@@ -70,7 +70,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopAccessAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/ScalarEvolution.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/Utils/ValueMapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/LoopUtils.h"
 end_include
 
 begin_decl_stmt
@@ -86,6 +104,9 @@ decl_stmt|;
 name|class
 name|LoopInfo
 decl_stmt|;
+name|class
+name|ScalarEvolution
+decl_stmt|;
 comment|/// \brief This class emits a version of the loop where run-time checks ensure
 comment|/// that may-alias pointers can't overlap.
 comment|///
@@ -96,45 +117,25 @@ name|LoopVersioning
 block|{
 name|public
 label|:
+comment|/// \brief Expects LoopAccessInfo, Loop, LoopInfo, DominatorTree as input.
+comment|/// It uses runtime check provided by the user. If \p UseLAIChecks is true,
+comment|/// we will retain the default checks made by LAI. Otherwise, construct an
+comment|/// object having no checks and we expect the user to add them.
 name|LoopVersioning
 argument_list|(
-specifier|const
-name|LoopAccessInfo
-operator|&
-name|LAI
+argument|const LoopAccessInfo&LAI
 argument_list|,
-name|Loop
-operator|*
-name|L
+argument|Loop *L
 argument_list|,
-name|LoopInfo
-operator|*
-name|LI
+argument|LoopInfo *LI
 argument_list|,
-name|DominatorTree
-operator|*
-name|DT
+argument|DominatorTree *DT
 argument_list|,
-specifier|const
-name|SmallVector
-operator|<
-name|int
+argument|ScalarEvolution *SE
 argument_list|,
-literal|8
-operator|>
-operator|*
-name|PtrToPartition
-operator|=
-name|nullptr
+argument|bool UseLAIChecks = true
 argument_list|)
-expr_stmt|;
-comment|/// \brief Returns true if we need memchecks to disambiguate may-aliasing
-comment|/// accesses.
-name|bool
-name|needsRuntimeChecks
-argument_list|()
-specifier|const
-expr_stmt|;
+empty_stmt|;
 comment|/// \brief Performs the CFG manipulation part of versioning the loop including
 comment|/// the DominatorTree and LoopInfo updates.
 comment|///
@@ -150,20 +151,21 @@ comment|///        if versioning is necessary version L
 comment|///        transform L
 name|void
 name|versionLoop
-parameter_list|(
-name|Pass
-modifier|*
-name|P
-parameter_list|)
-function_decl|;
-comment|/// \brief Adds the necessary PHI nodes for the versioned loops based on the
-comment|/// loop-defined values used outside of the loop.
-comment|///
-comment|/// This needs to be called after versionLoop if there are defs in the loop
-comment|/// that are used outside the loop.  FIXME: this should be invoked internally
-comment|/// by versionLoop and made private.
+parameter_list|()
+block|{
+name|versionLoop
+argument_list|(
+name|findDefsUsedOutsideOfLoop
+argument_list|(
+name|VersionedLoop
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Same but if the client has already precomputed the set of values
+comment|/// used outside the loop, this API will allows passing that.
 name|void
-name|addPHINodes
+name|versionLoop
 argument_list|(
 specifier|const
 name|SmallVectorImpl
@@ -198,8 +200,50 @@ return|return
 name|NonVersionedLoop
 return|;
 block|}
+comment|/// \brief Sets the runtime alias checks for versioning the loop.
+name|void
+name|setAliasChecks
+argument_list|(
+specifier|const
+name|SmallVector
+operator|<
+name|RuntimePointerChecking
+operator|::
+name|PointerCheck
+argument_list|,
+literal|4
+operator|>
+name|Checks
+argument_list|)
+decl_stmt|;
+comment|/// \brief Sets the runtime SCEV checks for versioning the loop.
+name|void
+name|setSCEVChecks
+parameter_list|(
+name|SCEVUnionPredicate
+name|Check
+parameter_list|)
+function_decl|;
 name|private
 label|:
+comment|/// \brief Adds the necessary PHI nodes for the versioned loops based on the
+comment|/// loop-defined values used outside of the loop.
+comment|///
+comment|/// This needs to be called after versionLoop if there are defs in the loop
+comment|/// that are used outside the loop.
+name|void
+name|addPHINodes
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|DefsUsedOutside
+argument_list|)
+decl_stmt|;
 comment|/// \brief The original loop.  This becomes the "versioned" one.  I.e.,
 comment|/// control flows here if pointers in the loop don't alias.
 name|Loop
@@ -212,25 +256,25 @@ name|Loop
 modifier|*
 name|NonVersionedLoop
 decl_stmt|;
-comment|/// \brief For each memory pointer it contains the partitionId it is used in.
-comment|/// If nullptr, no partitioning is used.
-comment|///
-comment|/// The I-th entry corresponds to I-th entry in LAI.getRuntimePointerCheck().
-comment|/// If the pointer is used in multiple partitions the entry is set to -1.
-specifier|const
-name|SmallVector
-operator|<
-name|int
-operator|,
-literal|8
-operator|>
-operator|*
-name|PtrToPartition
-expr_stmt|;
 comment|/// \brief This maps the instructions from VersionedLoop to their counterpart
 comment|/// in NonVersionedLoop.
 name|ValueToValueMapTy
 name|VMap
+decl_stmt|;
+comment|/// \brief The set of alias checks that we are versioning for.
+name|SmallVector
+operator|<
+name|RuntimePointerChecking
+operator|::
+name|PointerCheck
+operator|,
+literal|4
+operator|>
+name|AliasChecks
+expr_stmt|;
+comment|/// \brief The set of SCEV checks that we are versioning for.
+name|SCEVUnionPredicate
+name|Preds
 decl_stmt|;
 comment|/// \brief Analyses used.
 specifier|const
@@ -245,6 +289,10 @@ decl_stmt|;
 name|DominatorTree
 modifier|*
 name|DT
+decl_stmt|;
+name|ScalarEvolution
+modifier|*
+name|SE
 decl_stmt|;
 block|}
 empty_stmt|;

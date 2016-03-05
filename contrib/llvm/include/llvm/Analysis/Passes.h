@@ -85,38 +85,6 @@ decl_stmt|;
 name|class
 name|PassInfo
 decl_stmt|;
-name|class
-name|LibCallInfo
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createGlobalsModRefPass - This pass provides alias and mod/ref info for
-comment|// global values that do not have their addresses taken.
-comment|//
-name|Pass
-modifier|*
-name|createGlobalsModRefPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createAliasDebugger - This pass helps debug clients of AA
-comment|//
-name|Pass
-modifier|*
-name|createAliasDebugger
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createAliasAnalysisCounterPass - This pass counts alias queries and how the
-comment|// alias analysis implementation responds.
-comment|//
-name|ModulePass
-modifier|*
-name|createAliasAnalysisCounterPass
-parameter_list|()
-function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
 comment|// createAAEvalPass - This pass implements a simple N^2 alias analysis
@@ -129,86 +97,12 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createNoAAPass - This pass implements a "I don't know" alias analysis.
-comment|//
-name|ImmutablePass
-modifier|*
-name|createNoAAPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createBasicAliasAnalysisPass - This pass implements the stateless alias
-comment|// analysis.
-comment|//
-name|ImmutablePass
-modifier|*
-name|createBasicAliasAnalysisPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createCFLAliasAnalysisPass - This pass implements a set-based approach to
+comment|// createObjCARCAAWrapperPass - This pass implements ObjC-ARC-based
 comment|// alias analysis.
 comment|//
 name|ImmutablePass
 modifier|*
-name|createCFLAliasAnalysisPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|/// createLibCallAliasAnalysisPass - Create an alias analysis pass that knows
-comment|/// about the semantics of a set of libcalls specified by LCI.  The newly
-comment|/// constructed pass takes ownership of the pointer that is provided.
-comment|///
-name|FunctionPass
-modifier|*
-name|createLibCallAliasAnalysisPass
-parameter_list|(
-name|LibCallInfo
-modifier|*
-name|LCI
-parameter_list|)
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createScalarEvolutionAliasAnalysisPass - This pass implements a simple
-comment|// alias analysis using ScalarEvolution queries.
-comment|//
-name|FunctionPass
-modifier|*
-name|createScalarEvolutionAliasAnalysisPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createTypeBasedAliasAnalysisPass - This pass implements metadata-based
-comment|// type-based alias analysis.
-comment|//
-name|ImmutablePass
-modifier|*
-name|createTypeBasedAliasAnalysisPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createScopedNoAliasAAPass - This pass implements metadata-based
-comment|// scoped noalias analysis.
-comment|//
-name|ImmutablePass
-modifier|*
-name|createScopedNoAliasAAPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createObjCARCAliasAnalysisPass - This pass implements ObjC-ARC-based
-comment|// alias analysis.
-comment|//
-name|ImmutablePass
-modifier|*
-name|createObjCARCAliasAnalysisPass
+name|createObjCARCAAWrapperPass
 parameter_list|()
 function_decl|;
 name|FunctionPass

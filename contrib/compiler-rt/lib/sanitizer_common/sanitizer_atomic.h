@@ -237,6 +237,65 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|namespace
+name|__sanitizer
+block|{
+comment|// Clutter-reducing helpers.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|INLINE
+name|typename
+name|T
+operator|::
+name|Type
+name|atomic_load_relaxed
+argument_list|(
+argument|const volatile T *a
+argument_list|)
+block|{
+return|return
+name|atomic_load
+argument_list|(
+name|a
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|INLINE
+name|void
+name|atomic_store_relaxed
+argument_list|(
+argument|volatile T *a
+argument_list|,
+argument|typename T::Type v
+argument_list|)
+block|{
+name|atomic_store
+argument_list|(
+name|a
+argument_list|,
+name|v
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+block|; }
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __sanitizer
+end_comment
+
 begin_endif
 endif|#
 directive|endif

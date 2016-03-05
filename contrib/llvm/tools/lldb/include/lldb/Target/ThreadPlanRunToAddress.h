@@ -116,12 +116,11 @@ argument_list|,
 argument|bool stop_others
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadPlanRunToAddress
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -129,64 +128,59 @@ argument|Stream *s
 argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ValidatePlan
 argument_list|(
-name|Stream
-operator|*
-name|error
+argument|Stream *error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ShouldStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|StopOthers
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|SetStopOthers
 argument_list|(
 argument|bool new_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StateType
 name|GetPlanRunState
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|WillStop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MischiefManaged
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoPlanExplainsStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
 name|void
 name|SetInitialBreakpoints
@@ -228,7 +222,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanRunToAddress
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

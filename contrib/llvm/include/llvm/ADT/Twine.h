@@ -174,15 +174,13 @@ block|,
 comment|/// A pointer to a SmallString instance.
 name|SmallStringKind
 block|,
-comment|/// A char value reinterpreted as a pointer, to render as a character.
+comment|/// A char value, to render as a character.
 name|CharKind
 block|,
-comment|/// An unsigned int value reinterpreted as a pointer, to render as an
-comment|/// unsigned decimal integer.
+comment|/// An unsigned int value, to render as an unsigned decimal integer.
 name|DecUIKind
 block|,
-comment|/// An int value reinterpreted as a pointer, to render as a signed
-comment|/// decimal integer.
+comment|/// An int value, to render as a signed decimal integer.
 name|DecIKind
 block|,
 comment|/// A pointer to an unsigned long value, to render as an unsigned decimal

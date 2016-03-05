@@ -588,7 +588,7 @@ block|{
 return|return
 name|cell_
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -702,7 +702,7 @@ name|h
 operator|->
 name|cell_
 operator|=
-literal|0
+name|nullptr
 block|;
 comment|// If we want to remove the element, we need exclusive access to the bucket,
 comment|// so skip the lock-free phase.
@@ -1235,9 +1235,8 @@ end_comment
 begin_if
 if|if
 condition|(
+operator|!
 name|add
-operator|==
-literal|0
 condition|)
 block|{
 comment|// Allocate a new add array.
@@ -1562,11 +1561,10 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|h
 operator|->
 name|cell_
-operator|==
-literal|0
 condition|)
 return|return;
 name|Bucket

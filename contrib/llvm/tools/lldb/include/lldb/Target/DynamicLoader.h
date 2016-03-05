@@ -144,10 +144,10 @@ comment|///
 comment|/// The destructor is virtual since this class is designed to be
 comment|/// inherited from by the plug-in instance.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|DynamicLoader
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching a process.
@@ -400,6 +400,8 @@ argument_list|,
 argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
 block|;
 comment|// Utility method so base classes can share implementation of UpdateLoadedSections
@@ -409,6 +411,8 @@ argument_list|(
 argument|lldb::ModuleSP module
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
 block|;
 comment|/// Removes the loaded sections from the target in @p module.
@@ -430,6 +434,7 @@ argument_list|)
 block|;
 comment|/// Locates or creates a module given by @p file and updates/loads the
 comment|/// resulting module at the virtual base address @p base_addr.
+name|virtual
 name|lldb
 operator|::
 name|ModuleSP
@@ -440,6 +445,8 @@ argument_list|,
 argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
 block|;
 specifier|const
@@ -487,7 +494,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|DynamicLoader
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

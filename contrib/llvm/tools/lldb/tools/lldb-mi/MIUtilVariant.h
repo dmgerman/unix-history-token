@@ -31,14 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -80,18 +72,6 @@ comment|//          destructor should it have one.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 18/06/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -104,9 +84,7 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIUtilVariant
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMIUtilVariant
@@ -136,9 +114,7 @@ expr_stmt|;
 comment|/* dtor */
 operator|~
 name|CMIUtilVariant
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|template
 operator|<
@@ -162,9 +138,7 @@ operator|>
 name|T
 operator|*
 name|Get
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|CMIUtilVariant
@@ -205,9 +179,7 @@ name|public
 label|:
 comment|/* ctor */
 name|CDataObjectBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CDataObjectBase
@@ -262,26 +234,20 @@ label|:
 name|virtual
 operator|~
 name|CDataObjectBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|virtual
 name|CDataObjectBase
 modifier|*
 name|CreateCopyOfSelf
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|virtual
 name|bool
 name|GetIsDerivedClass
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Overrideable:
 name|protected
 label|:
@@ -298,9 +264,7 @@ function_decl|;
 name|virtual
 name|void
 name|Destroy
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
@@ -325,9 +289,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CDataObject
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CDataObject
@@ -389,9 +351,7 @@ comment|//
 name|T
 operator|&
 name|GetDataObject
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -399,24 +359,18 @@ operator|:
 comment|// From CDataObjectBase
 operator|~
 name|CDataObject
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|CDataObjectBase
 operator|*
 name|CreateCopyOfSelf
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|GetIsDerivedClass
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -439,9 +393,7 @@ operator|:
 comment|// From CDataObjectBase
 name|void
 name|Destroy
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -456,9 +408,7 @@ name|private
 label|:
 name|void
 name|Destroy
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|void
 name|Copy
@@ -537,9 +487,7 @@ name|T
 operator|>
 operator|::
 name|CDataObject
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{ }
 comment|//++ ------------------------------------------------------------------------------------
 comment|// Details: CDataObject constructor.
@@ -591,9 +539,7 @@ operator|>
 operator|::
 operator|~
 name|CDataObject
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 name|Destroy
 argument_list|()
@@ -620,9 +566,7 @@ name|T
 operator|>
 operator|::
 name|GetDataObject
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 return|return
 name|m_dataObj
@@ -676,9 +620,7 @@ name|T
 operator|>
 operator|::
 name|CreateCopyOfSelf
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 name|CDataObject
 operator|*
@@ -746,9 +688,7 @@ name|T
 operator|>
 operator|::
 name|GetIsDerivedClass
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -842,9 +782,7 @@ name|T
 operator|>
 operator|::
 name|Destroy
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 name|CDataObjectBase
 operator|::
@@ -903,9 +841,7 @@ operator|*
 name|CMIUtilVariant
 operator|::
 name|Get
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 if|if

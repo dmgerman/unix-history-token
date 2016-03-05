@@ -138,8 +138,9 @@ name|MachineBasicBlock
 operator|::
 name|instr_iterator
 name|I
-operator|=
+argument_list|(
 name|MI
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -152,6 +153,8 @@ operator|--
 name|I
 expr_stmt|;
 return|return
+operator|&
+operator|*
 name|I
 return|;
 block|}
@@ -171,8 +174,9 @@ name|MachineBasicBlock
 operator|::
 name|const_instr_iterator
 name|I
-operator|=
+argument_list|(
 name|MI
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -185,6 +189,8 @@ operator|--
 name|I
 expr_stmt|;
 return|return
+operator|&
+operator|*
 name|I
 return|;
 block|}
@@ -202,8 +208,9 @@ name|MachineBasicBlock
 operator|::
 name|instr_iterator
 name|I
-operator|=
+argument_list|(
 name|MI
+argument_list|)
 block|;
 while|while
 condition|(
@@ -240,8 +247,9 @@ name|MachineBasicBlock
 operator|::
 name|const_instr_iterator
 name|I
-operator|=
+argument_list|(
 name|MI
+argument_list|)
 block|;
 while|while
 condition|(
@@ -418,6 +426,9 @@ name|getBundleStart
 argument_list|(
 name|MI
 argument_list|)
+operator|->
+name|getIterator
+argument_list|()
 expr_stmt|;
 name|InstrE
 operator|=
@@ -437,6 +448,9 @@ operator|=
 name|InstrE
 operator|=
 name|MI
+operator|->
+name|getIterator
+argument_list|()
 expr_stmt|;
 operator|++
 name|InstrE
@@ -549,35 +563,43 @@ name|Tied
 decl_stmt|;
 block|}
 struct|;
-comment|/// PhysRegInfo - Information about a physical register used by a set of
+comment|/// Information about how a physical register Reg is used by a set of
 comment|/// operands.
 struct|struct
 name|PhysRegInfo
 block|{
-comment|/// Clobbers - Reg or an overlapping register is defined, or a regmask
-comment|/// clobbers Reg.
+comment|/// There is a regmask operand indicating Reg is clobbered.
+comment|/// \see MachineOperand::CreateRegMask().
 name|bool
-name|Clobbers
+name|Clobbered
 decl_stmt|;
-comment|/// Defines - Reg or a super-register is defined.
+comment|/// Reg or one of its aliases is defined. The definition may only cover
+comment|/// parts of the register.
 name|bool
-name|Defines
+name|Defined
 decl_stmt|;
-comment|/// Reads - Read or a super-register is read.
+comment|/// Reg or a super-register is defined. The definition covers the full
+comment|/// register.
 name|bool
-name|Reads
+name|FullyDefined
 decl_stmt|;
-comment|/// ReadsOverlap - Reg or an overlapping register is read.
+comment|/// Reg or one of its aliases is read. The register may only be read
+comment|/// partially.
 name|bool
-name|ReadsOverlap
+name|Read
 decl_stmt|;
-comment|/// DefinesDead - All defs of a Reg or a super-register are dead.
+comment|/// Reg or a super-register is read. The full register is read.
 name|bool
-name|DefinesDead
+name|FullyRead
 decl_stmt|;
-comment|/// There is a kill of Reg or a super-register.
+comment|/// Reg is FullyDefined and all defs of reg or an overlapping register are
+comment|/// dead.
 name|bool
-name|Kills
+name|DeadDef
+decl_stmt|;
+comment|/// There is a use operand of reg or a super-register with kill flag set.
+name|bool
+name|Killed
 decl_stmt|;
 block|}
 struct|;

@@ -256,20 +256,6 @@ argument|uint32_t depth = UINT32_MAX
 argument_list|)
 specifier|const
 expr_stmt|;
-name|bool
-name|GetSectionData
-argument_list|(
-specifier|const
-name|DataExtractor
-operator|&
-name|module_data
-argument_list|,
-name|DataExtractor
-operator|&
-name|section_data
-argument_list|)
-decl|const
-decl_stmt|;
 comment|// Get the number of sections in this list only
 name|size_t
 name|GetSize
@@ -777,6 +763,62 @@ return|return
 name|m_obj_file
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Read the section data from the object file that the section
+comment|/// resides in.
+comment|///
+comment|/// @param[in] dst
+comment|///     Where to place the data
+comment|///
+comment|/// @param[in] dst_len
+comment|///     How many bytes of section data to read
+comment|///
+comment|/// @param[in] offset
+comment|///     The offset in bytes within this section's data at which to
+comment|///     start copying data from.
+comment|///
+comment|/// @return
+comment|///     The number of bytes read from the section, or zero if the
+comment|///     section has no data or \a offset is not a valid offset
+comment|///     in this section.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|offset_t
+name|GetSectionData
+argument_list|(
+argument|void *dst
+argument_list|,
+argument|lldb::offset_t dst_len
+argument_list|,
+argument|lldb::offset_t offset =
+literal|0
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get the shared reference to the section data from the object
+comment|/// file that the section resides in. No copies of the data will be
+comment|/// make unless the object file has been read from memory. If the
+comment|/// object file is on disk, it will shared the mmap data for the
+comment|/// entire object file.
+comment|///
+comment|/// @param[in] data
+comment|///     Where to place the data, address byte size, and byte order
+comment|///
+comment|/// @return
+comment|///     The number of bytes read from the section, or zero if the
+comment|///     section has no data or \a offset is not a valid offset
+comment|///     in this section.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|offset_t
+name|GetSectionData
+argument_list|(
+argument|DataExtractor& data
+argument_list|)
+specifier|const
+expr_stmt|;
 name|uint32_t
 name|GetLog2Align
 parameter_list|()

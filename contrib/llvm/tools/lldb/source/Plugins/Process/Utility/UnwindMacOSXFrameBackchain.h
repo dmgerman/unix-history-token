@@ -97,27 +97,29 @@ operator|&
 name|thread
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|UnwindMacOSXFrameBackchain
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+block|;
 name|protected
 operator|:
-name|virtual
 name|void
 name|DoClear
 argument_list|()
+name|override
 block|{
 name|m_cursors
 operator|.
 name|clear
 argument_list|()
 block|;     }
-name|virtual
 name|uint32_t
 name|DoGetFrameCount
 argument_list|()
+name|override
 block|;
 name|bool
 name|DoGetFrameInfoAtIndex
@@ -128,18 +130,16 @@ argument|lldb::addr_t& cfa
 argument_list|,
 argument|lldb::addr_t& pc
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::
 name|RegisterContextSP
 name|DoCreateRegisterContextForFrame
 argument_list|(
-name|lldb_private
-operator|::
-name|StackFrame
-operator|*
-name|frame
+argument|lldb_private::StackFrame *frame
 argument_list|)
+name|override
 block|;
 name|friend
 name|class

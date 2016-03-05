@@ -106,37 +106,6 @@ name|class
 name|X86Subtarget
 decl_stmt|;
 name|namespace
-name|MachineCombinerPattern
-block|{
-enum|enum
-name|MC_PATTERN
-enum|:
-name|int
-block|{
-comment|// These are commutative variants for reassociating a computation chain
-comment|// of the form:
-comment|//   B = A op X (Prev)
-comment|//   C = B op Y (Root)
-name|MC_REASSOC_AX_BY
-init|=
-literal|0
-block|,
-name|MC_REASSOC_AX_YB
-init|=
-literal|1
-block|,
-name|MC_REASSOC_XA_BY
-init|=
-literal|2
-block|,
-name|MC_REASSOC_XA_YB
-init|=
-literal|3
-block|,     }
-enum|;
-block|}
-comment|// end namespace MachineCombinerPattern
-name|namespace
 name|X86
 block|{
 comment|// X86 specific condition code. These correspond to X86_*_COND in
@@ -1054,23 +1023,21 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// commuteInstruction - We have a few instructions that must be hacked on to
-comment|/// commute them.
+comment|/// Returns true iff the routine could find two commutable operands in the
+comment|/// given machine instruction.
+comment|/// The 'SrcOpIdx1' and 'SrcOpIdx2' are INPUT and OUTPUT arguments. Their
+comment|/// input values can be re-defined in this method only if the input values
+comment|/// are not pre-defined, which is designated by the special value
+comment|/// 'CommuteAnyOperandIndex' assigned to it.
+comment|/// If both of indices are pre-defined and refer to some operands, then the
+comment|/// method simply returns true if the corresponding operands are commutable
+comment|/// and returns false otherwise.
 comment|///
-name|MachineInstr
-modifier|*
-name|commuteInstruction
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|bool
-name|NewMI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
+comment|/// For example, calling this method this way:
+comment|///     unsigned Op1 = 1, Op2 = CommuteAnyOperandIndex;
+comment|///     findCommutedOpIndices(MI, Op1, Op2);
+comment|/// can be interpreted as a query asking to find an operand that would be
+comment|/// commutable with the operand#1.
 name|bool
 name|findCommutedOpIndices
 argument_list|(
@@ -1088,6 +1055,70 @@ name|SrcOpIdx2
 argument_list|)
 decl|const
 name|override
+decl_stmt|;
+comment|/// Returns true if the routine could find two commutable operands
+comment|/// in the given FMA instruction. Otherwise, returns false.
+comment|///
+comment|/// \p SrcOpIdx1 and \p SrcOpIdx2 are INPUT and OUTPUT arguments.
+comment|/// The output indices of the commuted operands are returned in these
+comment|/// arguments. Also, the input values of these arguments may be preset either
+comment|/// to indices of operands that must be commuted or be equal to a special
+comment|/// value 'CommuteAnyOperandIndex' which means that the corresponding
+comment|/// operand index is not set and this method is free to pick any of
+comment|/// available commutable operands.
+comment|///
+comment|/// For example, calling this method this way:
+comment|///     unsigned Idx1 = 1, Idx2 = CommuteAnyOperandIndex;
+comment|///     findFMA3CommutedOpIndices(MI, Idx1, Idx2);
+comment|/// can be interpreted as a query asking if the operand #1 can be swapped
+comment|/// with any other available operand (e.g. operand #2, operand #3, etc.).
+comment|///
+comment|/// The returned FMA opcode may differ from the opcode in the given MI.
+comment|/// For example, commuting the operands #1 and #3 in the following FMA
+comment|///     FMA213 #1, #2, #3
+comment|/// results into instruction with adjusted opcode:
+comment|///     FMA231 #3, #2, #1
+name|bool
+name|findFMA3CommutedOpIndices
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx1
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx2
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Returns an adjusted FMA opcode that must be used in FMA instruction that
+comment|/// performs the same computations as the given MI but which has the operands
+comment|/// \p SrcOpIdx1 and \p SrcOpIdx2 commuted.
+comment|/// It may return 0 if it is unsafe to commute the operands.
+comment|///
+comment|/// The returned FMA opcode may differ from the opcode in the given \p MI.
+comment|/// For example, commuting the operands #1 and #3 in the following FMA
+comment|///     FMA213 #1, #2, #3
+comment|/// results into instruction with adjusted opcode:
+comment|///     FMA231 #3, #2, #1
+name|unsigned
+name|getFMA3OpcodeToCommuteOperands
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+name|SrcOpIdx1
+argument_list|,
+name|unsigned
+name|SrcOpIdx2
+argument_list|)
+decl|const
 decl_stmt|;
 comment|// Branch analysis.
 name|bool
@@ -1532,23 +1563,6 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// canFoldMemoryOperand - Returns true if the specified load / store is
-comment|/// folding is possible.
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
 comment|/// unfoldMemoryOperand - Separate a single instruction which folded a load or
 comment|/// a store or a load and a store into two or more instruction. If this is
 comment|/// possible, returns true as well as the new instructions by reference.
@@ -1758,39 +1772,17 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|static
+comment|/// True if MI has a condition code def, e.g. EFLAGS, that is
+comment|/// not marked dead.
 name|bool
-name|isX86_64ExtendedReg
-parameter_list|(
-specifier|const
-name|MachineOperand
-modifier|&
-name|MO
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|MO
-operator|.
-name|isReg
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|X86II
-operator|::
-name|isX86_64ExtendedReg
+name|hasLiveCondCodeDef
 argument_list|(
-name|MO
-operator|.
-name|getReg
-argument_list|()
+name|MachineInstr
+operator|*
+name|MI
 argument_list|)
-return|;
-block|}
+decl|const
+decl_stmt|;
 comment|/// getGlobalBaseReg - Return a virtual register initialized with the
 comment|/// the global base register value. Output instructions required to
 comment|/// initialize the register in the function entry block, if necessary.
@@ -2009,66 +2001,51 @@ return|return
 name|true
 return|;
 block|}
-comment|/// Return true when there is potentially a faster code sequence
-comment|/// for an instruction chain ending in<Root>. All potential patterns are
-comment|/// output in the<Pattern> array.
 name|bool
-name|getMachineCombinerPatterns
+name|isAssociativeAndCommutative
 argument_list|(
+specifier|const
 name|MachineInstr
 operator|&
-name|Root
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineCombinerPattern
-operator|::
-name|MC_PATTERN
-operator|>
-operator|&
-name|P
+name|Inst
 argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// When getMachineCombinerPatterns() finds a pattern, this function generates
-comment|/// the instructions that could replace the original code sequence.
+name|bool
+name|hasReassociableOperands
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|void
-name|genAlternativeCodeSequence
+name|setSpecialOperandAttr
 argument_list|(
 name|MachineInstr
 operator|&
-name|Root
+name|OldMI1
 argument_list|,
-name|MachineCombinerPattern
-operator|::
-name|MC_PATTERN
-name|P
-argument_list|,
-name|SmallVectorImpl
-operator|<
 name|MachineInstr
-operator|*
-operator|>
 operator|&
-name|InsInstrs
+name|OldMI2
 argument_list|,
-name|SmallVectorImpl
-operator|<
 name|MachineInstr
-operator|*
-operator|>
 operator|&
-name|DelInstrs
+name|NewMI1
 argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|unsigned
-operator|>
+name|MachineInstr
 operator|&
-name|InstrIdxForVirtReg
+name|NewMI2
 argument_list|)
 decl|const
 name|override
@@ -2166,6 +2143,71 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned TF
+argument_list|)
+specifier|const
+name|override
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+name|protected
+label|:
+comment|/// Commutes the operands in the given instruction by changing the operands
+comment|/// order and/or changing the instruction's opcode and/or the immediate value
+comment|/// operand.
+comment|///
+comment|/// The arguments 'CommuteOpIdx1' and 'CommuteOpIdx2' specify the operands
+comment|/// to be commuted.
+comment|///
+comment|/// Do not call this method for a non-commutable instruction or
+comment|/// non-commutable operands.
+comment|/// Even though the instruction is commutable, the method may still
+comment|/// fail to commute the operands, null pointer is returned in such cases.
+name|MachineInstr
+modifier|*
+name|commuteInstructionImpl
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|bool
+name|NewMI
+argument_list|,
+name|unsigned
+name|CommuteOpIdx1
+argument_list|,
+name|unsigned
+name|CommuteOpIdx2
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|private
 label|:
 name|MachineInstr
@@ -2190,6 +2232,42 @@ argument_list|,
 name|LiveVariables
 operator|*
 name|LV
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Handles memory folding for special case instructions, for instance those
+comment|/// requiring custom manipulation of the address.
+name|MachineInstr
+modifier|*
+name|foldMemoryOperandCustom
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+name|OpNum
+argument_list|,
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|MOs
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPt
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|unsigned
+name|Align
 argument_list|)
 decl|const
 decl_stmt|;

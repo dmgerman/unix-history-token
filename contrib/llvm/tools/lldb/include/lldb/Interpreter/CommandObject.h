@@ -43,16 +43,18 @@ directive|define
 name|liblldb_CommandObject_h_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|<map>
 end_include
 
 begin_include
@@ -66,6 +68,14 @@ include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -164,7 +174,7 @@ return|return
 operator|(
 name|help_callback
 operator|!=
-name|NULL
+name|nullptr
 operator|)
 return|;
 block|}
@@ -279,9 +289,9 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *help = NULL
+argument|const char *help = nullptr
 argument_list|,
-argument|const char *syntax = NULL
+argument|const char *syntax = nullptr
 argument_list|,
 argument|uint32_t flags =
 literal|0
@@ -448,7 +458,7 @@ name|GetSubcommandSP
 argument_list|(
 argument|const char *sub_cmd
 argument_list|,
-argument|StringList *matches = NULL
+argument|StringList *matches = nullptr
 argument_list|)
 block|{
 return|return
@@ -472,11 +482,11 @@ name|StringList
 modifier|*
 name|matches
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -922,7 +932,7 @@ comment|/// @param[in] current_command_line
 comment|///    The complete current command line.
 comment|///
 comment|/// @return
-comment|///     NULL if there is no special repeat command - it will use the current command line.
+comment|///     nullptr if there is no special repeat command - it will use the current command line.
 comment|///     Otherwise a pointer to the command to be repeated.
 comment|///     If the returned string is the empty string, the command won't be repeated.
 comment|//------------------------------------------------------------------
@@ -941,7 +951,7 @@ name|index
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|bool
@@ -1255,9 +1265,9 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *help = NULL
+argument|const char *help = nullptr
 argument_list|,
-argument|const char *syntax = NULL
+argument|const char *syntax = nullptr
 argument_list|,
 argument|uint32_t flags =
 literal|0
@@ -1276,25 +1286,21 @@ argument_list|,
 argument|flags
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|CommandObjectParsed
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
 block|;
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|args_string
+argument|const char *args_string
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -1313,20 +1319,20 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|bool
 name|WantsRawCommandString
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-block|; }
-decl_stmt|;
+expr|}
+block|;
 name|class
 name|CommandObjectRaw
-range|:
+operator|:
 name|public
 name|CommandObject
 block|{
@@ -1338,9 +1344,9 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *help = NULL
+argument|const char *help = nullptr
 argument_list|,
-argument|const char *syntax = NULL
+argument|const char *syntax = nullptr
 argument_list|,
 argument|uint32_t flags =
 literal|0
@@ -1359,25 +1365,21 @@ argument_list|,
 argument|flags
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|CommandObjectRaw
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
 block|;
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|args_string
+argument|const char *args_string
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -1397,18 +1399,17 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|bool
 name|WantsRawCommandString
 argument_list|()
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

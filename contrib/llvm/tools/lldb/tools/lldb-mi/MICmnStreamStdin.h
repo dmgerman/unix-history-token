@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MIUtilStreamStdin.h -------------------------------------*- C++ -*-===//
+comment|//===-- MICmnStreamStdin.h --------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -90,18 +90,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 10/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: Factored out OS specific handling of reading stdin  - IOR 16/06/2014.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -134,28 +122,22 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|//
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetPrompt
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|SetPrompt
 parameter_list|(
@@ -175,11 +157,9 @@ parameter_list|)
 function_decl|;
 name|bool
 name|GetEnablePrompt
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -195,9 +175,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnStreamStdin
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnStreamStdin
@@ -223,9 +201,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnStreamStdin
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

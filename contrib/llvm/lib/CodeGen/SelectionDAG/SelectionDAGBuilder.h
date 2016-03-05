@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/Analysis.h"
 end_include
 
@@ -137,9 +143,6 @@ name|llvm
 block|{
 name|class
 name|AddrSpaceCastInst
-decl_stmt|;
-name|class
-name|AliasAnalysis
 decl_stmt|;
 name|class
 name|AllocaInst
@@ -502,8 +505,8 @@ name|BTCasesIndex
 decl_stmt|;
 block|}
 union|;
-name|uint32_t
-name|Weight
+name|BranchProbability
+name|Prob
 decl_stmt|;
 specifier|static
 name|CaseCluster
@@ -523,8 +526,8 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|,
-name|uint32_t
-name|Weight
+name|BranchProbability
+name|Prob
 parameter_list|)
 block|{
 name|CaseCluster
@@ -556,9 +559,9 @@ name|MBB
 expr_stmt|;
 name|C
 operator|.
-name|Weight
+name|Prob
 operator|=
-name|Weight
+name|Prob
 expr_stmt|;
 return|return
 name|C
@@ -581,8 +584,8 @@ parameter_list|,
 name|unsigned
 name|JTCasesIndex
 parameter_list|,
-name|uint32_t
-name|Weight
+name|BranchProbability
+name|Prob
 parameter_list|)
 block|{
 name|CaseCluster
@@ -614,9 +617,9 @@ name|JTCasesIndex
 expr_stmt|;
 name|C
 operator|.
-name|Weight
+name|Prob
 operator|=
-name|Weight
+name|Prob
 expr_stmt|;
 return|return
 name|C
@@ -639,8 +642,8 @@ parameter_list|,
 name|unsigned
 name|BTCasesIndex
 parameter_list|,
-name|uint32_t
-name|Weight
+name|BranchProbability
+name|Prob
 parameter_list|)
 block|{
 name|CaseCluster
@@ -672,9 +675,9 @@ name|BTCasesIndex
 expr_stmt|;
 name|C
 operator|.
-name|Weight
+name|Prob
 operator|=
-name|Weight
+name|Prob
 expr_stmt|;
 return|return
 name|C
@@ -710,8 +713,8 @@ decl_stmt|;
 name|unsigned
 name|Bits
 decl_stmt|;
-name|uint32_t
-name|ExtraWeight
+name|BranchProbability
+name|ExtraProb
 decl_stmt|;
 name|CaseBits
 argument_list|(
@@ -721,7 +724,7 @@ argument|MachineBasicBlock* bb
 argument_list|,
 argument|unsigned bits
 argument_list|,
-argument|uint32_t Weight
+argument|BranchProbability Prob
 argument_list|)
 block|:
 name|Mask
@@ -739,9 +742,9 @@ argument_list|(
 name|bits
 argument_list|)
 operator|,
-name|ExtraWeight
+name|ExtraProb
 argument_list|(
-argument|Weight
+argument|Prob
 argument_list|)
 block|{ }
 name|CaseBits
@@ -758,11 +761,6 @@ name|nullptr
 argument_list|)
 operator|,
 name|Bits
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ExtraWeight
 argument_list|(
 literal|0
 argument_list|)
@@ -809,11 +807,9 @@ argument|MachineBasicBlock *falsebb
 argument_list|,
 argument|MachineBasicBlock *me
 argument_list|,
-argument|uint32_t trueweight =
-literal|0
+argument|BranchProbability trueprob = BranchProbability::getUnknown()
 argument_list|,
-argument|uint32_t falseweight =
-literal|0
+argument|BranchProbability falseprob = BranchProbability::getUnknown()
 argument_list|)
 block|:
 name|CC
@@ -851,16 +847,16 @@ argument_list|(
 name|me
 argument_list|)
 operator|,
-name|TrueWeight
+name|TrueProb
 argument_list|(
-name|trueweight
+name|trueprob
 argument_list|)
 operator|,
-name|FalseWeight
+name|FalseProb
 argument_list|(
-argument|falseweight
+argument|falseprob
 argument_list|)
-block|{ }
+block|{}
 comment|// CC - the condition code to use for the case block's setcc node
 name|ISD
 operator|::
@@ -894,11 +890,11 @@ name|MachineBasicBlock
 modifier|*
 name|ThisBB
 decl_stmt|;
-comment|// TrueWeight/FalseWeight - branch weights.
-name|uint32_t
-name|TrueWeight
+comment|// TrueProb/FalseProb - branch weights.
+name|BranchProbability
+name|TrueProb
 decl_stmt|,
-name|FalseWeight
+name|FalseProb
 decl_stmt|;
 block|}
 struct|;
@@ -1041,7 +1037,7 @@ argument|MachineBasicBlock* T
 argument_list|,
 argument|MachineBasicBlock* Tr
 argument_list|,
-argument|uint32_t Weight
+argument|BranchProbability Prob
 argument_list|)
 block|:
 name|Mask
@@ -1059,9 +1055,9 @@ argument_list|(
 name|Tr
 argument_list|)
 operator|,
-name|ExtraWeight
+name|ExtraProb
 argument_list|(
-argument|Weight
+argument|Prob
 argument_list|)
 block|{ }
 name|uint64_t
@@ -1075,8 +1071,8 @@ name|MachineBasicBlock
 modifier|*
 name|TargetBB
 decl_stmt|;
-name|uint32_t
-name|ExtraWeight
+name|BranchProbability
+name|ExtraProb
 decl_stmt|;
 block|}
 struct|;
@@ -1098,7 +1094,7 @@ argument|APInt F
 argument_list|,
 argument|APInt R
 argument_list|,
-argument|const Value* SV
+argument|const Value *SV
 argument_list|,
 argument|unsigned Rg
 argument_list|,
@@ -1106,11 +1102,15 @@ argument|MVT RgVT
 argument_list|,
 argument|bool E
 argument_list|,
-argument|MachineBasicBlock* P
+argument|bool CR
 argument_list|,
-argument|MachineBasicBlock* D
+argument|MachineBasicBlock *P
+argument_list|,
+argument|MachineBasicBlock *D
 argument_list|,
 argument|BitTestInfo C
+argument_list|,
+argument|BranchProbability Pr
 argument_list|)
 block|:
 name|First
@@ -1143,6 +1143,11 @@ argument_list|(
 name|E
 argument_list|)
 operator|,
+name|ContiguousRange
+argument_list|(
+name|CR
+argument_list|)
+operator|,
 name|Parent
 argument_list|(
 name|P
@@ -1155,9 +1160,19 @@ argument_list|)
 operator|,
 name|Cases
 argument_list|(
-argument|std::move(C)
+name|std
+operator|::
+name|move
+argument_list|(
+name|C
 argument_list|)
-block|{ }
+argument_list|)
+operator|,
+name|Prob
+argument_list|(
+argument|Pr
+argument_list|)
+block|{}
 name|APInt
 name|First
 expr_stmt|;
@@ -1178,6 +1193,9 @@ decl_stmt|;
 name|bool
 name|Emitted
 decl_stmt|;
+name|bool
+name|ContiguousRange
+decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|Parent
@@ -1188,6 +1206,12 @@ name|Default
 decl_stmt|;
 name|BitTestInfo
 name|Cases
+decl_stmt|;
+name|BranchProbability
+name|Prob
+decl_stmt|;
+name|BranchProbability
+name|DefaultProb
 decl_stmt|;
 block|}
 struct|;
@@ -1364,6 +1388,9 @@ specifier|const
 name|ConstantInt
 modifier|*
 name|LT
+decl_stmt|;
+name|BranchProbability
+name|DefaultProb
 decl_stmt|;
 block|}
 struct|;
@@ -1710,6 +1737,10 @@ name|Guard
 operator|=
 name|nullptr
 expr_stmt|;
+name|GuardReg
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|MachineBasicBlock
 modifier|*
@@ -1922,13 +1953,6 @@ name|FunctionLoweringInfo
 modifier|&
 name|FuncInfo
 decl_stmt|;
-comment|/// OptLevel - What optimization level we're generating code for.
-comment|///
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-expr_stmt|;
 comment|/// GFI - Garbage collection metadata for the function.
 name|GCFunctionInfo
 modifier|*
@@ -1995,11 +2019,6 @@ operator|,
 name|FuncInfo
 argument_list|(
 name|funcinfo
-argument_list|)
-operator|,
-name|OptLevel
-argument_list|(
-name|ol
 argument_list|)
 operator|,
 name|HasTailCall
@@ -2276,38 +2295,40 @@ expr_stmt|;
 block|}
 name|void
 name|FindMergedConditions
-parameter_list|(
+argument_list|(
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|Cond
-parameter_list|,
+argument_list|,
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|TBB
-parameter_list|,
+argument_list|,
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|FBB
-parameter_list|,
+argument_list|,
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|CurBB
-parameter_list|,
+argument_list|,
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|SwitchBB
-parameter_list|,
-name|unsigned
+argument_list|,
+name|Instruction
+operator|::
+name|BinaryOps
 name|Opc
-parameter_list|,
-name|uint32_t
+argument_list|,
+name|BranchProbability
 name|TW
-parameter_list|,
-name|uint32_t
+argument_list|,
+name|BranchProbability
 name|FW
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitBranchForMergedCondition
 parameter_list|(
@@ -2332,10 +2353,10 @@ name|MachineBasicBlock
 modifier|*
 name|SwitchBB
 parameter_list|,
-name|uint32_t
+name|BranchProbability
 name|TW
 parameter_list|,
-name|uint32_t
+name|BranchProbability
 name|FW
 parameter_list|)
 function_decl|;
@@ -2397,9 +2418,10 @@ parameter_list|,
 name|bool
 name|IsTailCall
 parameter_list|,
-name|MachineBasicBlock
+specifier|const
+name|BasicBlock
 modifier|*
-name|LandingPad
+name|EHPadBB
 init|=
 name|nullptr
 parameter_list|)
@@ -2424,7 +2446,7 @@ argument|SDValue Callee
 argument_list|,
 argument|Type *ReturnTy
 argument_list|,
-argument|MachineBasicBlock *LandingPad = nullptr
+argument|const BasicBlock *EHPadBB = nullptr
 argument_list|,
 argument|bool IsPatchPoint = false
 argument_list|)
@@ -2451,9 +2473,10 @@ parameter_list|(
 name|ImmutableStatepoint
 name|Statepoint
 parameter_list|,
-name|MachineBasicBlock
+specifier|const
+name|BasicBlock
 modifier|*
-name|LandingPad
+name|EHPadBB
 init|=
 name|nullptr
 parameter_list|)
@@ -2476,9 +2499,12 @@ name|CallLoweringInfo
 operator|&
 name|CLI
 argument_list|,
-name|MachineBasicBlock
+specifier|const
+name|BasicBlock
 operator|*
-name|LandingPad
+name|EHPadBB
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|// Terminator instructions.
@@ -2527,8 +2553,53 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
-name|uint32_t
-name|getEdgeWeight
+name|void
+name|visitCleanupRet
+parameter_list|(
+specifier|const
+name|CleanupReturnInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitCatchSwitch
+parameter_list|(
+specifier|const
+name|CatchSwitchInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitCatchRet
+parameter_list|(
+specifier|const
+name|CatchReturnInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitCatchPad
+parameter_list|(
+specifier|const
+name|CatchPadInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitCleanupPad
+parameter_list|(
+specifier|const
+name|CleanupPadInst
+modifier|&
+name|CPI
+parameter_list|)
+function_decl|;
+name|BranchProbability
+name|getEdgeProbability
 argument_list|(
 specifier|const
 name|MachineBasicBlock
@@ -2543,7 +2614,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|addSuccessorWithWeight
+name|addSuccessorWithProb
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
@@ -2553,10 +2624,13 @@ name|MachineBasicBlock
 modifier|*
 name|Dst
 parameter_list|,
-name|uint32_t
-name|Weight
+name|BranchProbability
+name|Prob
 init|=
-literal|0
+name|BranchProbability
+operator|::
+name|getUnknown
+argument_list|()
 parameter_list|)
 function_decl|;
 name|public
@@ -2616,8 +2690,8 @@ name|MachineBasicBlock
 modifier|*
 name|NextMBB
 parameter_list|,
-name|uint32_t
-name|BranchWeightToNext
+name|BranchProbability
+name|BranchProbToNext
 parameter_list|,
 name|unsigned
 name|Reg
@@ -3521,9 +3595,10 @@ parameter_list|(
 name|ImmutableCallSite
 name|CS
 parameter_list|,
-name|MachineBasicBlock
+specifier|const
+name|BasicBlock
 modifier|*
-name|LandingPad
+name|EHPadBB
 init|=
 name|nullptr
 parameter_list|)
@@ -3542,7 +3617,7 @@ name|void
 name|visitGCRelocate
 parameter_list|(
 specifier|const
-name|CallInst
+name|GCRelocateInst
 modifier|&
 name|I
 parameter_list|)

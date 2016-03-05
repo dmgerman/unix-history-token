@@ -94,18 +94,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 18/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -140,18 +128,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|ValidateIsMi
 parameter_list|(
@@ -178,9 +162,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmdInterpreter
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmdInterpreter
@@ -259,9 +241,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdInterpreter
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

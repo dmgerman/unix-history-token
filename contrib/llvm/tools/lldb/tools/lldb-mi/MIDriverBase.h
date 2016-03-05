@@ -114,18 +114,6 @@ comment|//          LLDB::SBDebugger object.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 30/01/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -138,26 +126,20 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIDriverBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|CMIDriverBase
-modifier|*
+operator|*
 name|GetDriverToFallThruTo
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|CMIDriverBase
-modifier|*
+operator|*
 name|GetDriversParent
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Overrideable:
 name|public
 label|:
@@ -165,9 +147,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIDriverBase
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|virtual
 name|bool
@@ -206,27 +186,23 @@ function_decl|;
 name|virtual
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetDriverName
-argument_list|(
-name|void
-argument_list|)
-decl|const
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|virtual
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetDriverId
-argument_list|(
-name|void
-argument_list|)
-decl|const
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|virtual
 name|void
 name|SetExitApplicationFlag
@@ -239,31 +215,25 @@ function_decl|;
 comment|// MI provide information for the pass through (child) assigned driver
 name|virtual
 name|FILE
-modifier|*
+operator|*
 name|GetStdin
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|virtual
 name|FILE
-modifier|*
+operator|*
 name|GetStdout
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|virtual
 name|FILE
-modifier|*
+operator|*
 name|GetStderr
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Attributes:
 name|protected
 label|:

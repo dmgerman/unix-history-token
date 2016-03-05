@@ -175,12 +175,22 @@ name|CompileCommand
 argument_list|(
 argument|Twine Directory
 argument_list|,
+argument|Twine Filename
+argument_list|,
 argument|std::vector<std::string> CommandLine
 argument_list|)
 block|:
 name|Directory
 argument_list|(
 name|Directory
+operator|.
+name|str
+argument_list|()
+argument_list|)
+operator|,
+name|Filename
+argument_list|(
+name|Filename
 operator|.
 name|str
 argument_list|()
@@ -196,6 +206,12 @@ name|std
 operator|::
 name|string
 name|Directory
+expr_stmt|;
+comment|/// The source file associated with the command.
+name|std
+operator|::
+name|string
+name|Filename
 expr_stmt|;
 comment|/// \brief The command line that was executed.
 name|std

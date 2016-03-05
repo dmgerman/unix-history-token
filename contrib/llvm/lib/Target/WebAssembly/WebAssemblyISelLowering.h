@@ -81,6 +81,9 @@ name|namespace
 name|WebAssemblyISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 name|FIRST_NUMBER
 init|=
@@ -88,7 +91,19 @@ name|ISD
 operator|::
 name|BUILTIN_OP_END
 block|,
-comment|// add memory opcodes starting at ISD::FIRST_TARGET_MEMORY_OPCODE here...
+define|#
+directive|define
+name|HANDLE_NODETYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|NODE,
+include|#
+directive|include
+file|"WebAssemblyISD.def"
+undef|#
+directive|undef
+name|HANDLE_NODETYPE
 block|}
 enum|;
 block|}
@@ -129,8 +144,244 @@ specifier|const
 name|WebAssemblySubtarget
 operator|*
 name|Subtarget
+block|;
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+argument|FunctionLoweringInfo&FuncInfo
+argument_list|,
+argument|const TargetLibraryInfo *LibInfo
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isOffsetFoldingLegal
+argument_list|(
+argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MVT
+name|getScalarShiftAmountTy
+argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|EVT
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|char
+operator|*
+name|getTargetNodeName
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+name|getRegForInlineAsmConstraint
+argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
+argument_list|,
+argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|const AddrMode&AM
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|unsigned AS
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|CallLoweringInfo&CLI
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool IsVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Custom lowering hooks.
+name|SDValue
+name|LowerOperation
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|LowerFrameIndex
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerExternalSymbol
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBR_JT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerJumpTable
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
+name|namespace
+name|WebAssembly
+block|{
+name|FastISel
+modifier|*
+name|createFastISel
+parameter_list|(
+name|FunctionLoweringInfo
+modifier|&
+name|funcInfo
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|libInfo
+parameter_list|)
+function_decl|;
+block|}
+comment|// end namespace WebAssembly
 block|}
 end_decl_stmt
 

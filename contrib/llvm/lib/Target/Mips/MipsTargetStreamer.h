@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCELFStreamer.h"
 end_include
 
@@ -365,6 +371,18 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|emitDirectiveCpRestore
+argument_list|(
+argument|SmallVector<MCInst
+argument_list|,
+literal|3
+argument|>&StoreInsts
+argument_list|,
+argument|int Offset
+argument_list|)
+block|;
+name|virtual
+name|void
 name|emitDirectiveCpsetup
 argument_list|(
 argument|unsigned RegNo
@@ -374,6 +392,15 @@ argument_list|,
 argument|const MCSymbol&Sym
 argument_list|,
 argument|bool IsReg
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveCpreturn
+argument_list|(
+argument|unsigned SaveLocation
+argument_list|,
+argument|bool SaveLocationIsRegister
 argument_list|)
 block|;
 comment|// FP abiflags directives
@@ -453,7 +480,6 @@ argument_list|)
 block|{
 name|ABI
 operator|=
-operator|&
 name|P
 operator|.
 name|getABI
@@ -485,6 +511,9 @@ block|{
 name|assert
 argument_list|(
 name|ABI
+operator|.
+name|hasValue
+argument_list|()
 operator|&&
 literal|"ABI hasn't been set!"
 argument_list|)
@@ -496,9 +525,12 @@ return|;
 block|}
 name|protected
 operator|:
-specifier|const
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|MipsABIInfo
-operator|*
+operator|>
 name|ABI
 block|;
 name|MipsABIFlagsSection
@@ -830,6 +862,18 @@ argument_list|)
 name|override
 block|;
 name|void
+name|emitDirectiveCpRestore
+argument_list|(
+argument|SmallVector<MCInst
+argument_list|,
+literal|3
+argument|>&StoreInsts
+argument_list|,
+argument|int Offset
+argument_list|)
+name|override
+block|;
+name|void
 name|emitDirectiveCpsetup
 argument_list|(
 argument|unsigned RegNo
@@ -839,6 +883,15 @@ argument_list|,
 argument|const MCSymbol&Sym
 argument_list|,
 argument|bool IsReg
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveCpreturn
+argument_list|(
+argument|unsigned SaveLocation
+argument_list|,
+argument|bool SaveLocationIsRegister
 argument_list|)
 name|override
 block|;
@@ -1050,6 +1103,18 @@ argument_list|)
 name|override
 block|;
 name|void
+name|emitDirectiveCpRestore
+argument_list|(
+argument|SmallVector<MCInst
+argument_list|,
+literal|3
+argument|>&StoreInsts
+argument_list|,
+argument|int Offset
+argument_list|)
+name|override
+block|;
+name|void
 name|emitDirectiveCpsetup
 argument_list|(
 argument|unsigned RegNo
@@ -1059,6 +1124,15 @@ argument_list|,
 argument|const MCSymbol&Sym
 argument_list|,
 argument|bool IsReg
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveCpreturn
+argument_list|(
+argument|unsigned SaveLocation
+argument_list|,
+argument|bool SaveLocationIsRegister
 argument_list|)
 name|override
 block|;

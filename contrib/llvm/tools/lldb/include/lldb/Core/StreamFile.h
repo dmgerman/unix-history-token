@@ -135,10 +135,10 @@ argument_list|,
 argument|bool transfer_ownership
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|StreamFile
 argument_list|()
+name|override
 block|;
 name|File
 operator|&
@@ -160,12 +160,11 @@ return|return
 name|m_file
 return|;
 block|}
-name|virtual
 name|void
 name|Flush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|Write
 argument_list|(
@@ -173,6 +172,7 @@ argument|const void *s
 argument_list|,
 argument|size_t length
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:

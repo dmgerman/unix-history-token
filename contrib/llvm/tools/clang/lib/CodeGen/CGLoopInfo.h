@@ -120,6 +120,9 @@ block|{
 name|class
 name|Attr
 decl_stmt|;
+name|class
+name|ASTContext
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -144,28 +147,38 @@ comment|/// \brief Generate llvm.loop.parallel metadata for loads and stores.
 name|bool
 name|IsParallel
 decl_stmt|;
-comment|/// \brief Values of llvm.loop.vectorize.enable metadata.
+comment|/// \brief State of loop vectorization or unrolling.
 enum|enum
 name|LVEnableState
 block|{
-name|VecUnspecified
+name|Unspecified
 block|,
-name|VecEnable
+name|Enable
 block|,
-name|VecDisable
+name|Disable
+block|,
+name|Full
 block|}
 enum|;
-comment|/// \brief llvm.loop.vectorize.enable
+comment|/// \brief Value for llvm.loop.vectorize.enable metadata.
 name|LVEnableState
-name|VectorizerEnable
+name|VectorizeEnable
 decl_stmt|;
-comment|/// \brief llvm.loop.vectorize.width
-name|unsigned
-name|VectorizerWidth
+comment|/// \brief Value for llvm.loop.unroll.* metadata (enable, disable, or full).
+name|LVEnableState
+name|UnrollEnable
 decl_stmt|;
-comment|/// \brief llvm.loop.interleave.count
+comment|/// \brief Value for llvm.loop.vectorize.width metadata.
 name|unsigned
-name|VectorizerUnroll
+name|VectorizeWidth
+decl_stmt|;
+comment|/// \brief Value for llvm.loop.interleave.count metadata.
+name|unsigned
+name|InterleaveCount
+decl_stmt|;
+comment|/// \brief llvm.unroll.
+name|unsigned
+name|UnrollCount
 decl_stmt|;
 block|}
 struct|;
@@ -291,6 +304,24 @@ operator|::
 name|BasicBlock
 operator|*
 name|Header
+argument_list|)
+decl_stmt|;
+comment|/// \brief Begin a new structured loop. Stage attributes from the Attrs list.
+comment|/// The staged attributes are applied to the loop and then cleared.
+name|void
+name|push
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Header
+argument_list|,
+name|clang
+operator|::
+name|ASTContext
+operator|&
+name|Ctx
 argument_list|,
 name|llvm
 operator|::
@@ -301,10 +332,6 @@ name|Attr
 operator|*
 operator|>
 name|Attrs
-operator|=
-name|llvm
-operator|::
-name|None
 argument_list|)
 decl_stmt|;
 comment|/// \brief End the current loop.
@@ -380,9 +407,9 @@ operator|=
 name|Enable
 expr_stmt|;
 block|}
-comment|/// \brief Set the next pushed loop 'vectorizer.enable'
+comment|/// \brief Set the next pushed loop 'vectorize.enable'
 name|void
-name|setVectorizerEnable
+name|setVectorizeEnable
 parameter_list|(
 name|bool
 name|Enable
@@ -392,22 +419,41 @@ parameter_list|)
 block|{
 name|StagedAttrs
 operator|.
-name|VectorizerEnable
+name|VectorizeEnable
 operator|=
 name|Enable
 condition|?
 name|LoopAttributes
 operator|::
-name|VecEnable
+name|Enable
 else|:
 name|LoopAttributes
 operator|::
-name|VecDisable
+name|Disable
 expr_stmt|;
 block|}
-comment|/// \brief Set the vectorizer width for the next loop pushed.
+comment|/// \brief Set the next pushed loop unroll state.
 name|void
-name|setVectorizerWidth
+name|setUnrollState
+argument_list|(
+specifier|const
+name|LoopAttributes
+operator|::
+name|LVEnableState
+operator|&
+name|State
+argument_list|)
+block|{
+name|StagedAttrs
+operator|.
+name|UnrollEnable
+operator|=
+name|State
+expr_stmt|;
+block|}
+comment|/// \brief Set the vectorize width for the next loop pushed.
+name|void
+name|setVectorizeWidth
 parameter_list|(
 name|unsigned
 name|W
@@ -415,24 +461,39 @@ parameter_list|)
 block|{
 name|StagedAttrs
 operator|.
-name|VectorizerWidth
+name|VectorizeWidth
 operator|=
 name|W
 expr_stmt|;
 block|}
-comment|/// \brief Set the vectorizer unroll for the next loop pushed.
+comment|/// \brief Set the interleave count for the next loop pushed.
 name|void
-name|setVectorizerUnroll
+name|setInterleaveCount
 parameter_list|(
 name|unsigned
-name|U
+name|C
 parameter_list|)
 block|{
 name|StagedAttrs
 operator|.
-name|VectorizerUnroll
+name|InterleaveCount
 operator|=
-name|U
+name|C
+expr_stmt|;
+block|}
+comment|/// \brief Set the unroll count for the next loop pushed.
+name|void
+name|setUnrollCount
+parameter_list|(
+name|unsigned
+name|C
+parameter_list|)
+block|{
+name|StagedAttrs
+operator|.
+name|UnrollCount
+operator|=
+name|C
 expr_stmt|;
 block|}
 name|private

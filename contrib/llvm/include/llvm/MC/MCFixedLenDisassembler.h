@@ -80,6 +80,10 @@ comment|// OPC_CheckPredicate(uleb128 PIdx, uint16_t NumToSkip)
 name|OPC_Decode
 block|,
 comment|// OPC_Decode(uleb128 Opcode, uleb128 DIdx)
+name|OPC_TryDecode
+block|,
+comment|// OPC_TryDecode(uleb128 Opcode, uleb128 DIdx,
+comment|//               uint16_t NumToSkip)
 name|OPC_SoftFail
 block|,
 comment|// OPC_SoftFail(uleb128 PMask, uleb128 NMask)

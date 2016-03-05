@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CodeGenTypeCache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenTypes.h"
 end_include
 
@@ -153,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
@@ -428,175 +428,9 @@ block|}
 block|}
 struct|;
 struct|struct
-name|CodeGenTypeCache
+name|ObjCEntrypoints
 block|{
-comment|/// void
-name|llvm
-operator|::
-name|Type
-operator|*
-name|VoidTy
-expr_stmt|;
-comment|/// i8, i16, i32, and i64
-name|llvm
-operator|::
-name|IntegerType
-operator|*
-name|Int8Ty
-operator|,
-operator|*
-name|Int16Ty
-operator|,
-operator|*
-name|Int32Ty
-operator|,
-operator|*
-name|Int64Ty
-expr_stmt|;
-comment|/// float, double
-name|llvm
-operator|::
-name|Type
-operator|*
-name|FloatTy
-operator|,
-operator|*
-name|DoubleTy
-expr_stmt|;
-comment|/// int
-name|llvm
-operator|::
-name|IntegerType
-operator|*
-name|IntTy
-expr_stmt|;
-comment|/// intptr_t, size_t, and ptrdiff_t, which we assume are the same size.
-union|union
-block|{
-name|llvm
-operator|::
-name|IntegerType
-operator|*
-name|IntPtrTy
-expr_stmt|;
-name|llvm
-operator|::
-name|IntegerType
-operator|*
-name|SizeTy
-expr_stmt|;
-name|llvm
-operator|::
-name|IntegerType
-operator|*
-name|PtrDiffTy
-expr_stmt|;
-block|}
-union|;
-comment|/// void* in address space 0
-union|union
-block|{
-name|llvm
-operator|::
-name|PointerType
-operator|*
-name|VoidPtrTy
-expr_stmt|;
-name|llvm
-operator|::
-name|PointerType
-operator|*
-name|Int8PtrTy
-expr_stmt|;
-block|}
-union|;
-comment|/// void** in address space 0
-union|union
-block|{
-name|llvm
-operator|::
-name|PointerType
-operator|*
-name|VoidPtrPtrTy
-expr_stmt|;
-name|llvm
-operator|::
-name|PointerType
-operator|*
-name|Int8PtrPtrTy
-expr_stmt|;
-block|}
-union|;
-comment|/// The width of a pointer into the generic address space.
-name|unsigned
-name|char
-name|PointerWidthInBits
-decl_stmt|;
-comment|/// The size and alignment of a pointer into the generic address
-comment|/// space.
-union|union
-block|{
-name|unsigned
-name|char
-name|PointerAlignInBytes
-decl_stmt|;
-name|unsigned
-name|char
-name|PointerSizeInBytes
-decl_stmt|;
-name|unsigned
-name|char
-name|SizeSizeInBytes
-decl_stmt|;
-comment|// sizeof(size_t)
-block|}
-union|;
-name|llvm
-operator|::
-name|CallingConv
-operator|::
-name|ID
-name|RuntimeCC
-expr_stmt|;
-name|llvm
-operator|::
-name|CallingConv
-operator|::
-name|ID
-name|getRuntimeCC
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RuntimeCC
-return|;
-block|}
-name|llvm
-operator|::
-name|CallingConv
-operator|::
-name|ID
-name|BuiltinCC
-expr_stmt|;
-name|llvm
-operator|::
-name|CallingConv
-operator|::
-name|ID
-name|getBuiltinCC
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BuiltinCC
-return|;
-block|}
-block|}
-struct|;
-struct|struct
-name|RREntrypoints
-block|{
-name|RREntrypoints
+name|ObjCEntrypoints
 argument_list|()
 block|{
 name|memset
@@ -627,28 +461,6 @@ name|Constant
 operator|*
 name|objc_autoreleasePoolPush
 expr_stmt|;
-block|}
-struct|;
-struct|struct
-name|ARCEntrypoints
-block|{
-name|ARCEntrypoints
-argument_list|()
-block|{
-name|memset
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|this
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// id objc_autorelease(id);
 name|llvm
 operator|::
@@ -902,6 +714,138 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// A pair of helper functions for a __block variable.
+name|class
+name|BlockByrefHelpers
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|// MSVC requires this type to be complete in order to process this
+comment|// header.
+name|public
+operator|:
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|CopyHelper
+block|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|DisposeHelper
+block|;
+comment|/// The alignment of the field.  This is important because
+comment|/// different offsets to the field within the byref struct need to
+comment|/// have different helper functions.
+name|CharUnits
+name|Alignment
+block|;
+name|BlockByrefHelpers
+argument_list|(
+argument|CharUnits alignment
+argument_list|)
+operator|:
+name|Alignment
+argument_list|(
+argument|alignment
+argument_list|)
+block|{}
+name|BlockByrefHelpers
+argument_list|(
+specifier|const
+name|BlockByrefHelpers
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|virtual
+operator|~
+name|BlockByrefHelpers
+argument_list|()
+block|;
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&id
+argument_list|)
+specifier|const
+block|{
+name|id
+operator|.
+name|AddInteger
+argument_list|(
+name|Alignment
+operator|.
+name|getQuantity
+argument_list|()
+argument_list|)
+block|;
+name|profileImpl
+argument_list|(
+name|id
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|profileImpl
+argument_list|(
+argument|llvm::FoldingSetNodeID&id
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|needsCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|emitCopy
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|Address dest
+argument_list|,
+argument|Address src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|needsDispose
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|void
+name|emitDispose
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|Address field
+argument_list|)
+operator|=
+literal|0
+block|; }
+decl_stmt|;
 comment|/// This class organizes the cross-function state that is used while generating
 comment|/// LLVM code.
 name|class
@@ -1041,13 +985,6 @@ modifier|&
 name|Diags
 decl_stmt|;
 specifier|const
-name|llvm
-operator|::
-name|DataLayout
-operator|&
-name|TheDataLayout
-expr_stmt|;
-specifier|const
 name|TargetInfo
 modifier|&
 name|Target
@@ -1106,9 +1043,9 @@ name|CGDebugInfo
 modifier|*
 name|DebugInfo
 decl_stmt|;
-name|ARCEntrypoints
+name|ObjCEntrypoints
 modifier|*
-name|ARCData
+name|ObjCData
 decl_stmt|;
 name|llvm
 operator|::
@@ -1116,10 +1053,6 @@ name|MDNode
 operator|*
 name|NoObjCARCExceptionsMetadata
 expr_stmt|;
-name|RREntrypoints
-modifier|*
-name|RRData
-decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -1260,6 +1193,43 @@ expr_stmt|;
 name|ReplacementsTy
 name|Replacements
 decl_stmt|;
+comment|/// List of global values to be replaced with something else. Used when we
+comment|/// want to replace a GlobalValue but can't identify it by its mangled name
+comment|/// anymore (because the name is already taken).
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+operator|,
+literal|8
+operator|>
+name|GlobalValReplacements
+expr_stmt|;
+comment|/// Set of global decls for which we already diagnosed mangled name conflict.
+comment|/// Required to not issue a warning (on a mangling conflict) multiple times
+comment|/// for the same decl.
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|GlobalDecl
+operator|>
+name|DiagnosedConflictingDefinitions
+expr_stmt|;
 comment|/// A queue of (optional) vtables to consider emitting.
 name|std
 operator|::
@@ -1488,20 +1458,10 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
 specifier|const
 name|VarDecl
 operator|*
-operator|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
 operator|>
-expr|>
 name|CXXThreadLocals
 expr_stmt|;
 comment|/// \brief thread_local variables with initializers that need to run
@@ -1521,9 +1481,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|llvm
-operator|::
-name|GlobalVariable
+specifier|const
+name|VarDecl
 operator|*
 operator|>
 name|CXXThreadLocalInitVars
@@ -1815,6 +1774,22 @@ name|CoverageMappingModuleGen
 operator|>
 name|CoverageMapping
 expr_stmt|;
+comment|/// Mapping from canonical types to their metadata identifiers. We need to
+comment|/// maintain this mapping because identifiers may be formed from distinct
+comment|/// MDNodes.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|QualType
+operator|,
+name|llvm
+operator|::
+name|Metadata
+operator|*
+operator|>
+name|MetadataIdMap
+expr_stmt|;
 name|public
 label|:
 name|CodeGenModule
@@ -1843,13 +1818,6 @@ operator|::
 name|Module
 operator|&
 name|M
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|DataLayout
-operator|&
-name|TD
 argument_list|,
 name|DiagnosticsEngine
 operator|&
@@ -1959,45 +1927,22 @@ operator|*
 name|CUDARuntime
 return|;
 block|}
-name|ARCEntrypoints
+name|ObjCEntrypoints
 operator|&
-name|getARCEntrypoints
+name|getObjCEntrypoints
 argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|getLangOpts
-argument_list|()
-operator|.
-name|ObjCAutoRefCount
-operator|&&
-name|ARCData
+name|ObjCData
 operator|!=
 name|nullptr
 argument_list|)
 block|;
 return|return
 operator|*
-name|ARCData
-return|;
-block|}
-name|RREntrypoints
-operator|&
-name|getRREntrypoints
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|RRData
-operator|!=
-name|nullptr
-argument_list|)
-block|;
-return|return
-operator|*
-name|RRData
+name|ObjCData
 return|;
 block|}
 name|InstrProfStats
@@ -2398,7 +2343,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TheDataLayout
+name|TheModule
+operator|.
+name|getDataLayout
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2619,22 +2567,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Return the MDNode in the type DAG for the given struct type.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|getTBAAStructTypeInfo
-argument_list|(
-argument|QualType QTy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Return the path-aware tag for given base type, access node and offset.
 end_comment
 
@@ -2707,7 +2639,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|DecorateInstruction
+name|DecorateInstructionWithTBAA
 argument_list|(
 name|llvm
 operator|::
@@ -2725,6 +2657,28 @@ name|bool
 name|ConvertTypeToTag
 operator|=
 name|true
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Adds !invariant.barrier !tag to instruction
+end_comment
+
+begin_decl_stmt
+name|void
+name|DecorateInstructionWithInvariantGroup
+argument_list|(
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2858,118 +2812,10 @@ operator|*
 name|GetAddrOfGlobal
 argument_list|(
 argument|GlobalDecl GD
-argument_list|)
-block|{
-if|if
-condition|(
-name|isa
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
-condition|)
-return|return
-name|getAddrOfCXXStructor
-argument_list|(
-name|cast
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
 argument_list|,
-name|getFromCtorType
-argument_list|(
-name|GD
-operator|.
-name|getCtorType
-argument_list|()
+argument|bool IsForDefinition = false
 argument_list|)
-argument_list|)
-return|;
-elseif|else
-if|if
-condition|(
-name|isa
-operator|<
-name|CXXDestructorDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
-condition|)
-return|return
-name|getAddrOfCXXStructor
-argument_list|(
-name|cast
-operator|<
-name|CXXDestructorDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
-argument_list|,
-name|getFromDtorType
-argument_list|(
-name|GD
-operator|.
-name|getDtorType
-argument_list|()
-argument_list|)
-argument_list|)
-return|;
-elseif|else
-if|if
-condition|(
-name|isa
-operator|<
-name|FunctionDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
-condition|)
-return|return
-name|GetAddrOfFunction
-argument_list|(
-name|GD
-argument_list|)
-return|;
-else|else
-return|return
-name|GetAddrOfGlobalVar
-argument_list|(
-name|cast
-operator|<
-name|VarDecl
-operator|>
-operator|(
-name|GD
-operator|.
-name|getDecl
-argument_list|()
-operator|)
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -3014,6 +2860,8 @@ argument_list|(
 argument|llvm::FunctionType *ty
 argument_list|,
 argument|const Twine&name
+argument_list|,
+argument|const CGFunctionInfo&FI
 argument_list|,
 argument|SourceLocation Loc = SourceLocation()
 argument_list|,
@@ -3109,12 +2957,13 @@ name|GetAddrOfFunction
 argument_list|(
 argument|GlobalDecl GD
 argument_list|,
-argument|llvm::Type *Ty =
-literal|0
+argument|llvm::Type *Ty = nullptr
 argument_list|,
 argument|bool ForVTable = false
 argument_list|,
 argument|bool DontDefer = false
+argument_list|,
+argument|bool IsForDefinition = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3137,38 +2986,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|getAddrOfCXXCatchHandlerType
-argument_list|(
-argument|QualType Ty
-argument_list|,
-argument|QualType CatchHandlerType
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/// Get the address of a uuid descriptor .
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfUuidDescriptor
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXUuidofExpr
-operator|*
+modifier|*
 name|E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Get the address of the thunk for the given global decl.
@@ -3192,20 +3024,87 @@ begin_comment
 comment|/// Get a reference to the target of VD.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetWeakRefReference
-argument_list|(
+parameter_list|(
 specifier|const
 name|ValueDecl
-operator|*
+modifier|*
 name|VD
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Returns the assumed alignment of an opaque pointer to the given class.
+end_comment
+
+begin_function_decl
+name|CharUnits
+name|getClassPointerAlignment
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|CD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Returns the assumed alignment of a virtual base of a class.
+end_comment
+
+begin_function_decl
+name|CharUnits
+name|getVBaseAlignment
+parameter_list|(
+name|CharUnits
+name|DerivedAlign
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Derived
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|VBase
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Given a class pointer with an actual known alignment, and the
+end_comment
+
+begin_comment
+comment|/// expected alignment of an object at a dynamic offset w.r.t that
+end_comment
+
+begin_comment
+comment|/// pointer, return the alignment to assume at the offset.
+end_comment
+
+begin_function_decl
+name|CharUnits
+name|getDynamicOffsetAlignment
+parameter_list|(
+name|CharUnits
+name|ActualAlign
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|,
+name|CharUnits
+name|ExpectedTargetAlign
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|CharUnits
@@ -3253,155 +3152,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// A pair of helper functions for a __block variable.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ByrefHelpers
-range|:
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
-block|{
-name|public
-operator|:
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|CopyHelper
-block|;
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|DisposeHelper
-block|;
-comment|/// The alignment of the field.  This is important because
-comment|/// different offsets to the field within the byref struct need to
-comment|/// have different helper functions.
-name|CharUnits
-name|Alignment
-block|;
-name|ByrefHelpers
-argument_list|(
-argument|CharUnits alignment
-argument_list|)
-operator|:
-name|Alignment
-argument_list|(
-argument|alignment
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|ByrefHelpers
-argument_list|()
-block|;
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&id
-argument_list|)
-specifier|const
-block|{
-name|id
-operator|.
-name|AddInteger
-argument_list|(
-name|Alignment
-operator|.
-name|getQuantity
-argument_list|()
-argument_list|)
-block|;
-name|profileImpl
-argument_list|(
-name|id
-argument_list|)
-block|;     }
-name|virtual
-name|void
-name|profileImpl
-argument_list|(
-argument|llvm::FoldingSetNodeID&id
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|bool
-name|needsCopy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|void
-name|emitCopy
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|dest
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|src
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|bool
-name|needsDispose
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|void
-name|emitDispose
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|field
-argument_list|)
-operator|=
-literal|0
-block|;   }
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|ByrefHelpers
+name|BlockByrefHelpers
 operator|>
 name|ByrefHelpersCache
 expr_stmt|;
@@ -3480,20 +3236,17 @@ begin_comment
 comment|/// Return a pointer to a constant CFString object for the given string.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfConstantCFString
-argument_list|(
+parameter_list|(
 specifier|const
 name|StringLiteral
-operator|*
+modifier|*
 name|Literal
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Return a pointer to a constant NSString object for the given string. Or a
@@ -3507,20 +3260,17 @@ begin_comment
 comment|/// -fconstant-string-class=class_name option.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfConstantString
-argument_list|(
+parameter_list|(
 specifier|const
 name|StringLiteral
-operator|*
+modifier|*
 name|Literal
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Return a constant array for the given string.
@@ -3545,38 +3295,37 @@ begin_comment
 comment|/// Return a pointer to a constant array for the given string literal.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfConstantStringFromLiteral
-argument_list|(
-argument|const StringLiteral *S
-argument_list|,
-argument|StringRef Name =
+parameter_list|(
+specifier|const
+name|StringLiteral
+modifier|*
+name|S
+parameter_list|,
+name|StringRef
+name|Name
+init|=
 literal|".str"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Return a pointer to a constant array for the given ObjCEncodeExpr node.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfConstantStringFromObjCEncode
-argument_list|(
+parameter_list|(
 specifier|const
 name|ObjCEncodeExpr
-operator|*
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Returns a pointer to a character array containing the literal and a
@@ -3598,22 +3347,26 @@ begin_comment
 comment|/// created).
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+begin_decl_stmt
+name|ConstantAddress
 name|GetAddrOfConstantCString
 argument_list|(
-argument|const std::string&Str
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Str
 argument_list|,
-argument|const char *GlobalName = nullptr
-argument_list|,
-argument|unsigned Alignment =
-literal|0
+specifier|const
+name|char
+operator|*
+name|GlobalName
+operator|=
+name|nullptr
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Returns a pointer to a constant global variable for the given file-scope
@@ -3623,20 +3376,17 @@ begin_comment
 comment|/// compound literal expression.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfConstantCompoundLiteral
-argument_list|(
+parameter_list|(
 specifier|const
 name|CompoundLiteralExpr
-operator|*
+modifier|*
 name|E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Returns a pointer to a global variable representing a temporary
@@ -3646,25 +3396,22 @@ begin_comment
 comment|/// with static or thread storage duration.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
+begin_function_decl
+name|ConstantAddress
 name|GetAddrOfGlobalTemporary
-argument_list|(
+parameter_list|(
 specifier|const
 name|MaterializeTemporaryExpr
-operator|*
+modifier|*
 name|E
-argument_list|,
+parameter_list|,
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|Inner
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Retrieve the record type that describes the state of an
@@ -3714,7 +3461,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|GlobalValue
+name|Constant
 operator|*
 name|getAddrOfCXXStructor
 argument_list|(
@@ -3727,6 +3474,8 @@ argument_list|,
 argument|llvm::FunctionType *FnType = nullptr
 argument_list|,
 argument|bool DontDefer = false
+argument_list|,
+argument|bool IsForDefinition = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4216,6 +3965,32 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Emit type info if type of an expression is a variably modified
+end_comment
+
+begin_comment
+comment|/// type. Also emit proper debug info for cast types.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitExplicitCastExprType
+parameter_list|(
+specifier|const
+name|ExplicitCastExpr
+modifier|*
+name|E
+parameter_list|,
+name|CodeGenFunction
+modifier|*
+name|CGF
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Return the result of value-initializing the given type, i.e. a null
 end_comment
 
@@ -4486,19 +4261,23 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param Name - The function name.
+end_comment
+
+begin_comment
 comment|/// \param Info - The function type information.
 end_comment
 
 begin_comment
-comment|/// \param TargetDecl - The decl these attributes are being constructed
+comment|/// \param CalleeInfo - The callee information these attributes are being
 end_comment
 
 begin_comment
-comment|/// for. If supplied the attributes applied to this decl may contribute to the
+comment|/// constructed for. If valid, the attributes applied to this decl may
 end_comment
 
 begin_comment
-comment|/// function attributes and calling convention.
+comment|/// contribute to the function attributes and calling convention.
 end_comment
 
 begin_comment
@@ -4513,15 +4292,16 @@ begin_function_decl
 name|void
 name|ConstructAttributeList
 parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
 specifier|const
 name|CGFunctionInfo
 modifier|&
 name|Info
 parameter_list|,
-specifier|const
-name|Decl
-modifier|*
-name|TargetDecl
+name|CGCalleeInfo
+name|CalleeInfo
 parameter_list|,
 name|AttributeListType
 modifier|&
@@ -4536,6 +4316,35 @@ name|AttrOnCallSite
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// Fills in the supplied string map with the set of target features for the
+end_comment
+
+begin_comment
+comment|// passed in function.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getFunctionFeatureMap
+argument_list|(
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|bool
+operator|>
+operator|&
+name|FeatureMap
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|StringRef
@@ -4582,17 +4391,6 @@ name|CXXRecordDecl
 modifier|*
 name|Class
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Emit the RTTI descriptors for the builtin types.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitFundamentalRTTIDescriptors
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -5154,6 +4952,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|addGlobalValReplacement
+argument_list|(
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|C
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// \brief Emit a code for threadprivate directive.
 end_comment
@@ -5221,24 +5038,101 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Create a bitset entry for the given vtable.
+comment|/// Generate a cross-DSO type identifier for type.
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|MDTuple
+name|ConstantInt
 operator|*
-name|CreateVTableBitSetEntry
+name|CreateCfiIdForTypeMetadata
 argument_list|(
-argument|llvm::GlobalVariable *VTable
-argument_list|,
-argument|CharUnits Offset
-argument_list|,
-argument|const CXXRecordDecl *RD
+name|llvm
+operator|::
+name|Metadata
+operator|*
+name|MD
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Create a metadata identifier for the given type. This may either be an
+end_comment
+
+begin_comment
+comment|/// MDString (for external identifiers) or a distinct unnamed MDNode (for
+end_comment
+
+begin_comment
+comment|/// internal identifiers).
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Metadata
+operator|*
+name|CreateMetadataIdentifierForType
+argument_list|(
+argument|QualType T
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Create a bitset entry for the given function and add it to BitsetsMD.
+end_comment
+
+begin_decl_stmt
+name|void
+name|CreateFunctionBitSetEntry
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|F
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Create a bitset entry for the given vtable and add it to BitsetsMD.
+end_comment
+
+begin_decl_stmt
+name|void
+name|CreateVTableBitSetEntry
+argument_list|(
+name|llvm
+operator|::
+name|NamedMDNode
+operator|*
+name|BitsetsMD
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|VTable
+argument_list|,
+name|CharUnits
+name|Offset
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \breif Get the declaration of std::terminate for the platform.
@@ -5279,6 +5173,8 @@ argument_list|,
 argument|bool IsThunk = false
 argument_list|,
 argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument_list|,
+argument|bool IsForDefinition = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5577,7 +5473,7 @@ name|Constant
 operator|*
 name|AssociatedData
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -5630,20 +5526,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit the RTTI descriptors for the given type.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitFundamentalRTTIDescriptor
-parameter_list|(
-name|QualType
-name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Emit any needed decls for which code generation was deferred.
 end_comment
 
@@ -5661,6 +5543,17 @@ end_comment
 begin_function_decl
 name|void
 name|applyReplacements
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Call replaceAllUsesWith on all pairs in GlobalValReplacements.
+end_comment
+
+begin_function_decl
+name|void
+name|applyGlobalValReplacements
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -5857,6 +5750,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LIB_CODEGEN_CODEGENMODULE_H
+end_comment
 
 end_unit
 

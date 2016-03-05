@@ -43,11 +43,27 @@ directive|define
 name|liblldb_HistoryUnwind_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -90,26 +106,26 @@ argument_list|,
 argument|bool stop_id_is_valid
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|HistoryUnwind
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
 name|void
 name|DoClear
 argument_list|()
+name|override
 block|;
 name|lldb
 operator|::
 name|RegisterContextSP
 name|DoCreateRegisterContextForFrame
 argument_list|(
-name|StackFrame
-operator|*
-name|frame
+argument|StackFrame *frame
 argument_list|)
+name|override
 block|;
 name|bool
 name|DoGetFrameInfoAtIndex
@@ -120,10 +136,12 @@ argument|lldb::addr_t& cfa
 argument_list|,
 argument|lldb::addr_t& pc
 argument_list|)
+name|override
 block|;
 name|uint32_t
 name|DoGetFrameCount
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

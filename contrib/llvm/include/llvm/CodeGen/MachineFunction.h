@@ -152,6 +152,9 @@ name|class
 name|Pass
 decl_stmt|;
 name|class
+name|PseudoSourceValueManager
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -162,6 +165,9 @@ name|TargetRegisterClass
 decl_stmt|;
 struct_decl|struct
 name|MachinePointerInfo
+struct_decl|;
+struct_decl|struct
+name|WinEHFuncInfo
 struct_decl|;
 name|template
 operator|<
@@ -376,6 +382,14 @@ name|MachineJumpTableInfo
 modifier|*
 name|JumpTableInfo
 decl_stmt|;
+comment|// Keeps track of Windows exception handling related data. This will be null
+comment|// for functions that aren't using a funclet-based EH personality.
+name|WinEHFuncInfo
+modifier|*
+name|WinEHInfo
+init|=
+name|nullptr
+decl_stmt|;
 comment|// Function-level unique numbering for MachineBasicBlocks.  When a
 comment|// MachineBasicBlock is inserted into a MachineFunction is it automatically
 comment|// numbered and this vector keeps track of the mapping from ID's to MBB's.
@@ -446,6 +460,15 @@ comment|/// True if the function includes any inline assembly.
 name|bool
 name|HasInlineAsm
 decl_stmt|;
+comment|// Allocation management for pseudo source values.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PseudoSourceValueManager
+operator|>
+name|PSVManager
+expr_stmt|;
 name|MachineFunction
 argument_list|(
 specifier|const
@@ -501,6 +524,17 @@ specifier|const
 block|{
 return|return
 name|Ctx
+return|;
+block|}
+name|PseudoSourceValueManager
+operator|&
+name|getPSVManager
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|PSVManager
 return|;
 block|}
 comment|/// Return the DataLayout attached to the Module associated to this MF.
@@ -714,6 +748,29 @@ specifier|const
 block|{
 return|return
 name|ConstantPool
+return|;
+block|}
+comment|/// getWinEHFuncInfo - Return information about how the current function uses
+comment|/// Windows exception handling. Returns null for functions that don't use
+comment|/// funclets for exception handling.
+specifier|const
+name|WinEHFuncInfo
+operator|*
+name|getWinEHFuncInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WinEHInfo
+return|;
+block|}
+name|WinEHFuncInfo
+modifier|*
+name|getWinEHFuncInfo
+parameter_list|()
+block|{
+return|return
+name|WinEHInfo
 return|;
 block|}
 comment|/// getAlignment - Return the alignment (log2, not bytes) of the function.
@@ -930,8 +987,9 @@ block|}
 comment|/// Should we be emitting segmented stack stuff for the function
 name|bool
 name|shouldSplitStack
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getNumBlockIDs - Return the number of MBB ID's allocated.
 comment|///
 name|unsigned
@@ -1060,6 +1118,24 @@ name|iterator
 operator|>
 name|reverse_iterator
 expr_stmt|;
+comment|/// Support for MachineBasicBlock::getNextNode().
+specifier|static
+name|BasicBlockListType
+name|MachineFunction
+operator|::
+operator|*
+name|getSublistAccess
+argument_list|(
+argument|MachineBasicBlock *
+argument_list|)
+block|{
+return|return
+operator|&
+name|MachineFunction
+operator|::
+name|BasicBlocks
+return|;
+block|}
 comment|/// addLiveIn - Add the specified physical register as a live-in value and
 comment|/// create a corresponding virtual register for it.
 name|unsigned
@@ -1329,6 +1405,29 @@ parameter_list|(
 name|iterator
 name|InsertPt
 parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|)
+block|{
+name|BasicBlocks
+operator|.
+name|splice
+argument_list|(
+name|InsertPt
+argument_list|,
+name|BasicBlocks
+argument_list|,
+name|MBB
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|splice
+parameter_list|(
+name|iterator
+name|InsertPt
+parameter_list|,
 name|iterator
 name|MBBI
 parameter_list|,
@@ -1366,6 +1465,22 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
+name|remove
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|MBBI
+parameter_list|)
+block|{
+name|BasicBlocks
+operator|.
+name|remove
+argument_list|(
+name|MBBI
+argument_list|)
+expr_stmt|;
+block|}
+name|void
 name|erase
 parameter_list|(
 name|iterator
@@ -1380,6 +1495,40 @@ name|MBBI
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|erase
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|MBBI
+parameter_list|)
+block|{
+name|BasicBlocks
+operator|.
+name|erase
+argument_list|(
+name|MBBI
+argument_list|)
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|Comp
+operator|>
+name|void
+name|sort
+argument_list|(
+argument|Comp comp
+argument_list|)
+block|{
+name|BasicBlocks
+operator|.
+name|sort
+argument_list|(
+name|comp
+argument_list|)
+block|;   }
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal functions used to automatically number MachineBasicBlocks
 comment|//
@@ -1388,11 +1537,9 @@ comment|/// assigned to the MBB.
 comment|///
 name|unsigned
 name|addToMBBNumbering
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|)
 block|{
 name|MBBNumbering
 operator|.
@@ -1400,7 +1547,7 @@ name|push_back
 argument_list|(
 name|MBB
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 name|unsigned
@@ -1735,6 +1882,16 @@ argument_list|,
 argument|MachineInstr::mmo_iterator End
 argument_list|)
 expr_stmt|;
+comment|/// Allocate a string and populate it with the given external symbol name.
+specifier|const
+name|char
+modifier|*
+name|createExternalSymbolName
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Label Manipulation.
 comment|//

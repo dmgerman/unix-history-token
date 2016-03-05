@@ -339,11 +339,16 @@ decl_stmt|;
 comment|/// \brief Array of the declarations that have been found. This
 comment|/// array is constructed only if needed, e.g., to iterate over the
 comment|/// results within LookupResult.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|NamedDecl
-modifier|*
-modifier|*
+operator|*
+index|[]
+operator|>
 name|DeclsFound
-decl_stmt|;
+expr_stmt|;
 name|unsigned
 name|NumDeclsFound
 decl_stmt|;
@@ -370,12 +375,7 @@ argument_list|,
 name|CXXRecordDecl
 operator|::
 name|BaseMatchesCallback
-operator|*
 name|BaseMatches
-argument_list|,
-name|void
-operator|*
-name|UserData
 argument_list|)
 decl_stmt|;
 name|public
@@ -440,24 +440,11 @@ argument_list|(
 name|nullptr
 argument_list|)
 operator|,
-name|DeclsFound
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|NumDeclsFound
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
-operator|~
-name|CXXBasePaths
-argument_list|()
-block|{
-name|delete
-index|[]
-name|DeclsFound
-block|; }
+block|{}
 name|paths_iterator
 name|begin
 argument_list|()

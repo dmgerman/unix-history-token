@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ItaniumABILanguageRuntime.h ----------------------------------------*- C++ -*-===//
+comment|//===-- ItaniumABILanguageRuntime.h -----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -89,18 +95,6 @@ directive|include
 file|"lldb/Core/Value.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -118,38 +112,9 @@ operator|:
 operator|~
 name|ItaniumABILanguageRuntime
 argument_list|()
-block|{ }
-name|virtual
-name|bool
-name|IsVTableName
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|GetDynamicTypeAndAddress
-argument_list|(
-argument|ValueObject&in_value
-argument_list|,
-argument|lldb::DynamicValueType use_dynamic
-argument_list|,
-argument|TypeAndOrName&class_type_or_name
-argument_list|,
-argument|Address&address
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|CouldHaveDynamicValue
-argument_list|(
-name|ValueObject
-operator|&
-name|in_value
-argument_list|)
+name|override
+operator|=
+expr|default
 block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
@@ -183,44 +148,66 @@ name|ConstString
 name|GetPluginNameStatic
 argument_list|()
 block|;
-comment|//------------------------------------------------------------------
-comment|// PluginInterface protocol
-comment|//------------------------------------------------------------------
-name|virtual
-name|lldb_private
-operator|::
-name|ConstString
-name|GetPluginName
-argument_list|()
+name|bool
+name|IsVTableName
+argument_list|(
+argument|const char *name
+argument_list|)
+name|override
 block|;
-name|virtual
-name|uint32_t
-name|GetPluginVersion
-argument_list|()
+name|bool
+name|GetDynamicTypeAndAddress
+argument_list|(
+argument|ValueObject&in_value
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|,
+argument|TypeAndOrName&class_type_or_name
+argument_list|,
+argument|Address&address
+argument_list|,
+argument|Value::ValueType&value_type
+argument_list|)
+name|override
 block|;
-name|virtual
+name|TypeAndOrName
+name|FixUpDynamicType
+argument_list|(
+argument|const TypeAndOrName& type_and_or_name
+argument_list|,
+argument|ValueObject& static_value
+argument_list|)
+name|override
+block|;
+name|bool
+name|CouldHaveDynamicValue
+argument_list|(
+argument|ValueObject&in_value
+argument_list|)
+name|override
+block|;
 name|void
 name|SetExceptionBreakpoints
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ClearExceptionBreakpoints
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|ExceptionBreakpointsAreSet
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|ExceptionBreakpointsExplainStop
 argument_list|(
 argument|lldb::StopInfoSP stop_reason
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|BreakpointResolverSP
@@ -232,32 +219,29 @@ argument|bool catch_bp
 argument_list|,
 argument|bool throw_bp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|SearchFilterSP
 name|CreateExceptionSearchFilter
 argument_list|()
+name|override
 block|;
-name|virtual
-name|size_t
-name|GetAlternateManglings
-argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|mangled
-argument_list|,
-name|std
+comment|//------------------------------------------------------------------
+comment|// PluginInterface protocol
+comment|//------------------------------------------------------------------
+name|lldb_private
 operator|::
-name|vector
-operator|<
 name|ConstString
-operator|>
-operator|&
-name|alternates
-argument_list|)
+name|GetPluginName
+argument_list|()
+name|override
+block|;
+name|uint32_t
+name|GetPluginVersion
+argument_list|()
+name|override
 block|;
 name|protected
 operator|:

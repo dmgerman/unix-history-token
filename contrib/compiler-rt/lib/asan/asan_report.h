@@ -212,7 +212,34 @@ parameter_list|)
 function_decl|;
 comment|// Different kinds of error reports.
 name|void
-name|NORETURN
+name|ReportGenericError
+parameter_list|(
+name|uptr
+name|pc
+parameter_list|,
+name|uptr
+name|bp
+parameter_list|,
+name|uptr
+name|sp
+parameter_list|,
+name|uptr
+name|addr
+parameter_list|,
+name|bool
+name|is_write
+parameter_list|,
+name|uptr
+name|access_size
+parameter_list|,
+name|u32
+name|exp
+parameter_list|,
+name|bool
+name|fatal
+parameter_list|)
+function_decl|;
+name|void
 name|ReportStackOverflow
 parameter_list|(
 specifier|const
@@ -222,8 +249,7 @@ name|sig
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
-name|ReportSIGSEGV
+name|ReportDeadlySignal
 parameter_list|(
 specifier|const
 name|char
@@ -237,7 +263,6 @@ name|sig
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportNewDeleteSizeMismatch
 parameter_list|(
 name|uptr
@@ -252,7 +277,6 @@ name|free_stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportDoubleFree
 parameter_list|(
 name|uptr
@@ -264,7 +288,6 @@ name|free_stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportFreeNotMalloced
 parameter_list|(
 name|uptr
@@ -276,7 +299,6 @@ name|free_stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportAllocTypeMismatch
 parameter_list|(
 name|uptr
@@ -294,7 +316,6 @@ name|dealloc_type
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportMallocUsableSizeNotOwned
 parameter_list|(
 name|uptr
@@ -306,7 +327,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportSanitizerGetAllocatedSizeNotOwned
 parameter_list|(
 name|uptr
@@ -318,7 +338,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportStringFunctionMemoryRangesOverlap
 parameter_list|(
 specifier|const
@@ -348,7 +367,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportStringFunctionSizeOverflow
 parameter_list|(
 name|uptr
@@ -363,7 +381,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportBadParamsToAnnotateContiguousContainer
 parameter_list|(
 name|uptr
@@ -384,7 +401,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportODRViolation
 parameter_list|(
 specifier|const
@@ -406,26 +422,6 @@ parameter_list|)
 function_decl|;
 comment|// Mac-specific errors and warnings.
 name|void
-name|WarnMacFreeUnallocated
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-name|zone_ptr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|zone_name
-parameter_list|,
-name|BufferedStackTrace
-modifier|*
-name|stack
-parameter_list|)
-function_decl|;
-name|void
-name|NORETURN
 name|ReportMacMzReallocUnknown
 parameter_list|(
 name|uptr
@@ -445,7 +441,6 @@ name|stack
 parameter_list|)
 function_decl|;
 name|void
-name|NORETURN
 name|ReportMacCfReallocUnknown
 parameter_list|(
 name|uptr

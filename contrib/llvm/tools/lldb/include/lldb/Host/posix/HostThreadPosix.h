@@ -74,10 +74,10 @@ argument_list|(
 argument|lldb::thread_t thread
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|HostThreadPosix
 argument_list|()
+name|override
 block|;
 name|Error
 name|Join
@@ -99,10 +99,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// lldb_Host_posix_HostThreadPosix_h_
+end_comment
 
 end_unit
 

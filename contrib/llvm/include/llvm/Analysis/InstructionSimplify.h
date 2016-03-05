@@ -1100,6 +1100,7 @@ name|AC
 init|=
 name|nullptr
 parameter_list|,
+specifier|const
 name|Instruction
 modifier|*
 name|CxtI

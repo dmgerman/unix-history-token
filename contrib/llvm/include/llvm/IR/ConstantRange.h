@@ -247,6 +247,32 @@ operator|&
 name|Other
 argument_list|)
 decl_stmt|;
+comment|/// Return the largest range containing all X such that "X BinOpC C" does not
+comment|/// wrap (overflow).
+comment|///
+comment|/// Example:
+comment|///  typedef OverflowingBinaryOperator OBO;
+comment|///  makeNoWrapRegion(Add, i8 1, OBO::NoSignedWrap) == [-128, 127)
+comment|///  makeNoWrapRegion(Add, i8 1, OBO::NoUnsignedWrap) == [0, -1)
+comment|///  makeNoWrapRegion(Add, i8 0, OBO::NoUnsignedWrap) == Full Set
+specifier|static
+name|ConstantRange
+name|makeNoWrapRegion
+argument_list|(
+name|Instruction
+operator|::
+name|BinaryOps
+name|BinOp
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|NoWrapKind
+argument_list|)
+decl_stmt|;
 comment|/// Return the lower value for this range.
 comment|///
 specifier|const

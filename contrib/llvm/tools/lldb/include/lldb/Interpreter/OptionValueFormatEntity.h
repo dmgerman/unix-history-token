@@ -91,10 +91,10 @@ operator|*
 name|default_format
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|OptionValueFormatEntity
 argument_list|()
+name|override
 block|{     }
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides

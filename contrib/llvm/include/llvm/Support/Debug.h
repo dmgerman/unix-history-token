@@ -60,7 +60,7 @@ comment|// enabled automatically if you specify '-debug' on the command-line.
 end_comment
 
 begin_comment
-comment|// Alternatively, you can also define the DEBUG_TYPE macro to "foo" specify
+comment|// DEBUG() requires the DEBUG_TYPE macro to be defined. Set it to "foo" specify
 end_comment
 
 begin_comment

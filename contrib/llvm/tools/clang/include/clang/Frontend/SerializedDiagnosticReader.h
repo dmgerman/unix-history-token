@@ -288,7 +288,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit the end of a diagnostic block.
 name|virtual
 name|std
@@ -304,7 +303,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a category. This associates the category \c ID to a \c Name.
 name|virtual
 name|std
@@ -324,7 +322,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a flag. This associates the flag's \c ID to a \c Name.
 name|virtual
 name|std
@@ -344,7 +341,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a diagnostic.
 name|virtual
 name|std
@@ -370,7 +366,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a filename. This associates the file's \c ID to a \c Name.
 name|virtual
 name|std
@@ -394,7 +389,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a fixit hint.
 name|virtual
 name|std
@@ -416,7 +410,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit a source range.
 name|virtual
 name|std
@@ -436,7 +429,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Visit the version of the set of diagnostics.
 name|virtual
 name|std
@@ -454,7 +446,6 @@ name|error_code
 argument_list|()
 return|;
 block|}
-empty_stmt|;
 block|}
 empty_stmt|;
 block|}

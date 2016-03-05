@@ -106,18 +106,6 @@ comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 01/02/2012.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -190,9 +178,7 @@ operator|:
 name|virtual
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 block|;
@@ -201,9 +187,7 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetName
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -224,9 +208,7 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetError
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -234,9 +216,7 @@ block|;
 name|virtual
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|=
 literal|0
 block|;
@@ -248,9 +228,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|IMedium
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
 block|}
 block|;
@@ -304,9 +282,7 @@ argument_list|)
 block|;
 name|bool
 name|GetEnabled
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// MI common object handling - duplicate of CMICmnBase functions, necessary for LINUX build
@@ -315,9 +291,7 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetErrorDescription
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|void
@@ -329,9 +303,7 @@ specifier|const
 block|;
 name|void
 name|ClrErrorDescription
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Overridden:
@@ -340,16 +312,12 @@ operator|:
 comment|// From MI::ISingleton
 name|bool
 name|Initialize
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Shutdown
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -357,9 +325,7 @@ name|private
 operator|:
 comment|/* ctor */
 name|CMICmnLog
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmnLog
@@ -385,9 +351,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnLog
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Typedef:
@@ -447,9 +411,7 @@ end_decl_stmt
 begin_function_decl
 name|bool
 name|UnregisterMediumAll
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 

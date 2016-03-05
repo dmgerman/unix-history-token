@@ -101,6 +101,8 @@ name|invalid_section_index
 operator|,
 name|bitcode_section_not_found
 operator|,
+name|elf_invalid_dynamic_table_size
+operator|,
 name|macho_small_load_command
 operator|,
 name|macho_load_segment_too_many_sections

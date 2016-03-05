@@ -826,6 +826,23 @@ name|error
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Load a shared library into this process.
+comment|///
+comment|/// @param[in] remote_image_spec
+comment|///     The path for the shared library on the target what you want
+comment|///     to load.
+comment|///
+comment|/// @param[out] error
+comment|///     An error object that gets filled in with any errors that
+comment|///     might occur when trying to load the shared library.
+comment|///
+comment|/// @return
+comment|///     A token that represents the shared library that can be
+comment|///     later used to unload the shared library. A value of
+comment|///     LLDB_INVALID_IMAGE_TOKEN will be returned if the shared
+comment|///     library can't be opened.
+comment|//------------------------------------------------------------------
 name|uint32_t
 name|LoadImage
 argument_list|(
@@ -833,7 +850,57 @@ name|lldb
 operator|::
 name|SBFileSpec
 operator|&
-name|image_spec
+name|remote_image_spec
+argument_list|,
+name|lldb
+operator|::
+name|SBError
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Load a shared library into this process.
+comment|///
+comment|/// @param[in] local_image_spec
+comment|///     The file spec that points to the shared library that you
+comment|///     want to load if the library is located on the host. The
+comment|///     library will be copied over to the location specified by
+comment|///     remote_image_spec or into the current working directory with
+comment|///     the same filename if the remote_image_spec isn't specified.
+comment|///
+comment|/// @param[in] remote_image_spec
+comment|///     If local_image_spec is specified then the location where the
+comment|///     library should be copied over from the host. If
+comment|///     local_image_spec isn't specified, then the path for the
+comment|///     shared library on the target what you want to load.
+comment|///
+comment|/// @param[out] error
+comment|///     An error object that gets filled in with any errors that
+comment|///     might occur when trying to load the shared library.
+comment|///
+comment|/// @return
+comment|///     A token that represents the shared library that can be
+comment|///     later used to unload the shared library. A value of
+comment|///     LLDB_INVALID_IMAGE_TOKEN will be returned if the shared
+comment|///     library can't be opened.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|LoadImage
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBFileSpec
+operator|&
+name|local_image_spec
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|SBFileSpec
+operator|&
+name|remote_image_spec
 argument_list|,
 name|lldb
 operator|::
@@ -915,6 +982,18 @@ name|InstrumentationRuntimeType
 name|type
 parameter_list|)
 function_decl|;
+comment|// Save the state of the process in a core file (or mini dump on Windows).
+name|lldb
+operator|::
+name|SBError
+name|SaveCore
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|file_name
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 name|friend

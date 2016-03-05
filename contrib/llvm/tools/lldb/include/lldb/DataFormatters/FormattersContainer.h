@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- FormattersContainer.h ----------------------------------------*- C++ -*-===//
+comment|//===-- FormattersContainer.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -51,27 +51,33 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/DeclCXX.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/DeclObjC.h"
-end_include
 
 begin_comment
 comment|// Project includes
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Log.h"
 end_include
 
 begin_include
@@ -134,37 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/ClangASTType.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ObjCLanguageRuntime.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/Process.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/StackFrame.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/TargetList.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -177,15 +147,18 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// this file (and its. cpp) contain the low-level implementation of LLDB Data Visualization
-comment|// class DataVisualization is the high-level front-end of this feature
-comment|// clients should refer to that class as the entry-point into the data formatters
-comment|// unless they have a good reason to bypass it and prefer to use this file's objects directly
 name|class
 name|IFormatChangeListener
 block|{
 name|public
 label|:
+name|virtual
+operator|~
+name|IFormatChangeListener
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|Changed
@@ -194,17 +167,12 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-operator|~
-name|IFormatChangeListener
-argument_list|()
-block|{}
-name|virtual
 name|uint32_t
 name|GetCurrentRevision
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 comment|// if the user tries to add formatters for, say, "struct Foo"
@@ -359,22 +327,21 @@ name|iterator
 name|MapIterator
 expr_stmt|;
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|bool
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
+argument_list|(
 name|KeyType
-parameter_list|,
+argument_list|,
 specifier|const
 name|ValueSP
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+operator|>
+name|ForEachCallback
+expr_stmt|;
 name|FormatMap
 argument_list|(
 name|IFormatChangeListener
@@ -600,14 +567,10 @@ end_function
 
 begin_function
 name|void
-name|LoopThrough
+name|ForEach
 parameter_list|(
-name|CallbackType
+name|ForEachCallback
 name|callback
-parameter_list|,
-name|void
-modifier|*
-name|param
 parameter_list|)
 block|{
 if|if
@@ -662,8 +625,6 @@ condition|(
 operator|!
 name|callback
 argument_list|(
-name|param
-argument_list|,
 name|type
 argument_list|,
 name|pos
@@ -959,8 +920,8 @@ typedef|typedef
 name|typename
 name|BackEndType
 operator|::
-name|CallbackType
-name|CallbackType
+name|ForEachCallback
+name|ForEachCallback
 expr_stmt|;
 end_typedef
 
@@ -1024,11 +985,14 @@ name|type
 argument_list|,
 name|entry
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-name|NULL
 argument_list|)
 block|;     }
 name|bool
@@ -1042,11 +1006,14 @@ name|Delete_Impl
 argument_list|(
 name|type
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -1073,7 +1040,7 @@ name|uint32_t
 operator|*
 name|why
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|{
 name|uint32_t
@@ -1083,12 +1050,12 @@ name|lldb_private
 operator|::
 name|eFormatterChoiceCriterionDirectChoice
 decl_stmt|;
-name|ClangASTType
+name|CompilerType
 name|ast_type
 argument_list|(
 name|valobj
 operator|.
-name|GetClangType
+name|GetCompilerType
 argument_list|()
 argument_list|)
 decl_stmt|;
@@ -1159,11 +1126,14 @@ name|type
 argument_list|,
 name|entry
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -1188,11 +1158,14 @@ name|type
 argument_list|,
 name|entry
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -1231,11 +1204,14 @@ name|GetTypeNameSpecifierAtIndex_Impl
 argument_list|(
 name|index
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -1256,23 +1232,17 @@ end_function
 
 begin_function
 name|void
-name|LoopThrough
+name|ForEach
 parameter_list|(
-name|CallbackType
+name|ForEachCallback
 name|callback
-parameter_list|,
-name|void
-modifier|*
-name|param
 parameter_list|)
 block|{
 name|m_format_map
 operator|.
-name|LoopThrough
+name|ForEach
 argument_list|(
 name|callback
-argument_list|,
-name|param
 argument_list|)
 expr_stmt|;
 block|}
@@ -1589,11 +1559,14 @@ name|type
 argument_list|,
 name|entry
 argument_list|,
-operator|(
+name|static_cast
+operator|<
 name|KeyType
 operator|*
+operator|>
+operator|(
+name|nullptr
 operator|)
-literal|0
 argument_list|)
 return|;
 block|}
@@ -1672,7 +1645,7 @@ operator|.
 name|get
 argument_list|()
 operator|==
-name|NULL
+name|nullptr
 condition|)
 return|return
 name|lldb
@@ -1955,7 +1928,6 @@ range|:
 name|candidates
 control|)
 block|{
-comment|// FIXME: could we do the IsMatch() check first?
 if|if
 condition|(
 name|Get

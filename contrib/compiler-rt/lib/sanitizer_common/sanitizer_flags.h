@@ -176,7 +176,7 @@ name|common_flags_dont_use
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterIncludeFlag
+name|RegisterIncludeFlags
 parameter_list|(
 name|FlagParser
 modifier|*

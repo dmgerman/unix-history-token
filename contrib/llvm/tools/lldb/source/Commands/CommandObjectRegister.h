@@ -90,10 +90,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectRegister
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

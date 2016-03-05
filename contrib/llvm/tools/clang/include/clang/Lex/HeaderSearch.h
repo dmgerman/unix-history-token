@@ -164,7 +164,8 @@ name|DirInfo
 range|:
 literal|2
 decl_stmt|;
-comment|/// \brief Whether this header file info was supplied by an external source.
+comment|/// \brief Whether this header file info was supplied by an external source,
+comment|/// and has not changed since.
 name|unsigned
 name|External
 range|:
@@ -181,13 +182,6 @@ name|unsigned
 name|isCompilingModuleHeader
 range|:
 literal|1
-decl_stmt|;
-comment|/// \brief Whether this header is part of the module that we are building.
-comment|/// This is an instance of ModuleMap::ModuleHeaderRole.
-name|unsigned
-name|HeaderRole
-range|:
-literal|2
 decl_stmt|;
 comment|/// \brief Whether this structure is considered to already have been
 comment|/// "resolved", meaning that it was loaded from the external source.
@@ -208,7 +202,7 @@ name|IndexHeaderMapHeader
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether this file had been looked up as a header.
+comment|/// \brief Whether this file has been looked up as a header.
 name|unsigned
 name|IsValid
 range|:
@@ -280,13 +274,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|HeaderRole
-argument_list|(
-name|ModuleMap
-operator|::
-name|NormalHeader
-argument_list|)
-operator|,
 name|Resolved
 argument_list|(
 name|false
@@ -347,41 +334,6 @@ name|ControllingMacro
 operator|||
 name|ControllingMacroID
 return|;
-block|}
-comment|/// \brief Get the HeaderRole properly typed.
-name|ModuleMap
-operator|::
-name|ModuleHeaderRole
-name|getHeaderRole
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|ModuleMap
-operator|::
-name|ModuleHeaderRole
-operator|>
-operator|(
-name|HeaderRole
-operator|)
-return|;
-block|}
-comment|/// \brief Set the HeaderRole properly typed.
-name|void
-name|setHeaderRole
-argument_list|(
-name|ModuleMap
-operator|::
-name|ModuleHeaderRole
-name|Role
-argument_list|)
-block|{
-name|HeaderRole
-operator|=
-name|Role
-expr_stmt|;
 block|}
 block|}
 struct|;
@@ -508,6 +460,7 @@ name|ModuleCachePath
 expr_stmt|;
 comment|/// \brief All of the preprocessor-specific data about files that are
 comment|/// included, indexed by the FileEntry's UID.
+name|mutable
 name|std
 operator|::
 name|vector
@@ -1227,6 +1180,10 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
+name|Module
+operator|*
+name|RequestingModule
+argument_list|,
 name|ModuleMap
 operator|::
 name|KnownHeader
@@ -1271,6 +1228,10 @@ name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
 argument_list|,
 name|ModuleMap
 operator|::
@@ -1713,35 +1674,96 @@ modifier|&
 name|SearchDir
 parameter_list|)
 function_decl|;
-comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
-specifier|const
-name|HeaderFileInfo
-modifier|&
-name|getFileInfo
+comment|/// \brief Find and suggest a usable module for the given file.
+comment|///
+comment|/// \return \c true if the file can be used, \c false if we are not permitted to
+comment|///         find this file due to requirements from \p RequestingModule.
+name|bool
+name|findUsableModuleForHeader
 argument_list|(
 specifier|const
 name|FileEntry
 operator|*
-name|FE
-argument_list|)
-decl|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|HeaderSearch
+name|File
+argument_list|,
+specifier|const
+name|DirectoryEntry
 operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getFileInfo
-argument_list|(
-name|FE
+name|Root
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
+argument_list|,
+name|ModuleMap
+operator|::
+name|KnownHeader
+operator|*
+name|SuggestedModule
+argument_list|,
+name|bool
+name|IsSystemHeaderDir
 argument_list|)
-return|;
-block|}
+decl_stmt|;
+comment|/// \brief Find and suggest a usable module for the given file, which is part of
+comment|/// the specified framework.
+comment|///
+comment|/// \return \c true if the file can be used, \c false if we are not permitted to
+comment|///         find this file due to requirements from \p RequestingModule.
+name|bool
+name|findUsableModuleForFrameworkHeader
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|,
+name|StringRef
+name|FrameworkDir
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
+argument_list|,
+name|ModuleMap
+operator|::
+name|KnownHeader
+operator|*
+name|SuggestedModule
+argument_list|,
+name|bool
+name|IsSystemFramework
+argument_list|)
+decl_stmt|;
+comment|/// \brief Look up the file with the specified name and determine its owning
+comment|/// module.
+specifier|const
+name|FileEntry
+modifier|*
+name|getFileAndSuggestModule
+argument_list|(
+name|StringRef
+name|FileName
+argument_list|,
+specifier|const
+name|DirectoryEntry
+operator|*
+name|Dir
+argument_list|,
+name|bool
+name|IsSystemHeaderDir
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
+argument_list|,
+name|ModuleMap
+operator|::
+name|KnownHeader
+operator|*
+name|SuggestedModule
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Retrieve the module map.
@@ -1749,6 +1771,18 @@ name|ModuleMap
 modifier|&
 name|getModuleMap
 parameter_list|()
+block|{
+return|return
+name|ModMap
+return|;
+block|}
+comment|/// \brief Retrieve the module map.
+specifier|const
+name|ModuleMap
+operator|&
+name|getModuleMap
+argument_list|()
+specifier|const
 block|{
 return|return
 name|ModMap
@@ -1766,19 +1800,36 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// \brief Get a \c HeaderFileInfo structure for the specified \c FileEntry,
-comment|/// if one exists.
-name|bool
-name|tryGetFileInfo
+comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry,
+comment|/// in preparation for updating it in some way.
+name|HeaderFileInfo
+modifier|&
+name|getFileInfo
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|FE
+parameter_list|)
+function_decl|;
+comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry,
+comment|/// if it has ever been filled in.
+comment|/// \param WantExternal Whether the caller wants purely-external header file
+comment|///        info (where \p External is true).
+specifier|const
+name|HeaderFileInfo
+modifier|*
+name|getExistingFileInfo
 argument_list|(
 specifier|const
 name|FileEntry
 operator|*
 name|FE
 argument_list|,
-name|HeaderFileInfo
-operator|&
-name|Result
+name|bool
+name|WantExternal
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2018,17 +2069,6 @@ name|IsSystem
 parameter_list|,
 name|bool
 name|IsFramework
-parameter_list|)
-function_decl|;
-comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
-name|HeaderFileInfo
-modifier|&
-name|getFileInfo
-parameter_list|(
-specifier|const
-name|FileEntry
-modifier|*
-name|FE
 parameter_list|)
 function_decl|;
 block|}

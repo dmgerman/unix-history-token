@@ -1215,8 +1215,6 @@ operator|>
 name|ipo_begin
 argument_list|(
 argument|const T&G
-argument_list|,
-argument|bool Reverse = false
 argument_list|)
 block|{
 return|return
@@ -1228,8 +1226,6 @@ operator|::
 name|begin
 argument_list|(
 name|G
-argument_list|,
-name|Reverse
 argument_list|)
 return|;
 block|}
@@ -1279,8 +1275,6 @@ operator|>>
 name|inverse_post_order
 argument_list|(
 argument|const T&G
-argument_list|,
-argument|bool Reverse = false
 argument_list|)
 block|{
 return|return
@@ -1289,8 +1283,6 @@ argument_list|(
 name|ipo_begin
 argument_list|(
 name|G
-argument_list|,
-name|Reverse
 argument_list|)
 argument_list|,
 name|ipo_end

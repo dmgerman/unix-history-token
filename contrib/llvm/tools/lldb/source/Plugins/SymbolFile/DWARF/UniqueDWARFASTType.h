@@ -77,23 +77,11 @@ directive|include
 file|"lldb/Symbol/Declaration.h"
 end_include
 
-begin_decl_stmt
-name|class
-name|DWARFCompileUnit
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
-name|DWARFDebugInfoEntry
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|class
-name|SymbolFileDWARF
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"DWARFDIE.h"
+end_include
 
 begin_decl_stmt
 name|class
@@ -110,20 +98,8 @@ operator|:
 name|m_type_sp
 argument_list|()
 operator|,
-name|m_symfile
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|m_cu
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
 name|m_die
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 operator|,
 name|m_declaration
 argument_list|()
@@ -139,11 +115,7 @@ name|UniqueDWARFASTType
 argument_list|(
 argument|lldb::TypeSP&type_sp
 argument_list|,
-argument|SymbolFileDWARF *symfile
-argument_list|,
-argument|DWARFCompileUnit *cu
-argument_list|,
-argument|DWARFDebugInfoEntry *die
+argument|const DWARFDIE&die
 argument_list|,
 argument|const lldb_private::Declaration&decl
 argument_list|,
@@ -153,16 +125,6 @@ operator|:
 name|m_type_sp
 argument_list|(
 name|type_sp
-argument_list|)
-operator|,
-name|m_symfile
-argument_list|(
-name|symfile
-argument_list|)
-operator|,
-name|m_cu
-argument_list|(
-name|cu
 argument_list|)
 operator|,
 name|m_die
@@ -193,20 +155,6 @@ argument_list|(
 name|rhs
 operator|.
 name|m_type_sp
-argument_list|)
-operator|,
-name|m_symfile
-argument_list|(
-name|rhs
-operator|.
-name|m_symfile
-argument_list|)
-operator|,
-name|m_cu
-argument_list|(
-name|rhs
-operator|.
-name|m_cu
 argument_list|)
 operator|,
 name|m_die
@@ -257,18 +205,6 @@ name|rhs
 operator|.
 name|m_type_sp
 expr_stmt|;
-name|m_symfile
-operator|=
-name|rhs
-operator|.
-name|m_symfile
-expr_stmt|;
-name|m_cu
-operator|=
-name|rhs
-operator|.
-name|m_cu
-expr_stmt|;
 name|m_die
 operator|=
 name|rhs
@@ -298,18 +234,7 @@ operator|::
 name|TypeSP
 name|m_type_sp
 expr_stmt|;
-name|SymbolFileDWARF
-modifier|*
-name|m_symfile
-decl_stmt|;
-specifier|const
-name|DWARFCompileUnit
-modifier|*
-name|m_cu
-decl_stmt|;
-specifier|const
-name|DWARFDebugInfoEntry
-modifier|*
+name|DWARFDIE
 name|m_die
 decl_stmt|;
 name|lldb_private
@@ -377,18 +302,9 @@ block|}
 name|bool
 name|Find
 argument_list|(
-name|SymbolFileDWARF
-operator|*
-name|symfile
-argument_list|,
 specifier|const
-name|DWARFCompileUnit
-operator|*
-name|cu
-argument_list|,
-specifier|const
-name|DWARFDebugInfoEntry
-operator|*
+name|DWARFDIE
+operator|&
 name|die
 argument_list|,
 specifier|const
@@ -471,11 +387,7 @@ name|Find
 argument_list|(
 argument|const lldb_private::ConstString&name
 argument_list|,
-argument|SymbolFileDWARF *symfile
-argument_list|,
-argument|const DWARFCompileUnit *cu
-argument_list|,
-argument|const DWARFDebugInfoEntry *die
+argument|const DWARFDIE&die
 argument_list|,
 argument|const lldb_private::Declaration&decl
 argument_list|,
@@ -524,10 +436,6 @@ name|second
 operator|.
 name|Find
 argument_list|(
-name|symfile
-argument_list|,
-name|cu
-argument_list|,
 name|die
 argument_list|,
 name|decl

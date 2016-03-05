@@ -70,6 +70,9 @@ extern|extern llvm::cl::opt<bool> NoEnumDefs;
 extern|extern llvm::cl::list<std::string> ExcludeTypes;
 extern|extern llvm::cl::list<std::string> ExcludeSymbols;
 extern|extern llvm::cl::list<std::string> ExcludeCompilands;
+extern|extern llvm::cl::list<std::string> IncludeTypes;
+extern|extern llvm::cl::list<std::string> IncludeSymbols;
+extern|extern llvm::cl::list<std::string> IncludeCompilands;
 block|}
 end_decl_stmt
 

@@ -62,6 +62,9 @@ decl_stmt|;
 name|class
 name|SlotTracker
 decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 comment|/// Manage lifetime of a slot tracker for printing IR.
 comment|///
 comment|/// Wrapper around the \a SlotTracker used internally by \a AsmWriter.  This
@@ -193,6 +196,20 @@ specifier|const
 name|Function
 modifier|&
 name|F
+parameter_list|)
+function_decl|;
+comment|/// Return the slot number of the specified local value.
+comment|///
+comment|/// A function that defines this value should be incorporated prior to calling
+comment|/// this method.
+comment|/// Return -1 if the value is not in the function's SlotTracker.
+name|int
+name|getLocalSlot
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 block|}

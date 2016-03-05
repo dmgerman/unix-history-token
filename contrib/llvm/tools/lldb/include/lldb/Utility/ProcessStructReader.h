@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -115,7 +115,7 @@ label|:
 struct|struct
 name|FieldImpl
 block|{
-name|ClangASTType
+name|CompilerType
 name|type
 decl_stmt|;
 name|size_t
@@ -155,7 +155,7 @@ argument|Process *process
 argument_list|,
 argument|lldb::addr_t base_addr
 argument_list|,
-argument|ClangASTType struct_type
+argument|CompilerType struct_type
 argument_list|)
 block|{
 if|if
@@ -221,7 +221,7 @@ decl_stmt|;
 name|bool
 name|is_bitfield
 decl_stmt|;
-name|ClangASTType
+name|CompilerType
 name|field_type
 init|=
 name|struct_type

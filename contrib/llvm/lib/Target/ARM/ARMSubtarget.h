@@ -204,14 +204,22 @@ name|CortexR4F
 block|,
 name|CortexR5
 block|,
-name|Swift
+name|CortexR7
+block|,
+name|CortexA35
 block|,
 name|CortexA53
 block|,
 name|CortexA57
 block|,
+name|CortexA72
+block|,
 name|Krait
-block|,   }
+block|,
+name|Swift
+block|,
+name|ExynosM1
+block|}
 block|;   enum
 name|ARMProcClassEnum
 block|{
@@ -223,6 +231,55 @@ name|RClass
 block|,
 name|MClass
 block|}
+block|;   enum
+name|ARMArchEnum
+block|{
+name|ARMv2
+block|,
+name|ARMv2a
+block|,
+name|ARMv3
+block|,
+name|ARMv3m
+block|,
+name|ARMv4
+block|,
+name|ARMv4t
+block|,
+name|ARMv5
+block|,
+name|ARMv5t
+block|,
+name|ARMv5te
+block|,
+name|ARMv5tej
+block|,
+name|ARMv6
+block|,
+name|ARMv6k
+block|,
+name|ARMv6kz
+block|,
+name|ARMv6t2
+block|,
+name|ARMv6m
+block|,
+name|ARMv6sm
+block|,
+name|ARMv7a
+block|,
+name|ARMv7r
+block|,
+name|ARMv7m
+block|,
+name|ARMv7em
+block|,
+name|ARMv8a
+block|,
+name|ARMv81a
+block|,
+name|ARMv82a
+block|}
 block|;
 comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
 name|ARMProcFamilyEnum
@@ -231,6 +288,10 @@ block|;
 comment|/// ARMProcClass - ARM processor class: None, AClass, RClass or MClass.
 name|ARMProcClassEnum
 name|ARMProcClass
+block|;
+comment|/// ARMArch - ARM architecture
+name|ARMArchEnum
+name|ARMArch
 block|;
 comment|/// HasV4TOps, HasV5TOps, HasV5TEOps,
 comment|/// HasV6Ops, HasV6MOps, HasV6KOps, HasV6T2Ops, HasV7Ops, HasV8Ops -
@@ -264,6 +325,9 @@ name|HasV8Ops
 block|;
 name|bool
 name|HasV8_1aOps
+block|;
+name|bool
+name|HasV8_2aOps
 block|;
 comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasFPARMv8, HasNEON - Specify what
 comment|/// floating point ISAs are supported.
@@ -323,14 +387,14 @@ comment|/// NoARM - True if subtarget does not support ARM mode execution.
 name|bool
 name|NoARM
 block|;
-comment|/// IsR9Reserved - True if R9 is a not available as general purpose register.
+comment|/// ReserveR9 - True if R9 is not available as a general purpose register.
 name|bool
-name|IsR9Reserved
+name|ReserveR9
 block|;
-comment|/// UseMovt - True if MOVT / MOVW pairs are used for materialization of 32-bit
-comment|/// imms (including global addresses).
+comment|/// NoMovt - True if MOVT / MOVW pairs are not used for materialization of
+comment|/// 32-bit imms (including global addresses).
 name|bool
-name|UseMovt
+name|NoMovt
 block|;
 comment|/// SupportsTailCall - True if the OS supports tail call. The dynamic linker
 comment|/// must be able to synthesize call stubs for interworking between ARM and
@@ -338,10 +402,13 @@ comment|/// Thumb.
 name|bool
 name|SupportsTailCall
 block|;
-comment|/// HasFP16 - True if subtarget supports half-precision FP (We support VFP+HF
-comment|/// only so far)
+comment|/// HasFP16 - True if subtarget supports half-precision FP conversions
 name|bool
 name|HasFP16
+block|;
+comment|/// HasFullFP16 - True if subtarget supports half-precision FP operations
+name|bool
+name|HasFullFP16
 block|;
 comment|/// HasD16 - True if subtarget is limited to 16 double precision
 comment|/// FP registers for VFPv3.
@@ -425,21 +492,21 @@ comment|/// particularly effective at zeroing a VFP register.
 name|bool
 name|HasZeroCycleZeroing
 block|;
-comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
+comment|/// StrictAlign - If true, the subtarget disallows unaligned memory
 comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsMisalignedMemoryAccesses().
 name|bool
-name|AllowsUnalignedMem
+name|StrictAlign
 block|;
 comment|/// RestrictIT - If true, the subtarget disallows generation of deprecated IT
 comment|///  blocks to conform to ARMv8 rule.
 name|bool
 name|RestrictIT
 block|;
-comment|/// Thumb2DSP - If true, the subtarget supports the v7 DSP (saturating arith
-comment|/// and such) instructions in Thumb2 code.
+comment|/// HasDSP - If true, the subtarget supports the DSP (saturating arith
+comment|/// and such) instructions.
 name|bool
-name|Thumb2DSP
+name|HasDSP
 block|;
 comment|/// NaCl TRAP instruction is generated instead of the regular TRAP.
 name|bool
@@ -452,6 +519,10 @@ block|;
 comment|/// Target machine allowed unsafe FP math (such as use of NEON fp)
 name|bool
 name|UnsafeFPMath
+block|;
+comment|/// UseSjLjEH - If true, the target uses SjLj exception handling (e.g. iOS).
+name|bool
+name|UseSjLjEH
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -754,6 +825,15 @@ specifier|const
 block|{
 return|return
 name|HasV8_1aOps
+return|;
+block|}
+name|bool
+name|hasV8_2aOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8_2aOps
 return|;
 block|}
 name|bool
@@ -1138,12 +1218,12 @@ name|HasMPExtension
 return|;
 block|}
 name|bool
-name|hasThumb2DSP
+name|hasDSP
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Thumb2DSP
+name|HasDSP
 return|;
 block|}
 name|bool
@@ -1153,6 +1233,15 @@ specifier|const
 block|{
 return|return
 name|UseNaClTrap
+return|;
+block|}
+name|bool
+name|useSjLjEH
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSjLjEH
 return|;
 block|}
 name|bool
@@ -1180,6 +1269,15 @@ specifier|const
 block|{
 return|return
 name|HasD16
+return|;
+block|}
+name|bool
+name|hasFullFP16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFullFP16
 return|;
 block|}
 specifier|const
@@ -1214,6 +1312,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isiOS
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetWatchOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWatchOS
 argument_list|()
 return|;
 block|}
@@ -1343,6 +1453,41 @@ name|isTargetWindows
 argument_list|()
 return|;
 block|}
+name|bool
+name|isTargetGNUAEABI
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|GNUEABI
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|GNUEABIHF
+operator|)
+operator|&&
+operator|!
+name|isTargetDarwin
+argument_list|()
+operator|&&
+operator|!
+name|isTargetWindows
+argument_list|()
+return|;
+block|}
 comment|// ARM Targets that support EHABI exception handling standard
 comment|// Darwin uses SjLj. Other targets might need more checks.
 name|bool
@@ -1388,14 +1533,8 @@ name|Triple
 operator|::
 name|GNUEABIHF
 operator|||
-name|TargetTriple
-operator|.
-name|getEnvironment
+name|isTargetAndroid
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Android
 operator|)
 operator|&&
 operator|!
@@ -1434,6 +1573,9 @@ name|EABIHF
 operator|||
 name|isTargetWindows
 argument_list|()
+operator|||
+name|isAAPCS16_ABI
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1444,12 +1586,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getEnvironment
+name|isAndroid
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Android
 return|;
 block|}
 name|bool
@@ -1459,6 +1597,11 @@ specifier|const
 block|;
 name|bool
 name|isAAPCS_ABI
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isAAPCS16_ABI
 argument_list|()
 specifier|const
 block|;
@@ -1546,27 +1689,31 @@ name|AClass
 return|;
 block|}
 name|bool
-name|isV6M
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isThumb1Only
-argument_list|()
-operator|&&
-name|isMClass
-argument_list|()
-return|;
-block|}
-name|bool
 name|isR9Reserved
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsR9Reserved
+name|isTargetMachO
+argument_list|()
+operator|?
+operator|(
+name|ReserveR9
+operator|||
+operator|!
+name|HasV6Ops
+operator|)
+operator|:
+name|ReserveR9
 return|;
 block|}
+name|bool
+name|useStride4VFPs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|useMovt
 argument_list|(
@@ -1589,7 +1736,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AllowsUnalignedMem
+operator|!
+name|StrictAlign
 return|;
 block|}
 name|bool
@@ -1634,6 +1782,13 @@ name|bool
 name|hasSinCos
 argument_list|()
 specifier|const
+block|;
+comment|/// Returns true if machine scheduler should be enabled.
+name|bool
+name|enableMachineScheduler
+argument_list|()
+specifier|const
+name|override
 block|;
 comment|/// True for some subtargets at> -O0.
 name|bool

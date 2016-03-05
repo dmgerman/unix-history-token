@@ -243,6 +243,12 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|ModuleFileExtension
+decl_stmt|;
+name|class
+name|ModuleFileExtensionWriter
+decl_stmt|;
+name|class
 name|PreprocessedEntity
 decl_stmt|;
 name|class
@@ -318,6 +324,13 @@ name|uint64_t
 operator|>
 name|RecordDataImpl
 expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|RecordDataRef
+expr_stmt|;
 name|friend
 name|class
 name|ASTDeclWriter
@@ -387,6 +400,13 @@ operator|::
 name|string
 name|BaseDirectory
 expr_stmt|;
+comment|/// \brief Indicates whether timestamps should be written to the produced
+comment|/// module file. This is the case for files implicitly written to the
+comment|/// module cache, where we need the timestamps to determine if the module
+comment|/// file is up to date, but not otherwise.
+name|bool
+name|IncludeTimestamps
+decl_stmt|;
 comment|/// \brief Indicates when the AST writing is actively performing
 comment|/// serialization, rather than just queueing updates.
 name|bool
@@ -1223,23 +1243,6 @@ literal|16
 operator|>
 name|UpdatingVisibleDecls
 expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallSetVector
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-literal|16
-operator|>
-name|DeclsToRewriteTy
-expr_stmt|;
-comment|/// \brief Decls that will be replaced in the current dependent AST file.
-name|DeclsToRewriteTy
-name|DeclsToRewrite
-decl_stmt|;
 comment|/// \brief The set of Objective-C class that have categories we
 comment|/// should serialize.
 name|llvm
@@ -1336,6 +1339,22 @@ operator|,
 literal|16
 operator|>
 name|Redeclarations
+expr_stmt|;
+comment|/// \brief A cache of the first local declaration for "interesting"
+comment|/// redeclaration chains.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+specifier|const
+name|Decl
+operator|*
+operator|>
+name|FirstLocalDeclCache
 expr_stmt|;
 comment|/// \brief Statements that we've encountered while serializing a
 comment|/// declaration or type.
@@ -1567,6 +1586,19 @@ name|unsigned
 operator|>
 name|SubmoduleIDs
 expr_stmt|;
+comment|/// \brief A list of the module file extension writers.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleFileExtensionWriter
+operator|>>
+name|ModuleFileExtensionWriters
+expr_stmt|;
 comment|/// \brief Retrieve or create a submodule ID for this module.
 name|unsigned
 name|getSubmoduleID
@@ -1611,7 +1643,7 @@ name|void
 name|WriteBlockInfoBlock
 parameter_list|()
 function_decl|;
-name|void
+name|uint64_t
 name|WriteControlBlock
 argument_list|(
 name|Preprocessor
@@ -1759,7 +1791,7 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
-name|uint32_t
+name|void
 name|GenerateNameLookupTable
 argument_list|(
 specifier|const
@@ -1903,10 +1935,6 @@ name|WriteObjCCategories
 parameter_list|()
 function_decl|;
 name|void
-name|WriteRedeclarations
-parameter_list|()
-function_decl|;
-name|void
 name|WriteLateParsedTemplates
 parameter_list|(
 name|Sema
@@ -1920,6 +1948,18 @@ parameter_list|(
 name|Sema
 modifier|&
 name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteModuleFileExtension
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|,
+name|ModuleFileExtensionWriter
+modifier|&
+name|Writer
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -1996,7 +2036,7 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-name|void
+name|uint64_t
 name|WriteASTCore
 argument_list|(
 name|Sema
@@ -2024,13 +2064,13 @@ comment|/// \brief Create a new precompiled header writer that outputs to
 comment|/// the given bitstream.
 name|ASTWriter
 argument_list|(
-name|llvm
-operator|::
-name|BitstreamWriter
-operator|&
-name|Stream
+argument|llvm::BitstreamWriter&Stream
+argument_list|,
+argument|ArrayRef<llvm::IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument_list|,
+argument|bool IncludeTimestamps = true
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|ASTWriter
 argument_list|()
@@ -2043,6 +2083,19 @@ name|getLangOpts
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Get a timestamp for output into the AST file. The actual timestamp
+comment|/// of the specified file may be ignored if we have been instructed to not
+comment|/// include timestamps in the output file.
+name|time_t
+name|getTimestampForOutput
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|E
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
 comment|///
 comment|/// \param SemaRef a reference to the semantic analysis object that processed
@@ -2054,7 +2107,10 @@ comment|///
 comment|/// \param isysroot if non-empty, write a relocatable file whose headers
 comment|/// are relative to the given system root. If we're writing a module, its
 comment|/// build directory will be used in preference to this if both are available.
-name|void
+comment|///
+comment|/// \return the module signature, which eventually will be a hash of
+comment|/// the module but currently is merely a random 32-bit number.
+name|uint64_t
 name|WriteAST
 argument_list|(
 name|Sema
@@ -2385,6 +2441,19 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Find the first local declaration of a given local redeclarable
+comment|/// decl.
+specifier|const
+name|Decl
+modifier|*
+name|getFirstLocalDecl
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a reference to a declaration.
 name|void
 name|AddDeclRef
@@ -2687,8 +2756,7 @@ parameter_list|(
 name|unsigned
 name|Abbrev
 parameter_list|,
-name|RecordDataImpl
-modifier|&
+name|RecordDataRef
 name|Record
 parameter_list|,
 name|StringRef
@@ -2709,42 +2777,6 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-name|void
-name|RewriteDecl
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-block|{
-name|DeclsToRewrite
-operator|.
-name|insert
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|isRewritten
-argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|D
-argument_list|)
-decl|const
-block|{
-return|return
-name|DeclsToRewrite
-operator|.
-name|count
-argument_list|(
-name|D
-argument_list|)
-return|;
-block|}
 comment|/// \brief Infer the submodule ID that contains an entity at the given
 comment|/// source location.
 name|serialization
@@ -2755,17 +2787,17 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
-comment|/// \brief Retrieve a submodule ID for this module.
-comment|/// Returns 0 If no ID has been associated with the module.
+comment|/// \brief Retrieve or create a submodule ID for this module, or return 0 if
+comment|/// the submodule is neither local (a submodle of the currently-written module)
+comment|/// nor from an imported module.
 name|unsigned
-name|getExistingSubmoduleID
-argument_list|(
+name|getLocalOrImportedSubmoduleID
+parameter_list|(
 name|Module
-operator|*
+modifier|*
 name|Mod
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Note that the identifier II occurs at the given offset
 comment|/// within the identifier table.
 name|void
@@ -3007,6 +3039,16 @@ return|return
 name|Chain
 return|;
 block|}
+name|ASTReader
+operator|*
+name|getChain
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Chain
+return|;
+block|}
 comment|// ASTDeserializationListener implementation
 name|void
 name|ReaderInitialized
@@ -3141,51 +3183,6 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
-name|AddedCXXTemplateSpecialization
-argument_list|(
-specifier|const
-name|ClassTemplateDecl
-operator|*
-name|TD
-argument_list|,
-specifier|const
-name|ClassTemplateSpecializationDecl
-operator|*
-name|D
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-name|AddedCXXTemplateSpecialization
-argument_list|(
-specifier|const
-name|VarTemplateDecl
-operator|*
-name|TD
-argument_list|,
-specifier|const
-name|VarTemplateSpecializationDecl
-operator|*
-name|D
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-name|AddedCXXTemplateSpecialization
-argument_list|(
-specifier|const
-name|FunctionTemplateDecl
-operator|*
-name|TD
-argument_list|,
-specifier|const
-name|FunctionDecl
-operator|*
-name|D
-argument_list|)
-name|override
-decl_stmt|;
-name|void
 name|ResolvedExceptionSpec
 argument_list|(
 specifier|const
@@ -3244,6 +3241,16 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
+name|DefaultArgumentInstantiated
+argument_list|(
+specifier|const
+name|ParmVarDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|FunctionDefinitionInstantiated
 argument_list|(
 specifier|const
@@ -3265,26 +3272,6 @@ specifier|const
 name|ObjCInterfaceDecl
 operator|*
 name|IFD
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-name|AddedObjCPropertyInClassExtension
-argument_list|(
-specifier|const
-name|ObjCPropertyDecl
-operator|*
-name|Prop
-argument_list|,
-specifier|const
-name|ObjCPropertyDecl
-operator|*
-name|OrigProp
-argument_list|,
-specifier|const
-name|ObjCCategoryDecl
-operator|*
-name|ClassExt
 argument_list|)
 name|override
 decl_stmt|;
@@ -3442,7 +3429,11 @@ argument|StringRef isysroot
 argument_list|,
 argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|,
+argument|ArrayRef<llvm::IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument_list|,
 argument|bool AllowASTWithErrors = false
+argument_list|,
+argument|bool IncludeTimestamps = true
 argument_list|)
 block|;
 operator|~

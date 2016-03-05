@@ -181,7 +181,7 @@ comment|/// Launches an inferior process ready for debugging.  Forms the
 comment|/// implementation of Process::DoLaunch.
 name|ProcessMonitor
 argument_list|(
-name|ProcessPOSIX
+name|ProcessFreeBSD
 operator|*
 name|process
 argument_list|,
@@ -247,7 +247,7 @@ argument_list|)
 expr_stmt|;
 name|ProcessMonitor
 argument_list|(
-argument|ProcessPOSIX *process
+argument|ProcessFreeBSD *process
 argument_list|,
 argument|lldb::pid_t pid
 argument_list|,

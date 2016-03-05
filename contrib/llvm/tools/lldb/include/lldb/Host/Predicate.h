@@ -43,14 +43,33 @@ directive|define
 name|liblldb_Predicate_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -68,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Condition.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
 end_include
 
 begin_comment
@@ -187,7 +194,9 @@ comment|//------------------------------------------------------------------
 operator|~
 name|Predicate
 argument_list|()
-block|{     }
+operator|=
+expr|default
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Value get accessor.
 comment|///
@@ -430,7 +439,7 @@ comment|/// @param[in] bits
 comment|///     The bits we are waiting to be set in \a m_value.
 comment|///
 comment|/// @param[in] abstime
-comment|///     If non-NULL, the absolute time at which we should stop
+comment|///     If non-nullptr, the absolute time at which we should stop
 comment|///     waiting, else wait an infinite amount of time.
 comment|///
 comment|/// @return
@@ -443,7 +452,7 @@ name|WaitForSetValueBits
 argument_list|(
 argument|T bits
 argument_list|,
-argument|const TimeValue *abstime = NULL
+argument|const TimeValue *abstime = nullptr
 argument_list|)
 block|{
 name|int
@@ -555,7 +564,7 @@ comment|/// @param[in] bits
 comment|///     The bits we are waiting to be reset in \a m_value.
 comment|///
 comment|/// @param[in] abstime
-comment|///     If non-NULL, the absolute time at which we should stop
+comment|///     If non-nullptr, the absolute time at which we should stop
 comment|///     waiting, else wait an infinite amount of time.
 comment|///
 comment|/// @return
@@ -573,7 +582,7 @@ name|TimeValue
 modifier|*
 name|abstime
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -685,7 +694,7 @@ comment|/// @param[in] value
 comment|///     The value we want \a m_value to be equal to.
 comment|///
 comment|/// @param[in] abstime
-comment|///     If non-NULL, the absolute time at which we should stop
+comment|///     If non-nullptr, the absolute time at which we should stop
 comment|///     waiting, else wait an infinite amount of time.
 comment|///
 comment|/// @param[out] timed_out
@@ -707,13 +716,13 @@ name|TimeValue
 modifier|*
 name|abstime
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|bool
 modifier|*
 name|timed_out
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -816,7 +825,7 @@ comment|///     The value to which \a m_value will be set if \b true is
 comment|///     returned.
 comment|///
 comment|/// @param[in] abstime
-comment|///     If non-NULL, the absolute time at which we should stop
+comment|///     If non-nullptr, the absolute time at which we should stop
 comment|///     waiting, else wait an infinite amount of time.
 comment|///
 comment|/// @param[out] timed_out
@@ -841,13 +850,13 @@ name|TimeValue
 modifier|*
 name|abstime
 init|=
-name|NULL
+name|nullptr
 parameter_list|,
 name|bool
 modifier|*
 name|timed_out
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -962,7 +971,7 @@ comment|/// @param[out] new_value
 comment|///     The new value if \b true is returned.
 comment|///
 comment|/// @param[in] abstime
-comment|///     If non-NULL, the absolute time at which we should stop
+comment|///     If non-nullptr, the absolute time at which we should stop
 comment|///     waiting, else wait an infinite amount of time.
 comment|///
 comment|/// @return
@@ -984,7 +993,7 @@ name|TimeValue
 modifier|*
 name|abstime
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -1185,16 +1194,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #ifndef liblldb_Predicate_h_
+comment|// liblldb_Predicate_h_
 end_comment
 
 end_unit

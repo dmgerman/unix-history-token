@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sanitizer_atomic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_internal_defs.h"
 end_include
 
@@ -78,6 +84,23 @@ block|{
 struct|struct
 name|Suppression
 block|{
+name|Suppression
+argument_list|()
+block|{
+name|internal_memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 specifier|const
 name|char
 modifier|*
@@ -87,7 +110,7 @@ name|char
 modifier|*
 name|templ
 decl_stmt|;
-name|unsigned
+name|atomic_uint32_t
 name|hit_count
 decl_stmt|;
 name|uptr
@@ -189,7 +212,7 @@ specifier|const
 name|int
 name|kMaxSuppressionTypes
 init|=
-literal|16
+literal|32
 decl_stmt|;
 specifier|const
 name|char

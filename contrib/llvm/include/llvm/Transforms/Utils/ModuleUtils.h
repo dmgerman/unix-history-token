@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -206,6 +212,8 @@ argument_list|,
 argument|ArrayRef<Type *> InitArgTypes
 argument_list|,
 argument|ArrayRef<Value *> InitArgs
+argument_list|,
+argument|StringRef VersionCheckName = StringRef()
 argument_list|)
 expr_stmt|;
 block|}

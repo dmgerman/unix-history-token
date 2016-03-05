@@ -216,10 +216,10 @@ name|rhs
 operator|.
 name|m_streams
 block|;     }
-name|virtual
 operator|~
 name|StreamTee
 argument_list|()
+name|override
 block|{     }
 name|StreamTee
 operator|&
@@ -278,10 +278,10 @@ operator|*
 name|this
 return|;
 block|}
-name|virtual
 name|void
 name|Flush
 parameter_list|()
+function|override
 block|{
 name|Mutex
 operator|::
@@ -346,7 +346,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|virtual
 name|size_t
 name|Write
 parameter_list|(
@@ -358,6 +357,7 @@ parameter_list|,
 name|size_t
 name|length
 parameter_list|)
+function|override
 block|{
 name|Mutex
 operator|::
@@ -678,7 +678,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_StreamTee_h_
+comment|// liblldb_StreamTee_h_
 end_comment
 
 end_unit

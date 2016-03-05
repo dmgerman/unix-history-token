@@ -114,18 +114,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 02/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -158,18 +146,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|//
 name|bool
 name|HandleEvent
@@ -191,9 +175,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnLLDBDebuggerHandleEvents
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnLLDBDebuggerHandleEvents
@@ -215,21 +197,15 @@ decl_stmt|;
 comment|//
 name|bool
 name|ChkForStateChanges
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|GetProcessStdout
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|GetProcessStderr
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleEventSBBreakPoint
@@ -354,15 +330,11 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|HandleProcessEventStateRunning
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleProcessEventStateExited
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleProcessEventStateStopped
@@ -381,15 +353,11 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|HandleProcessEventStopReasonTrace
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleProcessEventStopReasonBreakpoint
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleProcessEventStopSignal
@@ -404,9 +372,7 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|HandleProcessEventStopException
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|HandleProcessEventStateSuspended
@@ -521,9 +487,7 @@ parameter_list|)
 function_decl|;
 name|bool
 name|UpdateSelectedThread
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Overridden:
 name|private
@@ -532,9 +496,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnLLDBDebuggerHandleEvents
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 name|void

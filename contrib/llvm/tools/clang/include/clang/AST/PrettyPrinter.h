@@ -226,7 +226,12 @@ argument_list|)
 operator|,
 name|IncludeNewlines
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|MSVCFormatting
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 comment|/// \brief What language we're printing.
@@ -316,7 +321,7 @@ decl_stmt|;
 comment|/// \brief Whether we should print the sizes of constant array expressions
 comment|/// as written in the sources.
 comment|///
-comment|/// This flag is determines whether arrays types declared as
+comment|/// This flag determines whether array types declared as
 comment|///
 comment|/// \code
 comment|/// int a[4+10*10];
@@ -398,6 +403,14 @@ decl_stmt|;
 comment|/// \brief When true, include newlines after statements like "break", etc.
 name|unsigned
 name|IncludeNewlines
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Use whitespace and punctuation like MSVC does. In particular, this
+comment|/// prints anonymous namespaces as `anonymous namespace' and does not insert
+comment|/// spaces after template arguments.
+name|bool
+name|MSVCFormatting
 range|:
 literal|1
 decl_stmt|;

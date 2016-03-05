@@ -131,25 +131,19 @@ argument|const TargetRegisterClass *SubRC
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|split64BitImm
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const MachineOperand&Op
-argument_list|)
-specifier|const
-block|;
 name|void
 name|swapOperands
 argument_list|(
 argument|MachineBasicBlock::iterator Inst
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerScalarAbs
+argument_list|(
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|,
+argument|MachineInstr *Inst
 argument_list|)
 specifier|const
 block|;
@@ -194,11 +188,22 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|addDescImplicitUseDef
+name|addUsersToMoveToVALUWorklist
 argument_list|(
-argument|const MCInstrDesc&Desc
+argument|unsigned Reg
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getDestEquivalentVGPRClass
+argument_list|(
+argument|const MachineInstr&Inst
 argument_list|)
 specifier|const
 block|;
@@ -221,6 +226,23 @@ literal|3
 argument|]
 argument_list|)
 specifier|const
+block|;
+name|protected
+operator|:
+name|MachineInstr
+operator|*
+name|commuteInstructionImpl
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool NewMI
+argument_list|,
+argument|unsigned OpIdx0
+argument_list|,
+argument|unsigned OpIdx1
+argument_list|)
+specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -386,23 +408,13 @@ argument|const TargetRegisterClass *DstRC
 argument_list|)
 specifier|const
 block|;
+name|LLVM_READONLY
 name|int
 name|commuteOpcode
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
 specifier|const
-block|;
-name|MachineInstr
-operator|*
-name|commuteInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|bool NewMI = false
-argument_list|)
-specifier|const
-name|override
 block|;
 name|bool
 name|findCommutedOpIndices
@@ -415,15 +427,6 @@ argument|unsigned&SrcOpIdx2
 argument_list|)
 specifier|const
 name|override
-block|;
-name|bool
-name|isTriviallyReMaterializable
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|AliasAnalysis *AA = nullptr
-argument_list|)
-specifier|const
 block|;
 name|bool
 name|areMemAccessesTriviallyDisjoint
@@ -456,14 +459,6 @@ name|bool
 name|isMov
 argument_list|(
 argument|unsigned Opcode
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|isSafeToMoveRegClassDefs
-argument_list|(
-argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 name|override
@@ -505,6 +500,26 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|static
+name|bool
+name|isSALU
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SALU
+return|;
+block|}
 name|bool
 name|isSALU
 argument_list|(
@@ -523,6 +538,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|SALU
+return|;
+block|}
+specifier|static
+name|bool
+name|isVALU
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VALU
 return|;
 block|}
 name|bool
@@ -545,6 +580,26 @@ operator|::
 name|VALU
 return|;
 block|}
+specifier|static
+name|bool
+name|isSOP1
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOP1
+return|;
+block|}
 name|bool
 name|isSOP1
 argument_list|(
@@ -563,6 +618,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|SOP1
+return|;
+block|}
+specifier|static
+name|bool
+name|isSOP2
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOP2
 return|;
 block|}
 name|bool
@@ -585,6 +660,26 @@ operator|::
 name|SOP2
 return|;
 block|}
+specifier|static
+name|bool
+name|isSOPC
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOPC
+return|;
+block|}
 name|bool
 name|isSOPC
 argument_list|(
@@ -603,6 +698,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|SOPC
+return|;
+block|}
+specifier|static
+name|bool
+name|isSOPK
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOPK
 return|;
 block|}
 name|bool
@@ -625,6 +740,26 @@ operator|::
 name|SOPK
 return|;
 block|}
+specifier|static
+name|bool
+name|isSOPP
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOPP
+return|;
+block|}
 name|bool
 name|isSOPP
 argument_list|(
@@ -643,6 +778,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|SOPP
+return|;
+block|}
+specifier|static
+name|bool
+name|isVOP1
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VOP1
 return|;
 block|}
 name|bool
@@ -665,6 +820,26 @@ operator|::
 name|VOP1
 return|;
 block|}
+specifier|static
+name|bool
+name|isVOP2
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VOP2
+return|;
+block|}
 name|bool
 name|isVOP2
 argument_list|(
@@ -683,6 +858,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|VOP2
+return|;
+block|}
+specifier|static
+name|bool
+name|isVOP3
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VOP3
 return|;
 block|}
 name|bool
@@ -705,6 +900,26 @@ operator|::
 name|VOP3
 return|;
 block|}
+specifier|static
+name|bool
+name|isVOPC
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VOPC
+return|;
+block|}
 name|bool
 name|isVOPC
 argument_list|(
@@ -723,6 +938,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|VOPC
+return|;
+block|}
+specifier|static
+name|bool
+name|isMUBUF
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|MUBUF
 return|;
 block|}
 name|bool
@@ -745,6 +980,26 @@ operator|::
 name|MUBUF
 return|;
 block|}
+specifier|static
+name|bool
+name|isMTBUF
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|MTBUF
+return|;
+block|}
 name|bool
 name|isMTBUF
 argument_list|(
@@ -763,6 +1018,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|MTBUF
+return|;
+block|}
+specifier|static
+name|bool
+name|isSMRD
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SMRD
 return|;
 block|}
 name|bool
@@ -785,6 +1060,26 @@ operator|::
 name|SMRD
 return|;
 block|}
+specifier|static
+name|bool
+name|isDS
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DS
+return|;
+block|}
 name|bool
 name|isDS
 argument_list|(
@@ -803,6 +1098,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|DS
+return|;
+block|}
+specifier|static
+name|bool
+name|isMIMG
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|MIMG
 return|;
 block|}
 name|bool
@@ -825,6 +1140,26 @@ operator|::
 name|MIMG
 return|;
 block|}
+specifier|static
+name|bool
+name|isFLAT
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|FLAT
+return|;
+block|}
 name|bool
 name|isFLAT
 argument_list|(
@@ -845,6 +1180,26 @@ operator|::
 name|FLAT
 return|;
 block|}
+specifier|static
+name|bool
+name|isWQM
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|WQM
+return|;
+block|}
 name|bool
 name|isWQM
 argument_list|(
@@ -863,6 +1218,26 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|WQM
+return|;
+block|}
+specifier|static
+name|bool
+name|isVGPRSpill
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VGPRSpill
 return|;
 block|}
 name|bool
@@ -1134,6 +1509,54 @@ argument|const MachineOperand *MO = nullptr
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Check if \p MO would be a valid operand for the given operand
+comment|/// definition \p OpInfo. Note this does not attempt to validate constant bus
+comment|/// restrictions (e.g. literal constant usage).
+name|bool
+name|isLegalVSrcOperand
+argument_list|(
+argument|const MachineRegisterInfo&MRI
+argument_list|,
+argument|const MCOperandInfo&OpInfo
+argument_list|,
+argument|const MachineOperand&MO
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Check if \p MO (a register operand) is a legal register for the
+comment|/// given operand description.
+name|bool
+name|isLegalRegOperand
+argument_list|(
+argument|const MachineRegisterInfo&MRI
+argument_list|,
+argument|const MCOperandInfo&OpInfo
+argument_list|,
+argument|const MachineOperand&MO
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Legalize operands in \p MI by either commuting it or inserting a
+comment|/// copy of src1.
+name|void
+name|legalizeOperandsVOP2
+argument_list|(
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Fix operands in \p MI to satisfy constant bus requirements.
+name|void
+name|legalizeOperandsVOP3
+argument_list|(
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Legalize all operands in this instruction.  This function may
 comment|/// create new instruction and insert them before \p MI.
 name|void
@@ -1168,6 +1591,8 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|)
 specifier|const
 block|;
@@ -1254,7 +1679,7 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|insertNOPs
+name|insertWaitStates
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|,
@@ -1264,6 +1689,7 @@ specifier|const
 block|;
 comment|/// \brief Returns the operand named \p Op.  If \p MI does not have an
 comment|/// operand named \c Op, this function returns nullptr.
+name|LLVM_READONLY
 name|MachineOperand
 operator|*
 name|getNamedOperand
@@ -1274,6 +1700,7 @@ argument|unsigned OperandName
 argument_list|)
 specifier|const
 block|;
+name|LLVM_READONLY
 specifier|const
 name|MachineOperand
 operator|*
@@ -1301,6 +1728,43 @@ name|OpName
 argument_list|)
 return|;
 block|}
+comment|/// Get required immediate operand
+name|int64_t
+name|getNamedImmOperand
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned OpName
+argument_list|)
+specifier|const
+block|{
+name|int
+name|Idx
+operator|=
+name|AMDGPU
+operator|::
+name|getNamedOperandIdx
+argument_list|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+argument_list|,
+name|OpName
+argument_list|)
+block|;
+return|return
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|Idx
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
 name|uint64_t
 name|getDefaultRsrcDataFormat
 argument_list|()
@@ -1310,11 +1774,26 @@ name|uint64_t
 name|getScratchRsrcWords23
 argument_list|()
 specifier|const
+block|;
+name|bool
+name|isLowLatencyInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isHighLatencyInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 name|namespace
 name|AMDGPU
 block|{
+name|LLVM_READONLY
 name|int
 name|getVOPe64
 parameter_list|(
@@ -1322,6 +1801,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getVOPe32
 parameter_list|(
@@ -1329,6 +1809,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getCommuteRev
 parameter_list|(
@@ -1336,6 +1817,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getCommuteOrig
 parameter_list|(
@@ -1343,6 +1825,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getAddr64Inst
 parameter_list|(
@@ -1350,6 +1833,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getAtomicRetOp
 parameter_list|(
@@ -1357,6 +1841,7 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
 name|int
 name|getAtomicNoRetOp
 parameter_list|(

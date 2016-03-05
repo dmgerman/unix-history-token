@@ -157,6 +157,31 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// targetHandlesStackFrameRounding - Returns true if the target is
+comment|/// responsible for rounding up the stack frame (probably at emitPrologue
+comment|/// time).
+name|bool
+name|targetHandlesStackFrameRounding
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|private
 operator|:
 comment|// Remap input registers to output registers for leaf procedure.

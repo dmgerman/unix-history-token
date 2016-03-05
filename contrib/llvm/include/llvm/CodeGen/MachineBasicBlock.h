@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BranchProbability.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -100,6 +112,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MIPrinter
+decl_stmt|;
+name|class
 name|SlotIndexes
 decl_stmt|;
 name|class
@@ -111,6 +126,11 @@ decl_stmt|;
 name|class
 name|MachineBranchProbabilityInfo
 decl_stmt|;
+comment|// Forward declaration to avoid circular include problem with TargetRegisterInfo
+typedef|typedef
+name|unsigned
+name|LaneBitmask
+typedef|;
 name|template
 operator|<
 operator|>
@@ -231,13 +251,13 @@ name|ilist_iterator
 operator|<
 name|MachineInstr
 operator|>
-name|first
+name|First
 argument_list|,
 name|ilist_iterator
 operator|<
 name|MachineInstr
 operator|>
-name|last
+name|Last
 argument_list|)
 block|;
 name|void
@@ -263,11 +283,50 @@ name|class
 name|MachineBasicBlock
 range|:
 name|public
-name|ilist_node
+name|ilist_node_with_parent
 operator|<
 name|MachineBasicBlock
-operator|>
+decl_stmt|,
+name|MachineFunction
+decl|>
 block|{
+name|public
+label|:
+comment|/// Pair of physical register and lane mask.
+comment|/// This is not simply a std::pair typedef because the members should be named
+comment|/// clearly as they both have an integer type.
+struct|struct
+name|RegisterMaskPair
+block|{
+name|public
+label|:
+name|MCPhysReg
+name|PhysReg
+decl_stmt|;
+name|LaneBitmask
+name|LaneMask
+decl_stmt|;
+name|RegisterMaskPair
+argument_list|(
+argument|MCPhysReg PhysReg
+argument_list|,
+argument|LaneBitmask LaneMask
+argument_list|)
+block|:
+name|PhysReg
+argument_list|(
+name|PhysReg
+argument_list|)
+operator|,
+name|LaneMask
+argument_list|(
+argument|LaneMask
+argument_list|)
+block|{}
+block|}
+struct|;
+name|private
+label|:
 typedef|typedef
 name|ilist
 operator|<
@@ -290,8 +349,7 @@ name|MachineFunction
 modifier|*
 name|xParent
 decl_stmt|;
-comment|/// Predecessors/Successors - Keep track of the predecessor / successor
-comment|/// basicblocks.
+comment|/// Keep track of the predecessor / successor basic blocks.
 name|std
 operator|::
 name|vector
@@ -310,64 +368,83 @@ operator|*
 operator|>
 name|Successors
 expr_stmt|;
-comment|/// Weights - Keep track of the weights to the successors. This vector
-comment|/// has the same order as Successors, or it is empty if we don't use it
-comment|/// (disable optimization).
+comment|/// Keep track of the probabilities to the successors. This vector has the
+comment|/// same order as Successors, or it is empty if we don't use it (disable
+comment|/// optimization).
 name|std
 operator|::
 name|vector
 operator|<
-name|uint32_t
+name|BranchProbability
 operator|>
-name|Weights
+name|Probs
 expr_stmt|;
 typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|uint32_t
+name|BranchProbability
 operator|>
 operator|::
 name|iterator
-name|weight_iterator
+name|probability_iterator
 expr_stmt|;
 typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|uint32_t
+name|BranchProbability
 operator|>
 operator|::
 name|const_iterator
-name|const_weight_iterator
+name|const_probability_iterator
 expr_stmt|;
-comment|/// LiveIns - Keep track of the physical registers that are livein of
-comment|/// the basicblock.
+comment|/// Keep track of the physical registers that are livein of the basicblock.
+typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|unsigned
+name|RegisterMaskPair
 operator|>
-name|LiveIns
+name|LiveInVector
 expr_stmt|;
-comment|/// Alignment - Alignment of the basic block. Zero if the basic block does
-comment|/// not need to be aligned.
-comment|/// The alignment is specified as log2(bytes).
+name|LiveInVector
+name|LiveIns
+decl_stmt|;
+comment|/// Alignment of the basic block. Zero if the basic block does not need to be
+comment|/// aligned. The alignment is specified as log2(bytes).
 name|unsigned
 name|Alignment
+init|=
+literal|0
 decl_stmt|;
-comment|/// IsLandingPad - Indicate that this basic block is entered via an
-comment|/// exception handler.
+comment|/// Indicate that this basic block is entered via an exception handler.
 name|bool
-name|IsLandingPad
+name|IsEHPad
+init|=
+name|false
 decl_stmt|;
-comment|/// AddressTaken - Indicate that this basic block is potentially the
-comment|/// target of an indirect branch.
+comment|/// Indicate that this basic block is potentially the target of an indirect
+comment|/// branch.
 name|bool
 name|AddressTaken
+init|=
+name|false
+decl_stmt|;
+comment|/// Indicate that this basic block is the entry block of an EH funclet.
+name|bool
+name|IsEHFuncletEntry
+init|=
+name|false
+decl_stmt|;
+comment|/// Indicate that this basic block is the entry block of a cleanup funclet.
+name|bool
+name|IsCleanupFuncletEntry
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief since getSymbol is a relatively heavy-weight operation, the symbol
 comment|/// is only computed once and is cached.
@@ -375,6 +452,8 @@ name|mutable
 name|MCSymbol
 modifier|*
 name|CachedMCSymbol
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Intrusive list support
 name|MachineBasicBlock
@@ -385,12 +464,12 @@ name|MachineBasicBlock
 parameter_list|(
 name|MachineFunction
 modifier|&
-name|mf
+name|MF
 parameter_list|,
 specifier|const
 name|BasicBlock
 modifier|*
-name|bb
+name|BB
 parameter_list|)
 function_decl|;
 operator|~
@@ -404,10 +483,9 @@ name|MachineFunction
 decl_stmt|;
 name|public
 label|:
-comment|/// getBasicBlock - Return the LLVM basic block that this instance
-comment|/// corresponded to originally. Note that this may be NULL if this instance
-comment|/// does not correspond directly to an LLVM basic block.
-comment|///
+comment|/// Return the LLVM basic block that this instance corresponded to originally.
+comment|/// Note that this may be NULL if this instance does not correspond directly
+comment|/// to an LLVM basic block.
 specifier|const
 name|BasicBlock
 operator|*
@@ -419,15 +497,13 @@ return|return
 name|BB
 return|;
 block|}
-comment|/// getName - Return the name of the corresponding LLVM basic block, or
-comment|/// "(null)".
+comment|/// Return the name of the corresponding LLVM basic block, or "(null)".
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getFullName - Return a formatted string to identify this block and its
-comment|/// parent function.
+comment|/// Return a formatted string to identify this block and its parent function.
 name|std
 operator|::
 name|string
@@ -435,8 +511,7 @@ name|getFullName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// hasAddressTaken - Test whether this block is potentially the target
-comment|/// of an indirect branch.
+comment|/// Test whether this block is potentially the target of an indirect branch.
 name|bool
 name|hasAddressTaken
 argument_list|()
@@ -446,8 +521,8 @@ return|return
 name|AddressTaken
 return|;
 block|}
-comment|/// setHasAddressTaken - Set this block to reflect that it potentially
-comment|/// is the target of an indirect branch.
+comment|/// Set this block to reflect that it potentially is the target of an indirect
+comment|/// branch.
 name|void
 name|setHasAddressTaken
 parameter_list|()
@@ -457,8 +532,7 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// getParent - Return the MachineFunction containing this basic block.
-comment|///
+comment|/// Return the MachineFunction containing this basic block.
 specifier|const
 name|MachineFunction
 operator|*
@@ -479,8 +553,8 @@ return|return
 name|xParent
 return|;
 block|}
-comment|/// bundle_iterator - MachineBasicBlock iterator that automatically skips over
-comment|/// MIs that are inside bundles (i.e. walk top level MIs only).
+comment|/// MachineBasicBlock iterator that automatically skips over MIs that are
+comment|/// inside bundles (i.e. walk top level MIs only).
 name|template
 operator|<
 name|typename
@@ -513,30 +587,30 @@ name|public
 operator|:
 name|bundle_iterator
 argument_list|(
-argument|IterTy mii
+argument|IterTy MI
 argument_list|)
 operator|:
 name|MII
 argument_list|(
-argument|mii
+argument|MI
 argument_list|)
 block|{}
 name|bundle_iterator
 argument_list|(
 name|Ty
 operator|&
-name|mi
+name|MI
 argument_list|)
 operator|:
 name|MII
 argument_list|(
-argument|mi
+argument|MI
 argument_list|)
 block|{
 name|assert
 argument_list|(
 operator|!
-name|mi
+name|MI
 operator|.
 name|isBundledWithPred
 argument_list|()
@@ -548,22 +622,22 @@ name|bundle_iterator
 argument_list|(
 name|Ty
 operator|*
-name|mi
+name|MI
 argument_list|)
 operator|:
 name|MII
 argument_list|(
-argument|mi
+argument|MI
 argument_list|)
 block|{
 name|assert
 argument_list|(
 operator|(
 operator|!
-name|mi
+name|MI
 operator|||
 operator|!
-name|mi
+name|MI
 operator|->
 name|isBundledWithPred
 argument_list|()
@@ -645,6 +719,9 @@ specifier|const
 block|{
 return|return
 name|MII
+operator|.
+name|getNodePtrUnchecked
+argument_list|()
 return|;
 block|}
 name|bool
@@ -654,14 +731,14 @@ operator|(
 specifier|const
 name|bundle_iterator
 operator|&
-name|x
+name|X
 operator|)
 specifier|const
 block|{
 return|return
 name|MII
 operator|==
-name|x
+name|X
 operator|.
 name|MII
 return|;
@@ -673,7 +750,7 @@ operator|(
 specifier|const
 name|bundle_iterator
 operator|&
-name|x
+name|X
 operator|)
 specifier|const
 block|{
@@ -682,7 +759,7 @@ operator|!
 name|operator
 operator|==
 operator|(
-name|x
+name|X
 operator|)
 return|;
 block|}
@@ -712,9 +789,6 @@ operator|*
 name|this
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|bundle_iterator
 operator|&
 name|operator
@@ -736,17 +810,15 @@ expr_stmt|;
 operator|++
 name|MII
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|this
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}     bundle_iterator
+name|bundle_iterator
 name|operator
 operator|--
 operator|(
@@ -1276,6 +1348,30 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Support for MachineInstr::getNextNode().
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|Instructions
+name|MachineBasicBlock
+operator|::
+operator|*
+name|getSublistAccess
+argument_list|(
+argument|MachineInstr *
+argument_list|)
+block|{
+return|return
+operator|&
+name|MachineBasicBlock
+operator|::
+name|Insts
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 specifier|inline
 name|iterator_range
@@ -1286,17 +1382,14 @@ name|terminators
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|getFirstTerminator
 argument_list|()
-operator|,
+argument_list|,
 name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1312,17 +1405,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|getFirstTerminator
 argument_list|()
-operator|,
+argument_list|,
 name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1759,17 +1849,14 @@ name|predecessors
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|pred_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|pred_begin
 argument_list|()
-operator|,
+argument_list|,
 name|pred_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1785,17 +1872,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_pred_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|pred_begin
 argument_list|()
-operator|,
+argument_list|,
 name|pred_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1810,17 +1894,14 @@ name|successors
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|succ_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|succ_begin
 argument_list|()
-operator|,
+argument_list|,
 name|succ_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1836,17 +1917,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_succ_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|succ_begin
 argument_list|()
-operator|,
+argument_list|,
 name|succ_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1871,15 +1949,46 @@ begin_function
 name|void
 name|addLiveIn
 parameter_list|(
-name|unsigned
-name|Reg
+name|MCPhysReg
+name|PhysReg
+parameter_list|,
+name|LaneBitmask
+name|LaneMask
+init|=
+operator|~
+literal|0u
 parameter_list|)
 block|{
 name|LiveIns
 operator|.
 name|push_back
 argument_list|(
-name|Reg
+name|RegisterMaskPair
+argument_list|(
+name|PhysReg
+argument_list|,
+name|LaneMask
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|addLiveIn
+parameter_list|(
+specifier|const
+name|RegisterMaskPair
+modifier|&
+name|RegMaskPair
+parameter_list|)
+block|{
+name|LiveIns
+operator|.
+name|push_back
+argument_list|(
+name|RegMaskPair
 argument_list|)
 expr_stmt|;
 block|}
@@ -1897,53 +2006,12 @@ begin_comment
 comment|/// LiveIn insertion.
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|sortUniqueLiveIns
 parameter_list|()
-block|{
-name|std
-operator|::
-name|sort
-argument_list|(
-name|LiveIns
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|LiveIns
-operator|.
-name|end
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|LiveIns
-operator|.
-name|erase
-argument_list|(
-name|std
-operator|::
-name|unique
-argument_list|(
-name|LiveIns
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|LiveIns
-operator|.
-name|end
-argument_list|()
-argument_list|)
-argument_list|,
-name|LiveIns
-operator|.
-name|end
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Add PhysReg as live in to this block, and ensure that there is a copy of
@@ -1961,7 +2029,7 @@ begin_function_decl
 name|unsigned
 name|addLiveIn
 parameter_list|(
-name|unsigned
+name|MCPhysReg
 name|PhysReg
 parameter_list|,
 specifier|const
@@ -1973,37 +2041,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// removeLiveIn - Remove the specified register from the live in set.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Remove the specified register from the live in set.
 end_comment
 
 begin_function_decl
 name|void
 name|removeLiveIn
 parameter_list|(
-name|unsigned
+name|MCPhysReg
 name|Reg
+parameter_list|,
+name|LaneBitmask
+name|LaneMask
+init|=
+operator|~
+literal|0u
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// isLiveIn - Return true if the specified register is in the live in set.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Return true if the specified register is in the live in set.
 end_comment
 
 begin_decl_stmt
 name|bool
 name|isLiveIn
 argument_list|(
-name|unsigned
+name|MCPhysReg
 name|Reg
+argument_list|,
+name|LaneBitmask
+name|LaneMask
+operator|=
+operator|~
+literal|0u
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2019,12 +2091,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
+name|LiveInVector
 operator|::
 name|const_iterator
 name|livein_iterator
@@ -2076,16 +2143,80 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|livein_iterator
+operator|>
+name|liveins
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|livein_begin
+argument_list|()
+argument_list|,
+name|livein_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-comment|/// getAlignment - Return alignment of the basic block.
+comment|/// Get the clobber mask for the start of this basic block. Funclets use this
 end_comment
 
 begin_comment
-comment|/// The alignment is specified as log2(bytes).
+comment|/// to prevent register allocation across funclet transitions.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|uint32_t
+modifier|*
+name|getBeginClobberMask
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Get the clobber mask for the end of the basic block.
 end_comment
 
 begin_comment
-comment|///
+comment|/// \see getBeginClobberMask()
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|uint32_t
+modifier|*
+name|getEndClobberMask
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return alignment of the basic block. The alignment is specified as
+end_comment
+
+begin_comment
+comment|/// log2(bytes).
 end_comment
 
 begin_expr_stmt
@@ -2101,15 +2232,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// setAlignment - Set alignment of the basic block.
+comment|/// Set alignment of the basic block. The alignment is specified as
 end_comment
 
 begin_comment
-comment|/// The alignment is specified as log2(bytes).
-end_comment
-
-begin_comment
-comment|///
+comment|/// log2(bytes).
 end_comment
 
 begin_function
@@ -2128,36 +2255,36 @@ block|}
 end_function
 
 begin_comment
-comment|/// isLandingPad - Returns true if the block is a landing pad. That is
+comment|/// Returns true if the block is a landing pad. That is this basic block is
 end_comment
 
 begin_comment
-comment|/// this basic block is entered via an exception handler.
+comment|/// entered via an exception handler.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|isLandingPad
+name|isEHPad
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsLandingPad
+name|IsEHPad
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// setIsLandingPad - Indicates the block is a landing pad.  That is
+comment|/// Indicates the block is a landing pad.  That is this basic block is entered
 end_comment
 
 begin_comment
-comment|/// this basic block is entered via an exception handler.
+comment|/// via an exception handler.
 end_comment
 
 begin_function
 name|void
-name|setIsLandingPad
+name|setIsEHPad
 parameter_list|(
 name|bool
 name|V
@@ -2165,7 +2292,7 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|IsLandingPad
+name|IsEHPad
 operator|=
 name|V
 expr_stmt|;
@@ -2173,11 +2300,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// getLandingPadSuccessor - If this block has a successor that is a landing
+comment|/// If this block has a successor that is a landing pad, return it. Otherwise
 end_comment
 
 begin_comment
-comment|/// pad, return it. Otherwise return NULL.
+comment|/// return NULL.
 end_comment
 
 begin_expr_stmt
@@ -2190,20 +2317,102 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|bool
+name|hasEHPadSuccessor
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this is the entry block of an EH funclet.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isEHFuncletEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsEHFuncletEntry
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Indicates if this is the entry block of an EH funclet.
+end_comment
+
+begin_function
+name|void
+name|setIsEHFuncletEntry
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsEHFuncletEntry
+operator|=
+name|V
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Returns true if this is the entry block of a cleanup funclet.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCleanupFuncletEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsCleanupFuncletEntry
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Indicates if this is the entry block of a cleanup funclet.
+end_comment
+
+begin_function
+name|void
+name|setIsCleanupFuncletEntry
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsCleanupFuncletEntry
+operator|=
+name|V
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// Code Layout methods.
 end_comment
 
 begin_comment
-comment|/// moveBefore/moveAfter - move 'this' block before or after the specified
+comment|/// Move 'this' block before or after the specified block.  This only moves
 end_comment
 
 begin_comment
-comment|/// block.  This only moves the block, it does not modify the CFG or adjust
+comment|/// the block, it does not modify the CFG or adjust potential fall-throughs at
 end_comment
 
 begin_comment
-comment|/// potential fall-throughs at the end of the block.
+comment|/// the end of the block.
 end_comment
 
 begin_function_decl
@@ -2229,19 +2438,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// updateTerminator - Update the terminator instructions in block to account
+comment|/// Update the terminator instructions in block to account for changes to the
 end_comment
 
 begin_comment
-comment|/// for changes to the layout. If the block previously used a fallthrough,
+comment|/// layout. If the block previously used a fallthrough, it may now need a
 end_comment
 
 begin_comment
-comment|/// it may now need a branch, and if it previously used branching it may now
+comment|/// branch, and if it previously used branching it may now be able to use a
 end_comment
 
 begin_comment
-comment|/// be able to use a fallthrough.
+comment|/// fallthrough.
 end_comment
 
 begin_function_decl
@@ -2256,19 +2465,27 @@ comment|// Machine-CFG mutators
 end_comment
 
 begin_comment
-comment|/// addSuccessor - Add succ as a successor of this MachineBasicBlock.
+comment|/// Add Succ as a successor of this MachineBasicBlock.  The Predecessors list
 end_comment
 
 begin_comment
-comment|/// The Predecessors list of succ is automatically updated. WEIGHT
+comment|/// of Succ is automatically updated. PROB parameter is stored in
 end_comment
 
 begin_comment
-comment|/// parameter is stored in Weights list and it may be used by
+comment|/// Probabilities list. The default probability is set as unknown. Mixing
 end_comment
 
 begin_comment
-comment|/// MachineBranchProbabilityInfo analysis to calculate branch probability.
+comment|/// known and unknown probabilities in successor list is not allowed. When all
+end_comment
+
+begin_comment
+comment|/// successors have unknown probabilities, 1 / N is returned as the
+end_comment
+
+begin_comment
+comment|/// probability for each successor, where N is the number of successors.
 end_comment
 
 begin_comment
@@ -2279,53 +2496,142 @@ begin_comment
 comment|/// Note that duplicate Machine CFG edges are not allowed.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_function_decl
 name|void
 name|addSuccessor
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|succ
+name|Succ
 parameter_list|,
-name|uint32_t
-name|weight
+name|BranchProbability
+name|Prob
 init|=
-literal|0
+name|BranchProbability
+operator|::
+name|getUnknown
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Set successor weight of a given iterator.
+comment|/// Add Succ as a successor of this MachineBasicBlock.  The Predecessors list
+end_comment
+
+begin_comment
+comment|/// of Succ is automatically updated. The probability is not provided because
+end_comment
+
+begin_comment
+comment|/// BPI is not available (e.g. -O0 is used), in which case edge probabilities
+end_comment
+
+begin_comment
+comment|/// won't be used. Using this interface can save some space.
 end_comment
 
 begin_function_decl
 name|void
-name|setSuccWeight
+name|addSuccessorWithoutProb
 parameter_list|(
-name|succ_iterator
-name|I
-parameter_list|,
-name|uint32_t
-name|weight
+name|MachineBasicBlock
+modifier|*
+name|Succ
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// removeSuccessor - Remove successor from the successors list of this
+comment|/// Set successor probability of a given iterator.
+end_comment
+
+begin_function_decl
+name|void
+name|setSuccProbability
+parameter_list|(
+name|succ_iterator
+name|I
+parameter_list|,
+name|BranchProbability
+name|Prob
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Normalize probabilities of all successors so that the sum of them becomes
 end_comment
 
 begin_comment
-comment|/// MachineBasicBlock. The Predecessors list of succ is automatically updated.
+comment|/// one. This is usually done when the current update on this MBB is done, and
 end_comment
 
 begin_comment
-comment|///
+comment|/// the sum of its successors' probabilities is not guaranteed to be one. The
+end_comment
+
+begin_comment
+comment|/// user is responsible for the correct use of this function.
+end_comment
+
+begin_comment
+comment|/// MBB::removeSuccessor() has an option to do this automatically.
+end_comment
+
+begin_function
+name|void
+name|normalizeSuccProbs
+parameter_list|()
+block|{
+name|BranchProbability
+operator|::
+name|normalizeProbabilities
+argument_list|(
+name|Probs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Probs
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Validate successors' probabilities and check if the sum of them is
+end_comment
+
+begin_comment
+comment|/// approximate one. This only works in DEBUG mode.
+end_comment
+
+begin_expr_stmt
+name|void
+name|validateSuccProbs
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Remove successor from the successors list of this MachineBasicBlock. The
+end_comment
+
+begin_comment
+comment|/// Predecessors list of Succ is automatically updated.
+end_comment
+
+begin_comment
+comment|/// If NormalizeSuccProbs is true, then normalize successors' probabilities
+end_comment
+
+begin_comment
+comment|/// after the successor is removed.
 end_comment
 
 begin_function_decl
@@ -2334,25 +2640,34 @@ name|removeSuccessor
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|succ
+name|Succ
+parameter_list|,
+name|bool
+name|NormalizeSuccProbs
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// removeSuccessor - Remove specified successor from the successors list of
+comment|/// Remove specified successor from the successors list of this
 end_comment
 
 begin_comment
-comment|/// this MachineBasicBlock. The Predecessors list of succ is automatically
+comment|/// MachineBasicBlock. The Predecessors list of Succ is automatically updated.
 end_comment
 
 begin_comment
-comment|/// updated.  Return the iterator to the element after the one removed.
+comment|/// If NormalizeSuccProbs is true, then normalize successors' probabilities
 end_comment
 
 begin_comment
-comment|///
+comment|/// after the successor is removed.
+end_comment
+
+begin_comment
+comment|/// Return the iterator to the element after the one removed.
 end_comment
 
 begin_function_decl
@@ -2361,16 +2676,17 @@ name|removeSuccessor
 parameter_list|(
 name|succ_iterator
 name|I
+parameter_list|,
+name|bool
+name|NormalizeSuccProbs
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// replaceSuccessor - Replace successor OLD with NEW and update weight info.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Replace successor OLD with NEW and update probability info.
 end_comment
 
 begin_function_decl
@@ -2389,15 +2705,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// transferSuccessors - Transfers all the successors from MBB to this
+comment|/// Transfers all the successors from MBB to this machine basic block (i.e.,
 end_comment
 
 begin_comment
-comment|/// machine basic block (i.e., copies all the successors fromMBB and
+comment|/// copies all the successors FromMBB and remove all the successors from
 end_comment
 
 begin_comment
-comment|/// remove all the successors from fromMBB).
+comment|/// FromMBB).
 end_comment
 
 begin_function_decl
@@ -2406,21 +2722,17 @@ name|transferSuccessors
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|fromMBB
+name|FromMBB
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// transferSuccessorsAndUpdatePHIs - Transfers all the successors, as
+comment|/// Transfers all the successors, as in transferSuccessors, and update PHI
 end_comment
 
 begin_comment
-comment|/// in transferSuccessors, and update PHI operands in the successor blocks
-end_comment
-
-begin_comment
-comment|/// which refer to fromMBB to refer to this.
+comment|/// operands in the successor blocks which refer to FromMBB to refer to this.
 end_comment
 
 begin_function_decl
@@ -2429,17 +2741,33 @@ name|transferSuccessorsAndUpdatePHIs
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|fromMBB
+name|FromMBB
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// isPredecessor - Return true if the specified MBB is a predecessor of this
+comment|/// Return true if any of the successors have probabilities attached to them.
 end_comment
 
+begin_expr_stmt
+name|bool
+name|hasSuccessorProbabilities
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Probs
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-comment|/// block.
+comment|/// Return true if the specified MBB is a predecessor of this block.
 end_comment
 
 begin_decl_stmt
@@ -2456,11 +2784,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isSuccessor - Return true if the specified MBB is a successor of this
-end_comment
-
-begin_comment
-comment|/// block.
+comment|/// Return true if the specified MBB is a successor of this block.
 end_comment
 
 begin_decl_stmt
@@ -2477,23 +2801,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isLayoutSuccessor - Return true if the specified MBB will be emitted
+comment|/// Return true if the specified MBB will be emitted immediately after this
 end_comment
 
 begin_comment
-comment|/// immediately after this block, such that if this block exits by
+comment|/// block, such that if this block exits by falling through, control will
 end_comment
 
 begin_comment
-comment|/// falling through, control will transfer to the specified MBB. Note
+comment|/// transfer to the specified MBB. Note that MBB need not be a successor at
 end_comment
 
 begin_comment
-comment|/// that MBB need not be a successor at all, for example if this block
+comment|/// all, for example if this block ends with an unconditional branch to some
 end_comment
 
 begin_comment
-comment|/// ends with an unconditional branch to some other block.
+comment|/// other block.
 end_comment
 
 begin_decl_stmt
@@ -2510,19 +2834,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// canFallThrough - Return true if the block can implicitly transfer
+comment|/// Return true if the block can implicitly transfer control to the block
 end_comment
 
 begin_comment
-comment|/// control to the block after it by falling off the end of it.  This should
+comment|/// after it by falling off the end of it.  This should return false if it can
 end_comment
 
 begin_comment
-comment|/// return false if it can reach the block after it, but it uses an explicit
+comment|/// reach the block after it, but it uses an explicit branch to do so (e.g., a
 end_comment
 
 begin_comment
-comment|/// branch to do so (e.g., a table jump).  True is a conservative answer.
+comment|/// table jump).  True is a conservative answer.
 end_comment
 
 begin_function_decl
@@ -2560,15 +2884,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// SkipPHIsAndLabels - Return the first instruction in MBB after I that is
+comment|/// Return the first instruction in MBB after I that is not a PHI or a label.
 end_comment
 
 begin_comment
-comment|/// not a PHI or a label. This is the correct point to insert copies at the
+comment|/// This is the correct point to insert copies at the beginning of a basic
 end_comment
 
 begin_comment
-comment|/// beginning of a basic block.
+comment|/// block.
 end_comment
 
 begin_function_decl
@@ -2582,15 +2906,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getFirstTerminator - returns an iterator to the first terminator
+comment|/// Returns an iterator to the first terminator instruction of this basic
 end_comment
 
 begin_comment
-comment|/// instruction of this basic block. If a terminator does not exist,
-end_comment
-
-begin_comment
-comment|/// it returns end()
+comment|/// block. If a terminator does not exist, it returns end().
 end_comment
 
 begin_function_decl
@@ -2623,11 +2943,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getFirstInstrTerminator - Same getFirstTerminator but it ignores bundles
+comment|/// Same getFirstTerminator but it ignores bundles and return an
 end_comment
 
 begin_comment
-comment|/// and return an instr_iterator instead.
+comment|/// instr_iterator instead.
 end_comment
 
 begin_function_decl
@@ -2638,11 +2958,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getFirstNonDebugInstr - returns an iterator to the first non-debug
+comment|/// Returns an iterator to the first non-debug instruction in the basic block,
 end_comment
 
 begin_comment
-comment|/// instruction in the basic block, or end()
+comment|/// or end().
 end_comment
 
 begin_function_decl
@@ -2675,11 +2995,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getLastNonDebugInstr - returns an iterator to the last non-debug
+comment|/// Returns an iterator to the last non-debug instruction in the basic block,
 end_comment
 
 begin_comment
-comment|/// instruction in the basic block, or end()
+comment|/// or end().
 end_comment
 
 begin_function_decl
@@ -2712,15 +3032,39 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// SplitCriticalEdge - Split the critical edge from this block to the
+comment|/// Convenience function that returns true if the block ends in a return
 end_comment
 
 begin_comment
-comment|/// given successor block, and return the newly created block, or null
+comment|/// instruction.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isReturnBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|empty
+argument_list|()
+operator|&&
+name|back
+argument_list|()
+operator|.
+name|isReturn
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Split the critical edge from this block to the given successor block, and
 end_comment
 
 begin_comment
-comment|/// if splitting is not possible.
+comment|/// return the newly created block, or null if splitting is not possible.
 end_comment
 
 begin_comment
@@ -3232,7 +3576,10 @@ name|Insts
 operator|.
 name|remove
 argument_list|(
+name|instr_iterator
+argument_list|(
 name|I
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3406,11 +3753,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// removeFromParent - This method unlinks 'this' from the containing
+comment|/// This method unlinks 'this' from the containing function, and returns it,
 end_comment
 
 begin_comment
-comment|/// function, and returns it, but does not delete it.
+comment|/// but does not delete it.
 end_comment
 
 begin_function_decl
@@ -3422,11 +3769,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// eraseFromParent - This method unlinks 'this' from the containing
-end_comment
-
-begin_comment
-comment|/// function and deletes it.
+comment|/// This method unlinks 'this' from the containing function and deletes it.
 end_comment
 
 begin_function_decl
@@ -3437,11 +3780,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ReplaceUsesOfBlockWith - Given a machine basic block that branched to
+comment|/// Given a machine basic block that branched to 'Old', change the code and
 end_comment
 
 begin_comment
-comment|/// 'Old', change the code and CFG so that it branches to 'New' instead.
+comment|/// CFG so that it branches to 'New' instead.
 end_comment
 
 begin_function_decl
@@ -3460,27 +3803,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// CorrectExtraCFGEdges - Various pieces of code can cause excess edges in
+comment|/// Various pieces of code can cause excess edges in the CFG to be inserted.
 end_comment
 
 begin_comment
-comment|/// the CFG to be inserted.  If we have proven that MBB can only branch to
+comment|/// If we have proven that MBB can only branch to DestA and DestB, remove any
 end_comment
 
 begin_comment
-comment|/// DestA and DestB, remove any other MBB successors from the CFG. DestA and
+comment|/// other MBB successors from the CFG. DestA and DestB can be null. Besides
 end_comment
 
 begin_comment
-comment|/// DestB can be null. Besides DestA and DestB, retain other edges leading
+comment|/// DestA and DestB, retain other edges leading to LandingPads (currently
 end_comment
 
 begin_comment
-comment|/// to LandingPads (currently there can be only one; we don't check or require
+comment|/// there can be only one; we don't check or require that here). Note it is
 end_comment
 
 begin_comment
-comment|/// that here). Note it is possible that DestA and/or DestB are LandingPads.
+comment|/// possible that DestA and/or DestB are LandingPads.
 end_comment
 
 begin_function_decl
@@ -3496,17 +3839,17 @@ modifier|*
 name|DestB
 parameter_list|,
 name|bool
-name|isCond
+name|IsCond
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// findDebugLoc - find the next valid DebugLoc starting at MBBI, skipping
+comment|/// Find the next valid DebugLoc starting at MBBI, skipping any DBG_VALUE
 end_comment
 
 begin_comment
-comment|/// any DBG_VALUE instructions.  Return UnknownLoc if there is none.
+comment|/// instructions.  Return UnknownLoc if there is none.
 end_comment
 
 begin_function_decl
@@ -3549,17 +3892,12 @@ name|LivenessQueryResult
 block|{
 name|LQR_Live
 block|,
-comment|///< Register is known to be live.
-name|LQR_OverlappingLive
-block|,
-comment|///< Register itself is not live, but some overlapping
-comment|///< register is.
+comment|///< Register is known to be (at least partially) live.
 name|LQR_Dead
 block|,
-comment|///< Register is known to be dead.
+comment|///< Register is known to be fully dead.
 name|LQR_Unknown
-comment|///< Register liveness not decidable from local
-comment|///< neighborhood.
+comment|///< Register liveness not decidable from local neighborhood.
 block|}
 enum|;
 end_enum
@@ -3692,19 +4030,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getNumber - MachineBasicBlocks are uniquely numbered at the function
+comment|/// MachineBasicBlocks are uniquely numbered at the function level, unless
 end_comment
 
 begin_comment
-comment|/// level, unless they're not in a MachineFunction yet, in which case this
-end_comment
-
-begin_comment
-comment|/// will return -1.
-end_comment
-
-begin_comment
-comment|///
+comment|/// they're not in a MachineFunction yet, in which case this will return -1.
 end_comment
 
 begin_expr_stmt
@@ -3735,11 +4065,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// getSymbol - Return the MCSymbol for this basic block.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Return the MCSymbol for this basic block.
 end_comment
 
 begin_expr_stmt
@@ -3757,16 +4083,12 @@ label|:
 end_label
 
 begin_comment
-comment|/// getWeightIterator - Return weight iterator corresponding to the I
-end_comment
-
-begin_comment
-comment|/// successor iterator.
+comment|/// Return probability iterator corresponding to the I successor iterator.
 end_comment
 
 begin_function_decl
-name|weight_iterator
-name|getWeightIterator
+name|probability_iterator
+name|getProbabilityIterator
 parameter_list|(
 name|succ_iterator
 name|I
@@ -3775,8 +4097,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|const_weight_iterator
-name|getWeightIterator
+name|const_probability_iterator
+name|getProbabilityIterator
 argument_list|(
 name|const_succ_iterator
 name|I
@@ -3792,21 +4114,28 @@ name|MachineBranchProbabilityInfo
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|friend
+name|class
+name|MIPrinter
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/// getSuccWeight - Return weight of the edge from this block to MBB. This
+comment|/// Return probability of the edge from this block to MBB. This method should
 end_comment
 
 begin_comment
-comment|/// method should NOT be called directly, but by using getEdgeWeight method
+comment|/// NOT be called directly, but by using getEdgeProbability method from
 end_comment
 
 begin_comment
-comment|/// from MachineBranchProbabilityInfo class.
+comment|/// MachineBranchProbabilityInfo class.
 end_comment
 
 begin_decl_stmt
-name|uint32_t
-name|getSuccWeight
+name|BranchProbability
+name|getSuccProbability
 argument_list|(
 name|const_succ_iterator
 name|Succ
@@ -3837,19 +4166,15 @@ comment|// Machine-CFG mutators
 end_comment
 
 begin_comment
-comment|/// addPredecessor - Remove pred as a predecessor of this MachineBasicBlock.
+comment|/// Remove Pred as a predecessor of this MachineBasicBlock. Don't do this
 end_comment
 
 begin_comment
-comment|/// Don't do this unless you know what you're doing, because it doesn't
+comment|/// unless you know what you're doing, because it doesn't update Pred's
 end_comment
 
 begin_comment
-comment|/// update pred's successors list. Use pred->addSuccessor instead.
-end_comment
-
-begin_comment
-comment|///
+comment|/// successors list. Use Pred->addSuccessor instead.
 end_comment
 
 begin_function_decl
@@ -3858,29 +4183,21 @@ name|addPredecessor
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|pred
+name|Pred
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// removePredecessor - Remove pred as a predecessor of this
+comment|/// Remove Pred as a predecessor of this MachineBasicBlock. Don't do this
 end_comment
 
 begin_comment
-comment|/// MachineBasicBlock. Don't do this unless you know what you're
+comment|/// unless you know what you're doing, because it doesn't update Pred's
 end_comment
 
 begin_comment
-comment|/// doing, because it doesn't update pred's successors list. Use
-end_comment
-
-begin_comment
-comment|/// pred->removeSuccessor instead.
-end_comment
-
-begin_comment
-comment|///
+comment|/// successors list. Use Pred->removeSuccessor instead.
 end_comment
 
 begin_function_decl
@@ -3889,7 +4206,7 @@ name|removePredecessor
 parameter_list|(
 name|MachineBasicBlock
 modifier|*
-name|pred
+name|Pred
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3975,7 +4292,7 @@ comment|// Provide specializations of GraphTraits to be able to treat a
 end_comment
 
 begin_comment
-comment|// MachineFunction as a graph of MachineBasicBlocks...
+comment|// MachineFunction as a graph of MachineBasicBlocks.
 end_comment
 
 begin_comment
@@ -4158,7 +4475,7 @@ comment|// Provide specializations of GraphTraits to be able to treat a
 end_comment
 
 begin_comment
-comment|// MachineFunction as a graph of MachineBasicBlocks... and to walk it
+comment|// MachineFunction as a graph of MachineBasicBlocks and to walk it
 end_comment
 
 begin_comment

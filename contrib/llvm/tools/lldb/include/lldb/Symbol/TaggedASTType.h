@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_decl_stmt
@@ -65,33 +65,33 @@ name|class
 name|TaggedASTType
 operator|:
 name|public
-name|ClangASTType
+name|CompilerType
 block|{
 name|public
 operator|:
 name|TaggedASTType
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|)
 operator|:
-name|ClangASTType
+name|CompilerType
 argument_list|(
-argument|clang_type
+argument|compiler_type
 argument_list|)
 block|{     }
 name|TaggedASTType
 argument_list|(
-argument|lldb::clang_type_t type
+argument|lldb::opaque_compiler_type_t type
 argument_list|,
-argument|clang::ASTContext *ast_context
+argument|TypeSystem * type_system
 argument_list|)
 operator|:
-name|ClangASTType
+name|CompilerType
 argument_list|(
-argument|ast_context
+argument|type_system
 argument_list|,
 argument|type
 argument_list|)
@@ -107,7 +107,7 @@ operator|&
 name|tw
 argument_list|)
 operator|:
-name|ClangASTType
+name|CompilerType
 argument_list|(
 argument|tw
 argument_list|)
@@ -115,7 +115,7 @@ block|{     }
 name|TaggedASTType
 argument_list|()
 operator|:
-name|ClangASTType
+name|CompilerType
 argument_list|()
 block|{     }
 name|virtual
@@ -140,7 +140,7 @@ operator|&
 name|tw
 operator|)
 block|{
-name|ClangASTType
+name|CompilerType
 operator|::
 name|operator
 operator|=

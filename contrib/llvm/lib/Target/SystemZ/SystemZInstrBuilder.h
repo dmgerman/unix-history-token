@@ -191,13 +191,12 @@ operator|.
 name|getMachineMemOperand
 argument_list|(
 name|MachinePointerInfo
-argument_list|(
-name|PseudoSourceValue
 operator|::
 name|getFixedStack
 argument_list|(
+name|MF
+argument_list|,
 name|FI
-argument_list|)
 argument_list|,
 name|Offset
 argument_list|)

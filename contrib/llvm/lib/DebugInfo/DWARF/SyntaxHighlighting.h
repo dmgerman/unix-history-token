@@ -72,6 +72,8 @@ block|,
 name|Attribute
 block|,
 name|Enumerator
+block|,
+name|Macro
 block|}
 enum|;
 comment|/// An RAII object that temporarily switches an output stream to a

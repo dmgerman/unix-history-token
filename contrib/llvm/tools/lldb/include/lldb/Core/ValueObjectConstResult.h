@@ -86,6 +86,11 @@ name|ValueObject
 block|{
 name|public
 operator|:
+operator|~
+name|ValueObjectConstResult
+argument_list|()
+name|override
+block|;
 specifier|static
 name|lldb
 operator|::
@@ -109,7 +114,7 @@ name|Create
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -126,7 +131,7 @@ name|Create
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -147,7 +152,7 @@ name|Create
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -201,43 +206,40 @@ operator|&
 name|error
 argument_list|)
 block|;
-name|virtual
-operator|~
-name|ValueObjectConstResult
-argument_list|()
-block|;
-name|virtual
 name|uint64_t
 name|GetByteSize
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueType
 name|GetValueType
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|size_t
 name|CalculateNumChildren
-argument_list|()
+argument_list|(
+argument|uint32_t max
+argument_list|)
+name|override
 block|;
-name|virtual
 name|ConstString
 name|GetTypeName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ConstString
 name|GetDisplayTypeName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsInScope
 argument_list|()
+name|override
 block|;
 name|void
 name|SetByteSize
@@ -245,18 +247,15 @@ argument_list|(
 argument|size_t size
 argument_list|)
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|ValueObject
 operator|*
 name|CreateChildAtIndex
@@ -267,8 +266,8 @@ argument|bool synthetic_array_member
 argument_list|,
 argument|int32_t synthetic_index
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -276,23 +275,21 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const ClangASTType& type
+argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -300,10 +297,10 @@ name|GetAddressOf
 argument_list|(
 argument|bool scalar_is_load_address = true
 argument_list|,
-argument|AddressType *address_type = NULL
+argument|AddressType *address_type = nullptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetPointeeData
 argument_list|(
@@ -315,13 +312,14 @@ argument_list|,
 argument|uint32_t item_count =
 literal|1
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
 name|GetLiveAddress
 argument_list|()
+name|override
 block|{
 return|return
 name|m_impl
@@ -330,7 +328,6 @@ name|GetLiveAddress
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|SetLiveAddress
 argument_list|(
@@ -338,6 +335,7 @@ argument|lldb::addr_t addr = LLDB_INVALID_ADDRESS
 argument_list|,
 argument|AddressType address_type = eAddressTypeLoad
 argument_list|)
+name|override
 block|{
 name|m_impl
 operator|.
@@ -348,7 +346,6 @@ argument_list|,
 name|address_type
 argument_list|)
 block|;     }
-name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -356,25 +353,35 @@ name|GetDynamicValue
 argument_list|(
 argument|lldb::DynamicValueType valueType
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|LanguageType
 name|GetPreferredDisplayLanguage
 argument_list|()
+name|override
+block|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Cast
+argument_list|(
+argument|const CompilerType&compiler_type
+argument_list|)
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|UpdateValue
 argument_list|()
+name|override
 block|;
-name|virtual
-name|ClangASTType
-name|GetClangTypeImpl
+name|CompilerType
+name|GetCompilerTypeImpl
 argument_list|()
+name|override
 block|;
 name|ConstString
 name|m_type_name
@@ -406,7 +413,7 @@ name|ValueObjectConstResult
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -419,7 +426,7 @@ name|ValueObjectConstResult
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -436,7 +443,7 @@ name|ValueObjectConstResult
 argument_list|(
 argument|ExecutionContextScope *exe_scope
 argument_list|,
-argument|const ClangASTType&clang_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|const ConstString&name
 argument_list|,

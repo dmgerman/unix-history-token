@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"int_util.h"
+file|"int_lib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"int_lib.h"
+file|"int_util.h"
 end_include
 
 begin_comment
@@ -26,6 +26,7 @@ name|KERNEL_USE
 end_ifdef
 
 begin_function_decl
+name|NORETURN
 specifier|extern
 name|void
 name|panic
@@ -36,15 +37,8 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(noreturn
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_ifndef
 ifndef|#
@@ -109,6 +103,7 @@ comment|/* from libSystem.dylib */
 end_comment
 
 begin_function_decl
+name|NORETURN
 specifier|extern
 name|void
 name|__assert_rtn
@@ -131,15 +126,8 @@ name|char
 modifier|*
 name|message
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(noreturn
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_ifndef
 ifndef|#

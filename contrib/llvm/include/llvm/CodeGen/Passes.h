@@ -356,10 +356,6 @@ comment|/// Default setting for -enable-tail-merge on this target.
 name|bool
 name|EnableTailMerge
 block|;
-comment|/// Default setting for -enable-shrink-wrap on this target.
-name|bool
-name|EnableShrinkWrap
-block|;
 name|public
 operator|:
 name|TargetPassConfig
@@ -556,6 +552,16 @@ name|TargetPassID
 parameter_list|,
 name|IdentifyingPassPtr
 name|InsertedPassID
+parameter_list|,
+name|bool
+name|VerifyAfter
+init|=
+name|true
+parameter_list|,
+name|bool
+name|PrintAfter
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// Allow the target to enable a specific standard pass by default.
@@ -670,7 +676,7 @@ comment|/// optimization level.
 comment|///
 comment|/// This can also be used to plug a new MachineSchedStrategy into an instance
 comment|/// of the standard ScheduleDAGMI:
-comment|///   return new ScheduleDAGMI(C, make_unique<MyStrategy>(C), /* IsPostRA= */false)
+comment|///   return new ScheduleDAGMI(C, make_unique<MyStrategy>(C), /*RemoveKillFlags=*/false)
 comment|///
 comment|/// Return NULL to select the default (generic) machine scheduler.
 name|virtual
@@ -1406,6 +1412,12 @@ name|char
 modifier|&
 name|StackSlotColoringID
 decl_stmt|;
+comment|/// \brief This pass lays out funclets contiguously.
+specifier|extern
+name|char
+modifier|&
+name|FuncletLayoutID
+decl_stmt|;
 comment|/// createStackProtectorPass - This pass adds stack protectors to functions.
 comment|///
 name|FunctionPass
@@ -1534,6 +1546,12 @@ specifier|extern
 name|char
 modifier|&
 name|StackMapLivenessID
+decl_stmt|;
+comment|/// LiveDebugValues pass
+specifier|extern
+name|char
+modifier|&
+name|LiveDebugValuesID
 decl_stmt|;
 comment|/// createJumpInstrTables - This pass creates jump-instruction tables.
 name|ModulePass

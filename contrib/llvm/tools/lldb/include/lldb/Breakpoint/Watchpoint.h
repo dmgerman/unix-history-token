@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<list>
+file|<memory>
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -135,21 +135,6 @@ name|EventData
 block|{
 name|public
 operator|:
-specifier|static
-specifier|const
-name|ConstString
-operator|&
-name|GetFlavorString
-argument_list|()
-block|;
-name|virtual
-specifier|const
-name|ConstString
-operator|&
-name|GetFlavor
-argument_list|()
-specifier|const
-block|;
 name|WatchpointEventData
 argument_list|(
 argument|lldb::WatchpointEventType sub_type
@@ -157,10 +142,25 @@ argument_list|,
 argument|const lldb::WatchpointSP&new_watchpoint_sp
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|WatchpointEventData
 argument_list|()
+name|override
+block|;
+specifier|static
+specifier|const
+name|ConstString
+operator|&
+name|GetFlavorString
+argument_list|()
+block|;
+specifier|const
+name|ConstString
+operator|&
+name|GetFlavor
+argument_list|()
+specifier|const
+name|override
 block|;
 name|lldb
 operator|::
@@ -176,13 +176,13 @@ operator|&
 name|GetWatchpoint
 argument_list|()
 block|;
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|lldb
@@ -250,7 +250,7 @@ argument|lldb::addr_t addr
 argument_list|,
 argument|uint32_t size
 argument_list|,
-argument|const ClangASTType *type
+argument|const CompilerType *type
 argument_list|,
 argument|bool hardware = true
 argument_list|)
@@ -258,6 +258,7 @@ empty_stmt|;
 operator|~
 name|Watchpoint
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|IncrementFalseAlarmsAndReviseHitCount
@@ -280,21 +281,21 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-name|virtual
 name|bool
 name|IsHardware
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
-name|virtual
 name|bool
 name|ShouldStop
-parameter_list|(
+argument_list|(
 name|StoppointCallbackContext
-modifier|*
+operator|*
 name|context
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|WatchpointRead
 argument_list|()
@@ -400,6 +401,7 @@ operator|*
 name|s
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|void
 name|DumpSnapshots
@@ -413,7 +415,7 @@ name|char
 operator|*
 name|prefix
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -546,7 +548,7 @@ comment|/// Set the watchpoint's condition.
 comment|///
 comment|/// @param[in] condition
 comment|///    The condition expression to evaluate when the watchpoint is hit.
-comment|///    Pass in NULL to clear the condition.
+comment|///    Pass in nullptr to clear the condition.
 comment|//------------------------------------------------------------------
 name|void
 name|SetCondition
@@ -561,7 +563,7 @@ comment|//------------------------------------------------------------------
 comment|/// Return a pointer to the text of the condition expression.
 comment|///
 comment|/// @return
-comment|///    A pointer to the condition expression text, or NULL if no
+comment|///    A pointer to the condition expression text, or nullptr if no
 comment|//     condition has been set.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -584,9 +586,9 @@ name|IsDisabledDuringEphemeralMode
 parameter_list|()
 function_decl|;
 specifier|const
-name|ClangASTType
+name|CompilerType
 modifier|&
-name|GetClangASTType
+name|GetCompilerType
 parameter_list|()
 block|{
 return|return
@@ -711,7 +713,7 @@ operator|::
 name|ValueObjectSP
 name|m_new_value_sp
 expr_stmt|;
-name|ClangASTType
+name|CompilerType
 name|m_type
 decl_stmt|;
 name|Error
@@ -730,7 +732,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ClangUserExpression
+name|UserExpression
 operator|>
 name|m_condition_ap
 expr_stmt|;

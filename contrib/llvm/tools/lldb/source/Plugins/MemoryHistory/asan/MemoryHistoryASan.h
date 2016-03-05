@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MemoryHistoryASan.h ----------------------------------------*- C++ -*-===//
+comment|//===-- MemoryHistoryASan.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -97,6 +97,13 @@ name|MemoryHistory
 block|{
 name|public
 operator|:
+operator|~
+name|MemoryHistoryASan
+argument_list|()
+name|override
+operator|=
+expr|default
+block|;
 specifier|static
 name|lldb
 operator|::
@@ -128,33 +135,27 @@ name|ConstString
 name|GetPluginNameStatic
 argument_list|()
 block|;
-name|virtual
-operator|~
-name|MemoryHistoryASan
-argument_list|()
-block|{}
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|{
 return|return
 name|GetPluginNameStatic
 argument_list|()
 return|;
 block|}
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 name|lldb_private
 operator|::
 name|HistoryThreads
@@ -162,6 +163,7 @@ name|GetHistoryThreads
 argument_list|(
 argument|lldb::addr_t address
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -177,9 +179,9 @@ argument_list|)
 block|;
 name|lldb
 operator|::
-name|ProcessSP
-name|m_process_sp
-block|;      }
+name|ProcessWP
+name|m_process_wp
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

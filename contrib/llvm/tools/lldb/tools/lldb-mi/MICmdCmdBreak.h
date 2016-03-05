@@ -134,18 +134,6 @@ comment|//          This command does not follow the MI documentation exactly.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 11/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -164,18 +152,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakInsert
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -183,32 +167,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakInsert
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Enumerations:
@@ -315,13 +291,7 @@ block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedLocation
-block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGroup
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option sometimes
-block|}
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -338,18 +308,6 @@ comment|//          *this class implements MI command "break-delete".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 11/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -368,18 +326,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakDelete
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -387,32 +341,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakDelete
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
@@ -421,13 +367,7 @@ operator|:
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedBrkPt
-block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
-block|}
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -444,18 +384,6 @@ comment|//          *this class implements MI command "break-disable".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -474,18 +402,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakDisable
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -493,42 +417,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakDisable
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedBrkPt
@@ -555,18 +466,6 @@ comment|//          *this class implements MI command "break-enable".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -585,18 +484,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakEnable
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -604,42 +499,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakEnable
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedBrkPt
@@ -666,18 +548,6 @@ comment|//          *this class implements MI command "break-after".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 29/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -696,18 +566,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakAfter
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -715,42 +581,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakAfter
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedNumber
@@ -781,18 +634,6 @@ comment|//          *this class implements MI command "break-condition".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 29/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -811,18 +652,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdBreakCondition
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -830,32 +667,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdBreakCondition
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -863,18 +692,11 @@ name|private
 operator|:
 name|CMIUtilString
 name|GetRestOfExpressionNotSurroundedInQuotes
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedNumber

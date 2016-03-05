@@ -82,15 +82,7 @@ name|ASTConsumer
 operator|>
 name|CreatePCHContainerGenerator
 argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|,
-argument|const HeaderSearchOptions&HSO
-argument_list|,
-argument|const PreprocessorOptions&PPO
-argument_list|,
-argument|const TargetOptions&TO
-argument_list|,
-argument|const LangOptions&LO
+argument|CompilerInstance&CI
 argument_list|,
 argument|const std::string&MainFileName
 argument_list|,

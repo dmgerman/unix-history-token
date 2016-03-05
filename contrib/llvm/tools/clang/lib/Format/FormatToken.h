@@ -428,12 +428,13 @@ name|OperatorIndex
 init|=
 literal|0
 decl_stmt|;
-comment|/// \brief Is this the last operator (or "."/"->") in a sequence of operators
-comment|/// with the same precedence?
-name|bool
-name|LastOperator
+comment|/// \brief If this is an operator (or "."/"->") in a sequence of operators
+comment|/// with the same precedence, points to the next operator.
+name|FormatToken
+modifier|*
+name|NextOperator
 init|=
-name|false
+name|nullptr
 decl_stmt|;
 comment|/// \brief Is this token part of a \c DeclStmt defining multiple variables?
 comment|///
@@ -541,6 +542,33 @@ name|Tok
 operator|.
 name|getIdentifierInfo
 argument_list|()
+return|;
+block|}
+name|bool
+name|is
+argument_list|(
+name|tok
+operator|::
+name|PPKeywordKind
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|&&
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|->
+name|getPPKeywordID
+argument_list|()
+operator|==
+name|Kind
 return|;
 block|}
 name|template
@@ -1150,7 +1178,7 @@ block|}
 comment|/// \brief Returns \c true if this tokens starts a block-type list, i.e. a
 comment|/// list that should be indented with a block indent.
 name|bool
-name|opensBlockTypeList
+name|opensBlockOrBlockTypeList
 argument_list|(
 specifier|const
 name|FormatStyle
@@ -1197,9 +1225,9 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// \brief Same as opensBlockTypeList, but for the closing token.
+comment|/// \brief Same as opensBlockOrBlockTypeList, but for the closing token.
 name|bool
-name|closesBlockTypeList
+name|closesBlockOrBlockTypeList
 argument_list|(
 specifier|const
 name|FormatStyle
@@ -1213,7 +1241,7 @@ name|MatchingParen
 operator|&&
 name|MatchingParen
 operator|->
-name|opensBlockTypeList
+name|opensBlockOrBlockTypeList
 argument_list|(
 name|Style
 argument_list|)
@@ -1507,6 +1535,26 @@ argument_list|(
 argument|IdentifierTable&IdentTable
 argument_list|)
 block|{
+name|kw_final
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"final"
+argument_list|)
+expr_stmt|;
+name|kw_override
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"override"
+argument_list|)
+expr_stmt|;
 name|kw_in
 operator|=
 operator|&
@@ -1587,6 +1635,26 @@ argument_list|(
 literal|"import"
 argument_list|)
 expr_stmt|;
+name|kw_is
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"is"
+argument_list|)
+expr_stmt|;
+name|kw_let
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"let"
+argument_list|)
+expr_stmt|;
 name|kw_var
 operator|=
 operator|&
@@ -1607,6 +1675,16 @@ argument_list|(
 literal|"abstract"
 argument_list|)
 expr_stmt|;
+name|kw_assert
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"assert"
+argument_list|)
+expr_stmt|;
 name|kw_extends
 operator|=
 operator|&
@@ -1615,16 +1693,6 @@ operator|.
 name|get
 argument_list|(
 literal|"extends"
-argument_list|)
-expr_stmt|;
-name|kw_final
-operator|=
-operator|&
-name|IdentTable
-operator|.
-name|get
-argument_list|(
-literal|"final"
 argument_list|)
 expr_stmt|;
 name|kw_implements
@@ -1717,6 +1785,16 @@ argument_list|(
 literal|"mark"
 argument_list|)
 expr_stmt|;
+name|kw_extend
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"extend"
+argument_list|)
+expr_stmt|;
 name|kw_option
 operator|=
 operator|&
@@ -1777,6 +1855,16 @@ argument_list|(
 literal|"signals"
 argument_list|)
 expr_stmt|;
+name|kw_qsignals
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"Q_SIGNALS"
+argument_list|)
+expr_stmt|;
 name|kw_slots
 operator|=
 operator|&
@@ -1799,6 +1887,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Context sensitive keywords.
+name|IdentifierInfo
+modifier|*
+name|kw_final
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_override
+decl_stmt|;
 name|IdentifierInfo
 modifier|*
 name|kw_in
@@ -1838,6 +1934,14 @@ name|kw_import
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
+name|kw_is
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_let
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
 name|kw_var
 decl_stmt|;
 comment|// Java keywords.
@@ -1847,11 +1951,11 @@ name|kw_abstract
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
-name|kw_extends
+name|kw_assert
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
-name|kw_final
+name|kw_extends
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
@@ -1889,6 +1993,10 @@ decl_stmt|;
 comment|// Proto keywords.
 name|IdentifierInfo
 modifier|*
+name|kw_extend
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
 name|kw_option
 decl_stmt|;
 name|IdentifierInfo
@@ -1911,6 +2019,10 @@ comment|// QT keywords.
 name|IdentifierInfo
 modifier|*
 name|kw_signals
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_qsignals
 decl_stmt|;
 name|IdentifierInfo
 modifier|*

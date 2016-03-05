@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -80,17 +74,23 @@ file|"lldb/Core/Scalar.h"
 end_include
 
 begin_decl_stmt
+name|class
+name|DWARFCompileUnit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|ClangExpressionDeclMap
+decl_stmt|;
 name|class
 name|ClangExpressionVariable
 decl_stmt|;
 name|class
 name|ClangExpressionVariableList
-decl_stmt|;
-name|class
-name|ClangExpressionDeclMap
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class DWARFExpression DWARFExpression.h "lldb/Expression/DWARFExpression.h"
@@ -110,12 +110,33 @@ name|DWARFExpression
 block|{
 name|public
 label|:
+enum|enum
+name|LocationListFormat
+enum|:
+name|uint8_t
+block|{
+name|NonLocationList
+block|,
+comment|// Not a location list
+name|RegularLocationList
+block|,
+comment|// Location list format used in non-split dwarf files
+name|SplitDwarfLocationList
+block|,
+comment|// Location list format used in split dwarf files
+block|}
+enum|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|//------------------------------------------------------------------
+name|explicit
 name|DWARFExpression
-argument_list|()
-expr_stmt|;
+parameter_list|(
+name|DWARFCompileUnit
+modifier|*
+name|dwarf_cu
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
@@ -134,6 +155,8 @@ argument_list|(
 argument|lldb::ModuleSP module
 argument_list|,
 argument|const DataExtractor& data
+argument_list|,
+argument|DWARFCompileUnit* dwarf_cu
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -649,6 +672,10 @@ name|DataExtractor
 operator|&
 name|opcodes
 argument_list|,
+name|DWARFCompileUnit
+operator|*
+name|dwarf_cu
+argument_list|,
 specifier|const
 name|lldb
 operator|::
@@ -760,6 +787,73 @@ operator|*
 name|abi
 argument_list|)
 decl_stmt|;
+specifier|static
+name|size_t
+name|LocationListSize
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|dwarf_cu
+argument_list|,
+specifier|const
+name|DataExtractor
+operator|&
+name|debug_loc_data
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+name|offset
+argument_list|)
+decl_stmt|;
+specifier|static
+name|bool
+name|PrintDWARFExpression
+parameter_list|(
+name|Stream
+modifier|&
+name|s
+parameter_list|,
+specifier|const
+name|DataExtractor
+modifier|&
+name|data
+parameter_list|,
+name|int
+name|address_size
+parameter_list|,
+name|int
+name|dwarf_ref_size
+parameter_list|,
+name|bool
+name|location_expression
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|PrintDWARFLocationList
+argument_list|(
+name|Stream
+operator|&
+name|s
+argument_list|,
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|cu
+argument_list|,
+specifier|const
+name|DataExtractor
+operator|&
+name|debug_loc_data
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+name|offset
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -835,6 +929,39 @@ operator|&
 name|len
 argument_list|)
 decl_stmt|;
+specifier|static
+name|bool
+name|AddressRangeForLocationListEntry
+argument_list|(
+specifier|const
+name|DWARFCompileUnit
+operator|*
+name|dwarf_cu
+argument_list|,
+specifier|const
+name|DataExtractor
+operator|&
+name|debug_loc_data
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|*
+name|offset_ptr
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|low_pc
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|high_pc
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Classes that inherit from DWARFExpression can see and modify these
 comment|//------------------------------------------------------------------
@@ -848,6 +975,13 @@ name|DataExtractor
 name|m_data
 decl_stmt|;
 comment|///< A data extractor capable of reading opcode bytes
+name|DWARFCompileUnit
+modifier|*
+name|m_dwarf_cu
+decl_stmt|;
+comment|///< The DWARF compile unit this expression belongs to. It is used
+comment|///< to evaluate values indexing into the .debug_addr section (e.g.
+comment|///< DW_OP_GNU_addr_index, DW_OP_GNU_const_index)
 name|lldb
 operator|::
 name|RegisterKind

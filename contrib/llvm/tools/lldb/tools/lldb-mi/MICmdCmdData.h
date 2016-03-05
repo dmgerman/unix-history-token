@@ -168,18 +168,6 @@ comment|//          *this class implements MI command "data-evaluate-expression"
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 26/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -198,18 +186,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataEvaluateExpression
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -217,32 +201,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataEvaluateExpression
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -279,26 +255,12 @@ name|CMICmnMIValueTuple
 name|m_miValueTuple
 block|;
 name|bool
-name|m_bCompositeVarType
-block|;
-comment|// True = yes composite type, false = internal type
-name|bool
 name|m_bFoundInvalidChar
 block|;
 comment|// True = yes found unexpected character in the expression, false = all ok
 name|char
 name|m_cExpressionInvalidChar
 block|;
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
-specifier|const
-name|CMIUtilString
-name|m_constStrArgFrame
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgExpr
@@ -316,18 +278,6 @@ end_comment
 
 begin_comment
 comment|//          *this class implements MI command "data-disassemble".
-end_comment
-
-begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -349,18 +299,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataDisassemble
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -368,42 +314,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataDisassemble
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgAddrStart
@@ -414,10 +347,6 @@ name|CMIUtilString
 name|m_constStrArgAddrEnd
 block|;
 comment|// MI spec non mandatory, *this command mandatory
-specifier|const
-name|CMIUtilString
-name|m_constStrArgConsume
-block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgMode
@@ -441,18 +370,6 @@ comment|//          *this class implements MI command "data-read-memory-bytes".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 20/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -471,18 +388,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataReadMemoryBytes
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -490,47 +403,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataReadMemoryBytes
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not in the MI spec but implemented by GDB.
-specifier|const
-name|CMIUtilString
-name|m_constStrArgFrame
-block|;
-comment|// Not in the MI spec but implemented by GDB.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgByteOffset
@@ -570,18 +465,6 @@ comment|//          *this class implements MI command "data-read-memory".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 21/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -600,18 +483,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataReadMemory
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -619,25 +498,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataReadMemory
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -656,18 +529,6 @@ comment|//          *this class implements MI command "data-list-register-names"
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 21/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -686,18 +547,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataListRegisterNames
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -705,32 +562,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataListRegisterNames
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -748,11 +597,6 @@ block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThreadGroup
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgRegNo
@@ -777,18 +621,6 @@ comment|//          *this class implements MI command "data-list-register-values
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 21/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -807,18 +639,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataListRegisterValues
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -826,32 +654,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataListRegisterValues
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
@@ -866,7 +686,7 @@ argument|const MIuint vRegisterIndex
 argument_list|)
 specifier|const
 block|;
-name|bool
+name|void
 name|AddToOutput
 argument_list|(
 argument|const MIuint vnIndex
@@ -879,11 +699,6 @@ block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgSkip
@@ -916,18 +731,6 @@ comment|//          *this class implements MI command "data-list-changed-registe
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 22/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -946,18 +749,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataListRegisterChanged
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -965,25 +764,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataListRegisterChanged
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -1002,18 +795,6 @@ comment|//          *this class implements MI command "data-read-memory-bytes".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 30/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -1032,18 +813,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataWriteMemoryBytes
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -1051,42 +828,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataWriteMemoryBytes
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgAddr
@@ -1122,18 +886,6 @@ comment|//          Not specified in MI spec but Eclipse gives *this command.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 02/05/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -1152,18 +904,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataWriteMemory
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -1171,42 +919,29 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataWriteMemory
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:
 name|private
 operator|:
-specifier|const
-name|CMIUtilString
-name|m_constStrArgThread
-block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgOffset
@@ -1284,18 +1019,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdDataInfoLine
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -1303,32 +1034,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdDataInfoLine
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:

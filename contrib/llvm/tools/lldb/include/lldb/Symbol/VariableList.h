@@ -150,10 +150,9 @@ operator|::
 name|VariableSP
 name|FindVariable
 argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|name
+argument|const ConstString& name
+argument_list|,
+argument|bool include_static_members = true
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -164,6 +163,8 @@ argument_list|(
 argument|const ConstString& name
 argument_list|,
 argument|lldb::ValueType value_type
+argument_list|,
+argument|bool include_static_members = true
 argument_list|)
 expr_stmt|;
 name|uint32_t

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Hashing.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -355,7 +361,7 @@ operator|(
 name|T
 operator|*
 operator|)
-literal|0
+name|nullptr
 operator|:
 name|Vec
 operator|.
@@ -630,7 +636,7 @@ operator|)
 block|;
 name|std
 operator|::
-name|copy
+name|uninitialized_copy
 argument_list|(
 name|begin
 argument_list|()
@@ -672,15 +678,6 @@ name|Length
 condition|)
 return|return
 name|false
-return|;
-if|if
-condition|(
-name|Length
-operator|==
-literal|0
-condition|)
-return|return
-name|true
 return|;
 return|return
 name|std
@@ -1679,6 +1676,57 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Construct an ArrayRef from an ArrayRef (no-op) (const)
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const ArrayRef<T>&Vec
+argument_list|)
+block|{
+return|return
+name|Vec
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from an ArrayRef (no-op)
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|&
+name|makeArrayRef
+argument_list|(
+argument|ArrayRef<T>&Vec
+argument_list|)
+block|{
+return|return
+name|Vec
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Construct an ArrayRef from a C array.
 end_comment
 
@@ -1836,6 +1884,35 @@ operator|=
 name|true
 block|;   }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|hash_code
+name|hash_value
+argument_list|(
+argument|ArrayRef<T> S
+argument_list|)
+block|{
+return|return
+name|hash_combine_range
+argument_list|(
+name|S
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|S
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_endif

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/DebugMacros.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/Function.h"
 end_include
 
@@ -148,6 +154,9 @@ comment|/// @param[in] language
 comment|///     A language enumeration type that describes the main language
 comment|///     of this compile unit.
 comment|///
+comment|/// @param[in] is_optimized
+comment|///     true if this compile unit was compiled with optimization.
+comment|///
 comment|/// @see lldb::LanguageType
 comment|//------------------------------------------------------------------
 name|CompileUnit
@@ -161,6 +170,8 @@ argument_list|,
 argument|lldb::user_id_t uid
 argument_list|,
 argument|lldb::LanguageType language
+argument_list|,
+argument|bool is_optimized
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -191,6 +202,9 @@ comment|/// @param[in] language
 comment|///     A language enumeration type that describes the main language
 comment|///     of this compile unit.
 comment|///
+comment|/// @param[in] is_optimized
+comment|///     true if this compile unit was compiled with optimization.
+comment|///
 comment|/// @see lldb::LanguageType
 comment|//------------------------------------------------------------------
 name|CompileUnit
@@ -204,15 +218,17 @@ argument_list|,
 argument|lldb::user_id_t uid
 argument_list|,
 argument|lldb::LanguageType language
+argument_list|,
+argument|bool is_optimized
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|CompileUnit
 argument_list|()
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Add a function to this compile unit.
@@ -238,42 +254,42 @@ comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CalculateSymbolContext
-parameter_list|(
+argument_list|(
 name|SymbolContext
-modifier|*
+operator|*
 name|sc
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|ModuleSP
 name|CalculateSymbolContextModule
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|CompileUnit
-modifier|*
+operator|*
 name|CalculateSymbolContextCompileUnit
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc SymbolContextScope::DumpSymbolContext(Stream*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DumpSymbolContext
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|LanguageType
@@ -436,6 +452,11 @@ modifier|*
 name|GetLineTable
 parameter_list|()
 function_decl|;
+name|DebugMacros
+modifier|*
+name|GetDebugMacros
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get the compile unit's support file list.
 comment|///
@@ -558,6 +579,15 @@ modifier|*
 name|line_table
 parameter_list|)
 function_decl|;
+name|void
+name|SetDebugMacros
+parameter_list|(
+specifier|const
+name|DebugMacrosSP
+modifier|&
+name|debug_macros
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Set accessor for the variable list.
 comment|///
@@ -648,6 +678,23 @@ modifier|&
 name|sc_list
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get whether compiler optimizations were enabled for this compile unit
+comment|///
+comment|/// "optimized" means that the debug experience may be difficult
+comment|/// for the user to understand.  Variables may not be available when
+comment|/// the developer would expect them, stepping through the source lines
+comment|/// in the function may appear strange, etc.
+comment|///
+comment|/// @return
+comment|///     Returns 'true' if this compile unit was compiled with
+comment|///     optimization.  'false' indicates that either the optimization
+comment|///     is unknown, or this compile unit was built without optimization.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsOptimized
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|void
@@ -700,12 +747,20 @@ operator|>
 name|m_line_table_ap
 expr_stmt|;
 comment|///< Line table that will get parsed on demand.
+name|DebugMacrosSP
+name|m_debug_macros_sp
+decl_stmt|;
+comment|///< Debug macros that will get parsed on demand.
 name|lldb
 operator|::
 name|VariableListSP
 name|m_variables
 expr_stmt|;
 comment|///< Global and static variable list that will get parsed on demand.
+name|bool
+name|m_is_optimized
+decl_stmt|;
+comment|/// eLazyBoolYes if this compile unit was compiled with optimization.
 name|private
 label|:
 enum|enum
@@ -754,7 +809,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-comment|///< Have we parsed the line table already?
+comment|///< Have we parsed the language already?
 name|flagsParsedImportedModules
 init|=
 operator|(
@@ -762,7 +817,16 @@ literal|1u
 operator|<<
 literal|5
 operator|)
+block|,
 comment|///< Have we parsed the imported modules already?
+name|flagsParsedDebugMacros
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|6
+operator|)
+comment|///< Have we parsed the debug macros already?
 block|}
 enum|;
 name|DISALLOW_COPY_AND_ASSIGN

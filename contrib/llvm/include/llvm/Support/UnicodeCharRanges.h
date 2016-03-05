@@ -179,6 +179,10 @@ comment|/// instances per each array of ranges, as possible.
 ifdef|#
 directive|ifdef
 name|NDEBUG
+comment|// FIXME: This could use constexpr + static_assert. This way we
+comment|// may get rid of NDEBUG in this header. Unfortunately there are some
+comment|// problems to get this working with MSVC 2013. Change this when
+comment|// the support for MSVC 2013 is dropped.
 name|LLVM_CONSTEXPR
 name|UnicodeCharSet
 argument_list|(

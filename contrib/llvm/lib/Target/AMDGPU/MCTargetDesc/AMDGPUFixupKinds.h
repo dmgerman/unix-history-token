@@ -67,9 +67,6 @@ block|,
 comment|/// fixup for global addresses with constant initializers
 name|fixup_si_rodata
 block|,
-comment|/// fixup for offset from instruction to end of text section
-name|fixup_si_end_of_text
-block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

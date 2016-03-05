@@ -163,8 +163,7 @@ name|alignment
 operator|=
 literal|8
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 decl_stmt|;
 end_decl_stmt
 
@@ -189,8 +188,7 @@ name|PR
 argument_list|,
 name|unsigned
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 decl_stmt|;
 end_decl_stmt
 
@@ -329,8 +327,7 @@ name|alignment
 init|=
 literal|8
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 return|return
 operator|::
@@ -357,8 +354,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 return|return
 name|mem
@@ -379,8 +375,7 @@ parameter_list|,
 name|unsigned
 name|alignment
 parameter_list|)
-function|throw
-parameter_list|()
+function|LLVM_NOEXCEPT
 block|{
 return|return
 operator|::
@@ -406,9 +401,8 @@ name|std
 operator|::
 name|size_t
 argument_list|)
-name|throw
-argument_list|()
-block|{ }
+name|LLVM_NOEXCEPT
+block|{}
 name|void
 name|operator
 name|delete
@@ -419,9 +413,8 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function|throw
-parameter_list|()
-block|{ }
+function|LLVM_NOEXCEPT
+block|{}
 name|private
 label|:
 comment|// Make vanilla 'new' and 'delete' illegal for preprocessed entities.
@@ -429,24 +422,22 @@ name|void
 modifier|*
 name|operator
 name|new
-parameter_list|(
+argument_list|(
 name|size_t
 name|bytes
-parameter_list|)
-function_decl|throw
-parameter_list|()
-function_decl|;
+argument_list|)
+name|LLVM_NOEXCEPT
+decl_stmt|;
 name|void
 name|operator
 name|delete
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|data
-parameter_list|)
-function_decl|throw
-parameter_list|()
-function_decl|;
+argument_list|)
+name|LLVM_NOEXCEPT
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Records the presence of a preprocessor directive.
@@ -1781,12 +1772,11 @@ name|new
 argument_list|(
 argument|size_t bytes
 argument_list|,
-argument|clang::PreprocessingRecord& PR
+argument|clang::PreprocessingRecord&PR
 argument_list|,
 argument|unsigned alignment
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 return|return
 name|PR
@@ -1804,14 +1794,13 @@ name|void
 name|operator
 name|delete
 argument_list|(
-argument|void* ptr
+argument|void *ptr
 argument_list|,
-argument|clang::PreprocessingRecord& PR
+argument|clang::PreprocessingRecord&PR
 argument_list|,
 argument|unsigned
 argument_list|)
-name|throw
-argument_list|()
+name|LLVM_NOEXCEPT
 block|{
 name|PR
 operator|.

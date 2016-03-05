@@ -641,7 +641,15 @@ name|I
 return|;
 block|}
 return|return
-literal|2
+literal|1
+operator|+
+name|getNumBytesForUTF8
+argument_list|(
+name|Text
+index|[
+literal|1
+index|]
+argument_list|)
 return|;
 block|}
 block|}

@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineOperand.h"
 end_include
 
@@ -164,9 +170,6 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|AliasAnalysis
-decl_stmt|;
-name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
@@ -192,13 +195,15 @@ name|class
 name|MachineInstr
 range|:
 name|public
-name|ilist_node
+name|ilist_node_with_parent
 operator|<
 name|MachineInstr
-operator|>
+decl_stmt|,
+name|MachineBasicBlock
+decl|>
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|MachineMemOperand
 modifier|*
@@ -209,14 +214,14 @@ comment|/// Flags to specify different kinds of comments to output in
 comment|/// assembly code.  These flags carry semantic information not
 comment|/// otherwise easily derivable from the IR text.
 comment|///
-block|enum
+enum|enum
 name|CommentFlag
 block|{
 name|ReloadReuse
-operator|=
+init|=
 literal|0x1
 block|}
-decl_stmt|;
+enum|;
 enum|enum
 name|MIFlag
 block|{
@@ -232,18 +237,26 @@ literal|0
 block|,
 comment|// Instruction is used as a part of
 comment|// function frame setup code.
-name|BundledPred
+name|FrameDestroy
 init|=
 literal|1
 operator|<<
 literal|1
+block|,
+comment|// Instruction is used as a part of
+comment|// function frame destruction code.
+name|BundledPred
+init|=
+literal|1
+operator|<<
+literal|2
 block|,
 comment|// Instruction has bundled predecessors.
 name|BundledSucc
 init|=
 literal|1
 operator|<<
-literal|2
+literal|3
 comment|// Instruction has bundled successors.
 block|}
 enum|;
@@ -302,6 +315,12 @@ name|uint8_t
 name|NumMemRefs
 decl_stmt|;
 comment|// Information on memory references.
+comment|// Note that MemRefs == nullptr,  means 'don't know', not 'no memory access'.
+comment|// Calling code must treat missing information conservatively.  If the number
+comment|// of memory operands required to be precise exceeds the maximum value of
+comment|// NumMemRefs - currently 256 - we remove the operands entirely. Note also
+comment|// that this is a non-owning reference to a shared copy on write buffer owned
+comment|// by the MachineFunction and created via MF.allocateMemRefsArray.
 name|mmo_iterator
 name|MemRefs
 decl_stmt|;
@@ -930,17 +949,14 @@ name|operands
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -952,17 +968,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -973,20 +986,17 @@ name|explicit_operands
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_begin
 argument_list|()
 operator|+
 name|getNumExplicitOperands
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -998,20 +1008,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_begin
 argument_list|()
 operator|+
 name|getNumExplicitOperands
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -1022,20 +1029,17 @@ name|implicit_operands
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|explicit_operands
 argument_list|()
 operator|.
 name|end
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -1047,22 +1051,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|explicit_operands
 argument_list|()
 operator|.
 name|end
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
+comment|/// Returns a range over all explicit operands that are register definitions.
+comment|/// Implicit definition are not included!
 name|iterator_range
 operator|<
 name|mop_iterator
@@ -1071,14 +1074,11 @@ name|defs
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_begin
 argument_list|()
 operator|+
@@ -1087,9 +1087,10 @@ argument_list|()
 operator|.
 name|getNumDefs
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
+comment|/// \copydoc defs()
 name|iterator_range
 operator|<
 name|const_mop_iterator
@@ -1099,14 +1100,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|operands_begin
 argument_list|()
 operator|+
@@ -1115,9 +1113,11 @@ argument_list|()
 operator|.
 name|getNumDefs
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
+comment|/// Returns a range that includes all operands that are register uses.
+comment|/// This may include unrelated operands which are not register uses.
 name|iterator_range
 operator|<
 name|mop_iterator
@@ -1126,11 +1126,8 @@ name|uses
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
 operator|+
@@ -1139,12 +1136,13 @@ argument_list|()
 operator|.
 name|getNumDefs
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
+comment|/// \copydoc uses()
 name|iterator_range
 operator|<
 name|const_mop_iterator
@@ -1154,11 +1152,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_mop_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|operands_begin
 argument_list|()
 operator|+
@@ -1167,10 +1162,10 @@ argument_list|()
 operator|.
 name|getNumDefs
 argument_list|()
-operator|,
+argument_list|,
 name|operands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Returns the number of the operand iterator \p I points to.
@@ -1210,6 +1205,9 @@ operator|+
 name|NumMemRefs
 return|;
 block|}
+comment|/// Return true if we don't have any memory operands which described the the
+comment|/// memory access done by this instruction.  If this is true, calling code
+comment|/// must be conservative.
 name|bool
 name|memoperands_empty
 argument_list|()
@@ -1229,17 +1227,14 @@ name|memoperands
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mmo_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|memoperands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|memoperands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -1251,17 +1246,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|mmo_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|memoperands_begin
 argument_list|()
-operator|,
+argument_list|,
 name|memoperands_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Return true if this instruction has exactly one MachineMemOperand.
@@ -1765,8 +1757,8 @@ argument_list|)
 return|;
 block|}
 comment|/// Return true if this instruction is convergent.
-comment|/// Convergent instructions can only be moved to locations that are
-comment|/// control-equivalent to their initial position.
+comment|/// Convergent instructions can not be made control-dependent on any
+comment|/// additional values.
 name|bool
 name|isConvergent
 argument_list|(
@@ -3119,6 +3111,48 @@ name|Idx
 argument_list|)
 return|;
 block|}
+specifier|const
+name|MachineOperand
+modifier|*
+name|findRegisterUseOperand
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+name|bool
+name|isKill
+operator|=
+name|false
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|findRegisterUseOperand
+argument_list|(
+name|Reg
+argument_list|,
+name|isKill
+argument_list|,
+name|TRI
+argument_list|)
+return|;
+block|}
 comment|/// Returns the operand index that is a def of the specified register or
 comment|/// -1 if it is not found. If isDead is true, defs that are not dead are
 comment|/// skipped. If Overlap is true, then it also looks for defs that merely
@@ -3591,10 +3625,15 @@ comment|/// Mark all subregister defs of register @p Reg with the undef flag.
 comment|/// This function is used when we determined to have a subregister def in an
 comment|/// otherwise undefined super register.
 name|void
-name|addRegisterDefReadUndef
+name|setRegisterDefReadUndef
 parameter_list|(
 name|unsigned
 name|Reg
+parameter_list|,
+name|bool
+name|IsUndef
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// We have determined MI defines a register. Make sure there is an operand
@@ -3688,6 +3727,12 @@ comment|/// in one of its operands (see InlineAsm::Extra_HasSideEffect).
 comment|///
 name|bool
 name|hasUnmodeledSideEffects
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if it is illegal to fold a load across this instruction.
+name|bool
+name|isLoadFoldBarrier
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3873,34 +3918,92 @@ name|mmo_iterator
 name|NewMemRefsEnd
 parameter_list|)
 block|{
+name|setMemRefs
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|NewMemRefs
+argument_list|,
+name|NewMemRefsEnd
+operator|-
+name|NewMemRefs
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Assign this MachineInstr's memory reference descriptor list.  First
+comment|/// element in the pair is the begin iterator/pointer to the array; the
+comment|/// second is the number of MemoryOperands.  This does not transfer ownership
+comment|/// of the underlying memory.
+name|void
+name|setMemRefs
+argument_list|(
+name|std
+operator|::
+name|pair
+operator|<
+name|mmo_iterator
+argument_list|,
+name|unsigned
+operator|>
+name|NewMemRefs
+argument_list|)
+block|{
 name|MemRefs
 operator|=
 name|NewMemRefs
+operator|.
+name|first
 expr_stmt|;
 name|NumMemRefs
 operator|=
 name|uint8_t
 argument_list|(
-name|NewMemRefsEnd
-operator|-
 name|NewMemRefs
+operator|.
+name|second
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
 name|NumMemRefs
 operator|==
-name|NewMemRefsEnd
-operator|-
 name|NewMemRefs
+operator|.
+name|second
 operator|&&
-literal|"Too many memrefs"
+literal|"Too many memrefs - must drop memory operands"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Clear this MachineInstr's memory reference descriptor list.
+comment|/// Return a set of memrefs (begin iterator, size) which conservatively
+comment|/// describe the memory behavior of both MachineInstrs.  This is appropriate
+comment|/// for use when merging two MachineInstrs into one. This routine does not
+comment|/// modify the memrefs of the this MachineInstr.
+name|std
+operator|::
+name|pair
+operator|<
+name|mmo_iterator
+operator|,
+name|unsigned
+operator|>
+name|mergeMemRefsWith
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
+comment|/// Clear this MachineInstr's memory reference descriptor list.  This resets
+comment|/// the memrefs to their most conservative state.  This should be used only
+comment|/// as a last resort since it greatly pessimizes our knowledge of the memory
+comment|/// access performed by the instruction.
 name|void
-name|clearMemRefs
+name|dropMemRefs
 parameter_list|()
 block|{
 name|MemRefs
@@ -3962,6 +4065,15 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+comment|/// Add all implicit def and use operands to this instruction.
+name|void
+name|addImplicitDefUseOperands
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// If this instruction is embedded into a MachineFunction, return the
@@ -3971,15 +4083,6 @@ name|MachineRegisterInfo
 modifier|*
 name|getRegInfo
 parameter_list|()
-function_decl|;
-comment|/// Add all implicit def and use operands to this instruction.
-name|void
-name|addImplicitDefUseOperands
-parameter_list|(
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|)
 function_decl|;
 comment|/// Unlink all of the register operands in this instruction from their
 comment|/// respective use lists.  This requires that the operands already be on their
@@ -4045,29 +4148,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// Special DenseMapInfo traits to compare MachineInstr* by *value* of the
-end_comment
-
-begin_comment
 comment|/// instruction rather than by pointer value.
-end_comment
-
-begin_comment
 comment|/// The hashing and equality testing functions ignore definitions so this is
-end_comment
-
-begin_comment
 comment|/// useful for CSE, etc.
-end_comment
-
-begin_decl_stmt
 name|struct
 name|MachineInstrExpressionTrait
 range|:
@@ -4168,10 +4253,14 @@ name|IgnoreVRegDefs
 argument_list|)
 return|;
 block|}
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 

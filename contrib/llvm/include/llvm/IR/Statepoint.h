@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Intrinsics.h"
 end_include
 
@@ -142,7 +148,7 @@ comment|///< A bitmask that includes all valid flags.
 block|}
 empty_stmt|;
 name|class
-name|GCRelocateOperands
+name|GCRelocateInst
 decl_stmt|;
 name|class
 name|ImmutableStatepoint
@@ -171,15 +177,6 @@ parameter_list|(
 specifier|const
 name|Value
 modifier|&
-name|V
-parameter_list|)
-function_decl|;
-name|bool
-name|isGCRelocate
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
 name|V
 parameter_list|)
 function_decl|;
@@ -767,17 +764,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|arg_begin
 argument_list|()
-operator|,
+argument_list|,
 name|arg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if the call or the callee has the given attribute.
@@ -942,17 +936,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|gc_transition_args_begin
 argument_list|()
-operator|,
+argument_list|,
 name|gc_transition_args_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Number of additional arguments excluding those intended
@@ -1065,17 +1056,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|vm_state_begin
 argument_list|()
-operator|,
+argument_list|,
 name|vm_state_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|typename
@@ -1107,6 +1095,22 @@ name|arg_end
 argument_list|()
 return|;
 block|}
+name|unsigned
+name|gcArgsStartIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|gc_args_begin
+argument_list|()
+operator|-
+name|getInstruction
+argument_list|()
+operator|->
+name|op_begin
+argument_list|()
+return|;
+block|}
 comment|/// range adapter for gc arguments
 name|iterator_range
 operator|<
@@ -1117,17 +1121,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|arg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|gc_args_begin
 argument_list|()
-operator|,
+argument_list|,
 name|gc_args_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Get list of all gc reloactes linked to this statepoint
@@ -1138,7 +1139,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|GCRelocateOperands
+specifier|const
+name|GCRelocateInst
+operator|*
 operator|>
 name|getRelocates
 argument_list|()
@@ -1424,86 +1427,66 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// Wraps a call to a gc.relocate and provides access to it's operands.
-end_comment
-
-begin_comment
-comment|/// TODO: This should likely be refactored to resememble the wrappers in
-end_comment
-
-begin_comment
-comment|/// InstrinsicInst.h.
+comment|/// This represents the gc.relocate intrinsic.
 end_comment
 
 begin_decl_stmt
 name|class
-name|GCRelocateOperands
-block|{
-name|ImmutableCallSite
-name|RelocateCS
-decl_stmt|;
+name|GCRelocateInst
+range|:
 name|public
-label|:
-name|GCRelocateOperands
-argument_list|(
-specifier|const
-name|User
-operator|*
-name|U
-argument_list|)
+name|IntrinsicInst
+block|{
+name|public
 operator|:
-name|RelocateCS
+specifier|static
+specifier|inline
+name|bool
+name|classof
 argument_list|(
-argument|U
+argument|const IntrinsicInst *I
 argument_list|)
 block|{
-name|assert
+return|return
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+operator|==
+name|Intrinsic
+operator|::
+name|experimental_gc_relocate
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
 argument_list|(
-name|isGCRelocate
-argument_list|(
-name|U
-argument_list|)
-argument_list|)
-block|; }
-name|GCRelocateOperands
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|inst
-argument_list|)
-operator|:
-name|RelocateCS
-argument_list|(
-argument|inst
+argument|const Value *V
 argument_list|)
 block|{
-name|assert
+return|return
+name|isa
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
 argument_list|(
-name|isGCRelocate
-argument_list|(
-name|inst
+name|cast
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
 argument_list|)
-argument_list|)
-block|;   }
-name|GCRelocateOperands
-argument_list|(
-argument|CallSite CS
-argument_list|)
-operator|:
-name|RelocateCS
-argument_list|(
-argument|CS
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|isGCRelocate
-argument_list|(
-name|CS
-argument_list|)
-argument_list|)
-block|; }
+return|;
+block|}
 comment|/// Return true if this relocate is tied to the invoke statepoint.
 comment|/// This includes relocates which are on the unwinding path.
 name|bool
@@ -1516,9 +1499,7 @@ name|Value
 operator|*
 name|Token
 operator|=
-name|RelocateCS
-operator|.
-name|getArgument
+name|getArgOperand
 argument_list|(
 literal|0
 argument_list|)
@@ -1526,7 +1507,7 @@ block|;
 return|return
 name|isa
 operator|<
-name|ExtractValueInst
+name|LandingPadInst
 operator|>
 operator|(
 name|Token
@@ -1541,34 +1522,24 @@ name|Token
 operator|)
 return|;
 block|}
-comment|/// Get enclosed relocate intrinsic
-name|ImmutableCallSite
-name|getUnderlyingCallSite
-parameter_list|()
-block|{
-return|return
-name|RelocateCS
-return|;
-block|}
 comment|/// The statepoint with which this gc.relocate is associated.
 specifier|const
 name|Instruction
-modifier|*
+operator|*
 name|getStatepoint
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|Token
-init|=
-name|RelocateCS
-operator|.
-name|getArgument
+operator|=
+name|getArgOperand
 argument_list|(
 literal|0
 argument_list|)
-decl_stmt|;
+block|;
 comment|// This takes care both of relocates for call statepoints and relocates
 comment|// on normal path of invoke statepoint.
 if|if
@@ -1576,7 +1547,7 @@ condition|(
 operator|!
 name|isa
 operator|<
-name|ExtractValueInst
+name|LandingPadInst
 operator|>
 operator|(
 name|Token
@@ -1619,7 +1590,7 @@ name|InvokeBB
 operator|&&
 literal|"safepoints should have unique landingpads"
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|InvokeBB
@@ -1629,7 +1600,7 @@ argument_list|()
 operator|&&
 literal|"safepoint block should be well formed"
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|isStatepoint
@@ -1640,7 +1611,7 @@ name|getTerminator
 argument_list|()
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|InvokeBB
 operator|->
@@ -1648,12 +1619,25 @@ name|getTerminator
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// The index into the associate statepoint's argument list
+end_comment
+
+begin_comment
 comment|/// which contains the base pointer of the pointer whose
+end_comment
+
+begin_comment
 comment|/// relocation this gc.relocate describes.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getBasePtrIndex
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|cast
@@ -1661,9 +1645,7 @@ operator|<
 name|ConstantInt
 operator|>
 operator|(
-name|RelocateCS
-operator|.
-name|getArgument
+name|getArgOperand
 argument_list|(
 literal|1
 argument_list|)
@@ -1673,11 +1655,21 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// The index into the associate statepoint's argument list which
+end_comment
+
+begin_comment
 comment|/// contains the pointer whose relocation this gc.relocate describes.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getDerivedPtrIndex
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|cast
@@ -1685,9 +1677,7 @@ operator|<
 name|ConstantInt
 operator|>
 operator|(
-name|RelocateCS
-operator|.
-name|getArgument
+name|getArgOperand
 argument_list|(
 literal|2
 argument_list|)
@@ -1697,10 +1687,14 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Value
-modifier|*
+operator|*
 name|getBasePtr
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|ImmutableCallSite
 name|CS
@@ -1708,7 +1702,7 @@ argument_list|(
 name|getStatepoint
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 operator|*
 operator|(
@@ -1722,10 +1716,14 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Value
-modifier|*
+operator|*
 name|getDerivedPtr
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|ImmutableCallSite
 name|CS
@@ -1733,7 +1731,7 @@ argument_list|(
 name|getStatepoint
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 operator|*
 operator|(
@@ -1747,14 +1745,10 @@ argument_list|()
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -1773,7 +1767,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|GCRelocateOperands
+specifier|const
+name|GCRelocateInst
+operator|*
 operator|>
 name|StatepointBase
 operator|<
@@ -1794,7 +1790,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|GCRelocateOperands
+specifier|const
+name|GCRelocateInst
+operator|*
 operator|>
 name|Result
 block|;
@@ -1822,19 +1820,23 @@ argument_list|()
 control|)
 if|if
 condition|(
-name|isGCRelocate
-argument_list|(
+name|auto
+operator|*
+name|Relocate
+operator|=
+name|dyn_cast
+operator|<
+name|GCRelocateInst
+operator|>
+operator|(
 name|U
-argument_list|)
+operator|)
 condition|)
 name|Result
 operator|.
 name|push_back
 argument_list|(
-name|GCRelocateOperands
-argument_list|(
-name|U
-argument_list|)
+name|Relocate
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1877,11 +1879,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Search for extract value from landingpad instruction to which
-end_comment
-
-begin_comment
-comment|// gc relocates will be attached
+comment|// Search for gc relocates that are attached to this landingpad.
 end_comment
 
 begin_for
@@ -1900,44 +1898,23 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|isa
+name|auto
+operator|*
+name|Relocate
+operator|=
+name|dyn_cast
 operator|<
-name|ExtractValueInst
+name|GCRelocateInst
 operator|>
 operator|(
 name|LandingPadUser
 operator|)
 condition|)
-continue|continue;
-comment|// gc relocates should be attached to this extract value
-for|for
-control|(
-specifier|const
-name|User
-modifier|*
-name|U
-range|:
-name|LandingPadUser
-operator|->
-name|users
-argument_list|()
-control|)
-if|if
-condition|(
-name|isGCRelocate
-argument_list|(
-name|U
-argument_list|)
-condition|)
 name|Result
 operator|.
 name|push_back
 argument_list|(
-name|GCRelocateOperands
-argument_list|(
-name|U
-argument_list|)
+name|Relocate
 argument_list|)
 expr_stmt|;
 block|}

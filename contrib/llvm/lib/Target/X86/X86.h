@@ -82,9 +82,8 @@ decl_stmt|;
 name|class
 name|X86TargetMachine
 decl_stmt|;
-comment|/// createX86ISelDag - This pass converts a legalized DAG into a
-comment|/// X86-specific DAG, ready for instruction scheduling.
-comment|///
+comment|/// This pass converts a legalized DAG into a X86-specific DAG, ready for
+comment|/// instruction scheduling.
 name|FunctionPass
 modifier|*
 name|createX86ISelDag
@@ -99,75 +98,67 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-comment|/// createX86GlobalBaseRegPass - This pass initializes a global base
-comment|/// register for PIC on x86-32.
+comment|/// This pass initializes a global base register for PIC on x86-32.
 name|FunctionPass
 modifier|*
 name|createX86GlobalBaseRegPass
 parameter_list|()
 function_decl|;
-comment|/// createCleanupLocalDynamicTLSPass() - This pass combines multiple accesses
-comment|/// to local-dynamic TLS variables so that the TLS base address for the module
-comment|/// is only fetched once per execution path through the function.
+comment|/// This pass combines multiple accesses to local-dynamic TLS variables so that
+comment|/// the TLS base address for the module is only fetched once per execution path
+comment|/// through the function.
 name|FunctionPass
 modifier|*
 name|createCleanupLocalDynamicTLSPass
 parameter_list|()
 function_decl|;
-comment|/// createX86FloatingPointStackifierPass - This function returns a pass which
-comment|/// converts floating point register references and pseudo instructions into
-comment|/// floating point stack references and physical instructions.
-comment|///
+comment|/// This function returns a pass which converts floating-point register
+comment|/// references and pseudo instructions into floating-point stack references and
+comment|/// physical instructions.
 name|FunctionPass
 modifier|*
 name|createX86FloatingPointStackifierPass
 parameter_list|()
 function_decl|;
-comment|/// createX86IssueVZeroUpperPass - This pass inserts AVX vzeroupper instructions
-comment|/// before each call to avoid transition penalty between functions encoded with
-comment|/// AVX and SSE.
+comment|/// This pass inserts AVX vzeroupper instructions before each call to avoid
+comment|/// transition penalty between functions encoded with AVX and SSE.
 name|FunctionPass
 modifier|*
 name|createX86IssueVZeroUpperPass
 parameter_list|()
 function_decl|;
-comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
-comment|/// allocated function into raw machine code in a dynamically
-comment|/// allocated chunk of memory.
-comment|///
-name|FunctionPass
-modifier|*
-name|createEmitX86CodeToMemory
-parameter_list|()
-function_decl|;
-comment|/// createX86PadShortFunctions - Return a pass that pads short functions
-comment|/// with NOOPs. This will prevent a stall when returning on the Atom.
+comment|/// Return a pass that pads short functions with NOOPs.
+comment|/// This will prevent a stall when returning on the Atom.
 name|FunctionPass
 modifier|*
 name|createX86PadShortFunctions
 parameter_list|()
 function_decl|;
-comment|/// createX86FixupLEAs - Return a a pass that selectively replaces
-comment|/// certain instructions (like add, sub, inc, dec, some shifts,
-comment|/// and some multiplies) by equivalent LEA instructions, in order
-comment|/// to eliminate execution delays in some Atom processors.
+comment|/// Return a pass that selectively replaces certain instructions (like add,
+comment|/// sub, inc, dec, some shifts, and some multiplies) by equivalent LEA
+comment|/// instructions, in order to eliminate execution delays in some processors.
 name|FunctionPass
 modifier|*
 name|createX86FixupLEAs
 parameter_list|()
 function_decl|;
-comment|/// createX86CallFrameOptimization - Return a pass that optimizes
-comment|/// the code-size of x86 call sequences. This is done by replacing
-comment|/// esp-relative movs with pushes.
+comment|/// Return a pass that removes redundant LEA instructions and redundant address
+comment|/// recalculations.
+name|FunctionPass
+modifier|*
+name|createX86OptimizeLEAs
+parameter_list|()
+function_decl|;
+comment|/// Return a pass that optimizes the code-size of x86 call sequences. This is
+comment|/// done by replacing esp-relative movs with pushes.
 name|FunctionPass
 modifier|*
 name|createX86CallFrameOptimization
 parameter_list|()
 function_decl|;
-comment|/// createX86WinEHStatePass - Return an IR pass that inserts EH registration
-comment|/// stack objects and explicit EH state updates. This pass must run after EH
-comment|/// preparation, which does Windows-specific but architecture-neutral
-comment|/// preparation.
+comment|/// Return an IR pass that inserts EH registration stack objects and explicit
+comment|/// EH state updates. This pass must run after EH preparation, which does
+comment|/// Windows-specific but architecture-neutral preparation.
 name|FunctionPass
 modifier|*
 name|createX86WinEHStatePass

@@ -662,7 +662,7 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
-comment|/**  * Sets the object module for code generation. This will transfer the ownship of  * the module to code generator.  *  * \c cg and \c mod must both be in the same context.  *  * \since LTO_API_VERSION=13  */
+comment|/**  * Sets the object module for code generation. This will transfer the ownership  * of the module to the code generator.  *  * \c cg and \c mod must both be in the same context.  *  * \since LTO_API_VERSION=13  */
 specifier|extern
 name|void
 name|lto_codegen_set_module

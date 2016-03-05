@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
@@ -93,6 +99,12 @@ name|AMDGPURegisterInfo
 block|{
 name|private
 operator|:
+name|unsigned
+name|SGPR32SetID
+block|;
+name|unsigned
+name|VGPR32SetID
+block|;
 name|void
 name|reserveRegisterTuples
 argument_list|(
@@ -106,6 +118,24 @@ name|public
 operator|:
 name|SIRegisterInfo
 argument_list|()
+block|;
+comment|/// Return the end register initially reserved for the scratch buffer in case
+comment|/// spilling is needed.
+name|unsigned
+name|reservedPrivateSegmentBufferReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Return the end register initially reserved for the scratch wave offset in
+comment|/// case spilling is needed.
+name|unsigned
+name|reservedPrivateSegmentWaveByteOffsetReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
 block|;
 name|BitVector
 name|getReservedRegs
@@ -147,18 +177,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// \brief get the register class of the specified type to use in the
-comment|/// CFGStructurizer
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getCFGStructurizerRegClass
-argument_list|(
-argument|MVT VT
-argument_list|)
-specifier|const
-name|override
-block|;
 name|unsigned
 name|getHWRegIndex
 argument_list|(
@@ -186,14 +204,6 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|RC
-condition|)
-return|return
-name|false
-return|;
 return|return
 operator|!
 name|hasVGPRs
@@ -206,27 +216,10 @@ comment|/// \returns true if this class ID contains only SGPR registers
 name|bool
 name|isSGPRClassID
 argument_list|(
-name|unsigned
-name|RCID
+argument|unsigned RCID
 argument_list|)
-decl|const
+specifier|const
 block|{
-if|if
-condition|(
-name|static_cast
-operator|<
-name|int
-operator|>
-operator|(
-name|RCID
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|false
-return|;
 return|return
 name|isSGPRClass
 argument_list|(
@@ -234,6 +227,42 @@ name|getRegClass
 argument_list|(
 name|RCID
 argument_list|)
+argument_list|)
+return|;
+block|}
+name|bool
+name|isSGPRReg
+argument_list|(
+argument|const MachineRegisterInfo&MRI
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|isSGPRClass
+argument_list|(
+name|MRI
+operator|.
+name|getRegClass
+argument_list|(
+name|Reg
+argument_list|)
+argument_list|)
+return|;
+return|return
+name|getPhysRegClass
+argument_list|(
+name|Reg
 argument_list|)
 return|;
 block|}
@@ -248,6 +277,35 @@ name|RC
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// returns true if this is a pseudoregister class combination of VGPRs and
+comment|/// SGPRs for operand modeling. FIXME: We should set isAllocatable = 0 on
+comment|/// them.
+specifier|static
+name|bool
+name|isPseudoRegClass
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+block|{
+return|return
+name|RC
+operator|==
+operator|&
+name|AMDGPU
+operator|::
+name|VS_32RegClass
+operator|||
+name|RC
+operator|==
+operator|&
+name|AMDGPU
+operator|::
+name|VS_64RegClass
+return|;
+block|}
 comment|/// \returns A VGPR reg class with the same width as \p SRC
 specifier|const
 name|TargetRegisterClass
@@ -278,6 +336,28 @@ name|unsigned
 name|SubIdx
 argument_list|)
 decl|const
+decl_stmt|;
+name|bool
+name|shouldRewriteCopySrc
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|DefRC
+argument_list|,
+name|unsigned
+name|DefSubReg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|SrcRC
+argument_list|,
+name|unsigned
+name|SrcSubReg
+argument_list|)
+decl|const
+name|override
 decl_stmt|;
 comment|/// \p Channel This is the register channel (e.g. a value from 0-16), not the
 comment|///            SubReg index.
@@ -322,23 +402,55 @@ decl_stmt|;
 enum|enum
 name|PreloadedValue
 block|{
-name|TGID_X
+comment|// SGPRS:
+name|PRIVATE_SEGMENT_BUFFER
+init|=
+literal|0
 block|,
-name|TGID_Y
+name|DISPATCH_PTR
+init|=
+literal|1
 block|,
-name|TGID_Z
+name|QUEUE_PTR
+init|=
+literal|2
 block|,
-name|SCRATCH_WAVE_OFFSET
+name|KERNARG_SEGMENT_PTR
+init|=
+literal|3
 block|,
-name|SCRATCH_PTR
+name|WORKGROUP_ID_X
+init|=
+literal|10
 block|,
-name|INPUT_PTR
+name|WORKGROUP_ID_Y
+init|=
+literal|11
 block|,
-name|TIDIG_X
+name|WORKGROUP_ID_Z
+init|=
+literal|12
 block|,
-name|TIDIG_Y
+name|PRIVATE_SEGMENT_WAVE_BYTE_OFFSET
+init|=
+literal|14
 block|,
-name|TIDIG_Z
+comment|// VGPRS:
+name|FIRST_VGPR_VALUE
+init|=
+literal|15
+block|,
+name|WORKITEM_ID_X
+init|=
+name|FIRST_VGPR_VALUE
+block|,
+name|WORKITEM_ID_Y
+init|=
+literal|16
+block|,
+name|WORKITEM_ID_Z
+init|=
+literal|17
 block|}
 enum|;
 comment|/// \brief Returns the physical register that \p Value is stored in.
@@ -396,6 +508,26 @@ name|RC
 argument_list|)
 decl|const
 decl_stmt|;
+name|unsigned
+name|getSGPR32PressureSet
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SGPR32SetID
+return|;
+block|}
+empty_stmt|;
+name|unsigned
+name|getVGPR32PressureSet
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VGPR32SetID
+return|;
+block|}
+empty_stmt|;
 name|private
 label|:
 name|void

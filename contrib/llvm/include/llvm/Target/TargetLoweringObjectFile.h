@@ -159,11 +159,6 @@ name|delete
 block|;
 name|protected
 operator|:
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-block|;
 name|bool
 name|SupportIndirectSymViaGOTPCRel
 block|;
@@ -190,11 +185,6 @@ name|MCObjectFileInfo
 argument_list|()
 block|,
 name|Ctx
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DL
 argument_list|(
 name|nullptr
 argument_list|)
@@ -237,7 +227,7 @@ name|emitPersonalityValue
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|const TargetMachine&TM
+argument|const DataLayout&TM
 argument_list|,
 argument|const MCSymbol *Sym
 argument_list|)
@@ -265,6 +255,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
@@ -345,8 +337,6 @@ argument_list|(
 argument|SmallVectorImpl<char>&OutName
 argument_list|,
 argument|const GlobalValue *GV
-argument_list|,
-argument|bool CannotUsePrivateLabel
 argument_list|,
 argument|Mangler&Mang
 argument_list|,

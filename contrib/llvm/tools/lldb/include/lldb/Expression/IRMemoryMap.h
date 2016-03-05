@@ -134,6 +134,8 @@ argument|uint32_t permissions
 argument_list|,
 argument|AllocationPolicy policy
 argument_list|,
+argument|bool zero_memory
+argument_list|,
 argument|Error&error
 argument_list|)
 expr_stmt|;
@@ -490,6 +492,8 @@ name|addr_t
 name|FindSpace
 argument_list|(
 argument|size_t size
+argument_list|,
+argument|bool zero_memory = false
 argument_list|)
 expr_stmt|;
 name|bool

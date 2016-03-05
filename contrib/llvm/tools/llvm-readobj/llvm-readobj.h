@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -67,7 +73,15 @@ name|RelocationRef
 decl_stmt|;
 block|}
 comment|// Various helper functions.
-name|bool
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|reportError
+parameter_list|(
+name|Twine
+name|Msg
+parameter_list|)
+function_decl|;
+name|void
 name|error
 argument_list|(
 name|std

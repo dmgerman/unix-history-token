@@ -118,15 +118,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
-name|fixTCReturn
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|spillCalleeSavedRegisters
 argument_list|(
@@ -212,16 +203,6 @@ argument|int SPAdj
 argument_list|)
 specifier|const
 block|;
-name|int
-name|getFrameIndexOffset
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|)
-specifier|const
-name|override
-block|;
 name|void
 name|determineCalleeSaves
 argument_list|(
@@ -244,6 +225,19 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Returns true if the target will correctly handle shrink wrapping.
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|private
 operator|:
 name|void

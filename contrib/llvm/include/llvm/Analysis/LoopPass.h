@@ -413,47 +413,15 @@ return|;
 block|}
 name|public
 label|:
-comment|// Delete loop from the loop queue and loop nest (LoopInfo).
-name|void
-name|deleteLoopFromQueue
-parameter_list|(
+comment|// Add a new loop into the loop queue as a child of the given parent, or at
+comment|// the top level if \c ParentLoop is null.
 name|Loop
-modifier|*
-name|L
-parameter_list|)
-function_decl|;
-comment|// Insert loop into the loop queue and add it as a child of the
-comment|// given parent.
-name|void
-name|insertLoop
+modifier|&
+name|addLoop
 parameter_list|(
-name|Loop
-modifier|*
-name|L
-parameter_list|,
 name|Loop
 modifier|*
 name|ParentLoop
-parameter_list|)
-function_decl|;
-comment|// Insert a loop into the loop queue.
-name|void
-name|insertLoopIntoQueue
-parameter_list|(
-name|Loop
-modifier|*
-name|L
-parameter_list|)
-function_decl|;
-comment|// Reoptimize this loop. LPPassManager will re-insert this loop into the
-comment|// queue. This allows LoopPass to change loop nest for the loop. This
-comment|// utility may send LPPassManager into infinite loops so use caution.
-name|void
-name|redoLoop
-parameter_list|(
-name|Loop
-modifier|*
-name|L
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -515,12 +483,6 @@ operator|*
 operator|>
 name|LQ
 expr_stmt|;
-name|bool
-name|skipThisLoop
-decl_stmt|;
-name|bool
-name|redoThisLoop
-decl_stmt|;
 name|LoopInfo
 modifier|*
 name|LI

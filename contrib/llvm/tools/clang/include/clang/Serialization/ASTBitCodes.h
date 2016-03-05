@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -155,18 +161,6 @@ typedef|typedef
 name|uint32_t
 name|DeclID
 typedef|;
-comment|/// \brief a Decl::Kind/DeclID pair.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|uint32_t
-operator|,
-name|DeclID
-operator|>
-name|KindDeclIDPair
-expr_stmt|;
 comment|// FIXME: Turn these into classes so we can have some type safety when
 comment|// we go from local ID to global and vice-versa.
 typedef|typedef
@@ -667,7 +661,17 @@ comment|/// to create this AST file.
 comment|///
 comment|/// This block is part of the control block.
 name|INPUT_FILES_BLOCK_ID
-block|}
+block|,
+comment|/// \brief The block of configuration options, used to check that
+comment|/// a module is being used in a configuration compatible with the
+comment|/// configuration in which it was built.
+comment|///
+comment|/// This block is part of the control block.
+name|OPTIONS_BLOCK_ID
+block|,
+comment|/// \brief A block containing a module file extension.
+name|EXTENSION_BLOCK_ID
+block|,     }
 enum|;
 comment|/// \brief Record types that occur within the control block.
 enum|enum
@@ -682,9 +686,42 @@ block|,
 comment|/// \brief Record code for the list of other AST files imported by
 comment|/// this AST file.
 name|IMPORTS
-init|=
-literal|2
 block|,
+comment|/// \brief Record code for the original file that was used to
+comment|/// generate the AST file, including both its file ID and its
+comment|/// name.
+name|ORIGINAL_FILE
+block|,
+comment|/// \brief The directory that the PCH was originally created in.
+name|ORIGINAL_PCH_DIR
+block|,
+comment|/// \brief Record code for file ID of the file or buffer that was used to
+comment|/// generate the AST file.
+name|ORIGINAL_FILE_ID
+block|,
+comment|/// \brief Offsets into the input-files block where input files
+comment|/// reside.
+name|INPUT_FILE_OFFSETS
+block|,
+comment|/// \brief Record code for the module name.
+name|MODULE_NAME
+block|,
+comment|/// \brief Record code for the module map file that was used to build this
+comment|/// AST file.
+name|MODULE_MAP_FILE
+block|,
+comment|/// \brief Record code for the signature that identifiers this AST file.
+name|SIGNATURE
+block|,
+comment|/// \brief Record code for the module build directory.
+name|MODULE_DIRECTORY
+block|,     }
+enum|;
+comment|/// \brief Record types that occur within the options block inside
+comment|/// the control block.
+enum|enum
+name|OptionsRecordTypes
+block|{
 comment|/// \brief Record code for the language options table.
 comment|///
 comment|/// The record with this code contains the contents of the
@@ -693,84 +730,38 @@ comment|/// the structure, and let the reader decide which options are
 comment|/// actually important to check.
 name|LANGUAGE_OPTIONS
 init|=
-literal|3
+literal|1
 block|,
 comment|/// \brief Record code for the target options table.
 name|TARGET_OPTIONS
-init|=
-literal|4
-block|,
-comment|/// \brief Record code for the original file that was used to
-comment|/// generate the AST file, including both its file ID and its
-comment|/// name.
-name|ORIGINAL_FILE
-init|=
-literal|5
-block|,
-comment|/// \brief The directory that the PCH was originally created in.
-name|ORIGINAL_PCH_DIR
-init|=
-literal|6
-block|,
-comment|/// \brief Record code for file ID of the file or buffer that was used to
-comment|/// generate the AST file.
-name|ORIGINAL_FILE_ID
-init|=
-literal|7
-block|,
-comment|/// \brief Offsets into the input-files block where input files
-comment|/// reside.
-name|INPUT_FILE_OFFSETS
-init|=
-literal|8
 block|,
 comment|/// \brief Record code for the diagnostic options table.
 name|DIAGNOSTIC_OPTIONS
-init|=
-literal|9
 block|,
 comment|/// \brief Record code for the filesystem options table.
 name|FILE_SYSTEM_OPTIONS
-init|=
-literal|10
 block|,
 comment|/// \brief Record code for the headers search options table.
 name|HEADER_SEARCH_OPTIONS
-init|=
-literal|11
 block|,
 comment|/// \brief Record code for the preprocessor options table.
 name|PREPROCESSOR_OPTIONS
-init|=
-literal|12
-block|,
-comment|/// \brief Record code for the module name.
-name|MODULE_NAME
-init|=
-literal|13
-block|,
-comment|/// \brief Record code for the module map file that was used to build this
-comment|/// AST file.
-name|MODULE_MAP_FILE
-init|=
-literal|14
-block|,
-comment|/// \brief Record code for the signature that identifiers this AST file.
-name|SIGNATURE
-init|=
-literal|15
-block|,
-comment|/// \brief Record code for the module build directory.
-name|MODULE_DIRECTORY
-init|=
-literal|16
-block|,
-comment|/// \brief Record code for the list of other AST files made available by
-comment|/// this AST file but not actually used by it.
-name|KNOWN_MODULE_FILES
-init|=
-literal|17
 block|,     }
+enum|;
+comment|/// \brief Record code for extension blocks.
+enum|enum
+name|ExtensionBlockRecordTypes
+block|{
+comment|/// Metadata describing this particular extension.
+name|EXTENSION_METADATA
+init|=
+literal|1
+block|,
+comment|/// The first record ID allocated to the extensions themselves.
+name|FIRST_EXTENSION_RECORD_ID
+init|=
+literal|4
+block|}
 enum|;
 comment|/// \brief Record types that occur within the input-files block
 comment|/// inside the control block.
@@ -829,7 +820,7 @@ literal|3
 block|,
 comment|/// \brief This is so that older clang versions, before the introduction
 comment|/// of the control block, can read and reject the newer PCH format.
-comment|/// *DON"T CHANGE THIS NUMBER*.
+comment|/// *DON'T CHANGE THIS NUMBER*.
 name|METADATA_OLD_FORMAT
 init|=
 literal|4
@@ -951,13 +942,7 @@ name|TU_UPDATE_LEXICAL
 init|=
 literal|22
 block|,
-comment|/// \brief Record code for the array describing the locations (in the
-comment|/// LOCAL_REDECLARATIONS record) of the redeclaration chains, indexed by
-comment|/// the first known ID.
-name|LOCAL_REDECLARATIONS_MAP
-init|=
-literal|23
-block|,
+comment|// ID 23 used to be for a list of local redeclarations.
 comment|/// \brief Record code for declarations that Sema keeps references of.
 name|SEMA_DECL_REFS
 init|=
@@ -1074,15 +1059,8 @@ name|IMPORTED_MODULES
 init|=
 literal|43
 block|,
-comment|// ID 40 used to be a table of merged canonical declarations.
-comment|/// \brief Record code for the array of redeclaration chains.
-comment|///
-comment|/// This array can only be interpreted properly using the local
-comment|/// redeclarations map.
-name|LOCAL_REDECLARATIONS
-init|=
-literal|45
-block|,
+comment|// ID 44 used to be a table of merged canonical declarations.
+comment|// ID 45 used to be a list of declaration IDs of local redeclarations.
 comment|/// \brief Record code for the array of Objective-C categories (including
 comment|/// extensions).
 comment|///
@@ -1101,7 +1079,13 @@ name|MACRO_OFFSET
 init|=
 literal|47
 block|,
-comment|// ID 48 used to be a table of macros.
+comment|/// \brief A list of "interesting" identifiers. Only used in C++ (where we
+comment|/// don't normally do lookups into the serialized identifier table). These
+comment|/// are eagerly deserialized.
+name|INTERESTING_IDENTIFIERS
+init|=
+literal|48
+block|,
 comment|/// \brief Record code for undefined but used functions and variables that
 comment|/// need a definition in this TU.
 name|UNDEFINED_BUT_USED
@@ -1521,55 +1505,105 @@ name|PREDEF_TYPE_PSEUDO_OBJECT
 init|=
 literal|35
 block|,
-comment|/// \brief The __va_list_tag placeholder type.
-name|PREDEF_TYPE_VA_LIST_TAG
-init|=
-literal|36
-block|,
 comment|/// \brief The placeholder type for builtin functions.
 name|PREDEF_TYPE_BUILTIN_FN
 init|=
-literal|37
+literal|36
 block|,
 comment|/// \brief OpenCL 1d image type.
 name|PREDEF_TYPE_IMAGE1D_ID
 init|=
-literal|38
+literal|37
 block|,
 comment|/// \brief OpenCL 1d image array type.
 name|PREDEF_TYPE_IMAGE1D_ARR_ID
 init|=
-literal|39
+literal|38
 block|,
 comment|/// \brief OpenCL 1d image buffer type.
 name|PREDEF_TYPE_IMAGE1D_BUFF_ID
 init|=
-literal|40
+literal|39
 block|,
 comment|/// \brief OpenCL 2d image type.
 name|PREDEF_TYPE_IMAGE2D_ID
 init|=
-literal|41
+literal|40
 block|,
 comment|/// \brief OpenCL 2d image array type.
 name|PREDEF_TYPE_IMAGE2D_ARR_ID
 init|=
+literal|41
+block|,
+comment|/// \brief OpenCL 2d image depth type.
+name|PREDEF_TYPE_IMAGE2D_DEP_ID
+init|=
 literal|42
+block|,
+comment|/// \brief OpenCL 2d image array depth type.
+name|PREDEF_TYPE_IMAGE2D_ARR_DEP_ID
+init|=
+literal|43
+block|,
+comment|/// \brief OpenCL 2d image MSAA type.
+name|PREDEF_TYPE_IMAGE2D_MSAA_ID
+init|=
+literal|44
+block|,
+comment|/// \brief OpenCL 2d image array MSAA type.
+name|PREDEF_TYPE_IMAGE2D_ARR_MSAA_ID
+init|=
+literal|45
+block|,
+comment|/// \brief OpenCL 2d image MSAA depth type.
+name|PREDEF_TYPE_IMAGE2D_MSAA_DEP_ID
+init|=
+literal|46
+block|,
+comment|/// \brief OpenCL 2d image array MSAA depth type.
+name|PREDEF_TYPE_IMAGE2D_ARR_MSAA_DEPTH_ID
+init|=
+literal|47
 block|,
 comment|/// \brief OpenCL 3d image type.
 name|PREDEF_TYPE_IMAGE3D_ID
 init|=
-literal|43
+literal|48
 block|,
 comment|/// \brief OpenCL event type.
 name|PREDEF_TYPE_EVENT_ID
 init|=
-literal|44
+literal|49
+block|,
+comment|/// \brief OpenCL clk event type.
+name|PREDEF_TYPE_CLK_EVENT_ID
+init|=
+literal|50
 block|,
 comment|/// \brief OpenCL sampler type.
 name|PREDEF_TYPE_SAMPLER_ID
 init|=
-literal|45
+literal|51
+block|,
+comment|/// \brief OpenCL queue type.
+name|PREDEF_TYPE_QUEUE_ID
+init|=
+literal|52
+block|,
+comment|/// \brief OpenCL ndrange type.
+name|PREDEF_TYPE_NDRANGE_ID
+init|=
+literal|53
+block|,
+comment|/// \brief OpenCL reserve_id type.
+name|PREDEF_TYPE_RESERVE_ID_ID
+init|=
+literal|54
+block|,
+comment|/// \brief The placeholder type for OpenMP array section.
+name|PREDEF_TYPE_OMP_ARRAY_SECTION
+init|=
+literal|55
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1796,6 +1830,11 @@ comment|/// \brief An AdjustedType record.
 name|TYPE_ADJUSTED
 init|=
 literal|42
+block|,
+comment|/// \brief A PipeType record.
+name|TYPE_PIPE
+init|=
+literal|43
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -1913,10 +1952,25 @@ name|PREDEF_DECL_BUILTIN_VA_LIST_ID
 init|=
 literal|9
 block|,
+comment|/// \brief The internal '__va_list_tag' struct, if any.
+name|PREDEF_DECL_VA_LIST_TAG
+init|=
+literal|10
+block|,
+comment|/// \brief The internal '__builtin_ms_va_list' typedef.
+name|PREDEF_DECL_BUILTIN_MS_VA_LIST_ID
+init|=
+literal|11
+block|,
 comment|/// \brief The extern "C" context.
 name|PREDEF_DECL_EXTERN_C_CONTEXT_ID
 init|=
-literal|10
+literal|12
+block|,
+comment|/// \brief The internal '__make_integer_seq' template.
+name|PREDEF_DECL_MAKE_INTEGER_SEQ_ID
+init|=
+literal|13
 block|,     }
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
@@ -1928,7 +1982,15 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|11
+literal|14
+decl_stmt|;
+comment|/// \brief Record code for a list of local redeclarations of a declaration.
+specifier|const
+name|unsigned
+name|int
+name|LOCAL_REDECLARATIONS
+init|=
+literal|50
 decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
@@ -2567,6 +2629,9 @@ comment|// Microsoft
 name|EXPR_CXX_PROPERTY_REF_EXPR
 block|,
 comment|// MSPropertyRefExpr
+name|EXPR_CXX_PROPERTY_SUBSCRIPT_EXPR
+block|,
+comment|// MSPropertySubscriptExpr
 name|EXPR_CXX_UUIDOF_EXPR
 block|,
 comment|// CXXUuidofExpr (of expr).
@@ -2626,6 +2691,8 @@ name|STMT_OMP_ATOMIC_DIRECTIVE
 block|,
 name|STMT_OMP_TARGET_DIRECTIVE
 block|,
+name|STMT_OMP_TARGET_DATA_DIRECTIVE
+block|,
 name|STMT_OMP_TEAMS_DIRECTIVE
 block|,
 name|STMT_OMP_TASKGROUP_DIRECTIVE
@@ -2633,6 +2700,14 @@ block|,
 name|STMT_OMP_CANCELLATION_POINT_DIRECTIVE
 block|,
 name|STMT_OMP_CANCEL_DIRECTIVE
+block|,
+name|STMT_OMP_TASKLOOP_DIRECTIVE
+block|,
+name|STMT_OMP_TASKLOOP_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_DISTRIBUTE_DIRECTIVE
+block|,
+name|EXPR_OMP_ARRAY_SECTION
 block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST
@@ -2922,6 +2997,191 @@ return|;
 block|}
 block|}
 struct|;
+comment|/// \brief A key used when looking up entities by \ref DeclarationName.
+comment|///
+comment|/// Different \ref DeclarationNames are mapped to different keys, but the
+comment|/// same key can occasionally represent multiple names (for names that
+comment|/// contain types, in particular).
+name|class
+name|DeclarationNameKey
+block|{
+typedef|typedef
+name|unsigned
+name|NameKind
+typedef|;
+name|NameKind
+name|Kind
+decl_stmt|;
+name|uint64_t
+name|Data
+decl_stmt|;
+name|public
+label|:
+name|DeclarationNameKey
+argument_list|()
+operator|:
+name|Kind
+argument_list|()
+operator|,
+name|Data
+argument_list|()
+block|{}
+name|DeclarationNameKey
+argument_list|(
+argument|DeclarationName Name
+argument_list|)
+expr_stmt|;
+name|DeclarationNameKey
+argument_list|(
+argument|NameKind Kind
+argument_list|,
+argument|uint64_t Data
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|Data
+argument_list|(
+argument|Data
+argument_list|)
+block|{}
+name|NameKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getIdentifier
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|Identifier
+operator|||
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|CXXLiteralOperatorName
+argument_list|)
+block|;
+return|return
+operator|(
+name|IdentifierInfo
+operator|*
+operator|)
+name|Data
+return|;
+block|}
+name|Selector
+name|getSelector
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|ObjCZeroArgSelector
+operator|||
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|ObjCOneArgSelector
+operator|||
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|ObjCMultiArgSelector
+argument_list|)
+block|;
+return|return
+name|Selector
+argument_list|(
+name|Data
+argument_list|)
+return|;
+block|}
+name|OverloadedOperatorKind
+name|getOperatorKind
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|CXXOperatorName
+argument_list|)
+block|;
+return|return
+operator|(
+name|OverloadedOperatorKind
+operator|)
+name|Data
+return|;
+block|}
+comment|/// Compute a fingerprint of this key for use in on-disk hash table.
+name|unsigned
+name|getHash
+argument_list|()
+specifier|const
+expr_stmt|;
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|DeclarationNameKey
+operator|&
+name|A
+operator|,
+specifier|const
+name|DeclarationNameKey
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|Kind
+operator|==
+name|B
+operator|.
+name|Kind
+operator|&&
+name|A
+operator|.
+name|Data
+operator|==
+name|B
+operator|.
+name|Data
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// @}
 block|}
 block|}
@@ -2930,6 +3190,102 @@ end_decl_stmt
 begin_comment
 comment|// end namespace clang
 end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|clang
+operator|::
+name|serialization
+operator|::
+name|DeclarationNameKey
+operator|>
+block|{
+specifier|static
+name|clang
+operator|::
+name|serialization
+operator|::
+name|DeclarationNameKey
+name|getEmptyKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|serialization
+operator|::
+name|DeclarationNameKey
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|static
+name|clang
+operator|::
+name|serialization
+operator|::
+name|DeclarationNameKey
+name|getTombstoneKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|serialization
+operator|::
+name|DeclarationNameKey
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const clang::serialization::DeclarationNameKey&Key
+argument_list|)
+block|{
+return|return
+name|Key
+operator|.
+name|getHash
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|const clang::serialization::DeclarationNameKey&L
+argument_list|,
+argument|const clang::serialization::DeclarationNameKey&R
+argument_list|)
+block|{
+return|return
+name|L
+operator|==
+name|R
+return|;
+block|}
+expr|}
+block|; }
+end_decl_stmt
 
 begin_endif
 endif|#

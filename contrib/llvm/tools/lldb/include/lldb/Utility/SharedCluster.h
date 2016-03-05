@@ -115,15 +115,15 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|shared_ptr_refcount
 argument_list|()
+name|override
 block|{         }
-name|virtual
 name|void
 name|on_zero_shared
 argument_list|()
+name|override
 block|{
 name|manager
 operator|->

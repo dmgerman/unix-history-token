@@ -71,12 +71,6 @@ directive|include
 file|"lldb/Interpreter/Options.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Language.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -104,12 +98,11 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandOptions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -117,16 +110,19 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|()
+name|override
 block|;
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
 comment|// Options table: Required for subclasses of Options.
 specifier|static
@@ -142,35 +138,31 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectArgs
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Options
 operator|*
 name|GetOptions
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
 name|CommandOptions
 name|m_options
 block|;
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-name|Args
-operator|&
-name|command
+argument|Args& command
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
-block|;              }
+name|override
+block|;     }
 decl_stmt|;
 block|}
 end_decl_stmt

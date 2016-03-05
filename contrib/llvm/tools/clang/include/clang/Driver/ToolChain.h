@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -130,6 +136,13 @@ block|{
 name|class
 name|ObjCRuntime
 decl_stmt|;
+name|namespace
+name|vfs
+block|{
+name|class
+name|FileSystem
+decl_stmt|;
+block|}
 name|namespace
 name|driver
 block|{
@@ -304,6 +317,13 @@ name|protected
 label|:
 name|MultilibSet
 name|Multilibs
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|DefaultLinker
+init|=
+literal|"ld"
 decl_stmt|;
 name|ToolChain
 argument_list|(
@@ -481,6 +501,18 @@ operator|&
 name|getDriver
 argument_list|()
 specifier|const
+block|{
+return|return
+name|D
+return|;
+block|}
+name|vfs
+operator|::
+name|FileSystem
+operator|&
+name|getVFS
+argument_list|()
+specifier|const
 expr_stmt|;
 specifier|const
 name|llvm
@@ -548,7 +580,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Provide the default architecture name (as expected by -arch) for
-comment|/// this toolchain. Note t
+comment|/// this toolchain.
 name|StringRef
 name|getDefaultUniversalArchName
 argument_list|()
@@ -652,6 +684,35 @@ return|return
 name|CachedRTTIMode
 return|;
 block|}
+comment|/// \brief Return any implicit target and/or mode flag for an invocation of
+comment|/// the compiler driver as `ProgName`.
+comment|///
+comment|/// For example, when called with i686-linux-android-g++, the first element
+comment|/// of the return value will be set to `"i686-linux-android"` and the second
+comment|/// will be set to "--driver-mode=g++"`.
+comment|///
+comment|/// \pre `llvm::InitializeAllTargets()` has been called.
+comment|/// \param ProgName The name the Clang driver was invoked with (from,
+comment|/// e.g., argv[0])
+comment|/// \return A pair of (`target`, `mode-flag`), where one or both may be empty.
+specifier|static
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+name|getTargetAndModeFromProgramName
+argument_list|(
+argument|StringRef ProgName
+argument_list|)
+expr_stmt|;
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
 comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain
@@ -680,7 +741,7 @@ block|}
 comment|/// Choose a tool to use to handle the action \p JA.
 comment|///
 comment|/// This can be overridden when a particular ToolChain needs to use
-comment|/// a C compiler other than Clang.
+comment|/// a compiler other than Clang.
 name|virtual
 name|Tool
 modifier|*
@@ -736,7 +797,6 @@ name|OS
 argument_list|)
 decl|const
 block|{}
-empty_stmt|;
 comment|// Platform defaults information
 comment|/// \brief Returns true if the toolchain is targeting a non-native
 comment|/// architecture.
@@ -870,6 +930,59 @@ operator|::
 name|RLT_Libgcc
 return|;
 block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getCompilerRT
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|StringRef Component
+argument_list|,
+argument|bool Shared = false
+argument_list|)
+specifier|const
+expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|getCompilerRTArgString
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|StringRef
+name|Component
+argument_list|,
+name|bool
+name|Shared
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// needsProfileRT - returns true if instrumentation profile is on.
+specifier|static
+name|bool
+name|needsProfileRT
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
 comment|/// IsUnwindTablesDefault - Does this tool chain use -funwind-tables
 comment|/// by default.
 name|virtual
@@ -949,12 +1062,64 @@ return|return
 name|false
 return|;
 block|}
+comment|// Return the DWARF version to emit, in the absence of arguments
+comment|// to the contrary.
+name|virtual
+name|unsigned
+name|GetDefaultDwarfVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|4
+return|;
+block|}
+comment|// True if the driver should assume "-fstandalone-debug"
+comment|// in the absence of an option specifying otherwise,
+comment|// provided that debugging was requested in the first place.
+comment|// i.e. a value of 'true' does not imply that debugging is wanted.
+name|virtual
+name|bool
+name|GetDefaultStandaloneDebug
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Return the default debugger "tuning."
+name|virtual
+name|llvm
+operator|::
+name|DebuggerKind
+name|getDefaultDebuggerTuning
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|DebuggerKind
+operator|::
+name|GDB
+return|;
+block|}
 comment|/// UseSjLjExceptions - Does this tool chain use SjLj exceptions.
 name|virtual
 name|bool
 name|UseSjLjExceptions
-argument_list|()
+argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
 block|{
 return|return
 name|false
@@ -1193,6 +1358,29 @@ name|CmdArgs
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// AddFilePathLibArgs - Add each thing in getFilePaths() as a "-L" option.
+name|void
+name|AddFilePathLibArgs
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// AddCCKextLibArgs - Add the system specific linker arguments to use
 comment|/// for kernel extensions (Darwin-specific).
 name|virtual
@@ -1242,6 +1430,55 @@ operator|::
 name|ArgStringList
 operator|&
 name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// addProfileRTLibs - When -fprofile-instr-profile is specified, try to pass
+comment|/// a suitable profile runtime library to the linker.
+name|virtual
+name|void
+name|addProfileRTLibs
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Add arguments to use system-specific CUDA includes.
+name|virtual
+name|void
+name|AddCudaIncludeArgs
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|DriverArgs
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CC1Args
 argument_list|)
 decl|const
 decl_stmt|;

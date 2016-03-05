@@ -393,6 +393,9 @@ name|Emitter
 parameter_list|,
 name|bool
 name|RelaxAll
+parameter_list|,
+name|bool
+name|IncrementalLinkerCompatible
 parameter_list|)
 function_decl|;
 comment|/// Construct an ELF Mach-O object writer.

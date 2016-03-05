@@ -104,25 +104,25 @@ name|_WIN32_IE
 end_undef
 
 begin_comment
-comment|// Require at least Windows XP(5.1) API.
+comment|// Require at least Windows 7 API.
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_WIN32_WINNT
-value|0x0501
+value|0x0601
 end_define
 
 begin_define
 define|#
 directive|define
 name|_WIN32_IE
-value|0x0600
+value|0x0800
 end_define
 
 begin_comment
-comment|// MinGW at it again.
+comment|// MinGW at it again. FIXME: verify if still needed.
 end_comment
 
 begin_define
@@ -131,10 +131,33 @@ directive|define
 name|WIN32_LEAN_AND_MEAN
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOMINMAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NOMINMAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
@@ -201,6 +224,119 @@ directive|include
 file|<vector>
 end_include
 
+begin_comment
+comment|/// Determines if the program is running on Windows 8 or newer. This
+end_comment
+
+begin_comment
+comment|/// reimplements one of the helpers in the Windows 8.1 SDK, which are intended
+end_comment
+
+begin_comment
+comment|/// to supercede raw calls to GetVersionEx. Old SDKs, Cygwin, and MinGW don't
+end_comment
+
+begin_comment
+comment|/// yet have VersionHelpers.h, so we have our own helper.
+end_comment
+
+begin_function
+specifier|inline
+name|bool
+name|RunningWindows8OrGreater
+parameter_list|()
+block|{
+comment|// Windows 8 is version 6.2, service pack 0.
+name|OSVERSIONINFOEXW
+name|osvi
+init|=
+block|{}
+decl_stmt|;
+name|osvi
+operator|.
+name|dwOSVersionInfoSize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|OSVERSIONINFO
+argument_list|)
+expr_stmt|;
+name|osvi
+operator|.
+name|dwMajorVersion
+operator|=
+literal|6
+expr_stmt|;
+name|osvi
+operator|.
+name|dwMinorVersion
+operator|=
+literal|2
+expr_stmt|;
+name|osvi
+operator|.
+name|wServicePackMajor
+operator|=
+literal|0
+expr_stmt|;
+name|DWORDLONG
+name|Mask
+init|=
+literal|0
+decl_stmt|;
+name|Mask
+operator|=
+name|VerSetConditionMask
+argument_list|(
+name|Mask
+argument_list|,
+name|VER_MAJORVERSION
+argument_list|,
+name|VER_GREATER_EQUAL
+argument_list|)
+expr_stmt|;
+name|Mask
+operator|=
+name|VerSetConditionMask
+argument_list|(
+name|Mask
+argument_list|,
+name|VER_MINORVERSION
+argument_list|,
+name|VER_GREATER_EQUAL
+argument_list|)
+expr_stmt|;
+name|Mask
+operator|=
+name|VerSetConditionMask
+argument_list|(
+name|Mask
+argument_list|,
+name|VER_SERVICEPACKMAJOR
+argument_list|,
+name|VER_GREATER_EQUAL
+argument_list|)
+expr_stmt|;
+return|return
+name|VerifyVersionInfoW
+argument_list|(
+operator|&
+name|osvi
+argument_list|,
+name|VER_MAJORVERSION
+operator||
+name|VER_MINORVERSION
+operator||
+name|VER_SERVICEPACKMAJOR
+argument_list|,
+name|Mask
+argument_list|)
+operator|!=
+name|FALSE
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|inline
 name|bool
@@ -235,6 +371,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|DWORD
+name|LastError
+init|=
+name|GetLastError
+argument_list|()
+decl_stmt|;
+name|DWORD
 name|R
 init|=
 name|FormatMessage
@@ -242,11 +384,12 @@ argument_list|(
 name|FORMAT_MESSAGE_ALLOCATE_BUFFER
 operator||
 name|FORMAT_MESSAGE_FROM_SYSTEM
+operator||
+name|FORMAT_MESSAGE_MAX_WIDTH_MASK
 argument_list|,
 name|NULL
 argument_list|,
-name|GetLastError
-argument_list|()
+name|LastError
 argument_list|,
 literal|0
 argument_list|,
@@ -270,6 +413,8 @@ name|ErrMsg
 operator|=
 name|prefix
 operator|+
+literal|": "
+operator|+
 name|buffer
 expr_stmt|;
 else|else
@@ -278,7 +423,21 @@ name|ErrMsg
 operator|=
 name|prefix
 operator|+
-literal|"Unknown error"
+literal|": Unknown error"
+expr_stmt|;
+operator|*
+name|ErrMsg
+operator|+=
+literal|" (0x"
+operator|+
+name|llvm
+operator|::
+name|utohexstr
+argument_list|(
+name|LastError
+argument_list|)
+operator|+
+literal|")"
 expr_stmt|;
 name|LocalFree
 argument_list|(

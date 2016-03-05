@@ -68,12 +68,9 @@ name|public
 operator|:
 name|RegisterContextLinux_mips
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|target_arch
+argument|const lldb_private::ArchSpec&target_arch
+argument_list|,
+argument|bool msa_present = true
 argument_list|)
 block|;
 name|size_t
@@ -103,6 +100,11 @@ name|GetUserRegisterCount
 argument_list|()
 specifier|const
 name|override
+block|;
+name|private
+operator|:
+name|uint32_t
+name|m_user_register_count
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 

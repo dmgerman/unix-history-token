@@ -462,6 +462,29 @@ operator|==
 name|Quantity
 return|;
 block|}
+comment|/// Test whether this is a multiple of the other value.
+comment|///
+comment|/// Among other things, this promises that
+comment|/// self.RoundUpToAlignment(N) will just return self.
+name|bool
+name|isMultipleOf
+argument_list|(
+name|CharUnits
+name|N
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|%
+name|N
+operator|)
+operator|==
+literal|0
+return|;
+block|}
 comment|// Arithmetic operators.
 name|CharUnits
 name|operator
@@ -658,11 +681,21 @@ comment|/// Given that this is a non-zero alignment value, what is the
 comment|/// alignment at the given offset?
 name|CharUnits
 name|alignmentAtOffset
-parameter_list|(
+argument_list|(
 name|CharUnits
 name|offset
-parameter_list|)
+argument_list|)
+decl|const
 block|{
+name|assert
+argument_list|(
+name|Quantity
+operator|!=
+literal|0
+operator|&&
+literal|"offsetting from unknown alignment?"
+argument_list|)
+expr_stmt|;
 return|return
 name|CharUnits
 argument_list|(
@@ -676,6 +709,26 @@ name|offset
 operator|.
 name|Quantity
 argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Given that this is the alignment of the first element of an
+comment|/// array, return the minimum alignment of any element in the array.
+name|CharUnits
+name|alignmentOfArrayElement
+argument_list|(
+name|CharUnits
+name|elementSize
+argument_list|)
+decl|const
+block|{
+comment|// Since we don't track offsetted alignments, the alignment of
+comment|// the second element (or any odd element) will be minimally
+comment|// aligned.
+return|return
+name|alignmentAtOffset
+argument_list|(
+name|elementSize
 argument_list|)
 return|;
 block|}

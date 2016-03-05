@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionGroupOutputFile.h -------------------------------*- C++ -*-===//
+comment|//===-- OptionGroupOutputFile.h ---------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -95,24 +95,23 @@ operator|:
 name|OptionGroupOutputFile
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|OptionGroupOutputFile
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -122,15 +121,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 specifier|const
 name|OptionValueFileSpec
@@ -176,7 +174,7 @@ name|m_file
 block|;
 name|OptionValueBoolean
 name|m_append
-block|;      }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

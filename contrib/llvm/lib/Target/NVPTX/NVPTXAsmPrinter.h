@@ -1092,15 +1092,6 @@ argument|unsigned Reg
 argument_list|)
 block|;
 name|void
-name|EmitAlignment
-argument_list|(
-argument|unsigned NumBits
-argument_list|,
-argument|const GlobalValue *GV = nullptr
-argument_list|)
-specifier|const
-block|{}
-name|void
 name|printVecModifiedImmediate
 argument_list|(
 specifier|const
@@ -1131,15 +1122,6 @@ argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
-name|printImplicitDef
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
 name|printModuleLevelGV
 argument_list|(
 specifier|const
@@ -1154,14 +1136,6 @@ argument_list|,
 name|bool
 operator|=
 name|false
-argument_list|)
-block|;
-name|void
-name|printParamName
-argument_list|(
-argument|int paramIndex
-argument_list|,
-argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
@@ -1218,15 +1192,6 @@ argument|raw_ostream&
 argument_list|)
 block|;
 name|void
-name|emitFunctionExternParamList
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-block|;
-name|void
 name|emitFunctionParamList
 argument_list|(
 specifier|const
@@ -1258,28 +1223,6 @@ specifier|const
 name|MachineFunction
 operator|&
 name|MF
-argument_list|)
-block|;
-name|void
-name|emitFunctionTempData
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-operator|&
-name|FrameSize
-argument_list|)
-block|;
-name|bool
-name|isImageType
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
 argument_list|)
 block|;
 name|void
@@ -1442,7 +1385,6 @@ name|std
 operator|::
 name|map
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|,
@@ -1523,7 +1465,7 @@ operator|::
 name|string
 name|getPTXFundamentalTypeStr
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|bool = true
 argument_list|)
@@ -1585,15 +1527,6 @@ name|aggBuffer
 parameter_list|)
 function_decl|;
 name|void
-name|printOperandProper
-parameter_list|(
-specifier|const
-name|MachineOperand
-modifier|&
-name|MO
-parameter_list|)
-function_decl|;
-name|void
 name|emitLinkageDirective
 parameter_list|(
 specifier|const
@@ -1628,16 +1561,6 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|O
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|getRegisterName
-parameter_list|(
-name|unsigned
-name|RegNo
 parameter_list|)
 function_decl|;
 name|void

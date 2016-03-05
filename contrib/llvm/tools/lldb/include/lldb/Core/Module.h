@@ -43,6 +43,40 @@ directive|define
 name|liblldb_Module_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<atomic>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -83,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolContextScope.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/TypeSystem.h"
 end_include
 
 begin_include
@@ -187,12 +227,12 @@ argument|const FileSpec& file_spec
 argument_list|,
 argument|const ArchSpec& arch
 argument_list|,
-argument|const ConstString *object_name = NULL
+argument|const ConstString *object_name = nullptr
 argument_list|,
 argument|lldb::offset_t object_offset =
 literal|0
 argument_list|,
-argument|const TimeValue *object_mod_time_ptr = NULL
+argument|const TimeValue *object_mod_time_ptr = nullptr
 argument_list|)
 empty_stmt|;
 name|Module
@@ -220,10 +260,10 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|Module
 argument_list|()
+name|override
 expr_stmt|;
 name|bool
 name|MatchesModuleSpec
@@ -297,21 +337,21 @@ comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CalculateSymbolContext
-parameter_list|(
+argument_list|(
 name|SymbolContext
-modifier|*
+operator|*
 name|sc
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|ModuleSP
 name|CalculateSymbolContextModule
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|GetDescription
@@ -382,15 +422,15 @@ comment|/// @copydoc SymbolContextScope::DumpSymbolContext(Stream*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DumpSymbolContext
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Find a symbol in the object file's symbol table.
 comment|///
@@ -405,7 +445,7 @@ comment|///     symbols that match \a symbol_type.
 comment|///
 comment|/// @return
 comment|///     Returns a valid symbol pointer if a symbol was found,
-comment|///     NULL otherwise.
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 specifier|const
 name|Symbol
@@ -573,9 +613,9 @@ modifier|&
 name|name
 parameter_list|,
 specifier|const
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 modifier|*
-name|namespace_decl
+name|parent_decl_ctx
 parameter_list|,
 name|uint32_t
 name|name_type_mask
@@ -706,8 +746,8 @@ comment|/// @param[in] name
 comment|///     The name of the global or static variable we are looking
 comment|///     for.
 comment|///
-comment|/// @param[in] namespace_decl
-comment|///     If valid, a namespace to search in.
+comment|/// @param[in] parent_decl_ctx
+comment|///     If valid, a decl context that results must exist within
 comment|///
 comment|/// @param[in] append
 comment|///     If \b true, any matches will be appended to \a
@@ -734,9 +774,9 @@ modifier|&
 name|name
 parameter_list|,
 specifier|const
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 modifier|*
-name|namespace_decl
+name|parent_decl_ctx
 parameter_list|,
 name|bool
 name|append
@@ -903,9 +943,9 @@ modifier|&
 name|type_name
 parameter_list|,
 specifier|const
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 modifier|*
-name|namespace_decl
+name|parent_decl_ctx
 parameter_list|,
 name|size_t
 name|max_matches
@@ -1122,7 +1162,7 @@ name|Stream
 modifier|*
 name|feedback_stream
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -1170,7 +1210,7 @@ comment|///
 comment|/// @return
 comment|///     If Module::m_file does not exist, or no plug-in was found
 comment|///     that can parse the file, or the object file doesn't contain
-comment|///     the current architecture in Module::m_arch, NULL will be
+comment|///     the current architecture in Module::m_arch, nullptr will be
 comment|///     returned, else a valid object file interface will be
 comment|///     returned. The returned pointer is owned by this object and
 comment|///     remains valid as long as the object is around.
@@ -1234,7 +1274,7 @@ comment|/// to read the header of the object file without going back to the
 comment|/// process.
 comment|///
 comment|/// @return
-comment|///     The object file loaded from memory or NULL, if the operation
+comment|///     The object file loaded from memory or nullptr, if the operation
 comment|///     failed (see the `error` for more information in that case).
 comment|//------------------------------------------------------------------
 name|ObjectFile
@@ -1272,7 +1312,7 @@ comment|/// use the current object file.
 comment|///
 comment|/// @return
 comment|///     If this module does not have a valid object file, or no
-comment|///     plug-in can be found that can use the object file, NULL will
+comment|///     plug-in can be found that can use the object file, nullptr will
 comment|///     be returned, else a valid symbol vendor plug-in interface
 comment|///     will be returned. The returned pointer is owned by this
 comment|///     object and remains valid as long as the object is around.
@@ -1293,14 +1333,14 @@ name|Stream
 operator|*
 name|feedback_strm
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get accessor the type list for this module.
 comment|///
 comment|/// @return
-comment|///     A valid type list pointer, or NULL if there is no valid
+comment|///     A valid type list pointer, or nullptr if there is no valid
 comment|///     symbol vendor for this module.
 comment|//------------------------------------------------------------------
 name|TypeList
@@ -1566,11 +1606,16 @@ name|bool
 name|GetIsDynamicLinkEditor
 parameter_list|()
 function_decl|;
-name|ClangASTContext
-modifier|&
-name|GetClangASTContext
-parameter_list|()
-function_decl|;
+name|TypeSystem
+modifier|*
+name|GetTypeSystemForLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl_stmt|;
 comment|// Special error functions that can do printf style formatting that will prepend the message with
 comment|// something appropriate for this module (like the architecture, path and object name (if any)).
 comment|// This centralizes code so that everyone doesn't need to format their error and log messages on
@@ -2099,6 +2144,22 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// @param[out] language
+end_comment
+
+begin_comment
+comment|///     If known, the language to use for determining the
+end_comment
+
+begin_comment
+comment|///     lookup_name_type_mask.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// @param[out] lookup_name
 end_comment
 
@@ -2166,33 +2227,38 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|PrepareForFunctionNameLookup
-parameter_list|(
+argument_list|(
 specifier|const
 name|ConstString
-modifier|&
+operator|&
 name|name
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|name_type_mask
-parameter_list|,
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
 name|ConstString
-modifier|&
+operator|&
 name|lookup_name
-parameter_list|,
+argument_list|,
 name|uint32_t
-modifier|&
+operator|&
 name|lookup_name_type_mask
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|match_name_after_lookup
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|protected
@@ -2359,16 +2425,14 @@ begin_comment
 comment|///< we need to keep all old symbol files around in case anyone has type references to them
 end_comment
 
-begin_expr_stmt
-name|lldb
-operator|::
-name|ClangASTContextUP
-name|m_ast
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+name|TypeSystemMap
+name|m_type_system_map
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|///< The AST context for this module.
+comment|///< A map of any type systems associated with this module
 end_comment
 
 begin_decl_stmt
@@ -2393,25 +2457,38 @@ begin_comment
 comment|///< Unified section list for module that is used by the ObjectFile and and ObjectFile instances for the debug info
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|std
+operator|::
+name|atomic
+operator|<
 name|bool
+operator|>
 name|m_did_load_objfile
-range|:
-literal|1
-decl_stmt|,
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|atomic
+operator|<
+name|bool
+operator|>
 name|m_did_load_symbol_vendor
-range|:
-literal|1
-decl_stmt|,
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|atomic
+operator|<
+name|bool
+operator|>
 name|m_did_parse_uuid
-range|:
-literal|1
-decl_stmt|,
-name|m_did_init_ast
-range|:
-literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|mutable
@@ -2687,9 +2764,9 @@ modifier|&
 name|name
 parameter_list|,
 specifier|const
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 modifier|*
-name|namespace_decl
+name|parent_decl_ctx
 parameter_list|,
 name|bool
 name|append
@@ -2697,7 +2774,7 @@ parameter_list|,
 name|size_t
 name|max_matches
 parameter_list|,
-name|TypeList
+name|TypeMap
 modifier|&
 name|types
 parameter_list|)

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -185,6 +191,7 @@ name|Length
 decl_stmt|;
 comment|// Workaround memcmp issue with null pointers (undefined behavior)
 comment|// by providing a specialized version
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|static
 name|int
 name|compareMemory
@@ -278,6 +285,7 @@ block|;
 comment|// invoking strlen(NULL) is undefined behavior
 block|}
 comment|/// Construct a string ref from a pointer and length.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 comment|/*implicit*/
 name|StringRef
 argument_list|(
@@ -310,6 +318,7 @@ literal|"StringRef cannot be built from a NULL argument with non-null length"
 argument_list|)
 block|;       }
 comment|/// Construct a string ref from an std::string.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 comment|/*implicit*/
 name|StringRef
 argument_list|(
@@ -406,6 +415,7 @@ comment|/// @name String Operations
 comment|/// @{
 comment|/// data - Get a pointer to the start of the string (which may not be null
 comment|/// terminated).
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|const
 name|char
 operator|*
@@ -418,6 +428,7 @@ name|Data
 return|;
 block|}
 comment|/// empty - Check if the string is empty.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|empty
 argument_list|()
@@ -430,6 +441,7 @@ literal|0
 return|;
 block|}
 comment|/// size - Get the string size.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_t
 name|size
 argument_list|()
@@ -533,6 +545,7 @@ return|;
 block|}
 comment|/// equals - Check for string equality, this is more efficient than
 comment|/// compare() when the relative ordering of inequal strings isn't needed.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|equals
 argument_list|(
@@ -592,6 +605,7 @@ return|;
 block|}
 comment|/// compare - Compare two strings; the result is -1, 0, or 1 if this string
 comment|/// is lexicographically less than, equal to, or greater than the \p RHS.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|int
 name|compare
 argument_list|(
@@ -793,6 +807,7 @@ comment|/// @}
 comment|/// @name String Predicates
 comment|/// @{
 comment|/// Check if this string starts with the given \p Prefix.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|startswith
 argument_list|(
@@ -834,6 +849,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Check if this string ends with the given \p Suffix.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|endswith
 argument_list|(
@@ -886,6 +902,7 @@ comment|/// Search for the first character \p C in the string.
 comment|///
 comment|/// \returns The index of the first occurrence of \p C, or npos if not
 comment|/// found.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_t
 name|find
 argument_list|(
@@ -1563,6 +1580,7 @@ comment|/// suffix (starting with \p Start) will be returned.
 end_comment
 
 begin_decl_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|substr
 argument_list|(
@@ -1618,6 +1636,7 @@ comment|/// dropped.
 end_comment
 
 begin_decl_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|drop_front
 argument_list|(
@@ -1656,6 +1675,7 @@ comment|/// dropped.
 end_comment
 
 begin_decl_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|drop_back
 argument_list|(
@@ -1731,6 +1751,7 @@ comment|/// (starting with \p Start) will be returned.
 end_comment
 
 begin_decl_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|slice
 argument_list|(
@@ -2020,7 +2041,7 @@ comment|/// Each substring is stored in \p A. If \p MaxSplit is>= 0, at most
 end_comment
 
 begin_comment
-comment|/// \p MaxSplit splits are done and consequently<= \p MaxSplit
+comment|/// \p MaxSplit splits are done and consequently<= \p MaxSplit + 1
 end_comment
 
 begin_comment
@@ -2080,6 +2101,91 @@ end_macro
 
 begin_decl_stmt
 specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Split into substrings around the occurrences of a separator character.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Each substring is stored in \p A. If \p MaxSplit is>= 0, at most
+end_comment
+
+begin_comment
+comment|/// \p MaxSplit splits are done and consequently<= \p MaxSplit + 1
+end_comment
+
+begin_comment
+comment|/// elements are added to A.
+end_comment
+
+begin_comment
+comment|/// If \p KeepEmpty is false, empty strings are not added to \p A. They
+end_comment
+
+begin_comment
+comment|/// still count when considering \p MaxSplit
+end_comment
+
+begin_comment
+comment|/// An useful invariant is that
+end_comment
+
+begin_comment
+comment|/// Separator.join(A) == *this if MaxSplit == -1 and KeepEmpty == true
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param A - Where to put the substrings.
+end_comment
+
+begin_comment
+comment|/// \param Separator - The string to split on.
+end_comment
+
+begin_comment
+comment|/// \param MaxSplit - The maximum number of times the string is split.
+end_comment
+
+begin_comment
+comment|/// \param KeepEmpty - True if empty substring should be added.
+end_comment
+
+begin_decl_stmt
+name|void
+name|split
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|A
+argument_list|,
+name|char
+name|Separator
+argument_list|,
+name|int
+name|MaxSplit
+operator|=
+operator|-
+literal|1
+argument_list|,
+name|bool
+name|KeepEmpty
+operator|=
+name|true
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,6 +2426,7 @@ comment|/// @{
 end_comment
 
 begin_expr_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|inline
 name|bool
 name|operator
@@ -2344,6 +2451,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|inline
 name|bool
 name|operator

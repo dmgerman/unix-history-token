@@ -37,11 +37,21 @@ directive|pragma
 name|once
 end_pragma
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
@@ -84,7 +94,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<lldb/Host/windows/getopt/GetOptInc.h>
+file|<lldb/Host/common/GetOptInc.h>
 end_include
 
 begin_endif

@@ -412,6 +412,9 @@ comment|///
 comment|///   TDK_SubstitutionFailure: this argument is the template
 comment|///   argument we were instantiating when we encountered an error.
 comment|///
+comment|///   TDK_DeducedMismatch: this is the parameter type, after substituting
+comment|///   deduced arguments.
+comment|///
 comment|///   TDK_NonDeducedMismatch: this is the component of the 'parameter'
 comment|///   of the deduction, directly provided in the source code.
 name|TemplateArgument
@@ -420,6 +423,11 @@ decl_stmt|;
 comment|/// \brief The second template argument to which the template
 comment|/// argument deduction failure refers.
 comment|///
+comment|///   TDK_Inconsistent: this argument is the second value deduced
+comment|///   for the corresponding template parameter.
+comment|///
+comment|///   TDK_DeducedMismatch: this is the (adjusted) call argument type.
+comment|///
 comment|///   TDK_NonDeducedMismatch: this is the mismatching component of the
 comment|///   'argument' of the deduction, from which we are deducing arguments.
 comment|///
@@ -427,6 +435,8 @@ comment|/// FIXME: Finish documenting this.
 name|TemplateArgument
 name|SecondArg
 decl_stmt|;
+union|union
+block|{
 comment|/// \brief The expression which caused a deduction failure.
 comment|///
 comment|///   TDK_FailedOverloadResolution: this argument is the reference to
@@ -436,6 +446,16 @@ name|Expr
 modifier|*
 name|Expression
 decl_stmt|;
+comment|/// \brief The index of the function argument that caused a deduction
+comment|/// failure.
+comment|///
+comment|///   TDK_DeducedMismatch: this is the index of the argument that had a
+comment|///   different argument type from its substituted parameter type.
+name|unsigned
+name|CallArgIndex
+decl_stmt|;
+block|}
+union|;
 comment|/// \brief Information on packs that we're currently expanding.
 comment|///
 comment|/// FIXME: This should be kept internal to SemaTemplateDeduction.
@@ -536,6 +556,17 @@ modifier|*
 name|getExpr
 parameter_list|()
 function_decl|;
+comment|/// \brief Return the index of the call argument that this deduction
+comment|/// failure refers to, if any.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getCallArgIndex
+argument_list|()
+expr_stmt|;
 comment|/// \brief Free any memory associated with this deduction failure.
 name|void
 name|Destroy
@@ -590,6 +621,9 @@ parameter_list|(
 name|Sema
 modifier|&
 name|S
+parameter_list|,
+name|bool
+name|ForTakingAddress
 parameter_list|)
 function_decl|;
 block|}
@@ -611,6 +645,12 @@ name|Candidates
 expr_stmt|;
 name|SourceLocation
 name|Loc
+decl_stmt|;
+comment|// Stores whether we're taking the address of these candidates. This helps us
+comment|// produce better error messages when dealing with the pass_object_size
+comment|// attribute on parameters.
+name|bool
+name|ForTakingAddress
 decl_stmt|;
 name|TemplateSpecCandidateSet
 argument_list|(
@@ -641,11 +681,18 @@ label|:
 name|TemplateSpecCandidateSet
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|bool ForTakingAddress = false
 argument_list|)
 block|:
 name|Loc
 argument_list|(
-argument|Loc
+name|Loc
+argument_list|)
+operator|,
+name|ForTakingAddress
+argument_list|(
+argument|ForTakingAddress
 argument_list|)
 block|{}
 operator|~

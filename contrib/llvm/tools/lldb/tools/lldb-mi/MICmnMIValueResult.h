@@ -112,18 +112,6 @@ comment|//          http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gd
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 24/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -139,9 +127,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMICmnMIValueResult
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmnMIValueResult
@@ -168,7 +154,7 @@ argument|const bool vbUseSpacing
 argument_list|)
 block|;
 comment|//
-name|bool
+name|void
 name|Add
 argument_list|(
 specifier|const
@@ -189,21 +175,17 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnMIValueResult
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
 name|private
 operator|:
-name|bool
-name|BuildResult
-argument_list|(
 name|void
-argument_list|)
+name|BuildResult
+argument_list|()
 block|;
-name|bool
+name|void
 name|BuildResult
 argument_list|(
 specifier|const

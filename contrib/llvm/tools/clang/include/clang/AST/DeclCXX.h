@@ -4051,19 +4051,7 @@ operator|*
 name|getMemberSpecializationInfo
 argument_list|()
 specifier|const
-block|{
-return|return
-name|TemplateOrInstantiation
-operator|.
-name|dyn_cast
-operator|<
-name|MemberSpecializationInfo
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
+expr_stmt|;
 comment|/// \brief Specify that this record is an instantiation of the
 comment|/// member class \p RD.
 name|void
@@ -4093,19 +4081,7 @@ operator|*
 name|getDescribedClassTemplate
 argument_list|()
 specifier|const
-block|{
-return|return
-name|TemplateOrInstantiation
-operator|.
-name|dyn_cast
-operator|<
-name|ClassTemplateDecl
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|void
 name|setDescribedClassTemplate
 parameter_list|(
@@ -4113,12 +4089,7 @@ name|ClassTemplateDecl
 modifier|*
 name|Template
 parameter_list|)
-block|{
-name|TemplateOrInstantiation
-operator|=
-name|Template
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// \brief Determine whether this particular class is a specialization or
 comment|/// instantiation of a class template or member class of a class template,
 comment|/// and how it was instantiated or specialized.
@@ -4522,19 +4493,20 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
 name|bool
-name|ForallBasesCallback
-parameter_list|(
+argument_list|(
 specifier|const
 name|CXXRecordDecl
-modifier|*
+operator|*
 name|BaseDefinition
-parameter_list|,
-name|void
-modifier|*
-name|UserData
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|ForallBasesCallback
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -4578,18 +4550,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param UserData Passed as the second argument of every call to
-end_comment
-
-begin_comment
-comment|/// \p BaseMatches.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// \param AllowShortCircuit if false, forces the callback to be called
 end_comment
 
@@ -4606,12 +4566,7 @@ name|bool
 name|forallBases
 argument_list|(
 name|ForallBasesCallback
-operator|*
 name|BaseMatches
-argument_list|,
-name|void
-operator|*
-name|UserData
 argument_list|,
 name|bool
 name|AllowShortCircuit
@@ -4659,40 +4614,29 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param UserData a single pointer to user-specified data, provided to
-end_comment
-
-begin_comment
-comment|/// lookupInBases().
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// \returns true if this base matched the search criteria, false otherwise.
 end_comment
 
 begin_typedef
 typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
 name|bool
-name|BaseMatchesCallback
-parameter_list|(
+argument_list|(
 specifier|const
 name|CXXBaseSpecifier
-modifier|*
+operator|*
 name|Specifier
-parameter_list|,
+argument_list|,
 name|CXXBasePath
-modifier|&
+operator|&
 name|Path
-parameter_list|,
-name|void
-modifier|*
-name|UserData
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|BaseMatchesCallback
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -4748,14 +4692,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param UserData user data pointer that will be provided to \p BaseMatches.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// \param Paths used to record the paths from this class to its base class
 end_comment
 
@@ -4780,12 +4716,7 @@ name|bool
 name|lookupInBases
 argument_list|(
 name|BaseMatchesCallback
-operator|*
 name|BaseMatches
-argument_list|,
-name|void
-operator|*
-name|UserData
 argument_list|,
 name|CXXBasePaths
 operator|&
@@ -4816,7 +4747,7 @@ comment|/// a given derived class has is a base class subobject of a particular 
 end_comment
 
 begin_comment
-comment|/// The user data pointer should refer to the canonical CXXRecordDecl of the
+comment|/// The base record pointer should refer to the canonical CXXRecordDecl of the
 end_comment
 
 begin_comment
@@ -4837,7 +4768,8 @@ name|CXXBasePath
 modifier|&
 name|Path
 parameter_list|,
-name|void
+specifier|const
+name|CXXRecordDecl
 modifier|*
 name|BaseRecord
 parameter_list|)
@@ -4869,7 +4801,7 @@ comment|/// whether a given derived class has is a virtual base class
 end_comment
 
 begin_comment
-comment|/// subobject of a particular type.  The user data pointer should
+comment|/// subobject of a particular type.  The base record pointer should
 end_comment
 
 begin_comment
@@ -4894,7 +4826,8 @@ name|CXXBasePath
 modifier|&
 name|Path
 parameter_list|,
-name|void
+specifier|const
+name|CXXRecordDecl
 modifier|*
 name|BaseRecord
 parameter_list|)
@@ -4918,11 +4851,7 @@ comment|/// This callback can be used with \c lookupInBases() to find tag member
 end_comment
 
 begin_comment
-comment|/// of the given name within a C++ class hierarchy. The user data pointer
-end_comment
-
-begin_comment
-comment|/// is an opaque \c DeclarationName pointer.
+comment|/// of the given name within a C++ class hierarchy.
 end_comment
 
 begin_function_decl
@@ -4939,8 +4868,7 @@ name|CXXBasePath
 modifier|&
 name|Path
 parameter_list|,
-name|void
-modifier|*
+name|DeclarationName
 name|Name
 parameter_list|)
 function_decl|;
@@ -4963,11 +4891,7 @@ comment|/// This callback can be used with \c lookupInBases() to find members
 end_comment
 
 begin_comment
-comment|/// of the given name within a C++ class hierarchy. The user data pointer
-end_comment
-
-begin_comment
-comment|/// is an opaque \c DeclarationName pointer.
+comment|/// of the given name within a C++ class hierarchy.
 end_comment
 
 begin_function_decl
@@ -4984,8 +4908,7 @@ name|CXXBasePath
 modifier|&
 name|Path
 parameter_list|,
-name|void
-modifier|*
+name|DeclarationName
 name|Name
 parameter_list|)
 function_decl|;
@@ -5004,7 +4927,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This callback can be used with \c lookupInBases() to find membes of
+comment|/// This callback can be used with \c lookupInBases() to find members of
 end_comment
 
 begin_comment
@@ -5029,9 +4952,8 @@ name|CXXBasePath
 modifier|&
 name|Path
 parameter_list|,
-name|void
-modifier|*
-name|UserData
+name|DeclarationName
+name|Name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6568,6 +6490,18 @@ end_comment
 begin_decl_stmt
 name|class
 name|CXXCtorInitializer
+name|final
+range|:
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|CXXCtorInitializer
+decl_stmt|,
+name|VarDecl
+modifier|*
+decl|>
 block|{
 comment|/// \brief Either the base class name/delegating constructor type (stored as
 comment|/// a TypeSourceInfo*), an normal field (FieldDecl), or an anonymous field
@@ -7364,16 +7298,12 @@ literal|"Out of bounds member array index"
 argument_list|)
 expr_stmt|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|VarDecl
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|I
@@ -7404,18 +7334,12 @@ literal|"Out of bounds member array index"
 argument_list|)
 expr_stmt|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|VarDecl
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|I
@@ -7446,16 +7370,12 @@ operator|&&
 literal|"Out of bounds member array index"
 argument_list|)
 expr_stmt|;
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|VarDecl
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|I
@@ -7490,16 +7410,12 @@ name|llvm
 operator|::
 name|makeArrayRef
 argument_list|(
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|VarDecl
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 argument_list|,
 name|getNumArrayIndices
@@ -7532,6 +7448,12 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -8207,7 +8129,7 @@ comment|/// \brief Determine whether this constructor is a move constructor
 end_comment
 
 begin_comment
-comment|/// (C++0x [class.copy]p3), which can be used to move values of the class.
+comment|/// (C++11 [class.copy]p3), which can be used to move values of the class.
 end_comment
 
 begin_comment
@@ -8239,7 +8161,7 @@ comment|/// \brief Determine whether this constructor is a move constructor
 end_comment
 
 begin_comment
-comment|/// (C++0x [class.copy]p3), which can be used to move values of the class.
+comment|/// (C++11 [class.copy]p3), which can be used to move values of the class.
 end_comment
 
 begin_expr_stmt
@@ -8760,7 +8682,7 @@ name|override
 block|;
 comment|/// Whether this conversion function declaration is marked
 comment|/// "explicit", meaning that it can only be applied when the user
-comment|/// explicitly wrote a cast. This is a C++0x feature.
+comment|/// explicitly wrote a cast. This is a C++11 feature.
 name|bool
 name|IsExplicitSpecified
 operator|:

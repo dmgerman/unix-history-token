@@ -476,7 +476,15 @@ block|,
 name|LC_LINKER_OPTIMIZATION_HINT
 init|=
 literal|0x0000002Eu
-block|}
+block|,
+name|LC_VERSION_MIN_TVOS
+init|=
+literal|0x0000002Fu
+block|,
+name|LC_VERSION_MIN_WATCHOS
+init|=
+literal|0x00000030u
+block|,     }
 enum|;
 enum_decl|enum :
 name|uint32_t

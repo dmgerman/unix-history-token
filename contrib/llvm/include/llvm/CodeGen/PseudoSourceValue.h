@@ -62,7 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -93,23 +117,44 @@ operator|&
 name|MMO
 operator|)
 expr_stmt|;
-comment|/// PseudoSourceValue - Special value supplied for machine level alias
-comment|/// analysis. It indicates that a memory access references the functions
-comment|/// stack frame (e.g., a spill slot), below the stack frame (e.g., argument
-comment|/// space), or constant pool.
+comment|/// Special value supplied for machine level alias analysis. It indicates that
+comment|/// a memory access references the functions stack frame (e.g., a spill slot),
+comment|/// below the stack frame (e.g., argument space), or constant pool.
 name|class
 name|PseudoSourceValue
 block|{
+name|public
+label|:
+enum|enum
+name|PSVKind
+block|{
+name|Stack
+block|,
+name|GOT
+block|,
+name|JumpTable
+block|,
+name|ConstantPool
+block|,
+name|FixedStack
+block|,
+name|GlobalValueCallEntry
+block|,
+name|ExternalSymbolCallEntry
+block|}
+enum|;
 name|private
 label|:
+name|PSVKind
+name|Kind
+decl_stmt|;
 name|friend
 name|class
 name|MachineMemOperand
 decl_stmt|;
 comment|// For printCustom().
-comment|/// printCustom - Implement printing for PseudoSourceValue. This is called
-comment|/// from Value::print or Value's operator<<.
-comment|///
+comment|/// Implement printing for PseudoSourceValue. This is called from
+comment|/// Value::print or Value's operator<<.
 name|virtual
 name|void
 name|printCustom
@@ -122,17 +167,11 @@ decl|const
 decl_stmt|;
 name|public
 label|:
-comment|/// isFixed - Whether this is a FixedStackPseudoSourceValue.
-name|bool
-name|isFixed
-decl_stmt|;
 name|explicit
 name|PseudoSourceValue
 parameter_list|(
-name|bool
-name|isFixed
-init|=
-name|false
+name|PSVKind
+name|Kind
 parameter_list|)
 function_decl|;
 name|virtual
@@ -140,9 +179,61 @@ operator|~
 name|PseudoSourceValue
 argument_list|()
 expr_stmt|;
-comment|/// isConstant - Test whether the memory pointed to by this
-comment|/// PseudoSourceValue has a constant value.
-comment|///
+name|PSVKind
+name|kind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+name|bool
+name|isStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|Stack
+return|;
+block|}
+name|bool
+name|isGOT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|GOT
+return|;
+block|}
+name|bool
+name|isConstantPool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|ConstantPool
+return|;
+block|}
+name|bool
+name|isJumpTable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|JumpTable
+return|;
+block|}
+comment|/// Test whether the memory pointed to by this PseudoSourceValue has a
+comment|/// constant value.
 name|virtual
 name|bool
 name|isConstant
@@ -153,8 +244,8 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isAliased - Test whether the memory pointed to by this
-comment|/// PseudoSourceValue may also be pointed to by an LLVM IR Value.
+comment|/// Test whether the memory pointed to by this PseudoSourceValue may also be
+comment|/// pointed to by an LLVM IR Value.
 name|virtual
 name|bool
 name|isAliased
@@ -165,8 +256,8 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// mayAlias - Return true if the memory pointed to by this
-comment|/// PseudoSourceValue can ever alias an LLVM IR Value.
+comment|/// Return true if the memory pointed to by this PseudoSourceValue can ever
+comment|/// alias an LLVM IR Value.
 name|virtual
 name|bool
 name|mayAlias
@@ -177,60 +268,10 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// A pseudo source value referencing a fixed stack frame entry,
-comment|/// e.g., a spill slot.
-specifier|static
-specifier|const
-name|PseudoSourceValue
-modifier|*
-name|getFixedStack
-parameter_list|(
-name|int
-name|FI
-parameter_list|)
-function_decl|;
-comment|/// A pseudo source value referencing the area below the stack frame of
-comment|/// a function, e.g., the argument space.
-specifier|static
-specifier|const
-name|PseudoSourceValue
-modifier|*
-name|getStack
-parameter_list|()
-function_decl|;
-comment|/// A pseudo source value referencing the global offset table
-comment|/// (or something the like).
-specifier|static
-specifier|const
-name|PseudoSourceValue
-modifier|*
-name|getGOT
-parameter_list|()
-function_decl|;
-comment|/// A pseudo source value referencing the constant pool. Since constant
-comment|/// pools are constant, this doesn't need to identify a specific constant
-comment|/// pool entry.
-specifier|static
-specifier|const
-name|PseudoSourceValue
-modifier|*
-name|getConstantPool
-parameter_list|()
-function_decl|;
-comment|/// A pseudo source value referencing a jump table. Since jump tables are
-comment|/// constant, this doesn't need to identify a specific jump table.
-specifier|static
-specifier|const
-name|PseudoSourceValue
-modifier|*
-name|getJumpTable
-parameter_list|()
-function_decl|;
 block|}
 empty_stmt|;
-comment|/// FixedStackPseudoSourceValue - A specialized PseudoSourceValue
-comment|/// for holding FixedStack values, which must include a frame
-comment|/// index.
+comment|/// A specialized PseudoSourceValue for holding FixedStack values, which must
+comment|/// include a frame index.
 name|class
 name|FixedStackPseudoSourceValue
 range|:
@@ -246,22 +287,19 @@ operator|:
 name|explicit
 name|FixedStackPseudoSourceValue
 argument_list|(
-argument|int fi
+argument|int FI
 argument_list|)
 operator|:
 name|PseudoSourceValue
 argument_list|(
-name|true
+name|FixedStack
 argument_list|)
 block|,
 name|FI
 argument_list|(
-argument|fi
+argument|FI
 argument_list|)
 block|{}
-comment|/// classof - Methods for support type inquiry through isa, cast, and
-comment|/// dyn_cast:
-comment|///
 specifier|static
 specifier|inline
 name|bool
@@ -273,9 +311,10 @@ block|{
 return|return
 name|V
 operator|->
-name|isFixed
+name|kind
+argument_list|()
 operator|==
-name|true
+name|FixedStack
 return|;
 block|}
 name|bool
@@ -320,11 +359,280 @@ name|FI
 return|;
 block|}
 expr|}
+block|;
+name|class
+name|CallEntryPseudoSourceValue
+operator|:
+name|public
+name|PseudoSourceValue
+block|{
+name|protected
+operator|:
+name|CallEntryPseudoSourceValue
+argument_list|(
+argument|PSVKind Kind
+argument_list|)
+block|;
+name|public
+operator|:
+name|bool
+name|isConstant
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+name|override
 block|; }
+block|;
+comment|/// A specialized pseudo soruce value for holding GlobalValue values.
+name|class
+name|GlobalValuePseudoSourceValue
+operator|:
+name|public
+name|CallEntryPseudoSourceValue
+block|{
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+block|;
+name|public
+operator|:
+name|GlobalValuePseudoSourceValue
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+block|;
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const PseudoSourceValue *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|kind
+argument_list|()
+operator|==
+name|GlobalValueCallEntry
+return|;
+block|}
+specifier|const
+name|GlobalValue
+operator|*
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GV
+return|;
+block|}
+expr|}
+block|;
+comment|/// A specialized pseudo source value for holding external symbol values.
+name|class
+name|ExternalSymbolPseudoSourceValue
+operator|:
+name|public
+name|CallEntryPseudoSourceValue
+block|{
+specifier|const
+name|char
+operator|*
+name|ES
+block|;
+name|public
+operator|:
+name|ExternalSymbolPseudoSourceValue
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|ES
+argument_list|)
+block|;
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const PseudoSourceValue *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|kind
+argument_list|()
+operator|==
+name|ExternalSymbolCallEntry
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ES
+return|;
+block|}
+expr|}
+block|;
+comment|/// Manages creation of pseudo source values.
+name|class
+name|PseudoSourceValueManager
+block|{
+specifier|const
+name|PseudoSourceValue
+name|StackPSV
+block|,
+name|GOTPSV
+block|,
+name|JumpTablePSV
+block|,
+name|ConstantPoolPSV
+block|;
+name|std
+operator|::
+name|map
+operator|<
+name|int
+block|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|FixedStackPseudoSourceValue
+operator|>>
+name|FSValues
+block|;
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|ExternalSymbolPseudoSourceValue
+operator|>>
+name|ExternalCallEntries
+block|;
+name|ValueMap
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+block|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|GlobalValuePseudoSourceValue
+operator|>>
+name|GlobalCallEntries
+block|;
+name|public
+operator|:
+name|PseudoSourceValueManager
+argument_list|()
+block|;
+comment|/// Return a pseudo source value referencing the area below the stack frame of
+comment|/// a function, e.g., the argument space.
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getStack
+argument_list|()
+block|;
+comment|/// Return a pseudo source value referencing the global offset table
+comment|/// (or something the like).
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getGOT
+argument_list|()
+block|;
+comment|/// Return a pseudo source value referencing the constant pool. Since constant
+comment|/// pools are constant, this doesn't need to identify a specific constant
+comment|/// pool entry.
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getConstantPool
+argument_list|()
+block|;
+comment|/// Return a pseudo source value referencing a jump table. Since jump tables
+comment|/// are constant, this doesn't need to identify a specific jump table.
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getJumpTable
+argument_list|()
+block|;
+comment|/// Return a pseudo source value referencing a fixed stack frame entry,
+comment|/// e.g., a spill slot.
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getFixedStack
+argument_list|(
+argument|int FI
+argument_list|)
+block|;
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getGlobalValueCallEntry
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+block|;
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|getExternalSymbolCallEntry
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|ES
+argument_list|)
+block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

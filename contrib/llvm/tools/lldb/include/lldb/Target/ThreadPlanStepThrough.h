@@ -83,12 +83,11 @@ name|ThreadPlan
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|ThreadPlanStepThrough
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
@@ -96,64 +95,58 @@ argument|Stream *s
 argument_list|,
 argument|lldb::DescriptionLevel level
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ValidatePlan
 argument_list|(
-name|Stream
-operator|*
-name|error
+argument|Stream *error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ShouldStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|StopOthers
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StateType
 name|GetPlanRunState
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|WillStop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|MischiefManaged
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidPush
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoPlanExplainsStop
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|DoWillResume
 argument_list|(
@@ -161,6 +154,7 @@ argument|lldb::StateType resume_state
 argument_list|,
 argument|bool current_plan
 argument_list|)
+name|override
 block|;
 name|ThreadPlanStepThrough
 argument_list|(
@@ -230,7 +224,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanStepThrough
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

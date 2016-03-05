@@ -3477,7 +3477,7 @@ name|CFGAutomaticObjDtor
 argument_list|(
 name|nullptr
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 argument_list|,
 name|C
@@ -3802,7 +3802,6 @@ block|{
 name|public
 label|:
 typedef|typedef
-specifier|const
 name|CFGBlock
 name|value_type
 typedef|;
@@ -6064,6 +6063,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_ANALYSIS_CFG_H
+end_comment
 
 end_unit
 

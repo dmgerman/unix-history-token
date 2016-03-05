@@ -171,39 +171,39 @@ operator|:
 expr|enum
 name|Kind
 block|{
-name|RegionValueKind
+name|SymbolRegionValueKind
 block|,
-name|ConjuredKind
+name|SymbolConjuredKind
 block|,
-name|DerivedKind
+name|SymbolDerivedKind
 block|,
-name|ExtentKind
+name|SymbolExtentKind
 block|,
-name|MetadataKind
+name|SymbolMetadataKind
 block|,
 name|BEGIN_SYMBOLS
 operator|=
-name|RegionValueKind
+name|SymbolRegionValueKind
 block|,
 name|END_SYMBOLS
 operator|=
-name|MetadataKind
+name|SymbolMetadataKind
 block|,
-name|SymIntKind
+name|SymIntExprKind
 block|,
-name|IntSymKind
+name|IntSymExprKind
 block|,
-name|SymSymKind
+name|SymSymExprKind
 block|,
 name|BEGIN_BINARYSYMEXPRS
 operator|=
-name|SymIntKind
+name|SymIntExprKind
 block|,
 name|END_BINARYSYMEXPRS
 operator|=
-name|SymSymKind
+name|SymSymExprKind
 block|,
-name|CastSymbolKind
+name|SymbolCastKind
 block|}
 block|;
 name|private
@@ -498,7 +498,7 @@ argument_list|)
 operator|:
 name|SymbolData
 argument_list|(
-name|RegionValueKind
+name|SymbolRegionValueKind
 argument_list|,
 name|sym
 argument_list|)
@@ -535,7 +535,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|RegionValueKind
+name|SymbolRegionValueKind
 argument_list|)
 block|;
 name|profile
@@ -588,7 +588,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|RegionValueKind
+name|SymbolRegionValueKind
 return|;
 block|}
 expr|}
@@ -641,7 +641,7 @@ argument_list|)
 operator|:
 name|SymbolData
 argument_list|(
-name|ConjuredKind
+name|SymbolConjuredKind
 argument_list|,
 name|sym
 argument_list|)
@@ -740,7 +740,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|ConjuredKind
+name|SymbolConjuredKind
 argument_list|)
 block|;
 name|profile
@@ -815,7 +815,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|ConjuredKind
+name|SymbolConjuredKind
 return|;
 block|}
 expr|}
@@ -849,7 +849,7 @@ argument_list|)
 operator|:
 name|SymbolData
 argument_list|(
-name|DerivedKind
+name|SymbolDerivedKind
 argument_list|,
 name|sym
 argument_list|)
@@ -916,7 +916,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|DerivedKind
+name|SymbolDerivedKind
 argument_list|)
 block|;
 name|profile
@@ -964,7 +964,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|DerivedKind
+name|SymbolDerivedKind
 return|;
 block|}
 expr|}
@@ -994,7 +994,7 @@ argument_list|)
 operator|:
 name|SymbolData
 argument_list|(
-name|ExtentKind
+name|SymbolExtentKind
 argument_list|,
 name|sym
 argument_list|)
@@ -1045,7 +1045,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|ExtentKind
+name|SymbolExtentKind
 argument_list|)
 block|;
 name|profile
@@ -1084,7 +1084,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|ExtentKind
+name|SymbolExtentKind
 return|;
 block|}
 expr|}
@@ -1139,7 +1139,7 @@ argument_list|)
 operator|:
 name|SymbolData
 argument_list|(
-name|MetadataKind
+name|SymbolMetadataKind
 argument_list|,
 name|sym
 argument_list|)
@@ -1249,7 +1249,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|MetadataKind
+name|SymbolMetadataKind
 argument_list|)
 block|;
 name|profile
@@ -1324,7 +1324,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|MetadataKind
+name|SymbolMetadataKind
 return|;
 block|}
 expr|}
@@ -1362,7 +1362,7 @@ argument_list|)
 operator|:
 name|SymExpr
 argument_list|(
-name|CastSymbolKind
+name|SymbolCastKind
 argument_list|)
 block|,
 name|Operand
@@ -1429,7 +1429,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|CastSymbolKind
+name|SymbolCastKind
 argument_list|)
 block|;
 name|ID
@@ -1486,7 +1486,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|CastSymbolKind
+name|SymbolCastKind
 return|;
 block|}
 expr|}
@@ -1620,7 +1620,7 @@ argument_list|)
 operator|:
 name|BinarySymExpr
 argument_list|(
-name|SymIntKind
+name|SymIntExprKind
 argument_list|,
 name|op
 argument_list|,
@@ -1691,7 +1691,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|SymIntKind
+name|SymIntExprKind
 argument_list|)
 block|;
 name|ID
@@ -1760,7 +1760,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|SymIntKind
+name|SymIntExprKind
 return|;
 block|}
 expr|}
@@ -1799,7 +1799,7 @@ argument_list|)
 operator|:
 name|BinarySymExpr
 argument_list|(
-name|IntSymKind
+name|IntSymExprKind
 argument_list|,
 name|op
 argument_list|,
@@ -1870,7 +1870,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|IntSymKind
+name|IntSymExprKind
 argument_list|)
 block|;
 name|ID
@@ -1939,7 +1939,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|IntSymKind
+name|IntSymExprKind
 return|;
 block|}
 expr|}
@@ -1976,7 +1976,7 @@ argument_list|)
 operator|:
 name|BinarySymExpr
 argument_list|(
-name|SymSymKind
+name|SymSymExprKind
 argument_list|,
 name|op
 argument_list|,
@@ -2045,7 +2045,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|SymSymKind
+name|SymSymExprKind
 argument_list|)
 block|;
 name|ID
@@ -2113,7 +2113,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|SymSymKind
+name|SymSymExprKind
 return|;
 block|}
 expr|}
@@ -2773,6 +2773,15 @@ operator|*
 name|region
 argument_list|)
 block|;
+name|void
+name|markElementIndicesLive
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|region
+argument_list|)
+block|;
 comment|/// \brief Set to the value of the symbolic store after
 comment|/// StoreManager::removeDeadBindings has been called.
 name|void
@@ -2798,8 +2807,35 @@ block|;
 name|class
 name|SymbolVisitor
 block|{
+name|protected
+operator|:
+operator|~
+name|SymbolVisitor
+argument_list|()
+operator|=
+expr|default
+block|;
 name|public
 operator|:
+name|SymbolVisitor
+argument_list|()
+operator|=
+expr|default
+block|;
+name|SymbolVisitor
+argument_list|(
+specifier|const
+name|SymbolVisitor
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|SymbolVisitor
+argument_list|(
+argument|SymbolVisitor&&
+argument_list|)
+block|{}
 comment|/// \brief A visitor method invoked by ProgramStateManager::scanReachableSymbols.
 comment|///
 comment|/// The method returns \c true if symbols should continue be scanned and \c
@@ -2824,11 +2860,7 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-operator|~
-name|SymbolVisitor
-argument_list|()
-block|; }
+expr|}
 block|;  }
 comment|// end GR namespace
 block|}

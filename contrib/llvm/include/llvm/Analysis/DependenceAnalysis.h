@@ -178,6 +178,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
@@ -191,9 +197,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|Loop
 decl_stmt|;
@@ -229,6 +232,22 @@ comment|/// itelf.
 name|class
 name|Dependence
 block|{
+name|protected
+label|:
+name|Dependence
+argument_list|(
+specifier|const
+name|Dependence
+operator|&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+comment|// FIXME: When we move to MSVC 2015 as the base compiler for Visual Studio
+comment|// support, uncomment this line to allow a defaulted move constructor for
+comment|// Dependence. Currently, FullDependence relies on the copy constructor, but
+comment|// that is acceptable given the triviality of the class.
+comment|// Dependence(Dependence&&) = default;
 name|public
 label|:
 name|Dependence
@@ -703,6 +722,7 @@ comment|/// ordering, where the source must precede the destination; in contrast
 comment|/// input dependences are unordered.
 name|class
 name|FullDependence
+name|final
 range|:
 name|public
 name|Dependence
@@ -720,15 +740,49 @@ argument_list|,
 argument|unsigned Levels
 argument_list|)
 block|;
-operator|~
 name|FullDependence
-argument_list|()
-name|override
-block|{
-name|delete
-index|[]
+argument_list|(
+name|FullDependence
+operator|&&
+name|RHS
+argument_list|)
+operator|:
+name|Dependence
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+argument_list|)
+argument_list|)
+block|,
+name|Levels
+argument_list|(
+name|RHS
+operator|.
+name|Levels
+argument_list|)
+block|,
+name|LoopIndependent
+argument_list|(
+name|RHS
+operator|.
+name|LoopIndependent
+argument_list|)
+block|,
+name|Consistent
+argument_list|(
+name|RHS
+operator|.
+name|Consistent
+argument_list|)
+block|,
 name|DV
-block|; }
+argument_list|(
+argument|std::move(RHS.DV)
+argument_list|)
+block|{}
 comment|/// isLoopIndependent - Returns true if this is a loop-independent
 comment|/// dependence.
 name|bool
@@ -854,8 +908,13 @@ name|bool
 name|Consistent
 block|;
 comment|// Init to true, then refine.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DVEntry
-operator|*
+index|[]
+operator|>
 name|DV
 block|;
 name|friend
@@ -2006,7 +2065,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// testBounds - Returns true iff the current bounds are plausible.
-comment|///
 name|bool
 name|testBounds
 argument_list|(
@@ -2276,15 +2334,13 @@ block|;
 name|bool
 name|tryDelinearize
 argument_list|(
-specifier|const
-name|SCEV
+name|Instruction
 operator|*
-name|SrcSCEV
+name|Src
 argument_list|,
-specifier|const
-name|SCEV
+name|Instruction
 operator|*
-name|DstSCEV
+name|Dst
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -2292,11 +2348,6 @@ name|Subscript
 operator|>
 operator|&
 name|Pair
-argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|ElementSize
 argument_list|)
 block|;
 name|public

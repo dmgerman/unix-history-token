@@ -43,6 +43,28 @@ directive|define
 name|liblldb_Iterable_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -143,19 +165,12 @@ operator|::
 name|const_iterator
 name|BackingIterator
 expr_stmt|;
-name|private
-operator|:
-name|BackingIterator
-name|m_iter
-expr_stmt|;
-name|public
-label|:
 comment|// Wrapping constructor
 name|AdaptedConstIterator
 argument_list|(
 argument|BackingIterator backing_iterator
 argument_list|)
-block|:
+operator|:
 name|m_iter
 argument_list|(
 argument|backing_iterator
@@ -209,7 +224,9 @@ comment|// Destructible
 operator|~
 name|AdaptedConstIterator
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 comment|// Comparable
 name|bool
 name|operator
@@ -693,6 +710,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|BackingIterator
+name|m_iter
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 unit|};
 name|template
@@ -1027,14 +1055,6 @@ operator|,
 name|A
 operator|>
 block|{
-name|private
-operator|:
-name|Mutex
-operator|*
-name|m_mutex
-operator|=
-name|nullptr
-block|;
 name|public
 operator|:
 name|LockingAdaptedIterable
@@ -1098,7 +1118,7 @@ name|rhs
 operator|.
 name|m_mutex
 operator|=
-name|NULL
+name|nullptr
 block|;     }
 operator|~
 name|LockingAdaptedIterable
@@ -1116,6 +1136,15 @@ expr_stmt|;
 block|}
 name|private
 operator|:
+name|Mutex
+operator|*
+name|m_mutex
+operator|=
+name|nullptr
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|LockingAdaptedIterable
@@ -1123,11 +1152,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|};      }
+comment|// namespace lldb_private
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_Iterable_h_
+end_comment
 
 end_unit
 

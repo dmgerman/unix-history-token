@@ -237,7 +237,7 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// \brief A lazily constructed view of the call graph of a module.
+comment|/// A lazily constructed view of the call graph of a module.
 comment|///
 comment|/// With the edges of this graph, the motivating constraint that we are
 comment|/// attempting to maintain is that function-local optimization, CGSCC-local
@@ -294,6 +294,9 @@ decl_stmt|;
 name|class
 name|SCC
 decl_stmt|;
+name|class
+name|iterator
+decl_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -323,7 +326,199 @@ operator|*
 operator|>>
 name|NodeVectorImplT
 expr_stmt|;
-comment|/// \brief A lazy iterator used for both the entry nodes and child nodes.
+comment|/// A node in the call graph.
+comment|///
+comment|/// This represents a single node. It's primary roles are to cache the list of
+comment|/// callees, de-duplicate and provide fast testing of whether a function is
+comment|/// a callee, and facilitate iteration of child nodes in the graph.
+name|class
+name|Node
+block|{
+name|friend
+name|class
+name|LazyCallGraph
+decl_stmt|;
+name|friend
+name|class
+name|LazyCallGraph
+operator|::
+name|SCC
+expr_stmt|;
+name|LazyCallGraph
+modifier|*
+name|G
+decl_stmt|;
+name|Function
+modifier|&
+name|F
+decl_stmt|;
+comment|// We provide for the DFS numbering and Tarjan walk lowlink numbers to be
+comment|// stored directly within the node.
+name|int
+name|DFSNumber
+decl_stmt|;
+name|int
+name|LowLink
+decl_stmt|;
+name|mutable
+name|NodeVectorT
+name|Callees
+decl_stmt|;
+name|DenseMap
+operator|<
+name|Function
+operator|*
+operator|,
+name|size_t
+operator|>
+name|CalleeIndexMap
+expr_stmt|;
+comment|/// Basic constructor implements the scanning of F into Callees and
+comment|/// CalleeIndexMap.
+name|Node
+argument_list|(
+name|LazyCallGraph
+operator|&
+name|G
+argument_list|,
+name|Function
+operator|&
+name|F
+argument_list|)
+expr_stmt|;
+comment|/// Internal helper to insert a callee.
+name|void
+name|insertEdgeInternal
+parameter_list|(
+name|Function
+modifier|&
+name|Callee
+parameter_list|)
+function_decl|;
+comment|/// Internal helper to insert a callee.
+name|void
+name|insertEdgeInternal
+parameter_list|(
+name|Node
+modifier|&
+name|CalleeN
+parameter_list|)
+function_decl|;
+comment|/// Internal helper to remove a callee from this node.
+name|void
+name|removeEdgeInternal
+parameter_list|(
+name|Function
+modifier|&
+name|Callee
+parameter_list|)
+function_decl|;
+name|public
+label|:
+typedef|typedef
+name|LazyCallGraph
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+name|Function
+operator|&
+name|getFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|F
+return|;
+block|}
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator
+argument_list|(
+operator|*
+name|G
+argument_list|,
+name|Callees
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Callees
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator
+argument_list|(
+operator|*
+name|G
+argument_list|,
+name|Callees
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Callees
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Equality is defined as address equality.
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Node
+operator|&
+name|N
+operator|)
+specifier|const
+block|{
+return|return
+name|this
+operator|==
+operator|&
+name|N
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Node
+operator|&
+name|N
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+name|operator
+operator|==
+operator|(
+name|N
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// A lazy iterator used for both the entry nodes and child nodes.
 comment|///
 comment|/// When this iterator is dereferenced, if not yet available, a function will
 comment|/// be scanned for "calls" or uses of functions and its child information
@@ -510,200 +705,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief A node in the call graph.
-comment|///
-comment|/// This represents a single node. It's primary roles are to cache the list of
-comment|/// callees, de-duplicate and provide fast testing of whether a function is
-comment|/// a callee, and facilitate iteration of child nodes in the graph.
-name|class
-name|Node
-block|{
-name|friend
-name|class
-name|LazyCallGraph
-decl_stmt|;
-name|friend
-name|class
-name|LazyCallGraph
-operator|::
-name|SCC
-expr_stmt|;
-name|LazyCallGraph
-modifier|*
-name|G
-decl_stmt|;
-name|Function
-modifier|&
-name|F
-decl_stmt|;
-comment|// We provide for the DFS numbering and Tarjan walk lowlink numbers to be
-comment|// stored directly within the node.
-name|int
-name|DFSNumber
-decl_stmt|;
-name|int
-name|LowLink
-decl_stmt|;
-name|mutable
-name|NodeVectorT
-name|Callees
-decl_stmt|;
-name|DenseMap
-operator|<
-name|Function
-operator|*
-operator|,
-name|size_t
-operator|>
-name|CalleeIndexMap
-expr_stmt|;
-comment|/// \brief Basic constructor implements the scanning of F into Callees and
-comment|/// CalleeIndexMap.
-name|Node
-argument_list|(
-name|LazyCallGraph
-operator|&
-name|G
-argument_list|,
-name|Function
-operator|&
-name|F
-argument_list|)
-expr_stmt|;
-comment|/// \brief Internal helper to insert a callee.
-name|void
-name|insertEdgeInternal
-parameter_list|(
-name|Function
-modifier|&
-name|Callee
-parameter_list|)
-function_decl|;
-comment|/// \brief Internal helper to insert a callee.
-name|void
-name|insertEdgeInternal
-parameter_list|(
-name|Node
-modifier|&
-name|CalleeN
-parameter_list|)
-function_decl|;
-comment|/// \brief Internal helper to remove a callee from this node.
-name|void
-name|removeEdgeInternal
-parameter_list|(
-name|Function
-modifier|&
-name|Callee
-parameter_list|)
-function_decl|;
-name|public
-label|:
-typedef|typedef
-name|LazyCallGraph
-operator|::
-name|iterator
-name|iterator
-expr_stmt|;
-name|Function
-operator|&
-name|getFunction
-argument_list|()
-specifier|const
-block|{
-return|return
-name|F
-return|;
-block|}
-empty_stmt|;
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|iterator
-argument_list|(
-operator|*
-name|G
-argument_list|,
-name|Callees
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Callees
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|iterator
-argument_list|(
-operator|*
-name|G
-argument_list|,
-name|Callees
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|Callees
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// Equality is defined as address equality.
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|Node
-operator|&
-name|N
-operator|)
-specifier|const
-block|{
-return|return
-name|this
-operator|==
-operator|&
-name|N
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|Node
-operator|&
-name|N
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|N
-operator|)
-return|;
-block|}
-block|}
-empty_stmt|;
-comment|/// \brief An SCC of the call graph.
+comment|/// An SCC of the call graph.
 comment|///
 comment|/// This represents a Strongly Connected Component of the call graph as
 comment|/// a collection of call graph nodes. While the order of nodes in the SCC is
@@ -887,20 +889,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|parent_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|parent_begin
 argument_list|()
-operator|,
+argument_list|,
 name|parent_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
-comment|/// \brief Test if this SCC is a parent of \a C.
+comment|/// Test if this SCC is a parent of \a C.
 name|bool
 name|isParentOf
 argument_list|(
@@ -921,7 +920,7 @@ name|this
 argument_list|)
 return|;
 block|}
-comment|/// \brief Test if this SCC is an ancestor of \a C.
+comment|/// Test if this SCC is an ancestor of \a C.
 name|bool
 name|isAncestorOf
 argument_list|(
@@ -942,7 +941,7 @@ name|this
 argument_list|)
 return|;
 block|}
-comment|/// \brief Test if this SCC is a child of \a C.
+comment|/// Test if this SCC is a child of \a C.
 name|bool
 name|isChildOf
 argument_list|(
@@ -970,7 +969,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Test if this SCC is a descendant of \a C.
+comment|/// Test if this SCC is a descendant of \a C.
 name|bool
 name|isDescendantOf
 argument_list|(
@@ -981,7 +980,7 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Short name useful for debugging or logging.
+comment|/// Short name useful for debugging or logging.
 comment|///
 comment|/// We use the name of the first function in the SCC to name the SCC for
 comment|/// the purposes of debugging and logging.
@@ -1012,7 +1011,7 @@ comment|/// presence of a (potentially still in-flight) DFS-found SCCs.
 comment|///
 comment|/// Note that these methods sometimes have complex runtimes, so be careful
 comment|/// how you call them.
-comment|/// \brief Insert an edge from one node in this SCC to another in this SCC.
+comment|/// Insert an edge from one node in this SCC to another in this SCC.
 comment|///
 comment|/// By the definition of an SCC, this does not change the nature or make-up
 comment|/// of any SCCs.
@@ -1028,8 +1027,7 @@ modifier|&
 name|CalleeN
 parameter_list|)
 function_decl|;
-comment|/// \brief Insert an edge whose tail is in this SCC and head is in some
-comment|/// child SCC.
+comment|/// Insert an edge whose tail is in this SCC and head is in some child SCC.
 comment|///
 comment|/// There must be an existing path from the caller to the callee. This
 comment|/// operation is inexpensive and does not change the set of SCCs in the
@@ -1046,8 +1044,8 @@ modifier|&
 name|CalleeN
 parameter_list|)
 function_decl|;
-comment|/// \brief Insert an edge whose tail is in a descendant SCC and head is in
-comment|/// this SCC.
+comment|/// Insert an edge whose tail is in a descendant SCC and head is in this
+comment|/// SCC.
 comment|///
 comment|/// There must be an existing path from the callee to the caller in this
 comment|/// case. NB! This is has the potential to be a very expensive function. It
@@ -1078,7 +1076,7 @@ operator|&
 name|CalleeN
 argument_list|)
 expr_stmt|;
-comment|/// \brief Remove an edge whose source is in this SCC and target is *not*.
+comment|/// Remove an edge whose source is in this SCC and target is *not*.
 comment|///
 comment|/// This removes an inter-SCC edge. All inter-SCC edges originating from
 comment|/// this SCC have been fully explored by any in-flight DFS SCC formation,
@@ -1100,7 +1098,7 @@ modifier|&
 name|CalleeN
 parameter_list|)
 function_decl|;
-comment|/// \brief Remove an edge which is entirely within this SCC.
+comment|/// Remove an edge which is entirely within this SCC.
 comment|///
 comment|/// Both the \a Caller and the \a Callee must be within this SCC. Removing
 comment|/// such an edge make break cycles that form this SCC and thus this
@@ -1153,7 +1151,7 @@ expr_stmt|;
 comment|///@}
 block|}
 empty_stmt|;
-comment|/// \brief A post-order depth-first SCC iterator over the call graph.
+comment|/// A post-order depth-first SCC iterator over the call graph.
 comment|///
 comment|/// This iterator triggers the Tarjan DFS-based formation of the SCC DAG for
 comment|/// the call graph, walking it lazily in depth-first post-order. That is, it
@@ -1184,7 +1182,7 @@ name|LazyCallGraph
 operator|::
 name|Node
 expr_stmt|;
-comment|/// \brief Nonce type to select the constructor for the end iterator.
+comment|/// Nonce type to select the constructor for the end iterator.
 struct|struct
 name|IsAtEndT
 block|{}
@@ -1305,7 +1303,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief Construct a graph for the given module.
+comment|/// Construct a graph for the given module.
 comment|///
 comment|/// This sets up the graph and computes all of the entry points of the graph.
 comment|/// No function definitions are scanned until their nodes in the graph are
@@ -1415,21 +1413,17 @@ name|postorder_sccs
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|postorder_scc_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|postorder_scc_begin
 argument_list|()
-operator|,
+argument_list|,
 name|postorder_scc_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
-comment|/// \brief Lookup a function in the graph which has already been scanned and
-comment|/// added.
+comment|/// Lookup a function in the graph which has already been scanned and added.
 name|Node
 modifier|*
 name|lookup
@@ -1451,7 +1445,7 @@ name|F
 argument_list|)
 return|;
 block|}
-comment|/// \brief Lookup a function's SCC in the graph.
+comment|/// Lookup a function's SCC in the graph.
 comment|///
 comment|/// \returns null if the function hasn't been assigned an SCC via the SCC
 comment|/// iterator walk.
@@ -1475,8 +1469,8 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get a graph node for a given function, scanning it to populate the
-comment|/// graph data as necessary.
+comment|/// Get a graph node for a given function, scanning it to populate the graph
+comment|/// data as necessary.
 name|Node
 modifier|&
 name|get
@@ -1523,7 +1517,7 @@ comment|/// a node-based inorder traversal that precedes any SCC-based traversal
 comment|///
 comment|/// Once you begin manipulating a call graph's SCCs, you must perform all
 comment|/// mutation of the graph via the SCC methods.
-comment|/// \brief Update the call graph after inserting a new edge.
+comment|/// Update the call graph after inserting a new edge.
 name|void
 name|insertEdge
 parameter_list|(
@@ -1536,7 +1530,7 @@ modifier|&
 name|Callee
 parameter_list|)
 function_decl|;
-comment|/// \brief Update the call graph after inserting a new edge.
+comment|/// Update the call graph after inserting a new edge.
 name|void
 name|insertEdge
 parameter_list|(
@@ -1561,7 +1555,7 @@ name|Callee
 argument_list|)
 return|;
 block|}
-comment|/// \brief Update the call graph after deleting an edge.
+comment|/// Update the call graph after deleting an edge.
 name|void
 name|removeEdge
 parameter_list|(
@@ -1574,7 +1568,7 @@ modifier|&
 name|Callee
 parameter_list|)
 function_decl|;
-comment|/// \brief Update the call graph after deleting an edge.
+comment|/// Update the call graph after deleting an edge.
 name|void
 name|removeEdge
 parameter_list|(
@@ -1602,14 +1596,14 @@ block|}
 comment|///@}
 name|private
 label|:
-comment|/// \brief Allocator that holds all the call graph nodes.
+comment|/// Allocator that holds all the call graph nodes.
 name|SpecificBumpPtrAllocator
 operator|<
 name|Node
 operator|>
 name|BPA
 expr_stmt|;
-comment|/// \brief Maps function->node for fast lookup.
+comment|/// Maps function->node for fast lookup.
 name|DenseMap
 operator|<
 specifier|const
@@ -1621,15 +1615,14 @@ operator|*
 operator|>
 name|NodeMap
 expr_stmt|;
-comment|/// \brief The entry nodes to the graph.
+comment|/// The entry nodes to the graph.
 comment|///
 comment|/// These nodes are reachable through "external" means. Put another way, they
 comment|/// escape at the module scope.
 name|NodeVectorT
 name|EntryNodes
 decl_stmt|;
-comment|/// \brief Map of the entry nodes in the graph to their indices in
-comment|/// \c EntryNodes.
+comment|/// Map of the entry nodes in the graph to their indices in \c EntryNodes.
 name|DenseMap
 operator|<
 name|Function
@@ -1639,14 +1632,14 @@ name|size_t
 operator|>
 name|EntryIndexMap
 expr_stmt|;
-comment|/// \brief Allocator that holds all the call graph SCCs.
+comment|/// Allocator that holds all the call graph SCCs.
 name|SpecificBumpPtrAllocator
 operator|<
 name|SCC
 operator|>
 name|SCCBPA
 expr_stmt|;
-comment|/// \brief Maps Function -> SCC for fast lookup.
+comment|/// Maps Function -> SCC for fast lookup.
 name|DenseMap
 operator|<
 name|Node
@@ -1657,7 +1650,7 @@ operator|*
 operator|>
 name|SCCMap
 expr_stmt|;
-comment|/// \brief The leaf SCCs of the graph.
+comment|/// The leaf SCCs of the graph.
 comment|///
 comment|/// These are all of the SCCs which have no children.
 name|SmallVector
@@ -1669,7 +1662,7 @@ literal|4
 operator|>
 name|LeafSCCs
 expr_stmt|;
-comment|/// \brief Stack of nodes in the DFS walk.
+comment|/// Stack of nodes in the DFS walk.
 name|SmallVector
 operator|<
 name|std
@@ -1686,7 +1679,7 @@ literal|4
 operator|>
 name|DFSStack
 expr_stmt|;
-comment|/// \brief Set of entry nodes not-yet-processed into SCCs.
+comment|/// Set of entry nodes not-yet-processed into SCCs.
 name|SmallVector
 operator|<
 name|Function
@@ -1696,7 +1689,7 @@ literal|4
 operator|>
 name|SCCEntryNodes
 expr_stmt|;
-comment|/// \brief Stack of nodes the DFS has walked but not yet put into a SCC.
+comment|/// Stack of nodes the DFS has walked but not yet put into a SCC.
 name|SmallVector
 operator|<
 name|Node
@@ -1706,11 +1699,11 @@ literal|4
 operator|>
 name|PendingSCCStack
 expr_stmt|;
-comment|/// \brief Counter for the next DFS number to assign.
+comment|/// Counter for the next DFS number to assign.
 name|int
 name|NextDFSNumber
 decl_stmt|;
-comment|/// \brief Helper to insert a new function, with an already looked-up entry in
+comment|/// Helper to insert a new function, with an already looked-up entry in
 comment|/// the NodeMap.
 name|Node
 modifier|&
@@ -1726,12 +1719,12 @@ modifier|&
 name|MappedN
 parameter_list|)
 function_decl|;
-comment|/// \brief Helper to update pointers back to the graph object during moves.
+comment|/// Helper to update pointers back to the graph object during moves.
 name|void
 name|updateGraphPtrs
 parameter_list|()
 function_decl|;
-comment|/// \brief Helper to form a new SCC out of the top of a DFSStack-like
+comment|/// Helper to form a new SCC out of the top of a DFSStack-like
 comment|/// structure.
 name|SCC
 modifier|*
@@ -1750,7 +1743,7 @@ operator|&
 name|NodeStack
 argument_list|)
 decl_stmt|;
-comment|/// \brief Retrieve the next node in the post-order SCC walk of the call graph.
+comment|/// Retrieve the next node in the post-order SCC walk of the call graph.
 name|SCC
 modifier|*
 name|getNextSCCInPostOrder
@@ -1938,7 +1931,7 @@ end_function
 
 begin_comment
 unit|};
-comment|/// \brief An analysis pass which computes the call graph for a module.
+comment|/// An analysis pass which computes the call graph for a module.
 end_comment
 
 begin_decl_stmt
@@ -1947,7 +1940,7 @@ name|LazyCallGraphAnalysis
 block|{
 name|public
 label|:
-comment|/// \brief Inform generic clients of the result type.
+comment|/// Inform generic clients of the result type.
 typedef|typedef
 name|LazyCallGraph
 name|Result
@@ -1976,7 +1969,7 @@ return|return
 literal|"Lazy CallGraph Analysis"
 return|;
 block|}
-comment|/// \brief Compute the \c LazyCallGraph for the module \c M.
+comment|/// Compute the \c LazyCallGraph for the module \c M.
 comment|///
 comment|/// This just builds the set of entry points to the call graph. The rest is
 comment|/// built lazily as it is walked.
@@ -2009,7 +2002,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief A pass which prints the call graph to a \c raw_ostream.
+comment|/// A pass which prints the call graph to a \c raw_ostream.
 end_comment
 
 begin_comment

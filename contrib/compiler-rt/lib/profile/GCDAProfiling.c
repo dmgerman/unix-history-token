@@ -39,6 +39,26 @@ directive|include
 file|<string.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"WindowsMMap.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -50,6 +70,11 @@ include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -90,6 +115,14 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

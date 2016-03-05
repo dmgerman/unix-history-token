@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadElfCore.h ----------------------------------------*- C++ -*-===//
+comment|//===-- ThreadElfCore.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,11 +43,27 @@ directive|define
 name|liblldb_ThreadElfCore_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -357,6 +373,11 @@ operator|::
 name|DataExtractor
 name|vregset
 expr_stmt|;
+name|lldb
+operator|::
+name|tid_t
+name|tid
+expr_stmt|;
 name|int
 name|signo
 decl_stmt|;
@@ -382,47 +403,48 @@ name|public
 operator|:
 name|ThreadElfCore
 argument_list|(
-argument|lldb_private::Process&process
+name|lldb_private
+operator|::
+name|Process
+operator|&
+name|process
 argument_list|,
-argument|lldb::tid_t tid
-argument_list|,
-argument|const ThreadData&td
+specifier|const
+name|ThreadData
+operator|&
+name|td
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadElfCore
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|GetRegisterContext
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|CreateRegisterContextForFrame
 argument_list|(
-name|lldb_private
-operator|::
-name|StackFrame
-operator|*
-name|frame
+argument|lldb_private::StackFrame *frame
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ClearStackFrames
 argument_list|()
+name|override
 block|;
 specifier|static
 name|bool
@@ -437,12 +459,12 @@ operator|!=
 literal|0
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetName
 argument_list|()
+name|override
 block|{
 if|if
 condition|(
@@ -472,6 +494,7 @@ name|char
 modifier|*
 name|name
 parameter_list|)
+function|override
 block|{
 if|if
 condition|(
@@ -561,13 +584,13 @@ name|m_vregset_data
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|bool
 name|CalculateStopInfo
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 unit|};

@@ -79,6 +79,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -105,6 +111,14 @@ block|,
 name|TSS_signed
 block|,
 name|TSS_unsigned
+block|}
+enum|;
+enum|enum
+name|TypeSpecifiersPipe
+block|{
+name|TSP_unspecified
+block|,
+name|TSP_pipe
 block|}
 enum|;
 comment|/// \brief Specifies the kind of type.
@@ -180,6 +194,9 @@ comment|// C++11 auto
 name|TST_decltype_auto
 block|,
 comment|// C++1y decltype(auto)
+name|TST_auto_type
+block|,
+comment|// __auto_type extension
 name|TST_unknown_anytype
 block|,
 comment|// __unknown_anytype extension
@@ -329,6 +346,50 @@ operator|!=
 name|TSK_ExplicitSpecialization
 return|;
 block|}
+comment|/// \brief True if this template specialization kind is an explicit
+comment|/// specialization, explicit instantiation declaration, or explicit
+comment|/// instantiation definition.
+specifier|inline
+name|bool
+name|isTemplateExplicitInstantiationOrSpecialization
+parameter_list|(
+name|TemplateSpecializationKind
+name|Kind
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Kind
+condition|)
+block|{
+case|case
+name|TSK_ExplicitSpecialization
+case|:
+case|case
+name|TSK_ExplicitInstantiationDeclaration
+case|:
+case|case
+name|TSK_ExplicitInstantiationDefinition
+case|:
+return|return
+name|true
+return|;
+case|case
+name|TSK_Undeclared
+case|:
+case|case
+name|TSK_ImplicitInstantiation
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad template specialization kind"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Thread storage-class-specifier.
 enum|enum
 name|ThreadStorageClassSpecifier
@@ -361,8 +422,6 @@ block|,
 name|SC_PrivateExtern
 block|,
 comment|// These are only legal on variables.
-name|SC_OpenCLWorkGroupLocal
-block|,
 name|SC_Auto
 block|,
 name|SC_Register

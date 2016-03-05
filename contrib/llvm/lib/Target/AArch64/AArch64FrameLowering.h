@@ -140,12 +140,10 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|int
-name|getFrameIndexOffset
+name|bool
+name|canUseAsPrologue
 argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
+argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override
@@ -238,9 +236,22 @@ argument|RegScavenger *RS
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|;
+comment|/// Returns true if the target will correctly handle shrink wrapping.
+name|bool
+name|enableShrinkWrapping
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

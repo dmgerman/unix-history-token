@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -210,93 +210,47 @@ modifier|*
 name|HeaderName
 decl_stmt|;
 name|LanguageID
-name|builtin_lang
+name|Langs
 decl_stmt|;
-name|bool
-name|operator
-operator|==
-operator|(
 specifier|const
-name|Info
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|Name
-argument_list|,
-name|RHS
-operator|.
-name|Name
-argument_list|)
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|Type
-argument_list|,
-name|RHS
-operator|.
-name|Type
-argument_list|)
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|Attributes
-argument_list|,
-name|RHS
-operator|.
-name|Attributes
-argument_list|)
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|Info
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
+name|char
+modifier|*
+name|Features
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Holds information about both target-independent and
 comment|/// target-specific builtins, allowing easy queries by clients.
+comment|///
+comment|/// Builtins from an optional auxiliary target are stored in
+comment|/// AuxTSRecords. Their IDs are shifted up by TSRecords.size() and need to
+comment|/// be translated back with getAuxBuiltinID() before use.
 name|class
 name|Context
 block|{
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|Info
-modifier|*
+operator|>
 name|TSRecords
-decl_stmt|;
-name|unsigned
-name|NumTSRecords
-decl_stmt|;
+expr_stmt|;
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|Info
+operator|>
+name|AuxTSRecords
+expr_stmt|;
 name|public
 label|:
 name|Context
 argument_list|()
-expr_stmt|;
+block|{}
 comment|/// \brief Perform target-specific initialization
+comment|/// \param AuxTarget Target info to incorporate builtins from. May be nullptr.
 name|void
 name|InitializeTarget
 parameter_list|(
@@ -304,13 +258,18 @@ specifier|const
 name|TargetInfo
 modifier|&
 name|Target
+parameter_list|,
+specifier|const
+name|TargetInfo
+modifier|*
+name|AuxTarget
 parameter_list|)
 function_decl|;
 comment|/// \brief Mark the identifiers for all the builtins with their
 comment|/// appropriate builtin ID # and mark any non-portable builtin identifiers as
 comment|/// such.
 name|void
-name|InitializeBuiltins
+name|initializeBuiltins
 parameter_list|(
 name|IdentifierTable
 modifier|&
@@ -322,26 +281,12 @@ modifier|&
 name|LangOpts
 parameter_list|)
 function_decl|;
-comment|/// \brief Populate the vector with the names of all of the builtins.
-name|void
-name|GetBuiltinNames
-argument_list|(
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-operator|&
-name|Names
-argument_list|)
-decl_stmt|;
 comment|/// \brief Return the identifier name for the specified builtin,
 comment|/// e.g. "__builtin_abs".
 specifier|const
 name|char
 modifier|*
-name|GetName
+name|getName
 argument_list|(
 name|unsigned
 name|ID
@@ -349,7 +294,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -361,7 +306,7 @@ comment|/// \brief Get the type descriptor string for the specified builtin.
 specifier|const
 name|char
 modifier|*
-name|GetTypeString
+name|getTypeString
 argument_list|(
 name|unsigned
 name|ID
@@ -369,12 +314,29 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
 operator|.
 name|Type
+return|;
+block|}
+comment|/// \brief Return true if this function is a target-specific builtin
+name|bool
+name|isTSBuiltin
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|ID
+operator|>=
+name|Builtin
+operator|::
+name|FirstTSBuiltin
 return|;
 block|}
 comment|/// \brief Return true if this function has no side effects and doesn't
@@ -390,7 +352,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -415,7 +377,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -440,7 +402,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -465,7 +427,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -491,7 +453,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -517,7 +479,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -544,7 +506,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -571,7 +533,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -596,7 +558,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -622,7 +584,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -638,7 +600,7 @@ block|}
 comment|/// \brief Completely forget that the given ID was ever considered a builtin,
 comment|/// e.g., because the user provided a conflicting signature.
 name|void
-name|ForgetBuiltin
+name|forgetBuiltin
 parameter_list|(
 name|unsigned
 name|ID
@@ -661,7 +623,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -720,7 +682,7 @@ block|{
 return|return
 name|strchr
 argument_list|(
-name|GetRecord
+name|getRecord
 argument_list|(
 name|ID
 argument_list|)
@@ -733,12 +695,86 @@ operator|!=
 name|nullptr
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|getRequiredFeatures
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|getRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Features
+return|;
+block|}
+comment|/// \brief Return true if builtin ID belongs to AuxTarget.
+name|bool
+name|isAuxBuiltinID
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|ID
+operator|>=
+operator|(
+name|Builtin
+operator|::
+name|FirstTSBuiltin
+operator|+
+name|TSRecords
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Return real buitin ID (i.e. ID it would have furing compilation
+comment|/// for AuxTarget).
+name|unsigned
+name|getAuxBuiltinID
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|ID
+operator|-
+name|TSRecords
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if this is a libc/libm function without the '__builtin_'
+comment|/// prefix.
+specifier|static
+name|bool
+name|isBuiltinFunc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
 name|private
 label|:
 specifier|const
 name|Info
 modifier|&
-name|GetRecord
+name|getRecord
 argument_list|(
 name|unsigned
 name|ID
@@ -747,7 +783,7 @@ decl|const
 decl_stmt|;
 comment|/// \brief Is this builtin supported according to the given language options?
 name|bool
-name|BuiltinIsSupported
+name|builtinIsSupported
 argument_list|(
 specifier|const
 name|Builtin
@@ -787,6 +823,16 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|/// \brief Kinds of BuiltinTemplateDecl.
+enum|enum
+name|BuiltinTemplateKind
+enum|:
+name|int
+block|{
+comment|/// \brief This names the __make_integer_seq BuiltinTemplateDecl.
+name|BTK__make_integer_seq
+block|}
+enum|;
 block|}
 end_decl_stmt
 

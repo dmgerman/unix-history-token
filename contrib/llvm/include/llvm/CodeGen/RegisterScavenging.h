@@ -234,12 +234,6 @@ operator|*
 name|mbb
 argument_list|)
 expr_stmt|;
-comment|/// Allow resetting register state info for multiple
-comment|/// passes over/within the same function.
-name|void
-name|initRegState
-parameter_list|()
-function_decl|;
 comment|/// Move the internal MBB iterator and update register states.
 name|void
 name|forward
@@ -566,6 +560,12 @@ name|setRegUsed
 parameter_list|(
 name|unsigned
 name|Reg
+parameter_list|,
+name|LaneBitmask
+name|LaneMask
+init|=
+operator|~
+literal|0u
 parameter_list|)
 function_decl|;
 name|private
@@ -663,6 +663,12 @@ operator|&
 name|UseMI
 argument_list|)
 decl_stmt|;
+comment|/// Allow resetting register state info for multiple
+comment|/// passes over/within the same function.
+name|void
+name|initRegState
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

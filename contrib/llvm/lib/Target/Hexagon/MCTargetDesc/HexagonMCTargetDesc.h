@@ -65,6 +65,12 @@ directive|include
 file|<cstdint>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CommandLine.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -115,6 +121,8 @@ specifier|extern
 name|Target
 name|TheHexagonTarget
 decl_stmt|;
+extern|extern cl::opt<bool> HexagonDisableCompound;
+extern|extern cl::opt<bool> HexagonDisableDuplex;
 specifier|extern
 specifier|const
 name|InstrStage
@@ -130,13 +138,13 @@ name|MCCodeEmitter
 modifier|*
 name|createHexagonMCCodeEmitter
 parameter_list|(
-name|MCInstrInfo
 specifier|const
+name|MCInstrInfo
 modifier|&
 name|MCII
 parameter_list|,
-name|MCRegisterInfo
 specifier|const
+name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
@@ -149,13 +157,13 @@ name|MCAsmBackend
 modifier|*
 name|createHexagonAsmBackend
 parameter_list|(
-name|Target
 specifier|const
+name|Target
 modifier|&
 name|T
 parameter_list|,
-name|MCRegisterInfo
 specifier|const
+name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
@@ -183,6 +191,22 @@ name|StringRef
 name|CPU
 parameter_list|)
 function_decl|;
+name|namespace
+name|HEXAGON_MC
+block|{
+name|StringRef
+name|selectHexagonCPU
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|TT
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
+block|}
 block|}
 end_decl_stmt
 

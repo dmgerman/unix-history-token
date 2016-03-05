@@ -1621,7 +1621,7 @@ comment|/// number is zero, returns the scale of the other.  If both are zero, w
 end_comment
 
 begin_comment
-comment|/// scale is returned is unspecifed.
+comment|/// scale is returned is unspecified.
 end_comment
 
 begin_expr_stmt
@@ -1930,7 +1930,7 @@ argument_list|,
 literal|"expected unsigned"
 argument_list|)
 block|;
-comment|// Check inputs up front.  This is only relevent if addition overflows, but
+comment|// Check inputs up front.  This is only relevant if addition overflows, but
 comment|// testing here should catch more bugs.
 name|assert
 argument_list|(

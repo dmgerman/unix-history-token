@@ -101,10 +101,10 @@ argument_list|,
 argument|uint32_t concrete_frame_idx
 argument_list|)
 empty_stmt|;
-name|virtual
 operator|~
 name|RegisterContext
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|InvalidateIfNeeded
@@ -269,7 +269,7 @@ comment|/// numbering scheme
 comment|///
 comment|/// There may be multiple ways to enumerate the registers for a given
 comment|/// architecture.  ABI references will specify one to be used with
-comment|/// DWARF, the register numberings from stabs (aka "gcc"), there may
+comment|/// DWARF, the register numberings from process plugin, there may
 comment|/// be a variation used for eh_frame unwind instructions (e.g. on Darwin),
 comment|/// and so on.  Register 5 by itself is meaningless - RegisterKind
 comment|/// enumeration tells you what context that number should be translated as.
@@ -632,43 +632,43 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|TargetSP
 name|CalculateTarget
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|CalculateProcess
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
 name|CalculateThread
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|StackFrameSP
 name|CalculateStackFrame
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|void
 name|CalculateExecutionContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|uint32_t
 name|GetStopID
 argument_list|()

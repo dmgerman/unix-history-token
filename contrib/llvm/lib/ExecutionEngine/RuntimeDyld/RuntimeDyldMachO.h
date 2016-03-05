@@ -329,6 +329,19 @@ name|Size
 argument_list|)
 return|;
 block|}
+comment|/// Process a scattered vanilla relocation.
+name|relocation_iterator
+name|processScatteredVANILLA
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|relocation_iterator RelI
+argument_list|,
+argument|const ObjectFile&BaseObjT
+argument_list|,
+argument|RuntimeDyldMachO::ObjSectionToIDMap&ObjSectionToID
+argument_list|)
+block|;
 comment|/// Construct a RelocationValueRef representing the relocation target.
 comment|/// For Symbols in known sections, this will return a RelocationValueRef
 comment|/// representing a (SectionID, Offset) pair.
@@ -521,7 +534,7 @@ name|char
 operator|*
 name|processFDE
 argument_list|(
-argument|unsigned char *P
+argument|uint8_t *P
 argument_list|,
 argument|int64_t DeltaForText
 argument_list|,

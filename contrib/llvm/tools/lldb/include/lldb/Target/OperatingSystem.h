@@ -129,10 +129,10 @@ operator|*
 name|process
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|OperatingSystem
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Plug-in Methods
@@ -254,7 +254,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_OperatingSystem_h_
+comment|// liblldb_OperatingSystem_h_
 end_comment
 
 end_unit

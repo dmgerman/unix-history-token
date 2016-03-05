@@ -176,8 +176,19 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
+name|bool
+name|targetSchedulesPostRAScheduling
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

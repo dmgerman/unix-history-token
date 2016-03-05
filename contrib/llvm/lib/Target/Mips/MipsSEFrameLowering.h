@@ -108,6 +108,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|spillCalleeSavedRegisters
 argument_list|(
@@ -146,6 +158,26 @@ name|unsigned
 name|ehDataReg
 argument_list|(
 argument|unsigned I
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|void
+name|emitInterruptEpilogueStub
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|void
+name|emitInterruptPrologueStub
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|; }

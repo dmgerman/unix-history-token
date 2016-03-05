@@ -132,6 +132,20 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|// Windows-only replacement for GetProcAddress. Useful for some sanitizers.
+name|uptr
+name|InternalGetProcAddress
+parameter_list|(
+name|void
+modifier|*
+name|module
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|func_name
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

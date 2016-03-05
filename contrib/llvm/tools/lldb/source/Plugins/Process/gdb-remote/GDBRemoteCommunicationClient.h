@@ -54,6 +54,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -104,15 +116,13 @@ name|GDBRemoteCommunication
 block|{
 name|public
 operator|:
-comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
 name|GDBRemoteCommunicationClient
 argument_list|()
 block|;
 operator|~
 name|GDBRemoteCommunicationClient
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// After connecting, send the handshake to the server to make sure
@@ -259,19 +269,50 @@ operator|&
 name|error_str
 argument_list|)
 block|;
-name|uint16_t
-name|LaunchGDBserverAndGetPort
+name|bool
+name|LaunchGDBServer
 argument_list|(
+specifier|const
+name|char
+operator|*
+name|remote_accept_hostname
+argument_list|,
 name|lldb
 operator|::
 name|pid_t
 operator|&
 name|pid
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|remote_accept_hostname
+name|uint16_t
+operator|&
+name|port
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|socket_name
+argument_list|)
+block|;
+name|size_t
+name|QueryGDBServer
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|uint16_t
+argument_list|,
+name|std
+operator|::
+name|string
+operator|>>
+operator|&
+name|connection_urls
 argument_list|)
 block|;
 name|bool
@@ -350,7 +391,7 @@ name|bool
 operator|*
 name|was_supported
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -1077,19 +1118,19 @@ name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
-comment|// Shouldn't be NULL
+comment|// Shouldn't be nullptr
 argument|const FileSpec&working_dir
 argument_list|,
 comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the process exit status
+comment|// Pass nullptr if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
+comment|// Pass nullptr if you don't want the signal that caused the process to exit
 argument|std::string *command_output
 argument_list|,
-comment|// Pass NULL if you don't want the command output
+comment|// Pass nullptr if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
 block|;
@@ -1233,45 +1274,6 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|PacketResult
-name|SendPacketAndWaitForResponseNoLock
-argument_list|(
-argument|const char *payload
-argument_list|,
-argument|size_t payload_length
-argument_list|,
-argument|StringExtractorGDBRemote&response
-argument_list|)
-block|;
-name|bool
-name|GetCurrentProcessInfo
-argument_list|(
-argument|bool allow_lazy_pid = true
-argument_list|)
-block|;
-name|bool
-name|GetGDBServerVersion
-argument_list|()
-block|;
-comment|// Given the list of compression types that the remote debug stub can support,
-comment|// possibly enable compression if we find an encoding we can handle.
-name|void
-name|MaybeEnableCompression
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|supported_compressions
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from GDBRemoteCommunicationClient can see and modify these
-comment|//------------------------------------------------------------------
 name|LazyBool
 name|m_supports_not_sending_acks
 block|;
@@ -1418,6 +1420,14 @@ name|m_supports_qSymbol
 operator|:
 literal|1
 block|,
+name|m_qSymbol_requests_done
+operator|:
+literal|1
+block|,
+name|m_supports_qModuleInfo
+operator|:
+literal|1
+block|,
 name|m_supports_jThreadsInfo
 operator|:
 literal|1
@@ -1533,6 +1543,42 @@ name|uint64_t
 name|m_max_packet_size
 block|;
 comment|// as returned by qSupported
+name|PacketResult
+name|SendPacketAndWaitForResponseNoLock
+argument_list|(
+argument|const char *payload
+argument_list|,
+argument|size_t payload_length
+argument_list|,
+argument|StringExtractorGDBRemote&response
+argument_list|)
+block|;
+name|bool
+name|GetCurrentProcessInfo
+argument_list|(
+argument|bool allow_lazy_pid = true
+argument_list|)
+block|;
+name|bool
+name|GetGDBServerVersion
+argument_list|()
+block|;
+comment|// Given the list of compression types that the remote debug stub can support,
+comment|// possibly enable compression if we find an encoding we can handle.
+name|void
+name|MaybeEnableCompression
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|supported_compressions
+argument_list|)
+block|;
 name|bool
 name|DecodeProcessInfoResponse
 argument_list|(
@@ -1547,9 +1593,6 @@ argument_list|)
 block|;
 name|private
 operator|:
-comment|//------------------------------------------------------------------
-comment|// For GDBRemoteCommunicationClient only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|GDBRemoteCommunicationClient

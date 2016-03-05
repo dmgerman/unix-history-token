@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -184,9 +178,6 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|DiagnosticsEngine
-decl_stmt|;
-name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
@@ -196,16 +187,7 @@ name|class
 name|NamespaceDecl
 decl_stmt|;
 name|class
-name|NestedNameSpecifier
-decl_stmt|;
-name|class
-name|NestedNameSpecifierLoc
-decl_stmt|;
-name|class
 name|ObjCDeclSpec
-decl_stmt|;
-name|class
-name|Preprocessor
 decl_stmt|;
 name|class
 name|Sema
@@ -239,9 +221,7 @@ name|Builder
 decl_stmt|;
 name|public
 label|:
-specifier|const
 name|SourceRange
-operator|&
 name|getRange
 argument_list|()
 specifier|const
@@ -253,9 +233,7 @@ block|}
 name|void
 name|setRange
 parameter_list|(
-specifier|const
 name|SourceRange
-modifier|&
 name|R
 parameter_list|)
 block|{
@@ -1134,6 +1112,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_auto_type
+init|=
+name|clang
+operator|::
+name|TST_auto_type
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_unknown_anytype
 init|=
 name|clang
@@ -1277,6 +1264,11 @@ name|TypeSpecOwned
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|TypeSpecPipe
+range|:
+literal|1
+decl_stmt|;
 comment|// type-qualifiers
 name|unsigned
 name|TypeQualifiers
@@ -1411,6 +1403,9 @@ decl_stmt|,
 name|ConstexprLoc
 decl_stmt|,
 name|ConceptLoc
+decl_stmt|;
+name|SourceLocation
+name|TQ_pipeLoc
 decl_stmt|;
 name|WrittenBuiltinSpecs
 name|writtenBS
@@ -1583,6 +1578,11 @@ name|false
 argument_list|)
 operator|,
 name|TypeSpecOwned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|TypeSpecPipe
 argument_list|(
 name|false
 argument_list|)
@@ -1860,6 +1860,15 @@ name|TypeSpecType
 argument_list|)
 return|;
 block|}
+name|bool
+name|isTypeSpecPipe
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeSpecPipe
+return|;
+block|}
 name|ParsedType
 name|getRepAsType
 argument_list|()
@@ -1948,9 +1957,7 @@ return|return
 name|TypeScope
 return|;
 block|}
-specifier|const
 name|SourceRange
-operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
@@ -2082,13 +2089,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|TypeSpecType
 operator|==
 name|TST_auto
 operator|||
 name|TypeSpecType
 operator|==
+name|TST_auto_type
+operator|||
+name|TypeSpecType
+operator|==
 name|TST_decltype_auto
+operator|)
 return|;
 block|}
 name|bool
@@ -2233,6 +2246,15 @@ return|return
 name|TQ_atomicLoc
 return|;
 block|}
+name|SourceLocation
+name|getPipeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TQ_pipeLoc
+return|;
+block|}
 comment|/// \brief Clear out all of the type qualifiers.
 name|void
 name|ClearTypeQualifiers
@@ -2258,6 +2280,11 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 name|TQ_atomicLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_pipeLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2861,6 +2888,31 @@ name|Policy
 parameter_list|)
 function_decl|;
 name|bool
+name|SetTypePipe
+parameter_list|(
+name|bool
+name|isPipe
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
+parameter_list|)
+function_decl|;
+name|bool
 name|SetTypeSpecError
 parameter_list|()
 function_decl|;
@@ -3317,13 +3369,9 @@ comment|/// DeclSpec is guaranteed self-consistent, even if an error occurred.
 name|void
 name|Finish
 parameter_list|(
-name|DiagnosticsEngine
+name|Sema
 modifier|&
-name|D
-parameter_list|,
-name|Preprocessor
-modifier|&
-name|PP
+name|S
 parameter_list|,
 specifier|const
 name|PrintingPolicy
@@ -4347,6 +4395,8 @@ block|,
 name|MemberPointer
 block|,
 name|Paren
+block|,
+name|Pipe
 block|}
 name|Kind
 enum|;
@@ -4676,9 +4726,13 @@ comment|/// any.
 name|unsigned
 name|MutableLoc
 block|;
-comment|/// \brief The location of the keyword introducing the spec, if any.
+comment|/// \brief The beginning location of the exception specification, if any.
 name|unsigned
-name|ExceptionSpecLoc
+name|ExceptionSpecLocBeg
+block|;
+comment|/// \brief The end location of the exception specification, if any.
+name|unsigned
+name|ExceptionSpecLocEnd
 block|;
 comment|/// Params - This is a pointer to a new[]'d array of ParamInfo objects that
 comment|/// describe the parameters specified by this function declarator.  null if
@@ -4868,7 +4922,7 @@ argument_list|)
 return|;
 block|}
 name|SourceLocation
-name|getExceptionSpecLoc
+name|getExceptionSpecLocBeg
 argument_list|()
 specifier|const
 block|{
@@ -4877,7 +4931,37 @@ name|SourceLocation
 operator|::
 name|getFromRawEncoding
 argument_list|(
-name|ExceptionSpecLoc
+name|ExceptionSpecLocBeg
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getExceptionSpecLocEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|ExceptionSpecLocEnd
+argument_list|)
+return|;
+block|}
+name|SourceRange
+name|getExceptionSpecRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getExceptionSpecLocBeg
+argument_list|()
+argument_list|,
+name|getExceptionSpecLocEnd
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -5135,6 +5219,22 @@ name|CXXScopeSpec
 argument_list|()
 block|;     }
 expr|}
+block|;    struct
+name|PipeTypeInfo
+operator|:
+name|TypeInfoCommon
+block|{
+comment|/// The access writes.
+name|unsigned
+name|AccessWrites
+operator|:
+literal|3
+block|;
+name|void
+name|destroy
+argument_list|()
+block|{}
+block|}
 block|;
 expr|union
 block|{
@@ -5158,6 +5258,9 @@ name|Cls
 block|;
 name|MemberPointerTypeInfo
 name|Mem
+block|;
+name|PipeTypeInfo
+name|PipeInfo
 block|;   }
 block|;
 name|void
@@ -5241,6 +5344,17 @@ operator|::
 name|Paren
 case|:
 return|return;
+case|case
+name|DeclaratorChunk
+operator|::
+name|Pipe
+case|:
+return|return
+name|PipeInfo
+operator|.
+name|destroy
+argument_list|()
+return|;
 block|}
 block|}
 comment|/// \brief If there are attributes applied to this declaratorchunk, return
@@ -5549,7 +5663,7 @@ argument|SourceLocation MutableLoc
 argument_list|,
 argument|ExceptionSpecificationType ESpecType
 argument_list|,
-argument|SourceLocation ESpecLoc
+argument|SourceRange ESpecRange
 argument_list|,
 argument|ParsedType *Exceptions
 argument_list|,
@@ -5610,6 +5724,51 @@ operator|.
 name|AttrList
 operator|=
 name|nullptr
+block|;
+return|return
+name|I
+return|;
+block|}
+comment|/// \brief Return a DeclaratorChunk for a block.
+specifier|static
+name|DeclaratorChunk
+name|getPipe
+argument_list|(
+argument|unsigned TypeQuals
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|DeclaratorChunk
+name|I
+block|;
+name|I
+operator|.
+name|Kind
+operator|=
+name|Pipe
+block|;
+name|I
+operator|.
+name|Loc
+operator|=
+name|Loc
+block|;
+name|I
+operator|.
+name|Cls
+operator|.
+name|TypeQuals
+operator|=
+name|TypeQuals
+block|;
+name|I
+operator|.
+name|Cls
+operator|.
+name|AttrList
+operator|=
+literal|0
 block|;
 return|return
 name|I
@@ -6161,9 +6320,7 @@ operator|)
 return|;
 block|}
 comment|/// \brief Get the source range that spans this declarator.
-specifier|const
 name|SourceRange
-operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
@@ -6265,9 +6422,7 @@ argument_list|(
 argument|const DeclSpec&DS
 argument_list|)
 block|{
-specifier|const
 name|SourceRange
-operator|&
 name|SR
 operator|=
 name|DS
@@ -7565,6 +7720,11 @@ name|DeclaratorChunk
 operator|::
 name|MemberPointer
 case|:
+case|case
+name|DeclaratorChunk
+operator|::
+name|Pipe
+case|:
 return|return
 name|false
 return|;
@@ -8518,6 +8678,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Returns true if this declares a constructor or a destructor.
+end_comment
+
+begin_function_decl
+name|bool
+name|isCtorOrDtor
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|setRedeclaration
@@ -8783,6 +8954,29 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+name|enum
+name|class
+name|LambdaCaptureInitKind
+block|{
+name|NoInit
+operator|,
+comment|//!< [a]
+name|CopyInit
+operator|,
+comment|//!< [a = b], [a = {b}]
+name|DirectInit
+operator|,
+comment|//!< [a(b)]
+name|ListInit
+comment|//!< [a{b}]
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/// \brief Represents a complete lambda introducer.
 end_comment
@@ -8808,6 +9002,9 @@ decl_stmt|;
 name|SourceLocation
 name|EllipsisLoc
 decl_stmt|;
+name|LambdaCaptureInitKind
+name|InitKind
+decl_stmt|;
 name|ExprResult
 name|Init
 decl_stmt|;
@@ -8823,6 +9020,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|SourceLocation EllipsisLoc
+argument_list|,
+argument|LambdaCaptureInitKind InitKind
 argument_list|,
 argument|ExprResult Init
 argument_list|,
@@ -8847,6 +9046,11 @@ operator|,
 name|EllipsisLoc
 argument_list|(
 name|EllipsisLoc
+argument_list|)
+operator|,
+name|InitKind
+argument_list|(
+name|InitKind
 argument_list|)
 operator|,
 name|Init
@@ -8898,6 +9102,8 @@ argument|IdentifierInfo* Id
 argument_list|,
 argument|SourceLocation EllipsisLoc
 argument_list|,
+argument|LambdaCaptureInitKind InitKind
+argument_list|,
 argument|ExprResult Init
 argument_list|,
 argument|ParsedType InitCaptureType
@@ -8916,6 +9122,8 @@ argument_list|,
 name|Id
 argument_list|,
 name|EllipsisLoc
+argument_list|,
+name|InitKind
 argument_list|,
 name|Init
 argument_list|,

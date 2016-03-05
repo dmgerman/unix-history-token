@@ -121,18 +121,20 @@ argument_list|(
 argument|exc_subcode
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|StopInfoMachException
 argument_list|()
-block|{     }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|lldb
 operator|::
 name|StopReason
 name|GetStopReason
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|lldb
@@ -140,12 +142,12 @@ operator|::
 name|eStopReasonException
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetDescription
 argument_list|()
+name|override
 block|;
 comment|// Since some mach exceptions will be reported as breakpoints, signals,
 comment|// or trace, we use this static accessor which will translate the mach

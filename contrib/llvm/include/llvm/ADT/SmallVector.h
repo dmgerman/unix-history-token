@@ -467,6 +467,7 @@ modifier|*
 name|const_pointer
 typedef|;
 comment|// forward iterator creation methods.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|iterator
 name|begin
 parameter_list|()
@@ -480,6 +481,7 @@ operator|->
 name|BeginX
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|const_iterator
 name|begin
 argument_list|()
@@ -494,6 +496,7 @@ operator|->
 name|BeginX
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|iterator
 name|end
 parameter_list|()
@@ -507,6 +510,7 @@ operator|->
 name|EndX
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|const_iterator
 name|end
 argument_list|()
@@ -603,6 +607,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_type
 name|size
 argument_list|()
@@ -675,6 +680,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|reference
 name|operator
 function|[]
@@ -699,6 +705,7 @@ name|idx
 index|]
 return|;
 block|}
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|const_reference
 name|operator
 index|[]

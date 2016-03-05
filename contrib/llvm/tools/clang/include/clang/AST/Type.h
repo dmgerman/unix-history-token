@@ -32,15 +32,27 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  This file defines the Type interface and subclasses.
+comment|/// \brief C Language Family Type Representation
 end_comment
 
 begin_comment
-comment|//
+comment|///
+end_comment
+
+begin_comment
+comment|/// This file defines the clang::Type interface and subclasses, used to
+end_comment
+
+begin_comment
+comment|/// represent types for languages in the C family.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -470,7 +482,7 @@ value|class Class##Type;
 include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
-comment|/// Qualifiers - The collection of all-type qualifiers we support.
+comment|/// The collection of all-type qualifiers we support.
 comment|/// Clang supports five independent qualifiers:
 comment|/// * C99: const, volatile, and restrict
 comment|/// * Embedded C (TR18037): address spaces
@@ -574,7 +586,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// \brief Returns the common set of qualifiers while removing them from
+comment|/// Returns the common set of qualifiers while removing them from
 comment|/// the given sets.
 specifier|static
 name|Qualifiers
@@ -1599,8 +1611,8 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
-comment|/// hasNonFastQualifiers - Return true if the set contains any
-comment|/// qualifiers which require an ExtQuals node to be allocated.
+comment|/// Return true if the set contains any qualifiers which require an ExtQuals
+comment|/// node to be allocated.
 name|bool
 name|hasNonFastQualifiers
 argument_list|()
@@ -1635,7 +1647,7 @@ return|return
 name|Quals
 return|;
 block|}
-comment|/// hasQualifiers - Return true if the set contains any qualifiers.
+comment|/// Return true if the set contains any qualifiers.
 name|bool
 name|hasQualifiers
 argument_list|()
@@ -1655,7 +1667,7 @@ operator|!
 name|Mask
 return|;
 block|}
-comment|/// \brief Add the qualifiers from the given set to this set.
+comment|/// Add the qualifiers from the given set to this set.
 name|void
 name|addQualifiers
 parameter_list|(
@@ -1825,7 +1837,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/// \brief Add the qualifiers from the given set to this set, given that
+comment|/// Add the qualifiers from the given set to this set, given that
 comment|/// they don't conflict.
 name|void
 name|addConsistentQualifiers
@@ -1904,7 +1916,7 @@ operator|.
 name|Mask
 expr_stmt|;
 block|}
-comment|/// \brief Returns true if this address space is a superset of the other one.
+comment|/// Returns true if this address space is a superset of the other one.
 comment|/// OpenCL v2.0 defines conversion rules (OpenCLC v2.0 s6.5.5) and notion of
 comment|/// overlapping address spaces.
 comment|/// CL1.1 or CL1.2:
@@ -1950,7 +1962,7 @@ name|opencl_constant
 operator|)
 return|;
 block|}
-comment|/// \brief Determines if these qualifiers compatibly include another set.
+comment|/// Determines if these qualifiers compatibly include another set.
 comment|/// Generally this answers the question of whether an object with the other
 comment|/// qualifiers can be safely used as an object with these qualifiers.
 name|bool
@@ -2029,7 +2041,8 @@ comment|/// qualifiers from the narrow perspective of Objective-C ARC lifetime.
 comment|///
 comment|/// One set of Objective-C lifetime qualifiers compatibly includes the other
 comment|/// if the lifetime qualifiers match, or if both are non-__weak and the
-comment|/// including set also contains the 'const' qualifier.
+comment|/// including set also contains the 'const' qualifier, or both are non-__weak
+comment|/// and one is None (which can only happen in non-ARC modes).
 name|bool
 name|compatiblyIncludesObjCLifetime
 argument_list|(
@@ -2067,6 +2080,23 @@ name|OCL_Weak
 condition|)
 return|return
 name|false
+return|;
+if|if
+condition|(
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|OCL_None
+operator|||
+name|other
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|OCL_None
+condition|)
+return|return
+name|true
 return|;
 return|return
 name|hasConst
@@ -2537,11 +2567,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
+comment|/// A (possibly-)qualified type.
 end_comment
 
 begin_comment
-comment|/// their own: instead each reference to a type stores the qualifiers.  This
+comment|///
+end_comment
+
+begin_comment
+comment|/// For efficiency, we don't store CV-qualified types as nodes on their
+end_comment
+
+begin_comment
+comment|/// own: instead each reference to a type stores the qualifiers.  This
 end_comment
 
 begin_comment
@@ -2906,7 +2944,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isNull - Return true if this QualType doesn't point to a type yet.
+comment|/// Return true if this QualType doesn't point to a type yet.
 end_comment
 
 begin_expr_stmt
@@ -3246,15 +3284,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isCXX98PODType() - Return true if this is a POD type according to the
+comment|/// Return true if this is a POD type according to the rules of the C++98
 end_comment
 
 begin_comment
-comment|/// rules of the C++98 standard, regardless of the current compilation's
-end_comment
-
-begin_comment
-comment|/// language.
+comment|/// standard, regardless of the current compilation's language.
 end_comment
 
 begin_decl_stmt
@@ -3270,15 +3304,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isCXX11PODType() - Return true if this is a POD type according to the
+comment|/// Return true if this is a POD type according to the more relaxed rules
 end_comment
 
 begin_comment
-comment|/// more relaxed rules of the C++11 standard, regardless of the current
-end_comment
-
-begin_comment
-comment|/// compilation's language.
+comment|/// of the C++11 standard, regardless of the current compilation's language.
 end_comment
 
 begin_comment
@@ -3298,11 +3328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isTrivialType - Return true if this is a trivial type
-end_comment
-
-begin_comment
-comment|/// (C++0x [basic.types]p9)
+comment|/// Return true if this is a trivial type per (C++0x [basic.types]p9)
 end_comment
 
 begin_decl_stmt
@@ -3318,11 +3344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// isTriviallyCopyableType - Return true if this is a trivially
-end_comment
-
-begin_comment
-comment|/// copyable type (C++0x [basic.types]p9)
+comment|/// Return true if this is a trivially copyable type (C++0x [basic.types]p9)
 end_comment
 
 begin_decl_stmt
@@ -3346,7 +3368,7 @@ comment|// easily added.
 end_comment
 
 begin_comment
-comment|/// addConst - add the specified type qualifier to this QualType.
+comment|/// Add the `const` type qualifier to this QualType.
 end_comment
 
 begin_function
@@ -3382,7 +3404,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// addVolatile - add the specified type qualifier to this QualType.
+comment|/// Add the `volatile` type qualifier to this QualType.
 end_comment
 
 begin_function
@@ -3418,7 +3440,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Add the restrict qualifier to this QualType.
+comment|/// Add the `restrict` qualifier to this QualType.
 end_comment
 
 begin_function
@@ -3806,11 +3828,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getSplitUnqualifiedType - Retrieve the unqualified variant of the
+comment|/// Retrieve the unqualified variant of the given type, removing as little
 end_comment
 
 begin_comment
-comment|/// given type, removing as little sugar as possible.
+comment|/// sugar as possible.
 end_comment
 
 begin_comment
@@ -3942,7 +3964,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getDesugaredType - Return the specified type with any "sugar" removed from
+comment|/// Return the specified type with any "sugar" removed from
 end_comment
 
 begin_comment
@@ -4056,7 +4078,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// IgnoreParens - Returns the specified type after dropping any
+comment|/// Returns the specified type after dropping any
 end_comment
 
 begin_comment
@@ -4100,11 +4122,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// operator==/!= - Indicate whether the specified types and qualifiers are
-end_comment
-
-begin_comment
-comment|/// identical.
+comment|/// Indicate whether the specified types and qualifiers are identical.
 end_comment
 
 begin_expr_stmt
@@ -4619,7 +4637,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getAddressSpace - Return the address space of this type.
+comment|/// Return the address space of this type.
 end_comment
 
 begin_expr_stmt
@@ -4632,7 +4650,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getObjCGCAttr - Returns gc attribute of this type.
+comment|/// Returns gc attribute of this type.
 end_comment
 
 begin_expr_stmt
@@ -4647,7 +4665,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// isObjCGCWeak true when Type is objc's weak.
+comment|/// true when Type is objc's weak.
 end_comment
 
 begin_expr_stmt
@@ -4668,7 +4686,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isObjCGCStrong true when Type is objc's strong.
+comment|/// true when Type is objc's strong.
 end_comment
 
 begin_expr_stmt
@@ -4689,7 +4707,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getObjCLifetime - Returns lifetime attribute of this type.
+comment|/// Returns lifetime attribute of this type.
 end_comment
 
 begin_expr_stmt
@@ -4758,7 +4776,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/// isDestructedType - nonzero if objects of this type require
+comment|/// Returns a nonzero value if objects of this type require
 end_comment
 
 begin_comment
@@ -4790,7 +4808,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether expressions of the given type are forbidden
+comment|/// Determine whether expressions of the given type are forbidden
 end_comment
 
 begin_comment
@@ -5320,7 +5338,7 @@ name|ExtQuals
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// ExtQuals - We can encode up to four bits in the low bits of a
+comment|/// We can encode up to four bits in the low bits of a
 comment|/// type pointer, but there are many more type qualifiers that we want
 comment|/// to be able to apply to an arbitrary type.  Therefore we have this
 comment|/// struct, intended to be heap-allocated and used by QualType to
@@ -5353,8 +5371,8 @@ comment|//    b) Update remove{Volatile,Restrict}, defined near the end of
 comment|//       this header.
 comment|// 3. ASTContext:
 comment|//    a) Update get{Volatile,Restrict}Type.
-comment|/// Quals - the immutable set of qualifiers applied by this
-comment|/// node;  always contains extended qualifiers.
+comment|/// The immutable set of qualifiers applied by this node. Always contains
+comment|/// extended qualifiers.
 name|Qualifiers
 name|Quals
 decl_stmt|;
@@ -5591,8 +5609,8 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief The kind of C++0x ref-qualifier associated with a function type,
-comment|/// which determines whether a member function's "this" object can be an
+comment|/// The kind of C++11 ref-qualifier associated with a function type.
+comment|/// This determines whether a member function's "this" object can be an
 comment|/// lvalue, rvalue, or neither.
 enum|enum
 name|RefQualifierKind
@@ -5609,17 +5627,33 @@ comment|/// \brief An rvalue ref-qualifier was provided (\c&&).
 name|RQ_RValue
 block|}
 enum|;
-comment|/// Type - This is the base class of the type hierarchy.  A central concept
-comment|/// with types is that each type always has a canonical type.  A canonical type
-comment|/// is the type with any typedef names stripped out of it or the types it
-comment|/// references.  For example, consider:
+comment|/// Which keyword(s) were used to create an AutoType.
+name|enum
+name|class
+name|AutoTypeKeyword
+block|{
+comment|/// \brief auto
+name|Auto
+operator|,
+comment|/// \brief decltype(auto)
+name|DecltypeAuto
+operator|,
+comment|/// \brief __auto_type (GNU extension)
+name|GNUAutoType
+block|}
+empty_stmt|;
+comment|/// The base class of the type hierarchy.
+comment|///
+comment|/// A central concept with types is that each type always has a canonical
+comment|/// type.  A canonical type is the type with any typedef names stripped out
+comment|/// of it or the types it references.  For example, consider:
 comment|///
 comment|///  typedef int  foo;
 comment|///  typedef foo* bar;
 comment|///    'int *'    'foo *'    'bar'
 comment|///
 comment|/// There will be a Type object created for 'int'.  Since int is canonical, its
-comment|/// canonicaltype pointer points to itself.  There is also a Type for 'foo' (a
+comment|/// CanonicalType pointer points to itself.  There is also a Type for 'foo' (a
 comment|/// TypedefType).  Its CanonicalType pointer points to the 'int' Type.  Next
 comment|/// there is a PointerType that represents 'int*', which, like 'int', is
 comment|/// canonical.  Finally, there is a PointerType type for 'foo*' whose canonical
@@ -5726,27 +5760,27 @@ name|TC
 operator|:
 literal|8
 block|;
-comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
+comment|/// Whether this type is a dependent type (C++ [temp.dep.type]).
 name|unsigned
 name|Dependent
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether this type somehow involves a template parameter, even
+comment|/// Whether this type somehow involves a template parameter, even
 comment|/// if the resolution of the type does not depend on a template parameter.
 name|unsigned
 name|InstantiationDependent
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
+comment|/// Whether this type is a variably-modified type (C99 6.7.5).
 name|unsigned
 name|VariablyModified
 operator|:
 literal|1
 block|;
 comment|/// \brief Whether this type contains an unexpanded parameter pack
-comment|/// (for C++0x variadic templates).
+comment|/// (for C++11 variadic templates).
 name|unsigned
 name|ContainsUnexpandedParameterPack
 operator|:
@@ -5774,7 +5808,7 @@ name|CachedLocalOrUnnamed
 operator|:
 literal|1
 block|;
-comment|/// \brief FromAST - Whether this type comes from an AST file.
+comment|/// \brief Whether this type comes from an AST file.
 name|mutable
 name|unsigned
 name|FromAST
@@ -5853,14 +5887,14 @@ name|unsigned
 operator|:
 name|NumTypeBits
 block|;
-comment|/// IndexTypeQuals - CVR qualifiers from declarations like
+comment|/// CVR qualifiers from declarations like
 comment|/// 'int X[static restrict 4]'. For function parameters only.
 name|unsigned
 name|IndexTypeQuals
 operator|:
 literal|3
 block|;
-comment|/// SizeModifier - storage class qualifiers from declarations like
+comment|/// Storage class qualifiers from declarations like
 comment|/// 'int X[static restrict 4]'. For function parameters only.
 comment|/// Actually an ArrayType::ArraySizeModifier.
 name|unsigned
@@ -5909,7 +5943,7 @@ name|ExtInfo
 operator|:
 literal|9
 block|;
-comment|/// TypeQuals - Used only by FunctionProtoType, put here to pack with the
+comment|/// Used only by FunctionProtoType, put here to pack with the
 comment|/// other bitfields.
 comment|/// The qualifiers are part of FunctionProtoType because...
 comment|///
@@ -5946,8 +5980,7 @@ name|NumTypeArgs
 operator|:
 literal|7
 block|;
-comment|/// NumProtocols - The number of protocols stored directly on this
-comment|/// object type.
+comment|/// The number of protocols stored directly on this object type.
 name|unsigned
 name|NumProtocols
 operator|:
@@ -6039,14 +6072,14 @@ name|unsigned
 operator|:
 name|NumTypeBits
 block|;
-comment|/// VecKind - The kind of vector, either a generic vector type or some
+comment|/// The kind of vector, either a generic vector type or some
 comment|/// target-specific vector type such as for AltiVec or Neon.
 name|unsigned
 name|VecKind
 operator|:
 literal|3
 block|;
-comment|/// NumElements - The number of elements in the vector.
+comment|/// The number of elements in the vector.
 name|unsigned
 name|NumElements
 operator|:
@@ -6082,7 +6115,7 @@ name|unsigned
 operator|:
 name|NumTypeBits
 block|;
-comment|/// AttrKind - an AttributedType::Kind
+comment|/// An AttributedType::Kind
 name|unsigned
 name|AttrKind
 operator|:
@@ -6102,11 +6135,12 @@ name|unsigned
 operator|:
 name|NumTypeBits
 block|;
-comment|/// Was this placeholder type spelled as 'decltype(auto)'?
+comment|/// Was this placeholder type spelled as 'auto', 'decltype(auto)',
+comment|/// or '__auto_type'?  AutoTypeKeyword value.
 name|unsigned
-name|IsDecltypeAuto
+name|Keyword
 operator|:
-literal|1
+literal|2
 block|;   }
 block|;
 expr|union
@@ -6407,12 +6441,12 @@ specifier|const
 block|;
 comment|/// Types are partitioned into 3 broad categories (C99 6.2.5p1):
 comment|/// object types, function types, and incomplete types.
-comment|/// isIncompleteType - Return true if this is an incomplete type.
+comment|/// Return true if this is an incomplete type.
 comment|/// A type that can describe objects, but which lacks information needed to
 comment|/// determine its size (e.g. void, or a fwd declared struct). Clients of this
 comment|/// routine will need to determine if the size is actually required.
 comment|///
-comment|/// \brief Def If non-NULL, and the type refers to some kind of declaration
+comment|/// \brief Def If non-null, and the type refers to some kind of declaration
 comment|/// that can be completed (such as a C struct, C++ class, or Objective-C
 comment|/// class), will be set to the declaration.
 name|bool
@@ -6422,7 +6456,7 @@ argument|NamedDecl **Def = nullptr
 argument_list|)
 specifier|const
 block|;
-comment|/// isIncompleteOrObjectType - Return true if this is an incomplete or object
+comment|/// Return true if this is an incomplete or object
 comment|/// type, in other words, not a function type.
 name|bool
 name|isIncompleteOrObjectType
@@ -6458,7 +6492,7 @@ name|isVoidType
 argument_list|()
 return|;
 block|}
-comment|/// isLiteralType - Return true if this is a literal type
+comment|/// Return true if this is a literal type
 comment|/// (C++11 [basic.types]p10)
 name|bool
 name|isLiteralType
@@ -6467,7 +6501,7 @@ argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Test if this type is a standard-layout type.
+comment|/// Test if this type is a standard-layout type.
 comment|/// (C++0x [basic.type]p9)
 name|bool
 name|isStandardLayoutType
@@ -6476,13 +6510,13 @@ specifier|const
 block|;
 comment|/// Helper methods to distinguish type categories. All type predicates
 comment|/// operate on the canonical type, ignoring typedefs and qualifiers.
-comment|/// isBuiltinType - returns true if the type is a builtin type.
+comment|/// Returns true if the type is a builtin type.
 name|bool
 name|isBuiltinType
 argument_list|()
 specifier|const
 block|;
-comment|/// isSpecificBuiltinType - Test for a particular builtin type.
+comment|/// Test for a particular builtin type.
 name|bool
 name|isSpecificBuiltinType
 argument_list|(
@@ -6490,10 +6524,9 @@ argument|unsigned K
 argument_list|)
 specifier|const
 block|;
-comment|/// isPlaceholderType - Test for a type which does not represent an
-comment|/// actual type-system type but is instead used as a placeholder for
-comment|/// various convenient purposes within Clang.  All such types are
-comment|/// BuiltinTypes.
+comment|/// Test for a type which does not represent an actual type-system type but
+comment|/// is instead used as a placeholder for various convenient purposes within
+comment|/// Clang.  All such types are BuiltinTypes.
 name|bool
 name|isPlaceholderType
 argument_list|()
@@ -6506,7 +6539,7 @@ name|getAsPlaceholderType
 argument_list|()
 specifier|const
 block|;
-comment|/// isSpecificPlaceholderType - Test for a specific placeholder type.
+comment|/// Test for a specific placeholder type.
 name|bool
 name|isSpecificPlaceholderType
 argument_list|(
@@ -6514,8 +6547,8 @@ argument|unsigned K
 argument_list|)
 specifier|const
 block|;
-comment|/// isNonOverloadPlaceholderType - Test for a placeholder type
-comment|/// other than Overload;  see BuiltinType::isNonOverloadPlaceholderType.
+comment|/// Test for a placeholder type other than Overload; see
+comment|/// BuiltinType::isNonOverloadPlaceholderType.
 name|bool
 name|isNonOverloadPlaceholderType
 argument_list|()
@@ -6571,14 +6604,13 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Determine whether this type is an integral or enumeration type.
+comment|/// Determine whether this type is an integral or enumeration type.
 name|bool
 name|isIntegralOrEnumerationType
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Determine whether this type is an integral or unscoped enumeration
-comment|/// type.
+comment|/// Determine whether this type is an integral or unscoped enumeration type.
 name|bool
 name|isIntegralOrUnscopedEnumerationType
 argument_list|()
@@ -6898,6 +6930,11 @@ argument_list|()
 specifier|const
 block|;
 comment|// id
+name|bool
+name|isObjCInertUnsafeUnretainedType
+argument_list|()
+specifier|const
+block|;
 comment|/// Whether the type is Objective-C 'id' or a __kindof type of an
 comment|/// object type, e.g., __kindof NSView * or __kindof id
 comment|///<NSCopying>.
@@ -7009,6 +7046,42 @@ specifier|const
 block|;
 comment|// OpenCL image2d_array_t
 name|bool
+name|isImage2dDepthT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_depth_t
+name|bool
+name|isImage2dArrayDepthT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_array_depth_t
+name|bool
+name|isImage2dMSAAT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_msaa_t
+name|bool
+name|isImage2dArrayMSAAT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_array_msaa_t
+name|bool
+name|isImage2dMSAATDepth
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_msaa_depth_t
+name|bool
+name|isImage2dArrayMSAATDepth
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL image_2d_array_msaa_depth_t
+name|bool
 name|isImage3dT
 argument_list|()
 specifier|const
@@ -7032,6 +7105,36 @@ argument_list|()
 specifier|const
 block|;
 comment|// OpenCL event_t
+name|bool
+name|isClkEventT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL clk_event_t
+name|bool
+name|isQueueT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL queue_t
+name|bool
+name|isNDRangeT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL ndrange_t
+name|bool
+name|isReserveIDT
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL reserve_id_t
+name|bool
+name|isPipeType
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL pipe type
 name|bool
 name|isOpenCLSpecificType
 argument_list|()
@@ -7075,15 +7178,14 @@ block|,
 name|STK_FloatingComplex
 block|}
 block|;
-comment|/// getScalarTypeKind - Given that this is a scalar type, classify it.
+comment|/// Given that this is a scalar type, classify it.
 name|ScalarTypeKind
 name|getScalarTypeKind
 argument_list|()
 specifier|const
 block|;
-comment|/// isDependentType - Whether this type is a dependent type, meaning
-comment|/// that its definition somehow depends on a template parameter
-comment|/// (C++ [temp.dep.type]).
+comment|/// Whether this type is a dependent type, meaning that its definition
+comment|/// somehow depends on a template parameter (C++ [temp.dep.type]).
 name|bool
 name|isDependentType
 argument_list|()
@@ -7158,17 +7260,16 @@ name|canDecayToPointerType
 argument_list|()
 specifier|const
 block|;
-comment|/// hasPointerRepresentation - Whether this type is represented
-comment|/// natively as a pointer; this includes pointers, references, block
-comment|/// pointers, and Objective-C interface, qualified id, and qualified
-comment|/// interface types, as well as nullptr_t.
+comment|/// Whether this type is represented natively as a pointer.  This includes
+comment|/// pointers, references, block pointers, and Objective-C interface,
+comment|/// qualified id, and qualified interface types, as well as nullptr_t.
 name|bool
 name|hasPointerRepresentation
 argument_list|()
 specifier|const
 block|;
-comment|/// hasObjCPointerRepresentation - Whether this type can represent
-comment|/// an objective pointer type for the purpose of GC'ability
+comment|/// Whether this type can represent an objective pointer type for the
+comment|/// purpose of GC'ability
 name|bool
 name|hasObjCPointerRepresentation
 argument_list|()
@@ -7295,7 +7396,7 @@ name|getPointeeCXXRecordDecl
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Get the AutoType whose type will be deduced for a variable with
+comment|/// Get the AutoType whose type will be deduced for a variable with
 comment|/// an initializer of this type. This looks through declarators like pointer
 comment|/// types, but not through decltype or typedefs.
 name|AutoType
@@ -7358,9 +7459,9 @@ name|castAsArrayTypeUnsafe
 argument_list|()
 specifier|const
 block|;
-comment|/// getBaseElementTypeUnsafe - Get the base element type of this
-comment|/// type, potentially discarding type qualifiers.  This method
-comment|/// should never be used when type qualifiers are meaningful.
+comment|/// Get the base element type of this type, potentially discarding type
+comment|/// qualifiers.  This should never be used when type qualifiers
+comment|/// are meaningful.
 specifier|const
 name|Type
 operator|*
@@ -7368,9 +7469,9 @@ name|getBaseElementTypeUnsafe
 argument_list|()
 specifier|const
 block|;
-comment|/// getArrayElementTypeNoTypeQual - If this is an array type, return the
-comment|/// element type of the array, potentially with type qualifiers missing.
-comment|/// This method should never be used when type qualifiers are meaningful.
+comment|/// If this is an array type, return the element type of the array,
+comment|/// potentially with type qualifiers missing.
+comment|/// This should never be used when type qualifiers are meaningful.
 specifier|const
 name|Type
 operator|*
@@ -7378,16 +7479,15 @@ name|getArrayElementTypeNoTypeQual
 argument_list|()
 specifier|const
 block|;
-comment|/// getPointeeType - If this is a pointer, ObjC object pointer, or block
+comment|/// If this is a pointer, ObjC object pointer, or block
 comment|/// pointer, this returns the respective pointee.
 name|QualType
 name|getPointeeType
 argument_list|()
 specifier|const
 block|;
-comment|/// getUnqualifiedDesugaredType() - Return the specified type with
-comment|/// any "sugar" removed from the type, removing any typedefs,
-comment|/// typeofs, etc., as well as any qualifiers.
+comment|/// Return the specified type with any "sugar" removed from the type,
+comment|/// removing any typedefs, typeofs, etc., as well as any qualifiers.
 specifier|const
 name|Type
 operator|*
@@ -7402,7 +7502,7 @@ argument_list|()
 specifier|const
 block|;
 comment|// C99 6.3.1.1p2
-comment|/// isSignedIntegerType - Return true if this is an integer type that is
+comment|/// Return true if this is an integer type that is
 comment|/// signed, according to C99 6.2.5p4 [char, signed char, short, int, long..],
 comment|/// or an enum decl which has a signed representation.
 name|bool
@@ -7410,7 +7510,7 @@ name|isSignedIntegerType
 argument_list|()
 specifier|const
 block|;
-comment|/// isUnsignedIntegerType - Return true if this is an integer type that is
+comment|/// Return true if this is an integer type that is
 comment|/// unsigned, according to C99 6.2.5p6 [which returns true for _Bool],
 comment|/// or an enum decl which has an unsigned representation.
 name|bool
@@ -7432,7 +7532,7 @@ name|isUnsignedIntegerOrEnumerationType
 argument_list|()
 specifier|const
 block|;
-comment|/// isConstantSizeType - Return true if this is not a variable sized type,
+comment|/// Return true if this is not a variable sized type,
 comment|/// according to the rules of C99 6.7.5p3.  It is not legal to call this on
 comment|/// incomplete types.
 name|bool
@@ -7440,20 +7540,20 @@ name|isConstantSizeType
 argument_list|()
 specifier|const
 block|;
-comment|/// isSpecifierType - Returns true if this type can be represented by some
+comment|/// Returns true if this type can be represented by some
 comment|/// set of type specifiers.
 name|bool
 name|isSpecifierType
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Determine the linkage of this type.
+comment|/// Determine the linkage of this type.
 name|Linkage
 name|getLinkage
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Determine the visibility of this type.
+comment|/// Determine the visibility of this type.
 name|Visibility
 name|getVisibility
 argument_list|()
@@ -7467,7 +7567,7 @@ name|getVisibility
 argument_list|()
 return|;
 block|}
-comment|/// \brief Return true if the visibility was explicitly set is the code.
+comment|/// Return true if the visibility was explicitly set is the code.
 name|bool
 name|isVisibilityExplicit
 argument_list|()
@@ -7481,13 +7581,13 @@ name|isVisibilityExplicit
 argument_list|()
 return|;
 block|}
-comment|/// \brief Determine the linkage and visibility of this type.
+comment|/// Determine the linkage and visibility of this type.
 name|LinkageInfo
 name|getLinkageAndVisibility
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief True if the computed linkage is valid. Used for consistency
+comment|/// True if the computed linkage is valid. Used for consistency
 comment|/// checking. Should always return true.
 name|bool
 name|isLinkageValid
@@ -7652,7 +7752,7 @@ value|template<> inline const Class##Type *Type::getAs() const { \   return dyn_
 include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
-comment|/// BuiltinType - This class is used for builtin types like 'int'.  Builtin
+comment|/// This class is used for builtin types like 'int'.  Builtin
 comment|/// types are always canonical and have a literal name field.
 name|class
 name|BuiltinType
@@ -7949,7 +8049,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ComplexType - C99 6.2.5p11 - Complex values.  This supports the C99 complex
+comment|/// Complex values, per C99 6.2.5p11.  This supports the C99 complex
 comment|/// types (_Complex float etc) as well as the GCC integer complex extensions.
 comment|///
 name|class
@@ -8095,7 +8195,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ParenType - Sugar for parentheses used when specifying types.
+comment|/// Sugar for parentheses used when specifying types.
 comment|///
 name|class
 name|ParenType
@@ -8304,7 +8404,7 @@ return|return
 name|PointeeType
 return|;
 block|}
-comment|/// \brief Returns true if address spaces of pointers overlap.
+comment|/// Returns true if address spaces of pointers overlap.
 comment|/// OpenCL v2.0 defines conversion rules for pointers to different
 comment|/// address spaces (OpenCLC v2.0 s6.5.5) and notion of overlapping
 comment|/// address spaces.
@@ -8429,7 +8529,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a type which was implicitly adjusted by the semantic
+comment|/// Represents a type which was implicitly adjusted by the semantic
 comment|/// engine for arbitrary reasons.  For example, array and function types can
 comment|/// decay, and function types can have their calling conventions adjusted.
 name|class
@@ -8613,7 +8713,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a pointer type decayed from an array or function type.
+comment|/// Represents a pointer type decayed from an array or function type.
 name|class
 name|DecayedType
 operator|:
@@ -8706,7 +8806,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// BlockPointerType - pointer to a block type.
+comment|/// Pointer to a block type.
 comment|/// This type is to represent types syntactically represented as
 comment|/// "void (^)(int)", etc. Pointee is required to always be a function type.
 comment|///
@@ -8855,7 +8955,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ReferenceType - Base for LValueReferenceType and RValueReferenceType
+comment|/// Base for LValueReferenceType and RValueReferenceType
 comment|///
 name|class
 name|ReferenceType
@@ -9072,7 +9172,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// LValueReferenceType - C++ [dcl.ref] - Lvalue reference
+comment|/// An lvalue reference type, per C++11 [dcl.ref].
 comment|///
 name|class
 name|LValueReferenceType
@@ -9148,7 +9248,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// RValueReferenceType - C++0x [dcl.ref] - Rvalue reference
+comment|/// An rvalue reference type, per C++11 [dcl.ref].
 comment|///
 name|class
 name|RValueReferenceType
@@ -9222,7 +9322,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemberPointerType - C++ 8.3.3 - Pointers to members
+comment|/// A pointer to member type per C++ 8.3.3 - Pointers to members.
+comment|///
+comment|/// This includes both pointers to data members and pointer to member functions.
 comment|///
 name|class
 name|MemberPointerType
@@ -9458,7 +9560,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ArrayType - C99 6.7.5.2 - Array Declarators.
+comment|/// Represents an array type, per C99 6.7.5.2 - Array Declarators.
 comment|///
 name|class
 name|ArrayType
@@ -9473,7 +9575,7 @@ name|FoldingSetNode
 block|{
 name|public
 operator|:
-comment|/// ArraySizeModifier - Capture whether this is a normal array (e.g. int X[4])
+comment|/// Capture whether this is a normal array (e.g. int X[4])
 comment|/// an array with a static size (e.g. int X[static 4]), or an array
 comment|/// with a star size (e.g. int X[*]).
 comment|/// 'static' is only allowed on function parameters.
@@ -9489,7 +9591,7 @@ block|}
 block|;
 name|private
 operator|:
-comment|/// ElementType - The element type of the array.
+comment|/// The element type of the array.
 name|QualType
 name|ElementType
 block|;
@@ -9665,10 +9767,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ConstantArrayType - This class represents the canonical version of
-comment|/// C arrays with a specified constant size.  For example, the canonical
-comment|/// type for 'int A[4 + 4*100]' is a ConstantArrayType where the element
-comment|/// type is 'int' and the size is 404.
+comment|/// Represents the canonical version of C arrays with a specified constant size.
+comment|/// For example, the canonical type for 'int A[4 + 4*100]' is a
+comment|/// ConstantArrayType where the element type is 'int' and the size is 404.
 name|class
 name|ConstantArrayType
 operator|:
@@ -9914,9 +10015,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// IncompleteArrayType - This class represents C arrays with an unspecified
-comment|/// size.  For example 'int A[]' has an IncompleteArrayType where the element
-comment|/// type is 'int' and the size is unspecified.
+comment|/// Represents a C array with an unspecified size.  For example 'int A[]' has
+comment|/// an IncompleteArrayType where the element type is 'int' and the size is
+comment|/// unspecified.
 name|class
 name|IncompleteArrayType
 operator|:
@@ -10058,8 +10159,8 @@ argument_list|)
 block|;   }
 block|}
 block|;
-comment|/// VariableArrayType - This class represents C arrays with a specified size
-comment|/// which is not an integer-constant-expression.  For example, 'int s[x+foo()]'.
+comment|/// Represents a C array with a specified size that is not an
+comment|/// integer-constant-expression.  For example, 'int s[x+foo()]'.
 comment|/// Since the size expression is an arbitrary expression, we store it as such.
 comment|///
 comment|/// Note: VariableArrayType's aren't uniqued (since the expressions aren't) and
@@ -10079,13 +10180,13 @@ operator|:
 name|public
 name|ArrayType
 block|{
-comment|/// SizeExpr - An assignment expression. VLA's are only permitted within
+comment|/// An assignment-expression. VLA's are only permitted within
 comment|/// a function block.
 name|Stmt
 operator|*
 name|SizeExpr
 block|;
-comment|/// Brackets - The left and right array brackets.
+comment|/// The range spanned by the left and right array brackets.
 name|SourceRange
 name|Brackets
 block|;
@@ -10248,9 +10349,9 @@ argument_list|)
 block|;   }
 block|}
 block|;
-comment|/// DependentSizedArrayType - This type represents an array type in
-comment|/// C++ whose size is a value-dependent expression. For example:
+comment|/// Represents an array type in C++ whose size is a value-dependent expression.
 comment|///
+comment|/// For example:
 comment|/// \code
 comment|/// template<typename T, int Size>
 comment|/// class array {
@@ -10275,13 +10376,13 @@ block|;
 comment|/// \brief An assignment expression that will instantiate to the
 comment|/// size of the array.
 comment|///
-comment|/// The expression itself might be NULL, in which case the array
+comment|/// The expression itself might be null, in which case the array
 comment|/// type will have its size deduced from an initializer.
 name|Stmt
 operator|*
 name|SizeExpr
 block|;
-comment|/// Brackets - The left and right array brackets.
+comment|/// The range spanned by the left and right array brackets.
 name|SourceRange
 name|Brackets
 block|;
@@ -10444,14 +10545,16 @@ argument|Expr *E
 argument_list|)
 block|; }
 block|;
-comment|/// DependentSizedExtVectorType - This type represent an extended vector type
-comment|/// where either the type or size is dependent. For example:
-comment|/// @code
+comment|/// Represents an extended vector type where either the type or size is
+comment|/// dependent.
+comment|///
+comment|/// For example:
+comment|/// \code
 comment|/// template<typename T, int Size>
 comment|/// class vector {
 comment|///   typedef T __attribute__((ext_vector_type(Size))) type;
 comment|/// }
-comment|/// @endcode
+comment|/// \endcode
 name|class
 name|DependentSizedExtVectorType
 operator|:
@@ -10472,7 +10575,7 @@ name|Expr
 operator|*
 name|SizeExpr
 block|;
-comment|/// ElementType - The element type of the array.
+comment|/// The element type of the array.
 name|QualType
 name|ElementType
 block|;
@@ -10598,7 +10701,7 @@ argument|Expr *SizeExpr
 argument_list|)
 block|; }
 block|;
-comment|/// VectorType - GCC generic vector type. This type is created using
+comment|/// Represents a GCC generic vector type. This type is created using
 comment|/// __attribute__((vector_size(n)), where "n" specifies the vector size in
 comment|/// bytes; or from an Altivec __vector or vector declaration.
 comment|/// Since the constructor takes the number of vector elements, the
@@ -10621,26 +10724,26 @@ name|VectorKind
 block|{
 name|GenericVector
 block|,
-comment|// not a target-specific vector type
+comment|///< not a target-specific vector type
 name|AltiVecVector
 block|,
-comment|// is AltiVec vector
+comment|///< is AltiVec vector
 name|AltiVecPixel
 block|,
-comment|// is AltiVec 'vector Pixel'
+comment|///< is AltiVec 'vector Pixel'
 name|AltiVecBool
 block|,
-comment|// is AltiVec 'vector bool ...'
+comment|///< is AltiVec 'vector bool ...'
 name|NeonVector
 block|,
-comment|// is ARM Neon vector
+comment|///< is ARM Neon vector
 name|NeonPolyVector
-comment|// is ARM Neon polynomial vector
+comment|///< is ARM Neon polynomial vector
 block|}
 block|;
 name|protected
 operator|:
-comment|/// ElementType - The element type of the vector.
+comment|/// The element type of the vector.
 name|QualType
 name|ElementType
 block|;
@@ -11178,7 +11281,7 @@ name|ResultType
 block|;
 name|public
 operator|:
-comment|/// ExtInfo - A class which abstracts out some details necessary for
+comment|/// A class which abstracts out some details necessary for
 comment|/// making a call.
 comment|///
 comment|/// It is not actually used directly for storing this information in
@@ -11335,7 +11438,7 @@ literal|0
 operator|)
 block|;     }
 comment|// Constructor with all defaults. Use when for example creating a
-comment|// function know to use defaults.
+comment|// function known to use defaults.
 name|ExtInfo
 argument_list|()
 operator|:
@@ -11703,7 +11806,7 @@ name|getRegParm
 argument_list|()
 return|;
 block|}
-comment|/// \brief Determine whether this function type includes the GNU noreturn
+comment|/// Determine whether this function type includes the GNU noreturn
 comment|/// attribute. The C++11 [[noreturn]] attribute does not affect the function
 comment|/// type.
 name|bool
@@ -11839,7 +11942,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// FunctionNoProtoType - Represents a K&R-style 'int foo()' function, which has
+comment|/// Represents a K&R-style 'int foo()' function, which has
 comment|/// no information available about its arguments.
 name|class
 name|FunctionNoProtoType
@@ -11977,7 +12080,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// FunctionProtoType - Represents a prototype with parameter type info, e.g.
+comment|/// Represents a prototype with parameter type info, e.g.
 comment|/// 'int foo(int)' or 'int foo(void)'.  'void' is represented as having no
 comment|/// parameters, not as having a single void parameter. Such a type can have an
 comment|/// exception specification, but this specification is not part of the canonical
@@ -12075,7 +12178,7 @@ operator|*
 name|SourceTemplate
 block|;   }
 block|;
-comment|/// ExtProtoInfo - Extra information about a function prototype.
+comment|/// Extra information about a function prototype.
 block|struct
 name|ExtProtoInfo
 block|{
@@ -12257,31 +12360,31 @@ name|NumParams
 operator|:
 literal|15
 block|;
-comment|/// NumExceptions - The number of types in the exception spec, if any.
+comment|/// The number of types in the exception spec, if any.
 name|unsigned
 name|NumExceptions
 operator|:
 literal|9
 block|;
-comment|/// ExceptionSpecType - The type of exception specification this function has.
+comment|/// The type of exception specification this function has.
 name|unsigned
 name|ExceptionSpecType
 operator|:
 literal|4
 block|;
-comment|/// HasAnyConsumedParams - Whether this function has any consumed parameters.
+comment|/// Whether this function has any consumed parameters.
 name|unsigned
 name|HasAnyConsumedParams
 operator|:
 literal|1
 block|;
-comment|/// Variadic - Whether the function is variadic.
+comment|/// Whether the function is variadic.
 name|unsigned
 name|Variadic
 operator|:
 literal|1
 block|;
-comment|/// HasTrailingReturn - Whether this function has a trailing return type.
+comment|/// Whether this function has a trailing return type.
 name|unsigned
 name|HasTrailingReturn
 operator|:
@@ -12333,7 +12436,7 @@ specifier|const
 operator|*
 operator|>
 operator|(
-name|param_type_end
+name|exception_end
 argument_list|()
 operator|)
 block|;
@@ -12341,19 +12444,29 @@ if|if
 condition|(
 name|getExceptionSpecType
 argument_list|()
-operator|!=
+operator|==
 name|EST_ComputedNoexcept
 condition|)
-name|eh_end
-operator|+=
-name|NumExceptions
-expr_stmt|;
-else|else
 name|eh_end
 operator|+=
 literal|1
 expr_stmt|;
 comment|// NoexceptExpr
+comment|// The memory layout of these types isn't handled here, so
+comment|// hopefully this is never called for them?
+name|assert
+argument_list|(
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_Uninstantiated
+operator|&&
+name|getExceptionSpecType
+argument_list|()
+operator|!=
+name|EST_Unevaluated
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -12593,7 +12706,7 @@ return|return
 name|EPI
 return|;
 block|}
-comment|/// \brief Get the kind of exception specification on this function.
+comment|/// Get the kind of exception specification on this function.
 name|ExceptionSpecificationType
 name|getExceptionSpecType
 argument_list|()
@@ -12609,7 +12722,7 @@ name|ExceptionSpecType
 operator|)
 return|;
 block|}
-comment|/// \brief Return whether this function has any kind of exception spec.
+comment|/// Return whether this function has any kind of exception spec.
 name|bool
 name|hasExceptionSpec
 argument_list|()
@@ -12622,7 +12735,7 @@ operator|!=
 name|EST_None
 return|;
 block|}
-comment|/// \brief Return whether this function has a dynamic (throw) exception spec.
+comment|/// Return whether this function has a dynamic (throw) exception spec.
 name|bool
 name|hasDynamicExceptionSpec
 argument_list|()
@@ -12636,7 +12749,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Return whether this function has a noexcept exception spec.
+comment|/// Return whether this function has a noexcept exception spec.
 name|bool
 name|hasNoexceptExceptionSpec
 argument_list|()
@@ -12650,13 +12763,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Return whether this function has a dependent exception spec.
+comment|/// Return whether this function has a dependent exception spec.
 name|bool
 name|hasDependentExceptionSpec
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Result type of getNoexceptSpec().
+comment|/// Result type of getNoexceptSpec().
 block|enum
 name|NoexceptResult
 block|{
@@ -12676,7 +12789,7 @@ name|NR_Nothrow
 comment|///< The noexcept specifier evaluates to true.
 block|}
 block|;
-comment|/// \brief Get the meaning of the noexcept spec on this function, if any.
+comment|/// Get the meaning of the noexcept spec on this function, if any.
 name|NoexceptResult
 name|getNoexceptSpec
 argument_list|(
@@ -12828,7 +12941,7 @@ literal|1
 index|]
 return|;
 block|}
-comment|/// \brief Determine whether this function type has a non-throwing exception
+comment|/// Determine whether this function type has a non-throwing exception
 comment|/// specification. If this depends on template arguments, returns
 comment|/// \c ResultIfDependent.
 name|bool
@@ -12849,7 +12962,7 @@ return|return
 name|Variadic
 return|;
 block|}
-comment|/// \brief Determines whether this function prototype contains a
+comment|/// Determines whether this function prototype contains a
 comment|/// parameter pack at the end.
 comment|///
 comment|/// A function template whose last parameter is a parameter pack can be
@@ -12881,7 +12994,7 @@ name|getTypeQuals
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the ref-qualifier associated with this function type.
+comment|/// Retrieve the ref-qualifier associated with this function type.
 name|RefQualifierKind
 name|getRefQualifier
 argument_list|()
@@ -13148,6 +13261,7 @@ block|;
 comment|/// \brief Represents the dependent type named by a dependently-scoped
 comment|/// typename using declaration, e.g.
 comment|///   using typename Base<T>::foo;
+comment|///
 comment|/// Template instantiation turns these into the underlying type.
 name|class
 name|UnresolvedUsingType
@@ -13392,7 +13506,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// TypeOfExprType (GCC extension).
+comment|/// Represents a `typeof` (or __typeof__) expression (a GCC extension).
 name|class
 name|TypeOfExprType
 operator|:
@@ -13460,7 +13574,7 @@ block|}
 expr|}
 block|;
 comment|/// \brief Internal representation of canonical, dependent
-comment|/// typeof(expr) types.
+comment|/// `typeof(expr)` types.
 comment|///
 comment|/// This class is used internally by the ASTContext to manage
 comment|/// canonical, dependent types, only. Clients will only see instances
@@ -13542,7 +13656,7 @@ name|E
 argument_list|)
 block|; }
 block|;
-comment|/// TypeOfType (GCC extension).
+comment|/// Represents `typeof(type)`, a GCC extension.
 name|class
 name|TypeOfType
 operator|:
@@ -13660,7 +13774,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// DecltypeType (C++0x)
+comment|/// Represents the type `decltype(expr)` (C++11).
 name|class
 name|DecltypeType
 operator|:
@@ -13814,7 +13928,7 @@ name|E
 argument_list|)
 block|; }
 block|;
-comment|/// \brief A unary type transform, which is a type constructed from another
+comment|/// A unary type transform, which is a type constructed from another.
 name|class
 name|UnaryTransformType
 operator|:
@@ -13961,8 +14075,7 @@ name|getDecl
 argument_list|()
 specifier|const
 block|;
-comment|/// @brief Determines whether this type is in the process of being
-comment|/// defined.
+comment|/// Determines whether this type is in the process of being defined.
 name|bool
 name|isBeingDefined
 argument_list|()
@@ -13993,7 +14106,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// RecordType - This is a helper class that allows the use of isa/cast/dyncast
+comment|/// A helper class that allows the use of isa/cast/dyncast
 comment|/// to detect TagType objects of structs/unions/classes.
 name|class
 name|RecordType
@@ -14118,7 +14231,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// EnumType - This is a helper class that allows the use of isa/cast/dyncast
+comment|/// A helper class that allows the use of isa/cast/dyncast
 comment|/// to detect TagType objects of enums.
 name|class
 name|EnumType
@@ -14212,12 +14325,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// AttributedType - An attributed type is a type to which a type
-comment|/// attribute has been applied.  The "modified type" is the
-comment|/// fully-sugared type to which the attributed type was applied;
-comment|/// generally it is not canonically equivalent to the attributed type.
-comment|/// The "equivalent type" is the minimally-desugared type which the
-comment|/// type is canonically equivalent to.
+comment|/// An attributed type is a type to which a type attribute has been applied.
+comment|///
+comment|/// The "modified type" is the fully-sugared type to which the attributed
+comment|/// type was applied; generally it is not canonically equivalent to the
+comment|/// attributed type. The "equivalent type" is the minimally-desugared type
+comment|/// which the type is canonically equivalent to.
 comment|///
 comment|/// For example, in the following attributed type:
 comment|///     int32_t __attribute__((vector_size(16)))
@@ -14314,6 +14427,8 @@ block|,
 name|attr_null_unspecified
 block|,
 name|attr_objc_kindof
+block|,
+name|attr_objc_inert_unsafe_unretained
 block|,   }
 block|;
 name|private
@@ -14439,6 +14554,26 @@ name|getEquivalentType
 argument_list|()
 return|;
 block|}
+comment|/// Does this attribute behave like a type qualifier?
+comment|///
+comment|/// A type qualifier adjusts a type to provide specialized rules for
+comment|/// a specific object, like the standard const and volatile qualifiers.
+comment|/// This includes attributes controlling things like nullability,
+comment|/// address spaces, and ARC ownership.  The value of the object is still
+comment|/// largely described by the modified type.
+comment|///
+comment|/// In contrast, many type attributes "rewrite" their modified type to
+comment|/// produce a fundamentally different type, not necessarily related in any
+comment|/// formalizable way to the original type.  For example, calling convention
+comment|/// and vector attributes are not simple type qualifiers.
+comment|///
+comment|/// Type qualifiers are often, but not always, reflected in the canonical
+comment|/// type.
+name|bool
+name|isQualifier
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|isMSTypeSpec
 argument_list|()
@@ -15255,7 +15390,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a C++11 auto or C++1y decltype(auto) type.
+comment|/// \brief Represents a C++11 auto or C++14 decltype(auto) type.
 comment|///
 comment|/// These types are usually a placeholder for a deduced type. However, before
 comment|/// the initializer is attached, or if the initializer is type-dependent, there
@@ -15276,7 +15411,7 @@ name|AutoType
 argument_list|(
 argument|QualType DeducedType
 argument_list|,
-argument|bool IsDecltypeAuto
+argument|AutoTypeKeyword Keyword
 argument_list|,
 argument|bool IsDependent
 argument_list|)
@@ -15299,7 +15434,7 @@ comment|/*VariablyModified=*/
 argument|false
 argument_list|,
 comment|/*ContainsParameterPack=*/
-argument|DeducedType.isNull()                 ? false : DeducedType->containsUnexpandedParameterPack()
+argument|DeducedType.isNull()                ? false : DeducedType->containsUnexpandedParameterPack()
 argument_list|)
 block|{
 name|assert
@@ -15319,9 +15454,12 @@ argument_list|)
 block|;
 name|AutoTypeBits
 operator|.
-name|IsDecltypeAuto
+name|Keyword
 operator|=
-name|IsDecltypeAuto
+operator|(
+name|unsigned
+operator|)
+name|Keyword
 block|;   }
 name|friend
 name|class
@@ -15336,9 +15474,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|getKeyword
+argument_list|()
+operator|==
+name|AutoTypeKeyword
+operator|::
+name|DecltypeAuto
+return|;
+block|}
+name|AutoTypeKeyword
+name|getKeyword
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|AutoTypeKeyword
+operator|)
 name|AutoTypeBits
 operator|.
-name|IsDecltypeAuto
+name|Keyword
 return|;
 block|}
 name|bool
@@ -15408,7 +15563,7 @@ argument_list|,
 name|getDeducedType
 argument_list|()
 argument_list|,
-name|isDecltypeAuto
+name|getKeyword
 argument_list|()
 argument_list|,
 name|isDependentType
@@ -15423,7 +15578,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType Deduced
 argument_list|,
-argument|bool IsDecltypeAuto
+argument|AutoTypeKeyword Keyword
 argument_list|,
 argument|bool IsDependent
 argument_list|)
@@ -15440,9 +15595,12 @@ argument_list|)
 block|;
 name|ID
 operator|.
-name|AddBoolean
+name|AddInteger
 argument_list|(
-name|IsDecltypeAuto
+operator|(
+name|unsigned
+operator|)
+name|Keyword
 argument_list|)
 block|;
 name|ID
@@ -15478,9 +15636,9 @@ comment|/// specifier, is instead represented as a
 comment|/// @c DependentTemplateSpecializationType.
 comment|///
 comment|/// A non-dependent template specialization type is always "sugar",
-comment|/// typically for a @c RecordType.  For example, a class template
-comment|/// specialization type of @c vector<int> will refer to a tag type for
-comment|/// the instantiation @c std::vector<int, std::allocator<int>>
+comment|/// typically for a \c RecordType.  For example, a class template
+comment|/// specialization type of \c vector<int> will refer to a tag type for
+comment|/// the instantiation \c std::vector<int, std::allocator<int>>
 comment|///
 comment|/// Template specializations are dependent if either the template or
 comment|/// any of the template arguments are dependent, in which case the
@@ -15491,6 +15649,11 @@ comment|/// TemplateArguments, followed by a QualType representing the
 comment|/// non-canonical aliased type when the template is a type alias
 comment|/// template.
 name|class
+name|LLVM_ALIGNAS
+argument_list|(
+comment|/*alignof(uint64_t)*/
+literal|8
+argument_list|)
 name|TemplateSpecializationType
 operator|:
 name|public
@@ -15501,7 +15664,7 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// \brief The name of the template being specialized.  This is
+comment|/// The name of the template being specialized.  This is
 comment|/// either a TemplateName::Template (in which case it is a
 comment|/// ClassTemplateDecl*, a TemplateTemplateParmDecl*, or a
 comment|/// TypeAliasTemplateDecl*), a
@@ -15511,15 +15674,14 @@ comment|/// replacement must, recursively, be one of these).
 name|TemplateName
 name|Template
 block|;
-comment|/// \brief - The number of template arguments named in this class
-comment|/// template specialization.
+comment|/// The number of template arguments named in this class template
+comment|/// specialization.
 name|unsigned
 name|NumArgs
 operator|:
 literal|31
 block|;
-comment|/// \brief Whether this template specialization type is a substituted
-comment|/// type alias.
+comment|/// Whether this template specialization type is a substituted type alias.
 name|bool
 name|TypeAlias
 operator|:
@@ -15545,8 +15707,7 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-comment|/// \brief Determine whether any of the given template arguments are
-comment|/// dependent.
+comment|/// Determine whether any of the given template arguments are dependent.
 specifier|static
 name|bool
 name|anyDependentTemplateArguments
@@ -15712,7 +15873,7 @@ argument_list|()
 specifier|const
 block|;
 comment|// defined inline in TemplateBase.h
-comment|/// \brief Retrieve the name of the template that we are specializing.
+comment|/// Retrieve the name of the template that we are specializing.
 name|TemplateName
 name|getTemplateName
 argument_list|()
@@ -15722,7 +15883,7 @@ return|return
 name|Template
 return|;
 block|}
-comment|/// \brief Retrieve the template arguments.
+comment|/// Retrieve the template arguments.
 specifier|const
 name|TemplateArgument
 operator|*
@@ -15744,7 +15905,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/// \brief Retrieve the number of template arguments.
+comment|/// Retrieve the number of template arguments.
 name|unsigned
 name|getNumArgs
 argument_list|()
@@ -15754,8 +15915,8 @@ return|return
 name|NumArgs
 return|;
 block|}
-comment|/// \brief Retrieve a specific template argument as a type.
-comment|/// \pre @c isArgType(Arg)
+comment|/// Retrieve a specific template argument as a type.
+comment|/// \pre \c isArgType(Arg)
 specifier|const
 name|TemplateArgument
 operator|&
@@ -15862,7 +16023,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief The injected class name of a C++ class template or class
+comment|/// The injected class name of a C++ class template or class
 comment|/// template partial specialization.  Used to record that a type was
 comment|/// spelled with a bare identifier rather than as a template-id; the
 comment|/// equivalent for non-templated classes is just RecordType.
@@ -16173,8 +16334,7 @@ name|Keyword
 operator|)
 return|;
 block|}
-comment|/// getKeywordForTypeSpec - Converts a type specifier (DeclSpec::TST)
-comment|/// into an elaborated type keyword.
+comment|/// Converts a type specifier (DeclSpec::TST) into an elaborated type keyword.
 specifier|static
 name|ElaboratedTypeKeyword
 name|getKeywordForTypeSpec
@@ -16182,9 +16342,8 @@ argument_list|(
 argument|unsigned TypeSpec
 argument_list|)
 block|;
-comment|/// getTagTypeKindForTypeSpec - Converts a type specifier (DeclSpec::TST)
-comment|/// into a tag type kind.  It is an error to provide a type specifier
-comment|/// which *isn't* a tag kind here.
+comment|/// Converts a type specifier (DeclSpec::TST) into a tag type kind.
+comment|/// It is an error to provide a type specifier which *isn't* a tag kind here.
 specifier|static
 name|TagTypeKind
 name|getTagTypeKindForTypeSpec
@@ -16192,8 +16351,7 @@ argument_list|(
 argument|unsigned TypeSpec
 argument_list|)
 block|;
-comment|/// getKeywordForTagDeclKind - Converts a TagTypeKind into an
-comment|/// elaborated type keyword.
+comment|/// Converts a TagTypeKind into an elaborated type keyword.
 specifier|static
 name|ElaboratedTypeKeyword
 name|getKeywordForTagTypeKind
@@ -16201,8 +16359,8 @@ argument_list|(
 argument|TagTypeKind Tag
 argument_list|)
 block|;
-comment|/// getTagTypeKindForKeyword - Converts an elaborated type keyword into
-comment|// a TagTypeKind. It is an error to provide an elaborated type keyword
+comment|/// Converts an elaborated type keyword into a TagTypeKind.
+comment|/// It is an error to provide an elaborated type keyword
 comment|/// which *isn't* a tag kind here.
 specifier|static
 name|TagTypeKind
@@ -16275,12 +16433,12 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// \brief The nested name specifier containing the qualifier.
+comment|/// The nested name specifier containing the qualifier.
 name|NestedNameSpecifier
 operator|*
 name|NNS
 block|;
-comment|/// \brief The type that this qualified name refers to.
+comment|/// The type that this qualified name refers to.
 name|QualType
 name|NamedType
 block|;
@@ -16362,7 +16520,7 @@ operator|~
 name|ElaboratedType
 argument_list|()
 block|;
-comment|/// \brief Retrieve the qualification on this type.
+comment|/// Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -16373,7 +16531,7 @@ return|return
 name|NNS
 return|;
 block|}
-comment|/// \brief Retrieve the type named by the qualified-id.
+comment|/// Retrieve the type named by the qualified-id.
 name|QualType
 name|getNamedType
 argument_list|()
@@ -16383,7 +16541,7 @@ return|return
 name|NamedType
 return|;
 block|}
-comment|/// \brief Remove a single level of sugar.
+comment|/// Remove a single level of sugar.
 name|QualType
 name|desugar
 argument_list|()
@@ -16394,7 +16552,7 @@ name|getNamedType
 argument_list|()
 return|;
 block|}
-comment|/// \brief Returns whether this type directly provides sugar.
+comment|/// Returns whether this type directly provides sugar.
 name|bool
 name|isSugared
 argument_list|()
@@ -16559,7 +16717,7 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-comment|/// \brief Retrieve the qualification on this type.
+comment|/// Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -16570,8 +16728,7 @@ return|return
 name|NNS
 return|;
 block|}
-comment|/// \brief Retrieve the type named by the typename specifier as an
-comment|/// identifier.
+comment|/// Retrieve the type named by the typename specifier as an identifier.
 comment|///
 comment|/// This routine will return a non-NULL identifier pointer when the
 comment|/// form of the original typename was terminated by an identifier,
@@ -16680,10 +16837,15 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// DependentTemplateSpecializationType - Represents a template
-comment|/// specialization type whose template cannot be resolved, e.g.
+comment|/// Represents a template specialization type whose template cannot be
+comment|/// resolved, e.g.
 comment|///   A<T>::template B<T>
 name|class
+name|LLVM_ALIGNAS
+argument_list|(
+comment|/*alignof(uint64_t)*/
+literal|8
+argument_list|)
 name|DependentTemplateSpecializationType
 operator|:
 name|public
@@ -16694,19 +16856,19 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// \brief The nested name specifier containing the qualifier.
+comment|/// The nested name specifier containing the qualifier.
 name|NestedNameSpecifier
 operator|*
 name|NNS
 block|;
-comment|/// \brief The identifier of the template.
+comment|/// The identifier of the template.
 specifier|const
 name|IdentifierInfo
 operator|*
 name|Name
 block|;
-comment|/// \brief - The number of template arguments named in this class
-comment|/// template specialization.
+comment|/// \brief The number of template arguments named in this class template
+comment|/// specialization.
 name|unsigned
 name|NumArgs
 block|;
@@ -16936,7 +17098,7 @@ expr|}
 block|;
 comment|/// \brief Represents a pack expansion of types.
 comment|///
-comment|/// Pack expansions are part of C++0x variadic templates. A pack
+comment|/// Pack expansions are part of C++11 variadic templates. A pack
 comment|/// expansion contains a pattern, which itself contains one or more
 comment|/// "unexpanded" parameter packs. When instantiated, a pack expansion
 comment|/// produces a series of types, each instantiated from the pattern of
@@ -17180,7 +17342,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCObjectType - Represents a class type in Objective C.
+comment|/// Represents a class type in Objective C.
 comment|///
 comment|/// Every Objective C type is a combination of a base type, a set of
 comment|/// type arguments (optional, for parameterized classes) and a list of
@@ -17373,8 +17535,8 @@ specifier|const
 block|;
 name|public
 operator|:
-comment|/// getBaseType - Gets the base type of this object type.  This is
-comment|/// always (possibly sugar for) one of:
+comment|/// Gets the base type of this object type.  This is always (possibly
+comment|/// sugar for) one of:
 comment|///  - the 'id' builtin type (as opposed to the 'id' type visible to the
 comment|///    user, which is a typedef for an ObjCObjectPointerType)
 comment|///  - the 'Class' builtin type (same caveat)
@@ -17605,18 +17767,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|QualType
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|getTypeArgStorage
 argument_list|()
-expr|,
+argument_list|,
 name|ObjCObjectTypeBits
 operator|.
 name|NumTypeArgs
-operator|)
+argument_list|)
 return|;
 block|}
 typedef|typedef
@@ -17686,8 +17847,8 @@ operator|==
 literal|0
 return|;
 block|}
-comment|/// getNumProtocols - Return the number of qualifying protocols in this
-comment|/// interface type, or 0 if there are none.
+comment|/// Return the number of qualifying protocols in this interface type,
+comment|/// or 0 if there are none.
 name|unsigned
 name|getNumProtocols
 argument_list|()
@@ -17699,7 +17860,7 @@ operator|.
 name|NumProtocols
 return|;
 block|}
-comment|/// \brief Fetch a protocol by index.
+comment|/// Fetch a protocol by index.
 name|ObjCProtocolDecl
 operator|*
 name|getProtocol
@@ -17870,7 +18031,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCObjectTypeImpl - A class providing a concrete implementation
+comment|/// A class providing a concrete implementation
 comment|/// of ObjCObjectType, so as to not increase the footprint of
 comment|/// ObjCInterfaceType.  Code outside of ASTContext and the core type
 comment|/// system should not reference this type.
@@ -17999,11 +18160,10 @@ name|NumTypeArgs
 operator|)
 return|;
 block|}
-comment|/// ObjCInterfaceType - Interfaces are the core concept in Objective-C for
-comment|/// object oriented design.  They basically correspond to C++ classes.  There
-comment|/// are two kinds of interface types, normal interfaces like "NSString" and
-comment|/// qualified interfaces, which are qualified with a protocol list like
-comment|/// "NSString<NSCopyable, NSAmazing>".
+comment|/// Interfaces are the core concept in Objective-C for object oriented design.
+comment|/// They basically correspond to C++ classes.  There are two kinds of interface
+comment|/// types: normal interfaces like `NSString`, and qualified interfaces, which
+comment|/// are qualified with a protocol list like `NSString<NSCopyable, NSAmazing>`.
 comment|///
 comment|/// ObjCInterfaceType guarantees the following properties when considered
 comment|/// as a subtype of its superclass, ObjCObjectType:
@@ -18056,7 +18216,7 @@ name|ObjCInterfaceDecl
 block|;
 name|public
 operator|:
-comment|/// getDecl - Get the declaration of this interface.
+comment|/// Get the declaration of this interface.
 name|ObjCInterfaceDecl
 operator|*
 name|getDecl
@@ -18189,12 +18349,12 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// ObjCObjectPointerType - Used to represent a pointer to an
-comment|/// Objective C object.  These are constructed from pointer
-comment|/// declarators when the pointee type is an ObjCObjectType (or sugar
-comment|/// for one).  In addition, the 'id' and 'Class' types are typedefs
-comment|/// for these, and the protocol-qualified types 'id<P>' and 'Class<P>'
-comment|/// are translated into these.
+comment|/// Represents a pointer to an Objective C object.
+comment|///
+comment|/// These are constructed from pointer declarators when the pointee type is
+comment|/// an ObjCObjectType (or sugar for one).  In addition, the 'id' and 'Class'
+comment|/// types are typedefs for these, and the protocol-qualified types 'id<P>'
+comment|/// and 'Class<P>' are translated into these.
 comment|///
 comment|/// Pointers to pointers to Objective C objects are still PointerTypes;
 comment|/// only the first level of pointer gets it own type implementation.
@@ -18258,7 +18418,7 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
-comment|/// getPointeeType - Gets the type pointed to by this ObjC pointer.
+comment|/// Gets the type pointed to by this ObjC pointer.
 comment|/// The result will always be an ObjCObjectType or sugar thereof.
 name|QualType
 name|getPointeeType
@@ -18269,8 +18429,7 @@ return|return
 name|PointeeType
 return|;
 block|}
-comment|/// getObjCObjectType - Gets the type pointed to by this ObjC
-comment|/// pointer.  This method always returns non-null.
+comment|/// Gets the type pointed to by this ObjC pointer.  Always returns non-null.
 comment|///
 comment|/// This method is equivalent to getPointeeType() except that
 comment|/// it discards any typedefs (or other sugar) between this
@@ -18311,7 +18470,7 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// getInterfaceType - If this pointer points to an Objective C
+comment|/// If this pointer points to an Objective C
 comment|/// \@interface type, gets the type for that interface.  Any protocol
 comment|/// qualifiers on the interface are ignored.
 comment|///
@@ -18323,7 +18482,7 @@ name|getInterfaceType
 argument_list|()
 specifier|const
 block|;
-comment|/// getInterfaceDecl - If this pointer points to an Objective \@interface
+comment|/// If this pointer points to an Objective \@interface
 comment|/// type, gets the declaration for that interface.
 comment|///
 comment|/// \return null if the base type for this pointer is 'id' or 'Class'
@@ -18341,7 +18500,7 @@ name|getInterface
 argument_list|()
 return|;
 block|}
-comment|/// isObjCIdType - True if this is equivalent to the 'id' type, i.e. if
+comment|/// True if this is equivalent to the 'id' type, i.e. if
 comment|/// its object type is the primitive 'id' type with no protocols.
 name|bool
 name|isObjCIdType
@@ -18356,7 +18515,7 @@ name|isObjCUnqualifiedId
 argument_list|()
 return|;
 block|}
-comment|/// isObjCClassType - True if this is equivalent to the 'Class' type,
+comment|/// True if this is equivalent to the 'Class' type,
 comment|/// i.e. if its object tive is the primitive 'Class' type with no protocols.
 name|bool
 name|isObjCClassType
@@ -18371,8 +18530,7 @@ name|isObjCUnqualifiedClass
 argument_list|()
 return|;
 block|}
-comment|/// isObjCIdOrClassType - True if this is equivalent to the 'id' or
-comment|/// 'Class' type,
+comment|/// True if this is equivalent to the 'id' or 'Class' type,
 name|bool
 name|isObjCIdOrClassType
 argument_list|()
@@ -18386,8 +18544,8 @@ name|isObjCUnqualifiedIdOrClass
 argument_list|()
 return|;
 block|}
-comment|/// isObjCQualifiedIdType - True if this is equivalent to 'id<P>' for some
-comment|/// non-empty set of protocols.
+comment|/// True if this is equivalent to 'id<P>' for some non-empty set of
+comment|/// protocols.
 name|bool
 name|isObjCQualifiedIdType
 argument_list|()
@@ -18401,8 +18559,8 @@ name|isObjCQualifiedId
 argument_list|()
 return|;
 block|}
-comment|/// isObjCQualifiedClassType - True if this is equivalent to 'Class<P>' for
-comment|/// some non-empty set of protocols.
+comment|/// True if this is equivalent to 'Class<P>' for some non-empty set of
+comment|/// protocols.
 name|bool
 name|isObjCQualifiedClassType
 argument_list|()
@@ -18592,8 +18750,7 @@ name|qual_empty
 argument_list|()
 return|;
 block|}
-comment|/// getNumProtocols - Return the number of qualifying protocols on
-comment|/// the object type.
+comment|/// Return the number of qualifying protocols on the object type.
 name|unsigned
 name|getNumProtocols
 argument_list|()
@@ -18607,8 +18764,7 @@ name|getNumProtocols
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve a qualifying protocol by index on the object
-comment|/// type.
+comment|/// Retrieve a qualifying protocol by index on the object type.
 name|ObjCProtocolDecl
 operator|*
 name|getProtocol
@@ -18783,7 +18939,7 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
-comment|/// getValueType - Gets the type contained by this atomic type, i.e.
+comment|/// Gets the type contained by this atomic type, i.e.
 comment|/// the type returned by performing an atomic load of this atomic type.
 name|QualType
 name|getValueType
@@ -18864,6 +19020,150 @@ name|getTypeClass
 argument_list|()
 operator|==
 name|Atomic
+return|;
+block|}
+expr|}
+block|;
+comment|/// PipeType - OpenCL20.
+name|class
+name|PipeType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|QualType
+name|ElementType
+block|;
+name|PipeType
+argument_list|(
+argument|QualType elemType
+argument_list|,
+argument|QualType CanonicalPtr
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|Pipe
+argument_list|,
+name|CanonicalPtr
+argument_list|,
+name|elemType
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|elemType
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|elemType
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|elemType
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|ElementType
+argument_list|(
+argument|elemType
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|QualType
+name|getElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ElementType
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getElementType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType T
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Pipe
 return|;
 block|}
 expr|}
@@ -19559,7 +19859,7 @@ argument_list|(
 name|Mask
 argument_list|)
 block|; }
-comment|/// getAddressSpace - Return the address space of this type.
+comment|/// Return the address space of this type.
 specifier|inline
 name|unsigned
 name|QualType
@@ -19576,7 +19876,7 @@ name|getAddressSpace
 argument_list|()
 return|;
 block|}
-comment|/// getObjCGCAttr - Return the gc attribute of this type.
+comment|/// Return the gc attribute of this type.
 specifier|inline
 name|Qualifiers
 operator|::
@@ -19694,7 +19994,7 @@ name|t
 argument_list|)
 return|;
 block|}
-comment|/// isMoreQualifiedThan - Determine whether this type is more
+comment|/// Determine whether this type is more
 comment|/// qualified than the Other type. For example, "const volatile int"
 comment|/// is more qualified than "const int", "volatile int", and
 comment|/// "int". However, it is not more qualified than "const volatile
@@ -19738,7 +20038,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// isAtLeastAsQualifiedAs - Determine whether this type is at last
+comment|/// Determine whether this type is at last
 comment|/// as qualified as the Other type. For example, "const volatile
 comment|/// int" is at least as qualified as "const int", "volatile int",
 comment|/// "int", and "const volatile int".
@@ -19765,7 +20065,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getNonReferenceType - If Type is a reference type (e.g., const
+comment|/// If Type is a reference type (e.g., const
 comment|/// int&), returns the type that the reference refers to ("const
 comment|/// int"). Otherwise, returns the type itself. This routine is used
 comment|/// throughout Sema to implement C++ 5p6:
@@ -19843,7 +20143,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// \brief Tests whether the type is categorized as a fundamental type.
+comment|/// Tests whether the type is categorized as a fundamental type.
 comment|///
 comment|/// \returns True for types specified in C++0x [basic.fundamental].
 specifier|inline
@@ -19870,7 +20170,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// \brief Tests whether the type is categorized as a compound type.
+comment|/// Tests whether the type is categorized as a compound type.
 comment|///
 comment|/// \returns True for types specified in C++0x [basic.compound].
 specifier|inline
@@ -20715,6 +21015,108 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isImage2dDepthT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dDepth
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dArrayDepthT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dArrayDepth
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dMSAAT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dMSAA
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dArrayMSAAT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dArrayMSAA
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dMSAATDepth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dMSAADepth
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isImage2dArrayMSAATDepth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLImage2dArrayMSAADepth
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isImage3dT
 argument_list|()
 specifier|const
@@ -20766,6 +21168,74 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isClkEventT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLClkEvent
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isQueueT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLQueue
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isNDRangeT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLNDRange
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isReserveIDT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|OCLReserveID
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isImageType
 argument_list|()
 specifier|const
@@ -20780,6 +21250,24 @@ operator|||
 name|isImage2dArrayT
 argument_list|()
 operator|||
+name|isImage2dDepthT
+argument_list|()
+operator|||
+name|isImage2dArrayDepthT
+argument_list|()
+operator|||
+name|isImage2dMSAAT
+argument_list|()
+operator|||
+name|isImage2dArrayMSAAT
+argument_list|()
+operator|||
+name|isImage2dMSAATDepth
+argument_list|()
+operator|||
+name|isImage2dArrayMSAATDepth
+argument_list|()
+operator|||
 name|isImage1dT
 argument_list|()
 operator|||
@@ -20788,6 +21276,24 @@ argument_list|()
 operator|||
 name|isImage1dBufferT
 argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isPipeType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|PipeType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
 return|;
 block|}
 specifier|inline
@@ -20806,6 +21312,21 @@ name|isEventT
 argument_list|()
 operator|||
 name|isImageType
+argument_list|()
+operator|||
+name|isClkEventT
+argument_list|()
+operator|||
+name|isQueueT
+argument_list|()
+operator|||
+name|isNDRangeT
+argument_list|()
+operator|||
+name|isReserveIDT
+argument_list|()
+operator|||
+name|isPipeType
 argument_list|()
 return|;
 block|}
@@ -21003,9 +21524,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -21035,16 +21553,14 @@ operator|->
 name|isNonOverloadPlaceholderType
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  inline
+specifier|inline
 name|bool
 name|Type
 operator|::

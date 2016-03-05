@@ -70,9 +70,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCOperand
-decl_stmt|;
-name|class
 name|MSP430InstPrinter
 range|:
 name|public

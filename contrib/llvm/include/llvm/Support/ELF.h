@@ -1389,7 +1389,16 @@ comment|// CSR Kalimba architecture family
 name|EM_AMDGPU
 init|=
 literal|224
+block|,
 comment|// AMD GPU architecture
+comment|// A request has been made to the maintainer of the official registry for
+comment|// such numbers for an official value for WebAssembly. As soon as one is
+comment|// allocated, this enum will be updated to use it.
+name|EM_WEBASSEMBLY
+init|=
+literal|0x4157
+block|,
+comment|// WebAssembly architecture
 block|}
 enum|;
 comment|// Object file classes.
@@ -1778,6 +1787,91 @@ directive|include
 file|"ELFRelocs/ARM.def"
 block|}
 enum|;
+comment|// AVR specific e_flags
+enum_decl|enum :
+name|unsigned
+block|{
+name|EF_AVR_ARCH_AVR1
+init|=
+literal|1
+block|,
+name|EF_AVR_ARCH_AVR2
+init|=
+literal|2
+block|,
+name|EF_AVR_ARCH_AVR25
+init|=
+literal|25
+block|,
+name|EF_AVR_ARCH_AVR3
+init|=
+literal|3
+block|,
+name|EF_AVR_ARCH_AVR31
+init|=
+literal|31
+block|,
+name|EF_AVR_ARCH_AVR35
+init|=
+literal|35
+block|,
+name|EF_AVR_ARCH_AVR4
+init|=
+literal|4
+block|,
+name|EF_AVR_ARCH_AVR5
+init|=
+literal|5
+block|,
+name|EF_AVR_ARCH_AVR51
+init|=
+literal|51
+block|,
+name|EF_AVR_ARCH_AVR6
+init|=
+literal|6
+block|,
+name|EF_AVR_ARCH_AVRTINY
+init|=
+literal|100
+block|,
+name|EF_AVR_ARCH_XMEGA1
+init|=
+literal|101
+block|,
+name|EF_AVR_ARCH_XMEGA2
+init|=
+literal|102
+block|,
+name|EF_AVR_ARCH_XMEGA3
+init|=
+literal|103
+block|,
+name|EF_AVR_ARCH_XMEGA4
+init|=
+literal|104
+block|,
+name|EF_AVR_ARCH_XMEGA5
+init|=
+literal|105
+block|,
+name|EF_AVR_ARCH_XMEGA6
+init|=
+literal|106
+block|,
+name|EF_AVR_ARCH_XMEGA7
+init|=
+literal|107
+block|}
+enum_decl|;
+comment|// ELF Relocation types for AVR
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/AVR.def"
+block|}
+enum|;
 comment|// Mips Specific e_flags
 enum_decl|enum :
 name|unsigned
@@ -2125,11 +2219,10 @@ literal|11
 comment|// Page size information
 block|}
 enum|;
-comment|// Hexagon Specific e_flags
-comment|// Release 5 ABI
+comment|// Hexagon-specific e_flags
 enum|enum
 block|{
-comment|// Object processor version flags, bits[3:0]
+comment|// Object processor version flags, bits[11:0]
 name|EF_HEXAGON_MACH_V2
 init|=
 literal|0x00000001
@@ -2150,12 +2243,22 @@ init|=
 literal|0x00000004
 block|,
 comment|// Hexagon V5
+name|EF_HEXAGON_MACH_V55
+init|=
+literal|0x00000005
+block|,
+comment|// Hexagon V55
+name|EF_HEXAGON_MACH_V60
+init|=
+literal|0x00000060
+block|,
+comment|// Hexagon V60
 comment|// Highest ISA version flags
 name|EF_HEXAGON_ISA_MACH
 init|=
 literal|0x00000000
 block|,
-comment|// Same as specified in bits[3:0]
+comment|// Same as specified in bits[11:0]
 comment|// of e_flags
 name|EF_HEXAGON_ISA_V2
 init|=
@@ -2175,11 +2278,21 @@ comment|// Hexagon V4 ISA
 name|EF_HEXAGON_ISA_V5
 init|=
 literal|0x00000040
+block|,
 comment|// Hexagon V5 ISA
+name|EF_HEXAGON_ISA_V55
+init|=
+literal|0x00000050
+block|,
+comment|// Hexagon V55 ISA
+name|EF_HEXAGON_ISA_V60
+init|=
+literal|0x00000060
+block|,
+comment|// Hexagon V60 ISA
 block|}
 enum|;
-comment|// Hexagon specific Section indexes for common small data
-comment|// Release 5 ABI
+comment|// Hexagon-specific section indexes for common small data
 enum|enum
 block|{
 name|SHN_HEXAGON_SCOMMON
@@ -2230,6 +2343,14 @@ block|{
 include|#
 directive|include
 file|"ELFRelocs/Sparc.def"
+block|}
+enum|;
+comment|// ELF Relocation types for WebAssembly
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/WebAssembly.def"
 block|}
 enum|;
 undef|#
@@ -2707,6 +2828,22 @@ comment|// Section data is string data by default.
 name|SHF_MIPS_STRING
 init|=
 literal|0x80000000
+block|,
+name|SHF_AMDGPU_HSA_GLOBAL
+init|=
+literal|0x00100000
+block|,
+name|SHF_AMDGPU_HSA_READONLY
+init|=
+literal|0x00200000
+block|,
+name|SHF_AMDGPU_HSA_CODE
+init|=
+literal|0x00400000
+block|,
+name|SHF_AMDGPU_HSA_AGENT
+init|=
+literal|0x00800000
 block|}
 enum_decl|;
 comment|// Section Group Flags
@@ -3082,7 +3219,20 @@ comment|// Lowest processor-specific symbol type
 name|STT_HIPROC
 init|=
 literal|15
+block|,
 comment|// Highest processor-specific symbol type
+comment|// AMDGPU symbol types
+name|STT_AMDGPU_HSA_KERNEL
+init|=
+literal|10
+block|,
+name|STT_AMDGPU_HSA_INDIRECT_FUNCTION
+init|=
+literal|11
+block|,
+name|STT_AMDGPU_HSA_METADATA
+init|=
+literal|12
 block|}
 enum|;
 enum|enum
@@ -3759,7 +3909,33 @@ comment|// Options segment.
 name|PT_MIPS_ABIFLAGS
 init|=
 literal|0x70000003
+block|,
 comment|// Abiflags segment.
+comment|// AMDGPU program header types.
+name|PT_AMDGPU_HSA_LOAD_GLOBAL_PROGRAM
+init|=
+literal|0x60000000
+block|,
+name|PT_AMDGPU_HSA_LOAD_GLOBAL_AGENT
+init|=
+literal|0x60000001
+block|,
+name|PT_AMDGPU_HSA_LOAD_READONLY_AGENT
+init|=
+literal|0x60000002
+block|,
+name|PT_AMDGPU_HSA_LOAD_CODE_AGENT
+init|=
+literal|0x60000003
+block|,
+comment|// WebAssembly program header types.
+name|PT_WEBASSEMBLY_FUNCTIONS
+init|=
+name|PT_LOPROC
+operator|+
+literal|0
+block|,
+comment|// Function definitions.
 block|}
 enum|;
 comment|// Segment flag bits.
@@ -4327,8 +4503,14 @@ comment|// Address of the base of the PLTGOT.
 name|DT_MIPS_RWPLT
 init|=
 literal|0x70000034
+block|,
 comment|// Points to the base
 comment|// of a writable PLT.
+name|DT_MIPS_RLD_MAP_REL
+init|=
+literal|0x70000035
+comment|// Relative offset of run time loader
+comment|// map, used for debugging.
 block|}
 enum|;
 comment|// DT_FLAGS values.

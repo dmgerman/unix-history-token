@@ -43,10 +43,18 @@ directive|define
 name|liblldb_ModuleList_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<functional>
 end_include
 
 begin_include
@@ -58,8 +66,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -100,6 +116,13 @@ name|Notifier
 block|{
 name|public
 label|:
+name|virtual
+operator|~
+name|Notifier
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|ModuleAdded
@@ -176,11 +199,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
-operator|~
-name|Notifier
-argument_list|()
-block|{}
 block|}
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -461,7 +479,7 @@ comment|/// @param[in] idx
 comment|///     An index into this module collection.
 comment|///
 comment|/// @return
-comment|///     A pointer to a Module which can by NULL if \a idx is out
+comment|///     A pointer to a Module which can by nullptr if \a idx is out
 comment|///     of range.
 comment|///
 comment|/// @see ModuleList::GetSize()
@@ -484,7 +502,7 @@ comment|/// @param[in] idx
 comment|///     An index into this module collection.
 comment|///
 comment|/// @return
-comment|///     A pointer to a Module which can by NULL if \a idx is out
+comment|///     A pointer to a Module which can by nullptr if \a idx is out
 comment|///     of range.
 comment|///
 comment|/// @see ModuleList::GetSize()
@@ -1106,7 +1124,7 @@ name|Stream
 operator|*
 name|feedback_stream
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|bool
 name|continue_on_error

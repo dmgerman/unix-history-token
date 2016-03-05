@@ -529,7 +529,7 @@ name|S
 operator|.
 name|Obj
 operator|=
-literal|0
+name|nullptr
 block|;     }
 name|template
 operator|<
@@ -667,7 +667,7 @@ argument_list|()
 block|{
 name|Obj
 operator|=
-literal|0
+name|nullptr
 block|;     }
 name|private
 operator|:

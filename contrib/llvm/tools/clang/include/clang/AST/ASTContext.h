@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OperatorKinds.h"
 end_include
 
@@ -298,6 +304,11 @@ name|class
 name|Context
 decl_stmt|;
 block|}
+enum_decl|enum
+name|BuiltinTemplateKind
+enum_decl|:
+name|int
+enum_decl|;
 name|namespace
 name|comments
 block|{
@@ -695,6 +706,15 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|PipeType
+operator|>
+name|PipeTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
 name|QualifiedTemplateName
 operator|>
 name|QualifiedTemplateNames
@@ -874,7 +894,8 @@ operator|>
 name|ClassScopeSpecializationPattern
 expr_stmt|;
 comment|/// \brief Mapping from materialized temporaries with static storage duration
-comment|/// that appear in constant initializers to their evaluated values.
+comment|/// that appear in constant initializers to their evaluated values.  These are
+comment|/// allocated in a std::map because their address must be stable.
 name|llvm
 operator|::
 name|DenseMap
@@ -884,6 +905,7 @@ name|MaterializeTemporaryExpr
 operator|*
 operator|,
 name|APValue
+operator|*
 operator|>
 name|MaterializedTemporaryValues
 expr_stmt|;
@@ -998,6 +1020,12 @@ name|TypedefDecl
 modifier|*
 name|BuiltinVaListDecl
 decl_stmt|;
+comment|/// The typedef for the predefined \c __builtin_ms_va_list type.
+name|mutable
+name|TypedefDecl
+modifier|*
+name|BuiltinMSVaListDecl
+decl_stmt|;
 comment|/// \brief The typedef for the predefined \c id type.
 name|mutable
 name|TypedefDecl
@@ -1050,6 +1078,14 @@ comment|/// The identifier 'NSCopying'.
 name|IdentifierInfo
 modifier|*
 name|NSCopyingName
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The identifier '__make_integer_seq'.
+name|mutable
+name|IdentifierInfo
+modifier|*
+name|MakeIntegerSeqName
 init|=
 name|nullptr
 decl_stmt|;
@@ -1392,6 +1428,11 @@ name|ExternCContextDecl
 modifier|*
 name|ExternCContext
 decl_stmt|;
+name|mutable
+name|BuiltinTemplateDecl
+modifier|*
+name|MakeIntegerSeqDecl
+decl_stmt|;
 comment|/// \brief The associated SourceManager object.a
 name|SourceManager
 modifier|&
@@ -1482,6 +1523,11 @@ name|TargetInfo
 modifier|*
 name|Target
 decl_stmt|;
+specifier|const
+name|TargetInfo
+modifier|*
+name|AuxTarget
+decl_stmt|;
 name|clang
 operator|::
 name|PrintingPolicy
@@ -1531,7 +1577,9 @@ literal|2
 operator|>
 name|ParentVector
 expr_stmt|;
-comment|/// \brief Maps from a node to its parents.
+comment|/// \brief Maps from a node to its parents. This is used for nodes that have
+comment|/// pointer identity only, which are more common and we can save space by
+comment|/// only storing a unique pointer to them.
 typedef|typedef
 name|llvm
 operator|::
@@ -1543,8 +1591,16 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|PointerUnion
+name|PointerUnion4
 operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+specifier|const
+name|Stmt
+operator|*
+operator|,
 name|ast_type_traits
 operator|::
 name|DynTypedNode
@@ -1553,43 +1609,387 @@ operator|,
 name|ParentVector
 operator|*
 operator|>>
-name|ParentMap
+name|ParentMapPointers
 expr_stmt|;
+comment|/// Parent map for nodes without pointer identity. We store a full
+comment|/// DynTypedNode for all keys.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|,
+name|llvm
+operator|::
+name|PointerUnion4
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+specifier|const
+name|Stmt
+operator|*
+operator|,
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|*
+operator|,
+name|ParentVector
+operator|*
+operator|>>
+name|ParentMapOtherNodes
+expr_stmt|;
+comment|/// Container for either a single DynTypedNode or for an ArrayRef to
+comment|/// DynTypedNode. For use with ParentMap.
+name|class
+name|DynTypedNodeList
+block|{
+typedef|typedef
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+name|DynTypedNode
+expr_stmt|;
+name|llvm
+operator|::
+name|AlignedCharArrayUnion
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|,
+name|ArrayRef
+operator|<
+name|DynTypedNode
+operator|>>
+name|Storage
+expr_stmt|;
+name|bool
+name|IsSingleNode
+decl_stmt|;
+name|public
+label|:
+name|DynTypedNodeList
+argument_list|(
+specifier|const
+name|DynTypedNode
+operator|&
+name|N
+argument_list|)
+operator|:
+name|IsSingleNode
+argument_list|(
+argument|true
+argument_list|)
+block|{
+name|new
+argument_list|(
+argument|Storage.buffer
+argument_list|)
+name|DynTypedNode
+argument_list|(
+name|N
+argument_list|)
+block|;     }
+name|DynTypedNodeList
+argument_list|(
+name|ArrayRef
+operator|<
+name|DynTypedNode
+operator|>
+name|A
+argument_list|)
+operator|:
+name|IsSingleNode
+argument_list|(
+argument|false
+argument_list|)
+block|{
+name|new
+argument_list|(
+argument|Storage.buffer
+argument_list|)
+name|ArrayRef
+operator|<
+name|DynTypedNode
+operator|>
+operator|(
+name|A
+operator|)
+block|;     }
+specifier|const
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|*
+name|begin
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|IsSingleNode
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ArrayRef
+operator|<
+name|DynTypedNode
+operator|>
+operator|*
+operator|>
+operator|(
+name|Storage
+operator|.
+name|buffer
+operator|)
+operator|->
+name|begin
+argument_list|()
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|DynTypedNode
+operator|*
+operator|>
+operator|(
+name|Storage
+operator|.
+name|buffer
+operator|)
+return|;
+block|}
+specifier|const
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|*
+name|end
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|IsSingleNode
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ArrayRef
+operator|<
+name|DynTypedNode
+operator|>
+operator|*
+operator|>
+operator|(
+name|Storage
+operator|.
+name|buffer
+operator|)
+operator|->
+name|end
+argument_list|()
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|DynTypedNode
+operator|*
+operator|>
+operator|(
+name|Storage
+operator|.
+name|buffer
+operator|)
+operator|+
+literal|1
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|end
+argument_list|()
+operator|-
+name|begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|begin
+argument_list|()
+operator|==
+name|end
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|DynTypedNode
+modifier|&
+name|operator
+index|[]
+argument_list|(
+name|size_t
+name|N
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|N
+operator|<
+name|size
+argument_list|()
+operator|&&
+literal|"Out of bounds!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+operator|(
+name|begin
+argument_list|()
+operator|+
+name|N
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Returns the parents of the given node.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that this will lazily compute the parents of all nodes
+end_comment
+
+begin_comment
 comment|/// and store them for later retrieval. Thus, the first call is O(n)
+end_comment
+
+begin_comment
 comment|/// in the number of AST nodes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Caveats and FIXMEs:
+end_comment
+
+begin_comment
 comment|/// Calculating the parent map over all AST nodes will need to load the
+end_comment
+
+begin_comment
 comment|/// full AST. This can be undesirable in the case where the full AST is
+end_comment
+
+begin_comment
 comment|/// expensive to create (for example, when using precompiled header
+end_comment
+
+begin_comment
 comment|/// preambles). Thus, there are good opportunities for optimization here.
+end_comment
+
+begin_comment
 comment|/// One idea is to walk the given node downwards, looking for references
+end_comment
+
+begin_comment
 comment|/// to declaration contexts - once a declaration context is found, compute
+end_comment
+
+begin_comment
 comment|/// the parent map for the declaration context; if that can satisfy the
+end_comment
+
+begin_comment
 comment|/// request, loading the whole AST can be avoided. Note that this is made
+end_comment
+
+begin_comment
 comment|/// more complex by statements in templates having multiple parents - those
+end_comment
+
+begin_comment
 comment|/// problems can be solved by building closure over the templated parts of
+end_comment
+
+begin_comment
 comment|/// the AST, which also avoids touching large parts of the AST.
+end_comment
+
+begin_comment
 comment|/// Additionally, we will want to add an interface to already give a hint
+end_comment
+
+begin_comment
 comment|/// where to search for the parents, for example when looking at a statement
+end_comment
+
+begin_comment
 comment|/// inside a certain function.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// 'NodeT' can be one of Decl, Stmt, Type, TypeLoc,
+end_comment
+
+begin_comment
 comment|/// NestedNameSpecifier or NestedNameSpecifierLoc.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|NodeT
 operator|>
-name|ArrayRef
-operator|<
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|>
+name|DynTypedNodeList
 name|getParents
 argument_list|(
 argument|const NodeT&Node
@@ -1609,12 +2009,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|ArrayRef
-operator|<
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|>
+end_expr_stmt
+
+begin_decl_stmt
+name|DynTypedNodeList
 name|getParents
 argument_list|(
 specifier|const
@@ -1624,7 +2022,10 @@ name|DynTypedNode
 operator|&
 name|Node
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|clang
 operator|::
@@ -1638,6 +2039,9 @@ return|return
 name|PrintingPolicy
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setPrintingPolicy
 argument_list|(
@@ -1654,6 +2058,9 @@ operator|=
 name|Policy
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_function
 name|SourceManager
 modifier|&
 name|getSourceManager
@@ -1663,6 +2070,9 @@ return|return
 name|SourceMgr
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|SourceManager
 operator|&
@@ -1674,6 +2084,9 @@ return|return
 name|SourceMgr
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -1686,6 +2099,9 @@ return|return
 name|BumpAlloc
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 modifier|*
 name|Allocate
@@ -1711,6 +2127,54 @@ name|Align
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|*
+name|Allocate
+argument_list|(
+argument|size_t Num =
+literal|1
+argument_list|)
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|Allocate
+argument_list|(
+name|Num
+operator|*
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|,
+name|llvm
+operator|::
+name|alignOf
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|Deallocate
 argument_list|(
@@ -1720,8 +2184,17 @@ name|Ptr
 argument_list|)
 decl|const
 block|{ }
+end_decl_stmt
+
+begin_comment
 comment|/// Return the total amount of physical memory allocated for representing
+end_comment
+
+begin_comment
 comment|/// AST nodes and type information.
+end_comment
+
+begin_expr_stmt
 name|size_t
 name|getASTAllocatedMemory
 argument_list|()
@@ -1734,12 +2207,21 @@ name|getTotalMemory
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return the total memory used for various side tables.
+end_comment
+
+begin_expr_stmt
 name|size_t
 name|getSideTableAllocatedMemory
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|PartialDiagnostic
 operator|::
 name|StorageAllocator
@@ -1751,6 +2233,9 @@ return|return
 name|DiagAllocator
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|TargetInfo
 operator|&
@@ -1763,10 +2248,39 @@ operator|*
 name|Target
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|TargetInfo
+operator|*
+name|getAuxTargetInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AuxTarget
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getIntTypeForBitwidth -
+end_comment
+
+begin_comment
 comment|/// sets integer QualTy according to specified details:
+end_comment
+
+begin_comment
 comment|/// bitwidth, signed/unsigned.
+end_comment
+
+begin_comment
 comment|/// Returns empty type if there is no appropriate target types.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getIntTypeForBitwidth
 argument_list|(
@@ -1778,9 +2292,21 @@ name|Signed
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getRealTypeForBitwidth -
+end_comment
+
+begin_comment
 comment|/// sets floating point QualTy according to specified bitwidth.
+end_comment
+
+begin_comment
 comment|/// Returns empty type if there is no appropriate target types.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getRealTypeForBitwidth
 argument_list|(
@@ -1789,6 +2315,9 @@ name|DestWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|AtomicUsesUnsupportedLibcall
 argument_list|(
@@ -1799,6 +2328,9 @@ name|E
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|LangOptions
 operator|&
@@ -1810,6 +2342,9 @@ return|return
 name|LangOpts
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|SanitizerBlacklist
 operator|&
@@ -1822,12 +2357,18 @@ operator|*
 name|SanitizerBL
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|DiagnosticsEngine
 operator|&
 name|getDiagnostics
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|FullSourceLoc
 name|getFullLoc
 argument_list|(
@@ -1845,15 +2386,30 @@ name|SourceMgr
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief All comments in this translation unit.
+end_comment
+
+begin_decl_stmt
 name|RawCommentList
 name|Comments
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief True if comments are already loaded from ExternalASTSource.
+end_comment
+
+begin_decl_stmt
 name|mutable
 name|bool
 name|CommentsLoaded
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|RawCommentAndCacheFlags
 block|{
@@ -1994,12 +2550,33 @@ modifier|*
 name|OriginalDecl
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Mapping from declarations to comments attached to any
+end_comment
+
+begin_comment
 comment|/// redeclaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Raw comments are owned by Comments list.  This mapping is populated
+end_comment
+
+begin_comment
 comment|/// lazily.
+end_comment
+
+begin_expr_stmt
 name|mutable
 name|llvm
 operator|::
@@ -2013,8 +2590,17 @@ name|RawCommentAndCacheFlags
 operator|>
 name|RedeclComments
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Mapping from declarations to parsed comments attached to any
+end_comment
+
+begin_comment
 comment|/// redeclaration.
+end_comment
+
+begin_expr_stmt
 name|mutable
 name|llvm
 operator|::
@@ -2031,8 +2617,17 @@ operator|*
 operator|>
 name|ParsedComments
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return the documentation comment attached to a given declaration,
+end_comment
+
+begin_comment
 comment|/// without looking into cache.
+end_comment
+
+begin_decl_stmt
 name|RawComment
 modifier|*
 name|getRawCommentForDeclNoCache
@@ -2044,8 +2639,14 @@ name|D
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_function
 name|RawCommentList
 modifier|&
 name|getRawCommentList
@@ -2055,6 +2656,9 @@ return|return
 name|Comments
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|addComment
 parameter_list|(
@@ -2095,11 +2699,29 @@ name|BumpAlloc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Return the documentation comment attached to a given declaration.
+end_comment
+
+begin_comment
 comment|/// Returns NULL if no comment is attached.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param OriginalDecl if not NULL, is set to declaration AST node that had
+end_comment
+
+begin_comment
 comment|/// the comment, if the comment we found comes from a redeclaration.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|RawComment
 modifier|*
@@ -2120,11 +2742,29 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return parsed documentation comment attached to a given declaration.
+end_comment
+
+begin_comment
 comment|/// Returns NULL if no comment is attached.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param PP the Preprocessor used with this TU.  Could be NULL if
+end_comment
+
+begin_comment
 comment|/// preprocessor is not available.
+end_comment
+
+begin_expr_stmt
 name|comments
 operator|::
 name|FullComment
@@ -2137,9 +2777,21 @@ argument|const Preprocessor *PP
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return parsed documentation comment attached to a given declaration.
+end_comment
+
+begin_comment
 comment|/// Returns NULL if no comment is attached. Does not look at any
+end_comment
+
+begin_comment
 comment|/// redeclarations of the declaration.
+end_comment
+
+begin_expr_stmt
 name|comments
 operator|::
 name|FullComment
@@ -2150,6 +2802,9 @@ argument|const Decl *D
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|comments
 operator|::
 name|FullComment
@@ -2162,15 +2817,27 @@ argument|const Decl *D
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|mutable
 name|comments
 operator|::
 name|CommandTraits
 name|CommentCommandTraits
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Iterator that visits import declarations.
+end_comment
+
+begin_decl_stmt
 name|class
 name|import_iterator
 block|{
@@ -2246,6 +2913,9 @@ return|return
 name|Import
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|import_iterator
 operator|&
 name|operator
@@ -2267,6 +2937,9 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|import_iterator
 name|operator
 operator|++
@@ -2291,58 +2964,60 @@ return|return
 name|Other
 return|;
 block|}
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-name|import_iterator
-name|X
-operator|,
-name|import_iterator
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Import
-operator|==
-name|Y
-operator|.
-name|Import
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|!=
-operator|(
-name|import_iterator
-name|X
-operator|,
-name|import_iterator
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Import
-operator|!=
-name|Y
-operator|.
-name|Import
-return|;
-block|}
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|import_iterator
+name|X
+operator|,
+name|import_iterator
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Import
+operator|==
+name|Y
+operator|.
+name|Import
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|import_iterator
+name|X
+operator|,
+name|import_iterator
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Import
+operator|!=
+name|Y
+operator|.
+name|Import
+return|;
+block|}
+end_expr_stmt
 
 begin_label
+unit|};
 name|public
 label|:
 end_label
@@ -2974,10 +3649,19 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
+begin_expr_stmt
 name|ExternCContextDecl
-modifier|*
+operator|*
 name|getExternCContextDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|BuiltinTemplateDecl
+modifier|*
+name|getMakeIntegerSeqDecl
 parameter_list|()
 function_decl|const;
 end_function_decl
@@ -3185,6 +3869,26 @@ name|CanQualType
 name|OCLImage2dTy
 decl_stmt|,
 name|OCLImage2dArrayTy
+decl_stmt|,
+name|OCLImage2dDepthTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLImage2dArrayDepthTy
+decl_stmt|,
+name|OCLImage2dMSAATy
+decl_stmt|,
+name|OCLImage2dArrayMSAATy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLImage2dMSAADepthTy
+decl_stmt|,
+name|OCLImage2dArrayMSAADepthTy
 decl_stmt|;
 end_decl_stmt
 
@@ -3199,6 +3903,24 @@ name|CanQualType
 name|OCLSamplerTy
 decl_stmt|,
 name|OCLEventTy
+decl_stmt|,
+name|OCLClkEventTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLQueueTy
+decl_stmt|,
+name|OCLNDRangeTy
+decl_stmt|,
+name|OCLReserveIDTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OMPArraySectionTy
 decl_stmt|;
 end_decl_stmt
 
@@ -3229,17 +3951,18 @@ comment|// Deduction against 'auto&&'.
 end_comment
 
 begin_comment
-comment|// Type used to help define __builtin_va_list for some targets.
+comment|// Decl used to help define __builtin_va_list for some targets.
 end_comment
 
 begin_comment
-comment|// The type is built when constructing 'BuiltinVaListDecl'.
+comment|// The decl is built when constructing 'BuiltinVaListDecl'.
 end_comment
 
 begin_decl_stmt
 name|mutable
-name|QualType
-name|VaListTagTy
+name|Decl
+modifier|*
+name|VaListTagDecl
 decl_stmt|;
 end_decl_stmt
 
@@ -3419,6 +4142,23 @@ name|Types
 return|;
 block|}
 end_expr_stmt
+
+begin_decl_stmt
+name|BuiltinTemplateDecl
+modifier|*
+name|buildBuiltinTemplateDecl
+argument_list|(
+name|BuiltinTemplateKind
+name|BTK
+argument_list|,
+specifier|const
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Create a new implicit TU-level CXXRecordDecl or RecordDecl
@@ -3788,6 +4528,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Adjust the given function result type.
+end_comment
+
+begin_decl_stmt
+name|CanQualType
+name|getCanonicalFunctionResultType
+argument_list|(
+name|QualType
+name|ResultType
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Change the result type of a function type once it is deduced.
 end_comment
 
@@ -4084,6 +4839,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Return pipe type for the specified type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getPipeType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Gets the struct used to keep track of the extended descriptor for
@@ -5242,8 +6012,8 @@ argument_list|(
 name|QualType
 name|DeducedType
 argument_list|,
-name|bool
-name|IsDecltypeAuto
+name|AutoTypeKeyword
+name|Keyword
 argument_list|,
 name|bool
 name|IsDependent
@@ -5890,7 +6660,38 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|IdentifierInfo
+operator|*
+name|getMakeIntegerSeqName
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|MakeIntegerSeqName
+condition|)
+name|MakeIntegerSeqName
+operator|=
+operator|&
+name|Idents
+operator|.
+name|get
+argument_list|(
+literal|"__make_integer_seq"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|MakeIntegerSeqName
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// \brief Retrieve the Objective-C "instancetype" type, if already known;
 end_comment
 
@@ -5898,10 +6699,13 @@ begin_comment
 comment|/// otherwise, returns a NULL type;
 end_comment
 
-begin_function
-name|QualType
+begin_macro
+unit|QualType
 name|getObjCInstanceType
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 return|return
 name|getTypeDeclType
@@ -5911,7 +6715,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/// \brief Retrieve the typedef declaration corresponding to the Objective-C
@@ -6751,11 +7555,49 @@ comment|/// for some targets.
 end_comment
 
 begin_expr_stmt
-name|QualType
-name|getVaListTagType
+name|Decl
+operator|*
+name|getVaListTagDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Retrieve the C type declaration corresponding to the predefined
+end_comment
+
+begin_comment
+comment|/// \c __builtin_ms_va_list type.
+end_comment
+
+begin_expr_stmt
+name|TypedefDecl
+operator|*
+name|getBuiltinMSVaListDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Retrieve the type of the \c __builtin_ms_va_list type.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getBuiltinMSVaListType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypeDeclType
+argument_list|(
+name|getBuiltinMSVaListDecl
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -7915,21 +8757,6 @@ specifier|const
 name|ASTRecordLayout
 modifier|&
 name|getASTRecordLayout
-argument_list|(
-specifier|const
-name|RecordDecl
-operator|*
-name|D
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|ASTRecordLayout
-modifier|*
-name|BuildMicrosoftASTRecordLayout
 argument_list|(
 specifier|const
 name|RecordDecl
@@ -9974,7 +10801,7 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_function_decl
 name|void
 name|ResetObjCLayout
 parameter_list|(
@@ -9983,16 +10810,8 @@ name|ObjCContainerDecl
 modifier|*
 name|CD
 parameter_list|)
-block|{
-name|ObjCLayouts
-index|[
-name|CD
-index|]
-operator|=
-name|nullptr
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -10053,59 +10872,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//                    Type Iterators.
-end_comment
-
-begin_comment
-comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|SmallVectorImpl
-operator|<
-name|Type
-operator|*
-operator|>
-operator|::
-name|const_iterator
-operator|>
-name|type_const_range
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|type_const_range
-name|types
-argument_list|()
-specifier|const
-block|{
-return|return
-name|type_const_range
-argument_list|(
-name|Types
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Types
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                    Integer Values
 end_comment
 
@@ -10133,15 +10899,14 @@ argument|QualType Type
 argument_list|)
 specifier|const
 block|{
+comment|// If Type is a signed integer type larger than 64 bits, we need to be sure
+comment|// to sign extend Res appropriately.
 name|llvm
 operator|::
 name|APSInt
 name|Res
 argument_list|(
-name|getIntWidth
-argument_list|(
-name|Type
-argument_list|)
+literal|64
 argument_list|,
 operator|!
 name|Type
@@ -10154,23 +10919,50 @@ name|Res
 operator|=
 name|Value
 block|;
+name|unsigned
+name|Width
+operator|=
+name|getIntWidth
+argument_list|(
+name|Type
+argument_list|)
+block|;
+if|if
+condition|(
+name|Width
+operator|!=
+name|Res
+operator|.
+name|getBitWidth
+argument_list|()
+condition|)
+return|return
+name|Res
+operator|.
+name|extOrTrunc
+argument_list|(
+name|Width
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|Res
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_function_decl
-name|bool
+begin_expr_stmt
+unit|}    bool
 name|isSentinelNullExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|Expr
-modifier|*
+operator|*
 name|E
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Get the implementation of the ObjCInterfaceDecl \p D, or NULL if
@@ -10289,19 +11081,10 @@ operator|*
 name|MD
 argument_list|)
 decl|const
-block|{
-return|return
-name|ObjCMethodRedecls
-operator|.
-name|lookup
-argument_list|(
-name|MD
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_function_decl
 name|void
 name|setObjCMethodRedeclaration
 parameter_list|(
@@ -10315,27 +11098,8 @@ name|ObjCMethodDecl
 modifier|*
 name|Redecl
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|getObjCMethodRedeclaration
-argument_list|(
-name|MD
-argument_list|)
-operator|&&
-literal|"MD already has a redeclaration"
-argument_list|)
-expr_stmt|;
-name|ObjCMethodRedecls
-index|[
-name|MD
-index|]
-operator|=
-name|Redecl
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Returns the Objective-C interface that \p ND belongs to if it is
@@ -10664,6 +11428,62 @@ name|CD
 parameter_list|,
 name|unsigned
 name|ParmIdx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addTypedefNameForUnnamedTagDecl
+parameter_list|(
+name|TagDecl
+modifier|*
+name|TD
+parameter_list|,
+name|TypedefNameDecl
+modifier|*
+name|TND
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|TypedefNameDecl
+modifier|*
+name|getTypedefNameForUnnamedTagDecl
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|TD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addDeclaratorForUnnamedTagDecl
+parameter_list|(
+name|TagDecl
+modifier|*
+name|TD
+parameter_list|,
+name|DeclaratorDecl
+modifier|*
+name|DD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|DeclaratorDecl
+modifier|*
+name|getDeclaratorForUnnamedTagDecl
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|TD
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11058,6 +11878,13 @@ specifier|const
 name|TargetInfo
 modifier|&
 name|Target
+parameter_list|,
+specifier|const
+name|TargetInfo
+modifier|*
+name|AuxTarget
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11277,11 +12104,39 @@ begin_comment
 comment|/// ASTContext is destroyed.
 end_comment
 
+begin_comment
+comment|// FIXME: We really should have a better mechanism in the ASTContext to
+end_comment
+
+begin_comment
+comment|// manage running destructors for types which do variable sized allocation
+end_comment
+
+begin_comment
+comment|// within the AST. In some places we thread the AST bump pointer allocator
+end_comment
+
+begin_comment
+comment|// into the datastructures which avoids this mess during deallocation but is
+end_comment
+
+begin_comment
+comment|// wasteful of memory, and here we require a lot of error prone book keeping
+end_comment
+
+begin_comment
+comment|// in order to track and run destructors while we're tearing things down.
+end_comment
+
 begin_typedef
 typedef|typedef
 name|llvm
 operator|::
-name|SmallDenseMap
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
 operator|<
 name|void
 argument_list|(
@@ -11292,22 +12147,18 @@ name|void
 operator|*
 argument_list|)
 operator|,
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|void
 operator|*
+operator|>
 operator|,
 literal|16
 operator|>
-expr|>
-name|DeallocationMap
+name|DeallocationFunctionsAndArguments
 expr_stmt|;
 end_typedef
 
 begin_decl_stmt
-name|DeallocationMap
+name|DeallocationFunctionsAndArguments
 name|Deallocations
 decl_stmt|;
 end_decl_stmt
@@ -11371,9 +12222,20 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ParentMap
+name|ParentMapPointers
 operator|>
-name|AllParents
+name|PointerParents
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ParentMapOtherNodes
+operator|>
+name|OtherParents
 expr_stmt|;
 end_expr_stmt
 

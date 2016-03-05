@@ -2439,6 +2439,10 @@ comment|/// \brief Initializer has a placeholder type which cannot be
 comment|/// resolved by initialization.
 name|FK_PlaceholderType
 block|,
+comment|/// \brief Trying to take the address of a function that doesn't support
+comment|/// having its address taken.
+name|FK_AddressOfUnaddressableFunction
+block|,
 comment|/// \brief List-copy-initialization chose an explicit constructor.
 name|FK_ExplicitConstructor
 block|}

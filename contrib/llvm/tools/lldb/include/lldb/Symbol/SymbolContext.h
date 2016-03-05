@@ -43,11 +43,39 @@ directive|define
 name|liblldb_SymbolContext_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -105,7 +133,7 @@ label|:
 comment|//------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
-comment|/// Initialize all pointer members to NULL and all struct members
+comment|/// Initialize all pointer members to nullptr and all struct members
 comment|/// to their default state.
 comment|//------------------------------------------------------------------
 name|SymbolContext
@@ -172,31 +200,31 @@ name|CompileUnit
 operator|*
 name|comp_unit
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Function
 operator|*
 name|function
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Block
 operator|*
 name|block
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|LineEntry
 operator|*
 name|line_entry
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Symbol
 operator|*
 name|symbol
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|// This version sets the target to a NULL TargetSP if you don't know it.
@@ -214,37 +242,33 @@ name|CompileUnit
 operator|*
 name|comp_unit
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Function
 operator|*
 name|function
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Block
 operator|*
 name|block
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|LineEntry
 operator|*
 name|line_entry
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|Symbol
 operator|*
 name|symbol
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
-operator|~
-name|SymbolContext
-argument_list|()
-expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Copy constructor
 comment|///
@@ -260,6 +284,10 @@ name|SymbolContext
 operator|&
 name|rhs
 argument_list|)
+expr_stmt|;
+operator|~
+name|SymbolContext
+argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Assignment operator.
@@ -288,7 +316,7 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Clear the object's state.
 comment|///
-comment|/// Resets all pointer members to NULL, and clears any class objects
+comment|/// Resets all pointer members to nullptr, and clears any class objects
 comment|/// to their default state.
 comment|//------------------------------------------------------------------
 name|void
@@ -401,14 +429,14 @@ comment|/// Get the address range contained within a symbol context.
 comment|///
 comment|/// Address range priority is as follows:
 comment|///     - line_entry address range if line_entry is valid and eSymbolContextLineEntry is set in \a scope
-comment|///     - block address range if block is not NULL and eSymbolContextBlock is set in \a scope
-comment|///     - function address range if function is not NULL and eSymbolContextFunction is set in \a scope
-comment|///     - symbol address range if symbol is not NULL and eSymbolContextSymbol is set in \a scope
+comment|///     - block address range if block is not nullptr and eSymbolContextBlock is set in \a scope
+comment|///     - function address range if function is not nullptr and eSymbolContextFunction is set in \a scope
+comment|///     - symbol address range if symbol is not nullptr and eSymbolContextSymbol is set in \a scope
 comment|///
 comment|/// @param[in] scope
 comment|///     A mask of symbol context bits telling this function which
 comment|///     address ranges it can use when trying to extract one from
-comment|///     the valid (non-NULL) symbol context classes.
+comment|///     the valid (non-nullptr) symbol context classes.
 comment|///
 comment|/// @param[in] range_idx
 comment|///     The address range index to grab. Since many functions and
@@ -472,6 +500,13 @@ name|GetResolvedMask
 argument_list|()
 specifier|const
 expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Find a block that defines the function represented by this
 comment|/// symbol context.
@@ -491,7 +526,7 @@ comment|/// is an inline function or not).
 comment|///
 comment|/// @return
 comment|///     The block object pointer that defines the function that is
-comment|///     represented by this symbol context object, NULL otherwise.
+comment|///     represented by this symbol context object, nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|Block
 modifier|*
@@ -534,6 +569,24 @@ name|ConstString
 operator|&
 name|language_object_name
 argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Sorts the types in TypeMap according to SymbolContext
+comment|/// to TypeList
+comment|///
+comment|//------------------------------------------------------------------
+name|void
+name|SortTypeList
+argument_list|(
+name|TypeMap
+operator|&
+name|type_map
+argument_list|,
+name|TypeList
+operator|&
+name|type_list
+argument_list|)
+decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Find a name of the innermost function for the symbol context.

@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<list>
+file|<memory>
 end_include
 
 begin_include
@@ -183,29 +183,29 @@ argument_list|,
 argument|size_t src_len
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|EventDataBytes
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Member functions
 comment|//------------------------------------------------------------------
-name|virtual
 specifier|const
 name|ConstString
 operator|&
 name|GetFlavor
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|void
@@ -301,7 +301,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|EventDataBytes
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// lldb::Event
@@ -329,14 +329,14 @@ argument|Broadcaster *broadcaster
 argument_list|,
 argument|uint32_t event_type
 argument_list|,
-argument|EventData *data = NULL
+argument|EventData *data = nullptr
 argument_list|)
 empty_stmt|;
 name|Event
 argument_list|(
 argument|uint32_t event_type
 argument_list|,
-argument|EventData *data = NULL
+argument|EventData *data = nullptr
 argument_list|)
 empty_stmt|;
 operator|~

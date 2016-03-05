@@ -84,9 +84,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AliasAnalysis
-decl_stmt|;
-name|class
 name|MemoryDependenceAnalysis
 decl_stmt|;
 name|class
@@ -130,12 +127,6 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
-parameter_list|,
-name|AliasAnalysis
-modifier|*
-name|AA
-init|=
-name|nullptr
 parameter_list|,
 name|MemoryDependenceAnalysis
 modifier|*
@@ -182,12 +173,6 @@ parameter_list|,
 name|LoopInfo
 modifier|*
 name|LI
-init|=
-name|nullptr
-parameter_list|,
-name|AliasAnalysis
-modifier|*
-name|AA
 init|=
 name|nullptr
 parameter_list|,
@@ -269,10 +254,6 @@ comment|/// during critical edge splitting.
 struct|struct
 name|CriticalEdgeSplittingOptions
 block|{
-name|AliasAnalysis
-modifier|*
-name|AA
-decl_stmt|;
 name|DominatorTree
 modifier|*
 name|DT
@@ -291,45 +272,7 @@ name|bool
 name|PreserveLCSSA
 decl_stmt|;
 name|CriticalEdgeSplittingOptions
-argument_list|()
-operator|:
-name|AA
 argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DT
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|LI
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|MergeIdenticalEdges
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|DontDeleteUselessPHIs
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|PreserveLCSSA
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-comment|/// \brief Basic case of setting up all the analysis.
-name|CriticalEdgeSplittingOptions
-argument_list|(
-name|AliasAnalysis
-operator|*
-name|AA
-argument_list|,
 name|DominatorTree
 operator|*
 name|DT
@@ -343,54 +286,6 @@ operator|=
 name|nullptr
 argument_list|)
 operator|:
-name|AA
-argument_list|(
-name|AA
-argument_list|)
-operator|,
-name|DT
-argument_list|(
-name|DT
-argument_list|)
-operator|,
-name|LI
-argument_list|(
-name|LI
-argument_list|)
-operator|,
-name|MergeIdenticalEdges
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|DontDeleteUselessPHIs
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|PreserveLCSSA
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-comment|/// \brief A common pattern is to preserve the dominator tree and loop
-comment|/// info but not care about AA.
-name|CriticalEdgeSplittingOptions
-argument_list|(
-name|DominatorTree
-operator|*
-name|DT
-argument_list|,
-name|LoopInfo
-operator|*
-name|LI
-argument_list|)
-operator|:
-name|AA
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|DT
 argument_list|(
 name|DT
@@ -795,11 +690,10 @@ comment|/// If BB is a landingpad block then additional basicblock might be intr
 comment|/// It will have Suffix+".split_lp". See SplitLandingPadPredecessors for more
 comment|/// details on this case.
 comment|///
-comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree,
-comment|/// DominanceFrontier, LoopInfo, and LCCSA but no other analyses.
-comment|/// In particular, it does not preserve LoopSimplify (because it's
-comment|/// complicated to handle the case where one of the edges being split
-comment|/// is an exit of a loop with other exits).
+comment|/// This currently updates the LLVM IR, DominatorTree, LoopInfo, and LCCSA but
+comment|/// no other analyses. In particular, it does not preserve LoopSimplify
+comment|/// (because it's complicated to handle the case where one of the edges being
+comment|/// split is an exit of a loop with other exits).
 comment|///
 name|BasicBlock
 modifier|*
@@ -820,12 +714,6 @@ specifier|const
 name|char
 operator|*
 name|Suffix
-argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-operator|=
-name|nullptr
 argument_list|,
 name|DominatorTree
 operator|*
@@ -852,11 +740,10 @@ comment|/// block gets the remaining predecessors of OrigBB. The landingpad inst
 comment|/// OrigBB is clone into both of the new basic blocks. The new blocks are given
 comment|/// the suffixes 'Suffix1' and 'Suffix2', and are returned in the NewBBs vector.
 comment|///
-comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree,
-comment|/// DominanceFrontier, LoopInfo, and LCCSA but no other analyses. In particular,
-comment|/// it does not preserve LoopSimplify (because it's complicated to handle the
-comment|/// case where one of the edges being split is an exit of a loop with other
-comment|/// exits).
+comment|/// This currently updates the LLVM IR, DominatorTree, LoopInfo, and LCCSA but
+comment|/// no other analyses. In particular, it does not preserve LoopSimplify
+comment|/// (because it's complicated to handle the case where one of the edges being
+comment|/// split is an exit of a loop with other exits).
 comment|///
 name|void
 name|SplitLandingPadPredecessors
@@ -889,12 +776,6 @@ operator|*
 operator|>
 operator|&
 name|NewBBs
-argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-operator|=
-name|nullptr
 argument_list|,
 name|DominatorTree
 operator|*

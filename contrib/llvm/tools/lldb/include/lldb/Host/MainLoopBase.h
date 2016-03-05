@@ -189,7 +189,7 @@ block|{
 return|return
 name|ReadHandleUP
 argument_list|(
-argument|new ReadHandle(*this, object_sp)
+argument|new ReadHandle(*this, object_sp->GetWaitableHandle())
 argument_list|)
 return|;
 block|}
@@ -197,12 +197,10 @@ name|virtual
 name|void
 name|UnregisterReadObject
 argument_list|(
-specifier|const
-name|lldb
+name|IOObject
 operator|::
-name|IOObjectSP
-operator|&
-name|object_sp
+name|WaitableHandle
+name|handle
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -226,23 +224,16 @@ name|m_mainloop
 operator|.
 name|UnregisterReadObject
 argument_list|(
-name|m_object_sp
+name|m_handle
 argument_list|)
 block|; }
 name|private
 operator|:
 name|ReadHandle
 argument_list|(
-name|MainLoopBase
-operator|&
-name|mainloop
+argument|MainLoopBase&mainloop
 argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|IOObjectSP
-operator|&
-name|object_sp
+argument|IOObject::WaitableHandle handle
 argument_list|)
 operator|:
 name|m_mainloop
@@ -250,19 +241,19 @@ argument_list|(
 name|mainloop
 argument_list|)
 operator|,
-name|m_object_sp
+name|m_handle
 argument_list|(
-argument|object_sp
+argument|handle
 argument_list|)
 block|{ }
 name|MainLoopBase
 operator|&
 name|m_mainloop
 expr_stmt|;
-name|lldb
+name|IOObject
 operator|::
-name|IOObjectSP
-name|m_object_sp
+name|WaitableHandle
+name|m_handle
 expr_stmt|;
 name|friend
 name|class

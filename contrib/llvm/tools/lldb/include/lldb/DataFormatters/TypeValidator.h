@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<string>
 end_include
 
 begin_comment
@@ -452,25 +452,6 @@ name|TypeValidatorImpl
 operator|>
 name|SharedPointer
 expr_stmt|;
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|ValueCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|TypeValidatorImplSP
-operator|&
-argument_list|)
-expr_stmt|;
 name|virtual
 operator|~
 name|TypeValidatorImpl
@@ -761,33 +742,11 @@ name|SharedPointer
 expr_stmt|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|bool
-argument_list|(
-operator|*
-name|ValueCallback
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|,
-name|ConstString
-argument_list|,
-specifier|const
-name|TypeValidatorImpl_CXX
-operator|::
-name|SharedPointer
-operator|&
-argument_list|)
-expr_stmt|;
-end_typedef
-
 begin_expr_stmt
-name|virtual
 operator|~
 name|TypeValidatorImpl_CXX
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -819,12 +778,12 @@ block|}
 end_function
 
 begin_expr_stmt
-name|virtual
 name|TypeValidatorImpl
 operator|::
 name|Type
 name|GetType
 argument_list|()
+name|override
 block|{
 return|return
 name|TypeValidatorImpl
@@ -837,7 +796,6 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|virtual
 name|ValidationResult
 name|FormatObject
 argument_list|(
@@ -846,16 +804,17 @@ operator|*
 name|valobj
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|GetDescription
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 

@@ -826,7 +826,8 @@ index|[]
 name|pVal
 decl_stmt|;
 block|}
-comment|/// \brief Default constructor that creates an uninitialized APInt.
+comment|/// \brief Default constructor that creates an uninteresting APInt
+comment|/// representing a 1-bit zero value.
 comment|///
 comment|/// This is useful for object deserialization (pair this with the static
 comment|///  method Read).
@@ -837,6 +838,11 @@ operator|:
 name|BitWidth
 argument_list|(
 literal|1
+argument_list|)
+operator|,
+name|VAL
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// \brief Returns whether this instance allocated memory.

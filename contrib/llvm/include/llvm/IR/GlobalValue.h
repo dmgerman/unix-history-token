@@ -211,7 +211,7 @@ name|protected
 operator|:
 name|GlobalValue
 argument_list|(
-argument|PointerType *Ty
+argument|Type *Ty
 argument_list|,
 argument|ValueTy VTy
 argument_list|,
@@ -222,17 +222,31 @@ argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
 argument|const Twine&Name
+argument_list|,
+argument|unsigned AddressSpace
 argument_list|)
 operator|:
 name|Constant
 argument_list|(
+name|PointerType
+operator|::
+name|get
+argument_list|(
 name|Ty
+argument_list|,
+name|AddressSpace
+argument_list|)
 argument_list|,
 name|VTy
 argument_list|,
 name|Ops
 argument_list|,
 name|NumOps
+argument_list|)
+block|,
+name|ValueType
+argument_list|(
+name|Ty
 argument_list|)
 block|,
 name|Linkage
@@ -280,6 +294,10 @@ argument_list|(
 name|Name
 argument_list|)
 block|;   }
+name|Type
+operator|*
+name|ValueType
+block|;
 comment|// Note: VC++ treats enums as signed, so an extra bit is required to prevent
 comment|// Linkage and Visibility from turning into negative values.
 name|LinkageTypes
@@ -732,11 +750,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getType
-argument_list|()
-operator|->
-name|getElementType
-argument_list|()
+name|ValueType
 return|;
 block|}
 specifier|static
@@ -970,6 +984,11 @@ name|Linkage
 argument_list|)
 operator|||
 name|isLocalLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isAvailableExternallyLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -1325,14 +1344,6 @@ name|isMaterializable
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Returns true if this function was loaded from a GVMaterializer that's
-comment|/// still attached to its Module and that knows how to dematerialize the
-comment|/// function.
-name|bool
-name|isDematerializable
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Make sure this GlobalValue is fully read. If the module is corrupt, this
 comment|/// returns true and fills in the optional string with information about the
 comment|/// problem.  If successful, this returns false.
@@ -1342,13 +1353,6 @@ name|error_code
 name|materialize
 argument_list|()
 expr_stmt|;
-comment|/// If this GlobalValue is read in, and if the GVMaterializer supports it,
-comment|/// release the memory for the function, and set it up to be materialized
-comment|/// lazily. If !isDematerializable(), this method is a noop.
-name|void
-name|dematerialize
-parameter_list|()
-function_decl|;
 comment|/// @}
 comment|/// Return true if the primary definition of this global value is outside of
 comment|/// the current translation unit.
@@ -1402,6 +1406,22 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns true if the alignment of the value can be unilaterally
+end_comment
+
+begin_comment
+comment|// increased.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|canIncreaseAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

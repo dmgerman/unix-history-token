@@ -362,8 +362,7 @@ operator|<
 name|PointerIntTy
 operator|,
 name|ChildItTy
-operator|>
-expr|>
+operator|>>
 name|VisitStack
 expr_stmt|;
 name|private

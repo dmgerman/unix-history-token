@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Threading.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Valgrind.h"
+file|"llvm/Support/Threading.h"
 end_include
 
 begin_decl_stmt

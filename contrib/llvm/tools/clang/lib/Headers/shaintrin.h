@@ -32,27 +32,6 @@ directive|define
 name|__SHAINTRIN_H
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__SHA__
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"SHA instructions not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Define the default attributes for the functions in this file. */
 end_comment
@@ -61,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("sha")))
 end_define
 
 begin_define
@@ -75,7 +54,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __builtin_ia32_sha1rnds4((V1), (V2), (M)); })
+value|__extension__ ({ \   __builtin_ia32_sha1rnds4((__v4si)(__m128i)(V1), (__v4si)(__m128i)(V2), (M)); })
 end_define
 
 begin_function

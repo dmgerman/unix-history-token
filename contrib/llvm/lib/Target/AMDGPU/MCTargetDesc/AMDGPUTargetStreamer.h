@@ -31,6 +31,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUTARGETSTREAMER_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUTARGETSTREAMER_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -116,6 +128,35 @@ name|Header
 argument_list|)
 operator|=
 literal|0
+block|;
+name|virtual
+name|void
+name|EmitAMDGPUSymbolType
+argument_list|(
+argument|StringRef SymbolName
+argument_list|,
+argument|unsigned Type
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|EmitAMDGPUHsaModuleScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|EmitAMDGPUHsaProgramScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
+argument_list|)
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 name|class
@@ -169,6 +210,29 @@ name|void
 name|EmitAMDKernelCodeT
 argument_list|(
 argument|const amd_kernel_code_t&Header
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitAMDGPUSymbolType
+argument_list|(
+argument|StringRef SymbolName
+argument_list|,
+argument|unsigned Type
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitAMDGPUHsaModuleScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitAMDGPUHsaProgramScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
 argument_list|)
 name|override
 block|; }
@@ -262,10 +326,38 @@ argument_list|(
 argument|const amd_kernel_code_t&Header
 argument_list|)
 name|override
-block|;  }
+block|;
+name|void
+name|EmitAMDGPUSymbolType
+argument_list|(
+argument|StringRef SymbolName
+argument_list|,
+argument|unsigned Type
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitAMDGPUHsaModuleScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitAMDGPUHsaProgramScopeGlobal
+argument_list|(
+argument|StringRef GlobalName
+argument_list|)
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

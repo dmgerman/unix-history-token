@@ -114,6 +114,25 @@ name|FoldingSetNode
 block|{
 name|public
 operator|:
+name|BugReporterVisitor
+argument_list|()
+operator|=
+expr|default
+block|;
+name|BugReporterVisitor
+argument_list|(
+specifier|const
+name|BugReporterVisitor
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|BugReporterVisitor
+argument_list|(
+argument|BugReporterVisitor&&
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|BugReporterVisitor
@@ -291,6 +310,7 @@ expr|}
 block|;
 name|class
 name|FindLastStoreBRVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -383,6 +403,7 @@ block|; }
 block|;
 name|class
 name|TrackConstraintBRVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -497,6 +518,7 @@ comment|/// \class NilReceiverBRVisitor
 comment|/// \brief Prints path notes when a message is sent to a nil receiver.
 name|class
 name|NilReceiverBRVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -565,6 +587,7 @@ block|;
 comment|/// Visitor that tries to report interesting diagnostics from conditions.
 name|class
 name|ConditionBRVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -780,6 +803,7 @@ comment|///
 comment|/// Currently this suppresses reports based on locations of bugs.
 name|class
 name|LikelyFalsePositiveSuppressionBRVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -871,6 +895,7 @@ comment|/// As a result, BugReporter will not prune the path through the functio
 comment|/// if the region's contents are not modified/accessed by the call.
 name|class
 name|UndefOrNullArgVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl
@@ -945,6 +970,7 @@ block|; }
 block|;
 name|class
 name|SuppressInlineDefensiveChecksVisitor
+name|final
 operator|:
 name|public
 name|BugReporterVisitorImpl

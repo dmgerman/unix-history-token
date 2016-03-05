@@ -91,20 +91,17 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// This optimization identifies DIV instructions that can be
+comment|/// This optimization identifies DIV instructions in a BB that can be
 comment|/// profitably bypassed and carried out with a shorter, faster divide.
+comment|///
+comment|/// This optimization may add basic blocks immediately after BB; for obvious
+comment|/// reasons, you shouldn't pass those blocks to bypassSlowDivision.
 name|bool
 name|bypassSlowDivision
 argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|,
-name|Function
-operator|::
-name|iterator
-operator|&
-name|I
+name|BasicBlock
+operator|*
+name|BB
 argument_list|,
 specifier|const
 name|DenseMap

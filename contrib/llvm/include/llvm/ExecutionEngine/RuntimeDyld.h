@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_include
@@ -250,13 +262,24 @@ name|RuntimeDyldImpl
 block|;
 name|public
 operator|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|object
+operator|::
+name|SectionRef
+operator|,
+name|unsigned
+operator|>
+name|ObjSectionToIDMap
+expr_stmt|;
 name|LoadedObjectInfo
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
 argument_list|,
-argument|unsigned BeginIdx
-argument_list|,
-argument|unsigned EndIdx
+argument|ObjSectionToIDMap ObjSecToIDMap
 argument_list|)
 operator|:
 name|RTDyld
@@ -264,14 +287,9 @@ argument_list|(
 name|RTDyld
 argument_list|)
 block|,
-name|BeginIdx
+name|ObjSecToIDMap
 argument_list|(
-name|BeginIdx
-argument_list|)
-block|,
-name|EndIdx
-argument_list|(
-argument|EndIdx
+argument|ObjSecToIDMap
 argument_list|)
 block|{ }
 name|virtual
@@ -290,31 +308,36 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;
+decl_stmt|;
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-argument|StringRef Name
-argument_list|)
 specifier|const
-block|;
+name|object
+operator|::
+name|SectionRef
+operator|&
+name|Sec
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|RuntimeDyldImpl
-operator|&
+modifier|&
 name|RTDyld
-block|;
-name|unsigned
-name|BeginIdx
-block|,
-name|EndIdx
-block|;   }
 decl_stmt|;
+name|ObjSectionToIDMap
+name|ObjSecToIDMap
+decl_stmt|;
+block|}
+empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -325,22 +348,36 @@ name|LoadedObjectInfoHelper
 operator|:
 name|LoadedObjectInfo
 block|{
+name|protected
+operator|:
+name|LoadedObjectInfoHelper
+argument_list|(
+specifier|const
+name|LoadedObjectInfoHelper
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|LoadedObjectInfoHelper
+argument_list|()
+operator|=
+expr|default
+block|;
+name|public
+operator|:
 name|LoadedObjectInfoHelper
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
 argument_list|,
-argument|unsigned BeginIdx
-argument_list|,
-argument|unsigned EndIdx
+argument|LoadedObjectInfo::ObjSectionToIDMap ObjSecToIDMap
 argument_list|)
 operator|:
 name|LoadedObjectInfo
 argument_list|(
 argument|RTDyld
 argument_list|,
-argument|BeginIdx
-argument_list|,
-argument|EndIdx
+argument|std::move(ObjSecToIDMap)
 argument_list|)
 block|{}
 name|std
@@ -383,14 +420,25 @@ comment|/// \brief Memory Management.
 name|class
 name|MemoryManager
 block|{
+name|friend
+name|class
+name|RuntimeDyld
+block|;
 name|public
 operator|:
+name|MemoryManager
+argument_list|()
+operator|:
+name|FinalizationLocked
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|MemoryManager
 argument_list|()
 block|{}
-block|;
 comment|/// Allocate a memory block of (at least) the given size suitable for
 comment|/// executable code. The SectionID is a unique identifier assigned by the
 comment|/// RuntimeDyld instance, and optionally recorded by the memory manager to
@@ -446,9 +494,15 @@ name|reserveAllocationSpace
 argument_list|(
 argument|uintptr_t CodeSize
 argument_list|,
-argument|uintptr_t DataSizeRO
+argument|uint32_t CodeAlign
 argument_list|,
-argument|uintptr_t DataSizeRW
+argument|uintptr_t RODataSize
+argument_list|,
+argument|uint32_t RODataAlign
+argument_list|,
+argument|uintptr_t RWDataSize
+argument_list|,
+argument|uint32_t RWDataAlign
 argument_list|)
 block|{}
 comment|/// Override to return true to enable the reserveAllocationSpace callback.
@@ -517,12 +571,35 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// This method is called after an object has been loaded into memory but
+comment|/// before relocations are applied to the loaded sections.
+comment|///
+comment|/// Memory managers which are preparing code for execution in an external
+comment|/// address space can use this call to remap the section addresses for the
+comment|/// newly loaded object.
+comment|///
+comment|/// For clients that do not need access to an ExecutionEngine instance this
+comment|/// method should be preferred to its cousin
+comment|/// MCJITMemoryManager::notifyObjectLoaded as this method is compatible with
+comment|/// ORC JIT stacks.
+name|virtual
+name|void
+name|notifyObjectLoaded
+argument_list|(
+argument|RuntimeDyld&RTDyld
+argument_list|,
+argument|const object::ObjectFile&Obj
+argument_list|)
+block|{}
 name|private
 operator|:
 name|virtual
 name|void
 name|anchor
 argument_list|()
+block|;
+name|bool
+name|FinalizationLocked
 block|;   }
 block|;
 comment|/// \brief Symbol resolution.
@@ -536,7 +613,6 @@ operator|~
 name|SymbolResolver
 argument_list|()
 block|{}
-block|;
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
 comment|///
@@ -716,6 +792,27 @@ name|ProcessAllSections
 operator|=
 name|ProcessAllSections
 block|;   }
+comment|/// Perform all actions needed to make the code owned by this RuntimeDyld
+comment|/// instance executable:
+comment|///
+comment|/// 1) Apply relocations.
+comment|/// 2) Register EH frames.
+comment|/// 3) Update memory permissions*.
+comment|///
+comment|/// * Finalization is potentially recursive**, and the 3rd step will only be
+comment|///   applied by the outermost call to finalize. This allows different
+comment|///   RuntimeDyld instances to share a memory manager without the innermost
+comment|///   finalization locking the memory and causing relocation fixup errors in
+comment|///   outer instances.
+comment|///
+comment|/// ** Recursive finalization occurs when one RuntimeDyld instances needs the
+comment|///   address of a symbol owned by some other instance in order to apply
+comment|///   relocations.
+comment|///
+name|void
+name|finalizeWithMemoryManagerLocking
+argument_list|()
+block|;
 name|private
 operator|:
 comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
@@ -755,6 +852,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_RUNTIMEDYLD_H
+end_comment
 
 end_unit
 

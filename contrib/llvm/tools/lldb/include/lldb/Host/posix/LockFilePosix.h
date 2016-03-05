@@ -70,6 +70,7 @@ block|;
 operator|~
 name|LockFilePosix
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:

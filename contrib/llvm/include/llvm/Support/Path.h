@@ -199,15 +199,6 @@ operator|(
 operator|)
 expr_stmt|;
 comment|// preincrement
-name|const_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-expr_stmt|;
-comment|// postincrement
 name|bool
 name|operator
 operator|==
@@ -335,15 +326,6 @@ operator|(
 operator|)
 expr_stmt|;
 comment|// preincrement
-name|reverse_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-expr_stmt|;
-comment|// postincrement
 name|bool
 name|operator
 operator|==
@@ -790,6 +772,49 @@ operator|&
 name|result
 argument_list|)
 decl_stmt|;
+comment|/// @brief Get the user's cache directory.
+comment|///
+comment|/// Expect the resulting path to be a directory shared with other
+comment|/// applications/services used by the user. Params \p Path1 to \p Path3 can be
+comment|/// used to append additional directory names to the resulting path. Recommended
+comment|/// pattern is<user_cache_directory>/<vendor>/<application>.
+comment|///
+comment|/// @param Result Holds the resulting path.
+comment|/// @param Path1 Additional path to be appended to the user's cache directory
+comment|/// path. "" can be used to append nothing.
+comment|/// @param Path2 Second additional path to be appended.
+comment|/// @param Path3 Third additional path to be appended.
+comment|/// @result True if a cache directory path is set, false otherwise.
+name|bool
+name|user_cache_directory
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Result
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Path1
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Path2
+operator|=
+literal|""
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Path3
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
 comment|/// @brief Has root name?
 comment|///
 comment|/// root_name != ""
@@ -936,6 +961,38 @@ modifier|&
 name|path
 parameter_list|)
 function_decl|;
+comment|/// @brief Remove redundant leading "./" pieces and consecutive separators.
+comment|///
+comment|/// @param path Input path.
+comment|/// @result The cleaned-up \a path.
+name|StringRef
+name|remove_leading_dotslash
+parameter_list|(
+name|StringRef
+name|path
+parameter_list|)
+function_decl|;
+comment|/// @brief In-place remove any './' and optionally '../' components from a path.
+comment|///
+comment|/// @param path processed path
+comment|/// @param remove_dot_dot specify if '../' should be removed
+comment|/// @result True if path was changed
+name|bool
+name|remove_dots
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|,
+name|bool
+name|remove_dot_dot
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

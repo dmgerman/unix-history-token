@@ -176,10 +176,9 @@ argument_list|(
 argument|size_t size
 argument_list|)
 block|;
-name|private
-operator|:
-specifier|const
+comment|/// The number of bytes read at a time from the data streamer.
 specifier|static
+specifier|const
 name|uint32_t
 name|kChunkSize
 operator|=
@@ -187,6 +186,8 @@ literal|4096
 operator|*
 literal|4
 block|;
+name|private
+operator|:
 name|mutable
 name|std
 operator|::

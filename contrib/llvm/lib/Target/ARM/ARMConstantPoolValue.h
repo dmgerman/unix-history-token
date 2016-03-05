@@ -126,9 +126,7 @@ name|no_modifier
 block|,
 name|TLSGD
 block|,
-name|GOT
-block|,
-name|GOTOFF
+name|GOT_PREL
 block|,
 name|GOTTPOFF
 block|,
@@ -469,16 +467,6 @@ operator|==
 name|ARMCP
 operator|::
 name|CPMachineBasicBlock
-return|;
-block|}
-name|unsigned
-name|getRelocationInfo
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-literal|2
 return|;
 block|}
 name|int

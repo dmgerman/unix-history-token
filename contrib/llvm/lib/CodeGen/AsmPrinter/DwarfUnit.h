@@ -426,41 +426,6 @@ argument_list|,
 argument|DwarfFile *DWU
 argument_list|)
 empty_stmt|;
-comment|/// Add a string attribute data and value.
-comment|///
-comment|/// This is guaranteed to be in the local string pool instead of indirected.
-name|void
-name|addLocalString
-argument_list|(
-name|DIE
-operator|&
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|StringRef
-name|Str
-argument_list|)
-decl_stmt|;
-name|void
-name|addIndexedString
-argument_list|(
-name|DIE
-operator|&
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|StringRef
-name|Str
-argument_list|)
-decl_stmt|;
 name|bool
 name|applySubprogramDefinitionAttributes
 parameter_list|(
@@ -645,19 +610,6 @@ modifier|*
 name|Context
 parameter_list|)
 block|{}
-comment|/// Add a new name to the namespace accelerator table.
-name|void
-name|addAccelNamespace
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-specifier|const
-name|DIE
-modifier|&
-name|Die
-parameter_list|)
-function_decl|;
 comment|/// Returns the DIE map slot for the specified debug variable.
 comment|///
 comment|/// We delegate the request to DwarfDebug when the MDNode can be part of the
@@ -724,7 +676,7 @@ comment|/// Add an unsigned integer attribute data and value.
 name|void
 name|addUInt
 argument_list|(
-name|DIE
+name|DIEValueList
 operator|&
 name|Die
 argument_list|,
@@ -748,7 +700,7 @@ decl_stmt|;
 name|void
 name|addUInt
 argument_list|(
-name|DIE
+name|DIEValueList
 operator|&
 name|Block
 argument_list|,
@@ -765,7 +717,7 @@ comment|/// Add an signed integer attribute data and value.
 name|void
 name|addSInt
 argument_list|(
-name|DIE
+name|DIEValueList
 operator|&
 name|Die
 argument_list|,
@@ -828,12 +780,12 @@ name|Str
 argument_list|)
 decl_stmt|;
 comment|/// Add a Dwarf label attribute data and value.
-name|DIE
+name|DIEValueList
 operator|::
 name|value_iterator
 name|addLabel
 argument_list|(
-argument|DIE&Die
+argument|DIEValueList&Die
 argument_list|,
 argument|dwarf::Attribute Attribute
 argument_list|,
@@ -951,6 +903,7 @@ name|DIEEntry
 name|Entry
 argument_list|)
 decl_stmt|;
+comment|/// Add a type's DW_AT_signature and set the  declaration flag.
 name|void
 name|addDIETypeSignature
 parameter_list|(
@@ -964,6 +917,23 @@ modifier|&
 name|Type
 parameter_list|)
 function_decl|;
+comment|/// Add an attribute containing the type signature for a unique identifier.
+name|void
+name|addDIETypeSignature
+argument_list|(
+name|DIE
+operator|&
+name|Die
+argument_list|,
+name|dwarf
+operator|::
+name|Attribute
+name|Attribute
+argument_list|,
+name|StringRef
+name|Identifier
+argument_list|)
+decl_stmt|;
 comment|/// Add block data.
 name|void
 name|addBlock

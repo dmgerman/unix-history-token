@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ARMMachineFuctionInfo.h - ARM machine function info -----*- C++ -*-===//
+comment|//===-- ARMMachineFunctionInfo.h - ARM machine function info ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ name|unsigned
 name|ReturnRegsCount
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
-comment|/// processFunctionBeforeCalleeSavedScan().
+comment|/// determineCalleeSaves().
 name|bool
 name|HasStackFrame
 block|;
@@ -225,12 +225,6 @@ name|unsigned
 operator|>
 name|CPEClones
 block|;
-comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
-comment|/// use as the global base register. This is used for PIC in some PIC
-comment|/// relocation models.
-name|unsigned
-name|GlobalBaseReg
-block|;
 comment|/// ArgumentStackSize - amount of bytes on stack consumed by the arguments
 comment|/// being passed on the stack
 name|unsigned
@@ -247,6 +241,11 @@ block|,
 name|unsigned
 operator|>
 name|CoalescedWeights
+block|;
+comment|/// True if this function has a subset of CSRs that is handled explicitly via
+comment|/// copies.
+name|bool
+name|IsSplitCSR
 block|;
 name|public
 operator|:
@@ -348,9 +347,9 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|GlobalBaseReg
+name|IsSplitCSR
 argument_list|(
-literal|0
+argument|false
 argument_list|)
 block|{}
 name|explicit
@@ -763,24 +762,24 @@ name|HasITBlocks
 operator|=
 name|h
 block|; }
-name|unsigned
-name|getGlobalBaseReg
+name|bool
+name|isSplitCSR
 argument_list|()
 specifier|const
 block|{
 return|return
-name|GlobalBaseReg
+name|IsSplitCSR
 return|;
 block|}
 name|void
-name|setGlobalBaseReg
+name|setIsSplitCSR
 argument_list|(
-argument|unsigned Reg
+argument|bool s
 argument_list|)
 block|{
-name|GlobalBaseReg
+name|IsSplitCSR
 operator|=
-name|Reg
+name|s
 block|; }
 name|void
 name|recordCPEClone

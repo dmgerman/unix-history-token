@@ -142,11 +142,6 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createARMGlobalBaseRegPass
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
 name|createARMConstantIslandPass
 parameter_list|()
 function_decl|;

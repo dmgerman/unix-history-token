@@ -107,12 +107,11 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandOptions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -120,16 +119,19 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|()
+name|override
 block|;
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
 specifier|const
 name|char
@@ -181,11 +183,11 @@ name|c_str
 argument_list|()
 return|;
 block|}
-name|virtual
 name|Error
 name|OptionParsingFinished
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 name|bool
 name|show_mixed
 decl_stmt|;
@@ -272,19 +274,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 operator|~
 name|CommandObjectDisassemble
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|virtual
 name|Options
 modifier|*
 name|GetOptions
 parameter_list|()
+function|override
 block|{
 return|return
 operator|&
@@ -298,21 +300,21 @@ name|protected
 label|:
 end_label
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|bool
 name|DoExecute
-parameter_list|(
+argument_list|(
 name|Args
-modifier|&
+operator|&
 name|command
-parameter_list|,
+argument_list|,
 name|CommandReturnObject
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|CommandOptions

@@ -148,8 +148,89 @@ decl_stmt|;
 name|class
 name|LocationContext
 decl_stmt|;
+comment|/// ProgramPoints can be "tagged" as representing points specific to a given
+comment|/// analysis entity.  Tags are abstract annotations, with an associated
+comment|/// description and potentially other information.
 name|class
 name|ProgramPointTag
+block|{
+name|public
+label|:
+name|ProgramPointTag
+argument_list|(
+name|void
+operator|*
+name|tagKind
+operator|=
+name|nullptr
+argument_list|)
+operator|:
+name|TagKind
+argument_list|(
+argument|tagKind
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ProgramPointTag
+argument_list|()
+expr_stmt|;
+name|virtual
+name|StringRef
+name|getTagDescription
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|protected
+label|:
+comment|/// Used to implement 'isKind' in subclasses.
+specifier|const
+name|void
+modifier|*
+name|getTagKind
+parameter_list|()
+block|{
+return|return
+name|TagKind
+return|;
+block|}
+name|private
+label|:
+specifier|const
+name|void
+modifier|*
+name|TagKind
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|SimpleProgramPointTag
+range|:
+name|public
+name|ProgramPointTag
+block|{
+name|std
+operator|::
+name|string
+name|Desc
+block|;
+name|public
+operator|:
+name|SimpleProgramPointTag
+argument_list|(
+argument|StringRef MsgProvider
+argument_list|,
+argument|StringRef Msg
+argument_list|)
+block|;
+name|StringRef
+name|getTagDescription
+argument_list|()
+specifier|const
+name|override
+block|; }
 decl_stmt|;
 name|class
 name|ProgramPoint
@@ -2859,89 +2940,6 @@ name|EpsilonKind
 return|;
 block|}
 expr|}
-block|;
-comment|/// ProgramPoints can be "tagged" as representing points specific to a given
-comment|/// analysis entity.  Tags are abstract annotations, with an associated
-comment|/// description and potentially other information.
-name|class
-name|ProgramPointTag
-block|{
-name|public
-operator|:
-name|ProgramPointTag
-argument_list|(
-name|void
-operator|*
-name|tagKind
-operator|=
-name|nullptr
-argument_list|)
-operator|:
-name|TagKind
-argument_list|(
-argument|tagKind
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|ProgramPointTag
-argument_list|()
-block|;
-name|virtual
-name|StringRef
-name|getTagDescription
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-name|protected
-operator|:
-comment|/// Used to implement 'isKind' in subclasses.
-specifier|const
-name|void
-operator|*
-name|getTagKind
-argument_list|()
-block|{
-return|return
-name|TagKind
-return|;
-block|}
-name|private
-operator|:
-specifier|const
-name|void
-operator|*
-name|TagKind
-block|; }
-block|;
-name|class
-name|SimpleProgramPointTag
-operator|:
-name|public
-name|ProgramPointTag
-block|{
-name|std
-operator|::
-name|string
-name|Desc
-block|;
-name|public
-operator|:
-name|SimpleProgramPointTag
-argument_list|(
-argument|StringRef MsgProvider
-argument_list|,
-argument|StringRef Msg
-argument_list|)
-block|;
-name|StringRef
-name|getTagDescription
-argument_list|()
-specifier|const
-name|override
-block|; }
 block|;  }
 comment|// end namespace clang
 name|namespace

@@ -150,6 +150,8 @@ name|eServerPacketType_qHostInfo
 block|,
 name|eServerPacketType_qLaunchGDBServer
 block|,
+name|eServerPacketType_qQueryGDBServer
+block|,
 name|eServerPacketType_qKillSpawnedProcess
 block|,
 name|eServerPacketType_qLaunchSuccess
@@ -232,6 +234,8 @@ block|,
 name|eServerPacketType_QSyncThreadState
 block|,
 name|eServerPacketType_QThreadSuffixSupported
+block|,
+name|eServerPacketType_jThreadsInfo
 block|,
 name|eServerPacketType_qsThreadInfo
 block|,
@@ -321,6 +325,10 @@ block|,
 name|eServerPacketType_S
 block|,
 name|eServerPacketType_T
+block|,
+name|eServerPacketType_x
+block|,
+name|eServerPacketType_X
 block|,
 name|eServerPacketType_Z
 block|,

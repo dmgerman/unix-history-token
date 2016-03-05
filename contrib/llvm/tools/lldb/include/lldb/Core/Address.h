@@ -410,7 +410,9 @@ name|public
 label|:
 name|ModulePointerAndOffsetLessThanFunctionObject
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|bool
 name|operator
 argument_list|()
@@ -589,6 +591,8 @@ name|addr_t
 name|GetOpcodeLoadAddress
 argument_list|(
 argument|Target *target
+argument_list|,
+argument|lldb::AddressClass addr_class = lldb::eAddressClassInvalid
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -639,7 +643,7 @@ operator|.
 name|get
 argument_list|()
 operator|!=
-name|NULL
+name|nullptr
 operator|)
 return|;
 block|}
@@ -748,6 +752,15 @@ argument_list|,
 name|Target
 operator|*
 name|target
+argument_list|,
+name|lldb
+operator|::
+name|AddressClass
+name|addr_class
+operator|=
+name|lldb
+operator|::
+name|eAddressClassInvalid
 argument_list|)
 decl_stmt|;
 name|bool

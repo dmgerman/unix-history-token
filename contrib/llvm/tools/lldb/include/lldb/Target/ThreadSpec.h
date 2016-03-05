@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadSpec.h ------------------------------------------------*- C++ -*-===//
+comment|//===-- ThreadSpec.h --------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,17 +43,27 @@ directive|define
 name|liblldb_ThreadSpec_h_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -293,7 +303,7 @@ if|if
 condition|(
 name|name
 operator|==
-name|NULL
+name|nullptr
 condition|)
 return|return
 name|false
@@ -339,7 +349,7 @@ if|if
 condition|(
 name|queue_name
 operator|==
-name|NULL
+name|nullptr
 condition|)
 return|return
 name|false
@@ -388,8 +398,6 @@ name|level
 argument_list|)
 decl|const
 decl_stmt|;
-name|protected
-label|:
 name|private
 label|:
 name|uint32_t

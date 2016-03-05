@@ -162,18 +162,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdGdbShow
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -181,32 +177,24 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|ParseArgs
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdGdbShow
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Typedefs:
@@ -341,17 +329,6 @@ specifier|const
 specifier|static
 name|MapGdbOptionNameToFnGdbOptionPtr_t
 name|ms_mapGdbOptionNameToFnGdbOptionPtr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|CMIUtilString
-name|m_constStrArgNamedThreadGrp
 decl_stmt|;
 end_decl_stmt
 

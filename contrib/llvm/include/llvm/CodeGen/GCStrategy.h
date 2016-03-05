@@ -380,7 +380,7 @@ return|;
 block|}
 comment|/** @name Statepoint Specific Properties */
 comment|///@{
-comment|/// If the value specified can be reliably distinguished, returns true for
+comment|/// If the type specified can be reliably distinguished, returns true for
 comment|/// pointers to GC managed locations and false for pointers to non-GC
 comment|/// managed locations.  Note a GCStrategy can always return 'None' (i.e. an
 comment|/// empty optional indicating it can't reliably distinguish.
@@ -391,7 +391,7 @@ name|bool
 operator|>
 name|isGCManagedPointer
 argument_list|(
-argument|const Value *V
+argument|const Type *Ty
 argument_list|)
 specifier|const
 block|{

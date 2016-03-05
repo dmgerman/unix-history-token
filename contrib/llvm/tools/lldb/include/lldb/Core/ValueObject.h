@@ -54,6 +54,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -128,7 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -754,6 +766,11 @@ name|bool
 name|m_needs_update
 block|;     }
 block|;
+name|virtual
+operator|~
+name|ValueObject
+argument_list|()
+block|;
 specifier|const
 name|EvaluationPoint
 operator|&
@@ -860,13 +877,8 @@ name|void
 name|SetNeedsUpdate
 argument_list|()
 block|;
-name|virtual
-operator|~
-name|ValueObject
-argument_list|()
-block|;
-name|ClangASTType
-name|GetClangType
+name|CompilerType
+name|GetCompilerType
 argument_list|()
 block|;
 comment|// this vends a TypeImpl that is useful at the SB API layer
@@ -929,11 +941,11 @@ name|virtual
 name|uint32_t
 name|GetTypeInfo
 argument_list|(
-name|ClangASTType
+name|CompilerType
 operator|*
-name|pointee_or_element_clang_type
+name|pointee_or_element_compiler_type
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|virtual
@@ -961,9 +973,12 @@ name|bool
 name|IsPossibleDynamicType
 argument_list|()
 block|;
-name|virtual
 name|bool
-name|IsObjCNil
+name|IsNilReference
+argument_list|()
+block|;
+name|bool
+name|IsUninitializedReference
 argument_list|()
 block|;
 name|virtual
@@ -1036,19 +1051,19 @@ operator|*
 operator|*
 name|first_unparsed
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|ExpressionPathScanEndReason
 operator|*
 name|reason_to_stop
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|ExpressionPathEndResultType
 operator|*
 name|final_value_type
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 specifier|const
 name|GetValueForExpressionPathOptions
@@ -1064,7 +1079,7 @@ name|ExpressionPathAftermath
 operator|*
 name|final_task_on_target
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|int
@@ -1087,19 +1102,19 @@ operator|*
 operator|*
 name|first_unparsed
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|ExpressionPathScanEndReason
 operator|*
 name|reason_to_stop
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|ExpressionPathEndResultType
 operator|*
 name|final_value_type
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 specifier|const
 name|GetValueForExpressionPathOptions
@@ -1115,7 +1130,7 @@ name|ExpressionPathAftermath
 operator|*
 name|final_task_on_target
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|virtual
@@ -1224,7 +1239,7 @@ name|GetValueAsUnsigned
 argument_list|(
 argument|uint64_t fail_value
 argument_list|,
-argument|bool *success = NULL
+argument|bool *success = nullptr
 argument_list|)
 block|;
 name|virtual
@@ -1233,7 +1248,7 @@ name|GetValueAsSigned
 argument_list|(
 argument|int64_t fail_value
 argument_list|,
-argument|bool *success = NULL
+argument|bool *success = nullptr
 argument_list|)
 block|;
 name|virtual
@@ -1339,7 +1354,7 @@ name|size_t
 operator|*
 name|index_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1361,7 +1376,7 @@ name|size_t
 operator|*
 name|index_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1390,7 +1405,7 @@ name|size_t
 operator|*
 name|index_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1419,7 +1434,7 @@ name|size_t
 operator|*
 name|index_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 comment|// this will always create the children if necessary
@@ -1442,7 +1457,7 @@ name|ConstString
 operator|*
 name|name_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1464,7 +1479,7 @@ name|ConstString
 operator|*
 name|name_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1493,7 +1508,7 @@ name|ConstString
 operator|*
 name|name_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1522,7 +1537,7 @@ name|ConstString
 operator|*
 name|name_of_error
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|virtual
@@ -1548,7 +1563,9 @@ argument_list|)
 block|;
 name|size_t
 name|GetNumChildren
-argument_list|()
+argument_list|(
+argument|uint32_t max=UINT32_MAX
+argument_list|)
 block|;
 specifier|const
 name|Value
@@ -1571,6 +1588,18 @@ operator|&
 name|scalar
 argument_list|)
 block|;
+comment|// return 'false' whenever you set the error, otherwise
+comment|// callers may assume true means everything is OK - this will
+comment|// break breakpoint conditions among potentially a few others
+name|virtual
+name|bool
+name|IsLogicalTrue
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
 name|virtual
 specifier|const
 name|char
@@ -1582,20 +1611,18 @@ specifier|const
 name|char
 operator|*
 name|GetSummaryAsCString
-argument_list|()
+argument_list|(
+argument|lldb::LanguageType lang = lldb::eLanguageTypeUnknown
+argument_list|)
 block|;
 name|bool
 name|GetSummaryAsCString
 argument_list|(
-name|TypeSummaryImpl
-operator|*
-name|summary_ptr
+argument|TypeSummaryImpl* summary_ptr
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|destination
+argument|std::string& destination
+argument_list|,
+argument|lldb::LanguageType lang = lldb::eLanguageTypeUnknown
 argument_list|)
 block|;
 name|bool
@@ -1740,7 +1767,7 @@ name|GetAddressOf
 argument_list|(
 argument|bool scalar_is_load_address = true
 argument_list|,
-argument|AddressType *address_type = NULL
+argument|AddressType *address_type = nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1752,7 +1779,7 @@ name|AddressType
 operator|*
 name|address_type
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|lldb
@@ -1804,7 +1831,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const ClangASTType& type
+argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
 argument_list|)
@@ -1817,7 +1844,7 @@ name|GetSyntheticBase
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const ClangASTType& type
+argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
 argument_list|)
@@ -1956,9 +1983,9 @@ name|ValueObjectSP
 name|Cast
 argument_list|(
 specifier|const
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_ast_type
+name|compiler_type
 argument_list|)
 block|;
 name|virtual
@@ -1972,7 +1999,7 @@ name|char
 operator|*
 name|name
 argument_list|,
-name|ClangASTType
+name|CompilerType
 operator|&
 name|ast_type
 argument_list|)
@@ -2127,7 +2154,7 @@ argument|uint64_t address
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 block|;
 specifier|static
@@ -2142,7 +2169,7 @@ argument|const DataExtractor& data
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
-argument|ClangASTType type
+argument|CompilerType type
 argument_list|)
 block|;
 name|void
@@ -2181,7 +2208,14 @@ argument_list|(
 argument|bool check_pointer = false
 argument_list|)
 block|;
+name|std
+operator|::
+name|pair
+operator|<
 name|size_t
+block|,
+name|bool
+operator|>
 name|ReadPointedString
 argument_list|(
 argument|lldb::DataBufferSP& buffer_sp
@@ -2256,8 +2290,12 @@ specifier|const
 name|bool
 name|accept_invalid_exe_ctx
 operator|=
+operator|(
 name|CanUpdateWithInvalidExecutionContext
 argument_list|()
+operator|==
+name|eLazyBoolYes
+operator|)
 block|;
 return|return
 name|m_update_point
@@ -2523,9 +2561,33 @@ name|MightHaveChildren
 parameter_list|()
 function_decl|;
 name|virtual
+name|lldb
+operator|::
+name|VariableSP
+name|GetVariable
+argument_list|()
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
 name|bool
 name|IsRuntimeSupportValue
 parameter_list|()
+function_decl|;
+name|virtual
+name|uint64_t
+name|GetLanguageFlags
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
+name|SetLanguageFlags
+parameter_list|(
+name|uint64_t
+name|flags
+parameter_list|)
 function_decl|;
 name|protected
 label|:
@@ -2573,29 +2635,19 @@ argument_list|(
 name|m_mutex
 argument_list|)
 block|;
-name|ChildrenIterator
-name|iter
-operator|=
+return|return
+operator|(
 name|m_children
 operator|.
 name|find
 argument_list|(
 name|idx
 argument_list|)
-block|;
-name|ChildrenIterator
-name|end
-operator|=
+operator|!=
 name|m_children
 operator|.
 name|end
 argument_list|()
-block|;
-return|return
-operator|(
-name|iter
-operator|!=
-name|end
 operator|)
 return|;
 block|}
@@ -2615,7 +2667,8 @@ argument_list|(
 name|m_mutex
 argument_list|)
 expr_stmt|;
-name|ChildrenIterator
+specifier|const
+specifier|auto
 name|iter
 init|=
 name|m_children
@@ -2625,28 +2678,23 @@ argument_list|(
 name|idx
 argument_list|)
 decl_stmt|;
-name|ChildrenIterator
-name|end
-init|=
+return|return
+operator|(
+operator|(
+name|iter
+operator|==
 name|m_children
 operator|.
 name|end
 argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|iter
-operator|==
-name|end
-condition|)
-return|return
-name|NULL
-return|;
-else|else
-return|return
+operator|)
+condition|?
+name|nullptr
+else|:
 name|iter
 operator|->
 name|second
+operator|)
 return|;
 block|}
 name|void
@@ -2777,12 +2825,12 @@ name|ValueObject
 modifier|*
 name|m_parent
 decl_stmt|;
-comment|// The parent value object, or NULL if this has no parent
+comment|// The parent value object, or nullptr if this has no parent
 name|ValueObject
 modifier|*
 name|m_root
 decl_stmt|;
-comment|// The root of the hierarchy for this ValueObject (or NULL if never calculated)
+comment|// The root of the hierarchy for this ValueObject (or nullptr if never calculated)
 name|EvaluationPoint
 name|m_update_point
 decl_stmt|;
@@ -2851,7 +2899,7 @@ name|string
 operator|>>
 name|m_validation_result
 expr_stmt|;
-name|ClangASTType
+name|CompilerType
 name|m_override_type
 decl_stmt|;
 comment|// If the type of the value object should be overridden, the type to impose.
@@ -2951,6 +2999,9 @@ operator|::
 name|LanguageType
 name|m_preferred_display_language
 expr_stmt|;
+name|uint64_t
+name|m_language_flags
+decl_stmt|;
 name|bool
 name|m_value_is_valid
 range|:
@@ -3007,7 +3058,7 @@ decl_stmt|;
 comment|// For GetValue
 name|friend
 name|class
-name|ClangExpressionVariable
+name|ExpressionVariable
 decl_stmt|;
 comment|// For SetName
 name|friend
@@ -3066,12 +3117,12 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|bool
+name|LazyBool
 name|CanUpdateWithInvalidExecutionContext
 parameter_list|()
 block|{
 return|return
-name|false
+name|eLazyBoolCalculate
 return|;
 block|}
 name|virtual
@@ -3137,7 +3188,12 @@ comment|// Should only be called by ValueObject::GetNumChildren()
 name|virtual
 name|size_t
 name|CalculateNumChildren
-parameter_list|()
+parameter_list|(
+name|uint32_t
+name|max
+init|=
+name|UINT32_MAX
+parameter_list|)
 init|=
 literal|0
 function_decl|;
@@ -3199,8 +3255,8 @@ comment|//------------------------------------------------------------------
 comment|// Subclasses must implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
-name|ClangASTType
-name|GetClangTypeImpl
+name|CompilerType
+name|GetCompilerTypeImpl
 parameter_list|()
 init|=
 literal|0
@@ -3225,13 +3281,18 @@ name|bool
 name|IsChecksumEmpty
 parameter_list|()
 function_decl|;
+name|void
+name|SetPreferredDisplayLanguageIfNeeded
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+argument_list|)
+decl_stmt|;
 name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// For ValueObject only
-comment|//------------------------------------------------------------------
 name|virtual
-name|ClangASTType
+name|CompilerType
 name|MaybeCalculateCompleteType
 parameter_list|()
 function_decl|;

@@ -435,7 +435,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -712,9 +718,21 @@ comment|/// ObjCArrayLiteral - used for objective-c array containers; as in:
 comment|/// @[@"Hello", NSApp, [NSNumber numberWithInt:42]];
 name|class
 name|ObjCArrayLiteral
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|ObjCArrayLiteral
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
 name|unsigned
 name|NumElements
@@ -845,16 +863,12 @@ name|getElements
 argument_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -869,18 +883,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|Expr
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -979,26 +987,35 @@ block|{
 return|return
 name|child_range
 argument_list|(
-operator|(
+name|reinterpret_cast
+operator|<
 name|Stmt
 operator|*
 operator|*
-operator|)
+operator|>
+operator|(
 name|getElements
 argument_list|()
+operator|)
 argument_list|,
-operator|(
+name|reinterpret_cast
+operator|<
 name|Stmt
 operator|*
 operator|*
-operator|)
+operator|>
+operator|(
 name|getElements
 argument_list|()
+operator|)
 operator|+
 name|NumElements
 argument_list|)
 return|;
 block|}
+name|friend
+name|TrailingObjects
+block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -1069,19 +1086,9 @@ block|; }
 name|namespace
 name|clang
 block|{
-comment|/// ObjCDictionaryLiteral - AST node to represent objective-c dictionary
-comment|/// literals; as in:  @{@"name" : NSUserName(), @"date" : [NSDate date] };
-name|class
-name|ObjCDictionaryLiteral
-operator|:
-name|public
-name|Expr
-block|{
-comment|/// \brief Key/value pair used to store the key and value of a given element.
-comment|///
-comment|/// Objects of this type are stored directly after the expression.
+comment|/// \brief Internal struct for storing Key/value pair.
 block|struct
-name|KeyValuePair
+name|ObjCDictionaryLiteral_KeyValuePair
 block|{
 name|Expr
 operator|*
@@ -1090,12 +1097,13 @@ block|;
 name|Expr
 operator|*
 name|Value
-block|;   }
+block|; }
 block|;
-comment|/// \brief Data that describes an element that is a pack expansion, used if any
-comment|/// of the elements in the dictionary literal are pack expansions.
+comment|/// \brief Internal struct to describes an element that is a pack
+comment|/// expansion, used if any of the elements in the dictionary literal
+comment|/// are pack expansions.
 block|struct
-name|ExpansionData
+name|ObjCDictionaryLiteral_ExpansionData
 block|{
 comment|/// \brief The location of the ellipsis, if this element is a pack
 comment|/// expansion.
@@ -1106,8 +1114,29 @@ comment|/// \brief If non-zero, the number of elements that this pack
 comment|/// expansion will expand to (+1).
 name|unsigned
 name|NumExpansionsPlusOne
-block|;   }
+block|; }
 block|;
+comment|/// ObjCDictionaryLiteral - AST node to represent objective-c dictionary
+comment|/// literals; as in:  @{@"name" : NSUserName(), @"date" : [NSDate date] };
+name|class
+name|ObjCDictionaryLiteral
+name|final
+operator|:
+name|public
+name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|ObjCDictionaryLiteral
+block|,
+name|ObjCDictionaryLiteral_KeyValuePair
+block|,
+name|ObjCDictionaryLiteral_ExpansionData
+operator|>
+block|{
 comment|/// \brief The number of elements in this dictionary literal.
 name|unsigned
 name|NumElements
@@ -1133,6 +1162,25 @@ name|ObjCMethodDecl
 operator|*
 name|DictWithObjectsMethod
 block|;
+typedef|typedef
+name|ObjCDictionaryLiteral_KeyValuePair
+name|KeyValuePair
+typedef|;
+typedef|typedef
+name|ObjCDictionaryLiteral_ExpansionData
+name|ExpansionData
+typedef|;
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<KeyValuePair>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NumElements
+return|;
+block|}
 name|ObjCDictionaryLiteral
 argument_list|(
 argument|ArrayRef<ObjCDictionaryElement> VK
@@ -1173,102 +1221,6 @@ argument_list|(
 argument|HasPackExpansions
 argument_list|)
 block|{}
-name|KeyValuePair
-operator|*
-name|getKeyValues
-argument_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|KeyValuePair
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-specifier|const
-name|KeyValuePair
-operator|*
-name|getKeyValues
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|KeyValuePair
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-name|ExpansionData
-operator|*
-name|getExpansionData
-argument_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|HasPackExpansions
-condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|reinterpret_cast
-operator|<
-name|ExpansionData
-operator|*
-operator|>
-operator|(
-name|getKeyValues
-argument_list|()
-operator|+
-name|NumElements
-operator|)
-return|;
-block|}
-specifier|const
-name|ExpansionData
-operator|*
-name|getExpansionData
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|HasPackExpansions
-condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|ExpansionData
-operator|*
-operator|>
-operator|(
-name|getKeyValues
-argument_list|()
-operator|+
-name|NumElements
-operator|)
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -1335,8 +1287,12 @@ name|KeyValuePair
 operator|&
 name|KV
 operator|=
-name|getKeyValues
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|KeyValuePair
+operator|>
+operator|(
+operator|)
 index|[
 name|Index
 index|]
@@ -1369,8 +1325,12 @@ name|ExpansionData
 modifier|&
 name|Expansion
 init|=
-name|getExpansionData
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ExpansionData
+operator|>
+operator|(
+operator|)
 index|[
 name|Index
 index|]
@@ -1475,6 +1435,24 @@ argument_list|()
 block|{
 comment|// Note: we're taking advantage of the layout of the KeyValuePair struct
 comment|// here. If that struct changes, this code will need to change as well.
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|KeyValuePair
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Stmt
+operator|*
+argument_list|)
+operator|*
+literal|2
+argument_list|,
+literal|"KeyValuePair is expected size"
+argument_list|)
+block|;
 return|return
 name|child_range
 argument_list|(
@@ -1485,9 +1463,12 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
+name|getTrailingObjects
+operator|<
+name|KeyValuePair
+operator|>
+operator|(
+operator|)
 operator|)
 argument_list|,
 name|reinterpret_cast
@@ -1497,9 +1478,12 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
+name|getTrailingObjects
+operator|<
+name|KeyValuePair
+operator|>
+operator|(
+operator|)
 operator|)
 operator|+
 name|NumElements
@@ -1515,6 +1499,9 @@ block|;
 name|friend
 name|class
 name|ASTStmtWriter
+block|;
+name|friend
+name|TrailingObjects
 block|; }
 decl_stmt|;
 comment|/// ObjCEncodeExpr, used for \@encode in Objective-C.  \@encode has the same
@@ -1732,7 +1719,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -1925,7 +1918,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2132,7 +2131,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|friend
@@ -3460,7 +3465,13 @@ return|;
 block|}
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|private
@@ -3797,26 +3808,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{}
-specifier|static
-name|ObjCSubscriptRefExpr
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|Expr *base
-argument_list|,
-argument|Expr *key
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|ObjCMethodDecl *getMethod
-argument_list|,
-argument|ObjCMethodDecl *setMethod
-argument_list|,
-argument|SourceLocation RB
-argument_list|)
-block|;
 name|SourceLocation
 name|getRBracket
 argument_list|()
@@ -4023,36 +4014,124 @@ comment|///
 comment|/// All four kinds of message sends are modeled by the ObjCMessageExpr
 comment|/// class, and can be distinguished via \c getReceiverKind(). Example:
 comment|///
+comment|/// The "void *" trailing objects are actually ONE void * (the
+comment|/// receiver pointer), and NumArgs Expr *. But due to the
+comment|/// implementation of children(), these must be together contiguously.
 name|class
 name|ObjCMessageExpr
+name|final
 range|:
 name|public
 name|Expr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|ObjCMessageExpr
+decl_stmt|,
+name|void
+modifier|*
+decl_stmt|,
+name|SourceLocation
+decl|>
 block|{
 comment|/// \brief Stores either the selector that this message is sending
 comment|/// to (when \c HasMethod is zero) or an \c ObjCMethodDecl pointer
 comment|/// referring to the method that we type-checked against.
 name|uintptr_t
 name|SelectorOrMethod
-block|;    enum
+decl_stmt|;
+enum|enum
 block|{
 name|NumArgsBitWidth
-operator|=
+init|=
 literal|16
 block|}
-block|;
+enum|;
 comment|/// \brief The number of arguments in the message send, not
 comment|/// including the receiver.
 name|unsigned
 name|NumArgs
-operator|:
+range|:
 name|NumArgsBitWidth
-block|;
+decl_stmt|;
+comment|/// \brief The kind of message send this is, which is one of the
+comment|/// ReceiverKind values.
+comment|///
+comment|/// We pad this out to a byte to avoid excessive masking and shifting.
+name|unsigned
+name|Kind
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief Whether we have an actual method prototype in \c
+comment|/// SelectorOrMethod.
+comment|///
+comment|/// When non-zero, we have a method declaration; otherwise, we just
+comment|/// have a selector.
+name|unsigned
+name|HasMethod
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this message send is a "delegate init call",
+comment|/// i.e. a call of an init method on self from within an init method.
+name|unsigned
+name|IsDelegateInitCall
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this message send was implicitly generated by
+comment|/// the implementation rather than explicitly written by the user.
+name|unsigned
+name|IsImplicit
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the locations of the selector identifiers are in a
+comment|/// "standard" position, a enum SelectorLocationsKind.
+name|unsigned
+name|SelLocsKind
+range|:
+literal|2
+decl_stmt|;
+comment|/// \brief When the message expression is a send to 'super', this is
+comment|/// the location of the 'super' keyword.
+name|SourceLocation
+name|SuperLoc
+decl_stmt|;
+comment|/// \brief The source locations of the open and close square
+comment|/// brackets ('[' and ']', respectively).
+name|SourceLocation
+name|LBracLoc
+decl_stmt|,
+name|RBracLoc
+decl_stmt|;
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|void
+operator|*
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|NumArgs
+operator|+
+literal|1
+return|;
+block|}
 name|void
 name|setNumArgs
-argument_list|(
-argument|unsigned Num
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Num
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4066,102 +4145,51 @@ literal|0
 operator|&&
 literal|"Num of args is out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 name|NumArgs
 operator|=
 name|Num
-block|;   }
-comment|/// \brief The kind of message send this is, which is one of the
-comment|/// ReceiverKind values.
-comment|///
-comment|/// We pad this out to a byte to avoid excessive masking and shifting.
-name|unsigned
-name|Kind
-operator|:
-literal|8
-block|;
-comment|/// \brief Whether we have an actual method prototype in \c
-comment|/// SelectorOrMethod.
-comment|///
-comment|/// When non-zero, we have a method declaration; otherwise, we just
-comment|/// have a selector.
-name|unsigned
-name|HasMethod
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this message send is a "delegate init call",
-comment|/// i.e. a call of an init method on self from within an init method.
-name|unsigned
-name|IsDelegateInitCall
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this message send was implicitly generated by
-comment|/// the implementation rather than explicitly written by the user.
-name|unsigned
-name|IsImplicit
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether the locations of the selector identifiers are in a
-comment|/// "standard" position, a enum SelectorLocationsKind.
-name|unsigned
-name|SelLocsKind
-operator|:
-literal|2
-block|;
-comment|/// \brief When the message expression is a send to 'super', this is
-comment|/// the location of the 'super' keyword.
-name|SourceLocation
-name|SuperLoc
-block|;
-comment|/// \brief The source locations of the open and close square
-comment|/// brackets ('[' and ']', respectively).
-name|SourceLocation
-name|LBracLoc
-block|,
-name|RBracLoc
-block|;
+expr_stmt|;
+block|}
 name|ObjCMessageExpr
 argument_list|(
 argument|EmptyShell Empty
 argument_list|,
 argument|unsigned NumArgs
 argument_list|)
-operator|:
+block|:
 name|Expr
 argument_list|(
 name|ObjCMessageExprClass
 argument_list|,
 name|Empty
 argument_list|)
-block|,
+operator|,
 name|SelectorOrMethod
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|Kind
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|HasMethod
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|IsDelegateInitCall
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|IsImplicit
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|SelLocsKind
 argument_list|(
 literal|0
@@ -4200,7 +4228,7 @@ argument|SourceLocation RBracLoc
 argument_list|,
 argument|bool isImplicit
 argument_list|)
-block|;
+expr_stmt|;
 name|ObjCMessageExpr
 argument_list|(
 argument|QualType T
@@ -4225,7 +4253,7 @@ argument|SourceLocation RBracLoc
 argument_list|,
 argument|bool isImplicit
 argument_list|)
-block|;
+empty_stmt|;
 name|ObjCMessageExpr
 argument_list|(
 argument|QualType T
@@ -4250,17 +4278,27 @@ argument|SourceLocation RBracLoc
 argument_list|,
 argument|bool isImplicit
 argument_list|)
-block|;
+empty_stmt|;
 name|void
 name|initArgsAndSelLocs
 argument_list|(
-argument|ArrayRef<Expr *> Args
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
 argument_list|,
-argument|ArrayRef<SourceLocation> SelLocs
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
 argument_list|,
-argument|SelectorLocationsKind SelLocsK
+name|SelectorLocationsKind
+name|SelLocsK
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Retrieve the pointer value of the message receiver.
 name|void
 operator|*
@@ -4270,51 +4308,36 @@ specifier|const
 block|{
 return|return
 operator|*
-name|const_cast
+name|getTrailingObjects
 operator|<
 name|void
 operator|*
-operator|*
 operator|>
 operator|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|void
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
 operator|)
 return|;
 block|}
 comment|/// \brief Set the pointer value of the message receiver.
 name|void
 name|setReceiverPointer
-argument_list|(
-argument|void *Value
-argument_list|)
+parameter_list|(
+name|void
+modifier|*
+name|Value
+parameter_list|)
 block|{
 operator|*
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|void
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 operator|=
 name|Value
-block|;   }
+expr_stmt|;
+block|}
 name|SelectorLocationsKind
 name|getSelLocsKind
 argument_list|()
@@ -4342,22 +4365,16 @@ block|}
 comment|/// \brief Get a pointer to the stored selector identifiers locations array.
 comment|/// No locations will be stored if HasStandardSelLocs is true.
 name|SourceLocation
-operator|*
+modifier|*
 name|getStoredSelLocs
-argument_list|()
+parameter_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|SourceLocation
-operator|*
 operator|>
 operator|(
-name|getArgs
-argument_list|()
-operator|+
-name|getNumArgs
-argument_list|()
 operator|)
 return|;
 block|}
@@ -4369,18 +4386,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|SourceLocation
-operator|*
 operator|>
 operator|(
-name|getArgs
-argument_list|()
-operator|+
-name|getNumArgs
-argument_list|()
 operator|)
 return|;
 block|}
@@ -5384,12 +5394,16 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
+name|getTrailingObjects
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
 operator|)
 operator|+
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -5414,12 +5428,16 @@ specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
+name|getTrailingObjects
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
 operator|)
 operator|+
 literal|1
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -5447,17 +5465,11 @@ literal|"Arg access out of range!"
 argument_list|)
 expr_stmt|;
 return|return
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
 name|getArgs
 argument_list|()
 index|[
 name|Arg
 index|]
-operator|)
 return|;
 block|}
 end_function
@@ -5483,17 +5495,11 @@ literal|"Arg access out of range!"
 argument_list|)
 expr_stmt|;
 return|return
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
 name|getArgs
 argument_list|()
 index|[
 name|Arg
 index|]
-operator|)
 return|;
 block|}
 end_decl_stmt
@@ -5853,6 +5859,57 @@ name|const_arg_iterator
 typedef|;
 end_typedef
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|arg_iterator
+operator|>
+name|arguments
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|arg_begin
+argument_list|()
+argument_list|,
+name|arg_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_arg_iterator
+operator|>
+name|arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|arg_begin
+argument_list|()
+argument_list|,
+name|arg_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|arg_iterator
 name|arg_begin
@@ -5942,6 +5999,12 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|friend
@@ -6482,9 +6545,21 @@ comment|/// NSString *str = (__bridge_transfer NSString *)CFCreateString();
 comment|/// \endcode
 name|class
 name|ObjCBridgedCastExpr
+name|final
 operator|:
 name|public
 name|ExplicitCastExpr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|ObjCBridgedCastExpr
+block|,
+name|CXXBaseSpecifier
+operator|*
+operator|>
 block|{
 name|SourceLocation
 name|LParenLoc
@@ -6496,6 +6571,13 @@ name|unsigned
 name|Kind
 operator|:
 literal|2
+block|;
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|class
+name|CastExpr
 block|;
 name|friend
 name|class

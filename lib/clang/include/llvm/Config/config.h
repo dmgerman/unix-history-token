@@ -4,11 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* include/llvm/Config/config.h.  Generated from config.h.in by configure.  */
-end_comment
-
-begin_comment
-comment|/* include/llvm/Config/config.h.in.  Generated from autoconf/configure.ac by autoheader.  */
+comment|/* include/llvm/Config/config.h.cmake corresponding to config.h.in. */
 end_comment
 
 begin_ifndef
@@ -55,66 +51,6 @@ value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
-comment|/* Default OpenMP runtime used by -fopenmp. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLANG_DEFAULT_OPENMP_RUNTIME
-value|"libomp"
-end_define
-
-begin_comment
-comment|/* Define if we have libxml2 */
-end_comment
-
-begin_comment
-comment|/* #undef CLANG_HAVE_LIBXML */
-end_comment
-
-begin_comment
-comment|/* Multilib suffix for libdir. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLANG_LIBDIR_SUFFIX
-value|""
-end_define
-
-begin_comment
-comment|/* Relative directory for resource files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLANG_RESOURCE_DIR
-value|""
-end_define
-
-begin_comment
-comment|/* Directories clang will search for headers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C_INCLUDE_DIRS
-value|""
-end_define
-
-begin_comment
-comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
-end_comment
-
-begin_comment
-comment|/* #undef DEFAULT_SYSROOT */
-end_comment
-
-begin_comment
 comment|/* Define if you want backtraces on crash */
 end_comment
 
@@ -122,18 +58,26 @@ begin_define
 define|#
 directive|define
 name|ENABLE_BACKTRACES
-value|1
 end_define
 
 begin_comment
-comment|/* Define to enable crash handling overrides */
+comment|/* Define to enable crash overrides */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ENABLE_CRASH_OVERRIDES
-value|1
+end_define
+
+begin_comment
+comment|/* Define to disable C++ atexit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DISABLE_LLVM_DYLIB_ATEXIT
 end_define
 
 begin_comment
@@ -144,29 +88,25 @@ begin_define
 define|#
 directive|define
 name|ENABLE_PIC
-value|0
 end_define
 
 begin_comment
 comment|/* Define if timestamp information (e.g., __DATE__) is allowed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ENABLE_TIMESTAMPS
-value|0
-end_define
+begin_comment
+comment|/* #undef ENABLE_TIMESTAMPS */
+end_comment
 
 begin_comment
-comment|/* Directory where gcc is installed. */
+comment|/* Define to 1 if you have the `arc4random' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GCC_INSTALL_PREFIX
-value|""
+name|HAVE_DECL_ARC4RANDOM
+value|1
 end_define
 
 begin_comment
@@ -178,22 +118,24 @@ comment|/* #undef HAVE_BACKTRACE */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
+comment|/* Define to 1 if you have the `bcopy' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CRASHREPORTERCLIENT_H */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HAVE_BCOPY
+end_undef
 
 begin_comment
-comment|/* can use __crashreporter_info__ */
+comment|/* Define to 1 if you have the `closedir' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_CRASHREPORTER_INFO
-value|0
+name|HAVE_CLOSEDIR
+value|1
 end_define
 
 begin_comment
@@ -208,37 +150,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the declaration of `arc4random', and to 0 if you    don't. */
+comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_ARC4RANDOM
-value|1
-end_define
+begin_undef
+undef|#
+directive|undef
+name|HAVE_CRASHREPORTERCLIENT_H
+end_undef
 
 begin_comment
-comment|/* Define to 1 if you have the declaration of `FE_ALL_EXCEPT', and to 0 if you    don't. */
+comment|/* can use __crashreporter_info__ */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_FE_ALL_EXCEPT
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the declaration of `FE_INEXACT', and to 0 if you    don't. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_FE_INEXACT
-value|1
-end_define
+begin_undef
+undef|#
+directive|undef
+name|HAVE_CRASHREPORTER_INFO
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `strerror_s', and to 0 if you    don't. */
@@ -252,6 +181,14 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the DIA SDK installed, and to 0 if you don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DIA_SDK */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file, and it defines `DIR'.    */
 end_comment
 
@@ -259,6 +196,27 @@ begin_define
 define|#
 directive|define
 name|HAVE_DIRENT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the GNU dld library. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DLD
+end_undef
+
+begin_comment
+comment|/* Define to 1 if you have the `dlerror' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLERROR
 value|1
 end_define
 
@@ -285,12 +243,14 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the dot program is available */
+comment|/* Define if you have the _dyld_func_lookup function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DOT */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DYLD
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the<errno.h> header file. */
@@ -374,7 +334,18 @@ comment|/* #undef HAVE_FFI_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `futimens' function. */
+comment|/* Define to 1 if you have the `futimes' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FUTIMES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `futimens' function */
 end_comment
 
 begin_if
@@ -396,17 +367,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Define to 1 if you have the `futimes' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FUTIMES
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getcwd' function. */
@@ -497,34 +457,32 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if libedit is available on this platform. */
+comment|/* Define if you have the libdl library or equivalent. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBEDIT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBDL */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `m' library (-lm). */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_LIBM
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the `ole32' library (-lole32). */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LIBOLE32 */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LIBOLE32
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the `psapi' library (-lpsapi). */
@@ -554,7 +512,7 @@ comment|/* #undef HAVE_LIBSHELL32 */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `z' library (-lz). */
+comment|/* Define to 1 if you have the 'z' library (-lz). */
 end_comment
 
 begin_define
@@ -565,13 +523,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you can use -rdynamic. */
+comment|/* Define to 1 if you have the 'edit' library (-ledit). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_LINK_EXPORT_DYNAMIC
+name|HAVE_LIBEDIT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<limits.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
 value|1
 end_define
 
@@ -587,26 +556,33 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you can use -Wl,-R. to pass -R. to the linker, in order to add    the current directory to the dynamic linker search path. */
+comment|/* Define if you can use -rdynamic. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_LINK_R
+name|HAVE_LINK_EXPORT_DYNAMIC
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you can use -Wl,-R. to pass -R. to the linker, in order to add    the current directory to the dynamic linker search path. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LINK_R
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the `longjmp' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LONGJMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LONGJMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<mach/mach.h> header file. */
@@ -614,6 +590,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_MACH_MACH_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<mach-o/dyld.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MACH_O_DYLD_H */
 end_comment
 
 begin_comment
@@ -649,13 +633,13 @@ comment|/* #undef HAVE_MALLOC_ZONE_STATISTICS */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<memory.h> header file. */
+comment|/* Define to 1 if you have the `mallctl` function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MEMORY_H
+name|HAVE_MALLCTL
 value|1
 end_define
 
@@ -696,30 +680,31 @@ begin_comment
 comment|/* Define to 1 if you have a working `mmap' system call. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_MMAP
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Define if mmap() uses MAP_ANONYMOUS to map anonymous pages, or undefine if    it uses MAP_ANON */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MMAP_ANONYMOUS */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MMAP_ANONYMOUS
+end_undef
 
 begin_comment
 comment|/* Define if mmap() can map files into memory */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_MMAP_FILE
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the<ndir.h> header file, and it defines `DIR'. */
@@ -730,12 +715,26 @@ comment|/* #undef HAVE_NDIR_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `opendir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENDIR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `posix_spawn' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_POSIX_SPAWN */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_POSIX_SPAWN
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `pread' function. */
@@ -749,15 +748,24 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if libtool can extract symbol lists from object files. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRELOADED_SYMBOLS
+end_undef
+
+begin_comment
 comment|/* Define to have the %a format string */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_PRINTF_A
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Have pthread_getspecific */
@@ -815,6 +823,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `readdir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_READDIR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `realpath' function. */
 end_comment
 
@@ -851,23 +870,9 @@ begin_comment
 comment|/* Define to 1 if you have the `setjmp' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SETJMP
-value|1
-end_define
-
 begin_comment
-comment|/* Define to 1 if you have the<setjmp.h> header file. */
+comment|/* #undef HAVE_SETJMP */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETJMP_H
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setrlimit' function. */
@@ -881,15 +886,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the shl_load function. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SHL_LOAD
+end_undef
+
+begin_comment
 comment|/* Define to 1 if you have the `siglongjmp' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SIGLONGJMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SIGLONGJMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<signal.h> header file. */
@@ -906,12 +918,9 @@ begin_comment
 comment|/* Define to 1 if you have the `sigsetjmp' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SIGSETJMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SIGSETJMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
@@ -925,15 +934,32 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<stdlib.h> header file. */
+comment|/* Set to 1 if the std::isinf function is found in<cmath> */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STDLIB_H
-value|1
-end_define
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STD_ISINF_IN_CMATH
+end_undef
+
+begin_comment
+comment|/* Set to 1 if the std::isnan function is found in<cmath> */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STD_ISNAN_IN_CMATH
+end_undef
+
+begin_comment
+comment|/* Define to 1 if you have the `strdup' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRDUP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `strerror' function. */
@@ -954,28 +980,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRERROR_R
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<strings.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRINGS_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<string.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRING_H
 value|1
 end_define
 
@@ -1005,20 +1009,22 @@ begin_comment
 comment|/* Define to 1 if you have the `sysconf' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_SYSCONF
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/dir.h> header file, and it defines `DIR'.    */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_DIR_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_DIR_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/ioctl.h> header file. */
@@ -1039,7 +1045,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_MMAN_H
-value|1
 end_define
 
 begin_comment
@@ -1098,12 +1103,9 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/types.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_TYPES_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_TYPES_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/uio.h> header file. */
@@ -1113,17 +1115,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_UIO_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have<sys/wait.h> that is POSIX.1 compatible. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_WAIT_H
 value|1
 end_define
 
@@ -1186,9 +1177,12 @@ begin_comment
 comment|/* Define to 1 if the system has the type `u_int64_t'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_U_INT64_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT64_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<valgrind/valgrind.h> header file. */
@@ -1288,12 +1282,11 @@ begin_comment
 comment|/* Define to 1 if you have the `__dso_handle' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE___DSO_HANDLE
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Have host's __fixdfdi */
@@ -1379,9 +1372,11 @@ begin_comment
 comment|/* Linker version detected at compile time. */
 end_comment
 
-begin_comment
-comment|/* #undef HOST_LINK_VERSION */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|HOST_LINK_VERSION
+end_undef
 
 begin_comment
 comment|/* Installation directory for binary executables */
@@ -1408,7 +1403,7 @@ comment|/* #undef LLVM_DATADIR */
 end_comment
 
 begin_comment
-comment|/* Target triple LLVM will generate code for by default */
+comment|/* Target triple LLVM will generate code for by default  * Doesn't use `cmakedefine` because it is allowed to be empty.  */
 end_comment
 
 begin_comment
@@ -1424,14 +1419,13 @@ comment|/* #undef LLVM_DOCSDIR */
 end_comment
 
 begin_comment
-comment|/* Define to enable checks that alter the LLVM C++ ABI */
+comment|/* Define if LLVM is built with asserts and checks that change the layout of    client-visible data structures.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
-value|1
 end_define
 
 begin_comment
@@ -1446,7 +1440,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if zlib is enabled */
+comment|/* Define if zlib compression is available */
 end_comment
 
 begin_define
@@ -1604,14 +1598,6 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Define to path to dot program if found or 'echo dot' otherwise */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_PATH_DOT */
-end_comment
-
-begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
@@ -1626,23 +1612,17 @@ begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_USE_INTEL_JITEVENTS
-value|0
-end_define
+begin_comment
+comment|/* #undef LLVM_USE_INTEL_JITEVENTS */
+end_comment
 
 begin_comment
 comment|/* Define if we have the oprofile JIT-support library */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_USE_OPROFILE
-value|0
-end_define
+begin_comment
+comment|/* #undef LLVM_USE_OPROFILE */
+end_comment
 
 begin_comment
 comment|/* Major version of the LLVM API */
@@ -1663,7 +1643,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|7
+value|8
 end_define
 
 begin_comment
@@ -1674,7 +1654,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -1685,11 +1665,37 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.7.1"
+value|"3.8.0"
 end_define
 
 begin_comment
-comment|/* The shared library extension */
+comment|/* Define if we link Polly to the tools */
+end_comment
+
+begin_comment
+comment|/* #undef LINK_POLLY_INTO_TOOLS */
+end_comment
+
+begin_comment
+comment|/* Define if the OS needs help to load dependent libraries for dlopen(). */
+end_comment
+
+begin_comment
+comment|/* #undef LTDL_DLOPEN_DEPLIBS */
+end_comment
+
+begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LTDL_OBJDIR
+end_undef
+
+begin_comment
+comment|/* Define to the extension used for shared libraries, say, ".so". */
 end_comment
 
 begin_define
@@ -1700,12 +1706,32 @@ value|".so"
 end_define
 
 begin_comment
-comment|/* Define if /dev/zero should be used when mapping RWX memory, or undefine if    its not necessary */
+comment|/* Define to the system default library search path. */
 end_comment
 
 begin_comment
-comment|/* #undef NEED_DEV_ZERO_FOR_MMAP */
+comment|/* #undef LTDL_SYSSEARCHPATH */
 end_comment
+
+begin_comment
+comment|/* Define if /dev/zero should be used when mapping RWX memory, or undefine if    its not necessary */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_DEV_ZERO_FOR_MMAP
+end_undef
+
+begin_comment
+comment|/* Define if dlsym() requires a leading underscore in symbol names. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_USCORE
+end_undef
 
 begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
@@ -1737,19 +1763,18 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.7.1"
+value|"LLVM 3.8.0"
 end_define
 
 begin_comment
 comment|/* Define to the one symbol short name of this package. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|PACKAGE_TARNAME
-value|"llvm"
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to the version of this package. */
@@ -1759,7 +1784,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.7.1"
+value|"3.8.0"
 end_define
 
 begin_comment
@@ -1777,39 +1802,41 @@ begin_comment
 comment|/* Define to 1 if the `S_IS*' macros in<sys/stat.h> do not work properly. */
 end_comment
 
-begin_comment
-comment|/* #undef STAT_MACROS_BROKEN */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|STAT_MACROS_BROKEN
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|STDC_HEADERS
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to 1 if you can safely include both<sys/time.h> and<time.h>. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|TIME_WITH_SYS_TIME
-value|1
-end_define
+end_undef
 
 begin_comment
 comment|/* Define to 1 if your<sys/time.h> declares `struct tm'. */
 end_comment
 
-begin_comment
-comment|/* #undef TM_IN_SYS_TIME */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|TM_IN_SYS_TIME
+end_undef
 
 begin_comment
 comment|/* Type of 1st arg on ELM Callback */
@@ -1823,16 +1850,60 @@ begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */
 end_comment
 
-begin_comment
-comment|/* #undef pid_t */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|pid_t
+end_undef
 
 begin_comment
 comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|size_t
+end_undef
+
 begin_comment
-comment|/* #undef size_t */
+comment|/* Define to a function replacing strtoll */
+end_comment
+
+begin_comment
+comment|/* #undef strtoll */
+end_comment
+
+begin_comment
+comment|/* Define to a function implementing strtoull */
+end_comment
+
+begin_comment
+comment|/* #undef strtoull */
+end_comment
+
+begin_comment
+comment|/* Define to a function implementing stricmp */
+end_comment
+
+begin_comment
+comment|/* #undef stricmp */
+end_comment
+
+begin_comment
+comment|/* Define to a function implementing strdup */
+end_comment
+
+begin_comment
+comment|/* #undef strdup */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `_chsize_s' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__CHSIZE_S */
 end_comment
 
 begin_endif

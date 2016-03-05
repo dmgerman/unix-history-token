@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RegisterContextPOSIX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Plugins/Process/Utility/RegisterContextPOSIX_arm64.h"
 end_include
 

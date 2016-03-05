@@ -186,6 +186,7 @@ name|ARMBaseTargetMachine
 operator|*
 name|TM
 argument_list|,
+specifier|const
 name|Function
 operator|&
 name|F
@@ -294,6 +295,14 @@ argument_list|(
 argument|std::move(Arg.TLI)
 argument_list|)
 block|{}
+name|bool
+name|enableInterleavedAccessVectorization
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
 name|using
@@ -301,7 +310,7 @@ name|BaseT
 operator|::
 name|getIntImmCost
 expr_stmt|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 specifier|const
@@ -414,7 +423,7 @@ return|return
 literal|1
 return|;
 block|}
-name|unsigned
+name|int
 name|getShuffleCost
 argument_list|(
 name|TTI
@@ -434,7 +443,7 @@ operator|*
 name|SubTp
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|int
 name|getCastInstrCost
 parameter_list|(
 name|unsigned
@@ -449,7 +458,7 @@ modifier|*
 name|Src
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getCmpSelInstrCost
 parameter_list|(
 name|unsigned
@@ -464,7 +473,7 @@ modifier|*
 name|CondTy
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getVectorInstrCost
 parameter_list|(
 name|unsigned
@@ -478,7 +487,7 @@ name|unsigned
 name|Index
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getAddressComputationCost
 parameter_list|(
 name|Type
@@ -489,7 +498,7 @@ name|bool
 name|IsComplex
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getFPOpCost
 parameter_list|(
 name|Type
@@ -497,7 +506,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getArithmeticInstrCost
 argument_list|(
 name|unsigned
@@ -544,7 +553,7 @@ operator|::
 name|OP_None
 argument_list|)
 decl_stmt|;
-name|unsigned
+name|int
 name|getMemoryOpCost
 parameter_list|(
 name|unsigned
@@ -561,7 +570,7 @@ name|unsigned
 name|AddressSpace
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getInterleavedMemoryOpCost
 argument_list|(
 name|unsigned

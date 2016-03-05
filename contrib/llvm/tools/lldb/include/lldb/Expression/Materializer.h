@@ -34,14 +34,42 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|lldb_Materializer_h
+name|liblldb_Materializer_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|lldb_Materializer_h
+name|liblldb_Materializer_h
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -64,25 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/SymbolContext.h"
+file|"lldb/Symbol/TaggedASTType.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Target/StackFrame.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -111,12 +127,12 @@ argument_list|()
 operator|:
 name|m_materializer
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|m_map
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|m_process_address
@@ -135,8 +151,6 @@ name|void
 name|Dematerialize
 argument_list|(
 argument|Error&err
-argument_list|,
-argument|lldb::ClangExpressionVariableSP&result_sp
 argument_list|,
 argument|lldb::addr_t frame_top
 argument_list|,
@@ -282,14 +296,50 @@ operator|&
 name|err
 argument_list|)
 decl_stmt|;
+name|class
+name|PersistentVariableDelegate
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|PersistentVariableDelegate
+argument_list|()
+expr_stmt|;
+name|virtual
+name|ConstString
+name|GetName
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|DidDematerialize
+argument_list|(
+name|lldb
+operator|::
+name|ExpressionVariableSP
+operator|&
+name|variable
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+block|}
+empty_stmt|;
 name|uint32_t
 name|AddPersistentVariable
 argument_list|(
 name|lldb
 operator|::
-name|ClangExpressionVariableSP
+name|ExpressionVariableSP
 operator|&
 name|persistent_variable_sp
+argument_list|,
+name|PersistentVariableDelegate
+operator|*
+name|delegate
 argument_list|,
 name|Error
 operator|&
@@ -314,7 +364,7 @@ name|uint32_t
 name|AddResultVariable
 parameter_list|(
 specifier|const
-name|TypeFromUser
+name|CompilerType
 modifier|&
 name|type
 parameter_list|,
@@ -323,6 +373,10 @@ name|is_lvalue
 parameter_list|,
 name|bool
 name|keep_in_memory
+parameter_list|,
+name|PersistentVariableDelegate
+modifier|*
+name|delegate
 parameter_list|,
 name|Error
 modifier|&
@@ -371,25 +425,6 @@ return|return
 name|m_current_offset
 return|;
 block|}
-name|uint32_t
-name|GetResultOffset
-parameter_list|()
-block|{
-if|if
-condition|(
-name|m_result_entity
-condition|)
-return|return
-name|m_result_entity
-operator|->
-name|GetOffset
-argument_list|()
-return|;
-else|else
-return|return
-name|UINT32_MAX
-return|;
-block|}
 name|class
 name|Entity
 block|{
@@ -417,22 +452,35 @@ name|virtual
 operator|~
 name|Entity
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|Materialize
 argument_list|(
-argument|lldb::StackFrameSP&frame_sp
+name|lldb
+operator|::
+name|StackFrameSP
+operator|&
+name|frame_sp
 argument_list|,
-argument|IRMemoryMap&map
+name|IRMemoryMap
+operator|&
+name|map
 argument_list|,
-argument|lldb::addr_t process_address
+name|lldb
+operator|::
+name|addr_t
+name|process_address
 argument_list|,
-argument|Error&err
+name|Error
+operator|&
+name|err
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|void
 name|Dematerialize
@@ -546,7 +594,7 @@ label|:
 name|void
 name|SetSizeAndAlignmentFromType
 parameter_list|(
-name|ClangASTType
+name|CompilerType
 modifier|&
 name|type
 parameter_list|)
@@ -596,10 +644,6 @@ decl_stmt|;
 name|EntityVector
 name|m_entities
 decl_stmt|;
-name|Entity
-modifier|*
-name|m_result_entity
-decl_stmt|;
 name|uint32_t
 name|m_current_offset
 decl_stmt|;
@@ -611,10 +655,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_Materializer_h
+end_comment
 
 end_unit
 

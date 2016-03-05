@@ -138,6 +138,16 @@ name|PreserveAll
 init|=
 literal|15
 block|,
+comment|// Swift - Calling convention for Swift.
+name|Swift
+init|=
+literal|16
+block|,
+comment|// CXX_FAST_TLS - Calling convention for access functions.
+name|CXX_FAST_TLS
+init|=
+literal|17
+block|,
 comment|// Target - This is the start of the target-specific calling conventions,
 comment|// e.g. fastcall and thiscall on X86.
 name|FirstTargetCC
@@ -246,6 +256,33 @@ comment|/// in SSE registers.
 name|X86_VectorCall
 init|=
 literal|80
+block|,
+comment|/// \brief Calling convention used by HipHop Virtual Machine (HHVM) to
+comment|/// perform calls to and from translation cache, and for calling PHP
+comment|/// functions.
+comment|/// HHVM calling convention supports tail/sibling call elimination.
+name|HHVM
+init|=
+literal|81
+block|,
+comment|/// \brief HHVM calling convention for invoking C/C++ helpers.
+name|HHVM_C
+init|=
+literal|82
+block|,
+comment|/// X86_INTR - x86 hardware interrupt context. Callee may take one or two
+comment|/// parameters, where the 1st represents a pointer to hardware context frame
+comment|/// and the 2nd represents hardware error code, the presence of the later
+comment|/// depends on the interrupt vector taken. Valid for both 32- and 64-bit
+comment|/// subtargets.
+name|X86_INTR
+init|=
+literal|83
+block|,
+comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
+name|MaxID
+init|=
+literal|1023
 block|}
 enum|;
 block|}

@@ -3011,6 +3011,18 @@ end_comment
 begin_decl_stmt
 name|class
 name|ObjCTypeParamList
+name|final
+range|:
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|ObjCTypeParamList
+decl_stmt|,
+name|ObjCTypeParamDecl
+modifier|*
+decl|>
 block|{
 comment|/// Stores the components of a SourceRange as a POD.
 struct|struct
@@ -3088,16 +3100,12 @@ name|begin
 parameter_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|ObjCTypeParamDecl
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -3137,17 +3145,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|ObjCTypeParamDecl
 operator|*
-specifier|const
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -3273,6 +3276,9 @@ operator|&
 name|typeArgs
 argument_list|)
 decl|const
+decl_stmt|;
+name|friend
+name|TrailingObjects
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -5494,36 +5500,12 @@ operator|.
 name|getOpaqueValue
 argument_list|()
 condition|)
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getIdentifier
+name|getMostRecentDecl
 argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|II
-operator|->
-name|isOutOfDate
-argument_list|()
-condition|)
-block|{
-name|updateOutOfDate
-argument_list|(
-operator|*
-name|II
-argument_list|)
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_return
-unit|}     }
 return|return
 name|Data
 operator|.
@@ -8418,36 +8400,12 @@ operator|.
 name|getOpaqueValue
 argument_list|()
 condition|)
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getIdentifier
+name|getMostRecentDecl
 argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|II
-operator|->
-name|isOutOfDate
-argument_list|()
-condition|)
-block|{
-name|updateOutOfDate
-argument_list|(
-operator|*
-name|II
-argument_list|)
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_return
-unit|}     }
 return|return
 name|Data
 operator|.
@@ -11514,6 +11472,16 @@ name|PropertyAttributes
 operator||=
 name|PRVal
 block|;   }
+name|void
+name|overwritePropertyAttributes
+argument_list|(
+argument|unsigned PRVal
+argument_list|)
+block|{
+name|PropertyAttributes
+operator|=
+name|PRVal
+block|;   }
 name|PropertyAttributeKind
 name|getPropertyAttributesAsWritten
 argument_list|()
@@ -11526,29 +11494,6 @@ name|PropertyAttributesAsWritten
 argument_list|)
 return|;
 block|}
-name|bool
-name|hasWrittenStorageAttribute
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PropertyAttributesAsWritten
-operator|&
-operator|(
-name|OBJC_PR_assign
-operator||
-name|OBJC_PR_copy
-operator||
-name|OBJC_PR_unsafe_unretained
-operator||
-name|OBJC_PR_retain
-operator||
-name|OBJC_PR_strong
-operator||
-name|OBJC_PR_weak
-operator|)
-return|;
-block|}
 name|void
 name|setPropertyAttributesAsWritten
 argument_list|(
@@ -11559,19 +11504,6 @@ name|PropertyAttributesAsWritten
 operator|=
 name|PRVal
 block|;   }
-name|void
-name|makeitReadWriteAttribute
-argument_list|()
-block|{
-name|PropertyAttributes
-operator|&=
-operator|~
-name|OBJC_PR_readonly
-block|;
-name|PropertyAttributes
-operator||=
-name|OBJC_PR_readwrite
-block|;  }
 comment|// Helper methods for accessing attributes.
 comment|/// isReadOnly - Return true iff the property has a setter.
 name|bool

@@ -102,6 +102,8 @@ argument|const char *name
 argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
+argument|lldb::LanguageType language
+argument_list|,
 argument|Breakpoint::MatchType type
 argument_list|,
 argument|bool skip_prologue
@@ -118,6 +120,8 @@ argument|size_t num_names
 argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
+argument|lldb::LanguageType language
+argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
@@ -130,6 +134,8 @@ argument|std::vector<std::string> names
 argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
+argument|lldb::LanguageType language
+argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
@@ -139,6 +145,8 @@ argument_list|(
 argument|Breakpoint *bkpt
 argument_list|,
 argument|RegularExpression&func_regex
+argument_list|,
+argument|lldb::LanguageType language
 argument_list|,
 argument|bool skip_prologue
 argument_list|)
@@ -156,10 +164,10 @@ argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|BreakpointResolverName
 argument_list|()
+name|override
 block|;
 name|Searcher
 operator|::
@@ -311,6 +319,11 @@ name|Breakpoint
 operator|::
 name|MatchType
 name|m_match_type
+block|;
+name|lldb
+operator|::
+name|LanguageType
+name|m_language
 block|;
 name|bool
 name|m_skip_prologue

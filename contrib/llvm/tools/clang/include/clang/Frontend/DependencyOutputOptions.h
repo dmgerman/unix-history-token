@@ -145,6 +145,17 @@ name|string
 operator|>
 name|Targets
 expr_stmt|;
+comment|/// A list of filenames to be used as extra dependencies for every target.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ExtraDeps
+expr_stmt|;
 comment|/// \brief The file to write GraphViz-formatted header dependencies to.
 name|std
 operator|::

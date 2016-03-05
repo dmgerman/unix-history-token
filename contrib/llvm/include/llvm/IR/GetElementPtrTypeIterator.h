@@ -422,8 +422,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|&
+operator|*
 operator|*
 name|OpIt
+operator|)
 return|;
 block|}
 end_expr_stmt

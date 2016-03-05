@@ -77,12 +77,9 @@ name|public
 operator|:
 name|RegisterContextLinux_mips64
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|target_arch
+argument|const lldb_private::ArchSpec&target_arch
+argument_list|,
+argument|bool msa_present = true
 argument_list|)
 block|;
 name|size_t

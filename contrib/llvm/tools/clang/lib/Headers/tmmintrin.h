@@ -15,23 +15,6 @@ directive|define
 name|__TMMINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SSSE3__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"SSSE3 instruction set not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -46,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("ssse3")))
 end_define
 
 begin_function
@@ -216,7 +199,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|__extension__ ({ \   __m128i __a = (a); \   __m128i __b = (b); \   (__m128i)__builtin_ia32_palignr128((__v16qi)__a, (__v16qi)__b, (n)); })
+value|__extension__ ({ \   (__m128i)__builtin_ia32_palignr128((__v16qi)(__m128i)(a), \                                      (__v16qi)(__m128i)(b), (n)); })
 end_define
 
 begin_define
@@ -230,7 +213,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|__extension__ ({ \   __m64 __a = (a); \   __m64 __b = (b); \   (__m64)__builtin_ia32_palignr((__v8qi)__a, (__v8qi)__b, (n)); })
+value|__extension__ ({ \   (__m64)__builtin_ia32_palignr((__v8qi)(__m64)(a), (__v8qi)(__m64)(b), (n)); })
 end_define
 
 begin_function
@@ -1054,15 +1037,6 @@ undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __SSSE3__ */
-end_comment
 
 begin_endif
 endif|#

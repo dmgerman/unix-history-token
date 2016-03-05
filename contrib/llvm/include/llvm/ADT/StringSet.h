@@ -105,6 +105,29 @@ name|base
 expr_stmt|;
 name|public
 operator|:
+name|StringSet
+argument_list|()
+operator|=
+block|default
+expr_stmt|;
+name|StringSet
+argument_list|(
+argument|std::initializer_list<StringRef> S
+argument_list|)
+block|{
+for|for
+control|(
+name|StringRef
+name|X
+range|:
+name|S
+control|)
+name|insert
+argument_list|(
+name|X
+argument_list|)
+expr_stmt|;
+block|}
 name|std
 operator|::
 name|pair
@@ -147,11 +170,14 @@ argument_list|)
 return|;
 block|}
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

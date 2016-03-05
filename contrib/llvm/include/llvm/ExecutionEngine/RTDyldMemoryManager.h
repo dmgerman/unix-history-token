@@ -113,6 +113,14 @@ name|MemoryManager
 block|{
 name|public
 operator|:
+comment|// Don't hide the notifyObjectLoaded method from RuntimeDyld::MemoryManager.
+name|using
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|::
+name|notifyObjectLoaded
+block|;
 comment|/// This method is called after an object has been loaded into memory but
 comment|/// before relocations are applied to the loaded sections.  The object load
 comment|/// may have been initiated by MCJIT to resolve an external symbol for another

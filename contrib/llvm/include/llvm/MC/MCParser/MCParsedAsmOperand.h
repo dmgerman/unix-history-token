@@ -87,11 +87,41 @@ operator|::
 name|string
 name|Constraint
 expr_stmt|;
-name|public
+name|protected
 label|:
+comment|// This only seems to need to be movable (by ARMOperand) but ARMOperand has
+comment|// lots of members and MSVC doesn't support defaulted move ops, so to avoid
+comment|// that verbosity, just rely on defaulted copy ops. It's only the Constraint
+comment|// string member that would benefit from movement anyway.
+name|MCParsedAsmOperand
+argument_list|(
+specifier|const
+name|MCParsedAsmOperand
+operator|&
+name|RHS
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+name|MCParsedAsmOperand
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCParsedAsmOperand
+operator|&
+operator|)
+operator|=
+expr|default
+decl_stmt|;
 name|MCParsedAsmOperand
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+name|public
+label|:
 name|virtual
 operator|~
 name|MCParsedAsmOperand

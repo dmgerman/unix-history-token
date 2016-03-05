@@ -15,23 +15,6 @@ directive|define
 name|__MMINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__MMX__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"MMX instruction set not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
 name|long
@@ -81,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("mmx")))
 end_define
 
 begin_function
@@ -2234,8 +2217,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|_m_from_int64
+value|_mm_cvtsi64_m64
+end_define
+
+begin_define
+define|#
+directive|define
 name|_m_to_int
 value|_mm_cvtsi64_si32
+end_define
+
+begin_define
+define|#
+directive|define
+name|_m_to_int64
+value|_mm_cvtm64_si64
 end_define
 
 begin_define
@@ -2601,15 +2598,6 @@ directive|define
 name|_m_pcmpgtd
 value|_mm_cmpgt_pi32
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __MMX__ */
-end_comment
 
 begin_endif
 endif|#

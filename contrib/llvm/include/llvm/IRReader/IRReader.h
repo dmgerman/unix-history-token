@@ -91,7 +91,8 @@ decl_stmt|;
 comment|/// If the given file holds a bitcode image, return a Module
 comment|/// for it which does lazy deserialization of function bodies.  Otherwise,
 comment|/// attempt to parse it as LLVM Assembly and return a fully populated
-comment|/// Module.
+comment|/// Module. The ShouldLazyLoadMetadata flag is passed down to the bitcode
+comment|/// reader to optionally enable lazy metadata loading.
 name|std
 operator|::
 name|unique_ptr
@@ -105,6 +106,8 @@ argument_list|,
 argument|SMDiagnostic&Err
 argument_list|,
 argument|LLVMContext&Context
+argument_list|,
+argument|bool ShouldLazyLoadMetadata = false
 argument_list|)
 expr_stmt|;
 comment|/// If the given MemoryBuffer holds a bitcode image, return a Module

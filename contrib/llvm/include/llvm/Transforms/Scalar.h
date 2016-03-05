@@ -198,12 +198,7 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createSROAPass
-parameter_list|(
-name|bool
-name|RequiresDomTree
-init|=
-name|true
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -330,6 +325,11 @@ name|MaximalOffset
 parameter_list|,
 name|bool
 name|OnlyOptimizeForSize
+init|=
+name|false
+parameter_list|,
+name|bool
+name|MergeExternalByDefault
 init|=
 name|false
 parameter_list|)
@@ -775,23 +775,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// SampleProfilePass - Loads sample profile data from disk and generates
-comment|// IR metadata to reflect the profile.
-name|FunctionPass
-modifier|*
-name|createSampleProfileLoaderPass
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createSampleProfileLoaderPass
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// ScalarizerPass - Converts vector operations into scalar operations
 comment|//
 name|FunctionPass
@@ -905,6 +888,15 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createLoopDistributePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopLoadElimination - Perform loop-aware load elimination.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLoopLoadEliminationPass
 parameter_list|()
 function_decl|;
 block|}

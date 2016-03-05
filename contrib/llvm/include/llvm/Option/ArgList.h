@@ -1163,6 +1163,22 @@ name|Id1
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// AddAllArgs - Render all arguments matching any of the given ids.
+name|void
+name|AddAllArgs
+argument_list|(
+name|ArgStringList
+operator|&
+name|Output
+argument_list|,
+name|ArrayRef
+operator|<
+name|OptSpecifier
+operator|>
+name|Ids
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// AddAllArgs - Render all arguments matching the given ids.
 name|void
 name|AddAllArgs
@@ -1321,6 +1337,20 @@ name|RHS
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

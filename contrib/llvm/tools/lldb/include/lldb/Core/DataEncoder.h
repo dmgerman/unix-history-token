@@ -397,7 +397,7 @@ comment|/// @param[in] offset
 comment|///     The offset in bytes into the contained data at which to
 comment|///     start encoding.
 comment|///
-comment|/// @param[int] src
+comment|/// @param[in] src
 comment|///     The buffer that contains the bytes to encode.
 comment|///
 comment|/// @param[in] src_len

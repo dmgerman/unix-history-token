@@ -140,18 +140,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 26/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -187,18 +175,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|SetDriver
 parameter_list|(
@@ -209,48 +193,36 @@ name|vClientDriver
 parameter_list|)
 function_decl|;
 name|CMIDriverBase
-modifier|&
+operator|&
 name|GetDriver
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|lldb
 operator|::
 name|SBDebugger
 operator|&
 name|GetTheDebugger
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|lldb
 operator|::
 name|SBListener
 operator|&
 name|GetTheListener
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|void
 name|WaitForHandleEvent
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|CheckIfNeedToRebroadcastStopEvent
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|void
 name|RebroadcastStopEvent
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// MI Commands can use these functions to listen for events they require
 name|bool
@@ -327,14 +299,12 @@ label|:
 comment|// From CMIUtilThreadActiveObjBase
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|ThreadGetName
-argument_list|(
-name|void
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|// Overridden:
 name|protected
 label|:
@@ -350,11 +320,9 @@ name|override
 decl_stmt|;
 name|bool
 name|ThreadFinish
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|// Typedefs:
 name|private
 label|:
@@ -407,9 +375,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnLLDBDebugger
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnLLDBDebugger
@@ -430,21 +396,15 @@ operator|)
 decl_stmt|;
 name|bool
 name|InitSBDebugger
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|InitSBListener
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|InitStdStreams
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|MonitorSBListenerEvents
@@ -550,6 +510,19 @@ modifier|&
 name|vwEventMask
 parameter_list|)
 function_decl|;
+name|bool
+name|LoadMIFormatters
+argument_list|(
+name|lldb
+operator|::
+name|SBTypeCategory
+name|miCategory
+argument_list|)
+decl_stmt|;
+name|bool
+name|RegisterMISummaryProviders
+parameter_list|()
+function_decl|;
 comment|// Overridden:
 name|private
 label|:
@@ -557,9 +530,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnLLDBDebugger
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

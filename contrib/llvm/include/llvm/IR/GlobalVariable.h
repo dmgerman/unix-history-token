@@ -121,9 +121,6 @@ name|template
 operator|<
 name|typename
 name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
 name|class
 name|SymbolTableListTraits
@@ -145,8 +142,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalVariable
-operator|,
-name|Module
 operator|>
 expr_stmt|;
 name|void
@@ -357,17 +352,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|hasInitializer
-argument_list|()
-operator|&&
-comment|// It's not safe to modify initializers of global variables with weak
-comment|// linkage, because the linker might choose to discard the initializer and
-comment|// use the initializer from another instance of the global variable
-comment|// instead. It is wrong to modify the initializer of a global variable
-comment|// with *_odr linkage because then different instances of the global may
-comment|// have different initializers, breaking the One Definition Rule.
-operator|!
-name|isWeakForLinker
+comment|// We need to be sure this is the definition that will actually be used
+name|isStrongDefinitionForLinker
 argument_list|()
 operator|&&
 comment|// It is not safe to modify initializers of global variables with the

@@ -173,6 +173,10 @@ block|,
 comment|// Return
 name|Ret
 block|,
+comment|// Interrupt, exception, error trap Return
+name|ERet
+block|,
+comment|// Software Exception Return.
 name|EH_RETURN
 block|,
 comment|// Node used to extract integer from accumulator.
@@ -479,6 +483,18 @@ operator|::
 name|i32
 return|;
 block|}
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+name|override
+block|;
 name|void
 name|LowerOperationWrapper
 argument_list|(
@@ -562,37 +578,6 @@ argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 name|override
-block|;      struct
-name|LTStr
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|char
-operator|*
-name|S1
-expr|,
-specifier|const
-name|char
-operator|*
-name|S2
-operator|)
-specifier|const
-block|{
-return|return
-name|strcmp
-argument_list|(
-name|S1
-argument_list|,
-name|S2
-argument_list|)
-operator|<
-literal|0
-return|;
-block|}
-expr|}
 block|;
 name|void
 name|HandleByVal
@@ -618,6 +603,56 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|ABI
+operator|.
+name|IsN64
+argument_list|()
+operator|?
+name|Mips
+operator|::
+name|A0_64
+operator|:
+name|Mips
+operator|::
+name|A0
+return|;
+block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|ABI
+operator|.
+name|IsN64
+argument_list|()
+condition|?
+name|Mips
+operator|::
+name|A1_64
+else|:
+name|Mips
+operator|::
+name|A1
+return|;
+block|}
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|bool
 name|isNoopAddrSpaceCast
@@ -681,11 +716,11 @@ name|unsigned
 name|GOTFlag
 operator|=
 name|IsN32OrN64
-operator|?
+condition|?
 name|MipsII
 operator|::
 name|MO_GOT_PAGE
-operator|:
+else|:
 name|MipsII
 operator|::
 name|MO_GOT
@@ -745,7 +780,12 @@ argument_list|,
 name|MachinePointerInfo
 operator|::
 name|getGOT
+argument_list|(
+name|DAG
+operator|.
+name|getMachineFunction
 argument_list|()
+argument_list|)
 argument_list|,
 name|false
 argument_list|,
@@ -1460,15 +1500,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerSELECT_CC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|lowerSETCC
 argument_list|(
 argument|SDValue Op
@@ -1770,6 +1801,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|SDValue
+name|LowerInterruptReturn
+argument_list|(
+argument|SmallVectorImpl<SDValue>&RetOps
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|shouldSignExtendTypeInLibCall
 argument_list|(
@@ -1903,169 +1945,248 @@ block|}
 name|bool
 name|isLegalAddressingMode
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|const AddrMode&AM
-argument_list|,
-argument|Type *Ty
-argument_list|,
-argument|unsigned AS
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|AddrMode
+operator|&
+name|AM
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|unsigned
+name|AS
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
-argument|const GlobalAddressSDNode *GA
-argument_list|)
 specifier|const
+name|GlobalAddressSDNode
+operator|*
+name|GA
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|EVT
 name|getOptimalMemOpType
 argument_list|(
-argument|uint64_t Size
+name|uint64_t
+name|Size
 argument_list|,
-argument|unsigned DstAlign
+name|unsigned
+name|DstAlign
 argument_list|,
-argument|unsigned SrcAlign
+name|unsigned
+name|SrcAlign
 argument_list|,
-argument|bool IsMemset
+name|bool
+name|IsMemset
 argument_list|,
-argument|bool ZeroMemset
+name|bool
+name|ZeroMemset
 argument_list|,
-argument|bool MemcpyStrSrc
+name|bool
+name|MemcpyStrSrc
 argument_list|,
-argument|MachineFunction&MF
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// isFPImmLegal - Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will
 comment|/// materialize the FP immediate as a load from a constant pool.
 name|bool
 name|isFPImmLegal
 argument_list|(
-argument|const APFloat&Imm
-argument_list|,
-argument|EVT VT
-argument_list|)
 specifier|const
+name|APFloat
+operator|&
+name|Imm
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|getJumpTableEncoding
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
 name|bool
 name|useSoftFloat
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
 comment|/// Emit a sign-extension using sll/sra, seb, or seh appropriately.
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|emitSignExtendToI32InReg
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|unsigned SrcRec
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|unsigned
+name|DstReg
+argument_list|,
+name|unsigned
+name|SrcRec
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitAtomicBinary
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|unsigned BinOpcode
-argument_list|,
-argument|bool Nand = false
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|unsigned
+name|BinOpcode
+argument_list|,
+name|bool
+name|Nand
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitAtomicBinaryPartword
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|unsigned BinOpcode
-argument_list|,
-argument|bool Nand = false
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|unsigned
+name|BinOpcode
+argument_list|,
+name|bool
+name|Nand
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitAtomicCmpSwap
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|unsigned Size
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitAtomicCmpSwapPartword
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|unsigned Size
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitSEL_D
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitPseudoSELECT
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|MachineBasicBlock *BB
+name|MachineBasicBlock
+operator|*
+name|BB
 argument_list|,
-argument|bool isFPCmp
+name|bool
+name|isFPCmp
 argument_list|,
-argument|unsigned Opc
+name|unsigned
+name|Opc
 argument_list|)
-specifier|const
-block|;   }
+decl|const
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Create MipsTargetLowering objects.
+end_comment
+
+begin_function_decl
 specifier|const
 name|MipsTargetLowering
 modifier|*
@@ -2082,6 +2203,9 @@ modifier|&
 name|STI
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|MipsTargetLowering
 modifier|*
@@ -2098,6 +2222,9 @@ modifier|&
 name|STI
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|namespace
 name|Mips
 block|{
@@ -2116,10 +2243,10 @@ name|libInfo
 parameter_list|)
 function_decl|;
 block|}
-block|}
 end_decl_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

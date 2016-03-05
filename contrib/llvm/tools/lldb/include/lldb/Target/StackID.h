@@ -98,7 +98,7 @@ argument_list|)
 operator|,
 name|m_symbol_scope
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{     }
 name|explicit
@@ -156,7 +156,9 @@ block|{     }
 operator|~
 name|StackID
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|lldb
 operator|::
 name|addr_t
@@ -216,7 +218,7 @@ name|LLDB_INVALID_ADDRESS
 expr_stmt|;
 name|m_symbol_scope
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 name|bool
@@ -323,16 +325,13 @@ operator|=
 name|cfa
 expr_stmt|;
 block|}
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from StackID can see and modify these
-comment|//------------------------------------------------------------------
 name|lldb
 operator|::
 name|addr_t
 name|m_pc
 expr_stmt|;
 comment|// The pc value for the function/symbol for this frame. This will
-comment|// only get used if the symbol scope is NULL (the code where we are
+comment|// only get used if the symbol scope is nullptr (the code where we are
 comment|// stopped is not represented by any function or symbol in any
 comment|// shared library).
 name|lldb
@@ -347,8 +346,8 @@ name|SymbolContextScope
 modifier|*
 name|m_symbol_scope
 decl_stmt|;
-comment|// If NULL, there is no block or symbol for this frame.
-comment|// If not NULL, this will either be the scope for the
+comment|// If nullptr, there is no block or symbol for this frame.
+comment|// If not nullptr, this will either be the scope for the
 comment|// lexical block for the frame, or the scope
 comment|// for the symbol. Symbol context scopes are
 comment|// always be unique pointers since the are part

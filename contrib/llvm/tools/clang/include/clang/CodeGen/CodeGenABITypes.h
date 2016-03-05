@@ -141,6 +141,9 @@ name|class
 name|CXXRecordDecl
 decl_stmt|;
 name|class
+name|CXXMethodDecl
+decl_stmt|;
+name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
@@ -184,13 +187,6 @@ name|Module
 operator|&
 name|M
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|DataLayout
-operator|&
-name|TD
-argument_list|,
 name|CoverageSourceInfo
 operator|*
 name|CoverageInfo
@@ -228,6 +224,11 @@ operator|<
 name|FunctionProtoType
 operator|>
 name|Ty
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -256,6 +257,11 @@ specifier|const
 name|FunctionProtoType
 modifier|*
 name|FTP
+parameter_list|,
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
 specifier|const
@@ -286,23 +292,39 @@ label|:
 comment|/// Default CodeGenOptions object used to initialize the
 comment|/// CodeGenModule and otherwise not used. More specifically, it is
 comment|/// not used in ABI type generation, so none of the options matter.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CodeGenOptions
-modifier|*
+operator|>
 name|CGO
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|HeaderSearchOptions
-modifier|*
+operator|>
 name|HSO
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PreprocessorOptions
-modifier|*
+operator|>
 name|PPO
-decl_stmt|;
+expr_stmt|;
 comment|/// The CodeGenModule we use get to the CodeGenTypes object.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CodeGen
 operator|::
 name|CodeGenModule
-operator|*
+operator|>
 name|CGM
 expr_stmt|;
 block|}

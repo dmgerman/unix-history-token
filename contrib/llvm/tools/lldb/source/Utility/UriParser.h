@@ -84,8 +84,10 @@ name|bool
 name|Parse
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
 name|uri
 argument_list|,
 name|std

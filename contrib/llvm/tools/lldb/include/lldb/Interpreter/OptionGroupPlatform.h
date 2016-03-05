@@ -122,24 +122,25 @@ argument_list|(
 argument|include_platform_option
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|OptionGroupPlatform
 argument_list|()
-block|{     }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -149,15 +150,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::

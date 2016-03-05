@@ -154,7 +154,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LibCallSemantics.h"
+file|"llvm/Analysis/EHPersonalities.h"
 end_include
 
 begin_include
@@ -179,6 +179,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
@@ -241,9 +247,6 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
-struct_decl|struct
-name|WinEHFuncInfo
-struct_decl|;
 struct|struct
 name|SEHHandler
 block|{
@@ -307,12 +310,6 @@ modifier|*
 name|LandingPadLabel
 decl_stmt|;
 comment|// Label at beginning of landing pad.
-specifier|const
-name|Function
-modifier|*
-name|Personality
-decl_stmt|;
-comment|// Personality function.
 name|std
 operator|::
 name|vector
@@ -322,10 +319,6 @@ operator|>
 name|TypeIds
 expr_stmt|;
 comment|// List of type ids (filters negative).
-name|int
-name|WinEHState
-decl_stmt|;
-comment|// WinEH specific state number.
 name|explicit
 name|LandingPadInfo
 argument_list|(
@@ -341,18 +334,7 @@ argument_list|)
 operator|,
 name|LandingPadLabel
 argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Personality
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|WinEHState
-argument_list|(
-argument|-
-literal|1
+argument|nullptr
 argument_list|)
 block|{}
 block|}
@@ -556,6 +538,14 @@ block|;
 name|bool
 name|CallsUnwindInit
 block|;
+name|bool
+name|HasEHFunclets
+block|;
+comment|// TODO: Ideally, what we'd like is to have a switch that allows emitting
+comment|// synchronous (precise at call-sites only) CFA into .eh_frame. However,
+comment|// even under this switch, we'd like .debug_frame to be precise when using.
+comment|// -g. At this moment, there's no way to specify that some CFI directives
+comment|// go into .eh_frame only, while others go into .debug_frame only.
 comment|/// DbgInfoAvailable - True if debugging information is available
 comment|/// in this module.
 name|bool
@@ -577,20 +567,6 @@ name|UsesMorestackAddr
 block|;
 name|EHPersonality
 name|PersonalityTypeCache
-block|;
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-block|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|WinEHFuncInfo
-operator|>>
-name|FuncInfoMap
 block|;
 name|public
 operator|:
@@ -761,52 +737,6 @@ return|return
 name|TheModule
 return|;
 block|}
-specifier|const
-name|Function
-modifier|*
-name|getWinEHParent
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
-decl|const
-decl_stmt|;
-name|WinEHFuncInfo
-modifier|&
-name|getWinEHFuncInfo
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|)
-function_decl|;
-name|bool
-name|hasWinEHFuncInfo
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
-decl|const
-block|{
-return|return
-name|FuncInfoMap
-operator|.
-name|count
-argument_list|(
-name|getWinEHParent
-argument_list|(
-name|F
-argument_list|)
-argument_list|)
-operator|>
-literal|0
-return|;
-block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for
 comment|/// backends that would like to do so.
 comment|///
@@ -967,6 +897,33 @@ block|{
 name|CallsUnwindInit
 operator|=
 name|b
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|hasEHFunclets
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEHFunclets
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHasEHFunclets
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+block|{
+name|HasEHFunclets
+operator|=
+name|V
 expr_stmt|;
 block|}
 end_function
@@ -1269,10 +1226,6 @@ begin_function_decl
 name|void
 name|addPersonality
 parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|,
 specifier|const
 name|Function
 modifier|*
@@ -1280,48 +1233,6 @@ name|Personality
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|addPersonality
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|Personality
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|addWinEHState
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|,
-name|int
-name|State
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getPersonalityIndex - Get index of the current personality function inside
-end_comment
-
-begin_comment
-comment|/// Personalitites array
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getPersonalityIndex
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// getPersonalities - Return array of personality functions ever seen.
@@ -1828,35 +1739,6 @@ name|FilterIds
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// getPersonality - Return a personality function if available.  The presence
-end_comment
-
-begin_comment
-comment|/// of one is required to emit exception handling info.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|Function
-operator|*
-name|getPersonality
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Classify the personality function amongst known EH styles.
-end_comment
-
-begin_function_decl
-name|EHPersonality
-name|getPersonalityType
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// setVariableDbgInfo - Collect information used to emit debugging

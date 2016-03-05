@@ -86,18 +86,6 @@ comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -153,30 +141,22 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 comment|//
 name|bool
 name|Lock
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|Unlock
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|Write
@@ -213,9 +193,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnStreamStderr
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnStreamStderr
@@ -262,9 +240,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnStreamStderr
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

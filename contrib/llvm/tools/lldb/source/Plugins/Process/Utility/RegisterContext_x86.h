@@ -48,7 +48,7 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// i386 gcc, dwarf, gdb enums
+comment|// i386 ehframe, dwarf regnums
 end_comment
 
 begin_comment
@@ -56,140 +56,98 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Register numbers seen in eh_frame (eRegisterKindGCC)
+comment|// Register numbers seen in eh_frame (eRegisterKindEHFrame) on i386 systems (non-Darwin)
 end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|// From Jason Molenda: "gcc registers" is the register numbering used in the eh_frame
-end_comment
-
-begin_comment
-comment|// CFI.  The only registers that are described in eh_frame CFI are those that are
-end_comment
-
-begin_comment
-comment|// preserved across function calls aka callee-saved aka non-volatile.  And none
-end_comment
-
-begin_comment
-comment|// of the floating point registers on x86 are preserved across function calls.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The only reason there is a "gcc register" and a "dwarf register" is because of a
-end_comment
-
-begin_comment
-comment|// mistake years and years ago with i386 where they got esp and ebp
-end_comment
-
-begin_comment
-comment|// backwards when they emitted the eh_frame instructions.  Once there were
-end_comment
-
-begin_comment
-comment|// binaries In The Wild using the reversed numbering, we had to stick with it
-end_comment
-
-begin_comment
-comment|// forever.
 end_comment
 
 begin_enum
 enum|enum
 block|{
-comment|// 2nd parameter in DwarfRegNum() is regnum for exception handling on x86-32.
-comment|// See http://llvm.org/docs/WritingAnLLVMBackend.html#defining-a-register
-name|gcc_eax_i386
+name|ehframe_eax_i386
 init|=
 literal|0
 block|,
-name|gcc_ecx_i386
+name|ehframe_ecx_i386
 block|,
-name|gcc_edx_i386
+name|ehframe_edx_i386
 block|,
-name|gcc_ebx_i386
+name|ehframe_ebx_i386
 block|,
 comment|// on Darwin esp& ebp are reversed in the eh_frame section for i386 (versus dwarf's reg numbering).
 comment|// To be specific:
 comment|//    i386+darwin eh_frame:        4 is ebp, 5 is esp
 comment|//    i386+everyone else eh_frame: 4 is esp, 5 is ebp
 comment|//    i386 dwarf:                  4 is esp, 5 is ebp
-comment|// lldb will get the darwin-specific eh_frame reg numberings from debugserver instead of here so we
-comment|// only encode the 4 == esp, 5 == ebp numbers in this generic header.
-name|gcc_esp_i386
+comment|// lldb will get the darwin-specific eh_frame reg numberings from debugserver, or the ABI, so we
+comment|// only encode the generally correct 4 == esp, 5 == ebp numbers in this generic header.
+name|ehframe_esp_i386
 block|,
-name|gcc_ebp_i386
+name|ehframe_ebp_i386
 block|,
-name|gcc_esi_i386
+name|ehframe_esi_i386
 block|,
-name|gcc_edi_i386
+name|ehframe_edi_i386
 block|,
-name|gcc_eip_i386
+name|ehframe_eip_i386
 block|,
-name|gcc_eflags_i386
+name|ehframe_eflags_i386
 block|,
-name|gcc_st0_i386
+name|ehframe_st0_i386
 init|=
 literal|12
 block|,
-name|gcc_st1_i386
+name|ehframe_st1_i386
 block|,
-name|gcc_st2_i386
+name|ehframe_st2_i386
 block|,
-name|gcc_st3_i386
+name|ehframe_st3_i386
 block|,
-name|gcc_st4_i386
+name|ehframe_st4_i386
 block|,
-name|gcc_st5_i386
+name|ehframe_st5_i386
 block|,
-name|gcc_st6_i386
+name|ehframe_st6_i386
 block|,
-name|gcc_st7_i386
+name|ehframe_st7_i386
 block|,
-name|gcc_xmm0_i386
+name|ehframe_xmm0_i386
 init|=
 literal|21
 block|,
-name|gcc_xmm1_i386
+name|ehframe_xmm1_i386
 block|,
-name|gcc_xmm2_i386
+name|ehframe_xmm2_i386
 block|,
-name|gcc_xmm3_i386
+name|ehframe_xmm3_i386
 block|,
-name|gcc_xmm4_i386
+name|ehframe_xmm4_i386
 block|,
-name|gcc_xmm5_i386
+name|ehframe_xmm5_i386
 block|,
-name|gcc_xmm6_i386
+name|ehframe_xmm6_i386
 block|,
-name|gcc_xmm7_i386
+name|ehframe_xmm7_i386
 block|,
-name|gcc_mm0_i386
+name|ehframe_mm0_i386
 init|=
 literal|29
 block|,
-name|gcc_mm1_i386
+name|ehframe_mm1_i386
 block|,
-name|gcc_mm2_i386
+name|ehframe_mm2_i386
 block|,
-name|gcc_mm3_i386
+name|ehframe_mm3_i386
 block|,
-name|gcc_mm4_i386
+name|ehframe_mm4_i386
 block|,
-name|gcc_mm5_i386
+name|ehframe_mm5_i386
 block|,
-name|gcc_mm6_i386
+name|ehframe_mm6_i386
 block|,
-name|gcc_mm7_i386
+name|ehframe_mm7_i386
 block|, }
 enum|;
 end_enum
@@ -329,157 +287,11 @@ enum|;
 end_enum
 
 begin_comment
-comment|// Register numbers GDB uses (eRegisterKindGDB)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// From Jason Molenda: The "gdb numbers" are what you would see in the stabs debug format.
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|gdb_eax_i386
-block|,
-name|gdb_ecx_i386
-block|,
-name|gdb_edx_i386
-block|,
-name|gdb_ebx_i386
-block|,
-name|gdb_esp_i386
-block|,
-name|gdb_ebp_i386
-block|,
-name|gdb_esi_i386
-block|,
-name|gdb_edi_i386
-block|,
-name|gdb_eip_i386
-block|,
-name|gdb_eflags_i386
-block|,
-name|gdb_cs_i386
-block|,
-name|gdb_ss_i386
-block|,
-name|gdb_ds_i386
-block|,
-name|gdb_es_i386
-block|,
-name|gdb_fs_i386
-block|,
-name|gdb_gs_i386
-block|,
-name|gdb_st0_i386
-init|=
-literal|16
-block|,
-name|gdb_st1_i386
-block|,
-name|gdb_st2_i386
-block|,
-name|gdb_st3_i386
-block|,
-name|gdb_st4_i386
-block|,
-name|gdb_st5_i386
-block|,
-name|gdb_st6_i386
-block|,
-name|gdb_st7_i386
-block|,
-name|gdb_fctrl_i386
-block|,
-comment|// FPU Control Word
-name|gdb_fstat_i386
-block|,
-comment|// FPU Status Word
-name|gdb_ftag_i386
-block|,
-comment|// FPU Tag Word
-name|gdb_fiseg_i386
-block|,
-comment|// FPU IP Selector
-name|gdb_fioff_i386
-block|,
-comment|// FPU IP Offset
-name|gdb_foseg_i386
-block|,
-comment|// FPU Operand Pointer Selector
-name|gdb_fooff_i386
-block|,
-comment|// FPU Operand Pointer Offset
-name|gdb_fop_i386
-block|,
-comment|// Last Instruction Opcode
-name|gdb_xmm0_i386
-init|=
-literal|32
-block|,
-name|gdb_xmm1_i386
-block|,
-name|gdb_xmm2_i386
-block|,
-name|gdb_xmm3_i386
-block|,
-name|gdb_xmm4_i386
-block|,
-name|gdb_xmm5_i386
-block|,
-name|gdb_xmm6_i386
-block|,
-name|gdb_xmm7_i386
-block|,
-name|gdb_mxcsr_i386
-init|=
-literal|40
-block|,
-name|gdb_ymm0h_i386
-block|,
-name|gdb_ymm1h_i386
-block|,
-name|gdb_ymm2h_i386
-block|,
-name|gdb_ymm3h_i386
-block|,
-name|gdb_ymm4h_i386
-block|,
-name|gdb_ymm5h_i386
-block|,
-name|gdb_ymm6h_i386
-block|,
-name|gdb_ymm7h_i386
-block|,
-name|gdb_mm0_i386
-block|,
-name|gdb_mm1_i386
-block|,
-name|gdb_mm2_i386
-block|,
-name|gdb_mm3_i386
-block|,
-name|gdb_mm4_i386
-block|,
-name|gdb_mm5_i386
-block|,
-name|gdb_mm6_i386
-block|,
-name|gdb_mm7_i386
-block|, }
-enum|;
-end_enum
-
-begin_comment
 comment|//---------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// AMD x86_64, AMD64, Intel EM64T, or Intel 64 gcc, dwarf, gdb enums
+comment|// AMD x86_64, AMD64, Intel EM64T, or Intel 64 ehframe, dwarf regnums
 end_comment
 
 begin_comment
@@ -487,7 +299,7 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// GCC and DWARF Register numbers (eRegisterKindGCC& eRegisterKindDWARF)
+comment|// EHFrame and DWARF Register numbers (eRegisterKindEHFrame& eRegisterKindDWARF)
 end_comment
 
 begin_comment
@@ -502,366 +314,197 @@ begin_enum
 enum|enum
 block|{
 comment|// GP Registers
-name|gcc_dwarf_rax_x86_64
+name|dwarf_rax_x86_64
 init|=
 literal|0
 block|,
-name|gcc_dwarf_rdx_x86_64
+name|dwarf_rdx_x86_64
 block|,
-name|gcc_dwarf_rcx_x86_64
+name|dwarf_rcx_x86_64
 block|,
-name|gcc_dwarf_rbx_x86_64
+name|dwarf_rbx_x86_64
 block|,
-name|gcc_dwarf_rsi_x86_64
+name|dwarf_rsi_x86_64
 block|,
-name|gcc_dwarf_rdi_x86_64
+name|dwarf_rdi_x86_64
 block|,
-name|gcc_dwarf_rbp_x86_64
+name|dwarf_rbp_x86_64
 block|,
-name|gcc_dwarf_rsp_x86_64
+name|dwarf_rsp_x86_64
 block|,
 comment|// Extended GP Registers
-name|gcc_dwarf_r8_x86_64
+name|dwarf_r8_x86_64
 init|=
 literal|8
 block|,
-name|gcc_dwarf_r9_x86_64
+name|dwarf_r9_x86_64
 block|,
-name|gcc_dwarf_r10_x86_64
+name|dwarf_r10_x86_64
 block|,
-name|gcc_dwarf_r11_x86_64
+name|dwarf_r11_x86_64
 block|,
-name|gcc_dwarf_r12_x86_64
+name|dwarf_r12_x86_64
 block|,
-name|gcc_dwarf_r13_x86_64
+name|dwarf_r13_x86_64
 block|,
-name|gcc_dwarf_r14_x86_64
+name|dwarf_r14_x86_64
 block|,
-name|gcc_dwarf_r15_x86_64
+name|dwarf_r15_x86_64
 block|,
 comment|// Return Address (RA) mapped to RIP
-name|gcc_dwarf_rip_x86_64
+name|dwarf_rip_x86_64
 init|=
 literal|16
 block|,
 comment|// SSE Vector Registers
-name|gcc_dwarf_xmm0_x86_64
+name|dwarf_xmm0_x86_64
 init|=
 literal|17
 block|,
-name|gcc_dwarf_xmm1_x86_64
+name|dwarf_xmm1_x86_64
 block|,
-name|gcc_dwarf_xmm2_x86_64
+name|dwarf_xmm2_x86_64
 block|,
-name|gcc_dwarf_xmm3_x86_64
+name|dwarf_xmm3_x86_64
 block|,
-name|gcc_dwarf_xmm4_x86_64
+name|dwarf_xmm4_x86_64
 block|,
-name|gcc_dwarf_xmm5_x86_64
+name|dwarf_xmm5_x86_64
 block|,
-name|gcc_dwarf_xmm6_x86_64
+name|dwarf_xmm6_x86_64
 block|,
-name|gcc_dwarf_xmm7_x86_64
+name|dwarf_xmm7_x86_64
 block|,
-name|gcc_dwarf_xmm8_x86_64
+name|dwarf_xmm8_x86_64
 block|,
-name|gcc_dwarf_xmm9_x86_64
+name|dwarf_xmm9_x86_64
 block|,
-name|gcc_dwarf_xmm10_x86_64
+name|dwarf_xmm10_x86_64
 block|,
-name|gcc_dwarf_xmm11_x86_64
+name|dwarf_xmm11_x86_64
 block|,
-name|gcc_dwarf_xmm12_x86_64
+name|dwarf_xmm12_x86_64
 block|,
-name|gcc_dwarf_xmm13_x86_64
+name|dwarf_xmm13_x86_64
 block|,
-name|gcc_dwarf_xmm14_x86_64
+name|dwarf_xmm14_x86_64
 block|,
-name|gcc_dwarf_xmm15_x86_64
+name|dwarf_xmm15_x86_64
 block|,
 comment|// Floating Point Registers
-name|gcc_dwarf_st0_x86_64
+name|dwarf_st0_x86_64
 init|=
 literal|33
 block|,
-name|gcc_dwarf_st1_x86_64
+name|dwarf_st1_x86_64
 block|,
-name|gcc_dwarf_st2_x86_64
+name|dwarf_st2_x86_64
 block|,
-name|gcc_dwarf_st3_x86_64
+name|dwarf_st3_x86_64
 block|,
-name|gcc_dwarf_st4_x86_64
+name|dwarf_st4_x86_64
 block|,
-name|gcc_dwarf_st5_x86_64
+name|dwarf_st5_x86_64
 block|,
-name|gcc_dwarf_st6_x86_64
+name|dwarf_st6_x86_64
 block|,
-name|gcc_dwarf_st7_x86_64
+name|dwarf_st7_x86_64
 block|,
 comment|// MMX Registers
-name|gcc_dwarf_mm0_x86_64
+name|dwarf_mm0_x86_64
 init|=
 literal|41
 block|,
-name|gcc_dwarf_mm1_x86_64
+name|dwarf_mm1_x86_64
 block|,
-name|gcc_dwarf_mm2_x86_64
+name|dwarf_mm2_x86_64
 block|,
-name|gcc_dwarf_mm3_x86_64
+name|dwarf_mm3_x86_64
 block|,
-name|gcc_dwarf_mm4_x86_64
+name|dwarf_mm4_x86_64
 block|,
-name|gcc_dwarf_mm5_x86_64
+name|dwarf_mm5_x86_64
 block|,
-name|gcc_dwarf_mm6_x86_64
+name|dwarf_mm6_x86_64
 block|,
-name|gcc_dwarf_mm7_x86_64
+name|dwarf_mm7_x86_64
 block|,
 comment|// Control and Status Flags Register
-name|gcc_dwarf_rflags_x86_64
+name|dwarf_rflags_x86_64
 init|=
 literal|49
 block|,
 comment|//  selector registers
-name|gcc_dwarf_es_x86_64
+name|dwarf_es_x86_64
 init|=
 literal|50
 block|,
-name|gcc_dwarf_cs_x86_64
+name|dwarf_cs_x86_64
 block|,
-name|gcc_dwarf_ss_x86_64
+name|dwarf_ss_x86_64
 block|,
-name|gcc_dwarf_ds_x86_64
+name|dwarf_ds_x86_64
 block|,
-name|gcc_dwarf_fs_x86_64
+name|dwarf_fs_x86_64
 block|,
-name|gcc_dwarf_gs_x86_64
+name|dwarf_gs_x86_64
 block|,
 comment|// Floating point control registers
-name|gcc_dwarf_mxcsr_x86_64
+name|dwarf_mxcsr_x86_64
 init|=
 literal|64
 block|,
 comment|// Media Control and Status
-name|gcc_dwarf_fctrl_x86_64
+name|dwarf_fctrl_x86_64
 block|,
 comment|// x87 control word
-name|gcc_dwarf_fstat_x86_64
+name|dwarf_fstat_x86_64
 block|,
 comment|// x87 status word
 comment|// Upper Vector Registers
-name|gcc_dwarf_ymm0h_x86_64
+name|dwarf_ymm0h_x86_64
 init|=
 literal|67
 block|,
-name|gcc_dwarf_ymm1h_x86_64
+name|dwarf_ymm1h_x86_64
 block|,
-name|gcc_dwarf_ymm2h_x86_64
+name|dwarf_ymm2h_x86_64
 block|,
-name|gcc_dwarf_ymm3h_x86_64
+name|dwarf_ymm3h_x86_64
 block|,
-name|gcc_dwarf_ymm4h_x86_64
+name|dwarf_ymm4h_x86_64
 block|,
-name|gcc_dwarf_ymm5h_x86_64
+name|dwarf_ymm5h_x86_64
 block|,
-name|gcc_dwarf_ymm6h_x86_64
+name|dwarf_ymm6h_x86_64
 block|,
-name|gcc_dwarf_ymm7h_x86_64
+name|dwarf_ymm7h_x86_64
 block|,
-name|gcc_dwarf_ymm8h_x86_64
+name|dwarf_ymm8h_x86_64
 block|,
-name|gcc_dwarf_ymm9h_x86_64
+name|dwarf_ymm9h_x86_64
 block|,
-name|gcc_dwarf_ymm10h_x86_64
+name|dwarf_ymm10h_x86_64
 block|,
-name|gcc_dwarf_ymm11h_x86_64
+name|dwarf_ymm11h_x86_64
 block|,
-name|gcc_dwarf_ymm12h_x86_64
+name|dwarf_ymm12h_x86_64
 block|,
-name|gcc_dwarf_ymm13h_x86_64
+name|dwarf_ymm13h_x86_64
 block|,
-name|gcc_dwarf_ymm14h_x86_64
+name|dwarf_ymm14h_x86_64
 block|,
-name|gcc_dwarf_ymm15h_x86_64
+name|dwarf_ymm15h_x86_64
 block|,
 comment|// AVX2 Vector Mask Registers
-comment|// gcc_dwarf_k0_x86_64 = 118,
-comment|// gcc_dwarf_k1_x86_64,
-comment|// gcc_dwarf_k2_x86_64,
-comment|// gcc_dwarf_k3_x86_64,
-comment|// gcc_dwarf_k4_x86_64,
-comment|// gcc_dwarf_k5_x86_64,
-comment|// gcc_dwarf_k6_x86_64,
-comment|// gcc_dwarf_k7_x86_64,
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|// GDB Register numbers (eRegisterKindGDB)
-end_comment
-
-begin_enum
-enum|enum
-block|{
-comment|// GP Registers
-name|gdb_rax_x86_64
-init|=
-literal|0
-block|,
-name|gdb_rbx_x86_64
-block|,
-name|gdb_rcx_x86_64
-block|,
-name|gdb_rdx_x86_64
-block|,
-name|gdb_rsi_x86_64
-block|,
-name|gdb_rdi_x86_64
-block|,
-name|gdb_rbp_x86_64
-block|,
-name|gdb_rsp_x86_64
-block|,
-comment|// Extended GP Registers
-name|gdb_r8_x86_64
-block|,
-name|gdb_r9_x86_64
-block|,
-name|gdb_r10_x86_64
-block|,
-name|gdb_r11_x86_64
-block|,
-name|gdb_r12_x86_64
-block|,
-name|gdb_r13_x86_64
-block|,
-name|gdb_r14_x86_64
-block|,
-name|gdb_r15_x86_64
-block|,
-comment|// Return Address (RA) mapped to RIP
-name|gdb_rip_x86_64
-block|,
-comment|// Control and Status Flags Register
-name|gdb_rflags_x86_64
-block|,
-name|gdb_cs_x86_64
-block|,
-name|gdb_ss_x86_64
-block|,
-name|gdb_ds_x86_64
-block|,
-name|gdb_es_x86_64
-block|,
-name|gdb_fs_x86_64
-block|,
-name|gdb_gs_x86_64
-block|,
-comment|// Floating Point Registers
-name|gdb_st0_x86_64
-block|,
-name|gdb_st1_x86_64
-block|,
-name|gdb_st2_x86_64
-block|,
-name|gdb_st3_x86_64
-block|,
-name|gdb_st4_x86_64
-block|,
-name|gdb_st5_x86_64
-block|,
-name|gdb_st6_x86_64
-block|,
-name|gdb_st7_x86_64
-block|,
-name|gdb_fctrl_x86_64
-block|,
-name|gdb_fstat_x86_64
-block|,
-name|gdb_ftag_x86_64
-block|,
-name|gdb_fiseg_x86_64
-block|,
-name|gdb_fioff_x86_64
-block|,
-name|gdb_foseg_x86_64
-block|,
-name|gdb_fooff_x86_64
-block|,
-name|gdb_fop_x86_64
-block|,
-comment|// SSE Vector Registers
-name|gdb_xmm0_x86_64
-init|=
-literal|40
-block|,
-name|gdb_xmm1_x86_64
-block|,
-name|gdb_xmm2_x86_64
-block|,
-name|gdb_xmm3_x86_64
-block|,
-name|gdb_xmm4_x86_64
-block|,
-name|gdb_xmm5_x86_64
-block|,
-name|gdb_xmm6_x86_64
-block|,
-name|gdb_xmm7_x86_64
-block|,
-name|gdb_xmm8_x86_64
-block|,
-name|gdb_xmm9_x86_64
-block|,
-name|gdb_xmm10_x86_64
-block|,
-name|gdb_xmm11_x86_64
-block|,
-name|gdb_xmm12_x86_64
-block|,
-name|gdb_xmm13_x86_64
-block|,
-name|gdb_xmm14_x86_64
-block|,
-name|gdb_xmm15_x86_64
-block|,
-comment|// Floating point control registers
-name|gdb_mxcsr_x86_64
-init|=
-literal|56
-block|,
-name|gdb_ymm0h_x86_64
-block|,
-name|gdb_ymm1h_x86_64
-block|,
-name|gdb_ymm2h_x86_64
-block|,
-name|gdb_ymm3h_x86_64
-block|,
-name|gdb_ymm4h_x86_64
-block|,
-name|gdb_ymm5h_x86_64
-block|,
-name|gdb_ymm6h_x86_64
-block|,
-name|gdb_ymm7h_x86_64
-block|,
-name|gdb_ymm8h_x86_64
-block|,
-name|gdb_ymm9h_x86_64
-block|,
-name|gdb_ymm10h_x86_64
-block|,
-name|gdb_ymm11h_x86_64
-block|,
-name|gdb_ymm12h_x86_64
-block|,
-name|gdb_ymm13h_x86_64
-block|,
-name|gdb_ymm14h_x86_64
-block|,
-name|gdb_ymm15h_x86_64
+comment|// dwarf_k0_x86_64 = 118,
+comment|// dwarf_k1_x86_64,
+comment|// dwarf_k2_x86_64,
+comment|// dwarf_k3_x86_64,
+comment|// dwarf_k4_x86_64,
+comment|// dwarf_k5_x86_64,
+comment|// dwarf_k6_x86_64,
+comment|// dwarf_k7_x86_64,
 block|}
 enum|;
 end_enum
@@ -929,10 +572,14 @@ name|uint16_t
 name|fstat
 decl_stmt|;
 comment|// FPU Status Word (fsw)
-name|uint16_t
+name|uint8_t
 name|ftag
 decl_stmt|;
 comment|// FPU Tag Word (ftw)
+name|uint8_t
+name|reserved_1
+decl_stmt|;
+comment|// Reserved
 name|uint16_t
 name|fop
 decl_stmt|;

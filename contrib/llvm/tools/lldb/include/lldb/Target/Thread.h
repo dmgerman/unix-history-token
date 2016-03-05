@@ -43,6 +43,40 @@ directive|define
 name|liblldb_Thread_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -127,10 +161,10 @@ argument_list|(
 argument|bool is_global
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadProperties
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// The regular expression returned determines symbols that this
@@ -138,7 +172,7 @@ comment|/// thread won't stop in during "step-in" operations.
 comment|///
 comment|/// @return
 comment|///    A pointer to a regular expression to compare against symbols,
-comment|///    or NULL if all symbols are allowed.
+comment|///    or nullptr if all symbols are allowed.
 comment|///
 comment|//------------------------------------------------------------------
 specifier|const
@@ -255,12 +289,12 @@ modifier|&
 name|GetStaticBroadcasterClass
 parameter_list|()
 function_decl|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
@@ -290,10 +324,10 @@ block|;
 name|ThreadEventData
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|ThreadEventData
 argument_list|()
+name|override
 block|;
 specifier|static
 specifier|const
@@ -302,13 +336,13 @@ operator|&
 name|GetFlavorString
 argument_list|()
 block|;
-name|virtual
 specifier|const
 name|ConstString
 operator|&
 name|GetFlavor
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|ThreadEventData
@@ -317,13 +351,13 @@ name|GetFlavorString
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|const
@@ -436,23 +470,6 @@ name|current_inlined_pc
 expr_stmt|;
 block|}
 struct|;
-specifier|static
-name|void
-name|SettingsInitialize
-parameter_list|()
-function_decl|;
-specifier|static
-name|void
-name|SettingsTerminate
-parameter_list|()
-function_decl|;
-specifier|static
-specifier|const
-name|ThreadPropertiesSP
-modifier|&
-name|GetGlobalProperties
-parameter_list|()
-function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
@@ -479,11 +496,28 @@ argument_list|,
 argument|bool use_invalid_index_id = false
 argument_list|)
 empty_stmt|;
-name|virtual
 operator|~
 name|Thread
 argument_list|()
+name|override
 expr_stmt|;
+specifier|static
+name|void
+name|SettingsInitialize
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|SettingsTerminate
+parameter_list|()
+function_decl|;
+specifier|static
+specifier|const
+name|ThreadPropertiesSP
+modifier|&
+name|GetGlobalProperties
+parameter_list|()
+function_decl|;
 name|lldb
 operator|::
 name|ProcessSP
@@ -711,6 +745,11 @@ name|StopReason
 name|GetStopReason
 argument_list|()
 expr_stmt|;
+name|bool
+name|StopInfoIsUpToDate
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// This sets the stop reason to a "blank" stop reason, so you can call functions on the thread
 comment|// without having the called function run with whatever stop reason you stopped with.
 name|void
@@ -753,7 +792,7 @@ name|GetInfo
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -802,7 +841,7 @@ name|GetName
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -814,6 +853,45 @@ name|char
 modifier|*
 name|name
 parameter_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Whether this thread can be associated with a libdispatch queue
+comment|///
+comment|/// The Thread may know if it is associated with a libdispatch queue,
+comment|/// it may know definitively that it is NOT associated with a libdispatch
+comment|/// queue, or it may be unknown whether it is associated with a libdispatch
+comment|/// queue.
+comment|///
+comment|/// @return
+comment|///     eLazyBoolNo if this thread is definitely not associated with a
+comment|///     libdispatch queue (e.g. on a non-Darwin system where GCD aka
+comment|///     libdispatch is not available).
+comment|///
+comment|///     eLazyBoolYes this thread is associated with a libdispatch queue.
+comment|///
+comment|///     eLazyBoolCalculate this thread may be associated with a libdispatch
+comment|///     queue but the thread doesn't know one way or the other.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|LazyBool
+name|GetAssociatedWithLibdispatchQueue
+argument_list|()
+block|{
+return|return
+name|eLazyBoolNo
+return|;
+block|}
+name|virtual
+name|void
+name|SetAssociatedWithLibdispatchQueue
+argument_list|(
+name|lldb_private
+operator|::
+name|LazyBool
+name|associated_with_libdispatch_queue
+argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue ID for the queue currently using this Thread
@@ -859,7 +937,7 @@ comment|/// retrieve the Queue name.
 comment|///
 comment|/// @return
 comment|///     The Queue name, if the Thread subclass implements this, else
-comment|///     NULL.
+comment|///     nullptr.
 comment|//------------------------------------------------------------------
 name|virtual
 specifier|const
@@ -869,7 +947,7 @@ name|GetQueueName
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -881,6 +959,41 @@ name|char
 modifier|*
 name|name
 parameter_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue kind for the queue currently using this Thread
+comment|///
+comment|/// If this Thread is doing work on behalf of a libdispatch/GCD queue,
+comment|/// retrieve the Queue kind - either eQueueKindSerial or
+comment|/// eQueueKindConcurrent, indicating that this queue processes work
+comment|/// items serially or concurrently.
+comment|///
+comment|/// @return
+comment|///     The Queue kind, if the Thread subclass implements this, else
+comment|///     eQueueKindUnknown.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|QueueKind
+name|GetQueueKind
+argument_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
+name|virtual
+name|void
+name|SetQueueKind
+argument_list|(
+name|lldb
+operator|::
+name|QueueKind
+name|kind
+argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue for this thread, if any.
@@ -931,6 +1044,39 @@ argument_list|()
 block|{
 return|return
 name|LLDB_INVALID_ADDRESS
+return|;
+block|}
+name|virtual
+name|void
+name|SetQueueLibdispatchQueueAddress
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|dispatch_queue_t
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Whether this Thread already has all the Queue information cached or not
+comment|///
+comment|/// A Thread may be associated with a libdispatch work Queue at a given
+comment|/// public stop event.  If so, the thread can satisify requests like
+comment|/// GetQueueLibdispatchQueueAddress, GetQueueKind, GetQueueName, and GetQueueID
+comment|/// either from information from the remote debug stub when it is initially
+comment|/// created, or it can query the SystemRuntime for that information.
+comment|///
+comment|/// This method allows the SystemRuntime to discover if a thread has this
+comment|/// information already, instead of calling the thread to get the information
+comment|/// and having the thread call the SystemRuntime again.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|ThreadHasQueueInformation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 name|virtual
@@ -1054,7 +1200,7 @@ name|string
 operator|*
 name|warnings
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|virtual
@@ -1106,28 +1252,7 @@ operator|::
 name|StackFrameSP
 name|GetSelectedFrame
 argument_list|()
-block|{
-name|lldb
-operator|::
-name|StackFrameListSP
-name|stack_frame_list_sp
-argument_list|(
-name|GetStackFrameList
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|stack_frame_list_sp
-operator|->
-name|GetFrameAtIndex
-argument_list|(
-name|stack_frame_list_sp
-operator|->
-name|GetSelectedFrameIndex
-argument_list|()
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 name|uint32_t
 name|SetSelectedFrame
 argument_list|(
@@ -1445,7 +1570,7 @@ comment|///    \b true if we discard the currently queued plans and replace them
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1470,7 +1595,7 @@ comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1514,7 +1639,7 @@ comment|///    If eLazyBoolYes, if the step over steps out it will continue to s
 comment|///    If eLazyBoolCalculate, we will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1525,6 +1650,25 @@ argument_list|(
 argument|bool abort_other_plans
 argument_list|,
 argument|const AddressRange&range
+argument_list|,
+argument|const SymbolContext&addr_context
+argument_list|,
+argument|lldb::RunMode stop_other_threads
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
+argument_list|)
+expr_stmt|;
+comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.  This may combine multiple
+comment|// LineEntries of the same source line number to step over a longer address range in a single operation.
+name|virtual
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|QueueThreadPlanForStepOverRange
+argument_list|(
+argument|bool abort_other_plans
+argument_list|,
+argument|const LineEntry&line_entry
 argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
@@ -1568,7 +1712,7 @@ comment|///    If eLazyBoolYes, if the step over steps out it will continue to s
 comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1579,6 +1723,29 @@ argument_list|(
 argument|bool abort_other_plans
 argument_list|,
 argument|const AddressRange&range
+argument_list|,
+argument|const SymbolContext&addr_context
+argument_list|,
+argument|const char *step_in_target
+argument_list|,
+argument|lldb::RunMode stop_other_threads
+argument_list|,
+argument|LazyBool step_in_avoids_code_without_debug_info = eLazyBoolCalculate
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
+argument_list|)
+expr_stmt|;
+comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.  This may combine multiple
+comment|// LineEntries of the same source line number to step over a longer address range in a single operation.
+name|virtual
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|QueueThreadPlanForStepInRange
+argument_list|(
+argument|bool abort_other_plans
+argument_list|,
+argument|const LineEntry&line_entry
 argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
@@ -1621,7 +1788,7 @@ comment|///    If eLazyBoolYes, if the step over steps out it will continue to s
 comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1674,8 +1841,18 @@ comment|/// @param[in] stop_vote
 comment|/// @param[in] run_vote
 comment|///    See standard meanings for the stop& run votes in ThreadPlan.h.
 comment|///
+comment|/// @param[in] continue_to_next_branch
+comment|///    Normally this will enqueue a plan that will put a breakpoint on the return address and continue
+comment|///    to there.  If continue_to_next_branch is true, this is an operation not involving the user --
+comment|///    e.g. stepping "next" in a source line and we instruction stepped into another function --
+comment|///    so instead of putting a breakpoint on the return address, advance the breakpoint to the
+comment|///    end of the source line that is doing the call, or until the next flow control instruction.
+comment|///    If the return value from the function call is to be retrieved / displayed to the user, you must stop
+comment|///    on the return address.  The return value may be stored in volatile registers which are overwritten
+comment|///    before the next branch instruction.
+comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1698,6 +1875,8 @@ argument|Vote run_vote
 argument_list|,
 comment|// = eVoteNoOpinion);
 argument|uint32_t frame_idx
+argument_list|,
+argument|bool continue_to_next_branch = false
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1717,7 +1896,7 @@ comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1748,7 +1927,7 @@ comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1818,26 +1997,6 @@ name|Error
 name|UnwindInnermostExpression
 parameter_list|()
 function_decl|;
-name|private
-label|:
-name|bool
-name|PlanIsBasePlan
-parameter_list|(
-name|ThreadPlan
-modifier|*
-name|plan_ptr
-parameter_list|)
-function_decl|;
-name|void
-name|BroadcastSelectedFrameChange
-parameter_list|(
-name|StackID
-modifier|&
-name|new_frame_id
-parameter_list|)
-function_decl|;
-name|public
-label|:
 comment|//------------------------------------------------------------------
 comment|/// Gets the outer-most plan that was popped off the plan stack in the
 comment|/// most recent stop.  Useful for printing the stop reason accurately.
@@ -1868,13 +2027,13 @@ comment|//------------------------------------------------------------------
 comment|/// Gets the outer-most expression variable from the completed plans
 comment|///
 comment|/// @return
-comment|///     A ClangExpressionVariableSP, either empty if there is no
+comment|///     A ExpressionVariableSP, either empty if there is no
 comment|///     plan completed an expression during the current stop
 comment|///     or the expression variable that was made for the completed expression.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
-name|ClangExpressionVariableSP
+name|ExpressionVariableSP
 name|GetExpressionVariable
 argument_list|()
 expr_stmt|;
@@ -2134,43 +2293,43 @@ block|}
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|TargetSP
 name|CalculateTarget
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|CalculateProcess
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
 name|CalculateThread
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|StackFrameSP
 name|CalculateStackFrame
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|void
 name|CalculateExecutionContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|StackFrameSP
@@ -2470,6 +2629,30 @@ name|StackFrameListSP
 name|GetStackFrameList
 argument_list|()
 expr_stmt|;
+name|void
+name|SetTemporaryResumeState
+argument_list|(
+name|lldb
+operator|::
+name|StateType
+name|new_state
+argument_list|)
+block|{
+name|m_temporary_resume_state
+operator|=
+name|new_state
+expr_stmt|;
+block|}
+name|void
+name|FunctionOptimizationWarning
+argument_list|(
+name|lldb_private
+operator|::
+name|StackFrame
+operator|*
+name|frame
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from Process can see and modify these
 comment|//------------------------------------------------------------------
@@ -2591,9 +2774,24 @@ name|ObjectSP
 name|m_extended_info
 expr_stmt|;
 comment|// The extended info for this thread
-comment|//------------------------------------------------------------------
-comment|// For Thread only
-comment|//------------------------------------------------------------------
+name|private
+label|:
+name|bool
+name|PlanIsBasePlan
+parameter_list|(
+name|ThreadPlan
+modifier|*
+name|plan_ptr
+parameter_list|)
+function_decl|;
+name|void
+name|BroadcastSelectedFrameChange
+parameter_list|(
+name|StackID
+modifier|&
+name|new_frame_id
+parameter_list|)
+function_decl|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Thread

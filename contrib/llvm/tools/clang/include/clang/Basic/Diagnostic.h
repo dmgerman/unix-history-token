@@ -3827,10 +3827,14 @@ name|mutable
 name|DiagnosticsEngine
 modifier|*
 name|DiagObj
+init|=
+name|nullptr
 decl_stmt|;
 name|mutable
 name|unsigned
 name|NumArgs
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Status variable indicating if this diagnostic is still active.
 comment|///
@@ -3840,12 +3844,16 @@ comment|// Emit() would end up with if we used that as our status variable.
 name|mutable
 name|bool
 name|IsActive
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Flag indicating that this diagnostic is being emitted via a
 comment|/// call to ForceEmit.
 name|mutable
 name|bool
 name|IsForceEmit
+init|=
+name|false
 decl_stmt|;
 name|void
 name|operator
@@ -3864,27 +3872,9 @@ name|DiagnosticsEngine
 decl_stmt|;
 name|DiagnosticBuilder
 argument_list|()
-operator|:
-name|DiagObj
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumArgs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|IsActive
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsForceEmit
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|DiagnosticBuilder
 argument_list|(
@@ -3898,19 +3888,9 @@ argument_list|(
 name|diagObj
 argument_list|)
 operator|,
-name|NumArgs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|IsActive
 argument_list|(
-name|true
-argument_list|)
-operator|,
-name|IsForceEmit
-argument_list|(
-argument|false
+argument|true
 argument_list|)
 block|{
 name|assert
@@ -4758,9 +4738,7 @@ name|DiagnosticBuilder
 operator|&
 name|DB
 operator|,
-specifier|const
 name|SourceRange
-operator|&
 name|R
 operator|)
 block|{
@@ -4804,9 +4782,7 @@ operator|)
 block|{
 for|for
 control|(
-specifier|const
 name|SourceRange
-modifier|&
 name|R
 range|:
 name|Ranges
@@ -5659,6 +5635,8 @@ name|public
 label|:
 name|StoredDiagnostic
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 name|StoredDiagnostic
 argument_list|(
@@ -5691,10 +5669,6 @@ argument_list|,
 argument|ArrayRef<FixItHint> Fixits
 argument_list|)
 empty_stmt|;
-operator|~
-name|StoredDiagnostic
-argument_list|()
-expr_stmt|;
 comment|/// \brief Evaluates true when this object stores a diagnostic.
 name|explicit
 name|operator

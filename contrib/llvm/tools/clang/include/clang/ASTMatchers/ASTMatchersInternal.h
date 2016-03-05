@@ -710,10 +710,20 @@ name|class
 name|DynMatcherInterface
 range|:
 name|public
-name|RefCountedBaseVPTR
+name|llvm
+operator|::
+name|ThreadSafeRefCountedBase
+operator|<
+name|DynMatcherInterface
+operator|>
 block|{
 name|public
 operator|:
+name|virtual
+operator|~
+name|DynMatcherInterface
+argument_list|()
+block|{}
 comment|/// \brief Returns true if \p DynNode can be matched.
 comment|///
 comment|/// May bind \p DynNode to an ID via \p Builder, or recurse into
@@ -753,11 +763,6 @@ name|DynMatcherInterface
 block|{
 name|public
 operator|:
-operator|~
-name|MatcherInterface
-argument_list|()
-name|override
-block|{}
 comment|/// \brief Returns true if 'Node' can be matched.
 comment|///
 comment|/// May bind 'Node' to an ID via 'Builder', or recurse into
@@ -956,6 +961,8 @@ name|DynTypedMatcher
 name|constructVariadic
 argument_list|(
 argument|VariadicOperator Op
+argument_list|,
+argument|ast_type_traits::ASTNodeKind SupportedKind
 argument_list|,
 argument|std::vector<DynTypedMatcher> InnerMatchers
 argument_list|)
@@ -1937,7 +1944,23 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Metafunction to determine if type T has a member called getDecl.
+comment|// Metafunction to determine if type T has a member called
+comment|// getDecl.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+comment|// For MSVC, we use a weird nonstandard __if_exists statement, as it
+comment|// is not standards-conformant enough to properly compile the standard
+comment|// code below. (At least up through MSVC 2015 require this workaround)
 name|template
 operator|<
 name|typename
@@ -1945,90 +1968,106 @@ name|T
 operator|>
 expr|struct
 name|has_getDecl
-block|{   struct
-name|Default
 block|{
-name|int
-name|getDecl
-block|; }
-block|;   struct
-name|Derived
-operator|:
-name|T
-block|,
-name|Default
-block|{ }
-block|;
-name|template
-operator|<
-name|typename
-name|C
-block|,
-name|C
-operator|>
-expr|struct
-name|CheckT
-block|;
-comment|// If T::getDecl exists, an ambiguity arises and CheckT will
-comment|// not be instantiable. This makes f(...) the only available
-comment|// overload.
-name|template
-operator|<
-name|typename
-name|C
-operator|>
-specifier|static
-name|char
+name|__if_exists
 argument_list|(
-operator|&
-name|f
-argument_list|(
-argument|CheckT<int Default::*
-argument_list|,
-argument|&C::getDecl>*
+argument|T::getDecl
 argument_list|)
-argument_list|)
-index|[
-literal|1
-index|]
-block|;
-name|template
-operator|<
-name|typename
-name|C
-operator|>
-specifier|static
-name|char
-argument_list|(
-operator|&
-name|f
-argument_list|(
-operator|...
-argument_list|)
-argument_list|)
-index|[
-literal|2
-index|]
-block|;
-specifier|static
-name|bool
-specifier|const
+block|{     enum
+block|{
 name|value
 operator|=
-sizeof|sizeof
+literal|1
+block|}
+block|;   }
+name|__if_not_exists
 argument_list|(
-name|f
+argument|T::getDecl
+argument_list|)
+block|{     enum
+block|{
+name|value
+operator|=
+literal|0
+block|}
+block|;   }
+block|}
+block|;
+else|#
+directive|else
+comment|// There is a default template inheriting from "false_type". Then, a
+comment|// partial specialization inherits from "true_type". However, this
+comment|// specialization will only exist when the call to getDecl() isn't an
+comment|// error -- it vanishes by SFINAE when the member doesn't exist.
+name|template
 operator|<
-name|Derived
+name|typename
+operator|>
+expr|struct
+name|type_sink_to_void
+block|{
+typedef|typedef
+name|void
+name|type
+typedef|;
+block|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+block|,
+name|typename
+operator|=
+name|void
+operator|>
+expr|struct
+name|has_getDecl
+operator|:
+name|std
+operator|::
+name|false_type
+block|{}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|has_getDecl
+operator|<
+name|T
+block|,
+name|typename
+name|type_sink_to_void
+operator|<
+name|decltype
+argument_list|(
+name|std
+operator|::
+name|declval
+operator|<
+name|T
 operator|>
 operator|(
-name|nullptr
 operator|)
+operator|.
+name|getDecl
+argument_list|()
 argument_list|)
-operator|==
-literal|2
-block|; }
+operator|>
+operator|::
+name|type
+operator|>
+operator|:
+name|std
+operator|::
+name|true_type
+block|{}
 block|;
+endif|#
+directive|endif
 comment|/// \brief Matches overloaded operators with a specific name.
 comment|///
 comment|/// The type argument ArgT is not used by this matcher but is used by
@@ -2370,8 +2409,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-comment|/// \brief Extracts the CXXRecordDecl or EnumDecl of a QualType and returns
-comment|/// whether the inner matcher matches on it.
+comment|/// \brief Extracts the TagDecl of a QualType and returns whether the inner
+comment|/// matcher matches on it.
 name|bool
 name|matchesSpecialized
 argument_list|(
@@ -2383,7 +2422,6 @@ argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
 block|{
-comment|/// FIXME: Add other ways to convert...
 if|if
 condition|(
 name|Node
@@ -2396,14 +2434,68 @@ name|false
 return|;
 if|if
 condition|(
-specifier|const
-name|EnumType
-modifier|*
-name|AsEnum
-init|=
+name|auto
+operator|*
+name|TD
+operator|=
+name|Node
+operator|->
+name|getAsTagDecl
+argument_list|()
+condition|)
+return|return
+name|matchesDecl
+argument_list|(
+name|TD
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|auto
+operator|*
+name|TT
+operator|=
+name|Node
+operator|->
+name|getAs
+operator|<
+name|TypedefType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|matchesDecl
+argument_list|(
+name|TT
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+comment|// Do not use getAs<TemplateTypeParmType> instead of the direct dyn_cast.
+comment|// Calling getAs will return the canonical type, but that type does not
+comment|// store a TemplateTypeParmDecl. We *need* the uncanonical type, if it is
+comment|// available, and using dyn_cast ensures that.
+elseif|else
+if|if
+condition|(
+name|auto
+operator|*
+name|TTP
+operator|=
 name|dyn_cast
 operator|<
-name|EnumType
+name|TemplateTypeParmType
 operator|>
 operator|(
 name|Node
@@ -2415,7 +2507,94 @@ condition|)
 return|return
 name|matchesDecl
 argument_list|(
-name|AsEnum
+name|TTP
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|auto
+operator|*
+name|OCIT
+operator|=
+name|Node
+operator|->
+name|getAs
+operator|<
+name|ObjCInterfaceType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|matchesDecl
+argument_list|(
+name|OCIT
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|auto
+operator|*
+name|UUT
+operator|=
+name|Node
+operator|->
+name|getAs
+operator|<
+name|UnresolvedUsingType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|matchesDecl
+argument_list|(
+name|UUT
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|auto
+operator|*
+name|ICNT
+operator|=
+name|Node
+operator|->
+name|getAs
+operator|<
+name|InjectedClassNameType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|matchesDecl
+argument_list|(
+name|ICNT
 operator|->
 name|getDecl
 argument_list|()
@@ -2426,17 +2605,7 @@ name|Builder
 argument_list|)
 return|;
 return|return
-name|matchesDecl
-argument_list|(
-name|Node
-operator|->
-name|getAsCXXRecordDecl
-argument_list|()
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
+name|false
 return|;
 block|}
 comment|/// \brief Gets the TemplateDecl from a TemplateSpecializationType
@@ -2760,7 +2929,7 @@ comment|///   Matches a matcher on all ancestors of the given node. Returns true
 comment|///   at least one ancestor matched.
 comment|///
 comment|/// FIXME: Currently we only allow Stmt and Decl nodes to start a traversal.
-comment|/// In the future, we wan to implement this for all nodes for which it makes
+comment|/// In the future, we want to implement this for all nodes for which it makes
 comment|/// sense. In the case of matchesAncestorOf, we'll want to implement it for
 comment|/// all nodes, as all nodes have ancestors.
 name|class
@@ -3090,14 +3259,36 @@ name|std
 operator|::
 name|is_base_of
 operator|<
+name|NestedNameSpecifierLoc
+argument_list|,
+name|T
+operator|>
+operator|::
+name|value
+operator|||
+name|std
+operator|::
+name|is_base_of
+operator|<
 name|Stmt
 argument_list|,
 name|T
 operator|>
 operator|::
 name|value
+operator|||
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|TypeLoc
 argument_list|,
-literal|"only Decl or Stmt allowed for recursive matching"
+name|T
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"type not allowed for recursive matching"
 argument_list|)
 block|;
 return|return
@@ -4518,6 +4709,17 @@ name|constructVariadic
 argument_list|(
 name|Op
 argument_list|,
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|::
+name|getFromNodeKind
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|,
 name|getMatchers
 operator|<
 name|T
@@ -4878,6 +5080,17 @@ argument_list|(
 name|DynTypedMatcher
 operator|::
 name|VO_AllOf
+argument_list|,
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|::
+name|getFromNodeKind
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
 argument_list|,
 name|std
 operator|::

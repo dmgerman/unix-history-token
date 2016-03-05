@@ -135,12 +135,12 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|protected
-label|:
 name|raw_pwrite_stream
-modifier|&
+modifier|*
 name|OS
 decl_stmt|;
+name|protected
+label|:
 name|unsigned
 name|IsLittleEndian
 range|:
@@ -158,6 +158,7 @@ argument_list|)
 block|:
 name|OS
 argument_list|(
+operator|&
 name|OS
 argument_list|)
 operator|,
@@ -166,8 +167,19 @@ argument_list|(
 argument|IsLittleEndian
 argument_list|)
 block|{}
+name|unsigned
+name|getInitialOffset
+argument_list|()
+block|{
+return|return
+name|OS
+operator|->
+name|tell
+argument_list|()
+return|;
+block|}
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|MCObjectWriter
@@ -188,14 +200,29 @@ return|return
 name|IsLittleEndian
 return|;
 block|}
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|getStream
 parameter_list|()
 block|{
 return|return
+operator|*
 name|OS
 return|;
+block|}
+name|void
+name|setStream
+parameter_list|(
+name|raw_pwrite_stream
+modifier|&
+name|NewOS
+parameter_list|)
+block|{
+name|OS
+operator|=
+operator|&
+name|NewOS
+expr_stmt|;
 block|}
 comment|/// \name High-Level API
 comment|/// @{
@@ -303,6 +330,30 @@ argument_list|,
 specifier|const
 name|MCSymbol
 operator|&
+name|A
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|&
+name|B
+argument_list|,
+name|bool
+name|InSet
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|isSymbolRefDifferenceFullyResolvedImpl
+argument_list|(
+specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|&
 name|SymA
 argument_list|,
 specifier|const
@@ -363,6 +414,7 @@ name|uint8_t
 name|Value
 parameter_list|)
 block|{
+operator|*
 name|OS
 operator|<<
 name|char
@@ -389,6 +441,7 @@ operator|::
 name|little
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -416,6 +469,7 @@ operator|::
 name|little
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -443,6 +497,7 @@ operator|::
 name|little
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -470,6 +525,7 @@ operator|::
 name|big
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -497,6 +553,7 @@ operator|::
 name|big
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -524,6 +581,7 @@ operator|::
 name|big
 operator|>
 operator|(
+operator|*
 name|OS
 operator|)
 operator|.
@@ -640,6 +698,7 @@ condition|;
 operator|++
 name|i
 control|)
+operator|*
 name|OS
 operator|<<
 name|StringRef
@@ -649,6 +708,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+operator|*
 name|OS
 operator|<<
 name|StringRef
@@ -729,6 +789,7 @@ operator|&&
 literal|"data size greater than fill size, unexpected large write will occur"
 argument_list|)
 expr_stmt|;
+operator|*
 name|OS
 operator|<<
 name|Str

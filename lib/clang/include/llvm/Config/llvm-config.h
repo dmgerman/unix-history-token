@@ -4,10 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* include/llvm/Config/llvm-config.h.  Generated from llvm-config.h.in by configure.  */
-end_comment
-
-begin_comment
 comment|/*===------- llvm/Config/llvm-config.h - llvm configuration -------*- C -*-===*/
 end_comment
 
@@ -96,14 +92,13 @@ comment|/* #undef LLVM_DOCSDIR */
 end_comment
 
 begin_comment
-comment|/* Define to enable checks that alter the LLVM C++ ABI */
+comment|/* Define if LLVM is built with asserts and checks that change the layout of    client-visible data structures.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
-value|1
 end_define
 
 begin_comment
@@ -279,23 +274,17 @@ begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_USE_INTEL_JITEVENTS
-value|0
-end_define
+begin_comment
+comment|/* #undef LLVM_USE_INTEL_JITEVENTS */
+end_comment
 
 begin_comment
 comment|/* Define if we have the oprofile JIT-support library */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_USE_OPROFILE
-value|0
-end_define
+begin_comment
+comment|/* #undef LLVM_USE_OPROFILE */
+end_comment
 
 begin_comment
 comment|/* Major version of the LLVM API */
@@ -316,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|7
+value|8
 end_define
 
 begin_comment
@@ -327,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -338,8 +327,16 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.7.1"
+value|"3.8.0"
 end_define
+
+begin_comment
+comment|/* Define if we link Polly to the tools */
+end_comment
+
+begin_comment
+comment|/* #undef LINK_POLLY_INTO_TOOLS */
+end_comment
 
 begin_endif
 endif|#

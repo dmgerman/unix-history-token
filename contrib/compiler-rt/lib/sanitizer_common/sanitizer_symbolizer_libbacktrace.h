@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sanitizer_allocator_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_symbolizer_internal.h"
 end_include
 

@@ -58,13 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangNamespaceDecl.h"
+file|"lldb/Symbol/CompilerDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerDeclContext.h"
 end_include
 
 begin_include
@@ -200,10 +206,10 @@ argument_list|(
 argument|false
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|SymbolFile
 argument_list|()
+name|override
 block|{     }
 comment|//------------------------------------------------------------------
 comment|/// Get a mask of what this symbol file supports for the object file
@@ -341,6 +347,18 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|ParseCompileUnitDebugMacros
+argument_list|(
+specifier|const
+name|SymbolContext
+operator|&
+name|sc
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|ParseCompileUnitSupportFiles
 argument_list|(
 specifier|const
@@ -424,43 +442,56 @@ literal|0
 block|;
 name|virtual
 name|bool
-name|ResolveClangOpaqueTypeDefinition
+name|CompleteType
 argument_list|(
-name|ClangASTType
+name|CompilerType
 operator|&
-name|clang_type
+name|compiler_type
 argument_list|)
 operator|=
 literal|0
 block|;
 name|virtual
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContextForTypeUID
+name|void
+name|ParseDeclsForContext
 argument_list|(
-argument|const lldb_private::SymbolContext&sc
-argument_list|,
-argument|lldb::user_id_t type_uid
+argument|CompilerDeclContext decl_ctx
+argument_list|)
+block|{}
+name|virtual
+name|CompilerDecl
+name|GetDeclForUID
+argument_list|(
+argument|lldb::user_id_t uid
 argument_list|)
 block|{
 return|return
-name|NULL
+name|CompilerDecl
+argument_list|()
 return|;
 block|}
 name|virtual
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|GetClangDeclContextContainingTypeUID
+name|CompilerDeclContext
+name|GetDeclContextForUID
 argument_list|(
-argument|lldb::user_id_t type_uid
+argument|lldb::user_id_t uid
 argument_list|)
 block|{
 return|return
-name|NULL
+name|CompilerDeclContext
+argument_list|()
+return|;
+block|}
+name|virtual
+name|CompilerDeclContext
+name|GetDeclContextContainingUID
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|)
+block|{
+return|return
+name|CompilerDeclContext
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -490,8 +521,6 @@ argument|uint32_t resolve_scope
 argument_list|,
 argument|SymbolContextList& sc_list
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|uint32_t
@@ -499,7 +528,7 @@ name|FindGlobalVariables
 argument_list|(
 argument|const ConstString&name
 argument_list|,
-argument|const ClangNamespaceDecl *namespace_decl
+argument|const CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|bool append
 argument_list|,
@@ -507,8 +536,6 @@ argument|uint32_t max_matches
 argument_list|,
 argument|VariableList& variables
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|uint32_t
@@ -522,8 +549,6 @@ argument|uint32_t max_matches
 argument_list|,
 argument|VariableList& variables
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|uint32_t
@@ -531,7 +556,7 @@ name|FindFunctions
 argument_list|(
 argument|const ConstString&name
 argument_list|,
-argument|const ClangNamespaceDecl *namespace_decl
+argument|const CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
@@ -541,8 +566,6 @@ argument|bool append
 argument_list|,
 argument|SymbolContextList& sc_list
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|uint32_t
@@ -556,8 +579,6 @@ argument|bool append
 argument_list|,
 argument|SymbolContextList& sc_list
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|uint32_t
@@ -567,16 +588,46 @@ argument|const SymbolContext& sc
 argument_list|,
 argument|const ConstString&name
 argument_list|,
-argument|const ClangNamespaceDecl *namespace_decl
+argument|const CompilerDeclContext *parent_decl_ctx
 argument_list|,
 argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|TypeList& types
+argument|TypeMap& types
 argument_list|)
-operator|=
-literal|0
+block|;
+name|virtual
+name|size_t
+name|FindTypes
+argument_list|(
+argument|const std::vector<CompilerContext>&context
+argument_list|,
+argument|bool append
+argument_list|,
+argument|TypeMap& types
+argument_list|)
+block|;
+name|virtual
+name|void
+name|GetMangledNamesForFunction
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|scope_qualified_name
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|mangled_names
+argument_list|)
 block|;
 comment|//  virtual uint32_t        FindTypes (const SymbolContext& sc, const RegularExpression& regex, bool append, uint32_t max_matches, TypeList& types) = 0;
 name|virtual
@@ -599,33 +650,31 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|ClangASTContext
-operator|&
-name|GetClangASTContext
-argument_list|()
+name|lldb_private
+operator|::
+name|TypeSystem
+operator|*
+name|GetTypeSystemForLanguage
+argument_list|(
+argument|lldb::LanguageType language
+argument_list|)
 block|;
 name|virtual
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 name|FindNamespace
 argument_list|(
-specifier|const
-name|SymbolContext
-operator|&
-name|sc
+argument|const SymbolContext& sc
 argument_list|,
-specifier|const
-name|ConstString
-operator|&
-name|name
+argument|const ConstString&name
 argument_list|,
-specifier|const
-name|ClangNamespaceDecl
-operator|*
-name|parent_namespace_decl
+argument|const CompilerDeclContext *parent_decl_ctx
 argument_list|)
-operator|=
-literal|0
-block|;
+block|{
+return|return
+name|CompilerDeclContext
+argument_list|()
+return|;
+block|}
 name|ObjectFile
 operator|*
 name|GetObjectFile

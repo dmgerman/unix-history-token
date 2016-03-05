@@ -293,9 +293,12 @@ specifier|const
 name|Function
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CallGraphNode
-operator|*
-operator|>
+operator|>>
 name|FunctionMapTy
 expr_stmt|;
 comment|/// \brief A map from \c Function* to \c CallGraphNode*.
@@ -316,10 +319,14 @@ name|ExternalCallingNode
 decl_stmt|;
 comment|/// \brief This node has edges to it from all functions making indirect calls
 comment|/// or calling an external function.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CallGraphNode
-modifier|*
+operator|>
 name|CallsExternalNode
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Replace the function represented by this node by another.
 comment|///
 comment|/// This does not rescan the body of the function, so it is suitable when
@@ -351,11 +358,19 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|explicit
+name|CallGraph
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
 name|CallGraph
 argument_list|(
-name|Module
-operator|&
-name|M
+name|CallGraph
+operator|&&
+name|Arg
 argument_list|)
 expr_stmt|;
 operator|~
@@ -490,6 +505,9 @@ return|return
 name|I
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns the call graph node for the provided function.
@@ -531,6 +549,9 @@ return|return
 name|I
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns the \c CallGraphNode which is used to represent
@@ -553,6 +574,9 @@ specifier|const
 block|{
 return|return
 name|CallsExternalNode
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|//===---------------------------------------------------------------------
@@ -1850,10 +1874,14 @@ operator|<
 specifier|const
 name|Function
 operator|*
+specifier|const
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CallGraphNode
-operator|*
-operator|>
+operator|>>
 name|PairTy
 expr_stmt|;
 end_typedef
@@ -1864,7 +1892,9 @@ name|std
 operator|::
 name|pointer_to_unary_function
 operator|<
+specifier|const
 name|PairTy
+operator|&
 operator|,
 name|CallGraphNode
 operator|&
@@ -1951,7 +1981,9 @@ name|CallGraphNode
 modifier|&
 name|CGdereference
 parameter_list|(
+specifier|const
 name|PairTy
+modifier|&
 name|P
 parameter_list|)
 block|{
@@ -2012,11 +2044,14 @@ operator|<
 specifier|const
 name|Function
 operator|*
-operator|,
 specifier|const
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CallGraphNode
-operator|*
-operator|>
+operator|>>
 name|PairTy
 expr_stmt|;
 end_typedef
@@ -2027,7 +2062,9 @@ name|std
 operator|::
 name|pointer_to_unary_function
 operator|<
+specifier|const
 name|PairTy
+operator|&
 operator|,
 specifier|const
 name|CallGraphNode
@@ -2118,7 +2155,9 @@ name|CallGraphNode
 modifier|&
 name|CGdereference
 parameter_list|(
+specifier|const
 name|PairTy
+modifier|&
 name|P
 parameter_list|)
 block|{

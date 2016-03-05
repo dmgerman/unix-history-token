@@ -223,24 +223,6 @@ name|eSortOrderByName
 block|}
 name|SortOrder
 typedef|;
-typedef|typedef
-enum|enum
-name|ObjCRuntimeVersions
-block|{
-name|eObjC_VersionUnknown
-init|=
-literal|0
-block|,
-name|eAppleObjC_V1
-init|=
-literal|1
-block|,
-name|eAppleObjC_V2
-init|=
-literal|2
-block|}
-name|ObjCRuntimeVersions
-typedef|;
 comment|//----------------------------------------------------------------------
 comment|// LazyBool is for boolean values that need to be calculated lazily.
 comment|// Values start off set to eLazyBoolCalculate, and then they can be
@@ -397,7 +379,7 @@ name|eFormatterChoiceCriterionRegularExpressionFilter
 init|=
 literal|0x00000004
 block|,
-name|eFormatterChoiceCriterionDynamicObjCDiscovery
+name|eFormatterChoiceCriterionLanguagePlugin
 init|=
 literal|0x00000008
 block|,
@@ -518,6 +500,39 @@ operator|=
 name|false
 block|}
 decl_stmt|;
+comment|//----------------------------------------------------------------------
+comment|// Enumerations that can be used to specify scopes types when looking up
+comment|// types.
+comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|CompilerContextKind
+block|{
+name|Invalid
+operator|=
+literal|0
+operator|,
+name|TranslationUnit
+operator|,
+name|Module
+operator|,
+name|Namespace
+operator|,
+name|Class
+operator|,
+name|Structure
+operator|,
+name|Union
+operator|,
+name|Function
+operator|,
+name|Variable
+operator|,
+name|Enumeration
+operator|,
+name|Typedef
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

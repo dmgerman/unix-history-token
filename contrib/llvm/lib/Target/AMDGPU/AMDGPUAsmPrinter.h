@@ -349,7 +349,19 @@ argument_list|()
 name|override
 block|;
 name|void
-name|EmitEndOfAsmFile
+name|EmitFunctionEntryLabel
+argument_list|()
+name|override
+block|;
+name|void
+name|EmitGlobalVariable
+argument_list|(
+argument|const GlobalVariable *GV
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitStartOfAsmFile
 argument_list|(
 argument|Module&M
 argument_list|)

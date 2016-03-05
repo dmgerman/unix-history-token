@@ -191,6 +191,12 @@ operator|>
 name|Weights
 argument_list|)
 decl_stmt|;
+comment|/// Return metadata specifying that a branch or switch is unpredictable.
+name|MDNode
+modifier|*
+name|createUnpredictable
+parameter_list|()
+function_decl|;
 comment|/// Return metadata containing the entry count for a function.
 name|MDNode
 modifier|*

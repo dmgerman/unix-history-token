@@ -186,6 +186,10 @@ comment|/// It takes an input chain and a pointer to the jump buffer as inputs
 comment|/// and returns an outchain.
 name|EH_SJLJ_LONGJMP
 block|,
+comment|/// OUTCHAIN = EH_SJLJ_SETUP_DISPATCH(INCHAIN)
+comment|/// The target initializes the dispatch table here.
+name|EH_SJLJ_SETUP_DISPATCH
+block|,
 comment|/// TargetConstant* - Like Constant*, but the DAG does not do any folding,
 comment|/// simplification, or lowering of the constant. They are used for constants
 comment|/// which are known to fit in the immediate fields of their users, or for
@@ -479,6 +483,8 @@ name|CTLZ
 block|,
 name|CTPOP
 block|,
+name|BITREVERSE
+block|,
 comment|/// Bit counting operators with an undefined result for zero inputs.
 name|CTTZ_ZERO_UNDEF
 block|,
@@ -511,9 +517,14 @@ comment|/// them with (op #2) as a CondCodeSDNode. If the operands are vector ty
 comment|/// then the result type must also be a vector type.
 name|SETCC
 block|,
+comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, but
+comment|/// op #2 is a *carry value*. This operator checks the result of
+comment|/// "LHS - RHS - Carry", and can be used to compare two wide integers:
+comment|/// (setcce lhshi rhshi (subc lhslo rhslo) cc). Only valid for integers.
+name|SETCCE
+block|,
 comment|/// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
-comment|/// integer shift operations, just like ADD/SUB_PARTS.  The operation
-comment|/// ordering is:
+comment|/// integer shift operations.  The operation ordering is:
 comment|///       [Lo,Hi] = op [LoLHS,HiLHS], Amt
 name|SHL_PARTS
 block|,
@@ -693,9 +704,20 @@ name|FROUND
 block|,
 name|FFLOOR
 block|,
+comment|/// FMINNUM/FMAXNUM - Perform floating-point minimum or maximum on two
+comment|/// values.
+comment|/// In the case where a single input is NaN, the non-NaN input is returned.
+comment|///
+comment|/// The return value of (FMINNUM 0.0, -0.0) could be either 0.0 or -0.0.
 name|FMINNUM
 block|,
 name|FMAXNUM
+block|,
+comment|/// FMINNAN/FMAXNAN - Behave identically to FMINNUM/FMAXNUM, except that
+comment|/// when a single input is NaN, NaN is returned.
+name|FMINNAN
+block|,
+name|FMAXNAN
 block|,
 comment|/// FSINCOS - Compute both fsin and fcos as a single operation.
 name|FSINCOS
@@ -765,6 +787,18 @@ comment|/// locations needed for debug and exception handling tables.  These nod
 comment|/// take a chain as input and return a chain.
 name|EH_LABEL
 block|,
+comment|/// CATCHPAD - Represents a catchpad instruction.
+name|CATCHPAD
+block|,
+comment|/// CATCHRET - Represents a return from a catch block funclet. Used for
+comment|/// MSVC compatible exception handling. Takes a chain operand and a
+comment|/// destination basic block operand.
+name|CATCHRET
+block|,
+comment|/// CLEANUPRET - Represents a return from a cleanup block funclet.  Used for
+comment|/// MSVC compatible exception handling. Takes only a chain operand.
+name|CLEANUPRET
+block|,
 comment|/// STACKSAVE - STACKSAVE has one operand, an input chain.  It produces a
 comment|/// value, the same type as the pointer type for the system, and an output
 comment|/// chain.
@@ -813,9 +847,11 @@ comment|/// PCMARKER - This corresponds to the pcmarker intrinsic.
 name|PCMARKER
 block|,
 comment|/// READCYCLECOUNTER - This corresponds to the readcyclecounter intrinsic.
-comment|/// The only operand is a chain and a value and a chain are produced.  The
-comment|/// value is the contents of the architecture specific cycle counter like
-comment|/// register (or other high accuracy low latency clock source)
+comment|/// It produces a chain and one i64 value. The only operand is a chain.
+comment|/// If i64 is not legal, the result will be expanded into smaller values.
+comment|/// Still, it returns an i64, so targets should set legality for i64.
+comment|/// The result is the content of the architecture-specific cycle
+comment|/// counter-like register (or other high accuracy low latency clock source).
 name|READCYCLECOUNTER
 block|,
 comment|/// HANDLENODE node - Used as a handle for various purposes.
@@ -930,6 +966,12 @@ comment|/// nested.
 name|GC_TRANSITION_START
 block|,
 name|GC_TRANSITION_END
+block|,
+comment|/// GET_DYNAMIC_AREA_OFFSET - get offset from native SP to the address of
+comment|/// the most recent dynamic alloca. For most targets that would be 0, but
+comment|/// for some others (e.g. PowerPC, PowerPC64) that would be compile-time
+comment|/// known nonzero constant. The only operand here is the chain.
+name|GET_DYNAMIC_AREA_OFFSET
 block|,
 comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
 comment|/// The target-specific pre-isel opcode values start here.

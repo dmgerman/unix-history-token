@@ -287,10 +287,11 @@ argument|VLABoundData *Data
 argument_list|,
 argument|ValueHandle Bound
 argument_list|)
+comment|// Keeping this around for binary compatibility with (sanitized) programs
+comment|// compiled with older compilers.
 struct|struct
 name|FloatCastOverflowData
 block|{
-comment|// FIXME: SourceLocation Loc;
 specifier|const
 name|TypeDescriptor
 modifier|&
@@ -303,12 +304,31 @@ name|ToType
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle overflow in a conversion to or from a floating-point type.
+struct|struct
+name|FloatCastOverflowDataV2
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|FromType
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|ToType
+decl_stmt|;
+block|}
+struct|;
+comment|/// Handle overflow in a conversion to or from a floating-point type.
+comment|/// void *Data is one of FloatCastOverflowData* or FloatCastOverflowDataV2*
 name|RECOVERABLE
 argument_list|(
 argument|float_cast_overflow
 argument_list|,
-argument|FloatCastOverflowData *Data
+argument|void *Data
 argument_list|,
 argument|ValueHandle From
 argument_list|)
@@ -393,6 +413,28 @@ argument_list|(
 argument|nonnull_arg
 argument_list|,
 argument|NonNullArgData *Data
+argument_list|)
+struct|struct
+name|CFIBadIcallData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|Type
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Handle control flow integrity failure for indirect function calls.
+name|RECOVERABLE
+argument_list|(
+argument|cfi_bad_icall
+argument_list|,
+argument|CFIBadIcallData *Data
+argument_list|,
+argument|ValueHandle Function
 argument_list|)
 block|}
 end_decl_stmt

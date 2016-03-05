@@ -164,6 +164,57 @@ comment|// Single Threaded Environment
 block|}
 enum|;
 block|}
+name|enum
+name|class
+name|EABI
+block|{
+name|Unknown
+operator|,
+name|Default
+operator|,
+comment|// Default means not specified
+name|EABI4
+operator|,
+comment|// Target-specific (either 4, 5 or gnu depending on triple).
+name|EABI5
+operator|,
+name|GNU
+block|}
+empty_stmt|;
+comment|/// Identify a debugger for "tuning" the debug info.
+comment|///
+comment|/// The "debugger tuning" concept allows us to present a more intuitive
+comment|/// interface that unpacks into different sets of defaults for the various
+comment|/// individual feature-flag settings, that suit the preferences of the
+comment|/// various debuggers.  However, it's worth remembering that debuggers are
+comment|/// not the only consumers of debug info, and some variations in DWARF might
+comment|/// better be treated as target/platform issues. Fundamentally,
+comment|/// o if the feature is useful (or not) to a particular debugger, regardless
+comment|///   of the target, that's a tuning decision;
+comment|/// o if the feature is useful (or not) on a particular platform, regardless
+comment|///   of the debugger, that's a target decision.
+comment|/// It's not impossible to see both factors in some specific case.
+comment|///
+comment|/// The "tuning" should be used to set defaults for individual feature flags
+comment|/// in DwarfDebug; if a given feature has a more specific command-line option,
+comment|/// that option should take precedence over the tuning.
+name|enum
+name|class
+name|DebuggerKind
+block|{
+name|Default
+operator|,
+comment|// No specific tuning requested.
+name|GDB
+operator|,
+comment|// Tune debug info for gdb.
+name|LLDB
+operator|,
+comment|// Tune debug info for lldb.
+name|SCE
+comment|// Tune debug info for SCE targets (e.g. PS4).
+block|}
+empty_stmt|;
 name|class
 name|TargetOptions
 block|{
@@ -262,6 +313,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|EmulatedTLS
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|FloatABIType
 argument_list|(
 name|FloatABI
@@ -291,7 +347,21 @@ argument_list|)
 operator|,
 name|ThreadModel
 argument_list|(
-argument|ThreadModel::POSIX
+name|ThreadModel
+operator|::
+name|POSIX
+argument_list|)
+operator|,
+name|EABIVersion
+argument_list|(
+name|EABI
+operator|::
+name|Default
+argument_list|)
+operator|,
+name|DebuggerTuning
+argument_list|(
+argument|DebuggerKind::Default
 argument_list|)
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
@@ -457,6 +527,13 @@ name|TrapUnreachable
 range|:
 literal|1
 decl_stmt|;
+comment|/// EmulatedTLS - This flag enables emulated TLS model, using emutls
+comment|/// function in the runtime library..
+name|unsigned
+name|EmulatedTLS
+range|:
+literal|1
+decl_stmt|;
 comment|/// FloatABIType - This setting is set by -float-abi=xxx option is specfied
 comment|/// on the command line. This setting may either be Default, Soft, or Hard.
 comment|/// Default selects the target's default behavior. Soft selects the ABI for
@@ -507,6 +584,14 @@ operator|::
 name|Model
 name|ThreadModel
 expr_stmt|;
+comment|/// EABIVersion - This flag specifies the EABI version
+name|EABI
+name|EABIVersion
+decl_stmt|;
+comment|/// Which debugger to tune for.
+name|DebuggerKind
+name|DebuggerTuning
+decl_stmt|;
 comment|/// Machine level options.
 name|MCTargetOptions
 name|MCOptions
@@ -595,6 +680,11 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
+name|EmulatedTLS
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
 name|FloatABIType
 argument_list|)
 operator|&&
@@ -616,6 +706,16 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|ThreadModel
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|EABIVersion
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|DebuggerTuning
 argument_list|)
 operator|&&
 name|ARE_EQUAL

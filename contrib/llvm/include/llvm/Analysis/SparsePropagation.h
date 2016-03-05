@@ -478,7 +478,7 @@ argument_list|()
 block|{
 name|delete
 name|LatticeFunc
-block|;   }
+block|; }
 comment|/// Solve - Solve for constants and executable blocks.
 comment|///
 name|void

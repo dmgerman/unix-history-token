@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/TargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -2239,11 +2239,9 @@ name|bool
 name|existsInTarget
 argument_list|(
 specifier|const
-name|llvm
-operator|::
-name|Triple
+name|TargetInfo
 operator|&
-name|T
+name|Target
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2589,11 +2587,20 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
+name|AttributePool
+argument_list|(
+specifier|const
+name|AttributePool
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
 comment|/// Move the given pool's allocations to this pool.
 name|AttributePool
 argument_list|(
 name|AttributePool
-operator|&
+operator|&&
 name|pool
 argument_list|)
 operator|:
@@ -3975,6 +3982,8 @@ block|,
 name|ExpectedObjectiveCInterfaceOrProtocol
 block|,
 name|ExpectedKernelFunction
+block|,
+name|ExpectedFunctionWithProtoType
 block|}
 enum|;
 end_enum

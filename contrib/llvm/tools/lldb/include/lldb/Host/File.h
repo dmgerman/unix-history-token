@@ -43,14 +43,13 @@ directive|define
 name|liblldb_File_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
@@ -69,6 +68,14 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -292,22 +299,11 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-name|File
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|File
-operator|&
-name|rhs
-operator|)
-block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor with path.
 comment|///
 comment|/// Takes a path to a file which can be just a filename, or a full
-comment|/// path. If \a path is not NULL or empty, this function will call
+comment|/// path. If \a path is not nullptr or empty, this function will call
 comment|/// File::Open (const char *path, uint32_t options, uint32_t permissions).
 comment|///
 comment|/// @param[in] path
@@ -334,10 +330,10 @@ comment|//------------------------------------------------------------------
 comment|/// Constructor with FileSpec.
 comment|///
 comment|/// Takes a FileSpec pointing to a file which can be just a filename, or a full
-comment|/// path. If \a path is not NULL or empty, this function will call
+comment|/// path. If \a path is not nullptr or empty, this function will call
 comment|/// File::Open (const char *path, uint32_t options, uint32_t permissions).
 comment|///
-comment|/// @param[in] path
+comment|/// @param[in] filespec
 comment|///     The FileSpec for this file.
 comment|///
 comment|/// @param[in] options
@@ -388,7 +384,17 @@ argument_list|)
 block|,
 name|m_own_stream
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|m_is_interactive
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+block|,
+name|m_is_real_terminal
+argument_list|(
+argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
@@ -396,15 +402,27 @@ comment|/// Destructor.
 comment|///
 comment|/// The destructor is virtual in case this class is subclassed.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|File
 argument_list|()
+name|override
+block|;
+name|File
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|File
+operator|&
+name|rhs
+operator|)
 block|;
 name|bool
 name|IsValid
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|DescriptorIsValid
@@ -428,7 +446,7 @@ comment|/// @endcode
 comment|///
 comment|/// @return
 comment|///     A pointer to this object if either the directory or filename
-comment|///     is valid, NULL otherwise.
+comment|///     is valid, nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|operator
 name|bool
@@ -517,6 +535,7 @@ block|;
 name|Error
 name|Close
 argument_list|()
+name|override
 block|;
 name|Error
 name|Duplicate
@@ -535,6 +554,7 @@ block|;
 name|WaitableHandle
 name|GetWaitableHandle
 argument_list|()
+name|override
 block|;
 name|void
 name|SetDescriptor
@@ -567,7 +587,7 @@ comment|///
 comment|/// @param[in] buf
 comment|///     A buffer where to put the bytes that are read.
 comment|///
-comment|/// @param[in/out] num_bytes
+comment|/// @param[in,out] num_bytes
 comment|///     The number of bytes to read form the current file position
 comment|///     which gets modified with the number of bytes that were read.
 comment|///
@@ -578,14 +598,11 @@ comment|//------------------------------------------------------------------
 name|Error
 name|Read
 argument_list|(
-name|void
-operator|*
-name|buf
+argument|void *buf
 argument_list|,
-name|size_t
-operator|&
-name|num_bytes
+argument|size_t&num_bytes
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Write bytes to a file at the current file position.
@@ -597,7 +614,7 @@ comment|///
 comment|/// @param[in] buf
 comment|///     A buffer where to put the bytes that are read.
 comment|///
-comment|/// @param[in/out] num_bytes
+comment|/// @param[in,out] num_bytes
 comment|///     The number of bytes to write to the current file position
 comment|///     which gets modified with the number of bytes that were
 comment|///     written.
@@ -609,15 +626,11 @@ comment|//------------------------------------------------------------------
 name|Error
 name|Write
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|buf
+argument|const void *buf
 argument_list|,
-name|size_t
-operator|&
-name|num_bytes
+argument|size_t&num_bytes
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Seek to an offset relative to the beginning of the file.
@@ -634,7 +647,7 @@ comment|///     beginning of the file.
 comment|///
 comment|/// @param[in] error_ptr
 comment|///     A pointer to a lldb_private::Error object that will be
-comment|///     filled in if non-NULL.
+comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
 comment|///     The resulting seek offset, or -1 on error.
@@ -644,7 +657,7 @@ name|SeekFromStart
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = NULL
+argument|Error *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -662,7 +675,7 @@ comment|///     current file position.
 comment|///
 comment|/// @param[in] error_ptr
 comment|///     A pointer to a lldb_private::Error object that will be
-comment|///     filled in if non-NULL.
+comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
 comment|///     The resulting seek offset, or -1 on error.
@@ -672,7 +685,7 @@ name|SeekFromCurrent
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = NULL
+argument|Error *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -684,14 +697,14 @@ comment|/// For thread safe reads and writes see the following functions:
 comment|/// @see File::Read (void *, size_t, off_t&)
 comment|/// @see File::Write (const void *, size_t, off_t&)
 comment|///
-comment|/// @param[in/out] offset
+comment|/// @param[in,out] offset
 comment|///     The offset to seek to within the file relative to the
 comment|///     end of the file which gets filled in with the resulting
 comment|///     absolute file offset.
 comment|///
 comment|/// @param[in] error_ptr
 comment|///     A pointer to a lldb_private::Error object that will be
-comment|///     filled in if non-NULL.
+comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
 comment|///     The resulting seek offset, or -1 on error.
@@ -701,7 +714,7 @@ name|SeekFromEnd
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = NULL
+argument|Error *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -711,14 +724,14 @@ comment|/// NOTE: This function is thread safe in that clients manager their
 comment|/// own file position markers and reads on other threads won't mess
 comment|/// up the current read.
 comment|///
-comment|/// @param[in] buf
+comment|/// @param[in] dst
 comment|///     A buffer where to put the bytes that are read.
 comment|///
-comment|/// @param[in/out] num_bytes
+comment|/// @param[in,out] num_bytes
 comment|///     The number of bytes to read form the current file position
 comment|///     which gets modified with the number of bytes that were read.
 comment|///
-comment|/// @param[in/out] offset
+comment|/// @param[in,out] offset
 comment|///     The offset within the file from which to read \a num_bytes
 comment|///     bytes. This offset gets incremented by the number of bytes
 comment|///     that were read.
@@ -750,11 +763,11 @@ comment|/// NOTE: This function is thread safe in that clients manager their
 comment|/// own file position markers and reads on other threads won't mess
 comment|/// up the current read.
 comment|///
-comment|/// @param[in/out] num_bytes
+comment|/// @param[in,out] num_bytes
 comment|///     The number of bytes to read form the current file position
 comment|///     which gets modified with the number of bytes that were read.
 comment|///
-comment|/// @param[in/out] offset
+comment|/// @param[in,out] offset
 comment|///     The offset within the file from which to read \a num_bytes
 comment|///     bytes. This offset gets incremented by the number of bytes
 comment|///     that were read.
@@ -792,15 +805,15 @@ comment|/// own file position markers, though clients will need to implement
 comment|/// their own locking externally to avoid multiple people writing
 comment|/// to the file at the same time.
 comment|///
-comment|/// @param[in] buf
+comment|/// @param[in] src
 comment|///     A buffer containing the bytes to write.
 comment|///
-comment|/// @param[in/out] num_bytes
+comment|/// @param[in,out] num_bytes
 comment|///     The number of bytes to write to the file at offset \a offset.
 comment|///     \a num_bytes gets modified with the number of bytes that
 comment|///     were read.
 comment|///
-comment|/// @param[in/out] offset
+comment|/// @param[in,out] offset
 comment|///     The offset within the file at which to write \a num_bytes
 comment|///     bytes. This offset gets incremented by the number of bytes
 comment|///     that were written.
@@ -903,6 +916,10 @@ name|bool
 name|GetIsRealTerminal
 argument_list|()
 block|;
+name|bool
+name|GetIsTerminalWithColors
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Output printf formatted output to the stream.
 comment|///
@@ -1003,6 +1020,9 @@ name|m_is_interactive
 block|;
 name|LazyBool
 name|m_is_real_terminal
+block|;
+name|LazyBool
+name|m_supports_colors
 block|; }
 decl_stmt|;
 block|}
@@ -1010,15 +1030,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

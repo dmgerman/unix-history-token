@@ -629,7 +629,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|unsigned NumCyles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -643,7 +643,7 @@ argument|unsigned NumCyles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -663,7 +663,7 @@ argument|unsigned NumFCycles
 argument_list|,
 argument|unsigned ExtraFCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override

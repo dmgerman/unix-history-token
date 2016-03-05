@@ -674,21 +674,18 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Generate a sink node. Generating a sink stops exploration of the
-comment|/// given path.
+comment|/// given path. To create a sink node for the purpose of reporting an error,
+comment|/// checkers should use generateErrorNode() instead.
 name|ExplodedNode
 modifier|*
 name|generateSink
 parameter_list|(
 name|ProgramStateRef
 name|State
-init|=
-name|nullptr
 parameter_list|,
 name|ExplodedNode
 modifier|*
 name|Pred
-init|=
-name|nullptr
 parameter_list|,
 specifier|const
 name|ProgramPointTag
@@ -713,6 +710,92 @@ argument_list|,
 name|Pred
 argument_list|,
 name|Tag
+argument_list|)
+return|;
+block|}
+comment|/// \brief Generate a transition to a node that will be used to report
+comment|/// an error. This node will be a sink. That is, it will stop exploration of
+comment|/// the given path.
+comment|///
+comment|/// @param State The state of the generated node.
+comment|/// @param Tag The tag to uniquely identify the creation site. If null,
+comment|///        the default tag for the checker will be used.
+name|ExplodedNode
+modifier|*
+name|generateErrorNode
+parameter_list|(
+name|ProgramStateRef
+name|State
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|ProgramPointTag
+modifier|*
+name|Tag
+init|=
+name|nullptr
+parameter_list|)
+block|{
+return|return
+name|generateSink
+argument_list|(
+name|State
+argument_list|,
+name|Pred
+argument_list|,
+operator|(
+name|Tag
+condition|?
+name|Tag
+else|:
+name|Location
+operator|.
+name|getTag
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+comment|/// \brief Generate a transition to a node that will be used to report
+comment|/// an error. This node will not be a sink. That is, exploration will
+comment|/// continue along this path.
+comment|///
+comment|/// @param State The state of the generated node.
+comment|/// @param Tag The tag to uniquely identify the creation site. If null,
+comment|///        the default tag for the checker will be used.
+name|ExplodedNode
+modifier|*
+name|generateNonFatalErrorNode
+parameter_list|(
+name|ProgramStateRef
+name|State
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|ProgramPointTag
+modifier|*
+name|Tag
+init|=
+name|nullptr
+parameter_list|)
+block|{
+return|return
+name|addTransition
+argument_list|(
+name|State
+argument_list|,
+operator|(
+name|Tag
+condition|?
+name|Tag
+else|:
+name|Location
+operator|.
+name|getTag
+argument_list|()
+operator|)
 argument_list|)
 return|;
 block|}
@@ -908,6 +991,18 @@ init|=
 name|nullptr
 parameter_list|)
 block|{
+comment|// The analyzer may stop exploring if it sees a state it has previously
+comment|// visited ("cache out"). The early return here is a defensive check to
+comment|// prevent accidental caching out by checker API clients. Unless there is a
+comment|// tag or the client checker has requested that the generated node be
+comment|// marked as a sink, we assume that a client requesting a transition to a
+comment|// state that is the same as the predecessor state has made a mistake. We
+comment|// return the predecessor rather than cache out.
+comment|//
+comment|// TODO: We could potentially change the return to an assertion to alert
+comment|// clients to their mistake, but several checkers (including
+comment|// DereferenceChecker, CallAndMessageChecker, and DynamicTypePropagation)
+comment|// rely upon the defensive behavior and would need to be updated.
 if|if
 condition|(
 operator|!

@@ -72,13 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unordered_set>
 end_include
 
 begin_comment
@@ -123,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Event.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/LoadedModuleInfoList.h"
 end_include
 
 begin_include
@@ -241,7 +259,7 @@ name|Properties
 block|{
 name|public
 operator|:
-comment|// Pass NULL for "process" if the ProcessProperties are to be the global copy
+comment|// Pass nullptr for "process" if the ProcessProperties are to be the global copy
 name|ProcessProperties
 argument_list|(
 name|lldb_private
@@ -251,10 +269,10 @@ operator|*
 name|process
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ProcessProperties
 argument_list|()
+name|override
 block|;
 name|bool
 name|GetDisableMemoryCache
@@ -338,6 +356,11 @@ argument_list|(
 argument|bool keep_stopped
 argument_list|)
 block|;
+name|bool
+name|GetWarningsOptimization
+argument_list|()
+specifier|const
+block|;
 name|protected
 operator|:
 specifier|static
@@ -357,7 +380,7 @@ name|Process
 operator|*
 name|m_process
 block|;
-comment|// Can be NULL for global ProcessProperties
+comment|// Can be nullptr for global ProcessProperties
 block|}
 decl_stmt|;
 typedef|typedef
@@ -649,7 +672,12 @@ argument_list|)
 block|,
 name|m_detach_on_error
 argument_list|(
-argument|true
+name|true
+argument_list|)
+block|,
+name|m_async
+argument_list|(
+argument|false
 argument_list|)
 block|{     }
 name|ProcessAttachInfo
@@ -694,7 +722,12 @@ argument_list|)
 block|,
 name|m_detach_on_error
 argument_list|(
-argument|true
+name|true
+argument_list|)
+block|,
+name|m_async
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|ProcessInfo
@@ -764,6 +797,25 @@ operator|=
 name|b
 block|;     }
 name|bool
+name|GetAsync
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_async
+return|;
+block|}
+name|void
+name|SetAsync
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|m_async
+operator|=
+name|b
+block|;     }
+name|bool
 name|GetIgnoreExisting
 argument_list|()
 specifier|const
@@ -827,31 +879,27 @@ name|GetProcessPluginName
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|m_plugin_name
 operator|.
 name|empty
 argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
+operator|?
+name|nullptr
+operator|:
 name|m_plugin_name
 operator|.
 name|c_str
 argument_list|()
+operator|)
 return|;
 block|}
 name|void
 name|SetProcessPluginName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|plugin
-parameter_list|)
+argument_list|(
+argument|const char *plugin
+argument_list|)
 block|{
 if|if
 condition|(
@@ -878,35 +926,34 @@ expr_stmt|;
 block|}
 name|void
 name|Clear
-parameter_list|()
+argument_list|()
 block|{
 name|ProcessInstanceInfo
 operator|::
 name|Clear
 argument_list|()
-expr_stmt|;
+block|;
 name|m_plugin_name
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|m_resume_count
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|m_wait_for_launch
 operator|=
 name|false
-expr_stmt|;
+block|;
 name|m_ignore_existing
 operator|=
 name|true
-expr_stmt|;
+block|;
 name|m_continue_once_attached
 operator|=
 name|false
-expr_stmt|;
-block|}
+block|;     }
 name|bool
 name|ProcessInfoSpecified
 argument_list|()
@@ -1127,6 +1174,16 @@ comment|// If we are debugging remotely, instruct the stub to detach rather than
 end_comment
 
 begin_decl_stmt
+name|bool
+name|m_async
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Use an async attach where we start the attach and return immediately (used by GUI programs with --waitfor so they can call SBProcess::Stop() to cancel attach)
+end_comment
+
+begin_decl_stmt
 unit|};
 name|class
 name|ProcessLaunchCommandOptions
@@ -1155,7 +1212,10 @@ block|;     }
 operator|~
 name|ProcessLaunchCommandOptions
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+block|;
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -1163,10 +1223,12 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|()
+name|override
 block|{
 name|launch_info
 operator|.
@@ -1182,6 +1244,7 @@ name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|{
 return|return
 name|g_option_table
@@ -1396,22 +1459,22 @@ name|public
 label|:
 name|ProcessInstanceInfoList
 argument_list|()
-operator|:
-name|m_infos
-argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|Clear
-argument_list|()
+parameter_list|()
 block|{
 name|m_infos
 operator|.
 name|clear
 argument_list|()
-block|;     }
+expr_stmt|;
+block|}
 name|size_t
 name|GetSize
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|m_infos
@@ -1446,16 +1509,17 @@ name|size_t
 name|idx
 parameter_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|idx
 operator|<
 name|m_infos
 operator|.
 name|size
 argument_list|()
-condition|)
-return|return
+operator|)
+condition|?
 name|m_infos
 index|[
 name|idx
@@ -1463,9 +1527,9 @@ index|]
 operator|.
 name|GetName
 argument_list|()
-return|;
-return|return
-name|NULL
+else|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|size_t
@@ -1475,16 +1539,17 @@ name|size_t
 name|idx
 parameter_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|idx
 operator|<
 name|m_infos
 operator|.
 name|size
 argument_list|()
-condition|)
-return|return
+operator|)
+condition|?
 name|m_infos
 index|[
 name|idx
@@ -1492,9 +1557,9 @@ index|]
 operator|.
 name|GetNameLength
 argument_list|()
-return|;
-return|return
+else|:
 literal|0
+operator|)
 return|;
 block|}
 name|lldb
@@ -1505,16 +1570,17 @@ argument_list|(
 argument|size_t idx
 argument_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|idx
 operator|<
 name|m_infos
 operator|.
 name|size
 argument_list|()
-condition|)
-return|return
+operator|)
+operator|?
 name|m_infos
 index|[
 name|idx
@@ -1522,14 +1588,11 @@ index|]
 operator|.
 name|GetProcessID
 argument_list|()
-return|;
-return|return
+operator|:
 literal|0
+operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|bool
 name|GetInfoAtIndex
 parameter_list|(
@@ -1566,13 +1629,7 @@ return|return
 name|false
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// You must ensure "idx" is valid before calling this function
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|ProcessInstanceInfo
 modifier|&
@@ -1600,14 +1657,8 @@ name|idx
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1617,16 +1668,17 @@ name|ProcessInstanceInfo
 operator|>
 name|collection
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|collection
 name|m_infos
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|// This class tracks the Modification state of the process.  Things that can currently modify
 end_comment
 
@@ -1758,14 +1810,16 @@ block|}
 operator|~
 name|ProcessModID
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|BumpStopID
-argument_list|()
+parameter_list|()
 block|{
 name|m_stop_id
 operator|++
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2101,8 +2155,8 @@ operator|&
 name|rhs
 operator|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
 operator|!
 name|lhs
 operator|.
@@ -2118,13 +2172,7 @@ name|MemoryIDEqual
 argument_list|(
 name|rhs
 argument_list|)
-condition|)
-return|return
-name|true
-return|;
-else|else
-return|return
-name|false
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2174,7 +2222,7 @@ name|PluginInterface
 block|{
 name|friend
 name|class
-name|ClangFunction
+name|FunctionCaller
 decl_stmt|;
 comment|// For WaitForStateChangeEventsPrivate
 name|friend
@@ -2273,6 +2321,17 @@ literal|2
 operator|)
 block|}
 enum|;
+comment|//------------------------------------------------------------------
+comment|/// Process warning types.
+comment|//------------------------------------------------------------------
+enum|enum
+name|Warnings
+block|{
+name|eWarningsOptimization
+init|=
+literal|1
+block|}
+enum|;
 typedef|typedef
 name|Range
 operator|<
@@ -2306,12 +2365,12 @@ modifier|&
 name|GetStaticBroadcasterClass
 parameter_list|()
 function_decl|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
@@ -2394,10 +2453,10 @@ argument_list|,
 argument|lldb::StateType state
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ProcessEventData
 argument_list|()
+name|override
 block|;
 specifier|static
 specifier|const
@@ -2406,13 +2465,13 @@ operator|&
 name|GetFlavorString
 argument_list|()
 block|;
-name|virtual
 specifier|const
 name|ConstString
 operator|&
 name|GetFlavor
 argument_list|()
 specifier|const
+name|override
 block|;
 name|lldb
 operator|::
@@ -2467,20 +2526,17 @@ argument_list|(
 argument|size_t idx
 argument_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|idx
-operator|>
+operator|<
 name|m_restarted_reasons
 operator|.
 name|size
 argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-else|else
-return|return
+operator|)
+operator|?
 name|m_restarted_reasons
 index|[
 name|idx
@@ -2488,6 +2544,9 @@ index|]
 operator|.
 name|c_str
 argument_list|()
+operator|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|bool
@@ -2499,22 +2558,20 @@ return|return
 name|m_interrupted
 return|;
 block|}
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|DoOnRemoval
 argument_list|(
-name|Event
-operator|*
-name|event_ptr
+argument|Event *event_ptr
 argument_list|)
+name|override
 block|;
 specifier|static
 specifier|const
@@ -2712,10 +2769,46 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ProcessEventData
 argument_list|)
-block|;      }
+block|;     }
 decl_stmt|;
 endif|#
 directive|endif
+comment|// SWIG
+comment|//------------------------------------------------------------------
+comment|/// Construct with a shared pointer to a target, and the Process listener.
+comment|/// Uses the Host UnixSignalsSP by default.
+comment|//------------------------------------------------------------------
+name|Process
+argument_list|(
+argument|lldb::TargetSP target_sp
+argument_list|,
+argument|Listener&listener
+argument_list|)
+empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Construct with a shared pointer to a target, the Process listener,
+comment|/// and the appropriate UnixSignalsSP for the process.
+comment|//------------------------------------------------------------------
+name|Process
+argument_list|(
+argument|lldb::TargetSP target_sp
+argument_list|,
+argument|Listener&listener
+argument_list|,
+argument|const lldb::UnixSignalsSP&unix_signals_sp
+argument_list|)
+empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Destructor.
+comment|///
+comment|/// The destructor is virtual since this class is designed to be
+comment|/// inherited from by the plug-in instance.
+comment|//------------------------------------------------------------------
+operator|~
+name|Process
+argument_list|()
+name|override
+expr_stmt|;
 specifier|static
 name|void
 name|SettingsInitialize
@@ -2734,54 +2827,6 @@ name|GetGlobalProperties
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Construct with a shared pointer to a target, and the Process listener.
-comment|/// Uses the Host UnixSignalsSP by default.
-comment|//------------------------------------------------------------------
-name|Process
-argument_list|(
-name|Target
-operator|&
-name|target
-argument_list|,
-name|Listener
-operator|&
-name|listener
-argument_list|)
-expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Construct with a shared pointer to a target, the Process listener,
-comment|/// and the appropriate UnixSignalsSP for the process.
-comment|//------------------------------------------------------------------
-name|Process
-argument_list|(
-name|Target
-operator|&
-name|target
-argument_list|,
-name|Listener
-operator|&
-name|listener
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|UnixSignalsSP
-operator|&
-name|unix_signals_sp
-argument_list|)
-expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Destructor.
-comment|///
-comment|/// The destructor is virtual since this class is designed to be
-comment|/// inherited from by the plug-in instance.
-comment|//------------------------------------------------------------------
-name|virtual
-operator|~
-name|Process
-argument_list|()
-expr_stmt|;
-comment|//------------------------------------------------------------------
 comment|/// Find a Process plug-in that can debug \a module using the
 comment|/// currently selected architecture.
 comment|///
@@ -2793,7 +2838,7 @@ comment|/// @param[in] module_sp
 comment|///     The module shared pointer that this process will debug.
 comment|///
 comment|/// @param[in] plugin_name
-comment|///     If NULL, select the best plug-in for the binary. If non-NULL
+comment|///     If nullptr, select the best plug-in for the binary. If non-nullptr
 comment|///     then look for a plugin whose PluginInfo's name matches
 comment|///     this string.
 comment|///
@@ -2805,23 +2850,13 @@ operator|::
 name|ProcessSP
 name|FindPlugin
 argument_list|(
-name|Target
-operator|&
-name|target
+argument|lldb::TargetSP target_sp
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|plugin_name
+argument|const char *plugin_name
 argument_list|,
-name|Listener
-operator|&
-name|listener
+argument|Listener&listener
 argument_list|,
-specifier|const
-name|FileSpec
-operator|*
-name|crash_file_path
+argument|const FileSpec *crash_file_path
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -2834,7 +2869,7 @@ comment|/// status automatically set when the host child process exits.
 comment|/// Subclasses should call Host::StartMonitoringChildProcess ()
 comment|/// with:
 comment|///     callback = Process::SetHostProcessExitStatus
-comment|///     callback_baton = NULL
+comment|///     callback_baton = nullptr
 comment|///     pid = Process::GetID()
 comment|///     monitor_signals = false
 comment|//------------------------------------------------------------------
@@ -2846,7 +2881,7 @@ name|void
 operator|*
 name|callback_baton
 argument_list|,
-comment|// The callback baton which should be set to NULL
+comment|// The callback baton which should be set to nullptr
 name|lldb
 operator|::
 name|pid_t
@@ -2900,17 +2935,18 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|bool
 name|CanDebug
-parameter_list|(
-name|Target
-modifier|&
+argument_list|(
+name|lldb
+operator|::
+name|TargetSP
 name|target
-parameter_list|,
+argument_list|,
 name|bool
 name|plugin_specified_by_name
-parameter_list|)
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// This object is about to be destroyed, do any necessary cleanup.
 comment|///
@@ -2960,7 +2996,7 @@ name|GetPluginCommandObject
 parameter_list|()
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -3074,6 +3110,18 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|size_t
+name|LoadModules
+parameter_list|(
+name|LoadedModuleInfoList
+modifier|&
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|protected
 label|:
 name|virtual
@@ -3089,7 +3137,7 @@ comment|/// Get the system runtime plug-in for this process.
 comment|///
 comment|/// @return
 comment|///   Returns a pointer to the SystemRuntime plugin for this Process
-comment|///   if one is available.  Else returns NULL.
+comment|///   if one is available.  Else returns nullptr.
 comment|//------------------------------------------------------------------
 name|virtual
 name|SystemRuntime
@@ -3129,7 +3177,7 @@ comment|///
 comment|/// @param[in] strm
 comment|///     A stream where output intended for the user
 comment|///     (if the driver has a way to display that) generated during
-comment|///     the connection.  This may be NULL if no output is needed.A
+comment|///     the connection.  This may be nullptr if no output is needed.A
 comment|///
 comment|/// @param[in] remote_url
 comment|///     The URL format that we are connecting to.
@@ -3195,48 +3243,25 @@ name|GetImageInfoAddress
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Load a shared library into this process.
+comment|/// Called when the process is about to broadcast a public stop.
 comment|///
-comment|/// Try and load a shared library into the current process. This
-comment|/// call might fail in the dynamic loader plug-in says it isn't safe
-comment|/// to try and load shared libraries at the moment.
-comment|///
-comment|/// @param[in] image_spec
-comment|///     The image file spec that points to the shared library that
-comment|///     you want to load.
-comment|///
-comment|/// @param[out] error
-comment|///     An error object that gets filled in with any errors that
-comment|///     might occur when trying to load the shared library.
-comment|///
-comment|/// @return
-comment|///     A token that represents the shared library that can be
-comment|///     later used to unload the shared library. A value of
-comment|///     LLDB_INVALID_IMAGE_TOKEN will be returned if the shared
-comment|///     library can't be opened.
+comment|/// There are public and private stops. Private stops are when the
+comment|/// process is doing things like stepping and the client doesn't
+comment|/// need to know about starts and stop that implement a thread plan.
+comment|/// Single stepping over a source line in code might end up being
+comment|/// implemented by one or more process starts and stops. Public stops
+comment|/// are when clients will be notified that the process is stopped.
+comment|/// These events typically trigger UI updates (thread stack frames to
+comment|/// be displayed, variables to be displayed, and more). This function
+comment|/// can be overriden and allows process subclasses to do something
+comment|/// before the eBroadcastBitStateChanged event is sent to public
+comment|/// clients.
 comment|//------------------------------------------------------------------
 name|virtual
-name|uint32_t
-name|LoadImage
-parameter_list|(
-specifier|const
-name|FileSpec
-modifier|&
-name|image_spec
-parameter_list|,
-name|Error
-modifier|&
-name|error
-parameter_list|)
-function_decl|;
-name|virtual
-name|Error
-name|UnloadImage
-parameter_list|(
-name|uint32_t
-name|image_token
-parameter_list|)
-function_decl|;
+name|void
+name|WillPublicStop
+parameter_list|()
+block|{     }
 comment|//------------------------------------------------------------------
 comment|/// Register for process and thread notifications.
 comment|///
@@ -3352,6 +3377,9 @@ comment|///
 comment|/// @param[in] clear_thread_plans
 comment|///     If true, when the process stops, clear all thread plans.
 comment|///
+comment|/// @param[in] use_run_lock
+comment|///     Whether to release the run lock after the stop.
+comment|///
 comment|/// @return
 comment|///     Returns an error object.  If the error is empty, the process is halted.
 comment|///     otherwise the halt has failed.
@@ -3363,6 +3391,11 @@ name|bool
 name|clear_thread_plans
 init|=
 name|false
+parameter_list|,
+name|bool
+name|use_run_lock
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -3428,11 +3461,10 @@ function_decl|;
 name|void
 name|SetUnixSignals
 argument_list|(
-specifier|const
 name|lldb
 operator|::
 name|UnixSignalsSP
-operator|&
+operator|&&
 name|signals_sp
 argument_list|)
 decl_stmt|;
@@ -3504,7 +3536,7 @@ comment|///
 comment|/// @param[in] strm
 comment|///     A stream where output intended for the user
 comment|///     (if the driver has a way to display that) generated during
-comment|///     the connection.  This may be NULL if no output is needed.A
+comment|///     the connection.  This may be nullptr if no output is needed.A
 comment|///
 comment|/// @param[in] remote_url
 comment|///     The URL format that we are connecting to.
@@ -3865,9 +3897,8 @@ comment|///
 comment|/// DoHalt must produce one and only one stop StateChanged event if it actually
 comment|/// stops the process.  If the stop happens through some natural event (for
 comment|/// instance a SIGSTOP), then forwarding that event will do.  Otherwise, you must
-comment|/// generate the event manually.  Note also, the private event thread is stopped when
-comment|/// DoHalt is run to prevent the events generated while halting to trigger
-comment|/// other state changes before the halt is complete.
+comment|/// generate the event manually. This function is called from the context of the
+comment|/// private state thread.
 comment|///
 comment|/// @param[out] caused_stop
 comment|///     If true, then this Halt caused the stop, otherwise, the
@@ -4109,6 +4140,62 @@ init|=
 literal|0
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Sometimes the connection to a process can detect the host OS
+comment|/// version that the process is running on. The current platform
+comment|/// should be checked first in case the platform is connected, but
+comment|/// clients can fall back onto this function if the platform fails
+comment|/// to identify the host OS version. The platform should be checked
+comment|/// first in case you are running a simulator platform that might
+comment|/// itself be running natively, but have different heuristics for
+comment|/// figuring out which OS is is emulating.
+comment|///
+comment|/// @param[out] major
+comment|///    The major OS version, or UINT32_MAX if it can't be determined
+comment|///
+comment|/// @param[out] minor
+comment|///    The minor OS version, or UINT32_MAX if it can't be determined
+comment|///
+comment|/// @param[out] update
+comment|///    The update OS version, or UINT32_MAX if it can't be determined
+comment|///
+comment|/// @return
+comment|///     Returns \b true if the host OS version info was filled in
+comment|///     and \b false otherwise.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|GetHostOSVersion
+parameter_list|(
+name|uint32_t
+modifier|&
+name|major
+parameter_list|,
+name|uint32_t
+modifier|&
+name|minor
+parameter_list|,
+name|uint32_t
+modifier|&
+name|update
+parameter_list|)
+block|{
+name|major
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+name|minor
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+name|update
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|/// Get the target object pointer for this module.
 comment|///
 comment|/// @return
@@ -4121,7 +4208,11 @@ name|GetTarget
 parameter_list|()
 block|{
 return|return
-name|m_target
+operator|*
+name|m_target_sp
+operator|.
+name|lock
+argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -4139,7 +4230,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|m_target
+operator|*
+name|m_target_sp
+operator|.
+name|lock
+argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -4298,41 +4393,25 @@ name|ObjectSP
 argument_list|()
 return|;
 block|}
-name|protected
-label|:
-name|void
-name|SetState
-argument_list|(
-name|lldb
-operator|::
-name|EventSP
-operator|&
-name|event_sp
-argument_list|)
-decl_stmt|;
-name|lldb
-operator|::
-name|StateType
-name|GetPrivateState
-argument_list|()
-expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// The "private" side of resuming a process.  This doesn't alter the
-comment|/// state of m_run_lock, but just causes the process to resume.
+comment|/// Print a user-visible warning about a module being built with optimization
 comment|///
-comment|/// @return
-comment|///     An Error object describing the success or failure of the resume.
-comment|//------------------------------------------------------------------
-name|Error
-name|PrivateResume
-parameter_list|()
-function_decl|;
-comment|//------------------------------------------------------------------
-comment|// Called internally
+comment|/// Prints a async warning message to the user one time per Module
+comment|/// where a function is found that was compiled with optimization, per
+comment|/// Process.
+comment|///
+comment|/// @param [in] sc
+comment|///     A SymbolContext with eSymbolContextFunction and eSymbolContextModule
+comment|///     pre-computed.
 comment|//------------------------------------------------------------------
 name|void
-name|CompleteAttach
-parameter_list|()
+name|PrintWarningOptimization
+parameter_list|(
+specifier|const
+name|SymbolContext
+modifier|&
+name|sc
+parameter_list|)
 function_decl|;
 name|public
 label|:
@@ -4351,7 +4430,7 @@ comment|//------------------------------------------------------------------
 comment|/// Get a textual description of what the process exited.
 comment|///
 comment|/// @return
-comment|///     The textual description of why the process exited, or NULL
+comment|///     The textual description of why the process exited, or nullptr
 comment|///     if there is no description available.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -4497,8 +4576,6 @@ name|virtual
 name|bool
 name|IsAlive
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Before lldb detaches from a process, it warns the user that they are about to lose their debug session.
@@ -5050,7 +5127,7 @@ comment|///     a given memory allocation can't be changed after allocation.  No
 comment|///     that a block that isn't set writable can still be written on from lldb,
 comment|///     just not by the process itself.
 comment|///
-comment|/// @param[in/out] error
+comment|/// @param[in,out] error
 comment|///     An error object to fill in if things go wrong.
 comment|/// @return
 comment|///     The address of the allocated buffer in the process, or
@@ -5060,6 +5137,41 @@ name|lldb
 operator|::
 name|addr_t
 name|AllocateMemory
+argument_list|(
+argument|size_t size
+argument_list|,
+argument|uint32_t permissions
+argument_list|,
+argument|Error&error
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// The public interface to allocating memory in the process, this also
+comment|/// clears the allocated memory.
+comment|///
+comment|/// This function will allocate memory in the process's address
+comment|/// space.  This can't rely on the generic function calling mechanism,
+comment|/// since that requires this function.
+comment|///
+comment|/// @param[in] size
+comment|///     The size of the allocation requested.
+comment|///
+comment|/// @param[in] permissions
+comment|///     Or together any of the lldb::Permissions bits.  The permissions on
+comment|///     a given memory allocation can't be changed after allocation.  Note
+comment|///     that a block that isn't set writable can still be written on from lldb,
+comment|///     just not by the process itself.
+comment|///
+comment|/// @param[in/out] error
+comment|///     An error object to fill in if things go wrong.
+comment|/// @return
+comment|///     The address of the allocated buffer in the process, or
+comment|///     LLDB_INVALID_ADDRESS if the allocation failed.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|addr_t
+name|CallocateMemory
 argument_list|(
 argument|size_t size
 argument_list|,
@@ -5891,6 +6003,9 @@ expr_stmt|;
 comment|// Returns the process state when it is stopped. If specified, event_sp_ptr
 comment|// is set to the event which triggered the stop. If wait_always = false,
 comment|// and the process is already stopped, this function returns immediately.
+comment|// If the process is hijacked and use_run_lock is true (the default), then this
+comment|// function releases the run lock after the stop. Setting use_run_lock to false
+comment|// will avoid this behavior.
 name|lldb
 operator|::
 name|StateType
@@ -5898,13 +6013,15 @@ name|WaitForProcessToStop
 argument_list|(
 argument|const TimeValue *timeout
 argument_list|,
-argument|lldb::EventSP *event_sp_ptr = NULL
+argument|lldb::EventSP *event_sp_ptr = nullptr
 argument_list|,
 argument|bool wait_always = true
 argument_list|,
-argument|Listener *hijack_listener = NULL
+argument|Listener *hijack_listener = nullptr
 argument_list|,
-argument|Stream *stream = NULL
+argument|Stream *stream = nullptr
+argument_list|,
+argument|bool use_run_lock = true
 argument_list|)
 expr_stmt|;
 name|uint32_t
@@ -5960,7 +6077,7 @@ operator|*
 name|hijack_listener
 argument_list|)
 expr_stmt|;
-comment|// Pass NULL to use builtin listener
+comment|// Pass nullptr to use builtin listener
 comment|//--------------------------------------------------------------------------------------
 comment|/// Centralize the code that handles and prints descriptions for process state changes.
 comment|///
@@ -5970,7 +6087,7 @@ comment|///
 comment|/// @param[in] stream
 comment|///     The output stream to get the state change description
 comment|///
-comment|/// @param[inout] pop_process_io_handler
+comment|/// @param[in,out] pop_process_io_handler
 comment|///     If this value comes in set to \b true, then pop the Process IOHandler if needed.
 comment|///     Else this variable will be set to \b true or \b false to indicate if the process
 comment|///     needs to have its process IOHandler popped.
@@ -6086,34 +6203,6 @@ name|void
 name|RestoreProcessEvents
 parameter_list|()
 function_decl|;
-name|private
-label|:
-comment|//------------------------------------------------------------------
-comment|/// This is the part of the event handling that for a process event.
-comment|/// It decides what to do with the event and returns true if the
-comment|/// event needs to be propagated to the user, and false otherwise.
-comment|/// If the event is not propagated, this call will most likely set
-comment|/// the target to executing again.
-comment|/// There is only one place where this call should be called, HandlePrivateEvent.
-comment|/// Don't call it from anywhere else...
-comment|///
-comment|/// @param[in] event_ptr
-comment|///     This is the event we are handling.
-comment|///
-comment|/// @return
-comment|///     Returns \b true if the event should be reported to the
-comment|///     user, \b false otherwise.
-comment|//------------------------------------------------------------------
-name|bool
-name|ShouldBroadcastEvent
-parameter_list|(
-name|Event
-modifier|*
-name|event_ptr
-parameter_list|)
-function_decl|;
-name|public
-label|:
 specifier|const
 name|lldb
 operator|::
@@ -6262,31 +6351,31 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|TargetSP
 name|CalculateTarget
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|CalculateProcess
 argument_list|()
+name|override
 block|{
 return|return
 name|shared_from_this
 argument_list|()
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
 name|CalculateThread
 argument_list|()
+name|override
 block|{
 return|return
 name|lldb
@@ -6295,12 +6384,12 @@ name|ThreadSP
 argument_list|()
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|StackFrameSP
 name|CalculateStackFrame
 argument_list|()
+name|override
 block|{
 return|return
 name|lldb
@@ -6309,15 +6398,15 @@ name|StackFrameSP
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|CalculateExecutionContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|SetSTDIOFileDescriptor
 parameter_list|(
@@ -6514,19 +6603,210 @@ literal|"Not supported"
 argument_list|)
 return|;
 block|}
+name|size_t
+name|AddImageToken
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|image_ptr
+argument_list|)
+decl_stmt|;
+name|lldb
+operator|::
+name|addr_t
+name|GetImagePtrFromToken
+argument_list|(
+argument|size_t token
+argument_list|)
+specifier|const
+expr_stmt|;
+name|void
+name|ResetImageToken
+parameter_list|(
+name|size_t
+name|token
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Find the next branch instruction to set a breakpoint on
+comment|///
+comment|/// When instruction stepping through a source line, instead of
+comment|/// stepping through each instruction, we can put a breakpoint on
+comment|/// the next branch instruction (within the range of instructions
+comment|/// we are stepping through) and continue the process to there,
+comment|/// yielding significant performance benefits over instruction
+comment|/// stepping.
+comment|///
+comment|/// @param[in] default_stop_addr
+comment|///     The address of the instruction where lldb would put a
+comment|///     breakpoint normally.
+comment|///
+comment|/// @param[in] range_bounds
+comment|///     The range which the breakpoint must be contained within.
+comment|///     Typically a source line.
+comment|///
+comment|/// @return
+comment|///     The address of the next branch instruction, or the end of
+comment|///     the range provided in range_bounds.  If there are any
+comment|///     problems with the disassembly or getting the instructions,
+comment|///     the original default_stop_addr will be returned.
+comment|//------------------------------------------------------------------
+name|Address
+name|AdvanceAddressToNextBranchInstruction
+parameter_list|(
+name|Address
+name|default_stop_addr
+parameter_list|,
+name|AddressRange
+name|range_bounds
+parameter_list|)
+function_decl|;
 name|protected
 label|:
+name|void
+name|SetState
+argument_list|(
+name|lldb
+operator|::
+name|EventSP
+operator|&
+name|event_sp
+argument_list|)
+decl_stmt|;
+name|lldb
+operator|::
+name|StateType
+name|GetPrivateState
+argument_list|()
+expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// The "private" side of resuming a process.  This doesn't alter the
+comment|/// state of m_run_lock, but just causes the process to resume.
+comment|///
+comment|/// @return
+comment|///     An Error object describing the success or failure of the resume.
+comment|//------------------------------------------------------------------
+name|Error
+name|PrivateResume
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|// Called internally
+comment|//------------------------------------------------------------------
+name|void
+name|CompleteAttach
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Print a user-visible warning one time per Process
+comment|///
+comment|/// A facility for printing a warning to the user once per repeat_key.
+comment|///
+comment|/// warning_type is from the Process::Warnings enums.
+comment|/// repeat_key is a pointer value that will be used to ensure that the
+comment|/// warning message is not printed multiple times.  For instance, with a
+comment|/// warning about a function being optimized, you can pass the CompileUnit
+comment|/// pointer to have the warning issued for only the first function in a
+comment|/// CU, or the Function pointer to have it issued once for every function,
+comment|/// or a Module pointer to have it issued once per Module.
+comment|///
+comment|/// Classes outside Process should call a specific PrintWarning method
+comment|/// so that the warning strings are all centralized in Process, instead of
+comment|/// calling PrintWarning() directly.
+comment|///
+comment|/// @param [in] warning_type
+comment|///     One of the types defined in Process::Warnings.
+comment|///
+comment|/// @param [in] repeat_key
+comment|///     A pointer value used to ensure that the warning is only printed once.
+comment|///     May be nullptr, indicating that the warning is printed unconditionally
+comment|///     every time.
+comment|///
+comment|/// @param [in] fmt
+comment|///     printf style format string
+comment|//------------------------------------------------------------------
+name|void
+name|PrintWarning
+parameter_list|(
+name|uint64_t
+name|warning_type
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|repeat_key
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|4
+operator|,
+function_decl|5
+block|)
+decl_stmt|)
+end_decl_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|// NextEventAction provides a way to register an action on the next
+end_comment
+
+begin_comment
 comment|// event that is delivered to this process.  There is currently only
+end_comment
+
+begin_comment
 comment|// one next event action allowed in the process at one time.  If a
+end_comment
+
+begin_comment
 comment|// new "NextEventAction" is added while one is already present, the
+end_comment
+
+begin_comment
 comment|// old action will be discarded (with HandleBeingUnshipped called
+end_comment
+
+begin_comment
 comment|// after it is discarded.)
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// If you want to resume the process as a result of a resume action,
+end_comment
+
+begin_comment
 comment|// call RequestResume, don't call Resume directly.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
 name|class
 name|NextEventAction
 block|{
@@ -6560,7 +6840,9 @@ name|virtual
 operator|~
 name|NextEventAction
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|EventActionResult
 name|PerformAction
@@ -6571,9 +6853,9 @@ name|EventSP
 operator|&
 name|event_sp
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|void
 name|HandleBeingUnshipped
@@ -6613,7 +6895,13 @@ modifier|*
 name|m_process
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|void
 name|SetNextEventAction
 argument_list|(
@@ -6644,7 +6932,13 @@ name|next_event_action
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// This is the completer for Attaching:
+end_comment
+
+begin_decl_stmt
 name|class
 name|AttachCompletionHandler
 range|:
@@ -6660,33 +6954,31 @@ argument_list|,
 argument|uint32_t exec_count
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|AttachCompletionHandler
 argument_list|()
-block|{         }
-name|virtual
+name|override
+operator|=
+expr|default
+block|;
 name|EventActionResult
 name|PerformAction
 argument_list|(
-name|lldb
-operator|::
-name|EventSP
-operator|&
-name|event_sp
+argument|lldb::EventSP&event_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|EventActionResult
 name|HandleBeingInterrupted
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetExitString
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -6699,18 +6991,9 @@ name|string
 name|m_exit_string
 block|;     }
 decl_stmt|;
-name|bool
-name|HijackPrivateProcessEvents
-parameter_list|(
-name|Listener
-modifier|*
-name|listener
-parameter_list|)
-function_decl|;
-name|void
-name|RestorePrivateProcessEvents
-parameter_list|()
-function_decl|;
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|PrivateStateThreadIsValid
 argument_list|()
@@ -6723,6 +7006,9 @@ name|IsJoinable
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|ForceNextEventDelivery
 parameter_list|()
@@ -6732,9 +7018,21 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|// Type definitions
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -6750,6 +7048,37 @@ name|LanguageRuntimeSP
 operator|>
 name|LanguageRuntimeCollection
 expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|unordered_set
+operator|<
+specifier|const
+name|void
+operator|*
+operator|>
+name|WarningsPointerSet
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|uint64_t
+operator|,
+name|WarningsPointerSet
+operator|>
+name|WarningsCollection
+expr_stmt|;
+end_typedef
+
+begin_struct
 struct|struct
 name|PreResumeCallbackAndBaton
 block|{
@@ -6786,14 +7115,36 @@ argument_list|)
 block|{         }
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|// Member variables
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|weak_ptr
+operator|<
 name|Target
-modifier|&
-name|m_target
-decl_stmt|;
+operator|>
+name|m_target_sp
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///< The target that owns this process.
+end_comment
+
+begin_expr_stmt
 name|ThreadSafeValue
 operator|<
 name|lldb
@@ -6802,6 +7153,9 @@ name|StateType
 operator|>
 name|m_public_state
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ThreadSafeValue
 operator|<
 name|lldb
@@ -6810,42 +7164,96 @@ name|StateType
 operator|>
 name|m_private_state
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// The actual state of our process
+end_comment
+
+begin_decl_stmt
 name|Broadcaster
 name|m_private_state_broadcaster
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// This broadcaster feeds state changed events into the private state thread's listener.
+end_comment
+
+begin_decl_stmt
 name|Broadcaster
 name|m_private_state_control_broadcaster
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// This is the control broadcaster, used to pause, resume& stop the private state thread.
+end_comment
+
+begin_decl_stmt
 name|Listener
 name|m_private_state_listener
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// This is the listener for the private state thread.
+end_comment
+
+begin_expr_stmt
 name|Predicate
 operator|<
 name|bool
 operator|>
 name|m_private_state_control_wait
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// This Predicate is used to signal that a control operation is complete.
+end_comment
+
+begin_decl_stmt
 name|HostThread
 name|m_private_state_thread
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Thread ID for the thread that watches internal state events
+end_comment
+
+begin_decl_stmt
 name|ProcessModID
 name|m_mod_id
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Tracks the state of the process over stops and other alterations.
+end_comment
+
+begin_decl_stmt
 name|uint32_t
 name|m_process_unique_id
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Each lldb_private::Process class that is created gets a unique integer ID that increments with each new instance
+end_comment
+
+begin_decl_stmt
 name|uint32_t
 name|m_thread_index_id
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Each thread is created with a 1 based index that won't get re-used.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|map
@@ -6856,48 +7264,111 @@ name|uint32_t
 operator|>
 name|m_thread_id_to_index_id_map
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int
 name|m_exit_status
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The exit status of the process, or -1 if not set.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|m_exit_string
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///< A textual description of why a process exited.
+end_comment
+
+begin_decl_stmt
 name|Mutex
 name|m_exit_status_mutex
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Mutex so m_exit_status m_exit_string can be safely accessed from multiple threads
+end_comment
+
+begin_decl_stmt
 name|Mutex
 name|m_thread_mutex
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ThreadList
 name|m_thread_list_real
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The threads for this process as are known to the protocol we are debugging with
+end_comment
+
+begin_decl_stmt
 name|ThreadList
 name|m_thread_list
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The threads for this process as the user will see them. This is usually the same as
+end_comment
+
+begin_comment
 comment|///< m_thread_list_real, but might be different if there is an OS plug-in creating memory threads
+end_comment
+
+begin_decl_stmt
 name|ThreadList
 name|m_extended_thread_list
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< Owner for extended threads that may be generated, cleared on natural stops
+end_comment
+
+begin_decl_stmt
 name|uint32_t
 name|m_extended_thread_stop_id
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The natural stop id when extended_thread_list was last updated
+end_comment
+
+begin_decl_stmt
 name|QueueList
 name|m_queue_list
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The list of libdispatch queues at a given stop point
+end_comment
+
+begin_decl_stmt
 name|uint32_t
 name|m_queue_list_stop_id
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< The natural stop id when queue list was last fetched
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -6906,7 +7377,13 @@ name|Notifications
 operator|>
 name|m_notifications
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///< The list of notifications that this process can deliver.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -6917,79 +7394,142 @@ name|addr_t
 operator|>
 name|m_image_tokens
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|Listener
 modifier|&
 name|m_listener
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|BreakpointSiteList
 name|m_breakpoint_site_list
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|///< This is the list of breakpoint locations we intend to insert in the target.
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|DynamicLoaderUP
 name|m_dyld_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|JITLoaderListUP
 name|m_jit_loaders_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|DynamicCheckerFunctionsUP
 name|m_dynamic_checkers_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|///< The functions used by the expression parser to validate data that expressions use.
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|OperatingSystemUP
 name|m_os_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|SystemRuntimeUP
 name|m_system_runtime_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|UnixSignalsSP
 name|m_unix_signals_sp
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// This is the current signal set for this process.
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|ABISP
 name|m_abi_sp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|IOHandlerSP
 name|m_process_input_reader
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|Communication
 name|m_stdio_communication
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|Mutex
 name|m_stdio_communication_mutex
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_stdin_forward
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Remember if stdin must be forwarded to remote debug server
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|m_stdout_data
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|m_stderr_data
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|Mutex
 name|m_profile_data_comm_mutex
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -7000,28 +7540,52 @@ name|string
 operator|>
 name|m_profile_data
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|Predicate
 operator|<
 name|uint32_t
 operator|>
 name|m_iohandler_sync
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|MemoryCache
 name|m_memory_cache
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|AllocatedMemoryCache
 name|m_allocated_memory_cache
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_should_detach
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Should we detach if the process object goes away with an explicit call to Kill or Detach?
+end_comment
+
+begin_decl_stmt
 name|LanguageRuntimeCollection
 name|m_language_runtimes
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|InstrumentationRuntimeCollection
 name|m_instrumentation_runtimes
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -7030,6 +7594,9 @@ name|NextEventAction
 operator|>
 name|m_next_event_action_ap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -7038,51 +7605,89 @@ name|PreResumeCallbackAndBaton
 operator|>
 name|m_pre_resume_actions
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|ProcessRunLock
 name|m_public_run_lock
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ProcessRunLock
 name|m_private_run_lock
 decl_stmt|;
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_currently_handling_event
-expr_stmt|;
-comment|// This predicate is set in HandlePrivateEvent while all its business is being done.
+end_decl_stmt
+
+begin_expr_stmt
 name|ArchSpec
 operator|::
 name|StopInfoOverrideCallbackType
 name|m_stop_info_override_callback
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|m_currently_handling_do_on_removals
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_resume_requested
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// If m_currently_handling_event or m_currently_handling_do_on_removals are true, Resume will only request a resume, using this flag to check.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|m_finalizing
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// This is set at the beginning of Process::Finalize() to stop functions from looking up or creating things during a finalize call
+end_comment
+
+begin_decl_stmt
 name|bool
 name|m_finalize_called
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// This is set at the end of Process::Finalize()
+end_comment
+
+begin_decl_stmt
 name|bool
 name|m_clear_thread_plans_on_stop
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_force_next_event_delivery
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|StateType
 name|m_last_broadcast_state
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// This helps with the Public event coalescing in ShouldBroadcastEvent.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|map
@@ -7097,13 +7702,35 @@ name|addr_t
 operator|>
 name|m_resolved_indirect_addresses
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|m_destroy_in_process
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|m_can_interpret_function_calls
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Some targets, e.g the OSX kernel, don't support the ability to modify the stack.
+end_comment
+
+begin_decl_stmt
+name|WarningsCollection
+name|m_warnings_issued
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// A set of object pointers which have already had warnings printed
+end_comment
+
+begin_enum
 enum|enum
 block|{
 name|eCanJITDontKnow
@@ -7116,6 +7743,9 @@ name|eCanJITNo
 block|}
 name|m_can_jit
 enum|;
+end_enum
+
+begin_decl_stmt
 name|size_t
 name|RemoveBreakpointOpcodesFromBuffer
 argument_list|(
@@ -7133,6 +7763,9 @@ name|buf
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|SynchronouslyNotifyStateChanged
 argument_list|(
@@ -7142,6 +7775,9 @@ name|StateType
 name|state
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|SetPublicState
 argument_list|(
@@ -7154,6 +7790,9 @@ name|bool
 name|restarted
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|SetPrivateState
 argument_list|(
@@ -7163,6 +7802,9 @@ name|StateType
 name|state
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|bool
 name|StartPrivateStateThread
 parameter_list|(
@@ -7172,18 +7814,30 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|StopPrivateStateThread
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|PausePrivateStateThread
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ResumePrivateStateThread
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_struct
 struct|struct
 name|PrivateStateThreadArgs
 block|{
@@ -7196,6 +7850,9 @@ name|is_secondary_thread
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_expr_stmt
 specifier|static
 name|lldb
 operator|::
@@ -7207,10 +7864,25 @@ operator|*
 name|arg
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// The starts up the private state thread that will watch for events from the debugee.
+end_comment
+
+begin_comment
 comment|// Pass true for is_secondary_thread in the case where you have to temporarily spin up a
+end_comment
+
+begin_comment
 comment|// secondary state thread to handle events from a hand-called function on the primary
+end_comment
+
+begin_comment
 comment|// private state thread.
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|thread_result_t
@@ -7219,6 +7891,9 @@ argument_list|(
 argument|bool is_secondary_thread
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|HandlePrivateEvent
 argument_list|(
@@ -7229,6 +7904,16 @@ operator|&
 name|event_sp
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|Error
+name|HaltPrivate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|StateType
@@ -7246,8 +7931,17 @@ operator|&
 name|event_sp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// This waits for both the state change broadcaster, and the control broadcaster.
+end_comment
+
+begin_comment
 comment|// If control_only, it only waits for the control broadcaster.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|WaitForEventsPrivate
 argument_list|(
@@ -7266,6 +7960,9 @@ name|bool
 name|control_only
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|StateType
@@ -7283,6 +7980,9 @@ operator|&
 name|event_sp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|StateType
@@ -7295,6 +7995,9 @@ argument_list|,
 argument|const uint32_t num_match_states
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|size_t
 name|WriteMemoryPrivate
 argument_list|(
@@ -7316,6 +8019,9 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|AppendSTDOUT
 parameter_list|(
@@ -7328,6 +8034,9 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AppendSTDERR
 parameter_list|(
@@ -7340,6 +8049,9 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|void
 name|BroadcastAsyncProfileData
 argument_list|(
@@ -7351,6 +8063,9 @@ operator|&
 name|one_profile_data
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 specifier|static
 name|void
 name|STDIOReadThreadBytesReceived
@@ -7368,18 +8083,30 @@ name|size_t
 name|src_len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|PushProcessIOHandler
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|PopProcessIOHandler
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|ProcessIOHandlerIsActive
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|bool
 name|ProcessIOHandlerExists
 argument_list|()
@@ -7395,8 +8122,11 @@ name|m_process_input_reader
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|Error
-name|HaltForDestroyOrDetach
+name|StopForDestroyOrDetach
 argument_list|(
 name|lldb
 operator|::
@@ -7405,10 +8135,16 @@ operator|&
 name|exit_event_sp
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|bool
 name|StateChangedIsExternallyHijacked
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|LoadOperatingSystemPlugin
 parameter_list|(
@@ -7416,11 +8152,89 @@ name|bool
 name|flush
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|//------------------------------------------------------------------
-comment|// For Process only
+end_comment
+
+begin_comment
+comment|/// This is the part of the event handling that for a process event.
+end_comment
+
+begin_comment
+comment|/// It decides what to do with the event and returns true if the
+end_comment
+
+begin_comment
+comment|/// event needs to be propagated to the user, and false otherwise.
+end_comment
+
+begin_comment
+comment|/// If the event is not propagated, this call will most likely set
+end_comment
+
+begin_comment
+comment|/// the target to executing again.
+end_comment
+
+begin_comment
+comment|/// There is only one place where this call should be called, HandlePrivateEvent.
+end_comment
+
+begin_comment
+comment|/// Don't call it from anywhere else...
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] event_ptr
+end_comment
+
+begin_comment
+comment|///     This is the event we are handling.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     Returns \b true if the event should be reported to the
+end_comment
+
+begin_comment
+comment|///     user, \b false otherwise.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldBroadcastEvent
+parameter_list|(
+name|Event
+modifier|*
+name|event_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ControlPrivateStateThread
 parameter_list|(
@@ -7428,20 +8242,18 @@ name|uint32_t
 name|signal
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Process
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

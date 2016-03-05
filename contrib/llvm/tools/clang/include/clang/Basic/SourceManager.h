@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -374,8 +380,6 @@ comment|///
 comment|/// This is only valid if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
-range|:
-literal|31
 decl_stmt|;
 comment|/// \brief Indicates whether the buffer itself was provided to override
 comment|/// the actual file contents.
@@ -391,6 +395,14 @@ comment|/// \brief True if this content cache was initially created for a source
 comment|/// file considered as a system one.
 name|unsigned
 name|IsSystemFile
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if this file may be transient, that is, if it might not
+comment|/// exist at some later point in time when this content entry is used,
+comment|/// after serialization and deserialization.
+name|unsigned
+name|IsTransient
 range|:
 literal|1
 decl_stmt|;
@@ -458,6 +470,11 @@ argument_list|)
 operator|,
 name|IsSystemFile
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsTransient
+argument_list|(
 argument|false
 argument_list|)
 block|{}
@@ -494,6 +511,11 @@ name|false
 argument_list|)
 operator|,
 name|IsSystemFile
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsTransient
 argument_list|(
 argument|false
 argument_list|)
@@ -1240,8 +1262,14 @@ name|SLocEntry
 block|{
 name|unsigned
 name|Offset
+range|:
+literal|31
 decl_stmt|;
-comment|// low bit is set for expansion info.
+name|unsigned
+name|IsExpansion
+range|:
+literal|1
+decl_stmt|;
 union|union
 block|{
 name|FileInfo
@@ -1261,8 +1289,6 @@ specifier|const
 block|{
 return|return
 name|Offset
-operator|>>
-literal|1
 return|;
 block|}
 name|bool
@@ -1271,9 +1297,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Offset
-operator|&
-literal|1
+name|IsExpansion
 return|;
 block|}
 name|bool
@@ -1338,6 +1362,22 @@ modifier|&
 name|FI
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|Offset
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+operator|)
+operator|&&
+literal|"Offset is too large"
+argument_list|)
+expr_stmt|;
 name|SLocEntry
 name|E
 decl_stmt|;
@@ -1346,8 +1386,12 @@ operator|.
 name|Offset
 operator|=
 name|Offset
-operator|<<
-literal|1
+expr_stmt|;
+name|E
+operator|.
+name|IsExpansion
+operator|=
+name|false
 expr_stmt|;
 name|E
 operator|.
@@ -1372,6 +1416,22 @@ modifier|&
 name|Expansion
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|Offset
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+operator|)
+operator|&&
+literal|"Offset is too large"
+argument_list|)
+expr_stmt|;
 name|SLocEntry
 name|E
 decl_stmt|;
@@ -1379,13 +1439,13 @@ name|E
 operator|.
 name|Offset
 operator|=
-operator|(
 name|Offset
-operator|<<
-literal|1
-operator|)
-operator||
-literal|1
+expr_stmt|;
+name|E
+operator|.
+name|IsExpansion
+operator|=
+name|true
 expr_stmt|;
 name|E
 operator|.
@@ -1729,6 +1789,12 @@ comment|/// \brief True if non-system source files should be treated as volatile
 comment|/// (likely to change while trying to use them). Defaults to false.
 name|bool
 name|UserFilesAreVolatile
+block|;
+comment|/// \brief True if all files read during this compilation should be treated
+comment|/// as transient (may not be present in later compilations using a module
+comment|/// file created from this compilation). Defaults to false.
+name|bool
+name|FilesAreTransient
 block|;    struct
 name|OverriddenFilesInfoTy
 block|{
@@ -1864,12 +1930,9 @@ comment|/// \brief A bitmap that indicates whether the entries of LoadedSLocEntr
 comment|/// have already been loaded from the external source.
 comment|///
 comment|/// Same indexing as LoadedSLocEntryTable.
-name|std
+name|llvm
 operator|::
-name|vector
-operator|<
-name|bool
-operator|>
+name|BitVector
 name|SLocEntryLoaded
 expr_stmt|;
 comment|/// \brief An external source for source location entries.
@@ -2643,6 +2706,30 @@ modifier|*
 name|File
 parameter_list|)
 function_decl|;
+comment|/// \brief Specify that a file is transient.
+name|void
+name|setFileIsTransient
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|SourceFile
+parameter_list|)
+function_decl|;
+comment|/// \brief Specify that all files that are read during this compilation are
+comment|/// transient.
+name|void
+name|setAllFilesAreTransient
+parameter_list|(
+name|bool
+name|Transient
+parameter_list|)
+block|{
+name|FilesAreTransient
+operator|=
+name|Transient
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// FileID manipulation methods.
 comment|//===--------------------------------------------------------------------===//
@@ -4076,6 +4163,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param StartLoc If non-null and function returns true, it is set to the
+end_comment
+
+begin_comment
+comment|/// start location of the macro argument expansion.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Such source locations only appear inside of the expansion
 end_comment
 
@@ -4093,6 +4192,12 @@ name|isMacroArgExpansion
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|SourceLocation
+operator|*
+name|StartLoc
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5708,6 +5813,14 @@ end_comment
 begin_expr_stmt
 name|void
 name|PrintStats
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|void
+name|dump
 argument_list|()
 specifier|const
 expr_stmt|;

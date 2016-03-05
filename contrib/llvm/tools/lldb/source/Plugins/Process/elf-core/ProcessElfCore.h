@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ProcessElfCore.h ---------------------------------------*- C++ -*-===//
+comment|//===-- ProcessElfCore.h ----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|//  3) PT_NOTE segment contains note entries which describes a thread co
 end_comment
 
 begin_comment
-comment|//  4) PT_LOAD segment describes a valid contigous range of process address
+comment|//  4) PT_LOAD segment describes a valid contiguous range of process address
 end_comment
 
 begin_comment
@@ -72,6 +72,10 @@ name|liblldb_ProcessElfCore_h_
 end_define
 
 begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
 comment|// C++ Includes
 end_comment
 
@@ -89,6 +93,10 @@ end_include
 
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -141,24 +149,11 @@ operator|::
 name|ProcessSP
 name|CreateInstance
 argument_list|(
-name|lldb_private
-operator|::
-name|Target
-operator|&
-name|target
+argument|lldb::TargetSP target_sp
 argument_list|,
-name|lldb_private
-operator|::
-name|Listener
-operator|&
-name|listener
+argument|lldb_private::Listener&listener
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|*
-name|crash_file_path
+argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
 block|;
 specifier|static
@@ -190,30 +185,17 @@ comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|ProcessElfCore
 argument_list|(
-name|lldb_private
-operator|::
-name|Target
-operator|&
-name|target
+argument|lldb::TargetSP target_sp
 argument_list|,
-name|lldb_private
-operator|::
-name|Listener
-operator|&
-name|listener
+argument|lldb_private::Listener&listener
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|core_file
+argument|const lldb_private::FileSpec&core_file
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ProcessElfCore
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Check if a given Process
@@ -221,7 +203,7 @@ comment|//------------------------------------------------------------------
 name|bool
 name|CanDebug
 argument_list|(
-argument|lldb_private::Target&target
+argument|lldb::TargetSP target_sp
 argument_list|,
 argument|bool plugin_specified_by_name
 argument_list|)
@@ -351,6 +333,30 @@ name|override
 block|;
 name|private
 operator|:
+expr|struct
+name|NT_FILE_Entry
+block|{
+name|lldb
+operator|::
+name|addr_t
+name|start
+block|;
+name|lldb
+operator|::
+name|addr_t
+name|end
+block|;
+name|lldb
+operator|::
+name|addr_t
+name|file_ofs
+block|;
+name|lldb_private
+operator|::
+name|ConstString
+name|path
+block|;     }
+block|;
 comment|//------------------------------------------------------------------
 comment|// For ProcessElfCore only
 comment|//------------------------------------------------------------------
@@ -483,6 +489,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// NT_FILE entries found from the NOTE segment
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|NT_FILE_Entry
+operator|>
+name|m_nt_file_entries
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Parse thread(s) data structures(prstatus, prpsinfo) from given NOTE segment
 end_comment
 
@@ -543,7 +564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_ProcessElffCore_h_
+comment|// liblldb_ProcessElfCore_h_
 end_comment
 
 end_unit

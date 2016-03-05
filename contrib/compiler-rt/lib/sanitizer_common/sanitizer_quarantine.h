@@ -778,7 +778,7 @@ name|empty
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|QuarantineBatch
 modifier|*
@@ -945,7 +945,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef SANITIZER_QUARANTINE_H
+comment|// SANITIZER_QUARANTINE_H
 end_comment
 
 end_unit

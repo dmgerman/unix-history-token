@@ -169,7 +169,7 @@ argument_list|)
 block|,
 name|thread
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -404,11 +404,11 @@ name|fake_stack_
 decl_stmt|;
 name|fake_stack_
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|SetTLSFakeStack
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|t
@@ -448,7 +448,7 @@ operator|!
 name|__asan_option_detect_stack_use_after_return
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 if|if
 condition|(

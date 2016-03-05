@@ -43,11 +43,11 @@ directive|define
 name|LLVM_CLANG_SEMA_CODECOMPLETEOPTIONS_H
 end_define
 
-begin_comment
-comment|/// Options controlling the behavior of code completion.
-end_comment
-
 begin_decl_stmt
+name|namespace
+name|clang
+block|{
+comment|/// Options controlling the behavior of code completion.
 name|class
 name|CodeCompleteOptions
 block|{
@@ -101,11 +101,13 @@ literal|0
 argument_list|)
 block|{ }
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// namespace clang
+end_comment
 
 begin_endif
 endif|#

@@ -192,6 +192,7 @@ name|IS
 decl_stmt|;
 comment|// Memory mod/ref behavior of this intrinsic.
 enum|enum
+name|ModRefKind
 block|{
 name|NoMem
 block|,
@@ -203,8 +204,10 @@ name|ReadWriteArgMem
 block|,
 name|ReadWriteMem
 block|}
-name|ModRef
 enum|;
+name|ModRefKind
+name|ModRef
+decl_stmt|;
 comment|/// This is set to true if the intrinsic is overloaded by its argument
 comment|/// types.
 name|bool

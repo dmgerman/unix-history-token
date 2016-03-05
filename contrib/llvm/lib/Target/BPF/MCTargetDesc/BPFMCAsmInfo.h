@@ -135,6 +135,10 @@ block|;
 name|HasDotTypeDotSizeDirective
 operator|=
 name|false
+block|;
+name|SupportsDebugInformation
+operator|=
+name|true
 block|;   }
 block|}
 end_decl_stmt

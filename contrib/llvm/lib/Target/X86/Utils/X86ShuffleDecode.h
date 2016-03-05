@@ -92,9 +92,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
-decl_stmt|;
-name|class
 name|MVT
 decl_stmt|;
 enum|enum
@@ -297,6 +294,21 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
+comment|/// \brief Decodes a PSWAPD 3DNow! instruction.
+name|void
+name|DecodePSWAPMask
+argument_list|(
+name|MVT
+name|VT
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
 comment|/// DecodeSHUFPMask - This decodes the shuffle masks for shufp*. VT indicates
 comment|/// the type of the vector allowing it to handle different datatypes and vector
 comment|/// widths.
@@ -342,23 +354,6 @@ name|DecodeUNPCKLMask
 argument_list|(
 name|MVT
 name|VT
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|&
-name|ShuffleMask
-argument_list|)
-decl_stmt|;
-comment|/// \brief Decode a PSHUFB mask from an IR-level vector constant.
-name|void
-name|DecodePSHUFBMask
-argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -422,11 +417,14 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// DecodeVPERMMask - this decodes the shuffle masks for VPERMQ/VPERMPD.
-comment|/// No VT provided since it only works on 256-bit, 4 element vectors.
+comment|/// \brief Decode a shuffle packed values at 128-bit granularity
+comment|/// immediate mask into a shuffle mask.
 name|void
-name|DecodeVPERMMask
+name|decodeVSHUF64x2FamilyMask
 argument_list|(
+name|MVT
+name|VT
+argument_list|,
 name|unsigned
 name|Imm
 argument_list|,
@@ -438,14 +436,13 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a VPERMILP variable mask from an IR-level vector constant.
+comment|/// DecodeVPERMMask - this decodes the shuffle masks for VPERMQ/VPERMPD.
+comment|/// No VT provided since it only works on 256-bit, 4 element vectors.
 name|void
-name|DecodeVPERMILPMask
+name|DecodeVPERMMask
 argument_list|(
-specifier|const
-name|Constant
-operator|*
-name|C
+name|unsigned
+name|Imm
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -533,6 +530,42 @@ name|Len
 argument_list|,
 name|int
 name|Idx
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// \brief Decode a VPERM W/D/Q/PS/PD mask from a raw array of constants.
+name|void
+name|DecodeVPERMVMask
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|RawMask
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// \brief Decode a VPERMT2 W/D/Q/PS/PD mask from a raw array of constants.
+name|void
+name|DecodeVPERMV3Mask
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|RawMask
 argument_list|,
 name|SmallVectorImpl
 operator|<

@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unordered_map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
 end_include
 
@@ -217,8 +223,6 @@ comment|/// linker.
 name|class
 name|SectionEntry
 block|{
-name|public
-label|:
 comment|/// Name - section name.
 name|std
 operator|::
@@ -246,11 +250,18 @@ comment|/// relocations (like ARM).
 name|uintptr_t
 name|StubOffset
 decl_stmt|;
+comment|/// The total amount of space allocated for this section.  This includes the
+comment|/// section size and the maximum amount of space that the stubs can occupy.
+name|size_t
+name|AllocationSize
+decl_stmt|;
 comment|/// ObjAddress - address of the section in the in-memory object file.  Used
 comment|/// for calculating relocations in some object formats (like MachO).
 name|uintptr_t
 name|ObjAddress
 decl_stmt|;
+name|public
+label|:
 name|SectionEntry
 argument_list|(
 argument|StringRef name
@@ -258,6 +269,8 @@ argument_list|,
 argument|uint8_t *address
 argument_list|,
 argument|size_t size
+argument_list|,
+argument|size_t allocationSize
 argument_list|,
 argument|uintptr_t objAddress
 argument_list|)
@@ -293,11 +306,160 @@ argument_list|(
 name|size
 argument_list|)
 operator|,
+name|AllocationSize
+argument_list|(
+name|allocationSize
+argument_list|)
+operator|,
 name|ObjAddress
 argument_list|(
 argument|objAddress
 argument_list|)
-block|{}
+block|{
+comment|// AllocationSize is used only in asserts, prevent an "unused private field"
+comment|// warning:
+operator|(
+name|void
+operator|)
+name|AllocationSize
+block|;   }
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+name|uint8_t
+operator|*
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
+comment|/// \brief Return the address of this section with an offset.
+name|uint8_t
+modifier|*
+name|getAddressWithOffset
+argument_list|(
+name|unsigned
+name|OffsetBytes
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|OffsetBytes
+operator|<=
+name|AllocationSize
+operator|&&
+literal|"Offset out of bounds!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Address
+operator|+
+name|OffsetBytes
+return|;
+block|}
+name|size_t
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Size
+return|;
+block|}
+name|uint64_t
+name|getLoadAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LoadAddress
+return|;
+block|}
+name|void
+name|setLoadAddress
+parameter_list|(
+name|uint64_t
+name|LA
+parameter_list|)
+block|{
+name|LoadAddress
+operator|=
+name|LA
+expr_stmt|;
+block|}
+comment|/// \brief Return the load address of this section with an offset.
+name|uint64_t
+name|getLoadAddressWithOffset
+argument_list|(
+name|unsigned
+name|OffsetBytes
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|OffsetBytes
+operator|<=
+name|AllocationSize
+operator|&&
+literal|"Offset out of bounds!"
+argument_list|)
+expr_stmt|;
+return|return
+name|LoadAddress
+operator|+
+name|OffsetBytes
+return|;
+block|}
+name|uintptr_t
+name|getStubOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StubOffset
+return|;
+block|}
+name|void
+name|advanceStubOffset
+parameter_list|(
+name|unsigned
+name|StubSize
+parameter_list|)
+block|{
+name|StubOffset
+operator|+=
+name|StubSize
+expr_stmt|;
+name|assert
+argument_list|(
+name|StubOffset
+operator|<=
+name|AllocationSize
+operator|&&
+literal|"Not enough space allocated!"
+argument_list|)
+expr_stmt|;
+block|}
+name|uintptr_t
+name|getObjAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjAddress
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// RelocationEntry - used to represent relocations internally in the dynamic
@@ -834,6 +996,14 @@ name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|protected
 label|:
+specifier|static
+specifier|const
+name|unsigned
+name|AbsoluteSymbolSection
+init|=
+operator|~
+literal|0U
+decl_stmt|;
 comment|// The MemoryManager to load objects into.
 name|RuntimeDyld
 operator|::
@@ -920,7 +1090,9 @@ expr_stmt|;
 comment|// Relocations to sections already loaded. Indexed by SectionID which is the
 comment|// source of the address. The target where the address will be written is
 comment|// SectionID/Offset in the relocation itself.
-name|DenseMap
+name|std
+operator|::
+name|unordered_map
 operator|<
 name|unsigned
 operator|,
@@ -1043,7 +1215,8 @@ index|[
 name|SectionID
 index|]
 operator|.
-name|LoadAddress
+name|getLoadAddress
+argument_list|()
 return|;
 block|}
 name|uint8_t
@@ -1056,16 +1229,13 @@ argument_list|)
 decl|const
 block|{
 return|return
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|Sections
 index|[
 name|SectionID
 index|]
 operator|.
-name|Address
+name|getAddress
+argument_list|()
 return|;
 block|}
 name|void
@@ -1558,13 +1728,25 @@ name|uint64_t
 modifier|&
 name|CodeSize
 parameter_list|,
-name|uint64_t
+name|uint32_t
 modifier|&
-name|DataSizeRO
+name|CodeAlign
 parameter_list|,
 name|uint64_t
 modifier|&
-name|DataSizeRW
+name|RODataSize
+parameter_list|,
+name|uint32_t
+modifier|&
+name|RODataAlign
+parameter_list|,
+name|uint64_t
+modifier|&
+name|RWDataSize
+parameter_list|,
+name|uint32_t
+modifier|&
+name|RWDataAlign
 parameter_list|)
 function_decl|;
 comment|// \brief Compute the stub buffer size required for a section
@@ -1583,14 +1765,7 @@ name|Section
 parameter_list|)
 function_decl|;
 comment|// \brief Implementation of the generic part of the loadObject algorithm.
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
+name|ObjSectionToIDMap
 name|loadObjectImpl
 argument_list|(
 specifier|const
@@ -1600,7 +1775,24 @@ name|ObjectFile
 operator|&
 name|Obj
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+comment|// \brief Return true if the relocation R may require allocating a stub.
+name|virtual
+name|bool
+name|relocationNeedsStub
+argument_list|(
+specifier|const
+name|RelocationRef
+operator|&
+name|R
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+comment|// Conservative answer
+block|}
 name|public
 label|:
 name|RuntimeDyldImpl
@@ -1742,6 +1934,19 @@ name|pos
 operator|->
 name|second
 decl_stmt|;
+comment|// Absolute symbols do not have a local address.
+if|if
+condition|(
+name|SymInfo
+operator|.
+name|getSectionID
+argument_list|()
+operator|==
+name|AbsoluteSymbolSection
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 name|getSectionAddress
 argument_list|(
@@ -1802,8 +2007,21 @@ operator|->
 name|second
 expr_stmt|;
 name|uint64_t
-name|TargetAddr
+name|SectionAddr
 init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|SymEntry
+operator|.
+name|getSectionID
+argument_list|()
+operator|!=
+name|AbsoluteSymbolSection
+condition|)
+name|SectionAddr
+operator|=
 name|getSectionLoadAddress
 argument_list|(
 name|SymEntry
@@ -1811,6 +2029,11 @@ operator|.
 name|getSectionID
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|uint64_t
+name|TargetAddr
+init|=
+name|SectionAddr
 operator|+
 name|SymEntry
 operator|.

@@ -173,6 +173,12 @@ init|=
 literal|1
 operator|<<
 literal|21
+block|,
+name|VOPAsmPrefer32Bit
+init|=
+literal|1
+operator|<<
+literal|22
 block|}
 enum|;
 block|}
@@ -713,6 +719,13 @@ define|#
 directive|define
 name|R_0286CC_SPI_PS_INPUT_ENA
 value|0x0286CC
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_0286D0_SPI_PS_INPUT_ADDR
+value|0x0286D0
 end_define
 
 begin_define

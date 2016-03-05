@@ -145,6 +145,9 @@ decl_stmt|;
 name|class
 name|PCHContainerOperations
 decl_stmt|;
+name|class
+name|PCHContainerReader
+decl_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -494,7 +497,7 @@ function_decl|;
 comment|/// \brief Write a global index into the given
 comment|///
 comment|/// \param FileMgr The file manager to use to load module files.
-comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+comment|/// \param PCHContainerRdr - The PCHContainerOperations to use for loading and
 comment|/// creating modules.
 comment|/// \param Path The path to the directory containing module files, into
 comment|/// which the global index will be written.

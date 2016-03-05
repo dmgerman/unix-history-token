@@ -629,7 +629,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-expr_stmt|;
 comment|/// Const accessor to the directives.
 specifier|const
 name|LOHDirectives

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|lldb_IRExecutionUnit_h_
+name|liblldb_IRExecutionUnit_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|lldb_IRExecutionUnit_h_
+name|liblldb_IRExecutionUnit_h_
 end_define
 
 begin_comment
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_comment
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/SectionMemoryManager.h"
 end_include
 
 begin_comment
@@ -104,31 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataBufferHeap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/SectionMemoryManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/ClangExpression.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/ClangExpressionParser.h"
 end_include
 
 begin_include
@@ -161,6 +143,10 @@ name|ExecutionEngine
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -262,6 +248,7 @@ comment|//------------------------------------------------------------------
 operator|~
 name|IRExecutionUnit
 argument_list|()
+name|override
 expr_stmt|;
 name|llvm
 operator|::
@@ -281,11 +268,14 @@ operator|*
 name|GetFunction
 argument_list|()
 block|{
-if|if
-condition|(
-name|m_module
-condition|)
 return|return
+operator|(
+operator|(
+name|m_module
+operator|!=
+name|nullptr
+operator|)
+operator|?
 name|m_module
 operator|->
 name|getFunction
@@ -295,10 +285,9 @@ operator|.
 name|AsCString
 argument_list|()
 argument_list|)
-return|;
-else|else
-return|return
-name|NULL
+operator|:
+name|nullptr
+operator|)
 return|;
 block|}
 name|void
@@ -350,21 +339,20 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// ObjectFileJITDelegate overrides
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|ByteOrder
 name|GetByteOrder
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
-name|virtual
 name|uint32_t
 name|GetAddressByteSize
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
-name|virtual
 name|void
 name|PopulateSymtab
 argument_list|(
@@ -380,8 +368,8 @@ name|Symtab
 operator|&
 name|symtab
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|PopulateSectionList
 argument_list|(
@@ -397,8 +385,8 @@ name|SectionList
 operator|&
 name|section_list
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|GetArchitecture
 argument_list|(
@@ -408,6 +396,7 @@ name|ArchSpec
 operator|&
 name|arch
 argument_list|)
+name|override
 decl_stmt|;
 name|lldb
 operator|::
@@ -565,10 +554,10 @@ operator|&
 name|parent
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|MemoryManager
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Allocate space for executable code, and add it to the
@@ -586,7 +575,6 @@ comment|///
 comment|/// @return
 comment|///     Allocated space.
 comment|//------------------------------------------------------------------
-name|virtual
 name|uint8_t
 operator|*
 name|allocateCodeSection
@@ -599,6 +587,7 @@ argument|unsigned SectionID
 argument_list|,
 argument|llvm::StringRef SectionName
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Allocate space for data, and add it to the m_spaceBlocks map
@@ -618,7 +607,6 @@ comment|///
 comment|/// @return
 comment|///     Allocated space.
 comment|//------------------------------------------------------------------
-name|virtual
 name|uint8_t
 operator|*
 name|allocateDataSection
@@ -633,6 +621,7 @@ argument|llvm::StringRef SectionName
 argument_list|,
 argument|bool IsReadOnly
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Called when object loading is complete and section page
@@ -644,12 +633,12 @@ comment|///
 comment|/// @return
 comment|///     True in case of failure, false in case of success.
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|finalizeMemory
 argument_list|(
 argument|std::string *ErrMsg
 argument_list|)
+name|override
 block|{
 comment|// TODO: Ensure that the instruction cache is flushed because
 comment|// relocations are updated by dy-load.  See:
@@ -659,7 +648,6 @@ return|return
 name|false
 return|;
 block|}
-name|virtual
 name|void
 name|registerEHFrames
 argument_list|(
@@ -669,25 +657,18 @@ argument|uint64_t LoadAddr
 argument_list|,
 argument|size_t Size
 argument_list|)
-block|{
-return|return;
-block|}
+name|override
+block|{         }
 comment|//------------------------------------------------------------------
 comment|/// Passthrough interface stub
 comment|//------------------------------------------------------------------
-name|virtual
 name|uint64_t
 name|getSymbolAddress
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 operator|*
 name|getPointerToNamedFunction
@@ -696,6 +677,7 @@ argument|const std::string&Name
 argument_list|,
 argument|bool AbortOnFailure = true
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1058,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// lldb_IRExecutionUnit_h_
+comment|// liblldb_IRExecutionUnit_h_
 end_comment
 
 end_unit

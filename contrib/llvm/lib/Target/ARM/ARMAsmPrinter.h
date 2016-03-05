@@ -146,6 +146,12 @@ literal|4
 operator|>
 name|ThumbIndirectPads
 block|;
+comment|/// OptimizationGoals - Maintain a combined optimization goal for all
+comment|/// functions in a module: one of Tag_ABI_optimization_goals values,
+comment|/// -1 if uninitialized, 0 if conflicting goals
+name|int
+name|OptimizationGoals
+block|;
 name|public
 operator|:
 name|explicit
@@ -300,6 +306,8 @@ block|;
 name|void
 name|EmitXXStructor
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const Constant *CV
 argument_list|)
 name|override
@@ -462,12 +470,6 @@ name|uid
 argument_list|)
 decl|const
 decl_stmt|;
-name|MCSymbol
-operator|*
-name|GetARMSJLJEHLabel
-argument_list|()
-specifier|const
-expr_stmt|;
 name|MCSymbol
 modifier|*
 name|GetARMGVSymbol

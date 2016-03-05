@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCWinEH.h"
 end_include
 
@@ -140,9 +146,6 @@ name|MCSection
 decl_stmt|;
 name|class
 name|MCStreamer
-decl_stmt|;
-name|class
-name|MCSymbol
 decl_stmt|;
 name|class
 name|MCSymbolELF
@@ -509,6 +512,13 @@ name|finish
 argument_list|()
 name|override
 block|;
+comment|/// Reset any state between object emissions, i.e. the equivalent of
+comment|/// MCStreamer's reset method.
+name|virtual
+name|void
+name|reset
+argument_list|()
+block|;
 comment|/// Callback used to implement the ldr= pseudo.
 comment|/// Add a new entry to the constant pool for the current section and return an
 comment|/// MCExpr that can be used to refer to the constant pool location.
@@ -517,9 +527,9 @@ name|MCExpr
 operator|*
 name|addConstantPoolEntry
 argument_list|(
-specifier|const
-name|MCExpr
-operator|*
+argument|const MCExpr *
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 block|;
 comment|/// Callback used to implemnt the .ltorg directive.
@@ -1379,15 +1389,15 @@ end_comment
 
 begin_function_decl
 name|void
-name|AssignSection
+name|AssignFragment
 parameter_list|(
 name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|,
-name|MCSection
+name|MCFragment
 modifier|*
-name|Section
+name|Fragment
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2203,9 +2213,7 @@ parameter_list|,
 name|unsigned
 name|Size
 parameter_list|,
-specifier|const
 name|SMLoc
-modifier|&
 name|Loc
 init|=
 name|SMLoc
@@ -2226,9 +2234,7 @@ parameter_list|,
 name|unsigned
 name|Size
 parameter_list|,
-specifier|const
 name|SMLoc
-modifier|&
 name|Loc
 init|=
 name|SMLoc
@@ -2451,7 +2457,6 @@ comment|/// This function properly handles data in virtual sections.
 end_comment
 
 begin_function_decl
-name|virtual
 name|void
 name|EmitZeros
 parameter_list|(
@@ -2643,14 +2648,10 @@ begin_comment
 comment|/// \param Value - The value to use when filling bytes.
 end_comment
 
-begin_comment
-comment|/// \return false on success, true if the offset was invalid.
-end_comment
-
 begin_function_decl
 name|virtual
-name|bool
-name|EmitValueToOffset
+name|void
+name|emitValueToOffset
 parameter_list|(
 specifier|const
 name|MCExpr
@@ -3010,6 +3011,17 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
+name|EmitCFIGnuArgsSize
+parameter_list|(
+name|int64_t
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
 name|EmitCFISignalFrame
 parameter_list|()
 function_decl|;
@@ -3195,6 +3207,54 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|virtual
+name|void
+name|EmitSyntaxDirective
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit a .reloc directive.
+end_comment
+
+begin_comment
+comment|/// Returns true if the relocation could not be emitted because Name is not
+end_comment
+
+begin_comment
+comment|/// known.
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|EmitRelocDirective
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|&
+name|Offset
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+name|Expr
+parameter_list|,
+name|SMLoc
+name|Loc
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/// \brief Emit the given \p Instruction into the current section.
 end_comment
@@ -3302,18 +3362,6 @@ name|String
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// \brief Causes any cached state to be written out.
-end_comment
-
-begin_function
-name|virtual
-name|void
-name|Flush
-parameter_list|()
-block|{}
-end_function
 
 begin_comment
 comment|/// \brief Streamer specific finalization.

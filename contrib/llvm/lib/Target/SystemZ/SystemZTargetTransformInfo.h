@@ -130,6 +130,7 @@ name|SystemZTargetMachine
 operator|*
 name|TM
 argument_list|,
+specifier|const
 name|Function
 operator|&
 name|F
@@ -240,7 +241,7 @@ argument_list|)
 block|{}
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 specifier|const
@@ -253,7 +254,7 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
-name|unsigned
+name|int
 name|getIntImmCost
 parameter_list|(
 name|unsigned
@@ -272,7 +273,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getIntImmCost
 argument_list|(
 name|Intrinsic

@@ -244,6 +244,16 @@ literal|2
 operator|>
 name|TriedMerging
 expr_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+operator|,
+name|int
+operator|>
+name|FuncletMembership
+expr_stmt|;
 name|class
 name|SameTailElt
 block|{

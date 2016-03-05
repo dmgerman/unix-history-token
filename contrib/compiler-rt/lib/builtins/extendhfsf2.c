@@ -53,6 +53,15 @@ directive|include
 file|"fp_extend_impl.inc"
 end_include
 
+begin_macro
+name|ARM_EABI_FNALIAS
+argument_list|(
+argument|h2f
+argument_list|,
+argument|extendhfsf2
+argument_list|)
+end_macro
+
 begin_comment
 comment|// Use a forwarding definition and noinline to implement a poor man's alias,
 end_comment
@@ -61,20 +70,15 @@ begin_comment
 comment|// as there isn't a good cross-platform way of defining one.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|COMPILER_RT_ABI
-name|__attribute__
-argument_list|(
-operator|(
-name|noinline
-operator|)
-argument_list|)
+name|NOINLINE
 name|float
 name|__extendhfsf2
-argument_list|(
+parameter_list|(
 name|uint16_t
 name|a
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__extendXfYf2__
@@ -83,7 +87,7 @@ name|a
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|COMPILER_RT_ABI

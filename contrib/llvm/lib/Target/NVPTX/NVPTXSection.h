@@ -81,12 +81,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// NVPTXSection - Represents a section in PTX
-comment|/// PTX does not have sections. We create this class in order to use
-comment|/// the ASMPrint interface.
+comment|/// Represents a section in PTX PTX does not have sections. We create this class
+comment|/// in order to use the ASMPrint interface.
 comment|///
 name|class
 name|NVPTXSection
+name|final
 range|:
 name|public
 name|MCSection
@@ -114,7 +114,6 @@ argument_list|,
 argument|nullptr
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|NVPTXSection
 argument_list|()

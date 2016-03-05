@@ -177,6 +177,28 @@ file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_SCHEDULE_unknown
 block|}
 enum|;
+comment|/// \brief OpenMP modifiers for 'schedule' clause.
+enum|enum
+name|OpenMPScheduleClauseModifier
+block|{
+name|OMPC_SCHEDULE_MODIFIER_unknown
+init|=
+name|OMPC_SCHEDULE_unknown
+block|,
+define|#
+directive|define
+name|OPENMP_SCHEDULE_MODIFIER
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_SCHEDULE_MODIFIER_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_SCHEDULE_MODIFIER_last
+block|}
+enum|;
 comment|/// \brief OpenMP attributes for 'depend' clause.
 enum|enum
 name|OpenMPDependClauseKind
@@ -193,6 +215,42 @@ include|#
 directive|include
 file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_DEPEND_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP attributes for 'linear' clause.
+enum|enum
+name|OpenMPLinearClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_LINEAR_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_LINEAR_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_LINEAR_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP mapping kind for 'map' clause.
+enum|enum
+name|OpenMPMapClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_MAP_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_MAP_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_MAP_unknown
 block|}
 enum|;
 name|OpenMPDirectiveKind
@@ -288,12 +346,34 @@ name|OpenMPDirectiveKind
 name|DKind
 parameter_list|)
 function_decl|;
+comment|/// \brief Checks if the specified directive is a taskloop directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a worksharing directive like 'omp taskloop',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPTaskLoopDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
 comment|/// \brief Checks if the specified directive is a parallel-kind directive.
 comment|/// \param DKind Specified directive.
 comment|/// \return true - the directive is a parallel-like directive like 'omp
 comment|/// parallel', otherwise - false.
 name|bool
 name|isOpenMPParallelDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a target-kind directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a target-like directive like 'omp target',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPTargetDirective
 parameter_list|(
 name|OpenMPDirectiveKind
 name|DKind
@@ -316,6 +396,18 @@ comment|/// \return true - the directive is a simd directive like 'omp simd',
 comment|/// otherwise - false.
 name|bool
 name|isOpenMPSimdDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a distribute directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a distribute-directive like 'omp
+comment|/// distribute',
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPDistributeDirective
 parameter_list|(
 name|OpenMPDirectiveKind
 name|DKind

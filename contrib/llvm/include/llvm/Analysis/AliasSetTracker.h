@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
@@ -111,9 +117,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|LoadInst
 decl_stmt|;
@@ -1600,6 +1603,7 @@ comment|/// CallbackVH - A CallbackVH to arrange for AliasSetTracker to be
 comment|/// notified whenever a Value is deleted.
 name|class
 name|ASTCallbackVH
+name|final
 range|:
 name|public
 name|CallbackVH

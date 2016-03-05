@@ -112,7 +112,7 @@ name|DIAG_START_FRONTEND
 init|=
 name|DIAG_START_DRIVER
 operator|+
-literal|100
+literal|200
 block|,
 name|DIAG_START_SERIALIZATION
 init|=

@@ -144,6 +144,9 @@ name|class
 name|Expr
 decl_stmt|;
 name|class
+name|GlobalDecl
+decl_stmt|;
+name|class
 name|OMPExecutableDirective
 decl_stmt|;
 name|class
@@ -152,6 +155,9 @@ decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
+name|class
+name|Address
+decl_stmt|;
 name|class
 name|CodeGenFunction
 decl_stmt|;
@@ -197,6 +203,10 @@ block|,
 comment|// Call to void __kmpc_critical(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_critical_name *crit);
 name|OMPRTL__kmpc_critical
+block|,
+comment|// Call to void __kmpc_critical_with_hint(ident_t *loc, kmp_int32
+comment|// global_tid, kmp_critical_name *crit, uintptr_t hint);
+name|OMPRTL__kmpc_critical_with_hint
 block|,
 comment|// Call to void __kmpc_end_critical(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_critical_name *crit);
@@ -321,6 +331,20 @@ block|,
 comment|// Call to kmp_int32 __kmpc_cancel(ident_t *loc, kmp_int32 global_tid,
 comment|// kmp_int32 cncl_kind);
 name|OMPRTL__kmpc_cancel
+block|,
+comment|//
+comment|// Offloading related calls
+comment|//
+comment|// Call to int32_t __tgt_target(int32_t device_id, void *host_ptr, int32_t
+comment|// arg_num, void** args_base, void **args, size_t *arg_sizes, int32_t
+comment|// *arg_types);
+name|OMPRTL__tgt_target
+block|,
+comment|// Call to void __tgt_register_lib(__tgt_bin_desc *desc);
+name|OMPRTL__tgt_register_lib
+block|,
+comment|// Call to void __tgt_unregister_lib(__tgt_bin_desc *desc);
+name|OMPRTL__tgt_unregister_lib
 block|,   }
 enum|;
 comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
@@ -400,15 +424,15 @@ expr_stmt|;
 name|OpenMPDefaultLocMapTy
 name|OpenMPDefaultLocMap
 decl_stmt|;
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getOrCreateDefaultLocation
-argument_list|(
-argument|OpenMPLocationFlags Flags
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|OpenMPLocationFlags
+name|Flags
+parameter_list|)
+function_decl|;
+name|public
+label|:
 comment|/// \brief Describes ident structure that describes a source location.
 comment|/// All descriptions are taken from
 comment|/// http://llvm.org/svn/llvm-project/openmp/trunk/runtime/src/kmp.h
@@ -456,6 +480,8 @@ comment|/// and a pair of line numbers that delimit the construct.
 name|IdentField_PSource
 block|}
 enum|;
+name|private
+label|:
 name|llvm
 operator|::
 name|StructType
@@ -590,6 +616,577 @@ comment|/// } kmp_depend_info_t;
 name|QualType
 name|KmpDependInfoTy
 decl_stmt|;
+comment|/// \brief Type struct __tgt_offload_entry{
+comment|///   void      *addr;       // Pointer to the offload entry info.
+comment|///                          // (function or global)
+comment|///   char      *name;       // Name of the function or global.
+comment|///   size_t     size;       // Size of the entry info (0 if it a function).
+comment|/// };
+name|QualType
+name|TgtOffloadEntryQTy
+decl_stmt|;
+comment|/// struct __tgt_device_image{
+comment|/// void   *ImageStart;       // Pointer to the target code start.
+comment|/// void   *ImageEnd;         // Pointer to the target code end.
+comment|/// // We also add the host entries to the device image, as it may be useful
+comment|/// // for the target runtime to have access to that information.
+comment|/// __tgt_offload_entry  *EntriesBegin;   // Begin of the table with all
+comment|///                                       // the entries.
+comment|/// __tgt_offload_entry  *EntriesEnd;     // End of the table with all the
+comment|///                                       // entries (non inclusive).
+comment|/// };
+name|QualType
+name|TgtDeviceImageQTy
+decl_stmt|;
+comment|/// struct __tgt_bin_desc{
+comment|///   int32_t              NumDevices;      // Number of devices supported.
+comment|///   __tgt_device_image   *DeviceImages;   // Arrays of device images
+comment|///                                         // (one per device).
+comment|///   __tgt_offload_entry  *EntriesBegin;   // Begin of the table with all the
+comment|///                                         // entries.
+comment|///   __tgt_offload_entry  *EntriesEnd;     // End of the table with all the
+comment|///                                         // entries (non inclusive).
+comment|/// };
+name|QualType
+name|TgtBinaryDescriptorQTy
+decl_stmt|;
+comment|/// \brief Entity that registers the offloading constants that were emitted so
+comment|/// far.
+name|class
+name|OffloadEntriesInfoManagerTy
+block|{
+name|CodeGenModule
+modifier|&
+name|CGM
+decl_stmt|;
+comment|/// \brief Number of entries registered so far.
+name|unsigned
+name|OffloadingEntriesNum
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief Base class of the entries info.
+name|class
+name|OffloadEntryInfo
+block|{
+name|public
+label|:
+comment|/// \brief Kind of a given entry. Currently, only target regions are
+comment|/// supported.
+enum|enum
+name|OffloadingEntryInfoKinds
+enum|:
+name|unsigned
+block|{
+comment|// Entry is a target region.
+name|OFFLOAD_ENTRY_INFO_TARGET_REGION
+init|=
+literal|0
+block|,
+comment|// Invalid entry info.
+name|OFFLOAD_ENTRY_INFO_INVALID
+init|=
+operator|~
+literal|0u
+block|}
+enum|;
+name|OffloadEntryInfo
+argument_list|()
+operator|:
+name|Order
+argument_list|(
+operator|~
+literal|0u
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|OFFLOAD_ENTRY_INFO_INVALID
+argument_list|)
+block|{}
+name|explicit
+name|OffloadEntryInfo
+argument_list|(
+argument|OffloadingEntryInfoKinds Kind
+argument_list|,
+argument|unsigned Order
+argument_list|)
+operator|:
+name|Order
+argument_list|(
+name|Order
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Order
+operator|!=
+operator|~
+literal|0u
+return|;
+block|}
+name|unsigned
+name|getOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Order
+return|;
+block|}
+name|OffloadingEntryInfoKinds
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|OffloadEntryInfo
+modifier|*
+name|Info
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|protected
+label|:
+comment|// \brief Order this entry was emitted.
+name|unsigned
+name|Order
+decl_stmt|;
+name|OffloadingEntryInfoKinds
+name|Kind
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief Return true if a there are no entries defined.
+name|bool
+name|empty
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Return number of entries defined so far.
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OffloadingEntriesNum
+return|;
+block|}
+name|OffloadEntriesInfoManagerTy
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|)
+operator|:
+name|CGM
+argument_list|(
+name|CGM
+argument_list|)
+operator|,
+name|OffloadingEntriesNum
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|///
+comment|/// Target region entries related.
+comment|///
+comment|/// \brief Target region entries info.
+name|class
+name|OffloadEntryInfoTargetRegion
+operator|:
+name|public
+name|OffloadEntryInfo
+block|{
+comment|// \brief Address of the entity that has to be mapped for offloading.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Addr
+block|;
+comment|// \brief Address that can be used as the ID of the entry.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|ID
+block|;
+name|public
+operator|:
+name|OffloadEntryInfoTargetRegion
+argument_list|()
+operator|:
+name|OffloadEntryInfo
+argument_list|(
+name|OFFLOAD_ENTRY_INFO_TARGET_REGION
+argument_list|,
+operator|~
+literal|0u
+argument_list|)
+block|,
+name|Addr
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|ID
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|explicit
+name|OffloadEntryInfoTargetRegion
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|llvm::Constant *Addr
+argument_list|,
+argument|llvm::Constant *ID
+argument_list|)
+operator|:
+name|OffloadEntryInfo
+argument_list|(
+name|OFFLOAD_ENTRY_INFO_TARGET_REGION
+argument_list|,
+name|Order
+argument_list|)
+block|,
+name|Addr
+argument_list|(
+name|Addr
+argument_list|)
+block|,
+name|ID
+argument_list|(
+argument|ID
+argument_list|)
+block|{}
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Addr
+return|;
+block|}
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+return|;
+block|}
+name|void
+name|setAddress
+argument_list|(
+argument|llvm::Constant *V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Addr
+operator|&&
+literal|"Address as been set before!"
+argument_list|)
+block|;
+name|Addr
+operator|=
+name|V
+block|;       }
+name|void
+name|setID
+argument_list|(
+argument|llvm::Constant *V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|ID
+operator|&&
+literal|"ID as been set before!"
+argument_list|)
+block|;
+name|ID
+operator|=
+name|V
+block|;       }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OffloadEntryInfo *Info
+argument_list|)
+block|{
+return|return
+name|Info
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|OFFLOAD_ENTRY_INFO_TARGET_REGION
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Initialize target region entry.
+name|void
+name|initializeTargetRegionEntryInfo
+argument_list|(
+argument|unsigned DeviceID
+argument_list|,
+argument|unsigned FileID
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|unsigned LineNum
+argument_list|,
+argument|unsigned ColNum
+argument_list|,
+argument|unsigned Order
+argument_list|)
+block|;
+comment|/// \brief Register target region entry.
+name|void
+name|registerTargetRegionEntryInfo
+argument_list|(
+argument|unsigned DeviceID
+argument_list|,
+argument|unsigned FileID
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|unsigned LineNum
+argument_list|,
+argument|unsigned ColNum
+argument_list|,
+argument|llvm::Constant *Addr
+argument_list|,
+argument|llvm::Constant *ID
+argument_list|)
+block|;
+comment|/// \brief Return true if a target region entry with the provided
+comment|/// information exists.
+name|bool
+name|hasTargetRegionEntryInfo
+argument_list|(
+argument|unsigned DeviceID
+argument_list|,
+argument|unsigned FileID
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|unsigned LineNum
+argument_list|,
+argument|unsigned ColNum
+argument_list|)
+specifier|const
+block|;
+comment|/// brief Applies action \a Action on all registered entries.
+typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|,
+name|StringRef
+argument_list|,
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|,
+name|OffloadEntryInfoTargetRegion
+operator|&
+argument_list|)
+operator|>
+name|OffloadTargetRegionEntryInfoActTy
+expr_stmt|;
+name|void
+name|actOnTargetRegionEntriesInfo
+argument_list|(
+specifier|const
+name|OffloadTargetRegionEntryInfoActTy
+operator|&
+name|Action
+argument_list|)
+expr_stmt|;
+name|private
+label|:
+comment|// Storage for target region entries kind. The storage is to be indexed by
+comment|// file ID, device ID, parent function name, lane number, and column number.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|OffloadEntryInfoTargetRegion
+operator|>
+name|OffloadEntriesTargetRegionPerColumn
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|OffloadEntriesTargetRegionPerColumn
+operator|>
+name|OffloadEntriesTargetRegionPerLine
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|OffloadEntriesTargetRegionPerLine
+operator|>
+name|OffloadEntriesTargetRegionPerParentName
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|OffloadEntriesTargetRegionPerParentName
+operator|>
+name|OffloadEntriesTargetRegionPerFile
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|OffloadEntriesTargetRegionPerFile
+operator|>
+name|OffloadEntriesTargetRegionPerDevice
+expr_stmt|;
+typedef|typedef
+name|OffloadEntriesTargetRegionPerDevice
+name|OffloadEntriesTargetRegionTy
+typedef|;
+name|OffloadEntriesTargetRegionTy
+name|OffloadEntriesTargetRegion
+decl_stmt|;
+block|}
+empty_stmt|;
+name|OffloadEntriesInfoManagerTy
+name|OffloadEntriesInfoManager
+decl_stmt|;
+comment|/// \brief Creates and registers offloading binary descriptor for the current
+comment|/// compilation unit. The function that does the registration is returned.
+name|llvm
+operator|::
+name|Function
+operator|*
+name|createOffloadingBinaryDescriptorRegistration
+argument_list|()
+expr_stmt|;
+comment|/// \brief Creates offloading entry for the provided address \a Addr,
+comment|/// name \a Name and size \a Size.
+name|void
+name|createOffloadEntry
+argument_list|(
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Addr
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|uint64_t
+name|Size
+argument_list|)
+decl_stmt|;
+comment|/// \brief Creates all the offload entries in the current compilation unit
+comment|/// along with the associated metadata.
+name|void
+name|createOffloadEntriesAndInfoMetadata
+parameter_list|()
+function_decl|;
+comment|/// \brief Loads all the offload entries information from the host IR
+comment|/// metadata.
+name|void
+name|loadOffloadInfoMetadata
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns __tgt_offload_entry type.
+name|QualType
+name|getTgtOffloadEntryQTy
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns __tgt_device_image type.
+name|QualType
+name|getTgtDeviceImageQTy
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns __tgt_bin_desc type.
+name|QualType
+name|getTgtBinaryDescriptorQTy
+parameter_list|()
+function_decl|;
+comment|/// \brief Start scanning from statement \a S and and emit all target regions
+comment|/// found along the way.
+comment|/// \param S Starting statement.
+comment|/// \param ParentName Name of the function declaration that is being scanned.
+name|void
+name|scanForTargetRegionsFunctions
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+name|StringRef
+name|ParentName
+parameter_list|)
+function_decl|;
 comment|/// \brief Build type kmp_routine_entry_t (if not built yet).
 name|void
 name|emitKmpRoutineEntryT
@@ -714,17 +1311,17 @@ expr_stmt|;
 comment|/// \brief Emits address of the word in a memory where current thread id is
 comment|/// stored.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|emitThreadIDAddress
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Gets thread id value for the current thread.
 comment|///
 name|llvm
@@ -788,10 +1385,7 @@ name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|VDAddr
 argument_list|,
 name|llvm
@@ -914,7 +1508,7 @@ comment|/// variables captured in a record which address is stored in \a
 comment|/// CapturedStruct.
 comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
 comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
-comment|/// \param CapturedStruct A pointer to the record with the references to
+comment|/// \param CapturedVars A pointer to the record with the references to
 comment|/// variables used in \a OutlinedFn function.
 comment|/// \param IfCond Condition in the associated 'if' clause, if it was
 comment|/// specified, nullptr otherwise.
@@ -936,11 +1530,14 @@ name|Value
 operator|*
 name|OutlinedFn
 argument_list|,
+name|ArrayRef
+operator|<
 name|llvm
 operator|::
 name|Value
 operator|*
-name|CapturedStruct
+operator|>
+name|CapturedVars
 argument_list|,
 specifier|const
 name|Expr
@@ -952,6 +1549,7 @@ comment|/// \brief Emits a critical region.
 comment|/// \param CriticalName Name of the critical region.
 comment|/// \param CriticalOpGen Generator for the statement associated with the given
 comment|/// critical region.
+comment|/// \param Hint Value of the 'hint' clause (optional).
 name|virtual
 name|void
 name|emitCriticalRegion
@@ -970,6 +1568,13 @@ name|CriticalOpGen
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Hint
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Emits a master region.
@@ -1095,13 +1700,18 @@ name|OrderedOpGen
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|IsThreads
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit an implicit/explicit barrier for OpenMP threads.
 comment|/// \param Kind Directive for which this implicit barrier call must be
 comment|/// generated. Must be OMPD_barrier for explicit barrier generation.
-comment|/// \param CheckForCancel true if check for possible cancellation must be
-comment|/// performed, false otherwise.
+comment|/// \param EmitChecks true if need to emit checks for cancellation barriers.
+comment|/// \param ForceSimpleCall true simple barrier call must be emitted, false if
+comment|/// runtime class decides which one to emit (simple or with cancellation
+comment|/// checks).
 comment|///
 name|virtual
 name|void
@@ -1118,9 +1728,14 @@ name|OpenMPDirectiveKind
 name|Kind
 parameter_list|,
 name|bool
-name|CheckForCancel
+name|EmitChecks
 init|=
 name|true
+parameter_list|,
+name|bool
+name|ForceSimpleCall
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Check if the specified \a ScheduleKind is static non-chunked.
@@ -1153,6 +1768,44 @@ name|ScheduleKind
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
+name|void
+name|emitForDispatchInit
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|OpenMPScheduleClauseKind
+name|SchedKind
+argument_list|,
+name|unsigned
+name|IVSize
+argument_list|,
+name|bool
+name|IVSigned
+argument_list|,
+name|bool
+name|Ordered
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|UB
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// \brief Call the appropriate runtime routine to initialize it before start
 comment|/// of loop.
 comment|///
@@ -1179,7 +1832,7 @@ comment|/// For the default (nullptr) value, the chunk 1 will be used.
 comment|///
 name|virtual
 name|void
-name|emitForInit
+name|emitForStaticInit
 argument_list|(
 name|CodeGenFunction
 operator|&
@@ -1200,28 +1853,16 @@ argument_list|,
 name|bool
 name|Ordered
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|IL
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|LB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|UB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|ST
 argument_list|,
 name|llvm
@@ -1306,13 +1947,13 @@ argument|unsigned IVSize
 argument_list|,
 argument|bool IVSigned
 argument_list|,
-argument|llvm::Value *IL
+argument|Address IL
 argument_list|,
-argument|llvm::Value *LB
+argument|Address LB
 argument_list|,
-argument|llvm::Value *UB
+argument|Address UB
 argument_list|,
-argument|llvm::Value *ST
+argument|Address ST
 argument_list|)
 expr_stmt|;
 comment|/// \brief Emits call to void __kmpc_push_num_threads(ident_t *loc, kmp_int32
@@ -1361,21 +2002,25 @@ comment|/// \param VDAddr Address of the global variable \a VD.
 comment|/// \param Loc Location of the reference to threadprivate var.
 comment|/// \return Address of the threadprivate variable for the current thread.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getAddrOfThreadPrivate
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const VarDecl *VD
-argument_list|,
-argument|llvm::Value *VDAddr
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|Address
+name|VDAddr
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a code for initialization of threadprivate variable. It emits
 comment|/// a call to runtime library which adds initial value to the newly created
 comment|/// threadprivate variable (if it is not constant) and registers destructor
@@ -1393,7 +2038,7 @@ name|emitThreadPrivateVarDefinition
 argument_list|(
 argument|const VarDecl *VD
 argument_list|,
-argument|llvm::Value *VDAddr
+argument|Address VDAddr
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
@@ -1511,10 +2156,7 @@ argument_list|,
 name|QualType
 name|SharedsTy
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|Shareds
 argument_list|,
 specifier|const
@@ -1582,6 +2224,8 @@ comment|///
 comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
 comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
+comment|/// \param HasCancel true if region has inner cancel directive, false
+comment|/// otherwise.
 name|virtual
 name|void
 name|emitInlinedDirective
@@ -1597,6 +2241,11 @@ specifier|const
 name|RegionCodeGenTy
 modifier|&
 name|CodeGen
+parameter_list|,
+name|bool
+name|HasCancel
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a code for reduction clause. Next code should be emitted for
@@ -1630,6 +2279,7 @@ comment|/// default:;
 comment|/// }
 comment|/// \endcode
 comment|///
+comment|/// \param Privates List of private copies for original reduction arguments.
 comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
 comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
 comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
@@ -1646,6 +2296,14 @@ name|CGF
 argument_list|,
 name|SourceLocation
 name|Loc
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Privates
 argument_list|,
 name|ArrayRef
 operator|<
@@ -1711,6 +2369,8 @@ name|CancelRegion
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit code for 'cancel' construct.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
 comment|/// \param CancelRegion Region kind for which the cancel must be emitted.
 comment|///
 name|virtual
@@ -1724,10 +2384,154 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|IfCond
+parameter_list|,
 name|OpenMPDirectiveKind
 name|CancelRegion
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit outilined function for 'target' directive.
+comment|/// \param D Directive to emit.
+comment|/// \param ParentName Name of the function that encloses the target region.
+comment|/// \param OutlinedFn Outlined function value to be defined by this call.
+comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
+comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// An oulined function may not be an entry if, e.g. the if clause always
+comment|/// evaluates to false.
+name|virtual
+name|void
+name|emitTargetOutlinedFunction
+argument_list|(
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|StringRef
+name|ParentName
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|&
+name|OutlinedFn
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|&
+name|OutlinedFnID
+argument_list|,
+name|bool
+name|IsOffloadEntry
+argument_list|)
+decl_stmt|;
+comment|/// \brief Emit the target offloading code associated with \a D. The emitted
+comment|/// code attempts offloading the execution to the device, an the event of
+comment|/// a failure it executes the host version outlined in \a OutlinedFn.
+comment|/// \param D Directive to emit.
+comment|/// \param OutlinedFn Host version of the code to be offloaded.
+comment|/// \param OutlinedFnID ID of host version of the code to be offloaded.
+comment|/// \param IfCond Expression evaluated in if clause associated with the target
+comment|/// directive, or null if no if clause is used.
+comment|/// \param Device Expression evaluated in device clause associated with the
+comment|/// target directive, or null if no device clause is used.
+comment|/// \param CapturedVars Values captured in the current region.
+name|virtual
+name|void
+name|emitTargetCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OutlinedFn
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OutlinedFnID
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|IfCond
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Device
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|CapturedVars
+argument_list|)
+decl_stmt|;
+comment|/// \brief Emit the target regions enclosed in \a GD function definition or
+comment|/// the function itself in case it is a valid device function. Returns true if
+comment|/// \a GD was dealt with successfully.
+comment|/// \param GD Function to scan.
+name|virtual
+name|bool
+name|emitTargetFunctions
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the global variable if it is a valid device global variable.
+comment|/// Returns true if \a GD was dealt with successfully.
+comment|/// \param GD Variable declaration to emit.
+name|virtual
+name|bool
+name|emitTargetGlobalVariable
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the global \a GD if it is meaningful for the target. Returns
+comment|/// if it was emitted succesfully.
+comment|/// \param GD Global to scan.
+name|virtual
+name|bool
+name|emitTargetGlobal
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// \brief Creates the offloading descriptor in the event any target region
+comment|/// was emitted in the current module and return the function that registers
+comment|/// it.
+name|virtual
+name|llvm
+operator|::
+name|Function
+operator|*
+name|emitRegistrationFunction
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -74,6 +74,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -119,9 +131,9 @@ name|function
 operator|<
 name|CommandLineArguments
 argument_list|(
-specifier|const
-name|CommandLineArguments
-operator|&
+argument|const CommandLineArguments&
+argument_list|,
+argument|StringRef Filename
 argument_list|)
 operator|>
 name|ArgumentsAdjuster

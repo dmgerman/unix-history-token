@@ -250,9 +250,22 @@ name|SANITIZER_GO
 struct_decl|struct
 name|MapUnmapCallback
 struct_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__mips64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 specifier|static
 specifier|const
 name|uptr
@@ -324,10 +337,16 @@ directive|else
 typedef|typedef
 name|SizeClassAllocator64
 operator|<
+name|Mapping
+operator|::
 name|kHeapMemBeg
 operator|,
+name|Mapping
+operator|::
 name|kHeapMemEnd
 operator|-
+name|Mapping
+operator|::
 name|kHeapMemBeg
 operator|,
 literal|0
@@ -1993,6 +2012,32 @@ directive|ifndef
 name|SANITIZER_GO
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|SANITIZER_MAC
+end_if
+
+begin_function_decl
+name|ThreadState
+modifier|*
+name|cur_thread
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cur_thread_finalize
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -2032,10 +2077,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|INLINE
+name|void
+name|cur_thread_finalize
+parameter_list|()
+block|{ }
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// SANITIZER_MAC
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// SANITIZER_GO
+end_comment
 
 begin_decl_stmt
 name|class
@@ -2230,7 +2296,7 @@ name|ReportType
 name|type
 decl_stmt|;
 name|uptr
-name|pc
+name|pc_or_addr
 decl_stmt|;
 name|Suppression
 modifier|*
@@ -2279,6 +2345,9 @@ name|ThreadRegistry
 modifier|*
 name|thread_registry
 decl_stmt|;
+name|Mutex
+name|racy_mtx
+decl_stmt|;
 name|Vector
 operator|<
 name|RacyStacks
@@ -2292,6 +2361,9 @@ operator|>
 name|racy_addresses
 expr_stmt|;
 comment|// Number of fired suppressions may be large enough.
+name|Mutex
+name|fired_suppressions_mtx
+decl_stmt|;
 name|InternalMmapVector
 operator|<
 name|FiredSuppression
@@ -2907,10 +2979,8 @@ name|Context
 modifier|*
 name|ctx
 parameter_list|,
-specifier|const
-name|ScopedReport
-modifier|&
-name|srep
+name|ReportType
+name|type
 parameter_list|,
 name|StackTrace
 name|trace
@@ -4116,6 +4186,9 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|&&
+operator|!
+name|SANITIZER_MAC
 end_if
 
 begin_comment
@@ -4380,24 +4453,15 @@ name|ALWAYS_INLINE
 name|HeapEnd
 parameter_list|()
 block|{
-if|#
-directive|if
-name|SANITIZER_CAN_USE_ALLOCATOR64
 return|return
-name|kHeapMemEnd
+name|HeapMemEnd
+argument_list|()
 operator|+
 name|PrimaryAllocator
 operator|::
 name|AdditionalSize
 argument_list|()
 return|;
-else|#
-directive|else
-return|return
-name|kHeapMemEnd
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

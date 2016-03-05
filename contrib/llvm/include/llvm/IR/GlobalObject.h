@@ -110,7 +110,7 @@ name|protected
 operator|:
 name|GlobalObject
 argument_list|(
-argument|PointerType *Ty
+argument|Type *Ty
 argument_list|,
 argument|ValueTy VTy
 argument_list|,
@@ -121,6 +121,9 @@ argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
 argument|const Twine&Name
+argument_list|,
+argument|unsigned AddressSpace =
+literal|0
 argument_list|)
 operator|:
 name|GlobalValue
@@ -136,6 +139,8 @@ argument_list|,
 name|Linkage
 argument_list|,
 name|Name
+argument_list|,
+name|AddressSpace
 argument_list|)
 block|,
 name|ObjComdat

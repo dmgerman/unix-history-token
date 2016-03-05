@@ -438,7 +438,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableMap
+unit|}    ImmutableMap
 operator|(
 specifier|const
 name|ImmutableMap
@@ -465,7 +465,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableMap
+unit|}    ImmutableMap
 operator|&
 name|operator
 operator|=
@@ -533,7 +533,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   ~
+unit|}    ~
 name|ImmutableMap
 argument_list|()
 end_macro
@@ -582,7 +582,7 @@ argument_list|)
 block|{}
 name|Factory
 argument_list|(
-argument|BumpPtrAllocator& Alloc
+argument|BumpPtrAllocator&Alloc
 argument_list|,
 argument|bool canonicalize = true
 argument_list|)
@@ -1611,7 +1611,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}      ImmutableMapRef
+unit|}    ImmutableMapRef
 operator|(
 specifier|const
 name|ImmutableMapRef
@@ -2178,7 +2178,7 @@ name|second
 return|;
 block|}
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getMaxElement - Returns the<key,value> pair in the ImmutableMap for
@@ -2231,7 +2231,7 @@ specifier|inline
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|,
 argument|const ImmutableMapRef&M
 argument_list|)
@@ -2249,7 +2249,7 @@ specifier|inline
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID& ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|{
@@ -2264,7 +2264,7 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;    }
+block|;  }
 end_decl_stmt
 
 begin_comment
@@ -2275,6 +2275,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_IMMUTABLEMAP_H
+end_comment
 
 end_unit
 

@@ -81,6 +81,9 @@ name|class
 name|MCFixup
 decl_stmt|;
 name|class
+name|MCFragment
+decl_stmt|;
+name|class
 name|MCSection
 decl_stmt|;
 name|class
@@ -420,9 +423,9 @@ comment|/// \brief Find the "associated section" for this expression, which is
 comment|/// currently defined as the absolute section for constants, or
 comment|/// otherwise the section associated with the first defined symbol in the
 comment|/// expression.
-name|MCSection
+name|MCFragment
 operator|*
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -606,6 +609,8 @@ name|VK_WEAKREF
 block|,
 comment|// The link between the symbols in .weakref foo, bar
 name|VK_ARM_NONE
+block|,
+name|VK_ARM_GOT_PREL
 block|,
 name|VK_ARM_TARGET1
 block|,
@@ -858,6 +863,9 @@ name|VK_Hexagon_IE
 block|,
 name|VK_Hexagon_IE_GOT
 block|,
+name|VK_WebAssembly_FUNCTION
+block|,
+comment|// Function table index, rather than virtual addr
 name|VK_TPREL
 block|,
 name|VK_DTPREL
@@ -2001,9 +2009,9 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|MCSection
+name|MCFragment
 operator|*
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 specifier|const
 operator|=

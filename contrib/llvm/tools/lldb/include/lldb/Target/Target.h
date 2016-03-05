@@ -57,6 +57,30 @@ directive|include
 file|<list>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -111,6 +135,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UserSettingsController.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Expression/Expression.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/TypeSystem.h"
 end_include
 
 begin_include
@@ -190,10 +226,10 @@ operator|*
 name|target
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|TargetProperties
 argument_list|()
+name|override
 block|;
 name|ArchSpec
 name|GetDefaultArchitecture
@@ -419,6 +455,13 @@ name|bool
 name|GetBreakpointsConsultPlatformAvoidList
 argument_list|()
 block|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|char
 operator|*
@@ -635,8 +678,6 @@ name|OptionValue
 operator|*
 argument_list|)
 block|;
-name|private
-operator|:
 comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
@@ -816,21 +857,20 @@ name|GetPrefix
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|m_prefix
 operator|.
 name|empty
 argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
+operator|?
+name|nullptr
+operator|:
 name|m_prefix
 operator|.
 name|c_str
 argument_list|()
+operator|)
 return|;
 block|}
 name|void
@@ -1117,6 +1157,27 @@ name|b
 expr_stmt|;
 block|}
 name|bool
+name|GetColorizeErrors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_ansi_color_errors
+return|;
+block|}
+name|void
+name|SetColorizeErrors
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_ansi_color_errors
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
 name|GetTrapExceptions
 argument_list|()
 specifier|const
@@ -1133,6 +1194,27 @@ name|b
 parameter_list|)
 block|{
 name|m_trap_exceptions
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|GetREPLEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_repl
+return|;
+block|}
+name|void
+name|SetREPLEnabled
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_repl
 operator|=
 name|b
 expr_stmt|;
@@ -1169,23 +1251,102 @@ name|phase
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|m_cancel_callback
-operator|==
+operator|!=
 name|nullptr
-condition|)
-return|return
-name|false
-return|;
-else|else
-return|return
+operator|)
+condition|?
 name|m_cancel_callback
 argument_list|(
 name|phase
 argument_list|,
 name|m_cancel_callback_baton
 argument_list|)
+else|:
+name|false
+operator|)
+return|;
+block|}
+comment|// Allows the expression contents to be remapped to point to the specified file and line
+comment|// using #line directives.
+name|void
+name|SetPoundLine
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
+name|uint32_t
+name|line
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|path
+operator|&&
+name|path
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|m_pound_line_file
+operator|=
+name|path
+expr_stmt|;
+name|m_pound_line_line
+operator|=
+name|line
+expr_stmt|;
+block|}
+else|else
+block|{
+name|m_pound_line_file
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|m_pound_line_line
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+specifier|const
+name|char
+operator|*
+name|GetPoundLineFilePath
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|m_pound_line_file
+operator|.
+name|empty
+argument_list|()
+operator|?
+name|nullptr
+operator|:
+name|m_pound_line_file
+operator|.
+name|c_str
+argument_list|()
+operator|)
+return|;
+block|}
+name|uint32_t
+name|GetPoundLineLine
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_pound_line_line
 return|;
 block|}
 name|void
@@ -1249,7 +1410,13 @@ name|bool
 name|m_trap_exceptions
 decl_stmt|;
 name|bool
+name|m_repl
+decl_stmt|;
+name|bool
 name|m_generate_debug_info
+decl_stmt|;
+name|bool
+name|m_ansi_color_errors
 decl_stmt|;
 name|bool
 name|m_result_is_internal
@@ -1274,26 +1441,24 @@ name|void
 modifier|*
 name|m_cancel_callback_baton
 decl_stmt|;
+comment|// If m_pound_line_file is not empty and m_pound_line_line is non-zero,
+comment|// use #line %u "%s" before the expression content to remap where the source
+comment|// originates
+name|mutable
+name|std
+operator|::
+name|string
+name|m_pound_line_file
+expr_stmt|;
+name|mutable
+name|uint32_t
+name|m_pound_line_line
+decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|// Target
-end_comment
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
 name|class
 name|Target
 range|:
@@ -1378,12 +1543,12 @@ modifier|&
 name|GetStaticBroadcasterClass
 parameter_list|()
 function_decl|;
-name|virtual
 name|ConstString
 operator|&
 name|GetBroadcasterClass
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetStaticBroadcasterClass
@@ -1424,10 +1589,10 @@ operator|&
 name|module_list
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|TargetEventData
 argument_list|()
+name|override
 block|;
 specifier|static
 specifier|const
@@ -1436,13 +1601,13 @@ operator|&
 name|GetFlavorString
 argument_list|()
 block|;
-name|virtual
 specifier|const
 name|ConstString
 operator|&
 name|GetFlavor
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|TargetEventData
@@ -1451,13 +1616,13 @@ name|GetFlavorString
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|Dump
 argument_list|(
 argument|Stream *s
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|const
@@ -1533,6 +1698,11 @@ name|TargetEventData
 argument_list|)
 block|;     }
 decl_stmt|;
+operator|~
+name|Target
+argument_list|()
+name|override
+expr_stmt|;
 specifier|static
 name|void
 name|SettingsInitialize
@@ -1589,7 +1759,7 @@ name|Error
 operator|*
 name|error_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|//----------------------------------------------------------------------
@@ -1602,60 +1772,6 @@ operator|::
 name|TargetPropertiesSP
 operator|&
 name|GetGlobalProperties
-argument_list|()
-expr_stmt|;
-name|private
-label|:
-comment|//------------------------------------------------------------------
-comment|/// Construct with optional file and arch.
-comment|///
-comment|/// This member is private. Clients must use
-comment|/// TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
-comment|/// so all targets can be tracked from the central target list.
-comment|///
-comment|/// @see TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
-comment|//------------------------------------------------------------------
-name|Target
-argument_list|(
-argument|Debugger&debugger
-argument_list|,
-argument|const ArchSpec&target_arch
-argument_list|,
-argument|const lldb::PlatformSP&platform_sp
-argument_list|,
-argument|bool is_dummy_target
-argument_list|)
-empty_stmt|;
-comment|// Helper function.
-name|bool
-name|ProcessIsValid
-parameter_list|()
-function_decl|;
-comment|// Copy breakpoints, stop hooks and so forth from the dummy target:
-name|void
-name|PrimeFromDummyTarget
-parameter_list|(
-name|Target
-modifier|*
-name|dummy_target
-parameter_list|)
-function_decl|;
-name|void
-name|AddBreakpoint
-argument_list|(
-name|lldb
-operator|::
-name|BreakpointSP
-name|breakpoint_sp
-argument_list|,
-name|bool
-name|internal
-argument_list|)
-decl_stmt|;
-name|public
-label|:
-operator|~
-name|Target
 argument_list|()
 expr_stmt|;
 name|Mutex
@@ -1812,7 +1928,7 @@ argument_list|(
 argument|lldb::break_id_t break_id
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a file and line breakpoint to a given module or all module it is NULL
+comment|// Use this to create a file and line breakpoint to a given module or all module it is nullptr
 name|lldb
 operator|::
 name|BreakpointSP
@@ -1867,20 +1983,35 @@ argument_list|,
 argument|bool request_hardware
 argument_list|)
 expr_stmt|;
+comment|// Use this to create a breakpoint from a load address and a module file spec
+name|lldb
+operator|::
+name|BreakpointSP
+name|CreateAddressInModuleBreakpoint
+argument_list|(
+argument|lldb::addr_t file_addr
+argument_list|,
+argument|bool internal
+argument_list|,
+argument|const FileSpec *file_spec
+argument_list|,
+argument|bool request_hardware
+argument_list|)
+expr_stmt|;
 comment|// Use this to create Address breakpoints:
 name|lldb
 operator|::
 name|BreakpointSP
 name|CreateBreakpoint
 argument_list|(
-argument|Address&addr
+argument|const Address&addr
 argument_list|,
 argument|bool internal
 argument_list|,
 argument|bool request_hardware
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a function breakpoint by regexp in containingModule/containingSourceFiles, or all modules if it is NULL
+comment|// Use this to create a function breakpoint by regexp in containingModule/containingSourceFiles, or all modules if it is nullptr
 comment|// When "skip_prologue is set to eLazyBoolCalculate, we use the current target
 comment|// setting, else we use the values passed in
 name|lldb
@@ -1894,6 +2025,8 @@ argument|const FileSpecList *containingSourceFiles
 argument_list|,
 argument|RegularExpression&func_regexp
 argument_list|,
+argument|lldb::LanguageType requested_language
+argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
 argument|bool internal
@@ -1901,7 +2034,7 @@ argument_list|,
 argument|bool request_hardware
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a function breakpoint by name in containingModule, or all modules if it is NULL
+comment|// Use this to create a function breakpoint by name in containingModule, or all modules if it is nullptr
 comment|// When "skip_prologue is set to eLazyBoolCalculate, we use the current target
 comment|// setting, else we use the values passed in.
 comment|// func_name_type_mask is or'ed values from the FunctionNameType enum.
@@ -1917,6 +2050,8 @@ argument_list|,
 argument|const char *func_name
 argument_list|,
 argument|uint32_t func_name_type_mask
+argument_list|,
+argument|lldb::LanguageType language
 argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
@@ -1962,6 +2097,8 @@ argument|size_t num_names
 argument_list|,
 argument|uint32_t func_name_type_mask
 argument_list|,
+argument|lldb::LanguageType language
+argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
 argument|bool internal
@@ -1981,6 +2118,8 @@ argument_list|,
 argument|const std::vector<std::string>&func_names
 argument_list|,
 argument|uint32_t func_name_type_mask
+argument_list|,
+argument|lldb::LanguageType language
 argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
@@ -2016,7 +2155,7 @@ argument|lldb::addr_t addr
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|const ClangASTType *type
+argument|const CompilerType *type
 argument_list|,
 argument|uint32_t kind
 argument_list|,
@@ -2224,81 +2363,19 @@ argument|lldb::AddressClass addr_class = lldb::eAddressClassInvalid
 argument_list|)
 specifier|const
 expr_stmt|;
-name|protected
-label|:
-comment|//------------------------------------------------------------------
-comment|/// Implementing of ModuleList::Notifier.
-comment|//------------------------------------------------------------------
-name|virtual
-name|void
-name|ModuleAdded
+comment|// Get load_addr as breakable load address for this target.
+comment|// Take a addr and check if for any reason there is a better address than this to put a breakpoint on.
+comment|// If there is then return that address.
+comment|// For MIPS, if instruction at addr is a delay slot instruction then this method will find the address of its
+comment|// previous instruction and return that address.
+name|lldb
+operator|::
+name|addr_t
+name|GetBreakableLoadAddress
 argument_list|(
-specifier|const
-name|ModuleList
-operator|&
-name|module_list
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
+argument|lldb::addr_t addr
 argument_list|)
-decl_stmt|;
-name|virtual
-name|void
-name|ModuleRemoved
-argument_list|(
-specifier|const
-name|ModuleList
-operator|&
-name|module_list
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
-argument_list|)
-decl_stmt|;
-name|virtual
-name|void
-name|ModuleUpdated
-argument_list|(
-specifier|const
-name|ModuleList
-operator|&
-name|module_list
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|old_module_sp
-argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|new_module_sp
-argument_list|)
-decl_stmt|;
-name|virtual
-name|void
-name|WillClearList
-parameter_list|(
-specifier|const
-name|ModuleList
-modifier|&
-name|module_list
-parameter_list|)
-function_decl|;
-name|public
-label|:
+expr_stmt|;
 name|void
 name|ModulesDidLoad
 parameter_list|(
@@ -2358,7 +2435,7 @@ comment|/// discovered at runtime as things are dynamically loaded.
 comment|///
 comment|/// @return
 comment|///     The shared pointer to the executable module which can
-comment|///     contains a NULL Module object if no executable has been
+comment|///     contains a nullptr Module object if no executable has been
 comment|///     set.
 comment|///
 comment|/// @see DynamicLoader
@@ -2432,7 +2509,7 @@ name|Stream
 operator|*
 name|feedback_stream
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|bool
 name|continue_on_error
@@ -2663,7 +2740,7 @@ name|addr_t
 operator|*
 name|load_addr_ptr
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|size_t
@@ -2809,48 +2886,180 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|TargetSP
 name|CalculateTarget
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|CalculateProcess
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
 name|CalculateThread
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|StackFrameSP
 name|CalculateStackFrame
 argument_list|()
+name|override
 expr_stmt|;
-name|virtual
 name|void
 name|CalculateExecutionContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|PathMappingList
 modifier|&
 name|GetImageSearchPathList
 parameter_list|()
 function_decl|;
+name|TypeSystem
+modifier|*
+name|GetScratchTypeSystemForLanguage
+argument_list|(
+name|Error
+operator|*
+name|error
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+name|bool
+name|create_on_demand
+operator|=
+name|true
+argument_list|)
+decl_stmt|;
+name|PersistentExpressionState
+modifier|*
+name|GetPersistentExpressionStateForLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl_stmt|;
+comment|// Creates a UserExpression for the given language, the rest of the parameters have the
+comment|// same meaning as for the UserExpression constructor.
+comment|// Returns a new-ed object which the caller owns.
+name|UserExpression
+modifier|*
+name|GetUserExpressionForLanguage
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|expr
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expr_prefix
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+name|Expression
+operator|::
+name|ResultType
+name|desired_type
+argument_list|,
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
+comment|// Creates a FunctionCaller for the given language, the rest of the parameters have the
+comment|// same meaning as for the FunctionCaller constructor.  Since a FunctionCaller can't be
+comment|// IR Interpreted, it makes no sense to call this with an ExecutionContextScope that lacks
+comment|// a Process.
+comment|// Returns a new-ed object which the caller owns.
+name|FunctionCaller
+modifier|*
+name|GetFunctionCallerForLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+specifier|const
+name|CompilerType
+operator|&
+name|return_type
+argument_list|,
+specifier|const
+name|Address
+operator|&
+name|function_address
+argument_list|,
+specifier|const
+name|ValueList
+operator|&
+name|arg_value_list
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
+comment|// Creates a UtilityFunction for the given language, the rest of the parameters have the
+comment|// same meaning as for the UtilityFunction constructor.
+comment|// Returns a new-ed object which the caller owns.
+name|UtilityFunction
+modifier|*
+name|GetUtilityFunctionForLanguage
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|expr
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
 name|ClangASTContext
 modifier|*
 name|GetScratchClangASTContext
@@ -2861,11 +3070,12 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-name|ClangASTImporter
-modifier|*
+name|lldb
+operator|::
+name|ClangASTImporterSP
 name|GetClangASTImporter
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Install any files through the platform that need be to installed
 comment|// prior to launching or attaching.
@@ -2998,9 +3208,9 @@ name|char
 operator|*
 name|expression
 argument_list|,
-name|StackFrame
+name|ExecutionContextScope
 operator|*
-name|frame
+name|exe_scope
 argument_list|,
 name|lldb
 operator|::
@@ -3017,11 +3227,28 @@ name|EvaluateExpressionOptions
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|ClangPersistentVariables
-modifier|&
-name|GetPersistentVariables
-parameter_list|()
-function_decl|;
+name|lldb
+operator|::
+name|ExpressionVariableSP
+name|GetPersistentVariable
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|name
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|addr_t
+name|GetPersistentSymbol
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|name
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Target Stop Hooks
 comment|//------------------------------------------------------------------
@@ -3033,10 +3260,6 @@ name|UserID
 block|{
 name|public
 operator|:
-operator|~
-name|StopHook
-argument_list|()
-block|;
 name|StopHook
 argument_list|(
 specifier|const
@@ -3044,6 +3267,10 @@ name|StopHook
 operator|&
 name|rhs
 argument_list|)
+block|;
+operator|~
+name|StopHook
+argument_list|()
 block|;
 name|StringList
 operator|*
@@ -3430,8 +3657,107 @@ operator|*
 name|containingSourceFiles
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|REPLSP
+name|GetREPL
+argument_list|(
+argument|Error&err
+argument_list|,
+argument|lldb::LanguageType language
+argument_list|,
+argument|const char *repl_options
+argument_list|,
+argument|bool can_create
+argument_list|)
+expr_stmt|;
+name|void
+name|SetREPL
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+name|lldb
+operator|::
+name|REPLSP
+name|repl_sp
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
+comment|//------------------------------------------------------------------
+comment|/// Implementing of ModuleList::Notifier.
+comment|//------------------------------------------------------------------
+name|void
+name|ModuleAdded
+argument_list|(
+specifier|const
+name|ModuleList
+operator|&
+name|module_list
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|ModuleRemoved
+argument_list|(
+specifier|const
+name|ModuleList
+operator|&
+name|module_list
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|ModuleUpdated
+argument_list|(
+specifier|const
+name|ModuleList
+operator|&
+name|module_list
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|old_module_sp
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|new_module_sp
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|WillClearList
+argument_list|(
+specifier|const
+name|ModuleList
+operator|&
+name|module_list
+argument_list|)
+name|override
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
@@ -3494,32 +3820,37 @@ expr_stmt|;
 name|PathMappingList
 name|m_image_search_paths
 decl_stmt|;
+name|TypeSystemMap
+name|m_scratch_type_system_map
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
 name|lldb
 operator|::
-name|ClangASTContextUP
-name|m_scratch_ast_context_ap
+name|LanguageType
+operator|,
+name|lldb
+operator|::
+name|REPLSP
+operator|>
+name|REPLMap
 expr_stmt|;
+name|REPLMap
+name|m_repl_map
+decl_stmt|;
 name|lldb
 operator|::
-name|ClangASTSourceUP
-name|m_scratch_ast_source_ap
-expr_stmt|;
-name|lldb
-operator|::
-name|ClangASTImporterUP
-name|m_ast_importer_ap
+name|ClangASTImporterSP
+name|m_ast_importer_sp
 expr_stmt|;
 name|lldb
 operator|::
 name|ClangModulesDeclVendorUP
 name|m_clang_modules_decl_vendor_ap
 expr_stmt|;
-name|lldb
-operator|::
-name|ClangPersistentVariablesUP
-name|m_persistent_variables
-expr_stmt|;
-comment|///< These are the persistent variables associated with this process for the expression parser.
 name|lldb
 operator|::
 name|SourceManagerUP
@@ -3571,20 +3902,63 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+comment|//------------------------------------------------------------------
+comment|/// Construct with optional file and arch.
+comment|///
+comment|/// This member is private. Clients must use
+comment|/// TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
+comment|/// so all targets can be tracked from the central target list.
+comment|///
+comment|/// @see TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
+comment|//------------------------------------------------------------------
+name|Target
+argument_list|(
+argument|Debugger&debugger
+argument_list|,
+argument|const ArchSpec&target_arch
+argument_list|,
+argument|const lldb::PlatformSP&platform_sp
+argument_list|,
+argument|bool is_dummy_target
+argument_list|)
+empty_stmt|;
+comment|// Helper function.
+name|bool
+name|ProcessIsValid
+parameter_list|()
+function_decl|;
+comment|// Copy breakpoints, stop hooks and so forth from the dummy target:
+name|void
+name|PrimeFromDummyTarget
+parameter_list|(
+name|Target
+modifier|*
+name|dummy_target
+parameter_list|)
+function_decl|;
+name|void
+name|AddBreakpoint
+argument_list|(
+name|lldb
+operator|::
+name|BreakpointSP
+name|breakpoint_sp
+argument_list|,
+name|bool
+name|internal
+argument_list|)
+decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Target
 argument_list|)
 expr_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

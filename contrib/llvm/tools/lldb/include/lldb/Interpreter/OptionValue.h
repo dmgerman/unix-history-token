@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValue.h --------------------------------------*- C++ -*-===//
+comment|//===-- OptionValue.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -254,7 +254,9 @@ name|virtual
 operator|~
 name|OptionValue
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 comment|//-----------------------------------------------------------------
 comment|// Subclasses should override these functions
 comment|//-----------------------------------------------------------------
@@ -1074,7 +1076,7 @@ name|char
 operator|*
 name|fail_value
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1167,7 +1169,7 @@ name|assert
 argument_list|(
 name|m_callback
 operator|==
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|m_callback

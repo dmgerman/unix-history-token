@@ -110,6 +110,10 @@ comment|/// simulator;  it is always non-fragile.  The version is a release
 comment|/// version of iOS.
 name|iOS
 block|,
+comment|/// 'watchos' is a variant of iOS for Apple's watchOS. The version
+comment|/// is a release version of watchOS.
+name|WatchOS
+block|,
 comment|/// 'gcc' is the Objective-C runtime shipped with GCC, implementing a
 comment|/// fragile Objective-C ABI
 name|GCC
@@ -238,6 +242,12 @@ name|true
 return|;
 case|case
 name|iOS
+case|:
+return|return
+name|true
+return|;
+case|case
+name|WatchOS
 case|:
 return|return
 name|true
@@ -397,6 +407,9 @@ case|:
 case|case
 name|iOS
 case|:
+case|case
+name|WatchOS
+case|:
 return|return
 name|false
 return|;
@@ -448,8 +461,17 @@ block|{
 case|case
 name|FragileMacOSX
 case|:
+comment|// No stub library for the fragile runtime.
 return|return
-name|false
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|10
+argument_list|,
+literal|7
+argument_list|)
 return|;
 case|case
 name|MacOSX
@@ -459,6 +481,12 @@ name|true
 return|;
 case|case
 name|iOS
+case|:
+return|return
+name|true
+return|;
+case|case
+name|WatchOS
 case|:
 return|return
 name|true
@@ -508,7 +536,15 @@ case|case
 name|FragileMacOSX
 case|:
 return|return
-name|false
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|10
+argument_list|,
+literal|7
+argument_list|)
 return|;
 case|case
 name|MacOSX
@@ -535,6 +571,12 @@ name|VersionTuple
 argument_list|(
 literal|5
 argument_list|)
+return|;
+case|case
+name|WatchOS
+case|:
+return|return
+name|true
 return|;
 case|case
 name|GCC
@@ -608,6 +650,12 @@ argument_list|(
 literal|6
 argument_list|)
 operator|)
+return|;
+case|case
+name|WatchOS
+case|:
+return|return
+name|true
 return|;
 case|case
 name|GNUstep
@@ -700,6 +748,12 @@ argument_list|(
 literal|6
 argument_list|)
 return|;
+case|case
+name|WatchOS
+case|:
+return|return
+name|true
+return|;
 comment|// This is really a lie, because some implementations and versions
 comment|// of the runtime do not support ARC.  Probably -fgnu-runtime
 comment|// should imply a "maximal" runtime or something?
@@ -768,6 +822,9 @@ name|MacOSX
 case|:
 case|case
 name|iOS
+case|:
+case|case
+name|WatchOS
 case|:
 case|case
 name|GNUstep
@@ -852,6 +909,12 @@ literal|5
 argument_list|)
 return|;
 case|case
+name|WatchOS
+case|:
+return|return
+name|true
+return|;
+case|case
 name|GCC
 case|:
 return|return
@@ -896,6 +959,12 @@ name|true
 return|;
 case|case
 name|iOS
+case|:
+return|return
+name|true
+return|;
+case|case
+name|WatchOS
 case|:
 return|return
 name|true
@@ -956,6 +1025,12 @@ return|return
 name|true
 return|;
 case|case
+name|WatchOS
+case|:
+return|return
+name|true
+return|;
+case|case
 name|FragileMacOSX
 case|:
 return|return
@@ -1005,6 +1080,9 @@ name|MacOSX
 case|:
 case|case
 name|iOS
+case|:
+case|case
+name|WatchOS
 case|:
 return|return
 name|true

@@ -178,6 +178,19 @@ argument_list|)
 name|override
 block|;
 name|void
+name|HexagonProcessInstruction
+argument_list|(
+name|MCInst
+operator|&
+name|Inst
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|&
+name|MBB
+argument_list|)
+block|;
+name|void
 name|printOperand
 argument_list|(
 argument|const MachineInstr *MI

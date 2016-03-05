@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Debug.h"
 end_include
 

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -167,6 +173,24 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|TargetMachine
+decl_stmt|;
+comment|/// Instrumentation passes often insert conditional checks into entry blocks.
+comment|/// Call this function before splitting the entry block to move instructions
+comment|/// that must remain in the entry block up before the split point. Static
+comment|/// allocas and llvm.localescape calls, for example, must remain in the entry
+comment|/// block.
+name|BasicBlock
+operator|::
+name|iterator
+name|PrepareToSplitEntryBlock
+argument_list|(
+argument|BasicBlock&BB
+argument_list|,
+argument|BasicBlock::iterator IP
+argument_list|)
+expr_stmt|;
+name|class
 name|ModulePass
 decl_stmt|;
 name|class
@@ -233,6 +257,25 @@ name|getDefault
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|// PGO Instrumention
+name|ModulePass
+modifier|*
+name|createPGOInstrumentationGenPass
+parameter_list|()
+function_decl|;
+name|ModulePass
+modifier|*
+name|createPGOInstrumentationUsePass
+parameter_list|(
+name|StringRef
+name|Filename
+init|=
+name|StringRef
+argument_list|(
+literal|""
+argument_list|)
+parameter_list|)
+function_decl|;
 comment|/// Options for the frontend instrumentation based profiling pass.
 struct|struct
 name|InstrProfOptions
@@ -280,6 +323,11 @@ name|bool
 name|CompileKernel
 init|=
 name|false
+parameter_list|,
+name|bool
+name|Recover
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|ModulePass
@@ -288,6 +336,11 @@ name|createAddressSanitizerModulePass
 parameter_list|(
 name|bool
 name|CompileKernel
+init|=
+name|false
+parameter_list|,
+name|bool
+name|Recover
 init|=
 name|false
 parameter_list|)
@@ -504,8 +557,78 @@ comment|/// protect against stack-based overflow vulnerabilities.
 name|FunctionPass
 modifier|*
 name|createSafeStackPass
-parameter_list|()
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+init|=
+name|nullptr
+parameter_list|)
 function_decl|;
+comment|/// \brief Calculate what to divide by to scale counts.
+comment|///
+comment|/// Given the maximum count, calculate a divisor that will scale all the
+comment|/// weights to strictly less than UINT32_MAX.
+specifier|static
+specifier|inline
+name|uint64_t
+name|calculateCountScale
+parameter_list|(
+name|uint64_t
+name|MaxCount
+parameter_list|)
+block|{
+return|return
+name|MaxCount
+operator|<
+name|UINT32_MAX
+condition|?
+literal|1
+else|:
+name|MaxCount
+operator|/
+name|UINT32_MAX
+operator|+
+literal|1
+return|;
+block|}
+comment|/// \brief Scale an individual branch count.
+comment|///
+comment|/// Scale a 64-bit weight down to 32-bits using \c Scale.
+comment|///
+specifier|static
+specifier|inline
+name|uint32_t
+name|scaleBranchCount
+parameter_list|(
+name|uint64_t
+name|Count
+parameter_list|,
+name|uint64_t
+name|Scale
+parameter_list|)
+block|{
+name|uint64_t
+name|Scaled
+init|=
+name|Count
+operator|/
+name|Scale
+decl_stmt|;
+name|assert
+argument_list|(
+name|Scaled
+operator|<=
+name|UINT32_MAX
+operator|&&
+literal|"overflow 32-bits"
+argument_list|)
+expr_stmt|;
+return|return
+name|Scaled
+return|;
+block|}
 block|}
 end_decl_stmt
 

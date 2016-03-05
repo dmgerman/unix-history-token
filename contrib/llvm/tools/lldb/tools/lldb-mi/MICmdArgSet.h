@@ -38,7 +38,11 @@ name|once
 end_pragma
 
 begin_comment
-comment|// Third party headers:
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
 end_comment
 
 begin_include
@@ -48,7 +52,11 @@ file|<vector>
 end_include
 
 begin_comment
-comment|// In-house headers:
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -118,18 +126,6 @@ comment|//          order. The order added to *this container is the order they 
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 14/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -154,9 +150,7 @@ operator|:
 name|virtual
 name|bool
 name|GetFound
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -164,9 +158,7 @@ block|;
 name|virtual
 name|bool
 name|GetIsHandledByCmd
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -174,9 +166,7 @@ block|;
 name|virtual
 name|bool
 name|GetIsMandatory
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -184,9 +174,7 @@ block|;
 name|virtual
 name|bool
 name|GetIsMissingOptions
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -196,9 +184,7 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetName
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -206,9 +192,7 @@ block|;
 name|virtual
 name|bool
 name|GetValid
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -224,19 +208,15 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/* dtor */
 name|virtual
 operator|~
 name|IArg
-argument_list|(
-argument|void
-argument_list|)
-block|{}
+argument_list|()
+operator|=
+expr|default
 block|;     }
 block|;
 comment|// Typedefs:
-name|public
-operator|:
 typedef|typedef
 name|std
 operator|::
@@ -248,23 +228,17 @@ operator|>
 name|SetCmdArgs_t
 expr_stmt|;
 comment|// Methods:
-name|public
-operator|:
-comment|/* ctor */
 name|CMICmdArgSet
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|bool
+name|void
 name|Add
 parameter_list|(
-specifier|const
 name|CMICmdArgValBase
-modifier|&
+modifier|*
 name|vArg
 parameter_list|)
 function_decl|;
@@ -288,59 +262,49 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
 name|SetCmdArgs_t
-modifier|&
+operator|&
 name|GetArgsThatAreMissing
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
 name|SetCmdArgs_t
-modifier|&
+operator|&
 name|GetArgsThatInvalid
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|MIuint
+begin_expr_stmt
+name|size_t
 name|GetCount
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|IsArgContextEmpty
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|IsArgsPresentButNotHandledByCmd
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -374,22 +338,11 @@ begin_comment
 comment|// Overrideable:
 end_comment
 
-begin_label
-name|public
-label|:
-end_label
-
-begin_comment
-comment|/* dtor */
-end_comment
-
 begin_expr_stmt
-name|virtual
 operator|~
 name|CMICmdArgSet
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -402,24 +355,20 @@ name|private
 label|:
 end_label
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
 name|SetCmdArgs_t
-modifier|&
+operator|&
 name|GetArgsNotHandledByCmd
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
 name|Destroy
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -442,11 +391,6 @@ end_function_decl
 begin_comment
 comment|// Attributes:
 end_comment
-
-begin_label
-name|private
-label|:
-end_label
 
 begin_decl_stmt
 name|bool

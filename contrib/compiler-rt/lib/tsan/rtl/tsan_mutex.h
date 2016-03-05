@@ -108,6 +108,10 @@ name|MutexTypeJavaMBlock
 block|,
 name|MutexTypeDDetector
 block|,
+name|MutexTypeFired
+block|,
+name|MutexTypeRacy
+block|,
 comment|// This must be the last.
 name|MutexTypeCount
 block|}

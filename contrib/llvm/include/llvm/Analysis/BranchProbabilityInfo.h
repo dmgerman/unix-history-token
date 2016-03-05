@@ -105,9 +105,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// \brief Analysis pass providing branch probability information.
+comment|/// \brief Analysis providing branch probability information.
 comment|///
-comment|/// This is a function analysis pass which provides information on the relative
+comment|/// This is a function analysis which provides information on the relative
 comment|/// probabilities of each "edge" in the function's CFG where such an edge is
 comment|/// defined by a pair (PredBlock and an index in the successors). The
 comment|/// probability of an edge from one block is always relative to the
@@ -119,63 +119,40 @@ comment|/// As an example, we can have a switch which jumps to Dst with value 0 
 comment|/// value 10.
 name|class
 name|BranchProbabilityInfo
-range|:
-name|public
-name|FunctionPass
 block|{
 name|public
-operator|:
-specifier|static
-name|char
-name|ID
-block|;
+label|:
 name|BranchProbabilityInfo
 argument_list|()
-operator|:
-name|FunctionPass
-argument_list|(
-argument|ID
-argument_list|)
-block|{
-name|initializeBranchProbabilityInfoPass
-argument_list|(
-operator|*
-name|PassRegistry
-operator|::
-name|getPassRegistry
-argument_list|()
-argument_list|)
-block|;   }
-name|void
-name|getAnalysisUsage
-argument_list|(
-argument|AnalysisUsage&AU
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|runOnFunction
+block|{}
+name|BranchProbabilityInfo
 argument_list|(
 argument|Function&F
+argument_list|,
+argument|const LoopInfo&LI
 argument_list|)
-name|override
-block|;
+block|{
+name|calculate
+argument_list|(
+name|F
+argument_list|,
+name|LI
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|releaseMemory
-argument_list|()
-name|override
-block|;
+parameter_list|()
+function_decl|;
 name|void
 name|print
 argument_list|(
-argument|raw_ostream&OS
-argument_list|,
-argument|const Module *M = nullptr
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-name|override
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Get an edge's probability, relative to other out-edges of the Src.
 comment|///
 comment|/// This routine provides access to the fractional probability between zero
@@ -185,24 +162,47 @@ comment|/// only be one if the source block has only one successor.
 name|BranchProbability
 name|getEdgeProbability
 argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|unsigned IndexInSuccessors
-argument_list|)
 specifier|const
-block|;
+name|BasicBlock
+operator|*
+name|Src
+argument_list|,
+name|unsigned
+name|IndexInSuccessors
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Get the probability of going from Src to Dst.
 comment|///
 comment|/// It returns the sum of all probabilities for edges from Src to Dst.
 name|BranchProbability
 name|getEdgeProbability
 argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|const BasicBlock *Dst
-argument_list|)
 specifier|const
-block|;
+name|BasicBlock
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|Dst
+argument_list|)
+decl|const
+decl_stmt|;
+name|BranchProbability
+name|getEdgeProbability
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|Src
+argument_list|,
+name|succ_const_iterator
+name|Dst
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Test if an edge is hot relative to other out-edges of the Src.
 comment|///
 comment|/// Check whether this edge out of the source block is 'hot'. We define hot
@@ -210,104 +210,91 @@ comment|/// as having a relative probability>= 80%.
 name|bool
 name|isEdgeHot
 argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|const BasicBlock *Dst
-argument_list|)
 specifier|const
-block|;
+name|BasicBlock
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|Dst
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve the hot successor of a block if one exists.
 comment|///
 comment|/// Given a basic block, look through its successors and if one exists for
 comment|/// which \see isEdgeHot would return true, return that successor block.
 name|BasicBlock
-operator|*
+modifier|*
 name|getHotSucc
 argument_list|(
-argument|BasicBlock *BB
+name|BasicBlock
+operator|*
+name|BB
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Print an edge's probability.
 comment|///
 comment|/// Retrieves an edge's probability similarly to \see getEdgeProbability, but
 comment|/// then prints that probability to the provided stream. That stream is then
 comment|/// returned.
 name|raw_ostream
-operator|&
+modifier|&
 name|printEdgeProbability
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const BasicBlock *Src
-argument_list|,
-argument|const BasicBlock *Dst
-argument_list|)
 specifier|const
-block|;
-comment|/// \brief Get the raw edge weight calculated for the edge.
+name|BasicBlock
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|Dst
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Set the raw edge probability for the given edge.
 comment|///
-comment|/// This returns the raw edge weight. It is guaranteed to fall between 1 and
-comment|/// UINT32_MAX. Note that the raw edge weight is not meaningful in isolation.
-comment|/// This interface should be very carefully, and primarily by routines that
-comment|/// are updating the analysis by later calling setEdgeWeight.
-name|uint32_t
-name|getEdgeWeight
-argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|unsigned IndexInSuccessors
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Get the raw edge weight calculated for the block pair.
-comment|///
-comment|/// This returns the sum of all raw edge weights from Src to Dst.
-comment|/// It is guaranteed to fall between 1 and UINT32_MAX.
-name|uint32_t
-name|getEdgeWeight
-argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|const BasicBlock *Dst
-argument_list|)
-specifier|const
-block|;
-name|uint32_t
-name|getEdgeWeight
-argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|succ_const_iterator Dst
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Set the raw edge weight for a given edge.
-comment|///
-comment|/// This allows a pass to explicitly set the edge weight for an edge. It can
-comment|/// be used when updating the CFG to update and preserve the branch
+comment|/// This allows a pass to explicitly set the edge probability for an edge. It
+comment|/// can be used when updating the CFG to update and preserve the branch
 comment|/// probability information. Read the implementation of how these edge
-comment|/// weights are calculated carefully before using!
+comment|/// probabilities are calculated carefully before using!
 name|void
-name|setEdgeWeight
-argument_list|(
-argument|const BasicBlock *Src
-argument_list|,
-argument|unsigned IndexInSuccessors
-argument_list|,
-argument|uint32_t Weight
-argument_list|)
-block|;
+name|setEdgeProbability
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|Src
+parameter_list|,
+name|unsigned
+name|IndexInSuccessors
+parameter_list|,
+name|BranchProbability
+name|Prob
+parameter_list|)
+function_decl|;
 specifier|static
-name|uint32_t
-name|getBranchWeightStackProtector
-argument_list|(
-argument|bool IsLikely
-argument_list|)
-block|{
-return|return
+name|BranchProbability
+name|getBranchProbStackProtector
+parameter_list|(
+name|bool
 name|IsLikely
-operator|?
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|BranchProbability
+name|LikelyProb
+argument_list|(
 operator|(
 literal|1u
 operator|<<
@@ -315,12 +302,38 @@ literal|20
 operator|)
 operator|-
 literal|1
-operator|:
-literal|1
+argument_list|,
+literal|1u
+operator|<<
+literal|20
+argument_list|)
+decl_stmt|;
+return|return
+name|IsLikely
+condition|?
+name|LikelyProb
+else|:
+name|LikelyProb
+operator|.
+name|getCompl
+argument_list|()
 return|;
 block|}
+name|void
+name|calculate
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|LoopInfo
+modifier|&
+name|LI
+parameter_list|)
+function_decl|;
 name|private
-operator|:
+label|:
 comment|// Since we allow duplicate edges from one basic block to another, we use
 comment|// a pair (PredBlock and an index in the successors) to specify an edge.
 typedef|typedef
@@ -346,22 +359,17 @@ specifier|static
 specifier|const
 name|uint32_t
 name|DEFAULT_WEIGHT
-operator|=
+init|=
 literal|16
 decl_stmt|;
 name|DenseMap
 operator|<
 name|Edge
 operator|,
-name|uint32_t
+name|BranchProbability
 operator|>
-name|Weights
+name|Probs
 expr_stmt|;
-comment|/// \brief Handle to the LoopInfo analysis.
-name|LoopInfo
-modifier|*
-name|LI
-decl_stmt|;
 comment|/// \brief Track the last function we run over for printing.
 name|Function
 modifier|*
@@ -387,17 +395,6 @@ literal|16
 operator|>
 name|PostDominatedByColdCall
 expr_stmt|;
-comment|/// \brief Get sum of the block successors' weights.
-name|uint32_t
-name|getSumForBlock
-argument_list|(
-specifier|const
-name|BasicBlock
-operator|*
-name|BB
-argument_list|)
-decl|const
-decl_stmt|;
 name|bool
 name|calcUnreachableHeuristics
 parameter_list|(
@@ -436,6 +433,11 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+specifier|const
+name|LoopInfo
+modifier|&
+name|LI
 parameter_list|)
 function_decl|;
 name|bool
@@ -463,14 +465,95 @@ name|BB
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+comment|/// \brief Legacy analysis pass which computes \c BranchProbabilityInfo.
+name|class
+name|BranchProbabilityInfoWrapperPass
+range|:
+name|public
+name|FunctionPass
+block|{
+name|BranchProbabilityInfo
+name|BPI
+block|;
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+name|BranchProbabilityInfoWrapperPass
+argument_list|()
+operator|:
+name|FunctionPass
+argument_list|(
+argument|ID
+argument_list|)
+block|{
+name|initializeBranchProbabilityInfoWrapperPassPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
+name|BranchProbabilityInfo
+operator|&
+name|getBPI
+argument_list|()
+block|{
+return|return
+name|BPI
+return|;
+block|}
+specifier|const
+name|BranchProbabilityInfo
+operator|&
+name|getBPI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BPI
+return|;
+block|}
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|runOnFunction
+argument_list|(
+argument|Function&F
+argument_list|)
+name|override
+block|;
+name|void
+name|releaseMemory
+argument_list|()
+name|override
+block|;
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const Module *M = nullptr
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

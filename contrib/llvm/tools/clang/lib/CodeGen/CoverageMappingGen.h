@@ -212,6 +212,17 @@ operator|*
 operator|>
 name|FunctionRecords
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|FunctionNames
+expr_stmt|;
 name|llvm
 operator|::
 name|StructType
@@ -284,6 +295,11 @@ operator|::
 name|string
 operator|&
 name|CoverageMapping
+argument_list|,
+name|bool
+name|isUsed
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit the coverage mapping data for a translation unit.

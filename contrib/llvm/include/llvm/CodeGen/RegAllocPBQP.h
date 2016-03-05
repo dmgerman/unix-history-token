@@ -807,7 +807,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Holds graph-level metadata relevent to PBQP RA problems.
+comment|/// \brief Holds graph-level metadata relevant to PBQP RA problems.
 name|class
 name|GraphMetadata
 block|{

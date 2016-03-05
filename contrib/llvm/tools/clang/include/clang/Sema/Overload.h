@@ -267,7 +267,11 @@ comment|///< Objective-C ARC writeback conversion
 name|ICK_Zero_Event_Conversion
 block|,
 comment|///< Zero constant to event (OpenCL1.2 6.12.10)
+name|ICK_C_Only_Conversion
+block|,
+comment|///< Conversions allowed in C, but not C++
 name|ICK_Num_Conversion_Kinds
+block|,
 comment|///< The number of conversion kinds
 block|}
 enum|;
@@ -293,7 +297,11 @@ name|ICR_Complex_Real_Conversion
 block|,
 comment|///< Complex<-> Real conversion
 name|ICR_Writeback_Conversion
+block|,
 comment|///< ObjC ARC writeback conversion
+name|ICR_C_Conversion
+comment|///< Conversion only allowed in the C standard.
+comment|///  (e.g. void* to char*)
 block|}
 enum|;
 name|ImplicitConversionRank
@@ -1742,6 +1750,9 @@ block|,
 comment|/// This candidate function was not viable because an enable_if
 comment|/// attribute disabled it.
 name|ovl_fail_enable_if
+block|,
+comment|/// This candidate was not viable because its address could not be taken.
+name|ovl_fail_addr_not_available
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).

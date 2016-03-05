@@ -238,6 +238,10 @@ comment|/// CK_FloatingToBoolean - Floating point to boolean.
 comment|///    (bool) f
 name|CK_FloatingToBoolean
 block|,
+comment|// CK_BooleanToSignedIntegral - Convert a boolean to -1 or 0 for true and
+comment|// false, respectively.
+name|CK_BooleanToSignedIntegral
+block|,
 comment|/// CK_FloatingCast - Casting between floating types of different size.
 comment|///    (double) f
 comment|///    (float) ld
@@ -486,7 +490,10 @@ name|UO_Imag
 block|,
 comment|// "__real expr"/"__imag expr" Extension.
 name|UO_Extension
+block|,
 comment|// __extension__ marker.
+name|UO_Coawait
+comment|// [C++ Coroutines] co_await operator
 block|}
 enum|;
 comment|/// \brief The kind of bridging performed by the Objective-C bridge cast.

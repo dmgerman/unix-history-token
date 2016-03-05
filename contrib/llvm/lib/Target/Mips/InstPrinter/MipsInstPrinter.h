@@ -177,9 +177,6 @@ decl_stmt|;
 block|}
 comment|// end namespace Mips
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|MipsInstPrinter
 range|:
 name|public

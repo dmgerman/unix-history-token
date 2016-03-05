@@ -100,7 +100,7 @@ name|class
 name|LogBuilder
 block|{
 name|Consumer
-modifier|&
+modifier|*
 name|consumer
 decl_stmt|;
 comment|/// The use of a stored StringRef here is okay because
@@ -130,6 +130,7 @@ argument_list|)
 block|:
 name|consumer
 argument_list|(
+operator|&
 name|c
 argument_list|)
 operator|,
@@ -138,6 +139,38 @@ argument_list|(
 argument|Format
 argument_list|)
 block|{}
+name|LogBuilder
+argument_list|(
+name|LogBuilder
+operator|&&
+name|L
+argument_list|)
+operator|:
+name|consumer
+argument_list|(
+name|L
+operator|.
+name|consumer
+argument_list|)
+operator|,
+name|Format
+argument_list|(
+name|L
+operator|.
+name|Format
+argument_list|)
+operator|,
+name|Arguments
+argument_list|(
+argument|std::move(L.Arguments)
+argument_list|)
+block|{
+name|L
+operator|.
+name|consumer
+operator|=
+name|nullptr
+block|;     }
 name|LogBuilder
 operator|&
 name|operator

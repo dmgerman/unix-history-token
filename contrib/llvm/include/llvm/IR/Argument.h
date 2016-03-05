@@ -90,10 +90,7 @@ block|{
 name|template
 operator|<
 name|typename
-name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
+name|NodeTy
 operator|>
 name|class
 name|SymbolTableListTraits
@@ -132,8 +129,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|Argument
-operator|,
-name|Function
 operator|>
 expr_stmt|;
 name|void

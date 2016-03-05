@@ -599,17 +599,14 @@ name|entries
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|begin
 argument_list|()
-operator|,
+argument_list|,
 name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -761,7 +758,7 @@ argument_list|)
 operator|,
 name|Next
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 if|if
@@ -1095,11 +1092,19 @@ name|ListenerTail
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_REGISTRY_H
+end_comment
 
 end_unit
 
