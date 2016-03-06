@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chared.h,v 1.27 2016/02/16 22:53:14 christos Exp $	*/
+comment|/*	$NetBSD: chared.h,v 1.22 2014/06/18 18:12:28 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,24 @@ define|#
 directive|define
 name|_h_el_chared
 end_define
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"histedit.h"
+end_include
 
 begin_define
 define|#
@@ -337,12 +355,42 @@ name|MODE_REPLACE_1
 value|2
 end_define
 
+begin_include
+include|#
+directive|include
+file|"common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"emacs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"search.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fcns.h"
+end_include
+
 begin_function_decl
 name|protected
 name|int
 name|cv__isword
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -352,7 +400,7 @@ name|protected
 name|int
 name|cv__isWord
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -387,7 +435,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -398,7 +446,7 @@ name|protected
 name|int
 name|ce__isword
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -453,7 +501,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -478,7 +526,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -503,7 +551,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -528,7 +576,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 parameter_list|)
 function_decl|;

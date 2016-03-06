@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: histedit.h,v 1.55 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: histedit.h,v 1.53 2014/06/18 18:12:28 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/*  * el_set/el_get parameters  *  * When using el_wset/el_wget (as opposed to el_set/el_get):  *   Char is wchar_t, otherwise it is char.  *   prompt_func is el_wpfunc_t, otherwise it is el_pfunc_t .   * Prompt function prototypes are:  *   typedef char    *(*el_pfunct_t)  (EditLine *);  *   typedef wchar_t *(*el_wpfunct_t) (EditLine *);  *  * For operations that support set or set/get, the argument types listed are for  * the "set" operation. For "get", each listed type must be a pointer.  * E.g. EL_EDITMODE takes an int when set, but an int* when get.  *  * Operations that only support "get" have the correct argument types listed.  */
+comment|/*  * el_set/el_get parameters  *  * When using el_wset/el_wget (as opposed to el_set/el_get):  *   Char is wchar_t, otherwise it is char.  *   prompt_func is el_wpfunc_t, otherwise it is el_pfunc_t .   * Prompt function prototypes are:  *   typedef char    *(*el_pfunct_t)  (EditLine *);  *   typedef wchar_t *(*el_wpfunct_t) (EditLine *);  *  * For operations that support set or set/get, the argument types listed are for  * the "set" operation. For "get", each listed type must be a pointer.  * E.g. EL_EDITMODE takes an int when set, but an int* when get.  *   * Operations that only support "get" have the correct argument types listed.  */
 define|#
 directive|define
 name|EL_PROMPT
@@ -339,7 +339,7 @@ directive|define
 name|EL_ADDFN
 value|9
 comment|/* , const Char *, const Char,        set     */
-comment|/*   el_func_t);			      */
+comment|/*   el_func_t);		 	      */
 define|#
 directive|define
 name|EL_HIST
@@ -731,12 +731,27 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Begin Wide Character Support  */
+ifdef|#
+directive|ifdef
+name|__linux__
+comment|/* Apparently we need _GNU_SOURCE defined to get access to wcsdup on Linux */
+ifndef|#
+directive|ifndef
+name|_GNU_SOURCE
+define|#
+directive|define
+name|_GNU_SOURCE
+endif|#
+directive|endif
+endif|#
+directive|endif
 include|#
 directive|include
 file|<wchar.h>
 include|#
 directive|include
 file|<wctype.h>
+comment|/*  * Wide character versions  */
 comment|/*  * ==== Editing ====  */
 typedef|typedef
 struct|struct

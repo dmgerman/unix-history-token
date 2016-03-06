@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: terminal.h,v 1.7 2016/02/16 15:53:48 christos Exp $	*/
+comment|/*	$NetBSD: terminal.h,v 1.4 2012/03/24 20:09:30 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|_h_el_terminal
 end_define
+
+begin_include
+include|#
+directive|include
+file|"histedit.h"
+end_include
 
 begin_typedef
 typedef|typedef
@@ -540,7 +546,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -553,7 +559,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl

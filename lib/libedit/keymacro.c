@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: keymacro.c,v 1.14 2016/02/24 14:25:38 christos Exp $	*/
+comment|/*	$NetBSD: keymacro.c,v 1.7 2011/08/16 16:25:15 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: keymacro.c,v 1.14 2016/02/24 14:25:38 christos Exp $"
+literal|"$NetBSD: keymacro.c,v 1.7 2011/08/16 16:25:15 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -110,7 +110,7 @@ block|{
 name|Char
 name|ch
 decl_stmt|;
-comment|/* single character of key	 */
+comment|/* single character of key 	 */
 name|int
 name|type
 decl_stmt|;
@@ -119,7 +119,7 @@ name|keymacro_value_t
 name|val
 decl_stmt|;
 comment|/* command code or pointer to str,  */
-comment|/* if this is a leaf		 */
+comment|/* if this is a leaf 		 */
 name|struct
 name|keymacro_node_t
 modifier|*
@@ -185,7 +185,7 @@ name|keymacro_node_t
 modifier|*
 name|node__get
 parameter_list|(
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -970,7 +970,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* node_trav():  *	recursively traverses node in tree until match or mismatch is  *	found.  May read in more characters.  */
+comment|/* node_trav():  *	recursively traverses node in tree until match or mismatch is  * 	found.  May read in more characters.  */
 end_comment
 
 begin_function
@@ -995,9 +995,6 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|wchar_t
-name|wc
-decl_stmt|;
 if|if
 condition|(
 name|ptr
@@ -1019,12 +1016,16 @@ block|{
 comment|/* key not complete so get next char */
 if|if
 condition|(
-name|el_wgetc
+name|FUN
 argument_list|(
 name|el
 argument_list|,
-operator|&
-name|wc
+name|getc
+argument_list|)
+argument_list|(
+name|el
+argument_list|,
+name|ch
 argument_list|)
 operator|!=
 literal|1
@@ -1042,14 +1043,6 @@ name|XK_CMD
 return|;
 comment|/* PWP: Pretend we just read an end-of-file */
 block|}
-operator|*
-name|ch
-operator|=
-operator|(
-name|Char
-operator|)
-name|wc
-expr_stmt|;
 return|return
 name|node_trav
 argument_list|(
@@ -1138,7 +1131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* node__try():  *	Find a node that matches *str or allocate a new one  */
+comment|/* node__try():  * 	Find a node that matches *str or allocate a new one  */
 end_comment
 
 begin_function
@@ -1815,7 +1808,7 @@ name|keymacro_node_t
 modifier|*
 name|node__get
 parameter_list|(
-name|wint_t
+name|Int
 name|ch
 parameter_list|)
 block|{
@@ -1847,9 +1840,6 @@ name|ptr
 operator|->
 name|ch
 operator|=
-operator|(
-name|Char
-operator|)
 name|ch
 expr_stmt|;
 name|ptr

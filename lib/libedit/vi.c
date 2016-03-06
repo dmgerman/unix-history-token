@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.54 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.47 2015/10/21 21:45:30 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -11,6 +11,30 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_if
@@ -44,7 +68,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.54 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: vi.c,v 1.47 2015/10/21 21:45:30 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,61 +108,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"common.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"emacs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vi.h"
 end_include
 
 begin_function_decl
@@ -149,7 +119,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -162,7 +132,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +150,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -203,7 +173,7 @@ condition|(
 name|c
 operator|!=
 operator|(
-name|wint_t
+name|Int
 operator|)
 name|el
 operator|->
@@ -378,7 +348,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -556,7 +526,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -591,7 +561,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -626,7 +596,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -724,7 +694,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -822,7 +792,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -934,7 +904,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1045,7 +1015,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -1196,7 +1166,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1234,7 +1204,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1293,7 +1263,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1365,7 +1335,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1420,7 +1390,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1473,7 +1443,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1558,7 +1528,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1643,7 +1613,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1690,7 +1660,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1801,7 +1771,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1860,7 +1830,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -1895,7 +1865,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2000,7 +1970,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2105,7 +2075,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2278,7 +2248,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2382,7 +2352,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -2443,7 +2413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_delete_prev_char():  *	Vi move to previous character (backspace)  *	[^H] in insert mode only  */
+comment|/* vi_delete_prev_char():  * 	Vi move to previous character (backspace)  *	[^H] in insert mode only  */
 end_comment
 
 begin_decl_stmt
@@ -2456,7 +2426,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2515,7 +2485,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -2628,7 +2598,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2747,7 +2717,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2782,7 +2752,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2817,7 +2787,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2873,7 +2843,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2934,7 +2904,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -2980,7 +2950,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3026,7 +2996,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3072,7 +3042,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3118,7 +3088,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3175,7 +3145,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3253,7 +3223,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3502,7 +3472,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3540,7 +3510,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3594,7 +3564,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3652,7 +3622,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3687,7 +3657,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3755,7 +3725,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -3887,7 +3857,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -4102,7 +4072,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -4584,7 +4554,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(
@@ -4867,7 +4837,7 @@ name|EditLine
 operator|*
 name|el
 argument_list|,
-name|wint_t
+name|Int
 name|c
 name|__attribute__
 argument_list|(

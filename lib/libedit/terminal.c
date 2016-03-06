@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: terminal.c,v 1.22 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: terminal.c,v 1.14 2012/05/30 18:21:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: terminal.c,v 1.22 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: terminal.c,v 1.14 2012/05/30 18:21:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,19 +84,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -108,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -120,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<limits.h>
 end_include
 
 begin_ifdef
@@ -210,6 +198,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -1326,9 +1326,10 @@ name|t_buf
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|fail1
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 name|el
 operator|->
 name|el_terminal
@@ -1360,9 +1361,10 @@ name|t_cap
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|fail2
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 name|el
 operator|->
 name|el_terminal
@@ -1394,9 +1396,10 @@ name|t_fkey
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|fail3
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 name|el
 operator|->
 name|el_terminal
@@ -1436,9 +1439,10 @@ name|t_str
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|fail4
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 operator|(
 name|void
 operator|)
@@ -1496,9 +1500,10 @@ name|t_val
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|fail5
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 operator|(
 name|void
 operator|)
@@ -1542,88 +1547,6 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
-return|;
-name|fail5
-label|:
-name|free
-argument_list|(
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_str
-argument_list|)
-expr_stmt|;
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_str
-operator|=
-name|NULL
-expr_stmt|;
-name|fail4
-label|:
-name|free
-argument_list|(
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_fkey
-argument_list|)
-expr_stmt|;
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_fkey
-operator|=
-name|NULL
-expr_stmt|;
-name|fail3
-label|:
-name|free
-argument_list|(
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_cap
-argument_list|)
-expr_stmt|;
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_cap
-operator|=
-name|NULL
-expr_stmt|;
-name|fail2
-label|:
-name|free
-argument_list|(
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_buf
-argument_list|)
-expr_stmt|;
-name|el
-operator|->
-name|el_terminal
-operator|.
-name|t_buf
-operator|=
-name|NULL
-expr_stmt|;
-name|fail1
-label|:
-return|return
-operator|-
-literal|1
 return|;
 block|}
 end_function
@@ -2242,9 +2165,10 @@ name|b
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|done
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -2317,9 +2241,10 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 name|b
@@ -2365,9 +2290,10 @@ name|b
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|done
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -2440,9 +2366,10 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 block|}
 name|b
@@ -2462,17 +2389,6 @@ name|b
 expr_stmt|;
 return|return
 literal|0
-return|;
-name|done
-label|:
-name|terminal_free_display
-argument_list|(
-name|el
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
 return|;
 block|}
 end_function
@@ -2595,7 +2511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* terminal_move_to_line():  *	move to line<where> (first line == 0)  *	as efficiently as possible  */
+comment|/* terminal_move_to_line():  *	move to line<where> (first line == 0)  * 	as efficiently as possible  */
 end_comment
 
 begin_function
@@ -2650,9 +2566,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: where is ridiculous: %d\r\n"
-argument_list|,
-name|__func__
+literal|"terminal_move_to_line: where is ridiculous: %d\r\n"
 argument_list|,
 name|where
 argument_list|)
@@ -3038,9 +2952,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: where is ridiculous: %d\r\n"
-argument_list|,
-name|__func__
+literal|"terminal_move_to_char: where is riduculous: %d\r\n"
 argument_list|,
 name|where
 argument_list|)
@@ -3504,9 +3416,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: n is ridiculous: %d\r\n"
-argument_list|,
-name|__func__
+literal|"terminal_overwrite: n is riduculous: %d\r\n"
 argument_list|,
 name|n
 argument_list|)
@@ -3782,9 +3692,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: num is ridiculous: %d\r\n"
-argument_list|,
-name|__func__
+literal|"terminal_deletechars: num is riduculous: %d\r\n"
 argument_list|,
 name|num
 argument_list|)
@@ -3986,9 +3894,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: num is ridiculous: %d\r\n"
-argument_list|,
-name|__func__
+literal|"StartInsert: num is riduculous: %d\r\n"
 argument_list|,
 name|num
 argument_list|)
@@ -7145,7 +7051,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -7165,7 +7071,7 @@ condition|(
 name|c
 operator|==
 operator|(
-name|wint_t
+name|Int
 operator|)
 name|MB_FILL_CHAR
 condition|)
@@ -7183,9 +7089,6 @@ name|size_t
 operator|)
 name|MB_LEN_MAX
 argument_list|,
-operator|(
-name|Char
-operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -7261,7 +7164,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|wint_t
+name|Int
 name|c
 parameter_list|)
 block|{
@@ -7282,9 +7185,6 @@ name|visbuf
 argument_list|,
 name|VISUAL_WIDTH_MAX
 argument_list|,
-operator|(
-name|Char
-operator|)
 name|c
 argument_list|)
 decl_stmt|;

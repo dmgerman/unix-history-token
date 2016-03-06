@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sys.h,v 1.23 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: sys.h,v 1.17 2011/09/28 14:08:04 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -310,32 +310,57 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_GETLINE
+name|HAVE_FGETLN
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|getline
-value|libedit_getline
+name|fgetln
+value|libedit_fgetln
 end_define
 
 begin_function_decl
-name|ssize_t
-name|getline
-parameter_list|(
 name|char
 modifier|*
+name|fgetln
+parameter_list|(
+name|FILE
 modifier|*
-name|line
+name|fp
 parameter_list|,
 name|size_t
 modifier|*
 name|len
-parameter_list|,
-name|FILE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_WCSDUP
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<wchar.h>
+end_include
+
+begin_function_decl
+name|wchar_t
 modifier|*
-name|fp
+name|wcsdup
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -407,13 +432,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_SIZE_MAX
+name|SIZE_T_MAX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIZE_MAX
+name|SIZE_T_MAX
 value|((size_t)-1)
 end_define
 
@@ -441,40 +466,6 @@ end_undef
 begin_comment
 comment|/* Use UNIX V8 regular expression functions */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIDECHAR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|setlocale
-parameter_list|(
-name|c
-parameter_list|,
-name|l
-parameter_list|)
-comment|/*LINTED*/
-value|NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|nl_langinfo
-parameter_list|(
-name|i
-parameter_list|)
-value|""
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
