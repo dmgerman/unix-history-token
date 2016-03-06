@@ -97,6 +97,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_CLOEXEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_CLOEXEC
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|DB
 modifier|*
@@ -130,7 +148,7 @@ define|#
 directive|define
 name|USE_OPEN_FLAGS
 define|\
-value|(O_CREAT | O_EXCL | O_EXLOCK | O_NOFOLLOW | O_NONBLOCK | 	\ 	 O_RDONLY | O_RDWR | O_SHLOCK | O_SYNC | O_TRUNC)
+value|(O_CREAT | O_EXCL | O_EXLOCK | O_NOFOLLOW | O_NONBLOCK | 	\ 	 O_RDONLY | O_RDWR | O_SHLOCK | O_SYNC | O_TRUNC | O_CLOEXEC)
 if|if
 condition|(
 operator|(
