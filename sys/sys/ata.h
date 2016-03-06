@@ -1580,6 +1580,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_WRITE_UNCORRECTABLE48
+value|0x45
+end_define
+
+begin_comment
+comment|/* write uncorrectable 48bit LBA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WU_PSEUDO
+value|0x55
+end_define
+
+begin_comment
+comment|/* pseudo-uncorrectable error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WU_FLAGGED
+value|0xaa
+end_define
+
+begin_comment
+comment|/* flagged-uncorrectable error */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_LOG_DMA_EXT
 value|0x47
 end_define
