@@ -1497,8 +1497,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 					 * XXX H_ENTER moves the internal 					 * cursor, set it back to the current 					 * entry. 					 */
-name|retval
-operator|=
 name|history
 argument_list|(
 name|hist
