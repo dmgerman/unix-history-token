@@ -1059,8 +1059,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_EXCL
-operator||
-name|O_SYNC
 argument_list|,
 name|PERM_INSECURE
 argument_list|,
@@ -1103,8 +1101,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_EXCL
-operator||
-name|O_SYNC
 argument_list|,
 name|PERM_SECURE
 argument_list|,
@@ -1453,8 +1449,6 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
-operator||
-name|O_SYNC
 argument_list|,
 name|PERM_INSECURE
 argument_list|,
@@ -1490,8 +1484,6 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
-operator||
-name|O_SYNC
 argument_list|,
 name|PERM_SECURE
 argument_list|,
