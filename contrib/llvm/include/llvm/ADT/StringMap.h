@@ -1068,10 +1068,51 @@ argument_list|)
 block|{}
 name|StringMap
 argument_list|(
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|StringRef
+argument_list|,
+name|ValueTy
+operator|>>
+name|List
+argument_list|)
+operator|:
+name|StringMapImpl
+argument_list|(
+argument|static_cast<unsigned>(sizeof(MapEntryTy))
+argument_list|)
+block|{
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|P
+range|:
+name|List
+control|)
+block|{
+name|insert
+argument_list|(
+name|P
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}    StringMap
+operator|(
 name|StringMap
 operator|&&
 name|RHS
-argument_list|)
+operator|)
 operator|:
 name|StringMapImpl
 argument_list|(
@@ -2332,7 +2373,7 @@ block|}
 end_expr_stmt
 
 begin_endif
-unit|};  }
+unit|}; }
 endif|#
 directive|endif
 end_endif

@@ -43,10 +43,24 @@ directive|define
 name|liblldb_ClangASTImporter_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -58,8 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
 
 begin_include
 include|#
@@ -79,10 +97,20 @@ directive|include
 file|"clang/Basic/FileSystemOptions.h"
 end_include
 
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangNamespaceDecl.h"
+file|"lldb/lldb-types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerDeclContext.h"
 end_include
 
 begin_decl_stmt
@@ -296,16 +324,29 @@ argument_list|)
 expr_stmt|;
 name|lldb
 operator|::
-name|clang_type_t
+name|opaque_compiler_type_t
 name|CopyType
 argument_list|(
 argument|clang::ASTContext *dst_ctx
 argument_list|,
 argument|clang::ASTContext *src_ctx
 argument_list|,
-argument|lldb::clang_type_t type
+argument|lldb::opaque_compiler_type_t type
 argument_list|)
 expr_stmt|;
+name|CompilerType
+name|CopyType
+parameter_list|(
+name|ClangASTContext
+modifier|&
+name|dst
+parameter_list|,
+specifier|const
+name|CompilerType
+modifier|&
+name|src_type
+parameter_list|)
+function_decl|;
 name|clang
 operator|::
 name|Decl
@@ -333,14 +374,14 @@ argument_list|)
 expr_stmt|;
 name|lldb
 operator|::
-name|clang_type_t
+name|opaque_compiler_type_t
 name|DeportType
 argument_list|(
 argument|clang::ASTContext *dst_ctx
 argument_list|,
 argument|clang::ASTContext *src_ctx
 argument_list|,
-argument|lldb::clang_type_t type
+argument|lldb::opaque_compiler_type_t type
 argument_list|)
 expr_stmt|;
 name|clang
@@ -412,6 +453,15 @@ operator|::
 name|ObjCInterfaceDecl
 operator|*
 name|interface_decl
+argument_list|)
+decl_stmt|;
+name|bool
+name|CompleteAndFetchChildren
+argument_list|(
+name|clang
+operator|::
+name|QualType
+name|type
 argument_list|)
 decl_stmt|;
 name|bool
@@ -530,7 +580,7 @@ name|lldb
 operator|::
 name|ModuleSP
 operator|,
-name|ClangNamespaceDecl
+name|CompilerDeclContext
 operator|>
 expr|>
 name|NamespaceMap
@@ -724,12 +774,12 @@ argument_list|()
 operator|:
 name|ctx
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|decl
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{         }
 name|DeclOrigin
@@ -804,11 +854,11 @@ return|return
 operator|(
 name|ctx
 operator|!=
-name|NULL
+name|nullptr
 operator|||
 name|decl
 operator|!=
-name|NULL
+name|nullptr
 operator|)
 return|;
 block|}
@@ -894,12 +944,12 @@ argument_list|)
 block|,
 name|m_decls_to_deport
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|m_decls_already_deported
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|m_master
@@ -978,18 +1028,11 @@ name|Decl
 operator|*
 name|Imported
 argument_list|(
-name|clang
-operator|::
-name|Decl
-operator|*
-name|from
+argument|clang::Decl *from
 argument_list|,
-name|clang
-operator|::
-name|Decl
-operator|*
-name|to
+argument|clang::Decl *to
 argument_list|)
+name|override
 block|;
 name|clang
 operator|::
@@ -997,12 +1040,9 @@ name|Decl
 operator|*
 name|GetOriginalDecl
 argument_list|(
-name|clang
-operator|::
-name|Decl
-operator|*
-name|To
+argument|clang::Decl *To
 argument_list|)
+name|override
 block|;
 name|std
 operator|::
@@ -1105,7 +1145,7 @@ argument_list|()
 operator|,
 name|m_map_completer
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{         }
 name|clang
@@ -1361,10 +1401,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_ClangASTImporter_h_
+end_comment
 
 end_unit
 

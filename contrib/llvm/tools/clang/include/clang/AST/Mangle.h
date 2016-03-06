@@ -800,21 +800,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
-name|void
-name|mangleCXXVTableBitSet
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|,
-name|raw_ostream
-modifier|&
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;
@@ -1162,19 +1147,6 @@ argument_list|,
 argument|int32_t VBPtrOffset
 argument_list|,
 argument|uint32_t VBIndex
-argument_list|,
-argument|raw_ostream&Out
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|mangleCXXCatchHandlerType
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|uint32_t Flags
 argument_list|,
 argument|raw_ostream&Out
 argument_list|)

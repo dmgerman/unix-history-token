@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/TypeTraits.h"
 end_include
 
@@ -527,18 +533,7 @@ operator|.
 name|ValueDependent
 operator|=
 name|VD
-block|;
-if|if
-condition|(
-name|VD
-condition|)
-name|ExprBits
-operator|.
-name|InstantiationDependent
-operator|=
-name|true
-expr_stmt|;
-block|}
+block|;   }
 comment|/// isTypeDependent - Determines whether this expression is
 comment|/// type-dependent (C++ [temp.dep.expr]), which means that its type
 comment|/// could change from one template instantiation to the next. For
@@ -573,18 +568,7 @@ operator|.
 name|TypeDependent
 operator|=
 name|TD
-block|;
-if|if
-condition|(
-name|TD
-condition|)
-name|ExprBits
-operator|.
-name|InstantiationDependent
-operator|=
-name|true
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Whether this expression is instantiation-dependent, meaning that
 comment|/// it depends in some way on a template parameter, even if neither its type
 comment|/// nor (constant) value can change due to the template instantiation.
@@ -1356,6 +1340,13 @@ name|refersToVectorElement
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Returns whether this expression refers to a global register
+comment|/// variable.
+name|bool
+name|refersToGlobalRegisterVar
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Returns whether this expression has a placeholder type.
 name|bool
 name|hasPlaceholderType
@@ -1589,10 +1580,16 @@ comment|/// EvalStatus is a struct with detailed info about an evaluation in pro
 struct|struct
 name|EvalStatus
 block|{
-comment|/// HasSideEffects - Whether the evaluated expression has side effects.
+comment|/// \brief Whether the evaluated expression has side effects.
 comment|/// For example, (f()&& 0) can be folded, but it still has side effects.
 name|bool
 name|HasSideEffects
+decl_stmt|;
+comment|/// \brief Whether the evaluation hit undefined behavior.
+comment|/// For example, 1.0 / 0.0 can be folded to Inf, but has undefined behavior.
+comment|/// Likewise, INT_MAX + 1 can be folded to INT_MIN, but has UB.
+name|bool
+name|HasUndefinedBehavior
 decl_stmt|;
 comment|/// Diag - If this is non-null, it will be filled in with a stack of notes
 comment|/// indicating why evaluation failed (or why it failed to produce a constant
@@ -1612,6 +1609,11 @@ name|EvalStatus
 argument_list|()
 operator|:
 name|HasSideEffects
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasUndefinedBehavior
 argument_list|(
 name|false
 argument_list|)
@@ -1695,7 +1697,13 @@ name|SideEffectsKind
 block|{
 name|SE_NoSideEffects
 block|,
+comment|///< Strictly evaluate the expression.
+name|SE_AllowUndefinedBehavior
+block|,
+comment|///< Allow UB that we can give a value, but not
+comment|///< arbitrary unmodeled side effects.
 name|SE_AllowSideEffects
+comment|///< Allow any unmodeled side effect.
 block|}
 enum|;
 comment|/// EvaluateAsInt - Return true if this is a constant which we can fold and
@@ -1730,6 +1738,11 @@ specifier|const
 name|ASTContext
 operator|&
 name|Ctx
+argument_list|,
+name|SideEffectsKind
+name|AllowSideEffects
+operator|=
+name|SE_NoSideEffects
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1864,6 +1877,29 @@ name|Expr
 operator|*
 operator|>
 name|Args
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief If the current Expr is a pointer, this will try to statically
+comment|/// determine the number of bytes available where the pointer is pointing.
+comment|/// Returns true if all of the above holds and we were able to figure out the
+comment|/// size, false otherwise.
+comment|///
+comment|/// \param Type - How to evaluate the size of the Expr, as defined by the
+comment|/// "type" parameter of __builtin_object_size
+name|bool
+name|tryEvaluateObjectSize
+argument_list|(
+name|uint64_t
+operator|&
+name|Result
+argument_list|,
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+name|unsigned
+name|Type
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2619,7 +2655,13 @@ parameter_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -2787,70 +2829,98 @@ end_comment
 begin_decl_stmt
 name|class
 name|DeclRefExpr
+name|final
 range|:
 name|public
 name|Expr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|DeclRefExpr
+decl_stmt|,
+name|NestedNameSpecifierLoc
+decl_stmt|,
+name|NamedDecl
+modifier|*
+decl_stmt|,
+name|ASTTemplateKWAndArgsInfo
+decl_stmt|,
+name|TemplateArgumentLoc
+decl|>
 block|{
 comment|/// \brief The declaration that we are referencing.
 name|ValueDecl
-operator|*
+modifier|*
 name|D
-block|;
+decl_stmt|;
 comment|/// \brief The location of the declaration name itself.
 name|SourceLocation
 name|Loc
-block|;
+decl_stmt|;
 comment|/// \brief Provides source/type location info for the declaration name
 comment|/// embedded in D.
 name|DeclarationNameLoc
 name|DNLoc
-block|;
-comment|/// \brief Helper to retrieve the optional NestedNameSpecifierLoc.
-name|NestedNameSpecifierLoc
-operator|&
-name|getInternalQualifierLoc
-argument_list|()
-block|{
-name|assert
+decl_stmt|;
+name|size_t
+name|numTrailingObjects
 argument_list|(
+name|OverloadToken
+operator|<
+name|NestedNameSpecifierLoc
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
 name|hasQualifier
 argument_list|()
-argument_list|)
-block|;
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-name|NestedNameSpecifierLoc
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
+condition|?
 literal|1
-operator|)
+else|:
+literal|0
 return|;
 block|}
-comment|/// \brief Helper to retrieve the optional NestedNameSpecifierLoc.
-specifier|const
-name|NestedNameSpecifierLoc
-operator|&
-name|getInternalQualifierLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
 operator|<
-name|DeclRefExpr
+name|NamedDecl
 operator|*
 operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getInternalQualifierLoc
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasFoundDecl
 argument_list|()
+condition|?
+literal|1
+else|:
+literal|0
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasTemplateKWAndArgsInfo
+argument_list|()
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 comment|/// \brief Test whether there is a distinct FoundDecl attached to the end of
@@ -2866,90 +2936,6 @@ operator|.
 name|HasFoundDecl
 return|;
 block|}
-comment|/// \brief Helper to retrieve the optional NamedDecl through which this
-comment|/// reference occurred.
-name|NamedDecl
-operator|*
-operator|&
-name|getInternalFoundDecl
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|hasFoundDecl
-argument_list|()
-argument_list|)
-block|;
-if|if
-condition|(
-name|hasQualifier
-argument_list|()
-condition|)
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-operator|>
-operator|(
-operator|&
-name|getInternalQualifierLoc
-argument_list|()
-operator|+
-literal|1
-operator|)
-return|;
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Helper to retrieve the optional NamedDecl through which this
-end_comment
-
-begin_comment
-comment|/// reference occurred.
-end_comment
-
-begin_expr_stmt
-name|NamedDecl
-operator|*
-name|getInternalFoundDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|DeclRefExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getInternalFoundDecl
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|const ASTContext&Ctx
@@ -2972,50 +2958,23 @@ argument|QualType T
 argument_list|,
 argument|ExprValueKind VK
 argument_list|)
-end_macro
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Construct an empty declaration reference expression.
-end_comment
-
-begin_macro
 name|explicit
-end_macro
-
-begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|EmptyShell Empty
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+block|:
 name|Expr
 argument_list|(
 argument|DeclRefExprClass
 argument_list|,
 argument|Empty
 argument_list|)
-end_macro
-
-begin_block
 block|{ }
-end_block
-
-begin_comment
 comment|/// \brief Computes the type- and value-dependence flags for this
-end_comment
-
-begin_comment
 comment|/// declaration reference expression.
-end_comment
-
-begin_function_decl
 name|void
 name|computeDependence
 parameter_list|(
@@ -3025,14 +2984,8 @@ modifier|&
 name|C
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|ValueDecl *D
@@ -3047,10 +3000,7 @@ argument|SourceLocation L
 argument_list|,
 argument|const DeclarationNameLoc&LocInfo = DeclarationNameLoc()
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+block|:
 name|Expr
 argument_list|(
 name|DeclRefExprClass
@@ -3149,9 +3099,6 @@ argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs = nullptr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 specifier|static
 name|DeclRefExpr
 modifier|*
@@ -3200,13 +3147,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Construct an empty declaration reference expression.
-end_comment
-
-begin_function_decl
 specifier|static
 name|DeclRefExpr
 modifier|*
@@ -3230,9 +3171,6 @@ name|unsigned
 name|NumTemplateArgs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|ValueDecl
 modifier|*
 name|getDecl
@@ -3242,9 +3180,6 @@ return|return
 name|D
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|ValueDecl
 operator|*
@@ -3256,9 +3191,6 @@ return|return
 name|D
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDecl
 parameter_list|(
@@ -3272,9 +3204,6 @@ operator|=
 name|NewD
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -3295,9 +3224,6 @@ name|DNLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -3307,9 +3233,6 @@ return|return
 name|Loc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setLocation
 parameter_list|(
@@ -3322,35 +3245,20 @@ operator|=
 name|L
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this declaration reference was preceded by a
-end_comment
-
-begin_comment
 comment|/// C++ nested-name-specifier, e.g., \c N::foo.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasQualifier
 argument_list|()
@@ -3362,7 +3270,34 @@ operator|.
 name|HasQualifier
 return|;
 block|}
-end_expr_stmt
+comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
+comment|/// that precedes the name, with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasQualifier
+argument_list|()
+condition|)
+return|return
+name|NestedNameSpecifierLoc
+argument_list|()
+return|;
+return|return
+operator|*
+name|getTrailingObjects
+operator|<
+name|NestedNameSpecifierLoc
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
@@ -3379,66 +3314,17 @@ name|getQualifier
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|hasQualifier
-argument_list|()
-condition|)
 return|return
-name|nullptr
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|getInternalQualifierLoc
+name|getQualifierLoc
 argument_list|()
 operator|.
 name|getNestedNameSpecifier
 argument_list|()
 return|;
-end_return
-
-begin_comment
-unit|}
-comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
-end_comment
-
-begin_comment
-comment|/// that precedes the name, with source-location information.
-end_comment
-
-begin_macro
-unit|NestedNameSpecifierLoc
-name|getQualifierLoc
-argument_list|()
-end_macro
-
-begin_expr_stmt
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|hasQualifier
-argument_list|()
-condition|)
-return|return
-name|NestedNameSpecifierLoc
-argument_list|()
-return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|getInternalQualifierLoc
-argument_list|()
-return|;
-end_return
-
 begin_comment
-unit|}
 comment|/// \brief Get the NamedDecl through which this reference occurred.
 end_comment
 
@@ -3458,23 +3344,29 @@ begin_comment
 comment|/// simple return the ValueDecl when appropriate.
 end_comment
 
-begin_expr_stmt
-unit|NamedDecl
-operator|*
+begin_function
+name|NamedDecl
+modifier|*
 name|getFoundDecl
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|hasFoundDecl
 argument_list|()
-operator|?
-name|getInternalFoundDecl
-argument_list|()
-operator|:
+condition|?
+operator|*
+name|getTrailingObjects
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+operator|)
+else|:
 name|D
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// \brief Get the NamedDecl through which this reference occurred.
@@ -3496,8 +3388,14 @@ return|return
 name|hasFoundDecl
 argument_list|()
 operator|?
-name|getInternalFoundDecl
-argument_list|()
+operator|*
+name|getTrailingObjects
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+operator|)
 operator|:
 name|D
 return|;
@@ -3514,106 +3412,6 @@ return|return
 name|DeclRefExprBits
 operator|.
 name|HasTemplateKWAndArgsInfo
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Return the optional template keyword and arguments info.
-end_comment
-
-begin_function
-name|ASTTemplateKWAndArgsInfo
-modifier|*
-name|getTemplateKWAndArgsInfo
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|hasTemplateKWAndArgsInfo
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-if|if
-condition|(
-name|hasFoundDecl
-argument_list|()
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|ASTTemplateKWAndArgsInfo
-operator|*
-operator|>
-operator|(
-operator|&
-name|getInternalFoundDecl
-argument_list|()
-operator|+
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|hasQualifier
-argument_list|()
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|ASTTemplateKWAndArgsInfo
-operator|*
-operator|>
-operator|(
-operator|&
-name|getInternalQualifierLoc
-argument_list|()
-operator|+
-literal|1
-operator|)
-return|;
-return|return
-name|reinterpret_cast
-operator|<
-name|ASTTemplateKWAndArgsInfo
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Return the optional template keyword and arguments info.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|ASTTemplateKWAndArgsInfo
-operator|*
-name|getTemplateKWAndArgsInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|DeclRefExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getTemplateKWAndArgsInfo
-argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3646,11 +3444,14 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
-name|getTemplateKeywordLoc
-argument_list|()
+name|TemplateKWLoc
 return|;
 end_return
 
@@ -3686,8 +3487,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
 name|LAngleLoc
 return|;
@@ -3725,8 +3530,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
 name|RAngleLoc
 return|;
@@ -3785,106 +3594,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Retrieve the explicit template argument list that followed the
-end_comment
-
-begin_comment
-comment|/// member template name.
-end_comment
-
-begin_function
-name|ASTTemplateArgumentListInfo
-modifier|&
-name|getExplicitTemplateArgs
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|hasExplicitTemplateArgs
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|getTemplateKWAndArgsInfo
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Retrieve the explicit template argument list that followed the
-end_comment
-
-begin_comment
-comment|/// member template name.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|ASTTemplateArgumentListInfo
-operator|&
-name|getExplicitTemplateArgs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|DeclRefExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getExplicitTemplateArgs
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieves the optional explicit template arguments.
-end_comment
-
-begin_comment
-comment|/// This points to the same data as getExplicitTemplateArgs(), but
-end_comment
-
-begin_comment
-comment|/// returns null if there are no explicit template arguments.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|ASTTemplateArgumentListInfo
-operator|*
-name|getOptionalExplicitTemplateArgs
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|hasExplicitTemplateArgs
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|&
-name|getExplicitTemplateArgs
-argument_list|()
-return|;
-end_return
-
-begin_comment
-unit|}
 comment|/// \brief Copies the template arguments (if present) into the given
 end_comment
 
@@ -3892,32 +3601,42 @@ begin_comment
 comment|/// structure.
 end_comment
 
-begin_macro
-unit|void
+begin_decl_stmt
+name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 if|if
 condition|(
 name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
+operator|->
 name|copyInto
 argument_list|(
+name|getTrailingObjects
+operator|<
+name|TemplateArgumentLoc
+operator|>
+operator|(
+operator|)
+argument_list|,
 name|List
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the template arguments provided as part of this
@@ -3948,11 +3667,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
-name|getTemplateArgs
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|TemplateArgumentLoc
+operator|>
+operator|(
+operator|)
 return|;
 end_return
 
@@ -3987,9 +3707,13 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
+operator|->
 name|NumTemplateArgs
 return|;
 end_return
@@ -4106,10 +3830,22 @@ parameter_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|friend
@@ -4742,7 +4478,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -4761,6 +4503,8 @@ block|{
 name|Ascii
 block|,
 name|Wide
+block|,
+name|UTF8
 block|,
 name|UTF16
 block|,
@@ -4947,7 +4691,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -5211,7 +4961,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -6012,6 +5768,10 @@ argument_list|,
 argument|const LangOptions&Features
 argument_list|,
 argument|const TargetInfo&Target
+argument_list|,
+argument|unsigned *StartToken = nullptr
+argument_list|,
+argument|unsigned *StartTokenByteOffset = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -6092,7 +5852,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -6822,27 +6588,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// OffsetOfExpr - [C99 7.17] - This represents an expression of the form
-comment|/// offsetof(record-type, member-designator). For example, given:
-comment|/// @code
-comment|/// struct S {
-comment|///   float f;
-comment|///   double d;
-comment|/// };
-comment|/// struct T {
-comment|///   int i;
-comment|///   struct S s[10];
-comment|/// };
-comment|/// @endcode
-comment|/// we can represent and evaluate the expression @c offsetof(struct T, s[2].d).
-name|class
-name|OffsetOfExpr
-operator|:
-name|public
-name|Expr
-block|{
-name|public
-operator|:
+comment|/// Helper class for OffsetOfExpr.
 comment|// __builtin_offsetof(type, identifier(.identifier|[expr])*)
 name|class
 name|OffsetOfNode
@@ -6929,7 +6675,7 @@ argument|(Index<<
 literal|2
 argument|) | Array
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Create an offsetof node that refers to a field.
 name|OffsetOfNode
 argument_list|(
@@ -6958,7 +6704,7 @@ name|Data
 argument_list|(
 argument|reinterpret_cast<uintptr_t>(Field) | OffsetOfNode::Field
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Create an offsetof node that refers to an identifier.
 name|OffsetOfNode
 argument_list|(
@@ -6987,7 +6733,7 @@ name|Data
 argument_list|(
 argument|reinterpret_cast<uintptr_t>(Name) | Identifier
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Create an offsetof node that refers into a C++ base class.
 name|explicit
 name|OffsetOfNode
@@ -7161,8 +6907,39 @@ return|;
 block|}
 expr|}
 block|;
-name|private
+comment|/// OffsetOfExpr - [C99 7.17] - This represents an expression of the form
+comment|/// offsetof(record-type, member-designator). For example, given:
+comment|/// @code
+comment|/// struct S {
+comment|///   float f;
+comment|///   double d;
+comment|/// };
+comment|/// struct T {
+comment|///   int i;
+comment|///   struct S s[10];
+comment|/// };
+comment|/// @endcode
+comment|/// we can represent and evaluate the expression @c offsetof(struct T, s[2].d).
+name|class
+name|OffsetOfExpr
+name|final
 operator|:
+name|public
+name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OffsetOfExpr
+block|,
+name|OffsetOfNode
+block|,
+name|Expr
+operator|*
+operator|>
+block|{
 name|SourceLocation
 name|OperatorLoc
 block|,
@@ -7181,6 +6958,17 @@ comment|// Number of sub-expressions (i.e. array subscript expressions).
 name|unsigned
 name|NumExprs
 block|;
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<OffsetOfNode>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NumComps
+return|;
+block|}
 name|OffsetOfExpr
 argument_list|(
 argument|const ASTContext&C
@@ -7342,16 +7130,11 @@ literal|"Subscript out of range"
 argument_list|)
 block|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|OffsetOfNode
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -7375,15 +7158,11 @@ operator|&&
 literal|"Subscript out of range"
 argument_list|)
 block|;
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|OffsetOfNode
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -7417,25 +7196,12 @@ literal|"Subscript out of range"
 argument_list|)
 block|;
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|reinterpret_cast
-operator|<
-name|OffsetOfNode
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-operator|+
-name|NumComps
 operator|)
 index|[
 name|Idx
@@ -7451,20 +7217,26 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|{
-return|return
-name|const_cast
+name|assert
+argument_list|(
+name|Idx
 operator|<
-name|OffsetOfExpr
+name|NumExprs
+operator|&&
+literal|"Subscript out of range"
+argument_list|)
+block|;
+return|return
+name|getTrailingObjects
+operator|<
+name|Expr
 operator|*
 operator|>
 operator|(
-name|this
 operator|)
-operator|->
-name|getIndexExpr
-argument_list|(
+index|[
 name|Idx
-argument_list|)
+index|]
 return|;
 block|}
 name|void
@@ -7484,25 +7256,12 @@ operator|&&
 literal|"Subscript out of range"
 argument_list|)
 block|;
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|reinterpret_cast
-operator|<
-name|OffsetOfNode
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-operator|+
-name|NumComps
 operator|)
 index|[
 name|Idx
@@ -7572,18 +7331,13 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-name|OffsetOfNode
+name|Expr
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
-operator|+
-name|NumComps
 operator|)
 block|;
 return|return
@@ -7597,7 +7351,9 @@ name|NumExprs
 argument_list|)
 return|;
 block|}
-expr|}
+name|friend
+name|TrailingObjects
+block|; }
 block|;
 comment|/// UnaryExprOrTypeTraitExpr - expression with either a type or (unevaluated)
 comment|/// expression operand.  Used for sizeof/alignof (C99 6.5.3.4) and
@@ -8787,17 +8543,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
+name|reinterpret_cast
 operator|<
-name|CallExpr
+name|Expr
+operator|*
 operator|*
 operator|>
 operator|(
-name|this
-operator|)
-operator|->
-name|getArgs
+name|SubExprs
+operator|+
+name|getNumPreArgs
 argument_list|()
+operator|+
+name|PREARGS_START
+operator|)
 return|;
 block|}
 comment|/// getArg - Return the specified argument.
@@ -9186,17 +8945,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemberExpr - [C99 6.5.2.3] Structure and Union Members.  X->F and X.F.
-comment|///
-name|class
-name|MemberExpr
-operator|:
-name|public
-name|Expr
-block|{
-comment|/// Extra data stored in some member expressions.
+comment|/// Extra data stored in some MemberExpr objects.
 block|struct
-name|MemberNameQualifier
+name|MemberExprNameQualifier
 block|{
 comment|/// \brief The nested-name-specifier that qualifies the name, including
 comment|/// source-location information.
@@ -9207,8 +8958,31 @@ comment|/// \brief The DeclAccessPair through which the MemberDecl was found due
 comment|/// name qualifiers.
 name|DeclAccessPair
 name|FoundDecl
-block|;   }
+block|; }
 block|;
+comment|/// MemberExpr - [C99 6.5.2.3] Structure and Union Members.  X->F and X.F.
+comment|///
+name|class
+name|MemberExpr
+name|final
+operator|:
+name|public
+name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|MemberExpr
+block|,
+name|MemberExprNameQualifier
+block|,
+name|ASTTemplateKWAndArgsInfo
+block|,
+name|TemplateArgumentLoc
+operator|>
+block|{
 comment|/// Base - the expression for the base pointer or structure references.  In
 comment|/// X.F, this is "X".
 name|Stmt
@@ -9242,7 +9016,7 @@ literal|1
 block|;
 comment|/// \brief True if this member expression used a nested-name-specifier to
 comment|/// refer to the member, e.g., "x->Base::f", or found its member via a using
-comment|/// declaration.  When true, a MemberNameQualifier
+comment|/// declaration.  When true, a MemberExprNameQualifier
 comment|/// structure is allocated immediately after the MemberExpr.
 name|bool
 name|HasQualifierOrFoundDecl
@@ -9253,9 +9027,7 @@ comment|/// \brief True if this member expression specified a template keyword
 comment|/// and/or a template argument list explicitly, e.g., x->f<int>,
 comment|/// x->template f, x->template f<int>.
 comment|/// When true, an ASTTemplateKWAndArgsInfo structure and its
-comment|/// TemplateArguments (if any) are allocated immediately after
-comment|/// the MemberExpr or, if the member expression also has a qualifier,
-comment|/// after the MemberNameQualifier structure.
+comment|/// TemplateArguments (if any) are present.
 name|bool
 name|HasTemplateKWAndArgsInfo
 operator|:
@@ -9268,50 +9040,34 @@ name|HadMultipleCandidates
 operator|:
 literal|1
 block|;
-comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
-name|MemberNameQualifier
-operator|*
-name|getMemberQualifier
-argument_list|()
-block|{
-name|assert
+name|size_t
+name|numTrailingObjects
 argument_list|(
-name|HasQualifierOrFoundDecl
+argument|OverloadToken<MemberExprNameQualifier>
 argument_list|)
-block|;
+specifier|const
+block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|MemberNameQualifier
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
+name|HasQualifierOrFoundDecl
+condition|?
 literal|1
-operator|)
+else|:
+literal|0
 return|;
 block|}
-comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
-specifier|const
-name|MemberNameQualifier
-operator|*
-name|getMemberQualifier
-argument_list|()
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<ASTTemplateKWAndArgsInfo>
+argument_list|)
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|MemberExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getMemberQualifier
-argument_list|()
+name|HasTemplateKWAndArgsInfo
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 name|public
@@ -9636,8 +9392,12 @@ argument_list|()
 argument_list|)
 return|;
 return|return
-name|getMemberQualifier
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|MemberExprNameQualifier
+operator|>
+operator|(
+operator|)
 operator|->
 name|FoundDecl
 return|;
@@ -9658,33 +9418,6 @@ name|nullptr
 return|;
 block|}
 comment|/// \brief If the member name was qualified, retrieves the
-comment|/// nested-name-specifier that precedes the member name. Otherwise, returns
-comment|/// NULL.
-name|NestedNameSpecifier
-operator|*
-name|getQualifier
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|HasQualifierOrFoundDecl
-condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|getMemberQualifier
-argument_list|()
-operator|->
-name|QualifierLoc
-operator|.
-name|getNestedNameSpecifier
-argument_list|()
-return|;
-block|}
-comment|/// \brief If the member name was qualified, retrieves the
 comment|/// nested-name-specifier that precedes the member name, with source-location
 comment|/// information.
 name|NestedNameSpecifierLoc
@@ -9695,16 +9428,19 @@ block|{
 if|if
 condition|(
 operator|!
-name|hasQualifier
-argument_list|()
+name|HasQualifierOrFoundDecl
 condition|)
 return|return
 name|NestedNameSpecifierLoc
 argument_list|()
 return|;
 return|return
-name|getMemberQualifier
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|MemberExprNameQualifier
+operator|>
+operator|(
+operator|)
 operator|->
 name|QualifierLoc
 return|;
@@ -9712,79 +9448,29 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Return the optional template keyword and arguments info.
+comment|/// \brief If the member name was qualified, retrieves the
 end_comment
 
-begin_function
-name|ASTTemplateKWAndArgsInfo
-modifier|*
-name|getTemplateKWAndArgsInfo
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|HasTemplateKWAndArgsInfo
-condition|)
-return|return
-name|nullptr
-return|;
-if|if
-condition|(
-operator|!
-name|HasQualifierOrFoundDecl
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|ASTTemplateKWAndArgsInfo
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-return|return
-name|reinterpret_cast
-operator|<
-name|ASTTemplateKWAndArgsInfo
-operator|*
-operator|>
-operator|(
-name|getMemberQualifier
-argument_list|()
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/// nested-name-specifier that precedes the member name. Otherwise, returns
+end_comment
 
 begin_comment
-comment|/// \brief Return the optional template keyword and arguments info.
+comment|/// NULL.
 end_comment
 
 begin_expr_stmt
-specifier|const
-name|ASTTemplateKWAndArgsInfo
+name|NestedNameSpecifier
 operator|*
-name|getTemplateKWAndArgsInfo
+name|getQualifier
 argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|MemberExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getTemplateKWAndArgsInfo
+name|getQualifierLoc
+argument_list|()
+operator|.
+name|getNestedNameSpecifier
 argument_list|()
 return|;
 block|}
@@ -9817,11 +9503,14 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
-name|getTemplateKeywordLoc
-argument_list|()
+name|TemplateKWLoc
 return|;
 end_return
 
@@ -9856,8 +9545,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
 name|LAngleLoc
 return|;
@@ -9894,8 +9587,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getTemplateKWAndArgsInfo
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
 operator|->
 name|RAngleLoc
 return|;
@@ -9972,11 +9669,22 @@ condition|(
 name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
+operator|->
 name|copyInto
 argument_list|(
+name|getTrailingObjects
+operator|<
+name|TemplateArgumentLoc
+operator|>
+operator|(
+operator|)
+argument_list|,
 name|List
 argument_list|)
 expr_stmt|;
@@ -9984,114 +9692,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Retrieve the explicit template argument list that
-end_comment
-
-begin_comment
-comment|/// follow the member template name.  This must only be called on an
-end_comment
-
-begin_comment
-comment|/// expression with explicit template arguments.
-end_comment
-
-begin_function
-name|ASTTemplateArgumentListInfo
-modifier|&
-name|getExplicitTemplateArgs
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|hasExplicitTemplateArgs
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|getTemplateKWAndArgsInfo
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Retrieve the explicit template argument list that
-end_comment
-
-begin_comment
-comment|/// followed the member template name.  This must only be called on
-end_comment
-
-begin_comment
-comment|/// an expression with explicit template arguments.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|ASTTemplateArgumentListInfo
-operator|&
-name|getExplicitTemplateArgs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|MemberExpr
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getExplicitTemplateArgs
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieves the optional explicit template arguments.
-end_comment
-
-begin_comment
-comment|/// This points to the same data as getExplicitTemplateArgs(), but
-end_comment
-
-begin_comment
-comment|/// returns null if there are no explicit template arguments.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|ASTTemplateArgumentListInfo
-operator|*
-name|getOptionalExplicitTemplateArgs
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|hasExplicitTemplateArgs
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|&
-name|getExplicitTemplateArgs
-argument_list|()
-return|;
-end_return
-
-begin_comment
-unit|}
 comment|/// \brief Retrieve the template arguments provided as part of this
 end_comment
 
@@ -10100,7 +9700,7 @@ comment|/// template-id.
 end_comment
 
 begin_expr_stmt
-unit|const
+specifier|const
 name|TemplateArgumentLoc
 operator|*
 name|getTemplateArgs
@@ -10120,11 +9720,12 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
-name|getTemplateArgs
-argument_list|()
+name|getTrailingObjects
+operator|<
+name|TemplateArgumentLoc
+operator|>
+operator|(
+operator|)
 return|;
 end_return
 
@@ -10159,9 +9760,13 @@ end_expr_stmt
 
 begin_return
 return|return
-name|getExplicitTemplateArgs
-argument_list|()
-operator|.
+name|getTrailingObjects
+operator|<
+name|ASTTemplateKWAndArgsInfo
+operator|>
+operator|(
+operator|)
+operator|->
 name|NumTemplateArgs
 return|;
 end_return
@@ -10374,6 +9979,45 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns true if virtual dispatch is performed.
+end_comment
+
+begin_comment
+comment|/// If the member access is fully qualified, (i.e. X::f()), virtual
+end_comment
+
+begin_comment
+comment|/// dispatching is not performed. In -fapple-kext mode qualified
+end_comment
+
+begin_comment
+comment|/// calls to virtual method will still go through the vtable.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|performsVirtualDispatch
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LO
+argument_list|)
+decl|const
+block|{
+return|return
+name|LO
+operator|.
+name|AppleKext
+operator|||
+operator|!
+name|hasQualifier
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
 begin_function
 specifier|static
 name|bool
@@ -10419,6 +10063,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|friend
@@ -11236,18 +10886,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-name|void
-name|setCastPath
-parameter_list|(
-specifier|const
-name|CXXCastPath
-modifier|&
-name|Path
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|bool
@@ -11385,12 +11023,24 @@ end_comment
 begin_decl_stmt
 name|class
 name|ImplicitCastExpr
+name|final
 range|:
 name|public
 name|CastExpr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|ImplicitCastExpr
+decl_stmt|,
+name|CXXBaseSpecifier
+modifier|*
+decl|>
 block|{
 name|private
-operator|:
+label|:
 name|ImplicitCastExpr
 argument_list|(
 argument|QualType ty
@@ -11403,7 +11053,7 @@ argument|unsigned BasePathLength
 argument_list|,
 argument|ExprValueKind VK
 argument_list|)
-operator|:
+block|:
 name|CastExpr
 argument_list|(
 argument|ImplicitCastExprClass
@@ -11427,7 +11077,7 @@ argument|EmptyShell Shell
 argument_list|,
 argument|unsigned PathSize
 argument_list|)
-operator|:
+block|:
 name|CastExpr
 argument_list|(
 argument|ImplicitCastExprClass
@@ -11438,13 +11088,13 @@ argument|PathSize
 argument_list|)
 block|{ }
 name|public
-operator|:
-expr|enum
+label|:
+enum|enum
 name|OnStack_t
 block|{
 name|OnStack
 block|}
-block|;
+enum|;
 name|ImplicitCastExpr
 argument_list|(
 argument|OnStack_t _
@@ -11457,7 +11107,7 @@ argument|Expr *op
 argument_list|,
 argument|ExprValueKind VK
 argument_list|)
-operator|:
+block|:
 name|CastExpr
 argument_list|(
 argument|ImplicitCastExprClass
@@ -11475,32 +11125,47 @@ argument_list|)
 block|{   }
 specifier|static
 name|ImplicitCastExpr
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|const ASTContext&Context
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|CastKind Kind
-argument_list|,
-argument|Expr *Operand
-argument_list|,
-argument|const CXXCastPath *BasePath
-argument_list|,
-argument|ExprValueKind Cat
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|CastKind
+name|Kind
+parameter_list|,
+name|Expr
+modifier|*
+name|Operand
+parameter_list|,
+specifier|const
+name|CXXCastPath
+modifier|*
+name|BasePath
+parameter_list|,
+name|ExprValueKind
+name|Cat
+parameter_list|)
+function_decl|;
 specifier|static
 name|ImplicitCastExpr
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&Context
-argument_list|,
-argument|unsigned PathSize
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|unsigned
+name|PathSize
+parameter_list|)
+function_decl|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -11532,9 +11197,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -11545,8 +11213,21 @@ operator|==
 name|ImplicitCastExprClass
 return|;
 block|}
-expr|}
-block|;
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|class
+name|CastExpr
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 specifier|inline
 name|Expr
 operator|*
@@ -11582,13 +11263,16 @@ operator|->
 name|getSubExpr
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|e
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// ExplicitCastExpr - An explicit cast written in the source
 end_comment
 
@@ -11652,21 +11336,24 @@ begin_comment
 comment|/// will not be used as the type of the expression.
 end_comment
 
-begin_decl_stmt
-name|class
+begin_label
+unit|class
 name|ExplicitCastExpr
-range|:
+label|:
+end_label
+
+begin_decl_stmt
 name|public
 name|CastExpr
 block|{
 comment|/// TInfo - Source type info for the (written) type
 comment|/// this expression is casting to.
 name|TypeSourceInfo
-operator|*
+modifier|*
 name|TInfo
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|ExplicitCastExpr
 argument_list|(
 argument|StmtClass SC
@@ -11683,7 +11370,7 @@ argument|unsigned PathSize
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|)
-operator|:
+block|:
 name|CastExpr
 argument_list|(
 name|SC
@@ -11698,7 +11385,7 @@ name|op
 argument_list|,
 name|PathSize
 argument_list|)
-block|,
+operator|,
 name|TInfo
 argument_list|(
 argument|writtenTy
@@ -11739,14 +11426,17 @@ return|;
 block|}
 name|void
 name|setTypeInfoAsWritten
-argument_list|(
-argument|TypeSourceInfo *writtenTy
-argument_list|)
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|writtenTy
+parameter_list|)
 block|{
 name|TInfo
 operator|=
 name|writtenTy
-block|; }
+expr_stmt|;
+block|}
 comment|/// getTypeAsWritten - Returns the type that this expression is
 comment|/// casting to, as written in the source code.
 name|QualType
@@ -11764,9 +11454,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -11784,24 +11477,51 @@ operator|<=
 name|lastExplicitCastExprConstant
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// CStyleCastExpr - An explicit cast in C (C99 6.5.4) or a C-style
+end_comment
+
+begin_comment
 comment|/// cast in C++ (C++ [expr.cast]), which uses the syntax
+end_comment
+
+begin_comment
 comment|/// (Type)expr. For example: @c (int)f.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CStyleCastExpr
-operator|:
+name|final
+range|:
 name|public
 name|ExplicitCastExpr
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|CStyleCastExpr
+decl_stmt|,
+name|CXXBaseSpecifier
+modifier|*
+decl|>
 block|{
 name|SourceLocation
 name|LPLoc
-block|;
+decl_stmt|;
 comment|// the location of the left paren
 name|SourceLocation
 name|RPLoc
-block|;
+decl_stmt|;
 comment|// the location of the right paren
 name|CStyleCastExpr
 argument_list|(
@@ -11821,7 +11541,7 @@ argument|SourceLocation l
 argument_list|,
 argument|SourceLocation r
 argument_list|)
-operator|:
+block|:
 name|ExplicitCastExpr
 argument_list|(
 name|CStyleCastExprClass
@@ -11838,12 +11558,12 @@ name|PathSize
 argument_list|,
 name|writtenTy
 argument_list|)
-block|,
+operator|,
 name|LPLoc
 argument_list|(
 name|l
 argument_list|)
-block|,
+operator|,
 name|RPLoc
 argument_list|(
 argument|r
@@ -11892,17 +11612,21 @@ argument|SourceLocation L
 argument_list|,
 argument|SourceLocation R
 argument_list|)
-block|;
+expr_stmt|;
 specifier|static
 name|CStyleCastExpr
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&Context
-argument_list|,
-argument|unsigned PathSize
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|unsigned
+name|PathSize
+parameter_list|)
+function_decl|;
 name|SourceLocation
 name|getLParenLoc
 argument_list|()
@@ -11914,14 +11638,16 @@ return|;
 block|}
 name|void
 name|setLParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|LPLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 name|SourceLocation
 name|getRParenLoc
 argument_list|()
@@ -11933,14 +11659,16 @@ return|;
 block|}
 name|void
 name|setRParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|RPLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -11968,9 +11696,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -11981,29 +11712,96 @@ operator|==
 name|CStyleCastExprClass
 return|;
 block|}
-expr|}
-block|;
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|class
+name|CastExpr
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief A builtin binary operation expression such as "x + y" or "x<= y".
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This expression node kind describes a builtin binary operation,
+end_comment
+
+begin_comment
 comment|/// such as "x + y" for integer values "x" and "y". The operands will
+end_comment
+
+begin_comment
 comment|/// already have been converted to appropriate types (e.g., by
+end_comment
+
+begin_comment
 comment|/// performing promotions or conversions).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// In C++, where operators may be overloaded, a different kind of
+end_comment
+
+begin_comment
 comment|/// expression node (CXXOperatorCallExpr) is used to express the
+end_comment
+
+begin_comment
 comment|/// invocation of an overloaded operator with operator syntax. Within
+end_comment
+
+begin_comment
 comment|/// a C++ template, whether BinaryOperator or CXXOperatorCallExpr is
+end_comment
+
+begin_comment
 comment|/// used to store an expression "x + y" depends on the subexpressions
+end_comment
+
+begin_comment
 comment|/// for x and y. If neither x or y is type-dependent, and the "+"
+end_comment
+
+begin_comment
 comment|/// operator resolves to a built-in operation, BinaryOperator will be
+end_comment
+
+begin_comment
 comment|/// used to express the computation (x and y may still be
+end_comment
+
+begin_comment
 comment|/// value-dependent). If either x or y is type-dependent, or if the
+end_comment
+
+begin_comment
 comment|/// "+" resolves to an overloaded operator, CXXOperatorCallExpr will
+end_comment
+
+begin_comment
 comment|/// be used to express the computation.
+end_comment
+
+begin_decl_stmt
 name|class
 name|BinaryOperator
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12019,19 +11817,41 @@ name|unsigned
 name|Opc
 operator|:
 literal|6
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Records the FP_CONTRACT pragma status at the point that this binary
+end_comment
+
+begin_comment
 comment|// operator was parsed. This bit is only meaningful for operations on
+end_comment
+
+begin_comment
 comment|// floating point types. For all other types it should default to
+end_comment
+
+begin_comment
 comment|// false.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|FPContractable
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SourceLocation
 name|OpLoc
-block|;    enum
+decl_stmt|;
+end_decl_stmt
+
+begin_enum
+enum|enum
 block|{
 name|LHS
 block|,
@@ -12039,16 +11859,25 @@ name|RHS
 block|,
 name|END_EXPR
 block|}
-block|;
+enum|;
+end_enum
+
+begin_decl_stmt
 name|Stmt
-operator|*
+modifier|*
 name|SubExprs
 index|[
 name|END_EXPR
 index|]
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_macro
 name|BinaryOperator
 argument_list|(
 argument|Expr *lhs
@@ -12067,7 +11896,10 @@ argument|SourceLocation opLoc
 argument_list|,
 argument|bool fpContractable
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|Expr
 argument_list|(
 name|BinaryOperatorClass
@@ -12122,17 +11954,17 @@ name|containsUnexpandedParameterPack
 argument_list|()
 operator|)
 argument_list|)
-block|,
+operator|,
 name|Opc
 argument_list|(
 name|opc
 argument_list|)
-block|,
+operator|,
 name|FPContractable
 argument_list|(
 name|fpContractable
 argument_list|)
-block|,
+operator|,
 name|OpLoc
 argument_list|(
 argument|opLoc
@@ -12174,7 +12006,7 @@ name|BinaryOperatorClass
 argument_list|,
 name|Empty
 argument_list|)
-block|,
+operator|,
 name|Opc
 argument_list|(
 argument|BO_Comma
@@ -12190,6 +12022,9 @@ return|return
 name|OpLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getOperatorLoc
 argument_list|()
@@ -12199,16 +12034,24 @@ return|return
 name|OpLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setOperatorLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|OpLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|Opcode
 name|getOpcode
 argument_list|()
@@ -12224,16 +12067,24 @@ name|Opc
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setOpcode
-argument_list|(
-argument|Opcode O
-argument_list|)
+parameter_list|(
+name|Opcode
+name|O
+parameter_list|)
 block|{
 name|Opc
 operator|=
 name|O
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getLHS
@@ -12253,11 +12104,16 @@ index|]
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setLHS
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|SubExprs
 index|[
@@ -12265,7 +12121,11 @@ name|LHS
 index|]
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getRHS
@@ -12285,11 +12145,16 @@ index|]
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setRHS
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|SubExprs
 index|[
@@ -12297,7 +12162,11 @@ name|RHS
 index|]
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -12312,6 +12181,9 @@ name|getLocStart
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -12326,15 +12198,28 @@ name|getLocEnd
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getOpcodeStr - Turn an Opcode enum value into the punctuation char it
+end_comment
+
+begin_comment
 comment|/// corresponds to, e.g. "<<=".
+end_comment
+
+begin_function_decl
 specifier|static
 name|StringRef
 name|getOpcodeStr
-argument_list|(
-argument|Opcode Op
-argument_list|)
-block|;
+parameter_list|(
+name|Opcode
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|StringRef
 name|getOpcodeStr
 argument_list|()
@@ -12348,25 +12233,51 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the binary opcode that corresponds to the given
+end_comment
+
+begin_comment
 comment|/// overloaded operator.
+end_comment
+
+begin_function_decl
 specifier|static
 name|Opcode
 name|getOverloadedOpcode
-argument_list|(
-argument|OverloadedOperatorKind OO
-argument_list|)
-block|;
+parameter_list|(
+name|OverloadedOperatorKind
+name|OO
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Retrieve the overloaded operator kind that corresponds to
+end_comment
+
+begin_comment
 comment|/// the given binary opcode.
+end_comment
+
+begin_function_decl
 specifier|static
 name|OverloadedOperatorKind
 name|getOverloadedOperator
-argument_list|(
-argument|Opcode Opc
-argument_list|)
-block|;
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// predicates to categorize the respective opcodes.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isPtrMemOp
 argument_list|()
@@ -12382,10 +12293,16 @@ operator|==
 name|BO_PtrMemI
 return|;
 block|}
+end_expr_stmt
+
+begin_function
+specifier|static
 name|bool
 name|isMultiplicativeOp
-argument_list|()
-specifier|const
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12397,12 +12314,32 @@ operator|<=
 name|BO_Rem
 return|;
 block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|isMultiplicativeOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isMultiplicativeOp
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isAdditiveOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12414,6 +12351,9 @@ operator|==
 name|BO_Sub
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isAdditiveOp
 argument_list|()
@@ -12427,12 +12367,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isShiftOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12444,6 +12388,9 @@ operator|==
 name|BO_Shr
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isShiftOp
 argument_list|()
@@ -12457,12 +12404,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isBitwiseOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12474,6 +12425,9 @@ operator|<=
 name|BO_Or
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isBitwiseOp
 argument_list|()
@@ -12487,12 +12441,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isRelationalOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12504,6 +12462,9 @@ operator|<=
 name|BO_GE
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isRelationalOp
 argument_list|()
@@ -12517,12 +12478,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isEqualityOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12534,6 +12499,9 @@ operator|==
 name|BO_NE
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isEqualityOp
 argument_list|()
@@ -12547,12 +12515,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isComparisonOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12564,6 +12536,9 @@ operator|<=
 name|BO_NE
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isComparisonOp
 argument_list|()
@@ -12577,12 +12552,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|Opcode
 name|negateComparisonOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -12633,12 +12612,16 @@ name|BO_EQ
 return|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|Opcode
 name|reverseComparisonOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -12686,12 +12669,16 @@ name|Opc
 return|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isLogicalOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12703,6 +12690,9 @@ operator|==
 name|BO_LOr
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isLogicalOp
 argument_list|()
@@ -12716,12 +12706,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isAssignmentOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12733,6 +12727,9 @@ operator|<=
 name|BO_OrAssign
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isAssignmentOp
 argument_list|()
@@ -12746,12 +12743,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isCompoundAssignmentOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12763,6 +12764,9 @@ operator|<=
 name|BO_OrAssign
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isCompoundAssignmentOp
 argument_list|()
@@ -12776,12 +12780,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|Opcode
 name|getOpForCompoundAssignment
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -12790,7 +12798,7 @@ argument_list|(
 name|Opc
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|Opc
@@ -12825,12 +12833,16 @@ name|BO_Mul
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isShiftAssignOp
-argument_list|(
-argument|Opcode Opc
-argument_list|)
+parameter_list|(
+name|Opcode
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -12842,6 +12854,9 @@ operator|==
 name|BO_ShrAssign
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isShiftAssignOp
 argument_list|()
@@ -12855,12 +12870,18 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *S
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
 block|{
 return|return
 name|S
@@ -12878,10 +12899,16 @@ operator|<=
 name|lastBinaryOperatorConstant
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -12902,20 +12929,40 @@ name|END_EXPR
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Set the FP contractability status of this operator. Only meaningful for
+end_comment
+
+begin_comment
 comment|// operations on floating point types.
+end_comment
+
+begin_function
 name|void
 name|setFPContractable
-argument_list|(
-argument|bool FPC
-argument_list|)
+parameter_list|(
+name|bool
+name|FPC
+parameter_list|)
 block|{
 name|FPContractable
 operator|=
 name|FPC
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Get the FP contractability status of this operator. Only meaningful for
+end_comment
+
+begin_comment
 comment|// operations on floating point types.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isFPContractable
 argument_list|()
@@ -12925,8 +12972,14 @@ return|return
 name|FPContractable
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|protected
-operator|:
+label|:
+end_label
+
+begin_macro
 name|BinaryOperator
 argument_list|(
 argument|Expr *lhs
@@ -12947,7 +13000,10 @@ argument|bool fpContractable
 argument_list|,
 argument|bool dead2
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|Expr
 argument_list|(
 name|CompoundAssignOperatorClass
@@ -13002,17 +13058,17 @@ name|containsUnexpandedParameterPack
 argument_list|()
 operator|)
 argument_list|)
-block|,
+operator|,
 name|Opc
 argument_list|(
 name|opc
 argument_list|)
-block|,
+operator|,
 name|FPContractable
 argument_list|(
 name|fpContractable
 argument_list|)
-block|,
+operator|,
 name|OpLoc
 argument_list|(
 argument|opLoc
@@ -13045,23 +13101,43 @@ name|SC
 argument_list|,
 name|Empty
 argument_list|)
-block|,
+operator|,
 name|Opc
 argument_list|(
 argument|BO_MulAssign
 argument_list|)
 block|{ }
-block|}
-block|;
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|/// CompoundAssignOperator - For compound assignments (e.g. +=), we keep
+end_comment
+
+begin_comment
 comment|/// track of the type the operation is performed in.  Due to the semantics of
+end_comment
+
+begin_comment
 comment|/// these operators, the operands are promoted, the arithmetic performed, an
+end_comment
+
+begin_comment
 comment|/// implicit conversion back to the result type done, then the assignment takes
+end_comment
+
+begin_comment
 comment|/// place.  This captures the intermediate type which the computation is done
+end_comment
+
+begin_comment
 comment|/// in.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CompoundAssignOperator
-operator|:
+range|:
 name|public
 name|BinaryOperator
 block|{
@@ -14304,7 +14380,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -15651,12 +15733,18 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
 block|;
-comment|/// VAArgExpr, used for the builtin function __builtin_va_arg.
+comment|/// Represents a call to the builtin function \c __builtin_va_arg.
 name|class
 name|VAArgExpr
 operator|:
@@ -15667,8 +15755,17 @@ name|Stmt
 operator|*
 name|Val
 block|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|TypeSourceInfo
 operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
 name|TInfo
 block|;
 name|SourceLocation
@@ -15682,13 +15779,15 @@ name|VAArgExpr
 argument_list|(
 argument|SourceLocation BLoc
 argument_list|,
-argument|Expr* e
+argument|Expr *e
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|SourceLocation RPLoc
 argument_list|,
 argument|QualType t
+argument_list|,
+argument|bool IsMS
 argument_list|)
 operator|:
 name|Expr
@@ -15747,6 +15846,8 @@ block|,
 name|TInfo
 argument_list|(
 name|TInfo
+argument_list|,
+name|IsMS
 argument_list|)
 block|,
 name|BuiltinLoc
@@ -15758,8 +15859,8 @@ name|RParenLoc
 argument_list|(
 argument|RPLoc
 argument_list|)
-block|{ }
-comment|/// \brief Create an empty __builtin_va_arg expression.
+block|{}
+comment|/// Create an empty __builtin_va_arg expression.
 name|explicit
 name|VAArgExpr
 argument_list|(
@@ -15768,11 +15869,23 @@ argument_list|)
 operator|:
 name|Expr
 argument_list|(
-argument|VAArgExprClass
+name|VAArgExprClass
 argument_list|,
-argument|Empty
+name|Empty
 argument_list|)
-block|{ }
+block|,
+name|Val
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|TInfo
+argument_list|(
+argument|nullptr
+argument_list|,
+argument|false
+argument_list|)
+block|{}
 specifier|const
 name|Expr
 operator|*
@@ -15815,6 +15928,32 @@ name|Val
 operator|=
 name|E
 block|; }
+comment|/// Returns whether this is really a Win64 ABI va_arg expression.
+name|bool
+name|isMicrosoftABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TInfo
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|setIsMicrosoftABI
+argument_list|(
+argument|bool IsMS
+argument_list|)
+block|{
+name|TInfo
+operator|.
+name|setInt
+argument_list|(
+name|IsMS
+argument_list|)
+block|; }
 name|TypeSourceInfo
 operator|*
 name|getWrittenTypeInfo
@@ -15823,6 +15962,9 @@ specifier|const
 block|{
 return|return
 name|TInfo
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|void
@@ -15832,8 +15974,11 @@ argument|TypeSourceInfo *TI
 argument_list|)
 block|{
 name|TInfo
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|TI
+argument_list|)
 block|; }
 name|SourceLocation
 name|getBuiltinLoc
@@ -16093,6 +16238,27 @@ operator|.
 name|data
 argument_list|()
 operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|inits
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getInits
+argument_list|()
+argument_list|,
+name|getNumInits
+argument_list|()
+argument_list|)
 return|;
 block|}
 specifier|const
@@ -16619,7 +16785,13 @@ argument_list|()
 condition|)
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 return|return
 name|child_range
@@ -16790,9 +16962,21 @@ comment|/// designators, one array designator for @c [2] followed by one field
 comment|/// designator for @c .y. The initialization expression will be 1.0.
 name|class
 name|DesignatedInitExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|DesignatedInitExpr
+block|,
+name|Stmt
+operator|*
+operator|>
 block|{
 name|public
 operator|:
@@ -17593,6 +17777,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -17602,9 +17789,12 @@ name|designators_iterator
 operator|>
 name|reverse_designators_iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 name|reverse_designators_iterator
 name|designators_rbegin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|reverse_designators_iterator
@@ -17614,9 +17804,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|reverse_designators_iterator
 name|designators_rend
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|reverse_designators_iterator
@@ -17626,7 +17819,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_typedef
 typedef|typedef
@@ -17929,17 +18122,12 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-specifier|const
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -17970,16 +18158,12 @@ operator|&&
 literal|"Subscript out of range"
 argument_list|)
 expr_stmt|;
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 index|[
 name|Idx
@@ -18085,16 +18269,12 @@ modifier|*
 modifier|*
 name|begin
 init|=
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Stmt
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 decl_stmt|;
 return|return
@@ -18109,6 +18289,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|TrailingObjects
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -18239,7 +18425,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -18515,7 +18707,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -18653,6 +18851,27 @@ operator|>
 operator|(
 name|Exprs
 operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|exprs
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getExprs
+argument_list|()
+argument_list|,
+name|getNumExprs
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -19372,7 +19591,7 @@ comment|/// aggregate Constant of ConstantInt(s).
 name|void
 name|getEncodedElementAccess
 argument_list|(
-argument|SmallVectorImpl<unsigned>&Elts
+argument|SmallVectorImpl<uint32_t>&Elts
 argument_list|)
 specifier|const
 block|;
@@ -19622,7 +19841,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -19873,9 +20098,21 @@ comment|/// part of the user model.  The name of this class encourages this
 comment|/// modelling design.
 name|class
 name|PseudoObjectExpr
+name|final
 operator|:
 name|public
 name|Expr
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|PseudoObjectExpr
+block|,
+name|Expr
+operator|*
+operator|>
 block|{
 comment|// PseudoObjectExprBits.NumSubExprs - The number of sub-expressions.
 comment|// Always at least two, because the first sub-expression is the
@@ -19893,16 +20130,12 @@ name|getSubExprsBuffer
 argument_list|()
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
 name|Expr
 operator|*
-operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -19916,25 +20149,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|getTrailingObjects
 operator|<
-specifier|const
 name|Expr
-operator|*
-specifier|const
 operator|*
 operator|>
 operator|(
-name|this
-operator|+
-literal|1
 operator|)
 return|;
 block|}
-name|friend
-name|class
-name|ASTStmtReader
-block|;
 name|PseudoObjectExpr
 argument_list|(
 argument|QualType type
@@ -20186,6 +20409,51 @@ name|getNumSubExprs
 argument_list|()
 return|;
 block|}
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|semantics_iterator
+operator|>
+name|semantics
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|semantics_begin
+argument_list|()
+argument_list|,
+name|semantics_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_semantics_iterator
+operator|>
+name|semantics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|semantics_begin
+argument_list|()
+argument_list|,
+name|semantics_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|Expr
 operator|*
 name|getSemanticExpr
@@ -20328,7 +20596,13 @@ operator|==
 name|PseudoObjectExprClass
 return|;
 block|}
-expr|}
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
 block|;
 comment|/// AtomicExpr - Variadic atomic builtins: __atomic_exchange, __atomic_fetch_*,
 comment|/// __atomic_load, __atomic_store, and __atomic_compare_exchange_*, for the
@@ -20869,7 +21143,13 @@ argument_list|()
 block|{
 return|return
 name|child_range
+argument_list|(
+name|child_iterator
 argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -20894,6 +21174,22 @@ name|SourceLocation
 argument_list|()
 return|;
 block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|TypoExprClass
+return|;
+block|}
 expr|}
 block|; }
 end_decl_stmt
@@ -20906,6 +21202,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_AST_EXPR_H
+end_comment
 
 end_unit
 

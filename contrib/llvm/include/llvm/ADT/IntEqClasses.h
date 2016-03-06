@@ -164,10 +164,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/// join - Join the equivalence classes of a and b. After joining classes,
-comment|/// findLeader(a) == findLeader(b).
-comment|/// This requires an uncompressed map.
-name|void
+comment|/// Join the equivalence classes of a and b. After joining classes,
+comment|/// findLeader(a) == findLeader(b). This requires an uncompressed map.
+comment|/// Returns the new leader.
+name|unsigned
 name|join
 parameter_list|(
 name|unsigned

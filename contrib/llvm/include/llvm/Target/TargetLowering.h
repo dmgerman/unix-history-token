@@ -320,6 +320,8 @@ comment|/// This enum indicates whether operations are valid for a target, and i
 comment|/// what action should be used to make them valid.
 enum|enum
 name|LegalizeAction
+enum|:
+name|uint8_t
 block|{
 name|Legal
 block|,
@@ -330,6 +332,9 @@ comment|// This operation should be executed in a larger type.
 name|Expand
 block|,
 comment|// Try to expand this to other ops, otherwise use a libcall.
+name|LibCall
+block|,
+comment|// Don't try to expand this to other ops, always use a libcall.
 name|Custom
 comment|// Use the LowerOperation hook to implement custom lowering.
 block|}
@@ -338,6 +343,8 @@ comment|/// This enum indicates whether a types are legal for a target, and if n
 comment|/// what action should be used to make them valid.
 enum|enum
 name|LegalizeTypeAction
+enum|:
+name|uint8_t
 block|{
 name|TypeLegal
 block|,
@@ -350,7 +357,8 @@ block|,
 comment|// Split this integer into two of half the size.
 name|TypeSoftenFloat
 block|,
-comment|// Convert this float to a same size integer type.
+comment|// Convert this float to a same size integer type,
+comment|// if an operation is not supported in target HW.
 name|TypeExpandFloat
 block|,
 comment|// Split this float into two of half the size.
@@ -410,13 +418,13 @@ comment|// The target supports vector selects with a vector
 comment|// mask (ex: x86 blends).
 block|}
 enum|;
-comment|/// Enum that specifies what a AtomicRMWInst is expanded to, if at all. Exists
-comment|/// because different targets have different levels of support for these
-comment|/// atomic RMW instructions, and also have different options w.r.t. what they
-comment|/// should expand to.
+comment|/// Enum that specifies what an atomic load/AtomicRMWInst is expanded
+comment|/// to, if at all. Exists because different targets have different levels of
+comment|/// support for these atomic instructions, and also have different options
+comment|/// w.r.t. what they should expand to.
 name|enum
 name|class
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 block|{
 name|None
 operator|,
@@ -424,8 +432,11 @@ comment|// Don't expand the instruction.
 name|LLSC
 operator|,
 comment|// Expand the instruction into loadlinked/storeconditional; used
-comment|// by ARM/AArch64. Implies `hasLoadLinkedStoreConditional`
-comment|// returns true.
+comment|// by ARM/AArch64.
+name|LLOnly
+operator|,
+comment|// Expand the (load) instruction into just a load-linked, which has
+comment|// greater atomic guarantees than a normal load.
 name|CmpXChg
 operator|,
 comment|// Expand the instruction into cmpxchg; used by at least X86.
@@ -705,13 +716,22 @@ return|;
 block|}
 comment|/// Return true if integer divide is usually cheaper than a sequence of
 comment|/// several shifts, adds, and multiplies for this target.
+comment|/// The definition of "cheaper" may depend on whether we're optimizing
+comment|/// for speed or for size.
+name|virtual
 name|bool
 name|isIntDivCheap
-argument_list|()
-specifier|const
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+name|AttributeSet
+name|Attr
+argument_list|)
+decl|const
 block|{
 return|return
-name|IntDivIsCheap
+name|false
 return|;
 block|}
 comment|/// Return true if sqrt(x) is as cheap or cheaper than 1 / rsqrt(x)
@@ -756,16 +776,6 @@ specifier|const
 block|{
 return|return
 name|BypassSlowDivWidths
-return|;
-block|}
-comment|/// Return true if pow2 sdiv is cheaper than a chain of sra/srl/add/sra.
-name|bool
-name|isPow2SDivCheap
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Pow2SDivIsCheap
 return|;
 block|}
 comment|/// Return true if Flow Control is an expensive operation that should be
@@ -1212,7 +1222,7 @@ name|ValueTypeActionImpl
 block|{
 comment|/// ValueTypeActions - For each value type, keep a LegalizeTypeAction enum
 comment|/// that indicates how instruction selection should deal with the type.
-name|uint8_t
+name|LegalizeTypeAction
 name|ValueTypeActions
 index|[
 name|MVT
@@ -1243,7 +1253,7 @@ argument_list|(
 name|ValueTypeActions
 argument_list|)
 argument_list|,
-literal|0
+name|TypeLegal
 argument_list|)
 expr_stmt|;
 block|}
@@ -1256,9 +1266,6 @@ argument_list|)
 decl|const
 block|{
 return|return
-operator|(
-name|LegalizeTypeAction
-operator|)
 name|ValueTypeActions
 index|[
 name|VT
@@ -1277,16 +1284,11 @@ name|LegalizeTypeAction
 name|Action
 parameter_list|)
 block|{
-name|unsigned
-name|I
-init|=
+name|ValueTypeActions
+index|[
 name|VT
 operator|.
 name|SimpleTy
-decl_stmt|;
-name|ValueTypeActions
-index|[
-name|I
 index|]
 operator|=
 name|Action
@@ -1716,9 +1718,9 @@ condition|)
 return|return
 name|Custom
 return|;
-name|unsigned
-name|I
-init|=
+return|return
+name|OpActions
+index|[
 operator|(
 name|unsigned
 operator|)
@@ -1728,14 +1730,6 @@ name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
-decl_stmt|;
-return|return
-operator|(
-name|LegalizeAction
-operator|)
-name|OpActions
-index|[
-name|I
 index|]
 index|[
 name|Op
@@ -1991,9 +1985,6 @@ literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|LegalizeAction
-operator|)
 name|LoadExtActions
 index|[
 name|ValI
@@ -2169,9 +2160,6 @@ literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|LegalizeAction
-operator|)
 name|TruncStoreActions
 index|[
 name|ValI
@@ -2483,14 +2471,14 @@ comment|// See setCondCodeAction for how this is encoded.
 name|uint32_t
 name|Shift
 init|=
-literal|2
+literal|4
 operator|*
 operator|(
 name|VT
 operator|.
 name|SimpleTy
 operator|&
-literal|0xF
+literal|0x7
 operator|)
 decl_stmt|;
 name|uint32_t
@@ -2505,7 +2493,7 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|LegalizeAction
@@ -2521,7 +2509,7 @@ operator|>>
 name|Shift
 operator|)
 operator|&
-literal|0x3
+literal|0xF
 argument_list|)
 decl_stmt|;
 name|assert
@@ -3347,6 +3335,15 @@ operator|)
 operator|)
 return|;
 block|}
+name|unsigned
+name|getGatherAllAliasesMaxDepth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GatherAllAliasesMaxDepth
+return|;
+block|}
 comment|/// \brief Get maximum # of store operations permitted for llvm.memset
 comment|///
 comment|/// This function returns the maximum number of store operations permitted
@@ -3450,6 +3447,43 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target supports a memory access of this type for the
+comment|/// given address space and alignment. If the access is allowed, the optional
+comment|/// final parameter returns if the access is also fast (as defined by the
+comment|/// target).
+name|bool
+name|allowsMemoryAccess
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Alignment
+operator|=
+literal|1
+argument_list|,
+name|bool
+operator|*
+name|Fast
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns the target specific optimal type for load and store operations as
 comment|/// a result of memset, memcpy, and memmove lowering.
 comment|///
@@ -3558,25 +3592,39 @@ name|StackPointerRegisterToSaveRestore
 return|;
 block|}
 comment|/// If a physical register, this returns the register that receives the
-comment|/// exception address on entry to a landing pad.
+comment|/// exception address on entry to an EH pad.
+name|virtual
 name|unsigned
 name|getExceptionPointerRegister
-argument_list|()
+argument_list|(
 specifier|const
+name|Constant
+operator|*
+name|PersonalityFn
+argument_list|)
+decl|const
 block|{
+comment|// 0 is guaranteed to be the NoRegister value on all targets
 return|return
-name|ExceptionPointerRegister
+literal|0
 return|;
 block|}
 comment|/// If a physical register, this returns the register that receives the
 comment|/// exception typeid on entry to a landing pad.
+name|virtual
 name|unsigned
 name|getExceptionSelectorRegister
-argument_list|()
+argument_list|(
 specifier|const
+name|Constant
+operator|*
+name|PersonalityFn
+argument_list|)
+decl|const
 block|{
+comment|// 0 is guaranteed to be the NoRegister value on all targets
 return|return
-name|ExceptionSelectorRegister
+literal|0
 return|;
 block|}
 comment|/// Returns the target's jmp_buf size in bytes (if never set, the default is
@@ -3680,6 +3728,21 @@ return|return
 name|false
 return|;
 block|}
+comment|/// If the target has a standard location for the unsafe stack pointer,
+comment|/// returns the address of that location. Otherwise, returns nullptr.
+name|virtual
+name|Value
+modifier|*
+name|getSafeStackPointerLocation
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|IRB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|virtual
 name|bool
@@ -3740,7 +3803,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|int
 operator|,
 name|MVT
 operator|>
@@ -3756,18 +3819,6 @@ comment|/// @}
 comment|//===--------------------------------------------------------------------===//
 comment|/// \name Helpers for atomic expansion.
 comment|/// @{
-comment|/// True if AtomicExpandPass should use emitLoadLinked/emitStoreConditional
-comment|/// and expand AtomicCmpXchgInst.
-name|virtual
-name|bool
-name|hasLoadLinkedStoreConditional
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Perform a load-linked operation on Addr, returning a "Value *" with the
 comment|/// corresponding pointee type. This may entail some non-trivial operations to
 comment|/// truncate or reconstruct types that will be illegal in the backend. See
@@ -3965,6 +4016,24 @@ name|nullptr
 return|;
 block|}
 comment|/// @}
+comment|// Emits code that executes when the comparison result in the ll/sc
+comment|// expansion of a cmpxchg instruction is such that the store-conditional will
+comment|// not execute.  This makes it possible to balance out the load-linked with
+comment|// a dedicated instruction, if desired.
+comment|// E.g., on ARM, if ldrex isn't followed by strex, the exclusive monitor would
+comment|// be unnecessarily held, except if clrex, inserted by this hook, is executed.
+name|virtual
+name|void
+name|emitAtomicCmpXchgNoStoreLLBalance
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|)
+decl|const
+block|{}
 comment|/// Returns true if the given (atomic) store should be expanded by the
 comment|/// IR-level AtomicExpand pass into an "atomic xchg" which ignores its input.
 name|virtual
@@ -3998,16 +4067,34 @@ return|return
 name|IsSigned
 return|;
 block|}
-comment|/// Returns true if the given (atomic) load should be expanded by the
-comment|/// IR-level AtomicExpand pass into a load-linked instruction
-comment|/// (through emitLoadLinked()).
+comment|/// Returns how the given (atomic) load should be expanded by the
+comment|/// IR-level AtomicExpand pass.
 name|virtual
-name|bool
+name|AtomicExpansionKind
 name|shouldExpandAtomicLoadInIR
 argument_list|(
 name|LoadInst
 operator|*
 name|LI
+argument_list|)
+decl|const
+block|{
+return|return
+name|AtomicExpansionKind
+operator|::
+name|None
+return|;
+block|}
+comment|/// Returns true if the given atomic cmpxchg should be expanded by the
+comment|/// IR-level AtomicExpand pass into a load-linked/store-conditional sequence
+comment|/// (through emitLoadLinked() and emitStoreConditional()).
+name|virtual
+name|bool
+name|shouldExpandAtomicCmpXchgInIR
+argument_list|(
+name|AtomicCmpXchgInst
+operator|*
+name|AI
 argument_list|)
 decl|const
 block|{
@@ -4018,7 +4105,7 @@ block|}
 comment|/// Returns how the IR-level AtomicExpand pass should expand the given
 comment|/// AtomicRMW, if at all. Default is to never expand.
 name|virtual
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
 name|AtomicRMWInst
@@ -4027,7 +4114,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 operator|::
 name|None
 return|;
@@ -4242,34 +4329,6 @@ operator|=
 name|R
 expr_stmt|;
 block|}
-comment|/// If set to a physical register, this sets the register that receives the
-comment|/// exception address on entry to a landing pad.
-name|void
-name|setExceptionPointerRegister
-parameter_list|(
-name|unsigned
-name|R
-parameter_list|)
-block|{
-name|ExceptionPointerRegister
-operator|=
-name|R
-expr_stmt|;
-block|}
-comment|/// If set to a physical register, this sets the register that receives the
-comment|/// exception typeid on entry to a landing pad.
-name|void
-name|setExceptionSelectorRegister
-parameter_list|(
-name|unsigned
-name|R
-parameter_list|)
-block|{
-name|ExceptionSelectorRegister
-operator|=
-name|R
-expr_stmt|;
-block|}
 comment|/// Tells the code generator not to expand operations into sequences that use
 comment|/// the select operations if possible.
 name|void
@@ -4335,23 +4394,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-comment|/// Tells the code generator that integer divide is expensive, and if
-comment|/// possible, should be replaced by an alternate sequence of instructions not
-comment|/// containing an integer divide.
-name|void
-name|setIntDivIsCheap
-parameter_list|(
-name|bool
-name|isCheap
-init|=
-name|true
-parameter_list|)
-block|{
-name|IntDivIsCheap
-operator|=
-name|isCheap
-expr_stmt|;
-block|}
 comment|/// Tells the code generator that fsqrt is cheap, and should not be replaced
 comment|/// with an alternative sequence of instructions.
 name|void
@@ -4403,22 +4445,6 @@ name|SlowBitWidth
 index|]
 operator|=
 name|FastBitWidth
-expr_stmt|;
-block|}
-comment|/// Tells the code generator that it shouldn't generate sra/srl/add/sra for a
-comment|/// signed divide by power of two; let the target handle it.
-name|void
-name|setPow2SDivIsCheap
-parameter_list|(
-name|bool
-name|isCheap
-init|=
-name|true
-parameter_list|)
-block|{
-name|Pow2SDivIsCheap
-operator|=
-name|isCheap
 expr_stmt|;
 block|}
 comment|/// Add the specified register class as an available regclass for the
@@ -4480,21 +4506,25 @@ name|void
 name|clearRegisterClasses
 parameter_list|()
 block|{
-name|memset
+name|std
+operator|::
+name|fill
+argument_list|(
+name|std
+operator|::
+name|begin
 argument_list|(
 name|RegClassForVT
-argument_list|,
-literal|0
-argument_list|,
-name|MVT
-operator|::
-name|LAST_VALUETYPE
-operator|*
-sizeof|sizeof
-argument_list|(
-name|TargetRegisterClass
-operator|*
 argument_list|)
+argument_list|,
+name|std
+operator|::
+name|end
+argument_list|(
+name|RegClassForVT
+argument_list|)
+argument_list|,
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|AvailableRegClasses
@@ -4583,9 +4613,6 @@ index|[
 name|Op
 index|]
 operator|=
-operator|(
-name|uint8_t
-operator|)
 name|Action
 expr_stmt|;
 block|}
@@ -4630,6 +4657,9 @@ argument_list|)
 expr_stmt|;
 name|LoadExtActions
 index|[
+operator|(
+name|unsigned
+operator|)
 name|ValVT
 operator|.
 name|SimpleTy
@@ -4643,9 +4673,6 @@ index|[
 name|ExtType
 index|]
 operator|=
-operator|(
-name|uint8_t
-operator|)
 name|Action
 expr_stmt|;
 block|}
@@ -4681,6 +4708,9 @@ argument_list|)
 expr_stmt|;
 name|TruncStoreActions
 index|[
+operator|(
+name|unsigned
+operator|)
 name|ValVT
 operator|.
 name|SimpleTy
@@ -4691,9 +4721,6 @@ operator|.
 name|SimpleTy
 index|]
 operator|=
-operator|(
-name|uint8_t
-operator|)
 name|Action
 expr_stmt|;
 block|}
@@ -4894,20 +4921,32 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-comment|/// The lower 5 bits of the SimpleTy index into Nth 2bit set from the 32-bit
-comment|/// value and the upper 27 bits index into the second dimension of the array
+name|assert
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|Action
+operator|<
+literal|0x10
+operator|&&
+literal|"too many bits for bitfield array"
+argument_list|)
+expr_stmt|;
+comment|/// The lower 3 bits of the SimpleTy index into Nth 4bit set from the 32-bit
+comment|/// value and the upper 29 bits index into the second dimension of the array
 comment|/// to select what 32-bit value to use.
 name|uint32_t
 name|Shift
 init|=
-literal|2
+literal|4
 operator|*
 operator|(
 name|VT
 operator|.
 name|SimpleTy
 operator|&
-literal|0xF
+literal|0x7
 operator|)
 decl_stmt|;
 name|CondCodeActions
@@ -4919,7 +4958,7 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|4
+literal|3
 index|]
 operator|&=
 operator|~
@@ -4927,7 +4966,7 @@ operator|(
 operator|(
 name|uint32_t
 operator|)
-literal|0x3
+literal|0xF
 operator|<<
 name|Shift
 operator|)
@@ -4941,7 +4980,7 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|4
+literal|3
 index|]
 operator||=
 operator|(
@@ -5354,20 +5393,21 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Return true if it's free to truncate a value of type Ty1 to type
-comment|/// Ty2. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
+comment|/// Return true if it's free to truncate a value of type FromTy to type
+comment|/// ToTy. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
 comment|/// by referencing its sub-register AX.
+comment|/// Targets must return false when FromTy<= ToTy.
 name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
 name|Type
 operator|*
-comment|/*Ty1*/
+name|FromTy
 argument_list|,
 name|Type
 operator|*
-comment|/*Ty2*/
+name|ToTy
 argument_list|)
 decl|const
 block|{
@@ -5375,22 +5415,22 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Return true if a truncation from Ty1 to Ty2 is permitted when deciding
+comment|/// Return true if a truncation from FromTy to ToTy is permitted when deciding
 comment|/// whether a call is in tail position. Typically this means that both results
 comment|/// would be assigned to the same register or stack slot, but it could mean
 comment|/// the target performs adequate checks of its own before proceeding with the
-comment|/// tail call.
+comment|/// tail call.  Targets must return false when FromTy<= ToTy.
 name|virtual
 name|bool
 name|allowTruncateForTailCall
 argument_list|(
 name|Type
 operator|*
-comment|/*Ty1*/
+name|FromTy
 argument_list|,
 name|Type
 operator|*
-comment|/*Ty2*/
+name|ToTy
 argument_list|)
 decl|const
 block|{
@@ -5403,10 +5443,10 @@ name|bool
 name|isTruncateFree
 argument_list|(
 name|EVT
-comment|/*VT1*/
+name|FromVT
 argument_list|,
 name|EVT
-comment|/*VT2*/
+name|ToVT
 argument_list|)
 decl|const
 block|{
@@ -5528,25 +5568,27 @@ name|I
 argument_list|)
 return|;
 block|}
-comment|/// Return true if any actual instruction that defines a value of type Ty1
-comment|/// implicitly zero-extends the value to Ty2 in the result register.
+comment|/// Return true if any actual instruction that defines a value of type FromTy
+comment|/// implicitly zero-extends the value to ToTy in the result register.
 comment|///
-comment|/// This does not necessarily include registers defined in unknown ways, such
-comment|/// as incoming arguments, or copies from unknown virtual registers. Also, if
-comment|/// isTruncateFree(Ty2, Ty1) is true, this does not necessarily apply to
-comment|/// truncate instructions. e.g. on x86-64, all instructions that define 32-bit
-comment|/// values implicit zero-extend the result out to 64 bits.
+comment|/// The function should return true when it is likely that the truncate can
+comment|/// be freely folded with an instruction defining a value of FromTy. If
+comment|/// the defining instruction is unknown (because you're looking at a
+comment|/// function argument, PHI, etc.) then the target may require an
+comment|/// explicit truncate, which is not necessarily free, but this function
+comment|/// does not deal with those cases.
+comment|/// Targets must return false when FromTy>= ToTy.
 name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
 name|Type
 operator|*
-comment|/*Ty1*/
+name|FromTy
 argument_list|,
 name|Type
 operator|*
-comment|/*Ty2*/
+name|ToTy
 argument_list|)
 decl|const
 block|{
@@ -5559,10 +5601,10 @@ name|bool
 name|isZExtFree
 argument_list|(
 name|EVT
-comment|/*VT1*/
+name|FromTy
 argument_list|,
 name|EVT
-comment|/*VT2*/
+name|ToTy
 argument_list|)
 decl|const
 block|{
@@ -5897,6 +5939,21 @@ return|return
 name|false
 return|;
 block|}
+comment|// Return true if it is profitable to use a scalar input to a BUILD_VECTOR
+comment|// even if the vector itself has multiple uses.
+name|virtual
+name|bool
+name|aggressivelyPreferBuildVectorSources
+argument_list|(
+name|EVT
+name|VecVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Runtime Library hooks
 comment|//
@@ -6052,13 +6109,6 @@ comment|/// combined with "shift" to BitExtract instructions.
 name|bool
 name|HasExtractBitsInsn
 decl_stmt|;
-comment|/// Tells the code generator not to expand integer divides by constants into a
-comment|/// sequence of muls, adds, and shifts.  This is a hack until a real cost
-comment|/// model is in place.  If we ever optimize for size, this will be set to true
-comment|/// unconditionally.
-name|bool
-name|IntDivIsCheap
-decl_stmt|;
 comment|// Don't expand fsqrt with an approximation based on the inverse sqrt.
 name|bool
 name|FsqrtIsCheap
@@ -6077,11 +6127,6 @@ name|int
 operator|>
 name|BypassSlowDivWidths
 expr_stmt|;
-comment|/// Tells the code generator that it shouldn't generate sra/srl/add/sra for a
-comment|/// signed divide by power of two; let the target handle it.
-name|bool
-name|Pow2SDivIsCheap
-decl_stmt|;
 comment|/// Tells the code generator that it shouldn't generate extra flow control
 comment|/// instructions and should attempt to combine flow control instructions via
 comment|/// predication.
@@ -6168,16 +6213,6 @@ comment|/// llvm.savestack/llvm.restorestack should save and restore.
 name|unsigned
 name|StackPointerRegisterToSaveRestore
 decl_stmt|;
-comment|/// If set to a physical register, this specifies the register that receives
-comment|/// the exception address on entry to a landing pad.
-name|unsigned
-name|ExceptionPointerRegister
-decl_stmt|;
-comment|/// If set to a physical register, this specifies the register that receives
-comment|/// the exception typeid on entry to a landing pad.
-name|unsigned
-name|ExceptionSelectorRegister
-decl_stmt|;
 comment|/// This indicates the default register class to use for each ValueType the
 comment|/// target supports natively.
 specifier|const
@@ -6252,7 +6287,7 @@ comment|/// indicates how instruction selection should deal with the operation. 
 comment|/// operations are Legal (aka, supported natively by the target), but
 comment|/// operations that are not should be described.  Note that operations on
 comment|/// non-legal value types are not described here.
-name|uint8_t
+name|LegalizeAction
 name|OpActions
 index|[
 name|MVT
@@ -6268,7 +6303,7 @@ decl_stmt|;
 comment|/// For each load extension type and each value type, keep a LegalizeAction
 comment|/// that indicates how instruction selection should deal with a load of a
 comment|/// specific value type and extension type.
-name|uint8_t
+name|LegalizeAction
 name|LoadExtActions
 index|[
 name|MVT
@@ -6288,7 +6323,7 @@ index|]
 decl_stmt|;
 comment|/// For each value type pair keep a LegalizeAction that indicates whether a
 comment|/// truncating store of a specific value type and truncating type is legal.
-name|uint8_t
+name|LegalizeAction
 name|TruncStoreActions
 index|[
 name|MVT
@@ -6323,9 +6358,9 @@ decl_stmt|;
 comment|/// For each condition code (ISD::CondCode) keep a LegalizeAction that
 comment|/// indicates how instruction selection should deal with the condition code.
 comment|///
-comment|/// Because each CC action takes up 2 bits, we need to have the array size be
+comment|/// Because each CC action takes up 4 bits, we need to have the array size be
 comment|/// large enough to fit all of the value types. This can be done by rounding
-comment|/// up the MVT::LAST_VALUETYPE value to the next multiple of 16.
+comment|/// up the MVT::LAST_VALUETYPE value to the next multiple of 8.
 name|uint32_t
 name|CondCodeActions
 index|[
@@ -6339,12 +6374,14 @@ name|MVT
 operator|::
 name|LAST_VALUETYPE
 operator|+
-literal|15
+literal|7
 operator|)
 operator|/
-literal|16
+literal|8
 index|]
 decl_stmt|;
+name|protected
+label|:
 name|ValueTypeActionImpl
 name|ValueTypeActions
 decl_stmt|;
@@ -6482,6 +6519,13 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Depth that GatherAllAliases should should continue looking for chain
+comment|/// dependencies when trying to find a more preferrable chain. As an
+comment|/// approximation, this should be more than the number of consecutive stores
+comment|/// expected to be merged.
+name|unsigned
+name|GatherAllAliasesMaxDepth
+decl_stmt|;
 comment|/// \brief Specify maximum number of store instructions per memset call.
 comment|///
 comment|/// When lowering \@llvm.memset this field specifies the maximum number of
@@ -6533,7 +6577,7 @@ name|unsigned
 name|MaxStoresPerMemmove
 decl_stmt|;
 comment|/// Maximum number of store instructions that may be substituted for a call to
-comment|/// memmove, used for functions with OpSize attribute.
+comment|/// memmove, used for functions with OptSize attribute.
 name|unsigned
 name|MaxStoresPerMemmoveOptSize
 decl_stmt|;
@@ -6822,9 +6866,7 @@ argument|RTLIB::Libcall LC
 argument_list|,
 argument|EVT RetVT
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|bool isSigned
 argument_list|,
@@ -7324,6 +7366,69 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target supports that a subset of CSRs for the given
+comment|/// machine function is handled explicitly via copies.
+name|virtual
+name|bool
+name|supportSplitCSR
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if the MachineFunction contains a COPY which would imply
+comment|/// HasCopyImplyingStackAdjustment.
+name|virtual
+name|bool
+name|hasCopyImplyingStackAdjustment
+argument_list|(
+argument|MachineFunction *MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Perform necessary initialization to handle a subset of CSRs explicitly
+comment|/// via copies. This function is called at the beginning of instruction
+comment|/// selection.
+name|virtual
+name|void
+name|initializeSplitCSR
+argument_list|(
+argument|MachineBasicBlock *Entry
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Not Implemented"
+argument_list|)
+block|;   }
+comment|/// Insert explicit copies in entry and exit blocks. We copy a subset of
+comment|/// CSRs to virtual registers in the entry block, and copy them back to
+comment|/// physical registers in the exit blocks. This function is called at the end
+comment|/// of instruction selection.
+name|virtual
+name|void
+name|insertCopiesSplitCSR
+argument_list|(
+argument|MachineBasicBlock *Entry
+argument_list|,
+argument|const SmallVectorImpl<MachineBasicBlock *>&Exits
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Not Implemented"
+argument_list|)
+block|;   }
 comment|//===--------------------------------------------------------------------===//
 comment|// Lowering methods - These methods must be implemented by targets so that
 comment|// the SelectionDAGBuilder code knows how to lower these.
@@ -8971,6 +9076,22 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Targets may override this function to provide custom SDIV lowering for
+end_comment
+
+begin_comment
+comment|/// power-of-2 denominators.  If the target returns an empty SDValue, LLVM
+end_comment
+
+begin_comment
+comment|/// assumes SDIV is expensive and replaces it with a series of other integer
+end_comment
+
+begin_comment
+comment|/// operations.
+end_comment
+
 begin_decl_stmt
 name|virtual
 name|SDValue
@@ -9000,37 +9121,37 @@ operator|*
 name|Created
 argument_list|)
 decl|const
-block|{
-return|return
-name|SDValue
-argument_list|()
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Indicate whether this target prefers to combine the given number of FDIVs
+comment|/// Indicate whether this target prefers to combine FDIVs with the same
 end_comment
 
 begin_comment
-comment|/// with the same divisor.
+comment|/// divisor. If the transform should never be done, return zero. If the
 end_comment
 
-begin_decl_stmt
+begin_comment
+comment|/// transform should be done, return the minimum number of divisor uses
+end_comment
+
+begin_comment
+comment|/// that must exist.
+end_comment
+
+begin_expr_stmt
 name|virtual
-name|bool
-name|combineRepeatedFPDivisors
-argument_list|(
 name|unsigned
-name|NumUsers
-argument_list|)
-decl|const
+name|combineRepeatedFPDivisors
+argument_list|()
+specifier|const
 block|{
 return|return
-name|false
+literal|0
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// Hooks for building estimates in place of slower divisions and square
@@ -9416,6 +9537,28 @@ name|false
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Lower TLS global address SDNode for target independent emulated TLS model.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|SDValue
+name|LowerToTLSEmulatedModel
+argument_list|(
+specifier|const
+name|GlobalAddressSDNode
+operator|*
+name|GA
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};

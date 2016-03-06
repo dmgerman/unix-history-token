@@ -3579,9 +3579,9 @@ argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|,
 name|vap
 operator|->
@@ -3594,9 +3594,9 @@ name|zyd_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16214,9 +16214,9 @@ name|zyd_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 name|ZYD_UNLOCK

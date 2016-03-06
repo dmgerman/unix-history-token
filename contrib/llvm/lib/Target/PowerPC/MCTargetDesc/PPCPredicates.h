@@ -345,6 +345,27 @@ init|=
 literal|1025
 block|}
 enum|;
+comment|// Bit for branch taken (plus) or not-taken (minus) hint
+enum|enum
+name|BranchHintBit
+block|{
+name|BR_NO_HINT
+init|=
+literal|0x0
+block|,
+name|BR_NONTAKEN_HINT
+init|=
+literal|0x2
+block|,
+name|BR_TAKEN_HINT
+init|=
+literal|0x3
+block|,
+name|BR_HINT_MASK
+init|=
+literal|0X3
+block|}
+enum|;
 comment|/// Invert the specified predicate.  != -> ==,< ->>=.
 name|Predicate
 name|InvertPredicate

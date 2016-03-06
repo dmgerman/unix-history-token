@@ -4488,6 +4488,12 @@ index|[
 literal|14
 index|]
 decl_stmt|;
+name|uint8_t
+name|sc_bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx

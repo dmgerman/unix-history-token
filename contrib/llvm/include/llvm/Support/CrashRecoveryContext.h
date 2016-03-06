@@ -85,8 +85,6 @@ comment|///      }
 comment|///
 comment|///      ... no crash was detected ...
 comment|///    }
-comment|///
-comment|/// Crash recovery contexts may not be nested.
 name|class
 name|CrashRecoveryContext
 block|{
@@ -447,7 +445,7 @@ argument_list|)
 return|;
 block|}
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 expr|}
@@ -689,7 +687,7 @@ argument_list|()
 block|{
 name|unregister
 argument_list|()
-block|;   }
+block|; }
 name|void
 name|unregister
 argument_list|()
@@ -715,17 +713,25 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 operator|=
-literal|0
+name|nullptr
 block|;   }
 block|}
 expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_CRASHRECOVERYCONTEXT_H
+end_comment
 
 end_unit
 

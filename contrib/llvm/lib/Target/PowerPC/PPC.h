@@ -170,6 +170,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createPPCMIPeepholePass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createPPCBranchSelectionPass
 parameter_list|()
 function_decl|;
@@ -185,6 +190,11 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createPPCTLSDynamicCallPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCBoolRetToIntPass
 parameter_list|()
 function_decl|;
 name|void
@@ -209,6 +219,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializePPCVSXFMAMutatePass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializePPCBoolRetToIntPass
 parameter_list|(
 name|PassRegistry
 modifier|&

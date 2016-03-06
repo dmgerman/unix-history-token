@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Section.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 

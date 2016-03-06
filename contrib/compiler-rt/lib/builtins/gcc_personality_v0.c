@@ -539,7 +539,7 @@ name|__USING_SJLJ_EXCEPTIONS__
 end_if
 
 begin_comment
-comment|// the setjump-longjump based exceptions personality routine has a different name
+comment|/* the setjump-longjump based exceptions personality routine has a  * different name */
 end_comment
 
 begin_decl_stmt
@@ -817,7 +817,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Found landing pad for the PC.              * Set Instruction Pointer to so we re-enter function               * at landing pad. The landing pad is created by the compiler              * to take two parameters in registers. 	     */
+comment|/* Found landing pad for the PC.              * Set Instruction Pointer to so we re-enter function               * at landing pad. The landing pad is created by the compiler              * to take two parameters in registers.              */
 name|_Unwind_SetGR
 argument_list|(
 name|context
@@ -849,9 +849,11 @@ name|_Unwind_SetIP
 argument_list|(
 name|context
 argument_list|,
+operator|(
 name|funcStart
 operator|+
 name|landingPad
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

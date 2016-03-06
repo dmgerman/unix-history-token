@@ -128,9 +128,6 @@ name|class
 name|DataLayout
 decl_stmt|;
 name|class
-name|AliasAnalysis
-decl_stmt|;
-name|class
 name|ScalarEvolution
 decl_stmt|;
 name|class
@@ -138,6 +135,12 @@ name|Loop
 decl_stmt|;
 name|class
 name|SCEV
+decl_stmt|;
+name|class
+name|SCEVUnionPredicate
+decl_stmt|;
+name|class
+name|LoopAccessInfo
 decl_stmt|;
 comment|/// Optimization analysis message produced during vectorization. Messages inform
 comment|/// the user why vectorization did not occur.
@@ -421,6 +424,14 @@ comment|// We couldn't determine the direction or the distance.
 name|Unknown
 block|,
 comment|// Lexically forward.
+comment|//
+comment|// FIXME: If we only have loop-independent forward dependences (e.g. a
+comment|// read and write of A[i]), LAA will locally deem the dependence "safe"
+comment|// without querying the MemoryDepChecker.  Therefore we can miss
+comment|// enumerating loop-independent forward dependences in
+comment|// getDependences.  Note that as soon as there are different
+comment|// indices used to access the same array, the MemoryDepChecker *is*
+comment|// queried and the dependence list is complete.
 name|Forward
 block|,
 comment|// Forward, but if vectorized, is likely to prevent store-to-load
@@ -482,24 +493,49 @@ argument_list|(
 argument|Type
 argument_list|)
 block|{}
+comment|/// \brief Return the source instruction of the dependence.
+name|Instruction
+operator|*
+name|getSource
+argument_list|(
+argument|const LoopAccessInfo&LAI
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// \brief Return the destination instruction of the dependence.
+name|Instruction
+modifier|*
+name|getDestination
+argument_list|(
+specifier|const
+name|LoopAccessInfo
+operator|&
+name|LAI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Dependence types that don't prevent vectorization.
 specifier|static
 name|bool
 name|isSafeForVectorization
-argument_list|(
-argument|DepType Type
-argument_list|)
-expr_stmt|;
-comment|/// \brief Dependence types that can be queried from the analysis.
-specifier|static
-name|bool
-name|isInterestingDependence
 parameter_list|(
 name|DepType
 name|Type
 parameter_list|)
 function_decl|;
-comment|/// \brief Lexically backward dependence types.
+comment|/// \brief Lexically forward dependence.
+name|bool
+name|isForward
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Lexically backward dependence.
+name|bool
+name|isBackward
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief May be a lexically backward dependence type (includes Unknown).
 name|bool
 name|isPossiblyBackward
 argument_list|()
@@ -532,9 +568,9 @@ block|}
 struct|;
 name|MemoryDepChecker
 argument_list|(
-name|ScalarEvolution
-operator|*
-name|Se
+name|PredicatedScalarEvolution
+operator|&
+name|PSE
 argument_list|,
 specifier|const
 name|Loop
@@ -542,9 +578,9 @@ operator|*
 name|L
 argument_list|)
 operator|:
-name|SE
+name|PSE
 argument_list|(
-name|Se
+name|PSE
 argument_list|)
 operator|,
 name|InnermostLoop
@@ -567,7 +603,7 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
-name|RecordInterestingDependences
+name|RecordDependences
 argument_list|(
 argument|true
 argument_list|)
@@ -707,33 +743,33 @@ return|return
 name|ShouldRetryWithRuntimeCheck
 return|;
 block|}
-comment|/// \brief Returns the interesting dependences.  If null is returned we
-comment|/// exceeded the MaxInterestingDependence threshold and this information is
-comment|/// not available.
+comment|/// \brief Returns the memory dependences.  If null is returned we exceeded
+comment|/// the MaxDependences threshold and this information is not
+comment|/// available.
 specifier|const
 name|SmallVectorImpl
 operator|<
 name|Dependence
 operator|>
 operator|*
-name|getInterestingDependences
+name|getDependences
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RecordInterestingDependences
+name|RecordDependences
 operator|?
 operator|&
-name|InterestingDependences
+name|Dependences
 operator|:
 name|nullptr
 return|;
 block|}
 name|void
-name|clearInterestingDependences
+name|clearDependences
 parameter_list|()
 block|{
-name|InterestingDependences
+name|Dependences
 operator|.
 name|clear
 argument_list|()
@@ -756,6 +792,59 @@ return|return
 name|InstMap
 return|;
 block|}
+comment|/// \brief Generate a mapping between the memory instructions and their
+comment|/// indices according to program order.
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|generateInstructionOrderMap
+argument_list|()
+specifier|const
+block|{
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+block|,
+name|unsigned
+operator|>
+name|OrderMap
+block|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|<
+name|InstMap
+operator|.
+name|size
+argument_list|()
+condition|;
+operator|++
+name|I
+control|)
+name|OrderMap
+index|[
+name|InstMap
+index|[
+name|I
+index|]
+index|]
+operator|=
+name|I
+expr_stmt|;
+return|return
+name|OrderMap
+return|;
+block|}
 comment|/// \brief Find the set of instructions that read or write via \p Ptr.
 name|SmallVector
 operator|<
@@ -774,9 +863,15 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|ScalarEvolution
-modifier|*
-name|SE
+comment|/// A wrapper around ScalarEvolution, used to add runtime SCEV checks, and
+comment|/// applies dynamic knowledge to simplify SCEV expressions and convert them
+comment|/// to a more usable form. We need this in case assumptions about SCEV
+comment|/// expressions need to be made in order to avoid unknown dependences. For
+comment|/// example we might assume a unit stride for a pointer in order to prove
+comment|/// that a memory access is strided and doesn't wrap.
+name|PredicatedScalarEvolution
+modifier|&
+name|PSE
 decl_stmt|;
 specifier|const
 name|Loop
@@ -825,22 +920,21 @@ comment|/// vectorization.
 name|bool
 name|SafeForVectorization
 decl_stmt|;
-comment|//// \brief True if InterestingDependences reflects the dependences in the
-comment|//// loop.  If false we exceeded MaxInterestingDependence and
-comment|//// InterestingDependences is invalid.
+comment|//// \brief True if Dependences reflects the dependences in the
+comment|//// loop.  If false we exceeded MaxDependences and
+comment|//// Dependences is invalid.
 name|bool
-name|RecordInterestingDependences
+name|RecordDependences
 decl_stmt|;
-comment|/// \brief Interesting memory dependences collected during the analysis as
-comment|/// defined by isInterestingDependence.  Only valid if
-comment|/// RecordInterestingDependences is true.
+comment|/// \brief Memory dependences collected during the analysis.  Only valid if
+comment|/// RecordDependences is true.
 name|SmallVector
 operator|<
 name|Dependence
 operator|,
 literal|8
 operator|>
-name|InterestingDependences
+name|Dependences
 expr_stmt|;
 comment|/// \brief Check whether there is a plausible dependence between the two
 comment|/// accesses.
@@ -883,9 +977,21 @@ name|TypeByteSize
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Holds information about the memory runtime legality checks to verify
+end_comment
+
+begin_comment
 comment|/// that a group of pointers do not overlap.
+end_comment
+
+begin_decl_stmt
 name|class
 name|RuntimePointerChecking
 block|{
@@ -1016,8 +1122,17 @@ name|Pointers
 operator|.
 name|clear
 argument_list|()
+block|;
+name|Checks
+operator|.
+name|clear
+argument_list|()
 block|;   }
 comment|/// Insert a pointer and calculate the start and end SCEVs.
+comment|/// \p We need Preds in order to compute the SCEV expression of the pointer
+comment|/// according to the assumptions that we've made during the analysis.
+comment|/// The method might also version the pointer stride according to \p Strides,
+comment|/// and change \p Preds.
 name|void
 name|insert
 argument_list|(
@@ -1032,6 +1147,8 @@ argument_list|,
 argument|unsigned ASId
 argument_list|,
 argument|const ValueToValueMap&Strides
+argument_list|,
+argument|PredicatedScalarEvolution&PSE
 argument_list|)
 expr_stmt|;
 comment|/// \brief No run-time memory checking is necessary.
@@ -1133,12 +1250,31 @@ name|Members
 expr_stmt|;
 block|}
 struct|;
-comment|/// \brief Groups pointers such that a single memcheck is required
-comment|/// between two different groups. This will clear the CheckingGroups vector
-comment|/// and re-compute it. We will only group dependecies if \p UseDependencies
-comment|/// is true, otherwise we will create a separate group for each pointer.
+comment|/// \brief A memcheck which made up of a pair of grouped pointers.
+comment|///
+comment|/// These *have* to be const for now, since checks are generated from
+comment|/// CheckingPtrGroups in LAI::addRuntimeChecks which is a const member
+comment|/// function.  FIXME: once check-generation is moved inside this class (after
+comment|/// the PtrPartition hack is removed), we could drop const.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CheckingPtrGroup
+operator|*
+operator|,
+specifier|const
+name|CheckingPtrGroup
+operator|*
+operator|>
+name|PointerCheck
+expr_stmt|;
+comment|/// \brief Generate the checks and store it.  This also performs the grouping
+comment|/// of pointers to reduce the number of memchecks necessary.
 name|void
-name|groupChecks
+name|generateChecks
 argument_list|(
 name|MemoryDepChecker
 operator|::
@@ -1150,6 +1286,23 @@ name|bool
 name|UseDependencies
 argument_list|)
 decl_stmt|;
+comment|/// \brief Returns the checks that generateChecks created.
+specifier|const
+name|SmallVector
+operator|<
+name|PointerCheck
+operator|,
+literal|4
+operator|>
+operator|&
+name|getChecks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Checks
+return|;
+block|}
 comment|/// \brief Decide if we need to add a check between two groups of pointers,
 comment|/// according to needsChecking.
 name|bool
@@ -1164,29 +1317,6 @@ specifier|const
 name|CheckingPtrGroup
 operator|&
 name|N
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|*
-name|PtrPartition
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Return true if any pointer requires run-time checking according
-comment|/// to needsChecking.
-name|bool
-name|needsAnyChecking
-argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|*
-name|PtrPartition
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1194,22 +1324,17 @@ comment|/// \brief Returns the number of run-time checks required according to
 comment|/// needsChecking.
 name|unsigned
 name|getNumberOfChecks
-argument_list|(
+argument_list|()
 specifier|const
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|*
-name|PtrPartition
-argument_list|)
-decl|const
-decl_stmt|;
+block|{
+return|return
+name|Checks
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 comment|/// \brief Print the list run-time memory checks necessary.
-comment|///
-comment|/// If \p PtrPartition is set, it contains the partition number for
-comment|/// pointers (-1 if the pointer belongs to multiple partitions).  In this
-comment|/// case omit checks between pointers belonging to the same partition.
 name|void
 name|print
 argument_list|(
@@ -1221,16 +1346,29 @@ name|unsigned
 name|Depth
 operator|=
 literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Print \p Checks.
+name|void
+name|printChecks
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|int
+name|PointerCheck
 operator|>
-operator|*
-name|PtrPartition
+operator|&
+name|Checks
+argument_list|,
+name|unsigned
+name|Depth
 operator|=
-name|nullptr
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1256,14 +1394,31 @@ literal|2
 operator|>
 name|CheckingGroups
 expr_stmt|;
-name|private
-label|:
+comment|/// \brief Check if pointers are in the same partition
+comment|///
+comment|/// \p PtrToPartition contains the partition number for pointers (-1 if the
+comment|/// pointer belongs to multiple partitions).
+specifier|static
+name|bool
+name|arePointersInSamePartition
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|PtrToPartition
+argument_list|,
+name|unsigned
+name|PtrIdx1
+argument_list|,
+name|unsigned
+name|PtrIdx2
+argument_list|)
+decl_stmt|;
 comment|/// \brief Decide whether we need to issue a run-time check for pointer at
 comment|/// index \p I and \p J to prove their independence.
-comment|///
-comment|/// If \p PtrPartition is set, it contains the partition number for
-comment|/// pointers (-1 if the pointer belongs to multiple partitions).  In this
-comment|/// case omit checks between pointers belonging to the same partition.
 name|bool
 name|needsChecking
 argument_list|(
@@ -1272,38 +1427,164 @@ name|I
 argument_list|,
 name|unsigned
 name|J
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|*
-name|PtrPartition
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return PointerInfo for pointer at index \p PtrIdx.
+specifier|const
+name|PointerInfo
+modifier|&
+name|getPointerInfo
+argument_list|(
+name|unsigned
+name|PtrIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|Pointers
+index|[
+name|PtrIdx
+index|]
+return|;
+block|}
+name|private
+label|:
+comment|/// \brief Groups pointers such that a single memcheck is required
+comment|/// between two different groups. This will clear the CheckingGroups vector
+comment|/// and re-compute it. We will only group dependecies if \p UseDependencies
+comment|/// is true, otherwise we will create a separate group for each pointer.
+name|void
+name|groupChecks
+argument_list|(
+name|MemoryDepChecker
+operator|::
+name|DepCandidates
+operator|&
+name|DepCands
+argument_list|,
+name|bool
+name|UseDependencies
+argument_list|)
+decl_stmt|;
+comment|/// Generate the checks and return them.
+name|SmallVector
+operator|<
+name|PointerCheck
+operator|,
+literal|4
+operator|>
+name|generateChecks
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Holds a pointer to the ScalarEvolution analysis.
 name|ScalarEvolution
 modifier|*
 name|SE
 decl_stmt|;
+comment|/// \brief Set of run-time checks required to establish independence of
+comment|/// otherwise may-aliasing pointers in the loop.
+name|SmallVector
+operator|<
+name|PointerCheck
+operator|,
+literal|4
+operator|>
+name|Checks
+expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Drive the analysis of memory accesses in the loop
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This class is responsible for analyzing the memory accesses of a loop.  It
+end_comment
+
+begin_comment
 comment|/// collects the accesses and then its main helper the AccessAnalysis class
+end_comment
+
+begin_comment
 comment|/// finds and categorizes the dependences in buildDependenceSets.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// For memory dependences that can be analyzed at compile time, it determines
+end_comment
+
+begin_comment
 comment|/// whether the dependence is part of cycle inhibiting vectorization.  This work
+end_comment
+
+begin_comment
 comment|/// is delegated to the MemoryDepChecker class.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// For memory dependences that cannot be determined at compile time, it
+end_comment
+
+begin_comment
 comment|/// generates run-time checks to prove independence.  This is done by
+end_comment
+
+begin_comment
 comment|/// AccessAnalysis::canCheckPtrAtRT and the checks are maintained by the
+end_comment
+
+begin_comment
 comment|/// RuntimePointerCheck class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If pointers can wrap or can't be expressed as affine AddRec expressions by
+end_comment
+
+begin_comment
+comment|/// ScalarEvolution, we will generate run-time checks by emitting a
+end_comment
+
+begin_comment
+comment|/// SCEVUnionPredicate.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Checks for both memory dependences and the SCEV predicates contained in the
+end_comment
+
+begin_comment
+comment|/// PSE must be emitted in order for the results of this analysis to be valid.
+end_comment
+
+begin_decl_stmt
 name|class
 name|LoopAccessInfo
 block|{
@@ -1374,26 +1655,14 @@ comment|/// \brief Number of memchecks required to prove independence of otherwi
 comment|/// may-alias pointers.
 name|unsigned
 name|getNumRuntimePointerChecks
-argument_list|(
+argument_list|()
 specifier|const
-name|SmallVectorImpl
-operator|<
-name|int
-operator|>
-operator|*
-name|PtrPartition
-operator|=
-name|nullptr
-argument_list|)
-decl|const
 block|{
 return|return
 name|PtrRtChecking
 operator|.
 name|getNumberOfChecks
-argument_list|(
-name|PtrPartition
-argument_list|)
+argument_list|()
 return|;
 block|}
 comment|/// Return true if the block BB needs to be predicated in order for the loop
@@ -1457,10 +1726,6 @@ comment|///
 comment|/// Returns a pair of instructions where the first element is the first
 comment|/// instruction generated in possibly a sequence of instructions and the
 comment|/// second value is the final comparator value or NULL if no check is needed.
-comment|///
-comment|/// If \p PtrPartition is set, it contains the partition number for pointers
-comment|/// (-1 if the pointer belongs to multiple partitions).  In this case omit
-comment|/// checks between pointers belonging to the same partition.
 name|std
 operator|::
 name|pair
@@ -1471,11 +1736,32 @@ operator|,
 name|Instruction
 operator|*
 operator|>
-name|addRuntimeCheck
+name|addRuntimeChecks
+argument_list|(
+argument|Instruction *Loc
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// \brief Generete the instructions for the checks in \p PointerChecks.
+comment|///
+comment|/// Returns a pair of instructions where the first element is the first
+comment|/// instruction generated in possibly a sequence of instructions and the
+comment|/// second value is the final comparator value or NULL if no check is needed.
+name|std
+operator|::
+name|pair
+operator|<
+name|Instruction
+operator|*
+operator|,
+name|Instruction
+operator|*
+operator|>
+name|addRuntimeChecks
 argument_list|(
 argument|Instruction *Loc
 argument_list|,
-argument|const SmallVectorImpl<int> *PtrPartition = nullptr
+argument|const SmallVectorImpl<RuntimePointerChecking::PointerCheck>&PointerChecks
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1569,6 +1855,14 @@ return|return
 name|StoreToLoopInvariantAddress
 return|;
 block|}
+comment|/// Used to add runtime SCEV checks. Simplifies SCEV expressions and converts
+comment|/// them to a more usable form.  All SCEV expressions during the analysis
+comment|/// should be re-written (and therefore simplified) according to PSE.
+comment|/// A user of LoopAccessAnalysis will need to emit the runtime checks
+comment|/// associated with this predicate.
+name|PredicatedScalarEvolution
+name|PSE
+decl_stmt|;
 name|private
 label|:
 comment|/// \brief Analyze the loop.  Substitute symbolic strides using Strides.
@@ -1608,10 +1902,6 @@ decl_stmt|;
 name|Loop
 modifier|*
 name|TheLoop
-decl_stmt|;
-name|ScalarEvolution
-modifier|*
-name|SE
 decl_stmt|;
 specifier|const
 name|DataLayout
@@ -1662,7 +1952,13 @@ operator|>
 name|Report
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|Value
 modifier|*
 name|stripIntegerCast
@@ -1672,20 +1968,53 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|///\brief Return the SCEV corresponding to a pointer with the symbolic stride
-comment|///replaced with constant one.
+end_comment
+
+begin_comment
+comment|/// replaced with constant one, assuming \p Preds is true.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// If necessary this method will version the stride of the pointer according
+end_comment
+
+begin_comment
+comment|/// to \p PtrToStride and therefore add a new predicate to \p Preds.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// If \p OrigPtr is not null, use it to look up the stride value instead of \p
+end_comment
+
+begin_comment
 comment|/// Ptr.  \p PtrToStride provides the mapping between the pointer value and its
+end_comment
+
+begin_comment
 comment|/// stride as collected by LoopVectorizationLegality::collectStridedAccess.
+end_comment
+
+begin_function_decl
 specifier|const
 name|SCEV
 modifier|*
 name|replaceSymbolicStrideSCEV
 parameter_list|(
-name|ScalarEvolution
-modifier|*
-name|SE
+name|PredicatedScalarEvolution
+modifier|&
+name|PSE
 parameter_list|,
 specifier|const
 name|ValueToValueMap
@@ -1703,14 +2032,35 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Check the stride of the pointer and ensure that it does not wrap in
-comment|/// the address space.
+end_comment
+
+begin_comment
+comment|/// the address space, assuming \p Preds is true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If necessary this method will version the stride of the pointer according
+end_comment
+
+begin_comment
+comment|/// to \p PtrToStride and therefore add a new predicate to \p Preds.
+end_comment
+
+begin_function_decl
 name|int
 name|isStridedPtr
 parameter_list|(
-name|ScalarEvolution
-modifier|*
-name|SE
+name|PredicatedScalarEvolution
+modifier|&
+name|PSE
 parameter_list|,
 name|Value
 modifier|*
@@ -1727,13 +2077,37 @@ modifier|&
 name|StridesMap
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief This analysis provides dependence information for the memory accesses
+end_comment
+
+begin_comment
 comment|/// of a loop.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// It runs the analysis for a loop on demand.  This can be initiated by
+end_comment
+
+begin_comment
 comment|/// querying the loop access info via LAA::getInfo.  getInfo return a
+end_comment
+
+begin_comment
 comment|/// LoopAccessInfo object.  See this class for the specifics of what information
+end_comment
+
+begin_comment
 comment|/// is provided.
+end_comment
+
+begin_decl_stmt
 name|class
 name|LoopAccessAnalysis
 range|:
@@ -1860,10 +2234,68 @@ operator|*
 name|LI
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
+begin_expr_stmt
+specifier|inline
+name|Instruction
+operator|*
+name|MemoryDepChecker
+operator|::
+name|Dependence
+operator|::
+name|getSource
+argument_list|(
+argument|const LoopAccessInfo&LAI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|LAI
+operator|.
+name|getDepChecker
+argument_list|()
+operator|.
+name|getMemoryInstructions
+argument_list|()
+index|[
+name|Source
+index|]
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|Instruction
+operator|*
+name|MemoryDepChecker
+operator|::
+name|Dependence
+operator|::
+name|getDestination
+argument_list|(
+argument|const LoopAccessInfo&LAI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|LAI
+operator|.
+name|getDepChecker
+argument_list|()
+operator|.
+name|getMemoryInstructions
+argument_list|()
+index|[
+name|Destination
+index|]
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

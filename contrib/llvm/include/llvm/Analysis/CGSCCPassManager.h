@@ -1265,7 +1265,7 @@ name|CGSCCAnalysisManagerFunctionProxy
 block|{
 name|public
 label|:
-comment|/// \brief Result proxy object for \c ModuleAnalysisManagerFunctionProxy.
+comment|/// \brief Result proxy object for \c CGSCCAnalysisManagerFunctionProxy.
 name|class
 name|Result
 block|{

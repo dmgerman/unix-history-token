@@ -2682,19 +2682,6 @@ name|RMAN_ARRAY
 expr_stmt|;
 name|acpi_rman_mem
 operator|.
-name|rm_start
-operator|=
-literal|0
-expr_stmt|;
-name|acpi_rman_mem
-operator|.
-name|rm_end
-operator|=
-operator|~
-literal|0ul
-expr_stmt|;
-name|acpi_rman_mem
-operator|.
 name|rm_descr
 operator|=
 literal|"ACPI I/O memory addresses"

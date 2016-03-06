@@ -122,6 +122,9 @@ comment|// AArch64 (little endian): aarch64
 name|aarch64_be
 block|,
 comment|// AArch64 (big endian): aarch64_be
+name|avr
+block|,
+comment|// AVR: Atmel AVR microcontroller
 name|bpfel
 block|,
 comment|// eBPF or extended BPF or 64-bit BPF (little endian)
@@ -199,10 +202,10 @@ block|,
 comment|// NVPTX: 64-bit
 name|le32
 block|,
-comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
+comment|// le32: generic little-endian 32-bit CPU (PNaCl)
 name|le64
 block|,
-comment|// le64: generic little-endian 64-bit CPU (PNaCl / Emscripten)
+comment|// le64: generic little-endian 64-bit CPU (PNaCl)
 name|amdil
 block|,
 comment|// AMDIL
@@ -243,6 +246,8 @@ name|SubArchType
 block|{
 name|NoSubArch
 block|,
+name|ARMSubArch_v8_2a
+block|,
 name|ARMSubArch_v8_1a
 block|,
 name|ARMSubArch_v8
@@ -254,6 +259,8 @@ block|,
 name|ARMSubArch_v7m
 block|,
 name|ARMSubArch_v7s
+block|,
+name|ARMSubArch_v7k
 block|,
 name|ARMSubArch_v6
 block|,
@@ -303,9 +310,11 @@ name|NVIDIA
 block|,
 name|CSR
 block|,
+name|Myriad
+block|,
 name|LastVendorType
 init|=
-name|CSR
+name|Myriad
 block|}
 enum|;
 enum|enum
@@ -367,9 +376,17 @@ block|,
 comment|// AMD HSA Runtime
 name|PS4
 block|,
+name|ELFIAMCU
+block|,
+name|TvOS
+block|,
+comment|// Apple tvOS
+name|WatchOS
+block|,
+comment|// Apple watchOS
 name|LastOSType
 init|=
-name|PS4
+name|WatchOS
 block|}
 enum|;
 enum|enum
@@ -399,9 +416,13 @@ name|Itanium
 block|,
 name|Cygnus
 block|,
+name|AMDOpenCL
+block|,
+name|CoreCLR
+block|,
 name|LastEnvironmentType
 init|=
-name|Cygnus
+name|CoreCLR
 block|}
 enum|;
 enum|enum
@@ -451,7 +472,7 @@ name|public
 label|:
 comment|/// @name Constructors
 comment|/// @{
-comment|/// \brief Default constructor is the same as an empty string and leaves all
+comment|/// Default constructor is the same as an empty string and leaves all
 comment|/// triple fields unknown.
 name|Triple
 argument_list|()
@@ -589,7 +610,7 @@ argument_list|(
 argument|StringRef Str
 argument_list|)
 expr_stmt|;
-comment|/// \brief Return the normalized form of this triple's string.
+comment|/// Return the normalized form of this triple's string.
 name|std
 operator|::
 name|string
@@ -671,7 +692,7 @@ return|return
 name|Environment
 return|;
 block|}
-comment|/// \brief Parse the version number from the OS name component of the
+comment|/// Parse the version number from the OS name component of the
 comment|/// triple, if present.
 comment|///
 comment|/// For example, "fooos1.2.3" would return (1, 2, 3).
@@ -776,9 +797,28 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// getiOSVersion - Parse the version number as with getOSVersion.  This should
-comment|/// only be called with IOS triples.
+comment|/// only be called with IOS or generic triples.
 name|void
 name|getiOSVersion
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getWatchOSVersion - Parse the version number as with getOSVersion.  This
+comment|/// should only be called with WatchOS or generic triples.
+name|void
+name|getWatchOSVersion
 argument_list|(
 name|unsigned
 operator|&
@@ -861,7 +901,7 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Convenience Predicates
 comment|/// @{
-comment|/// \brief Test whether the architecture is 64-bit
+comment|/// Test whether the architecture is 64-bit
 comment|///
 comment|/// Note that this tests for 64-bit pointer width, and nothing else. Note
 comment|/// that we intentionally expose only three predicates, 64-bit, 32-bit, and
@@ -873,7 +913,7 @@ name|isArch64Bit
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Test whether the architecture is 32-bit
+comment|/// Test whether the architecture is 32-bit
 comment|///
 comment|/// Note that this tests for 32-bit pointer width, and nothing else.
 name|bool
@@ -881,7 +921,7 @@ name|isArch32Bit
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Test whether the architecture is 16-bit
+comment|/// Test whether the architecture is 16-bit
 comment|///
 comment|/// Note that this tests for 16-bit pointer width, and nothing else.
 name|bool
@@ -1140,6 +1180,10 @@ name|MacOSX
 return|;
 block|}
 comment|/// Is this an iOS triple.
+comment|/// Note: This identifies tvOS as a variant of iOS. If that ever
+comment|/// changes, i.e., if the two operating systems diverge or their version
+comment|/// numbers get out of sync, that will need to be changed.
+comment|/// watchOS has completely different version numbers so it is not included.
 name|bool
 name|isiOS
 argument_list|()
@@ -1152,9 +1196,42 @@ operator|==
 name|Triple
 operator|::
 name|IOS
+operator|||
+name|isTvOS
+argument_list|()
 return|;
 block|}
-comment|/// isOSDarwin - Is this a "Darwin" OS (OS X or iOS).
+comment|/// Is this an Apple tvOS triple.
+name|bool
+name|isTvOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|TvOS
+return|;
+block|}
+comment|/// Is this an Apple watchOS triple.
+name|bool
+name|isWatchOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|WatchOS
+return|;
+block|}
+comment|/// isOSDarwin - Is this a "Darwin" OS (OS X, iOS, or watchOS).
 name|bool
 name|isOSDarwin
 argument_list|()
@@ -1165,6 +1242,9 @@ name|isMacOSX
 argument_list|()
 operator|||
 name|isiOS
+argument_list|()
+operator|||
+name|isWatchOS
 argument_list|()
 return|;
 block|}
@@ -1253,6 +1333,21 @@ name|Bitrig
 return|;
 block|}
 name|bool
+name|isOSIAMCU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ELFIAMCU
+return|;
+block|}
+comment|/// Checks if the environment could be MSVC.
+name|bool
 name|isWindowsMSVCEnvironment
 argument_list|()
 specifier|const
@@ -1282,6 +1377,7 @@ name|MSVC
 operator|)
 return|;
 block|}
+comment|/// Checks if the environment is MSVC.
 name|bool
 name|isKnownWindowsMSVCEnvironment
 argument_list|()
@@ -1301,6 +1397,27 @@ operator|==
 name|Triple
 operator|::
 name|MSVC
+return|;
+block|}
+name|bool
+name|isWindowsCoreCLREnvironment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|&&
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|CoreCLR
 return|;
 block|}
 name|bool
@@ -1366,7 +1483,7 @@ operator|::
 name|GNU
 return|;
 block|}
-comment|/// \brief Tests for either Cygwin or MinGW OS
+comment|/// Tests for either Cygwin or MinGW OS
 name|bool
 name|isOSCygMing
 argument_list|()
@@ -1380,7 +1497,7 @@ name|isWindowsGNUEnvironment
 argument_list|()
 return|;
 block|}
-comment|/// \brief Is this a "Windows" OS targeting a "MSVCRT.dll" environment.
+comment|/// Is this a "Windows" OS targeting a "MSVCRT.dll" environment.
 name|bool
 name|isOSMSVCRT
 argument_list|()
@@ -1397,7 +1514,7 @@ name|isWindowsItaniumEnvironment
 argument_list|()
 return|;
 block|}
-comment|/// \brief Tests whether the OS is Windows.
+comment|/// Tests whether the OS is Windows.
 name|bool
 name|isOSWindows
 argument_list|()
@@ -1412,7 +1529,7 @@ operator|::
 name|Win32
 return|;
 block|}
-comment|/// \brief Tests whether the OS is NaCl (Native Client)
+comment|/// Tests whether the OS is NaCl (Native Client)
 name|bool
 name|isOSNaCl
 argument_list|()
@@ -1427,7 +1544,7 @@ operator|::
 name|NaCl
 return|;
 block|}
-comment|/// \brief Tests whether the OS is Linux.
+comment|/// Tests whether the OS is Linux.
 name|bool
 name|isOSLinux
 argument_list|()
@@ -1442,7 +1559,7 @@ operator|::
 name|Linux
 return|;
 block|}
-comment|/// \brief Tests whether the OS uses the ELF binary format.
+comment|/// Tests whether the OS uses the ELF binary format.
 name|bool
 name|isOSBinFormatELF
 argument_list|()
@@ -1457,7 +1574,7 @@ operator|::
 name|ELF
 return|;
 block|}
-comment|/// \brief Tests whether the OS uses the COFF binary format.
+comment|/// Tests whether the OS uses the COFF binary format.
 name|bool
 name|isOSBinFormatCOFF
 argument_list|()
@@ -1472,7 +1589,7 @@ operator|::
 name|COFF
 return|;
 block|}
-comment|/// \brief Tests whether the environment is MachO.
+comment|/// Tests whether the environment is MachO.
 name|bool
 name|isOSBinFormatMachO
 argument_list|()
@@ -1487,7 +1604,7 @@ operator|::
 name|MachO
 return|;
 block|}
-comment|/// \brief Tests whether the target is the PS4 CPU
+comment|/// Tests whether the target is the PS4 CPU
 name|bool
 name|isPS4CPU
 argument_list|()
@@ -1516,7 +1633,7 @@ operator|::
 name|PS4
 return|;
 block|}
-comment|/// \brief Tests whether the target is the PS4 platform
+comment|/// Tests whether the target is the PS4 platform
 name|bool
 name|isPS4
 argument_list|()
@@ -1536,6 +1653,21 @@ operator|==
 name|Triple
 operator|::
 name|PS4
+return|;
+block|}
+comment|/// Tests whether the target is Android
+name|bool
+name|isAndroid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Android
 return|;
 block|}
 comment|/// @}
@@ -1643,7 +1775,7 @@ function_decl|;
 comment|/// @}
 comment|/// @name Helpers to build variants of a particular triple.
 comment|/// @{
-comment|/// \brief Form a triple with a 32-bit variant of the current architecture.
+comment|/// Form a triple with a 32-bit variant of the current architecture.
 comment|///
 comment|/// This can be used to move across "families" of architectures where useful.
 comment|///
@@ -1656,7 +1788,7 @@ name|get32BitArchVariant
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Form a triple with a 64-bit variant of the current architecture.
+comment|/// Form a triple with a 64-bit variant of the current architecture.
 comment|///
 comment|/// This can be used to move across "families" of architectures where useful.
 comment|///
@@ -1699,9 +1831,7 @@ comment|/// Get the (LLVM) name of the minimum ARM CPU for the arch we are targe
 comment|///
 comment|/// \param Arch the architecture name (e.g., "armv7s"). If it is an empty
 comment|/// string then the triple's arch name is used.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getARMCPUForArch
 argument_list|(
 name|StringRef

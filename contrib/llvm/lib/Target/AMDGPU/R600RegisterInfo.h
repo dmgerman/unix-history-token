@@ -122,7 +122,6 @@ argument_list|(
 argument|MVT VT
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|const
 name|RegClassWeight

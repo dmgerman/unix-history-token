@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -136,6 +142,10 @@ operator|~
 name|File
 argument_list|()
 expr_stmt|;
+name|void
+name|UpdateIfNeeded
+parameter_list|()
+function_decl|;
 name|size_t
 name|DisplaySourceLines
 parameter_list|(
@@ -324,20 +334,24 @@ name|public
 label|:
 name|SourceFileCache
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 operator|~
 name|SourceFileCache
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|AddSourceFile
-argument_list|(
+parameter_list|(
 specifier|const
 name|FileSP
-operator|&
+modifier|&
 name|file_sp
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|FileSP
 name|FindSourceFile
 argument_list|(
@@ -368,6 +382,7 @@ block|}
 empty_stmt|;
 endif|#
 directive|endif
+comment|// SWIG
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -436,7 +451,7 @@ name|SymbolContextList
 modifier|*
 name|bp_locs
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// This variant uses the last file we visited.
@@ -466,7 +481,7 @@ name|SymbolContextList
 modifier|*
 name|bp_locs
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|size_t
@@ -487,7 +502,7 @@ name|SymbolContextList
 modifier|*
 name|bp_locs
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -525,7 +540,7 @@ operator|.
 name|get
 argument_list|()
 operator|!=
-name|NULL
+name|nullptr
 operator|)
 return|;
 block|}
@@ -567,9 +582,6 @@ parameter_list|)
 function_decl|;
 name|protected
 label|:
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from SourceManager can see and modify these
-comment|//------------------------------------------------------------------
 name|FileSP
 name|m_last_file_sp
 decl_stmt|;
@@ -594,9 +606,6 @@ name|m_debugger_wp
 expr_stmt|;
 name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// For SourceManager only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|SourceManager

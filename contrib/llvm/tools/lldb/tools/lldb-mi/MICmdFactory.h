@@ -100,18 +100,6 @@ comment|//          A singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -149,9 +137,7 @@ function_decl|(
 modifier|*
 name|CmdCreatorFnPtr
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Class:
 name|public
@@ -167,36 +153,29 @@ label|:
 name|virtual
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|GetMiCmd
-argument_list|(
-name|void
-argument_list|)
-decl|const
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|virtual
 name|CmdCreatorFnPtr
 name|GetCmdCreatorFn
-argument_list|(
-name|void
-argument_list|)
-decl|const
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 comment|// virtual CMICmdBase *         CreateSelf( void ) = 0;             // Not possible as require a static creator
 comment|// function in the command class, here for awareness
 comment|/* dtor */
 name|virtual
 operator|~
 name|ICmd
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
-expr_stmt|;
 block|}
 empty_stmt|;
 comment|// Methods:
@@ -204,18 +183,14 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|CmdRegister
 parameter_list|(
@@ -262,9 +237,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmdFactory
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmdFactory
@@ -310,9 +283,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdFactory
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Typedefs:

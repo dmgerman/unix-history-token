@@ -242,8 +242,6 @@ operator|&
 name|generateReplacements
 argument_list|()
 expr_stmt|;
-name|private
-label|:
 comment|/// \brief Represents a change before a token, a break inside a token,
 comment|/// or the layout of an unchanged token (or whitespace within).
 struct|struct
@@ -309,7 +307,7 @@ name|Change
 argument_list|(
 argument|bool CreateReplacement
 argument_list|,
-argument|const SourceRange&OriginalWhitespaceRange
+argument|SourceRange OriginalWhitespaceRange
 argument_list|,
 argument|unsigned IndentLevel
 argument_list|,
@@ -326,6 +324,10 @@ argument_list|,
 argument|tok::TokenKind Kind
 argument_list|,
 argument|bool ContinuesPPDirective
+argument_list|,
+argument|bool IsStartOfDeclName
+argument_list|,
+argument|bool IsInsideToken
 argument_list|)
 empty_stmt|;
 name|bool
@@ -364,6 +366,9 @@ expr_stmt|;
 name|bool
 name|ContinuesPPDirective
 decl_stmt|;
+name|bool
+name|IsStartOfDeclName
+decl_stmt|;
 comment|// The number of nested blocks the token is in. This is used to add tabs
 comment|// only for the indentation, and not for alignment, when
 comment|// UseTab = US_ForIndentation.
@@ -377,6 +382,11 @@ comment|// of the lines in a block comment. This is used when aligning trailing
 comment|// comments. Uncompensated negative offset is truncated to 0.
 name|int
 name|Spaces
+decl_stmt|;
+comment|// If this change is inside of a token but not at the start of the token or
+comment|// directly after a newline.
+name|bool
+name|IsInsideToken
 decl_stmt|;
 comment|// \c IsTrailingComment, \c TokenLength, \c PreviousEndOfTokenColumn and
 comment|// \c EscapedNewlineColumn will be calculated in
@@ -411,6 +421,8 @@ name|IndentationOffset
 decl_stmt|;
 block|}
 struct|;
+name|private
+label|:
 comment|/// \brief Calculate \c IsTrailingComment, \c TokenLength for the last tokens
 comment|/// or token parts in a line and \c PreviousEndOfTokenColumn and
 comment|/// \c EscapedNewlineColumn for the first tokens or token parts in a line.
@@ -423,21 +435,10 @@ name|void
 name|alignConsecutiveAssignments
 parameter_list|()
 function_decl|;
-comment|/// \brief Align consecutive assignments from change \p Start to change \p End
-comment|/// at
-comment|/// the specified \p Column.
+comment|/// \brief Align consecutive declarations over all \c Changes.
 name|void
-name|alignConsecutiveAssignments
-parameter_list|(
-name|unsigned
-name|Start
-parameter_list|,
-name|unsigned
-name|End
-parameter_list|,
-name|unsigned
-name|Column
-parameter_list|)
+name|alignConsecutiveDeclarations
+parameter_list|()
 function_decl|;
 comment|/// \brief Align trailing comments over all \c Changes.
 name|void
@@ -488,9 +489,7 @@ comment|/// \brief Stores \p Text as the replacement for the whitespace in \p Ra
 name|void
 name|storeReplacement
 parameter_list|(
-specifier|const
 name|SourceRange
-modifier|&
 name|Range
 parameter_list|,
 name|StringRef

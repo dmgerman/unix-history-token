@@ -428,6 +428,9 @@ parameter_list|(
 name|Token
 modifier|&
 name|Tok
+parameter_list|,
+name|SourceLocation
+name|OpLoc
 parameter_list|)
 function_decl|;
 comment|/// \brief If \p loc is a FileID and points inside the current macro

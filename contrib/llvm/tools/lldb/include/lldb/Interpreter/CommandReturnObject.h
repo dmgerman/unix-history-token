@@ -572,7 +572,7 @@ name|char
 modifier|*
 name|fallback_error_cstr
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -659,6 +659,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|bool
+name|GetAbnormalStopWasExpected
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_abnormal_stop_was_expected
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|SetAbnormalStopWasExpected
+parameter_list|(
+name|bool
+name|signal_was_expected
+parameter_list|)
+block|{
+name|m_abnormal_stop_was_expected
+operator|=
+name|signal_was_expected
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|private
 label|:
@@ -712,6 +739,36 @@ end_decl_stmt
 
 begin_comment
 comment|// If true, then the input handle from the debugger will be hooked up
+end_comment
+
+begin_decl_stmt
+name|bool
+name|m_abnormal_stop_was_expected
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// This is to support eHandleCommandFlagStopOnCrash vrs. attach.
+end_comment
+
+begin_comment
+comment|// The attach command often ends up with the process stopped due to a signal.
+end_comment
+
+begin_comment
+comment|// Normally that would mean stop on crash should halt batch execution, but we
+end_comment
+
+begin_comment
+comment|// obviously don't want that for attach.  Using this flag, the attach command
+end_comment
+
+begin_comment
+comment|// (and anything else for which this is relevant) can say that the signal is
+end_comment
+
+begin_comment
+comment|// expected, and batch command execution can continue.
 end_comment
 
 begin_comment

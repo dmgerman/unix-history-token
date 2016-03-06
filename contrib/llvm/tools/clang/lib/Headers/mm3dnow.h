@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("3dnow")))
 end_define
 
 begin_function
@@ -675,6 +675,23 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Handle the 3dnowa instructions here. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__DEFAULT_FN_ATTRS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__, __target__("3dnowa")))
+end_define
 
 begin_function
 specifier|static

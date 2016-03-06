@@ -339,6 +339,23 @@ name|QualType
 name|originalType
 parameter_list|)
 function_decl|;
+comment|// Handles casts of type CK_IntegralCast.
+name|SVal
+name|evalIntegralCast
+parameter_list|(
+name|ProgramStateRef
+name|state
+parameter_list|,
+name|SVal
+name|val
+parameter_list|,
+name|QualType
+name|castTy
+parameter_list|,
+name|QualType
+name|originalType
+parameter_list|)
+function_decl|;
 name|virtual
 name|SVal
 name|evalMinus

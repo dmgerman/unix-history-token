@@ -385,6 +385,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// pop {pc} can't switch Thumb mode on ARMv4T
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|POP_PC
+parameter_list|()
+value|pop {pc}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|POP_PC
+parameter_list|()
+define|\
+value|pop {ip};                                                                    \   JMP(ip)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if

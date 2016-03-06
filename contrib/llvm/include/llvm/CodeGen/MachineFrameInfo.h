@@ -246,6 +246,14 @@ comment|// cannot alias any other memory objects.
 name|bool
 name|isSpillSlot
 decl_stmt|;
+comment|/// If true, this stack slot is used to spill a value (could be deopt
+comment|/// and/or GC related) over a statepoint. We know that the address of the
+comment|/// slot can't alias any LLVM IR value.  This is very similiar to a Spill
+comment|/// Slot, but is created by statepoint lowering is SelectionDAG, not the
+comment|/// register allocator.
+name|bool
+name|isStatepointSpillSlot
+decl_stmt|;
 comment|/// If this stack object is originated from an Alloca instruction
 comment|/// this value saves the original IR allocation. Can be NULL.
 specifier|const
@@ -307,6 +315,11 @@ argument_list|(
 name|isSS
 argument_list|)
 operator|,
+name|isStatepointSpillSlot
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Alloca
 argument_list|(
 name|Val
@@ -329,6 +342,16 @@ name|unsigned
 name|StackAlignment
 decl_stmt|;
 comment|/// Can the stack be realigned.
+comment|/// Targets that set this to false don't have the ability to overalign
+comment|/// their stack frame, and thus, overaligned allocas are all treated
+comment|/// as dynamic allocations and the target must handle them as part
+comment|/// of DYNAMIC_STACKALLOC lowering.
+comment|/// FIXME: There is room for improvement in this case, in terms of
+comment|/// grouping overaligned allocas into a "secondary stack frame" and
+comment|/// then only use a single alloca to allocate this frame and only a
+comment|/// single virtual register to access it. Currently, without such an
+comment|/// optimization, each such alloca gets it's own dynamic
+comment|/// realignment.
 name|bool
 name|StackRealignable
 decl_stmt|;
@@ -386,7 +409,7 @@ comment|/// SP-relative and FP-relative offsets.  E.G., if objects are accessed 
 comment|/// SP then OffsetAdjustment is zero; if FP is used, OffsetAdjustment is set
 comment|/// to the distance between the initial SP and the value in FP.  For many
 comment|/// targets, this value is only used when generating debug info (via
-comment|/// TargetRegisterInfo::getFrameIndexOffset); when generating code, the
+comment|/// TargetRegisterInfo::getFrameIndexReference); when generating code, the
 comment|/// corresponding adjustments are performed directly.
 name|int
 name|OffsetAdjustment
@@ -422,7 +445,7 @@ decl_stmt|;
 comment|/// This contains the size of the largest call frame if the target uses frame
 comment|/// setup/destroy pseudo instructions (as defined in the TargetFrameInfo
 comment|/// class).  This information is important for frame pointer elimination.
-comment|/// If is only valid during and after prolog/epilog code insertion.
+comment|/// It is only valid during and after prolog/epilog code insertion.
 name|unsigned
 name|MaxCallFrameSize
 decl_stmt|;
@@ -482,6 +505,11 @@ comment|/// True if the function dynamically adjusts the stack pointer through s
 comment|/// opaque mechanism like inline assembly or Win32 EH.
 name|bool
 name|HasOpaqueSPAdjustment
+decl_stmt|;
+comment|/// True if the function contains operations which will lower down to
+comment|/// instructions which manipulate the stack pointer.
+name|bool
+name|HasCopyImplyingStackAdjustment
 decl_stmt|;
 comment|/// True if the function contains a call to the llvm.vastart intrinsic.
 name|bool
@@ -606,6 +634,10 @@ name|HasOpaqueSPAdjustment
 operator|=
 name|false
 block|;
+name|HasCopyImplyingStackAdjustment
+operator|=
+name|false
+block|;
 name|HasVAStart
 operator|=
 name|false
@@ -673,6 +705,18 @@ name|StackProtectorIdx
 operator|=
 name|I
 expr_stmt|;
+block|}
+name|bool
+name|hasStackProtectorIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackProtectorIdx
+operator|!=
+operator|-
+literal|1
+return|;
 block|}
 comment|/// Return the index for the function context object.
 comment|/// This object is used for SjLj exceptions.
@@ -904,6 +948,7 @@ name|getLocalFrameObjectMap
 argument_list|(
 argument|int i
 argument_list|)
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -934,7 +979,8 @@ block|}
 comment|/// Return the number of objects allocated into the local object block.
 name|int64_t
 name|getLocalFrameObjectCount
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|LocalFrameObjects
@@ -994,7 +1040,8 @@ comment|/// Get whether the local allocation blob should be allocated together o
 comment|/// let PEI allocate the locals in it directly.
 name|bool
 name|getUseLocalStackAllocationBlock
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|UseLocalStackAllocationBlock
@@ -1498,6 +1545,29 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// Returns true if the function contains operations which will lower down to
+comment|/// instructions which manipulate the stack pointer.
+name|bool
+name|hasCopyImplyingStackAdjustment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCopyImplyingStackAdjustment
+return|;
+block|}
+name|void
+name|setHasCopyImplyingStackAdjustment
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasCopyImplyingStackAdjustment
+operator|=
+name|B
+expr_stmt|;
+block|}
 comment|/// Returns true if the function calls the llvm.va_start intrinsic.
 name|bool
 name|hasVAStart
@@ -1767,6 +1837,42 @@ operator|.
 name|isSpillSlot
 return|;
 block|}
+name|bool
+name|isStatepointSpillSlotObjectIndex
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isStatepointSpillSlot
+return|;
+block|}
 comment|/// Returns true if the specified index corresponds to a dead object.
 name|bool
 name|isDeadObjectIndex
@@ -1846,6 +1952,52 @@ name|Size
 operator|==
 literal|0
 return|;
+block|}
+name|void
+name|markAsStatepointSpillSlotObjectIndex
+parameter_list|(
+name|int
+name|ObjectIdx
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isStatepointSpillSlot
+operator|=
+name|true
+expr_stmt|;
+name|assert
+argument_list|(
+name|isStatepointSpillSlotObjectIndex
+argument_list|(
+name|ObjectIdx
+argument_list|)
+operator|&&
+literal|"inconsistent"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// Create a new statically sized stack object, returning
 comment|/// a nonnegative identifier to represent it.

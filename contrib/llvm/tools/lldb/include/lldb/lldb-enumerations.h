@@ -462,6 +462,8 @@ name|eFormatVectorOfSInt64
 block|,
 name|eFormatVectorOfUInt64
 block|,
+name|eFormatVectorOfFloat16
+block|,
 name|eFormatVectorOfFloat32
 block|,
 name|eFormatVectorOfFloat64
@@ -532,7 +534,7 @@ comment|//----------------------------------------------------------------------
 enum|enum
 name|RegisterKind
 block|{
-name|eRegisterKindGCC
+name|eRegisterKindEHFrame
 init|=
 literal|0
 block|,
@@ -543,9 +545,9 @@ comment|// the register numbers seen DWARF
 name|eRegisterKindGeneric
 block|,
 comment|// insn ptr reg, stack ptr reg, etc not specific to any particular target
-name|eRegisterKindGDB
+name|eRegisterKindProcessPlugin
 block|,
-comment|// the register numbers gdb uses (matches stabs numbers)
+comment|// num used by the process plugin - e.g. by the remote gdb-protocol stub program
 name|eRegisterKindLLDB
 block|,
 comment|// lldb's internal register numbers
@@ -1290,7 +1292,7 @@ literal|0x0023
 block|,
 comment|///< ISO Fortran 2008.
 comment|// Vendor Extensions
-comment|// Note: LanguageRuntime::GetNameForLanguageType
+comment|// Note: Language::GetNameForLanguageType
 comment|// assumes these can be used as indexes into array language_names, and
 comment|// Language::SetLanguageFromCString and Language::AsCString
 comment|// assume these can be used as indexes into array g_languages.
@@ -1635,6 +1637,8 @@ block|,
 comment|// Objective C const CFString/NSString objects
 name|eSectionTypeDWARFDebugAbbrev
 block|,
+name|eSectionTypeDWARFDebugAddr
+block|,
 name|eSectionTypeDWARFDebugAranges
 block|,
 name|eSectionTypeDWARFDebugFrame
@@ -1647,6 +1651,8 @@ name|eSectionTypeDWARFDebugLoc
 block|,
 name|eSectionTypeDWARFDebugMacInfo
 block|,
+name|eSectionTypeDWARFDebugMacro
+block|,
 name|eSectionTypeDWARFDebugPubNames
 block|,
 name|eSectionTypeDWARFDebugPubTypes
@@ -1654,6 +1660,8 @@ block|,
 name|eSectionTypeDWARFDebugRanges
 block|,
 name|eSectionTypeDWARFDebugStr
+block|,
+name|eSectionTypeDWARFDebugStrOffsets
 block|,
 name|eSectionTypeDWARFAppleNames
 block|,
@@ -1677,9 +1685,15 @@ block|,
 comment|// Elf SHT_DYNAMIC section
 name|eSectionTypeEHFrame
 block|,
+name|eSectionTypeARMexidx
+block|,
+name|eSectionTypeARMextab
+block|,
 name|eSectionTypeCompactUnwind
 block|,
 comment|// compact unwind section in Mach-O, __TEXT,__unwind_info
+name|eSectionTypeGoSymtab
+block|,
 name|eSectionTypeOther
 block|}
 enum|;
@@ -2125,6 +2139,14 @@ operator|(
 literal|1u
 operator|<<
 literal|7
+operator|)
+operator|,
+name|eTypeOptionHideEmptyAggregates
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|8
 operator|)
 block|}
 empty_stmt|;
@@ -2793,6 +2815,14 @@ operator|(
 literal|1u
 operator|<<
 literal|21
+operator|)
+operator|,
+name|eTypeInstanceIsPointer
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|22
 operator|)
 block|}
 empty_stmt|;

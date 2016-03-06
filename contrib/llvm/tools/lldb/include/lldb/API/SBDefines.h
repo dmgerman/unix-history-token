@@ -346,15 +346,10 @@ name|class
 name|LLDB_API
 name|SBTypeSummaryOptions
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_PYTHON
 name|class
 name|LLDB_API
 name|SBTypeSynthetic
 decl_stmt|;
-endif|#
-directive|endif
 name|class
 name|LLDB_API
 name|SBTypeList

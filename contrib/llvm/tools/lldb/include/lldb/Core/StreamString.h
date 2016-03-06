@@ -79,17 +79,16 @@ argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|StreamString
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Flush
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|Write
 argument_list|(
@@ -97,6 +96,7 @@ argument|const void *s
 argument_list|,
 argument|size_t length
 argument_list|)
+name|override
 block|;
 name|void
 name|Clear
@@ -154,7 +154,7 @@ name|std
 operator|::
 name|string
 name|m_packet
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -169,7 +169,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_StreamString_h_
+comment|// liblldb_StreamString_h_
 end_comment
 
 end_unit

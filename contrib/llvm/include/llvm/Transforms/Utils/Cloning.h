@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Utils/ValueMapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -161,40 +173,80 @@ name|class
 name|AllocaInst
 decl_stmt|;
 name|class
-name|AliasAnalysis
-decl_stmt|;
-name|class
 name|AssumptionCacheTracker
 decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
-comment|/// CloneModule - Return an exact copy of the specified module
+comment|/// Return an exact copy of the specified module
 comment|///
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|CloneModule
-parameter_list|(
+argument_list|(
 specifier|const
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|CloneModule
-parameter_list|(
+argument_list|(
 specifier|const
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|,
+argument_list|,
 name|ValueToValueMapTy
-modifier|&
+operator|&
 name|VMap
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+comment|/// Return a copy of the specified module. The ShouldCloneDefinition function
+comment|/// controls whether a specific GlobalValue's definition is cloned. If the
+comment|/// function returns false, the module copy will contain an external reference
+comment|/// in place of the global definition.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|CloneModule
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|,
+name|ValueToValueMapTy
+operator|&
+name|VMap
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+argument_list|)
+operator|>
+name|ShouldCloneDefinition
+argument_list|)
+expr_stmt|;
 comment|/// ClonedCodeInfo - This struct can be used to capture information about code
 comment|/// being cloned, while it is being cloned.
 struct|struct
@@ -212,6 +264,17 @@ comment|/// size.
 name|bool
 name|ContainsDynamicAllocas
 decl_stmt|;
+comment|/// All cloned call sites that have operand bundles attached are appended to
+comment|/// this vector.  This vector may contain nulls or undefs if some of the
+comment|/// originally inserted callsites were DCE'ed after they were cloned.
+name|std
+operator|::
+name|vector
+operator|<
+name|WeakVH
+operator|>
+name|OperandBundleCallSites
+expr_stmt|;
 name|ClonedCodeInfo
 argument_list|()
 operator|:
@@ -385,79 +448,6 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// A helper class used with CloneAndPruneIntoFromInst to change the default
-comment|/// behavior while instructions are being cloned.
-name|class
-name|CloningDirector
-block|{
-name|public
-label|:
-comment|/// This enumeration describes the way CloneAndPruneIntoFromInst should
-comment|/// proceed after the CloningDirector has examined an instruction.
-enum|enum
-name|CloningAction
-block|{
-comment|///< Continue cloning the instruction (default behavior).
-name|CloneInstruction
-block|,
-comment|///< Skip this instruction but continue cloning the current basic block.
-name|SkipInstruction
-block|,
-comment|///< Skip this instruction and stop cloning the current basic block.
-name|StopCloningBB
-block|,
-comment|///< Don't clone the terminator but clone the current block's successors.
-name|CloneSuccessors
-block|}
-enum|;
-name|virtual
-operator|~
-name|CloningDirector
-argument_list|()
-block|{}
-comment|/// Subclasses must override this function to customize cloning behavior.
-name|virtual
-name|CloningAction
-name|handleInstruction
-argument_list|(
-name|ValueToValueMapTy
-operator|&
-name|VMap
-argument_list|,
-specifier|const
-name|Instruction
-operator|*
-name|Inst
-argument_list|,
-name|BasicBlock
-operator|*
-name|NewBB
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|ValueMapTypeRemapper
-modifier|*
-name|getTypeRemapper
-parameter_list|()
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-name|virtual
-name|ValueMaterializer
-modifier|*
-name|getValueMaterializer
-parameter_list|()
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-block|}
-empty_stmt|;
 name|void
 name|CloneAndPruneIntoFromInst
 argument_list|(
@@ -500,12 +490,6 @@ argument_list|,
 name|ClonedCodeInfo
 operator|*
 name|CodeInfo
-operator|=
-name|nullptr
-argument_list|,
-name|CloningDirector
-operator|*
-name|Director
 operator|=
 name|nullptr
 argument_list|)
@@ -584,12 +568,6 @@ name|cg
 operator|=
 name|nullptr
 argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-operator|=
-name|nullptr
-argument_list|,
 name|AssumptionCacheTracker
 operator|*
 name|ACT
@@ -600,11 +578,6 @@ operator|:
 name|CG
 argument_list|(
 name|cg
-argument_list|)
-operator|,
-name|AA
-argument_list|(
-name|AA
 argument_list|)
 operator|,
 name|ACT
@@ -618,10 +591,6 @@ name|CallGraph
 operator|*
 name|CG
 expr_stmt|;
-name|AliasAnalysis
-modifier|*
-name|AA
-decl_stmt|;
 name|AssumptionCacheTracker
 modifier|*
 name|ACT
@@ -685,6 +654,12 @@ name|InlineFunctionInfo
 modifier|&
 name|IFI
 parameter_list|,
+name|AAResults
+modifier|*
+name|CalleeAAR
+init|=
+name|nullptr
+parameter_list|,
 name|bool
 name|InsertLifetime
 init|=
@@ -702,6 +677,12 @@ name|InlineFunctionInfo
 modifier|&
 name|IFI
 parameter_list|,
+name|AAResults
+modifier|*
+name|CalleeAAR
+init|=
+name|nullptr
+parameter_list|,
 name|bool
 name|InsertLifetime
 init|=
@@ -717,6 +698,12 @@ parameter_list|,
 name|InlineFunctionInfo
 modifier|&
 name|IFI
+parameter_list|,
+name|AAResults
+modifier|*
+name|CalleeAAR
+init|=
+name|nullptr
 parameter_list|,
 name|bool
 name|InsertLifetime

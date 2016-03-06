@@ -2557,19 +2557,6 @@ name|rm_descr
 operator|=
 literal|"Local Bus Space"
 expr_stmt|;
-name|rm
-operator|->
-name|rm_start
-operator|=
-literal|0UL
-expr_stmt|;
-name|rm
-operator|->
-name|rm_end
-operator|=
-operator|~
-literal|0UL
-expr_stmt|;
 name|error
 operator|=
 name|rman_init

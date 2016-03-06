@@ -15,23 +15,6 @@ directive|define
 name|__XMMINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SSE__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"SSE instruction set not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -97,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__))
+value|__attribute__((__always_inline__, __nodebug__, __target__("sse")))
 end_define
 
 begin_function
@@ -2575,6 +2558,24 @@ specifier|static
 name|__inline__
 name|__m128
 name|__DEFAULT_FN_ATTRS
+name|_mm_undefined_ps
+parameter_list|()
+block|{
+return|return
+operator|(
+name|__m128
+operator|)
+name|__builtin_ia32_undef128
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|__m128
+name|__DEFAULT_FN_ATTRS
 name|_mm_set_ss
 parameter_list|(
 name|float
@@ -3424,7 +3425,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|__extension__ ({ \   __m64 __a = (a); \   (__m64)__builtin_ia32_pshufw((__v4hi)__a, (n)); })
+value|__extension__ ({ \   (__m64)__builtin_ia32_pshufw((__v4hi)(__m64)(a), (n)); })
 end_define
 
 begin_function
@@ -3614,7 +3615,7 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-value|__extension__ ({ \   __m128 __a = (a); \   __m128 __b = (b); \   (__m128)__builtin_shufflevector((__v4sf)__a, (__v4sf)__b, \                                   (mask)& 0x3, ((mask)& 0xc)>> 2, \                                   (((mask)& 0x30)>> 4) + 4, \                                   (((mask)& 0xc0)>> 6) + 4); })
+value|__extension__ ({ \   (__m128)__builtin_shufflevector((__v4sf)(__m128)(a), (__v4sf)(__m128)(b), \                                   (mask)& 0x3, ((mask)& 0xc)>> 2, \                                   (((mask)& 0x30)>> 4) + 4, \                                   (((mask)& 0xc0)>> 6) + 4); })
 end_define
 
 begin_function
@@ -4194,6 +4195,24 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_MM_ALIGN16
+value|__declspec(align(16))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -4597,15 +4616,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __SSE__ */
-end_comment
 
 begin_endif
 endif|#

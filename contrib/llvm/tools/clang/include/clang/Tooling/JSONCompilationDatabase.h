@@ -139,17 +139,25 @@ block|{
 comment|/// \brief A JSON based compilation database.
 comment|///
 comment|/// JSON compilation database files must contain a list of JSON objects which
-comment|/// provide the command lines in the attributes 'directory', 'command' and
-comment|/// 'file':
+comment|/// provide the command lines in the attributes 'directory', 'command',
+comment|/// 'arguments' and 'file':
 comment|/// [
 comment|///   { "directory": "<working directory of the compile>",
 comment|///     "command": "<compile command line>",
+comment|///     "file": "<path to source file>"
+comment|///   },
+comment|///   { "directory": "<working directory of the compile>",
+comment|///     "arguments": ["<raw>", "<command>" "<line>" "<parameters>"],
 comment|///     "file": "<path to source file>"
 comment|///   },
 comment|///   ...
 comment|/// ]
 comment|/// Each object entry defines one compile action. The specified file is
 comment|/// considered to be the main source file for the translation unit.
+comment|///
+comment|/// 'command' is a full command line that will be unescaped.
+comment|///
+comment|/// 'arguments' is a list of command line arguments that will not be unescaped.
 comment|///
 comment|/// JSON compilation databases can for example be generated in CMake projects
 comment|/// by setting the flag -DCMAKE_EXPORT_COMPILE_COMMANDS.
@@ -290,12 +298,16 @@ operator|&
 name|ErrorMessage
 argument_list|)
 block|;
-comment|// Tuple (directory, commandline) where 'commandline' pointing to the
-comment|// corresponding nodes in the YAML stream.
+comment|// Tuple (directory, filename, commandline) where 'commandline' points to the
+comment|// corresponding scalar nodes in the YAML stream.
+comment|// If the command line contains a single argument, it is a shell-escaped
+comment|// command line.
+comment|// Otherwise, each entry in the command line vector is a literal
+comment|// argument to the compiler.
 typedef|typedef
 name|std
 operator|::
-name|pair
+name|tuple
 operator|<
 name|llvm
 operator|::
@@ -310,7 +322,18 @@ name|yaml
 operator|::
 name|ScalarNode
 operator|*
-operator|>
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|ScalarNode
+operator|*
+operator|>>
 name|CompileCommandRef
 expr_stmt|;
 comment|/// \brief Converts the given array of CompileCommandRefs to CompileCommands.
@@ -333,9 +356,18 @@ operator|::
 name|vector
 operator|<
 name|CompileCommandRef
-operator|>
-expr|>
+operator|>>
 name|IndexByFile
+expr_stmt|;
+comment|/// All the compile commands in the order that they were provided in the
+comment|/// JSON stream.
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommandRef
+operator|>
+name|AllCommands
 expr_stmt|;
 name|FileMatchTrie
 name|MatchTrie

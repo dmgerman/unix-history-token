@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionGroupFormat.h -------------------------------*- C++ -*-===//
+comment|//===-- OptionGroupFormat.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -137,24 +137,23 @@ argument|uint64_t default_count = UINT64_MAX
 argument_list|)
 block|;
 comment|// Pass UINT64_MAX to disable the "--count" option
-name|virtual
 operator|~
 name|OptionGroupFormat
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|SetOptionValue
 argument_list|(
@@ -164,15 +163,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::

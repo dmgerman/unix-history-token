@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|30
+value|32
 end_define
 
 begin_define
@@ -1151,6 +1151,11 @@ comment|/**    * \brief Used to indicate that brief documentation comments shoul
 name|CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
 init|=
 literal|0x80
+block|,
+comment|/**    * \brief Used to indicate that the precompiled preamble should be created on    * the first parse. Otherwise it will be created on the first reparse. This    * trades runtime on the first parse (serializing the preamble takes time) for    * reduced runtime on the second parse (can now reuse the preamble).    */
+name|CXTranslationUnit_CreatePreambleOnFirstParse
+init|=
+literal|0x100
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -1201,6 +1206,46 @@ name|CINDEX_LINKAGE
 name|enum
 name|CXErrorCode
 name|clang_parseTranslationUnit2
+parameter_list|(
+name|CXIndex
+name|CIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|command_line_args
+parameter_list|,
+name|int
+name|num_command_line_args
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|unsigned
+name|options
+parameter_list|,
+name|CXTranslationUnit
+modifier|*
+name|out_TU
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Same as clang_parseTranslationUnit2 but requires a full command line  * for \c command_line_args including argv[0]. This is useful if the standard  * library paths are relative to the binary.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXErrorCode
+name|clang_parseTranslationUnit2FullArgv
 parameter_list|(
 name|CXIndex
 name|CIdx
@@ -1590,7 +1635,7 @@ name|CXCursor_ObjCCategoryImplDecl
 init|=
 literal|19
 block|,
-comment|/** \brief A typedef */
+comment|/** \brief A typedef. */
 name|CXCursor_TypedefDecl
 init|=
 literal|20
@@ -2024,9 +2069,14 @@ name|CXCursor_ObjCSelfExpr
 init|=
 literal|146
 block|,
+comment|/** \brief OpenMP 4.0 [2.4, Array Section].    */
+name|CXCursor_OMPArraySectionExpr
+init|=
+literal|147
+block|,
 name|CXCursor_LastExpr
 init|=
-name|CXCursor_ObjCSelfExpr
+name|CXCursor_OMPArraySectionExpr
 block|,
 comment|/* Statements */
 name|CXCursor_FirstStmt
@@ -2322,9 +2372,29 @@ name|CXCursor_OMPCancelDirective
 init|=
 literal|256
 block|,
+comment|/** \brief OpenMP target data directive.    */
+name|CXCursor_OMPTargetDataDirective
+init|=
+literal|257
+block|,
+comment|/** \brief OpenMP taskloop directive.    */
+name|CXCursor_OMPTaskLoopDirective
+init|=
+literal|258
+block|,
+comment|/** \brief OpenMP taskloop simd directive.    */
+name|CXCursor_OMPTaskLoopSimdDirective
+init|=
+literal|259
+block|,
+comment|/** \brief OpenMP distribute directive.    */
+name|CXCursor_OMPDistributeDirective
+init|=
+literal|260
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPCancelDirective
+name|CXCursor_OMPDistributeDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2405,9 +2475,21 @@ name|CXCursor_CUDASharedAttr
 init|=
 literal|416
 block|,
+name|CXCursor_VisibilityAttr
+init|=
+literal|417
+block|,
+name|CXCursor_DLLExport
+init|=
+literal|418
+block|,
+name|CXCursor_DLLImport
+init|=
+literal|419
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_CUDASharedAttr
+name|CXCursor_DLLImport
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -2444,13 +2526,17 @@ name|CXCursor_ModuleImportDecl
 init|=
 literal|600
 block|,
+name|CXCursor_TypeAliasTemplateDecl
+init|=
+literal|601
+block|,
 name|CXCursor_FirstExtraDecl
 init|=
 name|CXCursor_ModuleImportDecl
 block|,
 name|CXCursor_LastExtraDecl
 init|=
-name|CXCursor_ModuleImportDecl
+name|CXCursor_TypeAliasTemplateDecl
 block|,
 comment|/**    * \brief A code completion overload candidate.    */
 name|CXCursor_OverloadCandidate
@@ -2639,6 +2725,32 @@ name|CINDEX_LINKAGE
 name|enum
 name|CXLinkageKind
 name|clang_getCursorLinkage
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+enum|enum
+name|CXVisibilityKind
+block|{
+comment|/** \brief This value indicates that no visibility information is available    * for a provided CXCursor. */
+name|CXVisibility_Invalid
+block|,
+comment|/** \brief Symbol not seen by the linker. */
+name|CXVisibility_Hidden
+block|,
+comment|/** \brief Symbol seen by the linker but resolves to a symbol inside this object. */
+name|CXVisibility_Protected
+block|,
+comment|/** \brief Symbol seen by the linker and acts like a normal symbol. */
+name|CXVisibility_Default
+block|}
+enum|;
+comment|/**  * \brief Describe the visibility of the entity referred to by a cursor.  *  * This returns the default visibility if not explicitly specified by  * a visibility attribute. The default visibility may be changed by  * commandline arguments.  *  * \param cursor The cursor to query.  *  * \returns The visibility of the cursor.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXVisibilityKind
+name|clang_getCursorVisibility
 parameter_list|(
 name|CXCursor
 name|cursor
@@ -3100,6 +3212,10 @@ block|,
 name|CXType_MemberPointer
 init|=
 literal|117
+block|,
+name|CXType_Auto
+init|=
+literal|118
 block|}
 enum|;
 comment|/**  * \brief Describes the calling convention of a function type  */
@@ -4229,6 +4345,15 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieve the CXStrings representing the mangled symbols of the C++  * constructor or destructor at the cursor.  */
+name|CINDEX_LINKAGE
+name|CXStringSet
+modifier|*
+name|clang_Cursor_getCXXManglings
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_MODULE Module introspection  *  * The functions in this group provide access to information about modules.  *  * @{  */
 typedef|typedef
@@ -4327,6 +4452,15 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
+comment|/**  * \brief Determine if a C++ field is declared 'mutable'.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXField_isMutable
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine if a C++ member function or member function template is  * pure virtual.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -6409,6 +6543,57 @@ comment|/**  * \brief Index the given source file and the translation unit corre
 name|CINDEX_LINKAGE
 name|int
 name|clang_indexSourceFile
+parameter_list|(
+name|CXIndexAction
+parameter_list|,
+name|CXClientData
+name|client_data
+parameter_list|,
+name|IndexerCallbacks
+modifier|*
+name|index_callbacks
+parameter_list|,
+name|unsigned
+name|index_callbacks_size
+parameter_list|,
+name|unsigned
+name|index_options
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|command_line_args
+parameter_list|,
+name|int
+name|num_command_line_args
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|CXTranslationUnit
+modifier|*
+name|out_TU
+parameter_list|,
+name|unsigned
+name|TU_options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Same as clang_indexSourceFile but requires a full command line  * for \c command_line_args including argv[0]. This is useful if the standard  * library paths are relative to the binary.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_indexSourceFileFullArgv
 parameter_list|(
 name|CXIndexAction
 parameter_list|,

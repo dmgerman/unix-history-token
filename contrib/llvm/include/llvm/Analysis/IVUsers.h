@@ -115,6 +115,7 @@ comment|/// instruction of the operand, and 'OperandValToReplace' is the operand
 comment|/// the User that is the use.
 name|class
 name|IVStrideUse
+name|final
 range|:
 name|public
 name|CallbackVH

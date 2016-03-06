@@ -43,6 +43,22 @@ directive|define
 name|lldb_Host_HostProcesPosix_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -84,10 +100,10 @@ argument_list|(
 argument|lldb::process_t process
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|HostProcessPosix
 argument_list|()
+name|override
 block|;
 name|virtual
 name|Error
@@ -148,10 +164,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// lldb_Host_HostProcesPosix_h_
+end_comment
 
 end_unit
 

@@ -168,18 +168,6 @@ return|return
 name|Ty
 return|;
 block|}
-comment|/// getRelocationInfo - This method classifies the entry according to
-comment|/// whether or not it may generate a relocation entry.  This must be
-comment|/// conservative, so if it might codegen to a relocatable entry, it should say
-comment|/// so.  The return values are the same as Constant::getRelocationInfo().
-name|virtual
-name|unsigned
-name|getRelocationInfo
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
 name|virtual
 name|int
 name|getExistingMachineCPValue
@@ -377,19 +365,11 @@ name|getType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getRelocationInfo - This method classifies the entry according to
-comment|/// whether or not it may generate a relocation entry.  This must be
-comment|/// conservative, so if it might codegen to a relocatable entry, it should say
-comment|/// so.  The return values are:
-comment|///
-comment|///  0: This constant pool entry is guaranteed to never have a relocation
-comment|///     applied to it (because it holds a simple constant like '4').
-comment|///  1: This entry has relocations, but the entries are guaranteed to be
-comment|///     resolvable by the static linker, so the dynamic linker will never see
-comment|///     them.
-comment|///  2: This entry may have arbitrary relocations.
-name|unsigned
-name|getRelocationInfo
+comment|/// This method classifies the entry according to whether or not it may
+comment|/// generate a relocation entry.  This must be conservative, so if it might
+comment|/// codegen to a relocatable entry, it should say so.
+name|bool
+name|needsRelocation
 argument_list|()
 specifier|const
 expr_stmt|;

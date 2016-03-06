@@ -103,7 +103,9 @@ block|,
 name|ARM_ABI_APCS
 block|,
 name|ARM_ABI_AAPCS
+block|,
 comment|// ARM EABI
+name|ARM_ABI_AAPCS16
 block|}
 name|TargetABI
 block|;

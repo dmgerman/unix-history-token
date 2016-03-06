@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RegisterContextPOSIX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Plugins/Process/Utility/RegisterContextPOSIX_x86.h"
 end_include
 
@@ -276,6 +282,10 @@ modifier|&
 name|GetMonitor
 parameter_list|()
 function_decl|;
+name|uint32_t
+name|m_fctrl_offset_in_userarea
+decl_stmt|;
+comment|// Offset of 'fctrl' in 'UserArea' Structure
 block|}
 end_decl_stmt
 

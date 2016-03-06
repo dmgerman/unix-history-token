@@ -148,9 +148,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|BumpPtrStringSaver
-decl_stmt|;
-name|class
 name|StringSaver
 decl_stmt|;
 comment|/// cl Namespace - This namespace contains all of the command line option
@@ -593,21 +590,15 @@ decl_stmt|;
 comment|// Greater than 0 for multi-valued option.
 name|public
 label|:
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|ArgStr
 decl_stmt|;
 comment|// The argument string itself (ex: "help", "o")
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|HelpStr
 decl_stmt|;
 comment|// The descriptive text message for -help
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|ValueStr
 decl_stmt|;
 comment|// String describing what the value of this option is
@@ -724,12 +715,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|ArgStr
-index|[
-literal|0
-index|]
-operator|!=
-literal|0
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
 comment|//-------------------------------------------------------------------------===
@@ -738,18 +728,14 @@ comment|//
 name|void
 name|setArgStr
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|S
 parameter_list|)
 function_decl|;
 name|void
 name|setDescription
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|S
 parameter_list|)
 block|{
@@ -761,9 +747,7 @@ block|}
 name|void
 name|setValueStr
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|S
 parameter_list|)
 block|{
@@ -1009,9 +993,7 @@ name|getExtraOptionNames
 argument_list|(
 name|SmallVectorImpl
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 operator|&
 argument_list|)
@@ -2617,7 +2599,7 @@ block|{}
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char *>&OptionNames
+argument|SmallVectorImpl<StringRef>&OptionNames
 argument_list|)
 block|{
 comment|// If there has been no argstr specified, that means that we need to add an
@@ -3128,7 +3110,7 @@ name|public
 label|:
 name|basic_parser_impl
 argument_list|(
-argument|Option&O
+argument|Option&
 argument_list|)
 block|{}
 block|enum
@@ -3146,9 +3128,7 @@ name|getExtraOptionNames
 argument_list|(
 name|SmallVectorImpl
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 operator|&
 argument_list|)
@@ -5538,9 +5518,7 @@ name|getExtraOptionNames
 argument_list|(
 name|SmallVectorImpl
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 operator|&
 name|OptionNames
@@ -6637,7 +6615,7 @@ block|}
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char *>&OptionNames
+argument|SmallVectorImpl<StringRef>&OptionNames
 argument_list|)
 name|override
 block|{
@@ -7400,7 +7378,7 @@ block|}
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|SmallVectorImpl<const char *>&OptionNames
+argument|SmallVectorImpl<StringRef>&OptionNames
 argument_list|)
 name|override
 block|{

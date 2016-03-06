@@ -78,7 +78,7 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|/// TargetSelectionDAGInfo - Targets can subclass this to parameterize the
+comment|/// Targets can subclass this to parameterize the
 comment|/// SelectionDAG lowering and instruction selection process.
 comment|///
 name|class
@@ -117,8 +117,8 @@ operator|~
 name|TargetSelectionDAGInfo
 argument_list|()
 expr_stmt|;
-comment|/// EmitTargetCodeForMemcpy - Emit target-specific code that performs a
-comment|/// memcpy. This can be used by targets to provide code sequences for cases
+comment|/// Emit target-specific code that performs a memcpy.
+comment|/// This can be used by targets to provide code sequences for cases
 comment|/// that don't fit the target's parameters for simple loads/stores and can be
 comment|/// more efficient than using a library call. This function can return a null
 comment|/// SDValue if the target declines to use custom code and a different
@@ -175,8 +175,8 @@ name|SDValue
 argument_list|()
 return|;
 block|}
-comment|/// EmitTargetCodeForMemmove - Emit target-specific code that performs a
-comment|/// memmove. This can be used by targets to provide code sequences for cases
+comment|/// Emit target-specific code that performs a memmove.
+comment|/// This can be used by targets to provide code sequences for cases
 comment|/// that don't fit the target's parameters for simple loads/stores and can be
 comment|/// more efficient than using a library call. This function can return a null
 comment|/// SDValue if the target declines to use custom code and a different
@@ -223,8 +223,8 @@ name|SDValue
 argument_list|()
 return|;
 block|}
-comment|/// EmitTargetCodeForMemset - Emit target-specific code that performs a
-comment|/// memset. This can be used by targets to provide code sequences for cases
+comment|/// Emit target-specific code that performs a memset.
+comment|/// This can be used by targets to provide code sequences for cases
 comment|/// that don't fit the target's parameters for simple stores and can be more
 comment|/// efficient than using a library call. This function can return a null
 comment|/// SDValue if the target declines to use custom code and a different
@@ -268,11 +268,10 @@ name|SDValue
 argument_list|()
 return|;
 block|}
-comment|/// EmitTargetCodeForMemcmp - Emit target-specific code that performs a
-comment|/// memcmp, in cases where that is faster than a libcall.  The first
-comment|/// returned SDValue is the result of the memcmp and the second is
-comment|/// the chain.  Both SDValues can be null if a normal libcall should
-comment|/// be used.
+comment|/// Emit target-specific code that performs a memcmp, in cases where that is
+comment|/// faster than a libcall. The first returned SDValue is the result of the
+comment|/// memcmp and the second is the chain. Both SDValues can be null if a normal
+comment|/// libcall should be used.
 name|virtual
 name|std
 operator|::
@@ -315,11 +314,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// EmitTargetCodeForMemchr - Emit target-specific code that performs a
-comment|/// memchr, in cases where that is faster than a libcall.  The first
-comment|/// returned SDValue is the result of the memchr and the second is
-comment|/// the chain.  Both SDValues can be null if a normal libcall should
-comment|/// be used.
+comment|/// Emit target-specific code that performs a memchr, in cases where that is
+comment|/// faster than a libcall. The first returned SDValue is the result of the
+comment|/// memchr and the second is the chain. Both SDValues can be null if a normal
+comment|/// libcall should be used.
 name|virtual
 name|std
 operator|::
@@ -360,8 +358,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// EmitTargetCodeForStrcpy - Emit target-specific code that performs a
-comment|/// strcpy or stpcpy, in cases where that is faster than a libcall.
+comment|/// Emit target-specific code that performs a strcpy or stpcpy, in cases
+comment|/// where that is faster than a libcall.
 comment|/// The first returned SDValue is the result of the copy (the start
 comment|/// of the destination string for strcpy, a pointer to the null terminator
 comment|/// for stpcpy) and the second is the chain.  Both SDValues can be null
@@ -408,11 +406,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// EmitTargetCodeForStrcmp - Emit target-specific code that performs a
-comment|/// strcmp, in cases where that is faster than a libcall.  The first
-comment|/// returned SDValue is the result of the strcmp and the second is
-comment|/// the chain.  Both SDValues can be null if a normal libcall should
-comment|/// be used.
+comment|/// Emit target-specific code that performs a strcmp, in cases where that is
+comment|/// faster than a libcall.
+comment|/// The first returned SDValue is the result of the strcmp and the second is
+comment|/// the chain. Both SDValues can be null if a normal libcall should be used.
 name|virtual
 name|std
 operator|::

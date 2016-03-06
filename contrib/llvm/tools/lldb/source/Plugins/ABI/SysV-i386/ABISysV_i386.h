@@ -85,7 +85,10 @@ operator|:
 operator|~
 name|ABISysV_i386
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|GetRedZoneSize
 argument_list|()
@@ -134,32 +137,6 @@ argument|lldb::ValueObjectSP&new_value
 argument_list|)
 name|override
 block|;
-name|protected
-operator|:
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetReturnValueObjectSimple
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|lldb_private::ClangASTType&ast_type
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|RegisterIsCalleeSaved
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
-argument_list|)
-block|;
-name|public
-operator|:
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -167,7 +144,7 @@ name|GetReturnValueObjectImpl
 argument_list|(
 argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::ClangASTType&type
+argument|lldb_private::CompilerType&type
 argument_list|)
 specifier|const
 name|override
@@ -385,6 +362,39 @@ block|}
 end_function
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObjectSimple
+argument_list|(
+argument|lldb_private::Thread&thread
+argument_list|,
+argument|lldb_private::CompilerType&ast_type
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|RegisterIsCalleeSaved
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|RegisterInfo
+operator|*
+name|reg_info
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|private
 label|:
 end_label
@@ -397,12 +407,10 @@ name|lldb_private
 operator|::
 name|ABI
 argument_list|()
-block|{ }
-end_expr_stmt
-
-begin_comment
+block|{
 comment|// Call CreateInstance instead.
-end_comment
+block|}
+end_expr_stmt
 
 begin_endif
 unit|};
@@ -411,7 +419,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_ABI_h
+comment|// liblldb_ABISysV_i386_h_
 end_comment
 
 end_unit

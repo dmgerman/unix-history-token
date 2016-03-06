@@ -132,7 +132,7 @@ name|class
 name|DebugCrashes
 decl_stmt|;
 name|class
-name|GCC
+name|CC
 decl_stmt|;
 specifier|extern
 name|bool
@@ -188,9 +188,9 @@ modifier|*
 name|SafeInterpreter
 decl_stmt|;
 comment|// To generate reference output, etc.
-name|GCC
+name|CC
 modifier|*
-name|gcc
+name|cc
 decl_stmt|;
 name|bool
 name|run_find_bugs
@@ -1069,6 +1069,17 @@ operator|&
 name|GVs
 argument_list|)
 decl_stmt|;
+comment|// DeleteGlobalInitializer - "Remove" the global variable by deleting its
+comment|// initializer, making it external.
+comment|//
+name|void
+name|DeleteGlobalInitializer
+parameter_list|(
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|)
+function_decl|;
 comment|// DeleteFunctionBody - "Remove" the function by deleting all of it's basic
 comment|// blocks, making it external.
 comment|//
@@ -1080,11 +1091,14 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
-comment|/// SplitFunctionsOutOfModule - Given a module and a list of functions in the
-comment|/// module, split the functions OUT of the specified module, and place them in
-comment|/// the new module.
+comment|/// Given a module and a list of functions in the module, split the functions
+comment|/// OUT of the specified module, and place them in the new module.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|SplitFunctionsOutOfModule
 argument_list|(
 name|Module
@@ -1106,7 +1120,7 @@ name|ValueToValueMapTy
 operator|&
 name|VMap
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 

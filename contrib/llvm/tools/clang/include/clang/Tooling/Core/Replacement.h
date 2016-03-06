@@ -706,6 +706,23 @@ argument_list|,
 argument|const Replacements&Replaces
 argument_list|)
 expr_stmt|;
+comment|/// \brief Merges two sets of replacements with the second set referring to the
+comment|/// code after applying the first set. Within both 'First' and 'Second',
+comment|/// replacements must not overlap.
+name|Replacements
+name|mergeReplacements
+parameter_list|(
+specifier|const
+name|Replacements
+modifier|&
+name|First
+parameter_list|,
+specifier|const
+name|Replacements
+modifier|&
+name|Second
+parameter_list|)
+function_decl|;
 name|template
 operator|<
 name|typename

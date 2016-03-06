@@ -318,6 +318,20 @@ name|StringRef
 name|triplePrefix
 parameter_list|)
 function_decl|;
+comment|/// Returns a string representing the producer identification stored in the
+comment|/// bitcode, or "" if the bitcode does not contains any.
+comment|///
+specifier|static
+name|std
+operator|::
+name|string
+name|getProducerString
+argument_list|(
+name|MemoryBuffer
+operator|*
+name|Buffer
+argument_list|)
+expr_stmt|;
 comment|/// Create a MemoryBuffer from a memory range with an optional name.
 specifier|static
 name|std
@@ -345,164 +359,134 @@ comment|/// InitializeAllTargetMCs();
 comment|/// InitializeAllAsmPrinters();
 comment|/// InitializeAllAsmParsers();
 specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createFromFile
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|path
+argument|LLVMContext&Context
 argument_list|,
-name|TargetOptions
-name|options
+argument|const char *path
 argument_list|,
+argument|TargetOptions options
+argument_list|)
+expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-specifier|static
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createFromOpenFile
 argument_list|(
-name|int
-name|fd
+argument|LLVMContext&Context
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|path
+argument|int fd
 argument_list|,
-name|size_t
-name|size
+argument|const char *path
 argument_list|,
-name|TargetOptions
-name|options
+argument|size_t size
 argument_list|,
+argument|TargetOptions options
+argument_list|)
+expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-specifier|static
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createFromOpenFileSlice
 argument_list|(
-name|int
-name|fd
+argument|LLVMContext&Context
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|path
+argument|int fd
 argument_list|,
-name|size_t
-name|map_size
+argument|const char *path
 argument_list|,
-name|off_t
-name|offset
+argument|size_t map_size
 argument_list|,
-name|TargetOptions
-name|options
+argument|off_t offset
 argument_list|,
+argument|TargetOptions options
+argument_list|)
+expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-specifier|static
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createFromBuffer
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|mem
+argument|LLVMContext&Context
 argument_list|,
-name|size_t
-name|length
+argument|const void *mem
 argument_list|,
-name|TargetOptions
-name|options
+argument|size_t length
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
+argument|TargetOptions options
 argument_list|,
-name|StringRef
-name|path
-operator|=
+argument|StringRef path =
 literal|""
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createInLocalContext
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|mem
+argument|const void *mem
 argument_list|,
-name|size_t
-name|length
+argument|size_t length
 argument_list|,
-name|TargetOptions
-name|options
+argument|TargetOptions options
 argument_list|,
+argument|StringRef path
+argument_list|)
+expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|,
-name|StringRef
-name|path
-argument_list|)
-decl_stmt|;
-specifier|static
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
+operator|>>
 name|createInContext
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|mem
+argument|const void *mem
 argument_list|,
-name|size_t
-name|length
+argument|size_t length
 argument_list|,
-name|TargetOptions
-name|options
+argument|TargetOptions options
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
+argument|StringRef path
 argument_list|,
-name|StringRef
-name|path
-argument_list|,
-name|LLVMContext
-operator|*
-name|Context
+argument|LLVMContext *Context
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|Module
 operator|&
@@ -533,6 +517,22 @@ return|return
 name|IRFile
 operator|->
 name|getModule
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|takeModule
+argument_list|()
+block|{
+return|return
+name|IRFile
+operator|->
+name|takeModule
 argument_list|()
 return|;
 block|}
@@ -718,16 +718,10 @@ parameter_list|()
 function_decl|;
 comment|/// Parse the symbols from the module and model-level ASM and add them to
 comment|/// either the defined or undefined lists.
-name|bool
+name|void
 name|parseSymbols
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// Add a symbol which isn't defined just yet to a list to be resolved later.
 name|void
 name|addPotentialUndefinedSymbol
@@ -882,27 +876,23 @@ argument_list|)
 decl_stmt|;
 comment|/// Create an LTOModule (private version).
 specifier|static
-name|LTOModule
-modifier|*
-name|makeLTOModule
-argument_list|(
-name|MemoryBufferRef
-name|Buffer
-argument_list|,
-name|TargetOptions
-name|options
-argument_list|,
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
+name|unique_ptr
+operator|<
+name|LTOModule
+operator|>>
+name|makeLTOModule
+argument_list|(
+argument|MemoryBufferRef Buffer
 argument_list|,
-name|LLVMContext
-operator|*
-name|Context
+argument|TargetOptions options
+argument_list|,
+argument|LLVMContext *Context
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 block|}

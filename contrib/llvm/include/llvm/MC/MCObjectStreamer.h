@@ -349,7 +349,7 @@ argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
 argument_list|,
-argument|const SMLoc&Loc = SMLoc()
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
 block|;
@@ -462,8 +462,8 @@ literal|0
 argument_list|)
 name|override
 block|;
-name|bool
-name|EmitValueToOffset
+name|void
+name|emitValueToOffset
 argument_list|(
 argument|const MCExpr *Offset
 argument_list|,
@@ -530,19 +530,25 @@ argument|const MCExpr *Value
 argument_list|)
 name|override
 block|;
+name|bool
+name|EmitRelocDirective
+argument_list|(
+argument|const MCExpr&Offset
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|const MCExpr *Expr
+argument_list|,
+argument|SMLoc Loc
+argument_list|)
+name|override
+block|;
 name|void
 name|EmitFill
 argument_list|(
 argument|uint64_t NumBytes
 argument_list|,
 argument|uint8_t FillValue
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitZeros
-argument_list|(
-argument|uint64_t NumBytes
 argument_list|)
 name|override
 block|;

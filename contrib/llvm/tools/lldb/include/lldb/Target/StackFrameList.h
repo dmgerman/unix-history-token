@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -246,7 +252,7 @@ name|char
 modifier|*
 name|frame_marker
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|protected
@@ -333,9 +339,6 @@ name|uint32_t
 name|new_depth
 parameter_list|)
 function_decl|;
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from StackFrameList can see and modify these
-comment|//------------------------------------------------------------------
 typedef|typedef
 name|std
 operator|::
@@ -394,9 +397,6 @@ name|m_show_inlined_frames
 decl_stmt|;
 name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// For StackFrameList only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|StackFrameList

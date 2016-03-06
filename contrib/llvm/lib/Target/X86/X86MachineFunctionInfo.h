@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86MachineFuctionInfo.h - X86 machine function info -----*- C++ -*-===//
+comment|//===-- X86MachineFunctionInfo.h - X86 machine function info ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -213,8 +213,8 @@ name|HasPushSequences
 operator|=
 name|false
 block|;
-comment|/// True if the function uses llvm.x86.seh.restoreframe, and it needed a spill
-comment|/// slot for the frame pointer.
+comment|/// True if the function recovers from an SEH exception, and therefore needs
+comment|/// to spill and restore the frame pointer.
 name|bool
 name|HasSEHFramePtrSave
 operator|=
@@ -226,6 +226,13 @@ name|int
 name|SEHFramePtrSaveIndex
 operator|=
 literal|0
+block|;
+comment|/// True if this function has a subset of CSRs that is handled explicitly via
+comment|/// copies.
+name|bool
+name|IsSplitCSR
+operator|=
+name|false
 block|;
 name|private
 operator|:
@@ -252,7 +259,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 block|{}
-block|;
 name|bool
 name|getForceFramePointer
 argument_list|()
@@ -614,6 +620,25 @@ return|return
 name|ForwardedMustTailRegParms
 return|;
 block|}
+name|bool
+name|isSplitCSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSplitCSR
+return|;
+block|}
+name|void
+name|setIsSplitCSR
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|IsSplitCSR
+operator|=
+name|s
+block|; }
 expr|}
 block|;  }
 end_decl_stmt

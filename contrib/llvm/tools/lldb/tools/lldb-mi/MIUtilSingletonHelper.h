@@ -31,18 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -70,8 +58,6 @@ comment|//                                 On output True = MI driver module ini
 comment|//          vwrErrMsg       - (W)  MI driver module initialise error description on failure.
 comment|// Return:  MIstatus::success - Functional succeeded.
 comment|//          MIstatus::failure - Functional failed.
-comment|// Authors: Aidan Dodds 17/03/2014.
-comment|// Changes: None.
 comment|//--
 name|template
 operator|<
@@ -149,8 +135,6 @@ comment|//                                 driver module initialise error descri
 comment|//                                 failure.
 comment|// Return:  True - Module shutdown succeeded.
 comment|//          False - Module shutdown failed.
-comment|// Authors: Aidan Dodds 17/03/2014.
-comment|// Changes: None.
 comment|//--
 name|template
 operator|<

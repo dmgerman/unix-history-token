@@ -71,12 +71,6 @@ directive|include
 file|"llvm/MC/MCSection.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/COFF.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,9 +78,10 @@ block|{
 name|class
 name|MCSymbol
 decl_stmt|;
-comment|/// MCSectionCOFF - This represents a section on Windows
+comment|/// This represents a section on Windows
 name|class
 name|MCSectionCOFF
+name|final
 range|:
 name|public
 name|MCSection
@@ -95,23 +90,22 @@ comment|// The memory for this string is stored in the same MCContext as *this.
 name|StringRef
 name|SectionName
 block|;
-comment|// FIXME: The following fields should not be mutable, but are for now so
-comment|// the asm parser can honor the .linkonce directive.
-comment|/// Characteristics - This is the Characteristics field of a section,
-comment|/// drawn from the enums below.
+comment|// FIXME: The following fields should not be mutable, but are for now so the
+comment|// asm parser can honor the .linkonce directive.
+comment|/// This is the Characteristics field of a section, drawn from the enums
+comment|/// below.
 name|mutable
 name|unsigned
 name|Characteristics
 block|;
-comment|/// The COMDAT symbol of this section. Only valid if this is a COMDAT
-comment|/// section. Two COMDAT sections are merged if they have the same
-comment|/// COMDAT symbol.
+comment|/// The COMDAT symbol of this section. Only valid if this is a COMDAT section.
+comment|/// Two COMDAT sections are merged if they have the same COMDAT symbol.
 name|MCSymbol
 operator|*
 name|COMDATSymbol
 block|;
-comment|/// Selection - This is the Selection field for the section symbol, if
-comment|/// it is a COMDAT section (Characteristics& IMAGE_SCN_LNK_COMDAT) != 0
+comment|/// This is the Selection field for the section symbol, if it is a COMDAT
+comment|/// section (Characteristics& IMAGE_SCN_LNK_COMDAT) != 0
 name|mutable
 name|int
 name|Selection
@@ -178,16 +172,15 @@ literal|0
 operator|&&
 literal|"alignment must not be set upon section creation"
 argument_list|)
-block|;     }
+block|;   }
+name|public
+operator|:
 operator|~
 name|MCSectionCOFF
 argument_list|()
-name|override
 block|;
-name|public
-operator|:
-comment|/// ShouldOmitSectionDirective - Decides whether a '.section' directive
-comment|/// should be printed before the section name
+comment|/// Decides whether a '.section' directive should be printed before the
+comment|/// section name
 name|bool
 name|ShouldOmitSectionDirective
 argument_list|(

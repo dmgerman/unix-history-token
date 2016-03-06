@@ -215,14 +215,6 @@ name|size_t
 name|size
 parameter_list|)
 function_decl|;
-comment|/* Set exit code when error(s) were detected.      Value of 0 means don't change the program exit code. */
-name|void
-name|__msan_set_exit_code
-parameter_list|(
-name|int
-name|exit_code
-parameter_list|)
-function_decl|;
 comment|/* For testing:      __msan_set_expect_umr(1);      ... some buggy code ...      __msan_set_expect_umr(0);      The last line will verify that a UMR happened. */
 name|void
 name|__msan_set_expect_umr
@@ -286,6 +278,20 @@ name|size_t
 name|size
 parameter_list|)
 function_decl|;
+comment|/* Tell MSan about newly destroyed memory. Mark memory as uninitialized. */
+name|void
+name|__sanitizer_dtor_callback
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
 comment|/* This function may be optionally provided by user and should return      a string containing Msan runtime options. See msan_flags.h for details. */
 specifier|const
 name|char
@@ -293,7 +299,7 @@ modifier|*
 name|__msan_default_options
 parameter_list|()
 function_decl|;
-comment|/* Sets the callback to be called right before death on error.      Passing 0 will unset the callback. */
+comment|/* Deprecated. Call __sanitizer_set_death_callback instead. */
 name|void
 name|__msan_set_death_callback
 parameter_list|(
@@ -305,6 +311,26 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+comment|/* Update shadow for the application copy of size bytes from src to dst.      Src and dst are application addresses. This function does not copy the      actual application memory, it only updates shadow and origin for such      copy. Source and destination regions can overlap. */
+name|void
+name|__msan_copy_shadow
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 ifdef|#

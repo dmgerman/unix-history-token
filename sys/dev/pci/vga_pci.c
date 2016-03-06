@@ -543,10 +543,10 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|0ul
+literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 literal|1
 argument_list|,

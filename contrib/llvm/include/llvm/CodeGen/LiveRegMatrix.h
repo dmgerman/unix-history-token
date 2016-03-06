@@ -128,9 +128,6 @@ name|class
 name|LiveIntervalAnalysis
 decl_stmt|;
 name|class
-name|MachineRegisterInfo
-decl_stmt|;
-name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
@@ -146,10 +143,6 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
-block|;
-name|MachineRegisterInfo
-operator|*
-name|MRI
 block|;
 name|LiveIntervals
 operator|*

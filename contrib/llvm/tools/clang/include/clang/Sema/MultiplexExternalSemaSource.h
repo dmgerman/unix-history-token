@@ -268,71 +268,19 @@ block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
 comment|///
-comment|/// \param isKindWeWant a predicate function that returns true if the passed
-comment|/// declaration kind is one we are looking for. If NULL, all declarations
-comment|/// are returned.
-comment|///
-comment|/// \return an indication of whether the load succeeded or failed.
-name|ExternalLoadResult
+comment|/// \param IsKindWeWant a predicate function that returns true if the passed
+comment|/// declaration kind is one we are looking for.
+name|void
 name|FindExternalLexicalDecls
 argument_list|(
 argument|const DeclContext *DC
 argument_list|,
-argument|bool (*isKindWeWant)(Decl::Kind)
+argument|llvm::function_ref<bool(Decl::Kind)> IsKindWeWant
 argument_list|,
-argument|SmallVectorImpl<Decl*>&Result
+argument|SmallVectorImpl<Decl *>&Result
 argument_list|)
 name|override
 block|;
-comment|/// \brief Finds all declarations lexically contained within the given
-comment|/// DeclContext.
-comment|///
-comment|/// \return true if an error occurred
-name|ExternalLoadResult
-name|FindExternalLexicalDecls
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|SmallVectorImpl<Decl*>&Result
-argument_list|)
-block|{
-return|return
-name|FindExternalLexicalDecls
-argument_list|(
-name|DC
-argument_list|,
-name|nullptr
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|DeclTy
-operator|>
-name|ExternalLoadResult
-name|FindExternalLexicalDeclsBy
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|SmallVectorImpl<Decl*>&Result
-argument_list|)
-block|{
-return|return
-name|FindExternalLexicalDecls
-argument_list|(
-name|DC
-argument_list|,
-name|DeclTy
-operator|::
-name|classofKind
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
 comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 comment|/// a range.

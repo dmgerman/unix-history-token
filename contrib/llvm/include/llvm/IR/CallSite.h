@@ -174,6 +174,12 @@ specifier|const
 name|User
 operator|,
 name|typename
+name|UseTy
+operator|=
+specifier|const
+name|Use
+operator|,
+name|typename
 name|InstrTy
 operator|=
 specifier|const
@@ -553,6 +559,186 @@ operator|==
 name|U
 return|;
 block|}
+comment|/// \brief Determine whether the passed iterator points to an argument
+comment|/// operand.
+name|bool
+name|isArgOperand
+argument_list|(
+name|Value
+operator|::
+name|const_user_iterator
+name|UI
+argument_list|)
+decl|const
+block|{
+return|return
+name|isArgOperand
+argument_list|(
+operator|&
+name|UI
+operator|.
+name|getUse
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine whether the passed use points to an argument operand.
+name|bool
+name|isArgOperand
+argument_list|(
+specifier|const
+name|Use
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|getInstruction
+argument_list|()
+operator|==
+name|U
+operator|->
+name|getUser
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|arg_begin
+argument_list|()
+operator|<=
+name|U
+operator|&&
+name|U
+operator|<
+name|arg_end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether the passed iterator points to a bundle operand.
+name|bool
+name|isBundleOperand
+argument_list|(
+name|Value
+operator|::
+name|const_user_iterator
+name|UI
+argument_list|)
+decl|const
+block|{
+return|return
+name|isBundleOperand
+argument_list|(
+operator|&
+name|UI
+operator|.
+name|getUse
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine whether the passed use points to a bundle operand.
+name|bool
+name|isBundleOperand
+argument_list|(
+specifier|const
+name|Use
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|getInstruction
+argument_list|()
+operator|==
+name|U
+operator|->
+name|getUser
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hasOperandBundles
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|unsigned
+name|OperandNo
+init|=
+name|U
+operator|-
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|op_begin
+argument_list|()
+decl_stmt|;
+return|return
+name|getBundleOperandsStartIndex
+argument_list|()
+operator|<=
+name|OperandNo
+operator|&&
+name|OperandNo
+operator|<
+name|getBundleOperandsEndIndex
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether the passed iterator points to a data operand.
+name|bool
+name|isDataOperand
+argument_list|(
+name|Value
+operator|::
+name|const_user_iterator
+name|UI
+argument_list|)
+decl|const
+block|{
+return|return
+name|isDataOperand
+argument_list|(
+operator|&
+name|UI
+operator|.
+name|getUse
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine whether the passed use points to a data operand.
+name|bool
+name|isDataOperand
+argument_list|(
+specifier|const
+name|Use
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+return|return
+name|data_operands_begin
+argument_list|()
+operator|<=
+name|U
+operator|&&
+name|U
+operator|<
+name|data_operands_end
+argument_list|()
+return|;
+block|}
 name|ValTy
 modifier|*
 name|getArgument
@@ -673,15 +859,10 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|arg_begin
-argument_list|()
-operator|<=
+name|isArgOperand
+argument_list|(
 name|U
-operator|&&
-name|U
-operator|<
-name|arg_end
-argument_list|()
+argument_list|)
 operator|&&
 literal|"Argument # out of range!"
 argument_list|)
@@ -699,50 +880,6 @@ typedef|typedef
 name|IterTy
 name|arg_iterator
 typedef|;
-comment|/// arg_begin/arg_end - Return iterators corresponding to the actual argument
-comment|/// list for a call site.
-name|IterTy
-name|arg_begin
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|getInstruction
-argument_list|()
-operator|&&
-literal|"Not a call or invoke instruction!"
-argument_list|)
-block|;
-comment|// Skip non-arguments
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|->
-name|op_begin
-argument_list|()
-return|;
-block|}
-name|IterTy
-name|arg_end
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|->
-name|op_end
-argument_list|()
-operator|-
-name|getArgumentEndOffset
-argument_list|()
-return|;
-block|}
 name|iterator_range
 operator|<
 name|IterTy
@@ -752,17 +889,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|IterTy
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|arg_begin
 argument_list|()
-operator|,
+argument_list|,
 name|arg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|bool
@@ -790,6 +924,183 @@ name|arg_end
 argument_list|()
 operator|-
 name|arg_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Given a value use iterator, returns the data operand that corresponds to
+comment|/// it.
+comment|/// Iterator must actually correspond to a data operand.
+name|unsigned
+name|getDataOperandNo
+argument_list|(
+name|Value
+operator|::
+name|const_user_iterator
+name|UI
+argument_list|)
+decl|const
+block|{
+return|return
+name|getDataOperandNo
+argument_list|(
+operator|&
+name|UI
+operator|.
+name|getUse
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Given a use for a data operand, get the data operand number that
+comment|/// corresponds to it.
+name|unsigned
+name|getDataOperandNo
+argument_list|(
+specifier|const
+name|Use
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|getInstruction
+argument_list|()
+operator|&&
+literal|"Not a call or invoke instruction!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|isDataOperand
+argument_list|(
+name|U
+argument_list|)
+operator|&&
+literal|"Data operand # out of range!"
+argument_list|)
+expr_stmt|;
+return|return
+name|U
+operator|-
+name|data_operands_begin
+argument_list|()
+return|;
+block|}
+comment|/// Type of iterator to use when looping over data operands at this call site
+comment|/// (see below).
+typedef|typedef
+name|IterTy
+name|data_operand_iterator
+typedef|;
+comment|/// data_operands_begin/data_operands_end - Return iterators iterating over
+comment|/// the call / invoke argument list and bundle operands.  For invokes, this is
+comment|/// the set of instruction operands except the invoke target and the two
+comment|/// successor blocks; and for calls this is the set of instruction operands
+comment|/// except the call target.
+name|IterTy
+name|data_operands_begin
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getInstruction
+argument_list|()
+operator|&&
+literal|"Not a call or invoke instruction!"
+argument_list|)
+block|;
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|op_begin
+argument_list|()
+return|;
+block|}
+name|IterTy
+name|data_operands_end
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getInstruction
+argument_list|()
+operator|&&
+literal|"Not a call or invoke instruction!"
+argument_list|)
+block|;
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|op_end
+argument_list|()
+operator|-
+operator|(
+name|isCall
+argument_list|()
+condition|?
+literal|1
+else|:
+literal|3
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|IterTy
+operator|>
+name|data_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|data_operands_begin
+argument_list|()
+argument_list|,
+name|data_operands_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|bool
+name|data_operands_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data_operands_end
+argument_list|()
+operator|==
+name|data_operands_begin
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|data_operands_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|distance
+argument_list|(
+name|data_operands_begin
+argument_list|()
+argument_list|,
+name|data_operands_end
 argument_list|()
 argument_list|)
 return|;
@@ -1060,6 +1371,22 @@ name|A
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// \brief Return true if this function has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|StringRef A
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasFnAttr
+argument_list|(
+name|A
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// \brief Return true if the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr
@@ -1073,6 +1400,32 @@ block|{
 name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|paramHasAttr
+argument_list|(
+name|i
+argument_list|,
+name|A
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// \brief Return true if the data operand at index \p i directly or
+comment|/// indirectly has the attribute \p A.
+comment|///
+comment|/// Normal call or invoke arguments have per operand attributes, as specified
+comment|/// in the attribute set attached to this instruction, while operand bundle
+comment|/// operands may have some attributes implied by the type of its containing
+comment|/// operand bundle.
+name|bool
+name|dataOperandHasImpliedAttr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute::AttrKind A
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|dataOperandHasImpliedAttr
 argument_list|(
 name|i
 argument_list|,
@@ -1127,6 +1480,24 @@ argument_list|(
 name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the parameter or return value is marked with NoAlias
+comment|/// attribute.
+comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+name|bool
+name|doesNotAlias
+argument_list|(
+argument|unsigned n
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|doesNotAlias
+argument_list|(
+name|n
 argument_list|)
 argument_list|)
 block|;   }
@@ -1280,24 +1651,209 @@ name|setDoesNotThrow
 argument_list|()
 argument_list|)
 block|;   }
+name|unsigned
+name|getNumOperandBundles
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getNumOperandBundles
+argument_list|()
+argument_list|)
+block|;   }
+name|bool
+name|hasOperandBundles
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasOperandBundles
+argument_list|()
+argument_list|)
+block|;   }
+name|unsigned
+name|getBundleOperandsStartIndex
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getBundleOperandsStartIndex
+argument_list|()
+argument_list|)
+block|;   }
+name|unsigned
+name|getBundleOperandsEndIndex
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getBundleOperandsEndIndex
+argument_list|()
+argument_list|)
+block|;   }
+name|unsigned
+name|getNumTotalBundleOperands
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getNumTotalBundleOperands
+argument_list|()
+argument_list|)
+block|;   }
+name|OperandBundleUse
+name|getOperandBundleAt
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getOperandBundleAt
+argument_list|(
+name|Index
+argument_list|)
+argument_list|)
+block|;   }
+name|Optional
+operator|<
+name|OperandBundleUse
+operator|>
+name|getOperandBundle
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getOperandBundle
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+block|;   }
+name|Optional
+operator|<
+name|OperandBundleUse
+operator|>
+name|getOperandBundle
+argument_list|(
+argument|uint32_t ID
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getOperandBundle
+argument_list|(
+name|ID
+argument_list|)
+argument_list|)
+block|;   }
+name|IterTy
+name|arg_begin
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|arg_begin
+argument_list|()
+argument_list|)
+block|;   }
+name|IterTy
+name|arg_end
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|arg_end
+argument_list|()
+argument_list|)
+block|;   }
 undef|#
 directive|undef
 name|CALLSITE_DELEGATE_GETTER
 undef|#
 directive|undef
 name|CALLSITE_DELEGATE_SETTER
-comment|/// @brief Determine whether this argument is not captured.
-name|bool
-name|doesNotCapture
+name|void
+name|getOperandBundlesAsDefs
 argument_list|(
-argument|unsigned ArgNo
+argument|SmallVectorImpl<OperandBundleDef>&Defs
 argument_list|)
 specifier|const
 block|{
-return|return
-name|paramHasAttr
+specifier|const
+name|Instruction
+operator|*
+name|II
+operator|=
+name|getInstruction
+argument_list|()
+block|;
+comment|// Since this is actually a getter that "looks like" a setter, don't use the
+comment|// above macros to avoid confusion.
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+name|cast
+operator|<
+name|CallInst
+operator|>
+operator|(
+name|II
+operator|)
+operator|->
+name|getOperandBundlesAsDefs
 argument_list|(
-name|ArgNo
+name|Defs
+argument_list|)
+expr_stmt|;
+else|else
+name|cast
+operator|<
+name|InvokeInst
+operator|>
+operator|(
+name|II
+operator|)
+operator|->
+name|getOperandBundlesAsDefs
+argument_list|(
+name|Defs
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @brief Determine whether this data operand is not captured.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|doesNotCapture
+argument_list|(
+name|unsigned
+name|OpNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|dataOperandHasImpliedAttr
+argument_list|(
+name|OpNo
 operator|+
 literal|1
 argument_list|,
@@ -1307,7 +1863,7 @@ name|NoCapture
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// @brief Determine whether this argument is passed by value.
@@ -1437,14 +1993,14 @@ name|bool
 name|doesNotAccessMemory
 argument_list|(
 name|unsigned
-name|ArgNo
+name|OpNo
 argument_list|)
 decl|const
 block|{
 return|return
-name|paramHasAttr
+name|dataOperandHasImpliedAttr
 argument_list|(
-name|ArgNo
+name|OpNo
 operator|+
 literal|1
 argument_list|,
@@ -1461,14 +2017,14 @@ name|bool
 name|onlyReadsMemory
 argument_list|(
 name|unsigned
-name|ArgNo
+name|OpNo
 argument_list|)
 decl|const
 block|{
 return|return
-name|paramHasAttr
+name|dataOperandHasImpliedAttr
 argument_list|(
-name|ArgNo
+name|OpNo
 operator|+
 literal|1
 argument_list|,
@@ -1477,9 +2033,9 @@ operator|::
 name|ReadOnly
 argument_list|)
 operator|||
-name|paramHasAttr
+name|dataOperandHasImpliedAttr
 argument_list|(
-name|ArgNo
+name|OpNo
 operator|+
 literal|1
 argument_list|,
@@ -1618,29 +2174,6 @@ end_return
 
 begin_expr_stmt
 unit|}  private:
-name|unsigned
-name|getArgumentEndOffset
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|isCall
-argument_list|()
-condition|)
-return|return
-literal|1
-return|;
-comment|// Skip Callee
-else|else
-return|return
-literal|3
-return|;
-comment|// Skip BB, BB, Callee
-block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|IterTy
 name|getCallee
 argument_list|()
@@ -1702,6 +2235,8 @@ decl_stmt|,
 name|Value
 decl_stmt|,
 name|User
+decl_stmt|,
+name|Use
 decl_stmt|,
 name|Instruction
 decl_stmt|,

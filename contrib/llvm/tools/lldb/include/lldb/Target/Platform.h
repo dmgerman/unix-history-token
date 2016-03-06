@@ -184,12 +184,12 @@ name|Properties
 block|{
 name|public
 operator|:
+name|PlatformProperties
+argument_list|()
+block|;
 specifier|static
 name|ConstString
 name|GetSettingName
-argument_list|()
-block|;
-name|PlatformProperties
 argument_list|()
 block|;
 name|bool
@@ -248,6 +248,25 @@ name|PluginInterface
 block|{
 name|public
 operator|:
+comment|//------------------------------------------------------------------
+comment|/// Default Constructor
+comment|//------------------------------------------------------------------
+name|Platform
+argument_list|(
+argument|bool is_host_platform
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Destructor.
+comment|///
+comment|/// The destructor is virtual since this class is designed to be
+comment|/// inherited from by the plug-in instance.
+comment|//------------------------------------------------------------------
+operator|~
+name|Platform
+argument_list|()
+name|override
+block|;
 specifier|static
 name|void
 name|Initialize
@@ -382,25 +401,6 @@ argument|uint32_t idx
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Default Constructor
-comment|//------------------------------------------------------------------
-name|Platform
-argument_list|(
-argument|bool is_host_platform
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Destructor.
-comment|///
-comment|/// The destructor is virtual since this class is designed to be
-comment|/// inherited from by the plug-in instance.
-comment|//------------------------------------------------------------------
-name|virtual
-operator|~
-name|Platform
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
 comment|/// Find a platform plugin for a given process.
 comment|///
 comment|/// Scans the installed Platform plug-ins and tries to find
@@ -412,7 +412,7 @@ comment|///     plug-in instance.
 comment|///
 comment|/// @param[in] plugin_name
 comment|///     An optional name of a specific platform plug-in that
-comment|///     should be used. If NULL, pick the best plug-in.
+comment|///     should be used. If nullptr, pick the best plug-in.
 comment|//------------------------------------------------------------------
 comment|//        static lldb::PlatformSP
 comment|//        FindPlugin (Process *process, const ConstString&plugin_name);
@@ -540,6 +540,17 @@ operator|&
 name|resolved_platform_path
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Get the OS version from a connected platform.
+comment|///
+comment|/// Some platforms might not be connected to a remote platform, but
+comment|/// can figure out the OS version for a process. This is common for
+comment|/// simulator platforms that will run native programs on the current
+comment|/// host, but the simulator might be simulating a different OS. The
+comment|/// \a process parameter might be specified to help to determine
+comment|/// the OS version.
+comment|//------------------------------------------------------------------
+name|virtual
 name|bool
 name|GetOSVersion
 argument_list|(
@@ -554,6 +565,12 @@ argument_list|,
 name|uint32_t
 operator|&
 name|update
+argument_list|,
+name|Process
+operator|*
+name|process
+operator|=
+name|nullptr
 argument_list|)
 block|;
 name|bool
@@ -597,6 +614,13 @@ name|char
 operator|*
 name|GetHostname
 argument_list|()
+block|;
+name|virtual
+name|ConstString
+name|GetFullNameForDylib
+argument_list|(
+argument|ConstString basename
+argument_list|)
 block|;
 name|virtual
 specifier|const
@@ -995,7 +1019,42 @@ name|Target
 operator|*
 name|target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be nullptr, if nullptr create a new target, else use existing one
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ProcessSP
+name|ConnectProcess
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|connect_url
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|plugin_name
+argument_list|,
+name|lldb_private
+operator|::
+name|Debugger
+operator|&
+name|debugger
+argument_list|,
+name|lldb_private
+operator|::
+name|Target
+operator|*
+name|target
+argument_list|,
+name|lldb_private
+operator|::
 name|Error
 operator|&
 name|error
@@ -1037,7 +1096,7 @@ name|Target
 operator|*
 name|target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be nullptr, if nullptr create a new target, else use existing one
 name|Error
 operator|&
 name|error
@@ -1747,7 +1806,7 @@ argument|CommandInterpreter& interpreter
 argument_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -1758,19 +1817,19 @@ name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
-comment|// Shouldn't be NULL
+comment|// Shouldn't be nullptr
 argument|const FileSpec&working_dir
 argument_list|,
 comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the process exit status
+comment|// Pass nullptr if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
+comment|// Pass nullptr if you don't want the signal that caused the process to exit
 argument|std::string *command_output
 argument_list|,
-comment|// Pass NULL if you don't want the command output
+comment|// Pass nullptr if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
 block|;
@@ -1952,6 +2011,177 @@ operator|&
 name|GetTrapHandlerSymbolNames
 argument_list|()
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Find a support executable that may not live within in the
+comment|/// standard locations related to LLDB.
+comment|///
+comment|/// Executable might exist within the Platform SDK directories, or
+comment|/// in standard tool directories within the current IDE that is
+comment|/// running LLDB.
+comment|///
+comment|/// @param[in] basename
+comment|///     The basename of the executable to locate in the current
+comment|///     platform.
+comment|///
+comment|/// @return
+comment|///     A FileSpec pointing to the executable on disk, or an invalid
+comment|///     FileSpec if the executable cannot be found.
+comment|//------------------------------------------------------------------
+name|virtual
+name|FileSpec
+name|LocateExecutable
+argument_list|(
+argument|const char *basename
+argument_list|)
+block|{
+return|return
+name|FileSpec
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Allow the platform to set preferred memory cache line size. If non-zero (and the user
+comment|/// has not set cache line size explicitly), this value will be used as the cache line
+comment|/// size for memory reads.
+comment|//------------------------------------------------------------------
+name|virtual
+name|uint32_t
+name|GetDefaultMemoryCacheLineSize
+argument_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Load a shared library into this process.
+comment|///
+comment|/// Try and load a shared library into the current process. This
+comment|/// call might fail in the dynamic loader plug-in says it isn't safe
+comment|/// to try and load shared libraries at the moment.
+comment|///
+comment|/// @param[in] process
+comment|///     The process to load the image.
+comment|///
+comment|/// @param[in] local_file
+comment|///     The file spec that points to the shared library that you want
+comment|///     to load if the library is located on the host. The library will
+comment|///     be copied over to the location specified by remote_file or into
+comment|///     the current working directory with the same filename if the
+comment|///     remote_file isn't specified.
+comment|///
+comment|/// @param[in] remote_file
+comment|///     If local_file is specified then the location where the library
+comment|///     should be copied over from the host. If local_file isn't
+comment|///     specified, then the path for the shared library on the target
+comment|///     what you want to load.
+comment|///
+comment|/// @param[out] error
+comment|///     An error object that gets filled in with any errors that
+comment|///     might occur when trying to load the shared library.
+comment|///
+comment|/// @return
+comment|///     A token that represents the shared library that can be
+comment|///     later used to unload the shared library. A value of
+comment|///     LLDB_INVALID_IMAGE_TOKEN will be returned if the shared
+comment|///     library can't be opened.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|LoadImage
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|local_file
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|remote_file
+argument_list|,
+name|lldb_private
+operator|::
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|uint32_t
+name|DoLoadImage
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|remote_file
+argument_list|,
+name|lldb_private
+operator|::
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|UnloadImage
+argument_list|(
+argument|lldb_private::Process* process
+argument_list|,
+argument|uint32_t image_token
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Connect to all processes waiting for a debugger to attach
+comment|///
+comment|/// If the platform have a list of processes waiting for a debugger
+comment|/// to connect to them then connect to all of these pending processes.
+comment|///
+comment|/// @param[in] debugger
+comment|///     The debugger used for the connect.
+comment|///
+comment|/// @param[out] error
+comment|///     If an error occurred during the connect then this object will
+comment|///     contain the error message.
+comment|///
+comment|/// @return
+comment|///     The number of processes we are succesfully connected to.
+comment|//------------------------------------------------------------------
+name|virtual
+name|size_t
+name|ConnectToWaitingProcesses
+argument_list|(
+name|lldb_private
+operator|::
+name|Debugger
+operator|&
+name|debugger
+argument_list|,
+name|lldb_private
+operator|::
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
 name|protected
 operator|:
 name|bool
@@ -2115,33 +2345,32 @@ argument_list|(
 name|m_mutex
 argument_list|)
 expr_stmt|;
-name|IDToNameMap
-operator|::
-name|iterator
+comment|// return the empty string if our string is NULL
+comment|// so we can tell when things were in the negative
+comment|// cached (didn't find a valid user name, don't keep
+comment|// trying)
+specifier|const
+specifier|auto
 name|pos
-operator|=
+init|=
 name|m_uid_map
 operator|.
 name|find
 argument_list|(
 name|uid
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+decl_stmt|;
+return|return
+operator|(
+operator|(
 name|pos
 operator|!=
 name|m_uid_map
 operator|.
 name|end
 argument_list|()
-condition|)
-block|{
-comment|// return the empty string if our string is NULL
-comment|// so we can tell when things were in the negative
-comment|// cached (didn't find a valid user name, don't keep
-comment|// trying)
-return|return
+operator|)
+condition|?
 name|pos
 operator|->
 name|second
@@ -2150,10 +2379,9 @@ name|AsCString
 argument_list|(
 literal|""
 argument_list|)
-return|;
-block|}
-return|return
-name|NULL
+else|:
+name|nullptr
+operator|)
 return|;
 block|}
 specifier|const
@@ -2271,33 +2499,32 @@ argument_list|(
 name|m_mutex
 argument_list|)
 expr_stmt|;
-name|IDToNameMap
-operator|::
-name|iterator
+comment|// return the empty string if our string is NULL
+comment|// so we can tell when things were in the negative
+comment|// cached (didn't find a valid group name, don't keep
+comment|// trying)
+specifier|const
+specifier|auto
 name|pos
-operator|=
+init|=
 name|m_gid_map
 operator|.
 name|find
 argument_list|(
 name|gid
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+decl_stmt|;
+return|return
+operator|(
+operator|(
 name|pos
 operator|!=
 name|m_gid_map
 operator|.
 name|end
 argument_list|()
-condition|)
-block|{
-comment|// return the empty string if our string is NULL
-comment|// so we can tell when things were in the negative
-comment|// cached (didn't find a valid group name, don't keep
-comment|// trying)
-return|return
+operator|)
+condition|?
 name|pos
 operator|->
 name|second
@@ -2306,10 +2533,9 @@ name|AsCString
 argument_list|(
 literal|""
 argument_list|)
-return|;
-block|}
-return|return
-name|NULL
+else|:
+name|nullptr
+operator|)
 return|;
 block|}
 specifier|const
@@ -2457,6 +2683,23 @@ name|dst_file_spec
 parameter_list|)
 function_decl|;
 name|virtual
+name|Error
+name|DownloadSymbolFile
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|dst_file_spec
+argument_list|)
+decl_stmt|;
+name|virtual
 specifier|const
 name|char
 modifier|*
@@ -2591,13 +2834,21 @@ block|{         }
 operator|~
 name|PlatformList
 argument_list|()
-block|{         }
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|Append
 argument_list|(
-argument|const lldb::PlatformSP&platform_sp
+specifier|const
+name|lldb
+operator|::
+name|PlatformSP
+operator|&
+name|platform_sp
 argument_list|,
-argument|bool set_selected
+name|bool
+name|set_selected
 argument_list|)
 block|{
 name|Mutex
@@ -2607,14 +2858,14 @@ name|locker
 argument_list|(
 name|m_mutex
 argument_list|)
-block|;
+expr_stmt|;
 name|m_platforms
 operator|.
 name|push_back
 argument_list|(
 name|platform_sp
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|set_selected
@@ -2897,12 +3148,11 @@ operator|:
 name|OptionGroupPlatformRSync
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|OptionGroupPlatformRSync
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -2914,14 +3164,14 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
 specifier|const
 name|lldb_private
@@ -2930,11 +3180,12 @@ name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
 comment|// Options table: Required for subclasses of Options.
 specifier|static
@@ -2985,12 +3236,11 @@ operator|:
 name|OptionGroupPlatformSSH
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|OptionGroupPlatformSSH
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -3002,19 +3252,19 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
 specifier|const
 name|lldb_private
@@ -3023,6 +3273,7 @@ name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
 comment|// Options table: Required for subclasses of Options.
 specifier|static
@@ -3065,12 +3316,11 @@ operator|:
 name|OptionGroupPlatformCaching
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|OptionGroupPlatformCaching
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -3082,19 +3332,19 @@ argument|uint32_t option_idx
 argument_list|,
 argument|const char *option_value
 argument_list|)
+name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetNumDefinitions
 argument_list|()
+name|override
 block|;
 specifier|const
 name|lldb_private
@@ -3103,6 +3353,7 @@ name|OptionDefinition
 operator|*
 name|GetDefinitions
 argument_list|()
+name|override
 block|;
 comment|// Options table: Required for subclasses of Options.
 specifier|static

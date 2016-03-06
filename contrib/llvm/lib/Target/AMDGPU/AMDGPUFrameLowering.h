@@ -40,11 +40,7 @@ comment|/// \file
 end_comment
 
 begin_comment
-comment|/// \brief Interface to describe a layout of a stack frame on a AMDIL target
-end_comment
-
-begin_comment
-comment|/// machine.
+comment|/// \brief Interface to describe a layout of a stack frame on an AMDGPU target.
 end_comment
 
 begin_comment
@@ -58,20 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUFRAMELOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUFRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUFRAMELOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUFRAMELOWERING_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineFunction.h"
-end_include
 
 begin_include
 include|#
@@ -123,11 +113,13 @@ argument_list|)
 specifier|const
 block|;
 name|int
-name|getFrameIndexOffset
+name|getFrameIndexReference
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 name|override

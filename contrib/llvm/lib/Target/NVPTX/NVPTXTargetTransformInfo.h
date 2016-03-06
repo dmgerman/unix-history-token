@@ -296,7 +296,7 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-name|unsigned
+name|int
 name|getArithmeticInstrCost
 argument_list|(
 name|unsigned

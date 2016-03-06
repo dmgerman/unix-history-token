@@ -213,8 +213,47 @@ block|;
 name|private
 operator|:
 expr|struct
+name|FreeMemBlock
+block|{
+comment|// The actual block of free memory
+name|sys
+operator|::
+name|MemoryBlock
+name|Free
+block|;
+comment|// If there is a pending allocation from the same reservation right before
+comment|// this block, store it's index in PendingMem, to be able to update the
+comment|// pending region if part of this block is allocated, rather than having to
+comment|// create a new one
+name|unsigned
+name|PendingPrefixIndex
+block|;   }
+block|;    struct
 name|MemoryGroup
 block|{
+comment|// PendingMem contains all blocks of memory (subblocks of AllocatedMem)
+comment|// which have not yet had their permissions applied, but have been given
+comment|// out to the user. FreeMem contains all block of memory, which have
+comment|// neither had their permissions applied, nor been given out to the user.
+name|SmallVector
+operator|<
+name|sys
+operator|::
+name|MemoryBlock
+block|,
+literal|16
+operator|>
+name|PendingMem
+block|;
+name|SmallVector
+operator|<
+name|FreeMemBlock
+block|,
+literal|16
+operator|>
+name|FreeMem
+block|;
+comment|// All memory blocks that have been requested from the system
 name|SmallVector
 operator|<
 name|sys
@@ -224,16 +263,6 @@ block|,
 literal|16
 operator|>
 name|AllocatedMem
-block|;
-name|SmallVector
-operator|<
-name|sys
-operator|::
-name|MemoryBlock
-block|,
-literal|16
-operator|>
-name|FreeMem
 block|;
 name|sys
 operator|::

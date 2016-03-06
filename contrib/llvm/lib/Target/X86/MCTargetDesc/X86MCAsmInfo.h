@@ -111,7 +111,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|struct
 name|X86_64MCAsmInfoDarwin
@@ -141,7 +141,7 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|X86ELFMCAsmInfo
@@ -164,7 +164,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|X86MCAsmInfoMicrosoft
@@ -187,7 +187,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|X86MCAsmInfoGNUCOFF
@@ -210,7 +210,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

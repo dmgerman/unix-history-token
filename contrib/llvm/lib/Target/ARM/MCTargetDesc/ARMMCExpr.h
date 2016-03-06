@@ -223,9 +223,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|MCSection
+name|MCFragment
 operator|*
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 specifier|const
 name|override
@@ -234,7 +234,7 @@ return|return
 name|getSubExpr
 argument_list|()
 operator|->
-name|findAssociatedSection
+name|findAssociatedFragment
 argument_list|()
 return|;
 block|}

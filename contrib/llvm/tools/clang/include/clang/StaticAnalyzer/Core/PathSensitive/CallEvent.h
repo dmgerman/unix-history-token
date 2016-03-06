@@ -649,6 +649,8 @@ name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
+argument_list|,
+argument|RegionAndSymbolInvalidationTraits *ETraits
 argument_list|)
 specifier|const
 block|{}
@@ -934,9 +936,31 @@ name|getReturnValue
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns true if the type of any of the non-null arguments satisfies
+comment|/// the condition.
+name|bool
+name|hasNonNullArgumentsWithType
+argument_list|(
+name|bool
+argument_list|(
+operator|*
+name|Condition
+argument_list|)
+argument_list|(
+name|QualType
+argument_list|)
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Returns true if any of the arguments appear to represent callbacks.
 name|bool
 name|hasNonZeroCallbackArg
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Returns true if any of the arguments is void*.
+name|bool
+name|hasVoidPointerToNonConstArg
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1873,6 +1897,8 @@ name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
+argument_list|,
+argument|RegionAndSymbolInvalidationTraits *ETraits
 argument_list|)
 specifier|const
 name|override
@@ -1975,12 +2001,101 @@ name|getDecl
 argument_list|()
 return|;
 block|}
+name|bool
+name|isConversionFromLambda
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|BlockDecl
+operator|*
+name|BD
+operator|=
+name|getDecl
+argument_list|()
+block|;
+if|if
+condition|(
+operator|!
+name|BD
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|BD
+operator|->
+name|isConversionFromLambda
+argument_list|()
+return|;
+block|}
+comment|/// \brief For a block converted from a C++ lambda, returns the block
+comment|/// VarRegion for the variable holding the captured C++ lambda record.
+specifier|const
+name|VarRegion
+operator|*
+name|getRegionStoringCapturedLambda
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isConversionFromLambda
+argument_list|()
+argument_list|)
+block|;
+specifier|const
+name|BlockDataRegion
+operator|*
+name|BR
+operator|=
+name|getBlockRegion
+argument_list|()
+block|;
+name|assert
+argument_list|(
+name|BR
+operator|&&
+literal|"Block converted from lambda must have a block region"
+argument_list|)
+block|;
+name|auto
+name|I
+operator|=
+name|BR
+operator|->
+name|referenced_vars_begin
+argument_list|()
+block|;
+name|assert
+argument_list|(
+name|I
+operator|!=
+name|BR
+operator|->
+name|referenced_vars_end
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|I
+operator|.
+name|getCapturedRegion
+argument_list|()
+return|;
+block|}
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
 name|override
 block|{
+if|if
+condition|(
+operator|!
+name|isConversionFromLambda
+argument_list|()
+condition|)
 return|return
 name|RuntimeDefinition
 argument_list|(
@@ -1988,7 +2103,68 @@ name|getDecl
 argument_list|()
 argument_list|)
 return|;
+comment|// Clang converts lambdas to blocks with an implicit user-defined
+comment|// conversion operator method on the lambda record that looks (roughly)
+comment|// like:
+comment|//
+comment|// typedef R(^block_type)(P1, P2, ...);
+comment|// operator block_type() const {
+comment|//   auto Lambda = *this;
+comment|//   return ^(P1 p1, P2 p2, ...){
+comment|//     /* return Lambda(p1, p2, ...); */
+comment|//   };
+comment|// }
+comment|//
+comment|// Here R is the return type of the lambda and P1, P2, ... are
+comment|// its parameter types. 'Lambda' is a fake VarDecl captured by the block
+comment|// that is initialized to a copy of the lambda.
+comment|//
+comment|// Sema leaves the body of a lambda-converted block empty (it is
+comment|// produced by CodeGen), so we can't analyze it directly. Instead, we skip
+comment|// the block body and analyze the operator() method on the captured lambda.
+specifier|const
+name|VarDecl
+operator|*
+name|LambdaVD
+operator|=
+name|getRegionStoringCapturedLambda
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+block|;
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|LambdaDecl
+operator|=
+name|LambdaVD
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getAsCXXRecordDecl
+argument_list|()
+block|;
+name|CXXMethodDecl
+operator|*
+name|LambdaCallOperator
+operator|=
+name|LambdaDecl
+operator|->
+name|getLambdaCallOperator
+argument_list|()
+block|;
+return|return
+name|RuntimeDefinition
+argument_list|(
+name|LambdaCallOperator
+argument_list|)
+return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|argumentsMayEscape
 argument_list|()
@@ -1999,16 +2175,27 @@ return|return
 name|true
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|getInitialStackFrameContents
 argument_list|(
-argument|const StackFrameContext *CalleeCtx
-argument_list|,
-argument|BindingsTy&Bindings
-argument_list|)
 specifier|const
+name|StackFrameContext
+operator|*
+name|CalleeCtx
+argument_list|,
+name|BindingsTy
+operator|&
+name|Bindings
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|ParmVarDecl
@@ -2018,7 +2205,10 @@ name|parameters
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|Kind
 name|getKind
 argument_list|()
@@ -2029,12 +2219,18 @@ return|return
 name|CE_Block
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const CallEvent *CA
-argument_list|)
+parameter_list|(
+specifier|const
+name|CallEvent
+modifier|*
+name|CA
+parameter_list|)
 block|{
 return|return
 name|CA
@@ -2045,13 +2241,21 @@ operator|==
 name|CE_Block
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief Represents a non-static C++ member function call, no matter how
+end_comment
+
+begin_comment
 comment|/// it is written.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CXXInstanceCall
-operator|:
+range|:
 name|public
 name|AnyFunctionCall
 block|{
@@ -2061,6 +2265,8 @@ name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
+argument_list|,
+argument|RegionAndSymbolInvalidationTraits *ETraits
 argument_list|)
 specifier|const
 name|override
@@ -2796,6 +3002,8 @@ name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
+argument_list|,
+argument|RegionAndSymbolInvalidationTraits *ETraits
 argument_list|)
 specifier|const
 name|override
@@ -3189,6 +3397,8 @@ name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
+argument_list|,
+argument|RegionAndSymbolInvalidationTraits *ETraits
 argument_list|)
 specifier|const
 name|override

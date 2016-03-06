@@ -619,6 +619,76 @@ block|;   }
 block|}
 block|;
 name|class
+name|ObjCMessageNil
+block|{
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_checkObjCMessage
+argument_list|(
+argument|void *checker
+argument_list|,
+argument|const ObjCMethodCall&msg
+argument_list|,
+argument|CheckerContext&C
+argument_list|)
+block|{
+operator|(
+operator|(
+specifier|const
+name|CHECKER
+operator|*
+operator|)
+name|checker
+operator|)
+operator|->
+name|checkObjCMessageNil
+argument_list|(
+name|msg
+argument_list|,
+name|C
+argument_list|)
+block|;   }
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_register
+argument_list|(
+argument|CHECKER *checker
+argument_list|,
+argument|CheckerManager&mgr
+argument_list|)
+block|{
+name|mgr
+operator|.
+name|_registerForObjCMessageNil
+argument_list|(
+name|CheckerManager
+operator|::
+name|CheckObjCMessageFunc
+argument_list|(
+name|checker
+argument_list|,
+name|_checkObjCMessage
+operator|<
+name|CHECKER
+operator|>
+argument_list|)
+argument_list|)
+block|;   }
+block|}
+block|;
+name|class
 name|PostObjCMessage
 block|{
 name|template
@@ -2332,6 +2402,12 @@ decl_stmt|;
 name|BugReporter
 modifier|*
 name|BR
+decl_stmt|;
+comment|// When true, the dereference is in the source code directly. When false, the
+comment|// dereference might happen later (for example pointer passed to a parameter
+comment|// that is marked with nonnull attribute.)
+name|bool
+name|IsDirectDereference
 decl_stmt|;
 block|}
 struct|;

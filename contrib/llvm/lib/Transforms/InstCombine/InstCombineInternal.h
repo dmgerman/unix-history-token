@@ -1457,6 +1457,23 @@ argument_list|)
 block|;
 name|Instruction
 operator|*
+name|FoldAllocaCmp
+argument_list|(
+name|ICmpInst
+operator|&
+name|ICI
+argument_list|,
+name|AllocaInst
+operator|*
+name|Alloca
+argument_list|,
+name|Value
+operator|*
+name|Other
+argument_list|)
+block|;
+name|Instruction
+operator|*
 name|FoldShiftByConstant
 argument_list|(
 name|Value
@@ -1902,6 +1919,15 @@ operator|:
 name|bool
 name|ShouldChangeType
 argument_list|(
+argument|unsigned FromBitWidth
+argument_list|,
+argument|unsigned ToBitWidth
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|ShouldChangeType
+argument_list|(
 argument|Type *From
 argument_list|,
 argument|Type *To
@@ -1968,6 +1994,11 @@ argument_list|)
 block|;
 comment|/// \brief Try to optimize a sequence of instructions checking if an operation
 comment|/// on LHS and RHS overflows.
+comment|///
+comment|/// If this overflow check is done via one of the overflow check intrinsics,
+comment|/// then CtxI has to be the call instruction calling that intrinsic.  If this
+comment|/// overflow check is done by arithmetic followed by a compare, then CtxI has
+comment|/// to be the arithmetic instruction.
 comment|///
 comment|/// If a simplification is possible, stores the simplified result of the
 comment|/// operation in OperationResult and result of the overflow check in
@@ -2189,8 +2220,10 @@ argument_list|()
 operator|.
 name|insert
 argument_list|(
-operator|&
 name|Old
+operator|.
+name|getIterator
+argument_list|()
 argument_list|,
 name|New
 argument_list|)
@@ -2239,7 +2272,7 @@ block|}
 comment|/// \brief A combiner-aware RAUW-like routine.
 comment|///
 comment|/// This method is to be used when an instruction is found to be dead,
-comment|/// replacable with another preexisting expression. Here we add all uses of
+comment|/// replaceable with another preexisting expression. Here we add all uses of
 comment|/// I to the worklist, replace all uses of I with the new value, then return
 comment|/// I, so that the inst combiner will know that I was modified.
 name|Instruction
@@ -3145,6 +3178,18 @@ end_function_decl
 begin_function_decl
 name|Instruction
 modifier|*
+name|FoldPHIArgZextsIntoPHI
+parameter_list|(
+name|PHINode
+modifier|&
+name|PN
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Instruction
+modifier|*
 name|OptAndOp
 parameter_list|(
 name|Instruction
@@ -3238,7 +3283,7 @@ end_function_decl
 begin_function_decl
 name|Instruction
 modifier|*
-name|MatchBSwap
+name|MatchBSwapOrBitReverse
 parameter_list|(
 name|BinaryOperator
 modifier|&

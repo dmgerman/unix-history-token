@@ -85,7 +85,10 @@ operator|:
 operator|~
 name|ABISysV_arm64
 argument_list|()
-block|{ }
+name|override
+operator|=
+expr|default
+block|;
 name|size_t
 name|GetRedZoneSize
 argument_list|()
@@ -129,22 +132,6 @@ argument|lldb::ValueObjectSP&new_value
 argument_list|)
 name|override
 block|;
-name|protected
-operator|:
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetReturnValueObjectImpl
-argument_list|(
-argument|lldb_private::Thread&thread
-argument_list|,
-argument|lldb_private::ClangASTType&ast_type
-argument_list|)
-specifier|const
-name|override
-block|;
-name|public
-operator|:
 name|bool
 name|CreateFunctionEntryUnwindPlan
 argument_list|(
@@ -357,6 +344,21 @@ begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObjectImpl
+argument_list|(
+argument|lldb_private::Thread&thread
+argument_list|,
+argument|lldb_private::CompilerType&ast_type
+argument_list|)
+specifier|const
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

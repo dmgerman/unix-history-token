@@ -2764,7 +2764,7 @@ name|taskqueue
 modifier|*
 name|tq
 index|[
-name|NCHAN
+name|MAX_NCHAN
 index|]
 decl_stmt|;
 comment|/* General purpose taskqueues */
@@ -2779,7 +2779,7 @@ decl_stmt|;
 name|uint8_t
 name|chan_map
 index|[
-name|NCHAN
+name|MAX_NCHAN
 index|]
 decl_stmt|;
 ifdef|#
@@ -2888,6 +2888,12 @@ decl_stmt|;
 name|struct
 name|adapter_params
 name|params
+decl_stmt|;
+specifier|const
+name|struct
+name|chip_params
+modifier|*
+name|chip_params
 decl_stmt|;
 name|struct
 name|t4_virt_res

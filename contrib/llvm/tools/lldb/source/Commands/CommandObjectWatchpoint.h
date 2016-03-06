@@ -99,10 +99,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMultiwordWatchpoint
 argument_list|()
+name|override
 block|;
 specifier|static
 name|bool
@@ -125,7 +125,7 @@ operator|>
 operator|&
 name|wp_ids
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

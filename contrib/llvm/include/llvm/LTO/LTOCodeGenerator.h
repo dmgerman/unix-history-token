@@ -170,7 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Linker/Linker.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_include
@@ -205,6 +205,9 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|Linker
+decl_stmt|;
+name|class
 name|Mangler
 decl_stmt|;
 name|class
@@ -236,16 +239,9 @@ name|getVersionString
 parameter_list|()
 function_decl|;
 name|LTOCodeGenerator
-argument_list|()
-expr_stmt|;
-name|LTOCodeGenerator
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|LLVMContext
-operator|>
+operator|&
 name|Context
 argument_list|)
 expr_stmt|;
@@ -253,7 +249,7 @@ operator|~
 name|LTOCodeGenerator
 argument_list|()
 expr_stmt|;
-comment|// Merge given module, return true on success.
+comment|/// Merge given module.  Return true on success.
 name|bool
 name|addModule
 parameter_list|(
@@ -262,20 +258,24 @@ name|LTOModule
 modifier|*
 parameter_list|)
 function_decl|;
-comment|// Set the destination module.
+comment|/// Set the destination module.
 name|void
 name|setModule
-parameter_list|(
-name|struct
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|LTOModule
-modifier|*
-parameter_list|)
-function_decl|;
+operator|>
+name|M
+argument_list|)
+decl_stmt|;
 name|void
 name|setTargetOptions
 parameter_list|(
 name|TargetOptions
-name|options
+name|Options
 parameter_list|)
 function_decl|;
 name|void
@@ -286,22 +286,48 @@ parameter_list|)
 function_decl|;
 name|void
 name|setCodePICModel
-parameter_list|(
-name|lto_codegen_model
-parameter_list|)
-function_decl|;
+argument_list|(
+name|Reloc
+operator|::
+name|Model
+name|Model
+argument_list|)
+block|{
+name|RelocModel
+operator|=
+name|Model
+expr_stmt|;
+block|}
+comment|/// Set the file type to be emitted (assembly or object code).
+comment|/// The default is TargetMachine::CGFT_ObjectFile.
+name|void
+name|setFileType
+argument_list|(
+name|TargetMachine
+operator|::
+name|CodeGenFileType
+name|FT
+argument_list|)
+block|{
+name|FileType
+operator|=
+name|FT
+expr_stmt|;
+block|}
 name|void
 name|setCpu
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|mCpu
+name|MCpu
 parameter_list|)
 block|{
+name|this
+operator|->
 name|MCpu
 operator|=
-name|mCpu
+name|MCpu
 expr_stmt|;
 block|}
 name|void
@@ -310,26 +336,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|mAttr
+name|MAttr
 parameter_list|)
 block|{
+name|this
+operator|->
 name|MAttr
 operator|=
-name|mAttr
+name|MAttr
 expr_stmt|;
 block|}
 name|void
 name|setOptLevel
 parameter_list|(
 name|unsigned
-name|optLevel
-parameter_list|)
-block|{
 name|OptLevel
-operator|=
-name|optLevel
-expr_stmt|;
-block|}
+parameter_list|)
+function_decl|;
 name|void
 name|setShouldInternalize
 parameter_list|(
@@ -358,91 +381,87 @@ name|void
 name|addMustPreserveSymbol
 parameter_list|(
 name|StringRef
-name|sym
+name|Sym
 parameter_list|)
 block|{
 name|MustPreserveSymbols
 index|[
-name|sym
+name|Sym
 index|]
 operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|// To pass options to the driver and optimization passes. These options are
-comment|// not necessarily for debugging purpose (The function name is misleading).
-comment|// This function should be called before LTOCodeGenerator::compilexxx(),
-comment|// and LTOCodeGenerator::writeMergedModules().
+comment|/// Pass options to the driver and optimization passes.
+comment|///
+comment|/// These options are not necessarily for debugging purpose (the function
+comment|/// name is misleading).  This function should be called before
+comment|/// LTOCodeGenerator::compilexxx(), and
+comment|/// LTOCodeGenerator::writeMergedModules().
 name|void
 name|setCodeGenDebugOptions
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|opts
+name|Opts
 parameter_list|)
 function_decl|;
-comment|// Parse the options set in setCodeGenDebugOptions. Like
-comment|// setCodeGenDebugOptions, this must be called before
-comment|// LTOCodeGenerator::compilexxx() and LTOCodeGenerator::writeMergedModules()
+comment|/// Parse the options set in setCodeGenDebugOptions.
+comment|///
+comment|/// Like \a setCodeGenDebugOptions(), this must be called before
+comment|/// LTOCodeGenerator::compilexxx() and
+comment|/// LTOCodeGenerator::writeMergedModules().
 name|void
 name|parseCodeGenDebugOptions
 parameter_list|()
 function_decl|;
-comment|// Write the merged module to the file specified by the given path.
-comment|// Return true on success.
+comment|/// Write the merged module to the file specified by the given path.  Return
+comment|/// true on success.
 name|bool
 name|writeMergedModules
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-name|path
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-comment|// Compile the merged module into a *single* object file; the path to object
-comment|// file is returned to the caller via argument "name". Return true on
-comment|// success.
-comment|//
-comment|// NOTE that it is up to the linker to remove the intermediate object file.
-comment|//  Do not try to remove the object file in LTOCodeGenerator's destructor
-comment|//  as we don't who (LTOCodeGenerator or the obj file) will last longer.
+modifier|*
+name|Path
+parameter_list|)
+function_decl|;
+comment|/// Compile the merged module into a *single* output file; the path to output
+comment|/// file is returned to the caller via argument "name". Return true on
+comment|/// success.
+comment|///
+comment|/// \note It is up to the linker to remove the intermediate output file.  Do
+comment|/// not try to remove the object file in LTOCodeGenerator's destructor as we
+comment|/// don't who (LTOCodeGenerator or the output file) will last longer.
 name|bool
 name|compile_to_file
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|*
-name|name
-argument_list|,
+modifier|*
+modifier|*
+name|Name
+parameter_list|,
 name|bool
-name|disableInline
-argument_list|,
+name|DisableVerify
+parameter_list|,
 name|bool
-name|disableGVNLoadPRE
-argument_list|,
+name|DisableInline
+parameter_list|,
 name|bool
-name|disableVectorization
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-comment|// As with compile_to_file(), this function compiles the merged module into
-comment|// single object file. Instead of returning the object-file-path to the caller
-comment|// (linker), it brings the object to a buffer, and return the buffer to the
-comment|// caller. This function should delete intermediate object file once its content
-comment|// is brought to memory. Return NULL if the compilation was not successful.
+name|DisableGVNLoadPRE
+parameter_list|,
+name|bool
+name|DisableVectorization
+parameter_list|)
+function_decl|;
+comment|/// As with compile_to_file(), this function compiles the merged module into
+comment|/// single output file. Instead of returning the output file path to the
+comment|/// caller (linker), it brings the output to a buffer, and returns the buffer
+comment|/// to the caller. This function should delete the intermediate file once
+comment|/// its content is brought to memory. Return NULL if the compilation was not
+comment|/// successful.
 name|std
 operator|::
 name|unique_ptr
@@ -451,38 +470,35 @@ name|MemoryBuffer
 operator|>
 name|compile
 argument_list|(
-argument|bool disableInline
+argument|bool DisableVerify
 argument_list|,
-argument|bool disableGVNLoadPRE
+argument|bool DisableInline
 argument_list|,
-argument|bool disableVectorization
+argument|bool DisableGVNLoadPRE
 argument_list|,
-argument|std::string&errMsg
+argument|bool DisableVectorization
 argument_list|)
 expr_stmt|;
-comment|// Optimizes the merged module. Returns true on success.
+comment|/// Optimizes the merged module.  Returns true on success.
 name|bool
 name|optimize
-argument_list|(
+parameter_list|(
 name|bool
-name|disableInline
-argument_list|,
+name|DisableVerify
+parameter_list|,
 name|bool
-name|disableGVNLoadPRE
-argument_list|,
+name|DisableInline
+parameter_list|,
 name|bool
-name|disableVectorization
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-comment|// Compiles the merged optimized module into a single object file. It brings
-comment|// the object to a buffer, and returns the buffer to the caller. Return NULL
-comment|// if the compilation was not successful.
+name|DisableGVNLoadPRE
+parameter_list|,
+name|bool
+name|DisableVectorization
+parameter_list|)
+function_decl|;
+comment|/// Compiles the merged optimized module into a single output file. It brings
+comment|/// the output to a buffer, and returns the buffer to the caller. Return NULL
+comment|/// if the compilation was not successful.
 name|std
 operator|::
 name|unique_ptr
@@ -490,14 +506,24 @@ operator|<
 name|MemoryBuffer
 operator|>
 name|compileOptimized
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
+argument_list|()
 expr_stmt|;
+comment|/// Compile the merged optimized module into out.size() output files each
+comment|/// representing a linkable partition of the module. If out contains more
+comment|/// than one element, code generation is done in parallel with out.size()
+comment|/// threads.  Output files will be written to members of out. Returns true on
+comment|/// success.
+name|bool
+name|compileOptimized
+argument_list|(
+name|ArrayRef
+operator|<
+name|raw_pwrite_stream
+operator|*
+operator|>
+name|Out
+argument_list|)
+decl_stmt|;
 name|void
 name|setDiagnosticHandler
 parameter_list|(
@@ -516,6 +542,16 @@ return|return
 name|Context
 return|;
 block|}
+name|void
+name|resetMergedModule
+parameter_list|()
+block|{
+name|MergedModule
+operator|.
+name|reset
+argument_list|()
+expr_stmt|;
+block|}
 name|private
 label|:
 name|void
@@ -523,35 +559,15 @@ name|initializeLTOPasses
 parameter_list|()
 function_decl|;
 name|bool
-name|compileOptimized
-argument_list|(
-name|raw_pwrite_stream
-operator|&
-name|out
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
-name|bool
 name|compileOptimizedToFile
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|*
-name|name
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
+modifier|*
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
 name|void
 name|applyScopeRestrictions
 parameter_list|()
@@ -595,14 +611,8 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|determineTarget
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|errMsg
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 specifier|static
 name|void
 name|DiagnosticHandler
@@ -626,6 +636,17 @@ modifier|&
 name|DI
 parameter_list|)
 function_decl|;
+name|void
+name|emitError
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ErrMsg
+argument_list|)
+decl_stmt|;
 typedef|typedef
 name|StringMap
 operator|<
@@ -633,31 +654,34 @@ name|uint8_t
 operator|>
 name|StringSet
 expr_stmt|;
-name|void
-name|destroyMergedModule
-parameter_list|()
-function_decl|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|LLVMContext
-operator|>
-name|OwnedContext
-expr_stmt|;
 name|LLVMContext
 modifier|&
 name|Context
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|MergedModule
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Linker
-name|IRLinker
-decl_stmt|;
+operator|>
+name|TheLinker
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetMachine
-modifier|*
+operator|>
 name|TargetMach
-init|=
-name|nullptr
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|EmitDwarfDebugInfo
 init|=
@@ -668,11 +692,15 @@ name|ScopeRestrictionsDone
 init|=
 name|false
 decl_stmt|;
-name|lto_codegen_model
-name|CodeModel
-init|=
-name|LTO_CODEGEN_PIC_MODEL_DEFAULT
-decl_stmt|;
+name|Reloc
+operator|::
+name|Model
+name|RelocModel
+operator|=
+name|Reloc
+operator|::
+name|Default
+expr_stmt|;
 name|StringSet
 name|MustPreserveSymbols
 decl_stmt|;
@@ -683,10 +711,16 @@ name|std
 operator|::
 name|vector
 operator|<
-name|char
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 name|CodegenOptions
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|FeatureStr
 expr_stmt|;
 name|std
 operator|::
@@ -706,6 +740,15 @@ expr_stmt|;
 name|TargetOptions
 name|Options
 decl_stmt|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|CGOptLevel
+operator|=
+name|CodeGenOpt
+operator|::
+name|Default
+expr_stmt|;
 name|unsigned
 name|OptLevel
 init|=
@@ -722,12 +765,6 @@ name|DiagContext
 init|=
 name|nullptr
 decl_stmt|;
-name|LTOModule
-modifier|*
-name|OwnedModule
-init|=
-name|nullptr
-decl_stmt|;
 name|bool
 name|ShouldInternalize
 init|=
@@ -738,6 +775,15 @@ name|ShouldEmbedUselists
 init|=
 name|false
 decl_stmt|;
+name|TargetMachine
+operator|::
+name|CodeGenFileType
+name|FileType
+operator|=
+name|TargetMachine
+operator|::
+name|CGFT_ObjectFile
+expr_stmt|;
 block|}
 struct|;
 block|}

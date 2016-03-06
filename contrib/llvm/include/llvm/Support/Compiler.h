@@ -380,6 +380,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_NOEXCEPT
+value|throw()
 end_define
 
 begin_endif
@@ -1134,7 +1135,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
-value|inline __attribute__((always_inline))
+value|__attribute__((always_inline))
 end_define
 
 begin_elif
@@ -1761,6 +1762,142 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/// \macro LLVM_PACKED
+end_comment
+
+begin_comment
+comment|/// \brief Used to specify a packed structure.
+end_comment
+
+begin_comment
+comment|/// LLVM_PACKED(
+end_comment
+
+begin_comment
+comment|///    struct A {
+end_comment
+
+begin_comment
+comment|///      int i;
+end_comment
+
+begin_comment
+comment|///      int j;
+end_comment
+
+begin_comment
+comment|///      int k;
+end_comment
+
+begin_comment
+comment|///      long long l;
+end_comment
+
+begin_comment
+comment|///   });
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// LLVM_PACKED_START
+end_comment
+
+begin_comment
+comment|/// struct B {
+end_comment
+
+begin_comment
+comment|///   int i;
+end_comment
+
+begin_comment
+comment|///   int j;
+end_comment
+
+begin_comment
+comment|///   int k;
+end_comment
+
+begin_comment
+comment|///   long long l;
+end_comment
+
+begin_comment
+comment|/// };
+end_comment
+
+begin_comment
+comment|/// LLVM_PACKED_END
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED
+parameter_list|(
+name|d
+parameter_list|)
+value|__pragma(pack(push, 1)) d __pragma(pack(pop))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED_START
+value|__pragma(pack(push, 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED_END
+value|__pragma(pack(pop))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED
+parameter_list|(
+name|d
+parameter_list|)
+value|d __attribute__((packed))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED_START
+value|_Pragma("pack(push, 1)")
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_PACKED_END
+value|_Pragma("pack(pop)")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/// \macro LLVM_PTR_SIZE
 end_comment
 
@@ -1996,6 +2133,12 @@ name|LLVM_ADDRESS_SANITIZER_BUILD
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sanitizer/asan_interface.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -2006,6 +2149,261 @@ define|#
 directive|define
 name|LLVM_ADDRESS_SANITIZER_BUILD
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__asan_poison_memory_region
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__asan_unpoison_memory_region
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_THREAD_SANITIZER_BUILD
+end_comment
+
+begin_comment
+comment|/// \brief Whether LLVM itself is built with ThreadSanitizer instrumentation.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|thread_sanitizer
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SANITIZE_THREAD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_SANITIZER_BUILD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_SANITIZER_BUILD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|LLVM_THREAD_SANITIZER_BUILD
+end_if
+
+begin_comment
+comment|// Thread Sanitizer is a tool that finds races in code.
+end_comment
+
+begin_comment
+comment|// See http://code.google.com/p/data-race-test/wiki/DynamicAnnotations .
+end_comment
+
+begin_comment
+comment|// tsan detects these exact functions by name.
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+name|void
+name|AnnotateHappensAfter
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|cv
+parameter_list|)
+function_decl|;
+name|void
+name|AnnotateHappensBefore
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|cv
+parameter_list|)
+function_decl|;
+name|void
+name|AnnotateIgnoreWritesBegin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+name|void
+name|AnnotateIgnoreWritesEnd
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+block|}
+end_extern
+
+begin_comment
+comment|// This marker is used to define a happens-before arc. The race detector will
+end_comment
+
+begin_comment
+comment|// infer an arc from the begin to the end when they share the same pointer
+end_comment
+
+begin_comment
+comment|// argument.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TsanHappensBefore
+parameter_list|(
+name|cv
+parameter_list|)
+value|AnnotateHappensBefore(__FILE__, __LINE__, cv)
+end_define
+
+begin_comment
+comment|// This marker defines the destination of a happens-before arc.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TsanHappensAfter
+parameter_list|(
+name|cv
+parameter_list|)
+value|AnnotateHappensAfter(__FILE__, __LINE__, cv)
+end_define
+
+begin_comment
+comment|// Ignore any races on writes between here and the next TsanIgnoreWritesEnd.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TsanIgnoreWritesBegin
+parameter_list|()
+value|AnnotateIgnoreWritesBegin(__FILE__, __LINE__)
+end_define
+
+begin_comment
+comment|// Resume checking for racy writes.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TsanIgnoreWritesEnd
+parameter_list|()
+value|AnnotateIgnoreWritesEnd(__FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TsanHappensBefore
+parameter_list|(
+name|cv
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TsanHappensAfter
+parameter_list|(
+name|cv
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TsanIgnoreWritesBegin
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|TsanIgnoreWritesEnd
+parameter_list|()
 end_define
 
 begin_endif

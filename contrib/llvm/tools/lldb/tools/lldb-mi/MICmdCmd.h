@@ -150,18 +150,6 @@ comment|// Ref:     http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Variable
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 03/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -180,18 +168,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdEnablePrettyPrinting
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -199,25 +183,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdEnablePrettyPrinting
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -236,18 +214,6 @@ comment|//          *this class implements MI command "source".
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 05/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -266,18 +232,14 @@ specifier|static
 name|CMICmdBase
 operator|*
 name|CreateSelf
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMICmdCmdSource
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Overridden:
 name|public
@@ -285,25 +247,19 @@ operator|:
 comment|// From CMICmdInvoker::ICmd
 name|bool
 name|Execute
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|bool
 name|Acknowledge
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmdCmdSource
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|; }
 decl_stmt|;

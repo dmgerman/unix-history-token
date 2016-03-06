@@ -161,10 +161,10 @@ comment|//------------------------------------------------------------------
 comment|/// The Destructor is virtual, all significant breakpoint resolvers derive
 comment|/// from this class.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|BreakpointResolver
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// This sets the breakpoint for this resolver.
@@ -222,14 +222,12 @@ comment|///
 comment|/// @param[in] s
 comment|///   Stream to which the output is copied.
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|GetDescription
 argument_list|(
-name|Stream
-operator|*
-name|s
+argument|Stream *s
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;

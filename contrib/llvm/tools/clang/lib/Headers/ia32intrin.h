@@ -57,18 +57,9 @@ argument_list|(
 name|void
 argument_list|)
 block|{
-name|unsigned
-name|long
-name|long
-name|__res
-init|=
-literal|0
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("pushf\n\t"                         "popq %0\n"                         :"=r"(__res)                         :                         :                        );
 return|return
-name|__res
+name|__builtin_ia32_readeflags_u64
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -93,9 +84,11 @@ name|long
 name|__f
 argument_list|)
 block|{
-asm|__asm__
-specifier|__volatile__
-asm|("pushq %0\n\t"                         "popf\n"                         :                         :"r"(__f)                         :"flags"                        );
+name|__builtin_ia32_writeeflags_u64
+argument_list|(
+name|__f
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -126,17 +119,9 @@ argument_list|(
 name|void
 argument_list|)
 block|{
-name|unsigned
-name|int
-name|__res
-init|=
-literal|0
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("pushf\n\t"                         "popl %0\n"                         :"=r"(__res)                         :                         :                        );
 return|return
-name|__res
+name|__builtin_ia32_readeflags_u32
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -160,9 +145,11 @@ name|int
 name|__f
 argument_list|)
 block|{
-asm|__asm__
-specifier|__volatile__
-asm|("pushl %0\n\t"                         "popf\n"                         :                         :"r"(__f)                         :"flags"                        );
+name|__builtin_ia32_writeeflags_u32
+argument_list|(
+name|__f
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

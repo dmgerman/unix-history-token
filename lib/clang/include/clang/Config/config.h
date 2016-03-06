@@ -4,17 +4,13 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* tools/clang/include/clang/Config/config.h.  Generated from config.h.in by configure.  */
-end_comment
-
-begin_comment
 comment|/* This generated file is for internal use. Do not include it from headers. */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_H
+name|CLANG_CONFIG_H
 end_ifdef
 
 begin_error
@@ -31,7 +27,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|CONFIG_H
+name|CLANG_CONFIG_H
 end_define
 
 begin_comment
@@ -116,13 +112,6 @@ begin_comment
 comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PACKAGE_STRING
-value|"LLVM 3.7.1"
-end_define
-
 begin_comment
 comment|/* The LLVM product name and version */
 end_comment
@@ -131,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|PACKAGE_STRING
+value|"LLVM 3.8.0"
 end_define
 
 begin_comment

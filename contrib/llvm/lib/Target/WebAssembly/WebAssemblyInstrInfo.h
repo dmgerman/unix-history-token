@@ -79,6 +79,18 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"WebAssemblyGenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -89,22 +101,25 @@ decl_stmt|;
 name|class
 name|WebAssemblyInstrInfo
 name|final
+range|:
+name|public
+name|WebAssemblyGenInstrInfo
 block|{
 specifier|const
 name|WebAssemblyRegisterInfo
 name|RI
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|WebAssemblyInstrInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|WebAssemblySubtarget
-modifier|&
+operator|&
 name|STI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 specifier|const
 name|WebAssemblyRegisterInfo
 operator|&
@@ -116,8 +131,73 @@ return|return
 name|RI
 return|;
 block|}
-block|}
-empty_stmt|;
+name|void
+name|copyPhysReg
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool KillSrc
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify = false
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|InsertBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|MachineBasicBlock *FBB
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|DebugLoc DL
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|ReverseBranchCondition
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

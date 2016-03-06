@@ -11483,6 +11483,12 @@ name|bhssc_initiator_task_tag
 expr_stmt|;
 name|bhsdi
 operator|->
+name|bhsdi_target_transfer_tag
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|bhsdi
+operator|->
 name|bhsdi_datasn
 operator|=
 name|htonl

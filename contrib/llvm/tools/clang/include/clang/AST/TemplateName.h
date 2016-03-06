@@ -554,17 +554,7 @@ name|void
 modifier|*
 name|Ptr
 parameter_list|)
-block|{
-name|Storage
-operator|=
-name|StorageType
-operator|::
-name|getFromOpaqueValue
-argument_list|(
-name|Ptr
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 name|public
 label|:
 comment|// \brief Kind of name that is actually stored.
@@ -608,85 +598,53 @@ name|TemplateDecl
 operator|*
 name|Template
 argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Template
-argument_list|)
-block|{ }
-name|explicit
-name|TemplateName
-argument_list|(
-name|OverloadedTemplateStorage
-operator|*
-name|Storage
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Storage
-argument_list|)
-block|{ }
-name|explicit
-name|TemplateName
-argument_list|(
-name|SubstTemplateTemplateParmStorage
-operator|*
-name|Storage
-argument_list|)
 expr_stmt|;
 name|explicit
 name|TemplateName
-argument_list|(
+parameter_list|(
+name|OverloadedTemplateStorage
+modifier|*
+name|Storage
+parameter_list|)
+function_decl|;
+name|explicit
+name|TemplateName
+parameter_list|(
+name|SubstTemplateTemplateParmStorage
+modifier|*
+name|Storage
+parameter_list|)
+function_decl|;
+name|explicit
+name|TemplateName
+parameter_list|(
 name|SubstTemplateTemplateParmPackStorage
-operator|*
+modifier|*
 name|Storage
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Storage
-argument_list|)
-block|{ }
+parameter_list|)
+function_decl|;
 name|explicit
 name|TemplateName
-argument_list|(
+parameter_list|(
 name|QualifiedTemplateName
-operator|*
+modifier|*
 name|Qual
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Qual
-argument_list|)
-block|{ }
+parameter_list|)
+function_decl|;
 name|explicit
 name|TemplateName
-argument_list|(
+parameter_list|(
 name|DependentTemplateName
-operator|*
+modifier|*
 name|Dep
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Dep
-argument_list|)
-block|{ }
+parameter_list|)
+function_decl|;
 comment|/// \brief Determine whether this template name is NULL.
 name|bool
 name|isNull
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Storage
-operator|.
-name|isNull
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|// \brief Get the kind of name that is actually stored.
 name|NameKind
 name|getKind
@@ -718,33 +676,7 @@ operator|*
 name|getAsOverloadedTemplate
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|UncommonTemplateNameStorage
-modifier|*
-name|Uncommon
-init|=
-name|Storage
-operator|.
-name|dyn_cast
-operator|<
-name|UncommonTemplateNameStorage
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|Uncommon
-operator|->
-name|getAsOverloadedStorage
-argument_list|()
-return|;
-return|return
-name|nullptr
-return|;
-block|}
+expr_stmt|;
 comment|/// \brief Retrieve the substituted template template parameter, if
 comment|/// known.
 comment|///
@@ -755,236 +687,67 @@ operator|*
 name|getAsSubstTemplateTemplateParm
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|UncommonTemplateNameStorage
-modifier|*
-name|uncommon
-init|=
-name|Storage
-operator|.
-name|dyn_cast
-operator|<
-name|UncommonTemplateNameStorage
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|uncommon
-operator|->
-name|getAsSubstTemplateTemplateParm
-argument_list|()
-return|;
-return|return
-name|nullptr
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
+expr_stmt|;
 comment|/// \brief Retrieve the substituted template template parameter pack, if
-end_comment
-
-begin_comment
 comment|/// known.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns The storage for the substituted template template parameter pack,
-end_comment
-
-begin_comment
 comment|/// if known. Otherwise, returns NULL.
-end_comment
-
-begin_expr_stmt
 name|SubstTemplateTemplateParmPackStorage
 operator|*
 name|getAsSubstTemplateTemplateParmPack
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|UncommonTemplateNameStorage
-modifier|*
-name|Uncommon
-init|=
-name|Storage
-operator|.
-name|dyn_cast
-operator|<
-name|UncommonTemplateNameStorage
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|Uncommon
-operator|->
-name|getAsSubstTemplateTemplateParmPack
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|nullptr
-return|;
-end_return
-
-begin_comment
-unit|}
+expr_stmt|;
 comment|/// \brief Retrieve the underlying qualified template name
-end_comment
-
-begin_comment
 comment|/// structure, if any.
-end_comment
-
-begin_expr_stmt
-unit|QualifiedTemplateName
+name|QualifiedTemplateName
 operator|*
 name|getAsQualifiedTemplateName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Storage
-operator|.
-name|dyn_cast
-operator|<
-name|QualifiedTemplateName
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
+expr_stmt|;
 comment|/// \brief Retrieve the underlying dependent template name
-end_comment
-
-begin_comment
 comment|/// structure, if any.
-end_comment
-
-begin_expr_stmt
 name|DependentTemplateName
 operator|*
 name|getAsDependentTemplateName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Storage
-operator|.
-name|dyn_cast
-operator|<
-name|DependentTemplateName
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
+expr_stmt|;
 name|TemplateName
 name|getUnderlying
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this is a dependent template name.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isDependent
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this is a template name that somehow
-end_comment
-
-begin_comment
 comment|/// depends on a template parameter.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isInstantiationDependent
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determines whether this template name contains an
-end_comment
-
-begin_comment
 comment|/// unexpanded parameter pack (for C++0x variadic templates).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|containsUnexpandedParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Print the template name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param OS the output stream to which the template name will be
-end_comment
-
-begin_comment
 comment|/// printed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param SuppressNNS if true, don't print the
-end_comment
-
-begin_comment
 comment|/// nested-name-specifier that precedes the template name (if it has
-end_comment
-
-begin_comment
 comment|/// one).
-end_comment
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1004,13 +767,7 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Debugging aid that dumps the template name.
-end_comment
-
-begin_decl_stmt
 name|void
 name|dump
 argument_list|(
@@ -1020,25 +777,13 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Debugging aid that dumps the template name to standard
-end_comment
-
-begin_comment
 comment|/// error.
-end_comment
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
@@ -1060,13 +805,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the template name as a void pointer.
-end_comment
-
-begin_expr_stmt
 name|void
 operator|*
 name|getAsVoidPointer
@@ -1080,13 +819,7 @@ name|getOpaqueValue
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Build a template name from a void pointer.
-end_comment
-
-begin_function
 specifier|static
 name|TemplateName
 name|getFromVoidPointer
@@ -1103,18 +836,10 @@ name|Ptr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+block|}
+empty_stmt|;
 comment|/// Insertion operator for diagnostics.  This allows sending TemplateName's
-end_comment
-
-begin_comment
 comment|/// into a diagnostic with<<.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|DiagnosticBuilder
 operator|&
@@ -1130,17 +855,8 @@ name|TemplateName
 name|N
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief A structure for storing the information associated with a
-end_comment
-
-begin_comment
 comment|/// substituted template template parameter.
-end_comment
-
-begin_decl_stmt
 name|class
 name|SubstTemplateTemplateParmStorage
 range|:
@@ -1237,28 +953,7 @@ name|replacement
 argument_list|)
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-specifier|inline
-name|TemplateName
-operator|::
-name|TemplateName
-argument_list|(
-name|SubstTemplateTemplateParmStorage
-operator|*
-name|Storage
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|Storage
-argument_list|)
-block|{ }
 specifier|inline
 name|TemplateName
 name|TemplateName
@@ -1285,17 +980,14 @@ operator|.
 name|getUnderlying
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|this
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// \brief Represents a template name that was expressed as a
 end_comment
 
@@ -1339,13 +1031,10 @@ begin_comment
 comment|/// providing extra syntactic sugar for downstream clients.
 end_comment
 
-begin_label
-unit|class
+begin_decl_stmt
+name|class
 name|QualifiedTemplateName
-label|:
-end_label
-
-begin_expr_stmt
+range|:
 name|public
 name|llvm
 operator|::
@@ -1434,17 +1123,8 @@ name|getInt
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The template declaration that this qualified name refers
-end_comment
-
-begin_comment
 comment|/// to.
-end_comment
-
-begin_expr_stmt
 name|TemplateDecl
 operator|*
 name|getDecl
@@ -1455,17 +1135,8 @@ return|return
 name|Template
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The template declaration to which this qualified name
-end_comment
-
-begin_comment
 comment|/// refers.
-end_comment
-
-begin_expr_stmt
 name|TemplateDecl
 operator|*
 name|getTemplateDecl
@@ -1476,17 +1147,10 @@ return|return
 name|Template
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|Profile
@@ -1502,31 +1166,18 @@ argument_list|,
 name|getTemplateDecl
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
+block|;   }
 specifier|static
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-name|NestedNameSpecifier
-operator|*
-name|NNS
+argument|NestedNameSpecifier *NNS
 argument_list|,
-name|bool
-name|TemplateKeyword
+argument|bool TemplateKeyword
 argument_list|,
-name|TemplateDecl
-operator|*
-name|Template
+argument|TemplateDecl *Template
 argument_list|)
 block|{
 name|ID
@@ -1535,61 +1186,34 @@ name|AddPointer
 argument_list|(
 name|NNS
 argument_list|)
-expr_stmt|;
+block|;
 name|ID
 operator|.
 name|AddBoolean
 argument_list|(
 name|TemplateKeyword
 argument_list|)
-expr_stmt|;
+block|;
 name|ID
 operator|.
 name|AddPointer
 argument_list|(
 name|Template
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-unit|};
+block|;   }
+expr|}
+block|;
 comment|/// \brief Represents a dependent template name that cannot be
-end_comment
-
-begin_comment
 comment|/// resolved prior to template instantiation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This kind of template name refers to a dependent template name,
-end_comment
-
-begin_comment
 comment|/// including its nested name specifier (if any). For example,
-end_comment
-
-begin_comment
 comment|/// DependentTemplateName can refer to "MetaFun::template apply",
-end_comment
-
-begin_comment
 comment|/// where "MetaFun::" is the nested name specifier and "apply" is the
-end_comment
-
-begin_comment
 comment|/// template name referenced. The "template" keyword is implied.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DependentTemplateName
-range|:
+operator|:
 name|public
 name|llvm
 operator|::

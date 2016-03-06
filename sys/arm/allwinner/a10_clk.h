@@ -572,8 +572,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_AHB_GATING_OHCI0
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_AHB_GATING_EHCI1
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_AHB_GATING_OHCI1
+value|(1<< 4)
 end_define
 
 begin_define
@@ -661,6 +675,10 @@ name|CCM_APB1_GATING_TWI
 value|(1<< 0)
 end_define
 
+begin_comment
+comment|/* USB */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -671,22 +689,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|CCM_USB0_RESET
-value|(1<< 0)
+name|CCM_SCLK_GATING_OHCI1
+value|(1<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CCM_USB1_RESET
+name|CCM_SCLK_GATING_OHCI0
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_USBPHY2_RESET
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_USBPHY1_RESET
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CCM_USB2_RESET
-value|(1<< 2)
+name|CCM_USBPHY0_RESET
+value|(1<< 0)
 end_define
 
 begin_define
@@ -1209,7 +1241,7 @@ end_define
 
 begin_function_decl
 name|int
-name|a10_clk_usb_activate
+name|a10_clk_ehci_activate
 parameter_list|(
 name|void
 parameter_list|)
@@ -1218,7 +1250,25 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|a10_clk_usb_deactivate
+name|a10_clk_ehci_deactivate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_ohci_activate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_ohci_deactivate
 parameter_list|(
 name|void
 parameter_list|)

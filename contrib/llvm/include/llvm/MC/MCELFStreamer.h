@@ -159,11 +159,6 @@ name|SeenIdent
 operator|=
 name|false
 block|;
-name|LocalCommons
-operator|.
-name|clear
-argument_list|()
-block|;
 name|BundleGroups
 operator|.
 name|clear
@@ -333,7 +328,7 @@ argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
 argument_list|,
-argument|const SMLoc&Loc = SMLoc()
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
 block|;
@@ -362,11 +357,6 @@ argument|unsigned
 argument_list|,
 argument|unsigned
 argument_list|)
-name|override
-block|;
-name|void
-name|Flush
-argument_list|()
 name|override
 block|;
 name|void
@@ -440,28 +430,6 @@ argument_list|)
 block|;
 name|bool
 name|SeenIdent
-block|;    struct
-name|LocalCommon
-block|{
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
-block|;
-name|uint64_t
-name|Size
-block|;
-name|unsigned
-name|ByteAlignment
-block|;   }
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|LocalCommon
-operator|>
-name|LocalCommons
 block|;
 comment|/// BundleGroups - The stack of fragments holding the bundle-locked
 comment|/// instructions.

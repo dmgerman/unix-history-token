@@ -356,6 +356,24 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+name|void
+name|Clear
+parameter_list|()
+block|{
+name|m_entries
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|m_qualified_name
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|protected
 label|:

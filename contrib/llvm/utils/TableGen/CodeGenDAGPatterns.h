@@ -505,7 +505,7 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorEltTypeIs - 'this' is now constrainted to be a vector type
+comment|/// EnforceVectorEltTypeIs - 'this' is now constrained to be a vector type
 comment|/// whose element is VT.
 name|bool
 name|EnforceVectorEltTypeIs
@@ -521,7 +521,7 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorEltTypeIs - 'this' is now constrainted to be a vector type
+comment|/// EnforceVectorEltTypeIs - 'this' is now constrained to be a vector type
 comment|/// whose element is VT.
 name|bool
 name|EnforceVectorEltTypeIs
@@ -536,7 +536,7 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorSubVectorTypeIs - 'this' is now constrainted to
+comment|/// EnforceVectorSubVectorTypeIs - 'this' is now constrained to
 comment|/// be a vector type VT.
 name|bool
 name|EnforceVectorSubVectorTypeIs
@@ -552,10 +552,25 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorSameNumElts - 'this' is now constrainted to
+comment|/// EnforceVectorSameNumElts - 'this' is now constrained to
 comment|/// be a vector with same num elements as VT.
 name|bool
 name|EnforceVectorSameNumElts
+argument_list|(
+name|EEVT
+operator|::
+name|TypeSet
+operator|&
+name|VT
+argument_list|,
+name|TreePattern
+operator|&
+name|TP
+argument_list|)
+decl_stmt|;
+comment|/// EnforceSameSize - 'this' is now constrained to be the same size as VT.
+name|bool
+name|EnforceSameSize
 argument_list|(
 name|EEVT
 operator|::
@@ -710,6 +725,8 @@ block|,
 name|SDTCVecEltisVT
 block|,
 name|SDTCisSameNumEltsAs
+block|,
+name|SDTCisSameSizeAs
 block|}
 name|ConstraintType
 enum|;
@@ -783,6 +800,14 @@ name|OtherOperandNum
 decl_stmt|;
 block|}
 name|SDTCisSameNumEltsAs_Info
+struct|;
+struct|struct
+block|{
+name|unsigned
+name|OtherOperandNum
+decl_stmt|;
+block|}
+name|SDTCisSameSizeAs_Info
 struct|;
 block|}
 name|x

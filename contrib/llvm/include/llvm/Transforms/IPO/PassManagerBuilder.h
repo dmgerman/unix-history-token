@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -73,6 +79,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|FunctionInfoIndex
+decl_stmt|;
 name|class
 name|Pass
 decl_stmt|;
@@ -168,6 +177,11 @@ comment|/// EP_OptimizerLast -- This extension point allows adding passes that
 comment|/// run after everything else.
 name|EP_OptimizerLast
 block|,
+comment|/// EP_VectorizerStart - This extension point allows adding optimization
+comment|/// passes before the vectorizer and other highly target specific
+comment|/// optimization passes are executed.
+name|EP_VectorizerStart
+block|,
 comment|/// EP_EnabledOnOptLevel0 - This extension point allows adding passes that
 comment|/// should not be disabled by O0 optimization level. The passes will be
 comment|/// inserted after the inlining pass.
@@ -201,6 +215,12 @@ comment|/// added to the per-module passes.
 name|Pass
 modifier|*
 name|Inliner
+decl_stmt|;
+comment|/// The function summary index to use for function importing.
+specifier|const
+name|FunctionInfoIndex
+modifier|*
+name|FunctionIndex
 decl_stmt|;
 name|bool
 name|DisableTailCalls

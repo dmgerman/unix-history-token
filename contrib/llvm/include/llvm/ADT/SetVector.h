@@ -86,6 +86,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
@@ -134,13 +140,10 @@ operator|,
 name|typename
 name|Set
 operator|=
-name|SmallSet
+name|DenseSet
 operator|<
 name|T
-operator|,
-literal|16
-operator|>
-expr|>
+operator|>>
 name|class
 name|SetVector
 block|{
@@ -191,6 +194,20 @@ typedef|typedef
 name|typename
 name|vector_type
 operator|::
+name|const_reverse_iterator
+name|reverse_iterator
+expr_stmt|;
+typedef|typedef
+name|typename
+name|vector_type
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
+typedef|typedef
+name|typename
+name|vector_type
+operator|::
 name|size_type
 name|size_type
 expr_stmt|;
@@ -218,6 +235,18 @@ argument_list|,
 name|End
 argument_list|)
 block|;   }
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|getArrayRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|vector_
+return|;
+block|}
 comment|/// \brief Determine if the SetVector is empty or not.
 name|bool
 name|empty
@@ -291,6 +320,56 @@ return|return
 name|vector_
 operator|.
 name|end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get an reverse_iterator to the end of the SetVector.
+name|reverse_iterator
+name|rbegin
+parameter_list|()
+block|{
+return|return
+name|vector_
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get a const_reverse_iterator to the end of the SetVector.
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|vector_
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get a reverse_iterator to the beginning of the SetVector.
+name|reverse_iterator
+name|rend
+parameter_list|()
+block|{
+return|return
+name|vector_
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get a const_reverse_iterator to the beginning of the SetVector.
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|vector_
+operator|.
+name|rend
 argument_list|()
 return|;
 block|}

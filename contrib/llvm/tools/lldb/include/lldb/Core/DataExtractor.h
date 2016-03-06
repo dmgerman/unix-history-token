@@ -43,26 +43,9 @@ directive|define
 name|liblldb_DataExtractor_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
+begin_comment
+comment|// C Includes
+end_comment
 
 begin_include
 include|#
@@ -82,10 +65,28 @@ directive|include
 file|<string.h>
 end_include
 
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -343,14 +344,14 @@ parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Dumps the binary data as \a type objects to stream \a s (or to
-comment|/// Log() if \a s is NULL) starting \a offset bytes into the data
+comment|/// Log() if \a s is nullptr) starting \a offset bytes into the data
 comment|/// and stopping after dumping \a length bytes. The offset into the
 comment|/// data is displayed at the beginning of each line and can be
 comment|/// offset by base address \a base_addr. \a num_per_line objects
 comment|/// will be displayed on each line.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to dump the output to. If NULL the output will
+comment|///     The stream to dump the output to. If nullptr the output will
 comment|///     be dumped to Log().
 comment|///
 comment|/// @param[in] offset
@@ -372,7 +373,7 @@ comment|///     object. See DataExtractor::Type.
 comment|///
 comment|/// @param[in] type_format
 comment|///     The optional format to use for the \a type objects. If this
-comment|///     is NULL, the default format for the \a type will be used.
+comment|///     is nullptr, the default format for the \a type will be used.
 comment|///
 comment|/// @return
 comment|///     The offset at which dumping ended.
@@ -394,7 +395,7 @@ argument|uint32_t num_per_line
 argument_list|,
 argument|Type type
 argument_list|,
-argument|const char *type_format = NULL
+argument|const char *type_format = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -413,7 +414,7 @@ comment|/// same start offset, format and size, yet differing \a
 comment|/// item_bit_size and \a item_bit_offset values.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to dump the output to. This value can not be NULL.
+comment|///     The stream to dump the output to. This value can not be nullptr.
 comment|///
 comment|/// @param[in] offset
 comment|///     The offset into the data at which to start dumping.
@@ -481,7 +482,7 @@ argument|uint32_t item_bit_size
 argument_list|,
 argument|uint32_t item_bit_offset
 argument_list|,
-argument|ExecutionContextScope *exe_scope = NULL
+argument|ExecutionContextScope *exe_scope = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -489,10 +490,10 @@ comment|//------------------------------------------------------------------
 comment|/// Dump a UUID value at \a offset.
 comment|///
 comment|/// Dump a UUID starting at \a offset bytes into this object's data.
-comment|/// If the stream \a s is NULL, the output will be sent to Log().
+comment|/// If the stream \a s is nullptr, the output will be sent to Log().
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to dump the output to. If NULL the output will
+comment|///     The stream to dump the output to. If nullptr the output will
 comment|///     be dumped to Log().
 comment|///
 comment|/// @param[in] offset
@@ -661,7 +662,7 @@ comment|/// @return
 comment|///     A pointer to the C string value in the data. If the offset
 comment|///     pointed to by \a offset_ptr is out of bounds, or if the
 comment|///     offset plus the length of the C string is out of bounds,
-comment|///     NULL will be returned.
+comment|///     nullptr will be returned.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
@@ -696,7 +697,7 @@ comment|/// @return
 comment|///     A pointer to the C string value in the data. If the offset
 comment|///     pointed to by \a offset_ptr is out of bounds, or if the
 comment|///     offset plus the length of the field is out of bounds, or if
-comment|///     the field does not contain a NULL terminator byte, NULL will
+comment|///     the field does not contain a NULL terminator byte, nullptr will
 comment|///     be returned.
 specifier|const
 name|char
@@ -722,7 +723,7 @@ comment|///
 comment|/// Returns a pointer to a bytes in this object's data at the offset
 comment|/// pointed to by \a offset_ptr. If \a length is zero or too large,
 comment|/// then the offset pointed to by \a offset_ptr will not be updated
-comment|/// and NULL will be returned.
+comment|/// and nullptr will be returned.
 comment|///
 comment|/// @param[in,out] offset_ptr
 comment|///     A pointer to an offset within the data that will be advanced
@@ -737,7 +738,7 @@ comment|///     zero, a NULL terminated C string will be extracted.
 comment|///
 comment|/// @return
 comment|///     A pointer to the bytes in this object's data if the offset
-comment|///     and length are valid, or NULL otherwise.
+comment|///     and length are valid, or nullptr otherwise.
 comment|//------------------------------------------------------------------
 specifier|const
 name|void
@@ -873,7 +874,7 @@ comment|/// Get the data end pointer.
 comment|///
 comment|/// @return
 comment|///     Returns a pointer to the next byte contained in this
-comment|///     object's data, or NULL of there is no data in this object.
+comment|///     object's data, or nullptr of there is no data in this object.
 comment|//------------------------------------------------------------------
 specifier|const
 name|uint8_t
@@ -906,7 +907,7 @@ comment|/// Get the data start pointer.
 comment|///
 comment|/// @return
 comment|///     Returns a pointer to the first byte contained in this
-comment|///     object's data, or NULL of there is no data in this object.
+comment|///     object's data, or nullptr of there is no data in this object.
 comment|//------------------------------------------------------------------
 specifier|const
 name|uint8_t
@@ -1425,7 +1426,7 @@ comment|///     The number of uint8_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherwise.
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1496,7 +1497,7 @@ comment|///     The number of uint16_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherwise.
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1567,7 +1568,7 @@ comment|///     The number of uint32_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherwise.
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1638,7 +1639,7 @@ comment|///     The number of uint64_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherwise.
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1739,8 +1740,8 @@ comment|/// @param[in] offset
 comment|///     An offset into the data.
 comment|///
 comment|/// @return
-comment|///     A non-NULL C string pointer if \a offset is a valid offset,
-comment|///     NULL otherwise.
+comment|///     A non-nullptr C string pointer if \a offset is a valid offset,
+comment|///     nullptr otherwise.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
@@ -1761,8 +1762,8 @@ comment|/// Returns a pointer to \a length bytes at \a offset as long as
 comment|/// there are \a length bytes available starting at \a offset.
 comment|///
 comment|/// @return
-comment|///     A non-NULL data pointer if \a offset is a valid offset and
-comment|///     there are \a length bytes available at that offset, NULL
+comment|///     A non-nullptr data pointer if \a offset is a valid offset and
+comment|///     there are \a length bytes available at that offset, nullptr
 comment|///     otherwise.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -1801,7 +1802,7 @@ operator|+
 name|offset
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -1820,6 +1821,22 @@ name|uint32_t
 name|addr_size
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|LLDB_CONFIGURATION_DEBUG
+name|assert
+argument_list|(
+name|addr_size
+operator|==
+literal|4
+operator|||
+name|addr_size
+operator|==
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m_addr_size
 operator|=
 name|addr_size
@@ -1831,7 +1848,7 @@ comment|///
 comment|/// Use data that is owned by the caller when extracting values.
 comment|/// The data must stay around as long as this object, or any object
 comment|/// that copies a subset of this object's data, is valid. If \a
-comment|/// bytes is NULL, or \a length is zero, this object will contain
+comment|/// bytes is nullptr, or \a length is zero, this object will contain
 comment|/// no data.
 comment|///
 comment|/// @param[in] bytes
@@ -2178,16 +2195,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined (__cplusplus)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #ifndef liblldb_DataExtractor_h_
+comment|// liblldb_DataExtractor_h_
 end_comment
 
 end_unit

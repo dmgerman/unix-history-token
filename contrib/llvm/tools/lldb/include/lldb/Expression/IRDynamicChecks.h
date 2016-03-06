@@ -94,9 +94,6 @@ name|class
 name|ClangExpressionDeclMap
 decl_stmt|;
 name|class
-name|ClangUtilityFunction
-decl_stmt|;
-name|class
 name|ExecutionContext
 decl_stmt|;
 name|class
@@ -176,7 +173,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ClangUtilityFunction
+name|UtilityFunction
 operator|>
 name|m_valid_pointer_check
 expr_stmt|;
@@ -184,7 +181,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|ClangUtilityFunction
+name|UtilityFunction
 operator|>
 name|m_objc_object_check
 expr_stmt|;
@@ -241,10 +238,10 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|IRDynamicChecks
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Run this IR transformer on a single module
@@ -260,12 +257,9 @@ comment|//------------------------------------------------------------------
 name|bool
 name|runOnModule
 argument_list|(
-name|llvm
-operator|::
-name|Module
-operator|&
-name|M
+argument|llvm::Module&M
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Interface stub
@@ -277,6 +271,7 @@ argument|llvm::PMStack&PMS
 argument_list|,
 argument|llvm::PassManagerType T = llvm::PMT_ModulePassManager
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Returns PMT_ModulePassManager
@@ -287,6 +282,7 @@ name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -338,10 +334,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_IRDynamicChecks_h_
+end_comment
 
 end_unit
 

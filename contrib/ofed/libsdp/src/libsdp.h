@@ -133,10 +133,10 @@ name|match_by_addr
 decl_stmt|;
 comment|/* if 0 ignore address match        */
 name|struct
-name|in_addr
-name|ipv4
+name|sockaddr_storage
+name|ip
 decl_stmt|;
-comment|/* IPv4 address for mapping         */
+comment|/* IPv4/6 address for mapping       */
 name|unsigned
 name|char
 name|prefixlen
@@ -346,35 +346,6 @@ parameter_list|(
 name|char
 modifier|*
 name|filename
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* port.c */
-end_comment
-
-begin_function_decl
-name|int
-name|__sdp_sockaddr_to_sdp
-parameter_list|(
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-name|addr_in
-parameter_list|,
-name|socklen_t
-name|addrlen
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|addr_out
-parameter_list|,
-name|int
-modifier|*
-name|was_ipv6
 parameter_list|)
 function_decl|;
 end_function_decl

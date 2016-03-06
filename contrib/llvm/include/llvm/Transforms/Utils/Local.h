@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -149,10 +155,10 @@ name|class
 name|DIBuilder
 decl_stmt|;
 name|class
-name|AliasAnalysis
+name|DominatorTree
 decl_stmt|;
 name|class
-name|DominatorTree
+name|LazyValueInfo
 decl_stmt|;
 name|template
 operator|<
@@ -1033,9 +1039,42 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// \brief Replaces llvm.dbg.declare instruction when an alloca is replaced with
-comment|/// a new value.  If Deref is true, tan additional DW_OP_deref is prepended to
-comment|/// the expression.
+comment|/// \brief Replaces llvm.dbg.declare instruction when the address it describes
+comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
+comment|/// prepended to the expression. If Offset is non-zero, a constant displacement
+comment|/// is added to the expression (after the optional Deref). Offset can be
+comment|/// negative.
+name|bool
+name|replaceDbgDeclare
+parameter_list|(
+name|Value
+modifier|*
+name|Address
+parameter_list|,
+name|Value
+modifier|*
+name|NewAddress
+parameter_list|,
+name|Instruction
+modifier|*
+name|InsertBefore
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|,
+name|bool
+name|Deref
+parameter_list|,
+name|int
+name|Offset
+parameter_list|)
+function_decl|;
+comment|/// \brief Replaces llvm.dbg.declare instruction when the alloca it describes
+comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
+comment|/// prepended to the expression. If Offset is non-zero, a constant displacement
+comment|/// is added to the expression (after the optional Deref). Offset can be
+comment|/// negative. New llvm.dbg.declare is inserted immediately before AI.
 name|bool
 name|replaceDbgDeclareForAlloca
 parameter_list|(
@@ -1053,6 +1092,38 @@ name|Builder
 parameter_list|,
 name|bool
 name|Deref
+parameter_list|,
+name|int
+name|Offset
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Insert an unreachable instruction before the specified
+comment|/// instruction, making it and the rest of the code in the block dead.
+name|void
+name|changeToUnreachable
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|bool
+name|UseLLVMTrap
+parameter_list|)
+function_decl|;
+comment|/// Replace 'BB's terminator with one that does not have an unwind successor
+comment|/// block.  Rewrites `invoke` to `call`, etc.  Updates any PHIs in unwind
+comment|/// successor.
+comment|///
+comment|/// \param BB  Block whose terminator will be replaced.  Its terminator must
+comment|///            have an unwind successor.
+name|void
+name|removeUnwindEdge
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
 parameter_list|)
 function_decl|;
 comment|/// \brief Remove all blocks that can not be reached from the function's entry.
@@ -1064,6 +1135,12 @@ parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|,
+name|LazyValueInfo
+modifier|*
+name|LVI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Combine the metadata of two instructions so that K can replace J
@@ -1111,6 +1188,80 @@ modifier|&
 name|Edge
 parameter_list|)
 function_decl|;
+comment|/// \brief Replace each use of 'From' with 'To' if that use is dominated by
+comment|/// the given BasicBlock. Returns the number of replacements made.
+name|unsigned
+name|replaceDominatedUsesWith
+parameter_list|(
+name|Value
+modifier|*
+name|From
+parameter_list|,
+name|Value
+modifier|*
+name|To
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DT
+parameter_list|,
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+comment|/// \brief Return true if the CallSite CS calls a gc leaf function.
+comment|///
+comment|/// A leaf function is a function that does not safepoint the thread during its
+comment|/// execution.  During a call or invoke to such a function, the callers stack
+comment|/// does not have to be made parseable.
+comment|///
+comment|/// Most passes can and should ignore this information, and it is only used
+comment|/// during lowering by the GC infrastructure.
+name|bool
+name|callsGCLeafFunction
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//  Intrinsic pattern matching
+comment|//
+comment|/// Try and match a bitreverse or bswap idiom.
+comment|///
+comment|/// If an idiom is matched, an intrinsic call is inserted before \c I. Any added
+comment|/// instructions are returned in \c InsertedInsts. They will all have been added
+comment|/// to a basic block.
+comment|///
+comment|/// A bitreverse idiom normally requires around 2*BW nodes to be searched (where
+comment|/// BW is the bitwidth of the integer type). A bswap idiom requires anywhere up
+comment|/// to BW / 4 nodes to be searched, so is significantly faster.
+comment|///
+comment|/// This function returns true on a successful match or false otherwise.
+name|bool
+name|recognizeBitReverseOrBSwapIdiom
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|bool
+name|MatchBSwaps
+argument_list|,
+name|bool
+name|MatchBitReversals
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|InsertedInsts
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

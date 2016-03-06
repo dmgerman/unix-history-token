@@ -141,19 +141,13 @@ name|public
 label|:
 name|LinkedObjectSet
 argument_list|(
-name|RuntimeDyld
-operator|::
-name|MemoryManager
-operator|&
-name|MemMgr
+argument|RuntimeDyld::MemoryManager&MemMgr
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
-operator|&
-name|Resolver
+argument|RuntimeDyld::SymbolResolver&Resolver
+argument_list|,
+argument|bool ProcessAllSections
 argument_list|)
-operator|:
+block|:
 name|RTDyld
 argument_list|(
 name|llvm
@@ -173,7 +167,14 @@ name|State
 argument_list|(
 argument|Raw
 argument_list|)
-block|{}
+block|{
+name|RTDyld
+operator|->
+name|setProcessAllSections
+argument_list|(
+name|ProcessAllSections
+argument_list|)
+block|;     }
 name|virtual
 operator|~
 name|LinkedObjectSet
@@ -272,31 +273,6 @@ name|TargetAddr
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|takeOwnershipOfBuffer
-argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>
-name|B
-argument_list|)
-block|{
-name|OwnedBuffers
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|B
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|protected
 label|:
 name|std
@@ -317,21 +293,6 @@ name|Finalized
 block|}
 name|State
 enum|;
-comment|// FIXME: This ownership hack only exists because RuntimeDyldELF still
-comment|//        wants to be able to inspect the original object when resolving
-comment|//        relocations. As soon as that can be fixed this should be removed.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>>
-name|OwnedBuffers
-expr_stmt|;
 block|}
 empty_stmt|;
 typedef|typedef
@@ -356,46 +317,6 @@ operator|::
 name|iterator
 name|ObjSetHandleT
 expr_stmt|;
-comment|// Ownership hack.
-comment|// FIXME: Remove this as soon as RuntimeDyldELF can apply relocations without
-comment|//        referencing the original object.
-name|template
-operator|<
-name|typename
-name|OwningMBSet
-operator|>
-name|void
-name|takeOwnershipOfBuffers
-argument_list|(
-argument|ObjSetHandleT H
-argument_list|,
-argument|OwningMBSet MBs
-argument_list|)
-block|{
-for|for
-control|(
-name|auto
-operator|&
-name|MB
-operator|:
-name|MBs
-control|)
-operator|(
-operator|*
-name|H
-operator|)
-operator|->
-name|takeOwnershipOfBuffer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|MB
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 empty_stmt|;
 comment|/// @brief Default (no-op) action to perform when loading objects.
@@ -473,6 +394,8 @@ argument_list|(
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
 argument|SymbolResolverPtrT Resolver
+argument_list|,
+argument|bool ProcessAllSections
 argument_list|)
 operator|:
 name|LinkedObjectSet
@@ -482,6 +405,8 @@ name|MemMgr
 argument_list|,
 operator|*
 name|Resolver
+argument_list|,
+name|ProcessAllSections
 argument_list|)
 block|,
 name|MemMgr
@@ -510,22 +435,7 @@ name|Finalizing
 block|;
 name|RTDyld
 operator|->
-name|resolveRelocations
-argument_list|()
-block|;
-name|RTDyld
-operator|->
-name|registerEHFrames
-argument_list|()
-block|;
-name|MemMgr
-operator|->
-name|finalizeMemory
-argument_list|()
-block|;
-name|OwnedBuffers
-operator|.
-name|clear
+name|finalizeWithMemoryManagerLocking
 argument_list|()
 block|;
 name|State
@@ -560,6 +470,8 @@ argument_list|(
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
 argument|SymbolResolverPtrT Resolver
+argument_list|,
+argument|bool ProcessAllSections
 argument_list|)
 block|{
 typedef|typedef
@@ -592,6 +504,8 @@ name|move
 argument_list|(
 name|Resolver
 argument_list|)
+operator|,
+name|ProcessAllSections
 operator|)
 return|;
 block|}
@@ -648,9 +562,37 @@ argument_list|)
 operator|,
 name|NotifyFinalized
 argument_list|(
-argument|std::move(NotifyFinalized)
+name|std
+operator|::
+name|move
+argument_list|(
+name|NotifyFinalized
+argument_list|)
+argument_list|)
+operator|,
+name|ProcessAllSections
+argument_list|(
+argument|false
 argument_list|)
 block|{}
+comment|/// @brief Set the 'ProcessAllSections' flag.
+comment|///
+comment|/// If set to true, all sections in each object file will be allocated using
+comment|/// the memory manager, rather than just the sections required for execution.
+comment|///
+comment|/// This is kludgy, and may be removed in the future.
+name|void
+name|setProcessAllSections
+argument_list|(
+argument|bool ProcessAllSections
+argument_list|)
+block|{
+name|this
+operator|->
+name|ProcessAllSections
+operator|=
+name|ProcessAllSections
+block|;   }
 comment|/// @brief Add a set of objects (or archives) that will be treated as a unit
 comment|///        for the purposes of symbol lookup and memory management.
 comment|///
@@ -710,6 +652,8 @@ name|move
 argument_list|(
 name|Resolver
 argument_list|)
+argument_list|,
+name|ProcessAllSections
 argument_list|)
 argument_list|)
 block|;
@@ -1097,6 +1041,12 @@ end_decl_stmt
 begin_decl_stmt
 name|NotifyFinalizedFtor
 name|NotifyFinalized
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|ProcessAllSections
 decl_stmt|;
 end_decl_stmt
 

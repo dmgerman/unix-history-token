@@ -122,22 +122,6 @@ decl_stmt|;
 name|class
 name|TagDecl
 decl_stmt|;
-comment|/// \brief Enumeration describing the result of loading information from
-comment|/// an external source.
-enum|enum
-name|ExternalLoadResult
-block|{
-comment|/// \brief Loading the external information has succeeded.
-name|ELR_Success
-block|,
-comment|/// \brief Loading the external information has failed.
-name|ELR_Failure
-block|,
-comment|/// \brief The external information has already been loaded, and therefore
-comment|/// no additional processing is required.
-name|ELR_AlreadyLoaded
-block|}
-enum|;
 comment|/// \brief Abstract interface for external sources of AST nodes.
 comment|///
 comment|/// External AST sources provide AST nodes constructed from some
@@ -374,31 +358,142 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// \brief Holds everything needed to generate debug info for an
-comment|/// imported module or precompiled header file.
-expr|struct
+comment|/// Abstracts clang modules and precompiled header files and holds
+comment|/// everything needed to generate debug info for an imported module
+comment|/// or PCH.
+name|class
 name|ASTSourceDescriptor
 block|{
-name|std
-operator|::
-name|string
-name|ModuleName
+name|StringRef
+name|PCHModuleName
 block|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|Path
 block|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|ASTFile
 block|;
 name|uint64_t
 name|Signature
-block|;   }
+operator|=
+literal|0
 block|;
-comment|/// \brief Return a descriptor for the corresponding module, if one exists.
+specifier|const
+name|Module
+operator|*
+name|ClangModule
+operator|=
+name|nullptr
+block|;
+name|public
+operator|:
+name|ASTSourceDescriptor
+argument_list|()
+block|{}
+block|;
+name|ASTSourceDescriptor
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|StringRef Path
+argument_list|,
+argument|StringRef ASTFile
+argument_list|,
+argument|uint64_t Signature
+argument_list|)
+operator|:
+name|PCHModuleName
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+block|,
+name|Path
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Path
+argument_list|)
+argument_list|)
+block|,
+name|ASTFile
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|ASTFile
+argument_list|)
+argument_list|)
+block|,
+name|Signature
+argument_list|(
+argument|Signature
+argument_list|)
+block|{}
+block|;
+name|ASTSourceDescriptor
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|std
+operator|::
+name|string
+name|getModuleName
+argument_list|()
+specifier|const
+block|;
+name|StringRef
+name|getPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Path
+return|;
+block|}
+name|StringRef
+name|getASTFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ASTFile
+return|;
+block|}
+name|uint64_t
+name|getSignature
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Signature
+return|;
+block|}
+specifier|const
+name|Module
+operator|*
+name|getModuleOrNull
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ClangModule
+return|;
+block|}
+expr|}
+block|;
+comment|/// Return a descriptor for the corresponding module, if one exists.
 name|virtual
 name|llvm
 operator|::
@@ -411,29 +506,15 @@ argument_list|(
 argument|unsigned ID
 argument_list|)
 block|;
-comment|/// \brief Return a descriptor for the module.
-name|virtual
-name|ASTSourceDescriptor
-name|getSourceDescriptor
-argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
-argument_list|)
-block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
 comment|///
-comment|/// \param isKindWeWant a predicate function that returns true if the passed
-comment|/// declaration kind is one we are looking for. If NULL, all declarations
-comment|/// are returned.
-comment|///
-comment|/// \return an indication of whether the load succeeded or failed.
+comment|/// \param IsKindWeWant a predicate function that returns true if the passed
+comment|/// declaration kind is one we are looking for.
 comment|///
 comment|/// The default implementation of this method is a no-op.
 name|virtual
-name|ExternalLoadResult
+name|void
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -441,16 +522,18 @@ name|DeclContext
 operator|*
 name|DC
 argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
 name|bool
-argument_list|(
-operator|*
-name|isKindWeWant
-argument_list|)
 argument_list|(
 name|Decl
 operator|::
 name|Kind
 argument_list|)
+operator|>
+name|IsKindWeWant
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -463,53 +546,33 @@ argument_list|)
 block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
-comment|///
-comment|/// \return true if an error occurred
-name|ExternalLoadResult
+name|void
 name|FindExternalLexicalDecls
 argument_list|(
 argument|const DeclContext *DC
 argument_list|,
-argument|SmallVectorImpl<Decl*>&Result
+argument|SmallVectorImpl<Decl *>&Result
 argument_list|)
 block|{
-return|return
 name|FindExternalLexicalDecls
 argument_list|(
 name|DC
 argument_list|,
-name|nullptr
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|DeclTy
-operator|>
-name|ExternalLoadResult
-name|FindExternalLexicalDeclsBy
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|SmallVectorImpl<Decl*>&Result
-argument_list|)
-block|{
-return|return
-name|FindExternalLexicalDecls
-argument_list|(
-name|DC
-argument_list|,
-name|DeclTy
+index|[]
+operator|(
+name|Decl
 operator|::
-name|classofKind
+name|Kind
+operator|)
+block|{
+return|return
+name|true
+return|;
+block|}
 argument_list|,
 name|Result
 argument_list|)
-return|;
-block|}
+block|;   }
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
 comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 comment|/// a range.
@@ -791,7 +854,7 @@ operator|&
 name|C
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 comment|/// \brief A lazy pointer to an AST node (of base type T) that resides
 comment|/// within an external AST source.
 comment|///
@@ -802,10 +865,10 @@ name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|typename
 name|OffsT
-operator|,
+block|,
 name|T
 operator|*
 operator|(
@@ -1018,14 +1081,12 @@ comment|/// \param Source the external AST source.
 comment|///
 comment|/// \returns a pointer to the AST node.
 name|T
-modifier|*
+operator|*
 name|get
 argument_list|(
-name|ExternalASTSource
-operator|*
-name|Source
+argument|ExternalASTSource *Source
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -1071,34 +1132,19 @@ name|Ptr
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief A lazy value (of type T) that is within an AST node of type Owner,
-end_comment
-
-begin_comment
 comment|/// where the value might change in later generations of the external AST
-end_comment
-
-begin_comment
 comment|/// source.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|Owner
-operator|,
+block|,
 name|typename
 name|T
-operator|,
+block|,
 name|void
 argument_list|(
 name|ExternalASTSource
@@ -1166,124 +1212,66 @@ name|ValueType
 expr_stmt|;
 name|ValueType
 name|Value
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|LazyGenerationalUpdatePtr
 argument_list|(
 argument|ValueType V
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|Value
 argument_list|(
 argument|V
 argument_list|)
-end_macro
-
-begin_block
 block|{}
-end_block
-
-begin_comment
 comment|// Defined in ASTContext.h
-end_comment
-
-begin_function_decl
 specifier|static
 name|ValueType
 name|makeValue
-parameter_list|(
-specifier|const
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|T
-name|Value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_label
+argument_list|(
+argument|const ASTContext&Ctx
+argument_list|,
+argument|T Value
+argument_list|)
+block|;
 name|public
-label|:
-end_label
-
-begin_macro
+operator|:
 name|explicit
-end_macro
-
-begin_macro
 name|LazyGenerationalUpdatePtr
 argument_list|(
 argument|const ASTContext&Ctx
 argument_list|,
 argument|T Value = T()
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|Value
 argument_list|(
 argument|makeValue(Ctx, Value)
 argument_list|)
-end_macro
-
-begin_block
 block|{}
-end_block
-
-begin_comment
 comment|/// Create a pointer that is not potentially updated by later generations of
-end_comment
-
-begin_comment
 comment|/// the external AST source.
-end_comment
-
-begin_enum
-enum|enum
+expr|enum
 name|NotUpdatedTag
 block|{
 name|NotUpdated
 block|}
-enum|;
-end_enum
-
-begin_macro
+block|;
 name|LazyGenerationalUpdatePtr
 argument_list|(
 argument|NotUpdatedTag
 argument_list|,
 argument|T Value = T()
 argument_list|)
-end_macro
-
-begin_macro
-unit|:
+operator|:
 name|Value
 argument_list|(
 argument|Value
 argument_list|)
-end_macro
-
-begin_block
 block|{}
-end_block
-
-begin_comment
 comment|/// Forcibly set this pointer (which must be lazy) as needing updates.
-end_comment
-
-begin_function
 name|void
 name|markIncomplete
-parameter_list|()
+argument_list|()
 block|{
 name|Value
 operator|.
@@ -1299,21 +1287,13 @@ operator|->
 name|LastGeneration
 operator|=
 literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// Set the value of this pointer, in the current generation.
-end_comment
-
-begin_function
 name|void
 name|set
-parameter_list|(
-name|T
-name|NewValue
-parameter_list|)
+argument_list|(
+argument|T NewValue
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1346,38 +1326,23 @@ operator|=
 name|NewValue
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Set the value of this pointer, for this and all future generations.
-end_comment
-
-begin_function
 name|void
 name|setNotUpdated
-parameter_list|(
-name|T
-name|NewValue
-parameter_list|)
+argument_list|(
+argument|T NewValue
+argument_list|)
 block|{
 name|Value
 operator|=
 name|NewValue
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// Get the value of this pointer, updating its owner if necessary.
-end_comment
-
-begin_function
 name|T
 name|get
-parameter_list|(
-name|Owner
-name|O
-parameter_list|)
+argument_list|(
+argument|Owner O
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1452,13 +1417,7 @@ operator|(
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Get the most recently computed value of this pointer without updating it.
-end_comment
-
-begin_expr_stmt
 name|T
 name|getNotUpdated
 argument_list|()
@@ -1486,9 +1445,6 @@ name|LazyVal
 operator|->
 name|LastValue
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Value
 operator|.
@@ -1500,13 +1456,11 @@ operator|>
 operator|(
 operator|)
 return|;
-end_return
-
-begin_expr_stmt
-unit|}    void
-operator|*
+block|}
+name|void
+modifier|*
 name|getOpaqueValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Value
@@ -1515,9 +1469,6 @@ name|getOpaqueValue
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|LazyGenerationalUpdatePtr
 name|getFromOpaqueValue
@@ -1539,10 +1490,15 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|}; }
+unit|}
 comment|// end namespace clang
 end_comment
 

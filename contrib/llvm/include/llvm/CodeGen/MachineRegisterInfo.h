@@ -223,10 +223,11 @@ comment|/// PhysRegUseDefLists - This is an array of the head of the use/def lis
 comment|/// physical registers.
 name|std
 operator|::
-name|vector
+name|unique_ptr
 operator|<
 name|MachineOperand
 operator|*
+index|[]
 operator|>
 name|PhysRegUseDefLists
 expr_stmt|;
@@ -332,21 +333,8 @@ operator|.
 name|Next
 return|;
 block|}
-comment|/// UsedRegUnits - This is a bit vector that is computed and set by the
-comment|/// register allocator, and must be kept up to date by passes that run after
-comment|/// register allocation (though most don't modify this).  This is used
-comment|/// so that the code generator knows which callee save registers to save and
-comment|/// for other target specific uses.
-comment|/// This vector has bits set for register units that are modified in the
-comment|/// current function. It doesn't include registers clobbered by function
-comment|/// calls with register mask operands.
-name|BitVector
-name|UsedRegUnits
-decl_stmt|;
 comment|/// UsedPhysRegMask - Additional used physregs including aliases.
 comment|/// This bit vector represents all the registers clobbered by function calls.
-comment|/// It can model things that UsedRegUnits can't, such as function calls that
-comment|/// clobber ymm7 but preserve the low half in xmm7.
 name|BitVector
 name|UsedPhysRegMask
 decl_stmt|;
@@ -807,19 +795,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_instr_iterator/reg_instr_begin/reg_instr_end - Walk all defs and uses
@@ -883,19 +868,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_instr_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_instr_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_instr_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_bundle_iterator/reg_bundle_begin/reg_bundle_end - Walk all defs and uses
@@ -959,19 +941,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_bundle_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_bundle_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_bundle_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_empty - Return true if there are no instructions using or defining the
@@ -1055,19 +1034,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_instr_nodbg_iterator/reg_instr_nodbg_begin/reg_instr_nodbg_end - Walk
@@ -1132,19 +1108,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_instr_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_instr_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_instr_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_bundle_nodbg_iterator/reg_bundle_nodbg_begin/reg_bundle_nodbg_end - Walk
@@ -1209,19 +1182,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|reg_bundle_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|reg_bundle_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|reg_bundle_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// reg_nodbg_empty - Return true if the only instructions using or defining
@@ -1304,19 +1274,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|def_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|def_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|def_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// def_instr_iterator/def_instr_begin/def_instr_end - Walk all defs of the
@@ -1380,19 +1347,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|def_instr_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|def_instr_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|def_instr_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// def_bundle_iterator/def_bundle_begin/def_bundle_end - Walk all defs of the
@@ -1456,19 +1420,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|def_bundle_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|def_bundle_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|def_bundle_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// def_empty - Return true if there are no instructions defining the
@@ -1587,19 +1548,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_instr_iterator/use_instr_begin/use_instr_end - Walk all uses of the
@@ -1663,19 +1621,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_instr_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_instr_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_instr_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_bundle_iterator/use_bundle_begin/use_bundle_end - Walk all uses of the
@@ -1739,19 +1694,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_bundle_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_bundle_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_bundle_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_empty - Return true if there are no instructions using the specified
@@ -1871,19 +1823,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_instr_nodbg_iterator/use_instr_nodbg_begin/use_instr_nodbg_end - Walk
@@ -1948,19 +1897,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_instr_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_instr_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_instr_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_bundle_nodbg_iterator/use_bundle_nodbg_begin/use_bundle_nodbg_end - Walk
@@ -2025,19 +1971,16 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|use_bundle_nodbg_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|use_bundle_nodbg_begin
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+argument_list|,
 name|use_bundle_nodbg_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// use_nodbg_empty - Return true if there are no non-Debug instructions
@@ -2325,6 +2268,29 @@ operator|=
 name|PrefReg
 expr_stmt|;
 block|}
+comment|/// Specify the preferred register allocation hint for the specified virtual
+comment|/// register.
+name|void
+name|setSimpleHint
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+name|unsigned
+name|PrefReg
+parameter_list|)
+block|{
+name|setRegAllocationHint
+argument_list|(
+name|VReg
+argument_list|,
+comment|/*Type=*/
+literal|0
+argument_list|,
+name|PrefReg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// getRegAllocationHint - Return the register allocation hint for the
 comment|/// specified virtual register.
 name|std
@@ -2419,7 +2385,8 @@ decl_stmt|;
 comment|/// Return true if the specified register is modified in this function.
 comment|/// This checks that no defining machine operands exist for the register or
 comment|/// any of its aliases. Definitions found on functions marked noreturn are
-comment|/// ignored.
+comment|/// ignored. The register is also considered modified when it is set in the
+comment|/// UsedPhysRegMask.
 name|bool
 name|isPhysRegModified
 argument_list|(
@@ -2428,124 +2395,18 @@ name|PhysReg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|// Physical Register Use Info
-comment|//===--------------------------------------------------------------------===//
-comment|/// isPhysRegUsed - Return true if the specified register is used in this
-comment|/// function. Also check for clobbered aliases and registers clobbered by
-comment|/// function calls with register mask operands.
-comment|///
-comment|/// This only works after register allocation.
+comment|/// Return true if the specified register is modified or read in this
+comment|/// function. This checks that no machine operands exist for the register or
+comment|/// any of its aliases. The register is also considered used when it is set
+comment|/// in the UsedPhysRegMask.
 name|bool
 name|isPhysRegUsed
 argument_list|(
 name|unsigned
-name|Reg
+name|PhysReg
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-name|UsedPhysRegMask
-operator|.
-name|test
-argument_list|(
-name|Reg
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-for|for
-control|(
-name|MCRegUnitIterator
-name|Units
-argument_list|(
-name|Reg
-argument_list|,
-name|getTargetRegisterInfo
-argument_list|()
-argument_list|)
-init|;
-name|Units
-operator|.
-name|isValid
-argument_list|()
-condition|;
-operator|++
-name|Units
-control|)
-if|if
-condition|(
-name|UsedRegUnits
-operator|.
-name|test
-argument_list|(
-operator|*
-name|Units
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
-return|;
-block|}
-comment|/// Mark the specified register unit as used in this function.
-comment|/// This should only be called during and after register allocation.
-name|void
-name|setRegUnitUsed
-parameter_list|(
-name|unsigned
-name|RegUnit
-parameter_list|)
-block|{
-name|UsedRegUnits
-operator|.
-name|set
-argument_list|(
-name|RegUnit
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// setPhysRegUsed - Mark the specified register used in this function.
-comment|/// This should only be called during and after register allocation.
-name|void
-name|setPhysRegUsed
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-block|{
-for|for
-control|(
-name|MCRegUnitIterator
-name|Units
-argument_list|(
-name|Reg
-argument_list|,
-name|getTargetRegisterInfo
-argument_list|()
-argument_list|)
-init|;
-name|Units
-operator|.
-name|isValid
-argument_list|()
-condition|;
-operator|++
-name|Units
-control|)
-name|UsedRegUnits
-operator|.
-name|set
-argument_list|(
-operator|*
-name|Units
-argument_list|)
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/// addPhysRegsUsedFromRegMask - Mark any registers not in RegMask as used.
 comment|/// This corresponds to the bit mask attached to register mask operands.
 name|void
@@ -2565,48 +2426,28 @@ name|RegMask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// setPhysRegUnused - Mark the specified register unused in this function.
-comment|/// This should only be called during and after register allocation.
+specifier|const
+name|BitVector
+operator|&
+name|getUsedPhysRegsMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsedPhysRegMask
+return|;
+block|}
 name|void
-name|setPhysRegUnused
+name|setUsedPhysRegMask
 parameter_list|(
-name|unsigned
-name|Reg
+name|BitVector
+modifier|&
+name|Mask
 parameter_list|)
 block|{
 name|UsedPhysRegMask
-operator|.
-name|reset
-argument_list|(
-name|Reg
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|MCRegUnitIterator
-name|Units
-argument_list|(
-name|Reg
-argument_list|,
-name|getTargetRegisterInfo
-argument_list|()
-argument_list|)
-init|;
-name|Units
-operator|.
-name|isValid
-argument_list|()
-condition|;
-operator|++
-name|Units
-control|)
-name|UsedRegUnits
-operator|.
-name|reset
-argument_list|(
-operator|*
-name|Units
-argument_list|)
+operator|=
+name|Mask
 expr_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -2883,7 +2724,7 @@ parameter_list|)
 function_decl|;
 comment|/// Returns a mask covering all bits that can appear in lane masks of
 comment|/// subregisters of the virtual register @p Reg.
-name|unsigned
+name|LaneBitmask
 name|getMaxLaneMaskForVReg
 argument_list|(
 name|unsigned

@@ -92,16 +92,16 @@ operator|:
 name|ConnectionSharedMemory
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|ConnectionSharedMemory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsConnected
 argument_list|()
 specifier|const
+name|override
 block|;
 name|virtual
 name|lldb
@@ -114,34 +114,26 @@ argument_list|,
 argument|Error *error_ptr
 argument_list|)
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ConnectionStatus
 name|Connect
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|s
+argument|const char *s
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ConnectionStatus
 name|Disconnect
 argument_list|(
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|Read
 argument_list|(
@@ -155,8 +147,8 @@ argument|lldb::ConnectionStatus&status
 argument_list|,
 argument|Error *error_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|Write
 argument_list|(
@@ -168,13 +160,14 @@ argument|lldb::ConnectionStatus&status
 argument_list|,
 argument|Error *error_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|GetURI
 argument_list|()
+name|override
 block|;
 name|lldb
 operator|::

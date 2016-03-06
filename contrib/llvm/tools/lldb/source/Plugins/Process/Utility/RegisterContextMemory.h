@@ -100,9 +100,6 @@ name|RegisterContext
 block|{
 name|public
 operator|:
-comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
 name|RegisterContextMemory
 argument_list|(
 argument|lldb_private::Thread&thread
@@ -114,25 +111,21 @@ argument_list|,
 argument|lldb::addr_t reg_data_addr
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextMemory
 argument_list|()
+name|override
 block|;
-comment|//------------------------------------------------------------------
-comment|// Subclasses must override these functions
-comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|InvalidateAllRegisters
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -142,13 +135,13 @@ name|GetRegisterInfoAtIndex
 argument_list|(
 argument|size_t reg
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetRegisterSetCount
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|lldb_private
 operator|::
@@ -158,8 +151,8 @@ name|GetRegisterSet
 argument_list|(
 argument|size_t reg_set
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|ConvertRegisterKindToRegisterNumber
 argument_list|(
@@ -167,6 +160,7 @@ argument|lldb::RegisterKind kind
 argument_list|,
 argument|uint32_t num
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// If all of the thread register are in a contiguous buffer in
@@ -175,65 +169,37 @@ comment|// ReadAllRegisterValues/WriteAllRegisterValues will work. If thread
 comment|// registers are not contiguous, clients will want to subclass this
 comment|// class and modify the read/write functions as needed.
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|ReadRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|reg_value
+argument|lldb_private::RegisterValue&reg_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteRegister
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|*
-name|reg_info
+argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|RegisterValue
-operator|&
-name|reg_value
+argument|const lldb_private::RegisterValue&reg_value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ReadAllRegisterValues
 argument_list|(
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|WriteAllRegisterValues
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|)
+name|override
 block|;
 name|void
 name|SetAllRegisterData
@@ -279,9 +245,6 @@ block|;
 comment|// If this is valid, then we have a register context that is stored in memmory
 name|private
 operator|:
-comment|//------------------------------------------------------------------
-comment|// For RegisterContextMemory only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|RegisterContextMemory

@@ -638,7 +638,6 @@ argument_list|(
 argument|batch + i
 argument_list|)
 name|T
-argument_list|()
 expr_stmt|;
 operator|*
 operator|(

@@ -43,6 +43,22 @@ directive|define
 name|LLDB_SBTarget_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -194,6 +210,13 @@ operator|&
 name|target_sp
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|// Destructor
+comment|//------------------------------------------------------------------
+operator|~
+name|SBTarget
+argument_list|()
+expr_stmt|;
 specifier|const
 name|lldb
 operator|::
@@ -209,13 +232,6 @@ name|SBTarget
 operator|&
 name|rhs
 operator|)
-expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|// Destructor
-comment|//------------------------------------------------------------------
-operator|~
-name|SBTarget
-argument_list|()
 expr_stmt|;
 name|bool
 name|IsValid
@@ -344,17 +360,17 @@ comment|///     Flags to modify the launch (@see lldb::LaunchFlags)
 comment|///
 comment|/// @param[in] stdin_path
 comment|///     The path to use when re-directing the STDIN of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
+comment|///     process. If all stdXX_path arguments are nullptr, a pseudo
 comment|///     terminal will be used.
 comment|///
 comment|/// @param[in] stdout_path
 comment|///     The path to use when re-directing the STDOUT of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
+comment|///     process. If all stdXX_path arguments are nullptr, a pseudo
 comment|///     terminal will be used.
 comment|///
 comment|/// @param[in] stderr_path
 comment|///     The path to use when re-directing the STDERR of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
+comment|///     process. If all stdXX_path arguments are nullptr, a pseudo
 comment|///     terminal will be used.
 comment|///
 comment|/// @param[in] working_directory
@@ -400,6 +416,15 @@ argument_list|,
 argument|lldb::SBError& error
 argument_list|)
 expr_stmt|;
+name|SBProcess
+name|LoadCore
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|core_file
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Launch a new process with sensible defaults.
 comment|///
@@ -457,15 +482,6 @@ parameter_list|,
 name|SBError
 modifier|&
 name|error
-parameter_list|)
-function_decl|;
-name|SBProcess
-name|LoadCore
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|core_file
 parameter_list|)
 function_decl|;
 name|SBProcess
@@ -582,7 +598,7 @@ comment|/// @param[in] url
 comment|///     The url to connect to, e.g., 'connect://localhost:12345'.
 comment|///
 comment|/// @param[in] plugin_name
-comment|///     The plugin name to be used; can be NULL.
+comment|///     The plugin name to be used; can be nullptr.
 comment|///
 comment|/// @param[out] error
 comment|///     An error explaining what went wrong if the connect fails.
@@ -1147,7 +1163,7 @@ name|char
 operator|*
 name|module_name
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|// This version uses name_type_mask = eFunctionNameTypeAuto
@@ -1190,6 +1206,23 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
+name|BreakpointCreateByName
+argument_list|(
+argument|const char *symbol_name
+argument_list|,
+argument|uint32_t name_type_mask
+argument_list|,
+comment|// Logical OR one or more FunctionNameType enum bits
+argument|lldb::LanguageType symbol_language
+argument_list|,
+argument|const SBFileSpecList&module_list
+argument_list|,
+argument|const SBFileSpecList&comp_unit_list
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
 name|BreakpointCreateByNames
 argument_list|(
 argument|const char *symbol_name[]
@@ -1199,6 +1232,25 @@ argument_list|,
 argument|uint32_t name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
+argument|const SBFileSpecList&module_list
+argument_list|,
+argument|const SBFileSpecList&comp_unit_list
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
+name|BreakpointCreateByNames
+argument_list|(
+argument|const char *symbol_name[]
+argument_list|,
+argument|uint32_t num_names
+argument_list|,
+argument|uint32_t name_type_mask
+argument_list|,
+comment|// Logical OR one or more FunctionNameType enum bits
+argument|lldb::LanguageType symbol_language
+argument_list|,
 argument|const SBFileSpecList&module_list
 argument_list|,
 argument|const SBFileSpecList&comp_unit_list
@@ -1219,7 +1271,7 @@ name|char
 operator|*
 name|module_name
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -1246,6 +1298,20 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
+name|BreakpointCreateByRegex
+argument_list|(
+argument|const char *symbol_name_regex
+argument_list|,
+argument|lldb::LanguageType symbol_language
+argument_list|,
+argument|const SBFileSpecList&module_list
+argument_list|,
+argument|const SBFileSpecList&comp_unit_list
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
 name|BreakpointCreateBySourceRegex
 argument_list|(
 specifier|const
@@ -1263,7 +1329,7 @@ name|char
 operator|*
 name|module_name
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -1305,6 +1371,16 @@ name|SBBreakpoint
 name|BreakpointCreateByAddress
 argument_list|(
 argument|addr_t address
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
+name|BreakpointCreateBySBAddress
+argument_list|(
+name|SBAddress
+operator|&
+name|address
 argument_list|)
 expr_stmt|;
 name|uint32_t
@@ -1740,9 +1816,6 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// For Target only
-comment|//------------------------------------------------------------------
 name|lldb
 operator|::
 name|TargetSP

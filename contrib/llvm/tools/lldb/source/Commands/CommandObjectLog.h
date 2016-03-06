@@ -102,10 +102,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectLog
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

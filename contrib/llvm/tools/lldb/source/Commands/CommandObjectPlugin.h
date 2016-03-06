@@ -90,10 +90,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectPlugin
 argument_list|()
+name|override
 block|;     }
 decl_stmt|;
 block|}

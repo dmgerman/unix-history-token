@@ -534,6 +534,27 @@ init|=
 literal|0x20000000000ULL
 decl_stmt|;
 comment|// 2T.
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+comment|// AArch64/SANITIZIER_CAN_USER_ALLOCATOR64 is only for 42-bit VMA
+comment|// so no need to different values for different VMA.
+specifier|const
+name|uptr
+name|kAllocatorSpace
+init|=
+literal|0x10000000000ULL
+decl_stmt|;
+specifier|const
+name|uptr
+name|kAllocatorSize
+init|=
+literal|0x10000000000ULL
+decl_stmt|;
+comment|// 3T.
 else|#
 directive|else
 specifier|const

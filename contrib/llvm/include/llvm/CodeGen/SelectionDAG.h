@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/DAGCombine.h"
 end_include
 
@@ -145,9 +151,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|MachineConstantPoolValue
 decl_stmt|;
@@ -909,6 +912,11 @@ name|SDDbgInfo
 modifier|*
 name|DbgInfo
 decl_stmt|;
+name|uint16_t
+name|NextPersistentId
+init|=
+literal|0
+decl_stmt|;
 name|public
 label|:
 comment|/// Clients of various APIs that cause global effects on
@@ -1381,17 +1389,14 @@ name|allnodes
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|allnodes_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|allnodes_begin
 argument_list|()
-operator|,
+argument_list|,
 name|allnodes_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -1403,17 +1408,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|allnodes_const_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|allnodes_begin
 argument_list|()
-operator|,
+argument_list|,
 name|allnodes_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Return the root tag of the SelectionDAG.
@@ -2652,13 +2654,10 @@ name|dl
 argument_list|,
 name|VTs
 argument_list|,
-name|ArrayRef
-operator|<
-name|SDValue
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Ops
-operator|,
+argument_list|,
 name|Glue
 operator|.
 name|getNode
@@ -2667,7 +2666,7 @@ condition|?
 literal|4
 else|:
 literal|3
-operator|)
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -2730,13 +2729,10 @@ name|dl
 argument_list|,
 name|VTs
 argument_list|,
-name|ArrayRef
-operator|<
-name|SDValue
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Ops
-operator|,
+argument_list|,
 name|Glue
 operator|.
 name|getNode
@@ -2745,7 +2741,7 @@ condition|?
 literal|4
 else|:
 literal|3
-operator|)
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -2873,13 +2869,10 @@ name|dl
 argument_list|,
 name|VTs
 argument_list|,
-name|ArrayRef
-operator|<
-name|SDValue
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Ops
-operator|,
+argument_list|,
 name|Glue
 operator|.
 name|getNode
@@ -2888,7 +2881,7 @@ condition|?
 literal|3
 else|:
 literal|2
-operator|)
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3413,6 +3406,13 @@ operator|<
 name|SDValue
 operator|>
 name|Ops
+argument_list|,
+specifier|const
+name|SDNodeFlags
+operator|*
+name|Flags
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -5015,6 +5015,24 @@ name|SDValue
 name|Op
 parameter_list|)
 function_decl|;
+comment|/// Expand the specified \c ISD::VAARG node as the Legalize pass would.
+name|SDValue
+name|expandVAArg
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+comment|/// Expand the specified \c ISD::VACOPY node as the Legalize pass would.
+name|SDValue
+name|expandVACopy
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
 comment|/// *Mutate* the specified node in-place to have the
 comment|/// specified operands.  If the resultant node already exists in the DAG,
 comment|/// this does not modify the specified node, instead it returns the node that
@@ -6152,6 +6170,26 @@ case|:
 case|case
 name|ISD
 operator|::
+name|SMIN
+case|:
+case|case
+name|ISD
+operator|::
+name|SMAX
+case|:
+case|case
+name|ISD
+operator|::
+name|UMIN
+case|:
+case|case
+name|ISD
+operator|::
+name|UMAX
+case|:
+case|case
+name|ISD
+operator|::
 name|MUL
 case|:
 case|case
@@ -6228,6 +6266,16 @@ case|case
 name|ISD
 operator|::
 name|FMAXNUM
+case|:
+case|case
+name|ISD
+operator|::
+name|FMINNAN
+case|:
+case|case
+name|ISD
+operator|::
+name|FMAXNAN
 case|:
 return|return
 name|true
@@ -6522,6 +6570,32 @@ modifier|*
 name|Cst2
 parameter_list|)
 function_decl|;
+name|SDValue
+name|FoldConstantVectorArithmetic
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|SDLoc
+name|DL
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDValue
+operator|>
+name|Ops
+argument_list|,
+specifier|const
+name|SDNodeFlags
+operator|*
+name|Flags
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// Constant fold a setcc to true or false.
 name|SDValue
 name|FoldSetCC
@@ -6662,6 +6736,19 @@ comment|/// is true if they are the same value, or if one is negative zero and t
 comment|/// other positive zero.
 name|bool
 name|isEqualTo
+argument_list|(
+name|SDValue
+name|A
+argument_list|,
+name|SDValue
+name|B
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return true if A and B have no common bits set. As an example, this can
+comment|/// allow an 'add' to be transformed into an 'or'.
+name|bool
+name|haveNoCommonBitsSet
 argument_list|(
 name|SDValue
 name|A

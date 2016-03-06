@@ -263,6 +263,33 @@ name|void
 name|anchor
 argument_list|()
 block|;
+name|protected
+operator|:
+comment|/// Commutes the operands in the given instruction.
+comment|/// The commutable operands are specified by their indices OpIdx1 and OpIdx2.
+comment|///
+comment|/// Do not call this method for a non-commutable instruction or for
+comment|/// non-commutable pair of operand indices OpIdx1 and OpIdx2.
+comment|/// Even though the instruction is commutable, the method may still
+comment|/// fail to commute the operands, null pointer is returned in such cases.
+comment|///
+comment|/// For example, we can commute rlwimi instructions, but only if the
+comment|/// rotate amt is zero.  We also have to munge the immediates a bit.
+name|MachineInstr
+operator|*
+name|commuteInstructionImpl
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|bool NewMI
+argument_list|,
+argument|unsigned OpIdx1
+argument_list|,
+argument|unsigned OpIdx2
+argument_list|)
+specifier|const
+name|override
+block|;
 name|public
 operator|:
 name|explicit
@@ -391,6 +418,37 @@ name|false
 return|;
 block|}
 name|bool
+name|useMachineCombiner
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Return true when there is potentially a faster code sequence
+comment|/// for an instruction chain ending in<Root>. All potential patterns are
+comment|/// output in the<Pattern> array.
+name|bool
+name|getMachineCombinerPatterns
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|SmallVectorImpl<MachineCombinerPattern>&P
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isAssociativeAndCommutative
+argument_list|(
+argument|const MachineInstr&Inst
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|isCoalescableExtInstr
 argument_list|(
 argument|const MachineInstr&MI
@@ -420,19 +478,6 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|int&FrameIndex
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|// commuteInstruction - We can commute rlwimi instructions, but only if the
-comment|// rotate amt is zero.  We also have to munge the immediates a bit.
-name|MachineInstr
-operator|*
-name|commuteInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|bool NewMI
 argument_list|)
 specifier|const
 name|override
@@ -631,7 +676,7 @@ argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -655,7 +700,7 @@ argument|unsigned NumF
 argument_list|,
 argument|unsigned ExtraF
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -667,7 +712,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|unsigned NumCycles
 argument_list|,
-argument|const BranchProbability&Probability
+argument|BranchProbability Probability
 argument_list|)
 specifier|const
 name|override
@@ -795,6 +840,55 @@ name|getNoopForMachoTarget
 argument_list|(
 argument|MCInst&NopInst
 argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned TF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
 specifier|const
 name|override
 block|; }

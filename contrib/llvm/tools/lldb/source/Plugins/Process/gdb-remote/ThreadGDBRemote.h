@@ -43,11 +43,27 @@ directive|define
 name|liblldb_ThreadGDBRemote_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -98,10 +114,10 @@ argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ThreadGDBRemote
 argument_list|()
+name|override
 block|;
 name|void
 name|WillResume
@@ -131,6 +147,13 @@ name|override
 block|;
 name|lldb
 operator|::
+name|QueueKind
+name|GetQueueKind
+argument_list|()
+name|override
+block|;
+name|lldb
+operator|::
 name|queue_id_t
 name|GetQueueID
 argument_list|()
@@ -148,6 +171,19 @@ operator|::
 name|addr_t
 name|GetQueueLibdispatchQueueAddress
 argument_list|()
+name|override
+block|;
+name|void
+name|SetQueueLibdispatchQueueAddress
+argument_list|(
+argument|lldb::addr_t dispatch_queue_t
+argument_list|)
+name|override
+block|;
+name|bool
+name|ThreadHasQueueInformation
+argument_list|()
+specifier|const
 name|override
 block|;
 name|lldb
@@ -257,7 +293,25 @@ argument_list|,
 argument|lldb::QueueKind queue_kind
 argument_list|,
 argument|uint64_t queue_serial
+argument_list|,
+argument|lldb::addr_t dispatch_queue_t
+argument_list|,
+argument|lldb_private::LazyBool associated_with_libdispatch_queue
 argument_list|)
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|GetAssociatedWithLibdispatchQueue
+argument_list|()
+name|override
+block|;
+name|void
+name|SetAssociatedWithLibdispatchQueue
+argument_list|(
+argument|lldb_private::LazyBool associated_with_libdispatch_queue
+argument_list|)
+name|override
 block|;
 name|StructuredData
 operator|::
@@ -272,30 +326,6 @@ name|friend
 name|class
 name|ProcessGDBRemote
 block|;
-name|bool
-name|PrivateSetRegisterValue
-argument_list|(
-argument|uint32_t reg
-argument_list|,
-argument|StringExtractor&response
-argument_list|)
-block|;
-name|bool
-name|CachedQueueInfoIsValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_queue_kind
-operator|!=
-name|lldb
-operator|::
-name|eQueueKindUnknown
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|// Member variables.
-comment|//------------------------------------------------------------------
 name|std
 operator|::
 name|string
@@ -313,17 +343,53 @@ name|m_thread_dispatch_qaddr
 block|;
 name|lldb
 operator|::
+name|addr_t
+name|m_dispatch_queue_t
+block|;
+name|lldb
+operator|::
 name|QueueKind
 name|m_queue_kind
 block|;
 comment|// Queue info from stop reply/stop info for thread
 name|uint64_t
-name|m_queue_serial
+name|m_queue_serial_number
 block|;
 comment|// Queue info from stop reply/stop info for thread
-comment|//------------------------------------------------------------------
-comment|// Member variables.
-comment|//------------------------------------------------------------------
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_associated_with_libdispatch_queue
+block|;
+name|bool
+name|PrivateSetRegisterValue
+argument_list|(
+argument|uint32_t reg
+argument_list|,
+argument|StringExtractor&response
+argument_list|)
+block|;
+name|bool
+name|PrivateSetRegisterValue
+argument_list|(
+argument|uint32_t reg
+argument_list|,
+argument|uint64_t regval
+argument_list|)
+block|;
+name|bool
+name|CachedQueueInfoIsValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_queue_kind
+operator|!=
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
 name|void
 name|SetStopInfoFromPacket
 argument_list|(

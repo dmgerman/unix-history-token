@@ -530,7 +530,7 @@ name|virtual
 name|VariantMatcher
 name|create
 argument_list|(
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -700,9 +700,7 @@ operator|,
 name|StringRef
 name|MatcherName
 operator|,
-specifier|const
 name|SourceRange
-operator|&
 name|NameRange
 operator|,
 name|ArrayRef
@@ -773,7 +771,7 @@ block|{}
 name|VariantMatcher
 name|create
 argument_list|(
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -1231,7 +1229,7 @@ name|variadicMatcherDescriptor
 argument_list|(
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -1465,9 +1463,7 @@ operator|(
 name|StringRef
 name|MatcherName
 operator|,
-specifier|const
 name|SourceRange
-operator|&
 name|NameRange
 operator|,
 name|ArrayRef
@@ -1553,7 +1549,7 @@ block|;   }
 name|VariantMatcher
 name|create
 argument_list|(
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -1815,7 +1811,7 @@ argument|void (*Func)()
 argument_list|,
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -1866,7 +1862,7 @@ argument|void (*Func)()
 argument_list|,
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -1944,7 +1940,7 @@ argument|void (*Func)()
 argument_list|,
 argument|StringRef MatcherName
 argument_list|,
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -2173,7 +2169,7 @@ block|{}
 name|VariantMatcher
 name|create
 argument_list|(
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,
@@ -2567,7 +2563,7 @@ block|{}
 name|VariantMatcher
 name|create
 argument_list|(
-argument|const SourceRange&NameRange
+argument|SourceRange NameRange
 argument_list|,
 argument|ArrayRef<ParserValue> Args
 argument_list|,

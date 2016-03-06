@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/FunctionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -135,8 +141,6 @@ argument|std::unique_ptr<MemoryBuffer>&&Buffer
 argument_list|,
 argument|LLVMContext&Context
 argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
-argument_list|,
 argument|bool ShouldLazyLoadMetadata = false
 argument_list|)
 expr_stmt|;
@@ -157,8 +161,6 @@ argument_list|,
 argument|std::unique_ptr<DataStreamer> Streamer
 argument_list|,
 argument|LLVMContext&Context
-argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// Read the header of the specified bitcode buffer and extract just the
@@ -172,8 +174,19 @@ argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|,
 argument|LLVMContext&Context
+argument_list|)
+expr_stmt|;
+comment|/// Read the header of the specified bitcode buffer and extract just the
+comment|/// producer string information. If successful, this returns a string. On
+comment|/// error, this returns "".
+name|std
+operator|::
+name|string
+name|getBitcodeProducerString
+argument_list|(
+argument|MemoryBufferRef Buffer
 argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
+argument|LLVMContext&Context
 argument_list|)
 expr_stmt|;
 comment|/// Read the specified bitcode file, returning the module.
@@ -190,8 +203,59 @@ argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|,
 argument|LLVMContext&Context
+argument_list|)
+expr_stmt|;
+comment|/// Check if the given bitcode buffer contains a function summary block.
+name|bool
+name|hasFunctionSummary
+parameter_list|(
+name|MemoryBufferRef
+name|Buffer
+parameter_list|,
+name|DiagnosticHandlerFunction
+name|DiagnosticHandler
+parameter_list|)
+function_decl|;
+comment|/// Parse the specified bitcode buffer, returning the function info index.
+comment|/// If IsLazy is true, parse the entire function summary into
+comment|/// the index. Otherwise skip the function summary section, and only create
+comment|/// an index object with a map from function name to function summary offset.
+comment|/// The index is used to perform lazy function summary reading later.
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|FunctionInfoIndex
+operator|>>
+name|getFunctionInfoIndex
+argument_list|(
+argument|MemoryBufferRef Buffer
 argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
+argument|DiagnosticHandlerFunction DiagnosticHandler
+argument_list|,
+argument|bool IsLazy = false
+argument_list|)
+expr_stmt|;
+comment|/// This method supports lazy reading of function summary data from the
+comment|/// combined index during function importing. When reading the combined index
+comment|/// file, getFunctionInfoIndex is first invoked with IsLazy=true.
+comment|/// Then this method is called for each function considered for importing,
+comment|/// to parse the summary information for the given function name into
+comment|/// the index.
+name|std
+operator|::
+name|error_code
+name|readFunctionSummary
+argument_list|(
+argument|MemoryBufferRef Buffer
+argument_list|,
+argument|DiagnosticHandlerFunction DiagnosticHandler
+argument_list|,
+argument|StringRef FunctionName
+argument_list|,
+argument|std::unique_ptr<FunctionInfoIndex> Index
 argument_list|)
 expr_stmt|;
 comment|/// \brief Write the specified module to the specified raw output stream.
@@ -202,6 +266,9 @@ comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode the use-list order for each \a
 comment|/// Value in \c M.  These will be reconstructed exactly when \a M is
 comment|/// deserialized.
+comment|///
+comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
+comment|/// for use in ThinLTO optimization).
 name|void
 name|WriteBitcodeToFile
 parameter_list|(
@@ -218,6 +285,27 @@ name|bool
 name|ShouldPreserveUseListOrder
 init|=
 name|false
+parameter_list|,
+name|bool
+name|EmitFunctionSummary
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Write the specified function summary index to the given raw output stream,
+comment|/// where it will be written in a new bitcode block. This is used when
+comment|/// writing the combined index file for ThinLTO.
+name|void
+name|WriteFunctionSummaryToFile
+parameter_list|(
+specifier|const
+name|FunctionInfoIndex
+modifier|&
+name|Index
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|Out
 parameter_list|)
 function_decl|;
 comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes
@@ -599,7 +687,6 @@ return|return
 name|EC
 return|;
 block|}
-block|;
 specifier|static
 name|bool
 name|classof

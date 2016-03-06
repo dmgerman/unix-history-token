@@ -128,6 +128,9 @@ decl_stmt|;
 name|class
 name|CodeGenModule
 decl_stmt|;
+struct_decl|struct
+name|CatchTypeInfo
+struct_decl|;
 comment|/// \brief Implements C++ ABI-specific code generation functions.
 name|class
 name|CGCXXABI
@@ -167,7 +170,6 @@ name|protected
 operator|:
 name|ImplicitParamDecl
 operator|*
-operator|&
 name|getThisDecl
 argument_list|(
 argument|CodeGenFunction&CGF
@@ -183,7 +185,6 @@ name|llvm
 operator|::
 name|Value
 operator|*
-operator|&
 name|getThisValue
 argument_list|(
 argument|CodeGenFunction&CGF
@@ -193,6 +194,27 @@ return|return
 name|CGF
 operator|.
 name|CXXABIThisValue
+return|;
+block|}
+name|Address
+name|getThisAddress
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+block|{
+return|return
+name|Address
+argument_list|(
+name|CGF
+operator|.
+name|CXXABIThisValue
+argument_list|,
+name|CGF
+operator|.
+name|CXXABIThisAlignment
+argument_list|)
 return|;
 block|}
 comment|/// Issue a diagnostic about unsupported features in the ABI.
@@ -295,6 +317,21 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+comment|/// Determine whether there's something special about the rules of
+comment|/// the ABI tell us that 'this' is a complete object within the
+comment|/// given function.  Obvious common logic like being defined on a
+comment|/// final class will have been taken care of by the caller.
+name|virtual
+name|bool
+name|isThisCompleteObject
+argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -441,32 +478,17 @@ name|Value
 operator|*
 name|EmitLoadOfMemberFunctionPointer
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-specifier|const
-name|Expr
-operator|*
-name|E
+argument|const Expr *E
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|&
-name|This
+argument|Address This
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|MemPtr
+argument|llvm::Value *&ThisPtrForCall
 argument_list|,
-specifier|const
-name|MemberPointerType
-operator|*
-name|MPT
+argument|llvm::Value *MemPtr
+argument_list|,
+argument|const MemberPointerType *MPT
 argument_list|)
 expr_stmt|;
 comment|/// Calculate an l-value from an object and a data member pointer.
@@ -477,31 +499,15 @@ name|Value
 operator|*
 name|EmitMemberDataPointerAddress
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-specifier|const
-name|Expr
-operator|*
-name|E
+argument|const Expr *E
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Base
+argument|Address Base
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|MemPtr
+argument|llvm::Value *MemPtr
 argument_list|,
-specifier|const
-name|MemberPointerType
-operator|*
-name|MPT
+argument|const MemberPointerType *MPT
 argument_list|)
 expr_stmt|;
 comment|/// Perform a derived-to-base, base-to-derived, or bitcast member
@@ -576,23 +582,6 @@ decl|const
 block|{
 return|return
 name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|isTypeInfoCalculable
-argument_list|(
-name|QualType
-name|Ty
-argument_list|)
-decl|const
-block|{
-return|return
-operator|!
-name|Ty
-operator|->
-name|isIncompleteType
-argument_list|()
 return|;
 block|}
 comment|/// Create a null member pointer of the given type.
@@ -729,33 +718,30 @@ label|:
 name|virtual
 name|void
 name|emitVirtualObjectDelete
-argument_list|(
+parameter_list|(
 name|CodeGenFunction
-operator|&
+modifier|&
 name|CGF
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXDeleteExpr
-operator|*
+modifier|*
 name|DE
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Ptr
-argument_list|,
+parameter_list|,
 name|QualType
 name|ElementType
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXDestructorDecl
-operator|*
+modifier|*
 name|Dtor
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 name|virtual
 name|void
 name|emitRethrow
@@ -800,6 +786,22 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// \brief Determine whether it's possible to emit a vtable for \p RD, even
+comment|/// though we do not know that the vtable has been marked as used by semantic
+comment|/// analysis.
+name|virtual
+name|bool
+name|canSpeculativelyEmitVTable
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 name|virtual
 name|void
 name|emitBeginCatch
@@ -847,19 +849,23 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|llvm
-operator|::
-name|Constant
-operator|*
+name|CatchTypeInfo
 name|getAddrOfCXXCatchHandlerType
-argument_list|(
-argument|QualType Ty
-argument_list|,
-argument|QualType CatchHandlerType
-argument_list|)
-operator|=
+parameter_list|(
+name|QualType
+name|Ty
+parameter_list|,
+name|QualType
+name|CatchHandlerType
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
+name|virtual
+name|CatchTypeInfo
+name|getCatchAllTypeInfo
+parameter_list|()
+function_decl|;
 name|virtual
 name|bool
 name|shouldTypeidBeNullChecked
@@ -895,7 +901,7 @@ argument|CodeGenFunction&CGF
 argument_list|,
 argument|QualType SrcRecordTy
 argument_list|,
-argument|llvm::Value *ThisPtr
+argument|Address ThisPtr
 argument_list|,
 argument|llvm::Type *StdTypeInfoPtrTy
 argument_list|)
@@ -924,7 +930,7 @@ name|EmitDynamicCastCall
 argument_list|(
 argument|CodeGenFunction&CGF
 argument_list|,
-argument|llvm::Value *Value
+argument|Address Value
 argument_list|,
 argument|QualType SrcRecordTy
 argument_list|,
@@ -946,7 +952,7 @@ name|EmitDynamicCastToVoid
 argument_list|(
 argument|CodeGenFunction&CGF
 argument_list|,
-argument|llvm::Value *Value
+argument|Address Value
 argument_list|,
 argument|QualType SrcRecordTy
 argument_list|,
@@ -973,25 +979,13 @@ name|Value
 operator|*
 name|GetVirtualBaseClassOffset
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|This
+argument|Address This
 argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
+argument|const CXXRecordDecl *ClassDecl
 argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|BaseClassDecl
+argument|const CXXRecordDecl *BaseClassDecl
 argument_list|)
 operator|=
 literal|0
@@ -1126,20 +1120,22 @@ comment|/// Perform ABI-specific "this" argument adjustment required prior to
 comment|/// a call of a virtual function.
 comment|/// The "VirtualCall" argument is true iff the call itself is virtual.
 name|virtual
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|adjustThisArgumentForVirtualFunctionCall
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|GlobalDecl GD
-argument_list|,
-argument|llvm::Value *This
-argument_list|,
-argument|bool VirtualCall
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|GlobalDecl
+name|GD
+parameter_list|,
+name|Address
+name|This
+parameter_list|,
+name|bool
+name|VirtualCall
+parameter_list|)
 block|{
 return|return
 name|This
@@ -1253,34 +1249,31 @@ comment|/// Emit the destructor call.
 name|virtual
 name|void
 name|EmitDestructorCall
-argument_list|(
+parameter_list|(
 name|CodeGenFunction
-operator|&
+modifier|&
 name|CGF
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXDestructorDecl
-operator|*
+modifier|*
 name|DD
-argument_list|,
+parameter_list|,
 name|CXXDtorType
 name|Type
-argument_list|,
+parameter_list|,
 name|bool
 name|ForVirtualBase
-argument_list|,
+parameter_list|,
 name|bool
 name|Delegating
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|This
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 comment|/// Emits the VTable definitions required for the given record type.
 name|virtual
 name|void
@@ -1298,10 +1291,53 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Checks if ABI requires extra virtual offset for vtable field.
+name|virtual
+name|bool
+name|isVirtualOffsetNeededForVTableField
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CodeGenFunction
+operator|::
+name|VPtr
+name|Vptr
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// Checks if ABI requires to initilize vptrs for given dynamic class.
+name|virtual
+name|bool
+name|doStructorsInitializeVPtrs
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|VTableClass
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Get the address point of the vtable for the given base subobject.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getVTableAddressPoint
+argument_list|(
+argument|BaseSubobject Base
+argument_list|,
+argument|const CXXRecordDecl *VTableClass
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Get the address point of the vtable for the given base subobject while
-comment|/// building a constructor or a destructor. On return, NeedsVirtualOffset
-comment|/// tells if a virtual base adjustment is needed in order to get the offset
-comment|/// of the base subobject.
+comment|/// building a constructor or a destructor.
 name|virtual
 name|llvm
 operator|::
@@ -1316,8 +1352,6 @@ argument_list|,
 argument|BaseSubobject Base
 argument_list|,
 argument|const CXXRecordDecl *NearestVBase
-argument_list|,
-argument|bool&NeedsVirtualOffset
 argument_list|)
 operator|=
 literal|0
@@ -1366,7 +1400,7 @@ argument|CodeGenFunction&CGF
 argument_list|,
 argument|GlobalDecl GD
 argument_list|,
-argument|llvm::Value *This
+argument|Address This
 argument_list|,
 argument|llvm::Type *Ty
 argument_list|,
@@ -1389,7 +1423,7 @@ argument|const CXXDestructorDecl *Dtor
 argument_list|,
 argument|CXXDtorType DtorType
 argument_list|,
-argument|llvm::Value *This
+argument|Address This
 argument_list|,
 argument|const CXXMemberCallExpr *CE
 argument_list|)
@@ -1456,20 +1490,11 @@ name|Value
 operator|*
 name|performThisAdjustment
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|This
+argument|Address This
 argument_list|,
-specifier|const
-name|ThisAdjustment
-operator|&
-name|TA
+argument|const ThisAdjustment&TA
 argument_list|)
 operator|=
 literal|0
@@ -1481,20 +1506,11 @@ name|Value
 operator|*
 name|performReturnAdjustment
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Ret
+argument|Address Ret
 argument_list|,
-specifier|const
-name|ReturnAdjustment
-operator|&
-name|RA
+argument|const ReturnAdjustment&RA
 argument_list|)
 operator|=
 literal|0
@@ -1530,6 +1546,22 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Gets the offsets of all the virtual base pointers in a given class.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|CharUnits
+operator|>
+name|getVBPtrOffsets
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
 comment|/// Gets the pure virtual member call function.
 name|virtual
 name|StringRef
@@ -1576,23 +1608,31 @@ comment|///   always a size_t
 comment|/// \param ElementType - the base element allocated type,
 comment|///   i.e. the allocated type after stripping all array types
 name|virtual
+name|Address
+name|InitializeArrayCookie
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|Address
+name|NewPtr
+argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|InitializeArrayCookie
-argument_list|(
-argument|CodeGenFunction&CGF
+name|NumElements
 argument_list|,
-argument|llvm::Value *NewPtr
+specifier|const
+name|CXXNewExpr
+operator|*
+name|expr
 argument_list|,
-argument|llvm::Value *NumElements
-argument_list|,
-argument|const CXXNewExpr *expr
-argument_list|,
-argument|QualType ElementType
+name|QualType
+name|ElementType
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// Reads the array cookie associated with the given pointer,
 comment|/// if it has one.
 comment|///
@@ -1614,10 +1654,7 @@ name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|Ptr
 argument_list|,
 specifier|const
@@ -1687,7 +1724,7 @@ name|readArrayCookieImpl
 argument_list|(
 argument|CodeGenFunction&IGF
 argument_list|,
-argument|llvm::Value *ptr
+argument|Address ptr
 argument_list|,
 argument|CharUnits cookieSize
 argument_list|)
@@ -1781,19 +1818,10 @@ name|CGM
 argument_list|,
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
 specifier|const
 name|VarDecl
 operator|*
-argument_list|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-operator|>>
+operator|>
 name|CXXThreadLocals
 argument_list|,
 name|ArrayRef
@@ -1807,9 +1835,8 @@ name|CXXThreadLocalInits
 argument_list|,
 name|ArrayRef
 operator|<
-name|llvm
-operator|::
-name|GlobalVariable
+specifier|const
+name|VarDecl
 operator|*
 operator|>
 name|CXXThreadLocalInitVars

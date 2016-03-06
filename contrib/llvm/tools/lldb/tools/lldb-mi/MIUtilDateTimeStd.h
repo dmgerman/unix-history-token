@@ -70,18 +70,6 @@ comment|//          time.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 16/07/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -94,27 +82,19 @@ name|public
 label|:
 comment|/* ctor */
 name|CMIUtilDateTimeStd
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|CMIUtilString
 name|GetDate
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|CMIUtilString
 name|GetTime
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|CMIUtilString
 name|GetDateTimeLogFilename
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Overrideable:
 name|public
@@ -124,9 +104,7 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|CMIUtilDateTimeStd
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|// Attributes:
 name|private

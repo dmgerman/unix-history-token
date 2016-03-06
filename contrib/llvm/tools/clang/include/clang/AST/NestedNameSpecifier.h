@@ -656,17 +656,26 @@ begin_comment
 comment|/// in debugging.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|dump
-parameter_list|(
+argument_list|(
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|LO
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};

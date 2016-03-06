@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/EHPersonalities.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Dominators.h"
 end_include
 
@@ -81,9 +93,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AliasAnalysis
-decl_stmt|;
 name|class
 name|AliasSet
 decl_stmt|;
@@ -134,6 +143,16 @@ name|bool
 name|HeaderMayThrow
 decl_stmt|;
 comment|// Same as previous, but specific to loop header
+comment|// Used to update funclet bundle operands.
+name|DenseMap
+operator|<
+name|BasicBlock
+operator|*
+operator|,
+name|ColorVector
+operator|>
+name|BlockColors
+expr_stmt|;
 name|LICMSafetyInfo
 argument_list|()
 operator|:
@@ -239,7 +258,22 @@ argument_list|)
 operator|,
 name|MinMaxKind
 argument_list|(
-argument|MRK_Invalid
+name|MRK_Invalid
+argument_list|)
+operator|,
+name|UnsafeAlgebraInst
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|RecurrenceType
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|IsSigned
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|RecurrenceDescriptor
@@ -251,6 +285,14 @@ argument_list|,
 argument|RecurrenceKind K
 argument_list|,
 argument|MinMaxRecurrenceKind MK
+argument_list|,
+argument|Instruction *UAI
+argument_list|,
+argument|Type *RT
+argument_list|,
+argument|bool Signed
+argument_list|,
+argument|SmallPtrSetImpl<Instruction *>&CI
 argument_list|)
 operator|:
 name|StartValue
@@ -270,9 +312,39 @@ argument_list|)
 operator|,
 name|MinMaxKind
 argument_list|(
-argument|MK
+name|MK
 argument_list|)
-block|{}
+operator|,
+name|UnsafeAlgebraInst
+argument_list|(
+name|UAI
+argument_list|)
+operator|,
+name|RecurrenceType
+argument_list|(
+name|RT
+argument_list|)
+operator|,
+name|IsSigned
+argument_list|(
+argument|Signed
+argument_list|)
+block|{
+name|CastInsts
+operator|.
+name|insert
+argument_list|(
+name|CI
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CI
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// This POD struct holds information about a potential recurrence operation.
 name|class
 name|InstDesc
@@ -284,6 +356,8 @@ argument_list|(
 argument|bool IsRecur
 argument_list|,
 argument|Instruction *I
+argument_list|,
+argument|Instruction *UAI = nullptr
 argument_list|)
 operator|:
 name|IsRecurrence
@@ -298,7 +372,12 @@ argument_list|)
 block|,
 name|MinMaxKind
 argument_list|(
-argument|MRK_Invalid
+name|MRK_Invalid
+argument_list|)
+block|,
+name|UnsafeAlgebraInst
+argument_list|(
+argument|UAI
 argument_list|)
 block|{}
 name|InstDesc
@@ -306,6 +385,8 @@ argument_list|(
 argument|Instruction *I
 argument_list|,
 argument|MinMaxRecurrenceKind K
+argument_list|,
+argument|Instruction *UAI = nullptr
 argument_list|)
 operator|:
 name|IsRecurrence
@@ -320,7 +401,12 @@ argument_list|)
 block|,
 name|MinMaxKind
 argument_list|(
-argument|K
+name|K
+argument_list|)
+block|,
+name|UnsafeAlgebraInst
+argument_list|(
+argument|UAI
 argument_list|)
 block|{}
 name|bool
@@ -329,6 +415,25 @@ argument_list|()
 block|{
 return|return
 name|IsRecurrence
+return|;
+block|}
+name|bool
+name|hasUnsafeAlgebra
+argument_list|()
+block|{
+return|return
+name|UnsafeAlgebraInst
+operator|!=
+name|nullptr
+return|;
+block|}
+name|Instruction
+operator|*
+name|getUnsafeAlgebraInst
+argument_list|()
+block|{
+return|return
+name|UnsafeAlgebraInst
 return|;
 block|}
 name|MinMaxRecurrenceKind
@@ -363,6 +468,11 @@ block|;
 comment|// If this is a min/max pattern the comparison predicate.
 name|MinMaxRecurrenceKind
 name|MinMaxKind
+block|;
+comment|// Recurrence has unsafe algebra.
+name|Instruction
+operator|*
+name|UnsafeAlgebraInst
 block|;   }
 expr_stmt|;
 comment|/// Returns a struct describing if the instruction 'I' can be a recurrence
@@ -389,7 +499,7 @@ name|bool
 name|HasFunNoNaNAttr
 parameter_list|)
 function_decl|;
-comment|/// Returns true if instuction I has multiple uses in Insts
+comment|/// Returns true if instruction I has multiple uses in Insts
 specifier|static
 name|bool
 name|hasMultipleUsesOf
@@ -569,6 +679,169 @@ return|return
 name|LoopExitInstr
 return|;
 block|}
+comment|/// Returns true if the recurrence has unsafe algebra which requires a relaxed
+comment|/// floating-point model.
+name|bool
+name|hasUnsafeAlgebra
+parameter_list|()
+block|{
+return|return
+name|UnsafeAlgebraInst
+operator|!=
+name|nullptr
+return|;
+block|}
+comment|/// Returns first unsafe algebra instruction in the PHI node's use-chain.
+name|Instruction
+modifier|*
+name|getUnsafeAlgebraInst
+parameter_list|()
+block|{
+return|return
+name|UnsafeAlgebraInst
+return|;
+block|}
+comment|/// Returns true if the recurrence kind is an integer kind.
+specifier|static
+name|bool
+name|isIntegerRecurrenceKind
+parameter_list|(
+name|RecurrenceKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the recurrence kind is a floating point kind.
+specifier|static
+name|bool
+name|isFloatingPointRecurrenceKind
+parameter_list|(
+name|RecurrenceKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the recurrence kind is an arithmetic kind.
+specifier|static
+name|bool
+name|isArithmeticRecurrenceKind
+parameter_list|(
+name|RecurrenceKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Determines if Phi may have been type-promoted. If Phi has a single user
+comment|/// that ANDs the Phi with a type mask, return the user. RT is updated to
+comment|/// account for the narrower bit width represented by the mask, and the AND
+comment|/// instruction is added to CI.
+specifier|static
+name|Instruction
+modifier|*
+name|lookThroughAnd
+argument_list|(
+name|PHINode
+operator|*
+name|Phi
+argument_list|,
+name|Type
+operator|*
+operator|&
+name|RT
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|Visited
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|CI
+argument_list|)
+decl_stmt|;
+comment|/// Returns true if all the source operands of a recurrence are either
+comment|/// SExtInsts or ZExtInsts. This function is intended to be used with
+comment|/// lookThroughAnd to determine if the recurrence has been type-promoted. The
+comment|/// source operands are added to CI, and IsSigned is updated to indicate if
+comment|/// all source operands are SExtInsts.
+specifier|static
+name|bool
+name|getSourceExtensionKind
+argument_list|(
+name|Instruction
+operator|*
+name|Start
+argument_list|,
+name|Instruction
+operator|*
+name|Exit
+argument_list|,
+name|Type
+operator|*
+name|RT
+argument_list|,
+name|bool
+operator|&
+name|IsSigned
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|Visited
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|CI
+argument_list|)
+decl_stmt|;
+comment|/// Returns the type of the recurrence. This type can be narrower than the
+comment|/// actual type of the Phi if the recurrence has been type-promoted.
+name|Type
+modifier|*
+name|getRecurrenceType
+parameter_list|()
+block|{
+return|return
+name|RecurrenceType
+return|;
+block|}
+comment|/// Returns a reference to the instructions used for type-promoting the
+comment|/// recurrence.
+name|SmallPtrSet
+operator|<
+name|Instruction
+operator|*
+operator|,
+literal|8
+operator|>
+operator|&
+name|getCastInsts
+argument_list|()
+block|{
+return|return
+name|CastInsts
+return|;
+block|}
+comment|/// Returns true if all source operands of the recurrence are SExtInsts.
+name|bool
+name|isSigned
+parameter_list|()
+block|{
+return|return
+name|IsSigned
+return|;
+block|}
 name|private
 label|:
 comment|// The starting value of the recurrence.
@@ -592,6 +865,178 @@ comment|// If this a min/max recurrence the kind of recurrence.
 name|MinMaxRecurrenceKind
 name|MinMaxKind
 decl_stmt|;
+comment|// First occurance of unasfe algebra in the PHI's use-chain.
+name|Instruction
+modifier|*
+name|UnsafeAlgebraInst
+decl_stmt|;
+comment|// The type of the recurrence.
+name|Type
+modifier|*
+name|RecurrenceType
+decl_stmt|;
+comment|// True if all source operands of the recurrence are SExtInsts.
+name|bool
+name|IsSigned
+decl_stmt|;
+comment|// Instructions used for type-promoting the recurrence.
+name|SmallPtrSet
+operator|<
+name|Instruction
+operator|*
+operator|,
+literal|8
+operator|>
+name|CastInsts
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/// A struct for saving information about induction variables.
+name|class
+name|InductionDescriptor
+block|{
+name|public
+label|:
+comment|/// This enum represents the kinds of inductions that we support.
+enum|enum
+name|InductionKind
+block|{
+name|IK_NoInduction
+block|,
+comment|///< Not an induction variable.
+name|IK_IntInduction
+block|,
+comment|///< Integer induction variable. Step = C.
+name|IK_PtrInduction
+comment|///< Pointer induction var. Step = C / sizeof(elem).
+block|}
+enum|;
+name|public
+label|:
+comment|/// Default constructor - creates an invalid induction.
+name|InductionDescriptor
+argument_list|()
+operator|:
+name|StartValue
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|IK
+argument_list|(
+name|IK_NoInduction
+argument_list|)
+operator|,
+name|StepValue
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// Get the consecutive direction. Returns:
+comment|///   0 - unknown or non-consecutive.
+comment|///   1 - consecutive and increasing.
+comment|///  -1 - consecutive and decreasing.
+name|int
+name|getConsecutiveDirection
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Compute the transformed value of Index at offset StartValue using step
+comment|/// StepValue.
+comment|/// For integer induction, returns StartValue + Index * StepValue.
+comment|/// For pointer induction, returns StartValue[Index * StepValue].
+comment|/// FIXME: The newly created binary instructions should contain nsw/nuw
+comment|/// flags, which can be found from the original scalar operations.
+name|Value
+modifier|*
+name|transform
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+name|Value
+operator|*
+name|Index
+argument_list|)
+decl|const
+decl_stmt|;
+name|Value
+operator|*
+name|getStartValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StartValue
+return|;
+block|}
+name|InductionKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IK
+return|;
+block|}
+name|ConstantInt
+operator|*
+name|getStepValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StepValue
+return|;
+block|}
+specifier|static
+name|bool
+name|isInductionPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|Phi
+parameter_list|,
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+name|InductionDescriptor
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+name|private
+label|:
+comment|/// Private constructor - used by \c isInductionPHI.
+name|InductionDescriptor
+argument_list|(
+argument|Value *Start
+argument_list|,
+argument|InductionKind K
+argument_list|,
+argument|ConstantInt *Step
+argument_list|)
+empty_stmt|;
+comment|/// Start value.
+name|TrackingVH
+operator|<
+name|Value
+operator|>
+name|StartValue
+expr_stmt|;
+comment|/// Induction kind.
+name|InductionKind
+name|IK
+decl_stmt|;
+comment|/// Step value.
+name|ConstantInt
+modifier|*
+name|StepValue
+decl_stmt|;
 block|}
 empty_stmt|;
 name|BasicBlock
@@ -602,17 +1047,23 @@ name|Loop
 modifier|*
 name|L
 parameter_list|,
-name|Pass
+name|DominatorTree
 modifier|*
-name|P
+name|DT
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+parameter_list|,
+name|bool
+name|PreserveLCSSA
 parameter_list|)
 function_decl|;
 comment|/// \brief Simplify each loop in a loop nest recursively.
 comment|///
 comment|/// This takes a potentially un-simplified loop L (and its children) and turns
-comment|/// it into a simplified loop nest with preheaders and single backedges. It
-comment|/// will optionally update \c AliasAnalysis and \c ScalarEvolution analyses if
-comment|/// passed into it.
+comment|/// it into a simplified loop nest with preheaders and single backedges. It will
+comment|/// update \c AliasAnalysis and \c ScalarEvolution analyses if they're non-null.
 name|bool
 name|simplifyLoop
 parameter_list|(
@@ -628,27 +1079,16 @@ name|LoopInfo
 modifier|*
 name|LI
 parameter_list|,
-name|Pass
-modifier|*
-name|PP
-parameter_list|,
-name|AliasAnalysis
-modifier|*
-name|AA
-init|=
-name|nullptr
-parameter_list|,
 name|ScalarEvolution
 modifier|*
 name|SE
-init|=
-name|nullptr
 parameter_list|,
 name|AssumptionCache
 modifier|*
 name|AC
-init|=
-name|nullptr
+parameter_list|,
+name|bool
+name|PreserveLCSSA
 parameter_list|)
 function_decl|;
 comment|/// \brief Put loop into LCSSA form.
@@ -680,8 +1120,6 @@ parameter_list|,
 name|ScalarEvolution
 modifier|*
 name|SE
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Put a loop nest into LCSSA form.
@@ -711,8 +1149,6 @@ parameter_list|,
 name|ScalarEvolution
 modifier|*
 name|SE
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Walk the specified region of the CFG (defined by all blocks
@@ -833,7 +1269,7 @@ operator|*
 argument_list|)
 decl_stmt|;
 comment|/// \brief Computes safety information for a loop
-comment|/// checks loop body& header for the possiblity of may throw
+comment|/// checks loop body& header for the possibility of may throw
 comment|/// exception, it takes LICMSafetyInfo and loop as argument.
 comment|/// Updates safety information in LICMSafetyInfo argument.
 name|void
@@ -846,23 +1282,21 @@ name|Loop
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/// \brief Checks if the given PHINode in a loop header is an induction
-comment|/// variable. Returns true if this is an induction PHI along with the step
-comment|/// value.
-name|bool
-name|isInductionPHI
-parameter_list|(
-name|PHINode
-modifier|*
-parameter_list|,
-name|ScalarEvolution
-modifier|*
-parameter_list|,
-name|ConstantInt
-modifier|*
-modifier|&
-parameter_list|)
-function_decl|;
+comment|/// \brief Returns the instructions that use values defined in the loop.
+name|SmallVector
+operator|<
+name|Instruction
+operator|*
+operator|,
+literal|8
+operator|>
+name|findDefsUsedOutsideOfLoop
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

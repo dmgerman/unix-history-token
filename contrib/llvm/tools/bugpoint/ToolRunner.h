@@ -126,17 +126,17 @@ name|class
 name|LLC
 decl_stmt|;
 comment|//===---------------------------------------------------------------------===//
-comment|// GCC abstraction
+comment|// CC abstraction
 comment|//
 name|class
-name|GCC
+name|CC
 block|{
 name|std
 operator|::
 name|string
-name|GCCPath
+name|CCPath
 expr_stmt|;
-comment|// The path to the gcc executable.
+comment|// The path to the cc executable.
 name|std
 operator|::
 name|string
@@ -151,21 +151,21 @@ name|std
 operator|::
 name|string
 operator|>
-name|gccArgs
+name|ccArgs
 expr_stmt|;
-comment|// GCC-specific arguments.
-name|GCC
+comment|// CC-specific arguments.
+name|CC
 argument_list|(
-argument|StringRef gccPath
+argument|StringRef ccPath
 argument_list|,
 argument|StringRef RemotePath
 argument_list|,
-argument|const std::vector<std::string> *GCCArgs
+argument|const std::vector<std::string> *CCArgs
 argument_list|)
 block|:
-name|GCCPath
+name|CCPath
 argument_list|(
-name|gccPath
+name|ccPath
 argument_list|)
 operator|,
 name|RemoteClientPath
@@ -175,12 +175,12 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|GCCArgs
+name|CCArgs
 condition|)
-name|gccArgs
+name|ccArgs
 operator|=
 operator|*
-name|GCCArgs
+name|CCArgs
 expr_stmt|;
 block|}
 name|public
@@ -196,7 +196,7 @@ name|CFile
 block|}
 enum|;
 specifier|static
-name|GCC
+name|CC
 modifier|*
 name|create
 argument_list|(
@@ -211,7 +211,7 @@ name|std
 operator|::
 name|string
 operator|&
-name|GCCBinary
+name|CCBinary
 argument_list|,
 specifier|const
 name|std
@@ -290,7 +290,7 @@ operator|::
 name|string
 operator|>
 operator|&
-name|GCCArgs
+name|CCArgs
 operator|=
 name|std
 operator|::
@@ -346,7 +346,7 @@ operator|::
 name|string
 operator|>
 operator|&
-name|ArgsForGCC
+name|ArgsForCC
 argument_list|,
 name|std
 operator|::
@@ -393,7 +393,7 @@ name|std
 operator|::
 name|string
 operator|&
-name|GCCBinary
+name|CCBinary
 argument_list|,
 specifier|const
 name|std
@@ -419,7 +419,7 @@ operator|::
 name|string
 operator|>
 operator|*
-name|GCCArgs
+name|CCArgs
 operator|=
 name|nullptr
 argument_list|,
@@ -553,11 +553,11 @@ literal|0
 argument_list|)
 block|{}
 comment|/// OutputCode - Compile the specified program from bitcode to code
-comment|/// understood by the GCC driver (either C or asm).  If the code generator
+comment|/// understood by the CC driver (either C or asm).  If the code generator
 comment|/// fails, it sets Error, otherwise, this function returns the type of code
 comment|/// emitted.
 name|virtual
-name|GCC
+name|CC
 operator|::
 name|FileType
 name|OutputCode
@@ -580,7 +580,7 @@ operator|=
 literal|"OutputCode not supported by this AbstractInterpreter!"
 block|;
 return|return
-name|GCC
+name|CC
 operator|::
 name|AsmFile
 return|;
@@ -643,7 +643,7 @@ operator|::
 name|string
 operator|>
 operator|&
-name|GCCArgs
+name|CCArgs
 operator|=
 name|std
 operator|::
@@ -720,9 +720,9 @@ operator|>
 name|ToolArgs
 block|;
 comment|// Extra args to pass to LLC.
-name|GCC
+name|CC
 operator|*
-name|gcc
+name|cc
 block|;
 name|bool
 name|UseIntegratedAssembler
@@ -733,7 +733,7 @@ name|LLC
 argument_list|(
 argument|const std::string&llcPath
 argument_list|,
-argument|GCC *Gcc
+argument|CC *cc
 argument_list|,
 argument|const std::vector<std::string> *Args
 argument_list|,
@@ -745,9 +745,9 @@ argument_list|(
 name|llcPath
 argument_list|)
 block|,
-name|gcc
+name|cc
 argument_list|(
-name|Gcc
+name|cc
 argument_list|)
 block|,
 name|UseIntegratedAssembler
@@ -776,7 +776,7 @@ argument_list|()
 name|override
 block|{
 name|delete
-name|gcc
+name|cc
 block|; }
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
@@ -809,7 +809,7 @@ argument|const std::string&OutputFile
 argument_list|,
 argument|std::string *Error
 argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                        std::vector<std::string>()
+argument|const std::vector<std::string>&CCArgs =                        std::vector<std::string>()
 argument_list|,
 argument|const std::vector<std::string>&SharedLibs =                         std::vector<std::string>()
 argument_list|,
@@ -822,10 +822,10 @@ argument_list|)
 name|override
 block|;
 comment|/// OutputCode - Compile the specified program from bitcode to code
-comment|/// understood by the GCC driver (either C or asm).  If the code generator
+comment|/// understood by the CC driver (either C or asm).  If the code generator
 comment|/// fails, it sets Error, otherwise, this function returns the type of code
 comment|/// emitted.
-name|GCC
+name|CC
 operator|::
 name|FileType
 name|OutputCode

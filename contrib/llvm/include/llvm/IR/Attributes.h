@@ -143,6 +143,9 @@ expr|struct
 name|DenseMapInfo
 expr_stmt|;
 name|class
+name|Function
+decl_stmt|;
+name|class
 name|LLVMContext
 decl_stmt|;
 name|class
@@ -182,149 +185,12 @@ comment|// IR-Level Attributes
 name|None
 block|,
 comment|///< No attributes have been set
-name|Alignment
-block|,
-comment|///< Alignment of parameter (5 bits)
-comment|///< stored as log2 of alignment with +1 bias
-comment|///< 0 means unaligned (different from align(1))
-name|AlwaysInline
-block|,
-comment|///< inline=always
-name|Builtin
-block|,
-comment|///< Callee is recognized as a builtin, despite
-comment|///< nobuiltin attribute on its declaration.
-name|ByVal
-block|,
-comment|///< Pass structure by value
-name|InAlloca
-block|,
-comment|///< Pass structure in an alloca
-name|Cold
-block|,
-comment|///< Marks function as being in a cold path.
-name|Convergent
-block|,
-comment|///< Can only be moved to control-equivalent blocks
-name|InlineHint
-block|,
-comment|///< Source said inlining was desirable
-name|InReg
-block|,
-comment|///< Force argument to be passed in register
-name|JumpTable
-block|,
-comment|///< Build jump-instruction tables and replace refs.
-name|MinSize
-block|,
-comment|///< Function must be optimized for size first
-name|Naked
-block|,
-comment|///< Naked function
-name|Nest
-block|,
-comment|///< Nested function static chain
-name|NoAlias
-block|,
-comment|///< Considered to not alias after call
-name|NoBuiltin
-block|,
-comment|///< Callee isn't recognized as a builtin
-name|NoCapture
-block|,
-comment|///< Function creates no aliases of pointer
-name|NoDuplicate
-block|,
-comment|///< Call cannot be duplicated
-name|NoImplicitFloat
-block|,
-comment|///< Disable implicit floating point insts
-name|NoInline
-block|,
-comment|///< inline=never
-name|NonLazyBind
-block|,
-comment|///< Function is called early and/or
-comment|///< often, so lazy binding isn't worthwhile
-name|NonNull
-block|,
-comment|///< Pointer is known to be not null
-name|Dereferenceable
-block|,
-comment|///< Pointer is known to be dereferenceable
-name|DereferenceableOrNull
-block|,
-comment|///< Pointer is either null or dereferenceable
-name|NoRedZone
-block|,
-comment|///< Disable redzone
-name|NoReturn
-block|,
-comment|///< Mark the function as not returning
-name|NoUnwind
-block|,
-comment|///< Function doesn't unwind stack
-name|OptimizeForSize
-block|,
-comment|///< opt_size
-name|OptimizeNone
-block|,
-comment|///< Function must not be optimized.
-name|ReadNone
-block|,
-comment|///< Function does not access memory
-name|ReadOnly
-block|,
-comment|///< Function only reads from memory
-name|ArgMemOnly
-block|,
-comment|///< Funciton can access memory only using pointers
-comment|///< based on its arguments.
-name|Returned
-block|,
-comment|///< Return value is always equal to this argument
-name|ReturnsTwice
-block|,
-comment|///< Function can return twice
-name|SExt
-block|,
-comment|///< Sign extended before/after call
-name|StackAlignment
-block|,
-comment|///< Alignment of stack for function (3 bits)
-comment|///< stored as log2 of alignment with +1 bias 0
-comment|///< means unaligned (different from
-comment|///< alignstack=(1))
-name|StackProtect
-block|,
-comment|///< Stack protection.
-name|StackProtectReq
-block|,
-comment|///< Stack protection required.
-name|StackProtectStrong
-block|,
-comment|///< Strong Stack protection.
-name|SafeStack
-block|,
-comment|///< Safe Stack protection.
-name|StructRet
-block|,
-comment|///< Hidden pointer to structure to return
-name|SanitizeAddress
-block|,
-comment|///< AddressSanitizer is on.
-name|SanitizeThread
-block|,
-comment|///< ThreadSanitizer is on.
-name|SanitizeMemory
-block|,
-comment|///< MemorySanitizer is on.
-name|UWTable
-block|,
-comment|///< Function must be in a unwind table
-name|ZExt
-block|,
-comment|///< Zero extended before/after call
+define|#
+directive|define
+name|GET_ATTR_ENUM
+include|#
+directive|include
+file|"llvm/IR/Attributes.inc"
 name|EndAttrKinds
 comment|///< Sentinal value useful for loops
 block|}
@@ -526,14 +392,14 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns the number of dereferenceable bytes from the
-comment|/// dereferenceable attribute (or zero if unknown).
+comment|/// dereferenceable attribute.
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns the number of dereferenceable_or_null bytes from the
-comment|/// dereferenceable_or_null attribute (or zero if unknown).
+comment|/// dereferenceable_or_null attribute.
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|()
@@ -876,6 +742,26 @@ name|Kind
 argument_list|,
 name|StringRef
 name|Value
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Add an attribute to the attribute set at the given indices. Because
+comment|/// attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|Attribute
+name|A
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1749,8 +1635,8 @@ return|return
 name|StackAlignment
 return|;
 block|}
-comment|/// \brief Retrieve the number of dereferenceable bytes, if the dereferenceable
-comment|/// attribute exists (zero is returned otherwise).
+comment|/// \brief Retrieve the number of dereferenceable bytes, if the
+comment|/// dereferenceable attribute exists (zero is returned otherwise).
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|()
@@ -2033,10 +1919,39 @@ comment|/// \brief Which attributes cannot be applied to a type.
 name|AttrBuilder
 name|typeIncompatible
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty
+parameter_list|)
+function_decl|;
+comment|/// \returns Return true if the two functions have compatible target-independent
+comment|/// attributes for inlining purposes.
+name|bool
+name|areInlineCompatible
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|Caller
+parameter_list|,
+specifier|const
+name|Function
+modifier|&
+name|Callee
+parameter_list|)
+function_decl|;
+comment|/// \brief Merge caller's and callee's attributes.
+name|void
+name|mergeAttributesForInlining
+parameter_list|(
+name|Function
+modifier|&
+name|Caller
+parameter_list|,
+specifier|const
+name|Function
+modifier|&
+name|Callee
 parameter_list|)
 function_decl|;
 block|}

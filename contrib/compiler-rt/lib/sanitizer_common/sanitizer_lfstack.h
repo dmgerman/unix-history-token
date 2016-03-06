@@ -259,12 +259,11 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|cur
-operator|==
-literal|0
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|T
 modifier|*
@@ -378,7 +377,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef SANITIZER_LFSTACK_H
+comment|// SANITIZER_LFSTACK_H
 end_comment
 
 end_unit

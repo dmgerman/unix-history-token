@@ -44,15 +44,10 @@ block|{
 comment|//++ ============================================================================
 comment|// Details: MI Command are instantiated and registered automatically with the
 comment|//          Command Factory
-comment|// Gotchas: None.
-comment|// Authors: Illya Rudkin 18/02/2014.
-comment|// Changes: None.
 comment|//--
 name|bool
 name|RegisterAll
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

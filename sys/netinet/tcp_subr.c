@@ -4799,7 +4799,7 @@ endif|#
 directive|endif
 name|TCP_PROBE3
 argument_list|(
-name|debug__input
+name|debug__output
 argument_list|,
 name|tp
 argument_list|,

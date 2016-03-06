@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/CodeGenOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -132,6 +138,8 @@ operator|>
 name|getCompilerRT
 argument_list|(
 argument|const ToolChain&TC
+argument_list|,
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|StringRef Component
 argument_list|,
@@ -229,6 +237,8 @@ argument_list|,
 argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ToolChain *AuxToolChain
 argument_list|)
 specifier|const
 block|;
@@ -244,6 +254,8 @@ block|;
 name|void
 name|AddARMTargetArgs
 argument_list|(
+argument|const llvm::Triple&Triple
+argument_list|,
 argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
@@ -323,7 +335,16 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
-block|;      enum
+block|;
+name|void
+name|AddWebAssemblyTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;    enum
 name|RewriteKind
 block|{
 name|RK_None
@@ -350,6 +371,10 @@ argument_list|(
 argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|,
+argument|enum CodeGenOptions::DebugInfoKind *DebugInfoKind
+argument_list|,
+argument|bool *EmitCodeView
 argument_list|)
 specifier|const
 block|;
@@ -453,7 +478,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 comment|/// \brief Clang integrated assembler tool.
 name|class
@@ -540,7 +565,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 comment|/// \brief Base class for all GNU tools that provide the same behavior when
 comment|/// it comes to response files support
@@ -631,6 +656,19 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
+comment|// A gcc tool has an "integrated" assembler that it will call to produce an
+comment|// object. Let it use that assembler so that we don't have to deal with
+comment|// assembly syntax incompatibilities.
+name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|ConstructJob
 argument_list|(
@@ -662,7 +700,7 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -719,7 +757,7 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -776,7 +814,7 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -833,7 +871,7 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 comment|// end namespace gcc
@@ -980,10 +1018,134 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 comment|// end namespace hexagon.
+name|namespace
+name|amdgpu
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+range|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"amdgpu::Linker"
+argument_list|,
+literal|"ld.lld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
+comment|// end namespace amdgpu
+name|namespace
+name|wasm
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+range|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|explicit
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+block|;
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
+comment|// end namespace wasm
 name|namespace
 name|arm
 block|{
@@ -1010,9 +1172,7 @@ argument_list|,
 argument|const llvm::Triple&Triple
 argument_list|)
 expr_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getARMCPUForMArch
 argument_list|(
 name|StringRef
@@ -1026,18 +1186,23 @@ operator|&
 name|Triple
 argument_list|)
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getLLVMArchSuffixForARM
-parameter_list|(
+argument_list|(
 name|StringRef
 name|CPU
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Arch
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
 name|void
 name|appendEBLinkFlags
 argument_list|(
@@ -1063,6 +1228,7 @@ name|Triple
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace arm
 name|namespace
 name|mips
 block|{
@@ -1079,6 +1245,18 @@ literal|2
 block|}
 name|NanEncoding
 typedef|;
+name|enum
+name|class
+name|FloatABI
+block|{
+name|Invalid
+operator|,
+name|Soft
+operator|,
+name|Hard
+operator|,
+block|}
+empty_stmt|;
 name|NanEncoding
 name|getSupportedNanEncoding
 parameter_list|(
@@ -1115,6 +1293,28 @@ operator|&
 name|ABIName
 argument_list|)
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|getMipsABILibSuffix
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+expr_stmt|;
 name|bool
 name|hasMipsAbiArg
 argument_list|(
@@ -1182,7 +1382,9 @@ argument_list|,
 name|StringRef
 name|ABIName
 argument_list|,
-name|StringRef
+name|mips
+operator|::
+name|FloatABI
 name|FloatABI
 argument_list|)
 decl_stmt|;
@@ -1211,11 +1413,14 @@ argument_list|,
 name|StringRef
 name|ABIName
 argument_list|,
-name|StringRef
+name|mips
+operator|::
+name|FloatABI
 name|FloatABI
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace mips
 name|namespace
 name|ppc
 block|{
@@ -1238,6 +1443,7 @@ name|Value
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace ppc
 comment|/// cloudabi -- Directly call GNU Binutils linker
 name|namespace
 name|cloudabi
@@ -1470,7 +1676,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1561,7 +1767,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1616,7 +1822,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1681,7 +1887,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1736,8 +1942,9 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
-block|;  }
+block|; }
+block|; }
+comment|// end namespace darwin
 comment|/// openbsd -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|openbsd
@@ -1860,7 +2067,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace openbsd
 comment|/// bitrig -- Directly call GNU Binutils assembler and linker
@@ -1985,7 +2192,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace bitrig
 comment|/// freebsd -- Directly call GNU Binutils assembler and linker
@@ -2110,7 +2317,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace freebsd
 comment|/// netbsd -- Directly call GNU Binutils assembler and linker
@@ -2235,7 +2442,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace netbsd
 comment|/// Directly call GNU Binutils' assembler and linker.
@@ -2360,8 +2567,9 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
-block|;   }
+block|; }
+block|; }
+comment|// end namespace gnutools
 name|namespace
 name|nacltools
 block|{
@@ -2408,14 +2616,14 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Linker
 operator|:
 name|public
-name|Tool
+name|GnuTool
 block|{
 name|public
 operator|:
@@ -2427,7 +2635,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|GnuTool
 argument_list|(
 literal|"NaCl::Linker"
 argument_list|,
@@ -2473,8 +2681,9 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
 block|; }
+block|; }
+comment|// end namespace nacltools
 comment|/// minix -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|minix
@@ -2597,7 +2806,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace minix
 comment|/// solaris -- Directly call Solaris assembler and linker
@@ -2722,7 +2931,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace solaris
 comment|/// dragonfly -- Directly call GNU Binutils assembler and linker
@@ -2847,7 +3056,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|; }
 comment|// end namespace dragonfly
 comment|/// Visual studio tools.
@@ -3034,7 +3243,7 @@ argument_list|,
 argument|const char *LinkingOutput
 argument_list|)
 specifier|const
-block|;   }
+block|; }
 block|; }
 comment|// end namespace visualstudio
 comment|/// MinGW -- Directly call GNU Binutils assembler and linker
@@ -3175,9 +3384,53 @@ block|; }
 comment|// end namespace MinGW
 name|namespace
 name|arm
+block|{ enum
+name|class
+name|FloatABI
 block|{
-name|StringRef
+name|Invalid
+block|,
+name|Soft
+block|,
+name|SoftFP
+block|,
+name|Hard
+block|, }
+block|;
+name|FloatABI
 name|getARMFloatABI
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|; }
+comment|// end namespace arm
+name|namespace
+name|ppc
+block|{ enum
+name|class
+name|FloatABI
+block|{
+name|Invalid
+block|,
+name|Soft
+block|,
+name|Hard
+block|, }
+block|;
+name|FloatABI
+name|getPPCFloatABI
 argument_list|(
 specifier|const
 name|Driver
@@ -3192,15 +3445,9 @@ operator|::
 name|ArgList
 operator|&
 name|Args
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
 argument_list|)
 block|; }
+comment|// end namespace ppc
 name|namespace
 name|XCore
 block|{
@@ -3325,8 +3572,8 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
-block|;   }
+block|; }
+block|; }
 comment|// end namespace XCore.
 name|namespace
 name|CrossWindows
@@ -3384,7 +3631,7 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -3453,6 +3700,7 @@ specifier|const
 name|override
 block|; }
 block|; }
+comment|// end namespace CrossWindows
 comment|/// SHAVE tools -- Directly call moviCompile and moviAsm
 name|namespace
 name|SHAVE
@@ -3569,6 +3817,207 @@ name|override
 block|; }
 block|; }
 comment|// end namespace SHAVE
+comment|/// The Myriad toolchain uses tools that are in two different namespaces.
+comment|/// The Compiler and Assembler as defined above are in the SHAVE namespace,
+comment|/// whereas the linker, which accepts code for a mixture of Sparc and SHAVE,
+comment|/// is in the Myriad namespace.
+name|namespace
+name|Myriad
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+operator|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"shave::Linker"
+argument_list|,
+literal|"ld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace Myriad
+name|namespace
+name|PS4cpu
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"PS4cpu::Assemble"
+argument_list|,
+literal|"assembler"
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"PS4cpu::Link"
+argument_list|,
+literal|"linker"
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace PS4cpu
 block|}
 comment|// end namespace tools
 block|}
@@ -3584,6 +4033,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LIB_DRIVER_TOOLS_H
+end_comment
 
 end_unit
 

@@ -1045,6 +1045,24 @@ operator|&
 name|Dst
 argument_list|)
 block|;
+comment|/// VisitLambdaExpr - Transfer function logic for LambdaExprs.
+name|void
+name|VisitLambdaExpr
+argument_list|(
+specifier|const
+name|LambdaExpr
+operator|*
+name|LE
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+block|;
 comment|/// VisitBinaryOperator - Transfer function logic for binary operators.
 name|void
 name|VisitBinaryOperator
@@ -2109,6 +2127,49 @@ argument_list|,
 argument|const Expr *E
 argument_list|,
 argument|const Expr *ResultE = nullptr
+argument_list|)
+block|;
+comment|/// For a DeclStmt or CXXInitCtorInitializer, walk backward in the current CFG
+comment|/// block to find the constructor expression that directly constructed into
+comment|/// the storage for this statement. Returns null if the constructor for this
+comment|/// statement created a temporary object region rather than directly
+comment|/// constructing into an existing region.
+specifier|const
+name|CXXConstructExpr
+operator|*
+name|findDirectConstructorForCurrentCFGElement
+argument_list|()
+block|;
+comment|/// For a CXXConstructExpr, walk forward in the current CFG block to find the
+comment|/// CFGElement for the DeclStmt or CXXInitCtorInitializer for which is
+comment|/// directly constructed by this constructor. Returns None if the current
+comment|/// constructor expression did not directly construct into an existing
+comment|/// region.
+name|Optional
+operator|<
+name|CFGElement
+operator|>
+name|findElementDirectlyInitializedByCurrentConstructor
+argument_list|()
+block|;
+comment|/// For a given constructor, look forward in the current CFG block to
+comment|/// determine the region into which an object will be constructed by \p CE.
+comment|/// Returns either a field or local variable region if the object will be
+comment|/// directly constructed in an existing region or a temporary object region
+comment|/// if not.
+specifier|const
+name|MemRegion
+operator|*
+name|getRegionForConstructedObject
+argument_list|(
+specifier|const
+name|CXXConstructExpr
+operator|*
+name|CE
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
 argument_list|)
 block|; }
 decl_stmt|;

@@ -62,18 +62,6 @@ comment|// Details: MI common code utility class. File handling.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 10/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -90,18 +78,14 @@ operator|:
 specifier|static
 name|char
 name|GetSlash
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|// Methods:
 name|public
 operator|:
 comment|/* ctor */
 name|CMIUtilFileStd
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|//
 name|bool
@@ -136,15 +120,11 @@ argument_list|)
 block|;
 name|void
 name|Close
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 name|bool
 name|IsOk
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|bool
@@ -158,9 +138,7 @@ specifier|const
 name|CMIUtilString
 operator|&
 name|GetLineReturn
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 specifier|static
@@ -180,9 +158,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMIUtilFileStd
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Attributes:

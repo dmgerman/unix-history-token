@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValueString.h --------------------------------------*- C++ -*-===//
+comment|//===-- OptionValueString.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ name|OptionValueString
 argument_list|(
 argument|ValidatorCallback validator
 argument_list|,
-argument|void* baton = NULL
+argument|void* baton = nullptr
 argument_list|)
 operator|:
 name|OptionValue
@@ -293,7 +293,7 @@ argument|const char *value
 argument_list|,
 argument|ValidatorCallback validator
 argument_list|,
-argument|void* baton = NULL
+argument|void* baton = nullptr
 argument_list|)
 end_macro
 
@@ -368,7 +368,7 @@ name|void
 operator|*
 name|baton
 operator|=
-name|NULL
+name|nullptr
 operator|)
 operator|:
 name|OptionValue
@@ -430,22 +430,39 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_expr_stmt
-unit|}          virtual
-operator|~
+begin_macro
+unit|}          ~
 name|OptionValueString
 argument_list|()
-block|{     }
+end_macro
+
+begin_expr_stmt
+name|override
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//---------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|// Virtual subclass pure virtual overrides
+end_comment
+
+begin_comment
 comment|//---------------------------------------------------------------------
-name|virtual
+end_comment
+
+begin_expr_stmt
 name|OptionValue
 operator|::
 name|Type
 name|GetType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|eTypeString
@@ -453,28 +470,27 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|void
 name|DumpValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExecutionContext
-modifier|*
+operator|*
 name|exe_ctx
-parameter_list|,
+argument_list|,
 name|Stream
-modifier|&
+operator|&
 name|strm
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|dump_mask
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|Error
 name|SetValueFromString
 argument_list|(
@@ -488,14 +504,15 @@ name|op
 operator|=
 name|eVarSetOperationAssign
 argument_list|)
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|virtual
 name|bool
 name|Clear
 parameter_list|()
+function|override
 block|{
 name|m_current_value
 operator|=
@@ -512,13 +529,13 @@ block|}
 end_function
 
 begin_expr_stmt
-name|virtual
 name|lldb
 operator|::
 name|OptionValueSP
 name|DeepCopy
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 

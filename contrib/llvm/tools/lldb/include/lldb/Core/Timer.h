@@ -43,14 +43,9 @@ directive|define
 name|liblldb_Timer_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
 
 begin_include
 include|#
@@ -64,11 +59,29 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<string>
+file|<atomic>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -102,11 +115,6 @@ name|Timer
 block|{
 name|public
 label|:
-specifier|static
-name|void
-name|Initialize
-parameter_list|()
-function_decl|;
 comment|//--------------------------------------------------------------
 comment|/// Default constructor.
 comment|//--------------------------------------------------------------
@@ -133,12 +141,17 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|//--------------------------------------------------------------
-comment|/// Desstructor
+comment|/// Destructor
 comment|//--------------------------------------------------------------
 operator|~
 name|Timer
 argument_list|()
 expr_stmt|;
+specifier|static
+name|void
+name|Initialize
+parameter_list|()
+function_decl|;
 name|void
 name|Dump
 parameter_list|()
@@ -201,9 +214,6 @@ name|uint64_t
 name|GetTimerElapsedNanoSeconds
 parameter_list|()
 function_decl|;
-comment|//--------------------------------------------------------------
-comment|/// Member variables
-comment|//--------------------------------------------------------------
 specifier|const
 name|char
 modifier|*
@@ -224,13 +234,29 @@ name|m_timer_ticks
 decl_stmt|;
 comment|// Ticks for this timer that do not include when other timers below this one are running
 specifier|static
-name|uint32_t
-name|g_depth
-decl_stmt|;
+name|std
+operator|::
+name|atomic
+operator|<
+name|bool
+operator|>
+name|g_quiet
+expr_stmt|;
 specifier|static
-name|uint32_t
+name|std
+operator|::
+name|atomic
+operator|<
+name|unsigned
+operator|>
 name|g_display_depth
-decl_stmt|;
+expr_stmt|;
+specifier|static
+name|std
+operator|::
+name|mutex
+name|g_file_mutex
+expr_stmt|;
 specifier|static
 name|FILE
 modifier|*
@@ -264,7 +290,9 @@ block|{     }
 operator|~
 name|IntervalTimer
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|uint64_t
 name|GetElapsedNanoSeconds
 argument_list|()
@@ -336,7 +364,7 @@ name|char
 modifier|*
 name|unit
 init|=
-name|NULL
+name|nullptr
 decl_stmt|;
 name|float
 name|elapsed_value
@@ -484,16 +512,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #if defined(__cplusplus)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #ifndef liblldb_Timer_h_
+comment|// liblldb_Timer_h_
 end_comment
 
 end_unit

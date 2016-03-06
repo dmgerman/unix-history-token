@@ -119,12 +119,21 @@ directive|include
 file|"llvm/Support/Valgrind.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|raw_fd_ostream
 decl_stmt|;
 name|class
 name|Statistic
@@ -762,6 +771,22 @@ name|AreStatisticsEnabled
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Return a file stream to print our output on.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_fd_ostream
+operator|>
+name|CreateInfoOutputFile
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Print statistics to the file returned by CreateInfoOutputFile().

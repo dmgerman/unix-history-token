@@ -116,7 +116,7 @@ specifier|const
 name|unsigned
 name|MAX_SUBTARGET_FEATURES
 init|=
-literal|64
+literal|128
 decl_stmt|;
 name|class
 name|FeatureBitset
@@ -172,29 +172,11 @@ for|for
 control|(
 name|auto
 name|I
-init|=
+range|:
 name|Init
-operator|.
-name|begin
-argument_list|()
-init|,
-name|E
-init|=
-name|Init
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
 name|set
 argument_list|(
-operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -246,6 +228,32 @@ name|Key
 argument_list|)
 operator|<
 name|S
+return|;
+block|}
+comment|// Compare routine for std::is_sorted.
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|SubtargetFeatureKV
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|Key
+argument_list|)
+operator|<
+name|StringRef
+argument_list|(
+name|Other
+operator|.
+name|Key
+argument_list|)
 return|;
 block|}
 expr|}
@@ -341,23 +349,24 @@ argument_list|,
 argument|bool Enable = true
 argument_list|)
 block|;
-comment|/// ToggleFeature - Toggle a feature and returns the newly updated feature
-comment|/// bits.
-name|FeatureBitset
+comment|/// ToggleFeature - Toggle a feature and update the feature bits.
+specifier|static
+name|void
 name|ToggleFeature
 argument_list|(
-argument|FeatureBitset Bits
+argument|FeatureBitset&Bits
 argument_list|,
 argument|StringRef String
 argument_list|,
 argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
 block|;
-comment|/// Apply the feature flag and return the newly updated feature bits.
-name|FeatureBitset
+comment|/// Apply the feature flag and update the feature bits.
+specifier|static
+name|void
 name|ApplyFeatureFlag
 argument_list|(
-argument|FeatureBitset Bits
+argument|FeatureBitset&Bits
 argument_list|,
 argument|StringRef Feature
 argument_list|,

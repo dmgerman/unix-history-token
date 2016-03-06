@@ -117,10 +117,10 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectMultiwordBreakpoint
 argument_list|()
+name|override
 block|;
 specifier|static
 name|void

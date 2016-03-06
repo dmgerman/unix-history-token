@@ -126,6 +126,16 @@ return|return
 name|ShaderType
 return|;
 block|}
+name|bool
+name|isKernel
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: Assume everything is a kernel until function calls are supported.
+return|return
+name|true
+return|;
+block|}
 name|unsigned
 name|ScratchSize
 block|;

@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -100,6 +106,8 @@ argument_list|,
 argument|const MCExpr *Val
 argument_list|,
 argument|unsigned Sz
+argument_list|,
+argument|SMLoc Loc_
 argument_list|)
 block|:
 name|Label
@@ -114,7 +122,12 @@ argument_list|)
 operator|,
 name|Size
 argument_list|(
-argument|Sz
+name|Sz
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|Loc_
 argument_list|)
 block|{}
 name|MCSymbol
@@ -128,6 +141,9 @@ name|Value
 decl_stmt|;
 name|unsigned
 name|Size
+decl_stmt|;
+name|SMLoc
+name|Loc
 decl_stmt|;
 block|}
 struct|;
@@ -175,6 +191,9 @@ name|Context
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|SMLoc
+name|Loc
 parameter_list|)
 function_decl|;
 comment|// Emit the contents of the constant pool using the provided streamer.
@@ -257,6 +276,9 @@ name|Expr
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|SMLoc
+name|Loc
 parameter_list|)
 function_decl|;
 name|private

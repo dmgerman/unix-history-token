@@ -279,6 +279,78 @@ case|:
 case|case
 name|D8
 case|:
+case|case
+name|D7
+case|:
+case|case
+name|D6
+case|:
+case|case
+name|D5
+case|:
+case|case
+name|D4
+case|:
+case|case
+name|D3
+case|:
+case|case
+name|D2
+case|:
+case|case
+name|D1
+case|:
+case|case
+name|D0
+case|:
+case|case
+name|D31
+case|:
+case|case
+name|D30
+case|:
+case|case
+name|D29
+case|:
+case|case
+name|D28
+case|:
+case|case
+name|D27
+case|:
+case|case
+name|D26
+case|:
+case|case
+name|D25
+case|:
+case|case
+name|D24
+case|:
+case|case
+name|D23
+case|:
+case|case
+name|D22
+case|:
+case|case
+name|D21
+case|:
+case|case
+name|D20
+case|:
+case|case
+name|D19
+case|:
+case|case
+name|D18
+case|:
+case|case
+name|D17
+case|:
+case|case
+name|D16
+case|:
 return|return
 name|true
 return|;
@@ -374,6 +446,16 @@ specifier|const
 name|override
 block|;
 specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegsViaCopy
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
 name|uint32_t
 operator|*
 name|getCallPreservedMask
@@ -390,6 +472,16 @@ name|uint32_t
 operator|*
 name|getNoPreservedMask
 argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getTLSCallPreservedMask
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
 specifier|const
 block|;
 comment|/// getThisReturnPreservedMask - Returns a call preserved mask specific to the
@@ -476,6 +568,8 @@ argument_list|,
 argument|const MachineFunction&MF
 argument_list|,
 argument|const VirtRegMap *VRM
+argument_list|,
+argument|const LiveRegMatrix *Matrix
 argument_list|)
 specifier|const
 name|override
@@ -501,13 +595,6 @@ specifier|const
 block|;
 name|bool
 name|canRealignStack
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

@@ -260,7 +260,7 @@ operator|>
 name|MetadataMapType
 expr_stmt|;
 name|MetadataMapType
-name|MDValueMap
+name|MetadataMap
 decl_stmt|;
 name|bool
 name|HasMDString
@@ -361,7 +361,7 @@ comment|/// before incorporation.
 name|unsigned
 name|NumModuleValues
 decl_stmt|;
-comment|/// When a function is incorporated, this is the size of the MDValues list
+comment|/// When a function is incorporated, this is the size of the Metadatas list
 comment|/// before incorporation.
 name|unsigned
 name|NumModuleMDs
@@ -498,12 +498,24 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|MDValueMap
+name|MetadataMap
 operator|.
 name|lookup
 argument_list|(
 name|MD
 argument_list|)
+return|;
+block|}
+name|unsigned
+name|numMDs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MDs
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 name|bool

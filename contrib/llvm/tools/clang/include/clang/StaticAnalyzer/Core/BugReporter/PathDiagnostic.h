@@ -470,7 +470,7 @@ name|isPoint
 block|;
 name|PathDiagnosticRange
 argument_list|(
-argument|const SourceRange&R
+argument|SourceRange R
 argument_list|,
 argument|bool isP = false
 argument_list|)
@@ -1798,10 +1798,6 @@ specifier|const
 block|;
 name|public
 operator|:
-operator|~
-name|PathPieces
-argument_list|()
-block|;
 name|PathPieces
 name|flatten
 argument_list|(

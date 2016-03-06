@@ -43,31 +43,32 @@ directive|define
 name|liblldb_ConstString_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
+begin_comment
+comment|// C++ Includes
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -103,7 +104,7 @@ argument_list|()
 operator|:
 name|m_string
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
@@ -201,12 +202,14 @@ comment|//------------------------------------------------------------------
 operator|~
 name|ConstString
 argument_list|()
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// C string equality binary predicate function object for ConstString
 comment|/// objects.
 comment|//----------------------------------------------------------------------
-expr|struct
+struct|struct
 name|StringIsEqual
 block|{
 comment|//--------------------------------------------------------------
@@ -241,8 +244,8 @@ operator|==
 name|rhs
 return|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
 comment|//------------------------------------------------------------------
 comment|/// Convert to bool operator.
 comment|///
@@ -287,9 +290,9 @@ comment|///     A const reference to this object.
 comment|//------------------------------------------------------------------
 specifier|const
 name|ConstString
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|ConstString
@@ -388,14 +391,14 @@ operator|&
 name|rhs
 operator|)
 specifier|const
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get the string value as a C string.
 comment|///
 comment|/// Get the value of the contained string as a NULL terminated C
 comment|/// string value.
 comment|///
-comment|/// If \a value_if_empty is NULL, then NULL will be returned.
+comment|/// If \a value_if_empty is nullptr, then nullptr will be returned.
 comment|///
 comment|/// @return
 comment|///     Returns \a value_if_empty if the string is empty, otherwise
@@ -403,23 +406,27 @@ comment|///     the C string value contained in this object.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
-operator|*
+modifier|*
 name|AsCString
 argument_list|(
-argument|const char *value_if_empty = NULL
-argument_list|)
 specifier|const
+name|char
+operator|*
+name|value_if_empty
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|IsEmpty
 argument_list|()
-condition|)
-return|return
+condition|?
 name|value_if_empty
-return|;
-return|return
+else|:
 name|m_string
+operator|)
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -453,12 +460,12 @@ comment|/// Get the string value as a C string.
 comment|///
 comment|/// Get the value of the contained string as a NULL terminated C
 comment|/// string value. Similar to the ConstString::AsCString() function,
-comment|/// yet this function will always return NULL if the string is not
+comment|/// yet this function will always return nullptr if the string is not
 comment|/// valid. So this function is a direct accessor to the string
 comment|/// pointer value.
 comment|///
 comment|/// @return
-comment|///     Returns NULL the string is invalid, otherwise the C string
+comment|///     Returns nullptr the string is invalid, otherwise the C string
 comment|///     value contained in this object.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -499,7 +506,7 @@ parameter_list|()
 block|{
 name|m_string
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 comment|//------------------------------------------------------------------
@@ -544,14 +551,14 @@ comment|/// Dump the object description to a stream.
 comment|///
 comment|/// Dump the string value to the stream \a s. If the contained string
 comment|/// is empty, print \a value_if_empty to the stream instead. If
-comment|/// \a value_if_empty is NULL, then nothing will be dumped to the
+comment|/// \a value_if_empty is nullptr, then nothing will be dumped to the
 comment|/// stream.
 comment|///
 comment|/// @param[in] s
 comment|///     The stream that will be used to dump the object description.
 comment|///
 comment|/// @param[in] value_if_empty
-comment|///     The value to dump if the string is empty. If NULL, nothing
+comment|///     The value to dump if the string is empty. If nullptr, nothing
 comment|///     will be output to the stream.
 comment|//------------------------------------------------------------------
 name|void
@@ -566,7 +573,7 @@ name|char
 operator|*
 name|value_if_empty
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -600,7 +607,7 @@ block|{
 return|return
 name|m_string
 operator|==
-name|NULL
+name|nullptr
 operator|||
 name|m_string
 index|[
@@ -828,15 +835,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace lldb_private
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// #if defined(__cplusplus)
 end_comment
 
 begin_endif

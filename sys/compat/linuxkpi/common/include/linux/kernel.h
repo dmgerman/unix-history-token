@@ -651,6 +651,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|kstrtouint
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|({*(c) = strtol(a,0,b); 0;})
+end_define
+
+begin_define
+define|#
+directive|define
 name|min
 parameter_list|(
 name|x

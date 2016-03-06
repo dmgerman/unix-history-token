@@ -457,7 +457,7 @@ name|StringRef
 name|Str
 parameter_list|)
 block|{   }
-comment|/// \brief Callback invoked when a \#pragma gcc dianostic push directive
+comment|/// \brief Callback invoked when a \#pragma gcc diagnostic push directive
 comment|/// is read.
 name|virtual
 name|void
@@ -470,7 +470,7 @@ name|StringRef
 name|Namespace
 parameter_list|)
 block|{   }
-comment|/// \brief Callback invoked when a \#pragma gcc dianostic pop directive
+comment|/// \brief Callback invoked when a \#pragma gcc diagnostic pop directive
 comment|/// is read.
 name|virtual
 name|void
@@ -483,7 +483,7 @@ name|StringRef
 name|Namespace
 parameter_list|)
 block|{   }
-comment|/// \brief Callback invoked when a \#pragma gcc dianostic directive is read.
+comment|/// \brief Callback invoked when a \#pragma gcc diagnostic directive is read.
 name|virtual
 name|void
 name|PragmaDiagnostic

@@ -186,9 +186,6 @@ block|,
 comment|// ARM conditional move instructions.
 name|BCC_i64
 block|,
-name|RBIT
-block|,
-comment|// ARM bitreverse instruction
 name|SRL_FLAG
 block|,
 comment|// V,Flag = srl_flag X -> srl X, 1 + save carry out.
@@ -222,6 +219,9 @@ comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp.
+name|EH_SJLJ_SETUP_DISPATCH
+block|,
+comment|// SjLj exception handling setup_dispatch.
 name|TC_RETURN
 block|,
 comment|// Tail call return pseudo.
@@ -239,6 +239,9 @@ comment|// Preload
 name|WIN__CHKSTK
 block|,
 comment|// Windows' __chkstk call to do stack probing.
+name|WIN__DBZCHK
+block|,
+comment|// Windows' divide by zero check
 name|VCEQ
 block|,
 comment|// Vector compare equal.
@@ -397,15 +400,6 @@ comment|// operands need to be legalized.  Define an ARM-specific version of
 comment|// BUILD_VECTOR for this purpose.
 name|BUILD_VECTOR
 block|,
-comment|// Floating-point max and min:
-name|FMAX
-block|,
-name|FMIN
-block|,
-name|VMAXNM
-block|,
-name|VMINNM
-block|,
 comment|// Bit-field insert
 name|BFI
 block|,
@@ -417,6 +411,10 @@ name|VBICIMM
 block|,
 comment|// Vector bitwise select
 name|VBSL
+block|,
+comment|// Pseudo-instruction representing a memory copy using ldm/stm
+comment|// instructions.
+name|MEMCPY
 block|,
 comment|// Vector load N-element structure to all lanes:
 name|VLD2DUP
@@ -603,6 +601,15 @@ name|override
 block|;
 name|SDValue
 name|PerformCMOVCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|PerformCMOVToBFICombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -895,6 +902,18 @@ elseif|else
 if|if
 condition|(
 name|ConstraintCode
+operator|==
+literal|"o"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_o
+return|;
+elseif|else
+if|if
+condition|(
+name|ConstraintCode
 operator|.
 name|size
 argument_list|()
@@ -1133,9 +1152,23 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
-name|hasLoadLinkedStoreConditional
-argument_list|()
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
 specifier|const
 name|override
 block|;
@@ -1173,6 +1206,14 @@ argument_list|,
 argument|Value *Addr
 argument_list|,
 argument|AtomicOrdering Ord
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|emitAtomicCmpXchgNoStoreLLBalance
+argument_list|(
+argument|IRBuilder<>&Builder
 argument_list|)
 specifier|const
 name|override
@@ -1243,7 +1284,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
+name|TargetLoweringBase
+operator|::
+name|AtomicExpansionKind
 name|shouldExpandAtomicLoadInIR
 argument_list|(
 argument|LoadInst *LI
@@ -1261,10 +1304,18 @@ name|override
 block|;
 name|TargetLoweringBase
 operator|::
-name|AtomicRMWExpansionKind
+name|AtomicExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
 argument|AtomicRMWInst *AI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldExpandAtomicCmpXchgInIR
+argument_list|(
+argument|AtomicCmpXchgInst *AI
 argument_list|)
 specifier|const
 name|override
@@ -1284,6 +1335,18 @@ argument|Value *Idx
 argument_list|,
 argument|unsigned&Cost
 argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -1521,6 +1584,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerEH_SJLJ_SETUP_DISPATCH
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 name|SDValue
@@ -1625,6 +1700,18 @@ name|TLSModel
 operator|::
 name|Model
 name|model
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerGlobalTLSAddressDarwin
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1831,6 +1918,75 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerDIV_Windows
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|bool
+name|Signed
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|ExpandDIV_Windows
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|bool
+name|Signed
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|Results
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerWindowsDIVLibCall
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|bool
+name|Signed
+argument_list|,
+name|SDValue
+operator|&
+name|Chain
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerREM
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerDYNAMIC_STACKALLOC
 argument_list|(
 name|SDValue
@@ -1990,6 +2146,71 @@ name|SDValue
 name|ThisVal
 argument_list|)
 decl|const
+decl_stmt|;
+name|bool
+name|supportSplitCSR
+argument_list|(
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|MF
+operator|->
+name|getFunction
+argument_list|()
+operator|->
+name|getCallingConv
+argument_list|()
+operator|==
+name|CallingConv
+operator|::
+name|CXX_FAST_TLS
+operator|&&
+name|MF
+operator|->
+name|getFunction
+argument_list|()
+operator|->
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|NoUnwind
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeSplitCSR
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|Entry
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|insertCopiesSplitCSR
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|Entry
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|&
+name|Exits
+argument_list|)
+decl|const
+name|override
 decl_stmt|;
 name|SDValue
 name|LowerFormalArguments
@@ -2448,6 +2669,20 @@ decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|EmitLowered__chkstk
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitLowered__dbzchk
 argument_list|(
 name|MachineInstr
 operator|*

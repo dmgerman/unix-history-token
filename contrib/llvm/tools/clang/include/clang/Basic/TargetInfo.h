@@ -108,6 +108,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -320,7 +332,7 @@ block|;
 specifier|const
 name|char
 operator|*
-name|DescriptionString
+name|DataLayoutString
 block|;
 specifier|const
 name|char
@@ -384,6 +396,11 @@ literal|3
 block|;
 name|unsigned
 name|ComplexLongDoubleUsesFP2Ret
+operator|:
+literal|1
+block|;
+name|unsigned
+name|HasBuiltinMSVaList
 operator|:
 literal|1
 block|;
@@ -812,6 +829,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Return integer type with specified width.
+name|virtual
 name|IntType
 name|getIntTypeByWidth
 argument_list|(
@@ -822,6 +840,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// \brief Return the smallest integer type with at least the specified width.
+name|virtual
 name|IntType
 name|getLeastIntTypeByWidth
 argument_list|(
@@ -1639,13 +1658,14 @@ comment|/// Return information about target-specific builtins for
 comment|/// the current primary target, and info about which builtins are non-portable
 comment|/// across the current set of primary and secondary targets.
 name|virtual
-name|void
+name|ArrayRef
+operator|<
+name|Builtin
+operator|::
+name|Info
+operator|>
 name|getTargetBuiltins
-argument_list|(
-argument|const Builtin::Info *&Records
-argument_list|,
-argument|unsigned&NumRecords
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -1675,6 +1695,17 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// Returns whether or not type \c __builtin_ms_va_list type is
+comment|/// available on this target.
+name|bool
+name|hasBuiltinMSVaList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBuiltinMSVaList
+return|;
+block|}
 comment|/// \brief Returns whether the passed in string is a valid clobber in an
 comment|/// inline asm statement.
 comment|///
@@ -1758,6 +1789,16 @@ name|int
 name|Max
 block|;     }
 name|ImmRange
+block|;
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+name|int
+block|,
+literal|4
+operator|>
+name|ImmSet
 block|;
 name|std
 operator|::
@@ -1968,26 +2009,45 @@ operator|!=
 literal|0
 return|;
 block|}
-name|int
-name|getImmConstantMin
-argument_list|()
+name|bool
+name|isValidAsmImmediate
+argument_list|(
+argument|const llvm::APInt&Value
+argument_list|)
 specifier|const
 block|{
 return|return
+operator|(
+name|Value
+operator|.
+name|sge
+argument_list|(
 name|ImmRange
 operator|.
 name|Min
-return|;
-block|}
-name|int
-name|getImmConstantMax
-argument_list|()
-specifier|const
-block|{
-return|return
+argument_list|)
+operator|&&
+name|Value
+operator|.
+name|sle
+argument_list|(
 name|ImmRange
 operator|.
 name|Max
+argument_list|)
+operator|)
+operator|||
+name|ImmSet
+operator|.
+name|count
+argument_list|(
+name|Value
+operator|.
+name|getZExtValue
+argument_list|()
+argument_list|)
+operator|!=
+literal|0
 return|;
 block|}
 name|void
@@ -2054,6 +2114,68 @@ name|Max
 operator|=
 name|Max
 block|;     }
+name|void
+name|setRequiresImmediate
+argument_list|(
+argument|llvm::ArrayRef<int> Exacts
+argument_list|)
+block|{
+name|Flags
+operator||=
+name|CI_ImmediateConstant
+block|;
+for|for
+control|(
+name|int
+name|Exact
+range|:
+name|Exacts
+control|)
+name|ImmSet
+operator|.
+name|insert
+argument_list|(
+name|Exact
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setRequiresImmediate
+argument_list|(
+argument|int Exact
+argument_list|)
+block|{
+name|Flags
+operator||=
+name|CI_ImmediateConstant
+block|;
+name|ImmSet
+operator|.
+name|insert
+argument_list|(
+name|Exact
+argument_list|)
+block|;     }
+name|void
+name|setRequiresImmediate
+argument_list|()
+block|{
+name|Flags
+operator||=
+name|CI_ImmediateConstant
+block|;
+name|ImmRange
+operator|.
+name|Min
+operator|=
+name|INT_MIN
+block|;
+name|ImmRange
+operator|.
+name|Max
+operator|=
+name|INT_MAX
+block|;     }
 comment|/// \brief Indicate that this is an input operand that is tied to
 comment|/// the specified output operand.
 comment|///
@@ -2085,17 +2207,30 @@ comment|// Don't copy Name or constraint string.
 block|}
 expr|}
 block|;
-comment|// Validate the contents of the __builtin_cpu_supports(const char*) argument.
+comment|/// \brief Validate register name used for global register variables.
+comment|///
+comment|/// This function returns true if the register passed in RegName can be used
+comment|/// for global register variables on this target. In addition, it returns
+comment|/// true in HasSizeMismatch if the size of the register doesn't match the
+comment|/// variable size passed in RegSize.
 name|virtual
 name|bool
-name|validateCpuSupports
+name|validateGlobalRegisterVariable
 argument_list|(
-argument|StringRef Name
+argument|StringRef RegName
+argument_list|,
+argument|unsigned RegSize
+argument_list|,
+argument|bool&HasSizeMismatch
 argument_list|)
 specifier|const
 block|{
-return|return
+name|HasSizeMismatch
+operator|=
 name|false
+block|;
+return|return
+name|true
 return|;
 block|}
 comment|// validateOutputConstraint, validateInputConstraint - Checks that
@@ -2111,9 +2246,7 @@ block|;
 name|bool
 name|validateInputConstraint
 argument_list|(
-argument|ConstraintInfo *OutputConstraints
-argument_list|,
-argument|unsigned NumOutputs
+argument|MutableArrayRef<ConstraintInfo> OutputConstraints
 argument_list|,
 argument|ConstraintInfo&info
 argument_list|)
@@ -2173,14 +2306,24 @@ return|return
 name|true
 return|;
 block|}
+name|virtual
+name|bool
+name|validateAsmConstraint
+argument_list|(
+argument|const char *&Name
+argument_list|,
+argument|TargetInfo::ConstraintInfo&info
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
 name|bool
 name|resolveSymbolicName
 argument_list|(
 argument|const char *&Name
 argument_list|,
-argument|ConstraintInfo *OutputConstraints
-argument_list|,
-argument|unsigned NumOutputs
+argument|ArrayRef<ConstraintInfo> OutputConstraints
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -2227,6 +2370,17 @@ name|Constraint
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns a string of target-specific clobbers, in LLVM format.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getClobbers
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
 comment|/// \brief Returns true if NaN encoding is IEEE 754-2008.
 comment|/// Only MIPS allows a different encoding.
 name|virtual
@@ -2239,17 +2393,6 @@ return|return
 name|true
 return|;
 block|}
-comment|/// \brief Returns a string of target-specific clobbers, in LLVM format.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getClobbers
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// \brief Returns the target triple of the primary target.
 specifier|const
 name|llvm
@@ -2267,17 +2410,19 @@ block|}
 specifier|const
 name|char
 operator|*
-name|getTargetDescription
+name|getDataLayoutString
 argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|DescriptionString
+name|DataLayoutString
+operator|&&
+literal|"Uninitialized DataLayoutString!"
 argument_list|)
 block|;
 return|return
-name|DescriptionString
+name|DataLayoutString
 return|;
 block|}
 expr|struct
@@ -2374,16 +2519,24 @@ operator|&
 name|Opts
 argument_list|)
 block|;
-comment|/// \brief Get the default set of target features for the CPU;
-comment|/// this should include all legal feature strings on the target.
+comment|/// \brief Initialize the map with the default set of target features for the
+comment|/// CPU this should include all legal feature strings on the target.
+comment|///
+comment|/// \return False on error (invalid features).
 name|virtual
-name|void
-name|getDefaultFeatures
+name|bool
+name|initFeatureMap
 argument_list|(
 argument|llvm::StringMap<bool>&Features
+argument_list|,
+argument|DiagnosticsEngine&Diags
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|const std::vector<std::string>&FeatureVec
 argument_list|)
 specifier|const
-block|{   }
+block|;
 comment|/// \brief Get the ABI currently in use.
 name|virtual
 name|StringRef
@@ -2448,79 +2601,19 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Use this specified C++ ABI.
-comment|///
-comment|/// \return False on error (invalid C++ ABI name).
-name|bool
-name|setCXXABI
-argument_list|(
-argument|llvm::StringRef name
-argument_list|)
-block|{
-name|TargetCXXABI
-name|ABI
-block|;
-if|if
-condition|(
-operator|!
-name|ABI
-operator|.
-name|tryParse
-argument_list|(
-name|name
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|setCXXABI
-argument_list|(
-name|ABI
-argument_list|)
-return|;
-block|}
-comment|/// \brief Set the C++ ABI to be used by this implementation.
-comment|///
-comment|/// \return False on error (ABI not valid on this target)
-name|virtual
-name|bool
-name|setCXXABI
-parameter_list|(
-name|TargetCXXABI
-name|ABI
-parameter_list|)
-block|{
-name|TheCXXABI
-operator|=
-name|ABI
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 comment|/// \brief Enable or disable a specific target feature;
 comment|/// the feature name must be valid.
 name|virtual
 name|void
 name|setFeatureEnabled
 argument_list|(
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|bool
-operator|>
-operator|&
-name|Features
+argument|llvm::StringMap<bool>&Features
 argument_list|,
-name|StringRef
-name|Name
+argument|StringRef Name
 argument_list|,
-name|bool
-name|Enabled
+argument|bool Enabled
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|Features
 index|[
@@ -2528,8 +2621,7 @@ name|Name
 index|]
 operator|=
 name|Enabled
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Perform initialization based on the user configured
 comment|/// set of features (e.g., +sse4).
 comment|///
@@ -2537,26 +2629,17 @@ comment|/// The list is guaranteed to have at most one entry per feature.
 comment|///
 comment|/// The target may modify the features list, to change which options are
 comment|/// passed onwards to the backend.
+comment|/// FIXME: This part should be fixed so that we can change handleTargetFeatures
+comment|/// to merely a TargetInfo initialization routine.
 comment|///
 comment|/// \return  False on error.
 name|virtual
 name|bool
 name|handleTargetFeatures
 argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Features
+argument|std::vector<std::string>&Features
 argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
+argument|DiagnosticsEngine&Diags
 argument_list|)
 block|{
 return|return
@@ -2568,10 +2651,23 @@ name|virtual
 name|bool
 name|hasFeature
 argument_list|(
-name|StringRef
-name|Feature
+argument|StringRef Feature
 argument_list|)
-decl|const
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// \brief Validate the contents of the __builtin_cpu_supports(const char*)
+comment|// argument.
+name|virtual
+name|bool
+name|validateCpuSupports
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
 block|{
 return|return
 name|false
@@ -2681,10 +2777,9 @@ name|virtual
 name|int
 name|getEHDataRegisterNumber
 argument_list|(
-name|unsigned
-name|RegNo
+argument|unsigned RegNo
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|-
@@ -2749,7 +2844,7 @@ return|return
 name|BigEndian
 return|;
 block|}
-enum|enum
+expr|enum
 name|CallingConvMethodType
 block|{
 name|CCMT_Unknown
@@ -2758,17 +2853,16 @@ name|CCMT_Member
 block|,
 name|CCMT_NonMember
 block|}
-enum|;
+block|;
 comment|/// \brief Gets the default calling convention for the given target and
 comment|/// declaration context.
 name|virtual
 name|CallingConv
 name|getDefaultCallingConv
 argument_list|(
-name|CallingConvMethodType
-name|MT
+argument|CallingConvMethodType MT
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Not all targets will specify an explicit calling convention that we can
 comment|// express.  This will always do the right thing, even though it's not
@@ -2777,7 +2871,7 @@ return|return
 name|CC_C
 return|;
 block|}
-enum|enum
+expr|enum
 name|CallingConvCheckResult
 block|{
 name|CCCR_OK
@@ -2786,7 +2880,7 @@ name|CCCR_Warning
 block|,
 name|CCCR_Ignore
 block|,   }
-enum|;
+block|;
 comment|/// \brief Determines whether a given calling convention is valid for the
 comment|/// target. A calling convention can either be accepted, produce a warning
 comment|/// and be substituted with the default calling convention, or (someday)
@@ -2795,10 +2889,9 @@ name|virtual
 name|CallingConvCheckResult
 name|checkCallingConvention
 argument_list|(
-name|CallingConv
-name|CC
+argument|CallingConv CC
 argument_list|)
-decl|const
+specifier|const
 block|{
 switch|switch
 condition|(
@@ -2830,15 +2923,14 @@ name|false
 return|;
 block|}
 name|protected
-label|:
+operator|:
 name|virtual
 name|uint64_t
 name|getPointerWidthV
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|PointerWidth
@@ -2848,121 +2940,69 @@ name|virtual
 name|uint64_t
 name|getPointerAlignV
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|PointerAlign
 return|;
 block|}
 name|virtual
-name|enum
+expr|enum
 name|IntType
 name|getPtrDiffTypeV
 argument_list|(
-name|unsigned
-name|AddrSpace
+argument|unsigned AddrSpace
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|PtrDiffType
 return|;
 block|}
 name|virtual
-name|void
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
 name|getGCCRegNames
-argument_list|(
+argument_list|()
 specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-operator|&
-name|Names
-argument_list|,
-name|unsigned
-operator|&
-name|NumNames
-argument_list|)
-decl|const
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|virtual
-name|void
-name|getGCCRegAliases
-argument_list|(
-specifier|const
+name|ArrayRef
+operator|<
 name|GCCRegAlias
-operator|*
-operator|&
-name|Aliases
-argument_list|,
-name|unsigned
-operator|&
-name|NumAliases
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|void
-name|getGCCAddlRegNames
-argument_list|(
+operator|>
+name|getGCCRegAliases
+argument_list|()
 specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|ArrayRef
+operator|<
 name|AddlRegName
-operator|*
-operator|&
-name|Addl
-argument_list|,
-name|unsigned
-operator|&
-name|NumAddl
-argument_list|)
-decl|const
-block|{
-name|Addl
-operator|=
-name|nullptr
-expr_stmt|;
-name|NumAddl
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|virtual
-name|bool
-name|validateAsmConstraint
-argument_list|(
+operator|>
+name|getGCCAddlRegNames
+argument_list|()
 specifier|const
-name|char
-operator|*
-operator|&
-name|Name
-argument_list|,
-name|TargetInfo
-operator|::
-name|ConstraintInfo
-operator|&
-name|info
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
+block|{
+return|return
+name|None
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DIBuilder.h"
 end_include
 
@@ -137,7 +143,13 @@ name|class
 name|CXXMethodDecl
 decl_stmt|;
 name|class
-name|VarDecl
+name|ClassTemplateSpecializationDecl
+decl_stmt|;
+name|class
+name|GlobalDecl
+decl_stmt|;
+name|class
+name|ModuleMap
 decl_stmt|;
 name|class
 name|ObjCInterfaceDecl
@@ -146,13 +158,10 @@ name|class
 name|ObjCIvarDecl
 decl_stmt|;
 name|class
-name|ClassTemplateSpecializationDecl
-decl_stmt|;
-name|class
-name|GlobalDecl
-decl_stmt|;
-name|class
 name|UsingDecl
+decl_stmt|;
+name|class
+name|VarDecl
 decl_stmt|;
 name|namespace
 name|CodeGen
@@ -190,6 +199,9 @@ operator|::
 name|DebugInfoKind
 name|DebugKind
 expr_stmt|;
+name|bool
+name|DebugTypeExtRefs
+decl_stmt|;
 name|llvm
 operator|::
 name|DIBuilder
@@ -203,6 +215,12 @@ name|TheCU
 operator|=
 name|nullptr
 expr_stmt|;
+name|ModuleMap
+modifier|*
+name|ClangModuleMap
+init|=
+name|nullptr
+decl_stmt|;
 name|SourceLocation
 name|CurLoc
 decl_stmt|;
@@ -282,6 +300,54 @@ name|llvm
 operator|::
 name|DIType
 operator|*
+name|OCLImage2dDepthDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLImage2dArrayDepthDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLImage2dMSAADITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLImage2dArrayMSAADITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLImage2dMSAADepthDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLImage2dArrayMSAADepthDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
 name|OCLImage3dDITy
 operator|=
 name|nullptr
@@ -291,6 +357,38 @@ operator|::
 name|DIType
 operator|*
 name|OCLEventDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLClkEventDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLQueueDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLNDRangeDITy
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLReserveIDDITy
 operator|=
 name|nullptr
 expr_stmt|;
@@ -308,6 +406,20 @@ operator|::
 name|TrackingMDRef
 operator|>
 name|TypeCache
+expr_stmt|;
+name|llvm
+operator|::
+name|SmallDenseMap
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|,
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|DebugPrefixMap
 expr_stmt|;
 struct|struct
 name|ObjCInterfaceCacheEntry
@@ -377,19 +489,20 @@ literal|32
 operator|>
 name|ObjCInterfaceCache
 expr_stmt|;
-comment|/// Cache of references to AST files such as PCHs or modules.
+comment|/// Cache of references to clang modules and precompiled headers.
 name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|uint64_t
+specifier|const
+name|Module
+operator|*
 operator|,
 name|llvm
 operator|::
-name|DIModule
-operator|*
+name|TrackingMDRef
 operator|>
-name|ModuleRefCache
+name|ModuleCache
 expr_stmt|;
 comment|/// List of interfaces we want to keep even if orphaned.
 name|std
@@ -573,23 +686,18 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|TrackingMDRef
-operator|>
+name|TypedTrackingMDRef
+operator|<
+name|llvm
+operator|::
+name|DIDerivedType
+operator|>>
 name|StaticDataMemberCache
 expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
 comment|/// @{
 comment|/// Currently the checksum of an interface includes the number of
 comment|/// ivars and property accessors.
-name|unsigned
-name|Checksum
-parameter_list|(
-specifier|const
-name|ObjCInterfaceDecl
-modifier|*
-name|InterfaceDecl
-parameter_list|)
-function_decl|;
 name|llvm
 operator|::
 name|DIType
@@ -949,6 +1057,24 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|CreateType
+argument_list|(
+specifier|const
+name|PipeType
+operator|*
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
 comment|/// Get enumeration type.
 name|llvm
 operator|::
@@ -1090,17 +1216,6 @@ name|llvm
 operator|::
 name|DIType
 operator|*
-name|getOrCreateTypeDeclaration
-argument_list|(
-argument|QualType PointeeTy
-argument_list|,
-argument|llvm::DIFile *F
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
 name|CreatePointerLikeType
 argument_list|(
 argument|llvm::dwarf::Tag Tag
@@ -1110,15 +1225,6 @@ argument_list|,
 argument|QualType PointeeTy
 argument_list|,
 argument|llvm::DIFile *F
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getCachedInterfaceTypeOrNull
-argument_list|(
-argument|const QualType Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -1486,6 +1592,31 @@ name|void
 name|finalize
 parameter_list|()
 function_decl|;
+comment|/// Set the main CU's DwoId field to \p Signature.
+name|void
+name|setDwoId
+parameter_list|(
+name|uint64_t
+name|Signature
+parameter_list|)
+function_decl|;
+comment|/// When generating debug information for a clang module or
+comment|/// precompiled header, this module map will be used to determine
+comment|/// the module of origin of each Decl.
+name|void
+name|setModuleMap
+parameter_list|(
+name|ModuleMap
+modifier|&
+name|MMap
+parameter_list|)
+block|{
+name|ClangModuleMap
+operator|=
+operator|&
+name|MMap
+expr_stmt|;
+block|}
 comment|/// Update the current source location. If \arg loc is invalid it is
 comment|/// ignored.
 name|void
@@ -1539,6 +1670,20 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// Emit debug info for a function declaration.
+name|void
+name|EmitFunctionDecl
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|QualType
+name|FnType
+parameter_list|)
+function_decl|;
 comment|/// Constructs the debug code for exiting a function.
 name|void
 name|EmitFunctionEnd
@@ -1626,7 +1771,7 @@ name|Instruction
 operator|*
 name|InsertPoint
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// Emit call to \c llvm.dbg.declare for an argument variable
@@ -1790,6 +1935,18 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
+comment|/// Emit standalone debug info for a type.
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|getOrCreateStandaloneType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
 name|void
 name|completeType
 parameter_list|(
@@ -1838,8 +1995,6 @@ function_decl|;
 name|private
 label|:
 comment|/// Emit call to llvm.dbg.declare for a variable declaration.
-comment|/// Tag accepts custom types DW_TAG_arg_variable and DW_TAG_auto_variable,
-comment|/// otherwise would be of type llvm::dwarf::Tag.
 name|void
 name|EmitDeclare
 argument_list|(
@@ -1850,18 +2005,16 @@ name|decl
 argument_list|,
 name|llvm
 operator|::
-name|dwarf
-operator|::
-name|Tag
-name|Tag
-argument_list|,
-name|llvm
-operator|::
 name|Value
 operator|*
 name|AI
 argument_list|,
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|unsigned
+operator|>
 name|ArgNo
 argument_list|,
 name|CGBuilderTy
@@ -1886,7 +2039,20 @@ operator|*
 name|OffSet
 argument_list|)
 expr_stmt|;
-comment|/// Get context info for the decl.
+comment|/// Get context info for the DeclContext of \p Decl.
+name|llvm
+operator|::
+name|DIScope
+operator|*
+name|getDeclContextDescriptor
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
+comment|/// Get context info for a given DeclContext \p Decl.
 name|llvm
 operator|::
 name|DIScope
@@ -1896,7 +2062,13 @@ argument_list|(
 specifier|const
 name|Decl
 operator|*
-name|Decl
+name|Context
+argument_list|,
+name|llvm
+operator|::
+name|DIScope
+operator|*
+name|Default
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -1938,6 +2110,16 @@ name|void
 name|CreateCompileUnit
 parameter_list|()
 function_decl|;
+comment|/// Remap a given path with the current debug prefix map
+name|std
+operator|::
+name|string
+name|remapDIPath
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// Get the file debug info descriptor for the input location.
 name|llvm
 operator|::
@@ -1968,7 +2150,8 @@ argument_list|,
 argument|llvm::DIFile *Fg
 argument_list|)
 expr_stmt|;
-comment|/// Get a reference to a clang module.
+comment|/// Get a reference to a clang module.  If \p CreateSkeletonCU is true,
+comment|/// this also creates a split dwarf skeleton compile unit.
 name|llvm
 operator|::
 name|DIModule
@@ -1976,13 +2159,28 @@ operator|*
 name|getOrCreateModuleRef
 argument_list|(
 argument|ExternalASTSource::ASTSourceDescriptor Mod
+argument_list|,
+argument|bool CreateSkeletonCU
+argument_list|)
+expr_stmt|;
+comment|/// DebugTypeExtRefs: If \p D originated in a clang module, return it.
+name|llvm
+operator|::
+name|DIModule
+operator|*
+name|getParentModuleOrNull
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
 argument_list|)
 expr_stmt|;
 comment|/// Get the type from the cache or create a new partial type if
 comment|/// necessary.
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 operator|*
 name|getOrCreateLimitedType
 argument_list|(
@@ -2010,16 +2208,6 @@ argument_list|,
 argument|llvm::DIFile *Fg
 argument_list|)
 expr_stmt|;
-comment|/// Return the underlying ObjCInterfaceDecl if \arg Ty is an
-comment|/// ObjCInterface or a pointer to one.
-name|ObjCInterfaceDecl
-modifier|*
-name|getObjCInterfaceDecl
-parameter_list|(
-name|QualType
-name|Ty
-parameter_list|)
-function_decl|;
 comment|/// Create new member and increase Offset by FType's size.
 name|llvm
 operator|::
@@ -2436,7 +2624,7 @@ name|DebugLoc
 name|OriginalLocation
 expr_stmt|;
 name|CodeGenFunction
-modifier|&
+modifier|*
 name|CGF
 decl_stmt|;
 name|public
@@ -2468,6 +2656,24 @@ argument_list|,
 argument|llvm::DebugLoc Loc
 argument_list|)
 empty_stmt|;
+name|ApplyDebugLocation
+argument_list|(
+name|ApplyDebugLocation
+operator|&&
+name|Other
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+argument|Other.CGF
+argument_list|)
+block|{
+name|Other
+operator|.
+name|CGF
+operator|=
+name|nullptr
+block|;   }
 operator|~
 name|ApplyDebugLocation
 argument_list|()
@@ -2534,7 +2740,7 @@ comment|/// Set the IRBuilder to not attach debug locations.  Note that
 comment|/// passing an empty SourceLocation to \a CGDebugInfo::setLocation()
 comment|/// will result in the last valid location being reused.  Note that
 comment|/// all instructions that do not have a location at the beginning of
-comment|/// a function are counted towards to funciton prologue.
+comment|/// a function are counted towards to function prologue.
 specifier|static
 name|ApplyDebugLocation
 name|CreateEmpty
@@ -2556,31 +2762,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Apply TemporaryLocation if it is valid. Otherwise set the IRBuilder
-comment|/// to not attach debug locations.
-specifier|static
-name|ApplyDebugLocation
-name|CreateDefaultEmpty
-parameter_list|(
-name|CodeGenFunction
-modifier|&
-name|CGF
-parameter_list|,
-name|SourceLocation
-name|TemporaryLocation
-parameter_list|)
-block|{
-return|return
-name|ApplyDebugLocation
-argument_list|(
-name|CGF
-argument_list|,
-name|true
-argument_list|,
-name|TemporaryLocation
-argument_list|)
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}
@@ -2596,6 +2777,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LIB_CODEGEN_CGDEBUGINFO_H
+end_comment
 
 end_unit
 

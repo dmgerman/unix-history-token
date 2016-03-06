@@ -71,6 +71,9 @@ decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
+name|class
+name|VirtRegMap
+decl_stmt|;
 comment|/// \brief Normalize the spill weight of a live interval
 comment|///
 comment|/// The spill weight of a live interval is computed as:
@@ -147,6 +150,10 @@ name|LiveIntervals
 modifier|&
 name|LIS
 decl_stmt|;
+name|VirtRegMap
+modifier|*
+name|VRM
+decl_stmt|;
 specifier|const
 name|MachineLoopInfo
 modifier|&
@@ -176,6 +183,8 @@ argument|MachineFunction&mf
 argument_list|,
 argument|LiveIntervals&lis
 argument_list|,
+argument|VirtRegMap *vrm
+argument_list|,
 argument|const MachineLoopInfo&loops
 argument_list|,
 argument|const MachineBlockFrequencyInfo&mbfi
@@ -191,6 +200,11 @@ operator|,
 name|LIS
 argument_list|(
 name|lis
+argument_list|)
+operator|,
+name|VRM
+argument_list|(
+name|vrm
 argument_list|)
 operator|,
 name|Loops
@@ -231,6 +245,10 @@ argument_list|,
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|VirtRegMap
+operator|*
+name|VRM
 argument_list|,
 specifier|const
 name|MachineLoopInfo

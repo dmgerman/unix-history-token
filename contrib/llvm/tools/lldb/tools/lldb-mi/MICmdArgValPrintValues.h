@@ -116,9 +116,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMICmdArgValPrintValues
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmdArgValPrintValues
@@ -145,9 +143,7 @@ comment|// From CMICmdArgValBase
 comment|/* dtor */
 operator|~
 name|CMICmdArgValPrintValues
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmdArgSet::IArg
@@ -172,9 +168,7 @@ argument_list|)
 block|;
 name|MIuint
 name|GetPrintValues
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Attributes:

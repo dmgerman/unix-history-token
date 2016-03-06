@@ -80,6 +80,10 @@ name|InitializeAllocator
 parameter_list|()
 function_decl|;
 name|void
+name|ReplaceSystemMalloc
+parameter_list|()
+function_decl|;
+name|void
 name|AllocatorThreadStart
 parameter_list|(
 name|ThreadState

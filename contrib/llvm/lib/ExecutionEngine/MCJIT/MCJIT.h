@@ -322,19 +322,14 @@ name|added
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|ModulePtrSet
-operator|::
-name|iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|begin_added
 argument_list|()
-expr|,
+argument_list|,
 name|end_added
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|ModulePtrSet
@@ -901,7 +896,6 @@ block|;
 comment|/// FindFunctionNamed - Search all of the active modules to find the function that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
-name|virtual
 name|Function
 operator|*
 name|FindFunctionNamed
@@ -910,10 +904,9 @@ argument|const char *FnName
 argument_list|)
 name|override
 block|;
-comment|/// FindGlobalVariableNamed - Search all of the active modules to find the global variable
-comment|/// that defines Name.  This is very slow operation and shouldn't be used for
-comment|/// general code.
-name|virtual
+comment|/// FindGlobalVariableNamed - Search all of the active modules to find the
+comment|/// global variable that defines Name.  This is very slow operation and
+comment|/// shouldn't be used for general code.
 name|GlobalVariable
 operator|*
 name|FindGlobalVariableNamed
@@ -1247,13 +1240,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end llvm namespace
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_EXECUTIONENGINE_MCJIT_MCJIT_H
+end_comment
 
 end_unit
 

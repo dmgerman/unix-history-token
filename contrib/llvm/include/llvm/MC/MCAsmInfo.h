@@ -826,6 +826,22 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if the .section directive should be omitted when
+comment|/// emitting \p SectionName.  For example:
+comment|///
+comment|/// shouldOmitSectionDirective(".text")
+comment|///
+comment|/// returns false => .section .text,#alloc,#execinstr
+comment|/// returns true  => .text
+name|virtual
+name|bool
+name|shouldOmitSectionDirective
+argument_list|(
+name|StringRef
+name|SectionName
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|usesSunStyleELFSectionSwitchSyntax
 argument_list|()

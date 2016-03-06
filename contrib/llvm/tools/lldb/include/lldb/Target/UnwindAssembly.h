@@ -93,10 +93,10 @@ operator|&
 name|arch
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|UnwindAssembly
 argument_list|()
+name|override
 expr_stmt|;
 name|virtual
 name|bool
@@ -217,7 +217,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//utility_UnwindAssembly_h_
+comment|// utility_UnwindAssembly_h_
 end_comment
 
 end_unit

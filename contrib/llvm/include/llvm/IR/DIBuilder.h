@@ -509,6 +509,16 @@ parameter_list|,
 name|DIType
 modifier|*
 name|RTy
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+init|=
+literal|0
+parameter_list|,
+name|uint64_t
+name|AlignInBits
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// Create debugging information entry for a typedef.
@@ -1124,7 +1134,6 @@ literal|""
 parameter_list|)
 function_decl|;
 comment|/// Create subroutine type.
-comment|/// \param File            File in which this subroutine is defined.
 comment|/// \param ParameterTypes  An array of subroutine parameter types. This
 comment|///                        includes return type at 0th index.
 comment|/// \param Flags           E.g.: LValueReference.
@@ -1133,10 +1142,6 @@ name|DISubroutineType
 modifier|*
 name|createSubroutineType
 parameter_list|(
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
 name|DITypeRefArray
 name|ParameterTypes
 parameter_list|,
@@ -1144,6 +1149,25 @@ name|unsigned
 name|Flags
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// Create an external type reference.
+comment|/// \param Tag              Dwarf TAG.
+comment|/// \param File             File in which the type is defined.
+comment|/// \param UniqueIdentifier A unique identifier for the type.
+name|DICompositeType
+modifier|*
+name|createExternalTypeRef
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
+name|StringRef
+name|UniqueIdentifier
 parameter_list|)
 function_decl|;
 comment|/// Create a new DIType* with "artificial" flag set.
@@ -1410,27 +1434,18 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// Create a new descriptor for the specified
-comment|/// local variable.
-comment|/// \param Tag         Dwarf TAG. Usually DW_TAG_auto_variable or
-comment|///                    DW_TAG_arg_variable.
-comment|/// \param Scope       Variable scope.
-comment|/// \param Name        Variable name.
-comment|/// \param File        File where this variable is defined.
-comment|/// \param LineNo      Line number.
-comment|/// \param Ty          Variable Type
-comment|/// \param AlwaysPreserve Boolean. Set to true if debug info for this
-comment|///                       variable should be preserved in optimized build.
-comment|/// \param Flags       Flags, e.g. artificial variable.
-comment|/// \param ArgNo       If this variable is an argument then this argument's
-comment|///                    number. 1 indicates 1st argument.
+comment|/// Create a new descriptor for an auto variable.  This is a local variable
+comment|/// that is not a subprogram parameter.
+comment|///
+comment|/// \c Scope must be a \a DILocalScope, and thus its scope chain eventually
+comment|/// leads to a \a DISubprogram.
+comment|///
+comment|/// If \c AlwaysPreserve, this variable will be referenced from its
+comment|/// containing subprogram, and will survive some optimizations.
 name|DILocalVariable
 modifier|*
-name|createLocalVariable
+name|createAutoVariable
 parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|,
 name|DIScope
 modifier|*
 name|Scope
@@ -1458,9 +1473,51 @@ name|unsigned
 name|Flags
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// Create a new descriptor for a parameter variable.
+comment|///
+comment|/// \c Scope must be a \a DILocalScope, and thus its scope chain eventually
+comment|/// leads to a \a DISubprogram.
+comment|///
+comment|/// \c ArgNo is the index (starting from \c 1) of this variable in the
+comment|/// subprogram parameters.  \c ArgNo should not conflict with other
+comment|/// parameters of the same subprogram.
+comment|///
+comment|/// If \c AlwaysPreserve, this variable will be referenced from its
+comment|/// containing subprogram, and will survive some optimizations.
+name|DILocalVariable
+modifier|*
+name|createParameterVariable
+parameter_list|(
+name|DIScope
+modifier|*
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
 parameter_list|,
 name|unsigned
 name|ArgNo
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|DIType
+modifier|*
+name|Ty
+parameter_list|,
+name|bool
+name|AlwaysPreserve
+init|=
+name|false
+parameter_list|,
+name|unsigned
+name|Flags
 init|=
 literal|0
 parameter_list|)
@@ -1522,8 +1579,7 @@ comment|/// \param ScopeLine     Set to the beginning of the scope this starts
 comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      These flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
-comment|/// \param Fn            llvm::Function pointer.
-comment|/// \param TParam        Function template parameters.
+comment|/// \param TParams       Function template parameters.
 name|DISubprogram
 modifier|*
 name|createFunction
@@ -1568,19 +1624,12 @@ name|isOptimized
 init|=
 name|false
 parameter_list|,
-name|Function
-modifier|*
-name|Fn
+name|DITemplateParameterArray
+name|TParams
 init|=
 name|nullptr
 parameter_list|,
-name|MDNode
-modifier|*
-name|TParam
-init|=
-name|nullptr
-parameter_list|,
-name|MDNode
+name|DISubprogram
 modifier|*
 name|Decl
 init|=
@@ -1633,19 +1682,12 @@ name|isOptimized
 init|=
 name|false
 parameter_list|,
-name|Function
-modifier|*
-name|Fn
+name|DITemplateParameterArray
+name|TParams
 init|=
 name|nullptr
 parameter_list|,
-name|MDNode
-modifier|*
-name|TParam
-init|=
-name|nullptr
-parameter_list|,
-name|MDNode
+name|DISubprogram
 modifier|*
 name|Decl
 init|=
@@ -1697,19 +1739,12 @@ name|isOptimized
 init|=
 name|false
 parameter_list|,
-name|Function
-modifier|*
-name|Fn
+name|DITemplateParameterArray
+name|TParams
 init|=
 name|nullptr
 parameter_list|,
-name|MDNode
-modifier|*
-name|TParam
-init|=
-name|nullptr
-parameter_list|,
-name|MDNode
+name|DISubprogram
 modifier|*
 name|Decl
 init|=
@@ -1733,8 +1768,7 @@ comment|/// \param VTableHolder  Type that holds vtable.
 comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
-comment|/// \param Fn            llvm::Function pointer.
-comment|/// \param TParam        Function template parameters.
+comment|/// \param TParams       Function template parameters.
 name|DISubprogram
 modifier|*
 name|createMethod
@@ -1792,15 +1826,8 @@ name|isOptimized
 init|=
 name|false
 parameter_list|,
-name|Function
-modifier|*
-name|Fn
-init|=
-name|nullptr
-parameter_list|,
-name|MDNode
-modifier|*
-name|TParam
+name|DITemplateParameterArray
+name|TParams
 init|=
 name|nullptr
 parameter_list|)
@@ -2173,7 +2200,7 @@ name|DINodeArray
 name|Elements
 parameter_list|,
 name|DINodeArray
-name|TParems
+name|TParams
 init|=
 name|DINodeArray
 argument_list|()

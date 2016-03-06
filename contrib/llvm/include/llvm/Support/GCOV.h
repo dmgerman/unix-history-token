@@ -127,15 +127,15 @@ block|{
 name|V402
 block|,
 name|V404
+block|,
+name|V704
 block|}
 enum|;
-block|}
-comment|// end GCOV namespace
-comment|/// GCOVOptions - A struct for passing gcov options between functions.
+comment|/// \brief A struct for passing gcov options between functions.
 struct|struct
-name|GCOVOptions
+name|Options
 block|{
-name|GCOVOptions
+name|Options
 argument_list|(
 argument|bool A
 argument_list|,
@@ -220,6 +220,8 @@ name|NoOutput
 decl_stmt|;
 block|}
 struct|;
+block|}
+comment|// end GCOV namespace
 comment|/// GCOVBuffer - A wrapper around MemoryBuffer to provide GCOV specific
 comment|/// read operations.
 name|class
@@ -405,6 +407,27 @@ operator|=
 name|GCOV
 operator|::
 name|V404
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+if|if
+condition|(
+name|VersionStr
+operator|==
+literal|"*704"
+condition|)
+block|{
+name|Cursor
+operator|+=
+literal|4
+expr_stmt|;
+name|Version
+operator|=
+name|GCOV
+operator|::
+name|V704
 expr_stmt|;
 return|return
 name|true
@@ -2136,7 +2159,9 @@ label|:
 name|FileInfo
 argument_list|(
 specifier|const
-name|GCOVOptions
+name|GCOV
+operator|::
+name|Options
 operator|&
 name|Options
 argument_list|)
@@ -2472,13 +2497,15 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
-name|GCOVOptions
-modifier|&
+name|GCOV
+operator|::
 name|Options
-decl_stmt|;
-end_decl_stmt
+operator|&
+name|Options
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|StringMap

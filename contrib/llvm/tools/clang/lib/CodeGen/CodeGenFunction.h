@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ExprOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -312,6 +318,12 @@ name|CGBlockInfo
 decl_stmt|;
 name|class
 name|CGCXXABI
+decl_stmt|;
+name|class
+name|BlockByrefHelpers
+decl_stmt|;
+name|class
+name|BlockByrefInfo
 decl_stmt|;
 name|class
 name|BlockFlags
@@ -592,14 +604,11 @@ comment|/// ReturnBlock - Unified return block.
 name|JumpDest
 name|ReturnBlock
 decl_stmt|;
-comment|/// ReturnValue - The temporary alloca to hold the return value. This is null
-comment|/// iff the function has no return value.
-name|llvm
-operator|::
-name|Value
-operator|*
+comment|/// ReturnValue - The temporary alloca to hold the return
+comment|/// value. This is invalid iff the function has no return value.
+name|Address
 name|ReturnValue
-expr_stmt|;
+decl_stmt|;
 comment|/// AllocaInsertPoint - This is an instruction in the entry block before which
 comment|/// we prefer to insert allocas.
 name|llvm
@@ -976,12 +985,6 @@ name|PrevCapturedStmtInfo
 block|; }
 block|}
 empty_stmt|;
-comment|/// BoundsChecking - Emit run-time bounds checks. Higher values mean
-comment|/// potentially higher performance penalties.
-name|unsigned
-name|char
-name|BoundsChecking
-decl_stmt|;
 comment|/// \brief Sanitizers enabled for this function.
 name|SanitizerSet
 name|SanOpts
@@ -1104,6 +1107,14 @@ literal|2
 operator|>
 name|SEHTryEpilogueStack
 expr_stmt|;
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|CurrentFuncletPad
+operator|=
+name|nullptr
+expr_stmt|;
 comment|/// Header for data within LifetimeExtendedCleanupStack.
 struct|struct
 name|LifetimeExtendedCleanupHeader
@@ -1179,10 +1190,7 @@ comment|/// on the stack and leaving pops one. The __exception_code() intrinsic 
 comment|/// a value from the top of the stack.
 name|SmallVector
 operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 operator|,
 literal|1
 operator|>
@@ -1345,6 +1353,26 @@ name|SEHTryEpilogueStack
 operator|.
 name|empty
 argument_list|()
+return|;
+block|}
+comment|/// Returns true while emitting a cleanuppad.
+name|bool
+name|isCleanupPadScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentFuncletPad
+operator|&&
+name|isa
+operator|<
+name|llvm
+operator|::
+name|CleanupPadInst
+operator|>
+operator|(
+name|CurrentFuncletPad
+operator|)
 return|;
 block|}
 comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
@@ -1573,35 +1601,29 @@ comment|/// given address.  Does nothing if T is not a C++ class type with a
 comment|/// non-trivial destructor.
 name|void
 name|PushDestructorCleanup
-argument_list|(
+parameter_list|(
 name|QualType
 name|T
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Addr
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// PushDestructorCleanup - Push a cleanup to call the
 comment|/// complete-object variant of the given destructor on the object at
 comment|/// the given address.
 name|void
 name|PushDestructorCleanup
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXDestructorDecl
-operator|*
+modifier|*
 name|Dtor
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Addr
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack and
 comment|/// process all branch fixups.
 name|void
@@ -2053,6 +2075,22 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|Address
+operator|>
+name|DeclMapTy
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/// \brief The scope used to remap some variables as private in the OpenMP
 end_comment
@@ -2072,39 +2110,14 @@ range|:
 name|public
 name|RunCleanupsScope
 block|{
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|VarDecl
-operator|*
-operator|,
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-name|VarDeclMapTy
-expr_stmt|;
-name|VarDeclMapTy
+name|DeclMapTy
 name|SavedLocals
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|VarDeclMapTy
+block|;
+name|DeclMapTy
 name|SavedPrivates
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|private
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|OMPPrivateScope
 argument_list|(
 specifier|const
@@ -2113,13 +2126,10 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|OMPPrivateScope
@@ -2127,23 +2137,11 @@ operator|&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// \brief Enter a new OpenMP private scope.
-end_comment
-
-begin_macro
 name|explicit
-end_macro
-
-begin_expr_stmt
 name|OMPPrivateScope
 argument_list|(
 name|CodeGenFunction
@@ -2166,7 +2164,7 @@ name|addPrivate
 argument_list|(
 argument|const VarDecl *LocalVD
 argument_list|,
-argument|const std::function<llvm::Value *()>&PrivateGen
+argument|llvm::function_ref<Address()> PrivateGen
 argument_list|)
 block|{
 name|assert
@@ -2176,6 +2174,7 @@ operator|&&
 literal|"adding private to dead scope"
 argument_list|)
 block|;
+comment|// Only save it once.
 if|if
 condition|(
 name|SavedLocals
@@ -2184,63 +2183,134 @@ name|count
 argument_list|(
 name|LocalVD
 argument_list|)
-operator|>
-literal|0
 condition|)
 return|return
 name|false
 return|;
-name|SavedLocals
-index|[
-name|LocalVD
-index|]
+comment|// Copy the existing local entry to SavedLocals.
+name|auto
+name|it
 operator|=
 name|CGF
 operator|.
 name|LocalDeclMap
 operator|.
-name|lookup
+name|find
 argument_list|(
 name|LocalVD
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
+if|if
+condition|(
+name|it
+operator|!=
 name|CGF
 operator|.
 name|LocalDeclMap
 operator|.
-name|erase
+name|end
+argument_list|()
+condition|)
+block|{
+name|SavedLocals
+operator|.
+name|insert
 argument_list|(
+block|{
 name|LocalVD
+block|,
+name|it
+operator|->
+name|second
+block|}
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+else|else
+block|{
+name|SavedLocals
+operator|.
+name|insert
+argument_list|(
+block|{
+name|LocalVD
+block|,
+name|Address
+operator|::
+name|invalid
+argument_list|()
+block|}
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Generate the private entry.
+name|Address
+name|Addr
+init|=
+name|PrivateGen
+argument_list|()
+decl_stmt|;
+name|QualType
+name|VarTy
+operator|=
+name|LocalVD
+operator|->
+name|getType
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|VarTy
+operator|->
+name|isReferenceType
+argument_list|()
+condition|)
+block|{
+name|Address
+name|Temp
+init|=
+name|CGF
+operator|.
+name|CreateMemTemp
+argument_list|(
+name|VarTy
+argument_list|)
+decl_stmt|;
+name|CGF
+operator|.
+name|Builder
+operator|.
+name|CreateStore
+argument_list|(
+name|Addr
+operator|.
+name|getPointer
+argument_list|()
+argument_list|,
+name|Temp
+argument_list|)
+expr_stmt|;
+name|Addr
+operator|=
+name|Temp
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|SavedPrivates
-index|[
-name|LocalVD
-index|]
-operator|=
-name|PrivateGen
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CGF
 operator|.
-name|LocalDeclMap
-index|[
+name|insert
+argument_list|(
+block|{
 name|LocalVD
-index|]
-operator|=
-name|SavedLocals
-index|[
-name|LocalVD
-index|]
+block|,
+name|Addr
+block|}
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2291,28 +2361,15 @@ end_macro
 
 begin_block
 block|{
-for|for
-control|(
-name|auto
-name|VDPair
-range|:
+name|copyInto
+argument_list|(
 name|SavedPrivates
-control|)
-block|{
+argument_list|,
 name|CGF
 operator|.
 name|LocalDeclMap
-index|[
-name|VDPair
-operator|.
-name|first
-index|]
-operator|=
-name|VDPair
-operator|.
-name|second
+argument_list|)
 expr_stmt|;
-block|}
 name|SavedPrivates
 operator|.
 name|clear
@@ -2338,29 +2395,15 @@ operator|::
 name|ForceCleanup
 argument_list|()
 expr_stmt|;
-comment|// Remap vars back to the original values.
-for|for
-control|(
-name|auto
-name|I
-range|:
+name|copyInto
+argument_list|(
 name|SavedLocals
-control|)
-block|{
+argument_list|,
 name|CGF
 operator|.
 name|LocalDeclMap
-index|[
-name|I
-operator|.
-name|first
-index|]
-operator|=
-name|I
-operator|.
-name|second
+argument_list|)
 expr_stmt|;
-block|}
 name|SavedLocals
 operator|.
 name|clear
@@ -2387,6 +2430,110 @@ argument_list|()
 expr_stmt|;
 block|}
 end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|/// Copy all the entries in the source map over the corresponding
+end_comment
+
+begin_comment
+comment|/// entries in the destination, which must exist.
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|copyInto
+parameter_list|(
+specifier|const
+name|DeclMapTy
+modifier|&
+name|src
+parameter_list|,
+name|DeclMapTy
+modifier|&
+name|dest
+parameter_list|)
+block|{
+for|for
+control|(
+name|auto
+operator|&
+name|pair
+operator|:
+name|src
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|pair
+operator|.
+name|second
+operator|.
+name|isValid
+argument_list|()
+condition|)
+block|{
+name|dest
+operator|.
+name|erase
+argument_list|(
+name|pair
+operator|.
+name|first
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|auto
+name|it
+init|=
+name|dest
+operator|.
+name|find
+argument_list|(
+name|pair
+operator|.
+name|first
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|it
+operator|!=
+name|dest
+operator|.
+name|end
+argument_list|()
+condition|)
+block|{
+name|it
+operator|->
+name|second
+operator|=
+name|pair
+operator|.
+name|second
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dest
+operator|.
+name|insert
+argument_list|(
+name|pair
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -2612,6 +2759,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getMSVCDispatchBlock
+argument_list|(
+argument|EHScopeStack::stable_iterator scope
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// An object to manage conditionally-evaluated expressions.
 end_comment
@@ -2754,10 +2913,7 @@ name|Value
 operator|*
 name|value
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|addr
 argument_list|)
 block|{
@@ -2778,6 +2934,9 @@ operator|->
 name|getStartingBlock
 argument_list|()
 expr_stmt|;
+name|auto
+name|store
+init|=
 name|new
 name|llvm
 operator|::
@@ -2786,11 +2945,27 @@ argument_list|(
 name|value
 argument_list|,
 name|addr
+operator|.
+name|getPointer
+argument_list|()
 argument_list|,
 operator|&
 name|block
 operator|->
 name|back
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|store
+operator|->
+name|setAlignment
+argument_list|(
+name|addr
+operator|.
+name|getAlignment
+argument_list|()
+operator|.
+name|getQuantity
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -3453,65 +3628,8 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|/// getByrefValueFieldNumber - Given a declaration, returns the LLVM field
-end_comment
-
-begin_comment
-comment|/// number that holds the value.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|Type
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|getByRefValueLLVMField
-argument_list|(
-argument|const ValueDecl *VD
-argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// BuildBlockByrefAddress - Computes address location of the
-end_comment
-
-begin_comment
-comment|/// variable which is declared as __block.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|BuildBlockByrefAddress
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|BaseAddr
-argument_list|,
-specifier|const
-name|VarDecl
-operator|*
-name|V
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_label
+unit|};
 name|private
 label|:
 end_label
@@ -3576,30 +3694,42 @@ begin_comment
 comment|/// decls.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-name|DeclMapTy
-expr_stmt|;
-end_typedef
-
 begin_decl_stmt
 name|DeclMapTy
 name|LocalDeclMap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// SizeArguments - If a ParmVarDecl had the pass_object_size attribute, this
+end_comment
+
+begin_comment
+comment|/// will contain a mapping from said ParmVarDecl to its implicit "object_size"
+end_comment
+
+begin_comment
+comment|/// parameter.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SmallDenseMap
+operator|<
+specifier|const
+name|ParmVarDecl
+operator|*
+operator|,
+specifier|const
+name|ImplicitParamDecl
+operator|*
+operator|,
+literal|2
+operator|>
+name|SizeArguments
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Track escaped local variables with auto storage. Used during SEH
@@ -4091,17 +4221,11 @@ name|public
 label|:
 name|FieldConstructionScope
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
+argument|CodeGenFunction&CGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|This
+argument|Address This
 argument_list|)
-operator|:
+block|:
 name|CGF
 argument_list|(
 name|CGF
@@ -4134,12 +4258,9 @@ name|CodeGenFunction
 operator|&
 name|CGF
 expr_stmt|;
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|OldCXXDefaultInitExprThis
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -4175,7 +4296,14 @@ argument_list|)
 operator|,
 name|OldCXXThisValue
 argument_list|(
-argument|CGF.CXXThisValue
+name|CGF
+operator|.
+name|CXXThisValue
+argument_list|)
+operator|,
+name|OldCXXThisAlignment
+argument_list|(
+argument|CGF.CXXThisAlignment
 argument_list|)
 block|{
 name|CGF
@@ -4185,6 +4313,20 @@ operator|=
 name|CGF
 operator|.
 name|CXXDefaultInitExprThis
+operator|.
+name|getPointer
+argument_list|()
+block|;
+name|CGF
+operator|.
+name|CXXThisAlignment
+operator|=
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+operator|.
+name|getAlignment
+argument_list|()
 block|;     }
 operator|~
 name|CXXDefaultInitExprScope
@@ -4195,6 +4337,12 @@ operator|.
 name|CXXThisValue
 operator|=
 name|OldCXXThisValue
+block|;
+name|CGF
+operator|.
+name|CXXThisAlignment
+operator|=
+name|OldCXXThisAlignment
 block|;     }
 name|public
 operator|:
@@ -4208,6 +4356,9 @@ name|Value
 operator|*
 name|OldCXXThisValue
 expr_stmt|;
+name|CharUnits
+name|OldCXXThisAlignment
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -4253,6 +4404,18 @@ name|CXXThisValue
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|CharUnits
+name|CXXABIThisAlignment
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CharUnits
+name|CXXThisAlignment
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// The value of 'this' to use when evaluating CXXDefaultInitExprs within
 end_comment
@@ -4261,14 +4424,16 @@ begin_comment
 comment|/// this expression.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_decl_stmt
+name|Address
 name|CXXDefaultInitExprThis
-expr_stmt|;
-end_expr_stmt
+init|=
+name|Address
+operator|::
+name|invalid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// CXXStructorImplicitParamDecl - When generating code for a constructor or
@@ -4339,11 +4504,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// ByrefValueInfoMap - For each __block variable, contains a pair of the LLVM
+comment|/// BlockByrefInfos - For each __block variable, contains
 end_comment
 
 begin_comment
-comment|/// type as well as the field number that contains the actual data.
+comment|/// information about the layout of the variable.
 end_comment
 
 begin_expr_stmt
@@ -4355,19 +4520,9 @@ specifier|const
 name|ValueDecl
 operator|*
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|Type
-operator|*
-operator|,
-name|unsigned
+name|BlockByrefInfo
 operator|>
-expr|>
-name|ByRefValueInfo
+name|BlockByrefInfos
 expr_stmt|;
 end_expr_stmt
 
@@ -4599,25 +4754,19 @@ begin_comment
 comment|/// which is assigned in every landing pad.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|getExceptionSlot
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|getEHSelectorSlot
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Returns the contents of the function's exception object and selector
@@ -4647,15 +4796,12 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|getNormalCleanupDestSlot
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -4806,21 +4952,18 @@ begin_typedef
 typedef|typedef
 name|void
 name|Destroyer
-argument_list|(
+parameter_list|(
 name|CodeGenFunction
-operator|&
+modifier|&
 name|CGF
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|QualType
 name|ty
-argument_list|)
-typedef|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_decl_stmt
@@ -4833,14 +4976,14 @@ name|Value
 operator|*
 name|arrayBegin
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|arrayEndPointer
 argument_list|,
 name|QualType
 name|elementType
+argument_list|,
+name|CharUnits
+name|elementAlignment
 argument_list|,
 name|Destroyer
 operator|*
@@ -4868,6 +5011,9 @@ argument_list|,
 name|QualType
 name|elementType
 argument_list|,
+name|CharUnits
+name|elementAlignment
+argument_list|,
 name|Destroyer
 operator|*
 name|destroyer
@@ -4884,10 +5030,7 @@ operator|::
 name|DestructionKind
 name|dtorKind
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|addr
 argument_list|,
 name|QualType
@@ -4905,10 +5048,7 @@ operator|::
 name|DestructionKind
 name|dtorKind
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|addr
 argument_list|,
 name|QualType
@@ -4917,57 +5057,51 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pushDestroy
-argument_list|(
+parameter_list|(
 name|CleanupKind
 name|kind
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|QualType
 name|type
-argument_list|,
+parameter_list|,
 name|Destroyer
-operator|*
+modifier|*
 name|destroyer
-argument_list|,
+parameter_list|,
 name|bool
 name|useEHCleanupForArray
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pushLifetimeExtendedDestroy
-argument_list|(
+parameter_list|(
 name|CleanupKind
 name|kind
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|QualType
 name|type
-argument_list|,
+parameter_list|,
 name|Destroyer
-operator|*
+modifier|*
 name|destroyer
-argument_list|,
+parameter_list|,
 name|bool
 name|useEHCleanupForArray
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -4990,44 +5124,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pushStackRestore
-argument_list|(
+parameter_list|(
 name|CleanupKind
 name|kind
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|SPMem
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|emitDestroy
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|QualType
 name|type
-argument_list|,
+parameter_list|,
 name|Destroyer
-operator|*
+modifier|*
 name|destroyer
-argument_list|,
+parameter_list|,
 name|bool
 name|useEHCleanupForArray
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -5036,7 +5164,7 @@ name|Function
 operator|*
 name|generateDestroyHelper
 argument_list|(
-argument|llvm::Constant *addr
+argument|Address addr
 argument_list|,
 argument|QualType type
 argument_list|,
@@ -5066,7 +5194,10 @@ operator|*
 name|end
 argument_list|,
 name|QualType
-name|type
+name|elementType
+argument_list|,
+name|CharUnits
+name|elementAlign
 argument_list|,
 name|Destroyer
 operator|*
@@ -5347,28 +5478,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|bool
-name|IndirectObjCSetterArg
-parameter_list|(
-specifier|const
-name|CGFunctionInfo
-modifier|&
-name|FI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|IvarTypeWithAggrGCObjects
-parameter_list|(
-name|QualType
-name|Ty
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -5421,36 +5530,6 @@ name|info
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|BuildDescriptorBlockDecl
-argument_list|(
-specifier|const
-name|BlockExpr
-operator|*
-argument_list|,
-specifier|const
-name|CGBlockInfo
-operator|&
-name|Info
-argument_list|,
-name|llvm
-operator|::
-name|StructType
-operator|*
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|BlockVarLayout
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|llvm
@@ -5590,79 +5669,115 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|LoadBlockStruct
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|BlockPointer
-operator|&&
-literal|"no block pointer set!"
-argument_list|)
-block|;
-return|return
-name|BlockPointer
-return|;
-block|}
-end_expr_stmt
-
-begin_function_decl
+begin_decl_stmt
 name|void
-name|AllocateBlockCXXThisPointer
-parameter_list|(
-specifier|const
-name|CXXThisExpr
-modifier|*
-name|E
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AllocateBlockDecl
-parameter_list|(
-specifier|const
-name|DeclRefExpr
-modifier|*
-name|E
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|GetAddrOfBlockDecl
+name|setBlockContextParameter
 argument_list|(
-argument|const VarDecl *var
+specifier|const
+name|ImplicitParamDecl
+operator|*
+name|D
 argument_list|,
-argument|bool ByRef
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|unsigned
+name|argNum
+argument_list|,
 name|llvm
 operator|::
-name|Type
+name|Value
 operator|*
-name|BuildByRefType
-argument_list|(
+name|ptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|Address
+name|LoadBlockStruct
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|GetAddrOfBlockDecl
+parameter_list|(
 specifier|const
 name|VarDecl
-operator|*
+modifier|*
 name|var
+parameter_list|,
+name|bool
+name|ByRef
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// BuildBlockByrefAddress - Computes the location of the
+end_comment
+
+begin_comment
+comment|/// data in a variable which is declared as __block.
+end_comment
+
+begin_function_decl
+name|Address
+name|emitBlockByrefAddress
+parameter_list|(
+name|Address
+name|baseAddr
+parameter_list|,
+specifier|const
+name|VarDecl
+modifier|*
+name|V
+parameter_list|,
+name|bool
+name|followForward
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|Address
+name|emitBlockByrefAddress
+argument_list|(
+name|Address
+name|baseAddr
+argument_list|,
+specifier|const
+name|BlockByrefInfo
+operator|&
+name|info
+argument_list|,
+name|bool
+name|followForward
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Twine
+operator|&
+name|name
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|const
+name|BlockByrefInfo
+modifier|&
+name|getBlockByrefInfo
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -5958,6 +6073,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|FinishThunk
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// Emit a musttail call for a thunk with a potentially adjusted this pointer.
 end_comment
@@ -6079,39 +6201,62 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// InitializeVTablePointer - Initialize the vtable pointer of the given
+comment|/// Struct with all informations about dynamic [sub]class needed to set vptr.
 end_comment
 
-begin_comment
-comment|/// subobject.
-end_comment
+begin_struct
+struct|struct
+name|VPtr
+block|{
+name|BaseSubobject
+name|Base
+decl_stmt|;
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|NearestVBase
+decl_stmt|;
+name|CharUnits
+name|OffsetFromNearestVBase
+decl_stmt|;
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|VTableClass
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|///
+comment|/// Initialize the vtable pointer of the given subobject.
 end_comment
 
 begin_function_decl
 name|void
 name|InitializeVTablePointer
 parameter_list|(
-name|BaseSubobject
-name|Base
-parameter_list|,
 specifier|const
-name|CXXRecordDecl
-modifier|*
-name|NearestVBase
-parameter_list|,
-name|CharUnits
-name|OffsetFromNearestVBase
-parameter_list|,
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|VTableClass
+name|VPtr
+modifier|&
+name|vptr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|VPtr
+operator|,
+literal|4
+operator|>
+name|VPtrsVector
+expr_stmt|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -6130,8 +6275,20 @@ expr_stmt|;
 end_typedef
 
 begin_function_decl
+name|VPtrsVector
+name|getVTablePointers
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|VTableClass
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
-name|InitializeVTablePointers
+name|getVTablePointers
 parameter_list|(
 name|BaseSubobject
 name|Base
@@ -6155,6 +6312,10 @@ parameter_list|,
 name|VisitedVirtualBasesSetTy
 modifier|&
 name|VBases
+parameter_list|,
+name|VPtrsVector
+modifier|&
+name|vptrs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6186,17 +6347,11 @@ name|Value
 operator|*
 name|GetVTablePtr
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|This
+argument|Address This
 argument_list|,
-name|llvm
-operator|::
-name|Type
-operator|*
-name|Ty
+argument|llvm::Type *VTableTy
+argument_list|,
+argument|const CXXRecordDecl *VTableClass
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7020,6 +7175,49 @@ begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
+begin_function
+name|LValue
+name|MakeAddrLValue
+parameter_list|(
+name|Address
+name|Addr
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|AlignmentSource
+name|AlignSource
+init|=
+name|AlignmentSource
+operator|::
+name|Type
+parameter_list|)
+block|{
+return|return
+name|LValue
+operator|::
+name|MakeAddr
+argument_list|(
+name|Addr
+argument_list|,
+name|T
+argument_list|,
+name|getContext
+argument_list|()
+argument_list|,
+name|AlignSource
+argument_list|,
+name|CGM
+operator|.
+name|getTBAAInfo
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|LValue
 name|MakeAddrLValue
@@ -7035,9 +7233,13 @@ name|T
 argument_list|,
 name|CharUnits
 name|Alignment
+argument_list|,
+name|AlignmentSource
+name|AlignSource
 operator|=
-name|CharUnits
-argument_list|()
+name|AlignmentSource
+operator|::
+name|Type
 argument_list|)
 block|{
 return|return
@@ -7045,14 +7247,19 @@ name|LValue
 operator|::
 name|MakeAddr
 argument_list|(
+name|Address
+argument_list|(
 name|V
+argument_list|,
+name|Alignment
+argument_list|)
 argument_list|,
 name|T
 argument_list|,
-name|Alignment
-argument_list|,
 name|getContext
 argument_list|()
+argument_list|,
+name|AlignSource
 argument_list|,
 name|CGM
 operator|.
@@ -7063,6 +7270,22 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|LValue
+name|MakeNaturalAlignPointeeAddrLValue
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|,
+name|QualType
+name|T
+argument_list|)
+decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
@@ -7080,6 +7303,79 @@ name|T
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|CharUnits
+name|getNaturalTypeAlignment
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|AlignmentSource
+modifier|*
+name|Source
+init|=
+name|nullptr
+parameter_list|,
+name|bool
+name|forPointeeType
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CharUnits
+name|getNaturalPointeeTypeAlignment
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|AlignmentSource
+modifier|*
+name|Source
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|EmitLoadOfReference
+parameter_list|(
+name|Address
+name|Ref
+parameter_list|,
+specifier|const
+name|ReferenceType
+modifier|*
+name|RefTy
+parameter_list|,
+name|AlignmentSource
+modifier|*
+name|Source
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
+name|EmitLoadOfReferenceLValue
+parameter_list|(
+name|Address
+name|Ref
+parameter_list|,
+specifier|const
+name|ReferenceType
+modifier|*
+name|RefTy
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// CreateTempAlloca - This creates a alloca and inserts it into the entry
@@ -7116,18 +7412,122 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|Address
+name|CreateTempAlloca
+argument_list|(
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|CharUnits
+name|align
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|"tmp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/// InitTempAlloca - Provide an initial value for the given alloca.
+comment|/// CreateDefaultAlignedTempAlloca - This creates an alloca with the
+end_comment
+
+begin_comment
+comment|/// default ABI alignment of the given LLVM type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// IMPORTANT NOTE: This is *not* generally the right alignment for
+end_comment
+
+begin_comment
+comment|/// any given AST type that happens to have been lowered to the
+end_comment
+
+begin_comment
+comment|/// given IR type.  This should only ever be used for function-local,
+end_comment
+
+begin_comment
+comment|/// IR-driven manipulations like saving and restoring a value.  Do
+end_comment
+
+begin_comment
+comment|/// not hand this address off to arbitrary IRGen routines, and especially
+end_comment
+
+begin_comment
+comment|/// do not pass it as an argument to a function that might expect a
+end_comment
+
+begin_comment
+comment|/// properly ABI-aligned value.
+end_comment
+
+begin_decl_stmt
+name|Address
+name|CreateDefaultAlignTempAlloca
+argument_list|(
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|"tmp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// InitTempAlloca - Provide an initial value for the given alloca which
+end_comment
+
+begin_comment
+comment|/// will be observable at all locations in the function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The address should be something that was returned from one of
+end_comment
+
+begin_comment
+comment|/// the CreateTempAlloca or CreateMemTemp routines, and the
+end_comment
+
+begin_comment
+comment|/// initializer must be valid in the entry block (i.e. it must
+end_comment
+
+begin_comment
+comment|/// either be a constant or an argument value).
 end_comment
 
 begin_decl_stmt
 name|void
 name|InitTempAlloca
 argument_list|(
-name|llvm
-operator|::
-name|AllocaInst
-operator|*
+name|Address
 name|Alloca
 argument_list|,
 name|llvm
@@ -7159,20 +7559,34 @@ begin_comment
 comment|/// for storing in memory.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|AllocaInst
-operator|*
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// That is, this is exactly equivalent to CreateMemTemp, but calling
+end_comment
+
+begin_comment
+comment|/// ConvertType instead of ConvertTypeForMem.
+end_comment
+
+begin_function_decl
+name|Address
 name|CreateIRTemp
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|const Twine&Name =
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+init|=
 literal|"tmp"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// CreateMemTemp - Create a temporary memory object of the given type, with
@@ -7182,20 +7596,42 @@ begin_comment
 comment|/// appropriate alignment.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|AllocaInst
-operator|*
+begin_function_decl
+name|Address
 name|CreateMemTemp
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|const Twine&Name =
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+init|=
 literal|"tmp"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|CreateMemTemp
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|CharUnits
+name|Align
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Name
+init|=
+literal|"tmp"
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// CreateAggTemp - Create a temporary memory object for the given
@@ -7220,17 +7656,6 @@ init|=
 literal|"tmp"
 parameter_list|)
 block|{
-name|CharUnits
-name|Alignment
-init|=
-name|getContext
-argument_list|()
-operator|.
-name|getTypeAlignInChars
-argument_list|(
-name|T
-argument_list|)
-decl_stmt|;
 return|return
 name|AggValueSlot
 operator|::
@@ -7242,8 +7667,6 @@ name|T
 argument_list|,
 name|Name
 argument_list|)
-argument_list|,
-name|Alignment
 argument_list|,
 name|T
 operator|.
@@ -7265,31 +7688,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/// CreateInAllocaTmp - Create a temporary memory object for the given
-end_comment
-
-begin_comment
-comment|/// aggregate type.
-end_comment
-
-begin_function_decl
-name|AggValueSlot
-name|CreateInAllocaTmp
-parameter_list|(
-name|QualType
-name|T
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Name
-init|=
-literal|"inalloca"
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// Emit a cast to void* in the appropriate address space.
@@ -7407,20 +7805,41 @@ begin_comment
 comment|// or the value of the expression, depending on how va_list is defined.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitVAListRef
-argument_list|(
+parameter_list|(
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit a "reference" to a __builtin_ms_va_list; this is
+end_comment
+
+begin_comment
+comment|/// always the value of the expression, because a __builtin_ms_va_list is a
+end_comment
+
+begin_comment
+comment|/// pointer to a char.
+end_comment
+
+begin_function_decl
+name|Address
+name|EmitMSVAListRef
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitAnyExprToTemp - Similary to EmitAnyExpr(), however, the result will
@@ -7450,47 +7869,41 @@ begin_comment
 comment|/// arbitrary expression into the given memory location.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitAnyExprToMem
-argument_list|(
+parameter_list|(
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Location
-argument_list|,
+parameter_list|,
 name|Qualifiers
 name|Quals
-argument_list|,
+parameter_list|,
 name|bool
 name|IsInitializer
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitAnyExprToExn
-argument_list|(
+parameter_list|(
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Addr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitExprAsInit - Emits the code necessary to initialize a
@@ -7601,25 +8014,19 @@ begin_comment
 comment|/// This is required for correctness when assigning non-POD structures in C++.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|EmitAggregateAssign
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|DestPtr
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|SrcPtr
-argument_list|,
+parameter_list|,
 name|QualType
 name|EltTy
-argument_list|)
+parameter_list|)
 block|{
 name|bool
 name|IsVolatile
@@ -7639,62 +8046,29 @@ name|EltTy
 argument_list|,
 name|IsVolatile
 argument_list|,
-name|CharUnits
-operator|::
-name|Zero
-argument_list|()
-argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|EmitAggregateCopyCtor
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|DestPtr
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|SrcPtr
-argument_list|,
+parameter_list|,
 name|QualType
 name|DestTy
-argument_list|,
+parameter_list|,
 name|QualType
 name|SrcTy
-argument_list|)
+parameter_list|)
 block|{
-name|CharUnits
-name|DestTypeAlign
-init|=
-name|getContext
-argument_list|()
-operator|.
-name|getTypeAlignInChars
-argument_list|(
-name|DestTy
-argument_list|)
-decl_stmt|;
-name|CharUnits
-name|SrcTypeAlign
-init|=
-name|getContext
-argument_list|()
-operator|.
-name|getTypeAlignInChars
-argument_list|(
-name|SrcTy
-argument_list|)
-decl_stmt|;
 name|EmitAggregateCopy
 argument_list|(
 name|DestPtr
@@ -7706,21 +8080,12 @@ argument_list|,
 comment|/*IsVolatile=*/
 name|false
 argument_list|,
-name|std
-operator|::
-name|min
-argument_list|(
-name|DestTypeAlign
-argument_list|,
-name|SrcTypeAlign
-argument_list|)
-argument_list|,
 comment|/*IsAssignment=*/
 name|false
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// EmitAggregateCopy - Emit an aggregate copy.
@@ -7746,62 +8111,28 @@ begin_comment
 comment|/// yields more efficient.
 end_comment
 
-begin_decl_stmt
-name|void
-name|EmitAggregateCopy
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestPtr
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcPtr
-argument_list|,
-name|QualType
-name|EltTy
-argument_list|,
-name|bool
-name|isVolatile
-operator|=
-name|false
-argument_list|,
-name|CharUnits
-name|Alignment
-operator|=
-name|CharUnits
-operator|::
-name|Zero
-argument_list|()
-argument_list|,
-name|bool
-name|isAssignment
-operator|=
-name|false
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// StartBlock - Start new block named N. If insert block is a dummy block
-end_comment
-
-begin_comment
-comment|/// then reuse it.
-end_comment
-
 begin_function_decl
 name|void
-name|StartBlock
+name|EmitAggregateCopy
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|N
+name|Address
+name|DestPtr
+parameter_list|,
+name|Address
+name|SrcPtr
+parameter_list|,
+name|QualType
+name|EltTy
+parameter_list|,
+name|bool
+name|isVolatile
+init|=
+name|false
+parameter_list|,
+name|bool
+name|isAssignment
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7810,39 +8141,45 @@ begin_comment
 comment|/// GetAddrOfLocalVar - Return the address of a local variable.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function
+name|Address
 name|GetAddrOfLocalVar
-argument_list|(
-argument|const VarDecl *VD
-argument_list|)
-block|{
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Res
-operator|=
-name|LocalDeclMap
-index|[
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
 name|VD
-index|]
-block|;
+parameter_list|)
+block|{
+name|auto
+name|it
+init|=
+name|LocalDeclMap
+operator|.
+name|find
+argument_list|(
+name|VD
+argument_list|)
+decl_stmt|;
 name|assert
 argument_list|(
-name|Res
+name|it
+operator|!=
+name|LocalDeclMap
+operator|.
+name|end
+argument_list|()
 operator|&&
 literal|"Invalid argument to GetAddrOfLocalVar(), no decl!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
-name|Res
+name|it
+operator|->
+name|second
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// getOpaqueLValueMapping - Given an opaque value expression (which
@@ -8050,28 +8387,79 @@ begin_comment
 comment|/// to -1 in accordance with the Itanium C++ ABI.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitNullInitialization
-argument_list|(
+parameter_list|(
+name|Address
+name|DestPtr
+parameter_list|,
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emits a call to an LLVM variable-argument intrinsic, either
+end_comment
+
+begin_comment
+comment|/// \c llvm.va_start or \c llvm.va_end.
+end_comment
+
+begin_comment
+comment|/// \param ArgValue A reference to the \c va_list as emitted by either
+end_comment
+
+begin_comment
+comment|/// \c EmitVAListRef or \c EmitMSVAListRef.
+end_comment
+
+begin_comment
+comment|/// \param IsStart If \c true, emits a call to \c llvm.va_start; otherwise,
+end_comment
+
+begin_comment
+comment|/// calls \c llvm.va_end.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
-name|DestPtr
+name|EmitVAStartEnd
+argument_list|(
+argument|llvm::Value *ArgValue
 argument_list|,
-name|QualType
-name|Ty
+argument|bool IsStart
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|// EmitVAArg - Generate code to get an argument from the passed in pointer
+comment|/// Generate code to get an argument from the passed in pointer
 end_comment
 
 begin_comment
-comment|// and update it accordingly. The return value is a pointer to the argument.
+comment|/// and update it accordingly.
+end_comment
+
+begin_comment
+comment|/// \param VE The \c VAArgExpr for which to generate code.
+end_comment
+
+begin_comment
+comment|/// \param VAListAddr Receives a reference to the \c va_list as emitted by
+end_comment
+
+begin_comment
+comment|/// either \c EmitVAListRef or \c EmitMSVAListRef.
+end_comment
+
+begin_comment
+comment|/// \returns A pointer to the argument.
 end_comment
 
 begin_comment
@@ -8082,19 +8470,20 @@ begin_comment
 comment|// instruction in LLVM instead once it works well enough.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitVAArg
-argument_list|(
-argument|llvm::Value *VAListAddr
-argument_list|,
-argument|QualType Ty
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|VAArgExpr
+modifier|*
+name|VE
+parameter_list|,
+name|Address
+modifier|&
+name|VAListAddr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// emitArrayLength - Compute the length of an array, even if it's a
@@ -8120,10 +8509,7 @@ name|QualType
 operator|&
 name|baseType
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 operator|&
 name|addr
 argument_list|)
@@ -8242,6 +8628,13 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function_decl
+name|Address
+name|LoadCXXThisAddress
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// LoadCXXVTT - Load the VTT parameter to base constructors/destructors have
 end_comment
@@ -8280,35 +8673,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// LoadCXXStructorImplicitParam - Load the implicit parameter
-end_comment
-
-begin_comment
-comment|/// for a constructor/destructor.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|LoadCXXStructorImplicitParam
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|CXXStructorImplicitParamValue
-operator|&&
-literal|"no implicit argument value for this function"
-argument_list|)
-block|;
-return|return
-name|CXXStructorImplicitParamValue
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// GetAddressOfBaseOfCompleteClass - Convert the given pointer to a
 end_comment
 
@@ -8316,23 +8680,41 @@ begin_comment
 comment|/// complete class to the given direct base.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|GetAddressOfDirectBaseInCompleteClass
-argument_list|(
-argument|llvm::Value *Value
-argument_list|,
-argument|const CXXRecordDecl *Derived
-argument_list|,
-argument|const CXXRecordDecl *Base
-argument_list|,
-argument|bool BaseIsVirtual
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|Address
+name|Value
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Derived
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Base
+parameter_list|,
+name|bool
+name|BaseIsVirtual
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|bool
+name|ShouldNullCheckClassCastValue
+parameter_list|(
+specifier|const
+name|CastExpr
+modifier|*
+name|Cast
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// GetAddressOfBaseClass - This function will add the necessary delta to the
@@ -8342,47 +8724,64 @@ begin_comment
 comment|/// load of 'this' and returns address of the base class.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_decl_stmt
+name|Address
 name|GetAddressOfBaseClass
 argument_list|(
-argument|llvm::Value *Value
-argument_list|,
-argument|const CXXRecordDecl *Derived
-argument_list|,
-argument|CastExpr::path_const_iterator PathBegin
-argument_list|,
-argument|CastExpr::path_const_iterator PathEnd
-argument_list|,
-argument|bool NullCheckValue
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
+name|Address
 name|Value
+argument_list|,
+specifier|const
+name|CXXRecordDecl
 operator|*
+name|Derived
+argument_list|,
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|PathBegin
+argument_list|,
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|PathEnd
+argument_list|,
+name|bool
+name|NullCheckValue
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Address
 name|GetAddressOfDerivedClass
 argument_list|(
-argument|llvm::Value *Value
+name|Address
+name|Value
 argument_list|,
-argument|const CXXRecordDecl *Derived
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Derived
 argument_list|,
-argument|CastExpr::path_const_iterator PathBegin
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|PathBegin
 argument_list|,
-argument|CastExpr::path_const_iterator PathEnd
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|PathEnd
 argument_list|,
-argument|bool NullCheckValue
+name|bool
+name|NullCheckValue
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// GetVTTParameter - Return the VTT parameter that should be passed to a
@@ -8472,99 +8871,129 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitCXXConstructorCall
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXConstructorDecl
-operator|*
+modifier|*
 name|D
-argument_list|,
+parameter_list|,
 name|CXXCtorType
 name|Type
-argument_list|,
+parameter_list|,
 name|bool
 name|ForVirtualBase
-argument_list|,
+parameter_list|,
 name|bool
 name|Delegating
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|This
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXConstructExpr
-operator|*
+modifier|*
 name|E
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_comment
+comment|/// Emit assumption load for all bases. Requires to be be called only on
+end_comment
+
+begin_comment
+comment|/// most-derived class and not under construction of the object.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitVTableAssumptionLoads
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
+parameter_list|,
+name|Address
+name|This
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit assumption that vptr load == global vtable.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitVTableAssumptionLoad
+parameter_list|(
+specifier|const
+name|VPtr
+modifier|&
+name|vptr
+parameter_list|,
+name|Address
+name|This
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitSynthesizedCXXCopyCtorCall
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXConstructorDecl
-operator|*
+modifier|*
 name|D
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|This
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXConstructExpr
-operator|*
+modifier|*
 name|E
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitCXXAggrConstructorCall
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXConstructorDecl
-operator|*
+modifier|*
 name|D
-argument_list|,
+parameter_list|,
 specifier|const
 name|ConstantArrayType
-operator|*
+modifier|*
 name|ArrayTy
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|ArrayPtr
-argument_list|,
+parameter_list|,
 specifier|const
 name|CXXConstructExpr
-operator|*
+modifier|*
 name|E
-argument_list|,
+parameter_list|,
 name|bool
 name|ZeroInitialization
-operator|=
+init|=
 name|false
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -8581,10 +9010,7 @@ name|Value
 operator|*
 name|NumElements
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|ArrayPtr
 argument_list|,
 specifier|const
@@ -8607,32 +9033,29 @@ name|destroyCXXObject
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitCXXDestructorCall
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXDestructorDecl
-operator|*
+modifier|*
 name|D
-argument_list|,
+parameter_list|,
 name|CXXDtorType
 name|Type
-argument_list|,
+parameter_list|,
 name|bool
 name|ForVirtualBase
-argument_list|,
+parameter_list|,
 name|bool
 name|Delegating
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|This
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -8652,10 +9075,7 @@ name|Type
 operator|*
 name|ElementTy
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|NewPtr
 argument_list|,
 name|llvm
@@ -8673,26 +9093,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitCXXTemporary
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXTemporary
-operator|*
+modifier|*
 name|Temporary
-argument_list|,
+parameter_list|,
 name|QualType
 name|TempType
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Ptr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -8817,34 +9234,24 @@ name|Value
 operator|*
 name|EmitDynamicCast
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|V
+argument|Address V
 argument_list|,
-specifier|const
-name|CXXDynamicCastExpr
-operator|*
-name|DCE
+argument|const CXXDynamicCastExpr *DCE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitCXXUuidofExpr
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXUuidofExpr
-operator|*
+modifier|*
 name|E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Situations in which we might emit a check for the suitability of a
@@ -9258,18 +9665,11 @@ name|VarDecl
 modifier|*
 name|Variable
 decl_stmt|;
-comment|/// The alignment of the variable.
-name|CharUnits
-name|Alignment
-decl_stmt|;
-comment|/// The address of the alloca.  Null if the variable was emitted
+comment|/// The address of the alloca.  Invalid if the variable was emitted
 comment|/// as a global constant.
-name|llvm
-operator|::
-name|Value
-operator|*
 name|Address
-expr_stmt|;
+name|Addr
+decl_stmt|;
 name|llvm
 operator|::
 name|Value
@@ -9303,7 +9703,12 @@ argument_list|)
 operator|:
 name|Variable
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|Addr
+argument_list|(
+argument|Address::invalid()
 argument_list|)
 block|{}
 name|AutoVarEmission
@@ -9320,9 +9725,12 @@ operator|&
 name|variable
 argument_list|)
 operator|,
-name|Address
+name|Addr
 argument_list|(
-name|nullptr
+name|Address
+operator|::
+name|invalid
+argument_list|()
 argument_list|)
 operator|,
 name|NRVOFlag
@@ -9351,9 +9759,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Address
-operator|==
-name|nullptr
+operator|!
+name|Addr
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 name|public
@@ -9402,30 +9812,26 @@ return|;
 block|}
 comment|/// Returns the raw, allocated address, which is not necessarily
 comment|/// the address of the object itself.
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getAllocatedAddress
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Address
+name|Addr
 return|;
 block|}
 comment|/// Returns the address of the object within this declaration.
 comment|/// Note that this does not chase the forwarding pointer for
 comment|/// __block decls.
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|getObjectAddress
 argument_list|(
-argument|CodeGenFunction&CGF
+name|CodeGenFunction
+operator|&
+name|CGF
 argument_list|)
-specifier|const
+decl|const
 block|{
 if|if
 condition|(
@@ -9433,46 +9839,30 @@ operator|!
 name|IsByRef
 condition|)
 return|return
-name|Address
+name|Addr
 return|;
-name|auto
-name|F
-operator|=
-name|CGF
-operator|.
-name|getByRefValueLLVMField
-argument_list|(
-name|Variable
-argument_list|)
-expr_stmt|;
 return|return
 name|CGF
 operator|.
-name|Builder
-operator|.
-name|CreateStructGEP
+name|emitBlockByrefAddress
 argument_list|(
-name|F
-operator|.
-name|first
-argument_list|,
-name|Address
-argument_list|,
-name|F
-operator|.
-name|second
+name|Addr
 argument_list|,
 name|Variable
-operator|->
-name|getNameAsString
-argument_list|()
+argument_list|,
+comment|/*forward*/
+name|false
 argument_list|)
 return|;
 block|}
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
-unit|};
 name|AutoVarEmission
 name|EmitAutoVarAlloca
 parameter_list|(
@@ -9544,33 +9934,187 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// EmitParmDecl - Emit a ParmVarDecl or an ImplicitParamDecl.
-end_comment
-
 begin_decl_stmt
-name|void
-name|EmitParmDecl
-argument_list|(
-specifier|const
-name|VarDecl
-operator|&
-name|D
-argument_list|,
+name|class
+name|ParamValue
+block|{
 name|llvm
 operator|::
 name|Value
 operator|*
-name|Arg
+name|Value
+expr_stmt|;
+name|unsigned
+name|Alignment
+decl_stmt|;
+name|ParamValue
+argument_list|(
+argument|llvm::Value *V
 argument_list|,
+argument|unsigned A
+argument_list|)
+block|:
+name|Value
+argument_list|(
+name|V
+argument_list|)
+operator|,
+name|Alignment
+argument_list|(
+argument|A
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|ParamValue
+name|forDirect
+argument_list|(
+argument|llvm::Value *value
+argument_list|)
+block|{
+return|return
+name|ParamValue
+argument_list|(
+name|value
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ParamValue
+name|forIndirect
+parameter_list|(
+name|Address
+name|addr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|addr
+operator|.
+name|getAlignment
+argument_list|()
+operator|.
+name|isZero
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|ParamValue
+argument_list|(
+name|addr
+operator|.
+name|getPointer
+argument_list|()
+argument_list|,
+name|addr
+operator|.
+name|getAlignment
+argument_list|()
+operator|.
+name|getQuantity
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|bool
-name|ArgIsPointer
+name|isIndirect
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Alignment
+operator|!=
+literal|0
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getAnyValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getDirectValue
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isIndirect
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Value
+return|;
+block|}
+name|Address
+name|getIndirectAddress
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isIndirect
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Address
+argument_list|(
+name|Value
 argument_list|,
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
+name|Alignment
+argument_list|)
+argument_list|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// EmitParmDecl - Emit a ParmVarDecl or an ImplicitParamDecl.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitParmDecl
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|&
+name|D
+parameter_list|,
+name|ParamValue
+name|Arg
+parameter_list|,
 name|unsigned
 name|ArgNo
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// protectFromPeepholes - Protect a value that we're intending to
@@ -9728,37 +10272,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitCompoundStmt
-argument_list|(
-argument|const CompoundStmt&S
-argument_list|,
-argument|bool GetLast = false
-argument_list|,
-argument|AggValueSlot AVS = AggValueSlot::ignored()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
+parameter_list|(
+specifier|const
+name|CompoundStmt
+modifier|&
+name|S
+parameter_list|,
+name|bool
+name|GetLast
+init|=
+name|false
+parameter_list|,
+name|AggValueSlot
+name|AVS
+init|=
+name|AggValueSlot
 operator|::
-name|Value
-operator|*
+name|ignored
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
 name|EmitCompoundStmtWithoutScope
-argument_list|(
-argument|const CompoundStmt&S
-argument_list|,
-argument|bool GetLast = false
-argument_list|,
-argument|AggValueSlot AVS =                                                 AggValueSlot::ignored()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+specifier|const
+name|CompoundStmt
+modifier|&
+name|S
+parameter_list|,
+name|bool
+name|GetLast
+init|=
+name|false
+parameter_list|,
+name|AggValueSlot
+name|AVS
+init|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitLabel - Emit the block for the given label. It is legal to call this
@@ -9843,33 +10405,6 @@ name|S
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|void
-name|EmitCondBrHints
-argument_list|(
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|Context
-argument_list|,
-name|llvm
-operator|::
-name|BranchInst
-operator|*
-name|CondBr
-argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|Attr
-operator|*
-operator|>
-name|Attrs
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -10360,21 +10895,15 @@ begin_comment
 comment|/// frame.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_decl_stmt
+name|Address
 name|recoverAddrOfEscapedLocal
 argument_list|(
 name|CodeGenFunction
 operator|&
 name|ParentCGF
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|ParentVar
 argument_list|,
 name|llvm
@@ -10383,8 +10912,8 @@ name|Value
 operator|*
 name|ParentFP
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -10434,33 +10963,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|void
-name|GenerateCapturedStmtFunctionProlog
-parameter_list|(
-specifier|const
-name|CapturedStmt
-modifier|&
-name|S
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Function
-operator|*
-name|GenerateCapturedStmtFunctionEpilog
-argument_list|(
-specifier|const
-name|CapturedStmt
-operator|&
-name|S
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|llvm
 operator|::
@@ -10476,12 +10978,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|Address
+name|GenerateCapturedStmtArgument
+parameter_list|(
+specifier|const
+name|CapturedStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|llvm
 operator|::
-name|Value
+name|Function
 operator|*
-name|GenerateCapturedStmtArgument
+name|GenerateOpenMPCapturedStmtFunction
 argument_list|(
 specifier|const
 name|CapturedStmt
@@ -10490,6 +11004,47 @@ name|S
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|GenerateOpenMPCapturedVars
+argument_list|(
+specifier|const
+name|CapturedStmt
+operator|&
+name|S
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+operator|&
+name|CapturedVars
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|emitOMPSimpleStore
+parameter_list|(
+name|LValue
+name|LVal
+parameter_list|,
+name|RValue
+name|RVal
+parameter_list|,
+name|QualType
+name|RValTy
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Perform element by element copying of arrays with type \a
@@ -10531,16 +11086,10 @@ begin_decl_stmt
 name|void
 name|EmitOMPAggregateAssign
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|DestAddr
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|SrcAddr
 argument_list|,
 name|QualType
@@ -10553,15 +11102,9 @@ name|function_ref
 operator|<
 name|void
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 argument_list|)
 operator|>
 operator|&
@@ -10614,46 +11157,36 @@ begin_comment
 comment|/// DestVD.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitOMPCopy
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
+parameter_list|(
 name|QualType
 name|OriginalType
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|DestAddr
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|SrcAddr
-argument_list|,
+parameter_list|,
 specifier|const
 name|VarDecl
-operator|*
+modifier|*
 name|DestVD
-argument_list|,
+parameter_list|,
 specifier|const
 name|VarDecl
-operator|*
+modifier|*
 name|SrcVD
-argument_list|,
+parameter_list|,
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|Copy
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Emit atomic update code for constructs: \a X = \a X \a BO \a E or
@@ -11285,6 +11818,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitOMPTargetDataDirective
+parameter_list|(
+specifier|const
+name|OMPTargetDataDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitOMPTeamsDirective
 parameter_list|(
 specifier|const
@@ -11313,6 +11858,42 @@ name|EmitOMPCancelDirective
 parameter_list|(
 specifier|const
 name|OMPCancelDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTaskLoopDirective
+parameter_list|(
+specifier|const
+name|OMPTaskLoopDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPTaskLoopSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTaskLoopSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPDistributeDirective
+parameter_list|(
+specifier|const
+name|OMPDistributeDirective
 modifier|&
 name|S
 parameter_list|)
@@ -11454,6 +12035,11 @@ specifier|const
 name|OMPLoopDirective
 modifier|&
 name|D
+parameter_list|,
+name|bool
+name|IsMonotonic
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11501,6 +12087,9 @@ argument_list|(
 name|OpenMPScheduleClauseKind
 name|ScheduleKind
 argument_list|,
+name|bool
+name|IsMonotonic
+argument_list|,
 specifier|const
 name|OMPLoopDirective
 operator|&
@@ -11513,28 +12102,16 @@ argument_list|,
 name|bool
 name|Ordered
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|LB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|UB
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|ST
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|IL
 argument_list|,
 name|llvm
@@ -11750,24 +12327,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|RValue
 name|convertTempToRValue
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|QualType
 name|type
-argument_list|,
+parameter_list|,
 name|SourceLocation
 name|Loc
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -12026,15 +12600,15 @@ name|Value
 operator|*
 name|EmitLoadOfScalar
 argument_list|(
-argument|llvm::Value *Addr
+argument|Address Addr
 argument_list|,
 argument|bool Volatile
-argument_list|,
-argument|unsigned Alignment
 argument_list|,
 argument|QualType Ty
 argument_list|,
 argument|SourceLocation Loc
+argument_list|,
+argument|AlignmentSource AlignSource =                                   AlignmentSource::Type
 argument_list|,
 argument|llvm::MDNode *TBAAInfo = nullptr
 argument_list|,
@@ -12042,6 +12616,8 @@ argument|QualType TBAABaseTy = QualType()
 argument_list|,
 argument|uint64_t TBAAOffset =
 literal|0
+argument_list|,
+argument|bool isNontemporal = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12098,20 +12674,21 @@ name|Value
 operator|*
 name|Value
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+name|Address
 name|Addr
 argument_list|,
 name|bool
 name|Volatile
 argument_list|,
-name|unsigned
-name|Alignment
-argument_list|,
 name|QualType
 name|Ty
+argument_list|,
+name|AlignmentSource
+name|AlignSource
+operator|=
+name|AlignmentSource
+operator|::
+name|Type
 argument_list|,
 name|llvm
 operator|::
@@ -12136,6 +12713,11 @@ name|uint64_t
 name|TBAAOffset
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|isNontemporal
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -12459,18 +13041,6 @@ end_function_decl
 
 begin_function_decl
 name|LValue
-name|EmitReadRegister
-parameter_list|(
-specifier|const
-name|VarDecl
-modifier|*
-name|VD
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|LValue
 name|EmitStringLiteralLValue
 parameter_list|(
 specifier|const
@@ -12530,6 +13100,23 @@ name|bool
 name|Accessed
 init|=
 name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
+name|EmitOMPArraySectionExpr
+parameter_list|(
+specifier|const
+name|OMPArraySectionExpr
+modifier|*
+name|E
+parameter_list|,
+name|bool
+name|IsLowerBound
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12642,17 +13229,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitExtVectorElementLValue
-argument_list|(
-argument|LValue V
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|LValue
+name|V
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|RValue
@@ -12668,6 +13253,24 @@ name|FD
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|EmitArrayToPointerDecay
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|Array
+parameter_list|,
+name|AlignmentSource
+modifier|*
+name|AlignSource
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13145,18 +13748,6 @@ begin_comment
 comment|/// LLVM arguments and the types they were derived from.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TargetDecl - If given, the decl of the function in a direct call;
-end_comment
-
-begin_comment
-comment|/// used to set attributes on the call (noreturn, etc.).
-end_comment
-
 begin_decl_stmt
 name|RValue
 name|EmitCall
@@ -13180,12 +13771,11 @@ name|CallArgList
 operator|&
 name|Args
 argument_list|,
-specifier|const
-name|Decl
-operator|*
-name|TargetDecl
+name|CGCalleeInfo
+name|CalleeInfo
 operator|=
-name|nullptr
+name|CGCalleeInfo
+argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -13220,12 +13810,11 @@ argument_list|,
 name|ReturnValueSlot
 name|ReturnValue
 argument_list|,
-specifier|const
-name|Decl
-operator|*
-name|TargetDecl
+name|CGCalleeInfo
+name|CalleeInfo
 operator|=
-name|nullptr
+name|CGCalleeInfo
+argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -13252,6 +13841,23 @@ name|ReturnValue
 init|=
 name|ReturnValueSlot
 argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|checkTargetFeatures
+parameter_list|(
+specifier|const
+name|CallExpr
+modifier|*
+name|E
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|TargetDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13386,28 +13992,6 @@ name|Value
 operator|*
 operator|>
 name|Args
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Name
-operator|=
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|CallSite
-name|EmitCallOrInvoke
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Callee
 argument_list|,
 specifier|const
 name|Twine
@@ -13674,6 +14258,38 @@ begin_comment
 comment|// Compute the object pointer.
 end_comment
 
+begin_decl_stmt
+name|Address
+name|EmitCXXMemberDataPointerAddress
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|Address
+name|base
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|memberPtr
+argument_list|,
+specifier|const
+name|MemberPointerType
+operator|*
+name|memberPtrType
+argument_list|,
+name|AlignmentSource
+operator|*
+name|AlignSource
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|RValue
 name|EmitCXXMemberPointerCallExpr
@@ -13840,7 +14456,9 @@ argument|const CallExpr *E
 argument_list|,
 argument|SmallVectorImpl<llvm::Value *>&Ops
 argument_list|,
-argument|llvm::Value *Align = nullptr
+argument|Address PtrOp0
+argument_list|,
+argument|Address PtrOp1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -13938,26 +14556,6 @@ argument_list|,
 argument|bool usgn
 argument_list|,
 argument|const char *name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Helper functions for EmitAArch64BuiltinExpr.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|vectorWrapScalar8
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Op
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14073,6 +14671,20 @@ operator|::
 name|Value
 operator|*
 name|EmitNVPTXBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitWebAssemblyBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
@@ -14245,33 +14857,27 @@ begin_decl_stmt
 name|void
 name|EmitARCInitWeak
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|value
+name|Address
+name|addr
 argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|addr
+name|value
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitARCDestroyWeak
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|addr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -14280,11 +14886,7 @@ name|Value
 operator|*
 name|EmitARCLoadWeak
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|addr
+argument|Address addr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14296,11 +14898,7 @@ name|Value
 operator|*
 name|EmitARCLoadWeakRetained
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|addr
+argument|Address addr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14312,52 +14910,40 @@ name|Value
 operator|*
 name|EmitARCStoreWeak
 argument_list|(
-argument|llvm::Value *value
+argument|Address addr
 argument_list|,
-argument|llvm::Value *addr
+argument|llvm::Value *value
 argument_list|,
 argument|bool ignored
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitARCCopyWeak
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|dst
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|src
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitARCMoveWeak
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|dst
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|src
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -14412,7 +14998,7 @@ name|Value
 operator|*
 name|EmitARCStoreStrongCall
 argument_list|(
-argument|llvm::Value *addr
+argument|Address addr
 argument_list|,
 argument|llvm::Value *value
 argument_list|,
@@ -14465,21 +15051,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitARCDestroyStrong
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|addr
-argument_list|,
+parameter_list|,
 name|ARCPreciseLifetime_t
 name|precise
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -14615,20 +15198,6 @@ specifier|const
 name|Expr
 operator|*
 name|expr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitObjCProduceObject
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|llvm::Value *Ptr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14857,11 +15426,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitScalarConversion - Emit a conversion from the specified type to the
+comment|/// Emit a conversion from the specified type to the specified destination
 end_comment
 
 begin_comment
-comment|/// specified destination type, both of which are LLVM scalar types.
+comment|/// type, both of which are LLVM scalar types.
 end_comment
 
 begin_expr_stmt
@@ -14876,20 +15445,18 @@ argument_list|,
 argument|QualType SrcTy
 argument_list|,
 argument|QualType DstTy
+argument_list|,
+argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitComplexToScalarConversion - Emit a conversion from the specified
+comment|/// Emit a conversion from the specified complex type to the specified
 end_comment
 
 begin_comment
-comment|/// complex type to the specified destination type, where the destination type
-end_comment
-
-begin_comment
-comment|/// is an LLVM scalar type.
+comment|/// destination type, where the destination type is an LLVM scalar type.
 end_comment
 
 begin_expr_stmt
@@ -14904,6 +15471,8 @@ argument_list|,
 argument|QualType SrcTy
 argument_list|,
 argument|QualType DstTy
+argument_list|,
+argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14954,36 +15523,6 @@ name|E
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// EmitGCMemmoveCollectable - Emit special API for structs with object
-end_comment
-
-begin_comment
-comment|/// pointers.
-end_comment
-
-begin_decl_stmt
-name|void
-name|EmitGCMemmoveCollectable
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestPtr
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcPtr
-argument_list|,
-name|QualType
-name|Ty
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// EmitExtendGCLifetime - Given a pointer to an Objective-C object,
@@ -15095,6 +15634,32 @@ name|src
 parameter_list|,
 name|SourceLocation
 name|loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|emitAddrOfRealComponent
+parameter_list|(
+name|Address
+name|complex
+parameter_list|,
+name|QualType
+name|complexType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Address
+name|emitAddrOfImagComponent
+parameter_list|(
+name|Address
+name|complex
+parameter_list|,
+name|QualType
+name|complexType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15292,13 +15857,13 @@ operator|*
 operator|>
 name|CXXThreadLocals
 argument_list|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+name|Address
 name|Guard
 operator|=
-name|nullptr
+name|Address
+operator|::
+name|invalid
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -15388,29 +15953,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitSynthesizedCXXCopyCtor
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|(
+name|Address
 name|Dest
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|Exp
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -15484,24 +16043,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|RValue
 name|EmitAtomicExpr
-argument_list|(
+parameter_list|(
 name|AtomicExpr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Dest
-operator|=
-name|nullptr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -15567,26 +16118,20 @@ begin_comment
 comment|/// annotation result.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
+begin_function_decl
+name|Address
 name|EmitFieldAnnotations
-argument_list|(
+parameter_list|(
 specifier|const
 name|FieldDecl
-operator|*
+modifier|*
 name|D
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
+parameter_list|,
+name|Address
 name|V
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -15880,6 +16425,39 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Emit a slow path cross-DSO CFI check which calls __cfi_slowpath
+end_comment
+
+begin_comment
+comment|/// if Cond if false.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitCfiSlowPathCheck
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Cond
+argument_list|,
+name|llvm
+operator|::
+name|ConstantInt
+operator|*
+name|TypeId
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Ptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Create a basic block that will call the trap intrinsic, and emit a
 end_comment
 
@@ -16106,6 +16684,50 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Set the address of a local variable.
+end_comment
+
+begin_function
+name|void
+name|setAddrOfLocalVar
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|Address
+name|Addr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|LocalDeclMap
+operator|.
+name|count
+argument_list|(
+name|VD
+argument_list|)
+operator|&&
+literal|"Decl already exists in LocalDeclMap!"
+argument_list|)
+expr_stmt|;
+name|LocalDeclMap
+operator|.
+name|insert
+argument_list|(
+block|{
+name|VD
+block|,
+name|Addr
+block|}
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// ExpandTypeFromArgs - Reconstruct a structure of type \arg Ty
 end_comment
 
@@ -16235,6 +16857,62 @@ argument_list|,
 argument|std::string&ConstraintStr
 argument_list|,
 argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Attempts to statically evaluate the object size of E. If that
+end_comment
+
+begin_comment
+comment|/// fails, emits code to figure the size of E out for us. This is
+end_comment
+
+begin_comment
+comment|/// pass_object_size aware.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|evaluateOrEmitBuiltinObjectSize
+argument_list|(
+argument|const Expr *E
+argument_list|,
+argument|unsigned Type
+argument_list|,
+argument|llvm::IntegerType *ResType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Emits the size of E, as required by __builtin_object_size. This
+end_comment
+
+begin_comment
+comment|/// function is aware of pass_object_size parameters, and will act accordingly
+end_comment
+
+begin_comment
+comment|/// if E is a parameter with the pass_object_size attribute.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitBuiltinObjectSize
+argument_list|(
+argument|const Expr *E
+argument_list|,
+argument|unsigned Type
+argument_list|,
+argument|llvm::IntegerType *ResType
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16372,9 +17050,7 @@ argument|CallArgList&Args
 argument_list|,
 argument|const T *CallArgTypeInfo
 argument_list|,
-argument|CallExpr::const_arg_iterator ArgBeg
-argument_list|,
-argument|CallExpr::const_arg_iterator ArgEnd
+argument|llvm::iterator_range<CallExpr::const_arg_iterator> ArgRange
 argument_list|,
 argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
@@ -16395,7 +17071,10 @@ operator|::
 name|const_arg_iterator
 name|Arg
 operator|=
-name|ArgBeg
+name|ArgRange
+operator|.
+name|begin
+argument_list|()
 block|;
 name|assert
 argument_list|(
@@ -16463,7 +17142,10 @@ name|assert
 argument_list|(
 name|Arg
 operator|!=
-name|ArgEnd
+name|ArgRange
+operator|.
+name|end
+argument_list|()
 operator|&&
 literal|"Running over edge of argument list!"
 argument_list|)
@@ -16515,7 +17197,10 @@ argument_list|()
 operator|.
 name|getCanonicalType
 argument_list|(
+operator|(
+operator|*
 name|Arg
+operator|)
 operator|->
 name|getType
 argument_list|()
@@ -16555,7 +17240,10 @@ operator|(
 operator|(
 name|Arg
 operator|==
-name|ArgEnd
+name|ArgRange
+operator|.
+name|end
+argument_list|()
 operator|||
 operator|!
 name|CallArgTypeInfo
@@ -16578,13 +17266,21 @@ end_comment
 begin_for
 for|for
 control|(
-init|;
+name|auto
+operator|*
+name|A
+operator|:
+name|llvm
+operator|::
+name|make_range
+argument_list|(
 name|Arg
-operator|!=
-name|ArgEnd
-condition|;
-operator|++
-name|Arg
+argument_list|,
+name|ArgRange
+operator|.
+name|end
+argument_list|()
+argument_list|)
 control|)
 name|ArgTypes
 operator|.
@@ -16592,8 +17288,7 @@ name|push_back
 argument_list|(
 name|getVarArgType
 argument_list|(
-operator|*
-name|Arg
+name|A
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16606,9 +17301,7 @@ name|Args
 argument_list|,
 name|ArgTypes
 argument_list|,
-name|ArgBeg
-argument_list|,
-name|ArgEnd
+name|ArgRange
 argument_list|,
 name|CalleeDecl
 argument_list|,
@@ -16625,9 +17318,7 @@ argument|CallArgList&Args
 argument_list|,
 argument|ArrayRef<QualType> ArgTypes
 argument_list|,
-argument|CallExpr::const_arg_iterator ArgBeg
-argument_list|,
-argument|CallExpr::const_arg_iterator ArgEnd
+argument|llvm::iterator_range<CallExpr::const_arg_iterator> ArgRange
 argument_list|,
 argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
@@ -16639,6 +17330,108 @@ end_macro
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// EmitPointerWithAlignment - Given an expression with a pointer
+end_comment
+
+begin_comment
+comment|/// type, emit the value and compute our best estimate of the
+end_comment
+
+begin_comment
+comment|/// alignment of the pointee.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that this function will conservatively fall back on the type
+end_comment
+
+begin_comment
+comment|/// when it doesn't
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Source - If non-null, this will be initialized with
+end_comment
+
+begin_comment
+comment|///   information about the source of the alignment.  Note that this
+end_comment
+
+begin_comment
+comment|///   function will conservatively fall back on the type when it
+end_comment
+
+begin_comment
+comment|///   doesn't recognize the expression, which means that sometimes
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   a worst-case One
+end_comment
+
+begin_comment
+comment|///   reasonable way to use this information is when there's a
+end_comment
+
+begin_comment
+comment|///   language guarantee that the pointer must be aligned to some
+end_comment
+
+begin_comment
+comment|///   stricter value, and we're simply trying to ensure that
+end_comment
+
+begin_comment
+comment|///   sufficiently obvious uses of under-aligned objects don't get
+end_comment
+
+begin_comment
+comment|///   miscompiled; for example, a placement new into the address of
+end_comment
+
+begin_comment
+comment|///   a local variable.  In such a case, it's quite reasonable to
+end_comment
+
+begin_comment
+comment|///   just ignore the returned alignment when it isn't from an
+end_comment
+
+begin_comment
+comment|///   explicit source.
+end_comment
+
+begin_function_decl
+name|Address
+name|EmitPointerWithAlignment
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|Addr
+parameter_list|,
+name|AlignmentSource
+modifier|*
+name|Source
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_label
 name|private
@@ -16681,11 +17474,9 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|CodeGenModule
-operator|::
-name|ByrefHelpers
-operator|*
+begin_decl_stmt
+name|BlockByrefHelpers
+modifier|*
 name|buildByrefHelpers
 argument_list|(
 name|llvm
@@ -16699,8 +17490,8 @@ name|AutoVarEmission
 operator|&
 name|emission
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -16714,36 +17505,6 @@ name|Inst
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// GetPointeeAlignment - Given an expression with a pointer type, emit the
-end_comment
-
-begin_comment
-comment|/// value and compute our best estimate of the alignment of the pointee.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|EmitPointerWithAlignment
-argument_list|(
-specifier|const
-name|Expr
-operator|*
-name|Addr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|llvm
@@ -16882,13 +17643,33 @@ argument_list|,
 name|false
 argument_list|)
 return|;
-comment|// Otherwise we need an alloca.
-name|llvm
+comment|// Otherwise, we need an alloca.
+name|auto
+name|align
+init|=
+name|CharUnits
 operator|::
-name|Value
-operator|*
+name|fromQuantity
+argument_list|(
+name|CGF
+operator|.
+name|CGM
+operator|.
+name|getDataLayout
+argument_list|()
+operator|.
+name|getPrefTypeAlignment
+argument_list|(
+name|value
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|Address
 name|alloca
-operator|=
+init|=
 name|CGF
 operator|.
 name|CreateTempAlloca
@@ -16898,9 +17679,11 @@ operator|->
 name|getType
 argument_list|()
 argument_list|,
+name|align
+argument_list|,
 literal|"cond-cleanup.save"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|CGF
 operator|.
 name|Builder
@@ -16916,6 +17699,9 @@ return|return
 name|saved_type
 argument_list|(
 name|alloca
+operator|.
+name|getPointer
+argument_list|()
 argument_list|,
 name|true
 argument_list|)
@@ -16933,6 +17719,7 @@ argument_list|,
 argument|saved_type value
 argument_list|)
 block|{
+comment|// If the value says it wasn't saved, trust that it's still dominating.
 if|if
 condition|(
 operator|!
@@ -16947,16 +17734,35 @@ operator|.
 name|getPointer
 argument_list|()
 return|;
+comment|// Otherwise, it should be an alloca instruction, as set up in save().
+name|auto
+name|alloca
+operator|=
+name|cast
+operator|<
+name|llvm
+operator|::
+name|AllocaInst
+operator|>
+operator|(
+name|value
+operator|.
+name|getPointer
+argument_list|()
+operator|)
+expr_stmt|;
 return|return
 name|CGF
 operator|.
 name|Builder
 operator|.
-name|CreateLoad
+name|CreateAlignedLoad
 argument_list|(
-name|value
-operator|.
-name|getPointer
+name|alloca
+argument_list|,
+name|alloca
+operator|->
+name|getAlignment
 argument_list|()
 argument_list|)
 return|;
@@ -17028,6 +17834,133 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// A specialization of DominatingValue for Address.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|DominatingValue
+operator|<
+name|Address
+operator|>
+block|{
+typedef|typedef
+name|Address
+name|type
+typedef|;
+block|struct
+name|saved_type
+block|{
+name|DominatingLLVMValue
+operator|::
+name|saved_type
+name|SavedValue
+block|;
+name|CharUnits
+name|Alignment
+block|;   }
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|bool
+name|needsSaving
+parameter_list|(
+name|type
+name|value
+parameter_list|)
+block|{
+return|return
+name|DominatingLLVMValue
+operator|::
+name|needsSaving
+argument_list|(
+name|value
+operator|.
+name|getPointer
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|saved_type
+name|save
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|type
+name|value
+parameter_list|)
+block|{
+return|return
+block|{
+name|DominatingLLVMValue
+operator|::
+name|save
+argument_list|(
+name|CGF
+argument_list|,
+name|value
+operator|.
+name|getPointer
+argument_list|()
+argument_list|)
+block|,
+name|value
+operator|.
+name|getAlignment
+argument_list|()
+block|}
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|type
+name|restore
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|saved_type
+name|value
+parameter_list|)
+block|{
+return|return
+name|Address
+argument_list|(
+name|DominatingLLVMValue
+operator|::
+name|restore
+argument_list|(
+name|CGF
+argument_list|,
+name|value
+operator|.
+name|SavedValue
+argument_list|)
+argument_list|,
+name|value
+operator|.
+name|Alignment
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
 comment|/// A specialization of DominatingValue for RValue.
 end_comment
 
@@ -17067,14 +18000,24 @@ name|Value
 operator|*
 name|Value
 block|;
-name|Kind
+name|unsigned
 name|K
+operator|:
+literal|3
+block|;
+name|unsigned
+name|Align
+operator|:
+literal|29
 block|;
 name|saved_type
 argument_list|(
 argument|llvm::Value *v
 argument_list|,
 argument|Kind k
+argument_list|,
+argument|unsigned a =
+literal|0
 argument_list|)
 operator|:
 name|Value
@@ -17084,7 +18027,12 @@ argument_list|)
 block|,
 name|K
 argument_list|(
-argument|k
+name|k
+argument_list|)
+block|,
+name|Align
+argument_list|(
+argument|a
 argument_list|)
 block|{}
 name|public
@@ -17113,7 +18061,7 @@ operator|&
 name|CGF
 argument_list|)
 block|;
-comment|// implementations in CGExprCXX.cpp
+comment|// implementations in CGCleanup.cpp
 block|}
 expr_stmt|;
 end_expr_stmt

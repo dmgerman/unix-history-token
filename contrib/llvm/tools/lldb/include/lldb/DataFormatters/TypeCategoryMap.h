@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- TypeCategoryMap.h ----------------------------------------*- C++ -*-===//
+comment|//===-- TypeCategoryMap.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -50,6 +50,24 @@ end_comment
 begin_comment
 comment|// C++ Includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
 
 begin_comment
 comment|// Other libraries and framework includes
@@ -143,20 +161,19 @@ name|iterator
 name|MapIterator
 expr_stmt|;
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|bool
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
+argument_list|(
 specifier|const
 name|ValueSP
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+operator|>
+name|ForEachCallback
+expr_stmt|;
 typedef|typedef
 name|uint32_t
 name|Position
@@ -281,14 +298,10 @@ name|entry
 parameter_list|)
 function_decl|;
 name|void
-name|LoopThrough
+name|ForEach
 parameter_list|(
-name|CallbackType
+name|ForEachCallback
 name|callback
-parameter_list|,
-name|void
-modifier|*
-name|param
 parameter_list|)
 function_decl|;
 name|lldb
@@ -325,7 +338,7 @@ operator|*
 operator|*
 name|matching_category
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 name|TypeCategoryImpl
 operator|::
@@ -333,7 +346,7 @@ name|FormatCategoryItems
 operator|*
 name|matching_type
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|uint32_t
@@ -352,9 +365,9 @@ operator|::
 name|TypeFormatImplSP
 name|GetFormat
 argument_list|(
-argument|ValueObject& valobj
-argument_list|,
-argument|lldb::DynamicValueType use_dynamic
+name|FormattersMatchData
+operator|&
+name|match_data
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -362,9 +375,9 @@ operator|::
 name|TypeSummaryImplSP
 name|GetSummaryFormat
 argument_list|(
-argument|ValueObject& valobj
-argument_list|,
-argument|lldb::DynamicValueType use_dynamic
+name|FormattersMatchData
+operator|&
+name|match_data
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -375,9 +388,9 @@ operator|::
 name|SyntheticChildrenSP
 name|GetSyntheticChildren
 argument_list|(
-argument|ValueObject& valobj
-argument_list|,
-argument|lldb::DynamicValueType use_dynamic
+name|FormattersMatchData
+operator|&
+name|match_data
 argument_list|)
 expr_stmt|;
 endif|#
@@ -387,9 +400,9 @@ operator|::
 name|TypeValidatorImplSP
 name|GetValidator
 argument_list|(
-argument|ValueObject& valobj
-argument_list|,
-argument|lldb::DynamicValueType use_dynamic
+name|FormattersMatchData
+operator|&
+name|match_data
 argument_list|)
 expr_stmt|;
 name|private

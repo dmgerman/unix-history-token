@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -243,8 +249,8 @@ name|class
 name|LoopBase
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// LoopBase class - Instances of this class are used to represent loops that
-comment|/// are detected in the flow graph
+comment|/// Instances of this class are used to represent loops that are detected in the
+comment|/// flow graph.
 comment|///
 name|template
 operator|<
@@ -261,7 +267,7 @@ name|LoopT
 operator|*
 name|ParentLoop
 block|;
-comment|// SubLoops - Loops contained entirely within this one.
+comment|// Loops contained entirely within this one.
 name|std
 operator|::
 name|vector
@@ -271,7 +277,7 @@ operator|*
 operator|>
 name|SubLoops
 block|;
-comment|// Blocks - The list of blocks in this loop.  First entry is the header node.
+comment|// The list of blocks in this loop. First entry is the header node.
 name|std
 operator|::
 name|vector
@@ -290,6 +296,12 @@ block|,
 literal|8
 operator|>
 name|DenseBlockSet
+block|;
+comment|/// Indicator that this loop is no longer a valid loop.
+name|bool
+name|IsInvalid
+operator|=
+name|false
 block|;
 name|LoopBase
 argument_list|(
@@ -330,7 +342,7 @@ name|delete
 block|;
 name|public
 operator|:
-comment|/// Loop ctor - This creates an empty loop.
+comment|/// This creates an empty loop.
 name|LoopBase
 argument_list|()
 operator|:
@@ -371,9 +383,9 @@ name|i
 index|]
 decl_stmt|;
 block|}
-comment|/// getLoopDepth - Return the nesting level of this loop.  An outer-most
-comment|/// loop has depth 1, for consistency with loop depth values used for basic
-comment|/// blocks, where depth 0 is used for blocks not inside any loops.
+comment|/// Return the nesting level of this loop.  An outer-most loop has depth 1,
+comment|/// for consistency with loop depth values used for basic blocks, where depth
+comment|/// 0 is used for blocks not inside any loops.
 name|unsigned
 name|getLoopDepth
 argument_list|()
@@ -431,7 +443,7 @@ return|return
 name|ParentLoop
 return|;
 block|}
-comment|/// setParentLoop is a raw interface for bypassing addChildLoop.
+comment|/// This is a raw interface for bypassing addChildLoop.
 name|void
 name|setParentLoop
 parameter_list|(
@@ -445,9 +457,7 @@ operator|=
 name|L
 expr_stmt|;
 block|}
-comment|/// contains - Return true if the specified loop is contained within in
-comment|/// this loop.
-comment|///
+comment|/// Return true if the specified loop is contained within in this loop.
 name|bool
 name|contains
 argument_list|(
@@ -485,8 +495,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// contains - Return true if the specified basic block is in this loop.
-comment|///
+comment|/// Return true if the specified basic block is in this loop.
 name|bool
 name|contains
 argument_list|(
@@ -506,8 +515,7 @@ name|BB
 argument_list|)
 return|;
 block|}
-comment|/// contains - Return true if the specified instruction is in this loop.
-comment|///
+comment|/// Return true if the specified instruction is in this loop.
 name|template
 operator|<
 name|class
@@ -530,8 +538,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// iterator/begin/end - Return the loops contained entirely within this loop.
-comment|///
+comment|/// Return the loops contained entirely within this loop.
 specifier|const
 name|std
 operator|::
@@ -650,8 +657,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// getBlocks - Get a list of the basic blocks which make up this loop.
-comment|///
+comment|/// Get a list of the basic blocks which make up this loop.
 specifier|const
 name|std
 operator|::
@@ -706,7 +712,27 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// getNumBlocks - Get the number of blocks in this loop in constant time.
+specifier|inline
+name|iterator_range
+operator|<
+name|block_iterator
+operator|>
+name|blocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|block_begin
+argument_list|()
+argument_list|,
+name|block_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Get the number of blocks in this loop in constant time.
 name|unsigned
 name|getNumBlocks
 argument_list|()
@@ -719,9 +745,27 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// isLoopExiting - True if terminator in the block can branch to another
-comment|/// block that is outside of the current loop.
-comment|///
+comment|/// Invalidate the loop, indicating that it is no longer a loop.
+name|void
+name|invalidate
+parameter_list|()
+block|{
+name|IsInvalid
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// Return true if this loop is no longer valid.
+name|bool
+name|isInvalid
+parameter_list|()
+block|{
+return|return
+name|IsInvalid
+return|;
+block|}
+comment|/// True if terminator in the block can branch to another block that is
+comment|/// outside of the current loop.
 name|bool
 name|isLoopExiting
 argument_list|(
@@ -790,8 +834,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getNumBackEdges - Calculate the number of back edges to the loop header
-comment|///
+comment|/// Calculate the number of back edges to the loop header.
 name|unsigned
 name|getNumBackEdges
 argument_list|()
@@ -897,19 +940,15 @@ comment|// for easy analysis.  These methods assume canonical loops.
 end_comment
 
 begin_comment
-comment|/// getExitingBlocks - Return all blocks inside the loop that have successors
+comment|/// Return all blocks inside the loop that have successors outside of the
 end_comment
 
 begin_comment
-comment|/// outside of the loop.  These are the blocks _inside of the current loop_
+comment|/// loop. These are the blocks _inside of the current loop_ which branch out.
 end_comment
 
 begin_comment
-comment|/// which branch out.  The returned list is always unique.
-end_comment
-
-begin_comment
-comment|///
+comment|/// The returned list is always unique.
 end_comment
 
 begin_decl_stmt
@@ -929,11 +968,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getExitingBlock - If getExitingBlocks would return exactly one block,
+comment|/// If getExitingBlocks would return exactly one block, return that block.
 end_comment
 
 begin_comment
-comment|/// return that block. Otherwise return null.
+comment|/// Otherwise return null.
 end_comment
 
 begin_expr_stmt
@@ -946,15 +985,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getExitBlocks - Return all of the successor blocks of this loop.  These
+comment|/// Return all of the successor blocks of this loop. These are the blocks
 end_comment
 
 begin_comment
-comment|/// are the blocks _outside of the current loop_ which are branched to.
-end_comment
-
-begin_comment
-comment|///
+comment|/// _outside of the current loop_ which are branched to.
 end_comment
 
 begin_decl_stmt
@@ -974,11 +1009,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getExitBlock - If getExitBlocks would return exactly one block,
+comment|/// If getExitBlocks would return exactly one block, return that block.
 end_comment
 
 begin_comment
-comment|/// return that block. Otherwise return null.
+comment|/// Otherwise return null.
 end_comment
 
 begin_expr_stmt
@@ -1013,7 +1048,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// getExitEdges - Return all pairs of (_inside_block_,_outside_block_).
+comment|/// Return all pairs of (_inside_block_,_outside_block_).
 end_comment
 
 begin_decl_stmt
@@ -1032,19 +1067,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getLoopPreheader - If there is a preheader for this loop, return it.  A
+comment|/// If there is a preheader for this loop, return it. A loop has a preheader
 end_comment
 
 begin_comment
-comment|/// loop has a preheader if there is only one edge to the header of the loop
+comment|/// if there is only one edge to the header of the loop from outside of the
 end_comment
 
 begin_comment
-comment|/// from outside of the loop.  If this is the case, the block branching to the
+comment|/// loop. If this is the case, the block branching to the header of the loop
 end_comment
 
 begin_comment
-comment|/// header of the loop is the preheader node.
+comment|/// is the preheader node.
 end_comment
 
 begin_comment
@@ -1053,10 +1088,6 @@ end_comment
 
 begin_comment
 comment|/// This method returns null if there is no preheader for the loop.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -1069,23 +1100,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getLoopPredecessor - If the given loop's header has exactly one unique
+comment|/// If the given loop's header has exactly one unique predecessor outside the
 end_comment
 
 begin_comment
-comment|/// predecessor outside the loop, return it. Otherwise return null.
+comment|/// loop, return it. Otherwise return null.
 end_comment
 
 begin_comment
-comment|/// This is less strict that the loop "preheader" concept, which requires
+comment|///  This is less strict that the loop "preheader" concept, which requires
 end_comment
 
 begin_comment
 comment|/// the predecessor to have exactly one successor.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -1098,7 +1125,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getLoopLatch - If there is a single latch block for this loop, return it.
+comment|/// If there is a single latch block for this loop, return it.
 end_comment
 
 begin_comment
@@ -1115,11 +1142,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getLoopLatches - Return all loop latch blocks of this loop. A latch block
+comment|/// Return all loop latch blocks of this loop. A latch block is a block that
 end_comment
 
 begin_comment
-comment|/// is a block that contains a branch back to the header.
+comment|/// contains a branch back to the header.
 end_comment
 
 begin_decl_stmt
@@ -1217,11 +1244,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|/// addBasicBlockToLoop - This method is used by other analyses to update loop
+comment|/// This method is used by other analyses to update loop information.
 end_comment
 
 begin_comment
-comment|/// information.  NewBB is set to be a new member of the current loop.
+comment|/// NewBB is set to be a new member of the current loop.
 end_comment
 
 begin_comment
@@ -1234,10 +1261,6 @@ end_comment
 
 begin_comment
 comment|/// is not valid to replace the loop header with this method.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_decl_stmt
@@ -1261,15 +1284,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// replaceChildLoopWith - This is used when splitting loops up.  It replaces
+comment|/// This is used when splitting loops up. It replaces the OldChild entry in
 end_comment
 
 begin_comment
-comment|/// the OldChild entry in our children list with NewChild, and updates the
+comment|/// our children list with NewChild, and updates the parent pointer of
 end_comment
 
 begin_comment
-comment|/// parent pointer of OldChild to be null and the NewChild to be this loop.
+comment|/// OldChild to be null and the NewChild to be this loop.
 end_comment
 
 begin_comment
@@ -1292,15 +1315,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// addChildLoop - Add the specified loop to be a child of this loop.  This
+comment|/// Add the specified loop to be a child of this loop.
 end_comment
 
 begin_comment
-comment|/// updates the loop depth of the new child.
-end_comment
-
-begin_comment
-comment|///
+comment|/// This updates the loop depth of the new child.
 end_comment
 
 begin_function
@@ -1346,15 +1365,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// removeChildLoop - This removes the specified child from being a subloop of
+comment|/// This removes the specified child from being a subloop of this loop. The
 end_comment
 
 begin_comment
-comment|/// this loop.  The loop is not deleted, as it will presumably be inserted
-end_comment
-
-begin_comment
-comment|/// into another loop.
+comment|/// loop is not deleted, as it will presumably be inserted into another loop.
 end_comment
 
 begin_function
@@ -1426,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// addBlockEntry - This adds a basic block directly to the basic block list.
+comment|/// This adds a basic block directly to the basic block list.
 end_comment
 
 begin_comment
@@ -1464,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// reverseBlocks - interface to reverse Blocks[from, end of loop] in this loop
+comment|/// interface to reverse Blocks[from, end of loop] in this loop
 end_comment
 
 begin_function
@@ -1496,7 +1511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// reserveBlocks- interface to do reserve() for Blocks
+comment|/// interface to do reserve() for Blocks
 end_comment
 
 begin_function
@@ -1518,15 +1533,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// moveToHeader - This method is used to move BB (which must be part of this
+comment|/// This method is used to move BB (which must be part of this loop) to be the
 end_comment
 
 begin_comment
-comment|/// loop) to be the loop header of the loop (the block that dominates all
-end_comment
-
-begin_comment
-comment|/// others).
+comment|/// loop header of the loop (the block that dominates all others).
 end_comment
 
 begin_function
@@ -1606,15 +1617,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// removeBlockFromLoop - This removes the specified basic block from the
+comment|/// This removes the specified basic block from the current loop, updating the
 end_comment
 
 begin_comment
-comment|/// current loop, updating the Blocks as appropriate.  This does not update
+comment|/// Blocks as appropriate. This does not update the mapping in the LoopInfo
 end_comment
 
 begin_comment
-comment|/// the mapping in the LoopInfo class.
+comment|/// class.
 end_comment
 
 begin_function
@@ -1676,7 +1687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// verifyLoop - Verify loop structure
+comment|/// Verify loop structure
 end_comment
 
 begin_expr_stmt
@@ -1688,7 +1699,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// verifyLoop - Verify loop structure of this loop and all nested loops.
+comment|/// Verify loop structure of this loop and all nested loops.
 end_comment
 
 begin_decl_stmt
@@ -1845,8 +1856,7 @@ label|:
 name|Loop
 argument_list|()
 block|{}
-comment|/// isLoopInvariant - Return true if the specified value is loop invariant
-comment|///
+comment|/// Return true if the specified value is loop invariant.
 name|bool
 name|isLoopInvariant
 argument_list|(
@@ -1857,8 +1867,8 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// hasLoopInvariantOperands - Return true if all the operands of the
-comment|/// specified instruction are loop invariant.
+comment|/// Return true if all the operands of the specified instruction are loop
+comment|/// invariant.
 name|bool
 name|hasLoopInvariantOperands
 argument_list|(
@@ -1869,15 +1879,14 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// makeLoopInvariant - If the given value is an instruction inside of the
-comment|/// loop and it can be hoisted, do so to make it trivially loop-invariant.
+comment|/// If the given value is an instruction inside of the loop and it can be
+comment|/// hoisted, do so to make it trivially loop-invariant.
 comment|/// Return true if the value after any hoisting is loop invariant. This
 comment|/// function can be used as a slightly more aggressive replacement for
 comment|/// isLoopInvariant.
 comment|///
 comment|/// If InsertPt is specified, it is the point to hoist instructions to.
 comment|/// If null, the terminator of the loop preheader is used.
-comment|///
 name|bool
 name|makeLoopInvariant
 argument_list|(
@@ -1897,8 +1906,8 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// makeLoopInvariant - If the given instruction is inside of the
-comment|/// loop and it can be hoisted, do so to make it trivially loop-invariant.
+comment|/// If the given instruction is inside of the loop and it can be hoisted, do
+comment|/// so to make it trivially loop-invariant.
 comment|/// Return true if the instruction after any hoisting is loop invariant. This
 comment|/// function can be used as a slightly more aggressive replacement for
 comment|/// isLoopInvariant.
@@ -1925,10 +1934,9 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getCanonicalInductionVariable - Check to see if the loop has a canonical
-comment|/// induction variable: an integer recurrence that starts at 0 and increments
-comment|/// by one each time through the loop.  If so, return the phi node that
-comment|/// corresponds to it.
+comment|/// Check to see if the loop has a canonical induction variable: an integer
+comment|/// recurrence that starts at 0 and increments by one each time through the
+comment|/// loop. If so, return the phi node that corresponds to it.
 comment|///
 comment|/// The IndVarSimplify pass transforms loops to have a canonical induction
 comment|/// variable.
@@ -1939,7 +1947,7 @@ name|getCanonicalInductionVariable
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isLCSSAForm - Return true if the Loop is in LCSSA form
+comment|/// Return true if the Loop is in LCSSA form.
 name|bool
 name|isLCSSAForm
 argument_list|(
@@ -1949,15 +1957,24 @@ name|DT
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isLoopSimplifyForm - Return true if the Loop is in the form that
-comment|/// the LoopSimplify form transforms loops to, which is sometimes called
-comment|/// normal form.
+comment|/// Return true if this Loop and all inner subloops are in LCSSA form.
+name|bool
+name|isRecursivelyLCSSAForm
+argument_list|(
+name|DominatorTree
+operator|&
+name|DT
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return true if the Loop is in the form that the LoopSimplify form
+comment|/// transforms loops to, which is sometimes called normal form.
 name|bool
 name|isLoopSimplifyForm
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isSafeToClone - Return true if the loop body is safe to clone in practice.
+comment|/// Return true if the loop body is safe to clone in practice.
 name|bool
 name|isSafeToClone
 argument_list|()
@@ -2008,17 +2025,16 @@ name|LoopID
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// hasDedicatedExits - Return true if no exit block for the loop
-comment|/// has a predecessor that is outside the loop.
+comment|/// Return true if no exit block for the loop has a predecessor that is
+comment|/// outside the loop.
 name|bool
 name|hasDedicatedExits
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getUniqueExitBlocks - Return all unique successor blocks of this loop.
+comment|/// Return all unique successor blocks of this loop.
 comment|/// These are the blocks _outside of the current loop_ which are branched to.
 comment|/// This assumes that loop exits are in canonical form.
-comment|///
 name|void
 name|getUniqueExitBlocks
 argument_list|(
@@ -2032,8 +2048,8 @@ name|ExitBlocks
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getUniqueExitBlock - If getUniqueExitBlocks would return exactly one
-comment|/// block, return that block. Otherwise return null.
+comment|/// If getUniqueExitBlocks would return exactly one block, return that block.
+comment|/// Otherwise return null.
 name|BasicBlock
 operator|*
 name|getUniqueExitBlock
@@ -2045,7 +2061,7 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Return the debug location of the start of this loop.
+comment|/// Return the debug location of the start of this loop.
 comment|/// This looks for a BB terminating instruction with a known debug
 comment|/// location by looking at the preheader and header blocks. If it
 comment|/// cannot find a terminating instruction with location information,
@@ -2161,7 +2177,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// LoopInfo - This class builds and contains all of the top level loop
+comment|/// This class builds and contains all of the top-level loop
 end_comment
 
 begin_comment
@@ -2204,6 +2220,15 @@ name|LoopT
 operator|*
 operator|>
 name|TopLevelLoops
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|LoopT
+operator|*
+operator|>
+name|RemovedLoops
 block|;
 name|friend
 name|class
@@ -2365,6 +2390,22 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|auto
+operator|*
+name|L
+operator|:
+name|RemovedLoops
+control|)
+name|delete
+name|L
+decl_stmt|;
+name|RemovedLoops
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2488,15 +2529,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getLoopFor - Return the inner most loop that BB lives in.  If a basic
+comment|/// Return the inner most loop that BB lives in. If a basic block is in no
 end_comment
 
 begin_comment
-comment|/// block is in no loop (for example the entry node), null is returned.
-end_comment
-
-begin_comment
-comment|///
+comment|/// loop (for example the entry node), null is returned.
 end_comment
 
 begin_decl_stmt
@@ -2523,11 +2560,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// operator[] - same as getLoopFor...
-end_comment
-
-begin_comment
-comment|///
+comment|/// Same as getLoopFor.
 end_comment
 
 begin_decl_stmt
@@ -2554,15 +2587,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// getLoopDepth - Return the loop nesting level of the specified block.  A
+comment|/// Return the loop nesting level of the specified block. A depth of 0 means
 end_comment
 
 begin_comment
-comment|/// depth of 0 means the block is not inside any loop.
-end_comment
-
-begin_comment
-comment|///
+comment|/// the block is not inside any loop.
 end_comment
 
 begin_decl_stmt
@@ -2600,7 +2629,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// isLoopHeader - True if the block is a loop header node
+comment|// True if the block is a loop header node
 end_comment
 
 begin_decl_stmt
@@ -2638,11 +2667,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// removeLoop - This removes the specified top-level loop from this loop info
+comment|/// This removes the specified top-level loop from this loop info object.
 end_comment
 
 begin_comment
-comment|/// object.  The loop is not deleted, as it will presumably be inserted into
+comment|/// The loop is not deleted, as it will presumably be inserted into
 end_comment
 
 begin_comment
@@ -2710,15 +2739,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// changeLoopFor - Change the top-level loop that contains BB to the
+comment|/// Change the top-level loop that contains BB to the specified loop.
 end_comment
 
 begin_comment
-comment|/// specified loop.  This should be used by transformations that restructure
+comment|/// This should be used by transformations that restructure the loop hierarchy
 end_comment
 
 begin_comment
-comment|/// the loop hierarchy tree.
+comment|/// tree.
 end_comment
 
 begin_function
@@ -2760,11 +2789,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// changeTopLevelLoop - Replace the specified loop in the top-level loops
+comment|/// Replace the specified loop in the top-level loops list with the indicated
 end_comment
 
 begin_comment
-comment|/// list with the indicated loop.
+comment|/// loop.
 end_comment
 
 begin_function
@@ -2836,11 +2865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// addTopLevelLoop - This adds the specified loop to the collection of
-end_comment
-
-begin_comment
-comment|/// top-level loops.
+comment|/// This adds the specified loop to the collection of top-level loops.
 end_comment
 
 begin_function
@@ -2874,7 +2899,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// removeBlock - This method completely removes BB from all data structures,
+comment|/// This method completely removes BB from all data structures,
 end_comment
 
 begin_comment
@@ -3008,8 +3033,9 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|Analyze
+name|analyze
 argument_list|(
+specifier|const
 name|DominatorTreeBase
 operator|<
 name|BlockT
@@ -3110,6 +3136,18 @@ label|:
 name|LoopInfo
 argument_list|()
 block|{}
+name|explicit
+name|LoopInfo
+argument_list|(
+specifier|const
+name|DominatorTreeBase
+operator|<
+name|BasicBlock
+operator|>
+operator|&
+name|DomTree
+argument_list|)
+decl_stmt|;
 name|LoopInfo
 argument_list|(
 name|LoopInfo
@@ -3158,20 +3196,20 @@ name|this
 return|;
 block|}
 comment|// Most of the public interface is provided via LoopInfoBase.
-comment|/// updateUnloop - Update LoopInfo after removing the last backedge from a
-comment|/// loop--now the "unloop". This updates the loop forest and parent loops for
-comment|/// each block so that Unloop is no longer referenced, but the caller must
-comment|/// actually delete the Unloop object.
+comment|/// Update LoopInfo after removing the last backedge from a loop. This updates
+comment|/// the loop forest and parent loops for each block so that \c L is no longer
+comment|/// referenced, but does not actually delete \c L immediately. The pointer
+comment|/// will remain valid until this LoopInfo's memory is released.
 name|void
-name|updateUnloop
+name|markAsRemoved
 parameter_list|(
 name|Loop
 modifier|*
-name|Unloop
+name|L
 parameter_list|)
 function_decl|;
-comment|/// replacementPreservesLCSSAForm - Returns true if replacing From with To
-comment|/// everywhere is guaranteed to preserve LCSSA form.
+comment|/// Returns true if replacing From with To everywhere is guaranteed to
+comment|/// preserve LCSSA form.
 name|bool
 name|replacementPreservesLCSSAForm
 parameter_list|(
@@ -3261,6 +3299,311 @@ name|getParent
 argument_list|()
 argument_list|)
 argument_list|)
+return|;
+block|}
+comment|/// Checks if moving a specific instruction can break LCSSA in any loop.
+comment|///
+comment|/// Return true if moving \p Inst to before \p NewLoc will break LCSSA,
+comment|/// assuming that the function containing \p Inst and \p NewLoc is currently
+comment|/// in LCSSA form.
+name|bool
+name|movementPreservesLCSSAForm
+parameter_list|(
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+name|Instruction
+modifier|*
+name|NewLoc
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Inst
+operator|->
+name|getFunction
+argument_list|()
+operator|==
+name|NewLoc
+operator|->
+name|getFunction
+argument_list|()
+operator|&&
+literal|"Can't reason about IPO!"
+argument_list|)
+expr_stmt|;
+name|auto
+operator|*
+name|OldBB
+operator|=
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+name|auto
+operator|*
+name|NewBB
+operator|=
+name|NewLoc
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+comment|// Movement within the same loop does not break LCSSA (the equality check is
+comment|// to avoid doing a hashtable lookup in case of intra-block movement).
+if|if
+condition|(
+name|OldBB
+operator|==
+name|NewBB
+condition|)
+return|return
+name|true
+return|;
+name|auto
+operator|*
+name|OldLoop
+operator|=
+name|getLoopFor
+argument_list|(
+name|OldBB
+argument_list|)
+expr_stmt|;
+name|auto
+operator|*
+name|NewLoop
+operator|=
+name|getLoopFor
+argument_list|(
+name|NewBB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OldLoop
+operator|==
+name|NewLoop
+condition|)
+return|return
+name|true
+return|;
+comment|// Check if Outer contains Inner; with the null loop counting as the
+comment|// "outermost" loop.
+name|auto
+name|Contains
+init|=
+index|[]
+operator|(
+specifier|const
+name|Loop
+operator|*
+name|Outer
+expr|,
+specifier|const
+name|Loop
+operator|*
+name|Inner
+operator|)
+block|{
+return|return
+operator|!
+name|Outer
+operator|||
+name|Outer
+operator|->
+name|contains
+argument_list|(
+name|Inner
+argument_list|)
+return|;
+block|}
+empty_stmt|;
+comment|// To check that the movement of Inst to before NewLoc does not break LCSSA,
+comment|// we need to check two sets of uses for possible LCSSA violations at
+comment|// NewLoc: the users of NewInst, and the operands of NewInst.
+comment|// If we know we're hoisting Inst out of an inner loop to an outer loop,
+comment|// then the uses *of* Inst don't need to be checked.
+if|if
+condition|(
+operator|!
+name|Contains
+argument_list|(
+name|NewLoop
+argument_list|,
+name|OldLoop
+argument_list|)
+condition|)
+block|{
+for|for
+control|(
+name|Use
+modifier|&
+name|U
+range|:
+name|Inst
+operator|->
+name|uses
+argument_list|()
+control|)
+block|{
+name|auto
+operator|*
+name|UI
+operator|=
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|getUser
+argument_list|()
+operator|)
+expr_stmt|;
+name|auto
+operator|*
+name|UBB
+operator|=
+name|isa
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|UI
+operator|)
+condition|?
+name|cast
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|UI
+operator|)
+operator|->
+name|getIncomingBlock
+argument_list|(
+name|U
+argument_list|)
+else|:
+name|UI
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|UBB
+operator|!=
+name|NewBB
+operator|&&
+name|getLoopFor
+argument_list|(
+name|UBB
+argument_list|)
+operator|!=
+name|NewLoop
+condition|)
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|// If we know we're sinking Inst from an outer loop into an inner loop, then
+comment|// the *operands* of Inst don't need to be checked.
+if|if
+condition|(
+operator|!
+name|Contains
+argument_list|(
+name|OldLoop
+argument_list|,
+name|NewLoop
+argument_list|)
+condition|)
+block|{
+comment|// See below on why we can't handle phi nodes here.
+if|if
+condition|(
+name|isa
+operator|<
+name|PHINode
+operator|>
+operator|(
+name|Inst
+operator|)
+condition|)
+return|return
+name|false
+return|;
+for|for
+control|(
+name|Use
+modifier|&
+name|U
+range|:
+name|Inst
+operator|->
+name|operands
+argument_list|()
+control|)
+block|{
+name|auto
+operator|*
+name|DefI
+operator|=
+name|dyn_cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|U
+operator|.
+name|get
+argument_list|()
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DefI
+condition|)
+return|return
+name|false
+return|;
+comment|// This would need adjustment if we allow Inst to be a phi node -- the
+comment|// new use block won't simply be NewBB.
+name|auto
+operator|*
+name|DefBlock
+operator|=
+name|DefI
+operator|->
+name|getParent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DefBlock
+operator|!=
+name|NewBB
+operator|&&
+name|getLoopFor
+argument_list|(
+name|DefBlock
+argument_list|)
+operator|!=
+name|NewLoop
+condition|)
+return|return
+name|false
+return|;
+block|}
+block|}
+return|return
+name|true
 return|;
 block|}
 block|}
@@ -3671,6 +4014,68 @@ name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Pass for printing a loop's contents as LLVM's text IR assembly.
+end_comment
+
+begin_decl_stmt
+name|class
+name|PrintLoopPass
+block|{
+name|raw_ostream
+modifier|&
+name|OS
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Banner
+expr_stmt|;
+name|public
+label|:
+name|PrintLoopPass
+argument_list|()
+expr_stmt|;
+name|PrintLoopPass
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+name|PreservedAnalyses
+name|run
+parameter_list|(
+name|Loop
+modifier|&
+name|L
+parameter_list|)
+function_decl|;
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"PrintLoopPass"
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}

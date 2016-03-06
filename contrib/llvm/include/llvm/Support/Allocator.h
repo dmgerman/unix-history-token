@@ -875,6 +875,7 @@ name|void
 name|Reset
 argument_list|()
 block|{
+comment|// Deallocate all but the first slab, and deallocate all custom-sized slabs.
 name|DeallocateCustomSizedSlabs
 argument_list|()
 block|;
@@ -913,7 +914,20 @@ name|CurPtr
 operator|+
 name|SlabSize
 block|;
-comment|// Deallocate all but the first slab, and deallocate all custom-sized slabs.
+name|__asan_poison_memory_region
+argument_list|(
+operator|*
+name|Slabs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|computeSlabSize
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|;
 name|DeallocateSlabs
 argument_list|(
 name|std
@@ -1038,6 +1052,14 @@ argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
+comment|// Similarly, tell ASan about this space.
+name|__asan_unpoison_memory_region
+argument_list|(
+name|AlignedPtr
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
 return|return
 name|AlignedPtr
 return|;
@@ -1072,6 +1094,15 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+comment|// We own the new slab and don't want anyone reading anyting other than
+comment|// pieces returned from this method.  So poison the whole slab.
+name|__asan_poison_memory_region
+argument_list|(
+name|NewSlab
+argument_list|,
+name|PaddedSize
+argument_list|)
+expr_stmt|;
 name|CustomSizedSlabs
 operator|.
 name|push_back
@@ -1121,6 +1152,13 @@ operator|)
 name|AlignedAddr
 decl_stmt|;
 name|__msan_allocated_memory
+argument_list|(
+name|AlignedPtr
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+name|__asan_unpoison_memory_region
 argument_list|(
 name|AlignedPtr
 argument_list|,
@@ -1182,6 +1220,13 @@ argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
+name|__asan_unpoison_memory_region
+argument_list|(
+name|AlignedPtr
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
 return|return
 name|AlignedPtr
 return|;
@@ -1210,12 +1255,20 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-comment|/*Ptr*/
+name|Ptr
 parameter_list|,
 name|size_t
-comment|/*Size*/
+name|Size
 parameter_list|)
-block|{}
+block|{
+name|__asan_poison_memory_region
+argument_list|(
+name|Ptr
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -1520,6 +1573,15 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+comment|// We own the new slab and don't want anyone reading anything other than
+comment|// pieces returned from this method.  So poison the whole slab.
+name|__asan_poison_memory_region
+argument_list|(
+name|NewSlab
+argument_list|,
+name|AllocatedSlabSize
+argument_list|)
+expr_stmt|;
 name|Slabs
 operator|.
 name|push_back

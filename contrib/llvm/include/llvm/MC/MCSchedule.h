@@ -545,6 +545,18 @@ return|return
 name|CompleteModel
 return|;
 block|}
+comment|/// Return true if machine supports out of order execution.
+name|bool
+name|isOutOfOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MicroOpBufferSize
+operator|>
+literal|1
+return|;
+block|}
 name|unsigned
 name|getNumProcResourceKinds
 argument_list|()

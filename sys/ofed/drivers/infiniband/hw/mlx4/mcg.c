@@ -377,7 +377,7 @@ parameter_list|(
 name|ref
 parameter_list|)
 define|\
-value|do {\                 if (atomic_dec_and_test(ref)) \ 			mcg_warn_group(group, "did not expect to reach zero\n"); \ 	} while (0)
+value|do {\ 		if (atomic_dec_and_test(ref)) \ 			mcg_warn_group(group, "did not expect to reach zero\n"); \ 	} while (0)
 end_define
 
 begin_function

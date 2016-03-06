@@ -80,6 +80,16 @@ name|Platform
 block|{
 name|public
 operator|:
+name|PlatformFreeBSD
+argument_list|(
+argument|bool is_host
+argument_list|)
+block|;
+operator|~
+name|PlatformFreeBSD
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------
 comment|// Class functions
 comment|//------------------------------------------------------------
@@ -119,19 +129,6 @@ name|GetDescriptionStatic
 argument_list|(
 argument|bool is_host
 argument_list|)
-block|;
-comment|//------------------------------------------------------------
-comment|// Class Methods
-comment|//------------------------------------------------------------
-name|PlatformFreeBSD
-argument_list|(
-argument|bool is_host
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|PlatformFreeBSD
-argument_list|()
 block|;
 comment|//------------------------------------------------------------
 comment|// lldb_private::PluginInterface functions

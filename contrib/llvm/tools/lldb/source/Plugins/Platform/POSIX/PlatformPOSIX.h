@@ -93,10 +93,10 @@ argument_list|(
 argument|bool is_host
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|PlatformPOSIX
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
@@ -316,19 +316,19 @@ name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
-comment|// Shouldn't be NULL
+comment|// Shouldn't be nullptr
 argument|const lldb_private::FileSpec&working_dir
 argument_list|,
 comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the process exit status
+comment|// Pass nullptr if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
+comment|// Pass nullptr if you don't want the signal that caused the process to exit
 argument|std::string *command_output
 argument_list|,
-comment|// Pass NULL if you don't want the command output
+comment|// Pass nullptr if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
 name|override
@@ -412,7 +412,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be nullptr, if nullptr create a new target, else use existing one
 argument|lldb_private::Error&error
 argument_list|)
 name|override
@@ -428,7 +428,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be nullptr, if nullptr create a new target, else use existing one
 argument|lldb_private::Error&error
 argument_list|)
 name|override
@@ -472,6 +472,54 @@ name|DisconnectRemote
 argument_list|()
 name|override
 block|;
+name|uint32_t
+name|DoLoadImage
+argument_list|(
+argument|lldb_private::Process* process
+argument_list|,
+argument|const lldb_private::FileSpec& remote_file
+argument_list|,
+argument|lldb_private::Error& error
+argument_list|)
+name|override
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|UnloadImage
+argument_list|(
+argument|lldb_private::Process* process
+argument_list|,
+argument|uint32_t image_token
+argument_list|)
+name|override
+block|;
+name|lldb
+operator|::
+name|ProcessSP
+name|ConnectProcess
+argument_list|(
+argument|const char* connect_url
+argument_list|,
+argument|const char* plugin_name
+argument_list|,
+argument|lldb_private::Debugger&debugger
+argument_list|,
+argument|lldb_private::Target *target
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+name|override
+block|;
+name|size_t
+name|ConnectToWaitingProcesses
+argument_list|(
+argument|lldb_private::Debugger& debugger
+argument_list|,
+argument|lldb_private::Error& error
+argument_list|)
+name|override
+block|;
 name|protected
 operator|:
 name|std
@@ -490,13 +538,49 @@ name|PlatformSP
 name|m_remote_platform_sp
 block|;
 comment|// Allow multiple ways to connect to a remote POSIX-compliant OS
+name|lldb_private
+operator|::
+name|Error
+name|EvaluateLibdlExpression
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expr_cstr
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expr_prefix
+argument_list|,
+name|lldb
+operator|::
+name|ValueObjectSP
+operator|&
+name|result_valobj_sp
+argument_list|)
+block|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetLibdlFunctionDeclarations
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformPOSIX
 argument_list|)
-block|;      }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

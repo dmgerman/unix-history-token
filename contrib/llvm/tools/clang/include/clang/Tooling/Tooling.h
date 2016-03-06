@@ -789,6 +789,7 @@ comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
 comment|/// \param Content A null terminated buffer of the file's content.
+comment|// FIXME: remove this when all users have migrated!
 name|void
 name|mapVirtualFile
 parameter_list|(
@@ -1066,6 +1067,26 @@ name|llvm
 operator|::
 name|IntrusiveRefCntPtr
 operator|<
+name|vfs
+operator|::
+name|OverlayFileSystem
+operator|>
+name|OverlayFileSystem
+expr_stmt|;
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|InMemoryFileSystem
+operator|>
+name|InMemoryFileSystem
+expr_stmt|;
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
 name|FileManager
 operator|>
 name|Files
@@ -1085,6 +1106,13 @@ name|StringRef
 operator|>
 expr|>
 name|MappedFileContents
+expr_stmt|;
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+name|SeenWorkingDirectories
 expr_stmt|;
 name|ArgumentsAdjuster
 name|ArgsAdjuster
@@ -1434,6 +1462,107 @@ argument|StringRef File
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Changes CommandLine to contain implicit flags that would have been
+end_comment
+
+begin_comment
+comment|/// defined had the compiler driver been invoked through the path InvokedAs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For example, when called with \c InvokedAs set to `i686-linux-android-g++`,
+end_comment
+
+begin_comment
+comment|/// the arguments '-target', 'i686-linux-android`, `--driver-mode=g++` will
+end_comment
+
+begin_comment
+comment|/// be inserted after the first argument in \c CommandLine.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function will not add new `-target` or `--driver-mode` flags if they
+end_comment
+
+begin_comment
+comment|/// are already present in `CommandLine` (even if they have different settings
+end_comment
+
+begin_comment
+comment|/// than would have been inserted).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \pre `llvm::InitializeAllTargets()` has been called.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CommandLine the command line used to invoke the compiler driver or
+end_comment
+
+begin_comment
+comment|/// Clang tool, including the path to the executable as \c CommandLine[0].
+end_comment
+
+begin_comment
+comment|/// \param InvokedAs the path to the driver used to infer implicit flags.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note This will not set \c CommandLine[0] to \c InvokedAs. The tooling
+end_comment
+
+begin_comment
+comment|/// infrastructure expects that CommandLine[0] is a tool path relative to which
+end_comment
+
+begin_comment
+comment|/// the builtin headers can be found.
+end_comment
+
+begin_decl_stmt
+name|void
+name|addTargetAndModeForProgramName
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|CommandLine
+argument_list|,
+name|StringRef
+name|InvokedAs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Creates a \c CompilerInvocation.

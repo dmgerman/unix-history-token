@@ -387,7 +387,7 @@ for|for
 control|(
 name|LambdaExpr
 operator|::
-name|capture_init_iterator
+name|const_capture_init_iterator
 name|I
 operator|=
 name|LE

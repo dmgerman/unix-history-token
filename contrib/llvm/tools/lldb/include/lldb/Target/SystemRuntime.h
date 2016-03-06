@@ -182,10 +182,10 @@ comment|///
 comment|/// The destructor is virtual since this class is designed to be
 comment|/// inherited by the plug-in instance.
 comment|//------------------------------------------------------------------
-name|virtual
 operator|~
 name|SystemRuntime
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching to a process.
@@ -449,6 +449,31 @@ argument_list|)
 block|{
 return|return
 name|LLDB_INVALID_ADDRESS
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the Queue kind for the queue at a thread's dispatch_qaddr.
+comment|///
+comment|/// Retrieve the Queue kind - either eQueueKindSerial or
+comment|/// eQueueKindConcurrent, indicating that this queue processes work
+comment|/// items serially or concurrently.
+comment|///
+comment|/// @return
+comment|///     The Queue kind, if it could be read, else eQueueKindUnknown.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|QueueKind
+name|GetQueueKind
+argument_list|(
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+name|lldb
+operator|::
+name|eQueueKindUnknown
 return|;
 block|}
 comment|//------------------------------------------------------------------

@@ -3192,7 +3192,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   template
+unit|}  template
 operator|<
 name|typename
 name|T
@@ -4078,7 +4078,7 @@ block|}
 end_block
 
 begin_expr_stmt
-unit|}   template
+unit|}  template
 operator|<
 operator|>
 expr|struct
@@ -5011,7 +5011,7 @@ argument_list|)
 block|,
 name|BufPtr
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|Result

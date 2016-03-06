@@ -133,7 +133,7 @@ comment|/// \brief Implementation of the target library information.
 comment|///
 comment|/// This class constructs tables that hold the target library information and
 comment|/// make it available. However, it is somewhat expensive to compute and only
-comment|/// depends on the triple. So users typicaly interact with the \c
+comment|/// depends on the triple. So users typically interact with the \c
 comment|/// TargetLibraryInfo wrapper below.
 name|class
 name|TargetLibraryInfoImpl
@@ -797,7 +797,6 @@ name|VF
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 name|bool
 name|isFunctionVectorizable
 argument_list|(
@@ -815,7 +814,6 @@ name|F
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 name|StringRef
 name|getVectorizedFunction
 argument_list|(
@@ -838,7 +836,6 @@ name|VF
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 comment|/// \brief Tests if the function is both available and a candidate for
 comment|/// optimized code generation.
 name|bool

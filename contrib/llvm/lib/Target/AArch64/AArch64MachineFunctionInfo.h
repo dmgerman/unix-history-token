@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- AArch64MachineFuctionInfo.h - AArch64 machine function info --*- C++ -*-=//
+comment|//=- AArch64MachineFunctionInfo.h - AArch64 machine function info -*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ name|unsigned
 name|ArgumentStackToRestore
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
-comment|/// processFunctionBeforeCalleeSavedScan().
+comment|/// determineCalleeSaves().
 name|bool
 name|HasStackFrame
 block|;
@@ -151,6 +151,11 @@ comment|/// \brief Size of the varargs area for arguments passed in floating-poi
 comment|/// registers.
 name|unsigned
 name|VarArgsFPRSize
+block|;
+comment|/// True if this function has a subset of CSRs that is handled explicitly via
+comment|/// copies.
+name|bool
+name|IsSplitCSR
 block|;
 name|public
 operator|:
@@ -200,6 +205,11 @@ block|,
 name|VarArgsFPRSize
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|IsSplitCSR
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|explicit
@@ -253,6 +263,11 @@ block|,
 name|VarArgsFPRSize
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|IsSplitCSR
+argument_list|(
+argument|false
 argument_list|)
 block|{
 operator|(
@@ -314,6 +329,25 @@ argument|bool s
 argument_list|)
 block|{
 name|HasStackFrame
+operator|=
+name|s
+block|; }
+name|bool
+name|isSplitCSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSplitCSR
+return|;
+block|}
+name|void
+name|setIsSplitCSR
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|IsSplitCSR
 operator|=
 name|s
 block|; }

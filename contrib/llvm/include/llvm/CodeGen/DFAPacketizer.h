@@ -150,6 +150,49 @@ decl_stmt|;
 name|class
 name|SUnit
 decl_stmt|;
+comment|// --------------------------------------------------------------------
+comment|// Definitions shared between DFAPacketizer.cpp and DFAPacketizerEmitter.cpp
+comment|// DFA_MAX_RESTERMS * DFA_MAX_RESOURCES must fit within sizeof DFAInput.
+comment|// This is verified in DFAPacketizer.cpp:DFAPacketizer::DFAPacketizer.
+comment|//
+comment|// e.g. terms x resource bit combinations that fit in uint32_t:
+comment|//      4 terms x 8  bits = 32 bits
+comment|//      3 terms x 10 bits = 30 bits
+comment|//      2 terms x 16 bits = 32 bits
+comment|//
+comment|// e.g. terms x resource bit combinations that fit in uint64_t:
+comment|//      8 terms x 8  bits = 64 bits
+comment|//      7 terms x 9  bits = 63 bits
+comment|//      6 terms x 10 bits = 60 bits
+comment|//      5 terms x 12 bits = 60 bits
+comment|//      4 terms x 16 bits = 64 bits<--- current
+comment|//      3 terms x 21 bits = 63 bits
+comment|//      2 terms x 32 bits = 64 bits
+comment|//
+define|#
+directive|define
+name|DFA_MAX_RESTERMS
+value|4
+comment|// The max # of AND'ed resource terms.
+define|#
+directive|define
+name|DFA_MAX_RESOURCES
+value|16
+comment|// The max # of resource bits in one term.
+typedef|typedef
+name|uint64_t
+name|DFAInput
+typedef|;
+typedef|typedef
+name|int64_t
+name|DFAStateInput
+typedef|;
+define|#
+directive|define
+name|DFA_TBLTYPE
+value|"int64_t"
+comment|// For generating DFAStateInputTable.
+comment|// --------------------------------------------------------------------
 name|class
 name|DFAPacketizer
 block|{
@@ -162,7 +205,7 @@ name|pair
 operator|<
 name|unsigned
 operator|,
-name|unsigned
+name|DFAInput
 operator|>
 name|UnsignPair
 expr_stmt|;
@@ -175,7 +218,7 @@ name|int
 name|CurrentState
 decl_stmt|;
 specifier|const
-name|int
+name|DFAStateInput
 argument_list|(
 operator|*
 name|DFAStateInputTable
@@ -203,7 +246,6 @@ name|void
 name|ReadTable
 parameter_list|(
 name|unsigned
-name|int
 name|state
 parameter_list|)
 function_decl|;
@@ -217,7 +259,7 @@ operator|*
 name|I
 argument_list|,
 specifier|const
-name|int
+name|DFAStateInput
 argument_list|(
 operator|*
 name|SIT
@@ -242,6 +284,30 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|// getInsnInput - Return the DFAInput for an instruction class.
+name|DFAInput
+name|getInsnInput
+parameter_list|(
+name|unsigned
+name|InsnClass
+parameter_list|)
+function_decl|;
+comment|// getInsnInput - Return the DFAInput for an instruction class input vector.
+specifier|static
+name|DFAInput
+name|getInsnInput
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|InsnClass
+argument_list|)
+decl_stmt|;
 comment|// canReserveResources - Check if the resources occupied by a MCInstrDesc
 comment|// are available in the current state.
 name|bool
@@ -326,6 +392,10 @@ name|TargetInstrInfo
 modifier|*
 name|TII
 decl_stmt|;
+name|AliasAnalysis
+modifier|*
+name|AA
+decl_stmt|;
 comment|// The VLIW Scheduler.
 name|DefaultVLIWScheduler
 modifier|*
@@ -361,15 +431,22 @@ name|MIToSUnit
 expr_stmt|;
 name|public
 label|:
+comment|// The AliasAnalysis parameter can be nullptr.
 name|VLIWPacketizerList
 argument_list|(
-argument|MachineFunction&MF
+name|MachineFunction
+operator|&
+name|MF
 argument_list|,
-argument|MachineLoopInfo&MLI
+name|MachineLoopInfo
+operator|&
+name|MLI
 argument_list|,
-argument|bool IsPostRA
+name|AliasAnalysis
+operator|*
+name|AA
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|virtual
 operator|~
 name|VLIWPacketizerList
@@ -439,7 +516,10 @@ return|return
 name|MII
 return|;
 block|}
-comment|// endPacket - End the current packet.
+comment|// End the current packet and reset the state of the packetizer.
+comment|// Overriding this function allows the target-specific packetizer
+comment|// to perform custom finalization.
+name|virtual
 name|void
 name|endPacket
 parameter_list|(
@@ -467,10 +547,12 @@ name|virtual
 name|bool
 name|ignorePseudoInstruction
 parameter_list|(
+specifier|const
 name|MachineInstr
 modifier|*
 name|I
 parameter_list|,
+specifier|const
 name|MachineBasicBlock
 modifier|*
 name|MBB
@@ -486,6 +568,27 @@ name|virtual
 name|bool
 name|isSoloInstruction
 parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Check if the packetizer should try to add the given instruction to
+comment|// the current packet. One reasons for which it may not be desirable
+comment|// to include an instruction in the current packet could be that it
+comment|// would cause a stall.
+comment|// If this function returns "false", the current packet will be ended,
+comment|// and the instruction will be added to the next packet.
+name|virtual
+name|bool
+name|shouldAddToPacket
+parameter_list|(
+specifier|const
 name|MachineInstr
 modifier|*
 name|MI

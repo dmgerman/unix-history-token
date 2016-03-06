@@ -529,6 +529,39 @@ name|TerminatorInst
 argument_list|)
 block|;}
 name|RetTy
+name|visitCleanupReturnInst
+argument_list|(
+argument|CleanupReturnInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|TerminatorInst
+argument_list|)
+block|;}
+name|RetTy
+name|visitCatchReturnInst
+argument_list|(
+argument|CatchReturnInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|TerminatorInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitCatchSwitchInst
+argument_list|(
+argument|CatchSwitchInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|TerminatorInst
+argument_list|)
+block|;}
+name|RetTy
 name|visitICmpInst
 argument_list|(
 argument|ICmpInst&I
@@ -867,6 +900,39 @@ block|{
 name|DELEGATE
 argument_list|(
 name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitFuncletPadInst
+argument_list|(
+argument|FuncletPadInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitCleanupPadInst
+argument_list|(
+argument|CleanupPadInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|FuncletPadInst
+argument_list|)
+block|; }
+name|RetTy
+name|visitCatchPadInst
+argument_list|(
+argument|CatchPadInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|FuncletPadInst
 argument_list|)
 block|; }
 comment|// Handle the special instrinsic instruction classes.

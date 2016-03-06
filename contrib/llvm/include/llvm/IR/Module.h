@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
@@ -148,265 +154,6 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|Function
-operator|>
-operator|:
-name|public
-name|SymbolTableListTraits
-operator|<
-name|Function
-operator|,
-name|Module
-operator|>
-block|{
-comment|// createSentinel is used to get hold of the node that marks the end of the
-comment|// list... (same trick used here as in ilist_traits<Instruction>)
-name|Function
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|Function
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|Function*
-argument_list|)
-block|{}
-name|Function
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|Function
-operator|*
-name|ensureHead
-argument_list|(
-argument|Function*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|Function*
-argument_list|,
-argument|Function*
-argument_list|)
-block|{}
-name|private
-operator|:
-name|mutable
-name|ilist_node
-operator|<
-name|Function
-operator|>
-name|Sentinel
-block|; }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|GlobalVariable
-operator|>
-operator|:
-name|public
-name|SymbolTableListTraits
-operator|<
-name|GlobalVariable
-operator|,
-name|Module
-operator|>
-block|{
-comment|// createSentinel is used to create a node that marks the end of the list.
-name|GlobalVariable
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|GlobalVariable
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|GlobalVariable*
-argument_list|)
-block|{}
-name|GlobalVariable
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|GlobalVariable
-operator|*
-name|ensureHead
-argument_list|(
-argument|GlobalVariable*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|GlobalVariable*
-argument_list|,
-argument|GlobalVariable*
-argument_list|)
-block|{}
-name|private
-operator|:
-name|mutable
-name|ilist_node
-operator|<
-name|GlobalVariable
-operator|>
-name|Sentinel
-block|; }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|GlobalAlias
-operator|>
-operator|:
-name|public
-name|SymbolTableListTraits
-operator|<
-name|GlobalAlias
-operator|,
-name|Module
-operator|>
-block|{
-comment|// createSentinel is used to create a node that marks the end of the list.
-name|GlobalAlias
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|GlobalAlias
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|GlobalAlias*
-argument_list|)
-block|{}
-name|GlobalAlias
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|GlobalAlias
-operator|*
-name|ensureHead
-argument_list|(
-argument|GlobalAlias*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|GlobalAlias*
-argument_list|,
-argument|GlobalAlias*
-argument_list|)
-block|{}
-name|private
-operator|:
-name|mutable
-name|ilist_node
-operator|<
-name|GlobalAlias
-operator|>
-name|Sentinel
-block|; }
-expr_stmt|;
 name|template
 operator|<
 operator|>
@@ -524,7 +271,7 @@ name|public
 label|:
 comment|/// The type for the list of global variables.
 typedef|typedef
-name|iplist
+name|SymbolTableList
 operator|<
 name|GlobalVariable
 operator|>
@@ -532,7 +279,7 @@ name|GlobalListType
 expr_stmt|;
 comment|/// The type for the list of functions.
 typedef|typedef
-name|iplist
+name|SymbolTableList
 operator|<
 name|Function
 operator|>
@@ -540,7 +287,7 @@ name|FunctionListType
 expr_stmt|;
 comment|/// The type for the list of aliases.
 typedef|typedef
-name|iplist
+name|SymbolTableList
 operator|<
 name|GlobalAlias
 operator|>
@@ -1123,6 +870,21 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Populate client supplied SmallVector with the bundle tags registered in
+comment|/// this LLVMContext.  The bundle tags are ordered by increasing bundle IDs.
+comment|/// \see LLVMContext::getOperandBundleTagID
+name|void
+name|getOperandBundleTags
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return the type with the specified name, or null if there is none by that
 comment|/// name.
 name|StructType
@@ -1530,7 +1292,7 @@ comment|/// @name Materialization
 comment|/// @{
 comment|/// Sets the GVMaterializer to GVM. This module must not yet have a
 comment|/// Materializer. To reset the materializer for a module that already has one,
-comment|/// call MaterializeAllPermanently first. Destroying this module will destroy
+comment|/// call materializeAll first. Destroying this module will destroy
 comment|/// its materializer without materializing any more GlobalValues. Without
 comment|/// destroying the Module, there is no way to detach or destroy a materializer
 comment|/// without materializing all the GVs it controls, to avoid leaving orphan
@@ -1557,18 +1319,17 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// Returns true if this GV was loaded from this Module's GVMaterializer and
-comment|/// the GVMaterializer knows how to dematerialize the GV.
 name|bool
-name|isDematerializable
-argument_list|(
+name|isMaterialized
+argument_list|()
 specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-decl|const
-decl_stmt|;
+block|{
+return|return
+operator|!
+name|getMaterializer
+argument_list|()
+return|;
+block|}
 comment|/// Make sure the GlobalValue is fully read. If the module is corrupt, this
 comment|/// returns true and fills in the optional string with information about the
 comment|/// problem. If successful, this returns false.
@@ -1582,31 +1343,12 @@ operator|*
 name|GV
 argument_list|)
 expr_stmt|;
-comment|/// If the GlobalValue is read in, and if the GVMaterializer supports it,
-comment|/// release the memory for the function, and set it up to be materialized
-comment|/// lazily. If !isDematerializable(), this method is a no-op.
-name|void
-name|dematerialize
-parameter_list|(
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|)
-function_decl|;
-comment|/// Make sure all GlobalValues in this Module are fully read.
-name|std
-operator|::
-name|error_code
-name|materializeAll
-argument_list|()
-expr_stmt|;
 comment|/// Make sure all GlobalValues in this Module are fully read and clear the
-comment|/// Materializer. If the module is corrupt, this DOES NOT clear the old
 comment|/// Materializer.
 name|std
 operator|::
 name|error_code
-name|materializeAllPermanently
+name|materializeAll
 argument_list|()
 expr_stmt|;
 name|std
@@ -1889,17 +1631,14 @@ name|globals
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|global_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|global_begin
 argument_list|()
-operator|,
+argument_list|,
 name|global_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -1911,17 +1650,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_global_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|global_begin
 argument_list|()
-operator|,
+argument_list|,
 name|global_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// @}
@@ -2051,17 +1787,14 @@ name|functions
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|begin
 argument_list|()
-operator|,
+argument_list|,
 name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -2073,17 +1806,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|begin
 argument_list|()
-operator|,
+argument_list|,
 name|end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// @}
@@ -2167,17 +1897,14 @@ name|aliases
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|alias_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|alias_begin
 argument_list|()
-operator|,
+argument_list|,
 name|alias_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -2189,17 +1916,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_alias_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|alias_begin
 argument_list|()
-operator|,
+argument_list|,
 name|alias_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// @}
@@ -2283,17 +2007,14 @@ name|named_metadata
 argument_list|()
 block|{
 return|return
-name|iterator_range
-operator|<
-name|named_metadata_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|named_metadata_begin
 argument_list|()
-operator|,
+argument_list|,
 name|named_metadata_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|iterator_range
@@ -2305,17 +2026,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|iterator_range
-operator|<
-name|const_named_metadata_iterator
-operator|>
-operator|(
+name|make_range
+argument_list|(
 name|named_metadata_begin
 argument_list|()
-operator|,
+argument_list|,
 name|named_metadata_end
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// Destroy ConstantArrays in LLVMContext if they are not used.
@@ -2351,6 +2069,11 @@ name|bool
 name|ShouldPreserveUseListOrder
 operator|=
 name|false
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2379,6 +2102,13 @@ name|getDwarfVersion
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the CodeView Version by checking module flags.
+comment|/// Returns zero if not present in module.
+name|unsigned
+name|getCodeViewFlag
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Utility functions for querying and setting PIC level
 comment|/// @{
@@ -2400,6 +2130,24 @@ name|Level
 name|PL
 argument_list|)
 decl_stmt|;
+comment|/// @}
+comment|/// @name Utility functions for querying and setting PGO counts
+comment|/// @{
+comment|/// \brief Set maximum function count in PGO mode
+name|void
+name|setMaximumFunctionCount
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns maximum function count in PGO mode
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getMaximumFunctionCount
+argument_list|()
+expr_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

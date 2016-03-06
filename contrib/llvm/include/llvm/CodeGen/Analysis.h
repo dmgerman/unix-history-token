@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -103,6 +109,12 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
 name|TargetLoweringBase
 decl_stmt|;
 name|class
@@ -129,7 +141,7 @@ comment|///
 comment|/// Given an LLVM IR aggregate type and a sequence of insertvalue or
 comment|/// extractvalue indices that identify a member, return the linearized index of
 comment|/// the start of the member, i.e the number of element in memory before the
-comment|/// seeked one. This is disconnected from the number of bytes.
+comment|/// sought one. This is disconnected from the number of bytes.
 comment|///
 comment|/// \param Ty is the type indexed by \p Indices.
 comment|/// \param Indices is an optional pointer in the indices list to the current
@@ -365,6 +377,22 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
+name|DenseMap
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+operator|,
+name|int
+operator|>
+name|getFuncletMembership
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

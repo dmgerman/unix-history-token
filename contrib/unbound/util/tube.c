@@ -425,13 +425,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tube
-operator|->
-name|cmd_msg
-condition|)
-block|{
 name|free
 argument_list|(
 name|tube
@@ -445,7 +438,6 @@ name|cmd_msg
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 

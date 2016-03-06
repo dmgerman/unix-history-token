@@ -843,6 +843,8 @@ comment|/// and IK_LastXXXInit be their own values, but that would degrade
 comment|/// readability for really no benefit.
 enum|enum
 name|InitKind
+enum|:
+name|uint8_t
 block|{
 name|IK_BitInit
 block|,
@@ -889,6 +891,14 @@ specifier|const
 name|InitKind
 name|Kind
 decl_stmt|;
+name|protected
+label|:
+name|uint8_t
+name|Opc
+decl_stmt|;
+comment|// Used by UnOpInit, BinOpInit, and TernOpInit
+name|private
+label|:
 name|Init
 argument_list|(
 specifier|const
@@ -932,15 +942,23 @@ name|explicit
 name|Init
 argument_list|(
 argument|InitKind K
+argument_list|,
+argument|uint8_t Opc =
+literal|0
 argument_list|)
 block|:
 name|Kind
 argument_list|(
-argument|K
+name|K
+argument_list|)
+operator|,
+name|Opc
+argument_list|(
+argument|Opc
 argument_list|)
 block|{}
 name|public
-label|:
+operator|:
 name|virtual
 operator|~
 name|Init
@@ -1280,11 +1298,16 @@ argument_list|(
 argument|InitKind K
 argument_list|,
 argument|RecTy *T
+argument_list|,
+argument|uint8_t Opc =
+literal|0
 argument_list|)
 operator|:
 name|Init
 argument_list|(
 name|K
+argument_list|,
+name|Opc
 argument_list|)
 block|,
 name|Ty
@@ -1295,6 +1318,7 @@ block|{}
 operator|~
 name|TypedInit
 argument_list|()
+name|override
 block|{
 comment|// If this is a DefInit we need to delete the RecordRecTy.
 if|if
@@ -2130,12 +2154,7 @@ block|;
 name|explicit
 name|StringInit
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|V
+argument|StringRef V
 argument_list|)
 operator|:
 name|TypedInit
@@ -2632,6 +2651,8 @@ argument_list|(
 argument|InitKind K
 argument_list|,
 argument|RecTy *Type
+argument_list|,
+argument|uint8_t Opc
 argument_list|)
 operator|:
 name|TypedInit
@@ -2639,6 +2660,8 @@ argument_list|(
 argument|K
 argument_list|,
 argument|Type
+argument_list|,
+argument|Opc
 argument_list|)
 block|{}
 name|public
@@ -2747,6 +2770,8 @@ name|public
 operator|:
 expr|enum
 name|UnaryOp
+operator|:
+name|uint8_t
 block|{
 name|CAST
 block|,
@@ -2759,9 +2784,6 @@ block|}
 block|;
 name|private
 operator|:
-name|UnaryOp
-name|Opc
-block|;
 name|Init
 operator|*
 name|LHS
@@ -2780,10 +2802,7 @@ argument_list|(
 name|IK_UnOpInit
 argument_list|,
 name|Type
-argument_list|)
-block|,
-name|Opc
-argument_list|(
+argument_list|,
 name|opc
 argument_list|)
 block|,
@@ -2925,6 +2944,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|UnaryOp
+operator|)
 name|Opc
 return|;
 block|}
@@ -2983,6 +3005,8 @@ name|public
 operator|:
 expr|enum
 name|BinaryOp
+operator|:
+name|uint8_t
 block|{
 name|ADD
 block|,
@@ -3005,9 +3029,6 @@ block|}
 block|;
 name|private
 operator|:
-name|BinaryOp
-name|Opc
-block|;
 name|Init
 operator|*
 name|LHS
@@ -3031,10 +3052,7 @@ argument_list|(
 name|IK_BinOpInit
 argument_list|,
 name|Type
-argument_list|)
-block|,
-name|Opc
-argument_list|(
+argument_list|,
 name|opc
 argument_list|)
 block|,
@@ -3200,6 +3218,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|BinaryOp
+operator|)
 name|Opc
 return|;
 block|}
@@ -3268,6 +3289,8 @@ name|public
 operator|:
 expr|enum
 name|TernaryOp
+operator|:
+name|uint8_t
 block|{
 name|SUBST
 block|,
@@ -3278,9 +3301,6 @@ block|}
 block|;
 name|private
 operator|:
-name|TernaryOp
-name|Opc
-block|;
 name|Init
 operator|*
 name|LHS
@@ -3309,10 +3329,7 @@ argument_list|(
 name|IK_TernOpInit
 argument_list|,
 name|Type
-argument_list|)
-block|,
-name|Opc
-argument_list|(
+argument_list|,
 name|opc
 argument_list|)
 block|,
@@ -3497,6 +3514,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|TernaryOp
+operator|)
 name|Opc
 return|;
 block|}
@@ -3585,33 +3605,6 @@ name|Init
 operator|*
 name|VarName
 block|;
-name|explicit
-name|VarInit
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|VN
-argument_list|,
-name|RecTy
-operator|*
-name|T
-argument_list|)
-operator|:
-name|TypedInit
-argument_list|(
-name|IK_VarInit
-argument_list|,
-name|T
-argument_list|)
-block|,
-name|VarName
-argument_list|(
-argument|StringInit::get(VN)
-argument_list|)
-block|{}
 name|explicit
 name|VarInit
 argument_list|(
@@ -7557,13 +7550,17 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end llvm namespace
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TABLEGEN_RECORD_H
+end_comment
 
 end_unit
 

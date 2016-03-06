@@ -578,7 +578,7 @@ comment|/// \brief A set of declarations.
 typedef|typedef
 name|SmallVector
 operator|<
-name|Decl
+name|ParmVarDecl
 operator|*
 operator|,
 literal|4
@@ -1123,7 +1123,7 @@ name|Decl
 modifier|*
 name|D
 parameter_list|,
-name|Decl
+name|ParmVarDecl
 modifier|*
 name|Inst
 parameter_list|)

@@ -412,6 +412,41 @@ return|return
 name|VecTy
 return|;
 block|}
+comment|/// Return the type converted to an equivalently sized integer or vector
+comment|/// with integer element type. Similar to changeVectorElementTypeToInteger,
+comment|/// but also handles scalars.
+name|EVT
+name|changeTypeToInteger
+argument_list|()
+block|{
+if|if
+condition|(
+name|isVector
+argument_list|()
+condition|)
+return|return
+name|changeVectorElementTypeToInteger
+argument_list|()
+return|;
+if|if
+condition|(
+name|isSimple
+argument_list|()
+condition|)
+return|return
+name|MVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|getSizeInBits
+argument_list|()
+argument_list|)
+return|;
+return|return
+name|changeExtendedTypeToInteger
+argument_list|()
+return|;
+block|}
 comment|/// isSimple - Test if the given EVT is simple (as opposed to being
 comment|/// extended).
 name|bool
@@ -627,6 +662,25 @@ name|is1024BitVector
 argument_list|()
 else|:
 name|isExtended1024BitVector
+argument_list|()
+return|;
+block|}
+comment|/// is2048BitVector - Return true if this is a 2048-bit vector type.
+name|bool
+name|is2048BitVector
+argument_list|()
+decl|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+condition|?
+name|V
+operator|.
+name|is2048BitVector
+argument_list|()
+else|:
+name|isExtended2048BitVector
 argument_list|()
 return|;
 block|}
@@ -1442,6 +1496,11 @@ comment|// Methods for handling the Extended-type case in functions above.
 comment|// These are all out-of-line to prevent users of this header file
 comment|// from having a dependency on Type.h.
 name|EVT
+name|changeExtendedTypeToInteger
+argument_list|()
+specifier|const
+expr_stmt|;
+name|EVT
 name|changeExtendedVectorElementTypeToInteger
 argument_list|()
 specifier|const
@@ -1529,6 +1588,12 @@ name|LLVM_READONLY
 expr_stmt|;
 name|bool
 name|isExtended1024BitVector
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+name|bool
+name|isExtended2048BitVector
 argument_list|()
 specifier|const
 name|LLVM_READONLY

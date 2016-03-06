@@ -118,18 +118,6 @@ comment|//          http://ftp.gnu.org/old-gnu/Manuals/gdb-5.1.1/html_chapter/gd
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 24/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -168,7 +156,7 @@ name|vValue
 argument_list|)
 block|;
 comment|//
-name|bool
+name|void
 name|Add
 argument_list|(
 specifier|const
@@ -177,7 +165,7 @@ operator|&
 name|vResult
 argument_list|)
 block|;
-name|bool
+name|void
 name|Add
 argument_list|(
 specifier|const
@@ -188,9 +176,7 @@ argument_list|)
 block|;
 name|CMIUtilString
 name|ExtractContentNoBrackets
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|// Overridden:
@@ -200,21 +186,17 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnMIValueList
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Methods:
 name|private
 operator|:
-name|bool
-name|BuildList
-argument_list|(
 name|void
-argument_list|)
+name|BuildList
+argument_list|()
 block|;
-name|bool
+name|void
 name|BuildList
 argument_list|(
 specifier|const
@@ -223,7 +205,7 @@ operator|&
 name|vResult
 argument_list|)
 block|;
-name|bool
+name|void
 name|BuildList
 argument_list|(
 specifier|const

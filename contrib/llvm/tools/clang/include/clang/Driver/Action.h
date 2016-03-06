@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|opt
 block|{
@@ -91,6 +94,9 @@ comment|/// The current driver is hard wired to expect actions which produce a
 comment|/// single primary output, at least in terms of controlling the
 comment|/// compilation. Actions can produce auxiliary files, but can only
 comment|/// produce a single output to feed into subsequent actions.
+comment|///
+comment|/// Actions are usually owned by a Compilation, which creates new
+comment|/// actions via MakeAction().
 name|class
 name|Action
 block|{
@@ -184,16 +190,63 @@ expr_stmt|;
 name|ActionList
 name|Inputs
 decl_stmt|;
-name|unsigned
-name|OwnsInputs
-range|:
-literal|1
-decl_stmt|;
 name|protected
 label|:
 name|Action
 argument_list|(
 argument|ActionClass Kind
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|:
+name|Action
+argument_list|(
+argument|Kind
+argument_list|,
+argument|ActionList()
+argument_list|,
+argument|Type
+argument_list|)
+block|{}
+name|Action
+argument_list|(
+argument|ActionClass Kind
+argument_list|,
+argument|Action *Input
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|:
+name|Action
+argument_list|(
+argument|Kind
+argument_list|,
+argument|ActionList({Input})
+argument_list|,
+argument|Type
+argument_list|)
+block|{}
+name|Action
+argument_list|(
+argument|ActionClass Kind
+argument_list|,
+argument|Action *Input
+argument_list|)
+block|:
+name|Action
+argument_list|(
+argument|Kind
+argument_list|,
+argument|ActionList({Input})
+argument_list|,
+argument|Input->getType()
+argument_list|)
+block|{}
+name|Action
+argument_list|(
+argument|ActionClass Kind
+argument_list|,
+argument|const ActionList&Inputs
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -208,107 +261,9 @@ argument_list|(
 name|Type
 argument_list|)
 operator|,
-name|OwnsInputs
-argument_list|(
-argument|true
-argument_list|)
-block|{}
-name|Action
-argument_list|(
-argument|ActionClass Kind
-argument_list|,
-argument|std::unique_ptr<Action> Input
-argument_list|,
-argument|types::ID Type
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|Kind
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Type
-argument_list|)
-operator|,
 name|Inputs
 argument_list|(
-literal|1
-argument_list|,
-name|Input
-operator|.
-name|release
-argument_list|()
-argument_list|)
-operator|,
-name|OwnsInputs
-argument_list|(
-argument|true
-argument_list|)
-block|{   }
-name|Action
-argument_list|(
-argument|ActionClass Kind
-argument_list|,
-argument|std::unique_ptr<Action> Input
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|Kind
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Input
-operator|->
-name|getType
-argument_list|()
-argument_list|)
-operator|,
-name|Inputs
-argument_list|(
-literal|1
-argument_list|,
-name|Input
-operator|.
-name|release
-argument_list|()
-argument_list|)
-operator|,
-name|OwnsInputs
-argument_list|(
-argument|true
-argument_list|)
-block|{}
-name|Action
-argument_list|(
-argument|ActionClass Kind
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|,
-argument|types::ID Type
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|Kind
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|Type
-argument_list|)
-operator|,
-name|Inputs
-argument_list|(
-name|Inputs
-argument_list|)
-operator|,
-name|OwnsInputs
-argument_list|(
-argument|true
+argument|Inputs
 argument_list|)
 block|{}
 name|public
@@ -334,26 +289,6 @@ name|getKind
 argument_list|()
 argument_list|)
 return|;
-block|}
-name|bool
-name|getOwnsInputs
-parameter_list|()
-block|{
-return|return
-name|OwnsInputs
-return|;
-block|}
-name|void
-name|setOwnsInputs
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|OwnsInputs
-operator|=
-name|Value
-expr_stmt|;
 block|}
 name|ActionClass
 name|getKind
@@ -539,12 +474,8 @@ name|public
 operator|:
 name|BindArchAction
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|Action
-operator|>
+operator|*
 name|Input
 argument_list|,
 specifier|const
@@ -593,7 +524,7 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// GPU architecture to bind -- e.g 'sm_35'.
+comment|/// GPU architecture to bind.  Always of the form /sm_\d+/.
 specifier|const
 name|char
 operator|*
@@ -608,7 +539,7 @@ name|public
 operator|:
 name|CudaDeviceAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|const char *ArchName
 argument_list|,
@@ -626,6 +557,14 @@ return|return
 name|GpuArchName
 return|;
 block|}
+comment|/// Gets the compute_XX that corresponds to getGpuArchName().
+specifier|const
+name|char
+operator|*
+name|getComputeArchName
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|isAtTopLevel
 argument_list|()
@@ -635,6 +574,13 @@ return|return
 name|AtTopLevel
 return|;
 block|}
+specifier|static
+name|bool
+name|IsValidGpuArchName
+argument_list|(
+argument|llvm::StringRef ArchName
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -671,12 +617,8 @@ name|public
 operator|:
 name|CudaHostAction
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|Action
-operator|>
+operator|*
 name|Input
 argument_list|,
 specifier|const
@@ -685,20 +627,6 @@ operator|&
 name|DeviceActions
 argument_list|)
 block|;
-operator|~
-name|CudaHostAction
-argument_list|()
-name|override
-block|;
-name|ActionList
-operator|&
-name|getDeviceActions
-argument_list|()
-block|{
-return|return
-name|DeviceActions
-return|;
-block|}
 specifier|const
 name|ActionList
 operator|&
@@ -745,7 +673,7 @@ name|JobAction
 argument_list|(
 argument|ActionClass Kind
 argument_list|,
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -803,7 +731,7 @@ name|public
 operator|:
 name|PreprocessJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -841,7 +769,7 @@ name|public
 operator|:
 name|PrecompileJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -879,7 +807,7 @@ name|public
 operator|:
 name|AnalyzeJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -917,7 +845,7 @@ name|public
 operator|:
 name|MigrateJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -955,7 +883,7 @@ name|public
 operator|:
 name|CompileJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -993,7 +921,7 @@ name|public
 operator|:
 name|BackendJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -1031,7 +959,7 @@ name|public
 operator|:
 name|AssembleJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID OutputType
 argument_list|)
@@ -1185,16 +1113,7 @@ name|VerifyJobAction
 argument_list|(
 argument|ActionClass Kind
 argument_list|,
-argument|std::unique_ptr<Action> Input
-argument_list|,
-argument|types::ID Type
-argument_list|)
-block|;
-name|VerifyJobAction
-argument_list|(
-argument|ActionClass Kind
-argument_list|,
-argument|ActionList&Inputs
+argument|Action *Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -1239,7 +1158,7 @@ name|public
 operator|:
 name|VerifyDebugInfoJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID Type
 argument_list|)
@@ -1277,7 +1196,7 @@ name|public
 operator|:
 name|VerifyPCHJobAction
 argument_list|(
-argument|std::unique_ptr<Action> Input
+argument|Action *Input
 argument_list|,
 argument|types::ID Type
 argument_list|)

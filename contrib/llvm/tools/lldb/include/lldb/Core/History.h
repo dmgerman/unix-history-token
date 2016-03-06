@@ -270,18 +270,18 @@ argument_list|(
 argument|start_value
 argument_list|)
 block|{     }
-name|virtual
 operator|~
 name|HistorySourceUInt
 argument_list|()
+name|override
 block|{     }
 comment|// Create a new history event. Subclasses should use any data or members
 comment|// in the subclass of this class to produce a history event and push it
 comment|// onto the end of the history stack.
-name|virtual
 name|HistoryEvent
 name|CreateHistoryEvent
 argument_list|()
+name|override
 block|{
 operator|++
 name|m_curr_id
@@ -293,16 +293,15 @@ operator|)
 name|m_curr_id
 return|;
 block|}
-name|virtual
 name|void
 name|DeleteHistoryEvent
 argument_list|(
 argument|HistoryEvent event
 argument_list|)
+name|override
 block|{
 comment|// Nothing to delete, the event contains the integer
 block|}
-name|virtual
 name|void
 name|DumpHistoryEvent
 argument_list|(
@@ -310,22 +309,23 @@ argument|Stream&strm
 argument_list|,
 argument|HistoryEvent event
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetHistoryEventCount
 argument_list|()
+name|override
 block|{
 return|return
 name|m_curr_id
 return|;
 block|}
-name|virtual
 name|HistoryEvent
 name|GetHistoryEventAtIndex
 argument_list|(
 argument|uint32_t idx
 argument_list|)
+name|override
 block|{
 return|return
 call|(
@@ -339,10 +339,10 @@ name|idx
 argument_list|)
 return|;
 block|}
-name|virtual
 name|HistoryEvent
 name|GetCurrentHistoryEvent
 argument_list|()
+name|override
 block|{
 return|return
 operator|(
@@ -352,7 +352,6 @@ name|m_curr_id
 return|;
 block|}
 comment|// Return 0 when lhs == rhs, 1 if lhs> rhs, or -1 if lhs< rhs.
-name|virtual
 name|int
 name|CompareHistoryEvents
 argument_list|(
@@ -360,6 +359,7 @@ argument|const HistoryEvent lhs
 argument_list|,
 argument|const HistoryEvent rhs
 argument_list|)
+name|override
 block|{
 name|uintptr_t
 name|lhs_uint
@@ -404,7 +404,6 @@ block|}
 end_decl_stmt
 
 begin_function
-name|virtual
 name|bool
 name|IsCurrentHistoryEvent
 parameter_list|(
@@ -412,6 +411,7 @@ specifier|const
 name|HistoryEvent
 name|event
 parameter_list|)
+function|override
 block|{
 return|return
 operator|(
@@ -452,7 +452,7 @@ comment|// The current value of the history unsigned unteger
 end_comment
 
 begin_comment
-unit|};   }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

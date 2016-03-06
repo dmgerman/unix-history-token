@@ -420,6 +420,11 @@ init|=
 literal|52
 block|,
 comment|/* RFC 6698 */
+name|LDNS_RR_TYPE_SMIMEA
+init|=
+literal|53
+block|,
+comment|/* draft-ietf-dane-smime, TLSA-like but may 				     be extended */
 name|LDNS_RR_TYPE_HIP
 init|=
 literal|55
@@ -450,6 +455,16 @@ init|=
 literal|60
 block|,
 comment|/** RFC 7344 */
+name|LDNS_RR_TYPE_OPENPGPKEY
+init|=
+literal|61
+block|,
+comment|/* draft-ietf-dane-openpgpkey */
+name|LDNS_RR_TYPE_CSYNC
+init|=
+literal|62
+block|,
+comment|/* RFC 7477 */
 name|LDNS_RR_TYPE_SPF
 init|=
 literal|99

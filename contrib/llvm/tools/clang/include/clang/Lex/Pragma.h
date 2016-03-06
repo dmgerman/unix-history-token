@@ -202,8 +202,11 @@ name|PragmaHandler
 block|{
 name|public
 operator|:
+name|explicit
 name|EmptyPragmaHandler
-argument_list|()
+argument_list|(
+argument|StringRef Name = StringRef()
+argument_list|)
 block|;
 name|void
 name|HandlePragma

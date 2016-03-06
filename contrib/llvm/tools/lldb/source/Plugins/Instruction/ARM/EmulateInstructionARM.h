@@ -238,42 +238,42 @@ return|return
 name|false
 return|;
 block|}
-function|virtual lldb_private::ConstString     GetPluginName
+function|lldb_private::ConstString     GetPluginName
 parameter_list|()
+function|override
 block|{
 return|return
 name|GetPluginNameStatic
 argument_list|()
 return|;
 block|}
-function|virtual uint32_t     GetPluginVersion
+function|uint32_t     GetPluginVersion
 parameter_list|()
+function|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-function|bool     SetTargetTriple
-parameter_list|(
-specifier|const
-name|ArchSpec
-modifier|&
-name|arch
-parameter_list|)
-function|;
-enum|enum
+name|bool
+name|SetTargetTriple
+function|(const ArchSpec&arch
+block|)
+name|override
+expr_stmt|;
+block|enum
 name|Mode
 block|{
 name|eModeInvalid
-init|=
+operator|=
 operator|-
 literal|1
 block|,
 name|eModeARM
 block|,
 name|eModeThumb
-decl|}
-empty_stmt|;
+block|}
+decl_stmt|;
 name|EmulateInstructionARM
 argument_list|(
 specifier|const
@@ -281,30 +281,30 @@ name|ArchSpec
 operator|&
 name|arch
 argument_list|)
-range|:
+operator|:
 name|EmulateInstruction
 argument_list|(
 name|arch
 argument_list|)
-block|,
+operator|,
 name|m_arm_isa
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|m_opcode_mode
 argument_list|(
 name|eModeInvalid
 argument_list|)
-block|,
+operator|,
 name|m_opcode_cpsr
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|m_it_session
 argument_list|()
-block|,
+operator|,
 name|m_ignore_conditions
 argument_list|(
 argument|false
@@ -314,8 +314,7 @@ name|SetArchitecture
 argument_list|(
 name|arch
 argument_list|)
-empty_stmt|;
-block|}
+block|;     }
 comment|//    EmulateInstructionARM (const ArchSpec&arch,
 comment|//                           bool ignore_conditions,
 comment|//                           void *baton,
@@ -336,13 +335,12 @@ comment|//        m_opcode_cpsr (0),
 comment|//        m_it_session ()
 comment|//    {
 comment|//    }
-name|virtual
 name|bool
 name|SupportsEmulatingInstructionsOfType
-parameter_list|(
-name|InstructionType
-name|inst_type
-parameter_list|)
+argument_list|(
+argument|InstructionType inst_type
+argument_list|)
+name|override
 block|{
 return|return
 name|SupportsEmulatingInstructionsOfTypeStatic
@@ -351,89 +349,96 @@ name|inst_type
 argument_list|)
 return|;
 block|}
-function|virtual bool     SetArchitecture
+name|virtual
+name|bool
+name|SetArchitecture
 parameter_list|(
 specifier|const
 name|ArchSpec
 modifier|&
 name|arch
 parameter_list|)
-function|;
-name|virtual
+function_decl|;
 name|bool
 name|ReadInstruction
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|bool
 name|SetInstruction
-parameter_list|(
+argument_list|(
 specifier|const
 name|Opcode
-modifier|&
+operator|&
 name|insn_opcode
-parameter_list|,
+argument_list|,
 specifier|const
 name|Address
-modifier|&
+operator|&
 name|inst_addr
-parameter_list|,
+argument_list|,
 name|Target
-modifier|*
+operator|*
 name|target
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|EvaluateInstruction
-parameter_list|(
+argument_list|(
 name|uint32_t
 name|evaluate_options
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
+name|bool
+name|IsInstructionConditional
+argument_list|()
+name|override
+expr_stmt|;
 name|bool
 name|TestEmulation
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|out_stream
-parameter_list|,
+argument_list|,
 name|ArchSpec
-modifier|&
+operator|&
 name|arch
-parameter_list|,
+argument_list|,
 name|OptionValueDictionary
-modifier|*
+operator|*
 name|test_data
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|GetRegisterInfo
-block|(
+argument_list|(
 name|lldb
-block|::
+operator|::
 name|RegisterKind
 name|reg_kind
-block|,
+argument_list|,
 name|uint32_t
 name|reg_num
-block|,
+argument_list|,
 name|RegisterInfo
-modifier|&
+operator|&
 name|reg_info
-block|)
-empty_stmt|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|CreateFunctionEntryUnwind
-parameter_list|(
+argument_list|(
 name|UnwindPlan
-modifier|&
+operator|&
 name|unwind_plan
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|uint32_t
 name|ArchVersion
 parameter_list|()
@@ -444,16 +449,8 @@ parameter_list|(
 specifier|const
 name|uint32_t
 name|opcode
-parameter_list|,
-name|bool
-modifier|*
-name|is_conditional
-init|=
-name|NULL
 parameter_list|)
 function_decl|;
-comment|// Filled in with true if the opcode is a conditional opcode
-comment|// Filled in with false if the opcode is always executed
 name|uint32_t
 name|CurrentCond
 parameter_list|(
@@ -567,7 +564,7 @@ operator|::
 name|addr_t
 name|address
 argument_list|)
-block|;
+decl_stmt|;
 name|bool
 name|UnalignedSupport
 parameter_list|()
@@ -586,7 +583,7 @@ name|overflow
 decl_stmt|;
 block|}
 name|AddWithCarryResult
-expr_stmt|;
+typedef|;
 name|AddWithCarryResult
 name|AddWithCarry
 parameter_list|(
@@ -681,7 +678,8 @@ block|}
 comment|// See A8.6.35 CMP (immediate) Operation.
 comment|// Default arguments are specified for carry and overflow parameters, which means
 comment|// not to update the respective flags.
-function|bool     WriteFlags
+name|bool
+name|WriteFlags
 parameter_list|(
 name|Context
 modifier|&
@@ -705,7 +703,7 @@ init|=
 operator|~
 literal|0u
 parameter_list|)
-function|;
+function_decl|;
 specifier|inline
 name|uint64_t
 name|MemARead
@@ -754,26 +752,26 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-namespace|bool
+name|bool
 name|MemAWrite
-namespace|(
+argument_list|(
 name|EmulateInstruction
-namespace|::
+operator|::
 name|Context
-namespace|&
+operator|&
 name|context
-operator|,
+argument_list|,
 name|lldb
-namespace|::
+operator|::
 name|addr_t
 name|address
-operator|,
+argument_list|,
 name|uint64_t
 name|data_val
-operator|,
+argument_list|,
 name|uint32_t
 name|size
-block|)
+argument_list|)
 block|{
 comment|// This is a stub function corresponding to "MemA[]" in the ARM manual pseudocode, for
 comment|// aligned writes to memory.  Since we are not trying to write a full hardware simulator, and since
@@ -795,30 +793,30 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-namespace|uint64_t
+name|uint64_t
 name|MemURead
-namespace|(
+argument_list|(
 name|EmulateInstruction
-namespace|::
+operator|::
 name|Context
-namespace|&
+operator|&
 name|context
-operator|,
+argument_list|,
 name|lldb
-namespace|::
+operator|::
 name|addr_t
 name|address
-operator|,
+argument_list|,
 name|uint32_t
 name|size
-operator|,
+argument_list|,
 name|uint64_t
 name|fail_value
-operator|,
+argument_list|,
 name|bool
-namespace|*
+operator|*
 name|success_ptr
-block|)
+argument_list|)
 block|{
 comment|// This is a stub function corresponding to "MemU[]" in the ARM manual pseudocode, for
 comment|// unaligned reads from memory.  Since we are not trying to write a full hardware simulator, and since
@@ -883,7 +881,7 @@ argument_list|)
 return|;
 block|}
 name|protected
-range|:
+label|:
 comment|// Typedef for the callback function used during the emulation.
 comment|// Pass along (ARMEncoding)encoding as the callback data.
 typedef|typedef

@@ -291,12 +291,12 @@ name|int
 name|fd
 parameter_list|)
 function_decl|;
+comment|/// Interceptor hooks.
 comment|/// Whenever a dfsan's custom function is called the corresponding
 comment|/// hook is called it non-zero. The hooks should be defined by the user.
 comment|/// The primary use case is taint-guided fuzzing, where the fuzzer
 comment|/// needs to see the parameters of the function and the labels.
 comment|/// FIXME: implement more hooks.
-comment|/// memcmp hook.
 name|void
 name|dfsan_weak_hook_memcmp
 parameter_list|(
@@ -311,6 +311,36 @@ name|s1
 parameter_list|,
 specifier|const
 name|void
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+name|dfsan_label
+name|s1_label
+parameter_list|,
+name|dfsan_label
+name|s2_label
+parameter_list|,
+name|dfsan_label
+name|n_label
+parameter_list|)
+function_decl|;
+name|void
+name|dfsan_weak_hook_strncmp
+parameter_list|(
+name|void
+modifier|*
+name|caller_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 name|s2
 parameter_list|,

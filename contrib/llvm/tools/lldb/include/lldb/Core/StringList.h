@@ -43,17 +43,39 @@ directive|define
 name|liblldb_StringList_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdint.h>
 end_include
 
+begin_comment
+comment|// C++ Includes
+end_comment
+
 begin_include
 include|#
 directive|include
-file|"lldb/Core/STLUtils.h"
+file|<string>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -64,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"lldb/Core/STLUtils.h"
 end_include
 
 begin_decl_stmt
@@ -368,7 +390,7 @@ operator|::
 name|string
 name|CopyList
 argument_list|(
-argument|const char* item_preamble = NULL
+argument|const char* item_preamble = nullptr
 argument_list|,
 argument|const char* items_sep =
 literal|"\n"
@@ -391,10 +413,42 @@ operator|&
 name|operator
 operator|<<
 operator|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|s
+operator|)
+expr_stmt|;
+name|StringList
+operator|&
+name|operator
+operator|<<
+operator|(
 name|StringList
 name|strings
 operator|)
 expr_stmt|;
+comment|// Copy assignment for a vector of strings
+name|StringList
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|rhs
+operator|)
+decl_stmt|;
 comment|// This string list contains a list of valid auto completion
 comment|// strings, and the "s" is passed in. "matches" is filled in
 comment|// with zero or more string values that start with "s", and
@@ -420,17 +474,90 @@ name|exact_matches_idx
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// Dump the StringList to the given lldb_private::Log, `log`, one item per line.
+comment|// If given, `name` will be used to identify the start and end of the list in the output.
+name|virtual
+name|void
+name|LogDump
+parameter_list|(
+name|Log
+modifier|*
+name|log
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|// Static helper to convert an iterable of strings to a StringList, and then
+comment|// dump it with the semantics of the `LogDump` method.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|static
+name|void
+name|LogDump
+argument_list|(
+argument|Log *log
+argument_list|,
+argument|T s_iterable
+argument_list|,
+argument|const char *name = nullptr
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|log
+condition|)
+return|return;
+comment|// Make a copy of the iterable as a StringList
+name|StringList
+name|l
+block|{}
+expr_stmt|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|s
+range|:
+name|s_iterable
+control|)
+name|l
+operator|<<
+name|s
+expr_stmt|;
+name|l
+operator|.
+name|LogDump
+argument_list|(
+name|log
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 name|private
 label|:
 name|STLStringArray
 name|m_strings
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb_private
 end_comment
 

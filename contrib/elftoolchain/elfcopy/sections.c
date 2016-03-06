@@ -7902,6 +7902,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"empty debug link target %s"
+argument_list|,
+name|ecp
+operator|->
+name|debuglink
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|buf
 operator|=

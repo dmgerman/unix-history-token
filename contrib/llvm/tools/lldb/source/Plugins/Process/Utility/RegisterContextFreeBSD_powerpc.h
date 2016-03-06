@@ -34,19 +34,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_RegisterContextFreeBSD_powerpc_H_
+name|liblldb_RegisterContextFreeBSD_powerpc_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_RegisterContextFreeBSD_powerpc_H_
+name|liblldb_RegisterContextFreeBSD_powerpc_h_
 end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"RegisterInfoInterface.h"
 end_include
 
 begin_decl_stmt
@@ -70,10 +86,10 @@ operator|&
 name|target_arch
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextFreeBSD_powerpc
 argument_list|()
+name|override
 block|;
 name|size_t
 name|GetGPRSize
@@ -119,10 +135,10 @@ operator|&
 name|target_arch
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextFreeBSD_powerpc32
 argument_list|()
+name|override
 block|;
 name|size_t
 name|GetGPRSize
@@ -168,10 +184,10 @@ operator|&
 name|target_arch
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|RegisterContextFreeBSD_powerpc64
 argument_list|()
+name|override
 block|;
 name|size_t
 name|GetGPRSize
@@ -202,6 +218,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_RegisterContextFreeBSD_powerpc_h_
+end_comment
 
 end_unit
 

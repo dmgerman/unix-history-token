@@ -839,10 +839,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-if|if
-condition|(
-name|s
-condition|)
 name|free
 argument_list|(
 name|s

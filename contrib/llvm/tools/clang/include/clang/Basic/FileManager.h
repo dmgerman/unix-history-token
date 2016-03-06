@@ -538,8 +538,12 @@ comment|/// For each virtual file (e.g. foo/bar/baz.cpp), we add all of its pare
 comment|/// directories (foo/ and foo/bar/) here.
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DirectoryEntry
-operator|*
+operator|>
 block|,
 literal|4
 operator|>
@@ -548,8 +552,12 @@ block|;
 comment|/// \brief The virtual files that we have allocated.
 name|SmallVector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FileEntry
-operator|*
+operator|>
 block|,
 literal|4
 operator|>
@@ -755,11 +763,21 @@ argument|bool CacheFailure = true
 argument_list|)
 block|;
 comment|/// \brief Returns the current file system options
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+block|{
+return|return
+name|FileSystemOpts
+return|;
+block|}
 specifier|const
 name|FileSystemOptions
 operator|&
-name|getFileSystemOptions
+name|getFileSystemOpts
 argument_list|()
+specifier|const
 block|{
 return|return
 name|FileSystemOpts
@@ -862,10 +880,21 @@ block|;
 comment|/// \brief If path is not absolute and FileSystemOptions set the working
 comment|/// directory, the path is modified to be relative to the given
 comment|/// working directory.
-name|void
+comment|/// \returns true if \c path changed.
+name|bool
 name|FixupRelativePath
 argument_list|(
 argument|SmallVectorImpl<char>&path
+argument_list|)
+specifier|const
+block|;
+comment|/// Makes \c Path absolute taking into account FileSystemOptions and the
+comment|/// working directory option.
+comment|/// \returns true if \c Path changed to absolute.
+name|bool
+name|makeAbsolutePath
+argument_list|(
+argument|SmallVectorImpl<char>&Path
 argument_list|)
 specifier|const
 block|;
@@ -889,19 +918,6 @@ argument_list|,
 argument|off_t Size
 argument_list|,
 argument|time_t ModificationTime
-argument_list|)
-block|;
-comment|/// \brief Remove any './' components from a path.
-specifier|static
-name|bool
-name|removeDotPaths
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|Path
 argument_list|)
 block|;
 comment|/// \brief Retrieve the canonical name for a given directory.

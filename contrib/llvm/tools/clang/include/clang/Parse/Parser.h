@@ -585,6 +585,14 @@ name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
+name|MSRuntimeChecks
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
 name|OptimizeHandler
 block|;
 name|std
@@ -1730,6 +1738,12 @@ comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma align...
 name|void
 name|HandlePragmaAlign
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma clang __debug dump...
+name|void
+name|HandlePragmaDump
 parameter_list|()
 function_decl|;
 comment|/// \brief Handle the annotation token produced for
@@ -4290,6 +4304,10 @@ name|AccessSpecifier
 name|AS
 parameter_list|)
 function_decl|;
+name|void
+name|SkipFunctionBody
+parameter_list|()
+function_decl|;
 name|Decl
 modifier|*
 name|ParseFunctionDefinition
@@ -4370,6 +4388,9 @@ modifier|&
 name|prefixAttrs
 parameter_list|)
 function_decl|;
+name|class
+name|ObjCTypeParamListScope
+decl_stmt|;
 name|ObjCTypeParamList
 modifier|*
 name|parseObjCTypeParamList
@@ -4379,6 +4400,10 @@ name|ObjCTypeParamList
 modifier|*
 name|parseObjCTypeParamListOrProtocolRefs
 argument_list|(
+name|ObjCTypeParamListScope
+operator|&
+name|Scope
+argument_list|,
 name|SourceLocation
 operator|&
 name|lAngleLoc
@@ -5674,7 +5699,11 @@ name|ConvertToBoolean
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
-comment|// C++ types
+comment|// C++ Coroutines
+name|ExprResult
+name|ParseCoyieldExpression
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.7.8: Initialization.
 comment|/// ParseInitializer
@@ -5904,8 +5933,26 @@ modifier|*
 name|TrailingElseLoc
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|AllowOpenMPStandalone
+init|=
+name|false
 parameter_list|)
 function_decl|;
+enum|enum
+name|AllowedContsructsKind
+block|{
+comment|/// \brief Allow any declarations, statements, OpenMP directives.
+name|ACK_Any
+block|,
+comment|/// \brief Allow only statements and non-standalone OpenMP directives.
+name|ACK_StatementsOpenMPNonStandalone
+block|,
+comment|/// \brief Allow statements and all executable OpenMP directives
+name|ACK_StatementsOpenMPAnyExecutable
+block|}
+enum|;
 name|StmtResult
 name|ParseStatementOrDeclaration
 parameter_list|(
@@ -5913,8 +5960,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -5930,8 +5977,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -6098,8 +6145,8 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|bool
-name|OnlyStatement
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|,
 name|SourceLocation
 modifier|*
@@ -7938,19 +7985,9 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|LO
 operator|.
-name|MicrosoftExt
-operator|||
-name|LO
-operator|.
-name|Borland
-operator|||
-name|LO
-operator|.
-name|CUDA
-operator|)
+name|DeclSpecKeyword
 operator|&&
 name|Tok
 operator|.
@@ -8712,8 +8749,7 @@ modifier|*
 name|Context
 parameter_list|)
 function_decl|;
-name|Decl
-modifier|*
+name|DeclGroupPtrTy
 name|ParseNamespace
 parameter_list|(
 name|unsigned
@@ -9025,7 +9061,7 @@ modifier|&
 name|VS
 parameter_list|)
 function_decl|;
-name|void
+name|DeclGroupPtrTy
 name|ParseCXXClassMemberDeclaration
 parameter_list|(
 name|AccessSpecifier
@@ -9050,6 +9086,27 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+name|DeclGroupPtrTy
+name|ParseCXXClassMemberDeclarationWithPragmas
+argument_list|(
+name|AccessSpecifier
+operator|&
+name|AS
+argument_list|,
+name|ParsedAttributesWithRange
+operator|&
+name|AccessAttrs
+argument_list|,
+name|DeclSpec
+operator|::
+name|TST
+name|TagType
+argument_list|,
+name|Decl
+operator|*
+name|TagDecl
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseConstructorInitializer
 parameter_list|(
@@ -9196,14 +9253,16 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Parses declarative or executable directive.
 comment|///
-comment|/// \param StandAloneAllowed true if allowed stand-alone directives,
-comment|/// false - otherwise
+comment|/// \param Allowed ACK_Any, if any directives are allowed,
+comment|/// ACK_StatementsOpenMPAnyExecutable - if any executable directives are
+comment|/// allowed, ACK_StatementsOpenMPNonStandalone - if only non-standalone
+comment|/// executable directives are allowed.
 comment|///
 name|StmtResult
 name|ParseOpenMPDeclarativeOrExecutableDirective
 parameter_list|(
-name|bool
-name|StandAloneAllowed
+name|AllowedContsructsKind
+name|Allowed
 parameter_list|)
 function_decl|;
 comment|/// \brief Parses clause of kind \a CKind for directive of a kind \a Kind.
@@ -9284,6 +9343,9 @@ name|OMPClause
 modifier|*
 name|ParseOpenMPVarListClause
 parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|,
 name|OpenMPClauseKind
 name|Kind
 parameter_list|)
@@ -9651,6 +9713,52 @@ name|SourceLocation
 name|AtLoc
 parameter_list|)
 function_decl|;
+name|bool
+name|parseMisplacedModuleImport
+parameter_list|()
+function_decl|;
+name|bool
+name|tryParseMisplacedModuleImport
+parameter_list|()
+block|{
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+operator|=
+name|Tok
+operator|.
+name|getKind
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_begin
+operator|||
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_end
+operator|||
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_include
+condition|)
+return|return
+name|parseMisplacedModuleImport
+argument_list|()
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// C++11/G++: Type Traits [Type-Traits.html in the GCC manual]
 name|ExprResult

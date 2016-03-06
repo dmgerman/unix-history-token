@@ -92,18 +92,6 @@ comment|//          objects by ID.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 19/06/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -119,9 +107,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMIUtilMapIdToVariant
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 name|template
 operator|<
@@ -144,9 +130,7 @@ argument_list|)
 block|;
 name|void
 name|Clear
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 name|template
 operator|<
@@ -173,9 +157,7 @@ specifier|const
 block|;
 name|bool
 name|IsEmpty
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 name|bool
@@ -194,9 +176,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMIUtilMapIdToVariant
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// Typedefs:

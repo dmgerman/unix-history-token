@@ -100,7 +100,7 @@ comment|///      the next stage starts immediately after this one.
 comment|///
 comment|///   { 2, x|y, 1 }
 comment|///      indicates that the stage occupies either FU x or FU y for 2
-comment|///      consecuative cycles and that the next stage starts one cycle
+comment|///      consecutive cycles and that the next stage starts one cycle
 comment|///      after this stage starts. That is, the stage requirements
 comment|///      overlap in time.
 comment|///

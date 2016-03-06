@@ -151,6 +151,36 @@ argument_list|,
 literal|1
 argument_list|)
 block|{}
+name|BumpVectorContext
+argument_list|(
+name|BumpVectorContext
+operator|&&
+name|Other
+argument_list|)
+operator|:
+name|Alloc
+argument_list|(
+argument|Other.Alloc
+argument_list|)
+block|{
+name|Other
+operator|.
+name|Alloc
+operator|.
+name|setInt
+argument_list|(
+name|false
+argument_list|)
+block|;
+name|Other
+operator|.
+name|Alloc
+operator|.
+name|setPointer
+argument_list|(
+name|nullptr
+argument_list|)
+block|;   }
 comment|/// Construct a new BumpVectorContext that reuses an existing
 comment|/// BumpPtrAllocator.  This BumpPtrAllocator is not destroyed when the
 comment|/// BumpVectorContext object is destroyed.

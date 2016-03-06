@@ -51,26 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -114,6 +100,20 @@ name|DynamicLoader
 block|{
 name|public
 operator|:
+name|DynamicLoaderStatic
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
+block|;
+operator|~
+name|DynamicLoaderStatic
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -153,37 +153,22 @@ argument_list|,
 argument|bool force
 argument_list|)
 block|;
-name|DynamicLoaderStatic
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|DynamicLoaderStatic
-argument_list|()
-block|;
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching a process.
 comment|///
 comment|/// Allow DynamicLoader plug-ins to execute some code after
 comment|/// attaching to a process.
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DidAttach
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadPlanSP
@@ -193,28 +178,29 @@ argument|lldb_private::Thread&thread
 argument_list|,
 argument|bool stop_others
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|CanLoadImage
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

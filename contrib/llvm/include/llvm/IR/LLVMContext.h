@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/CBindingWrapping.h"
 end_include
 
@@ -220,7 +214,45 @@ comment|// "dereferenceable"
 name|MD_dereferenceable_or_null
 init|=
 literal|13
+block|,
 comment|// "dereferenceable_or_null"
+name|MD_make_implicit
+init|=
+literal|14
+block|,
+comment|// "make.implicit"
+name|MD_unpredictable
+init|=
+literal|15
+block|,
+comment|// "unpredictable"
+name|MD_invariant_group
+init|=
+literal|16
+block|,
+comment|// "invariant.group"
+name|MD_align
+init|=
+literal|17
+comment|// "align"
+block|}
+enum|;
+comment|/// Known operand bundle tag IDs, which always have the same value.  All
+comment|/// operand bundle tags that LLVM has special knowledge of are listed here.
+comment|/// Additionally, this scheme allows LLVM to efficiently check for specific
+comment|/// operand bundle tags without comparing strings.
+enum|enum
+block|{
+name|OB_deopt
+init|=
+literal|0
+block|,
+comment|// "deopt"
+name|OB_funclet
+init|=
+literal|1
+block|,
+comment|// "funclet"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -247,6 +279,71 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getOperandBundleTags - Populate client supplied SmallVector with the
+comment|/// bundle tags registered in this LLVMContext.  The bundle tags are ordered
+comment|/// by increasing bundle IDs.
+comment|/// \see LLVMContext::getOperandBundleTagID
+name|void
+name|getOperandBundleTags
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getOperandBundleTagID - Maps a bundle tag to an integer ID.  Every bundle
+comment|/// tag registered with an LLVMContext has an unique ID.
+name|uint32_t
+name|getOperandBundleTagID
+argument_list|(
+name|StringRef
+name|Tag
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Define the GC for a function
+name|void
+name|setGC
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|,
+name|std
+operator|::
+name|string
+name|GCName
+argument_list|)
+decl_stmt|;
+comment|/// Return the GC for a function
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getGC
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|Fn
+argument_list|)
+expr_stmt|;
+comment|/// Remove the GC for a function
+name|void
+name|deleteGC
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|Fn
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|void
 function_decl|(

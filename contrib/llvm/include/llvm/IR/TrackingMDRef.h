@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/MetadataTracking.h"
+file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
@@ -75,15 +75,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Metadata
-decl_stmt|;
-name|class
-name|MDNode
-decl_stmt|;
-name|class
-name|ValueAsMetadata
-decl_stmt|;
 comment|/// \brief Tracking metadata reference.
 comment|///
 comment|/// This class behaves like \a TrackingVH, but for metadata.

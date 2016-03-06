@@ -1623,12 +1623,13 @@ name|BlockT
 modifier|*
 name|EntryBB
 init|=
+operator|&
 name|BB
 operator|->
 name|getParent
 argument_list|()
 operator|->
-name|begin
+name|front
 argument_list|()
 decl_stmt|;
 for|for
@@ -2147,7 +2148,7 @@ argument|LoopInfoBase<BlockT
 argument_list|,
 argument|LoopT> *LI
 argument_list|,
-argument|DominatorTreeBase<BlockT>&DomTree
+argument|const DominatorTreeBase<BlockT>&DomTree
 argument_list|)
 block|{
 typedef|typedef
@@ -2809,12 +2810,13 @@ operator|,
 name|LoopT
 operator|>
 operator|::
-name|Analyze
+name|analyze
 argument_list|(
-argument|DominatorTreeBase<BlockT>&DomTree
+argument|const DominatorTreeBase<BlockT>&DomTree
 argument_list|)
 block|{
 comment|// Postorder traversal of the dominator tree.
+specifier|const
 name|DomTreeNodeBase
 operator|<
 name|BlockT

@@ -83,6 +83,12 @@ directive|include
 file|<climits>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<numeric>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -153,10 +159,9 @@ operator|.
 name|setPreservesAll
 argument_list|()
 block|;   }
-comment|// Return edge weight. If we don't have any informations about it - return
-comment|// DEFAULT_WEIGHT.
-name|uint32_t
-name|getEdgeWeight
+comment|// Return edge probability.
+name|BranchProbability
+name|getEdgeProbability
 argument_list|(
 argument|const MachineBasicBlock *Src
 argument_list|,
@@ -164,26 +169,14 @@ argument|const MachineBasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
-comment|// Same thing, but using a const_succ_iterator from Src. This is faster when
-comment|// the iterator is already available.
-name|uint32_t
-name|getEdgeWeight
+comment|// Same as above, but using a const_succ_iterator from Src. This is faster
+comment|// when the iterator is already available.
+name|BranchProbability
+name|getEdgeProbability
 argument_list|(
 argument|const MachineBasicBlock *Src
 argument_list|,
 argument|MachineBasicBlock::const_succ_iterator Dst
-argument_list|)
-specifier|const
-block|;
-comment|// Get sum of the block successors' weights, potentially scaling them to fit
-comment|// within 32-bits. If scaling is required, sets Scale based on the necessary
-comment|// adjustment. Any edge weights used with the sum should be divided by Scale.
-name|uint32_t
-name|getSumForBlock
-argument_list|(
-argument|const MachineBasicBlock *MBB
-argument_list|,
-argument|uint32_t&Scale
 argument_list|)
 specifier|const
 block|;
@@ -204,21 +197,6 @@ operator|*
 name|getHotSucc
 argument_list|(
 argument|MachineBasicBlock *MBB
-argument_list|)
-specifier|const
-block|;
-comment|// Return a probability as a fraction between 0 (0% probability) and
-comment|// 1 (100% probability), however the value is never equal to 0, and can be 1
-comment|// only iff SRC block has only one successor.
-comment|// NB: This routine's complexity is linear on the number of successors of
-comment|// Src. Querying sequentially for each successor's probability is a quadratic
-comment|// query pattern.
-name|BranchProbability
-name|getEdgeProbability
-argument_list|(
-argument|const MachineBasicBlock *Src
-argument_list|,
-argument|const MachineBasicBlock *Dst
 argument_list|)
 specifier|const
 block|;

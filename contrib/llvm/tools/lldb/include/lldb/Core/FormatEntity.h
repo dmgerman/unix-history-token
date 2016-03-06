@@ -43,14 +43,13 @@ directive|define
 name|liblldb_FormatEntity_h_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
 
 begin_include
 include|#
@@ -63,6 +62,14 @@ include|#
 directive|include
 file|<vector>
 end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -85,6 +92,10 @@ name|StringRef
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -204,6 +215,8 @@ name|FunctionInitial
 operator|,
 name|FunctionChanged
 operator|,
+name|FunctionIsOptimized
+operator|,
 name|LineEntryFile
 operator|,
 name|LineEntryLineNumber
@@ -270,9 +283,9 @@ name|Entry
 argument_list|(
 argument|Type t = Type::Invalid
 argument_list|,
-argument|const char *s = NULL
+argument|const char *s = nullptr
 argument_list|,
-argument|const char *f = NULL
+argument|const char *f = nullptr
 argument_list|)
 block|:
 name|string
@@ -298,7 +311,7 @@ argument_list|()
 operator|,
 name|definition
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|type
@@ -398,7 +411,7 @@ argument_list|()
 expr_stmt|;
 name|definition
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|type
 operator|=
@@ -884,14 +897,9 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|// #if defined(__cplusplus)
+unit|}
+comment|// namespace lldb_private
 end_comment
 
 begin_endif

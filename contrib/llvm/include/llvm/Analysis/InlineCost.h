@@ -94,7 +94,7 @@ name|class
 name|Function
 decl_stmt|;
 name|class
-name|TargetTransformInfoWrapperPass
+name|TargetTransformInfo
 decl_stmt|;
 name|namespace
 name|InlineConstants
@@ -351,51 +351,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief Cost analyzer used by inliner.
-name|class
-name|InlineCostAnalysis
-range|:
-name|public
-name|CallGraphSCCPass
-block|{
-name|TargetTransformInfoWrapperPass
-operator|*
-name|TTIWP
-block|;
-name|AssumptionCacheTracker
-operator|*
-name|ACT
-block|;
-name|public
-operator|:
-specifier|static
-name|char
-name|ID
-block|;
-name|InlineCostAnalysis
-argument_list|()
-block|;
-operator|~
-name|InlineCostAnalysis
-argument_list|()
-name|override
-block|;
-comment|// Pass interface implementation.
-name|void
-name|getAnalysisUsage
-argument_list|(
-argument|AnalysisUsage&AU
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|runOnSCC
-argument_list|(
-argument|CallGraphSCC&SCC
-argument_list|)
-name|override
-block|;
 comment|/// \brief Get an InlineCost object representing the cost of inlining this
 comment|/// callsite.
 comment|///
@@ -408,39 +363,58 @@ comment|/// Also note that calling this function *dynamically* computes the cost
 comment|/// inlining the callsite. It is an expensive, heavyweight call.
 name|InlineCost
 name|getInlineCost
-argument_list|(
-argument|CallSite CS
-argument_list|,
-argument|int Threshold
-argument_list|)
-block|;
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+name|int
+name|Threshold
+parameter_list|,
+name|TargetTransformInfo
+modifier|&
+name|CalleeTTI
+parameter_list|,
+name|AssumptionCacheTracker
+modifier|*
+name|ACT
+parameter_list|)
+function_decl|;
 comment|/// \brief Get an InlineCost with the callee explicitly specified.
 comment|/// This allows you to calculate the cost of inlining a function via a
 comment|/// pointer. This behaves exactly as the version with no explicit callee
 comment|/// parameter in all other respects.
 comment|//
-comment|//  Note: This is used by out-of-tree passes, please do not remove without
-comment|//  adding a replacement API.
 name|InlineCost
 name|getInlineCost
-argument_list|(
-argument|CallSite CS
-argument_list|,
-argument|Function *Callee
-argument_list|,
-argument|int Threshold
-argument_list|)
-block|;
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+name|Function
+modifier|*
+name|Callee
+parameter_list|,
+name|int
+name|Threshold
+parameter_list|,
+name|TargetTransformInfo
+modifier|&
+name|CalleeTTI
+parameter_list|,
+name|AssumptionCacheTracker
+modifier|*
+name|ACT
+parameter_list|)
+function_decl|;
 comment|/// \brief Minimal filter to detect invalid constructs for inlining.
 name|bool
 name|isInlineViable
-argument_list|(
+parameter_list|(
 name|Function
-operator|&
+modifier|&
 name|Callee
-argument_list|)
-block|; }
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

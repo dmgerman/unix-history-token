@@ -235,7 +235,7 @@ argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
 argument_list|,
-argument|const SMLoc&Loc
+argument|SMLoc Loc
 argument_list|)
 name|override
 block|;

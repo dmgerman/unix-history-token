@@ -225,14 +225,6 @@ return|return
 name|true
 return|;
 block|}
-name|bool
-name|needsStackRealignment
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// Returns true if the frame pointer is valid.
 name|bool
 name|useFPForScavengingIndex

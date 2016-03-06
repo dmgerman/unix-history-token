@@ -69,12 +69,6 @@ directive|include
 file|"llvm/ExecutionEngine/ExecutionEngine.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cstdlib>
-end_include
-
 begin_extern
 extern|extern
 literal|"C"
@@ -96,27 +90,6 @@ block|{
 name|ForceInterpreterLinking
 argument_list|()
 block|{
-comment|// We must reference the interpreter in such a way that compilers will not
-comment|// delete it all as dead code, even with whole program optimization,
-comment|// yet is effectively a NO-OP. As the compiler isn't smart enough
-comment|// to know that getenv() never returns -1, this will do the job.
-if|if
-condition|(
-name|std
-operator|::
-name|getenv
-argument_list|(
-literal|"bar"
-argument_list|)
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-operator|-
-literal|1
-condition|)
-return|return;
 name|LLVMLinkInInterpreter
 argument_list|()
 expr_stmt|;

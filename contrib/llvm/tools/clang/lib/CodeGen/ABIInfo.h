@@ -91,6 +91,12 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|ABIArgInfo
+decl_stmt|;
+name|class
+name|Address
+decl_stmt|;
+name|class
 name|CGCXXABI
 decl_stmt|;
 name|class
@@ -259,21 +265,36 @@ comment|// the ABI information any lower than CodeGen. Of course, for
 comment|// VAArg handling it has to be at this level; there is no way to
 comment|// abstract this out.
 name|virtual
-name|llvm
+name|CodeGen
 operator|::
-name|Value
-operator|*
+name|Address
 name|EmitVAArg
 argument_list|(
-argument|llvm::Value *VAListAddr
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|CodeGen::Address VAListAddr
 argument_list|,
 argument|QualType Ty
-argument_list|,
-argument|CodeGen::CodeGenFunction&CGF
 argument_list|)
 specifier|const
 operator|=
 literal|0
+expr_stmt|;
+comment|/// Emit the target dependent code to load a value of
+comment|/// \arg Ty from the \c __builtin_ms_va_list pointed to by \arg VAListAddr.
+name|virtual
+name|CodeGen
+operator|::
+name|Address
+name|EmitMSVAArg
+argument_list|(
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|CodeGen::Address VAListAddr
+argument_list|,
+argument|QualType Ty
+argument_list|)
+specifier|const
 expr_stmt|;
 name|virtual
 name|bool
@@ -325,6 +346,34 @@ name|Members
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// A convenience method to return an indirect ABIArgInfo with an
+comment|/// expected alignment equal to the ABI alignment of the given type.
+name|CodeGen
+operator|::
+name|ABIArgInfo
+name|getNaturalAlignIndirect
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|bool ByRef = true
+argument_list|,
+argument|bool Realign = false
+argument_list|,
+argument|llvm::Type *Padding = nullptr
+argument_list|)
+specifier|const
+expr_stmt|;
+name|CodeGen
+operator|::
+name|ABIArgInfo
+name|getNaturalAlignIndirectInReg
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|bool Realign = false
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -104,18 +104,6 @@ comment|//          Singleton class.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Aidan Dodds 12/03/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -147,23 +135,17 @@ name|public
 label|:
 name|bool
 name|Initialize
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Shutdown
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|ThreadAllTerminate
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Ask all threads to stop (caution)
 name|template
@@ -198,9 +180,7 @@ name|private
 label|:
 comment|/* ctor */
 name|CMICmnThreadMgrStd
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* ctor */
 name|CMICmnThreadMgrStd
@@ -237,9 +217,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CMICmnThreadMgrStd
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

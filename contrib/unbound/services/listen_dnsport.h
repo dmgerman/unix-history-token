@@ -370,7 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @return: the socket. -1 on error.  */
+comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @param mss: maximum segment size of the socket. if zero, leaves the default.   * @return: the socket. -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -395,6 +395,9 @@ name|reuseport
 parameter_list|,
 name|int
 name|transparent
+parameter_list|,
+name|int
+name|mss
 parameter_list|)
 function_decl|;
 end_function_decl

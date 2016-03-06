@@ -98,23 +98,19 @@ file|"llvm/Support/Path.h"
 end_include
 
 begin_comment
-comment|// FIXME: Kill when CompilationInfo
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<memory>
-end_include
-
-begin_comment
-comment|// lands.
+comment|// FIXME: Kill when CompilationInfo lands.
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -160,6 +156,13 @@ name|namespace
 name|clang
 block|{
 name|namespace
+name|vfs
+block|{
+name|class
+name|FileSystem
+decl_stmt|;
+block|}
+name|namespace
 name|driver
 block|{
 name|class
@@ -186,6 +189,19 @@ decl_stmt|;
 name|class
 name|ToolChain
 decl_stmt|;
+comment|/// Describes the kind of LTO mode selected via -f(no-)?lto(=.*)? options.
+enum|enum
+name|LTOKind
+block|{
+name|LTOK_None
+block|,
+name|LTOK_Full
+block|,
+name|LTOK_Thin
+block|,
+name|LTOK_Unknown
+block|}
+enum|;
 comment|/// Driver - Encapsulate logic for constructing compilation processes
 comment|/// from a set of gcc-driver-like command line arguments.
 name|class
@@ -203,6 +219,14 @@ name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+expr_stmt|;
 enum|enum
 name|DriverMode
 block|{
@@ -227,6 +251,10 @@ name|SaveTempsObj
 block|}
 name|SaveTemps
 enum|;
+comment|/// LTO mode selected via -f(no-)?lto(=.*)? options.
+name|LTOKind
+name|LTOMode
+decl_stmt|;
 name|public
 label|:
 comment|// Diag - Forwarding function for diagnostics.
@@ -588,11 +616,13 @@ name|public
 label|:
 name|Driver
 argument_list|(
-argument|StringRef _ClangExecutable
+argument|StringRef ClangExecutable
 argument_list|,
-argument|StringRef _DefaultTargetTriple
+argument|StringRef DefaultTargetTriple
 argument_list|,
-argument|DiagnosticsEngine&_Diags
+argument|DiagnosticsEngine&Diags
+argument_list|,
+argument|IntrusiveRefCntPtr<vfs::FileSystem> VFS = nullptr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -640,6 +670,19 @@ specifier|const
 block|{
 return|return
 name|Diags
+return|;
+block|}
+name|vfs
+operator|::
+name|FileSystem
+operator|&
+name|getVFS
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|VFS
 return|;
 block|}
 name|bool
@@ -855,12 +898,17 @@ decl_stmt|;
 comment|/// BuildActions - Construct the list of actions to perform for the
 comment|/// given arguments, which are only done for a single architecture.
 comment|///
+comment|/// \param C - The compilation that is being built.
 comment|/// \param TC - The default host tool chain.
 comment|/// \param Args - The input arguments.
 comment|/// \param Actions - The list to store the resulting actions onto.
 name|void
 name|BuildActions
 argument_list|(
+name|Compilation
+operator|&
+name|C
+argument_list|,
 specifier|const
 name|ToolChain
 operator|&
@@ -888,33 +936,24 @@ decl_stmt|;
 comment|/// BuildUniversalActions - Construct the list of actions to perform
 comment|/// for the given arguments, which may require a universal build.
 comment|///
+comment|/// \param C - The compilation that is being built.
 comment|/// \param TC - The default host tool chain.
-comment|/// \param Args - The input arguments.
-comment|/// \param Actions - The list to store the resulting actions onto.
 name|void
 name|BuildUniversalActions
 argument_list|(
+name|Compilation
+operator|&
+name|C
+argument_list|,
 specifier|const
 name|ToolChain
 operator|&
 name|TC
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|DerivedArgList
-operator|&
-name|Args
-argument_list|,
 specifier|const
 name|InputList
 operator|&
 name|BAInputs
-argument_list|,
-name|ActionList
-operator|&
-name|Actions
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1068,27 +1107,42 @@ function_decl|;
 comment|/// ConstructAction - Construct the appropriate action to do for
 comment|/// \p Phase on the \p Input, taking in to account arguments
 comment|/// like -fsyntax-only or --analyze.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|Action
-operator|>
+modifier|*
 name|ConstructPhaseAction
 argument_list|(
-argument|const ToolChain&TC
+name|Compilation
+operator|&
+name|C
 argument_list|,
-argument|const llvm::opt::ArgList&Args
-argument_list|,
-argument|phases::ID Phase
-argument_list|,
-argument|std::unique_ptr<Action> Input
-argument_list|)
 specifier|const
-expr_stmt|;
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|phases
+operator|::
+name|ID
+name|Phase
+argument_list|,
+name|Action
+operator|*
+name|Input
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// BuildJobsForAction - Construct the jobs to perform for the
-comment|/// action \p A.
-name|void
+comment|/// action \p A and return an InputInfo for the result of running \p A.
+name|InputInfo
 name|BuildJobsForAction
 argument_list|(
 name|Compilation
@@ -1120,10 +1174,6 @@ specifier|const
 name|char
 operator|*
 name|LinkingOutput
-argument_list|,
-name|InputInfo
-operator|&
-name|Result
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1205,8 +1255,34 @@ name|JA
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns true if we are performing any kind of LTO.
 name|bool
-name|IsUsingLTO
+name|isUsingLTO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LTOMode
+operator|!=
+name|LTOK_None
+return|;
+block|}
+comment|/// Get the specific kind of LTO being performed.
+name|LTOKind
+name|getLTOMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LTOMode
+return|;
+block|}
+name|private
+label|:
+comment|/// Parse the \p Args list for LTO options and record the type of LTO
+comment|/// compilation based on which -f(no-)?lto(=.*)? option occurs last.
+name|void
+name|setLTOMode
 argument_list|(
 specifier|const
 name|llvm
@@ -1217,10 +1293,7 @@ name|ArgList
 operator|&
 name|Args
 argument_list|)
-decl|const
 decl_stmt|;
-name|private
-label|:
 comment|/// \brief Retrieves a ToolChain for a particular \p Target triple.
 comment|///
 comment|/// Will cache ToolChains for the life of the driver object, and create them

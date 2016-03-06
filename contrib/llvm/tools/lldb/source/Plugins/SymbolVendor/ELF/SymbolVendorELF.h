@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SymbolVendorELF.h ------------------------------------*- C++ -*-===//
+comment|//===-- SymbolVendorELF.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,6 +43,22 @@ directive|define
 name|liblldb_SymbolVendorELF_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -66,6 +82,24 @@ name|SymbolVendor
 block|{
 name|public
 operator|:
+comment|//------------------------------------------------------------------
+comment|// Constructors and Destructors
+comment|//------------------------------------------------------------------
+name|SymbolVendorELF
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|)
+block|;
+operator|~
+name|SymbolVendorELF
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -115,37 +149,19 @@ name|feedback_strm
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
-name|SymbolVendorELF
-argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|SymbolVendorELF
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

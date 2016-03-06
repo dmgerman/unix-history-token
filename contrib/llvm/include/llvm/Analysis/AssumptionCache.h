@@ -195,7 +195,7 @@ argument_list|)
 block|{}
 comment|/// \brief Add an @llvm.assume intrinsic to this function's cache.
 comment|///
-comment|/// The call passed in must be an instruction within this fuction and must
+comment|/// The call passed in must be an instruction within this function and must
 comment|/// not already be in the cache.
 name|void
 name|registerAssumption
@@ -223,7 +223,7 @@ name|false
 expr_stmt|;
 block|}
 comment|/// \brief Access the list of assumption handles currently tracked for this
-comment|/// fuction.
+comment|/// function.
 comment|///
 comment|/// Note that these produce weak handles that may be null. The caller must
 comment|/// handle that case.
@@ -479,6 +479,7 @@ comment|/// A callback value handle applied to function objects, which we use to
 comment|/// delete our cache of intrinsics for a function when it is deleted.
 name|class
 name|FunctionCallbackVH
+name|final
 operator|:
 name|public
 name|CallbackVH

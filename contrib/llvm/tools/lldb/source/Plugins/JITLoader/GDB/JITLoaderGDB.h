@@ -57,17 +57,13 @@ directive|include
 file|<map>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -92,6 +88,20 @@ name|JITLoader
 block|{
 name|public
 operator|:
+name|JITLoaderGDB
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
+block|;
+operator|~
+name|JITLoaderGDB
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -130,58 +140,51 @@ argument_list|,
 argument|bool force
 argument_list|)
 block|;
-name|JITLoaderGDB
+specifier|static
+name|void
+name|DebuggerInitialize
 argument_list|(
 name|lldb_private
 operator|::
-name|Process
-operator|*
-name|process
+name|Debugger
+operator|&
+name|debugger
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|JITLoaderGDB
-argument_list|()
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// JITLoader interface
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DidAttach
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ModulesDidLoad
 argument_list|(
-name|lldb_private
-operator|::
-name|ModuleList
-operator|&
-name|module_list
+argument|lldb_private::ModuleList&module_list
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -297,6 +300,10 @@ unit|};
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_JITLoaderGDB_h_
+end_comment
 
 end_unit
 

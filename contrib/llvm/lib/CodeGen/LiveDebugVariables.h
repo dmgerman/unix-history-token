@@ -129,17 +129,6 @@ name|void
 operator|*
 name|pImpl
 block|;
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-block|,
-name|DISubprogram
-operator|*
-operator|>
-name|FunctionDIs
-block|;
 name|public
 operator|:
 specifier|static

@@ -93,7 +93,7 @@ name|Triple
 operator|&
 name|TheTriple
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

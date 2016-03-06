@@ -175,7 +175,7 @@ operator|>
 name|end
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 if|if
 condition|(

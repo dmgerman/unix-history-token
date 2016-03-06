@@ -86,18 +86,6 @@ comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 15/04/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -116,9 +104,7 @@ name|public
 operator|:
 comment|/* ctor */
 name|CMICmdArgValString
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/* ctor */
 name|CMICmdArgValString
@@ -165,9 +151,7 @@ comment|// From CMICmdArgValBase
 comment|/* dtor */
 operator|~
 name|CMICmdArgValString
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 block|;
 comment|// From CMICmdArgSet::IArg

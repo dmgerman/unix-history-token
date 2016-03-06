@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -73,9 +79,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// PointerLikeTypeTraits - This is a traits object that is used to handle
-comment|/// pointer types and things that are just wrappers for pointers as a uniform
-comment|/// entity.
+comment|/// A traits type that is used to handle pointer types and things that are just
+comment|/// wrappers for pointers as a uniform entity.
 name|template
 operator|<
 name|typename
@@ -89,28 +94,77 @@ comment|// getFromVoidPointer
 comment|// getNumLowBitsAvailable
 block|}
 expr_stmt|;
+name|namespace
+name|detail
+block|{
+comment|/// A tiny meta function to compute the log2 of a compile time constant.
+name|template
+operator|<
+name|size_t
+name|N
+operator|>
+expr|struct
+name|ConstantLog2
+operator|:
+name|std
+operator|::
+name|integral_constant
+operator|<
+name|size_t
+operator|,
+name|ConstantLog2
+operator|<
+name|N
+operator|/
+literal|2
+operator|>
+operator|::
+name|value
+operator|+
+literal|1
+operator|>
+block|{}
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ConstantLog2
+operator|<
+literal|1
+operator|>
+operator|:
+name|std
+operator|::
+name|integral_constant
+operator|<
+name|size_t
+operator|,
+literal|0
+operator|>
+block|{}
+expr_stmt|;
+block|}
 comment|// Provide PointerLikeTypeTraits for non-cvr pointers.
 name|template
 operator|<
 name|typename
 name|T
 operator|>
-name|class
+expr|struct
 name|PointerLikeTypeTraits
 operator|<
 name|T
 operator|*
 operator|>
 block|{
-name|public
-operator|:
 specifier|static
 specifier|inline
 name|void
 operator|*
 name|getAsVoidPointer
 argument_list|(
-argument|T* P
+argument|T *P
 argument_list|)
 block|{
 return|return
@@ -137,9 +191,66 @@ name|P
 operator|)
 return|;
 block|}
-comment|/// Note, we assume here that malloc returns objects at least 4-byte aligned.
-comment|/// However, this may be wrong, or pointers may be from something other than
-comment|/// malloc.  In this case, you should specialize this template to reduce this.
+expr|enum
+block|{
+name|NumLowBitsAvailable
+operator|=
+name|detail
+operator|::
+name|ConstantLog2
+operator|<
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|>
+operator|::
+name|value
+block|}
+block|; }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|PointerLikeTypeTraits
+operator|<
+name|void
+operator|*
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|getAsVoidPointer
+argument_list|(
+argument|void *P
+argument_list|)
+block|{
+return|return
+name|P
+return|;
+block|}
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|getFromVoidPointer
+argument_list|(
+argument|void *P
+argument_list|)
+block|{
+return|return
+name|P
+return|;
+block|}
+comment|/// Note, we assume here that void* is related to raw malloc'ed memory and
+comment|/// that malloc returns objects at least 4-byte aligned. However, this may be
+comment|/// wrong, or pointers may be from something other than malloc. In this case,
+comment|/// you should specify a real typed pointer or avoid this template.
 comment|///
 comment|/// All clients should use assertions to do a run-time check to ensure that
 comment|/// this is actually true.
@@ -182,7 +293,7 @@ name|void
 operator|*
 name|getAsVoidPointer
 argument_list|(
-argument|const T* P
+argument|const T *P
 argument_list|)
 block|{
 return|return
@@ -314,7 +425,7 @@ enum|;
 end_enum
 
 begin_comment
-unit|};    }
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

@@ -230,11 +230,30 @@ enum|;
 comment|/// Decl - This represents one declaration (or definition), e.g. a variable,
 comment|/// typedef, function, struct, etc.
 comment|///
+comment|/// Note: There are objects tacked on before the *beginning* of Decl
+comment|/// (and its subclasses) in its Decl::operator new(). Proper alignment
+comment|/// of all subclasses (not requiring more than DeclObjAlignment) is
+comment|/// asserted in DeclBase.cpp.
 name|class
 name|Decl
 block|{
 name|public
 label|:
+comment|/// \brief Alignment guaranteed when allocating Decl and any subtypes.
+enum|enum
+block|{
+name|DeclObjAlignment
+init|=
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|Alignment
+block|}
+enum|;
 comment|/// \brief Lists the kind of concrete classes of Decl.
 enum|enum
 name|Kind
@@ -312,6 +331,9 @@ block|,
 comment|/// Tags, declared with 'struct foo;' and referenced with
 comment|/// 'struct foo'.  All tags are also types.  This is what
 comment|/// elaborated-type-specifiers look for in C.
+comment|/// This also contains names that conflict with tags in the
+comment|/// same scope but that are otherwise ordinary names (non-type
+comment|/// template parameters and indirect field declarations).
 name|IDNS_Tag
 init|=
 literal|0x0002
@@ -338,7 +360,7 @@ init|=
 literal|0x0010
 block|,
 comment|/// Ordinary names.  In C, everything that's not a label, tag,
-comment|/// or member ends up here.
+comment|/// member, or function-local extern ends up here.
 name|IDNS_Ordinary
 init|=
 literal|0x0020
@@ -379,7 +401,9 @@ literal|0x0400
 block|,
 comment|/// This declaration is a function-local extern declaration of a
 comment|/// variable or function. This may also be IDNS_Ordinary if it
-comment|/// has been declared outside any function.
+comment|/// has been declared outside any function. These act mostly like
+comment|/// invisible friend declarations, but are also visible to unqualified
+comment|/// lookup within the scope of the declaring function.
 name|IDNS_LocalExtern
 init|=
 literal|0x0800
@@ -1550,27 +1574,22 @@ block|{
 return|return
 name|llvm
 operator|::
-name|iterator_range
-operator|<
-name|specific_attr_iterator
-operator|<
-name|T
-operator|>>
-operator|(
+name|make_range
+argument_list|(
 name|specific_attr_begin
 operator|<
 name|T
 operator|>
 operator|(
 operator|)
-operator|,
+argument_list|,
 name|specific_attr_end
 operator|<
 name|T
 operator|>
 operator|(
 operator|)
-operator|)
+argument_list|)
 return|;
 block|}
 name|template
@@ -2531,6 +2550,42 @@ operator|==
 name|nullptr
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns true if this declaration lexically is inside a function.
+end_comment
+
+begin_comment
+comment|/// It recognizes non-defining declarations as well as members of local
+end_comment
+
+begin_comment
+comment|/// classes:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///     void foo() { void bar(); }
+end_comment
+
+begin_comment
+comment|///     void foo2() { class ABC { void bar(); }; }
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isLexicallyWithinFunctionOrMethod
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -4620,6 +4675,15 @@ name|HasLazyExternalLexicalLookups
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief If \c true, lookups should only return identifier from
+comment|/// DeclContext scope (for example TranslationUnit). Used in
+comment|/// LookupQualifiedName()
+name|mutable
+name|bool
+name|UseQualifiedLookup
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Pointer to the data structure used to lookup declarations
 comment|/// within this context (or a DependentStoredDeclsMap if this is a
 comment|/// dependent context). We maintain the invariant that, if the map
@@ -4713,6 +4777,11 @@ name|false
 argument_list|)
 operator|,
 name|HasLazyExternalLexicalLookups
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UseQualifiedLookup
 argument_list|(
 name|false
 argument_list|)
@@ -7097,6 +7166,43 @@ operator|)
 return|;
 block|}
 end_decl_stmt
+
+begin_function
+name|bool
+name|setUseQualifiedLookup
+parameter_list|(
+name|bool
+name|use
+init|=
+name|true
+parameter_list|)
+block|{
+name|bool
+name|old_value
+init|=
+name|UseQualifiedLookup
+decl_stmt|;
+name|UseQualifiedLookup
+operator|=
+name|use
+expr_stmt|;
+return|return
+name|old_value
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|shouldUseQualifiedLookup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseQualifiedLookup
+return|;
+block|}
+end_expr_stmt
 
 begin_function_decl
 specifier|static

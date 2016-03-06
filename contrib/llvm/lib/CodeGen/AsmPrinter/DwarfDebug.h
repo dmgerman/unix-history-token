@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -213,101 +219,6 @@ decl_stmt|;
 name|class
 name|MachineModuleInfo
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// This class is used to record source line correspondence.
-name|class
-name|SrcLineInfo
-block|{
-name|unsigned
-name|Line
-decl_stmt|;
-comment|// Source line number.
-name|unsigned
-name|Column
-decl_stmt|;
-comment|// Source column.
-name|unsigned
-name|SourceID
-decl_stmt|;
-comment|// Source ID number.
-name|MCSymbol
-modifier|*
-name|Label
-decl_stmt|;
-comment|// Label in code ID number.
-name|public
-label|:
-name|SrcLineInfo
-argument_list|(
-argument|unsigned L
-argument_list|,
-argument|unsigned C
-argument_list|,
-argument|unsigned S
-argument_list|,
-argument|MCSymbol *label
-argument_list|)
-block|:
-name|Line
-argument_list|(
-name|L
-argument_list|)
-operator|,
-name|Column
-argument_list|(
-name|C
-argument_list|)
-operator|,
-name|SourceID
-argument_list|(
-name|S
-argument_list|)
-operator|,
-name|Label
-argument_list|(
-argument|label
-argument_list|)
-block|{}
-comment|// Accessors
-name|unsigned
-name|getLine
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Line
-return|;
-block|}
-name|unsigned
-name|getColumn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Column
-return|;
-block|}
-name|unsigned
-name|getSourceID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceID
-return|;
-block|}
-name|MCSymbol
-operator|*
-name|getLabel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Label
-return|;
-block|}
-block|}
-empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// This class is used to track local variable information.
 comment|///
@@ -608,7 +519,6 @@ return|return
 name|IA
 return|;
 block|}
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -691,7 +601,6 @@ return|return
 name|MInsn
 return|;
 block|}
-specifier|const
 name|ArrayRef
 operator|<
 name|int
@@ -913,16 +822,13 @@ name|getTag
 argument_list|()
 specifier|const
 block|{
+comment|// FIXME: Why don't we just infer this tag and store it all along?
 if|if
 condition|(
 name|Var
 operator|->
-name|getTag
+name|isParameter
 argument_list|()
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_arg_variable
 condition|)
 return|return
 name|dwarf
@@ -1384,56 +1290,20 @@ name|InfoHolder
 block|;
 comment|/// Holders for the various debug information flags that we might need to
 comment|/// have exposed. See accessor functions below for description.
-comment|/// Holder for imported entities.
-typedef|typedef
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-specifier|const
-name|MDNode
-operator|*
-operator|>
-operator|,
-literal|32
-operator|>
-name|ImportedEntityMap
-expr_stmt|;
-name|ImportedEntityMap
-name|ScopesWithImportedEntities
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Map from MDNodes for user-defined types to the type units that
-end_comment
-
-begin_comment
 comment|/// describe them.
-end_comment
-
-begin_expr_stmt
 name|DenseMap
 operator|<
 specifier|const
 name|MDNode
 operator|*
-operator|,
+block|,
 specifier|const
 name|DwarfTypeUnit
 operator|*
 operator|>
 name|DwarfTypeUnits
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|SmallVector
 operator|<
 name|std
@@ -1446,237 +1316,96 @@ name|unique_ptr
 operator|<
 name|DwarfTypeUnit
 operator|>
-operator|,
+block|,
 specifier|const
 name|DICompositeType
 operator|*
 operator|>
-operator|,
+block|,
 literal|1
 operator|>
 name|TypeUnitsUnderConstruction
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Whether to emit the pubnames/pubtypes sections.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|HasDwarfPubSections
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Whether or not to use AT_ranges for compilation units.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|HasCURanges
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Whether we emitted a function into a section other than the
-end_comment
-
-begin_comment
-comment|/// default text.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|UsedNonDefaultText
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
-end_comment
-
-begin_decl_stmt
 name|bool
 name|UseGNUTLSOpcode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
+comment|/// Whether to emit DW_AT_[MIPS_]linkage_name.
+name|bool
+name|UseLinkageNames
+block|;
 comment|/// Version of dwarf we're emitting.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|DwarfVersion
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Maps from a type identifier to the actual MDNode.
-end_comment
-
-begin_decl_stmt
 name|DITypeIdentifierMap
 name|TypeIdentifierMap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// DWARF5 Experimental Options
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_decl_stmt
 name|bool
 name|HasDwarfAccelTables
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|bool
 name|HasSplitDwarf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Separated Dwarf Variables
-end_comment
-
-begin_comment
 comment|/// In general these will all be for bits that are left in the
-end_comment
-
-begin_comment
 comment|/// original object file, rather than things that are meant
-end_comment
-
-begin_comment
 comment|/// to be in the .dwo sections.
-end_comment
-
-begin_comment
 comment|/// Holder for the skeleton information.
-end_comment
-
-begin_decl_stmt
 name|DwarfFile
 name|SkeletonHolder
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Store file names for type units under fission in a line table
-end_comment
-
-begin_comment
 comment|/// header that will be emitted into debug_line.dwo.
-end_comment
-
-begin_comment
 comment|// FIXME: replace this with a map from comp_dir to table so that we
-end_comment
-
-begin_comment
 comment|// can emit multiple tables during LTO each of which uses directory
-end_comment
-
-begin_comment
 comment|// 0, referencing the comp_dir of all the type units that use it.
-end_comment
-
-begin_decl_stmt
 name|MCDwarfDwoLineTable
 name|SplitTypeUnitFileTable
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// @}
-end_comment
-
-begin_comment
 comment|/// True iff there are multiple CUs in this module.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|SingleCU
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|bool
 name|IsDarwin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|IsPS4
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|AddressPool
 name|AddrPool
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DwarfAccelTable
 name|AccelNames
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DwarfAccelTable
 name|AccelObjC
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DwarfAccelTable
 name|AccelNamespace
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DwarfAccelTable
 name|AccelTypes
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-operator|,
-name|DISubprogram
-operator|*
-operator|>
-name|FunctionDIs
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
+block|;
+comment|// Identify a debugger for "tuning" the debug info.
+name|DebuggerKind
+name|DebuggerTuning
+block|;
 name|MCDwarfDwoLineTable
-modifier|*
+operator|*
 name|getDwoLineTable
-parameter_list|(
+argument_list|(
 specifier|const
 name|DwarfCompileUnit
-modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+operator|&
+argument_list|)
+block|;
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -1697,37 +1426,23 @@ name|getUnits
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|DbgValueHistoryMap
 operator|::
 name|InlinedVariable
 name|InlinedVariable
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// Find abstract variable associated with Var.
-end_comment
-
-begin_function_decl
 name|DbgVariable
-modifier|*
+operator|*
 name|getExistingAbstractVariable
-parameter_list|(
-name|InlinedVariable
-name|IV
-parameter_list|,
-specifier|const
-name|DILocalVariable
-modifier|*
-modifier|&
-name|Cleansed
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|InlinedVariable IV
+argument_list|,
+argument|const DILocalVariable *&Cleansed
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|DbgVariable
@@ -1813,35 +1528,6 @@ name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Compute the size and offset of a DIE given an incoming Offset.
-end_comment
-
-begin_function_decl
-name|unsigned
-name|computeSizeAndOffset
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|unsigned
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Compute the size and offset of all the DIEs.
-end_comment
-
-begin_function_decl
-name|void
-name|computeSizeAndOffsets
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -2080,7 +1766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug loc section.
+comment|/// Emit variable locations into a debug loc section.
 end_comment
 
 begin_function_decl
@@ -2091,7 +1777,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug loc dwo section.
+comment|/// Emit variable locations into a debug loc dwo section.
 end_comment
 
 begin_function_decl
@@ -2102,7 +1788,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug aranges section.
+comment|/// Emit address ranges into a debug aranges section.
 end_comment
 
 begin_function_decl
@@ -2113,7 +1799,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit visible names into a debug ranges section.
+comment|/// Emit address ranges into a debug ranges section.
 end_comment
 
 begin_function_decl
@@ -2124,13 +1810,65 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit inline info using custom format.
+comment|/// Emit macros into a debug macinfo section.
 end_comment
 
 begin_function_decl
 name|void
-name|emitDebugInlineInfo
+name|emitDebugMacinfo
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|emitMacro
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacro
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|emitMacroFile
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacroFile
+modifier|&
+name|F
+parameter_list|,
+name|DwarfCompileUnit
+modifier|&
+name|U
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|handleMacroNodes
+parameter_list|(
+name|AsmStreamerBase
+modifier|*
+name|AS
+parameter_list|,
+name|DIMacroNodeArray
+name|Nodes
+parameter_list|,
+name|DwarfCompileUnit
+modifier|&
+name|U
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2183,26 +1921,6 @@ specifier|const
 name|DwarfCompileUnit
 modifier|&
 name|CU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Construct the split debug info compile unit for the debug info
-end_comment
-
-begin_comment
-comment|/// section.
-end_comment
-
-begin_function_decl
-name|DwarfTypeUnit
-modifier|&
-name|constructSkeletonTU
-parameter_list|(
-name|DwarfTypeUnit
-modifier|&
-name|TU
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2634,6 +2352,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Perform an MD5 checksum of \p Identifier and return the lower 64 bits.
+end_comment
+
+begin_function_decl
+specifier|static
+name|uint64_t
+name|makeTypeSignature
+parameter_list|(
+name|StringRef
+name|Identifier
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Add a DIE to the set of types that we're going to pull into
 end_comment
 
@@ -2719,6 +2452,22 @@ block|}
 end_function
 
 begin_comment
+comment|/// Returns whether to emit DW_AT_[MIPS_]linkage_name.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|useLinkageNames
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLinkageNames
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns whether to use DW_OP_GNU_push_tls_address, instead of the
 end_comment
 
@@ -2737,6 +2486,74 @@ name|UseGNUTLSOpcode
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \defgroup DebuggerTuning Predicates to tune DWARF for a given debugger.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Returns whether we are "tuning" for a given debugger.
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_expr_stmt
+name|bool
+name|tuneForGDB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|GDB
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|tuneForLLDB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|LLDB
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|tuneForSCE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|SCE
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
 
 begin_comment
 comment|// Experimental DWARF5 features.
@@ -2971,26 +2788,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|/// isSubprogramContext - Return true if Context is either a subprogram
-end_comment
-
-begin_comment
-comment|/// or another context nested inside a subprogram.
-end_comment
-
-begin_function_decl
-name|bool
-name|isSubprogramContext
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|void
 name|addSubprogramNames
@@ -3092,62 +2889,6 @@ specifier|const
 block|{
 return|return
 name|CurFn
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|iterator_range
-operator|<
-name|ImportedEntityMap
-operator|::
-name|const_iterator
-operator|>
-name|findImportedEntitiesForScope
-argument_list|(
-argument|const MDNode *Scope
-argument_list|)
-specifier|const
-block|{
-return|return
-name|make_range
-argument_list|(
-name|std
-operator|::
-name|equal_range
-argument_list|(
-name|ScopesWithImportedEntities
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|ScopesWithImportedEntities
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|MDNode
-operator|*
-argument_list|,
-specifier|const
-name|MDNode
-operator|*
-operator|>
-operator|(
-name|Scope
-operator|,
-name|nullptr
-operator|)
-argument_list|,
-name|less_first
-argument_list|()
-argument_list|)
-argument_list|)
 return|;
 block|}
 end_expr_stmt

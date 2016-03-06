@@ -153,6 +153,10 @@ block|;
 name|DwarfRangesSection
 operator|=
 name|nullptr
+block|;
+name|DwarfMacinfoSection
+operator|=
+name|nullptr
 block|;   }
 name|virtual
 operator|~
@@ -203,7 +207,7 @@ name|SV_ELF
 argument_list|,
 name|SectionKind
 operator|::
-name|getDataRel
+name|getData
 argument_list|()
 argument_list|)
 block|;
@@ -446,11 +450,28 @@ operator|::
 name|getMetadata
 argument_list|()
 argument_list|)
+block|;
+name|DwarfMacinfoSection
+operator|=
+name|new
+name|NVPTXSection
+argument_list|(
+name|MCSection
+operator|::
+name|SV_ELF
+argument_list|,
+name|SectionKind
+operator|::
+name|getMetadata
+argument_list|()
+argument_list|)
 block|;   }
 name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C

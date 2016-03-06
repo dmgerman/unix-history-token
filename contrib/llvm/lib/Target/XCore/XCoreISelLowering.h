@@ -289,6 +289,38 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception address on entry to an EH pad.
+name|unsigned
+name|getExceptionPointerRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|XCore
+operator|::
+name|R0
+return|;
+block|}
+comment|/// If a physical register, this returns the register that receives the
+comment|/// exception typeid on entry to a landing pad.
+name|unsigned
+name|getExceptionSelectorRegister
+argument_list|(
+argument|const Constant *PersonalityFn
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|XCore
+operator|::
+name|R1
+return|;
+block|}
 name|private
 operator|:
 specifier|const

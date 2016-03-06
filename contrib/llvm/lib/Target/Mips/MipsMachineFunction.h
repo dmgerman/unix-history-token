@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
@@ -93,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/PseudoSourceValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
@@ -141,82 +129,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// \brief A class derived from PseudoSourceValue that represents a GOT entry
-comment|/// resolved by lazy-binding.
-name|class
-name|MipsCallEntry
-range|:
-name|public
-name|PseudoSourceValue
-block|{
-name|public
-operator|:
-name|explicit
-name|MipsCallEntry
-argument_list|(
-argument|StringRef N
-argument_list|)
-block|;
-name|explicit
-name|MipsCallEntry
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|V
-argument_list|)
-block|;
-name|bool
-name|isConstant
-argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|isAliased
-argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|mayAlias
-argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
-specifier|const
-name|override
-block|;
-name|private
-operator|:
-name|void
-name|printCustom
-argument_list|(
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-name|override
-block|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|std
-operator|::
-name|string
-name|Name
-block|;
-specifier|const
-name|GlobalValue
-operator|*
-name|Val
-block|;
-endif|#
-directive|endif
-block|}
-decl_stmt|;
 comment|/// MipsFunctionInfo - This class is derived from MachineFunction private
 comment|/// Mips target-specific information for each MachineFunction.
 name|class
@@ -260,6 +172,11 @@ literal|0
 argument_list|)
 block|,
 name|CallsEhReturn
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsISR
 argument_list|(
 name|false
 argument_list|)
@@ -411,15 +328,62 @@ argument|int FI
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
-comment|/// representing a GOT entry for an external function.
+comment|/// Create a MachinePointerInfo that has an ExternalSymbolPseudoSourceValue
+comment|/// object representing a GOT entry for an external function.
 name|MachinePointerInfo
 name|callPtrInfo
 argument_list|(
-argument|StringRef Name
+specifier|const
+name|char
+operator|*
+name|ES
 argument_list|)
 block|;
-comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
+comment|// Functions with the "interrupt" attribute require special prologues,
+comment|// epilogues and additional spill slots.
+name|bool
+name|isISR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsISR
+return|;
+block|}
+name|void
+name|setISR
+argument_list|()
+block|{
+name|IsISR
+operator|=
+name|true
+block|; }
+name|void
+name|createISRRegFI
+argument_list|()
+block|;
+name|int
+name|getISRRegFI
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ISRDataRegFI
+index|[
+name|Reg
+index|]
+return|;
+block|}
+name|bool
+name|isISRRegFI
+argument_list|(
+argument|int FI
+argument_list|)
+specifier|const
+block|;
+comment|/// Create a MachinePointerInfo that has a GlobalValuePseudoSourceValue object
 comment|/// representing a GOT entry for a global function.
 name|MachinePointerInfo
 name|callPtrInfo
@@ -427,7 +391,7 @@ argument_list|(
 specifier|const
 name|GlobalValue
 operator|*
-name|Val
+name|GV
 argument_list|)
 block|;
 name|void
@@ -526,6 +490,17 @@ index|[
 literal|4
 index|]
 block|;
+comment|/// ISR - Whether the function is an Interrupt Service Routine.
+name|bool
+name|IsISR
+block|;
+comment|/// Frame objects for spilling C0_STATUS, C0_EPC
+name|int
+name|ISRDataRegFI
+index|[
+literal|2
+index|]
+block|;
 comment|// saveS2
 name|bool
 name|SaveS2
@@ -534,33 +509,6 @@ comment|/// FrameIndex for expanding BuildPairF64 nodes to spill and reload when
 comment|/// O32 FPXX ABI is enabled. -1 is used to denote invalid index.
 name|int
 name|MoveF64ViaSpillFI
-block|;
-comment|/// MipsCallEntry maps.
-name|StringMap
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-specifier|const
-name|MipsCallEntry
-operator|>>
-name|ExternalCallEntries
-block|;
-name|ValueMap
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-block|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-specifier|const
-name|MipsCallEntry
-operator|>>
-name|GlobalCallEntries
 block|; }
 decl_stmt|;
 block|}

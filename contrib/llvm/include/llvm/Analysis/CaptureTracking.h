@@ -75,6 +75,9 @@ decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
+name|class
+name|OrderedBasicBlock
+decl_stmt|;
 comment|/// PointerMayBeCaptured - Return true if this pointer value may be captured
 comment|/// by the enclosing function (which is required to exist).  This routine can
 comment|/// be expensive, so consider caching the results.  The boolean ReturnCaptures
@@ -106,7 +109,8 @@ comment|/// returning the value (or part of it) from the function counts as capt
 comment|/// it or not.  The boolean StoreCaptures specified whether storing the value
 comment|/// (or part of it) into memory anywhere automatically counts as capturing it
 comment|/// or not. Captures by the provided instruction are considered if the
-comment|/// final parameter is true.
+comment|/// final parameter is true. An ordered basic block in \p OBB could be used
+comment|/// to speed up capture-tracker queries.
 name|bool
 name|PointerMayBeCapturedBefore
 parameter_list|(
@@ -134,6 +138,12 @@ name|bool
 name|IncludeI
 init|=
 name|false
+parameter_list|,
+name|OrderedBasicBlock
+modifier|*
+name|OBB
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// This callback is used in conjunction with PointerMayBeCaptured. In

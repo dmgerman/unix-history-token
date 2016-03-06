@@ -43,6 +43,22 @@ directive|define
 name|liblldb_ObjectContainerBSDArchive_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -90,6 +106,26 @@ name|ObjectContainer
 block|{
 name|public
 operator|:
+name|ObjectContainerBSDArchive
+argument_list|(
+argument|const lldb::ModuleSP&module_sp
+argument_list|,
+argument|lldb::DataBufferSP& data_sp
+argument_list|,
+argument|lldb::offset_t data_offset
+argument_list|,
+argument|const lldb_private::FileSpec *file
+argument_list|,
+argument|lldb::offset_t offset
+argument_list|,
+argument|lldb::offset_t length
+argument_list|)
+block|;
+operator|~
+name|ObjectContainerBSDArchive
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -169,36 +205,16 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Member Functions
 comment|//------------------------------------------------------------------
-name|ObjectContainerBSDArchive
-argument_list|(
-argument|const lldb::ModuleSP&module_sp
-argument_list|,
-argument|lldb::DataBufferSP& data_sp
-argument_list|,
-argument|lldb::offset_t data_offset
-argument_list|,
-argument|const lldb_private::FileSpec *file
-argument_list|,
-argument|lldb::offset_t offset
-argument_list|,
-argument|lldb::offset_t length
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|ObjectContainerBSDArchive
-argument_list|()
-block|;
-name|virtual
 name|bool
 name|ParseHeader
 argument_list|()
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetNumObjects
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -217,7 +233,6 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|Dump
 argument_list|(
@@ -228,23 +243,19 @@ operator|*
 name|s
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|lldb
 operator|::
 name|ObjectFileSP
 name|GetObjectFile
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|*
-name|file
+argument|const lldb_private::FileSpec *file
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -261,22 +272,22 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|virtual
+begin_expr_stmt
 name|uint32_t
 name|GetPluginVersion
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|protected
@@ -395,6 +406,21 @@ name|shared_ptr
 operator|>
 name|Map
 expr_stmt|;
+name|Archive
+argument_list|(
+argument|const lldb_private::ArchSpec&arch
+argument_list|,
+argument|const lldb_private::TimeValue&mod_time
+argument_list|,
+argument|lldb::offset_t file_offset
+argument_list|,
+argument|lldb_private::DataExtractor&data
+argument_list|)
+empty_stmt|;
+operator|~
+name|Archive
+argument_list|()
+expr_stmt|;
 specifier|static
 name|Map
 modifier|&
@@ -440,21 +466,6 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb_private::DataExtractor&data
 argument_list|)
-expr_stmt|;
-name|Archive
-argument_list|(
-argument|const lldb_private::ArchSpec&arch
-argument_list|,
-argument|const lldb_private::TimeValue&mod_time
-argument_list|,
-argument|lldb::offset_t file_offset
-argument_list|,
-argument|lldb_private::DataExtractor&data
-argument_list|)
-empty_stmt|;
-operator|~
-name|Archive
-argument_list|()
 expr_stmt|;
 name|size_t
 name|GetNumObjects

@@ -1044,10 +1044,10 @@ begin_struct
 struct|struct
 name|ReportOptions
 block|{
-comment|/// If DieAfterReport is specified, UBSan will terminate the program after the
-comment|/// report is printed.
+comment|// If FromUnrecoverableHandler is specified, UBSan runtime handler is not
+comment|// expected to return.
 name|bool
-name|DieAfterReport
+name|FromUnrecoverableHandler
 decl_stmt|;
 comment|/// pc/bp are used to unwind the stack trace.
 name|uptr
@@ -1060,15 +1060,60 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|enum
+name|class
+name|ErrorType
+block|{
+define|#
+directive|define
+name|UBSAN_CHECK
+parameter_list|(
+name|Name
+parameter_list|,
+name|SummaryKind
+parameter_list|,
+name|FSanitizeFlagName
+parameter_list|)
+value|Name,
+include|#
+directive|include
+file|"ubsan_checks.inc"
+undef|#
+directive|undef
+name|UBSAN_CHECK
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|bool
+name|ignoreReport
+parameter_list|(
+name|SourceLocation
+name|SLoc
+parameter_list|,
+name|ReportOptions
+name|Opts
+parameter_list|,
+name|ErrorType
+name|ET
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
 name|GET_REPORT_OPTIONS
 parameter_list|(
-name|die_after_report
+name|unrecoverable_handler
 parameter_list|)
 define|\
-value|GET_CALLER_PC_BP; \     ReportOptions Opts = {die_after_report, pc, bp}
+value|GET_CALLER_PC_BP; \     ReportOptions Opts = {unrecoverable_handler, pc, bp}
 end_define
 
 begin_comment
@@ -1093,6 +1138,9 @@ decl_stmt|;
 name|Location
 name|SummaryLoc
 decl_stmt|;
+name|ErrorType
+name|Type
+decl_stmt|;
 name|public
 label|:
 name|ScopedReport
@@ -1100,6 +1148,8 @@ argument_list|(
 argument|ReportOptions Opts
 argument_list|,
 argument|Location SummaryLoc
+argument_list|,
+argument|ErrorType Type
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1128,6 +1178,32 @@ specifier|const
 name|char
 modifier|*
 name|TypeName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Sometimes UBSan runtime can know filename from handlers arguments, even if
+end_comment
+
+begin_comment
+comment|// debug info is missing.
+end_comment
+
+begin_function_decl
+name|bool
+name|IsPCSuppressed
+parameter_list|(
+name|ErrorType
+name|ET
+parameter_list|,
+name|uptr
+name|PC
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Filename
 parameter_list|)
 function_decl|;
 end_function_decl

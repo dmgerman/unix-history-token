@@ -2461,7 +2461,8 @@ name|nbuckets
 operator|*
 sizeof|sizeof
 argument_list|(
-name|ipfw_dyn_rule
+operator|*
+name|dyn_v
 argument_list|)
 argument_list|,
 name|M_IPFW

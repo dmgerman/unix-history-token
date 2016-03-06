@@ -173,7 +173,7 @@ operator|::
 name|string
 name|GetAsString
 argument_list|(
-argument|const char *separator = NULL
+argument|const char *separator = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -208,7 +208,7 @@ comment|///     A buffer of bytes that will contain a full or patially
 comment|///     decoded UUID.
 comment|///
 comment|/// @param[out] end
-comment|///     If \a end is not NULL, it will be filled in with the a
+comment|///     If \a end is not nullptr, it will be filled in with the a
 comment|///     pointer to the character after the last successfully decoded
 comment|///     byte.
 comment|///

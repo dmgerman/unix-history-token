@@ -705,41 +705,37 @@ comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CalculateSymbolContext
 argument_list|(
-name|SymbolContext
-operator|*
-name|sc
+argument|SymbolContext *sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ModuleSP
 name|CalculateSymbolContextModule
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Symbol
 operator|*
 name|CalculateSymbolContextSymbol
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|/// @copydoc SymbolContextScope::DumpSymbolContext(Stream*)
 comment|///
 comment|/// @see SymbolContextScope
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DumpSymbolContext
 argument_list|(
-name|Stream
-operator|*
-name|s
+argument|Stream *s
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::

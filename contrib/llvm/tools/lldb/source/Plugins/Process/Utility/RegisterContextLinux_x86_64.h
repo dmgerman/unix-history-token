@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"RegisterInfoInterface.h"
 end_include
 
 begin_decl_stmt
@@ -98,6 +98,21 @@ argument_list|()
 specifier|const
 name|override
 block|;
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb_private
+operator|::
+name|RegisterInfo
+operator|>
+operator|*
+name|GetDynamicRegisterInfoP
+argument_list|()
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 specifier|const
@@ -112,7 +127,17 @@ name|m_register_info_count
 block|;
 name|uint32_t
 name|m_user_register_count
-block|; }
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb_private
+operator|::
+name|RegisterInfo
+operator|>
+name|d_register_infos
+block|;  }
 decl_stmt|;
 end_decl_stmt
 

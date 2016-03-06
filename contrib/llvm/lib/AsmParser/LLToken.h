@@ -177,11 +177,21 @@ name|kw_undef
 block|,
 name|kw_null
 block|,
+name|kw_none
+block|,
 name|kw_to
+block|,
+name|kw_caller
+block|,
+name|kw_within
+block|,
+name|kw_from
 block|,
 name|kw_tail
 block|,
 name|kw_musttail
+block|,
+name|kw_notail
 block|,
 name|kw_target
 block|,
@@ -304,6 +314,14 @@ name|kw_preserve_allcc
 block|,
 name|kw_ghccc
 block|,
+name|kw_x86_intrcc
+block|,
+name|kw_hhvmcc
+block|,
+name|kw_hhvm_ccc
+block|,
+name|kw_cxx_fast_tlscc
+block|,
 comment|// Attributes:
 name|kw_attributes
 block|,
@@ -326,6 +344,10 @@ block|,
 name|kw_dereferenceable
 block|,
 name|kw_dereferenceable_or_null
+block|,
+name|kw_inaccessiblememonly
+block|,
+name|kw_inaccessiblemem_or_argmemonly
 block|,
 name|kw_inlinehint
 block|,
@@ -350,6 +372,8 @@ block|,
 name|kw_noimplicitfloat
 block|,
 name|kw_noinline
+block|,
+name|kw_norecurse
 block|,
 name|kw_nonlazybind
 block|,
@@ -562,6 +586,16 @@ name|kw_resume
 block|,
 name|kw_unreachable
 block|,
+name|kw_cleanupret
+block|,
+name|kw_catchswitch
+block|,
+name|kw_catchret
+block|,
+name|kw_catchpad
+block|,
+name|kw_cleanuppad
+block|,
 name|kw_alloca
 block|,
 name|kw_load
@@ -643,6 +677,9 @@ comment|// DW_OP_foo
 name|DIFlag
 block|,
 comment|// DIFlagFoo
+name|DwarfMacinfo
+block|,
+comment|// DW_MACINFO_foo
 comment|// Type valued tokens (TyVal).
 name|Type
 block|,

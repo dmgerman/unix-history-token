@@ -97,10 +97,10 @@ argument_list|,
 argument|bool exact_match
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|BreakpointResolverFileLine
 argument_list|()
+name|override
 block|;
 name|Searcher
 operator|::

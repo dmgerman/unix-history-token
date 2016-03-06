@@ -82,6 +82,15 @@ argument_list|)
 block|;
 name|private
 operator|:
+name|StringRef
+name|getTypeName
+argument_list|(
+specifier|const
+name|PDBSymbolTypeBuiltin
+operator|&
+name|Symbol
+argument_list|)
+block|;
 name|LinePrinter
 operator|&
 name|Printer

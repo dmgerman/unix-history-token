@@ -60,18 +60,6 @@ comment|//          as found on stdin. Holds the command's MI output (written to
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
-end_comment
-
-begin_comment
-comment|// Authors: Illya Rudkin 18/02/2014.
-end_comment
-
-begin_comment
-comment|// Changes: None.
-end_comment
-
-begin_comment
 comment|//--
 end_comment
 
@@ -80,9 +68,7 @@ struct|struct
 name|SMICmdData
 block|{
 name|SMICmdData
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 operator|:
 name|id
 argument_list|(
@@ -109,10 +95,9 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-expr_stmt|;
 name|MIuint
 name|id
-decl_stmt|;
+expr_stmt|;
 comment|// A command's unique ID i.e. GUID
 name|CMIUtilString
 name|strMiCmdToken
@@ -160,9 +145,7 @@ decl_stmt|;
 comment|// True = Yes command produced additional MI output to its 1 line response, false = no extra MI output formed
 name|void
 name|Clear
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|id
 operator|=

@@ -81,11 +81,11 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// MCSectionMachO - This represents a section on a Mach-O system (used by
-comment|/// Mac OS X).  On a Mac system, these are also described in
-comment|/// /usr/include/mach-o/loader.h.
+comment|/// This represents a section on a Mach-O system (used by Mac OS X).  On a Mac
+comment|/// system, these are also described in /usr/include/mach-o/loader.h.
 name|class
 name|MCSectionMachO
+name|final
 range|:
 name|public
 name|MCSection
@@ -104,13 +104,13 @@ literal|16
 index|]
 block|;
 comment|// Not necessarily null terminated!
-comment|/// TypeAndAttributes - This is the SECTION_TYPE and SECTION_ATTRIBUTES
-comment|/// field of a section, drawn from the enums below.
+comment|/// This is the SECTION_TYPE and SECTION_ATTRIBUTES field of a section, drawn
+comment|/// from the enums below.
 name|unsigned
 name|TypeAndAttributes
 block|;
-comment|/// Reserved2 - The 'reserved2' field of a section, used to represent the
-comment|/// size of stubs, for example.
+comment|/// The 'reserved2' field of a section, used to represent the size of stubs,
+comment|/// for example.
 name|unsigned
 name|Reserved2
 block|;
@@ -265,27 +265,27 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// ParseSectionSpecifier - Parse the section specifier indicated by "Spec".
+comment|/// Parse the section specifier indicated by "Spec". This is a string that can
 end_comment
 
 begin_comment
-comment|/// This is a string that can appear after a .section directive in a mach-o
+comment|/// appear after a .section directive in a mach-o flavored .s file.  If
 end_comment
 
 begin_comment
-comment|/// flavored .s file.  If successful, this fills in the specified Out
+comment|/// successful, this fills in the specified Out parameters and returns an
 end_comment
 
 begin_comment
-comment|/// parameters and returns an empty string.  When an invalid section
+comment|/// empty string.  When an invalid section specifier is present, this returns
 end_comment
 
 begin_comment
-comment|/// specifier is present, this returns a string indicating the problem.
+comment|/// a string indicating the problem. If no TAA was parsed, TAA is not altered,
 end_comment
 
 begin_comment
-comment|/// If no TAA was parsed, TAA is not altered, and TAAWasSet becomes false.
+comment|/// and TAAWasSet becomes false.
 end_comment
 
 begin_expr_stmt

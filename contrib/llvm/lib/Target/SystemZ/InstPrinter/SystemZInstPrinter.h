@@ -65,12 +65,6 @@ directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

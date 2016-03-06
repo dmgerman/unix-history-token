@@ -422,7 +422,7 @@ specifier|const
 name|u32
 name|kFlagMask
 init|=
-literal|3
+literal|3u
 operator|<<
 literal|30
 decl_stmt|;
@@ -431,7 +431,7 @@ specifier|const
 name|u32
 name|kFlagBlock
 init|=
-literal|1
+literal|1u
 operator|<<
 literal|30
 decl_stmt|;
@@ -440,7 +440,7 @@ specifier|const
 name|u32
 name|kFlagSync
 init|=
-literal|2
+literal|2u
 operator|<<
 literal|30
 decl_stmt|;

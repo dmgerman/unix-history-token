@@ -452,6 +452,8 @@ comment|/// \param RelativePath If not NULL, will be set to the path relative to
 comment|/// SearchPath at which the file was found. This only differs from the
 comment|/// Filename for framework includes.
 comment|///
+comment|/// \param RequestingModule The module in which the lookup was performed.
+comment|///
 comment|/// \param SuggestedModule If non-null, and the file found is semantically
 comment|/// part of a known module, this will be set to the module that should
 comment|/// be imported instead of preprocessing/parsing the file found.
@@ -489,6 +491,10 @@ name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
 argument_list|,
 name|ModuleMap
 operator|::
@@ -540,6 +546,10 @@ name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|Module
+operator|*
+name|RequestingModule
 argument_list|,
 name|ModuleMap
 operator|::

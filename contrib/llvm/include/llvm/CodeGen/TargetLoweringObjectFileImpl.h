@@ -150,7 +150,7 @@ name|emitPersonalityValue
 argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
-argument|const TargetMachine&TM
+argument|const DataLayout&TM
 argument_list|,
 argument|const MCSymbol *Sym
 argument_list|)
@@ -163,6 +163,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
@@ -355,6 +357,8 @@ name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
@@ -417,6 +421,20 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|getNameWithPrefix
+argument_list|(
+argument|SmallVectorImpl<char>&OutName
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -468,8 +486,6 @@ argument_list|(
 argument|SmallVectorImpl<char>&OutName
 argument_list|,
 argument|const GlobalValue *GV
-argument_list|,
-argument|bool CannotUsePrivateLabel
 argument_list|,
 argument|Mangler&Mang
 argument_list|,

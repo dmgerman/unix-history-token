@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ConstantRange.h"
 end_include
 
@@ -121,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
@@ -188,19 +200,25 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|Loop
-decl_stmt|;
-name|class
-name|LoopInfo
-decl_stmt|;
-name|class
 name|Operator
 decl_stmt|;
 name|class
-name|SCEVUnknown
+name|SCEV
 decl_stmt|;
 name|class
-name|SCEV
+name|SCEVAddRecExpr
+decl_stmt|;
+name|class
+name|SCEVConstant
+decl_stmt|;
+name|class
+name|SCEVExpander
+decl_stmt|;
+name|class
+name|SCEVPredicate
+decl_stmt|;
+name|class
+name|SCEVUnknown
 decl_stmt|;
 name|template
 operator|<
@@ -211,9 +229,17 @@ operator|<
 name|SCEV
 operator|>
 expr_stmt|;
-comment|/// SCEV - This class represents an analyzed expression in the program.  These
-comment|/// are opaque objects that the client is not allowed to do much with
-comment|/// directly.
+name|template
+operator|<
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEVPredicate
+operator|>
+expr_stmt|;
+comment|/// This class represents an analyzed expression in the program.  These are
+comment|/// opaque objects that the client is not allowed to do much with directly.
 comment|///
 name|class
 name|SCEV
@@ -228,8 +254,8 @@ operator|<
 name|SCEV
 operator|>
 block|;
-comment|/// FastID - A reference to an Interned FoldingSetNodeID for this node.
-comment|/// The ScalarEvolution's BumpPtrAllocator holds the data.
+comment|/// A reference to an Interned FoldingSetNodeID for this node.  The
+comment|/// ScalarEvolution's BumpPtrAllocator holds the data.
 name|FoldingSetNodeIDRef
 name|FastID
 block|;
@@ -241,8 +267,8 @@ name|SCEVType
 block|;
 name|protected
 operator|:
-comment|/// SubclassData - This field is initialized to zero and may be used in
-comment|/// subclasses to store miscellaneous information.
+comment|/// This field is initialized to zero and may be used in subclasses to store
+comment|/// miscellaneous information.
 name|unsigned
 name|short
 name|SubclassData
@@ -367,7 +393,7 @@ return|return
 name|SCEVType
 return|;
 block|}
-comment|/// getType - Return the LLVM type of this SCEV expression.
+comment|/// Return the LLVM type of this SCEV expression.
 comment|///
 name|Type
 operator|*
@@ -375,38 +401,35 @@ name|getType
 argument_list|()
 specifier|const
 block|;
-comment|/// isZero - Return true if the expression is a constant zero.
+comment|/// Return true if the expression is a constant zero.
 comment|///
 name|bool
 name|isZero
 argument_list|()
 specifier|const
 block|;
-comment|/// isOne - Return true if the expression is a constant one.
+comment|/// Return true if the expression is a constant one.
 comment|///
 name|bool
 name|isOne
 argument_list|()
 specifier|const
 block|;
-comment|/// isAllOnesValue - Return true if the expression is a constant
-comment|/// all-ones value.
+comment|/// Return true if the expression is a constant all-ones value.
 comment|///
 name|bool
 name|isAllOnesValue
 argument_list|()
 specifier|const
 block|;
-comment|/// isNonConstantNegative - Return true if the specified scev is negated,
-comment|/// but not a constant.
+comment|/// Return true if the specified scev is negated, but not a constant.
 name|bool
 name|isNonConstantNegative
 argument_list|()
 specifier|const
 block|;
-comment|/// print - Print out the internal representation of this scalar to the
-comment|/// specified stream.  This should really only be used for debugging
-comment|/// purposes.
+comment|/// Print out the internal representation of this scalar to the specified
+comment|/// stream.  This should really only be used for debugging purposes.
 name|void
 name|print
 argument_list|(
@@ -414,28 +437,13 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NDEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LLVM_ENABLE_DUMP
-argument_list|)
-comment|/// dump - This method is used for debugging.
+comment|/// This method is used for debugging.
 comment|///
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|;
-endif|#
-directive|endif
-block|}
+block|;   }
 decl_stmt|;
 comment|// Specialize FoldingSetTrait for SCEV to avoid needing to compute
 comment|// temporary FoldingSetNodeID values.
@@ -536,11 +544,10 @@ return|return
 name|OS
 return|;
 block|}
-comment|/// SCEVCouldNotCompute - An object of this class is returned by queries that
-comment|/// could not be answered.  For example, if you ask for the number of
-comment|/// iterations of a linked-list traversal loop, you will get one of these.
-comment|/// None of the standard SCEV operations are valid on this class, it is just a
-comment|/// marker.
+comment|/// An object of this class is returned by queries that could not be answered.
+comment|/// For example, if you ask for the number of iterations of a linked-list
+comment|/// traversal loop, you will get one of these.  None of the standard SCEV
+comment|/// operations are valid on this class, it is just a marker.
 expr|struct
 name|SCEVCouldNotCompute
 operator|:
@@ -562,20 +569,526 @@ name|S
 argument_list|)
 block|;   }
 block|;
-comment|/// ScalarEvolution - This class is the main scalar evolution driver.  Because
-comment|/// client code (intentionally) can't do much with the SCEV objects directly,
-comment|/// they must ask this class for services.
-comment|///
+comment|/// SCEVPredicate - This class represents an assumption made using SCEV
+comment|/// expressions which can be checked at run-time.
 name|class
-name|ScalarEvolution
+name|SCEVPredicate
 operator|:
 name|public
-name|FunctionPass
+name|FoldingSetNode
+block|{
+name|friend
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEVPredicate
+operator|>
+block|;
+comment|/// A reference to an Interned FoldingSetNodeID for this node.  The
+comment|/// ScalarEvolution's BumpPtrAllocator holds the data.
+name|FoldingSetNodeIDRef
+name|FastID
+block|;
+name|public
+operator|:
+expr|enum
+name|SCEVPredicateKind
+block|{
+name|P_Union
+block|,
+name|P_Equal
+block|}
+block|;
+name|protected
+operator|:
+name|SCEVPredicateKind
+name|Kind
+block|;
+operator|~
+name|SCEVPredicate
+argument_list|()
+operator|=
+expr|default
+block|;
+name|SCEVPredicate
+argument_list|(
+specifier|const
+name|SCEVPredicate
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|SCEVPredicate
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SCEVPredicate
+operator|&
+operator|)
+operator|=
+expr|default
+block|;
+name|public
+operator|:
+name|SCEVPredicate
+argument_list|(
+argument|const FoldingSetNodeIDRef ID
+argument_list|,
+argument|SCEVPredicateKind Kind
+argument_list|)
+block|;
+name|SCEVPredicateKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// \brief Returns the estimated complexity of this predicate.
+comment|/// This is roughly measured in the number of run-time checks required.
+name|virtual
+name|unsigned
+name|getComplexity
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|1
+return|;
+block|}
+comment|/// \brief Returns true if the predicate is always true. This means that no
+comment|/// assumptions were made and nothing needs to be checked at run-time.
+name|virtual
+name|bool
+name|isAlwaysTrue
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// \brief Returns true if this predicate implies \p N.
+name|virtual
+name|bool
+name|implies
+argument_list|(
+argument|const SCEVPredicate *N
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// \brief Prints a textual representation of this predicate with an
+comment|/// indentation of \p Depth.
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned Depth =
+literal|0
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// \brief Returns the SCEV to which this predicate applies, or nullptr
+comment|/// if this is a SCEVUnionPredicate.
+name|virtual
+specifier|const
+name|SCEV
+operator|*
+name|getExpr
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;   }
+block|;
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|SCEVPredicate
+operator|&
+name|P
+operator|)
+block|{
+name|P
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+comment|// Specialize FoldingSetTrait for SCEVPredicate to avoid needing to compute
+comment|// temporary FoldingSetNodeID values.
+name|template
+operator|<
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEVPredicate
+operator|>
+operator|:
+name|DefaultFoldingSetTrait
+operator|<
+name|SCEVPredicate
+operator|>
+block|{
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|const SCEVPredicate&X
+argument_list|,
+argument|FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|X
+operator|.
+name|FastID
+block|;     }
+specifier|static
+name|bool
+name|Equals
+argument_list|(
+argument|const SCEVPredicate&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|unsigned IDHash
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+return|return
+name|ID
+operator|==
+name|X
+operator|.
+name|FastID
+return|;
+block|}
+specifier|static
+name|unsigned
+name|ComputeHash
+argument_list|(
+argument|const SCEVPredicate&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|FastID
+operator|.
+name|ComputeHash
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// SCEVEqualPredicate - This class represents an assumption that two SCEV
+comment|/// expressions are equal, and this can be checked at run-time. We assume
+comment|/// that the left hand side is a SCEVUnknown and the right hand side a
+comment|/// constant.
+name|class
+name|SCEVEqualPredicate
+name|final
+operator|:
+name|public
+name|SCEVPredicate
+block|{
+comment|/// We assume that LHS == RHS, where LHS is a SCEVUnknown and RHS a
+comment|/// constant.
+specifier|const
+name|SCEVUnknown
+operator|*
+name|LHS
+block|;
+specifier|const
+name|SCEVConstant
+operator|*
+name|RHS
+block|;
+name|public
+operator|:
+name|SCEVEqualPredicate
+argument_list|(
+argument|const FoldingSetNodeIDRef ID
+argument_list|,
+argument|const SCEVUnknown *LHS
+argument_list|,
+argument|const SCEVConstant *RHS
+argument_list|)
+block|;
+comment|/// Implementation of the SCEVPredicate interface
+name|bool
+name|implies
+argument_list|(
+argument|const SCEVPredicate *N
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned Depth =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isAlwaysTrue
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|SCEV
+operator|*
+name|getExpr
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// \brief Returns the left hand side of the equality.
+specifier|const
+name|SCEVUnknown
+operator|*
+name|getLHS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LHS
+return|;
+block|}
+comment|/// \brief Returns the right hand side of the equality.
+specifier|const
+name|SCEVConstant
+operator|*
+name|getRHS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RHS
+return|;
+block|}
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SCEVPredicate *P
+argument_list|)
+block|{
+return|return
+name|P
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|P_Equal
+return|;
+block|}
+expr|}
+block|;
+comment|/// SCEVUnionPredicate - This class represents a composition of other
+comment|/// SCEV predicates, and is the class that most clients will interact with.
+comment|/// This is equivalent to a logical "AND" of all the predicates in the union.
+name|class
+name|SCEVUnionPredicate
+name|final
+operator|:
+name|public
+name|SCEVPredicate
+block|{
+name|private
+operator|:
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+name|SmallVector
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|,
+literal|4
+operator|>>
+name|PredicateMap
+expr_stmt|;
+comment|/// Vector with references to all predicates in this union.
+name|SmallVector
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|,
+literal|16
+operator|>
+name|Preds
+block|;
+comment|/// Maps SCEVs to predicates for quick look-ups.
+name|PredicateMap
+name|SCEVToPreds
+block|;
+name|public
+operator|:
+name|SCEVUnionPredicate
+argument_list|()
+block|;
+specifier|const
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|>
+operator|&
+name|getPredicates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Preds
+return|;
+block|}
+comment|/// \brief Adds a predicate to this union.
+name|void
+name|add
+argument_list|(
+specifier|const
+name|SCEVPredicate
+operator|*
+name|N
+argument_list|)
+block|;
+comment|/// \brief Returns a reference to a vector containing all predicates
+comment|/// which apply to \p Expr.
+name|ArrayRef
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|>
+name|getPredicatesForExpr
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|)
+block|;
+comment|/// Implementation of the SCEVPredicate interface
+name|bool
+name|isAlwaysTrue
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|implies
+argument_list|(
+argument|const SCEVPredicate *N
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned Depth
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|SCEV
+operator|*
+name|getExpr
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// \brief We estimate the complexity of a union predicate as the size
+comment|/// number of predicates in the union.
+name|unsigned
+name|getComplexity
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Preds
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SCEVPredicate *P
+argument_list|)
+block|{
+return|return
+name|P
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|P_Union
+return|;
+block|}
+expr|}
+block|;
+comment|/// The main scalar evolution driver. Because client code (intentionally)
+comment|/// can't do much with the SCEV objects directly, they must ask this class
+comment|/// for services.
+name|class
+name|ScalarEvolution
 block|{
 name|public
 operator|:
-comment|/// LoopDisposition - An enum describing the relationship between a
-comment|/// SCEV and a loop.
+comment|/// An enum describing the relationship between a SCEV and a loop.
 expr|enum
 name|LoopDisposition
 block|{
@@ -589,8 +1102,7 @@ name|LoopComputable
 comment|///< The SCEV varies predictably with the loop.
 block|}
 block|;
-comment|/// BlockDisposition - An enum describing the relationship between a
-comment|/// SCEV and a basic block.
+comment|/// An enum describing the relationship between a SCEV and a basic block.
 block|enum
 name|BlockDisposition
 block|{
@@ -684,10 +1196,11 @@ return|;
 block|}
 name|private
 operator|:
-comment|/// SCEVCallbackVH - A CallbackVH to arrange for ScalarEvolution to be
-comment|/// notified whenever a Value is deleted.
+comment|/// A CallbackVH to arrange for ScalarEvolution to be notified whenever a
+comment|/// Value is deleted.
 name|class
 name|SCEVCallbackVH
+name|final
 operator|:
 name|public
 name|CallbackVH
@@ -736,41 +1249,45 @@ name|friend
 name|class
 name|SCEVUnknown
 block|;
-comment|/// F - The function we are analyzing.
+comment|/// The function we are analyzing.
 comment|///
 name|Function
-operator|*
+operator|&
 name|F
+block|;
+comment|/// The target library information for the target we are targeting.
+comment|///
+name|TargetLibraryInfo
+operator|&
+name|TLI
 block|;
 comment|/// The tracker for @llvm.assume intrinsics in this function.
 name|AssumptionCache
-operator|*
+operator|&
 name|AC
 block|;
-comment|/// LI - The loop information for the function we are currently analyzing.
-comment|///
-name|LoopInfo
-operator|*
-name|LI
-block|;
-comment|/// TLI - The target library information for the target we are targeting.
-comment|///
-name|TargetLibraryInfo
-operator|*
-name|TLI
-block|;
-comment|/// DT - The dominator tree.
+comment|/// The dominator tree.
 comment|///
 name|DominatorTree
-operator|*
+operator|&
 name|DT
 block|;
-comment|/// CouldNotCompute - This SCEV is used to represent unknown trip
-comment|/// counts and things.
+comment|/// The loop information for the function we are currently analyzing.
+comment|///
+name|LoopInfo
+operator|&
+name|LI
+block|;
+comment|/// This SCEV is used to represent unknown trip counts and things.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|SCEVCouldNotCompute
+operator|>
 name|CouldNotCompute
 block|;
-comment|/// ValueExprMapType - The typedef for ValueExprMap.
+comment|/// The typedef for ValueExprMap.
 comment|///
 typedef|typedef
 name|DenseMap
@@ -789,7 +1306,7 @@ operator|>
 expr|>
 name|ValueExprMapType
 expr_stmt|;
-comment|/// ValueExprMap - This is a cache of the values we have analyzed so far.
+comment|/// This is a cache of the values we have analyzed so far.
 comment|///
 name|ValueExprMapType
 name|ValueExprMap
@@ -807,10 +1324,15 @@ comment|/// conditions dominating the backedge of a loop.
 name|bool
 name|WalkingBEDominatingConds
 block|;
-comment|/// ExitLimit - Information about the number of loop iterations for which a
-comment|/// loop exit's branch condition evaluates to the not-taken path.  This is a
-comment|/// temporary pair of exact and max expressions that are eventually
-comment|/// summarized in ExitNotTakenInfo and BackedgeTakenInfo.
+comment|/// Set to true by isKnownPredicateViaSplitting when we're trying to prove a
+comment|/// predicate by splitting it into a set of independent predicates.
+name|bool
+name|ProvingSplitPredicate
+block|;
+comment|/// Information about the number of loop iterations for which a loop exit's
+comment|/// branch condition evaluates to the not-taken path.  This is a temporary
+comment|/// pair of exact and max expressions that are eventually summarized in
+comment|/// ExitNotTakenInfo and BackedgeTakenInfo.
 block|struct
 name|ExitLimit
 block|{
@@ -865,9 +1387,33 @@ name|Max
 argument_list|(
 argument|M
 argument_list|)
-block|{}
-comment|/// hasAnyInfo - Test whether this ExitLimit contains any computed
-comment|/// information, or whether it's all SCEVCouldNotCompute values.
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isa
+operator|<
+name|SCEVCouldNotCompute
+operator|>
+operator|(
+name|Exact
+operator|)
+operator|||
+operator|!
+name|isa
+operator|<
+name|SCEVCouldNotCompute
+operator|>
+operator|(
+name|Max
+operator|)
+operator|)
+operator|&&
+literal|"Exact is not allowed to be less precise than Max"
+argument_list|)
+block|;       }
+comment|/// Test whether this ExitLimit contains any computed information, or
+comment|/// whether it's all SCEVCouldNotCompute values.
 name|bool
 name|hasAnyInfo
 argument_list|()
@@ -895,8 +1441,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ExitNotTakenInfo - Information about the number of times a particular
-comment|/// loop exit may be reached before exiting the loop.
+comment|/// Information about the number of times a particular loop exit may be
+comment|/// reached before exiting the loop.
 block|struct
 name|ExitNotTakenInfo
 block|{
@@ -933,7 +1479,7 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-comment|/// isCompleteList - Return true if all loop exits are computable.
+comment|/// Return true if all loop exits are computable.
 name|bool
 name|isCompleteList
 argument_list|()
@@ -959,7 +1505,7 @@ argument_list|(
 literal|1
 argument_list|)
 block|; }
-comment|/// getNextExit - Return a pointer to the next exit's not-taken info.
+comment|/// Return a pointer to the next exit's not-taken info.
 name|ExitNotTakenInfo
 operator|*
 name|getNextExit
@@ -988,19 +1534,19 @@ argument_list|)
 block|; }
 expr|}
 block|;
-comment|/// BackedgeTakenInfo - Information about the backedge-taken count
-comment|/// of a loop. This currently includes an exact count and a maximum count.
+comment|/// Information about the backedge-taken count of a loop. This currently
+comment|/// includes an exact count and a maximum count.
 comment|///
 name|class
 name|BackedgeTakenInfo
 block|{
-comment|/// ExitNotTaken - A list of computable exits and their not-taken counts.
-comment|/// Loops almost never have more than one computable exit.
+comment|/// A list of computable exits and their not-taken counts.  Loops almost
+comment|/// never have more than one computable exit.
 name|ExitNotTakenInfo
 name|ExitNotTaken
 block|;
-comment|/// Max - An expression indicating the least maximum backedge-taken
-comment|/// count of the loop that is known, or a SCEVCouldNotCompute.
+comment|/// An expression indicating the least maximum backedge-taken count of the
+comment|/// loop that is known, or a SCEVCouldNotCompute.
 specifier|const
 name|SCEV
 operator|*
@@ -1028,9 +1574,8 @@ argument_list|,
 argument|const SCEV *MaxCount
 argument_list|)
 block|;
-comment|/// hasAnyInfo - Test whether this BackedgeTakenInfo contains any
-comment|/// computed information, or whether it's all SCEVCouldNotCompute
-comment|/// values.
+comment|/// Test whether this BackedgeTakenInfo contains any computed information,
+comment|/// or whether it's all SCEVCouldNotCompute values.
 name|bool
 name|hasAnyInfo
 argument_list|()
@@ -1051,10 +1596,10 @@ name|Max
 operator|)
 return|;
 block|}
-comment|/// getExact - Return an expression indicating the exact backedge-taken
-comment|/// count of the loop if it is known, or SCEVCouldNotCompute
-comment|/// otherwise. This is the number of times the loop header can be
-comment|/// guaranteed to execute, minus one.
+comment|/// Return an expression indicating the exact backedge-taken count of the
+comment|/// loop if it is known, or SCEVCouldNotCompute otherwise. This is the
+comment|/// number of times the loop header can be guaranteed to execute, minus
+comment|/// one.
 specifier|const
 name|SCEV
 operator|*
@@ -1064,10 +1609,10 @@ argument|ScalarEvolution *SE
 argument_list|)
 specifier|const
 block|;
-comment|/// getExact - Return the number of times this loop exit may fall through
-comment|/// to the back edge, or SCEVCouldNotCompute. The loop is guaranteed not
-comment|/// to exit via this block before this number of iterations, but may exit
-comment|/// via another block.
+comment|/// Return the number of times this loop exit may fall through to the back
+comment|/// edge, or SCEVCouldNotCompute. The loop is guaranteed not to exit via
+comment|/// this block before this number of iterations, but may exit via another
+comment|/// block.
 specifier|const
 name|SCEV
 operator|*
@@ -1079,7 +1624,7 @@ argument|ScalarEvolution *SE
 argument_list|)
 specifier|const
 block|;
-comment|/// getMax - Get the max backedge taken count for the loop.
+comment|/// Get the max backedge taken count for the loop.
 specifier|const
 name|SCEV
 operator|*
@@ -1100,14 +1645,14 @@ argument|ScalarEvolution *SE
 argument_list|)
 specifier|const
 block|;
-comment|/// clear - Invalidate this result and free associated memory.
+comment|/// Invalidate this result and free associated memory.
 name|void
 name|clear
 argument_list|()
 block|;     }
 block|;
-comment|/// BackedgeTakenCounts - Cache the backedge-taken count of the loops for
-comment|/// this function as they are computed.
+comment|/// Cache the backedge-taken count of the loops for this function as they
+comment|/// are computed.
 name|DenseMap
 operator|<
 specifier|const
@@ -1118,11 +1663,10 @@ name|BackedgeTakenInfo
 operator|>
 name|BackedgeTakenCounts
 block|;
-comment|/// ConstantEvolutionLoopExitValue - This map contains entries for all of
-comment|/// the PHI instructions that we attempt to compute constant evolutions for.
-comment|/// This allows us to avoid potentially expensive recomputation of these
-comment|/// properties.  An instruction maps to null if we are unable to compute its
-comment|/// exit value.
+comment|/// This map contains entries for all of the PHI instructions that we
+comment|/// attempt to compute constant evolutions for.  This allows us to avoid
+comment|/// potentially expensive recomputation of these properties.  An instruction
+comment|/// maps to null if we are unable to compute its exit value.
 name|DenseMap
 operator|<
 name|PHINode
@@ -1133,9 +1677,9 @@ operator|*
 operator|>
 name|ConstantEvolutionLoopExitValue
 block|;
-comment|/// ValuesAtScopes - This map contains entries for all the expressions
-comment|/// that we attempt to compute getSCEVAtScope information for, which can
-comment|/// be expensive in extreme cases.
+comment|/// This map contains entries for all the expressions that we attempt to
+comment|/// compute getSCEVAtScope information for, which can be expensive in
+comment|/// extreme cases.
 name|DenseMap
 operator|<
 specifier|const
@@ -1162,7 +1706,7 @@ operator|>
 expr|>
 name|ValuesAtScopes
 block|;
-comment|/// LoopDispositions - Memoized computeLoopDisposition results.
+comment|/// Memoized computeLoopDisposition results.
 name|DenseMap
 operator|<
 specifier|const
@@ -1186,7 +1730,7 @@ literal|2
 operator|>>
 name|LoopDispositions
 block|;
-comment|/// computeLoopDisposition - Compute a LoopDisposition value.
+comment|/// Compute a LoopDisposition value.
 name|LoopDisposition
 name|computeLoopDisposition
 argument_list|(
@@ -1201,7 +1745,7 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// BlockDispositions - Memoized computeBlockDisposition results.
+comment|/// Memoized computeBlockDisposition results.
 name|DenseMap
 operator|<
 specifier|const
@@ -1225,7 +1769,7 @@ literal|2
 operator|>>
 name|BlockDispositions
 block|;
-comment|/// computeBlockDisposition - Compute a BlockDisposition value.
+comment|/// Compute a BlockDisposition value.
 name|BlockDisposition
 name|computeBlockDisposition
 argument_list|(
@@ -1240,7 +1784,7 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// UnsignedRanges - Memoized results from getRange
+comment|/// Memoized results from getRange
 name|DenseMap
 operator|<
 specifier|const
@@ -1251,7 +1795,7 @@ name|ConstantRange
 operator|>
 name|UnsignedRanges
 block|;
-comment|/// SignedRanges - Memoized results from getRange
+comment|/// Memoized results from getRange
 name|DenseMap
 operator|<
 specifier|const
@@ -1262,7 +1806,7 @@ name|ConstantRange
 operator|>
 name|SignedRanges
 block|;
-comment|/// RangeSignHint - Used to parameterize getRange
+comment|/// Used to parameterize getRange
 block|enum
 name|RangeSignHint
 block|{
@@ -1271,7 +1815,7 @@ block|,
 name|HINT_RANGE_SIGNED
 block|}
 block|;
-comment|/// setRange - Set the memoized range for the given SCEV.
+comment|/// Set the memoized range for the given SCEV.
 specifier|const
 name|ConstantRange
 operator|&
@@ -1359,7 +1903,7 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// getRange - Determine the range for a particular SCEV.
+comment|/// Determine the range for a particular SCEV.
 name|ConstantRange
 name|getRange
 argument_list|(
@@ -1368,8 +1912,8 @@ argument_list|,
 argument|RangeSignHint Hint
 argument_list|)
 block|;
-comment|/// createSCEV - We know that there is no SCEV for the specified value.
-comment|/// Analyze the expression.
+comment|/// We know that there is no SCEV for the specified value.  Analyze the
+comment|/// expression.
 specifier|const
 name|SCEV
 operator|*
@@ -1380,8 +1924,7 @@ operator|*
 name|V
 argument_list|)
 block|;
-comment|/// createNodeForPHI - Provide the special handling we need to analyze PHI
-comment|/// SCEVs.
+comment|/// Provide the special handling we need to analyze PHI SCEVs.
 specifier|const
 name|SCEV
 operator|*
@@ -1392,8 +1935,55 @@ operator|*
 name|PN
 argument_list|)
 block|;
-comment|/// createNodeForGEP - Provide the special handling we need to analyze GEP
-comment|/// SCEVs.
+comment|/// Helper function called from createNodeForPHI.
+specifier|const
+name|SCEV
+operator|*
+name|createAddRecFromPHI
+argument_list|(
+name|PHINode
+operator|*
+name|PN
+argument_list|)
+block|;
+comment|/// Helper function called from createNodeForPHI.
+specifier|const
+name|SCEV
+operator|*
+name|createNodeFromSelectLikePHI
+argument_list|(
+name|PHINode
+operator|*
+name|PN
+argument_list|)
+block|;
+comment|/// Provide special handling for a select-like instruction (currently this
+comment|/// is either a select instruction or a phi node).  \p I is the instruction
+comment|/// being processed, and it is assumed equivalent to "Cond ? TrueVal :
+comment|/// FalseVal".
+specifier|const
+name|SCEV
+operator|*
+name|createNodeForSelectOrPHI
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|Value
+operator|*
+name|Cond
+argument_list|,
+name|Value
+operator|*
+name|TrueVal
+argument_list|,
+name|Value
+operator|*
+name|FalseVal
+argument_list|)
+block|;
+comment|/// Provide the special handling we need to analyze GEP SCEVs.
 specifier|const
 name|SCEV
 operator|*
@@ -1404,8 +1994,8 @@ operator|*
 name|GEP
 argument_list|)
 block|;
-comment|/// computeSCEVAtScope - Implementation code for getSCEVAtScope; called
-comment|/// at most once for each SCEV+Loop pair.
+comment|/// Implementation code for getSCEVAtScope; called at most once for each
+comment|/// SCEV+Loop pair.
 comment|///
 specifier|const
 name|SCEV
@@ -1423,10 +2013,9 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// ForgetSymbolicValue - This looks up computed SCEV values for all
-comment|/// instructions that depend on the given instruction and removes them from
-comment|/// the ValueExprMap map if they reference SymName. This is used during PHI
-comment|/// resolution.
+comment|/// This looks up computed SCEV values for all instructions that depend on
+comment|/// the given instruction and removes them from the ValueExprMap map if they
+comment|/// reference SymName. This is used during PHI resolution.
 name|void
 name|ForgetSymbolicName
 argument_list|(
@@ -1440,9 +2029,8 @@ operator|*
 name|SymName
 argument_list|)
 block|;
-comment|/// getBackedgeTakenInfo - Return the BackedgeTakenInfo for the given
-comment|/// loop, lazily computing new values if the loop hasn't been analyzed
-comment|/// yet.
+comment|/// Return the BackedgeTakenInfo for the given loop, lazily computing new
+comment|/// values if the loop hasn't been analyzed yet.
 specifier|const
 name|BackedgeTakenInfo
 operator|&
@@ -1454,10 +2042,9 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// ComputeBackedgeTakenCount - Compute the number of times the specified
-comment|/// loop will iterate.
+comment|/// Compute the number of times the specified loop will iterate.
 name|BackedgeTakenInfo
-name|ComputeBackedgeTakenCount
+name|computeBackedgeTakenCount
 argument_list|(
 specifier|const
 name|Loop
@@ -1465,10 +2052,10 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// ComputeExitLimit - Compute the number of times the backedge of the
-comment|/// specified loop will execute if it exits via the specified block.
+comment|/// Compute the number of times the backedge of the specified loop will
+comment|/// execute if it exits via the specified block.
 name|ExitLimit
-name|ComputeExitLimit
+name|computeExitLimit
 argument_list|(
 specifier|const
 name|Loop
@@ -1480,11 +2067,11 @@ operator|*
 name|ExitingBlock
 argument_list|)
 block|;
-comment|/// ComputeExitLimitFromCond - Compute the number of times the backedge of
-comment|/// the specified loop will execute if its exit condition were a conditional
-comment|/// branch of ExitCond, TBB, and FBB.
+comment|/// Compute the number of times the backedge of the specified loop will
+comment|/// execute if its exit condition were a conditional branch of ExitCond,
+comment|/// TBB, and FBB.
 name|ExitLimit
-name|ComputeExitLimitFromCond
+name|computeExitLimitFromCond
 argument_list|(
 argument|const Loop *L
 argument_list|,
@@ -1497,11 +2084,11 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
-comment|/// ComputeExitLimitFromICmp - Compute the number of times the backedge of
-comment|/// the specified loop will execute if its exit condition were a conditional
-comment|/// branch of the ICmpInst ExitCond, TBB, and FBB.
+comment|/// Compute the number of times the backedge of the specified loop will
+comment|/// execute if its exit condition were a conditional branch of the ICmpInst
+comment|/// ExitCond, TBB, and FBB.
 name|ExitLimit
-name|ComputeExitLimitFromICmp
+name|computeExitLimitFromICmp
 argument_list|(
 argument|const Loop *L
 argument_list|,
@@ -1514,11 +2101,11 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
-comment|/// ComputeExitLimitFromSingleExitSwitch - Compute the number of times the
-comment|/// backedge of the specified loop will execute if its exit condition were a
-comment|/// switch with a single exiting case to ExitingBB.
+comment|/// Compute the number of times the backedge of the specified loop will
+comment|/// execute if its exit condition were a switch with a single exiting case
+comment|/// to ExitingBB.
 name|ExitLimit
-name|ComputeExitLimitFromSingleExitSwitch
+name|computeExitLimitFromSingleExitSwitch
 argument_list|(
 argument|const Loop *L
 argument_list|,
@@ -1529,11 +2116,10 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
-comment|/// ComputeLoadConstantCompareExitLimit - Given an exit condition
-comment|/// of 'icmp op load X, cst', try to see if we can compute the
-comment|/// backedge-taken count.
+comment|/// Given an exit condition of 'icmp op load X, cst', try to see if we can
+comment|/// compute the backedge-taken count.
 name|ExitLimit
-name|ComputeLoadConstantCompareExitLimit
+name|computeLoadConstantCompareExitLimit
 argument_list|(
 argument|LoadInst *LI
 argument_list|,
@@ -1544,15 +2130,34 @@ argument_list|,
 argument|ICmpInst::Predicate p
 argument_list|)
 block|;
-comment|/// ComputeExitCountExhaustively - If the loop is known to execute a
-comment|/// constant number of times (the condition evolves only from constants),
-comment|/// try to evaluate a few iterations of the loop until we get the exit
-comment|/// condition gets a value of ExitWhen (true or false).  If we cannot
-comment|/// evaluate the exit count of the loop, return CouldNotCompute.
+comment|/// Compute the exit limit of a loop that is controlled by a
+comment|/// "(IV>> 1) != 0" type comparison.  We cannot compute the exact trip
+comment|/// count in these cases (since SCEV has no way of expressing them), but we
+comment|/// can still sometimes compute an upper bound.
+comment|///
+comment|/// Return an ExitLimit for a loop whose backedge is guarded by `LHS Pred
+comment|/// RHS`.
+name|ExitLimit
+name|computeShiftCompareExitLimit
+argument_list|(
+argument|Value *LHS
+argument_list|,
+argument|Value *RHS
+argument_list|,
+argument|const Loop *L
+argument_list|,
+argument|ICmpInst::Predicate Pred
+argument_list|)
+block|;
+comment|/// If the loop is known to execute a constant number of times (the
+comment|/// condition evolves only from constants), try to evaluate a few iterations
+comment|/// of the loop until we get the exit condition gets a value of ExitWhen
+comment|/// (true or false).  If we cannot evaluate the exit count of the loop,
+comment|/// return CouldNotCompute.
 specifier|const
 name|SCEV
 operator|*
-name|ComputeExitCountExhaustively
+name|computeExitCountExhaustively
 argument_list|(
 argument|const Loop *L
 argument_list|,
@@ -1561,9 +2166,8 @@ argument_list|,
 argument|bool ExitWhen
 argument_list|)
 block|;
-comment|/// HowFarToZero - Return the number of times an exit condition comparing
-comment|/// the specified value to zero will execute.  If not computable, return
-comment|/// CouldNotCompute.
+comment|/// Return the number of times an exit condition comparing the specified
+comment|/// value to zero will execute.  If not computable, return CouldNotCompute.
 name|ExitLimit
 name|HowFarToZero
 argument_list|(
@@ -1574,8 +2178,8 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
-comment|/// HowFarToNonZero - Return the number of times an exit condition checking
-comment|/// the specified value for nonzero will execute.  If not computable, return
+comment|/// Return the number of times an exit condition checking the specified
+comment|/// value for nonzero will execute.  If not computable, return
 comment|/// CouldNotCompute.
 name|ExitLimit
 name|HowFarToNonZero
@@ -1591,10 +2195,9 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// HowManyLessThans - Return the number of times an exit condition
-comment|/// containing the specified less-than comparison will execute.  If not
-comment|/// computable, return CouldNotCompute. isSigned specifies whether the
-comment|/// less-than is signed.
+comment|/// Return the number of times an exit condition containing the specified
+comment|/// less-than comparison will execute.  If not computable, return
+comment|/// CouldNotCompute. isSigned specifies whether the less-than is signed.
 name|ExitLimit
 name|HowManyLessThans
 argument_list|(
@@ -1623,10 +2226,9 @@ argument_list|,
 argument|bool IsSubExpr
 argument_list|)
 block|;
-comment|/// getPredecessorWithUniqueSuccessorForBB - Return a predecessor of BB
-comment|/// (which may not be an immediate predecessor) which has exactly one
-comment|/// successor from which BB is reachable, or null if no such block is
-comment|/// found.
+comment|/// Return a predecessor of BB (which may not be an immediate predecessor)
+comment|/// which has exactly one successor from which BB is reachable, or null if
+comment|/// no such block is found.
 name|std
 operator|::
 name|pair
@@ -1644,8 +2246,8 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// isImpliedCond - Test whether the condition described by Pred, LHS, and
-comment|/// RHS is true whenever the given FoundCondValue value evaluates to true.
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the given FoundCondValue value evaluates to true.
 name|bool
 name|isImpliedCond
 argument_list|(
@@ -1660,9 +2262,28 @@ argument_list|,
 argument|bool Inverse
 argument_list|)
 block|;
-comment|/// isImpliedCondOperands - Test whether the condition described by Pred,
-comment|/// LHS, and RHS is true whenever the condition described by Pred, FoundLHS,
-comment|/// and FoundRHS is true.
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by FoundPred, FoundLHS, FoundRHS is
+comment|/// true.
+name|bool
+name|isImpliedCond
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|ICmpInst::Predicate FoundPred
+argument_list|,
+argument|const SCEV *FoundLHS
+argument_list|,
+argument|const SCEV *FoundRHS
+argument_list|)
+block|;
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
+comment|/// true.
 name|bool
 name|isImpliedCondOperands
 argument_list|(
@@ -1677,9 +2298,9 @@ argument_list|,
 argument|const SCEV *FoundRHS
 argument_list|)
 block|;
-comment|/// isImpliedCondOperandsHelper - Test whether the condition described by
-comment|/// Pred, LHS, and RHS is true whenever the condition described by Pred,
-comment|/// FoundLHS, and FoundRHS is true.
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
+comment|/// true.
 name|bool
 name|isImpliedCondOperandsHelper
 argument_list|(
@@ -1694,10 +2315,9 @@ argument_list|,
 argument|const SCEV *FoundRHS
 argument_list|)
 block|;
-comment|/// isImpliedCondOperandsViaRanges - Test whether the condition described by
-comment|/// Pred, LHS, and RHS is true whenever the condition described by Pred,
-comment|/// FoundLHS, and FoundRHS is true.  Utility function used by
-comment|/// isImpliedCondOperands.
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
+comment|/// true.  Utility function used by isImpliedCondOperands.
 name|bool
 name|isImpliedCondOperandsViaRanges
 argument_list|(
@@ -1712,10 +2332,29 @@ argument_list|,
 argument|const SCEV *FoundRHS
 argument_list|)
 block|;
-comment|/// getConstantEvolutionLoopExitValue - If we know that the specified Phi is
-comment|/// in the header of its containing loop, we know the loop executes a
-comment|/// constant number of times, and the PHI node is just a recurrence
-comment|/// involving constants, fold it.
+comment|/// Test whether the condition described by Pred, LHS, and RHS is true
+comment|/// whenever the condition described by Pred, FoundLHS, and FoundRHS is
+comment|/// true.
+comment|///
+comment|/// This routine tries to rule out certain kinds of integer overflow, and
+comment|/// then tries to reason about arithmetic properties of the predicates.
+name|bool
+name|isImpliedCondOperandsViaNoOverflow
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|const SCEV *FoundLHS
+argument_list|,
+argument|const SCEV *FoundRHS
+argument_list|)
+block|;
+comment|/// If we know that the specified Phi is in the header of its containing
+comment|/// loop, we know the loop executes a constant number of times, and the PHI
+comment|/// node is just a recurrence involving constants, fold it.
 name|Constant
 operator|*
 name|getConstantEvolutionLoopExitValue
@@ -1735,9 +2374,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// isKnownPredicateWithRanges - Test if the given expression is known to
-comment|/// satisfy the condition described by Pred and the known constant ranges
-comment|/// of LHS and RHS.
+comment|/// Test if the given expression is known to satisfy the condition described
+comment|/// by Pred and the known constant ranges of LHS and RHS.
 comment|///
 name|bool
 name|isKnownPredicateWithRanges
@@ -1749,7 +2387,82 @@ argument_list|,
 argument|const SCEV *RHS
 argument_list|)
 block|;
-comment|/// forgetMemoizedResults - Drop memoized information computed for S.
+comment|/// Try to prove the condition described by "LHS Pred RHS" by ruling out
+comment|/// integer overflow.
+comment|///
+comment|/// For instance, this will return true for "A s< (A + C)<nsw>" if C is
+comment|/// positive.
+name|bool
+name|isKnownPredicateViaNoOverflow
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|)
+block|;
+comment|/// Try to split Pred LHS RHS into logical conjunctions (and's) and try to
+comment|/// prove them individually.
+name|bool
+name|isKnownPredicateViaSplitting
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|)
+block|;
+comment|/// Try to match the Expr as "(L + R)<Flags>".
+name|bool
+name|splitBinaryAdd
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|L
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|R
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+operator|&
+name|Flags
+argument_list|)
+block|;
+comment|/// Return true if More == (Less + C), where C is a constant.  This is
+comment|/// intended to be used as a cheaper substitute for full SCEV subtraction.
+name|bool
+name|computeConstantDifference
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Less
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|More
+argument_list|,
+name|APInt
+operator|&
+name|C
+argument_list|)
+block|;
+comment|/// Drop memoized information computed for S.
 name|void
 name|forgetMemoizedResults
 argument_list|(
@@ -1757,6 +2470,17 @@ specifier|const
 name|SCEV
 operator|*
 name|S
+argument_list|)
+block|;
+comment|/// Return an existing SCEV for V if there is one, otherwise return nullptr.
+specifier|const
+name|SCEV
+operator|*
+name|getExistingSCEV
+argument_list|(
+name|Value
+operator|*
+name|V
 argument_list|)
 block|;
 comment|/// Return false iff given SCEV contains a SCEVUnknown with NULL value-
@@ -1768,11 +2492,12 @@ argument|const SCEV *S
 argument_list|)
 specifier|const
 block|;
-comment|// Return true if `ExtendOpTy`({`Start`,+,`Step`}) can be proved to be equal
-comment|// to {`ExtendOpTy`(`Start`),+,`ExtendOpTy`(`Step`)}.  This is equivalent to
-comment|// proving no signed (resp. unsigned) wrap in {`Start`,+,`Step`} if
-comment|// `ExtendOpTy` is `SCEVSignExtendExpr` (resp. `SCEVZeroExtendExpr`).
-comment|//
+comment|/// Return true if `ExtendOpTy`({`Start`,+,`Step`}) can be proved to be
+comment|/// equal to {`ExtendOpTy`(`Start`),+,`ExtendOpTy`(`Step`)}.  This is
+comment|/// equivalent to proving no signed (resp. unsigned) wrap in
+comment|/// {`Start`,+,`Step`} if `ExtendOpTy` is `SCEVSignExtendExpr`
+comment|/// (resp. `SCEVZeroExtendExpr`).
+comment|///
 name|template
 operator|<
 name|typename
@@ -1797,15 +2522,84 @@ operator|*
 name|L
 argument_list|)
 block|;
+name|bool
+name|isMonotonicPredicateImpl
+argument_list|(
+argument|const SCEVAddRecExpr *LHS
+argument_list|,
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|bool&Increasing
+argument_list|)
+block|;
+comment|/// Return true if, for all loop invariant X, the predicate "LHS `Pred` X"
+comment|/// is monotonically increasing or decreasing.  In the former case set
+comment|/// `Increasing` to true and in the latter case set `Increasing` to false.
+comment|///
+comment|/// A predicate is said to be monotonically increasing if may go from being
+comment|/// false to being true as the loop iterates, but never the other way
+comment|/// around.  A predicate is said to be monotonically decreasing if may go
+comment|/// from being true to being false as the loop iterates, but never the other
+comment|/// way around.
+name|bool
+name|isMonotonicPredicate
+argument_list|(
+argument|const SCEVAddRecExpr *LHS
+argument_list|,
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|bool&Increasing
+argument_list|)
+block|;
+comment|// Return SCEV no-wrap flags that can be proven based on reasoning
+comment|// about how poison produced from no-wrap flags on this value
+comment|// (e.g. a nuw add) would trigger undefined behavior on overflow.
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|getNoWrapFlagsFromUB
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
 name|public
 operator|:
-specifier|static
-name|char
-name|ID
+name|ScalarEvolution
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|TargetLibraryInfo
+operator|&
+name|TLI
+argument_list|,
+name|AssumptionCache
+operator|&
+name|AC
+argument_list|,
+name|DominatorTree
+operator|&
+name|DT
+argument_list|,
+name|LoopInfo
+operator|&
+name|LI
+argument_list|)
 block|;
-comment|// Pass identification, replacement for typeid
+operator|~
 name|ScalarEvolution
 argument_list|()
+block|;
+name|ScalarEvolution
+argument_list|(
+name|ScalarEvolution
+operator|&&
+name|Arg
+argument_list|)
 block|;
 name|LLVMContext
 operator|&
@@ -1815,15 +2609,15 @@ specifier|const
 block|{
 return|return
 name|F
-operator|->
+operator|.
 name|getContext
 argument_list|()
 return|;
 block|}
-comment|/// isSCEVable - Test if values of the given type are analyzable within
-comment|/// the SCEV framework. This primarily includes integer types, and it
-comment|/// can optionally include pointer types if the ScalarEvolution class
-comment|/// has access to target-specific information.
+comment|/// Test if values of the given type are analyzable within the SCEV
+comment|/// framework. This primarily includes integer types, and it can optionally
+comment|/// include pointer types if the ScalarEvolution class has access to
+comment|/// target-specific information.
 name|bool
 name|isSCEVable
 argument_list|(
@@ -1831,8 +2625,8 @@ argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
-comment|/// getTypeSizeInBits - Return the size in bits of the specified type,
-comment|/// for which isSCEVable must return true.
+comment|/// Return the size in bits of the specified type, for which isSCEVable must
+comment|/// return true.
 name|uint64_t
 name|getTypeSizeInBits
 argument_list|(
@@ -1840,10 +2634,9 @@ argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
-comment|/// getEffectiveSCEVType - Return a type with the same bitwidth as
-comment|/// the given type and which represents how SCEV will treat the given
-comment|/// type, for which isSCEVable must return true. For pointer types,
-comment|/// this is the pointer-sized integer type.
+comment|/// Return a type with the same bitwidth as the given type and which
+comment|/// represents how SCEV will treat the given type, for which isSCEVable must
+comment|/// return true. For pointer types, this is the pointer-sized integer type.
 name|Type
 operator|*
 name|getEffectiveSCEVType
@@ -1852,8 +2645,8 @@ argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
-comment|/// getSCEV - Return a SCEV expression for the full generality of the
-comment|/// specified expression.
+comment|/// Return a SCEV expression for the full generality of the specified
+comment|/// expression.
 specifier|const
 name|SCEV
 operator|*
@@ -1988,20 +2781,12 @@ block|,
 literal|2
 operator|>
 name|Ops
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 name|LHS
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|RHS
-argument_list|)
+block|}
 block|;
 return|return
 name|getAddExpr
@@ -2035,27 +2820,14 @@ block|,
 literal|3
 operator|>
 name|Ops
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 name|Op0
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|Op1
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|Op2
-argument_list|)
+block|}
 block|;
 return|return
 name|getAddExpr
@@ -2097,20 +2869,12 @@ block|,
 literal|2
 operator|>
 name|Ops
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 name|LHS
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|RHS
-argument_list|)
+block|}
 block|;
 return|return
 name|getMulExpr
@@ -2144,27 +2908,14 @@ block|,
 literal|3
 operator|>
 name|Ops
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 name|Op0
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|Op1
-argument_list|)
-block|;
-name|Ops
-operator|.
-name|push_back
-argument_list|(
+block|,
 name|Op2
-argument_list|)
+block|}
 block|;
 return|return
 name|getMulExpr
@@ -2407,8 +3158,43 @@ operator|*
 name|getCouldNotCompute
 argument_list|()
 block|;
-comment|/// getSizeOfExpr - Return an expression for sizeof AllocTy that is type
-comment|/// IntTy
+comment|/// \brief Return a SCEV for the constant 0 of a specific type.
+specifier|const
+name|SCEV
+operator|*
+name|getZero
+argument_list|(
+argument|Type *Ty
+argument_list|)
+block|{
+return|return
+name|getConstant
+argument_list|(
+name|Ty
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return a SCEV for the constant 1 of a specific type.
+specifier|const
+name|SCEV
+operator|*
+name|getOne
+argument_list|(
+argument|Type *Ty
+argument_list|)
+block|{
+return|return
+name|getConstant
+argument_list|(
+name|Ty
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+comment|/// Return an expression for sizeof AllocTy that is type IntTy
 comment|///
 specifier|const
 name|SCEV
@@ -2424,8 +3210,7 @@ operator|*
 name|AllocTy
 argument_list|)
 block|;
-comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field
-comment|/// with type IntTy
+comment|/// Return an expression for offsetof on the given field with type IntTy
 comment|///
 specifier|const
 name|SCEV
@@ -2439,20 +3224,19 @@ argument_list|,
 argument|unsigned FieldNo
 argument_list|)
 block|;
-comment|/// getNegativeSCEV - Return the SCEV object corresponding to -V.
+comment|/// Return the SCEV object corresponding to -V.
 comment|///
 specifier|const
 name|SCEV
 operator|*
 name|getNegativeSCEV
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|V
+argument|const SCEV *V
+argument_list|,
+argument|SCEV::NoWrapFlags Flags = SCEV::FlagAnyWrap
 argument_list|)
 block|;
-comment|/// getNotSCEV - Return the SCEV object corresponding to ~V.
+comment|/// Return the SCEV object corresponding to ~V.
 comment|///
 specifier|const
 name|SCEV
@@ -2465,7 +3249,7 @@ operator|*
 name|V
 argument_list|)
 block|;
-comment|/// getMinusSCEV - Return LHS-RHS.  Minus is represented in SCEV as A+B*-1.
+comment|/// Return LHS-RHS.  Minus is represented in SCEV as A+B*-1.
 specifier|const
 name|SCEV
 operator|*
@@ -2478,9 +3262,8 @@ argument_list|,
 argument|SCEV::NoWrapFlags Flags = SCEV::FlagAnyWrap
 argument_list|)
 block|;
-comment|/// getTruncateOrZeroExtend - Return a SCEV corresponding to a conversion
-comment|/// of the input value to the specified type.  If the type must be
-comment|/// extended, it is zero extended.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type.  If the type must be extended, it is zero extended.
 specifier|const
 name|SCEV
 operator|*
@@ -2496,9 +3279,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getTruncateOrSignExtend - Return a SCEV corresponding to a conversion
-comment|/// of the input value to the specified type.  If the type must be
-comment|/// extended, it is sign extended.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type.  If the type must be extended, it is sign extended.
 specifier|const
 name|SCEV
 operator|*
@@ -2514,9 +3296,9 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getNoopOrZeroExtend - Return a SCEV corresponding to a conversion of
-comment|/// the input value to the specified type.  If the type must be extended,
-comment|/// it is zero extended.  The conversion must not be narrowing.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type.  If the type must be extended, it is zero extended.  The
+comment|/// conversion must not be narrowing.
 specifier|const
 name|SCEV
 operator|*
@@ -2532,9 +3314,9 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getNoopOrSignExtend - Return a SCEV corresponding to a conversion of
-comment|/// the input value to the specified type.  If the type must be extended,
-comment|/// it is sign extended.  The conversion must not be narrowing.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type.  If the type must be extended, it is sign extended.  The
+comment|/// conversion must not be narrowing.
 specifier|const
 name|SCEV
 operator|*
@@ -2550,10 +3332,9 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getNoopOrAnyExtend - Return a SCEV corresponding to a conversion of
-comment|/// the input value to the specified type. If the type must be extended,
-comment|/// it is extended with unspecified bits. The conversion must not be
-comment|/// narrowing.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type. If the type must be extended, it is extended with
+comment|/// unspecified bits. The conversion must not be narrowing.
 specifier|const
 name|SCEV
 operator|*
@@ -2569,9 +3350,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getTruncateOrNoop - Return a SCEV corresponding to a conversion of the
-comment|/// input value to the specified type.  The conversion must not be
-comment|/// widening.
+comment|/// Return a SCEV corresponding to a conversion of the input value to the
+comment|/// specified type.  The conversion must not be widening.
 specifier|const
 name|SCEV
 operator|*
@@ -2587,9 +3367,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getUMaxFromMismatchedTypes - Promote the operands to the wider of
-comment|/// the types using zero-extension, and then perform a umax operation
-comment|/// with them.
+comment|/// Promote the operands to the wider of the types using zero-extension, and
+comment|/// then perform a umax operation with them.
 specifier|const
 name|SCEV
 operator|*
@@ -2606,9 +3385,8 @@ operator|*
 name|RHS
 argument_list|)
 block|;
-comment|/// getUMinFromMismatchedTypes - Promote the operands to the wider of
-comment|/// the types using zero-extension, and then perform a umin operation
-comment|/// with them.
+comment|/// Promote the operands to the wider of the types using zero-extension, and
+comment|/// then perform a umin operation with them.
 specifier|const
 name|SCEV
 operator|*
@@ -2625,10 +3403,10 @@ operator|*
 name|RHS
 argument_list|)
 block|;
-comment|/// getPointerBase - Transitively follow the chain of pointer-type operands
-comment|/// until reaching a SCEV that does not have a single pointer operand. This
-comment|/// returns a SCEVUnknown pointer for well-formed pointer-type expressions,
-comment|/// but corner cases do exist.
+comment|/// Transitively follow the chain of pointer-type operands until reaching a
+comment|/// SCEV that does not have a single pointer operand. This returns a
+comment|/// SCEVUnknown pointer for well-formed pointer-type expressions, but corner
+comment|/// cases do exist.
 specifier|const
 name|SCEV
 operator|*
@@ -2640,10 +3418,10 @@ operator|*
 name|V
 argument_list|)
 block|;
-comment|/// getSCEVAtScope - Return a SCEV expression for the specified value
-comment|/// at the specified scope in the program.  The L value specifies a loop
-comment|/// nest to evaluate the expression at, where null is the top-level or a
-comment|/// specified loop is immediately inside of the loop.
+comment|/// Return a SCEV expression for the specified value at the specified scope
+comment|/// in the program.  The L value specifies a loop nest to evaluate the
+comment|/// expression at, where null is the top-level or a specified loop is
+comment|/// immediately inside of the loop.
 comment|///
 comment|/// This method can be used to compute the exit value for a variable defined
 comment|/// in a loop by querying what the value will hold in the parent loop.
@@ -2666,8 +3444,7 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// getSCEVAtScope - This is a convenience function which does
-comment|/// getSCEVAtScope(getSCEV(V), L).
+comment|/// This is a convenience function which does getSCEVAtScope(getSCEV(V), L).
 specifier|const
 name|SCEV
 operator|*
@@ -2683,9 +3460,9 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// isLoopEntryGuardedByCond - Test whether entry to the loop is protected
-comment|/// by a conditional between LHS and RHS.  This is used to help avoid max
-comment|/// expressions in loop trip counts, and to eliminate casts.
+comment|/// Test whether entry to the loop is protected by a conditional between LHS
+comment|/// and RHS.  This is used to help avoid max expressions in loop trip
+comment|/// counts, and to eliminate casts.
 name|bool
 name|isLoopEntryGuardedByCond
 argument_list|(
@@ -2698,9 +3475,8 @@ argument_list|,
 argument|const SCEV *RHS
 argument_list|)
 block|;
-comment|/// isLoopBackedgeGuardedByCond - Test whether the backedge of the loop is
-comment|/// protected by a conditional between LHS and RHS.  This is used to
-comment|/// to eliminate casts.
+comment|/// Test whether the backedge of the loop is protected by a conditional
+comment|/// between LHS and RHS.  This is used to to eliminate casts.
 name|bool
 name|isLoopBackedgeGuardedByCond
 argument_list|(
@@ -2726,13 +3502,13 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// getSmallConstantTripCount - Returns the maximum trip count of this loop
-comment|/// as a normal unsigned value. Returns 0 if the trip count is unknown or
-comment|/// not constant. This "trip count" assumes that control exits via
-comment|/// ExitingBlock. More precisely, it is the number of times that control may
-comment|/// reach ExitingBlock before taking the branch. For loops with multiple
-comment|/// exits, it may not be the number times that the loop header executes if
-comment|/// the loop exits prematurely via another branch.
+comment|/// Returns the maximum trip count of this loop as a normal unsigned
+comment|/// value. Returns 0 if the trip count is unknown or not constant. This
+comment|/// "trip count" assumes that control exits via ExitingBlock. More
+comment|/// precisely, it is the number of times that control may reach ExitingBlock
+comment|/// before taking the branch. For loops with multiple exits, it may not be
+comment|/// the number times that the loop header executes if the loop exits
+comment|/// prematurely via another branch.
 name|unsigned
 name|getSmallConstantTripCount
 argument_list|(
@@ -2759,12 +3535,12 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// getSmallConstantTripMultiple - Returns the largest constant divisor of
-comment|/// the trip count of this loop as a normal unsigned value, if
-comment|/// possible. This means that the actual trip count is always a multiple of
-comment|/// the returned value (don't forget the trip count could very well be zero
-comment|/// as well!). As explained in the comments for getSmallConstantTripCount,
-comment|/// this assumes that control exits the loop via ExitingBlock.
+comment|/// Returns the largest constant divisor of the trip count of this loop as a
+comment|/// normal unsigned value, if possible. This means that the actual trip
+comment|/// count is always a multiple of the returned value (don't forget the trip
+comment|/// count could very well be zero as well!). As explained in the comments
+comment|/// for getSmallConstantTripCount, this assumes that control exits the loop
+comment|/// via ExitingBlock.
 name|unsigned
 name|getSmallConstantTripMultiple
 argument_list|(
@@ -2777,9 +3553,9 @@ operator|*
 name|ExitingBlock
 argument_list|)
 block|;
-comment|// getExitCount - Get the expression for the number of loop iterations for
-comment|// which this loop is guaranteed not to exit via ExitingBlock. Otherwise
-comment|// return SCEVCouldNotCompute.
+comment|/// Get the expression for the number of loop iterations for which this loop
+comment|/// is guaranteed not to exit via ExitingBlock. Otherwise return
+comment|/// SCEVCouldNotCompute.
 specifier|const
 name|SCEV
 operator|*
@@ -2794,12 +3570,12 @@ operator|*
 name|ExitingBlock
 argument_list|)
 block|;
-comment|/// getBackedgeTakenCount - If the specified loop has a predictable
-comment|/// backedge-taken count, return it, otherwise return a SCEVCouldNotCompute
-comment|/// object. The backedge-taken count is the number of times the loop header
-comment|/// will be branched to from within the loop. This is one less than the
-comment|/// trip count of the loop, since it doesn't count the first iteration,
-comment|/// when the header is branched to from outside the loop.
+comment|/// If the specified loop has a predictable backedge-taken count, return it,
+comment|/// otherwise return a SCEVCouldNotCompute object. The backedge-taken count
+comment|/// is the number of times the loop header will be branched to from within
+comment|/// the loop. This is one less than the trip count of the loop, since it
+comment|/// doesn't count the first iteration, when the header is branched to from
+comment|/// outside the loop.
 comment|///
 comment|/// Note that it is not valid to call this method on a loop without a
 comment|/// loop-invariant backedge-taken count (see
@@ -2816,9 +3592,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// getMaxBackedgeTakenCount - Similar to getBackedgeTakenCount, except
-comment|/// return the least SCEV value that is known never to be less than the
-comment|/// actual backedge taken count.
+comment|/// Similar to getBackedgeTakenCount, except return the least SCEV value
+comment|/// that is known never to be less than the actual backedge taken count.
 specifier|const
 name|SCEV
 operator|*
@@ -2830,8 +3605,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// hasLoopInvariantBackedgeTakenCount - Return true if the specified loop
-comment|/// has an analyzable loop-invariant backedge-taken count.
+comment|/// Return true if the specified loop has an analyzable loop-invariant
+comment|/// backedge-taken count.
 name|bool
 name|hasLoopInvariantBackedgeTakenCount
 argument_list|(
@@ -2841,10 +3616,10 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// forgetLoop - This method should be called by the client when it has
-comment|/// changed a loop in a way that may effect ScalarEvolution's ability to
-comment|/// compute a trip count, or if the loop is deleted.  This call is
-comment|/// potentially expensive for large loop bodies.
+comment|/// This method should be called by the client when it has changed a loop in
+comment|/// a way that may effect ScalarEvolution's ability to compute a trip count,
+comment|/// or if the loop is deleted.  This call is potentially expensive for large
+comment|/// loop bodies.
 name|void
 name|forgetLoop
 argument_list|(
@@ -2854,9 +3629,9 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// forgetValue - This method should be called by the client when it has
-comment|/// changed a value in a way that may effect its value, or which may
-comment|/// disconnect it from a def-use chain linking it to a loop.
+comment|/// This method should be called by the client when it has changed a value
+comment|/// in a way that may effect its value, or which may disconnect it from a
+comment|/// def-use chain linking it to a loop.
 name|void
 name|forgetValue
 argument_list|(
@@ -2881,11 +3656,10 @@ operator|.
 name|clear
 argument_list|()
 block|; }
-comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S
-comment|/// is guaranteed to end in (at every loop iteration).  It is, at the same
-comment|/// time, the minimum number of times S is divisible by 2.  For example,
-comment|/// given {4,+,8} it returns 2.  If S is guaranteed to be 0, it returns the
-comment|/// bitwidth of S.
+comment|/// Determine the minimum number of zero bits that S is guaranteed to end in
+comment|/// (at every loop iteration).  It is, at the same time, the minimum number
+comment|/// of times S is divisible by 2.  For example, given {4,+,8} it returns 2.
+comment|/// If S is guaranteed to be 0, it returns the bitwidth of S.
 name|uint32_t
 name|GetMinTrailingZeros
 argument_list|(
@@ -2895,7 +3669,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// getUnsignedRange - Determine the unsigned range for a particular SCEV.
+comment|/// Determine the unsigned range for a particular SCEV.
 comment|///
 name|ConstantRange
 name|getUnsignedRange
@@ -2912,7 +3686,7 @@ name|HINT_RANGE_UNSIGNED
 argument_list|)
 return|;
 block|}
-comment|/// getSignedRange - Determine the signed range for a particular SCEV.
+comment|/// Determine the signed range for a particular SCEV.
 comment|///
 name|ConstantRange
 name|getSignedRange
@@ -2929,7 +3703,7 @@ name|HINT_RANGE_SIGNED
 argument_list|)
 return|;
 block|}
-comment|/// isKnownNegative - Test if the given expression is known to be negative.
+comment|/// Test if the given expression is known to be negative.
 comment|///
 name|bool
 name|isKnownNegative
@@ -2940,7 +3714,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownPositive - Test if the given expression is known to be positive.
+comment|/// Test if the given expression is known to be positive.
 comment|///
 name|bool
 name|isKnownPositive
@@ -2951,8 +3725,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownNonNegative - Test if the given expression is known to be
-comment|/// non-negative.
+comment|/// Test if the given expression is known to be non-negative.
 comment|///
 name|bool
 name|isKnownNonNegative
@@ -2963,8 +3736,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownNonPositive - Test if the given expression is known to be
-comment|/// non-positive.
+comment|/// Test if the given expression is known to be non-positive.
 comment|///
 name|bool
 name|isKnownNonPositive
@@ -2975,8 +3747,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownNonZero - Test if the given expression is known to be
-comment|/// non-zero.
+comment|/// Test if the given expression is known to be non-zero.
 comment|///
 name|bool
 name|isKnownNonZero
@@ -2987,8 +3758,8 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownPredicate - Test if the given expression is known to satisfy
-comment|/// the condition described by Pred, LHS, and RHS.
+comment|/// Test if the given expression is known to satisfy the condition described
+comment|/// by Pred, LHS, and RHS.
 comment|///
 name|bool
 name|isKnownPredicate
@@ -3000,10 +3771,32 @@ argument_list|,
 argument|const SCEV *RHS
 argument_list|)
 block|;
-comment|/// SimplifyICmpOperands - Simplify LHS and RHS in a comparison with
-comment|/// predicate Pred. Return true iff any changes were made. If the
-comment|/// operands are provably equal or unequal, LHS and RHS are set to
-comment|/// the same value and Pred is set to either ICMP_EQ or ICMP_NE.
+comment|/// Return true if the result of the predicate LHS `Pred` RHS is loop
+comment|/// invariant with respect to L.  Set InvariantPred, InvariantLHS and
+comment|/// InvariantLHS so that InvariantLHS `InvariantPred` InvariantRHS is the
+comment|/// loop invariant form of LHS `Pred` RHS.
+name|bool
+name|isLoopInvariantPredicate
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|const Loop *L
+argument_list|,
+argument|ICmpInst::Predicate&InvariantPred
+argument_list|,
+argument|const SCEV *&InvariantLHS
+argument_list|,
+argument|const SCEV *&InvariantRHS
+argument_list|)
+block|;
+comment|/// Simplify LHS and RHS in a comparison with predicate Pred. Return true
+comment|/// iff any changes were made. If the operands are provably equal or
+comment|/// unequal, LHS and RHS are set to the same value and Pred is set to either
+comment|/// ICMP_EQ or ICMP_NE.
 comment|///
 name|bool
 name|SimplifyICmpOperands
@@ -3018,8 +3811,8 @@ argument|unsigned Depth =
 literal|0
 argument_list|)
 block|;
-comment|/// getLoopDisposition - Return the "disposition" of the given SCEV with
-comment|/// respect to the given loop.
+comment|/// Return the "disposition" of the given SCEV with respect to the given
+comment|/// loop.
 name|LoopDisposition
 name|getLoopDisposition
 argument_list|(
@@ -3034,8 +3827,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// isLoopInvariant - Return true if the value of the given SCEV is
-comment|/// unchanging in the specified loop.
+comment|/// Return true if the value of the given SCEV is unchanging in the
+comment|/// specified loop.
 name|bool
 name|isLoopInvariant
 argument_list|(
@@ -3050,10 +3843,10 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// hasComputableLoopEvolution - Return true if the given SCEV changes value
-comment|/// in a known way in the specified loop.  This property being true implies
-comment|/// that the value is variant in the loop AND that we can emit an expression
-comment|/// to compute the value of the expression at any particular loop iteration.
+comment|/// Return true if the given SCEV changes value in a known way in the
+comment|/// specified loop.  This property being true implies that the value is
+comment|/// variant in the loop AND that we can emit an expression to compute the
+comment|/// value of the expression at any particular loop iteration.
 name|bool
 name|hasComputableLoopEvolution
 argument_list|(
@@ -3068,8 +3861,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// getLoopDisposition - Return the "disposition" of the given SCEV with
-comment|/// respect to the given block.
+comment|/// Return the "disposition" of the given SCEV with respect to the given
+comment|/// block.
 name|BlockDisposition
 name|getBlockDisposition
 argument_list|(
@@ -3084,8 +3877,8 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// dominates - Return true if elements that makes up the given SCEV
-comment|/// dominate the specified basic block.
+comment|/// Return true if elements that makes up the given SCEV dominate the
+comment|/// specified basic block.
 name|bool
 name|dominates
 argument_list|(
@@ -3100,8 +3893,8 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// properlyDominates - Return true if elements that makes up the given SCEV
-comment|/// properly dominate the specified basic block.
+comment|/// Return true if elements that makes up the given SCEV properly dominate
+comment|/// the specified basic block.
 name|bool
 name|properlyDominates
 argument_list|(
@@ -3116,8 +3909,7 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// hasOperand - Test whether the given SCEV has Op as a direct or
-comment|/// indirect operand.
+comment|/// Test whether the given SCEV has Op as a direct or indirect operand.
 name|bool
 name|hasOperand
 argument_list|(
@@ -3151,41 +3943,17 @@ argument|const SCEV *ElementSize
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|runOnFunction
-argument_list|(
-argument|Function&F
-argument_list|)
-name|override
-block|;
-name|void
-name|releaseMemory
-argument_list|()
-name|override
-block|;
-name|void
-name|getAnalysisUsage
-argument_list|(
-argument|AnalysisUsage&AU
-argument_list|)
-specifier|const
-name|override
-block|;
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
-argument_list|,
-argument|const Module* = nullptr
 argument_list|)
 specifier|const
-name|override
 block|;
 name|void
-name|verifyAnalysis
+name|verify
 argument_list|()
 specifier|const
-name|override
 block|;
 comment|/// Collect parametric terms occurring in step expressions.
 name|void
@@ -3330,6 +4098,57 @@ operator|*
 name|ElementSize
 argument_list|)
 block|;
+comment|/// Return the DataLayout associated with the module this SCEV instance is
+comment|/// operating on.
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+name|F
+operator|.
+name|getParent
+argument_list|()
+operator|->
+name|getDataLayout
+argument_list|()
+return|;
+block|}
+specifier|const
+name|SCEVPredicate
+operator|*
+name|getEqualPredicate
+argument_list|(
+specifier|const
+name|SCEVUnknown
+operator|*
+name|LHS
+argument_list|,
+specifier|const
+name|SCEVConstant
+operator|*
+name|RHS
+argument_list|)
+block|;
+comment|/// Re-writes the SCEV according to the Predicates in \p Preds.
+specifier|const
+name|SCEV
+operator|*
+name|rewriteUsingPredicate
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Scev
+argument_list|,
+name|SCEVUnionPredicate
+operator|&
+name|A
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// Compute the backedge taken count knowing the interval difference, the
@@ -3384,15 +4203,333 @@ name|SCEV
 operator|>
 name|UniqueSCEVs
 block|;
+name|FoldingSet
+operator|<
+name|SCEVPredicate
+operator|>
+name|UniquePreds
+block|;
 name|BumpPtrAllocator
 name|SCEVAllocator
 block|;
-comment|/// FirstUnknown - The head of a linked list of all SCEVUnknown
-comment|/// values that have been allocated. This is used by releaseMemory
-comment|/// to locate them all and call their destructors.
+comment|/// The head of a linked list of all SCEVUnknown values that have been
+comment|/// allocated. This is used by releaseMemory to locate them all and call
+comment|/// their destructors.
 name|SCEVUnknown
 operator|*
 name|FirstUnknown
+block|;   }
+block|;
+comment|/// \brief Analysis pass that exposes the \c ScalarEvolution for a function.
+name|class
+name|ScalarEvolutionAnalysis
+block|{
+specifier|static
+name|char
+name|PassID
+block|;
+name|public
+operator|:
+typedef|typedef
+name|ScalarEvolution
+name|Result
+typedef|;
+comment|/// \brief Opaque, unique identifier for this analysis pass.
+specifier|static
+name|void
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|PassID
+return|;
+block|}
+comment|/// \brief Provide a name for the analysis for debugging and logging.
+specifier|static
+name|StringRef
+name|name
+argument_list|()
+block|{
+return|return
+literal|"ScalarEvolutionAnalysis"
+return|;
+block|}
+name|ScalarEvolution
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Function
+operator|>
+operator|*
+name|AM
+argument_list|)
+block|;   }
+block|;
+comment|/// \brief Printer pass for the \c ScalarEvolutionAnalysis results.
+name|class
+name|ScalarEvolutionPrinterPass
+block|{
+name|raw_ostream
+operator|&
+name|OS
+block|;
+name|public
+operator|:
+name|explicit
+name|ScalarEvolutionPrinterPass
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+operator|:
+name|OS
+argument_list|(
+argument|OS
+argument_list|)
+block|{}
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Function
+operator|>
+operator|*
+name|AM
+argument_list|)
+block|;
+specifier|static
+name|StringRef
+name|name
+argument_list|()
+block|{
+return|return
+literal|"ScalarEvolutionPrinterPass"
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|ScalarEvolutionWrapperPass
+operator|:
+name|public
+name|FunctionPass
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScalarEvolution
+operator|>
+name|SE
+block|;
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+name|ScalarEvolutionWrapperPass
+argument_list|()
+block|;
+name|ScalarEvolution
+operator|&
+name|getSE
+argument_list|()
+block|{
+return|return
+operator|*
+name|SE
+return|;
+block|}
+specifier|const
+name|ScalarEvolution
+operator|&
+name|getSE
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|SE
+return|;
+block|}
+name|bool
+name|runOnFunction
+argument_list|(
+argument|Function&F
+argument_list|)
+name|override
+block|;
+name|void
+name|releaseMemory
+argument_list|()
+name|override
+block|;
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const Module * = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|verifyAnalysis
+argument_list|()
+specifier|const
+name|override
+block|;   }
+block|;
+comment|/// An interface layer with SCEV used to manage how we see SCEV expressions
+comment|/// for values in the context of existing predicates. We can add new
+comment|/// predicates, but we cannot remove them.
+comment|///
+comment|/// This layer has multiple purposes:
+comment|///   - provides a simple interface for SCEV versioning.
+comment|///   - guarantees that the order of transformations applied on a SCEV
+comment|///     expression for a single Value is consistent across two different
+comment|///     getSCEV calls. This means that, for example, once we've obtained
+comment|///     an AddRec expression for a certain value through expression
+comment|///     rewriting, we will continue to get an AddRec expression for that
+comment|///     Value.
+comment|///   - lowers the number of expression rewrites.
+name|class
+name|PredicatedScalarEvolution
+block|{
+name|public
+operator|:
+name|PredicatedScalarEvolution
+argument_list|(
+name|ScalarEvolution
+operator|&
+name|SE
+argument_list|)
+block|;
+specifier|const
+name|SCEVUnionPredicate
+operator|&
+name|getUnionPredicate
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Returns the SCEV expression of V, in the context of the current
+comment|/// SCEV predicate.
+comment|/// The order of transformations applied on the expression of V returned
+comment|/// by ScalarEvolution is guaranteed to be preserved, even when adding new
+comment|/// predicates.
+specifier|const
+name|SCEV
+operator|*
+name|getSCEV
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// \brief Adds a new predicate.
+name|void
+name|addPredicate
+argument_list|(
+specifier|const
+name|SCEVPredicate
+operator|&
+name|Pred
+argument_list|)
+block|;
+comment|/// \brief Returns the ScalarEvolution analysis used.
+name|ScalarEvolution
+operator|*
+name|getSE
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|SE
+return|;
+block|}
+name|private
+operator|:
+comment|/// \brief Increments the version number of the predicate.
+comment|/// This needs to be called every time the SCEV predicate changes.
+name|void
+name|updateGeneration
+argument_list|()
+block|;
+comment|/// Holds a SCEV and the version number of the SCEV predicate used to
+comment|/// perform the rewrite of the expression.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+specifier|const
+name|SCEV
+operator|*
+operator|>
+name|RewriteEntry
+expr_stmt|;
+comment|/// Maps a SCEV to the rewrite result of that SCEV at a certain version
+comment|/// number. If this number doesn't match the current Generation, we will
+comment|/// need to do a rewrite. To preserve the transformation order of previous
+comment|/// rewrites, we will rewrite the previous result instead of the original
+comment|/// SCEV.
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+name|RewriteEntry
+operator|>
+name|RewriteMap
+block|;
+comment|/// The ScalarEvolution analysis.
+name|ScalarEvolution
+operator|&
+name|SE
+block|;
+comment|/// The SCEVPredicate that forms our context. We will rewrite all
+comment|/// expressions assuming that this predicate true.
+name|SCEVUnionPredicate
+name|Preds
+block|;
+comment|/// Marks the version of the SCEV predicate used. When rewriting a SCEV
+comment|/// expression we mark it with the version of the predicate. We use this to
+comment|/// figure out if the predicate has changed from the last rewrite of the
+comment|/// SCEV. If so, we need to perform a new rewrite.
+name|unsigned
+name|Generation
 block|;   }
 block|; }
 end_decl_stmt

@@ -46,13 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UniqueCStringMap.h"
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|"lldb/Core/dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/UniqueCStringMap.h"
 end_include
 
 begin_include
@@ -61,23 +67,17 @@ directive|include
 file|"lldb/lldb-defines.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"DIERef.h"
+end_include
+
 begin_decl_stmt
 name|class
 name|SymbolFileDWARF
 decl_stmt|;
 end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|uint32_t
-operator|>
-name|DIEArray
-expr_stmt|;
-end_typedef
 
 begin_decl_stmt
 name|class
@@ -115,10 +115,21 @@ name|ConstString
 operator|&
 name|name
 argument_list|,
-name|uint32_t
-name|die_offset
+specifier|const
+name|DIERef
+operator|&
+name|die_ref
 argument_list|)
 decl_stmt|;
+name|void
+name|Append
+parameter_list|(
+specifier|const
+name|NameToDIE
+modifier|&
+name|other
+parameter_list|)
+function_decl|;
 name|void
 name|Finalize
 parameter_list|()
@@ -158,11 +169,8 @@ decl_stmt|;
 name|size_t
 name|FindAllEntriesForCompileUnit
 argument_list|(
-name|uint32_t
+name|dw_offset_t
 name|cu_offset
-argument_list|,
-name|uint32_t
-name|cu_end_offset
 argument_list|,
 name|DIEArray
 operator|&
@@ -179,9 +187,15 @@ name|function
 operator|<
 name|bool
 argument_list|(
-argument|const char *name
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|,
-argument|uint32_t die_offset
+specifier|const
+name|DIERef
+operator|&
+name|die_ref
 argument_list|)
 operator|>
 specifier|const
@@ -196,7 +210,7 @@ name|lldb_private
 operator|::
 name|UniqueCStringMap
 operator|<
-name|uint32_t
+name|DIERef
 operator|>
 name|m_map
 expr_stmt|;

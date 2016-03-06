@@ -376,7 +376,6 @@ literal|4
 argument|>&Decls
 argument_list|)
 block|{}
-block|;
 comment|/// \brief Read the set of referenced selectors known to the
 comment|/// external Sema source.
 comment|///

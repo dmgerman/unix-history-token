@@ -343,7 +343,7 @@ name|void
 name|parseAccessSpecifier
 parameter_list|()
 function_decl|;
-name|void
+name|bool
 name|parseEnum
 parameter_list|()
 function_decl|;
@@ -398,6 +398,12 @@ specifier|const
 expr_stmt|;
 name|void
 name|nextToken
+parameter_list|()
+function_decl|;
+specifier|const
+name|FormatToken
+modifier|*
+name|getPreviousToken
 parameter_list|()
 function_decl|;
 name|void

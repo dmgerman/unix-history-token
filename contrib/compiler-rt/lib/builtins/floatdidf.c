@@ -54,17 +54,17 @@ specifier|const
 name|double
 name|twop52
 init|=
-literal|0x1
-literal|.0p52
+literal|4503599627370496.0
 decl_stmt|;
+comment|// 0x1.0p52
 specifier|static
 specifier|const
 name|double
 name|twop32
 init|=
-literal|0x1
-literal|.0p32
+literal|4294967296.0
 decl_stmt|;
+comment|// 0x1.0p32
 union|union
 block|{
 name|int64_t

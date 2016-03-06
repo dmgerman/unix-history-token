@@ -399,6 +399,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|APInt
+decl_stmt|;
+name|class
+name|APSInt
+decl_stmt|;
+name|class
 name|LLVMContext
 decl_stmt|;
 name|class

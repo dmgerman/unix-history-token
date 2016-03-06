@@ -87,26 +87,22 @@ operator|&
 name|interpreter
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|CommandObjectApropos
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|DoExecute
 argument_list|(
-name|Args
-operator|&
-name|command
+argument|Args& command
 argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
+argument|CommandReturnObject&result
 argument_list|)
-block|;   }
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

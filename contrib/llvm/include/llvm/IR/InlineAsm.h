@@ -165,6 +165,10 @@ name|AsmString
 block|,
 name|Constraints
 block|;
+name|FunctionType
+operator|*
+name|FTy
+block|;
 name|bool
 name|HasSideEffects
 block|;
@@ -176,7 +180,7 @@ name|Dialect
 block|;
 name|InlineAsm
 argument_list|(
-argument|PointerType *Ty
+argument|FunctionType *Ty
 argument_list|,
 argument|const std::string&AsmString
 argument_list|,
@@ -457,7 +461,7 @@ comment|/// The currently selected alternative constraint index.
 name|unsigned
 name|currentAlternativeIndex
 decl_stmt|;
-comment|///Default constructor.
+comment|/// Default constructor.
 name|ConstraintInfo
 argument_list|()
 expr_stmt|;

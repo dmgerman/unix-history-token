@@ -129,47 +129,67 @@ comment|// convertible to an integer (including enums and endian helpers) can be
 comment|// without requiring type traits or call-site changes.
 name|HexNumber
 argument_list|(
-argument|int8_t   Value
+argument|char             Value
 argument_list|)
 block|:
 name|Value
 argument_list|(
-argument|static_cast<uint8_t>(Value)
+argument|static_cast<unsigned char>(Value)
 argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|int16_t  Value
+argument|signed char      Value
 argument_list|)
 block|:
 name|Value
 argument_list|(
-argument|static_cast<uint16_t>(Value)
+argument|static_cast<unsigned char>(Value)
 argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|int32_t  Value
+argument|signed short     Value
 argument_list|)
 block|:
 name|Value
 argument_list|(
-argument|static_cast<uint32_t>(Value)
+argument|static_cast<unsigned short>(Value)
 argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|int64_t  Value
+argument|signed int       Value
 argument_list|)
 block|:
 name|Value
 argument_list|(
-argument|static_cast<uint64_t>(Value)
+argument|static_cast<unsigned int>(Value)
 argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|uint8_t  Value
+argument|signed long      Value
+argument_list|)
+block|:
+name|Value
+argument_list|(
+argument|static_cast<unsigned long>(Value)
+argument_list|)
+block|{ }
+name|HexNumber
+argument_list|(
+argument|signed long long Value
+argument_list|)
+block|:
+name|Value
+argument_list|(
+argument|static_cast<unsigned long long>(Value)
+argument_list|)
+block|{ }
+name|HexNumber
+argument_list|(
+argument|unsigned char      Value
 argument_list|)
 block|:
 name|Value
@@ -179,7 +199,7 @@ argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|uint16_t Value
+argument|unsigned short     Value
 argument_list|)
 block|:
 name|Value
@@ -189,7 +209,7 @@ argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|uint32_t Value
+argument|unsigned int       Value
 argument_list|)
 block|:
 name|Value
@@ -199,7 +219,17 @@ argument_list|)
 block|{ }
 name|HexNumber
 argument_list|(
-argument|uint64_t Value
+argument|unsigned long      Value
+argument_list|)
+block|:
+name|Value
+argument_list|(
+argument|Value
+argument_list|)
+block|{ }
+name|HexNumber
+argument_list|(
+argument|unsigned long long Value
 argument_list|)
 block|:
 name|Value
@@ -995,6 +1025,66 @@ expr_stmt|;
 name|OS
 operator|<<
 name|Item
+expr_stmt|;
+name|Comma
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|OS
+operator|<<
+literal|"]\n"
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|printHexList
+argument_list|(
+argument|StringRef Label
+argument_list|,
+argument|const T&List
+argument_list|)
+block|{
+name|startLine
+argument_list|()
+operator|<<
+name|Label
+operator|<<
+literal|": ["
+block|;
+name|bool
+name|Comma
+operator|=
+name|false
+block|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|Item
+range|:
+name|List
+control|)
+block|{
+if|if
+condition|(
+name|Comma
+condition|)
+name|OS
+operator|<<
+literal|", "
+expr_stmt|;
+name|OS
+operator|<<
+name|hex
+argument_list|(
+name|Item
+argument_list|)
 expr_stmt|;
 name|Comma
 operator|=

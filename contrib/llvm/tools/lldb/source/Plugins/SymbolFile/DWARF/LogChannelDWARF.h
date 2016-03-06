@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LogChannelDWARF.h --------------------------------------*- C++ -*-===//
+comment|//===-- LogChannelDWARF.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -156,10 +156,10 @@ operator|:
 name|LogChannelDWARF
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|LogChannelDWARF
 argument_list|()
+name|override
 block|;
 specifier|static
 name|void
@@ -193,40 +193,31 @@ operator|*
 name|CreateInstance
 argument_list|()
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Disable
 argument_list|(
-specifier|const
-name|char
-operator|*
-operator|*
-name|categories
+argument|const char** categories
 argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|feedback_strm
+argument|lldb_private::Stream *feedback_strm
 argument_list|)
+name|override
 block|;
 name|void
 name|Delete
 argument_list|()
 block|;
-name|virtual
 name|bool
 name|Enable
 argument_list|(
@@ -239,18 +230,15 @@ argument_list|,
 comment|// Feedback stream for argument errors etc
 argument|const char **categories
 argument_list|)
+name|override
 block|;
 comment|// The categories to enable within this logging stream, if empty, enable default set
-name|virtual
 name|void
 name|ListCategories
 argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
+argument|lldb_private::Stream *strm
 argument_list|)
+name|override
 block|;
 specifier|static
 name|lldb_private

@@ -49,6 +49,15 @@ directive|include
 file|"fp_trunc_impl.inc"
 end_include
 
+begin_macro
+name|ARM_EABI_FNALIAS
+argument_list|(
+argument|d2h
+argument_list|,
+argument|truncdfhf2
+argument_list|)
+end_macro
+
 begin_function
 name|COMPILER_RT_ABI
 name|uint16_t

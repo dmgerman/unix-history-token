@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- UnwindAssembly-x86.h -------------------------------------*- C++ -*-===//
+comment|//===-- UnwindAssembly-x86.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,11 +43,27 @@ directive|define
 name|liblldb_UnwindAssembly_x86_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"llvm-c/Disassembler.h"
 end_include
+
+begin_comment
+comment|// Project includes
+end_comment
 
 begin_include
 include|#
@@ -75,100 +91,52 @@ operator|:
 operator|~
 name|UnwindAssembly_x86
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|GetNonCallSiteUnwindPlanFromAssembly
 argument_list|(
-name|lldb_private
-operator|::
-name|AddressRange
-operator|&
-name|func
+argument|lldb_private::AddressRange& func
 argument_list|,
-name|lldb_private
-operator|::
-name|Thread
-operator|&
-name|thread
+argument|lldb_private::Thread& thread
 argument_list|,
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan& unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|AugmentUnwindPlanFromCallSite
 argument_list|(
-name|lldb_private
-operator|::
-name|AddressRange
-operator|&
-name|func
+argument|lldb_private::AddressRange& func
 argument_list|,
-name|lldb_private
-operator|::
-name|Thread
-operator|&
-name|thread
+argument|lldb_private::Thread& thread
 argument_list|,
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan& unwind_plan
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetFastUnwindPlan
 argument_list|(
-name|lldb_private
-operator|::
-name|AddressRange
-operator|&
-name|func
+argument|lldb_private::AddressRange& func
 argument_list|,
-name|lldb_private
-operator|::
-name|Thread
-operator|&
-name|thread
+argument|lldb_private::Thread& thread
 argument_list|,
-name|lldb_private
-operator|::
-name|UnwindPlan
-operator|&
-name|unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
+name|override
 block|;
 comment|// thread may be NULL in which case we only use the Target (e.g. if this is called pre-process-launch).
-name|virtual
 name|bool
 name|FirstNonPrologueInsn
 argument_list|(
-name|lldb_private
-operator|::
-name|AddressRange
-operator|&
-name|func
+argument|lldb_private::AddressRange& func
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|,
-name|lldb_private
-operator|::
-name|Address
-operator|&
-name|first_non_prologue_insn
+argument|lldb_private::Address& first_non_prologue_insn
 argument_list|)
+name|override
 block|;
 specifier|static
 name|lldb_private
@@ -212,17 +180,17 @@ operator|*
 name|GetPluginDescriptionStatic
 argument_list|()
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 name|private
 operator|:

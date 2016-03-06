@@ -135,28 +135,119 @@ name|anchor
 parameter_list|()
 function_decl|;
 comment|// Out of line method.
-name|public
+name|protected
 label|:
-name|virtual
 operator|~
 name|ValueMaterializer
 argument_list|()
-block|{}
-comment|/// materializeValueFor - The client should implement this method if they
-comment|/// want to generate a mapped Value on demand. For example, if linking
-comment|/// lazily.
-name|virtual
-name|Value
-operator|*
-name|materializeValueFor
+operator|=
+expr|default
+expr_stmt|;
+name|ValueMaterializer
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|ValueMaterializer
 argument_list|(
-name|Value
-operator|*
-name|V
+specifier|const
+name|ValueMaterializer
+operator|&
 argument_list|)
 operator|=
-literal|0
+expr|default
 expr_stmt|;
+name|ValueMaterializer
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ValueMaterializer
+operator|&
+operator|)
+operator|=
+expr|default
+decl_stmt|;
+name|public
+label|:
+comment|/// The client should implement this method if they want to generate a
+comment|/// mapped Value on demand. For example, if linking lazily.
+name|virtual
+name|Value
+modifier|*
+name|materializeDeclFor
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// If the data being mapped is recursive, the above function can map
+comment|/// just the declaration and this is called to compute the initializer.
+comment|/// It is called after the mapping is recorded, so it doesn't need to worry
+comment|/// about recursion.
+name|virtual
+name|void
+name|materializeInitFor
+parameter_list|(
+name|GlobalValue
+modifier|*
+name|New
+parameter_list|,
+name|GlobalValue
+modifier|*
+name|Old
+parameter_list|)
+function_decl|;
+comment|/// If the client needs to handle temporary metadata it must implement
+comment|/// these methods.
+name|virtual
+name|Metadata
+modifier|*
+name|mapTemporaryMetadata
+parameter_list|(
+name|Metadata
+modifier|*
+name|MD
+parameter_list|)
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+name|void
+name|replaceTemporaryMetadata
+parameter_list|(
+specifier|const
+name|Metadata
+modifier|*
+name|OrigMD
+parameter_list|,
+name|Metadata
+modifier|*
+name|NewMD
+parameter_list|)
+block|{}
+comment|/// The client should implement this method if some metadata need
+comment|/// not be mapped, for example DISubprogram metadata for functions not
+comment|/// linked into the destination module.
+name|virtual
+name|bool
+name|isMetadataNeeded
+parameter_list|(
+name|Metadata
+modifier|*
+name|MD
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// RemapFlags - These are flags that the value mapping APIs allow.
@@ -180,7 +271,26 @@ comment|/// operand is asked to be remapped which doesn't exist in the mapping.
 name|RF_IgnoreMissingEntries
 init|=
 literal|2
-block|}
+block|,
+comment|/// Instruct the remapper to move distinct metadata instead of duplicating
+comment|/// it when there are module-level changes.
+name|RF_MoveDistinctMDs
+init|=
+literal|4
+block|,
+comment|/// Any global values not in value map are mapped to null instead of
+comment|/// mapping to self. Illegal if RF_IgnoreMissingEntries is also set.
+name|RF_NullMapMissingGlobalValues
+init|=
+literal|8
+block|,
+comment|/// Set when there is still temporary metadata that must be handled,
+comment|/// such as when we are doing function importing and will materialize
+comment|/// and link metadata as a postpass.
+name|RF_HaveUnmaterializedMetadata
+init|=
+literal|16
+block|,   }
 enum|;
 specifier|static
 specifier|inline

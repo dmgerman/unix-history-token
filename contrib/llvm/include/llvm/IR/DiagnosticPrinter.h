@@ -378,7 +378,6 @@ argument_list|(
 argument|Stream
 argument_list|)
 block|{}
-block|;
 comment|// Simple types.
 name|DiagnosticPrinter
 operator|&

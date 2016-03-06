@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SchedulerRegistry.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
@@ -275,6 +281,23 @@ name|TargetSelectionDAGInfo
 modifier|*
 name|getSelectionDAGInfo
 argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// Target can subclass this hook to select a different DAG scheduler.
+name|virtual
+name|RegisterScheduler
+decl|::
+name|FunctionPassCtor
+name|getDAGScheduler
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
 decl|const
 block|{
 return|return

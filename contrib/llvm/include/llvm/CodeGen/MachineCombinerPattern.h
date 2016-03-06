@@ -67,20 +67,47 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// Enumeration of instruction pattern supported by machine combiner
-comment|///
-comment|///
-name|namespace
+comment|/// These are instruction patterns matched by the machine combiner pass.
+name|enum
+name|class
 name|MachineCombinerPattern
 block|{
-comment|// Forward declaration
-enum_decl|enum
-name|MC_PATTERN
-enum_decl|:
-name|int
-enum_decl|;
+comment|// These are commutative variants for reassociating a computation chain. See
+comment|// the comments before getMachineCombinerPatterns() in TargetInstrInfo.cpp.
+name|REASSOC_AX_BY
+operator|,
+name|REASSOC_AX_YB
+operator|,
+name|REASSOC_XA_BY
+operator|,
+name|REASSOC_XA_YB
+operator|,
+comment|// These are multiply-add patterns matched by the AArch64 machine combiner.
+name|MULADDW_OP1
+operator|,
+name|MULADDW_OP2
+operator|,
+name|MULSUBW_OP1
+operator|,
+name|MULSUBW_OP2
+operator|,
+name|MULADDWI_OP1
+operator|,
+name|MULSUBWI_OP1
+operator|,
+name|MULADDX_OP1
+operator|,
+name|MULADDX_OP2
+operator|,
+name|MULSUBX_OP1
+operator|,
+name|MULSUBX_OP2
+operator|,
+name|MULADDXI_OP1
+operator|,
+name|MULSUBXI_OP1
 block|}
-comment|// end namespace MachineCombinerPattern
+empty_stmt|;
 block|}
 end_decl_stmt
 

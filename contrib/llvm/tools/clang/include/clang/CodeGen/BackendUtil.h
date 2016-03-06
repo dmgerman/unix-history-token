@@ -49,6 +49,18 @@ directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/FunctionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

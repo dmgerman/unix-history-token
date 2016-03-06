@@ -143,13 +143,16 @@ block|{     }
 operator|~
 name|GDBRemoteDynamicRegisterInfo
 argument_list|()
-block|{     }
+name|override
+operator|=
+expr|default
+block|;
 name|void
 name|HardcodeARMRegisters
 argument_list|(
 argument|bool from_scratch
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 name|class
 name|GDBRemoteRegisterContext
@@ -159,9 +162,6 @@ name|RegisterContext
 block|{
 name|public
 operator|:
-comment|//------------------------------------------------------------------
-comment|// Constructors and Destructors
-comment|//------------------------------------------------------------------
 name|GDBRemoteRegisterContext
 argument_list|(
 argument|ThreadGDBRemote&thread
@@ -173,14 +173,11 @@ argument_list|,
 argument|bool read_all_at_once
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|GDBRemoteRegisterContext
 argument_list|()
+name|override
 block|;
-comment|//------------------------------------------------------------------
-comment|// Subclasses must override these functions
-comment|//------------------------------------------------------------------
 name|void
 name|InvalidateAllRegisters
 argument_list|()
@@ -304,6 +301,14 @@ argument_list|(
 argument|uint32_t reg
 argument_list|,
 argument|StringExtractor&response
+argument_list|)
+block|;
+name|bool
+name|PrivateSetRegisterValue
+argument_list|(
+argument|uint32_t reg
+argument_list|,
+argument|uint64_t val
 argument_list|)
 block|;
 name|void
@@ -490,9 +495,6 @@ modifier|&
 name|gdb_comm
 parameter_list|)
 function_decl|;
-comment|//------------------------------------------------------------------
-comment|// For GDBRemoteRegisterContext only
-comment|//------------------------------------------------------------------
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|GDBRemoteRegisterContext

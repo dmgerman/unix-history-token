@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OperatingSystemPython.h ---------------------------*- C++ -*-===//
+comment|//===-- OperatingSystemPython.h ---------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,12 +34,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLDB_DISABLE_PYTHON
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|liblldb_OperatingSystemPython_h_
 end_ifndef
 
@@ -48,6 +42,12 @@ define|#
 directive|define
 name|liblldb_OperatingSystemPython_h_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLDB_DISABLE_PYTHON
+end_ifndef
 
 begin_comment
 comment|// C Includes
@@ -59,6 +59,10 @@ end_comment
 
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -100,6 +104,27 @@ name|OperatingSystem
 block|{
 name|public
 operator|:
+name|OperatingSystemPython
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|python_module_path
+argument_list|)
+block|;
+operator|~
+name|OperatingSystemPython
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
@@ -140,82 +165,41 @@ name|GetPluginDescriptionStatic
 argument_list|()
 block|;
 comment|//------------------------------------------------------------------
-comment|// Class Methods
-comment|//------------------------------------------------------------------
-name|OperatingSystemPython
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|python_module_path
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|OperatingSystemPython
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
 comment|// lldb_private::PluginInterface Methods
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// lldb_private::OperatingSystem Methods
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|old_thread_list
+argument|lldb_private::ThreadList&old_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|real_thread_list
+argument|lldb_private::ThreadList&real_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|new_thread_list
+argument|lldb_private::ThreadList&new_thread_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ThreadWasSelected
 argument_list|(
-name|lldb_private
-operator|::
-name|Thread
-operator|*
-name|thread
+argument|lldb_private::Thread *thread
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
@@ -225,24 +209,20 @@ argument|lldb_private::Thread *thread
 argument_list|,
 argument|lldb::addr_t reg_data_addr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|StopInfoSP
 name|CreateThreadStopReason
 argument_list|(
-name|lldb_private
-operator|::
-name|Thread
-operator|*
-name|thread
+argument|lldb_private::Thread *thread
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Method for lazy creation of threads on demand
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|ThreadSP
@@ -252,6 +232,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|lldb::addr_t context
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -348,7 +329,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef liblldb_OperatingSystemPython_h_
+comment|// LLDB_DISABLE_PYTHON
 end_comment
 
 begin_endif
@@ -357,7 +338,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// #ifndef LLDB_DISABLE_PYTHON
+comment|// liblldb_OperatingSystemPython_h_
 end_comment
 
 end_unit

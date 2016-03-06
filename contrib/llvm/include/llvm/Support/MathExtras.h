@@ -281,7 +281,10 @@ name|__GNUC__
 operator|>=
 literal|4
 operator|||
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 end_if
 
 begin_expr_stmt
@@ -345,7 +348,10 @@ argument_list|)
 return|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 name|unsigned
 name|long
 name|Index
@@ -455,7 +461,10 @@ argument_list|)
 return|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 name|unsigned
 name|long
 name|Index
@@ -708,7 +717,10 @@ name|__GNUC__
 operator|>=
 literal|4
 operator|||
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 end_if
 
 begin_expr_stmt
@@ -772,7 +784,10 @@ argument_list|)
 return|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 name|unsigned
 name|long
 name|Index
@@ -884,7 +899,10 @@ argument_list|)
 return|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|_MSC_VER
+argument_list|)
 name|unsigned
 name|long
 name|Index
@@ -1892,20 +1910,20 @@ name|x
 parameter_list|)
 block|{
 return|return
-name|x
-operator|==
-operator|(
-name|x
-operator|&
-operator|(
-operator|~
-literal|0ULL
-operator|>>
-operator|(
-literal|64
-operator|-
 name|N
-operator|)
+operator|>=
+literal|64
+operator|||
+name|x
+operator|<
+operator|(
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+operator|(
+name|N
 operator|)
 operator|)
 return|;
@@ -3442,6 +3460,26 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// If non-zero \p Skew is specified, the return value will be a minimal
+end_comment
+
+begin_comment
+comment|/// integer that is greater than or equal to \p Value and equal to
+end_comment
+
+begin_comment
+comment|/// \p Align * N + \p Skew for some integer N. If \p Skew is larger than
+end_comment
+
+begin_comment
+comment|/// \p Align, its value is adjusted to '\p Skew mod \p Align'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Examples:
 end_comment
 
@@ -3466,6 +3504,26 @@ comment|///   RoundUpToAlignment(321, 255) = 510
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   RoundUpToAlignment(5, 8, 7) = 7
+end_comment
+
+begin_comment
+comment|///   RoundUpToAlignment(17, 8, 1) = 17
+end_comment
+
+begin_comment
+comment|///   RoundUpToAlignment(~0LL, 8, 3) = 3
+end_comment
+
+begin_comment
+comment|///   RoundUpToAlignment(321, 255, 42) = 552
+end_comment
+
+begin_comment
 comment|/// \endcode
 end_comment
 
@@ -3479,8 +3537,17 @@ name|Value
 parameter_list|,
 name|uint64_t
 name|Align
+parameter_list|,
+name|uint64_t
+name|Skew
+init|=
+literal|0
 parameter_list|)
 block|{
+name|Skew
+operator|%=
+name|Align
+expr_stmt|;
 return|return
 operator|(
 name|Value
@@ -3488,11 +3555,15 @@ operator|+
 name|Align
 operator|-
 literal|1
+operator|-
+name|Skew
 operator|)
 operator|/
 name|Align
 operator|*
 name|Align
+operator|+
+name|Skew
 return|;
 block|}
 end_function
@@ -3700,8 +3771,446 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Add two unsigned integers, X and Y, of type T.
+end_comment
+
+begin_comment
+comment|/// Clamp the result to the maximum representable value of T on overflow.
+end_comment
+
+begin_comment
+comment|/// ResultOverflowed indicates if the result is larger than the maximum
+end_comment
+
+begin_comment
+comment|/// representable value of type T.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|,
+name|T
+operator|>
+operator|::
+name|type
+name|SaturatingAdd
+argument_list|(
+argument|T X
+argument_list|,
+argument|T Y
+argument_list|,
+argument|bool *ResultOverflowed = nullptr
+argument_list|)
+block|{
+name|bool
+name|Dummy
+block|;
+name|bool
+operator|&
+name|Overflowed
+operator|=
+name|ResultOverflowed
+condition|?
+operator|*
+name|ResultOverflowed
+else|:
+name|Dummy
+block|;
+comment|// Hacker's Delight, p. 29
+name|T
+name|Z
+operator|=
+name|X
+operator|+
+name|Y
+block|;
+name|Overflowed
+operator|=
+operator|(
+name|Z
+operator|<
+name|X
+operator|||
+name|Z
+operator|<
+name|Y
+operator|)
+block|;
+if|if
+condition|(
+name|Overflowed
+condition|)
+return|return
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|max
+argument_list|()
+return|;
+else|else
+return|return
+name|Z
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Multiply two unsigned integers, X and Y, of type T.
+end_comment
+
+begin_comment
+comment|/// Clamp the result to the maximum representable value of T on overflow.
+end_comment
+
+begin_comment
+comment|/// ResultOverflowed indicates if the result is larger than the maximum
+end_comment
+
+begin_comment
+comment|/// representable value of type T.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|,
+name|T
+operator|>
+operator|::
+name|type
+name|SaturatingMultiply
+argument_list|(
+argument|T X
+argument_list|,
+argument|T Y
+argument_list|,
+argument|bool *ResultOverflowed = nullptr
+argument_list|)
+block|{
+name|bool
+name|Dummy
+block|;
+name|bool
+operator|&
+name|Overflowed
+operator|=
+name|ResultOverflowed
+condition|?
+operator|*
+name|ResultOverflowed
+else|:
+name|Dummy
+block|;
+comment|// Hacker's Delight, p. 30 has a different algorithm, but we don't use that
+comment|// because it fails for uint16_t (where multiplication can have undefined
+comment|// behavior due to promotion to int), and requires a division in addition
+comment|// to the multiplication.
+name|Overflowed
+operator|=
+name|false
+block|;
+comment|// Log2(Z) would be either Log2Z or Log2Z + 1.
+comment|// Special case: if X or Y is 0, Log2_64 gives -1, and Log2Z
+comment|// will necessarily be less than Log2Max as desired.
+name|int
+name|Log2Z
+operator|=
+name|Log2_64
+argument_list|(
+name|X
+argument_list|)
+operator|+
+name|Log2_64
+argument_list|(
+name|Y
+argument_list|)
+block|;
+specifier|const
+name|T
+name|Max
+operator|=
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|max
+argument_list|()
+block|;
+name|int
+name|Log2Max
+operator|=
+name|Log2_64
+argument_list|(
+name|Max
+argument_list|)
+block|;
+if|if
+condition|(
+name|Log2Z
+operator|<
+name|Log2Max
+condition|)
+block|{
+return|return
+name|X
+operator|*
+name|Y
+return|;
+block|}
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Log2Z
+operator|>
+name|Log2Max
+condition|)
+block|{
+name|Overflowed
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|Max
+return|;
+block|}
+end_if
+
+begin_comment
+comment|// We're going to use the top bit, and maybe overflow one
+end_comment
+
+begin_comment
+comment|// bit past it. Multiply all but the bottom bit then add
+end_comment
+
+begin_comment
+comment|// that on at the end.
+end_comment
+
 begin_decl_stmt
-specifier|extern
+name|T
+name|Z
+init|=
+operator|(
+name|X
+operator|>>
+literal|1
+operator|)
+operator|*
+name|Y
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|Z
+operator|&
+operator|~
+operator|(
+name|Max
+operator|>>
+literal|1
+operator|)
+condition|)
+block|{
+name|Overflowed
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|Max
+return|;
+block|}
+end_if
+
+begin_expr_stmt
+name|Z
+operator|<<=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|X
+operator|&
+literal|1
+condition|)
+return|return
+name|SaturatingAdd
+argument_list|(
+name|Z
+argument_list|,
+name|Y
+argument_list|,
+name|ResultOverflowed
+argument_list|)
+return|;
+end_if
+
+begin_return
+return|return
+name|Z
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Multiply two unsigned integers, X and Y, and add the unsigned
+end_comment
+
+begin_comment
+comment|/// integer, A to the product. Clamp the result to the maximum representable
+end_comment
+
+begin_comment
+comment|/// value of T on overflow. ResultOverflowed indicates if the result is larger
+end_comment
+
+begin_comment
+comment|/// than the maximum representable value of type T.
+end_comment
+
+begin_comment
+comment|/// Note that this is purely a convenience function as there is no distinction
+end_comment
+
+begin_comment
+comment|/// where overflow occurred in a 'fused' multiply-add for unsigned numbers.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|,
+name|T
+operator|>
+operator|::
+name|type
+name|SaturatingMultiplyAdd
+argument_list|(
+argument|T X
+argument_list|,
+argument|T Y
+argument_list|,
+argument|T A
+argument_list|,
+argument|bool *ResultOverflowed = nullptr
+argument_list|)
+block|{
+name|bool
+name|Dummy
+block|;
+name|bool
+operator|&
+name|Overflowed
+operator|=
+name|ResultOverflowed
+condition|?
+operator|*
+name|ResultOverflowed
+else|:
+name|Dummy
+block|;
+name|T
+name|Product
+operator|=
+name|SaturatingMultiply
+argument_list|(
+name|X
+argument_list|,
+name|Y
+argument_list|,
+operator|&
+name|Overflowed
+argument_list|)
+block|;
+if|if
+condition|(
+name|Overflowed
+condition|)
+return|return
+name|Product
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|SaturatingAdd
+argument_list|(
+name|A
+argument_list|,
+name|Product
+argument_list|,
+operator|&
+name|Overflowed
+argument_list|)
+return|;
+end_return
+
+begin_decl_stmt
+unit|}  extern
 specifier|const
 name|float
 name|huge_valf

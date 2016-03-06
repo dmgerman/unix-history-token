@@ -3042,14 +3042,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|section_iterator
+operator|>
 name|getSymbolSection
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|section_iterator&Res
 argument_list|)
 specifier|const
 name|override
@@ -3986,6 +3985,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|uint64_t
+name|getImageBase
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|error_code
@@ -4433,6 +4440,24 @@ name|std
 operator|::
 name|error_code
 name|getSymbolName
+argument_list|(
+argument|StringRef&Result
+argument_list|)
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|error_code
+name|isForwarder
+argument_list|(
+argument|bool&Result
+argument_list|)
+specifier|const
+expr_stmt|;
+name|std
+operator|::
+name|error_code
+name|getForwardTo
 argument_list|(
 argument|StringRef&Result
 argument_list|)

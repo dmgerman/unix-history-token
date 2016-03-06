@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Constant
+decl_stmt|;
+name|class
 name|LLVMContext
 decl_stmt|;
 name|class
@@ -185,6 +188,38 @@ name|SMDiagnostic
 modifier|&
 name|Err
 parameter_list|,
+name|SlotMapping
+modifier|*
+name|Slots
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Parse a type and a constant value in the given string.
+comment|///
+comment|/// The constant value can be any LLVM constant, including a constant
+comment|/// expression.
+comment|///
+comment|/// \param Slots The optional slot mapping that will restore the parsing state
+comment|/// of the module.
+comment|/// \return null on error.
+name|Constant
+modifier|*
+name|parseConstantValue
+parameter_list|(
+name|StringRef
+name|Asm
+parameter_list|,
+name|SMDiagnostic
+modifier|&
+name|Err
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|,
+specifier|const
 name|SlotMapping
 modifier|*
 name|Slots

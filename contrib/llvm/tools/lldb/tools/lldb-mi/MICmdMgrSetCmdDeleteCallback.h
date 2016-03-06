@@ -81,9 +81,6 @@ comment|//          Objects that want to be notified of a command being deleted
 comment|//          inherit this interface and register interest in command object
 comment|//          deletion. An object deleting a command must not do it itself but call
 comment|//          the Command Manager CmdDelete() function to delete a command object.
-comment|// Gotchas: None.
-comment|// Authors: Illya Rudkin 21/02/2014.
-comment|// Changes: None.
 comment|//--
 name|class
 name|ICallback
@@ -105,11 +102,8 @@ comment|/* dtor */
 name|virtual
 operator|~
 name|ICallback
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{}
-expr_stmt|;
 block|}
 empty_stmt|;
 comment|//++ ============================================================================
@@ -119,9 +113,6 @@ comment|//          is to be deleted that object wanting the delete calls the Co
 comment|//          Manager to delete the command object. In so do all other registered
 comment|//          objects get called to about the deletion including the object wanting
 comment|//          to do the delete in the first place.
-comment|// Gotchas: None.
-comment|// Authors: Illya Rudkin 21/02/2014.
-comment|// Changes: None.
 comment|//--
 name|class
 name|CSetClients
@@ -144,9 +135,7 @@ name|public
 label|:
 comment|/* ctor */
 name|CSetClients
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|bool
 name|Register
@@ -181,9 +170,7 @@ comment|// From CMICmnBase
 comment|/* dtor */
 operator|~
 name|CSetClients
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 name|override
 expr_stmt|;
 comment|// Attributes:

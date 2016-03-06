@@ -97,6 +97,27 @@ modifier|*
 name|GetName
 parameter_list|()
 function_decl|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguageAtIndex
+argument_list|(
+argument|uint32_t idx
+argument_list|)
+expr_stmt|;
+name|uint32_t
+name|GetNumLanguages
+parameter_list|()
+function_decl|;
+name|void
+name|AddLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl_stmt|;
 name|bool
 name|GetDescription
 argument_list|(

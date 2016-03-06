@@ -49,6 +49,19 @@ decl_stmt|;
 block|}
 name|CXString
 typedef|;
+typedef|typedef
+struct|struct
+block|{
+name|CXString
+modifier|*
+name|Strings
+decl_stmt|;
+name|unsigned
+name|Count
+decl_stmt|;
+block|}
+name|CXStringSet
+typedef|;
 comment|/**  * \brief Retrieve the character data associated with the given string.  */
 name|CINDEX_LINKAGE
 specifier|const
@@ -67,6 +80,16 @@ name|clang_disposeString
 parameter_list|(
 name|CXString
 name|string
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Free the given string set.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_disposeStringSet
+parameter_list|(
+name|CXStringSet
+modifier|*
+name|set
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

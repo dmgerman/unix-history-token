@@ -43,6 +43,22 @@ directive|define
 name|liblldb_AddressRange_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -117,7 +133,7 @@ argument|lldb::addr_t file_addr
 argument_list|,
 argument|lldb::addr_t byte_size
 argument_list|,
-argument|const SectionList *section_list = NULL
+argument|const SectionList *section_list = nullptr
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------

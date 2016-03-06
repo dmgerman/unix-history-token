@@ -43,6 +43,22 @@ directive|define
 name|liblldb_CommandOptionValidators_h_
 end_define
 
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -65,7 +81,6 @@ range|:
 name|public
 name|OptionValidator
 block|{
-name|virtual
 name|bool
 name|IsValid
 argument_list|(
@@ -74,22 +89,23 @@ argument_list|,
 argument|const ExecutionContext&target
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|ShortConditionString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|LongConditionString
 argument_list|()
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

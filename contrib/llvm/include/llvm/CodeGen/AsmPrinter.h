@@ -517,6 +517,12 @@ name|getDataLayout
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return the pointer size from the TargetMachine
+name|unsigned
+name|getPointerSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return information about subtarget.
 specifier|const
 name|MCSubtargetInfo
@@ -705,9 +711,28 @@ function_decl|;
 comment|/// Print assembly representations of the jump tables used by the current
 comment|/// function to the current output stream.
 comment|///
+name|virtual
 name|void
 name|EmitJumpTableInfo
 parameter_list|()
+function_decl|;
+comment|/// Emit the control variable for an emulated TLS variable.
+name|virtual
+name|void
+name|EmitEmulatedTLSControlVariable
+parameter_list|(
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|EmittedSym
+parameter_list|,
+name|bool
+name|AllZeroInitValue
+parameter_list|)
 function_decl|;
 comment|/// Emit the specified global variable to the .s file.
 name|virtual
@@ -753,6 +778,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Lower the specified LLVM Constant to an MCExpr.
+name|virtual
 specifier|const
 name|MCExpr
 modifier|*
@@ -768,6 +794,11 @@ comment|/// \brief Print a general LLVM constant to the .s file.
 name|void
 name|EmitGlobalConstant
 parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
 specifier|const
 name|Constant
 modifier|*
@@ -910,6 +941,11 @@ name|void
 name|EmitXXStructor
 parameter_list|(
 specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
 name|Constant
 modifier|*
 name|CV
@@ -917,6 +953,8 @@ parameter_list|)
 block|{
 name|EmitGlobalConstant
 argument_list|(
+name|DL
+argument_list|,
 name|CV
 argument_list|)
 expr_stmt|;
@@ -1208,15 +1246,6 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Emit a .byte 42 directive for a DW_CFA_xxx value.
-name|void
-name|EmitCFAByte
-argument_list|(
-name|unsigned
-name|Val
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Emit a .byte 42 directive that corresponds to an encoding.  If verbose
 comment|/// assembly output is enabled, we output comments describing the encoding.
 comment|/// Desc is a string saying what the encoding is specifying (e.g. "LSDA").
@@ -1330,23 +1359,63 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Emit Dwarf abbreviation table.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|void
 name|emitDwarfAbbrevs
 argument_list|(
+argument|const T&Abbrevs
+argument_list|)
 specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|DIEAbbrev
-operator|*
-operator|>
-operator|&
+block|{
+comment|// For each abbreviation.
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|Abbrev
+range|:
 name|Abbrevs
+control|)
+name|emitDwarfAbbrev
+argument_list|(
+operator|*
+name|Abbrev
+argument_list|)
+expr_stmt|;
+comment|// Mark end of abbreviations.
+name|EmitULEB128
+argument_list|(
+literal|0
+argument_list|,
+literal|"EOM(3)"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|emitDwarfAbbrev
+argument_list|(
+specifier|const
+name|DIEAbbrev
+operator|&
+name|Abbrev
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Recursively emit Dwarf DIE tree.
+end_comment
+
+begin_decl_stmt
 name|void
 name|emitDwarfDIE
 argument_list|(
@@ -1357,19 +1426,58 @@ name|Die
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Inline Asm Support
+end_comment
+
+begin_comment
 comment|//===------------------------------------------------------------------===//
+end_comment
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|// These are hooks that targets can override to implement inline asm
+end_comment
+
+begin_comment
 comment|// support.  These should probably be moved out of AsmPrinter someday.
+end_comment
+
+begin_comment
 comment|/// Print information related to the specified machine instr that is
+end_comment
+
+begin_comment
 comment|/// independent of the operand, and may be independent of the instr itself.
+end_comment
+
+begin_comment
 comment|/// This can be useful for portably encoding the comment character or other
+end_comment
+
+begin_comment
 comment|/// bits of target-specific knowledge into the asmstrings.  The syntax used is
+end_comment
+
+begin_comment
 comment|/// ${:comment}.  Targets can override this to add support for their own
+end_comment
+
+begin_comment
 comment|/// strange codes.
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|void
 name|PrintSpecial
@@ -1390,9 +1498,21 @@ name|Code
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Print the specified operand of MI, an INLINEASM instruction, using the
+end_comment
+
+begin_comment
 comment|/// specified assembler variant.  Targets should override this to format as
+end_comment
+
+begin_comment
 comment|/// appropriate.  This method can return true if the operand is erroneous.
+end_comment
+
+begin_function_decl
 name|virtual
 name|bool
 name|PrintAsmOperand
@@ -1418,10 +1538,25 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Print the specified operand of MI, an INLINEASM instruction, using the
+end_comment
+
+begin_comment
 comment|/// specified assembler variant as an address. Targets should override this to
+end_comment
+
+begin_comment
 comment|/// format as appropriate.  This method can return true if the operand is
+end_comment
+
+begin_comment
 comment|/// erroneous.
+end_comment
+
+begin_function_decl
 name|virtual
 name|bool
 name|PrintAsmMemoryOperand
@@ -1447,20 +1582,50 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Let the target do anything it needs to do before emitting inlineasm.
+end_comment
+
+begin_comment
 comment|/// \p StartInfo - the subtarget info before parsing inline asm
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|void
 name|emitInlineAsmStart
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Let the target do anything it needs to do after emitting inlineasm.
+end_comment
+
+begin_comment
 comment|/// This callback can be used restore the original mode in case the
+end_comment
+
+begin_comment
 comment|/// inlineasm contains directives to switch modes.
+end_comment
+
+begin_comment
 comment|/// \p StartInfo - the original subtarget info before inline asm
+end_comment
+
+begin_comment
 comment|/// \p EndInfo   - the final subtarget info after parsing the inline asm,
+end_comment
+
+begin_comment
 comment|///                or NULL if the value is unknown.
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|void
 name|emitInlineAsmEnd
@@ -1477,31 +1642,61 @@ name|EndInfo
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|/// Private state for PrintSpecial()
+end_comment
+
+begin_comment
 comment|// Assign a unique ID to this machine instruction.
+end_comment
+
+begin_decl_stmt
 name|mutable
 specifier|const
 name|MachineInstr
 modifier|*
 name|LastMI
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|mutable
 name|unsigned
 name|LastFn
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|mutable
 name|unsigned
 name|Counter
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// This method emits the header for the current function.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|EmitFunctionHeader
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Emit a blob of inline asm to the output streamer.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitInlineAsm
 argument_list|(
@@ -1536,8 +1731,17 @@ name|AD_ATT
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// This method formats and emits the specified machine instruction that is an
+end_comment
+
+begin_comment
 comment|/// inline asm.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitInlineAsm
 argument_list|(
@@ -1548,11 +1752,29 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Internal Implementation Details
+end_comment
+
+begin_comment
 comment|//===------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// This emits visibility information about symbol, if this is suported by the
+end_comment
+
+begin_comment
 comment|/// target.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitVisibility
 argument_list|(
@@ -1570,6 +1792,9 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitLinkage
 argument_list|(
@@ -1584,6 +1809,9 @@ name|GVSym
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitJumpTableEntry
 argument_list|(
@@ -1602,6 +1830,9 @@ name|uid
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|EmitLLVMUsedList
 parameter_list|(
@@ -1611,7 +1842,13 @@ modifier|*
 name|InitList
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Emit llvm.ident metadata in an '.ident' directive.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitModuleIdents
 parameter_list|(
@@ -1620,9 +1857,17 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitXXStructorList
 parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
 specifier|const
 name|Constant
 modifier|*
@@ -1632,6 +1877,9 @@ name|bool
 name|isCtor
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|GCMetadataPrinter
 modifier|*
 name|GetOrCreateGCPrinter
@@ -1641,15 +1889,10 @@ modifier|&
 name|C
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_endif
-unit|}
+unit|}; }
 endif|#
 directive|endif
 end_endif

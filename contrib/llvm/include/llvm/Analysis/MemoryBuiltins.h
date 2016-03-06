@@ -239,48 +239,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Tests if a value is a call or invoke to a library function that
-comment|/// reallocates memory (such as realloc).
-name|bool
-name|isReallocLikeFn
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-parameter_list|,
-name|bool
-name|LookThroughBitCast
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// \brief Tests if a value is a call or invoke to a library function that
-comment|/// allocates memory and never returns null (such as operator new).
-name|bool
-name|isOperatorNewLikeFn
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-parameter_list|,
-name|bool
-name|LookThroughBitCast
-init|=
-name|false
-parameter_list|)
-function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  malloc Call Utility Functions.
 comment|//

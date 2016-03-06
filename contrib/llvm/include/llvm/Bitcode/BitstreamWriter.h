@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -142,7 +154,7 @@ block|{
 name|unsigned
 name|PrevCodeSize
 decl_stmt|;
-name|unsigned
+name|size_t
 name|StartSizeWord
 decl_stmt|;
 name|std
@@ -159,7 +171,7 @@ name|Block
 argument_list|(
 argument|unsigned PCS
 argument_list|,
-argument|unsigned SSW
+argument|size_t SSW
 argument_list|)
 block|:
 name|PrevCodeSize
@@ -211,34 +223,6 @@ name|BlockInfo
 operator|>
 name|BlockInfoRecords
 expr_stmt|;
-comment|// BackpatchWord - Backpatch a 32-bit word in the output with the specified
-comment|// value.
-name|void
-name|BackpatchWord
-parameter_list|(
-name|unsigned
-name|ByteNo
-parameter_list|,
-name|unsigned
-name|NewWord
-parameter_list|)
-block|{
-name|support
-operator|::
-name|endian
-operator|::
-name|write32le
-argument_list|(
-operator|&
-name|Out
-index|[
-name|ByteNo
-index|]
-argument_list|,
-name|NewWord
-argument_list|)
-expr_stmt|;
-block|}
 name|void
 name|WriteByte
 parameter_list|(
@@ -310,7 +294,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|unsigned
+name|size_t
 name|GetBufferOffset
 argument_list|()
 specifier|const
@@ -322,12 +306,12 @@ name|size
 argument_list|()
 return|;
 block|}
-name|unsigned
+name|size_t
 name|GetWordIndex
 argument_list|()
 specifier|const
 block|{
-name|unsigned
+name|size_t
 name|Offset
 operator|=
 name|GetBufferOffset
@@ -428,9 +412,99 @@ operator|+
 name|CurBit
 return|;
 block|}
+comment|/// \brief Retrieve the number of bits currently used to encode an abbrev ID.
+name|unsigned
+name|GetAbbrevIDWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurCodeSize
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Basic Primitives for emitting bits to the stream.
 comment|//===--------------------------------------------------------------------===//
+comment|/// Backpatch a 32-bit word in the output at the given bit offset
+comment|/// with the specified value.
+name|void
+name|BackpatchWord
+parameter_list|(
+name|uint64_t
+name|BitNo
+parameter_list|,
+name|unsigned
+name|NewWord
+parameter_list|)
+block|{
+name|using
+name|namespace
+name|llvm
+operator|::
+name|support
+expr_stmt|;
+name|unsigned
+name|ByteNo
+init|=
+name|BitNo
+operator|/
+literal|8
+decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|endian
+operator|::
+name|readAtBitAlignment
+operator|<
+name|uint32_t
+operator|,
+name|little
+operator|,
+name|unaligned
+operator|>
+operator|(
+operator|&
+name|Out
+index|[
+name|ByteNo
+index|]
+operator|,
+name|BitNo
+operator|&
+literal|7
+operator|)
+operator|)
+operator|&&
+literal|"Expected to be patching over 0-value placeholders"
+argument_list|)
+expr_stmt|;
+name|endian
+operator|::
+name|writeAtBitAlignment
+operator|<
+name|uint32_t
+operator|,
+name|little
+operator|,
+name|unaligned
+operator|>
+operator|(
+operator|&
+name|Out
+index|[
+name|ByteNo
+index|]
+operator|,
+name|NewWord
+operator|,
+name|BitNo
+operator|&
+literal|7
+operator|)
+expr_stmt|;
+block|}
 name|void
 name|Emit
 parameter_list|(
@@ -953,7 +1027,7 @@ expr_stmt|;
 name|FlushToWord
 argument_list|()
 expr_stmt|;
-name|unsigned
+name|size_t
 name|BlockSizeWordIndex
 init|=
 name|GetWordIndex
@@ -1079,7 +1153,7 @@ name|FlushToWord
 argument_list|()
 expr_stmt|;
 comment|// Compute the size of the block, in words, not counting the size field.
-name|unsigned
+name|size_t
 name|SizeInWords
 init|=
 name|GetWordIndex
@@ -1091,19 +1165,22 @@ name|StartSizeWord
 operator|-
 literal|1
 decl_stmt|;
-name|unsigned
-name|ByteNo
+name|uint64_t
+name|BitNo
 init|=
+name|uint64_t
+argument_list|(
 name|B
 operator|.
 name|StartSizeWord
+argument_list|)
 operator|*
-literal|4
+literal|32
 decl_stmt|;
 comment|// Update the block size field in the header of this sub-block.
 name|BackpatchWord
 argument_list|(
-name|ByteNo
+name|BitNo
 argument_list|,
 name|SizeInWords
 argument_list|)
@@ -1298,7 +1375,9 @@ block|}
 comment|/// EmitRecordWithAbbrevImpl - This is the core implementation of the record
 comment|/// emission code.  If BlobData is non-null, then it specifies an array of
 comment|/// data that should be emitted as part of the Blob or Array operand that is
-comment|/// known to exist at the end of the record.
+comment|/// known to exist at the end of the record. If Code is specified, then
+comment|/// it is the record code to emit before the Vals, which must not contain
+comment|/// the code.
 name|template
 operator|<
 name|typename
@@ -1309,9 +1388,11 @@ name|EmitRecordWithAbbrevImpl
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|ArrayRef<uintty> Vals
 argument_list|,
 argument|StringRef Blob
+argument_list|,
+argument|Optional<unsigned> Code
 argument_list|)
 block|{
 specifier|const
@@ -1375,19 +1456,12 @@ name|Abbrev
 argument_list|)
 block|;
 name|unsigned
-name|RecordIdx
+name|i
 operator|=
 literal|0
-block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
+block|,
 name|e
-init|=
+operator|=
 name|static_cast
 operator|<
 name|unsigned
@@ -1398,6 +1472,93 @@ operator|->
 name|getNumOperandInfos
 argument_list|()
 operator|)
+block|;
+if|if
+condition|(
+name|Code
+condition|)
+block|{
+name|assert
+argument_list|(
+name|e
+operator|&&
+literal|"Expected non-empty abbreviation"
+argument_list|)
+expr_stmt|;
+specifier|const
+name|BitCodeAbbrevOp
+modifier|&
+name|Op
+init|=
+name|Abbv
+operator|->
+name|getOperandInfo
+argument_list|(
+name|i
+operator|++
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|Op
+operator|.
+name|isLiteral
+argument_list|()
+condition|)
+name|EmitAbbreviatedLiteral
+argument_list|(
+name|Op
+argument_list|,
+name|Code
+operator|.
+name|getValue
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|assert
+argument_list|(
+name|Op
+operator|.
+name|getEncoding
+argument_list|()
+operator|!=
+name|BitCodeAbbrevOp
+operator|::
+name|Array
+operator|&&
+name|Op
+operator|.
+name|getEncoding
+argument_list|()
+operator|!=
+name|BitCodeAbbrevOp
+operator|::
+name|Blob
+operator|&&
+literal|"Expected literal or scalar"
+argument_list|)
+expr_stmt|;
+name|EmitAbbreviatedField
+argument_list|(
+name|Op
+argument_list|,
+name|Code
+operator|.
+name|getValue
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|unsigned
+name|RecordIdx
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
 init|;
 name|i
 operator|!=
@@ -1843,14 +2004,14 @@ comment|/// we have one to compress the output.
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecord
 argument_list|(
 argument|unsigned Code
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|,
 argument|unsigned Abbrev =
 literal|0
@@ -1864,6 +2025,23 @@ condition|)
 block|{
 comment|// If we don't have an abbrev to use, emit this in its fully unabbreviated
 comment|// form.
+name|auto
+name|Count
+init|=
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|makeArrayRef
+argument_list|(
+name|Vals
+argument_list|)
+operator|.
+name|size
+argument_list|()
+operator|)
+decl_stmt|;
 name|EmitCode
 argument_list|(
 name|bitc
@@ -1880,16 +2058,7 @@ argument_list|)
 expr_stmt|;
 name|EmitVBR
 argument_list|(
-name|static_cast
-operator|<
-name|uint32_t
-operator|>
-operator|(
-name|Vals
-operator|.
-name|size
-argument_list|()
-operator|)
+name|Count
 argument_list|,
 literal|6
 argument_list|)
@@ -1903,16 +2072,7 @@ literal|0
 init|,
 name|e
 init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|Vals
-operator|.
-name|size
-argument_list|()
-operator|)
+name|Count
 init|;
 name|i
 operator|!=
@@ -1933,63 +2093,51 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|// Insert the code into Vals to treat it uniformly.
-name|Vals
-operator|.
-name|insert
+name|EmitRecordWithAbbrevImpl
+argument_list|(
+name|Abbrev
+argument_list|,
+name|makeArrayRef
 argument_list|(
 name|Vals
-operator|.
-name|begin
+argument_list|)
+argument_list|,
+name|StringRef
 argument_list|()
 argument_list|,
 name|Code
 argument_list|)
 expr_stmt|;
-name|EmitRecordWithAbbrev
-argument_list|(
-name|Abbrev
-argument_list|,
-name|Vals
-argument_list|)
-expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// EmitRecordWithAbbrev - Emit a record with the specified abbreviation.
-end_comment
-
-begin_comment
 comment|/// Unlike EmitRecord, the code for the record should be included in Vals as
-end_comment
-
-begin_comment
 comment|/// the first entry.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecordWithAbbrev
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|)
 block|{
 name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
+name|makeArrayRef
+argument_list|(
 name|Vals
+argument_list|)
 argument_list|,
 name|StringRef
 argument_list|()
+argument_list|,
+name|None
 argument_list|)
 block|;   }
 comment|/// EmitRecordWithBlob - Emit the specified record to the stream, using an
@@ -2000,14 +2148,14 @@ comment|/// of the record.
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecordWithBlob
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|,
 argument|StringRef Blob
 argument_list|)
@@ -2016,22 +2164,27 @@ name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
+name|makeArrayRef
+argument_list|(
 name|Vals
+argument_list|)
 argument_list|,
 name|Blob
+argument_list|,
+name|None
 argument_list|)
 block|;   }
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecordWithBlob
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|,
 argument|const char *BlobData
 argument_list|,
@@ -2043,7 +2196,10 @@ name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
+name|makeArrayRef
+argument_list|(
 name|Vals
+argument_list|)
 argument_list|,
 name|StringRef
 argument_list|(
@@ -2051,31 +2207,24 @@ name|BlobData
 argument_list|,
 name|BlobLen
 argument_list|)
+argument_list|,
+name|None
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// EmitRecordWithArray - Just like EmitRecordWithBlob, works with records
-end_comment
-
-begin_comment
 comment|/// that end with an array.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecordWithArray
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|,
 argument|StringRef Array
 argument_list|)
@@ -2084,22 +2233,27 @@ name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
+name|makeArrayRef
+argument_list|(
 name|Vals
+argument_list|)
 argument_list|,
 name|Array
+argument_list|,
+name|None
 argument_list|)
 block|;   }
 name|template
 operator|<
 name|typename
-name|uintty
+name|Container
 operator|>
 name|void
 name|EmitRecordWithArray
 argument_list|(
 argument|unsigned Abbrev
 argument_list|,
-argument|SmallVectorImpl<uintty>&Vals
+argument|const Container&Vals
 argument_list|,
 argument|const char *ArrayData
 argument_list|,
@@ -2111,7 +2265,10 @@ name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
+name|makeArrayRef
+argument_list|(
 name|Vals
+argument_list|)
 argument_list|,
 name|StringRef
 argument_list|(
@@ -2119,33 +2276,17 @@ name|ArrayData
 argument_list|,
 name|ArrayLen
 argument_list|)
+argument_list|,
+name|None
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Abbrev Emission
-end_comment
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|// Emit the abbreviation as a DEFINE_ABBREV record.
-end_comment
-
-begin_function
 name|void
 name|EncodeAbbrev
 parameter_list|(
@@ -2272,22 +2413,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// EmitAbbrev - This emits an abbreviation to the stream.  Note that this
-end_comment
-
-begin_comment
 comment|/// method takes ownership of the specified abbrev.
-end_comment
-
-begin_function
 name|unsigned
 name|EmitAbbrev
 parameter_list|(
@@ -2328,25 +2457,10 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
-end_function
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// BlockInfo Block Emission
-end_comment
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// EnterBlockInfoBlock - Start emitting the BLOCKINFO_BLOCK.
-end_comment
-
-begin_function
 name|void
 name|EnterBlockInfoBlock
 parameter_list|(
@@ -2369,22 +2483,10 @@ operator|~
 literal|0U
 expr_stmt|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// SwitchToBlockID - If we aren't already talking about the specified block
-end_comment
-
-begin_comment
 comment|/// ID, emit a BLOCKINFO_CODE_SETBID record.
-end_comment
-
-begin_function
 name|void
 name|SwitchToBlockID
 parameter_list|(
@@ -2428,9 +2530,6 @@ operator|=
 name|BlockID
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|BlockInfo
 modifier|&
 name|getOrCreateBlockInfo
@@ -2476,22 +2575,10 @@ name|back
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// EmitBlockInfoAbbrev - Emit a DEFINE_ABBREV record for the specified
-end_comment
-
-begin_comment
 comment|/// BlockID.
-end_comment
-
-begin_function
 name|unsigned
 name|EmitBlockInfoAbbrev
 parameter_list|(
@@ -2547,10 +2634,15 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};   }
+unit|}
 comment|// End llvm namespace
 end_comment
 

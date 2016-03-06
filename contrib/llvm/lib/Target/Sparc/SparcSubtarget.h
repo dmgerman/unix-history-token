@@ -255,6 +255,12 @@ name|TSInfo
 return|;
 block|}
 name|bool
+name|enableMachineScheduler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
 name|isV9
 argument_list|()
 specifier|const
@@ -370,7 +376,7 @@ argument_list|(
 argument|int stackSize
 argument_list|)
 specifier|const
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

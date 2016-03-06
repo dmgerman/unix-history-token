@@ -2412,10 +2412,10 @@ name|type
 argument_list|,
 name|rid
 argument_list|,
-literal|0ul
+literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -2455,10 +2455,10 @@ name|type
 argument_list|,
 name|rid
 argument_list|,
-literal|0ul
+literal|0
 argument_list|,
 operator|~
-literal|0ul
+literal|0
 argument_list|,
 name|count
 argument_list|,

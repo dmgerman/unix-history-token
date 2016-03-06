@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_DynamicLoaderHexagon_H_
+name|liblldb_DynamicLoaderHexagonDYLD_h_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_DynamicLoaderHexagon_H_
+name|liblldb_DynamicLoaderHexagonDYLD_h_
 end_define
 
 begin_comment
@@ -53,6 +53,10 @@ end_comment
 
 begin_comment
 comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
 end_comment
 
 begin_include
@@ -84,6 +88,20 @@ name|DynamicLoader
 block|{
 name|public
 operator|:
+name|DynamicLoaderHexagonDYLD
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
+block|;
+operator|~
+name|DynamicLoaderHexagonDYLD
+argument_list|()
+name|override
+block|;
 specifier|static
 name|void
 name|Initialize
@@ -120,34 +138,19 @@ argument_list|,
 argument|bool force
 argument_list|)
 block|;
-name|DynamicLoaderHexagonDYLD
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-block|;
-name|virtual
-operator|~
-name|DynamicLoaderHexagonDYLD
-argument_list|()
-block|;
 comment|//------------------------------------------------------------------
 comment|// DynamicLoader protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|DidAttach
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|DidLaunch
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ThreadPlanSP
@@ -157,15 +160,15 @@ argument|lldb_private::Thread&thread
 argument_list|,
 argument|bool stop_others
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|CanLoadImage
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -175,76 +178,22 @@ argument|const lldb::ModuleSP module
 argument_list|,
 argument|const lldb::ThreadSP thread
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
-block|;
-name|virtual
-name|void
-name|GetPluginCommandHelp
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|command
-argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|)
-block|;
-name|virtual
-name|lldb_private
-operator|::
-name|Error
-name|ExecutePluginCommand
-argument_list|(
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|command
-argument_list|,
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|)
-block|;
-name|virtual
-name|lldb_private
-operator|::
-name|Log
-operator|*
-name|EnablePluginLogging
-argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
-argument_list|,
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|command
-argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -335,7 +284,10 @@ argument_list|,
 argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
+name|override
 block|;
 comment|/// Removes the loaded sections from the target in @p module.
 comment|///
@@ -345,6 +297,7 @@ name|UnloadSections
 argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|)
+name|override
 block|;
 comment|/// Locates or creates a module given by @p file and updates/loads the
 comment|/// resulting module at the virtual base address @p base_addr.
@@ -358,7 +311,10 @@ argument_list|,
 argument|lldb::addr_t link_map_addr
 argument_list|,
 argument|lldb::addr_t base_addr
+argument_list|,
+argument|bool base_addr_is_offset
 argument_list|)
+name|override
 block|;
 comment|/// Callback routine invoked when we hit the breakpoint on process entry.
 comment|///
@@ -417,11 +373,6 @@ argument_list|( )
 block|;
 name|private
 operator|:
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
-name|DynamicLoaderHexagonDYLD
-argument_list|)
-block|;
 specifier|const
 name|lldb_private
 operator|::
@@ -432,6 +383,11 @@ argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|)
 specifier|const
+block|;
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|DynamicLoaderHexagonDYLD
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -442,7 +398,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_DynamicLoaderHexagonDYLD_H_
+comment|// liblldb_DynamicLoaderHexagonDYLD_h_
 end_comment
 
 end_unit
