@@ -1187,6 +1187,7 @@ name|error
 operator|=
 name|EBUSY
 expr_stmt|;
+break|break;
 case|case
 name|MOD_SHUTDOWN
 case|:
