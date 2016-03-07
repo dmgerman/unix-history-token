@@ -40505,7 +40505,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-name|ssymbuf
+name|ssym
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -40536,6 +40536,8 @@ operator|(
 name|ssymbuf
 operator|+
 name|shndx_count
+operator|+
+literal|1
 operator|)
 expr_stmt|;
 name|ssymbuf
