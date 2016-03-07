@@ -7863,7 +7863,7 @@ literal|"invalid column name "
 literal|"'%s'\n"
 argument_list|)
 argument_list|,
-name|value
+name|suboptarg
 argument_list|)
 expr_stmt|;
 name|usage
@@ -8001,7 +8001,7 @@ literal|"invalid source "
 literal|"'%s'\n"
 argument_list|)
 argument_list|,
-name|value
+name|suboptarg
 argument_list|)
 expr_stmt|;
 name|usage
@@ -8121,7 +8121,7 @@ argument_list|(
 literal|"invalid type '%s'\n"
 argument_list|)
 argument_list|,
-name|value
+name|suboptarg
 argument_list|)
 expr_stmt|;
 name|usage
@@ -14723,7 +14723,7 @@ argument_list|(
 literal|"invalid type '%s'\n"
 argument_list|)
 argument_list|,
-name|value
+name|suboptarg
 argument_list|)
 expr_stmt|;
 name|usage
