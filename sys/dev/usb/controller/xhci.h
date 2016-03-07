@@ -1724,6 +1724,9 @@ decl_stmt|;
 name|uint8_t
 name|trb_running
 decl_stmt|;
+name|uint8_t
+name|trb_ep_maxp
+decl_stmt|;
 block|}
 struct|;
 end_struct
