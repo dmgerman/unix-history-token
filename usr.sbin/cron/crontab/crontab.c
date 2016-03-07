@@ -2664,7 +2664,7 @@ argument_list|(
 name|tmp
 argument_list|)
 argument_list|,
-name|ftell
+name|ftello
 argument_list|(
 name|tmp
 argument_list|)
