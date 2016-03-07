@@ -3858,13 +3858,10 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|tlen
-decl_stmt|;
-name|int
-name|win
-init|=
-literal|0
+name|struct
+name|inpcb
+modifier|*
+name|inp
 decl_stmt|;
 name|struct
 name|ip
@@ -3891,14 +3888,9 @@ endif|#
 directive|endif
 comment|/* INET6 */
 name|int
-name|ipflags
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|inpcb
-modifier|*
-name|inp
+name|tlen
+decl_stmt|,
+name|win
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -3982,6 +3974,10 @@ else|else
 name|inp
 operator|=
 name|NULL
+expr_stmt|;
+name|win
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4883,7 +4879,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|ipflags
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -4923,7 +4919,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|ipflags
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
