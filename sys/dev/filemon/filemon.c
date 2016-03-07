@@ -236,27 +236,6 @@ name|filemon_open
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|int
-name|filemon_unload
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|filemon_load
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1200,6 +1179,14 @@ name|filemon_unload
 argument_list|()
 expr_stmt|;
 break|break;
+case|case
+name|MOD_QUIESCE
+case|:
+comment|/* 		 * The wrapper implementation is unsafe for reliable unload. 		 * Require forcing an unload. 		 */
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
 case|case
 name|MOD_SHUTDOWN
 case|:
