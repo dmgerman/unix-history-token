@@ -2305,7 +2305,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SSP_SPEC
-value|"%{fstack-protector|fstack-protector-strong|fstack-protector-all:-lssp_nonshared -lssp}"
+value|"%{fstack-protector|fstack-protector-all:-lssp_nonshared -lssp}"
 end_define
 
 begin_endif
