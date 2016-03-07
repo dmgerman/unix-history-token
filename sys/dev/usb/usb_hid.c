@@ -1528,7 +1528,18 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Number of "
-literal|"items truncated to 255\n"
+literal|"items(%u) truncated to 255\n"
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|c
+operator|->
+name|loc
+operator|.
+name|count
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
