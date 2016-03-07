@@ -4,7 +4,7 @@ comment|/* -*- Mode: C; c-file-style: "bsd" -*- */
 end_comment
 
 begin_comment
-comment|/*  * easy-tls.h -- generic TLS proxy.  * $Id: easy-tls.h,v 1.1 2001/09/17 19:06:59 bodo Exp $  */
+comment|/*-  * easy-tls.h -- generic TLS proxy.  * $Id: easy-tls.h,v 1.1 2001/09/17 19:06:59 bodo Exp $  */
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Generate DHE parameters:  * i>= 0 deterministic (i selects seed), i< 0 random (may take a while).  * tls_create_ctx calls this with random non-negative i if the application  * has never called it.*/
+comment|/*  * Generate DHE parameters: i>= 0 deterministic (i selects seed), i< 0  * random (may take a while). tls_create_ctx calls this with random  * non-negative i if the application has never called it.  */
 end_comment
 
 begin_function_decl
@@ -160,7 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* struct tls_create_ctx_args is similar to a conventional argument list,  * but it can provide default values and allows for future extension. */
+comment|/*  * struct tls_create_ctx_args is similar to a conventional argument list, but  * it can provide default values and allows for future extension.  */
 end_comment
 
 begin_function_decl
@@ -215,7 +215,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* tls_start_proxy return value *MUST* be checked!  * 0 means ok, otherwise we've probably run out of some resources. */
+comment|/*  * tls_start_proxy return value *MUST* be checked! 0 means ok, otherwise  * we've probably run out of some resources.  */
 end_comment
 
 begin_function_decl

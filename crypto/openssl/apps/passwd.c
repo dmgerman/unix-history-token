@@ -323,7 +323,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* -crypt        - standard Unix password algorithm (default)  * -1            - MD5-based password algorithm  * -apr1         - MD5-based password algorithm, Apache variant  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -noverify     - never verify when reading password from terminal  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
+comment|/*-  * -crypt        - standard Unix password algorithm (default)  * -1            - MD5-based password algorithm  * -apr1         - MD5-based password algorithm, Apache variant  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -noverify     - never verify when reading password from terminal  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
 end_comment
 
 begin_function_decl
@@ -1175,7 +1175,7 @@ name|pw_maxlen
 operator|=
 literal|256
 expr_stmt|;
-comment|/* arbitrary limit, should be enough for most passwords */
+comment|/* arbitrary limit, should be enough for most                                  * passwords */
 if|if
 condition|(
 name|passwds
@@ -1190,7 +1190,7 @@ name|pw_maxlen
 operator|+
 literal|2
 expr_stmt|;
-comment|/* longer than necessary so that we can warn about truncation */
+comment|/*          * longer than necessary so that we can warn about truncation          */
 name|passwd
 operator|=
 name|passwd_malloc
@@ -1304,8 +1304,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 do|do
-comment|/* loop over list of passwords */
 block|{
+comment|/* loop over list of passwords */
 name|passwd
 operator|=
 operator|*
@@ -1577,7 +1577,7 @@ name|NO_MD5CRYPT_1
 end_ifndef
 
 begin_comment
-comment|/* MD5-based password algorithm (should probably be available as a library  * function; then the static buffer would not be acceptable).  * For magic string "1", this should be compatible to the MD5-based BSD  * password algorithm.  * For 'magic' string "apr1", this is compatible to the MD5-based Apache  * password algorithm.  * (Apparently, the Apache password algorithm is identical except that the  * 'magic' string was changed -- the laziest application of the NIH principle  * I've ever encountered.)  */
+comment|/*  * MD5-based password algorithm (should probably be available as a library  * function; then the static buffer would not be acceptable). For magic  * string "1", this should be compatible to the MD5-based BSD password  * algorithm. For 'magic' string "apr1", this is compatible to the MD5-based  * Apache password algorithm. (Apparently, the Apache password algorithm is  * identical except that the 'magic' string was changed -- the laziest  * application of the NIH principle I've ever encountered.)  */
 end_comment
 
 begin_function
@@ -1602,6 +1602,7 @@ modifier|*
 name|salt
 parameter_list|)
 block|{
+comment|/* "$apr1$..salt..$.......md5hash..........\0" */
 specifier|static
 name|char
 name|out_buf
@@ -1615,7 +1616,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-comment|/* "$apr1$..salt..$.......md5hash..........\0" */
 name|unsigned
 name|char
 name|buf
@@ -2167,7 +2167,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PEDANTIC
-comment|/* Unfortunately, this generates a "no effect" warning */
+comment|/* Unfortunately, this generates a "no                                  * effect" warning */
 name|assert
 argument_list|(
 literal|16
@@ -2584,7 +2584,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* des_crypt will convert 			                                    * back to ASCII */
+comment|/* des_crypt will convert back                                                 * to ASCII */
 endif|#
 directive|endif
 block|}
@@ -2730,7 +2730,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-comment|/* XXX: really we should know how to print a size_t, not cast it */
+comment|/*              * XXX: really we should know how to print a size_t, not cast it              */
 name|BIO_printf
 argument_list|(
 name|bio_err

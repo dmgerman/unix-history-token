@@ -8,7 +8,7 @@ comment|/*  * Written by Nils Larsch for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -1128,7 +1128,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ec_asn1_parameters2group() creates a EC_GROUP object from a  * ECPARAMETERS object */
+comment|/*  * ec_asn1_parameters2group() creates a EC_GROUP object from a ECPARAMETERS  * object  */
 end_comment
 
 begin_function_decl
@@ -1145,7 +1145,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ec_asn1_group2parameters() creates a ECPARAMETERS object from a   * EC_GROUP object */
+comment|/*  * ec_asn1_group2parameters() creates a ECPARAMETERS object from a EC_GROUP  * object  */
 end_comment
 
 begin_function_decl
@@ -1165,7 +1165,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ec_asn1_pkparameters2group() creates a EC_GROUP object from a  * ECPKPARAMETERS object */
+comment|/*  * ec_asn1_pkparameters2group() creates a EC_GROUP object from a  * ECPKPARAMETERS object  */
 end_comment
 
 begin_function_decl
@@ -1182,7 +1182,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ec_asn1_group2pkparameters() creates a ECPKPARAMETERS object from a   * EC_GROUP object */
+comment|/*  * ec_asn1_group2pkparameters() creates a ECPKPARAMETERS object from a  * EC_GROUP object  */
 end_comment
 
 begin_function_decl
@@ -1416,8 +1416,8 @@ goto|;
 block|}
 block|}
 else|else
-comment|/* nid == NID_X9_62_characteristic_two_field */
 block|{
+comment|/* nid == NID_X9_62_characteristic_two_field */
 name|int
 name|field_type
 decl_stmt|;
@@ -1718,8 +1718,8 @@ name|k3
 expr_stmt|;
 block|}
 else|else
-comment|/* field_type == NID_X9_62_onBasis */
 block|{
+comment|/* field_type == NID_X9_62_onBasis */
 comment|/* for ONB the parameters are (asn1) NULL */
 name|char_two
 operator|->
@@ -1943,8 +1943,8 @@ goto|;
 block|}
 block|}
 else|else
-comment|/* nid == NID_X9_62_characteristic_two_field */
 block|{
+comment|/* nid == NID_X9_62_characteristic_two_field */
 if|if
 condition|(
 operator|!
@@ -2987,7 +2987,7 @@ name|group
 argument_list|)
 condition|)
 block|{
-comment|/* use the asn1 OID to describe the 		 * the elliptic curve parameters 		 */
+comment|/*          * use the asn1 OID to describe the the elliptic curve parameters          */
 name|tmp
 operator|=
 name|EC_GROUP_get_curve_name
@@ -3707,8 +3707,8 @@ name|err
 goto|;
 block|}
 else|else
-comment|/* error */
 block|{
+comment|/* error */
 name|ECerr
 argument_list|(
 name|EC_F_EC_ASN1_PARAMETERS2GROUP
@@ -4166,8 +4166,8 @@ name|field_bits
 operator|+
 literal|1
 condition|)
-comment|/* Hasse bound */
 block|{
+comment|/* Hasse bound */
 name|ECerr
 argument_list|(
 name|EC_F_EC_ASN1_PARAMETERS2GROUP
@@ -4436,7 +4436,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* the parameters are given by a ECPARAMETERS 		   * structure */
+comment|/* the parameters are given by a                                      * ECPARAMETERS structure */
 name|ret
 operator|=
 name|ec_asn1_parameters2group
@@ -5814,15 +5814,6 @@ return|return
 name|NULL
 return|;
 block|}
-if|if
-condition|(
-name|a
-condition|)
-operator|*
-name|a
-operator|=
-name|ret
-expr_stmt|;
 block|}
 else|else
 name|ret
@@ -5853,10 +5844,35 @@ argument_list|,
 name|ERR_R_EC_LIB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+operator|||
+operator|*
+name|a
+operator|!=
+name|ret
+condition|)
+name|EC_KEY_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+name|a
+condition|)
+operator|*
+name|a
+operator|=
+name|ret
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -5913,7 +5929,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* sorry, but a EC_GROUP-structur is necessary                  * to set the public key */
+comment|/*          * sorry, but a EC_GROUP-structur is necessary to set the public key          */
 name|ECerr
 argument_list|(
 name|EC_F_O2I_ECPUBLICKEY

@@ -8,7 +8,7 @@ comment|/*  * Written by Nils Larsch for the OpenSSL project  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -161,7 +161,7 @@ literal|0xFFFFFFFFFFFFFFFFULL
 block|,
 literal|0x00000001FFFFFFFFULL
 block|}
-comment|/* this one is "carry-full" */
+comment|/* this one is                                                     * "carry-full" */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -251,7 +251,7 @@ literal|0x0000000000000000ULL
 block|,
 literal|0xFFFFFFFB00000005ULL
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -362,7 +362,7 @@ literal|0xFFFFFFFFFFFFFFFFULL
 block|,
 literal|0xFFFFFFFFFFFFFFFFULL
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ literal|0x00000005
 block|,
 literal|0xFFFFFFFB
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -946,7 +946,7 @@ literal|0xFFFFFFFF
 block|,
 literal|0xFFFFFFFF
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1577,7 +1577,7 @@ name|from
 parameter_list|,
 name|m
 parameter_list|)
-value|(((n)&1)?(to[(n)/2]|=((m)&1)?(from[(m)/2]&BN_MASK2h):(from[(m)/2]<<32))\ 						:(to[(n)/2] =((m)&1)?(from[(m)/2]>>32):(from[(m)/2]&BN_MASK2l)))
+value|(((n)&1)?(to[(n)/2]|=((m)&1)?(from[(m)/2]&BN_MASK2h):(from[(m)/2]<<32))\                                                 :(to[(n)/2] =((m)&1)?(from[(m)/2]>>32):(from[(m)/2]&BN_MASK2l)))
 end_define
 
 begin_define
@@ -1627,7 +1627,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|{ \ 	bn_cp_32(to, (n)*2, from, (m)*2); \ 	bn_cp_32(to, (n)*2+1, from, (m)*2+1); \ 	}
+value|{ \         bn_cp_32(to, (n)*2, from, (m)*2); \         bn_cp_32(to, (n)*2+1, from, (m)*2+1); \         }
 end_define
 
 begin_define
@@ -1640,7 +1640,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ \ 	bn_32_set_0(to, (n)*2); \ 	bn_32_set_0(to, (n)*2+1); \ 	}
+value|{ \         bn_32_set_0(to, (n)*2); \         bn_32_set_0(to, (n)*2+1); \         }
 end_define
 
 begin_if
@@ -1709,7 +1709,7 @@ parameter_list|,
 name|a3
 parameter_list|)
 define|\
-value|{ \ 	bn_cp_64(to, 0, from, (a3) - 3) \ 	bn_cp_64(to, 1, from, (a2) - 3) \ 	bn_cp_64(to, 2, from, (a1) - 3) \ 	}
+value|{ \         bn_cp_64(to, 0, from, (a3) - 3) \         bn_cp_64(to, 1, from, (a2) - 3) \         bn_cp_64(to, 2, from, (a1) - 3) \         }
 end_define
 
 begin_function
@@ -2085,7 +2085,7 @@ name|carry
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * we need 'if (carry==0 || result>=modulus) result-=modulus;' 	 * as comparison implies subtraction, we can write 	 * 'tmp=result-modulus; if (!carry || !borrow) result=tmp;' 	 * this is what happens below, but without explicit if:-) a. 	 */
+comment|/*      * we need 'if (carry==0 || result>=modulus) result-=modulus;'      * as comparison implies subtraction, we can write      * 'tmp=result-modulus; if (!carry || !borrow) result=tmp;'      * this is what happens below, but without explicit if:-) a.      */
 name|mask
 operator|=
 literal|0
@@ -2217,7 +2217,7 @@ parameter_list|,
 name|a7
 parameter_list|)
 define|\
-value|{ \ 	bn_cp_32(to, 0, from, (a7) - 7) \ 	bn_cp_32(to, 1, from, (a6) - 7) \ 	bn_cp_32(to, 2, from, (a5) - 7) \ 	bn_cp_32(to, 3, from, (a4) - 7) \ 	bn_cp_32(to, 4, from, (a3) - 7) \ 	bn_cp_32(to, 5, from, (a2) - 7) \ 	bn_cp_32(to, 6, from, (a1) - 7) \ 	}
+value|{ \         bn_cp_32(to, 0, from, (a7) - 7) \         bn_cp_32(to, 1, from, (a6) - 7) \         bn_cp_32(to, 2, from, (a5) - 7) \         bn_cp_32(to, 3, from, (a4) - 7) \         bn_cp_32(to, 4, from, (a3) - 7) \         bn_cp_32(to, 5, from, (a2) - 7) \         bn_cp_32(to, 6, from, (a1) - 7) \         }
 end_define
 
 begin_function
@@ -2792,7 +2792,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* it's a bit more comlicated logic in this case. 		 * if bn_add_words yields no carry, then result 		 * has to be adjusted by unconditionally *adding* 		 * the modulus. but if it does, then result has 		 * to be compared to the modulus and conditionally 		 * adjusted by *subtracting* the latter. */
+comment|/*          * it's a bit more comlicated logic in this case. if bn_add_words          * yields no carry, then result has to be adjusted by unconditionally          * *adding* the modulus. but if it does, then result has to be          * compared to the modulus and conditionally adjusted by          * *subtracting* the latter.          */
 name|carry
 operator|=
 operator|(
@@ -2968,7 +2968,7 @@ parameter_list|,
 name|a8
 parameter_list|)
 define|\
-value|{ \ 	bn_cp_32(to, 0, from, (a8) - 8) \ 	bn_cp_32(to, 1, from, (a7) - 8) \ 	bn_cp_32(to, 2, from, (a6) - 8) \ 	bn_cp_32(to, 3, from, (a5) - 8) \ 	bn_cp_32(to, 4, from, (a4) - 8) \ 	bn_cp_32(to, 5, from, (a3) - 8) \ 	bn_cp_32(to, 6, from, (a2) - 8) \ 	bn_cp_32(to, 7, from, (a1) - 8) \ 	}
+value|{ \         bn_cp_32(to, 0, from, (a8) - 8) \         bn_cp_32(to, 1, from, (a7) - 8) \         bn_cp_32(to, 2, from, (a6) - 8) \         bn_cp_32(to, 3, from, (a5) - 8) \         bn_cp_32(to, 4, from, (a4) - 8) \         bn_cp_32(to, 5, from, (a3) - 8) \         bn_cp_32(to, 6, from, (a2) - 8) \         bn_cp_32(to, 7, from, (a1) - 8) \         }
 end_define
 
 begin_function
@@ -3239,7 +3239,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S1*/
+comment|/*      * S1      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3263,7 +3263,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*S2*/
+comment|/*      * S2      */
 name|nist_set_256
 argument_list|(
 name|c_d
@@ -3397,7 +3397,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S3*/
+comment|/*      * S3      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3437,7 +3437,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S4*/
+comment|/*      * S4      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3477,7 +3477,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D1*/
+comment|/*      * D1      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3517,7 +3517,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D2*/
+comment|/*      * D2      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3557,7 +3557,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D3*/
+comment|/*      * D3      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3597,7 +3597,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D4*/
+comment|/*      * D4      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -3861,7 +3861,7 @@ parameter_list|,
 name|a12
 parameter_list|)
 define|\
-value|{ \ 	bn_cp_32(to, 0, from,  (a12) - 12) \ 	bn_cp_32(to, 1, from,  (a11) - 12) \ 	bn_cp_32(to, 2, from,  (a10) - 12) \ 	bn_cp_32(to, 3, from,  (a9) - 12)  \ 	bn_cp_32(to, 4, from,  (a8) - 12)  \ 	bn_cp_32(to, 5, from,  (a7) - 12)  \ 	bn_cp_32(to, 6, from,  (a6) - 12)  \ 	bn_cp_32(to, 7, from,  (a5) - 12)  \ 	bn_cp_32(to, 8, from,  (a4) - 12)  \ 	bn_cp_32(to, 9, from,  (a3) - 12)  \ 	bn_cp_32(to, 10, from, (a2) - 12)  \ 	bn_cp_32(to, 11, from, (a1) - 12)  \ 	}
+value|{ \         bn_cp_32(to, 0, from,  (a12) - 12) \         bn_cp_32(to, 1, from,  (a11) - 12) \         bn_cp_32(to, 2, from,  (a10) - 12) \         bn_cp_32(to, 3, from,  (a9) - 12)  \         bn_cp_32(to, 4, from,  (a8) - 12)  \         bn_cp_32(to, 5, from,  (a7) - 12)  \         bn_cp_32(to, 6, from,  (a6) - 12)  \         bn_cp_32(to, 7, from,  (a5) - 12)  \         bn_cp_32(to, 8, from,  (a4) - 12)  \         bn_cp_32(to, 9, from,  (a3) - 12)  \         bn_cp_32(to, 10, from, (a2) - 12)  \         bn_cp_32(to, 11, from, (a1) - 12)  \         }
 end_define
 
 begin_function
@@ -4132,7 +4132,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S1*/
+comment|/*      * S1      */
 name|nist_set_256
 argument_list|(
 name|t_d
@@ -4265,7 +4265,7 @@ argument_list|,
 name|BN_NIST_256_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S2 */
+comment|/*      * S2      */
 name|carry
 operator|+=
 operator|(
@@ -4282,7 +4282,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S3*/
+comment|/*      * S3      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4330,7 +4330,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S4*/
+comment|/*      * S4      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4378,7 +4378,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S5*/
+comment|/*      * S5      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4426,7 +4426,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*S6*/
+comment|/*      * S6      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4474,7 +4474,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D1*/
+comment|/*      * D1      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4522,7 +4522,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D2*/
+comment|/*      * D2      */
 name|nist_set_384
 argument_list|(
 name|t_d
@@ -4570,7 +4570,7 @@ argument_list|,
 name|BN_NIST_384_TOP
 argument_list|)
 expr_stmt|;
-comment|/*D3*/
+comment|/*      * D3      */
 name|nist_set_384
 argument_list|(
 name|t_d

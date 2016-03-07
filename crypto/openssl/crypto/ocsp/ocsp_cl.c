@@ -4,15 +4,15 @@ comment|/* ocsp_cl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project. */
+comment|/*  * Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* History:    This file was transfered to Richard Levitte from CertCo by Kathy    Weinhold in mid-spring 2000 to be included in OpenSSL or released    as a patch kit. */
+comment|/*  * History: This file was transfered to Richard Levitte from CertCo by Kathy  * Weinhold in mid-spring 2000 to be included in OpenSSL or released as a  * patch kit.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -70,11 +70,11 @@ file|<openssl/ocsp.h>
 end_include
 
 begin_comment
-comment|/* Utility functions related to sending OCSP requests and extracting  * relevant information from the response.  */
+comment|/*  * Utility functions related to sending OCSP requests and extracting relevant  * information from the response.  */
 end_comment
 
 begin_comment
-comment|/* Add an OCSP_CERTID to an OCSP request. Return new OCSP_ONEREQ   * pointer: useful if we want to add extensions.  */
+comment|/*  * Add an OCSP_CERTID to an OCSP request. Return new OCSP_ONEREQ pointer:  * useful if we want to add extensions.  */
 end_comment
 
 begin_function
@@ -372,7 +372,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sign an OCSP request set the requestorName to the subjec  * name of an optional signers certificate and include one  * or more optional certificates in the request. Behaves  * like PKCS7_sign().  */
+comment|/*  * Sign an OCSP request set the requestorName to the subjec name of an  * optional signers certificate and include one or more optional certificates  * in the request. Behaves like PKCS7_sign().  */
 end_comment
 
 begin_decl_stmt
@@ -618,7 +618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract basic response from OCSP_RESPONSE or NULL if  * no basic response present.  */
+comment|/*  * Extract basic response from OCSP_RESPONSE or NULL if no basic response  * present.  */
 end_comment
 
 begin_function
@@ -698,7 +698,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return number of OCSP_SINGLERESP reponses present in  * a basic response.  */
+comment|/*  * Return number of OCSP_SINGLERESP reponses present in a basic response.  */
 end_comment
 
 begin_function
@@ -887,7 +887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract status information from an OCSP_SINGLERESP structure.  * Note: the revtime and reason values are only set if the   * certificate status is revoked. Returns numerical value of  * status.  */
+comment|/*  * Extract status information from an OCSP_SINGLERESP structure. Note: the  * revtime and reason values are only set if the certificate status is  * revoked. Returns numerical value of status.  */
 end_comment
 
 begin_function
@@ -1033,7 +1033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function combines the previous ones: look up a certificate ID and  * if found extract status information. Return 0 is successful.  */
+comment|/*  * This function combines the previous ones: look up a certificate ID and if  * found extract status information. Return 0 is successful.  */
 end_comment
 
 begin_function
@@ -1141,7 +1141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check validity of thisUpdate and nextUpdate fields. It is possible that the request will  * take a few seconds to process and/or the time wont be totally accurate. Therefore to avoid  * rejecting otherwise valid time we allow the times to be within 'nsec' of the current time.  * Also to avoid accepting very old responses without a nextUpdate field an optional maxage  * parameter specifies the maximum age the thisUpdate field can be.  */
+comment|/*  * Check validity of thisUpdate and nextUpdate fields. It is possible that  * the request will take a few seconds to process and/or the time wont be  * totally accurate. Therefore to avoid rejecting otherwise valid time we  * allow the times to be within 'nsec' of the current time. Also to avoid  * accepting very old responses without a nextUpdate field an optional maxage  * parameter specifies the maximum age the thisUpdate field can be.  */
 end_comment
 
 begin_function
@@ -1234,7 +1234,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If maxsec specified check thisUpdate is not more than maxsec in the past */
+comment|/*          * If maxsec specified check thisUpdate is not more than maxsec in          * the past          */
 if|if
 condition|(
 name|maxsec

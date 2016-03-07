@@ -4,11 +4,11 @@ comment|/* crypto/engine/hw_nuron.c */
 end_comment
 
 begin_comment
-comment|/* Written by Ben Laurie for the OpenSSL Project, leaning heavily on Geoff  * Thorpe's Atalla implementation.  */
+comment|/*  * Written by Ben Laurie for the OpenSSL Project, leaning heavily on Geoff  * Thorpe's Atalla implementation.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -746,7 +746,7 @@ name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_comment
-comment|/* This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Atalla acceleration  * (it doesn't have a CRT form for RSA), this function means that an  * Atalla system running with a DSA server certificate can handshake  * around 5 or 6 times faster/more than an equivalent system running with  * RSA. Just check out the "signs" statistics from the RSA and DSA parts  * of "openssl speed -engine atalla dsa1024 rsa1024". */
+comment|/*  * This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Atalla acceleration (it  * doesn't have a CRT form for RSA), this function means that an Atalla  * system running with a DSA server certificate can handshake around 5 or 6  * times faster/more than an equivalent system running with RSA. Just check  * out the "signs" statistics from the RSA and DSA parts of "openssl speed  * -engine atalla dsa1024 rsa1024".  */
 end_comment
 
 begin_function
@@ -1246,7 +1246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_nuron() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_nuron() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -1395,7 +1395,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the nuron-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * nuron-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1438,7 +1438,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* Use the DSA_OpenSSL() method and just hook the mod_exp-ish 	 * bits. */
+comment|/*      * Use the DSA_OpenSSL() method and just hook the mod_exp-ish bits.      */
 name|meth2
 operator|=
 name|DSA_OpenSSL
@@ -1604,7 +1604,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

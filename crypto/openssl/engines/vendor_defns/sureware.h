@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* * Written by Corinne Dive-Reclus(cdive@baltimore.com) * * Copyright@2001 Baltimore Technologies Ltd. *																								*	 *		THIS FILE IS PROVIDED BY BALTIMORE TECHNOLOGIES ``AS IS'' AND																			* *		ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE					*  *		IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE				* *		ARE DISCLAIMED.  IN NO EVENT SHALL BALTIMORE TECHNOLOGIES BE LIABLE						* *		FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL				* *		DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS					* *		OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)					* *		HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT				* *		LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY				* *		OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF					* *		SUCH DAMAGE.																			* * *  */
+comment|/*-  * Written by Corinne Dive-Reclus(cdive@baltimore.com)  *  * Copyright@2001 Baltimore Technologies Ltd.  *  * THIS FILE IS PROVIDED BY BALTIMORE TECHNOLOGIES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL BALTIMORE TECHNOLOGIES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* *	List of exposed SureWare errors */
+comment|/*  *       List of exposed SureWare errors  */
 end_comment
 
 begin_define
@@ -72,11 +72,11 @@ value|-5
 end_define
 
 begin_comment
-comment|/* * -----------------WARNING----------------------------------- * In all the following functions: * msg is a string with at least 24 bytes free. * A 24 bytes string will be concatenated to the existing content of msg.  */
+comment|/*- * -----------------WARNING----------------------------------- * In all the following functions: * msg is a string with at least 24 bytes free. * A 24 bytes string will be concatenated to the existing content of msg. */
 end_comment
 
 begin_comment
-comment|/* *	SureWare Initialisation function *	in param threadsafe, if !=0, thread safe enabled *	return SureWareHOOK_ERROR_UNIT_FAILURE if failure, 1 if success */
+comment|/*- *       SureWare Initialisation function *       in param threadsafe, if !=0, thread safe enabled *       return SureWareHOOK_ERROR_UNIT_FAILURE if failure, 1 if success */
 end_comment
 
 begin_typedef
@@ -104,7 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Finish function */
+comment|/*- *       SureWare Finish function */
 end_comment
 
 begin_typedef
@@ -126,11 +126,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	 PRE_CONDITION: *		DO NOT CALL ANY OF THE FOLLOWING FUNCTIONS IN CASE OF INIT FAILURE */
+comment|/*- *        PRE_CONDITION: *               DO NOT CALL ANY OF THE FOLLOWING FUNCTIONS IN CASE OF INIT FAILURE */
 end_comment
 
 begin_comment
-comment|/* *	SureWare RAND Bytes function *	In case of failure, the content of buf is unpredictable. *	return 1 if success *			SureWareHOOK_ERROR_FALLBACK if function not available in hardware *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	in/out param buf : a num bytes long buffer where random bytes will be put *	in param num : the number of bytes into buf */
+comment|/*- *       SureWare RAND Bytes function *       In case of failure, the content of buf is unpredictable. *       return 1 if success *                       SureWareHOOK_ERROR_FALLBACK if function not available in hardware *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       in/out param buf : a num bytes long buffer where random bytes will be put *       in param num : the number of bytes into buf */
 end_comment
 
 begin_typedef
@@ -163,7 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare RAND Seed function *	Adds some seed to the Hardware Random Number Generator *	return 1 if success *			SureWareHOOK_ERROR_FALLBACK if function not available in hardware *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	in param buf : the seed to add into the HRNG *	in param num : the number of bytes into buf */
+comment|/*- *       SureWare RAND Seed function *       Adds some seed to the Hardware Random Number Generator *       return 1 if success *                       SureWareHOOK_ERROR_FALLBACK if function not available in hardware *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       in param buf : the seed to add into the HRNG *       in param num : the number of bytes into buf */
 end_comment
 
 begin_typedef
@@ -196,7 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Load Private Key function *	return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *	No hardware is contact for this function. * *	in param key_id :the name of the private protected key file without the extension 						".sws" *	out param hptr : a pointer to a buffer allocated by SureWare_Hook *	out param num: the effective key length in bytes *	out param keytype: 1 if RSA 2 if DSA */
+comment|/*- *       SureWare Load Private Key function *       return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *       No hardware is contact for this function. * *       in param key_id :the name of the private protected key file without the extension                                                 ".sws" *       out param hptr : a pointer to a buffer allocated by SureWare_Hook *       out param num: the effective key length in bytes *       out param keytype: 1 if RSA 2 if DSA */
 end_comment
 
 begin_typedef
@@ -240,7 +240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Info Public Key function *	return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *	No hardware is contact for this function. * *	in param key_id :the name of the private protected key file without the extension 						".swp" *	out param hptr : a pointer to a buffer allocated by SureWare_Hook *	out param num: the effective key length in bytes *	out param keytype: 1 if RSA 2 if DSA */
+comment|/*- *       SureWare Info Public Key function *       return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *       No hardware is contact for this function. * *       in param key_id :the name of the private protected key file without the extension                                                 ".swp" *       out param hptr : a pointer to a buffer allocated by SureWare_Hook *       out param num: the effective key length in bytes *       out param keytype: 1 if RSA 2 if DSA */
 end_comment
 
 begin_typedef
@@ -279,7 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Load Public Key function *	return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *	No hardware is contact for this function. * *	in param key_id :the name of the public protected key file without the extension 						".swp" *	in param num : the bytes size of n and e *	out param n: where to write modulus in bn format *	out param e: where to write exponent in bn format */
+comment|/*- *       SureWare Load Public Key function *       return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *       No hardware is contact for this function. * *       in param key_id :the name of the public protected key file without the extension                                                 ".swp" *       in param num : the bytes size of n and e *       out param n: where to write modulus in bn format *       out param e: where to write exponent in bn format */
 end_comment
 
 begin_typedef
@@ -323,7 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Load DSA Public Key function *	return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *	No hardware is contact for this function. * *	in param key_id :the name of the public protected key file without the extension 						".swp" *	in param num : the bytes size of n and e *	out param pub: where to write pub key in bn format *	out param p: where to write prime in bn format *	out param q: where to write sunprime (length 20 bytes) in bn format *	out param g: where to write base in bn format */
+comment|/*- *       SureWare Load DSA Public Key function *       return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *       No hardware is contact for this function. * *       in param key_id :the name of the public protected key file without the extension                                                 ".swp" *       in param num : the bytes size of n and e *       out param pub: where to write pub key in bn format *       out param p: where to write prime in bn format *       out param q: where to write sunprime (length 20 bytes) in bn format *       out param g: where to write base in bn format */
 end_comment
 
 begin_typedef
@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* *	SureWare Free function *	Destroy the key into the hardware if destroy==1 */
+comment|/*- *       SureWare Free function *       Destroy the key into the hardware if destroy==1 */
 end_comment
 
 begin_typedef
@@ -425,7 +425,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* * SureWare RSA Private Decryption * return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	in param flen : byte size of from and to *	in param from : encrypted data buffer, should be a not-null valid pointer *	out param tlen: byte size of decrypted data, if error, unexpected value *	out param to : decrypted data buffer, should be a not-null valid pointer *   in param prsa: a protected key pointer, should be a not-null valid pointer *   int padding: padding id as follow *					SUREWARE_PKCS1_PAD *					SUREWARE_NO_PAD * */
+comment|/*- * SureWare RSA Private Decryption * return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       in param flen : byte size of from and to *       in param from : encrypted data buffer, should be a not-null valid pointer *       out param tlen: byte size of decrypted data, if error, unexpected value *       out param to : decrypted data buffer, should be a not-null valid pointer *   in param prsa: a protected key pointer, should be a not-null valid pointer *   int padding: padding id as follow *                                       SUREWARE_PKCS1_PAD *                                       SUREWARE_NO_PAD * */
 end_comment
 
 begin_typedef
@@ -474,7 +474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* * SureWare RSA Signature * return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	in param flen : byte size of from and to *	in param from : encrypted data buffer, should be a not-null valid pointer *	out param tlen: byte size of decrypted data, if error, unexpected value *	out param to : decrypted data buffer, should be a not-null valid pointer *   in param prsa: a protected key pointer, should be a not-null valid pointer *   int padding: padding id as follow *					SUREWARE_PKCS1_PAD *					SUREWARE_ISO9796_PAD * */
+comment|/*- * SureWare RSA Signature * return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       in param flen : byte size of from and to *       in param from : encrypted data buffer, should be a not-null valid pointer *       out param tlen: byte size of decrypted data, if error, unexpected value *       out param to : decrypted data buffer, should be a not-null valid pointer *   in param prsa: a protected key pointer, should be a not-null valid pointer *   int padding: padding id as follow *                                       SUREWARE_PKCS1_PAD *                                       SUREWARE_ISO9796_PAD * */
 end_comment
 
 begin_typedef
@@ -523,7 +523,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* * SureWare DSA Signature * return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	in param flen : byte size of from and to *	in param from : encrypted data buffer, should be a not-null valid pointer *	out param to : decrypted data buffer, should be a 40bytes valid pointer *   in param pdsa: a protected key pointer, should be a not-null valid pointer * */
+comment|/*- * SureWare DSA Signature * return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       in param flen : byte size of from and to *       in param from : encrypted data buffer, should be a not-null valid pointer *       out param to : decrypted data buffer, should be a 40bytes valid pointer *   in param pdsa: a protected key pointer, should be a not-null valid pointer * */
 end_comment
 
 begin_typedef
@@ -571,7 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* * SureWare Mod Exp * return 1 if success *			SureWareHOOK_ERROR_FAILED if error while processing *			SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *			SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *	mod and res are mlen bytes long. *	exp is elen bytes long *	data is dlen bytes long *	mlen,elen and dlen are all multiple of sizeof(unsigned long) */
+comment|/*- * SureWare Mod Exp * return 1 if success *                       SureWareHOOK_ERROR_FAILED if error while processing *                       SureWareHOOK_ERROR_UNIT_FAILURE if hardware failure *                       SUREWAREHOOK_ERROR_DATA_SIZE wrong size for buf * *       mod and res are mlen bytes long. *       exp is elen bytes long *       data is dlen bytes long *       mlen,elen and dlen are all multiple of sizeof(unsigned long) */
 end_comment
 
 begin_typedef

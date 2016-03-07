@@ -4,7 +4,7 @@ comment|/* crypto/pkcs7/pk7_doit.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -469,7 +469,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* 	 * The content field in the PKCS7 ContentInfo is optional, but that really 	 * only applies to inner content (precisely, detached signatures). 	 * 	 * When reading content, missing outer content is therefore treated as an 	 * error. 	 * 	 * When creating content, PKCS7_content_new() must be called before 	 * calling this method, so a NULL p7->d is always an error. 	 */
+comment|/*      * The content field in the PKCS7 ContentInfo is optional, but that really      * only applies to inner content (precisely, detached signatures).      *      * When reading content, missing outer content is therefore treated as an      * error.      *      * When creating content, PKCS7_content_new() must be called before      * calling this method, so a NULL p7->d is always an error.      */
 if|if
 condition|(
 name|p7
@@ -1627,6 +1627,7 @@ block|{
 case|case
 name|NID_pkcs7_signed
 case|:
+comment|/*          * p7->d.sign->contents is a PKCS7 structure consisting of a contentType          * field and optional content.          * data_body is NULL if that structure has no (=detached) content          * or if the contentType is wrong (i.e., not "data").          */
 name|data_body
 operator|=
 name|PKCS7_get_octet_string
@@ -1674,6 +1675,7 @@ name|signed_and_enveloped
 operator|->
 name|md_algs
 expr_stmt|;
+comment|/* data_body is NULL if the optional EncryptedContent is missing. */
 name|data_body
 operator|=
 name|p7
@@ -1751,6 +1753,7 @@ name|enc_data
 operator|->
 name|algorithm
 expr_stmt|;
+comment|/* data_body is NULL if the optional EncryptedContent is missing. */
 name|data_body
 operator|=
 name|p7
@@ -1961,7 +1964,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|unsigned char key[EVP_MAX_KEY_LENGTH]; 		unsigned char iv[EVP_MAX_IV_LENGTH]; 		unsigned char *p; 		int keylen,ivlen; 		int max; 		X509_OBJECT ret;
+block|unsigned char key[EVP_MAX_KEY_LENGTH];         unsigned char iv[EVP_MAX_IV_LENGTH];         unsigned char *p;         int keylen, ivlen;         int max;         X509_OBJECT ret;
 endif|#
 directive|endif
 name|unsigned
@@ -2003,8 +2006,8 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* It was encrypted, we need to decrypt the secret key 		 * with the private key */
-comment|/* Find the recipientInfo which matches the passed certificate 		 * (if any) 		 */
+comment|/*          * It was encrypted, we need to decrypt the secret key with the          * private key          */
+comment|/*          * Find the recipientInfo which matches the passed certificate (if          * any)          */
 if|if
 condition|(
 name|pcert
@@ -2118,7 +2121,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Temporary storage in case EVP_PKEY_decrypt 			 * overwrites output buffer on error. 			 */
+comment|/*              * Temporary storage in case EVP_PKEY_decrypt overwrites output              * buffer on error.              */
 name|unsigned
 name|char
 modifier|*
@@ -2144,7 +2147,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Always attempt to decrypt all cases to avoid 			 * leaking timing information about a successful 			 * decrypt. 			 */
+comment|/*              * Always attempt to decrypt all cases to avoid leaking timing              * information about a successful decrypt.              */
 for|for
 control|(
 name|i
@@ -2384,7 +2387,7 @@ operator|!=
 name|tkeylen
 condition|)
 block|{
-comment|/* Some S/MIME clients don't use the same key 			 * and effective key length. The key length is 			 * determined by the size of the decrypted RSA key. 			 */
+comment|/*              * Some S/MIME clients don't use the same key and effective key              * length. The key length is determined by the size of the              * decrypted RSA key.              */
 if|if
 condition|(
 operator|!
@@ -2516,9 +2519,9 @@ block|{
 if|#
 directive|if
 literal|0
-block|bio=BIO_new(BIO_s_mem());
-comment|/* We need to set this so that when we have read all 		 * the data, the encrypt BIO, if present, will read 		 * EOF and encode the last few bytes */
-block|BIO_set_mem_eof_return(bio,0);  		if (data_body->length> 0) 			BIO_write(bio,(char *)data_body->data,data_body->length);
+block|bio = BIO_new(BIO_s_mem());
+comment|/*          * We need to set this so that when we have read all the data, the          * encrypt BIO, if present, will read EOF and encode the last few          * bytes          */
+block|BIO_set_mem_eof_return(bio, 0);          if (data_body->length> 0)             BIO_write(bio, (char *)data_body->data, data_body->length);
 else|#
 directive|else
 if|if
@@ -3222,7 +3225,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* We now have the EVP_MD_CTX, lets do the 			 * signing. */
+comment|/*              * We now have the EVP_MD_CTX, lets do the signing.              */
 name|EVP_MD_CTX_copy_ex
 argument_list|(
 operator|&
@@ -3264,7 +3267,7 @@ name|si
 operator|->
 name|auth_attr
 expr_stmt|;
-comment|/* If there are attributes, we add the digest 			 * attribute and only sign the attributes */
+comment|/*              * If there are attributes, we add the digest attribute and only              * sign the attributes              */
 if|if
 condition|(
 operator|(
@@ -3732,7 +3735,7 @@ name|p7
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * NOTE(emilia): I think we only reach os == NULL here because detached 		 * digested data support is broken. 		 */
+comment|/*          * NOTE(emilia): I think we only reach os == NULL here because detached          * digested data support is broken.          */
 if|if
 condition|(
 name|os
@@ -3777,7 +3780,7 @@ operator|&
 name|buf_mem
 argument_list|)
 expr_stmt|;
-comment|/* Mark the BIO read only then we can use its copy of the data 		 * instead of making an extra copy. 		 */
+comment|/*          * Mark the BIO read only then we can use its copy of the data          * instead of making an extra copy.          */
 name|BIO_set_flags
 argument_list|(
 name|btmp
@@ -3816,7 +3819,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|M_ASN1_OCTET_STRING_set(os, 			(unsigned char *)buf_mem->data,buf_mem->length);
+block|M_ASN1_OCTET_STRING_set(os,                                 (unsigned char *)buf_mem->data,                                 buf_mem->length);
 endif|#
 directive|endif
 block|}
@@ -4300,7 +4303,7 @@ operator|==
 name|md_type
 condition|)
 break|break;
-comment|/* Workaround for some broken clients that put the signature 		 * OID instead of the digest OID in digest_alg->algorithm 		 */
+comment|/*          * Workaround for some broken clients that put the signature OID          * instead of the digest OID in digest_alg->algorithm          */
 if|if
 condition|(
 name|EVP_MD_pkey_type
@@ -4322,7 +4325,7 @@ name|btmp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* mdc is the digest ctx that we want, unless there are attributes, 	 * in which case the digest is the signed attributes */
+comment|/*      * mdc is the digest ctx that we want, unless there are attributes, in      * which case the digest is the signed attributes      */
 name|EVP_MD_CTX_copy_ex
 argument_list|(
 operator|&
@@ -4442,7 +4445,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|{ int ii; for (ii=0; ii<message_digest->length; ii++) 	printf("%02X",message_digest->data[ii]); printf(" sent\n"); for (ii=0; ii<md_len; ii++) printf("%02X",md_dat[ii]); printf(" calc\n"); }
+block|{                 int ii;                 for (ii = 0; ii< message_digest->length; ii++)                     printf("%02X", message_digest->data[ii]);                 printf(" sent\n");                 for (ii = 0; ii< md_len; ii++)                     printf("%02X", md_dat[ii]);                 printf(" calc\n");             }
 endif|#
 directive|endif
 name|PKCS7err

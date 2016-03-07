@@ -4,7 +4,7 @@ comment|/* crypto/des/des_enc.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * DES_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
+comment|/*      * Things have been modified so that the initial rotate is done outside      * the loop.  This required the DES_SPtrans values in sp.h to be rotated      * 1 bit to the right. One perl script later and things have a 5% speed      * up on a sparc2. Thanks to Richard Outerbridge      *<71755.204@CompuServe.COM> for pointing this out.      */
 comment|/* clear the top bits on machines with 8byte longs */
 comment|/* shift left by 2 */
 name|r
@@ -127,7 +127,7 @@ name|ks
 operator|->
 name|deslong
 expr_stmt|;
-comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop */
+comment|/*      * I don't know if it is worth the effort of loop unrolling the inner      * loop      */
 if|if
 condition|(
 name|enc
@@ -145,7 +145,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -155,7 +155,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -165,7 +165,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -175,7 +175,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -185,7 +185,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*  5 */
+comment|/* 5 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -195,7 +195,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  6 */
+comment|/* 6 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -205,7 +205,7 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/*  7 */
+comment|/* 7 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -215,7 +215,7 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/*  8 */
+comment|/* 8 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -225,7 +225,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*  9 */
+comment|/* 9 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -235,7 +235,7 @@ argument_list|,
 literal|18
 argument_list|)
 expr_stmt|;
-comment|/*  10 */
+comment|/* 10 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -245,7 +245,7 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-comment|/*  11 */
+comment|/* 11 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -255,7 +255,7 @@ argument_list|,
 literal|22
 argument_list|)
 expr_stmt|;
-comment|/*  12 */
+comment|/* 12 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -265,7 +265,7 @@ argument_list|,
 literal|24
 argument_list|)
 expr_stmt|;
-comment|/*  13 */
+comment|/* 13 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -275,7 +275,7 @@ argument_list|,
 literal|26
 argument_list|)
 expr_stmt|;
-comment|/*  14 */
+comment|/* 14 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -285,7 +285,7 @@ argument_list|,
 literal|28
 argument_list|)
 expr_stmt|;
-comment|/*  15 */
+comment|/* 15 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -295,7 +295,7 @@ argument_list|,
 literal|30
 argument_list|)
 expr_stmt|;
-comment|/*  16 */
+comment|/* 16 */
 else|#
 directive|else
 for|for
@@ -324,7 +324,7 @@ operator|+
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -336,7 +336,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -348,7 +348,7 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -360,7 +360,7 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 block|}
 endif|#
 directive|endif
@@ -449,7 +449,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*  9 */
+comment|/* 9 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -459,7 +459,7 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/*  8 */
+comment|/* 8 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -469,7 +469,7 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/*  7 */
+comment|/* 7 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -479,7 +479,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  6 */
+comment|/* 6 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -489,7 +489,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*  5 */
+comment|/* 5 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -499,7 +499,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -509,7 +509,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -519,7 +519,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -529,7 +529,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 else|#
 directive|else
 for|for
@@ -730,7 +730,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* Things have been modified so that the initial rotate is 	 * done outside the loop.  This required the 	 * DES_SPtrans values in sp.h to be rotated 1 bit to the right. 	 * One perl script later and things have a 5% speed up on a sparc2. 	 * Thanks to Richard Outerbridge<71755.204@CompuServe.COM> 	 * for pointing this out. */
+comment|/*      * Things have been modified so that the initial rotate is done outside      * the loop.  This required the DES_SPtrans values in sp.h to be rotated      * 1 bit to the right. One perl script later and things have a 5% speed      * up on a sparc2. Thanks to Richard Outerbridge      *<71755.204@CompuServe.COM> for pointing this out.      */
 comment|/* clear the top bits on machines with 8byte longs */
 name|r
 operator|=
@@ -762,7 +762,7 @@ name|ks
 operator|->
 name|deslong
 expr_stmt|;
-comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop */
+comment|/*      * I don't know if it is worth the effort of loop unrolling the inner      * loop      */
 if|if
 condition|(
 name|enc
@@ -780,7 +780,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -790,7 +790,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -800,7 +800,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -810,7 +810,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -820,7 +820,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*  5 */
+comment|/* 5 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -830,7 +830,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  6 */
+comment|/* 6 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -840,7 +840,7 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/*  7 */
+comment|/* 7 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -850,7 +850,7 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/*  8 */
+comment|/* 8 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -860,7 +860,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*  9 */
+comment|/* 9 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -870,7 +870,7 @@ argument_list|,
 literal|18
 argument_list|)
 expr_stmt|;
-comment|/*  10 */
+comment|/* 10 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -880,7 +880,7 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-comment|/*  11 */
+comment|/* 11 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -890,7 +890,7 @@ argument_list|,
 literal|22
 argument_list|)
 expr_stmt|;
-comment|/*  12 */
+comment|/* 12 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -900,7 +900,7 @@ argument_list|,
 literal|24
 argument_list|)
 expr_stmt|;
-comment|/*  13 */
+comment|/* 13 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -910,7 +910,7 @@ argument_list|,
 literal|26
 argument_list|)
 expr_stmt|;
-comment|/*  14 */
+comment|/* 14 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -920,7 +920,7 @@ argument_list|,
 literal|28
 argument_list|)
 expr_stmt|;
-comment|/*  15 */
+comment|/* 15 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -930,7 +930,7 @@ argument_list|,
 literal|30
 argument_list|)
 expr_stmt|;
-comment|/*  16 */
+comment|/* 16 */
 else|#
 directive|else
 for|for
@@ -959,7 +959,7 @@ operator|+
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -971,7 +971,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -983,7 +983,7 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -995,7 +995,7 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 block|}
 endif|#
 directive|endif
@@ -1084,7 +1084,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*  9 */
+comment|/* 9 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -1094,7 +1094,7 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/*  8 */
+comment|/* 8 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -1104,7 +1104,7 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/*  7 */
+comment|/* 7 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -1114,7 +1114,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  6 */
+comment|/* 6 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -1124,7 +1124,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*  5 */
+comment|/* 5 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -1134,7 +1134,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  4 */
+comment|/* 4 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -1144,7 +1144,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  3 */
+comment|/* 3 */
 name|D_ENCRYPT
 argument_list|(
 name|l
@@ -1154,7 +1154,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*  2 */
+comment|/* 2 */
 name|D_ENCRYPT
 argument_list|(
 name|r
@@ -1164,7 +1164,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  1 */
+comment|/* 1 */
 else|#
 directive|else
 for|for

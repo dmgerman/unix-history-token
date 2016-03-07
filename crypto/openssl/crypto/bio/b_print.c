@@ -4,7 +4,7 @@ comment|/* crypto/bio/b_print.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Stolen from tjh's ssl/ssl_trc.c stuff.  */
+comment|/*  * Stolen from tjh's ssl/ssl_trc.c stuff.  */
 end_comment
 
 begin_include
@@ -158,7 +158,7 @@ comment|/*  * Copyright Patrick Powell 1995  * This code is based on code writte
 end_comment
 
 begin_comment
-comment|/*  * This code contains numerious changes and enhancements which were  * made by lots of contributors over the last years to Patrick Powell's  * original code:  *  * o Patrick Powell<papowell@astart.com>      (1995)  * o Brandon Long<blong@fiction.net>          (1996, for Mutt)  * o Thomas Roessler<roessler@guug.de>        (1998, for Mutt)  * o Michael Elkins<me@cs.hmc.edu>            (1998, for Mutt)  * o Andrew Tridgell<tridge@samba.org>        (1998, for Samba)  * o Luke Mewburn<lukem@netbsd.org>           (1999, for LukemFTP)  * o Ralf S. Engelschall<rse@engelschall.com> (1999, for Pth)  * o ...                                       (for OpenSSL)  */
+comment|/*-  * This code contains numerious changes and enhancements which were  * made by lots of contributors over the last years to Patrick Powell's  * original code:  *  * o Patrick Powell<papowell@astart.com>      (1995)  * o Brandon Long<blong@fiction.net>          (1996, for Mutt)  * o Thomas Roessler<roessler@guug.de>        (1998, for Mutt)  * o Michael Elkins<me@cs.hmc.edu>            (1998, for Mutt)  * o Andrew Tridgell<tridge@samba.org>        (1998, for Samba)  * o Luke Mewburn<lukem@netbsd.org>           (1999, for LukemFTP)  * o Ralf S. Engelschall<rse@engelschall.com> (1999, for Pth)  * o ...                                       (for OpenSSL)  */
 end_comment
 
 begin_ifdef
@@ -255,7 +255,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtstr
 parameter_list|(
 name|char
@@ -287,7 +287,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtint
 parameter_list|(
 name|char
@@ -319,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fmtfp
 parameter_list|(
 name|char
@@ -349,7 +349,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|doapr_outch
 parameter_list|(
 name|char
@@ -373,7 +373,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|_dopr
 parameter_list|(
 name|char
@@ -582,7 +582,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|_dopr
 parameter_list|(
 name|char
@@ -718,7 +718,10 @@ name|state
 operator|=
 name|DP_S_FLAGS
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -732,7 +735,10 @@ name|maxlen
 argument_list|,
 name|ch
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|ch
 operator|=
 operator|*
@@ -1160,6 +1166,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1181,7 +1190,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'X'
@@ -1271,6 +1283,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1306,7 +1321,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'f'
@@ -1336,6 +1354,9 @@ argument_list|,
 name|double
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fmtfp
 argument_list|(
 name|sbuffer
@@ -1355,7 +1376,10 @@ name|max
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'E'
@@ -1432,6 +1456,9 @@ break|break;
 case|case
 literal|'c'
 case|:
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1450,7 +1477,10 @@ argument_list|,
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'s'
@@ -1487,6 +1517,9 @@ operator|*
 name|maxlen
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|fmtstr
 argument_list|(
 name|sbuffer
@@ -1506,7 +1539,10 @@ name|min
 argument_list|,
 name|max
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'p'
@@ -1524,6 +1560,9 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fmtint
 argument_list|(
 name|sbuffer
@@ -1547,7 +1586,10 @@ name|flags
 operator||
 name|DP_F_NUM
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'n'
@@ -1671,6 +1713,9 @@ break|break;
 case|case
 literal|'%'
 case|:
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1684,7 +1729,10 @@ name|maxlen
 argument_list|,
 name|ch
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 break|break;
 case|case
 literal|'w'
@@ -1757,6 +1805,9 @@ name|maxlen
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1770,7 +1821,10 @@ name|maxlen
 argument_list|,
 literal|'\0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|*
 name|retlen
 operator|=
@@ -1778,13 +1832,15 @@ name|currlen
 operator|-
 literal|1
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtstr
 parameter_list|(
 name|char
@@ -1822,7 +1878,8 @@ parameter_list|)
 block|{
 name|int
 name|padlen
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|strln
 decl_stmt|;
 name|int
@@ -1840,21 +1897,23 @@ name|value
 operator|=
 literal|"<NULL>"
 expr_stmt|;
-for|for
-control|(
 name|strln
 operator|=
-literal|0
-init|;
+name|strlen
+argument_list|(
 name|value
-index|[
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|strln
-index|]
-condition|;
-operator|++
+operator|>
+name|INT_MAX
+condition|)
 name|strln
-control|)
-empty_stmt|;
+operator|=
+name|INT_MAX
+expr_stmt|;
 name|padlen
 operator|=
 name|min
@@ -1863,6 +1922,10 @@ name|strln
 expr_stmt|;
 if|if
 condition|(
+name|min
+operator|<
+literal|0
+operator|||
 name|padlen
 operator|<
 literal|0
@@ -1897,6 +1960,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1909,7 +1975,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -1929,6 +1998,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1943,7 +2015,10 @@ operator|*
 name|value
 operator|++
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|cnt
 expr_stmt|;
@@ -1963,6 +2038,9 @@ name|max
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -1975,7 +2053,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|padlen
 expr_stmt|;
@@ -1983,12 +2064,15 @@ operator|++
 name|cnt
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtint
 parameter_list|(
 name|char
@@ -2336,6 +2420,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2348,7 +2435,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|spadlen
 expr_stmt|;
@@ -2358,6 +2448,9 @@ if|if
 condition|(
 name|signvalue
 condition|)
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2370,7 +2463,10 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 comment|/* prefix */
 while|while
 condition|(
@@ -2378,6 +2474,9 @@ operator|*
 name|prefix
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2391,7 +2490,10 @@ argument_list|,
 operator|*
 name|prefix
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|prefix
 operator|++
 expr_stmt|;
@@ -2411,6 +2513,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2423,7 +2528,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|zpadlen
 expr_stmt|;
@@ -2436,6 +2544,10 @@ name|place
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2452,7 +2564,11 @@ operator|--
 name|place
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 comment|/* left justified spaces */
 while|while
 condition|(
@@ -2461,6 +2577,9 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2473,12 +2592,17 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|spadlen
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2588,7 +2712,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fmtfp
 parameter_list|(
 name|char
@@ -2732,7 +2856,7 @@ name|long
 operator|)
 name|ufvalue
 expr_stmt|;
-comment|/* sorry, we only support 9 digits past the decimal because of our        conversion method */
+comment|/*      * sorry, we only support 9 digits past the decimal because of our      * conversion method      */
 if|if
 condition|(
 name|max
@@ -2743,7 +2867,7 @@ name|max
 operator|=
 literal|9
 expr_stmt|;
-comment|/* we "cheat" by converting the fractional part to integer by        multiplying by a factor of 10 */
+comment|/*      * we "cheat" by converting the fractional part to integer by multiplying      * by a factor of 10      */
 name|max10
 operator|=
 name|roundv
@@ -2983,6 +3107,9 @@ condition|(
 name|signvalue
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -2995,7 +3122,10 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -3011,6 +3141,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3023,7 +3156,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -3036,6 +3172,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3048,7 +3187,10 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|padlen
 expr_stmt|;
@@ -3056,7 +3198,8 @@ block|}
 if|if
 condition|(
 name|signvalue
-condition|)
+operator|&&
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3069,13 +3212,20 @@ name|maxlen
 argument_list|,
 name|signvalue
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|iplace
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3092,7 +3242,11 @@ operator|--
 name|iplace
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 comment|/*      * Decimal point. This should probably use locale to find the correct      * char to print out.      */
 if|if
 condition|(
@@ -3107,6 +3261,9 @@ name|DP_F_NUM
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3119,13 +3276,20 @@ name|maxlen
 argument_list|,
 literal|'.'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|fplace
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3142,7 +3306,11 @@ operator|--
 name|fplace
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+block|}
 block|}
 while|while
 condition|(
@@ -3151,6 +3319,9 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3163,7 +3334,10 @@ name|maxlen
 argument_list|,
 literal|'0'
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|--
 name|zpadlen
 expr_stmt|;
@@ -3175,6 +3349,9 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|doapr_outch
 argument_list|(
 name|sbuffer
@@ -3187,17 +3364,30 @@ name|maxlen
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 operator|++
 name|padlen
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|BUFFER_INC
+value|1024
+end_define
+
 begin_function
 specifier|static
-name|void
+name|int
 name|doapr_outch
 parameter_list|(
 name|char
@@ -3235,20 +3425,44 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* |currlen| must always be<= |*maxlen| */
+name|assert
+argument_list|(
+operator|*
+name|currlen
+operator|<=
+operator|*
+name|maxlen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buffer
-condition|)
-block|{
-while|while
-condition|(
+operator|&&
 operator|*
 name|currlen
-operator|>=
+operator|==
 operator|*
 name|maxlen
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|maxlen
+operator|>
+name|INT_MAX
+operator|-
+name|BUFFER_INC
+condition|)
+return|return
+literal|0
+return|;
+operator|*
+name|maxlen
+operator|+=
+name|BUFFER_INC
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -3257,18 +3471,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|*
-name|maxlen
-operator|==
-literal|0
-condition|)
-operator|*
-name|maxlen
-operator|=
-literal|1024
-expr_stmt|;
 operator|*
 name|buffer
 operator|=
@@ -3278,6 +3480,16 @@ operator|*
 name|maxlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buffer
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|*
@@ -3315,13 +3527,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|maxlen
-operator|+=
-literal|1024
-expr_stmt|;
-operator|*
-name|buffer
+name|char
+modifier|*
+name|tmpbuf
+decl_stmt|;
+name|tmpbuf
 operator|=
 name|OPENSSL_realloc
 argument_list|(
@@ -3332,22 +3542,21 @@ operator|*
 name|maxlen
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* What to do if *buffer is NULL? */
-name|assert
-argument_list|(
-operator|*
-name|sbuffer
-operator|!=
+if|if
+condition|(
+name|tmpbuf
+operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+literal|0
+return|;
 operator|*
 name|buffer
-operator|!=
-name|NULL
-argument_list|)
+operator|=
+name|tmpbuf
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3399,7 +3608,9 @@ operator|)
 name|c
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3491,7 +3702,7 @@ operator|*
 literal|2
 index|]
 decl_stmt|;
-comment|/* Was previously 10k, which is unreasonable 				   in small-stack environments, like threads 				   or DOS programs. */
+comment|/* Was previously 10k, which is unreasonable                                  * in small-stack environments, like threads                                  * or DOS programs. */
 name|char
 modifier|*
 name|hugebufp
@@ -3524,6 +3735,9 @@ argument_list|(
 literal|"doapr()"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|_dopr
 argument_list|(
 operator|&
@@ -3545,7 +3759,18 @@ name|format
 argument_list|,
 name|args
 argument_list|)
+condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|dynbuf
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|dynbuf
@@ -3600,7 +3825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* As snprintf is not available everywhere, we provide our own implementation.  * This function has nothing to do with BIOs, but it's closely related  * to BIO_printf, and we need *some* name prefix ...  * (XXX  the function should be renamed, but to what?) */
+comment|/*  * As snprintf is not available everywhere, we provide our own  * implementation. This function has nothing to do with BIOs, but it's  * closely related to BIO_printf, and we need *some* name prefix ... (XXX the  * function should be renamed, but to what?)  */
 end_comment
 
 begin_function
@@ -3687,6 +3912,9 @@ decl_stmt|;
 name|int
 name|truncated
 decl_stmt|;
+if|if
+condition|(
+operator|!
 name|_dopr
 argument_list|(
 operator|&
@@ -3707,12 +3935,16 @@ name|format
 argument_list|,
 name|args
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|truncated
 condition|)
-comment|/* In case of truncation, return -1 like traditional snprintf. 		 * (Current drafts for ISO/IEC 9899 say snprintf should return 		 * the number of characters that would have been written, 		 * had the buffer been large enough.) */
+comment|/*          * In case of truncation, return -1 like traditional snprintf.          * (Current drafts for ISO/IEC 9899 say snprintf should return the          * number of characters that would have been written, had the buffer          * been large enough.)          */
 return|return
 operator|-
 literal|1

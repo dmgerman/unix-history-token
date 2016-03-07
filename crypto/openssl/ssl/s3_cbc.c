@@ -32,7 +32,7 @@ file|<openssl/sha.h>
 end_include
 
 begin_comment
-comment|/* MAX_HASH_BIT_COUNT_BYTES is the maximum number of bytes in the hash's length  * field. (SHA-384/512 have 128-bit length.) */
+comment|/*  * MAX_HASH_BIT_COUNT_BYTES is the maximum number of bytes in the hash's  * length field. (SHA-384/512 have 128-bit length.)  */
 end_comment
 
 begin_define
@@ -43,7 +43,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* MAX_HASH_BLOCK_SIZE is the maximum hash block size that we'll support.  * Currently SHA-384/512 has a 128-byte block size and that's the largest  * supported by TLS.) */
+comment|/*  * MAX_HASH_BLOCK_SIZE is the maximum hash block size that we'll support.  * Currently SHA-384/512 has a 128-byte block size and that's the largest  * supported by TLS.)  */
 end_comment
 
 begin_define
@@ -54,7 +54,7 @@ value|128
 end_define
 
 begin_comment
-comment|/* ssl3_cbc_remove_padding removes padding from the decrypted, SSLv3, CBC  * record in |rec| by updating |rec->length| in constant time.  *  * block_size: the block size of the cipher used to encrypt the record.  * returns:  *   0: (in non-constant time) if the record is publicly invalid.  *   1: if the padding was valid  *  -1: otherwise. */
+comment|/*-  * ssl3_cbc_remove_padding removes padding from the decrypted, SSLv3, CBC  * record in |rec| by updating |rec->length| in constant time.  *  * block_size: the block size of the cipher used to encrypt the record.  * returns:  *   0: (in non-constant time) if the record is publicly invalid.  *   1: if the padding was valid  *  -1: otherwise.  */
 end_comment
 
 begin_function
@@ -91,7 +91,7 @@ comment|/* padding length byte */
 operator|+
 name|mac_size
 decl_stmt|;
-comment|/* These lengths are all public so we can test them in non-constant 	 * time. */
+comment|/*      * These lengths are all public so we can test them in non-constant time.      */
 if|if
 condition|(
 name|overhead
@@ -181,7 +181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* tls1_cbc_remove_padding removes the CBC padding from the decrypted, TLS, CBC  * record in |rec| in constant time and returns 1 if the padding is valid and  * -1 otherwise. It also removes any explicit IV from the start of the record  * without leaking any timing about whether there was enough space after the  * padding was removed.  *  * block_size: the block size of the cipher used to encrypt the record.  * returns:  *   0: (in non-constant time) if the record is publicly invalid.  *   1: if the padding was valid  *  -1: otherwise. */
+comment|/*-  * tls1_cbc_remove_padding removes the CBC padding from the decrypted, TLS, CBC  * record in |rec| in constant time and returns 1 if the padding is valid and  * -1 otherwise. It also removes any explicit IV from the start of the record  * without leaking any timing about whether there was enough space after the  * padding was removed.  *  * block_size: the block size of the cipher used to encrypt the record.  * returns:  *   0: (in non-constant time) if the record is publicly invalid.  *   1: if the padding was valid  *  -1: otherwise.  */
 end_comment
 
 begin_function
@@ -238,7 +238,7 @@ operator|==
 name|DTLS1_BAD_VER
 condition|)
 block|{
-comment|/* These lengths are all public so we can test them in 		 * non-constant time. 		 */
+comment|/*          * These lengths are all public so we can test them in non-constant          * time.          */
 if|if
 condition|(
 name|overhead
@@ -297,7 +297,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* NB: if compression is in operation the first packet may not be of 	 * even length so the padding bug check cannot be performed. This bug 	 * workaround has been around since SSLeay so hopefully it is either 	 * fixed now or no buggy implementation supports compression [steve] 	 */
+comment|/*      * NB: if compression is in operation the first packet may not be of even      * length so the padding bug check cannot be performed. This bug      * workaround has been around since SSLeay so hopefully it is either      * fixed now or no buggy implementation supports compression [steve]      */
 if|if
 condition|(
 operator|(
@@ -386,7 +386,7 @@ operator|+
 name|padding_length
 argument_list|)
 expr_stmt|;
-comment|/* The padding consists of a length byte at the end of the record and 	 * then that many bytes of padding, all with the same value as the 	 * length byte. Thus, with the length byte included, there are i+1 	 * bytes of padding. 	 * 	 * We can't check just |padding_length+1| bytes because that leaks 	 * decrypted information. Therefore we always have to check the maximum 	 * amount of padding possible. (Again, the length of the record is 	 * public information so we can use it.) */
+comment|/*      * The padding consists of a length byte at the end of the record and      * then that many bytes of padding, all with the same value as the length      * byte. Thus, with the length byte included, there are i+1 bytes of      * padding. We can't check just |padding_length+1| bytes because that      * leaks decrypted information. Therefore we always have to check the      * maximum amount of padding possible. (Again, the length of the record      * is public information so we can use it.)      */
 name|to_check
 operator|=
 literal|255
@@ -452,7 +452,7 @@ operator|-
 name|i
 index|]
 decl_stmt|;
-comment|/* The final |padding_length+1| bytes should all have the value 		 * |padding_length|. Therefore the XOR should be zero. */
+comment|/*          * The final |padding_length+1| bytes should all have the value          * |padding_length|. Therefore the XOR should be zero.          */
 name|good
 operator|&=
 operator|~
@@ -467,7 +467,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* If any of the final |padding_length+1| bytes had the wrong value, 	 * one or more of the lower eight bits of |good| will be cleared. 	 */
+comment|/*      * If any of the final |padding_length+1| bytes had the wrong value, one      * or more of the lower eight bits of |good| will be cleared.      */
 name|good
 operator|=
 name|constant_time_eq
@@ -519,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ssl3_cbc_copy_mac copies |md_size| bytes from the end of |rec| to |out| in  * constant time (independent of the concrete value of rec->length, which may  * vary within a 256-byte window).  *  * ssl3_cbc_remove_padding or tls1_cbc_remove_padding must be called prior to  * this function.  *  * On entry:  *   rec->orig_len>= md_size  *   md_size<= EVP_MAX_MD_SIZE  *  * If CBC_MAC_ROTATE_IN_PLACE is defined then the rotation is performed with  * variable accesses in a 64-byte-aligned buffer. Assuming that this fits into  * a single or pair of cache-lines, then the variable memory accesses don't  * actually affect the timing. CPUs with smaller cache-lines [if any] are  * not multi-core and are not considered vulnerable to cache-timing attacks.  */
+comment|/*-  * ssl3_cbc_copy_mac copies |md_size| bytes from the end of |rec| to |out| in  * constant time (independent of the concrete value of rec->length, which may  * vary within a 256-byte window).  *  * ssl3_cbc_remove_padding or tls1_cbc_remove_padding must be called prior to  * this function.  *  * On entry:  *   rec->orig_len>= md_size  *   md_size<= EVP_MAX_MD_SIZE  *  * If CBC_MAC_ROTATE_IN_PLACE is defined then the rotation is performed with  * variable accesses in a 64-byte-aligned buffer. Assuming that this fits into  * a single or pair of cache-lines, then the variable memory accesses don't  * actually affect the timing. CPUs with smaller cache-lines [if any] are  * not multi-core and are not considered vulnerable to cache-timing attacks.  */
 end_comment
 
 begin_define
@@ -580,7 +580,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* mac_end is the index of |rec->data| just after the end of the MAC. */
+comment|/*      * mac_end is the index of |rec->data| just after the end of the MAC.      */
 name|unsigned
 name|mac_end
 init|=
@@ -595,7 +595,7 @@ name|mac_end
 operator|-
 name|md_size
 decl_stmt|;
-comment|/* scan_start contains the number of bytes that we can ignore because 	 * the MAC's position can only vary by 255 bytes. */
+comment|/*      * scan_start contains the number of bytes that we can ignore because the      * MAC's position can only vary by 255 bytes.      */
 name|unsigned
 name|scan_start
 init|=
@@ -674,7 +674,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* div_spoiler contains a multiple of md_size that is used to cause the 	 * modulo operation to be constant time. Without this, the time varies 	 * based on the amount of padding when running on Intel chips at least. 	 * 	 * The aim of right-shifting md_size is so that the compiler doesn't 	 * figure out that it can remove div_spoiler as that would require it 	 * to prove that md_size is always even, which I hope is beyond it. */
+comment|/*      * div_spoiler contains a multiple of md_size that is used to cause the      * modulo operation to be constant time. Without this, the time varies      * based on the amount of padding when running on Intel chips at least.      * The aim of right-shifting md_size is so that the compiler doesn't      * figure out that it can remove div_spoiler as that would require it to      * prove that md_size is always even, which I hope is beyond it.      */
 name|div_spoiler
 operator|=
 name|md_size
@@ -941,7 +941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* u32toLE serialises an unsigned, 32-bit number (n) as four bytes at (p) in  * little-endian order. The value of p is advanced by four. */
+comment|/*  * u32toLE serialises an unsigned, 32-bit number (n) as four bytes at (p) in  * little-endian order. The value of p is advanced by four.  */
 end_comment
 
 begin_define
@@ -954,11 +954,11 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(*((p)++)=(unsigned char)(n), \ 	 *((p)++)=(unsigned char)(n>>8), \ 	 *((p)++)=(unsigned char)(n>>16), \ 	 *((p)++)=(unsigned char)(n>>24))
+value|(*((p)++)=(unsigned char)(n), \          *((p)++)=(unsigned char)(n>>8), \          *((p)++)=(unsigned char)(n>>16), \          *((p)++)=(unsigned char)(n>>24))
 end_define
 
 begin_comment
-comment|/* These functions serialize the state of a hash and thus perform the standard  * "final" operation without adding the padding and length that such a function  * typically does. */
+comment|/*  * These functions serialize the state of a hash and thus perform the  * standard "final" operation without adding the padding and length that such  * a function typically does.  */
 end_comment
 
 begin_function
@@ -1254,7 +1254,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ssl3_cbc_record_digest_supported returns 1 iff |ctx| uses a hash function  * which ssl3_cbc_digest_record supports. */
+comment|/*  * ssl3_cbc_record_digest_supported returns 1 iff |ctx| uses a hash function  * which ssl3_cbc_digest_record supports.  */
 end_comment
 
 begin_function
@@ -1328,7 +1328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ssl3_cbc_digest_record computes the MAC of a decrypted, padded SSLv3/TLS  * record.  *  *   ctx: the EVP_MD_CTX from which we take the hash function.  *     ssl3_cbc_record_digest_supported must return true for this EVP_MD_CTX.  *   md_out: the digest output. At most EVP_MAX_MD_SIZE bytes will be written.  *   md_out_size: if non-NULL, the number of output bytes is written here.  *   header: the 13-byte, TLS record header.  *   data: the record data itself, less any preceeding explicit IV.  *   data_plus_mac_size: the secret, reported length of the data and MAC  *     once the padding has been removed.  *   data_plus_mac_plus_padding_size: the public length of the whole  *     record, including padding.  *   is_sslv3: non-zero if we are to use SSLv3. Otherwise, TLS.  *  * On entry: by virtue of having been through one of the remove_padding  * functions, above, we know that data_plus_mac_size is large enough to contain  * a padding byte and MAC. (If the padding was invalid, it might contain the  * padding too. ) */
+comment|/*-  * ssl3_cbc_digest_record computes the MAC of a decrypted, padded SSLv3/TLS  * record.  *  *   ctx: the EVP_MD_CTX from which we take the hash function.  *     ssl3_cbc_record_digest_supported must return true for this EVP_MD_CTX.  *   md_out: the digest output. At most EVP_MAX_MD_SIZE bytes will be written.  *   md_out_size: if non-NULL, the number of output bytes is written here.  *   header: the 13-byte, TLS record header.  *   data: the record data itself, less any preceeding explicit IV.  *   data_plus_mac_size: the secret, reported length of the data and MAC  *     once the padding has been removed.  *   data_plus_mac_plus_padding_size: the public length of the whole  *     record, including padding.  *   is_sslv3: non-zero if we are to use SSLv3. Otherwise, TLS.  *  * On entry: by virtue of having been through one of the remove_padding  * functions, above, we know that data_plus_mac_size is large enough to contain  * a padding byte and MAC. (If the padding was invalid, it might contain the  * padding too. )  */
 end_comment
 
 begin_function
@@ -1511,7 +1511,7 @@ decl_stmt|;
 name|EVP_MD_CTX
 name|md_ctx
 decl_stmt|;
-comment|/* mdLengthSize is the number of bytes in the length field that terminates 	* the hash. */
+comment|/*      * mdLengthSize is the number of bytes in the length field that      * terminates * the hash.      */
 name|unsigned
 name|md_length_size
 init|=
@@ -1522,7 +1522,7 @@ name|length_is_big_endian
 init|=
 literal|1
 decl_stmt|;
-comment|/* This is a, hopefully redundant, check that allows us to forget about 	 * many possible overflows later in this function. */
+comment|/*      * This is a, hopefully redundant, check that allows us to forget about      * many possible overflows later in this function.      */
 name|OPENSSL_assert
 argument_list|(
 name|data_plus_mac_plus_padding_size
@@ -1843,7 +1843,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-comment|/* ssl3_cbc_record_digest_supported should have been 			 * called first to check that the hash function is 			 * supported. */
+comment|/*          * ssl3_cbc_record_digest_supported should have been called first to          * check that the hash function is supported.          */
 name|OPENSSL_assert
 argument_list|(
 literal|0
@@ -1898,7 +1898,7 @@ operator|+
 name|sslv3_pad_length
 operator|+
 literal|8
-comment|/* sequence number */
+comment|/* sequence                                                                   * number */
 operator|+
 literal|1
 comment|/* record type */
@@ -1907,7 +1907,7 @@ literal|2
 comment|/* record length */
 expr_stmt|;
 block|}
-comment|/* variance_blocks is the number of blocks of the hash that we have to 	 * calculate in constant time because they could be altered by the 	 * padding value. 	 * 	 * In SSLv3, the padding must be minimal so the end of the plaintext 	 * varies by, at most, 15+20 = 35 bytes. (We conservatively assume that 	 * the MAC size varies from 0..20 bytes.) In case the 9 bytes of hash 	 * termination (0x80 + 64-bit length) don't fit in the final block, we 	 * say that the final two blocks can vary based on the padding. 	 * 	 * TLSv1 has MACs up to 48 bytes long (SHA-384) and the padding is not 	 * required to be minimal. Therefore we say that the final six blocks 	 * can vary based on the padding. 	 * 	 * Later in the function, if the message is short and there obviously 	 * cannot be this many blocks then variance_blocks can be reduced. */
+comment|/*      * variance_blocks is the number of blocks of the hash that we have to      * calculate in constant time because they could be altered by the      * padding value. In SSLv3, the padding must be minimal so the end of      * the plaintext varies by, at most, 15+20 = 35 bytes. (We conservatively      * assume that the MAC size varies from 0..20 bytes.) In case the 9 bytes      * of hash termination (0x80 + 64-bit length) don't fit in the final      * block, we say that the final two blocks can vary based on the padding.      * TLSv1 has MACs up to 48 bytes long (SHA-384) and the padding is not      * required to be minimal. Therefore we say that the final six blocks can      * vary based on the padding. Later in the function, if the message is      * short and there obviously cannot be this many blocks then      * variance_blocks can be reduced.      */
 name|variance_blocks
 operator|=
 name|is_sslv3
@@ -1916,14 +1916,14 @@ literal|2
 else|:
 literal|6
 expr_stmt|;
-comment|/* From now on we're dealing with the MAC, which conceptually has 13 	 * bytes of `header' before the start of the data (TLS) or 71/75 bytes 	 * (SSLv3) */
+comment|/*      * From now on we're dealing with the MAC, which conceptually has 13      * bytes of `header' before the start of the data (TLS) or 71/75 bytes      * (SSLv3)      */
 name|len
 operator|=
 name|data_plus_mac_plus_padding_size
 operator|+
 name|header_length
 expr_stmt|;
-comment|/* max_mac_bytes contains the maximum bytes of bytes in the MAC, including 	* |header|, assuming that there's no padding. */
+comment|/*      * max_mac_bytes contains the maximum bytes of bytes in the MAC,      * including * |header|, assuming that there's no padding.      */
 name|max_mac_bytes
 operator|=
 name|len
@@ -1949,17 +1949,17 @@ operator|)
 operator|/
 name|md_block_size
 expr_stmt|;
-comment|/* In order to calculate the MAC in constant time we have to handle 	 * the final blocks specially because the padding value could cause the 	 * end to appear somewhere in the final |variance_blocks| blocks and we 	 * can't leak where. However, |num_starting_blocks| worth of data can 	 * be hashed right away because no padding value can affect whether 	 * they are plaintext. */
+comment|/*      * In order to calculate the MAC in constant time we have to handle the      * final blocks specially because the padding value could cause the end      * to appear somewhere in the final |variance_blocks| blocks and we can't      * leak where. However, |num_starting_blocks| worth of data can be hashed      * right away because no padding value can affect whether they are      * plaintext.      */
 name|num_starting_blocks
 operator|=
 literal|0
 expr_stmt|;
-comment|/* k is the starting byte offset into the conceptual header||data where 	 * we start processing. */
+comment|/*      * k is the starting byte offset into the conceptual header||data where      * we start processing.      */
 name|k
 operator|=
 literal|0
 expr_stmt|;
-comment|/* mac_end_offset is the index just past the end of the data to be 	 * MACed. */
+comment|/*      * mac_end_offset is the index just past the end of the data to be MACed.      */
 name|mac_end_offset
 operator|=
 name|data_plus_mac_size
@@ -1968,21 +1968,21 @@ name|header_length
 operator|-
 name|md_size
 expr_stmt|;
-comment|/* c is the index of the 0x80 byte in the final hash block that 	 * contains application data. */
+comment|/*      * c is the index of the 0x80 byte in the final hash block that contains      * application data.      */
 name|c
 operator|=
 name|mac_end_offset
 operator|%
 name|md_block_size
 expr_stmt|;
-comment|/* index_a is the hash block number that contains the 0x80 terminating 	 * value. */
+comment|/*      * index_a is the hash block number that contains the 0x80 terminating      * value.      */
 name|index_a
 operator|=
 name|mac_end_offset
 operator|/
 name|md_block_size
 expr_stmt|;
-comment|/* index_b is the hash block number that contains the 64-bit hash 	 * length, in bits. */
+comment|/*      * index_b is the hash block number that contains the 64-bit hash length,      * in bits.      */
 name|index_b
 operator|=
 operator|(
@@ -1993,8 +1993,8 @@ operator|)
 operator|/
 name|md_block_size
 expr_stmt|;
-comment|/* bits is the hash-length in bits. It includes the additional hash 	 * block for the masked HMAC key, or whole of |header| in the case of 	 * SSLv3. */
-comment|/* For SSLv3, if we're going to have any starting blocks then we need 	 * at least two because the header is larger than a single block. */
+comment|/*      * bits is the hash-length in bits. It includes the additional hash block      * for the masked HMAC key, or whole of |header| in the case of SSLv3.      */
+comment|/*      * For SSLv3, if we're going to have any starting blocks then we need at      * least two because the header is larger than a single block.      */
 if|if
 condition|(
 name|num_blocks
@@ -2035,7 +2035,7 @@ operator|!
 name|is_sslv3
 condition|)
 block|{
-comment|/* Compute the initial HMAC block. For SSLv3, the padding and 		 * secret bytes are included in |header| because they take more 		 * than a single block. */
+comment|/*          * Compute the initial HMAC block. For SSLv3, the padding and secret          * bytes are included in |header| because they take more than a          * single block.          */
 name|bits
 operator|+=
 literal|8
@@ -2269,7 +2269,7 @@ condition|(
 name|is_sslv3
 condition|)
 block|{
-comment|/* The SSLv3 header is larger than a single block. 			 * overhang is the number of bytes beyond a single 			 * block that the header consumes: either 7 bytes 			 * (SHA1) or 11 bytes (MD5). */
+comment|/*              * The SSLv3 header is larger than a single block. overhang is              * the number of bytes beyond a single block that the header              * consumes: either 7 bytes (SHA1) or 11 bytes (MD5).              */
 name|unsigned
 name|overhang
 init|=
@@ -2430,7 +2430,7 @@ name|mac_out
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* We now process the final hash blocks. For each block, we construct 	 * it in constant time. If the |i==index_a| then we'll include the 0x80 	 * bytes and zero pad etc. For each block we selectively copy it, in 	 * constant time, to |mac_out|. */
+comment|/*      * We now process the final hash blocks. For each block, we construct it      * in constant time. If the |i==index_a| then we'll include the 0x80      * bytes and zero pad etc. For each block we selectively copy it, in      * constant time, to |mac_out|.      */
 for|for
 control|(
 name|i
@@ -2558,7 +2558,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* If this is the block containing the end of the 			 * application data, and we are at the offset for the 			 * 0x80 value, then overwrite b with 0x80. */
+comment|/*              * If this is the block containing the end of the application              * data, and we are at the offset for the 0x80 value, then              * overwrite b with 0x80.              */
 name|b
 operator|=
 name|constant_time_select_8
@@ -2570,7 +2570,7 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-comment|/* If this the the block containing the end of the 			 * application data and we're past the 0x80 value then 			 * just write zero. */
+comment|/*              * If this the the block containing the end of the application              * data and we're past the 0x80 value then just write zero.              */
 name|b
 operator|=
 name|b
@@ -2578,7 +2578,7 @@ operator|&
 operator|~
 name|is_past_cp1
 expr_stmt|;
-comment|/* If this is index_b (the final block), but not 			 * index_a (the end of the data), then the 64-bit 			 * length didn't fit into index_a and we're having to 			 * add an extra block of zeros. */
+comment|/*              * If this is index_b (the final block), but not index_a (the end              * of the data), then the 64-bit length didn't fit into index_a              * and we're having to add an extra block of zeros.              */
 name|b
 operator|&=
 operator|~
@@ -2586,7 +2586,7 @@ name|is_block_b
 operator||
 name|is_block_a
 expr_stmt|;
-comment|/* The final bytes of one of the blocks contains the 			 * length. */
+comment|/*              * The final bytes of one of the blocks contains the length.              */
 if|if
 condition|(
 name|j
@@ -2814,7 +2814,7 @@ name|OPENSSL_FIPS
 end_ifdef
 
 begin_comment
-comment|/* Due to the need to use EVP in FIPS mode we can't reimplement digests but  * we can ensure the number of blocks processed is equal for all cases  * by digesting additional data.  */
+comment|/*  * Due to the need to use EVP in FIPS mode we can't reimplement digests but  * we can ensure the number of blocks processed is equal for all cases by  * digesting additional data.  */
 end_comment
 
 begin_function
@@ -2874,7 +2874,7 @@ argument_list|(
 name|hash
 argument_list|)
 expr_stmt|;
-comment|/* We are in FIPS mode if we get this far so we know we have only SHA* 	 * digests and TLS to deal with. 	 * Minimum digest padding length is 17 for SHA384/SHA512 and 9 	 * otherwise. 	 * Additional header is 13 bytes. To get the number of digest blocks 	 * processed round up the amount of data plus padding to the nearest 	 * block length. Block length is 128 for SHA384/SHA512 and 64 otherwise. 	 * So we have: 	 * blocks = (payload_len + digest_pad + 13 + block_size - 1)/block_size 	 * equivalently: 	 * blocks = (payload_len + digest_pad + 12)/block_size + 1 	 * HMAC adds a constant overhead. 	 * We're ultimately only interested in differences so this becomes 	 * blocks = (payload_len + 29)/128 	 * for SHA384/SHA512 and 	 * blocks = (payload_len + 21)/64 	 * otherwise. 	 */
+comment|/*      * We are in FIPS mode if we get this far so we know we have only SHA*      * digests and TLS to deal with. Minimum digest padding length is 17 for      * SHA384/SHA512 and 9 otherwise. Additional header is 13 bytes. To get      * the number of digest blocks processed round up the amount of data plus      * padding to the nearest block length. Block length is 128 for      * SHA384/SHA512 and 64 otherwise. So we have: blocks = (payload_len +      * digest_pad + 13 + block_size - 1)/block_size equivalently: blocks =      * (payload_len + digest_pad + 12)/block_size + 1 HMAC adds a constant      * overhead. We're ultimately only interested in differences so this      * becomes blocks = (payload_len + 29)/128 for SHA384/SHA512 and blocks =      * (payload_len + 21)/64 otherwise.      */
 name|digest_pad
 operator|=
 name|block_size
@@ -2905,7 +2905,7 @@ operator|)
 operator|/
 name|block_size
 expr_stmt|;
-comment|/* MAC enough blocks to make up the difference between the original 	 * and actual lengths plus one extra block to ensure this is never a 	 * no op. The "data" pointer should always have enough space to 	 * perform this operation as it is large enough for a maximum 	 * length TLS buffer.  	 */
+comment|/*      * MAC enough blocks to make up the difference between the original and      * actual lengths plus one extra block to ensure this is never a no op.      * The "data" pointer should always have enough space to perform this      * operation as it is large enough for a maximum length TLS buffer.      */
 name|HMAC_Update
 argument_list|(
 name|hctx

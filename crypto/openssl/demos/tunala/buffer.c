@@ -239,7 +239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* These 3 static (internal) functions don't adjust the "total" variables as  * it's not sure when they're called how it should be interpreted. Only the  * higher-level "buffer_[to|from]_[fd|SSL|BIO]" functions should alter these  * values. */
+comment|/*  * These 3 static (internal) functions don't adjust the "total" variables as  * it's not sure when they're called how it should be interpreted. Only the  * higher-level "buffer_[to|from]_[fd|SSL|BIO]" functions should alter these  * values.  */
 end_comment
 
 begin_if
@@ -253,7 +253,7 @@ comment|/* To avoid "unused" warnings */
 end_comment
 
 begin_endif
-unit|static unsigned int buffer_adddata(buffer_t *buf, const unsigned char *ptr, 		unsigned int size) { 	unsigned int added = MAX_DATA_SIZE - buf->used; 	if(added> size) 		added = size; 	if(added == 0) 		return 0; 	memcpy(buf->data + buf->used, ptr, added); 	buf->used += added; 	buf->total_in += added; 	return added; }  static unsigned int buffer_tobuffer(buffer_t *to, buffer_t *from, int cap) { 	unsigned int moved, tomove = from->used; 	if((int)tomove> cap) 		tomove = cap; 	if(tomove == 0) 		return 0; 	moved = buffer_adddata(to, from->data, tomove); 	if(moved == 0) 		return 0; 	buffer_takedata(from, NULL, moved); 	return moved; }
+unit|static unsigned int buffer_adddata(buffer_t * buf, const unsigned char *ptr,                                    unsigned int size) {     unsigned int added = MAX_DATA_SIZE - buf->used;     if (added> size)         added = size;     if (added == 0)         return 0;     memcpy(buf->data + buf->used, ptr, added);     buf->used += added;     buf->total_in += added;     return added; }  static unsigned int buffer_tobuffer(buffer_t * to, buffer_t * from, int cap) {     unsigned int moved, tomove = from->used;     if ((int)tomove> cap)         tomove = cap;     if (tomove == 0)         return 0;     moved = buffer_adddata(to, from->data, tomove);     if (moved == 0)         return 0;     buffer_takedata(from, NULL, moved);     return moved; }
 endif|#
 directive|endif
 end_endif
@@ -552,7 +552,7 @@ condition|(
 name|e
 condition|)
 block|{
-comment|/* These seem to be harmless and already "dealt with" by our 		 * non-blocking environment. NB: "ZERO_RETURN" is the clean 		 * "error" indicating a successfully closed SSL tunnel. We let 		 * this happen because our IO loop should not appear to have 		 * broken on this condition - and outside the IO loop, the 		 * "shutdown" state is checked. */
+comment|/*          * These seem to be harmless and already "dealt with" by our          * non-blocking environment. NB: "ZERO_RETURN" is the clean "error"          * indicating a successfully closed SSL tunnel. We let this happen          * because our IO loop should not appear to have broken on this          * condition - and outside the IO loop, the "shutdown" state is          * checked.          */
 case|case
 name|SSL_ERROR_NONE
 case|:
@@ -569,7 +569,7 @@ case|case
 name|SSL_ERROR_ZERO_RETURN
 case|:
 return|return;
-comment|/* These seem to be indications of a genuine error that should 		 * result in the SSL tunnel being regarded as "dead". */
+comment|/*          * These seem to be indications of a genuine error that should result          * in the SSL tunnel being regarded as "dead".          */
 case|case
 name|SSL_ERROR_SYSCALL
 case|:
@@ -591,7 +591,7 @@ return|return;
 default|default:
 break|break;
 block|}
-comment|/* For any other errors that (a) exist, and (b) crop up - we need to 	 * interpret what to do with them - so "politely inform" the caller that 	 * the code needs updating here. */
+comment|/*      * For any other errors that (a) exist, and (b) crop up - we need to      * interpret what to do with them - so "politely inform" the caller that      * the code needs updating here.      */
 name|abort
 argument_list|()
 expr_stmt|;

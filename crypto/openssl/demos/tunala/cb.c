@@ -36,7 +36,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Output level:  *     0 = nothing,  *     1 = minimal, just errors,  *     2 = minimal, all steps,  *     3 = detail, all steps */
+comment|/*-  * Output level:  *     0 = nothing,  *     1 = minimal, just errors,  *     2 = minimal, all steps,  *     3 = detail, all steps */
 end_comment
 
 begin_decl_stmt
@@ -63,7 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This function is largely borrowed from the one used in OpenSSL's "s_client"  * and "s_server" utilities. */
+comment|/*  * This function is largely borrowed from the one used in OpenSSL's  * "s_client" and "s_server" utilities.  */
 end_comment
 
 begin_function
@@ -175,11 +175,11 @@ argument_list|,
 name|str2
 argument_list|)
 expr_stmt|;
-comment|/* In a non-blocking model, we get a few of these "error"s simply because we're  * calling "reads" and "writes" on the state-machine that are virtual NOPs  * simply to avoid wasting the time seeing if we *should* call them. Removing  * this case makes the "-out_state" output a lot easier on the eye. */
+comment|/*          * In a non-blocking model, we get a few of these "error"s simply          * because we're calling "reads" and "writes" on the state-machine          * that are virtual NOPs simply to avoid wasting the time seeing if          * we *should* call them. Removing this case makes the "-out_state"          * output a lot easier on the eye.          */
 if|#
 directive|if
 literal|0
-block|else if (ret< 0) 			fprintf(fp_cb_ssl_info, "%s:error in %s\n", str1, str2);
+block|else if (ret< 0)             fprintf(fp_cb_ssl_info, "%s:error in %s\n", str1, str2);
 endif|#
 directive|endif
 block|}
@@ -603,7 +603,7 @@ name|int
 name|keylength
 parameter_list|)
 block|{
-comment|/* TODO: Perhaps make it so our global key can be generated on-the-fly 	 * after certain intervals? */
+comment|/*      * TODO: Perhaps make it so our global key can be generated on-the-fly      * after certain intervals?      */
 specifier|static
 name|RSA
 modifier|*

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------   NIST DES Modes of Operation Validation System   Test Program    Based on the AES Validation Suite, which was:   Donated to OpenSSL by:   V-ONE Corporation   20250 Century Blvd, Suite 300   Germantown, MD 20874   U.S.A.   ----------------------------------------------*/
+comment|/* --------------------------------------------   NIST DES Modes of Operation Validation System   Test Program    Based on the AES Validation Suite, which was:   Donated to OpenSSL by:   V-ONE Corporation   20250 Century Blvd, Suite 300   Germantown, MD 20874   U.S.A.   ----------------------------------------------*/
 end_comment
 
 begin_include
@@ -162,10 +162,10 @@ name|char
 modifier|*
 name|iVec
 parameter_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|int
 name|dir
 parameter_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|unsigned
 name|char
 modifier|*
@@ -386,7 +386,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void DebugValue(char *tag, unsigned char *val, int len)     {     char obuf[2048];     int olen;     olen = bin2hex(val, len, obuf);     printf("%s = %.*s\n", tag, olen, obuf);     }
+unit|static void DebugValue(char *tag, unsigned char *val, int len) {     char obuf[2048];     int olen;     olen = bin2hex(val, len, obuf);     printf("%s = %.*s\n", tag, olen, obuf); }
 endif|#
 directive|endif
 end_endif
@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------*/
+comment|/* ---------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -871,7 +871,7 @@ if|#
 directive|if
 literal|0
 comment|/* compensate for endianness */
-block|if(imode == CFB1) 	    text[0]<<=7;
+block|if (imode == CFB1)             text[0]<<= 7;
 endif|#
 directive|endif
 name|memcpy
@@ -1003,9 +1003,9 @@ operator|==
 name|CFB1
 argument_list|)
 expr_stmt|;
-comment|/*		memcpy(ivec,text,8); */
+comment|/*              memcpy(ivec,text,8); */
 block|}
-comment|/*	    DebugValue("iv",ctx.iv,8); */
+comment|/*      DebugValue("iv",ctx.iv,8); */
 comment|/* accumulate material for the next key */
 name|shiftin
 argument_list|(
@@ -1019,7 +1019,7 @@ name|imode
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*	    DebugValue("nk",nk,24);*/
+comment|/*      DebugValue("nk",nk,24); */
 if|if
 condition|(
 operator|(
@@ -1077,7 +1077,7 @@ name|CFB64
 operator|)
 condition|)
 block|{
-comment|/* the test specifies using the output of the raw DES operation 		   which we don't have, so reconstruct it... */
+comment|/*                  * the test specifies using the output of the raw DES                  * operation which we don't have, so reconstruct it...                  */
 for|for
 control|(
 name|n
@@ -1266,7 +1266,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* pointless exercise - the final text doesn't depend on the 	   initial text in OFB mode, so who cares what it is? (Who 	   designed these tests?) */
+comment|/*          * pointless exercise - the final text doesn't depend on the initial          * text in OFB mode, so who cares what it is? (Who designed these          * tests?)          */
 if|if
 condition|(
 name|imode
@@ -1658,7 +1658,7 @@ argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-comment|/*	printf("step=%d ibuf=%s",step,ibuf);*/
+comment|/*      printf("step=%d ibuf=%s",step,ibuf); */
 if|if
 condition|(
 name|step
@@ -2717,8 +2717,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* Monte Carlo Test */
 block|{
+comment|/* Monte Carlo Test */
 name|do_mct
 argument_list|(
 name|amode
@@ -2765,9 +2765,9 @@ name|aKey
 argument_list|,
 name|iVec
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|ciphertext
 argument_list|,
 name|plaintext
@@ -2918,8 +2918,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* Monte Carlo Test */
 block|{
+comment|/* Monte Carlo Test */
 name|do_mct
 argument_list|(
 name|amode
@@ -2966,9 +2966,9 @@ name|aKey
 argument_list|,
 name|iVec
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|plaintext
 argument_list|,
 name|ciphertext
@@ -3043,7 +3043,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* MCT already added terminating nl */
+comment|/* MCT already added                                                      * terminating nl */
 name|fputs
 argument_list|(
 name|ibuf
@@ -3084,7 +3084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------   Processes either a single file or    a set of files whose names are passed in a file.   A single file is specified as:     aes_test -f xxx.req   A set of files is specified as:     aes_test -d xxxxx.xxx   The default is: -d req.txt --------------------------------------------------*/
+comment|/* -------------------------------------------------   Processes either a single file or   a set of files whose names are passed in a file.   A single file is specified as:     aes_test -f xxx.req   A set of files is specified as:     aes_test -d xxxxx.xxx   The default is: -d req.txt --------------------------------------------------*/
 end_comment
 
 begin_function
@@ -3378,8 +3378,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* single file */
 block|{
+comment|/* single file */
 if|if
 condition|(
 name|VERBOSE

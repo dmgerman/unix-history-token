@@ -4,7 +4,7 @@ comment|/* crypto/rsa/rsa.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -89,7 +89,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If this flag is set the RSA method is FIPS compliant and can be used  * in FIPS mode. This is set in the validated module method. If an  * application sets this flag in its own methods it is its reposibility  * to ensure the result is compliant.  */
+comment|/*  * If this flag is set the RSA method is FIPS compliant and can be used in  * FIPS mode. This is set in the validated module method. If an application  * sets this flag in its own methods it is its reposibility to ensure the  * result is compliant.  */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* If this flag is set the operations normally disabled in FIPS mode are  * permitted it is then the applications responsibility to ensure that the  * usage is compliant.  */
+comment|/*  * If this flag is set the operations normally disabled in FIPS mode are  * permitted it is then the applications responsibility to ensure that the  * usage is compliant.  */
 end_comment
 
 begin_define
@@ -263,6 +263,7 @@ name|int
 name|padding
 parameter_list|)
 function_decl|;
+comment|/* Can be null */
 name|int
 function_decl|(
 modifier|*
@@ -322,7 +323,7 @@ modifier|*
 name|m_ctx
 parameter_list|)
 function_decl|;
-comment|/* Can be null */
+comment|/* called at new */
 name|int
 function_decl|(
 modifier|*
@@ -334,7 +335,7 @@ modifier|*
 name|rsa
 parameter_list|)
 function_decl|;
-comment|/* called at new */
+comment|/* called at free */
 name|int
 function_decl|(
 modifier|*
@@ -346,17 +347,16 @@ modifier|*
 name|rsa
 parameter_list|)
 function_decl|;
-comment|/* called at free */
+comment|/* RSA_METHOD_FLAG_* things */
 name|int
 name|flags
 decl_stmt|;
-comment|/* RSA_METHOD_FLAG_* things */
+comment|/* may be needed! */
 name|char
 modifier|*
 name|app_data
 decl_stmt|;
-comment|/* may be needed! */
-comment|/* New sign and verify functions: some libraries don't allow arbitrary data  * to be signed/verified: this allows them to be used. Note: for this to work  * the RSA_public_decrypt() and RSA_private_encrypt() should *NOT* be used  * RSA_sign(), RSA_verify() should be used instead. Note: for backwards  * compatibility this functionality is only enabled if the RSA_FLAG_SIGN_VER  * option is set in 'flags'.  */
+comment|/*      * New sign and verify functions: some libraries don't allow arbitrary      * data to be signed/verified: this allows them to be used. Note: for      * this to work the RSA_public_decrypt() and RSA_private_encrypt() should      * *NOT* be used RSA_sign(), RSA_verify() should be used instead. Note:      * for backwards compatibility this functionality is only enabled if the      * RSA_FLAG_SIGN_VER option is set in 'flags'.      */
 name|int
 function_decl|(
 modifier|*
@@ -426,7 +426,7 @@ modifier|*
 name|rsa
 parameter_list|)
 function_decl|;
-comment|/* If this callback is NULL, the builtin software RSA key-gen will be used. This  * is for behavioural compatibility whilst the code gets rewired, but one day  * it would be nice to assume there are no such things as "builtin software"  * implementations. */
+comment|/*      * If this callback is NULL, the builtin software RSA key-gen will be      * used. This is for behavioural compatibility whilst the code gets      * rewired, but one day it would be nice to assume there are no such      * things as "builtin software" implementations.      */
 name|int
 function_decl|(
 modifier|*
@@ -454,7 +454,7 @@ struct|;
 struct|struct
 name|rsa_st
 block|{
-comment|/* The first parameter is used to pickup errors where 	 * this is passed instead of aEVP_PKEY, it is set to 0 */
+comment|/*      * The first parameter is used to pickup errors where this is passed      * instead of aEVP_PKEY, it is set to 0      */
 name|int
 name|pad
 decl_stmt|;
@@ -526,7 +526,7 @@ name|BN_MONT_CTX
 modifier|*
 name|_method_mod_q
 decl_stmt|;
-comment|/* all BIGNUM values are actually in the following data, if it is not 	 * NULL */
+comment|/*      * all BIGNUM values are actually in the following data, if it is not      * NULL      */
 name|char
 modifier|*
 name|bignum_data
@@ -566,11 +566,11 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_RSA_MAX_PUBEXP_BITS
+comment|/* exponent limit enforced for "large" modulus only */
 define|#
 directive|define
 name|OPENSSL_RSA_MAX_PUBEXP_BITS
 value|64
-comment|/* exponent limit enforced for "large" modulus only */
 endif|#
 directive|endif
 define|#
@@ -585,7 +585,7 @@ define|#
 directive|define
 name|RSA_METHOD_FLAG_NO_CHECK
 value|0x0001
-comment|/* don't check pub/private match */
+comment|/* don't check pub/private                                                 * match */
 define|#
 directive|define
 name|RSA_FLAG_CACHE_PUBLIC
@@ -602,35 +602,35 @@ define|#
 directive|define
 name|RSA_FLAG_THREAD_SAFE
 value|0x0010
-comment|/* This flag means the private key operations will be handled by rsa_mod_exp  * and that they do not depend on the private key components being present:  * for example a key stored in external hardware. Without this flag bn_mod_exp  * gets called when private key components are absent.  */
+comment|/*  * This flag means the private key operations will be handled by rsa_mod_exp  * and that they do not depend on the private key components being present:  * for example a key stored in external hardware. Without this flag  * bn_mod_exp gets called when private key components are absent.  */
 define|#
 directive|define
 name|RSA_FLAG_EXT_PKEY
 value|0x0020
-comment|/* This flag in the RSA_METHOD enables the new rsa_sign, rsa_verify functions.  */
+comment|/*  * This flag in the RSA_METHOD enables the new rsa_sign, rsa_verify  * functions.  */
 define|#
 directive|define
 name|RSA_FLAG_SIGN_VER
 value|0x0040
+comment|/*  * new with 0.9.6j and 0.9.7b; the built-in  * RSA implementation now uses blinding by  * default (ignoring RSA_FLAG_BLINDING),  * but other engines might not need it  */
 define|#
 directive|define
 name|RSA_FLAG_NO_BLINDING
 value|0x0080
-comment|/* new with 0.9.6j and 0.9.7b; the built-in                                                 * RSA implementation now uses blinding by                                                 * default (ignoring RSA_FLAG_BLINDING),                                                 * but other engines might not need it                                                 */
+comment|/*  * new with 0.9.8f; the built-in RSA  * implementation now uses constant time  * operations by default in private key operations,  * e.g., constant time modular exponentiation,  * modular inverse without leaking branches,  * division without leaking branches. This  * flag disables these constant time  * operations and results in faster RSA  * private key operations.  */
 define|#
 directive|define
 name|RSA_FLAG_NO_CONSTTIME
 value|0x0100
-comment|/* new with 0.9.8f; the built-in RSA 						* implementation now uses constant time 						* operations by default in private key operations, 						* e.g., constant time modular exponentiation,                                                  * modular inverse without leaking branches,                                                  * division without leaking branches. This                                                  * flag disables these constant time                                                  * operations and results in faster RSA                                                  * private key operations.                                                 */
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_DEPRECATED
+ifdef|#
+directive|ifdef
+name|OPENSSL_USE_DEPRECATED
+comment|/* deprecated name for the flag*/
+comment|/*  * new with 0.9.7h; the built-in RSA  * implementation now uses constant time  * modular exponentiation for secret exponents  * by default. This flag causes the  * faster variable sliding window method to  * be used for all exponents.  */
 define|#
 directive|define
 name|RSA_FLAG_NO_EXP_CONSTTIME
 value|RSA_FLAG_NO_CONSTTIME
-comment|/* deprecated name for the flag*/
-comment|/* new with 0.9.7h; the built-in RSA                                                 * implementation now uses constant time                                                 * modular exponentiation for secret exponents                                                 * by default. This flag causes the                                                 * faster variable sliding window method to                                                 * be used for all exponents.                                                 */
 endif|#
 directive|endif
 define|#
@@ -1282,7 +1282,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* The following 2 functions sign and verify a X509_SIG ASN1 object  * inside PKCS#1 padded RSA encryption */
+comment|/*  * The following 2 functions sign and verify a X509_SIG ASN1 object inside  * PKCS#1 padded RSA encryption  */
 name|int
 name|RSA_sign
 parameter_list|(
@@ -1344,7 +1344,7 @@ modifier|*
 name|rsa
 parameter_list|)
 function_decl|;
-comment|/* The following 2 function sign and verify a ASN1_OCTET_STRING  * object inside PKCS#1 padded RSA encryption */
+comment|/*  * The following 2 function sign and verify a ASN1_OCTET_STRING object inside  * PKCS#1 padded RSA encryption  */
 name|int
 name|RSA_sign_ASN1_OCTET_STRING
 parameter_list|(
@@ -1885,7 +1885,7 @@ name|rsa
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_RSA_strings
 parameter_list|(

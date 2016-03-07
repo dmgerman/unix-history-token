@@ -4,7 +4,7 @@ comment|/*  * Contributed to the OpenSSL Project by the American Registry for  *
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  */
+comment|/* ====================================================================  * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  */
 end_comment
 
 begin_comment
@@ -3654,7 +3654,7 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-comment|/*    * Empty extension is cannonical.    */
+comment|/*      * Empty extension is cannonical.      */
 if|if
 condition|(
 name|addr
@@ -3664,7 +3664,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/*    * Check whether the top-level list is in order.    */
+comment|/*      * Check whether the top-level list is in order.      */
 for|for
 control|(
 name|i
@@ -3727,7 +3727,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*    * Top level's ok, now check each address family.    */
+comment|/*      * Top level's ok, now check each address family.      */
 for|for
 control|(
 name|i
@@ -3767,7 +3767,7 @@ name|f
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/*      * Inheritance is canonical.  Anything other than inheritance or      * a SEQUENCE OF IPAddressOrRange is an ASN.1 error or something.      */
+comment|/*          * Inheritance is canonical.  Anything other than inheritance or          * a SEQUENCE OF IPAddressOrRange is an ASN.1 error or something.          */
 if|if
 condition|(
 name|f
@@ -3805,7 +3805,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*      * It's an IPAddressOrRanges sequence, check it.      */
+comment|/*          * It's an IPAddressOrRanges sequence, check it.          */
 name|aors
 operator|=
 name|f
@@ -3900,7 +3900,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*        * Punt misordered list, overlapping start, or inverted range.        */
+comment|/*              * Punt misordered list, overlapping start, or inverted range.              */
 if|if
 condition|(
 name|memcmp
@@ -3939,7 +3939,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*        * Punt if adjacent or overlapping.  Check for adjacency by        * subtracting one from b_min first.        */
+comment|/*              * Punt if adjacent or overlapping.  Check for adjacency by              * subtracting one from b_min first.              */
 for|for
 control|(
 name|k
@@ -3980,7 +3980,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*        * Check for range that should be expressed as a prefix.        */
+comment|/*              * Check for range that should be expressed as a prefix.              */
 if|if
 condition|(
 name|a
@@ -4004,7 +4004,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*      * Check range to see if it's inverted or should be a      * prefix.      */
+comment|/*          * Check range to see if it's inverted or should be a          * prefix.          */
 name|j
 operator|=
 name|sk_IPAddressOrRange_num
@@ -4086,7 +4086,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/*    * If we made it through all that, we're happy.    */
+comment|/*      * If we made it through all that, we're happy.      */
 return|return
 literal|1
 return|;
@@ -4123,13 +4123,13 @@ argument_list|(
 name|afi
 argument_list|)
 decl_stmt|;
-comment|/*    * Sort the IPAddressOrRanges sequence.    */
+comment|/*      * Sort the IPAddressOrRanges sequence.      */
 name|sk_IPAddressOrRange_sort
 argument_list|(
 name|aors
 argument_list|)
 expr_stmt|;
-comment|/*    * Clean up representation issues, punt on duplicates or overlaps.    */
+comment|/*      * Clean up representation issues, punt on duplicates or overlaps.      */
 for|for
 control|(
 name|i
@@ -4226,7 +4226,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*      * Punt inverted ranges.      */
+comment|/*          * Punt inverted ranges.          */
 if|if
 condition|(
 name|memcmp
@@ -4254,7 +4254,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*      * Punt overlaps.      */
+comment|/*          * Punt overlaps.          */
 if|if
 condition|(
 name|memcmp
@@ -4271,7 +4271,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*      * Merge if a and b are adjacent.  We check for      * adjacency by subtracting one from b_min first.      */
+comment|/*          * Merge if a and b are adjacent.  We check for          * adjacency by subtracting one from b_min first.          */
 for|for
 control|(
 name|j
@@ -4369,7 +4369,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/*    * Check for inverted final range.    */
+comment|/*      * Check for inverted final range.      */
 name|j
 operator|=
 name|sk_IPAddressOrRange_num
@@ -4840,7 +4840,7 @@ argument_list|(
 name|afi
 argument_list|)
 expr_stmt|;
-comment|/*      * Handle SAFI, if any, and BUF_strdup() so we can null-terminate      * the other input values.      */
+comment|/*          * Handle SAFI, if any, and BUF_strdup() so we can null-terminate          * the other input values.          */
 if|if
 condition|(
 name|safi
@@ -4949,7 +4949,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*      * Check for inheritance.  Not worth additional complexity to      * optimize this (seldom-used) case.      */
+comment|/*          * Check for inheritance.  Not worth additional complexity to          * optimize this (seldom-used) case.          */
 if|if
 condition|(
 operator|!
@@ -5362,7 +5362,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*    * Canonize the result, then we're done.    */
+comment|/*      * Canonize the result, then we're done.      */
 if|if
 condition|(
 operator|!
@@ -5896,7 +5896,7 @@ parameter_list|(
 name|_err_
 parameter_list|)
 define|\
-value|do {					\     if (ctx != NULL) {			\       ctx->error = _err_;		\       ctx->error_depth = i;		\       ctx->current_cert = x;		\       ret = ctx->verify_cb(0, ctx);	\     } else {				\       ret = 0;				\     }					\     if (!ret)				\       goto done;			\   } while (0)
+value|do {                                  \     if (ctx != NULL) {                  \       ctx->error = _err_;               \       ctx->error_depth = i;             \       ctx->current_cert = x;            \       ret = ctx->verify_cb(0, ctx);     \     } else {                            \       ret = 0;                          \     }                                   \     if (!ret)                           \       goto done;                        \   } while (0)
 end_define
 
 begin_comment
@@ -5983,7 +5983,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*    * Figure out where to start.  If we don't have an extension to    * check, we're done.  Otherwise, check canonical form and    * set up for walking up the chain.    */
+comment|/*      * Figure out where to start.  If we don't have an extension to      * check, we're done.  Otherwise, check canonical form and      * set up for walking up the chain.      */
 if|if
 condition|(
 name|ext
@@ -6087,7 +6087,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/*    * Now walk up the chain.  No cert may list resources that its    * parent doesn't list.    */
+comment|/*      * Now walk up the chain.  No cert may list resources that its      * parent doesn't list.      */
 for|for
 control|(
 name|i
@@ -6351,7 +6351,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*    * Trust anchor can't inherit.    */
+comment|/*      * Trust anchor can't inherit.      */
 if|if
 condition|(
 name|x

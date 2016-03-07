@@ -47,7 +47,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * IMPLEMENTATION NOTES.  *  * As you might have noticed 32-bit hash algorithms:  *  * - permit SHA_LONG to be wider than 32-bit (case on CRAY);  * - optimized versions implement two transform functions: one operating  *   on [aligned] data in host byte order and one - on data in input  *   stream byte order;  * - share common byte-order neutral collector and padding function  *   implementations, ../md32_common.h;  *  * Neither of the above applies to this SHA-512 implementations. Reasons  * [in reverse order] are:  *  * - it's the only 64-bit hash algorithm for the moment of this writing,  *   there is no need for common collector/padding implementation [yet];  * - by supporting only one transform function [which operates on  *   *aligned* data in input stream byte order, big-endian in this case]  *   we minimize burden of maintenance in two ways: a) collector/padding  *   function is simpler; b) only one transform function to stare at;  * - SHA_LONG64 is required to be exactly 64-bit in order to be able to  *   apply a number of optimizations to mitigate potential performance  *   penalties caused by previous design decision;  *  * Caveat lector.  *  * Implementation relies on the fact that "long long" is 64-bit on  * both 32- and 64-bit platforms. If some compiler vendor comes up  * with 128-bit long long, adjustment to sha.h would be required.  * As this implementation relies on 64-bit integer type, it's totally  * inappropriate for platforms which don't support it, most notably  * 16-bit platforms.  *<appro@fy.chalmers.se>  */
+comment|/*-  * IMPLEMENTATION NOTES.  *  * As you might have noticed 32-bit hash algorithms:  *  * - permit SHA_LONG to be wider than 32-bit (case on CRAY);  * - optimized versions implement two transform functions: one operating  *   on [aligned] data in host byte order and one - on data in input  *   stream byte order;  * - share common byte-order neutral collector and padding function  *   implementations, ../md32_common.h;  *  * Neither of the above applies to this SHA-512 implementations. Reasons  * [in reverse order] are:  *  * - it's the only 64-bit hash algorithm for the moment of this writing,  *   there is no need for common collector/padding implementation [yet];  * - by supporting only one transform function [which operates on  *   *aligned* data in input stream byte order, big-endian in this case]  *   we minimize burden of maintenance in two ways: a) collector/padding  *   function is simpler; b) only one transform function to stare at;  * - SHA_LONG64 is required to be exactly 64-bit in order to be able to  *   apply a number of optimizations to mitigate potential performance  *   penalties caused by previous design decision;  *  * Caveat lector.  *  * Implementation relies on the fact that "long long" is 64-bit on  * both 32- and 64-bit platforms. If some compiler vendor comes up  * with 128-bit long long, adjustment to sha.h would be required.  * As this implementation relies on 64-bit integer type, it's totally  * inappropriate for platforms which don't support it, most notably  * 16-bit platforms.  *<appro@fy.chalmers.se>  */
 end_comment
 
 begin_include
@@ -2451,7 +2451,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ unsigned long ret;		\ 				asm ("rorq %1,%0"	\ 				: "=r"(ret)		\ 				: "J"(n),"0"(a)		\ 				: "cc"); ret;		})
+value|({ unsigned long ret;           \                                 asm ("rorq %1,%0"       \                                 : "=r"(ret)             \                                 : "J"(n),"0"(a)         \                                 : "cc"); ret;           })
 end_define
 
 begin_if
@@ -2471,7 +2471,7 @@ name|PULL64
 parameter_list|(
 name|x
 parameter_list|)
-value|({ SHA_LONG64 ret=*((const SHA_LONG64 *)(&(x)));	\ 				asm ("bswapq	%0"		\ 				: "=r"(ret)			\ 				: "0"(ret)); ret;		})
+value|({ SHA_LONG64 ret=*((const SHA_LONG64 *)(&(x)));  \                                 asm ("bswapq    %0"             \                                 : "=r"(ret)                     \                                 : "0"(ret)); ret;               })
 end_define
 
 begin_endif
@@ -2517,7 +2517,7 @@ name|PULL64
 parameter_list|(
 name|x
 parameter_list|)
-value|({ const unsigned int *p=(const unsigned int *)(&(x));\ 			 unsigned int hi=p[0],lo=p[1];		\ 				asm("xchgb %%ah,%%al;xchgb %%dh,%%dl;"\ 				    "roll $16,%%eax; roll $16,%%edx; "\ 				    "xchgb %%ah,%%al;xchgb %%dh,%%dl;" \ 				: "=a"(lo),"=d"(hi)		\ 				: "0"(lo),"1"(hi) : "cc");	\ 				((SHA_LONG64)hi)<<32|lo;	})
+value|({ const unsigned int *p=(const unsigned int *)(&(x));\                          unsigned int hi=p[0],lo=p[1];          \                                 asm("xchgb %%ah,%%al;xchgb %%dh,%%dl;"\                                     "roll $16,%%eax; roll $16,%%edx; "\                                     "xchgb %%ah,%%al;xchgb %%dh,%%dl;" \                                 : "=a"(lo),"=d"(hi)             \                                 : "0"(lo),"1"(hi) : "cc");      \                                 ((SHA_LONG64)hi)<<32|lo;        })
 end_define
 
 begin_else
@@ -2532,7 +2532,7 @@ name|PULL64
 parameter_list|(
 name|x
 parameter_list|)
-value|({ const unsigned int *p=(const unsigned int *)(&(x));\ 			 unsigned int hi=p[0],lo=p[1];			\ 				asm ("bswapl %0; bswapl %1;"	\ 				: "=r"(lo),"=r"(hi)		\ 				: "0"(lo),"1"(hi));		\ 				((SHA_LONG64)hi)<<32|lo;	})
+value|({ const unsigned int *p=(const unsigned int *)(&(x));\                          unsigned int hi=p[0],lo=p[1];                  \                                 asm ("bswapl %0; bswapl %1;"    \                                 : "=r"(lo),"=r"(hi)             \                                 : "0"(lo),"1"(hi));             \                                 ((SHA_LONG64)hi)<<32|lo;        })
 end_define
 
 begin_endif
@@ -2570,7 +2570,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ unsigned long ret;		\ 				asm ("rotrdi %0,%1,%2"	\ 				: "=r"(ret)		\ 				: "r"(a),"K"(n)); ret;	})
+value|({ unsigned long ret;           \                                 asm ("rotrdi %0,%1,%2"  \                                 : "=r"(ret)             \                                 : "r"(a),"K"(n)); ret;  })
 end_define
 
 begin_endif
@@ -2662,13 +2662,13 @@ block|{
 name|_asm
 name|mov
 name|edx
-decl_stmt|, [
+decl_stmt|,[
 name|ecx
 decl|+ 0]
 name|_asm
 name|mov
 name|eax
-decl_stmt|, [
+decl_stmt|,[
 name|ecx
 decl|+ 4]
 name|_asm
@@ -2684,11 +2684,11 @@ name|al
 name|_asm
 name|rol
 name|edx
-decl_stmt|,16
+decl_stmt|, 16
 name|_asm
 name|rol
 name|eax
-decl_stmt|,16
+decl_stmt|, 16
 name|_asm
 name|xchg
 name|dh
@@ -2722,13 +2722,13 @@ block|{
 name|_asm
 name|mov
 name|edx
-decl_stmt|, [
+decl_stmt|,[
 name|ecx
 decl|+ 0]
 name|_asm
 name|mov
 name|eax
-decl_stmt|, [
+decl_stmt|,[
 name|ecx
 decl|+ 4]
 name|_asm
@@ -2948,7 +2948,7 @@ name|in
 parameter_list|,
 name|num
 parameter_list|)
-value|do {		\ 	void	sha512_block_sse2(void *,const void *,size_t);	\ 	if (!(OPENSSL_ia32cap_P& (1<<26))) break;	\ 	sha512_block_sse2(ctx->h,in,num); return;	\ 					} while (0)
+value|do {            \         void    sha512_block_sse2(void *,const void *,size_t);  \         if (!(OPENSSL_ia32cap_P& (1<<26))) break;      \         sha512_block_sse2(ctx->h,in,num); return;       \                                         } while (0)
 end_define
 
 begin_endif
@@ -3496,7 +3496,7 @@ name|g
 parameter_list|,
 name|h
 parameter_list|)
-value|do {	\ 	T1 += h + Sigma1(e) + Ch(e,f,g) + K512[i];	\ 	h = Sigma0(a) + Maj(a,b,c);			\ 	d += T1;	h += T1;		} while (0)
+value|do {    \         T1 += h + Sigma1(e) + Ch(e,f,g) + K512[i];      \         h = Sigma0(a) + Maj(a,b,c);                     \         d += T1;        h += T1;                } while (0)
 end_define
 
 begin_define
@@ -3524,7 +3524,7 @@ name|h
 parameter_list|,
 name|X
 parameter_list|)
-value|do {	\ 	s0 = X[(i+1)&0x0f];	s0 = sigma0(s0);	\ 	s1 = X[(i+14)&0x0f];	s1 = sigma1(s1);	\ 	T1 = X[(i)&0x0f] += s0 + s1 + X[(i+9)&0x0f];	\ 	ROUND_00_15(i,a,b,c,d,e,f,g,h);		} while (0)
+value|do {    \         s0 = X[(i+1)&0x0f];     s0 = sigma0(s0);        \         s1 = X[(i+14)&0x0f];    s1 = sigma1(s1);        \         T1 = X[(i)&0x0f] += s0 + s1 + X[(i+9)&0x0f];    \         ROUND_00_15(i,a,b,c,d,e,f,g,h);         } while (0)
 end_define
 
 begin_function
@@ -5107,7 +5107,7 @@ comment|/* OPENSSL_NO_SHA512 */
 end_comment
 
 begin_comment
-comment|/* Sensitive compilers ("Compaq C V6.4-005 on OpenVMS VAX V7.3", for  * example) dislike a statement-free file, complaining:  * "%CC-W-EMPTYFILE, Source file does not contain any declarations."  */
+comment|/*  * Sensitive compilers ("Compaq C V6.4-005 on OpenVMS VAX V7.3", for example)  * dislike a statement-free file, complaining: "%CC-W-EMPTYFILE, Source file  * does not contain any declarations."  */
 end_comment
 
 begin_function_decl

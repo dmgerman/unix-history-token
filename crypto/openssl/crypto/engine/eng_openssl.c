@@ -4,15 +4,15 @@ comment|/* crypto/engine/eng_openssl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_include
@@ -115,7 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This testing gunk is implemented (and explained) lower down. It also assumes  * the application explicitly calls "ENGINE_load_openssl()" because this is no  * longer automatic in ENGINE_load_builtin_engines(). */
+comment|/*  * This testing gunk is implemented (and explained) lower down. It also  * assumes the application explicitly calls "ENGINE_load_openssl()" because  * this is no longer automatic in ENGINE_load_builtin_engines().  */
 end_comment
 
 begin_define
@@ -399,7 +399,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_openssl() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_openssl() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -556,7 +556,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If we add errors to this ENGINE, ensure the error handling is setup here */
+comment|/*      * If we add errors to this ENGINE, ensure the error handling is setup      * here      */
 comment|/* openssl_load_error_strings(); */
 return|return
 literal|1
@@ -637,7 +637,7 @@ argument_list|(
 name|toadd
 argument_list|)
 expr_stmt|;
-comment|/* If the "add" worked, it gets a structural reference. So either way, 	 * we release our just-created reference. */
+comment|/*      * If the "add" worked, it gets a structural reference. So either way, we      * release our just-created reference.      */
 name|ENGINE_free
 argument_list|(
 name|toadd
@@ -650,7 +650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifdef
@@ -737,7 +737,7 @@ name|TEST_ENG_OPENSSL_RC4
 end_ifdef
 
 begin_comment
-comment|/* This section of code compiles an "alternative implementation" of two modes of  * RC4 into this ENGINE. The result is that EVP_CIPHER operation for "rc4"  * should under normal circumstances go via this support rather than the default  * EVP support. There are other symbols to tweak the testing;  *    TEST_ENC_OPENSSL_RC4_OTHERS - print a one line message to stderr each time  *        we're asked for a cipher we don't support (should not happen).  *    TEST_ENG_OPENSSL_RC4_P_INIT - print a one line message to stderr each time  *        the "init_key" handler is called.  *    TEST_ENG_OPENSSL_RC4_P_CIPHER - ditto for the "cipher" handler.  */
+comment|/*-  * This section of code compiles an "alternative implementation" of two modes of  * RC4 into this ENGINE. The result is that EVP_CIPHER operation for "rc4"  * should under normal circumstances go via this support rather than the default  * EVP support. There are other symbols to tweak the testing;  *    TEST_ENC_OPENSSL_RC4_OTHERS - print a one line message to stderr each time  *        we're asked for a cipher we don't support (should not happen).  *    TEST_ENG_OPENSSL_RC4_P_INIT - print a one line message to stderr each time  *        the "init_key" handler is called.  *    TEST_ENG_OPENSSL_RC4_P_CIPHER - ditto for the "cipher" handler.  */
 end_comment
 
 begin_include
@@ -1329,7 +1329,7 @@ sizeof|sizeof
 argument_list|(
 name|SHA_CTX
 argument_list|)
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

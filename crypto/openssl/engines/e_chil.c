@@ -4,11 +4,11 @@ comment|/* crypto/engine/e_chil.c -*- mode: C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org), Geoff Thorpe  * (geoff@geoffthorpe.net) and Dr Stephen N Henson (steve@openssl.org)  * for the OpenSSL project 2000.  */
+comment|/*  * Written by Richard Levitte (richard@levitte.org), Geoff Thorpe  * (geoff@geoffthorpe.net) and Dr Stephen N Henson (steve@openssl.org) for  * the OpenSSL project 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -112,7 +112,7 @@ name|OPENSSL_NO_HW_CHIL
 end_ifndef
 
 begin_comment
-comment|/* Attribution notice: nCipher have said several times that it's OK for  * us to implement a general interface to their boxes, and recently declared  * their HWCryptoHook to be public, and therefore available for us to use.  * Thanks, nCipher.  *  * The hwcryptohook.h included here is from May 2000.  * [Richard Levitte]  */
+comment|/*-  * Attribution notice: nCipher have said several times that it's OK for  * us to implement a general interface to their boxes, and recently declared  * their HWCryptoHook to be public, and therefore available for us to use.  * Thanks, nCipher.  *  * The hwcryptohook.h included here is from May 2000.  * [Richard Levitte]  */
 end_comment
 
 begin_ifdef
@@ -843,7 +843,7 @@ block|,
 name|hwcrhk_rand_bytes
 block|,
 name|hwcrhk_rand_status
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -908,7 +908,7 @@ comment|/* Some structures needed for proper use of thread locks */
 end_comment
 
 begin_comment
-comment|/* hwcryptohook.h has some typedefs that turn struct HWCryptoHook_MutexValue    into HWCryptoHook_Mutex */
+comment|/*  * hwcryptohook.h has some typedefs that turn struct HWCryptoHook_MutexValue  * into HWCryptoHook_Mutex  */
 end_comment
 
 begin_struct
@@ -923,7 +923,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* hwcryptohook.h has some typedefs that turn    struct HWCryptoHook_PassphraseContextValue    into HWCryptoHook_PassphraseContext */
+comment|/*  * hwcryptohook.h has some typedefs that turn struct  * HWCryptoHook_PassphraseContextValue into HWCryptoHook_PassphraseContext  */
 end_comment
 
 begin_struct
@@ -943,7 +943,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* hwcryptohook.h has some typedefs that turn    struct HWCryptoHook_CallerContextValue    into HWCryptoHook_CallerContext */
+comment|/*  * hwcryptohook.h has some typedefs that turn struct  * HWCryptoHook_CallerContextValue into HWCryptoHook_CallerContext  */
 end_comment
 
 begin_struct
@@ -954,7 +954,7 @@ name|pem_password_cb
 modifier|*
 name|password_callback
 decl_stmt|;
-comment|/* Deprecated!  Only present for                                                backward compatibility! */
+comment|/* Deprecated! Only present for                                          * backward compatibility! */
 name|UI_METHOD
 modifier|*
 name|ui_method
@@ -968,7 +968,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The MPI structure in HWCryptoHook is pretty compatible with OpenSSL    BIGNUM's, so lets define a couple of conversion macros */
+comment|/*  * The MPI structure in HWCryptoHook is pretty compatible with OpenSSL  * BIGNUM's, so lets define a couple of conversion macros  */
 end_comment
 
 begin_define
@@ -1017,7 +1017,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* One might wonder why these are needed, since one can pass down at least    a UI_METHOD and a pointer to callback data to the key-loading functions.    The thing is that the ModExp and RSAImmed functions can load keys as well,    if the data they get is in a special, nCipher-defined format (hint: if you    look at the private exponent of the RSA data as a string, you'll see this    string: "nCipher KM tool key id", followed by some bytes, followed a key    identity string, followed by more bytes.  This happens when you use "embed"    keys instead of "hwcrhk" keys).  Unfortunately, those functions do not take    any passphrase or caller context, and our functions can't really take any    callback data either.  Still, the "insert_card" and "get_passphrase"    callbacks may be called down the line, and will need to know what user    interface callbacks to call, and having callback data from the application    may be a nice thing as well, so we need to keep track of that globally. */
+comment|/*  * One might wonder why these are needed, since one can pass down at least a  * UI_METHOD and a pointer to callback data to the key-loading functions. The  * thing is that the ModExp and RSAImmed functions can load keys as well, if  * the data they get is in a special, nCipher-defined format (hint: if you  * look at the private exponent of the RSA data as a string, you'll see this  * string: "nCipher KM tool key id", followed by some bytes, followed a key  * identity string, followed by more bytes.  This happens when you use  * "embed" keys instead of "hwcrhk" keys).  Unfortunately, those functions do  * not take any passphrase or caller context, and our functions can't really  * take any callback data either.  Still, the "insert_card" and  * "get_passphrase" callbacks may be called down the line, and will need to  * know what user interface callbacks to call, and having callback data from  * the application may be a nice thing as well, so we need to keep track of  * that globally.  */
 end_comment
 
 begin_decl_stmt
@@ -1071,7 +1071,7 @@ comment|/* Max mutexes, 0 = no small limit */
 literal|0
 block|,
 comment|/* Max simultaneous, 0 = default */
-comment|/* The next few are mutex stuff: we write wrapper functions 	   around the OS mutex functions.  We initialise them to 0 	   here, and change that to actual function pointers in hwcrhk_init() 	   if dynamic locks are supported (that is, if the application 	   programmer has made sure of setting up callbacks bafore starting 	   this engine) *and* if disable_mutex_callbacks hasn't been set by 	   a call to ENGINE_ctrl(ENGINE_CTRL_CHIL_NO_LOCKING). */
+comment|/*      * The next few are mutex stuff: we write wrapper functions around the OS      * mutex functions.  We initialise them to 0 here, and change that to      * actual function pointers in hwcrhk_init() if dynamic locks are      * supported (that is, if the application programmer has made sure of      * setting up callbacks bafore starting this engine) *and* if      * disable_mutex_callbacks hasn't been set by a call to      * ENGINE_ctrl(ENGINE_CTRL_CHIL_NO_LOCKING).      */
 sizeof|sizeof
 argument_list|(
 name|HWCryptoHook_Mutex
@@ -1085,7 +1085,7 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* The next few are condvar stuff: we write wrapper functions 	   round the OS functions.  Currently not implemented and not 	   and absolute necessity even in threaded programs, therefore 	   0'ed.  Will hopefully be implemented some day, since it 	   enhances the efficiency of HWCryptoHook.  */
+comment|/*      * The next few are condvar stuff: we write wrapper functions round the      * OS functions.  Currently not implemented and not and absolute      * necessity even in threaded programs, therefore 0'ed.  Will hopefully      * be implemented some day, since it enhances the efficiency of      * HWCryptoHook.      */
 literal|0
 block|,
 comment|/* sizeof(HWCryptoHook_CondVar), */
@@ -1121,7 +1121,7 @@ comment|/* Now, to our own code */
 end_comment
 
 begin_comment
-comment|/* This internal function is used by ENGINE_chil() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_chil() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -1271,7 +1271,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the cswift-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * cswift-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1445,7 +1445,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the HWCryptoHook library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * HWCryptoHook library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1473,6 +1473,10 @@ directive|ifndef
 name|OPENSSL_NO_RSA
 end_ifndef
 
+begin_comment
+comment|/* Index for KM handle.  Not really used yet. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1483,17 +1487,13 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Index for KM handle.  Not really used yet. */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -1833,7 +1833,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* HWCryptoHook library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no  * error checking, take a look lower down where these functions are  * called, the checking and error handling is probably down there. */
+comment|/*  * HWCryptoHook library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no error  * checking, take a look lower down where these functions are called, the  * checking and error handling is probably down there.  */
 end_comment
 
 begin_comment
@@ -2270,7 +2270,7 @@ name|p_hwcrhk_ModExpCRT
 operator|=
 name|p9
 expr_stmt|;
-comment|/* Check if the application decided to support dynamic locks, 	   and if it does, use them. */
+comment|/*      * Check if the application decided to support dynamic locks, and if it      * does, use them.      */
 if|if
 condition|(
 name|disable_mutex_callbacks
@@ -2322,7 +2322,7 @@ name|hwcrhk_mutex_destroy
 expr_stmt|;
 block|}
 block|}
-comment|/* Try and get a context - if not, we may have a DSO but no 	 * accelerator! */
+comment|/*      * Try and get a context - if not, we may have a DSO but no accelerator!      */
 if|if
 condition|(
 operator|!
@@ -2801,7 +2801,7 @@ name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* this enables or disables the "SimpleForkCheck" flag used in the 	 * initialisation structure. */
+comment|/*          * this enables or disables the "SimpleForkCheck" flag used in the          * initialisation structure.          */
 case|case
 name|ENGINE_CTRL_CHIL_SET_FORKCHECK
 case|:
@@ -2837,7 +2837,7 @@ name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* This will prevent the initialisation function from "installing" 	 * the mutex-handling callbacks, even if they are available from 	 * within the library (or were provided to the library from the 	 * calling application). This is to remove any baggage for 	 * applications not using multithreading. */
+comment|/*          * This will prevent the initialisation function from "installing"          * the mutex-handling callbacks, even if they are available from          * within the library (or were provided to the library from the          * calling application). This is to remove any baggage for          * applications not using multithreading.          */
 case|case
 name|ENGINE_CTRL_CHIL_NO_LOCKING
 case|:
@@ -3633,7 +3633,7 @@ decl_stmt|;
 name|HWCryptoHook_ErrMsgBuf
 name|rmsg
 decl_stmt|;
-comment|/* Since HWCryptoHook_MPI is pretty compatible with BIGNUM's, 	   we use them directly, plus a little macro magic.  We only 	   thing we need to make sure of is that enough space is allocated. */
+comment|/*      * Since HWCryptoHook_MPI is pretty compatible with BIGNUM's, we use them      * directly, plus a little macro magic.  We only thing we need to make      * sure of is that enough space is allocated.      */
 name|HWCryptoHook_MPI
 name|m_a
 decl_stmt|,
@@ -3770,7 +3770,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* FIXME: When this error is returned, HWCryptoHook is 		   telling us that falling back to software computation 		   might be a good thing. */
+comment|/*          * FIXME: When this error is returned, HWCryptoHook is telling us          * that falling back to software computation might be a good thing.          */
 if|if
 condition|(
 name|ret
@@ -3902,7 +3902,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* This provides support for nForce keys.  Since that's opaque data 	   all we do is provide a handle to the proper key and let HWCryptoHook 	   take care of the rest. */
+comment|/*      * This provides support for nForce keys.  Since that's opaque data all      * we do is provide a handle to the proper key and let HWCryptoHook take      * care of the rest.      */
 if|if
 condition|(
 operator|(
@@ -4017,7 +4017,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* FIXME: When this error is returned, HWCryptoHook is 			   telling us that falling back to software computation 			   might be a good thing. */
+comment|/*              * FIXME: When this error is returned, HWCryptoHook is telling us              * that falling back to software computation might be a good              * thing.              */
 if|if
 condition|(
 name|ret
@@ -4237,7 +4237,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* FIXME: When this error is returned, HWCryptoHook is 			   telling us that falling back to software computation 			   might be a good thing. */
+comment|/*              * FIXME: When this error is returned, HWCryptoHook is telling us              * that falling back to software computation might be a good              * thing.              */
 if|if
 condition|(
 name|ret
@@ -4277,7 +4277,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* If we're here, we must be here with some semblance of success :-) */
+comment|/*      * If we're here, we must be here with some semblance of success :-)      */
 name|to_return
 operator|=
 literal|1
@@ -4576,7 +4576,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* FIXME: When this error is returned, HWCryptoHook is 		   telling us that falling back to software computation 		   might be a good thing. */
+comment|/*          * FIXME: When this error is returned, HWCryptoHook is telling us          * that falling back to software computation might be a good thing.          */
 if|if
 condition|(
 name|ret
@@ -4642,7 +4642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Mutex calls: since the HWCryptoHook model closely follows the POSIX model  * these just wrap the POSIX functions and add some logging.  */
+comment|/*  * Mutex calls: since the HWCryptoHook model closely follows the POSIX model  * these just wrap the POSIX functions and add some logging.  */
 end_comment
 
 begin_function
@@ -4793,7 +4793,7 @@ name|ui_method
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Despite what the documentation says prompt_info can be 	 * an empty string. 	 */
+comment|/*      * Despite what the documentation says prompt_info can be an empty      * string.      */
 if|if
 condition|(
 name|prompt_info
@@ -5226,7 +5226,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-comment|/* Despite what the documentation says wrong_info can be 	 	 * an empty string. 		 */
+comment|/*          * Despite what the documentation says wrong_info can be an empty          * string.          */
 if|if
 condition|(
 name|wrong_info
@@ -5447,7 +5447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

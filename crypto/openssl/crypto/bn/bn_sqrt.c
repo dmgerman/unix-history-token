@@ -4,11 +4,11 @@ comment|/* crypto/bn/bn_sqrt.c */
 end_comment
 
 begin_comment
-comment|/* Written by Lenka Fibikova<fibikova@exp-math.uni-essen.de>  * and Bodo Moeller for the OpenSSL project. */
+comment|/*  * Written by Lenka Fibikova<fibikova@exp-math.uni-essen.de> and Bodo  * Moeller for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ name|BN_CTX
 modifier|*
 name|ctx
 parameter_list|)
-comment|/* Returns 'ret' such that  *      ret^2 == a (mod p),  * using the Tonelli/Shanks algorithm (cf. Henri Cohen, "A Course  * in Algebraic Computational Number Theory", algorithm 1.5.1).  * 'p' must be prime!  */
+comment|/*  * Returns 'ret' such that ret^2 == a (mod p), using the Tonelli/Shanks  * algorithm (cf. Henri Cohen, "A Course in Algebraic Computational Number  * Theory", algorithm 1.5.1). 'p' must be prime!  */
 block|{
 name|BIGNUM
 modifier|*
@@ -378,7 +378,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* The easy case:  (|p|-1)/2  is odd, so 2 has an inverse 		 * modulo  (|p|-1)/2,  and square roots can be computed 		 * directly by modular exponentiation. 		 * We have 		 *     2 * (|p|+1)/4 == 1   (mod (|p|-1)/2), 		 * so we can use exponent  (|p|+1)/4,  i.e.  (|p|-3)/4 + 1. 		 */
+comment|/*-          * The easy case:  (|p|-1)/2  is odd, so 2 has an inverse          * modulo  (|p|-1)/2,  and square roots can be computed          * directly by modular exponentiation.          * We have          *     2 * (|p|+1)/4 == 1   (mod (|p|-1)/2),          * so we can use exponent  (|p|+1)/4,  i.e.  (|p|-3)/4 + 1.          */
 if|if
 condition|(
 operator|!
@@ -447,7 +447,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* |p| == 5  (mod 8) 		 * 		 * In this case  2  is always a non-square since 		 * Legendre(2,p) = (-1)^((p^2-1)/8)  for any odd prime. 		 * So if  a  really is a square, then  2*a  is a non-square. 		 * Thus for 		 *      b := (2*a)^((|p|-5)/8), 		 *      i := (2*a)*b^2 		 * we have 		 *     i^2 = (2*a)^((1 + (|p|-5)/4)*2) 		 *         = (2*a)^((p-1)/2) 		 *         = -1; 		 * so if we set 		 *      x := a*b*(i-1), 		 * then 		 *     x^2 = a^2 * b^2 * (i^2 - 2*i + 1) 		 *         = a^2 * b^2 * (-2*i) 		 *         = a*(-i)*(2*a*b^2) 		 *         = a*(-i)*i 		 *         = a. 		 * 		 * (This is due to A.O.L. Atkin,  		 *<URL: http://listserv.nodak.edu/scripts/wa.exe?A2=ind9211&L=nmbrthry&O=T&P=562>, 		 * November 1992.) 		 */
+comment|/*-          * |p| == 5  (mod 8)          *          * In this case  2  is always a non-square since          * Legendre(2,p) = (-1)^((p^2-1)/8)  for any odd prime.          * So if  a  really is a square, then  2*a  is a non-square.          * Thus for          *      b := (2*a)^((|p|-5)/8),          *      i := (2*a)*b^2          * we have          *     i^2 = (2*a)^((1 + (|p|-5)/4)*2)          *         = (2*a)^((p-1)/2)          *         = -1;          * so if we set          *      x := a*b*(i-1),          * then          *     x^2 = a^2 * b^2 * (i^2 - 2*i + 1)          *         = a^2 * b^2 * (-2*i)          *         = a*(-i)*(2*a*b^2)          *         = a*(-i)*i          *         = a.          *          * (This is due to A.O.L. Atkin,          *<URL: http://listserv.nodak.edu/scripts/wa.exe?A2=ind9211&L=nmbrthry&O=T&P=562>,          * November 1992.)          */
 comment|/* t := 2*a */
 if|if
 condition|(
@@ -523,7 +523,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* t := (2*a)*b^2 - 1*/
+comment|/* t := (2*a)*b^2 - 1 */
 if|if
 condition|(
 operator|!
@@ -616,7 +616,7 @@ goto|goto
 name|vrfy
 goto|;
 block|}
-comment|/* e> 2, so we really have to use the Tonelli/Shanks algorithm. 	 * First, find some  y  that is not a square. */
+comment|/*      * e> 2, so we really have to use the Tonelli/Shanks algorithm. First,      * find some y that is not a square.      */
 if|if
 condition|(
 operator|!
@@ -643,7 +643,7 @@ literal|2
 expr_stmt|;
 do|do
 block|{
-comment|/* For efficiency, try small numbers first; 		 * if this fails, try random numbers. 		 */
+comment|/*          * For efficiency, try small numbers first; if this fails, try random          * numbers.          */
 if|if
 condition|(
 name|i
@@ -807,7 +807,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* Many rounds and still no non-square -- this is more likely 		 * a bug than just bad luck. 		 * Even if  p  is not prime, we should have found some  y 		 * such that r == -1. 		 */
+comment|/*          * Many rounds and still no non-square -- this is more likely a bug          * than just bad luck. Even if p is not prime, we should have found          * some y such that r == -1.          */
 name|BNerr
 argument_list|(
 name|BN_F_BN_MOD_SQRT
@@ -835,7 +835,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* Now that we have some non-square, we can find an element 	 * of order  2^e  by computing its q'th power. */
+comment|/*      * Now that we have some non-square, we can find an element of order 2^e      * by computing its q'th power.      */
 if|if
 condition|(
 operator|!
@@ -874,7 +874,7 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/* Now we know that (if  p  is indeed prime) there is an integer 	 * k,  0<= k< 2^e,  such that 	 * 	 *      a^q * y^k == 1   (mod p). 	 * 	 * As  a^q  is a square and  y  is not,  k  must be even. 	 * q+1  is even, too, so there is an element 	 * 	 *     X := a^((q+1)/2) * y^(k/2), 	 * 	 * and it satisfies 	 * 	 *     X^2 = a^q * a     * y^k 	 *         = a, 	 * 	 * so it is the square root that we are looking for. 	 */
+comment|/*-      * Now we know that (if  p  is indeed prime) there is an integer      * k,  0<= k< 2^e,  such that      *      *      a^q * y^k == 1   (mod p).      *      * As  a^q  is a square and  y  is not,  k  must be even.      * q+1  is even, too, so there is an element      *      *     X := a^((q+1)/2) * y^(k/2),      *      * and it satisfies      *      *     X^2 = a^q * a     * y^k      *         = a,      *      * so it is the square root that we are looking for.      */
 comment|/* t := (q-1)/2  (note that  q  is odd) */
 if|if
 condition|(
@@ -897,8 +897,8 @@ argument_list|(
 name|t
 argument_list|)
 condition|)
-comment|/* special case: p = 2^e + 1 */
 block|{
+comment|/* special case: p = 2^e + 1 */
 if|if
 condition|(
 operator|!
@@ -1057,7 +1057,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* Now  b  is  a^q * y^k  for some even  k  (0<= k< 2^E 		 * where  E  refers to the original value of  e,  which we 		 * don't keep in a variable),  and  x  is  a^((q+1)/2) * y^(k/2). 		 * 		 * We have  a*b = x^2, 		 *    y^2^(e-1) = -1, 		 *    b^2^(e-1) = 1. 		 */
+comment|/*-          * Now  b  is  a^q * y^k  for some even  k  (0<= k< 2^E          * where  E  refers to the original value of  e,  which we          * don't keep in a variable),  and  x  is  a^((q+1)/2) * y^(k/2).          *          * We have  a*b = x^2,          *    y^2^(e-1) = -1,          *    b^2^(e-1) = 1.          */
 if|if
 condition|(
 name|BN_is_one
@@ -1279,7 +1279,7 @@ operator|!
 name|err
 condition|)
 block|{
-comment|/* verify the result -- the input might have been not a square 		 * (test added in 0.9.8) */
+comment|/*          * verify the result -- the input might have been not a square (test          * added in 0.9.8)          */
 if|if
 condition|(
 operator|!

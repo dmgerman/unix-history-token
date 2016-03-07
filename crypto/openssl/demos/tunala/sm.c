@@ -93,11 +93,11 @@ operator|->
 name|ssl
 argument_list|)
 expr_stmt|;
-comment|/* SSL_free seems to decrement the reference counts already so doing this goes  * kaboom. */
+comment|/*      * SSL_free seems to decrement the reference counts already so doing this      * goes kaboom.      */
 if|#
 directive|if
 literal|0
-block|if(machine->bio_intossl) 		BIO_free(machine->bio_intossl); 	if(machine->bio_fromssl) 		BIO_free(machine->bio_fromssl);
+block|if (machine->bio_intossl)         BIO_free(machine->bio_intossl);     if (machine->bio_fromssl)         BIO_free(machine->bio_fromssl);
 endif|#
 directive|endif
 name|buffer_close
@@ -331,7 +331,7 @@ operator|->
 name|ssl
 argument_list|)
 expr_stmt|;
-comment|/* If we're the first one to generate traffic - do it now otherwise we 	 * go into the next select empty-handed and our peer will not send data 	 * but will similarly wait for us. */
+comment|/*      * If we're the first one to generate traffic - do it now otherwise we go      * into the next select empty-handed and our peer will not send data but      * will similarly wait for us.      */
 return|return
 name|state_machine_churn
 argument_list|(
@@ -387,7 +387,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Do this loop twice to cover any dependencies about which precise 	 * order of reads and writes is required. */
+comment|/*      * Do this loop twice to cover any dependencies about which precise order      * of reads and writes is required.      */
 for|for
 control|(
 name|loop
@@ -451,7 +451,7 @@ name|bio_fromssl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We close on the SSL side if the info callback noticed some problems 	 * or an SSL shutdown was underway and shutdown traffic had all been 	 * sent. */
+comment|/*      * We close on the SSL side if the info callback noticed some problems or      * an SSL shutdown was underway and shutdown traffic had all been sent.      */
 if|if
 condition|(
 name|SSL_get_app_data
@@ -492,7 +492,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Either the SSL is alive and well, or the closing process still has 	 * outgoing data waiting to be sent */
+comment|/*      * Either the SSL is alive and well, or the closing process still has      * outgoing data waiting to be sent      */
 return|return
 literal|1
 return|;
@@ -512,7 +512,7 @@ modifier|*
 name|machine
 parameter_list|)
 block|{
-comment|/* Well, first thing to do is null out the clean-side buffers - they're 	 * no use any more. */
+comment|/*      * Well, first thing to do is null out the clean-side buffers - they're      * no use any more.      */
 name|buffer_close
 argument_list|(
 operator|&
@@ -577,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called when the dirty side of the SSL has lost its connection. This is pretty  * terminal as all that can be left to do is send any buffered output on the  * clean side - after that, we're done. */
+comment|/*  * Called when the dirty side of the SSL has lost its connection. This is  * pretty terminal as all that can be left to do is send any buffered output  * on the clean side - after that, we're done.  */
 end_comment
 
 begin_function

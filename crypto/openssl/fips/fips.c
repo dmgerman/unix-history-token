@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -360,7 +360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Selftest failure fatal exit routine. This will be called  * during *any* cryptographic operation. It has the minimum  * overhead possible to avoid too big a performance hit.  */
+comment|/*  * Selftest failure fatal exit routine. This will be called during *any*  * cryptographic operation. It has the minimum overhead possible to avoid too  * big a performance hit.  */
 end_comment
 
 begin_function
@@ -973,7 +973,7 @@ name|fips_selftest_fail
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Don't go into FIPS mode twice, just so we can do automagic 	   seeding */
+comment|/*          * Don't go into FIPS mode twice, just so we can do automagic seeding          */
 if|if
 condition|(
 name|FIPS_mode
@@ -1520,7 +1520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generalized public key test routine. Signs and verifies the data  * supplied in tbs using mesage digest md and setting option digest  * flags md_flags. If the 'kat' parameter is not NULL it will  * additionally check the signature matches it: a known answer test  * The string "fail_str" is used for identification purposes in case  * of failure.  */
+comment|/*  * Generalized public key test routine. Signs and verifies the data supplied  * in tbs using mesage digest md and setting option digest flags md_flags. If  * the 'kat' parameter is not NULL it will additionally check the signature  * matches it: a known answer test The string "fail_str" is used for  * identification purposes in case of failure.  */
 end_comment
 
 begin_function
@@ -1862,7 +1862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generalized symmetric cipher test routine. Encrypt data, verify result  * against known answer, decrypt and compare with original plaintext.  */
+comment|/*  * Generalized symmetric cipher test routine. Encrypt data, verify result  * against known answer, decrypt and compare with original plaintext.  */
 end_comment
 
 begin_function
@@ -2034,11 +2034,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/* The purpose of this is to ensure the error code exists and the function  * name is to keep the error checking script quiet  */
+comment|/*  * The purpose of this is to ensure the error code exists and the function  * name is to keep the error checking script quiet  */
 end_comment
 
 begin_endif
-unit|void hash_final(void) 	{ 	FIPSerr(FIPS_F_HASH_FINAL,FIPS_R_NON_FIPS_METHOD); 	}
+unit|void hash_final(void) {     FIPSerr(FIPS_F_HASH_FINAL, FIPS_R_NON_FIPS_METHOD); }
 endif|#
 directive|endif
 end_endif

@@ -110,7 +110,7 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

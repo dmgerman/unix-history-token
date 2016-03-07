@@ -117,7 +117,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* We have to multiply 'ret' by 10 before absorbing the next 		 * digit. If this will overflow, catch it now. */
+comment|/*          * We have to multiply 'ret' by 10 before absorbing the next digit.          * If this will overflow, catch it now.          */
 if|if
 condition|(
 name|ret

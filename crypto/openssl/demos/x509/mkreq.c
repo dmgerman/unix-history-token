@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Certificate request creation. Demonstrates some request related  * operations.  */
+comment|/*  * Certificate request creation. Demonstrates some request related  * operations.  */
 end_comment
 
 begin_include
@@ -421,7 +421,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* This function creates and adds the entry, working out the 	 * correct string type and performing checks on its length. 	 * Normally we'd check the return value for errors... 	 */
+comment|/*      * This function creates and adds the entry, working out the correct      * string type and performing checks on its length. Normally we'd check      * the return value for errors...      */
 name|X509_NAME_add_entry_by_txt
 argument_list|(
 name|name
@@ -463,8 +463,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REQUEST_EXTENSIONS
-comment|/* Certificate requests can contain extensions, which can be used 	 * to indicate the extensions the requestor would like added to  	 * their certificate. CAs might ignore them however or even choke 	 * if they are present. 	 */
-comment|/* For request extensions they are all packed in a single attribute. 	 * We save them in a STACK and add them all at once later... 	 */
+comment|/*      * Certificate requests can contain extensions, which can be used to      * indicate the extensions the requestor would like added to their      * certificate. CAs might ignore them however or even choke if they are      * present.      */
+comment|/*      * For request extensions they are all packed in a single attribute. We      * save them in a STACK and add them all at once later...      */
 name|exts
 operator|=
 name|sk_X509_EXTENSION_new_null
@@ -480,7 +480,7 @@ argument_list|,
 literal|"critical,digitalSignature,keyEncipherment"
 argument_list|)
 expr_stmt|;
-comment|/* This is a typical use for request extensions: requesting a value for 	 * subject alternative name. 	 */
+comment|/*      * This is a typical use for request extensions: requesting a value for      * subject alternative name.      */
 name|add_ext
 argument_list|(
 name|exts
@@ -597,7 +597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add extension using V3 code: we can set the config file as NULL  * because we wont reference any other sections.  */
+comment|/*  * Add extension using V3 code: we can set the config file as NULL because we  * wont reference any other sections.  */
 end_comment
 
 begin_decl_stmt

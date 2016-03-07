@@ -8,7 +8,7 @@ comment|/* ==================================================================== 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|ec_GF2m_simple_make_affine
 block|,
 name|ec_GF2m_simple_points_make_affine
 block|,
-comment|/* the following three method functions are defined in ec2_mult.c */
+comment|/*          * the following three method functions are defined in ec2_mult.c          */
 name|ec_GF2m_simple_mul
 block|,
 name|ec_GF2m_precompute_mult
@@ -129,7 +129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize a GF(2^m)-based EC_GROUP structure.  * Note that all other members are handled by EC_GROUP_new.  */
+comment|/*  * Initialize a GF(2^m)-based EC_GROUP structure. Note that all other members  * are handled by EC_GROUP_new.  */
 end_comment
 
 begin_function
@@ -172,7 +172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free a GF(2^m)-based EC_GROUP structure.  * Note that all other members are handled by EC_GROUP_free.  */
+comment|/*  * Free a GF(2^m)-based EC_GROUP structure. Note that all other members are  * handled by EC_GROUP_free.  */
 end_comment
 
 begin_function
@@ -212,7 +212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Clear and free a GF(2^m)-based EC_GROUP structure.  * Note that all other members are handled by EC_GROUP_clear_free.  */
+comment|/*  * Clear and free a GF(2^m)-based EC_GROUP structure. Note that all other  * members are handled by EC_GROUP_clear_free.  */
 end_comment
 
 begin_function
@@ -297,7 +297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy a GF(2^m)-based EC_GROUP structure.  * Note that all other members are handled by EC_GROUP_copy.  */
+comment|/*  * Copy a GF(2^m)-based EC_GROUP structure. Note that all other members are  * handled by EC_GROUP_copy.  */
 end_comment
 
 begin_function
@@ -863,7 +863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the curve parameters of an EC_GROUP structure.  * If p, a, or b are NULL then there values will not be set but the method will return with success.  */
+comment|/*  * Get the curve parameters of an EC_GROUP structure. If p, a, or b are NULL  * then there values will not be set but the method will return with success.  */
 end_comment
 
 begin_function
@@ -982,7 +982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Gets the degree of the field.  For a curve over GF(2^m) this is the value m. */
+comment|/*  * Gets the degree of the field.  For a curve over GF(2^m) this is the value  * m.  */
 end_comment
 
 begin_function
@@ -1010,7 +1010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Checks the discriminant of the curve.  * y^2 + x*y = x^3 + a*x^2 + b is an elliptic curve<=> b != 0 (mod p)   */
+comment|/*  * Checks the discriminant of the curve. y^2 + x*y = x^3 + a*x^2 + b is an  * elliptic curve<=> b != 0 (mod p)  */
 end_comment
 
 begin_function
@@ -1116,7 +1116,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* check the discriminant: 	 * y^2 + x*y = x^3 + a*x^2 + b is an elliptic curve<=> b != 0 (mod p)  	 */
+comment|/*      * check the discriminant: y^2 + x*y = x^3 + a*x^2 + b is an elliptic      * curve<=> b != 0 (mod p)      */
 if|if
 condition|(
 name|BN_is_zero
@@ -1291,7 +1291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy the contents of one EC_POINT into another.  Assumes dest is initialized. */
+comment|/*  * Copy the contents of one EC_POINT into another.  Assumes dest is  * initialized.  */
 end_comment
 
 begin_function
@@ -1380,7 +1380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set an EC_POINT to the point at infinity.    * A point at infinity is represented by having Z=0.  */
+comment|/*  * Set an EC_POINT to the point at infinity. A point at infinity is  * represented by having Z=0.  */
 end_comment
 
 begin_function
@@ -1418,7 +1418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the coordinates of an EC_POINT using affine coordinates.   * Note that the simple implementation only uses affine coordinates.  */
+comment|/*  * Set the coordinates of an EC_POINT using affine coordinates. Note that  * the simple implementation only uses affine coordinates.  */
 end_comment
 
 begin_function
@@ -1574,7 +1574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Gets the affine coordinates of an EC_POINT.   * Note that the simple implementation only uses affine coordinates.  */
+comment|/*  * Gets the affine coordinates of an EC_POINT. Note that the simple  * implementation only uses affine coordinates.  */
 end_comment
 
 begin_function
@@ -1740,7 +1740,7 @@ file|"ec2_smpt.c"
 end_include
 
 begin_comment
-comment|/* Converts an EC_POINT to an octet string.    * If buf is NULL, the encoded length will be returned.  * If the length len of buf is smaller than required an error will be returned.  *  * The point compression section of this function is patented by Certicom Corp.   * under US Patent 6,141,420.  Point compression is disabled by default and can   * be enabled by defining the preprocessor macro OPENSSL_EC_BIN_PT_COMP at   * Configure-time.  */
+comment|/*  * Converts an EC_POINT to an octet string. If buf is NULL, the encoded  * length will be returned. If the length len of buf is smaller than required  * an error will be returned. The point compression section of this function  * is patented by Certicom Corp. under US Patent 6,141,420.  Point  * compression is disabled by default and can be enabled by defining the  * preprocessor macro OPENSSL_EC_BIN_PT_COMP at Configure-time.  */
 end_comment
 
 begin_function
@@ -2348,7 +2348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Converts an octet string representation to an EC_POINT.   * Note that the simple implementation only uses affine coordinates.  */
+comment|/*  * Converts an octet string representation to an EC_POINT. Note that the  * simple implementation only uses affine coordinates.  */
 end_comment
 
 begin_function
@@ -2898,7 +2898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes a + b and stores the result in r.  r could be a or b, a could be b.  * Uses algorithm A.10.2 of IEEE P1363.  */
+comment|/*  * Computes a + b and stores the result in r.  r could be a or b, a could be  * b. Uses algorithm A.10.2 of IEEE P1363.  */
 end_comment
 
 begin_function
@@ -3617,7 +3617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes 2 * a and stores the result in r.  r could be a.  * Uses algorithm A.10.2 of IEEE P1363.  */
+comment|/*  * Computes 2 * a and stores the result in r.  r could be a. Uses algorithm  * A.10.2 of IEEE P1363.  */
 end_comment
 
 begin_function
@@ -3768,7 +3768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Determines whether the given EC_POINT is an actual point on the curve defined  * in the EC_GROUP.  A point is valid if it satisfies the Weierstrass equation:  *      y^2 + x*y = x^3 + a*x^2 + b.  */
+comment|/*-  * Determines whether the given EC_POINT is an actual point on the curve defined  * in the EC_GROUP.  A point is valid if it satisfies the Weierstrass equation:  *      y^2 + x*y = x^3 + a*x^2 + b.  */
 end_comment
 
 begin_function
@@ -3948,7 +3948,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* We have a curve defined by a Weierstrass equation 	 *      y^2 + x*y = x^3 + a*x^2 + b. 	 *<=> x^3 + a*x^2 + x*y + b + y^2 = 0 	 *<=> ((x + a) * x + y ) * x + b + y^2 = 0 	 */
+comment|/*-      * We have a curve defined by a Weierstrass equation      *      y^2 + x*y = x^3 + a*x^2 + b.      *<=> x^3 + a*x^2 + x*y + b + y^2 = 0      *<=> ((x + a) * x + y ) * x + b + y^2 = 0      */
 if|if
 condition|(
 operator|!
@@ -4119,7 +4119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Indicates whether two points are equal.  * Return values:  *  -1   error  *   0   equal (in affine coordinates)  *   1   not equal  */
+comment|/*-  * Indicates whether two points are equal.  * Return values:  *  -1   error  *   0   equal (in affine coordinates)  *   1   not equal  */
 end_comment
 
 begin_function
@@ -4620,7 +4620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Forces each of the EC_POINTs in the given array to use affine coordinates. */
+comment|/*  * Forces each of the EC_POINTs in the given array to use affine coordinates.  */
 end_comment
 
 begin_function

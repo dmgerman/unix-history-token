@@ -4,7 +4,7 @@ comment|/* crypto/bio/b_sock.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -167,7 +167,7 @@ literal|0
 end_if
 
 begin_define
-unit|static unsigned long BIO_ghbn_hits=0L; static unsigned long BIO_ghbn_miss=0L;
+unit|static unsigned long BIO_ghbn_hits = 0L; static unsigned long BIO_ghbn_miss = 0L;
 define|#
 directive|define
 name|GHBN_NUM
@@ -175,7 +175,7 @@ value|4
 end_define
 
 begin_endif
-unit|static struct ghbn_cache_st 	{ 	char name[129]; 	struct hostent *ent; 	unsigned long order; 	} ghbn_cache[GHBN_NUM];
+unit|static struct ghbn_cache_st {     char name[129];     struct hostent *ent;     unsigned long order; } ghbn_cache[GHBN_NUM];
 endif|#
 directive|endif
 end_endif
@@ -270,7 +270,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* At this point, we have something that is most probably correct 	   in some way, so let's init the socket. */
+comment|/*      * At this point, we have something that is most probably correct in some      * way, so let's init the socket.      */
 if|if
 condition|(
 name|BIO_sock_init
@@ -282,7 +282,7 @@ return|return
 literal|0
 return|;
 comment|/* don't generate another error code here */
-comment|/* If the string actually contained an IP address, we need not do 	   anything more */
+comment|/*      * If the string actually contained an IP address, we need not do      * anything more      */
 if|if
 condition|(
 name|i
@@ -493,7 +493,7 @@ argument_list|(
 name|CRYPTO_LOCK_GETSERVBYNAME
 argument_list|)
 expr_stmt|;
-comment|/* Note: under VMS with SOCKETSHR, it seems like the first 		 * parameter is 'char *', instead of 'const char *' 		 */
+comment|/*          * Note: under VMS with SOCKETSHR, it seems like the first parameter          * is 'char *', instead of 'const char *'          */
 ifndef|#
 directive|ifndef
 name|CONST_STRICT
@@ -676,7 +676,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-if|else if (strcmp(str,"wais") == 0) 				*port_ptr=21;
+if|else if (strcmp(str, "wais") == 0)                 *port_ptr = 21;
 endif|#
 directive|endif
 else|else
@@ -739,7 +739,7 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-comment|/* Note: under Windows the third parameter is of type (char *) 	 * whereas under other systems it is (void *) if you don't have 	 * a cast it will choke the compiler: if you do have a cast then 	 * you can either go for (char *) or (void *). 	 */
+comment|/*      * Note: under Windows the third parameter is of type (char *) whereas      * under other systems it is (void *) if you don't have a cast it will      * choke the compiler: if you do have a cast then you can either go for      * (char *) or (void *).      */
 name|i
 operator|=
 name|getsockopt
@@ -792,27 +792,27 @@ literal|0
 end_if
 
 begin_comment
-unit|long BIO_ghbn_ctrl(int cmd, int iarg, char *parg) 	{ 	int i; 	char **p;  	switch (cmd) 		{ 	case BIO_GHBN_CTRL_HITS: 		return(BIO_ghbn_hits);
+unit|long BIO_ghbn_ctrl(int cmd, int iarg, char *parg) {     int i;     char **p;      switch (cmd) {     case BIO_GHBN_CTRL_HITS:         return (BIO_ghbn_hits);
 comment|/* break; */
 end_comment
 
 begin_comment
-unit|case BIO_GHBN_CTRL_MISSES: 		return(BIO_ghbn_miss);
+unit|case BIO_GHBN_CTRL_MISSES:         return (BIO_ghbn_miss);
 comment|/* break; */
 end_comment
 
 begin_comment
-unit|case BIO_GHBN_CTRL_CACHE_SIZE: 		return(GHBN_NUM);
+unit|case BIO_GHBN_CTRL_CACHE_SIZE:         return (GHBN_NUM);
 comment|/* break; */
 end_comment
 
 begin_comment
-unit|case BIO_GHBN_CTRL_GET_ENTRY: 		if ((iarg>= 0)&& (iarg<GHBN_NUM)&& 			(ghbn_cache[iarg].order> 0)) 			{ 			p=(char **)parg; 			if (p == NULL) return(0); 			*p=ghbn_cache[iarg].name; 			ghbn_cache[iarg].name[128]='\0'; 			return(1); 			} 		return(0);
+unit|case BIO_GHBN_CTRL_GET_ENTRY:         if ((iarg>= 0)&& (iarg< GHBN_NUM)&& (ghbn_cache[iarg].order> 0)) {             p = (char **)parg;             if (p == NULL)                 return (0);             *p = ghbn_cache[iarg].name;             ghbn_cache[iarg].name[128] = '\0';             return (1);         }         return (0);
 comment|/* break; */
 end_comment
 
 begin_endif
-unit|case BIO_GHBN_CTRL_FLUSH: 		for (i=0; i<GHBN_NUM; i++) 			ghbn_cache[i].order=0; 		break; 	default: 		return(0); 		} 	return(1); 	}
+unit|case BIO_GHBN_CTRL_FLUSH:         for (i = 0; i< GHBN_NUM; i++)             ghbn_cache[i].order = 0;         break;     default:         return (0);     }     return (1); }
 endif|#
 directive|endif
 end_endif
@@ -824,7 +824,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static struct hostent *ghbn_dup(struct hostent *a) 	{ 	struct hostent *ret; 	int i,j;  	MemCheck_off(); 	ret=(struct hostent *)OPENSSL_malloc(sizeof(struct hostent)); 	if (ret == NULL) return(NULL); 	memset(ret,0,sizeof(struct hostent));  	for (i=0; a->h_aliases[i] != NULL; i++) 		; 	i++; 	ret->h_aliases = (char **)OPENSSL_malloc(i*sizeof(char *)); 	if (ret->h_aliases == NULL) 		goto err; 	memset(ret->h_aliases, 0, i*sizeof(char *));  	for (i=0; a->h_addr_list[i] != NULL; i++) 		; 	i++; 	ret->h_addr_list=(char **)OPENSSL_malloc(i*sizeof(char *)); 	if (ret->h_addr_list == NULL) 		goto err; 	memset(ret->h_addr_list, 0, i*sizeof(char *));  	j=strlen(a->h_name)+1; 	if ((ret->h_name=OPENSSL_malloc(j)) == NULL) goto err; 	memcpy((char *)ret->h_name,a->h_name,j); 	for (i=0; a->h_aliases[i] != NULL; i++) 		{ 		j=strlen(a->h_aliases[i])+1; 		if ((ret->h_aliases[i]=OPENSSL_malloc(j)) == NULL) goto err; 		memcpy(ret->h_aliases[i],a->h_aliases[i],j); 		} 	ret->h_length=a->h_length; 	ret->h_addrtype=a->h_addrtype; 	for (i=0; a->h_addr_list[i] != NULL; i++) 		{ 		if ((ret->h_addr_list[i]=OPENSSL_malloc(a->h_length)) == NULL) 			goto err; 		memcpy(ret->h_addr_list[i],a->h_addr_list[i],a->h_length); 		} 	if (0) 		{ err:	 		if (ret != NULL) 			ghbn_free(ret); 		ret=NULL; 		} 	MemCheck_on(); 	return(ret); 	}  static void ghbn_free(struct hostent *a) 	{ 	int i;  	if(a == NULL) 	    return;  	if (a->h_aliases != NULL) 		{ 		for (i=0; a->h_aliases[i] != NULL; i++) 			OPENSSL_free(a->h_aliases[i]); 		OPENSSL_free(a->h_aliases); 		} 	if (a->h_addr_list != NULL) 		{ 		for (i=0; a->h_addr_list[i] != NULL; i++) 			OPENSSL_free(a->h_addr_list[i]); 		OPENSSL_free(a->h_addr_list); 		} 	if (a->h_name != NULL) OPENSSL_free(a->h_name); 	OPENSSL_free(a); 	}
+unit|static struct hostent *ghbn_dup(struct hostent *a) {     struct hostent *ret;     int i, j;      MemCheck_off();     ret = (struct hostent *)OPENSSL_malloc(sizeof(struct hostent));     if (ret == NULL)         return (NULL);     memset(ret, 0, sizeof(struct hostent));      for (i = 0; a->h_aliases[i] != NULL; i++) ;     i++;     ret->h_aliases = (char **)OPENSSL_malloc(i * sizeof(char *));     if (ret->h_aliases == NULL)         goto err;     memset(ret->h_aliases, 0, i * sizeof(char *));      for (i = 0; a->h_addr_list[i] != NULL; i++) ;     i++;     ret->h_addr_list = (char **)OPENSSL_malloc(i * sizeof(char *));     if (ret->h_addr_list == NULL)         goto err;     memset(ret->h_addr_list, 0, i * sizeof(char *));      j = strlen(a->h_name) + 1;     if ((ret->h_name = OPENSSL_malloc(j)) == NULL)         goto err;     memcpy((char *)ret->h_name, a->h_name, j);     for (i = 0; a->h_aliases[i] != NULL; i++) {         j = strlen(a->h_aliases[i]) + 1;         if ((ret->h_aliases[i] = OPENSSL_malloc(j)) == NULL)             goto err;         memcpy(ret->h_aliases[i], a->h_aliases[i], j);     }     ret->h_length = a->h_length;     ret->h_addrtype = a->h_addrtype;     for (i = 0; a->h_addr_list[i] != NULL; i++) {         if ((ret->h_addr_list[i] = OPENSSL_malloc(a->h_length)) == NULL)             goto err;         memcpy(ret->h_addr_list[i], a->h_addr_list[i], a->h_length);     }     if (0) {  err:         if (ret != NULL)             ghbn_free(ret);         ret = NULL;     }     MemCheck_on();     return (ret); }  static void ghbn_free(struct hostent *a) {     int i;      if (a == NULL)         return;      if (a->h_aliases != NULL) {         for (i = 0; a->h_aliases[i] != NULL; i++)             OPENSSL_free(a->h_aliases[i]);         OPENSSL_free(a->h_aliases);     }     if (a->h_addr_list != NULL) {         for (i = 0; a->h_addr_list[i] != NULL; i++)             OPENSSL_free(a->h_addr_list[i]);         OPENSSL_free(a->h_addr_list);     }     if (a->h_name != NULL)         OPENSSL_free(a->h_name);     OPENSSL_free(a); }
 endif|#
 directive|endif
 end_endif
@@ -844,7 +844,7 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* Caching gethostbyname() results forever is wrong, 	 * so we have to let the true gethostbyname() worry about this */
+comment|/*      * Caching gethostbyname() results forever is wrong, so we have to let      * the true gethostbyname() worry about this      */
 if|#
 directive|if
 operator|(
@@ -909,7 +909,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* It doesn't make sense to use locking here: The function interface 	 * is not thread-safe, because threads can never be sure when 	 * some other thread destroys the data they were given a pointer to. 	 */
+comment|/*      * It doesn't make sense to use locking here: The function interface is      * not thread-safe, because threads can never be sure when some other      * thread destroys the data they were given a pointer to.      */
 block|CRYPTO_w_lock(CRYPTO_LOCK_GETHOSTBYNAME);
 endif|#
 directive|endif
@@ -1012,12 +1012,12 @@ name|i
 operator|==
 name|GHBN_NUM
 condition|)
-comment|/* no hit*/
 block|{
+comment|/* no hit */
 name|BIO_ghbn_miss
 operator|++
 expr_stmt|;
-comment|/* Note: under VMS with SOCKETSHR, it seems like the first 		 * parameter is 'char *', instead of 'const char *' 		 */
+comment|/*          * Note: under VMS with SOCKETSHR, it seems like the first parameter          * is 'char *', instead of 'const char *'          */
 ifndef|#
 directive|ifndef
 name|CONST_STRICT
@@ -1058,12 +1058,12 @@ name|j
 operator|>
 literal|128
 condition|)
-comment|/* too big to cache */
 block|{
+comment|/* too big to cache */
 if|#
 directive|if
 literal|0
-comment|/* If we were trying to make this function thread-safe (which 			 * is bound to fail), we'd have to give up in this case 			 * (or allocate more memory). */
+comment|/*              * If we were trying to make this function thread-safe (which is              * bound to fail), we'd have to give up in this case (or allocate              * more memory).              */
 block|ret = NULL;
 endif|#
 directive|endif
@@ -1566,7 +1566,7 @@ comment|/* __VMS_VER */
 end_comment
 
 begin_comment
-comment|/* The reason I have implemented this instead of using sscanf is because  * Visual C 1.52c gives an unresolved external when linking a DLL :-( */
+comment|/*  * The reason I have implemented this instead of using sscanf is because  * Visual C 1.52c gives an unresolved external when linking a DLL :-(  */
 end_comment
 
 begin_function
@@ -2267,7 +2267,7 @@ operator|&&
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_WINDOWS
-comment|/* Some versions of Windows define EADDRINUSE to 			 * a dummy value. 			 */
+comment|/*              * Some versions of Windows define EADDRINUSE to a dummy value.              */
 operator|(
 name|err_num
 operator|==
@@ -2601,7 +2601,7 @@ argument_list|(
 name|from
 argument_list|)
 expr_stmt|;
-comment|/* Note: under VMS with SOCKETSHR the fourth parameter is currently 	 * of type (int *) whereas under other systems it is (void *) if 	 * you don't have a cast it will choke the compiler: if you do 	 * have a cast then you can either go for (int *) or (void *). 	 */
+comment|/*      * Note: under VMS with SOCKETSHR the fourth parameter is currently of      * type (int *) whereas under other systems it is (void *) if you don't      * have a cast it will choke the compiler: if you do have a cast then you      * can either go for (int *) or (void *).      */
 name|ret
 operator|=
 name|accept

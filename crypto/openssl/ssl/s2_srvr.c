@@ -4,11 +4,11 @@ comment|/* ssl/s2_srvr.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -693,7 +693,7 @@ expr_stmt|;
 case|case
 name|SSL2_ST_SERVER_START_ENCRYPTION
 case|:
-comment|/* Ok we how have sent all the stuff needed to 			 * start encrypting, the next packet back will 			 * be encrypted. */
+comment|/*              * Ok we how have sent all the stuff needed to start encrypting,              * the next packet back will be encrypted.              */
 if|if
 condition|(
 operator|!
@@ -765,7 +765,7 @@ operator|->
 name|hit
 condition|)
 block|{
-comment|/* If we are in here, we have been 				 * buffering the output, so we need to 				 * flush it and remove buffering from 				 * future traffic */
+comment|/*                  * If we are in here, we have been buffering the output, so                  * we need to flush it and remove buffering from future                  * traffic                  */
 name|s
 operator|->
 name|state
@@ -917,7 +917,7 @@ case|:
 case|case
 name|SSL2_ST_SEND_REQUEST_CERTIFICATE_D
 case|:
-comment|/* don't do a 'request certificate' if we 			 * don't want to, or we already have one, and 			 * we only want to do it once. */
+comment|/*              * don't do a 'request certificate' if we don't want to, or we              * already have one, and we only want to do it once.              */
 if|if
 condition|(
 operator|!
@@ -1053,7 +1053,7 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-comment|/*	ERR_clear_error();*/
+comment|/*      ERR_clear_error(); */
 name|ssl_update_cache
 argument_list|(
 name|s
@@ -1206,7 +1206,9 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|keya
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|ek
 decl_stmt|;
 name|unsigned
@@ -1675,6 +1677,8 @@ name|s
 operator|->
 name|msg_callback
 condition|)
+block|{
+comment|/* CLIENT-MASTER-KEY */
 name|s
 operator|->
 name|msg_callback
@@ -1701,7 +1705,7 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* CLIENT-MASTER-KEY */
+block|}
 name|p
 operator|+=
 literal|10
@@ -1857,7 +1861,7 @@ name|ek
 operator|=
 literal|5
 expr_stmt|;
-comment|/* 	 * The format of the CLIENT-MASTER-KEY message is 	 * 1 byte message type 	 * 3 bytes cipher 	 * 2-byte clear key length (stored in s->s2->tmp.clear) 	 * 2-byte encrypted key length (stored in s->s2->tmp.enc) 	 * 2-byte key args length (IV etc) 	 * clear key 	 * encrypted key 	 * key args 	 * 	 * If the cipher is an export cipher, then the encrypted key bytes 	 * are a fixed portion of the total key (5 or 8 bytes). The size of 	 * this portion is in |ek|. If the cipher is not an export cipher, 	 * then the entire key material is encrypted (i.e., clear key length 	 * must be zero). 	 */
+comment|/*      * The format of the CLIENT-MASTER-KEY message is      * 1 byte message type      * 3 bytes cipher      * 2-byte clear key length (stored in s->s2->tmp.clear)      * 2-byte encrypted key length (stored in s->s2->tmp.enc)      * 2-byte key args length (IV etc)      * clear key      * encrypted key      * key args      *      * If the cipher is an export cipher, then the encrypted key bytes      * are a fixed portion of the total key (5 or 8 bytes). The size of      * this portion is in |ek|. If the cipher is not an export cipher,      * then the entire key material is encrypted (i.e., clear key length      * must be zero).      */
 if|if
 condition|(
 operator|(
@@ -1888,6 +1892,10 @@ name|clear
 operator|+
 name|ek
 operator|!=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|EVP_CIPHER_key_length
 argument_list|(
 name|c
@@ -1914,7 +1922,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* 	 * The encrypted blob must decrypt to the encrypted portion of the key. 	 * Decryption can't be expanding, so if we don't have enough encrypted 	 * bytes to fit the key in the buffer, stop now. 	 */
+comment|/*      * The encrypted blob must decrypt to the encrypted portion of the key.      * Decryption can't be expanding, so if we don't have enough encrypted      * bytes to fit the key in the buffer, stop now.      */
 if|if
 condition|(
 operator|(
@@ -1943,6 +1951,10 @@ name|tmp
 operator|.
 name|enc
 operator|<
+operator|(
+name|unsigned
+name|int
+operator|)
 name|EVP_CIPHER_key_length
 argument_list|(
 name|c
@@ -2030,7 +2042,7 @@ comment|/* bad decrypt */
 if|#
 directive|if
 literal|1
-comment|/* If a bad decrypt, continue with protocol but with a 	 * random master secret (Bleichenbacher attack) */
+comment|/*      * If a bad decrypt, continue with protocol but with a random master      * secret (Bleichenbacher attack)      */
 if|if
 condition|(
 operator|(
@@ -2057,6 +2069,9 @@ name|is_export
 operator|&&
 name|i
 operator|!=
+operator|(
+name|int
+operator|)
 name|ek
 operator|)
 operator|)
@@ -2331,7 +2346,7 @@ expr_stmt|;
 name|int
 name|z
 decl_stmt|;
-comment|/* This is a bit of a hack to check for the correct packet 	 * type the first time round. */
+comment|/*      * This is a bit of a hack to check for the correct packet type the first      * time round.      */
 if|if
 condition|(
 name|s
@@ -2734,6 +2749,8 @@ name|s
 operator|->
 name|msg_callback
 condition|)
+block|{
+comment|/* CLIENT-HELLO */
 name|s
 operator|->
 name|msg_callback
@@ -2760,12 +2777,12 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* CLIENT-HELLO */
+block|}
 name|p
 operator|+=
 literal|9
 expr_stmt|;
-comment|/* get session-id before cipher stuff so we can get out session 	 * structure if it is cached */
+comment|/*      * get session-id before cipher stuff so we can get out session structure      * if it is cached      */
 comment|/* session-id */
 if|if
 condition|(
@@ -3201,7 +3218,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* s->session->ciphers should now have a list of 		 * ciphers that are on both the client and server. 		 * This list is ordered by the order the client sent 		 * the ciphers or in the order of the server's preference 		 * if SSL_OP_CIPHER_SERVER_PREFERENCE was set. 		 */
+comment|/*          * s->session->ciphers should now have a list of ciphers that are on          * both the client and server. This list is ordered by the order the          * client sent the ciphers or in the order of the server's preference          * if SSL_OP_CIPHER_SERVER_PREFERENCE was set.          */
 block|}
 name|p
 operator|+=
@@ -3401,7 +3418,7 @@ name|sess_cert
 operator|!=
 name|NULL
 condition|)
-comment|/* This can't really happen because get_client_hello 				 * has called ssl_get_new_session, which does not set 				 * sess_cert. */
+comment|/*                  * This can't really happen because get_client_hello has                  * called ssl_get_new_session, which does not set sess_cert.                  */
 name|ssl_sess_cert_free
 argument_list|(
 name|s
@@ -3446,10 +3463,10 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* If 'hit' is set, then s->sess_cert may be non-NULL or NULL, 		 * depending on whether it survived in the internal cache 		 * or was retrieved from an external cache. 		 * If it is NULL, we cannot put any useful data in it anyway, 		 * so we don't touch it. 		 */
+comment|/*          * If 'hit' is set, then s->sess_cert may be non-NULL or NULL,          * depending on whether it survived in the internal cache or was          * retrieved from an external cache. If it is NULL, we cannot put any          * useful data in it anyway, so we don't touch it.          */
 else|#
 directive|else
-comment|/* That's what used to be done when cert_st and sess_cert_st were 	   * the same. */
+comment|/* That's what used to be done when cert_st                                  * and sess_cert_st were * the same. */
 if|if
 condition|(
 operator|!
@@ -3502,8 +3519,8 @@ name|cert
 expr_stmt|;
 block|}
 else|else
-comment|/* We have a session id-cache hit, if the 			 * session-id has no certificate listed against 			 * the 'cert' structure, grab the 'old' one 			 * listed against the SSL connection */
 block|{
+comment|/* We have a session id-cache hit, if the *                                  * session-id has no certificate listed                                  * against * the 'cert' structure, grab the                                  * 'old' one * listed against the SSL                                  * connection */
 if|if
 condition|(
 name|s
@@ -3683,7 +3700,7 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
-comment|/* lets send out the ciphers we like in the 			 * prefered order */
+comment|/*              * lets send out the ciphers we like in the prefered order              */
 name|n
 operator|=
 name|ssl_cipher_list_to_bytes
@@ -3805,7 +3822,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* SSL2_ST_SEND_SERVER_HELLO_B */
-comment|/* If we are using TCP/IP, the performance is bad if we do 2  	 * writes without a read between them.  This occurs when  	 * Session-id reuse is used, so I will put in a buffering module  	 */
+comment|/*      * If we are using TCP/IP, the performance is bad if we do 2 writes      * without a read between them.  This occurs when Session-id reuse is      * used, so I will put in a buffering module      */
 if|if
 condition|(
 name|s
@@ -4145,6 +4162,8 @@ name|s
 operator|->
 name|msg_callback
 condition|)
+block|{
+comment|/* CLIENT-FINISHED */
 name|s
 operator|->
 name|msg_callback
@@ -4168,7 +4187,7 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* CLIENT-FINISHED */
+block|}
 name|p
 operator|+=
 literal|1
@@ -4713,6 +4732,7 @@ name|init_buf
 operator|->
 name|data
 expr_stmt|;
+comment|/* try to read 6 octets ... */
 name|i
 operator|=
 name|ssl2_read
@@ -4740,7 +4760,7 @@ operator|->
 name|init_num
 argument_list|)
 expr_stmt|;
-comment|/* try to read 6 octets ... */
+comment|/*          * ... but don't call ssl2_part_read now if we got at least 3          * (probably NO-CERTIFICATE-ERROR)          */
 if|if
 condition|(
 name|i
@@ -4751,7 +4771,6 @@ name|s
 operator|->
 name|init_num
 condition|)
-comment|/* ... but don't call ssl2_part_read now if we got at least 3 		                        * (probably NO-CERTIFICATE-ERROR) */
 block|{
 name|ret
 operator|=
@@ -4808,7 +4827,7 @@ operator|!=
 name|SSL2_PE_NO_CERTIFICATE
 condition|)
 block|{
-comment|/* not the error message we expected -- let ssl2_part_read handle it */
+comment|/*                  * not the error message we expected -- let ssl2_part_read                  * handle it                  */
 name|s
 operator|->
 name|init_num
@@ -4836,6 +4855,8 @@ name|s
 operator|->
 name|msg_callback
 condition|)
+block|{
+comment|/* ERROR */
 name|s
 operator|->
 name|msg_callback
@@ -4859,8 +4880,8 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* ERROR */
-comment|/* this is the one place where we can recover from an SSL 2.0 error */
+block|}
+comment|/*              * this is the one place where we can recover from an SSL 2.0              * error              */
 if|if
 condition|(
 name|s
@@ -5153,6 +5174,8 @@ name|s
 operator|->
 name|msg_callback
 condition|)
+block|{
+comment|/* CLIENT-CERTIFICATE */
 name|s
 operator|->
 name|msg_callback
@@ -5176,7 +5199,7 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* CLIENT-CERTIFICATE */
+block|}
 name|p
 operator|+=
 literal|6
@@ -5278,8 +5301,8 @@ name|i
 operator|>
 literal|0
 condition|)
-comment|/* we like the packet, now check the chksum */
 block|{
+comment|/* we like the packet, now check the chksum */
 name|EVP_MD_CTX
 name|ctx
 decl_stmt|;

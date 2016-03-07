@@ -19,7 +19,7 @@ value|511
 end_define
 
 begin_comment
-comment|/* So if it gets masked by 256 or some other 				   such value it'll still be respectable */
+comment|/* So if it gets masked by 256 or some other                                  * such value it'll still be respectable */
 end_comment
 
 begin_comment
@@ -515,7 +515,7 @@ operator|!
 name|ptr
 condition|)
 block|{
-comment|/* We assume we're listening on all local interfaces and have 		 * only specified a port. */
+comment|/*          * We assume we're listening on all local interfaces and have only          * specified a port.          */
 if|if
 condition|(
 operator|!
@@ -582,7 +582,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Spit a message to differentiate between lookup failures and 		 * bad strings. */
+comment|/*          * Spit a message to differentiate between lookup failures and bad          * strings.          */
 name|fprintf
 argument_list|(
 name|stderr

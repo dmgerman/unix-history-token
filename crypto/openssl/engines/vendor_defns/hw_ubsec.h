@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * Broadcom Corporation uBSec SDK   */
+comment|/*  * Broadcom Corporation uBSec SDK  */
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * Predeclare the function pointer types that we dynamically load from the DSO.  */
+comment|/*  * Predeclare the function pointer types that we dynamically load from the DSO.  */
 end_comment
 
 begin_typedef

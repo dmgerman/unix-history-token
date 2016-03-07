@@ -4,11 +4,11 @@ comment|/* ocsp_vfy.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -242,6 +242,15 @@ name|chain
 operator|=
 name|NULL
 expr_stmt|;
+name|STACK_OF
+argument_list|(
+name|X509
+argument_list|)
+operator|*
+name|untrusted
+operator|=
+name|NULL
+expr_stmt|;
 name|X509_STORE_CTX
 name|ctx
 decl_stmt|;
@@ -387,35 +396,98 @@ name|flags
 operator|&
 name|OCSP_NOCHAIN
 condition|)
-name|init_res
+block|{
+name|untrusted
 operator|=
-name|X509_STORE_CTX_init
-argument_list|(
-operator|&
-name|ctx
-argument_list|,
-name|st
-argument_list|,
-name|signer
-argument_list|,
 name|NULL
-argument_list|)
 expr_stmt|;
-else|else
-name|init_res
-operator|=
-name|X509_STORE_CTX_init
-argument_list|(
-operator|&
-name|ctx
-argument_list|,
-name|st
-argument_list|,
-name|signer
-argument_list|,
+block|}
+elseif|else
+if|if
+condition|(
 name|bs
 operator|->
 name|certs
+operator|&&
+name|certs
+condition|)
+block|{
+name|untrusted
+operator|=
+name|sk_X509_dup
+argument_list|(
+name|bs
+operator|->
+name|certs
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sk_X509_num
+argument_list|(
+name|certs
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|sk_X509_push
+argument_list|(
+name|untrusted
+argument_list|,
+name|sk_X509_value
+argument_list|(
+name|certs
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|OCSPerr
+argument_list|(
+name|OCSP_F_OCSP_BASIC_VERIFY
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|untrusted
+operator|=
+name|bs
+operator|->
+name|certs
+expr_stmt|;
+block|}
+name|init_res
+operator|=
+name|X509_STORE_CTX_init
+argument_list|(
+operator|&
+name|ctx
+argument_list|,
+name|st
+argument_list|,
+name|signer
+argument_list|,
+name|untrusted
 argument_list|)
 expr_stmt|;
 if|if
@@ -523,7 +595,7 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/* At this point we have a valid certificate chain 		 * need to verify it against the OCSP issuer criteria. 		 */
+comment|/*          * At this point we have a valid certificate chain need to verify it          * against the OCSP issuer criteria.          */
 name|ret
 operator|=
 name|ocsp_check_issuer
@@ -545,7 +617,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* Easy case: explicitly trusted. Get root CA and 		 * check for explicit trust 		 */
+comment|/*          * Easy case: explicitly trusted. Get root CA and check for explicit          * trust          */
 if|if
 condition|(
 name|flags
@@ -610,6 +682,19 @@ argument_list|(
 name|chain
 argument_list|,
 name|X509_free
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bs
+operator|->
+name|certs
+operator|&&
+name|certs
+condition|)
+name|sk_X509_free
+argument_list|(
+name|untrusted
 argument_list|)
 expr_stmt|;
 return|return
@@ -1055,7 +1140,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Check the issuer certificate IDs for equality. If there is a mismatch with the same  * algorithm then there's no point trying to match any certificates against the issuer.  * If the issuer IDs all match then we just need to check equality against one of them.  */
+comment|/*  * Check the issuer certificate IDs for equality. If there is a mismatch with  * the same algorithm then there's no point trying to match any certificates  * against the issuer. If the issuer IDs all match then we just need to check  * equality against one of them.  */
 end_comment
 
 begin_decl_stmt
@@ -1515,7 +1600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Verify an OCSP request. This is fortunately much easier than OCSP  * response verify. Just find the signers certificate and verify it  * against a given trust value.  */
+comment|/*  * Verify an OCSP request. This is fortunately much easier than OCSP response  * verify. Just find the signers certificate and verify it against a given  * trust value.  */
 end_comment
 
 begin_decl_stmt

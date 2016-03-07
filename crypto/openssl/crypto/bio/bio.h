@@ -4,7 +4,7 @@ comment|/* crypto/bio/bio.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -181,7 +181,7 @@ define|#
 directive|define
 name|BIO_TYPE_SOURCE_SINK
 value|0x0400
-comment|/* BIO_FILENAME_READ|BIO_CLOSE to open or close on free.  * BIO_set_fp(in,stdin,BIO_NOCLOSE); */
+comment|/*  * BIO_FILENAME_READ|BIO_CLOSE to open or close on free.  * BIO_set_fp(in,stdin,BIO_NOCLOSE);  */
 define|#
 directive|define
 name|BIO_NOCLOSE
@@ -190,7 +190,7 @@ define|#
 directive|define
 name|BIO_CLOSE
 value|0x01
-comment|/* These are used in the following macros and are passed to  * BIO_ctrl() */
+comment|/*  * These are used in the following macros and are passed to BIO_ctrl()  */
 define|#
 directive|define
 name|BIO_CTRL_RESET
@@ -282,7 +282,7 @@ define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_CONNECTED
 value|32
-comment|/* allow for an externally 					  * connected socket to be 					  * passed in */
+comment|/* allow for an externally connected                                          * socket to be passed in */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_RECV_TIMEOUT
@@ -338,12 +338,12 @@ define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_MTU
 value|42
-comment|/* set cached value for 					      * MTU. want to use this 					      * if asking the kernel 					      * fails */
+comment|/* set cached value for MTU.                                               * want to use this if asking                                               * the kernel fails */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_MTU_EXCEEDED
 value|43
-comment|/* check whether the MTU 					      * was exceed in the 					      * previous write 					      * operation */
+comment|/* check whether the MTU was                                               * exceed in the previous write                                               * operation */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_GET_PEER
@@ -357,7 +357,7 @@ define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_NEXT_TIMEOUT
 value|45
-comment|/* Next DTLS handshake timeout to 											  * adjust socket timeouts */
+comment|/* Next DTLS handshake timeout                                               * to * adjust socket timeouts */
 comment|/* modifiers */
 define|#
 directive|define
@@ -398,7 +398,7 @@ value|0x08
 ifndef|#
 directive|ifndef
 name|BIO_FLAGS_UPLINK
-comment|/* "UPLINK" flag denotes file descriptors provided by application.    It defaults to 0, as most platforms don't require UPLINK interface. */
+comment|/*  * "UPLINK" flag denotes file descriptors provided by application. It  * defaults to 0, as most platforms don't require UPLINK interface.  */
 define|#
 directive|define
 name|BIO_FLAGS_UPLINK
@@ -427,12 +427,12 @@ directive|define
 name|BIO_GHBN_CTRL_FLUSH
 value|5
 comment|/* Mostly used in the SSL BIO */
-comment|/* Not used anymore  * #define BIO_FLAGS_PROTOCOL_DELAYED_READ 0x10  * #define BIO_FLAGS_PROTOCOL_DELAYED_WRITE 0x20  * #define BIO_FLAGS_PROTOCOL_STARTUP	0x40  */
+comment|/*-  * Not used anymore  * #define BIO_FLAGS_PROTOCOL_DELAYED_READ 0x10  * #define BIO_FLAGS_PROTOCOL_DELAYED_WRITE 0x20  * #define BIO_FLAGS_PROTOCOL_STARTUP   0x40  */
 define|#
 directive|define
 name|BIO_FLAGS_BASE64_NO_NL
 value|0x100
-comment|/* This is used with memory BIOs: it means we shouldn't free up or change the  * data in any way.  */
+comment|/*  * This is used with memory BIOs: it means we shouldn't free up or change the  * data in any way.  */
 define|#
 directive|define
 name|BIO_FLAGS_MEM_RDONLY
@@ -560,8 +560,8 @@ parameter_list|(
 name|a
 parameter_list|)
 value|BIO_test_flags(a, BIO_FLAGS_SHOULD_RETRY)
-comment|/* The next three are used in conjunction with the  * BIO_should_io_special() condition.  After this returns true,  * BIO *BIO_get_retry_BIO(BIO *bio, int *reason); will walk the BIO   * stack and return the 'reason' for the special and the offending BIO.  * Given a BIO, BIO_get_retry_reason(bio) will return the code. */
-comment|/* Returned from the SSL bio when the certificate retrieval code had an error */
+comment|/*  * The next three are used in conjunction with the BIO_should_io_special()  * condition.  After this returns true, BIO *BIO_get_retry_BIO(BIO *bio, int  * *reason); will walk the BIO stack and return the 'reason' for the special  * and the offending BIO. Given a BIO, BIO_get_retry_reason(bio) will return  * the code.  */
+comment|/*  * Returned from the SSL bio when the certificate retrieval code had an error  */
 define|#
 directive|define
 name|BIO_RR_SSL_X509_LOOKUP
@@ -601,7 +601,7 @@ define|#
 directive|define
 name|BIO_CB_CTRL
 value|0x06
-comment|/* The callback is called before and after the underling operation,  * The BIO_CB_RETURN flag indicates if it is after the call */
+comment|/*  * The callback is called before and after the underling operation, The  * BIO_CB_RETURN flag indicates if it is after the call  */
 define|#
 directive|define
 name|BIO_CB_RETURN
@@ -1055,9 +1055,9 @@ typedef|typedef
 struct|struct
 name|bio_f_buffer_ctx_struct
 block|{
-comment|/* Buffers are setup like this: 	 * 	 *<---------------------- size -----------------------> 	 * +---------------------------------------------------+ 	 * | consumed | remaining          | free space        | 	 * +---------------------------------------------------+ 	 *<-- off --><------- len -------> 	 */
-comment|/* BIO *bio; */
-comment|/* this is now in the BIO struct */
+comment|/*-      * Buffers are setup like this:      *      *<---------------------- size ----------------------->      * +---------------------------------------------------+      * | consumed | remaining          | free space        |      * +---------------------------------------------------+      *<-- off --><------- len ------->      */
+comment|/*- BIO *bio; */
+comment|/*      * this is now in the BIO struct      */
 name|int
 name|ibuf_size
 decl_stmt|;
@@ -1128,7 +1128,7 @@ define|#
 directive|define
 name|BIO_CONN_S_NBIO
 value|8
-comment|/*#define BIO_CONN_get_param_hostname	BIO_ctrl */
+comment|/*  * #define BIO_CONN_get_param_hostname BIO_ctrl  */
 define|#
 directive|define
 name|BIO_C_SET_CONNECT
@@ -1254,7 +1254,7 @@ define|#
 directive|define
 name|BIO_C_SET_BUF_MEM_EOF_RETURN
 value|130
-comment|/*return end of input value*/
+comment|/* return end of input                                                      * value */
 define|#
 directive|define
 name|BIO_C_SET_BIND_MODE
@@ -1435,7 +1435,7 @@ parameter_list|(
 name|b
 parameter_list|)
 value|BIO_ptr_ctrl(b,BIO_C_GET_ACCEPT,0)
-comment|/* #define BIO_set_nbio(b,n)	BIO_ctrl(b,BIO_C_SET_NBIO,(n),NULL) */
+comment|/* #define BIO_set_nbio(b,n)    BIO_ctrl(b,BIO_C_SET_NBIO,(n),NULL) */
 define|#
 directive|define
 name|BIO_set_nbio_accept
@@ -1652,11 +1652,11 @@ parameter_list|(
 name|b
 parameter_list|)
 value|(int)BIO_ctrl(b,BIO_C_FILE_TELL,0,NULL)
-comment|/* name is cast to lose const, but might be better to route through a function    so we can do it safely */
+comment|/*  * name is cast to lose const, but might be better to route through a  * function so we can do it safely  */
 ifdef|#
 directive|ifdef
 name|CONST_STRICT
-comment|/* If you are wondering why this isn't defined, its because CONST_STRICT is  * purely a compile-time kludge to allow const to be checked.  */
+comment|/*  * If you are wondering why this isn't defined, its because CONST_STRICT is  * purely a compile-time kludge to allow const to be checked.  */
 name|int
 name|BIO_read_filename
 parameter_list|(
@@ -1680,7 +1680,7 @@ name|b
 parameter_list|,
 name|name
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_SET_FILENAME, \ 		BIO_CLOSE|BIO_FP_READ,(char *)name)
+value|BIO_ctrl(b,BIO_C_SET_FILENAME, \                 BIO_CLOSE|BIO_FP_READ,(char *)name)
 endif|#
 directive|endif
 define|#
@@ -1691,7 +1691,7 @@ name|b
 parameter_list|,
 name|name
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_SET_FILENAME, \ 		BIO_CLOSE|BIO_FP_WRITE,name)
+value|BIO_ctrl(b,BIO_C_SET_FILENAME, \                 BIO_CLOSE|BIO_FP_WRITE,name)
 define|#
 directive|define
 name|BIO_append_filename
@@ -1700,7 +1700,7 @@ name|b
 parameter_list|,
 name|name
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_SET_FILENAME, \ 		BIO_CLOSE|BIO_FP_APPEND,name)
+value|BIO_ctrl(b,BIO_C_SET_FILENAME, \                 BIO_CLOSE|BIO_FP_APPEND,name)
 define|#
 directive|define
 name|BIO_rw_filename
@@ -1709,8 +1709,8 @@ name|b
 parameter_list|,
 name|name
 parameter_list|)
-value|BIO_ctrl(b,BIO_C_SET_FILENAME, \ 		BIO_CLOSE|BIO_FP_READ|BIO_FP_WRITE,name)
-comment|/* WARNING WARNING, this ups the reference count on the read bio of the  * SSL structure.  This is because the ssl read BIO is now pointed to by  * the next_bio field in the bio.  So when you free the BIO, make sure  * you are doing a BIO_free_all() to catch the underlying BIO. */
+value|BIO_ctrl(b,BIO_C_SET_FILENAME, \                 BIO_CLOSE|BIO_FP_READ|BIO_FP_WRITE,name)
+comment|/*  * WARNING WARNING, this ups the reference count on the read bio of the SSL  * structure.  This is because the ssl read BIO is now pointed to by the  * next_bio field in the bio.  So when you free the BIO, make sure you are  * doing a BIO_free_all() to catch the underlying BIO.  */
 define|#
 directive|define
 name|BIO_set_ssl
@@ -1769,7 +1769,7 @@ parameter_list|)
 define|\
 value|BIO_ctrl(b,BIO_C_SET_SSL_RENEGOTIATE_TIMEOUT,seconds,NULL);
 comment|/* defined in evp.h */
-comment|/* #define BIO_set_md(b,md)	BIO_ctrl(b,BIO_C_SET_MD,1,(char *)md) */
+comment|/* #define BIO_set_md(b,md)     BIO_ctrl(b,BIO_C_SET_MD,1,(char *)md) */
 define|#
 directive|define
 name|BIO_get_mem_data
@@ -1941,7 +1941,7 @@ name|b
 parameter_list|,
 name|cbp
 parameter_list|)
-value|(int)BIO_ctrl(b,BIO_CTRL_GET_CALLBACK,0, \ 						   cbp)
+value|(int)BIO_ctrl(b,BIO_CTRL_GET_CALLBACK,0, \                                                    cbp)
 define|#
 directive|define
 name|BIO_set_info_callback
@@ -2987,7 +2987,7 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-comment|/* We might want a thread-safe interface too:  * struct hostent *BIO_gethostbyname_r(const char *name,  *     struct hostent *result, void *buffer, size_t buflen);  * or something similar (caller allocates a struct hostent,  * pointed to by "result", and additional buffer space for the various  * substructures; if the buffer does not suffice, NULL is returned  * and an appropriate error code is set).  */
+comment|/*-  * We might want a thread-safe interface too:  * struct hostent *BIO_gethostbyname_r(const char *name,  *     struct hostent *result, void *buffer, size_t buflen);  * or something similar (caller allocates a struct hostent,  * pointed to by "result", and additional buffer space for the various  * substructures; if the buffer does not suffice, NULL is returned  * and an appropriate error code is set).  */
 name|int
 name|BIO_sock_error
 parameter_list|(
@@ -3163,7 +3163,7 @@ name|size_t
 name|writebuf2
 parameter_list|)
 function_decl|;
-comment|/* If successful, returns 1 and in *bio1, *bio2 two BIO pair endpoints.  * Otherwise returns 0 and sets *bio1 and *bio2 to NULL.  * Size 0 uses default value.  */
+comment|/*  * If successful, returns 1 and in *bio1, *bio2 two BIO pair endpoints.  * Otherwise returns 0 and sets *bio1 and *bio2 to NULL. Size 0 uses default  * value.  */
 name|void
 name|BIO_copy_next_retry
 parameter_list|(
@@ -3172,7 +3172,7 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/*long BIO_ghbn_ctrl(int cmd,int iarg,char *parg);*/
+comment|/*  * long BIO_ghbn_ctrl(int cmd,int iarg,char *parg);  */
 ifdef|#
 directive|ifdef
 name|__GNUC__
@@ -3333,7 +3333,7 @@ comment|/* BEGIN ERROR CODES */
 end_comment
 
 begin_comment
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 end_comment
 
 begin_function_decl

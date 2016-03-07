@@ -4,7 +4,7 @@ comment|/* crypto/threads/mttest.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -1692,7 +1692,7 @@ argument_list|,
 literal|"-----\n"
 argument_list|)
 expr_stmt|;
-comment|/*	lh_node_stats(SSL_CTX_sessions(s_ctx),stderr); 			fprintf(stderr,"-----\n"); */
+comment|/*-     lh_node_stats(SSL_CTX_sessions(s_ctx),stderr);             fprintf(stderr,"-----\n"); */
 name|lh_node_usage_stats
 argument_list|(
 name|SSL_CTX_sessions
@@ -1899,8 +1899,8 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*		fprintf(stderr,"%4d %2d ctx->ref (%3d,%3d)\n", 			CRYPTO_thread_id(),i, 			ssl_ctx[0]->references, 			ssl_ctx[1]->references); */
-comment|/*	pthread_delay_np(&tm);*/
+comment|/*-     fprintf(stderr,"%4d %2d ctx->ref (%3d,%3d)\n",             CRYPTO_thread_id(),i,             ssl_ctx[0]->references,             ssl_ctx[1]->references); */
+comment|/*      pthread_delay_np(&tm); */
 name|ret
 operator|=
 name|doit
@@ -3118,7 +3118,7 @@ endif|#
 directive|endif
 name|err
 label|:
-comment|/* We have to set the BIO's to NULL otherwise they will be 	 * free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
+comment|/*      * We have to set the BIO's to NULL otherwise they will be free()ed      * twice.  Once when th s_ssl is SSL_free()ed and again when c_ssl is      * SSL_free()ed. This is a hack required because s_ssl and c_ssl are      * sharing the same BIO structure and SSL_set_bio() and SSL_free()      * automatically BIO_free non NULL entries. You should not normally do      * this or be required to do this      */
 if|if
 condition|(
 name|s_ssl
@@ -3829,7 +3829,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static rwlock_t *lock_cs; */
+comment|/*  * static rwlock_t *lock_cs;  */
 end_comment
 
 begin_decl_stmt
@@ -4087,7 +4087,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	if (CRYPTO_LOCK_SSL_CERT == type) 	fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); 	*/
+comment|/*-     if (CRYPTO_LOCK_SSL_CERT == type)     fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n",             CRYPTO_thread_id(),             mode,file,line);     */
 if|if
 condition|(
 name|mode
@@ -4095,7 +4095,7 @@ operator|&
 name|CRYPTO_LOCK
 condition|)
 block|{
-comment|/*	if (mode& CRYPTO_READ) 			rw_rdlock(&(lock_cs[type])); 		else 			rw_wrlock(&(lock_cs[type])); */
+comment|/*-         if (mode& CRYPTO_READ)                 rw_rdlock(&(lock_cs[type]));         else                 rw_wrlock(&(lock_cs[type])); */
 name|mutex_lock
 argument_list|(
 operator|&
@@ -4116,7 +4116,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*		rw_unlock(&(lock_cs[type]));  */
+comment|/*      rw_unlock(&(lock_cs[type]));  */
 name|mutex_unlock
 argument_list|(
 operator|&
@@ -5038,7 +5038,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	if (CRYPTO_LOCK_SSL_CERT == type) 		fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n", 		CRYPTO_thread_id(), 		mode,file,line); */
+comment|/*-     if (CRYPTO_LOCK_SSL_CERT == type)             fprintf(stderr,"(t,m,f,l) %ld %d %s %d\n",             CRYPTO_thread_id(),             mode,file,line); */
 if|if
 condition|(
 name|mode
@@ -5124,7 +5124,7 @@ index|]
 operator|=
 name|c_ctx
 expr_stmt|;
-comment|/* 	thr_setconcurrency(thread_number); 	*/
+comment|/*      * thr_setconcurrency(thread_number);      */
 for|for
 control|(
 name|i

@@ -4,7 +4,7 @@ comment|/* v3_pci.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Contributed to the OpenSSL Project 2004  * by Richard Levitte (richard@levitte.org)  */
+comment|/*  * Contributed to the OpenSSL Project 2004 by Richard Levitte  * (richard@levitte.org)  */
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ operator|)
 name|r2i_pci
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -638,7 +638,7 @@ argument_list|(
 name|tmp_data2
 argument_list|)
 expr_stmt|;
-comment|/* realloc failure implies the original data space is b0rked too! */
+comment|/*                  * realloc failure implies the original data space is b0rked                  * too!                  */
 operator|(
 operator|*
 name|policy
@@ -1019,7 +1019,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* realloc failure implies the original data space is b0rked too! */
+comment|/*                  * realloc failure implies the original data space is b0rked                  * too!                  */
 operator|(
 operator|*
 name|policy

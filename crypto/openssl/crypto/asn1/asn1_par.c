@@ -4,7 +4,7 @@ comment|/* crypto/asn1/asn1_par.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -36,6 +36,24 @@ include|#
 directive|include
 file|<openssl/asn1.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASN1_PARSE_MAXDEPTH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASN1_PARSE_MAXDEPTH
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -524,7 +542,7 @@ name|os
 init|=
 name|NULL
 decl_stmt|;
-comment|/* ASN1_BMPSTRING *bmp=NULL;*/
+comment|/* ASN1_BMPSTRING *bmp=NULL; */
 name|int
 name|dump_indent
 decl_stmt|;
@@ -541,6 +559,24 @@ expr_stmt|;
 comment|/* Because we know BIO_dump_indent() */
 endif|#
 directive|endif
+if|if
+condition|(
+name|depth
+operator|>
+name|ASN1_PARSE_MAXDEPTH
+condition|)
+block|{
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|"BAD RECURSION DEPTH\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|p
 operator|=
 operator|*
@@ -648,7 +684,7 @@ name|length
 operator|-=
 name|hl
 expr_stmt|;
-comment|/* if j == 0x21 it is a constructed indefinite length object */
+comment|/*          * if j == 0x21 it is a constructed indefinite length object          */
 if|if
 condition|(
 name|BIO_printf
@@ -1296,7 +1332,7 @@ name|os
 operator|->
 name|data
 expr_stmt|;
-comment|/* testing whether the octet string is 					 * printable */
+comment|/*                      * testing whether the octet string is printable                      */
 for|for
 control|(
 name|i
@@ -1422,7 +1458,7 @@ condition|(
 operator|!
 name|dump
 condition|)
-comment|/* not printable => print octet string 					 * as hex dump */
+comment|/*                          * not printable => print octet string as hex dump                          */
 block|{
 if|if
 condition|(
@@ -2101,6 +2137,7 @@ name|tag2str
 index|[]
 init|=
 block|{
+comment|/* 0-4 */
 literal|"EOC"
 block|,
 literal|"BOOLEAN"
@@ -2111,7 +2148,7 @@ literal|"BIT STRING"
 block|,
 literal|"OCTET STRING"
 block|,
-comment|/* 0-4 */
+comment|/* 5-9 */
 literal|"NULL"
 block|,
 literal|"OBJECT"
@@ -2122,7 +2159,7 @@ literal|"EXTERNAL"
 block|,
 literal|"REAL"
 block|,
-comment|/* 5-9 */
+comment|/* 10-13 */
 literal|"ENUMERATED"
 block|,
 literal|"<ASN1 11>"
@@ -2131,7 +2168,7 @@ literal|"UTF8STRING"
 block|,
 literal|"<ASN1 13>"
 block|,
-comment|/* 10-13 */
+comment|/* 15-17 */
 literal|"<ASN1 14>"
 block|,
 literal|"<ASN1 15>"
@@ -2140,14 +2177,14 @@ literal|"SEQUENCE"
 block|,
 literal|"SET"
 block|,
-comment|/* 15-17 */
+comment|/* 18-20 */
 literal|"NUMERICSTRING"
 block|,
 literal|"PRINTABLESTRING"
 block|,
 literal|"T61STRING"
 block|,
-comment|/* 18-20 */
+comment|/* 21-24 */
 literal|"VIDEOTEXSTRING"
 block|,
 literal|"IA5STRING"
@@ -2156,20 +2193,19 @@ literal|"UTCTIME"
 block|,
 literal|"GENERALIZEDTIME"
 block|,
-comment|/* 21-24 */
+comment|/* 25-27 */
 literal|"GRAPHICSTRING"
 block|,
 literal|"VISIBLESTRING"
 block|,
 literal|"GENERALSTRING"
 block|,
-comment|/* 25-27 */
+comment|/* 28-30 */
 literal|"UNIVERSALSTRING"
 block|,
 literal|"<ASN1 29>"
 block|,
 literal|"BMPSTRING"
-comment|/* 28-30 */
 block|}
 decl_stmt|;
 if|if

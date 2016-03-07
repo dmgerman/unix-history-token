@@ -8,7 +8,7 @@ comment|/*  * Originally written by Bodo Moeller and Nils Larsch for the OpenSSL
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ comment|/* block size for wNAF splitting */
 name|size_t
 name|numblocks
 decl_stmt|;
-comment|/* max. number of blocks for which we have precomputation */
+comment|/* max. number of blocks for which we have                                  * precomputation */
 name|size_t
 name|w
 decl_stmt|;
@@ -69,7 +69,7 @@ modifier|*
 modifier|*
 name|points
 decl_stmt|;
-comment|/* array with pre-calculated multiples of generator: 	                        * 'num' pointers to EC_POINT objects followed by a NULL */
+comment|/* array with pre-calculated multiples of                                  * generator: 'num' pointers to EC_POINT                                  * objects followed by a NULL */
 name|size_t
 name|num
 decl_stmt|;
@@ -478,7 +478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Determine the modified width-(w+1) Non-Adjacent Form (wNAF) of 'scalar'.  * This is an array  r[]  of values that are either zero or odd with an  * absolute value less than  2^w  satisfying  *     scalar = \sum_j r[j]*2^j  * where at most one of any  w+1  consecutive digits is non-zero  * with the exception that the most significant digit may be only  * w-1 zeros away from that next non-zero digit.  */
+comment|/*-  * Determine the modified width-(w+1) Non-Adjacent Form (wNAF) of 'scalar'.  * This is an array  r[]  of values that are either zero or odd with an  * absolute value less than  2^w  satisfying  *     scalar = \sum_j r[j]*2^j  * where at most one of any  w+1  consecutive digits is non-zero  * with the exception that the most significant digit may be only  * w-1 zeros away from that next non-zero digit.  */
 end_comment
 
 begin_function
@@ -593,8 +593,8 @@ name|w
 operator|>
 literal|7
 condition|)
-comment|/* 'signed char' can represent integers with absolute values less than 2^7 */
 block|{
+comment|/* 'signed char' can represent integers with                                  * absolute values less than 2^7 */
 name|ECerr
 argument_list|(
 name|EC_F_COMPUTE_WNAF
@@ -657,7 +657,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* modified wNAF may be one digit longer than binary representation 	                              * (*ret_len will be set to the actual length, i.e. at most 	                              * BN_num_bits(scalar) + 1) */
+comment|/* modified wNAF may be one digit longer                                   * than binary representation (*ret_len will                                   * be set to the actual length, i.e. at most                                   * BN_num_bits(scalar) + 1) */
 if|if
 condition|(
 name|r
@@ -735,8 +735,8 @@ operator|<
 name|len
 operator|)
 condition|)
-comment|/* if j+w+1>= len, window_val will not increase */
 block|{
+comment|/* if j+w+1>= len,                                                       * window_val will not                                                       * increase */
 name|int
 name|digit
 init|=
@@ -780,7 +780,7 @@ operator|>=
 name|len
 condition|)
 block|{
-comment|/* special case for generating modified wNAFs: 					 * no new bits will be added into window_val, 					 * so using a positive digit here will decrease 					 * the total length of the representation */
+comment|/*                      * special case for generating modified wNAFs: no new                      * bits will be added into window_val, so using a                      * positive digit here will decrease the total length of                      * the representation                      */
 name|digit
 operator|=
 name|window_val
@@ -838,7 +838,7 @@ name|window_val
 operator|-=
 name|digit
 expr_stmt|;
-comment|/* now window_val is 0 or 2^(w+1) in standard wNAF generation; 			 * for modified window NAFs, it may also be 2^w 			 */
+comment|/*              * now window_val is 0 or 2^(w+1) in standard wNAF generation;              * for modified window NAFs, it may also be 2^w              */
 if|if
 condition|(
 name|window_val
@@ -974,7 +974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TODO: table should be optimised for the wNAF-based implementation,  *       sometimes smaller windows will give better performance  *       (thus the boundaries should be increased)  */
+comment|/*  * TODO: table should be optimised for the wNAF-based implementation,  * sometimes smaller windows will give better performance (thus the  * boundaries should be increased)  */
 end_comment
 
 begin_define
@@ -985,11 +985,11 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((size_t) \ 		 ((b)>= 2000 ? 6 : \ 		  (b)>=  800 ? 5 : \ 		  (b)>=  300 ? 4 : \ 		  (b)>=   70 ? 3 : \ 		  (b)>=   20 ? 2 : \ 		  1))
+value|((size_t) \                  ((b)>= 2000 ? 6 : \                   (b)>=  800 ? 5 : \                   (b)>=  300 ? 4 : \                   (b)>=   70 ? 3 : \                   (b)>=   20 ? 2 : \                   1))
 end_define
 
 begin_comment
-comment|/* Compute  *      \sum scalars[i]*points[i],  * also including  *      scalar*generator  * in the addition if scalar != NULL  */
+comment|/*-  * Compute  *      \sum scalars[i]*points[i],  * also including  *      scalar*generator  * in the addition if scalar != NULL  */
 end_comment
 
 begin_function
@@ -1136,7 +1136,7 @@ name|val_sub
 init|=
 name|NULL
 decl_stmt|;
-comment|/* pointers to sub-arrays of 'val' or 'pre_comp->points' */
+comment|/* pointers to sub-arrays of 'val' or                                  * 'pre_comp->points' */
 specifier|const
 name|EC_PRE_COMP
 modifier|*
@@ -1149,7 +1149,7 @@ name|num_scalar
 init|=
 literal|0
 decl_stmt|;
-comment|/* flag: will be set to 1 if 'scalar' must be treated like other scalars, 	                     * i.e. precomputation is not available */
+comment|/* flag: will be set to 1 if 'scalar' must be                                  * treated like other scalars, i.e.                                  * precomputation is not available */
 name|int
 name|ret
 init|=
@@ -1348,7 +1348,7 @@ name|pre_comp
 operator|->
 name|blocksize
 expr_stmt|;
-comment|/* determine maximum number of blocks that wNAF splitting may yield 			 * (NB: maximum wNAF length is bit length plus one) */
+comment|/*              * determine maximum number of blocks that wNAF splitting may              * yield (NB: maximum wNAF length is bit length plus one)              */
 name|numblocks
 operator|=
 operator|(
@@ -1362,7 +1362,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* we cannot use more blocks than we have precomputation for */
+comment|/*              * we cannot use more blocks than we have precomputation for              */
 if|if
 condition|(
 name|numblocks
@@ -1432,7 +1432,7 @@ name|num_scalar
 operator|=
 literal|1
 expr_stmt|;
-comment|/* treat 'scalar' like 'num'-th element of 'scalars' */
+comment|/* treat 'scalar' like 'num'-th element of                                  * 'scalars' */
 block|}
 block|}
 name|totalnum
@@ -1484,7 +1484,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* includes space for pivot */
+comment|/* includes space                                                              * for pivot */
 name|val_sub
 operator|=
 name|OPENSSL_malloc
@@ -1532,7 +1532,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* preliminary pivot */
-comment|/* num_val will be the total number of temporarily precomputed points */
+comment|/*      * num_val will be the total number of temporarily precomputed points      */
 name|num_val
 operator|=
 literal|0
@@ -1734,7 +1734,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* use the window size for which we have precomputation */
+comment|/*              * use the window size for which we have precomputation              */
 name|wsize
 index|[
 name|num
@@ -1774,7 +1774,7 @@ operator|<=
 name|max_len
 condition|)
 block|{
-comment|/* One of the other wNAFs is at least as long 				 * as the wNAF belonging to the generator, 				 * so wNAF splitting will not buy us anything. */
+comment|/*                  * One of the other wNAFs is at least as long as the wNAF                  * belonging to the generator, so wNAF splitting will not buy                  * us anything.                  */
 name|numblocks
 operator|=
 literal|1
@@ -1819,7 +1819,7 @@ name|max_len
 operator|=
 name|tmp_len
 expr_stmt|;
-comment|/* pre_comp->points starts with the points that we need here: */
+comment|/*                  * pre_comp->points starts with the points that we need here:                  */
 name|val_sub
 index|[
 name|num
@@ -1832,7 +1832,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* don't include tmp_wNAF directly into wNAF array 				 * - use wNAF splitting and include the blocks */
+comment|/*                  * don't include tmp_wNAF directly into wNAF array - use wNAF                  * splitting and include the blocks                  */
 name|signed
 name|char
 modifier|*
@@ -1852,7 +1852,7 @@ operator|*
 name|blocksize
 condition|)
 block|{
-comment|/* possibly we can do with fewer blocks than estimated */
+comment|/*                      * possibly we can do with fewer blocks than estimated                      */
 name|numblocks
 operator|=
 operator|(
@@ -1957,7 +1957,7 @@ name|blocksize
 expr_stmt|;
 block|}
 else|else
-comment|/* last block gets whatever is left 						 * (this could be more or less than 'blocksize'!) */
+comment|/*                          * last block gets whatever is left (this could be                          * more or less than 'blocksize'!)                          */
 name|wNAF_len
 index|[
 name|i
@@ -2092,7 +2092,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* All points we precompute now go into a single array 'val'. 	 * 'val_sub[i]' is a pointer to the subarray for the i-th point, 	 * or to a subarray of 'pre_comp->points' if we already have precomputation. */
+comment|/*      * All points we precompute now go into a single array 'val'.      * 'val_sub[i]' is a pointer to the subarray for the i-th point, or to a      * subarray of 'pre_comp->points' if we already have precomputation.      */
 name|val
 operator|=
 name|OPENSSL_malloc
@@ -2250,7 +2250,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* prepare precomputed values: 	 *    val_sub[i][0] :=     points[i] 	 *    val_sub[i][1] := 3 * points[i] 	 *    val_sub[i][2] := 5 * points[i] 	 *    ... 	 */
+comment|/*-      * prepare precomputed values:      *    val_sub[i][0] :=     points[i]      *    val_sub[i][1] := 3 * points[i]      *    val_sub[i][2] := 5 * points[i]      *    ...      */
 for|for
 control|(
 name|i
@@ -2416,7 +2416,7 @@ block|}
 if|#
 directive|if
 literal|1
-comment|/* optional; EC_window_bits_for_scalar_size assumes we do this step */
+comment|/* optional; EC_window_bits_for_scalar_size                                  * assumes we do this step */
 if|if
 condition|(
 operator|!
@@ -2825,7 +2825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ec_wNAF_precompute_mult()  * creates an EC_PRE_COMP object with preprecomputed multiples of the generator  * for use with wNAF splitting as implemented in ec_wNAF_mul().  *   * 'pre_comp->points' is an array of multiples of the generator  * of the following form:  * points[0] =     generator;  * points[1] = 3 * generator;  * ...  * points[2^(w-1)-1] =     (2^(w-1)-1) * generator;  * points[2^(w-1)]   =     2^blocksize * generator;  * points[2^(w-1)+1] = 3 * 2^blocksize * generator;  * ...  * points[2^(w-1)*(numblocks-1)-1] = (2^(w-1)) *  2^(blocksize*(numblocks-2)) * generator  * points[2^(w-1)*(numblocks-1)]   =              2^(blocksize*(numblocks-1)) * generator  * ...  * points[2^(w-1)*numblocks-1]     = (2^(w-1)) *  2^(blocksize*(numblocks-1)) * generator  * points[2^(w-1)*numblocks]       = NULL  */
+comment|/*-  * ec_wNAF_precompute_mult()  * creates an EC_PRE_COMP object with preprecomputed multiples of the generator  * for use with wNAF splitting as implemented in ec_wNAF_mul().  *  * 'pre_comp->points' is an array of multiples of the generator  * of the following form:  * points[0] =     generator;  * points[1] = 3 * generator;  * ...  * points[2^(w-1)-1] =     (2^(w-1)-1) * generator;  * points[2^(w-1)]   =     2^blocksize * generator;  * points[2^(w-1)+1] = 3 * 2^blocksize * generator;  * ...  * points[2^(w-1)*(numblocks-1)-1] = (2^(w-1)) *  2^(blocksize*(numblocks-2)) * generator  * points[2^(w-1)*(numblocks-1)]   =              2^(blocksize*(numblocks-1)) * generator  * ...  * points[2^(w-1)*numblocks-1]     = (2^(w-1)) *  2^(blocksize*(numblocks-1)) * generator  * points[2^(w-1)*numblocks]       = NULL  */
 end_comment
 
 begin_function
@@ -3044,7 +3044,7 @@ argument_list|(
 name|order
 argument_list|)
 expr_stmt|;
-comment|/* The following parameters mean we precompute (approximately) 	 * one point per bit. 	 * 	 * TBD: The combination  8, 4  is perfect for 160 bits; for other 	 * bit lengths, other parameter combinations might provide better 	 * efficiency. 	 */
+comment|/*      * The following parameters mean we precompute (approximately) one point      * per bit. TBD: The combination 8, 4 is perfect for 160 bits; for other      * bit lengths, other parameter combinations might provide better      * efficiency.      */
 name|blocksize
 operator|=
 literal|8
@@ -3084,7 +3084,7 @@ operator|)
 operator|/
 name|blocksize
 expr_stmt|;
-comment|/* max. number of blocks to use for wNAF splitting */
+comment|/* max. number of blocks                                                      * to use for wNAF                                                      * splitting */
 name|pre_points_per_block
 operator|=
 literal|1u
@@ -3101,7 +3101,7 @@ name|pre_points_per_block
 operator|*
 name|numblocks
 expr_stmt|;
-comment|/* number of points to compute and store */
+comment|/* number of points to compute                                              * and store */
 name|points
 operator|=
 name|OPENSSL_malloc
@@ -3305,7 +3305,7 @@ name|var
 operator|++
 control|)
 block|{
-comment|/* calculate odd multiples of the current base point */
+comment|/*              * calculate odd multiples of the current base point              */
 if|if
 condition|(
 operator|!
@@ -3341,7 +3341,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* get the next base (multiply current one by 2^blocksize) */
+comment|/*              * get the next base (multiply current one by 2^blocksize)              */
 name|size_t
 name|k
 decl_stmt|;

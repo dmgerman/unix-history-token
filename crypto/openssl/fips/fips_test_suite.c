@@ -143,7 +143,7 @@ file|"fips_utl.h"
 end_include
 
 begin_comment
-comment|/* AES: encrypt and decrypt known plaintext, verify result matches original plaintext */
+comment|/*  * AES: encrypt and decrypt known plaintext, verify result matches original  * plaintext  */
 end_comment
 
 begin_function
@@ -1108,7 +1108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SHA1: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * SHA1: generate hash of known digest value and compare to known precomputed  * correct hash  */
 end_comment
 
 begin_function
@@ -1234,7 +1234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SHA256: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * SHA256: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -1384,7 +1384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SHA512: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * SHA512: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -1598,7 +1598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* HMAC-SHA1: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * HMAC-SHA1: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -1740,7 +1740,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* HMAC-SHA224: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * HMAC-SHA224: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -1898,7 +1898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* HMAC-SHA256: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * HMAC-SHA256: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -2064,7 +2064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* HMAC-SHA384: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * HMAC-SHA384: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -2262,7 +2262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* HMAC-SHA512: generate hash of known digest value and compare to known    precomputed correct hash */
+comment|/*  * HMAC-SHA512: generate hash of known digest value and compare to known  * precomputed correct hash  */
 end_comment
 
 begin_function
@@ -2492,7 +2492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* DH: generate shared parameters */
+comment|/*  * DH: generate shared parameters  */
 end_comment
 
 begin_function
@@ -2550,7 +2550,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Zeroize */
+comment|/*  * Zeroize  */
 end_comment
 
 begin_function
@@ -3280,7 +3280,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Non-Approved cryptographic operation     */
+comment|/*      * Non-Approved cryptographic operation      */
 name|printf
 argument_list|(
 literal|"1. Non-Approved cryptographic operation test...\n"
@@ -3294,7 +3294,7 @@ name|dh_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Power-up self test     */
+comment|/*      * Power-up self test      */
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
@@ -3340,7 +3340,7 @@ condition|)
 name|FIPS_rng_stick
 argument_list|()
 expr_stmt|;
-comment|/* AES encryption/decryption     */
+comment|/*      * AES encryption/decryption      */
 name|test_msg
 argument_list|(
 literal|"3. AES encryption/decryption"
@@ -3349,7 +3349,7 @@ name|FIPS_aes_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* RSA key generation and encryption/decryption     */
+comment|/*      * RSA key generation and encryption/decryption      */
 name|test_msg
 argument_list|(
 literal|"4. RSA key generation and encryption/decryption"
@@ -3360,7 +3360,7 @@ name|bad_rsa
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* DES-CBC encryption/decryption     */
+comment|/*      * DES-CBC encryption/decryption      */
 name|test_msg
 argument_list|(
 literal|"5. DES-ECB encryption/decryption"
@@ -3369,7 +3369,7 @@ name|FIPS_des3_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* DSA key generation and signature validation     */
+comment|/*      * DSA key generation and signature validation      */
 name|test_msg
 argument_list|(
 literal|"6. DSA key generation and signature validation"
@@ -3380,7 +3380,7 @@ name|bad_dsa
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* SHA-1 hash     */
+comment|/*      * SHA-1 hash      */
 name|test_msg
 argument_list|(
 literal|"7a. SHA-1 hash"
@@ -3389,7 +3389,7 @@ name|FIPS_sha1_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* SHA-256 hash     */
+comment|/*      * SHA-256 hash      */
 name|test_msg
 argument_list|(
 literal|"7b. SHA-256 hash"
@@ -3398,7 +3398,7 @@ name|FIPS_sha256_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* SHA-512 hash     */
+comment|/*      * SHA-512 hash      */
 name|test_msg
 argument_list|(
 literal|"7c. SHA-512 hash"
@@ -3407,7 +3407,7 @@ name|FIPS_sha512_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* HMAC-SHA-1 hash     */
+comment|/*      * HMAC-SHA-1 hash      */
 name|test_msg
 argument_list|(
 literal|"7d. HMAC-SHA-1 hash"
@@ -3416,7 +3416,7 @@ name|FIPS_hmac_sha1_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* HMAC-SHA-224 hash     */
+comment|/*      * HMAC-SHA-224 hash      */
 name|test_msg
 argument_list|(
 literal|"7e. HMAC-SHA-224 hash"
@@ -3425,7 +3425,7 @@ name|FIPS_hmac_sha224_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* HMAC-SHA-256 hash     */
+comment|/*      * HMAC-SHA-256 hash      */
 name|test_msg
 argument_list|(
 literal|"7f. HMAC-SHA-256 hash"
@@ -3434,7 +3434,7 @@ name|FIPS_hmac_sha256_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* HMAC-SHA-384 hash     */
+comment|/*      * HMAC-SHA-384 hash      */
 name|test_msg
 argument_list|(
 literal|"7g. HMAC-SHA-384 hash"
@@ -3443,7 +3443,7 @@ name|FIPS_hmac_sha384_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* HMAC-SHA-512 hash     */
+comment|/*      * HMAC-SHA-512 hash      */
 name|test_msg
 argument_list|(
 literal|"7h. HMAC-SHA-512 hash"
@@ -3452,7 +3452,7 @@ name|FIPS_hmac_sha512_test
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Non-Approved cryptographic operation     */
+comment|/*      * Non-Approved cryptographic operation      */
 name|printf
 argument_list|(
 literal|"8. Non-Approved cryptographic operation test...\n"
@@ -3473,7 +3473,7 @@ literal|"failed INCORRECTLY!"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Zeroization     */
+comment|/*      * Zeroization      */
 name|printf
 argument_list|(
 literal|"9. Zero-ization...\n\t%s\n"

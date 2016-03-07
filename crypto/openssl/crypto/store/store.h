@@ -4,11 +4,11 @@ comment|/* crypto/store/store.h -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org) for the OpenSSL  * project 2003.  */
+comment|/*  * Written by Richard Levitte (richard@levitte.org) for the OpenSSL project  * 2003.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -73,7 +73,7 @@ directive|endif
 comment|/* Already defined in ossl_typ.h */
 comment|/* typedef struct store_st STORE; */
 comment|/* typedef struct store_method_st STORE_METHOD; */
-comment|/* All the following functions return 0, a negative number or NULL on error.    When everything is fine, they return a positive value or a non-NULL    pointer, all depending on their purpose. */
+comment|/*  * All the following functions return 0, a negative number or NULL on error.  * When everything is fine, they return a positive value or a non-NULL  * pointer, all depending on their purpose.  */
 comment|/* Creators and destructor.   */
 name|STORE
 modifier|*
@@ -102,7 +102,7 @@ modifier|*
 name|ui
 parameter_list|)
 function_decl|;
-comment|/* Give a user interface parametrised control commands.  This can be used to    send down an integer, a data pointer or a function pointer, as well as    be used to get information from a STORE. */
+comment|/*  * Give a user interface parametrised control commands.  This can be used to  * send down an integer, a data pointer or a function pointer, as well as be  * used to get information from a STORE.  */
 name|int
 name|STORE_ctrl
 parameter_list|(
@@ -130,22 +130,22 @@ name|void
 parameter_list|)
 parameter_list|)
 function_decl|;
-comment|/* A control to set the directory with keys and certificates.  Used by the    built-in directory level method. */
+comment|/*  * A control to set the directory with keys and certificates.  Used by the  * built-in directory level method.  */
 define|#
 directive|define
 name|STORE_CTRL_SET_DIRECTORY
 value|0x0001
-comment|/* A control to set a file to load.  Used by the built-in file level method. */
+comment|/*  * A control to set a file to load.  Used by the built-in file level method.  */
 define|#
 directive|define
 name|STORE_CTRL_SET_FILE
 value|0x0002
-comment|/* A control to set a configuration file to load.  Can be used by any method    that wishes to load a configuration file. */
+comment|/*  * A control to set a configuration file to load.  Can be used by any method  * that wishes to load a configuration file.  */
 define|#
 directive|define
 name|STORE_CTRL_SET_CONF_FILE
 value|0x0003
-comment|/* A control to set a the section of the loaded configuration file.  Can be    used by any method that wishes to load a configuration file. */
+comment|/*  * A control to set a the section of the loaded configuration file.  Can be  * used by any method that wishes to load a configuration file.  */
 define|#
 directive|define
 name|STORE_CTRL_SET_CONF_SECTION
@@ -244,7 +244,7 @@ name|meth
 parameter_list|)
 function_decl|;
 comment|/* The standard OpenSSL methods. */
-comment|/* This is the in-memory method.  It does everything except revoking and updating,    and is of course volatile.  It's used by other methods that have an in-memory    cache. */
+comment|/*  * This is the in-memory method.  It does everything except revoking and  * updating, and is of course volatile.  It's used by other methods that have  * an in-memory cache.  */
 specifier|const
 name|STORE_METHOD
 modifier|*
@@ -257,13 +257,13 @@ if|#
 directive|if
 literal|0
 comment|/* Not yet implemented */
-comment|/* This is the directory store.  It does everything except revoking and updating,    and uses STORE_Memory() to cache things in memory. */
+comment|/*  * This is the directory store.  It does everything except revoking and  * updating, and uses STORE_Memory() to cache things in memory.  */
 block|const STORE_METHOD *STORE_Directory(void);
-comment|/* This is the file store.  It does everything except revoking and updating,    and uses STORE_Memory() to cache things in memory.  Certificates are added    to it with the store operation, and it will only get cached certificates. */
+comment|/*  * This is the file store.  It does everything except revoking and updating,  * and uses STORE_Memory() to cache things in memory.  Certificates are added  * to it with the store operation, and it will only get cached certificates.  */
 block|const STORE_METHOD *STORE_File(void);
 endif|#
 directive|endif
-comment|/* Store functions take a type code for the type of data they should store    or fetch */
+comment|/*  * Store functions take a type code for the type of data they should store or  * fetch  */
 typedef|typedef
 enum|enum
 name|STORE_object_types
@@ -301,7 +301,7 @@ comment|/* BUF_MEM * */
 name|STORE_OBJECT_TYPE_NUM
 init|=
 literal|0x06
-comment|/* The amount of known 							 object types */
+comment|/* The amount of known object types */
 block|}
 name|STORE_OBJECT_TYPES
 typedef|;
@@ -318,7 +318,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Some store functions take a parameter list.  Those parameters come with    one of the following codes. The comments following the codes below indicate    what type the value should be a pointer to. */
+comment|/*  * Some store functions take a parameter list.  Those parameters come with  * one of the following codes. The comments following the codes below  * indicate what type the value should be a pointer to.  */
 typedef|typedef
 enum|enum
 name|STORE_params
@@ -356,11 +356,11 @@ comment|/* void * */
 name|STORE_PARAM_TYPE_NUM
 init|=
 literal|0x06
-comment|/* The amount of known 							 parameter types */
+comment|/* The amount of known parameter types */
 block|}
 name|STORE_PARAM_TYPES
 typedef|;
-comment|/* Parameter value sizes.  -1 means unknown, anything else is the required size. */
+comment|/*  * Parameter value sizes.  -1 means unknown, anything else is the required  * size.  */
 specifier|extern
 specifier|const
 name|int
@@ -371,7 +371,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Store functions take attribute lists.  Those attributes come with codes.    The comments following the codes below indicate what type the value should    be a pointer to. */
+comment|/*  * Store functions take attribute lists.  Those attributes come with codes.  * The comments following the codes below indicate what type the value should  * be a pointer to.  */
 typedef|typedef
 enum|enum
 name|STORE_attribs
@@ -439,15 +439,15 @@ name|STORE_ATTR_TYPE_NUM
 init|=
 literal|0x0b
 block|,
-comment|/* The amount of known 							 attribute types */
+comment|/* The amount of known attribute types */
 name|STORE_ATTR_OR
 init|=
 literal|0xff
-comment|/* This is a special 							 separator, which 							 expresses the OR 							 operation.  */
+comment|/* This is a special separator, which                                  * expresses the OR operation.  */
 block|}
 name|STORE_ATTR_TYPES
 typedef|;
-comment|/* Attribute value sizes.  -1 means unknown, anything else is the required size. */
+comment|/*  * Attribute value sizes.  -1 means unknown, anything else is the required  * size.  */
 specifier|extern
 specifier|const
 name|int
@@ -480,7 +480,7 @@ literal|0x03
 block|}
 name|STORE_CERTIFICATE_STATUS
 typedef|;
-comment|/* Engine store functions will return a structure that contains all the necessary  * information, including revokation status for certificates.  This is really not  * needed for application authors, as the ENGINE framework functions will extract  * the OpenSSL-specific information when at all possible.  However, for engine  * authors, it's crucial to know this structure.  */
+comment|/*  * Engine store functions will return a structure that contains all the  * necessary information, including revokation status for certificates.  This  * is really not needed for application authors, as the ENGINE framework  * functions will extract the OpenSSL-specific information when at all  * possible.  However, for engine authors, it's crucial to know this  * structure.  */
 typedef|typedef
 struct|struct
 name|STORE_OBJECT_st
@@ -543,7 +543,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-comment|/* The following functions handle the storage. They return 0, a negative number    or NULL on error, anything else on success. */
+comment|/*  * The following functions handle the storage. They return 0, a negative  * number or NULL on error, anything else on success.  */
 name|X509
 modifier|*
 name|STORE_get_certificate
@@ -1883,13 +1883,13 @@ name|sm
 parameter_list|)
 function_decl|;
 comment|/* Method helper structures and functions. */
-comment|/* This structure is the result of parsing through the information in a list    of OPENSSL_ITEMs.  It stores all the necessary information in a structured    way.*/
+comment|/*  * This structure is the result of parsing through the information in a list  * of OPENSSL_ITEMs.  It stores all the necessary information in a structured  * way.  */
 typedef|typedef
 name|struct
 name|STORE_attr_info_st
 name|STORE_ATTR_INFO
 typedef|;
-comment|/* Parse a list of OPENSSL_ITEMs and return a pointer to a STORE_ATTR_INFO.    Note that we do this in the list form, since the list of OPENSSL_ITEMs can    come in blocks separated with STORE_ATTR_OR.  Note that the value returned    by STORE_parse_attrs_next() must be freed with STORE_ATTR_INFO_free(). */
+comment|/*  * Parse a list of OPENSSL_ITEMs and return a pointer to a STORE_ATTR_INFO.  * Note that we do this in the list form, since the list of OPENSSL_ITEMs can  * come in blocks separated with STORE_ATTR_OR.  Note that the value returned  * by STORE_parse_attrs_next() must be freed with STORE_ATTR_INFO_free().  */
 name|void
 modifier|*
 name|STORE_parse_attrs_start
@@ -2124,7 +2124,7 @@ modifier|*
 name|number
 parameter_list|)
 function_decl|;
-comment|/* Compare on basis of a bit pattern formed by the STORE_ATTR_TYPES values    in each contained attribute. */
+comment|/*  * Compare on basis of a bit pattern formed by the STORE_ATTR_TYPES values in  * each contained attribute.  */
 name|int
 name|STORE_ATTR_INFO_compare
 parameter_list|(
@@ -2137,7 +2137,7 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/* Check if the set of attributes in a is within the range of attributes    set in b. */
+comment|/*  * Check if the set of attributes in a is within the range of attributes set  * in b.  */
 name|int
 name|STORE_ATTR_INFO_in_range
 parameter_list|(
@@ -2177,7 +2177,7 @@ name|b
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_STORE_strings
 parameter_list|(

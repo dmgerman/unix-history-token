@@ -4,7 +4,7 @@ comment|/* apps/ca.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -3515,7 +3515,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 				BIO_printf(bio_err,"problems opening %s for extra oid's\n",p); 				ERR_print_errors(bio_err); 				*/
+comment|/*-                 BIO_printf(bio_err,"problems opening %s for extra oid's\n",p);                 ERR_print_errors(bio_err);                 */
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
@@ -4440,7 +4440,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_SYS_VMS
-comment|/* outdir is a directory spec, but access() for VMS demands a 	       filename.  In any case, stat(), below, will catch the problem 	       if outdir is not a directory spec, and the fopen() or open() 	       will catch an error if there is no write access.  	       Presumably, this problem could also be solved by using the DEC 	       C routines to convert the directory syntax to Unixly, and give 	       that to access().  However, time's too short to do that just 	       now. 	    */
+comment|/*          * outdir is a directory spec, but access() for VMS demands a          * filename.  In any case, stat(), below, will catch the problem if          * outdir is not a directory spec, and the fopen() or open() will          * catch an error if there is no write access.          *          * Presumably, this problem could also be solved by using the DEC C          * routines to convert the directory syntax to Unixly, and give that          * to access().  However, time's too short to do that just now.          */
 if|if
 condition|(
 name|access
@@ -5493,7 +5493,7 @@ operator|!
 name|extconf
 condition|)
 block|{
-comment|/* no '-extfile' option, so we look for extensions 			 * in the main configuration file */
+comment|/*              * no '-extfile' option, so we look for extensions in the main              * configuration file              */
 if|if
 condition|(
 operator|!
@@ -6404,7 +6404,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* we have a stack of newly certified certificates 		 * and a data base and serial number that need 		 * updating */
+comment|/*          * we have a stack of newly certified certificates and a data base          * and serial number that need updating          */
 if|if
 condition|(
 name|sk_X509_num
@@ -7459,7 +7459,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* sort the data so it will be written in serial 		 * number order */
+comment|/*          * sort the data so it will be written in serial number order          */
 name|X509_CRL_sort
 argument_list|(
 name|crl
@@ -7656,13 +7656,13 @@ name|err
 goto|;
 comment|/* version 2 CRL */
 block|}
+comment|/* we have a CRL number that need updating */
 if|if
 condition|(
 name|crlnumberfile
 operator|!=
 name|NULL
 condition|)
-comment|/* we have a CRL number that need updating */
 if|if
 condition|(
 operator|!
@@ -9945,7 +9945,7 @@ literal|"The subject name appears to be ok, checking data base for clashes\n"
 argument_list|)
 expr_stmt|;
 comment|/* Build the correct Subject if no e-mail is wanted in the subject */
-comment|/* and add it later on because of the method extensions are added (altName) */
+comment|/*      * and add it later on because of the method extensions are added      * (altName)      */
 if|if
 condition|(
 name|email_dn
@@ -9960,7 +9960,7 @@ name|X509_NAME_ENTRY
 modifier|*
 name|tmpne
 decl_stmt|;
-comment|/* Its best to dup the subject DN and then delete any email 		 * addresses because this retains its structure. 		 */
+comment|/*          * Its best to dup the subject DN and then delete any email addresses          * because this retains its structure.          */
 if|if
 condition|(
 operator|!
@@ -10240,7 +10240,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Type	  :%s\n"
+literal|"Type          :%s\n"
 argument_list|,
 name|p
 argument_list|)
@@ -10658,7 +10658,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* version 3 certificate */
-comment|/* Free the current entries if any, there should not 		 * be any I believe */
+comment|/*          * Free the current entries if any, there should not be any I believe          */
 if|if
 condition|(
 name|ci
@@ -10921,7 +10921,7 @@ argument_list|,
 literal|"Certificate Details:\n"
 argument_list|)
 expr_stmt|;
-comment|/* Never print signature details because signature not present */
+comment|/*          * Never print signature details because signature not present          */
 name|certopt
 operator||=
 name|X509_FLAG_NO_SIGDUMP
@@ -11661,7 +11661,7 @@ if|#
 directive|if
 literal|0
 comment|/* ??? Not needed since X509_print prints all this stuff anyway */
-block|f=X509_NAME_oneline(X509_get_issuer_name(x),buf,256); 	BIO_printf(bp,"issuer :%s\n",f);  	f=X509_NAME_oneline(X509_get_subject_name(x),buf,256); 	BIO_printf(bp,"subject:%s\n",f);  	BIO_puts(bp,"serial :"); 	i2a_ASN1_INTEGER(bp,x->cert_info->serialNumber); 	BIO_puts(bp,"\n\n");
+block|f = X509_NAME_oneline(X509_get_issuer_name(x), buf, 256);     BIO_printf(bp, "issuer :%s\n", f);      f = X509_NAME_oneline(X509_get_subject_name(x), buf, 256);     BIO_printf(bp, "subject:%s\n", f);      BIO_puts(bp, "serial :");     i2a_ASN1_INTEGER(bp, x->cert_info->serialNumber);     BIO_puts(bp, "\n\n");
 endif|#
 directive|endif
 if|if
@@ -11857,7 +11857,7 @@ decl_stmt|;
 name|int
 name|nid
 decl_stmt|;
-comment|/* 	 * Load input file into a hash table.  (This is just an easy 	 * way to read and parse the file, then put it into a convenient 	 * STACK format). 	 */
+comment|/*      * Load input file into a hash table.  (This is just an easy      * way to read and parse the file, then put it into a convenient      * STACK format).      */
 name|parms
 operator|=
 name|CONF_load
@@ -11934,7 +11934,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* 	 * Now create a dummy X509 request structure.  We don't actually 	 * have an X509 request, but we have many of the components 	 * (a public key, various DN components).  The idea is that we 	 * put these components into the right X509 request structure 	 * and we can use the same code as if you had a real X509 request. 	 */
+comment|/*      * Now create a dummy X509 request structure.  We don't actually      * have an X509 request, but we have many of the components      * (a public key, various DN components).  The idea is that we      * put these components into the right X509 request structure      * and we can use the same code as if you had a real X509 request.      */
 name|req
 operator|=
 name|X509_REQ_new
@@ -11956,7 +11956,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* 	 * Build up the subject name set. 	 */
+comment|/*      * Build up the subject name set.      */
 name|ri
 operator|=
 name|req
@@ -12005,7 +12005,7 @@ name|cv
 operator|->
 name|name
 expr_stmt|;
-comment|/* Skip past any leading X. X: X, etc to allow for 		 * multiple instances 		 */
+comment|/*          * Skip past any leading X. X: X, etc to allow for multiple instances          */
 for|for
 control|(
 name|buf
@@ -12179,7 +12179,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* 	 * Now extract the key from the SPKI structure. 	 */
+comment|/*      * Now extract the key from the SPKI structure.      */
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -12608,7 +12608,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* We have to lookup by serial number because name lookup 	 * skips revoked certs  	 */
+comment|/*      * We have to lookup by serial number because name lookup skips revoked      * certs      */
 name|rrow
 operator|=
 name|TXT_DB_get_by_index
@@ -13229,7 +13229,7 @@ operator|%
 literal|2
 condition|)
 block|{
-comment|/* Set the first char to 0 */
+comment|/*          * Set the first char to 0          */
 empty_stmt|;
 name|row
 index|[
@@ -13989,7 +13989,7 @@ value|(sizeof(crl_reasons) / sizeof(char *))
 end_define
 
 begin_comment
-comment|/* Given revocation information convert to a DB string.  * The format of the string is:  * revtime[,reason,extra]. Where 'revtime' is the  * revocation time (the current time). 'reason' is the  * optional CRL reason and 'extra' is any additional  * argument  */
+comment|/*  * Given revocation information convert to a DB string. The format of the  * string is: revtime[,reason,extra]. Where 'revtime' is the revocation time  * (the current time). 'reason' is the optional CRL reason and 'extra' is any  * additional argument  */
 end_comment
 
 begin_function
@@ -14345,7 +14345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert revocation field to X509_REVOKED entry   * return code:  * 0 error  * 1 OK  * 2 OK and some extensions added (i.e. V2 CRL)  */
+comment|/*-  * Convert revocation field to X509_REVOKED entry  * return code:  * 0 error  * 1 OK  * 2 OK and some extensions added (i.e. V2 CRL)  */
 end_comment
 
 begin_function
@@ -15207,8 +15207,8 @@ name|reason_code
 operator|==
 literal|8
 condition|)
-comment|/* Hold instruction */
 block|{
+comment|/* Hold instruction */
 if|if
 condition|(
 operator|!

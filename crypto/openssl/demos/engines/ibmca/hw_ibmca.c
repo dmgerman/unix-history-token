@@ -4,7 +4,7 @@ comment|/* crypto/engine/hw_ibmca.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
@@ -769,7 +769,7 @@ block|,
 name|ibmca_rand_bytes
 block|,
 name|ibmca_rand_status
-block|,         }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -800,7 +800,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_ibmca() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_ibmca() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -958,7 +958,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the ibmca-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * ibmca-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1001,7 +1001,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* Use the DSA_OpenSSL() method and just hook the mod_exp-ish 	 * bits. */
+comment|/*      * Use the DSA_OpenSSL() method and just hook the mod_exp-ish bits.      */
 name|meth2
 operator|=
 name|DSA_OpenSSL
@@ -1178,7 +1178,7 @@ modifier|*
 name|e
 parameter_list|)
 block|{
-comment|/* Unload the ibmca error strings so any error state including our 	 * functs or reasons won't lead to a segfault (they simply get displayed 	 * without corresponding string data because none will be found). */
+comment|/*      * Unload the ibmca error strings so any error state including our functs      * or reasons won't lead to a segfault (they simply get displayed without      * corresponding string data because none will be found).      */
 name|ERR_unload_IBMCA_strings
 argument_list|()
 expr_stmt|;
@@ -1189,7 +1189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the Ibmca library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * Ibmca library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1203,7 +1203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_function_decl
@@ -1403,8 +1403,8 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Attempt to load libatasi.so/atasi.dll/whatever. Needs to be          * changed unfortunately because the Ibmca drivers don't have          * standard library names that can be platform-translated well. */
-comment|/* TODO: Work out how to actually map to the names the Ibmca          * drivers really use - for now a symbollic link needs to be          * created on the host system from libatasi.so to atasi.so on          * unix variants. */
+comment|/*      * Attempt to load libatasi.so/atasi.dll/whatever. Needs to be changed      * unfortunately because the Ibmca drivers don't have standard library      * names that can be platform-translated well.      */
+comment|/*      * TODO: Work out how to actually map to the names the Ibmca drivers      * really use - for now a symbollic link needs to be created on the host      * system from libatasi.so to atasi.so on unix variants.      */
 comment|/* WJH XXX check name translation */
 name|ibmca_dso
 operator|=
@@ -1416,7 +1416,7 @@ name|IBMCA_LIBNAME
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* DSO_FLAG_NAME_TRANSLATION */
+comment|/*                           * DSO_FLAG_NAME_TRANSLATION                           */
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1839,7 +1839,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* I need somewhere to store temporary serialised values for          * use with the Ibmca API calls. A neat cheat - I'll use          * BIGNUMs from the BN_CTX but access their arrays directly as          * byte arrays<grin>. This way I don't have to clean anything          * up. */
+comment|/*      * I need somewhere to store temporary serialised values for use with the      * Ibmca API calls. A neat cheat - I'll use BIGNUMs from the BN_CTX but      * access their arrays directly as byte arrays<grin>. This way I don't      * have to clean anything up.      */
 name|BIGNUM
 modifier|*
 name|argument
@@ -2070,7 +2070,7 @@ operator|*
 operator|)
 name|publKey
 expr_stmt|;
-comment|/* A quirk of the card: the exponent length has to be the same      as the modulus (key) length */
+comment|/*      * A quirk of the card: the exponent length has to be the same as the      * modulus (key) length      */
 name|outLen
 operator|=
 name|BN_num_bytes
@@ -2108,7 +2108,7 @@ name|nLength
 operator|=
 name|outLen
 expr_stmt|;
-comment|/* SAB Check for underflow condition     the size of the exponent is less than the size of the parameter     then we have a big problem and will underflow the keyRecord    buffer.  Bad stuff could happen then */
+comment|/*      * SAB Check for underflow condition the size of the exponent is less      * than the size of the parameter then we have a big problem and will      * underflow the keyRecord buffer.  Bad stuff could happen then      */
 if|if
 condition|(
 name|outLen
@@ -2803,7 +2803,7 @@ name|key
 operator|->
 name|d
 expr_stmt|;
-comment|/* SAB Add check for total size in bytes of the parms does not exceed    the buffer space we have    do this first */
+comment|/*      * SAB Add check for total size in bytes of the parms does not exceed the      * buffer space we have do this first      */
 name|keyRecordSize
 operator|=
 name|pbytes
@@ -2931,7 +2931,7 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*          * p,dp& qInv are 1 QWORD Larger          */
+comment|/*      * p,dp& qInv are 1 QWORD Larger      */
 name|privKey
 operator|->
 name|pLength
@@ -3027,8 +3027,8 @@ name|qSize
 operator|+
 literal|8
 expr_stmt|;
-comment|/*  1 QWORD larger */
-comment|/* SAB  probably aittle redundant, but we'll verify that each of the    components which make up a key record sent ot the card does not exceed    the space that is allocated for it.  this handles the case where even if    the total length does not exceed keyrecord zied, if the operands are funny sized they could cause potential side affects on either the card or the result */
+comment|/* 1 QWORD larger */
+comment|/*      * SAB probably aittle redundant, but we'll verify that each of the      * components which make up a key record sent ot the card does not exceed      * the space that is allocated for it.  this handles the case where even      * if the total length does not exceed keyrecord zied, if the operands are      * funny sized they could cause potential side affects on either the card      * or the result      */
 if|if
 condition|(
 operator|(
@@ -3201,6 +3201,7 @@ operator|+=
 name|qSize
 expr_stmt|;
 comment|/* move pointer */
+comment|/* set up for zero padding of next field */
 name|pkey
 operator|+=
 name|pSize
@@ -3210,7 +3211,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* set up for zero padding of next field */
 name|BN_bn2bin
 argument_list|(
 name|p
@@ -3218,6 +3218,7 @@ argument_list|,
 name|pkey
 argument_list|)
 expr_stmt|;
+comment|/* increment pointer by number of bytes moved  */
 name|pkey
 operator|+=
 name|BN_num_bytes
@@ -3225,7 +3226,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* increment pointer by number of bytes moved  */
 name|BN_bn2bin
 argument_list|(
 name|q
@@ -3256,6 +3256,7 @@ name|pkey
 argument_list|)
 expr_stmt|;
 comment|/* Prepare the argument and response */
+comment|/*      * Correct endianess is used because the fields were converted above      */
 name|outLen
 operator|=
 name|CORRECT_ENDIANNESS
@@ -3267,7 +3268,6 @@ argument_list|)
 operator|*
 literal|2
 expr_stmt|;
-comment|/* Correct endianess is used  						because the fields were converted above */
 if|if
 condition|(
 name|outLen
@@ -3443,7 +3443,7 @@ name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_comment
-comment|/* This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Ibmca acceleration  * (it doesn't have a CRT form for RSA), this function means that an  * Ibmca system running with a DSA server certificate can handshake  * around 5 or 6 times faster/more than an equivalent system running with  * RSA. Just check out the "signs" statistics from the RSA and DSA parts  * of "openssl speed -engine ibmca dsa1024 rsa1024". */
+comment|/*  * This code was liberated and adapted from the commented-out code in  * dsa_ossl.c. Because of the unoptimised form of the Ibmca acceleration (it  * doesn't have a CRT form for RSA), this function means that an Ibmca system  * running with a DSA server certificate can handshake around 5 or 6 times  * faster/more than an equivalent system running with RSA. Just check out the  * "signs" statistics from the RSA and DSA parts of "openssl speed -engine  * ibmca dsa1024 rsa1024".  */
 end_comment
 
 begin_function
@@ -3866,7 +3866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifdef

@@ -4,11 +4,11 @@ comment|/* crypto/engine/hw_ubsec.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  *  * Cloned shamelessly by Joe Tardo.   */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000. Cloned shamelessly by Joe Tardo.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -872,7 +872,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_ubsec() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_ubsec() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -1017,7 +1017,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the Broadcom-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * Broadcom-specific mod_exp and mod_exp_crt so we use those functions.      * NB: We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1197,7 +1197,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the UBSEC library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * UBSEC library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1211,7 +1211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -1388,7 +1388,7 @@ comment|/* ??? */
 end_comment
 
 begin_comment
-comment|/*   * These are the static string constants for the DSO file name and the function  * symbol names to bind to.   */
+comment|/*  * These are the static string constants for the DSO file name and the function  * symbol names to bind to.  */
 end_comment
 
 begin_decl_stmt
@@ -1790,7 +1790,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*  	 * Attempt to load libubsec.so/ubsec.dll/whatever.  	 */
+comment|/*      * Attempt to load libubsec.so/ubsec.dll/whatever.      */
 name|ubsec_dso
 operator|=
 name|DSO_load
@@ -1888,10 +1888,10 @@ argument_list|,
 name|UBSEC_F4
 argument_list|)
 operator|)
-operator|||
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH
+operator|||
 operator|!
 operator|(
 name|p5
@@ -1923,10 +1923,10 @@ argument_list|,
 name|UBSEC_F6
 argument_list|)
 operator|)
-operator|||
 endif|#
 directive|endif
 comment|/* #ifndef OPENSSL_NO_RSA */
+operator|||
 operator|!
 operator|(
 name|p7
@@ -1958,11 +1958,11 @@ argument_list|,
 name|UBSEC_F8
 argument_list|)
 operator|)
-operator|||
 comment|/* #endif */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
+operator|||
 operator|!
 operator|(
 name|p9
@@ -1994,9 +1994,9 @@ argument_list|,
 name|UBSEC_F10
 argument_list|)
 operator|)
-operator|||
 endif|#
 directive|endif
+operator|||
 operator|!
 operator|(
 name|p11
@@ -2888,7 +2888,7 @@ operator|==
 name|FAIL_TO_SOFTWARE
 condition|)
 block|{
-comment|/* 	   * Do in software as hardware failed. 	   */
+comment|/*          * Do in software as hardware failed.          */
 specifier|const
 name|RSA_METHOD
 modifier|*
@@ -3854,9 +3854,9 @@ name|p_UBSEC_dsa_sign_ioctl
 argument_list|(
 name|fd
 argument_list|,
+comment|/* compute hash before signing */
 literal|0
 argument_list|,
-comment|/* compute hash before signing */
 operator|(
 name|unsigned
 name|char
@@ -3868,9 +3868,9 @@ name|d_len
 argument_list|,
 name|NULL
 argument_list|,
+comment|/* compute random value */
 literal|0
 argument_list|,
-comment|/* compute random value */
 operator|(
 name|unsigned
 name|char
@@ -4741,7 +4741,7 @@ name|priv_key
 init|=
 name|NULL
 decl_stmt|;
-comment|/*           *  How many bits should Random x be? dh_key.c          *  sets the range from 0 to num_bits(modulus) ???          */
+comment|/*      *  How many bits should Random x be? dh_key.c      *  sets the range from 0 to num_bits(modulus) ???      */
 if|if
 condition|(
 name|dh
@@ -5319,7 +5319,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $LP: LPlib/source/LPdir_unix.c,v 1.11 2004/09/23 22:07:22 _cvs_levitte Exp $ */
+comment|/*  * $LP: LPlib/source/LPdir_unix.c,v 1.11 2004/09/23 22:07:22 _cvs_levitte Exp  * $  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2004, Richard Levitte<richard@levitte.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2004, Richard Levitte<richard@levitte.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The POSIXly macro for the maximum number of characters in a file path    is NAME_MAX.  However, some operating systems use PATH_MAX instead.    Therefore, it seems natural to first check for PATH_MAX and use that,    and if it doesn't exist, use NAME_MAX. */
+comment|/*  * The POSIXly macro for the maximum number of characters in a file path is  * NAME_MAX.  However, some operating systems use PATH_MAX instead.  * Therefore, it seems natural to first check for PATH_MAX and use that, and  * if it doesn't exist, use NAME_MAX.  */
 end_comment
 
 begin_if
@@ -108,7 +108,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Of course, there's the possibility that neither PATH_MAX nor NAME_MAX    exist.  It's also possible that NAME_MAX exists but is define to a    very small value (HP-UX offers 14), so we need to check if we got a    result, and if it meets a minimum standard, and create or change it    if not. */
+comment|/*  * Of course, there's the possibility that neither PATH_MAX nor NAME_MAX  * exist.  It's also possible that NAME_MAX exists but is define to a very  * small value (HP-UX offers 14), so we need to check if we got a result, and  * if it meets a minimum standard, and create or change it if not.  */
 end_comment
 
 begin_if

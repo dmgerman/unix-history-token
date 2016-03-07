@@ -232,16 +232,16 @@ name|instruction_pointer_xlc
 name|{
 pragma|\
 literal|"7c0802a6"
-comment|/* mflr	r0  */
+comment|/* mflr r0  */
 pragma|\
 literal|"48000005"
-comment|/* bl	$+4 */
+comment|/* bl   $+4 */
 pragma|\
 literal|"7c6802a6"
-comment|/* mflr	r3  */
+comment|/* mflr r3  */
 pragma|\
 literal|"7c0803a6"
-comment|/* mtlr	r0  */
+comment|/* mtlr r0  */
 name|}
 end_pragma
 
@@ -283,7 +283,7 @@ value|FIPS_text_start
 end_define
 
 begin_comment
-comment|/* Some compilers put string literals into a separate segment. As we  * are mostly interested to hash AES tables in .rodata, we declare  * reference points accordingly. In case you wonder, the values are  * big-endian encoded variable names, just to prevent these arrays  * from being merged by linker. */
+comment|/*  * Some compilers put string literals into a separate segment. As we are  * mostly interested to hash AES tables in .rodata, we declare reference  * points accordingly. In case you wonder, the values are big-endian encoded  * variable names, just to prevent these arrays from being merged by linker.  */
 end_comment
 
 begin_decl_stmt
@@ -360,7 +360,7 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
-comment|/* These are ABI-neutral CPU-specific snippets. ABI-neutrality means  * that they are designed to work under any OS running on particular  * CPU, which is why you don't find any #ifdef THIS_OR_THAT_OS in  * this function. */
+comment|/*      * These are ABI-neutral CPU-specific snippets. ABI-neutrality means that      * they are designed to work under any OS running on particular CPU,      * which is why you don't find any #ifdef THIS_OR_THAT_OS in this      * function.      */
 if|#
 directive|if
 name|defined
@@ -396,7 +396,7 @@ argument_list|)
 define|#
 directive|define
 name|INSTRUCTION_POINTER_IMPLEMENTED
-asm|__asm __volatile (	"br	%0,1f\n1:" : "=r"(ret) );
+asm|__asm __volatile("br     %0,1f\n1:":"=r"(ret));
 elif|#
 directive|elif
 name|defined
@@ -411,7 +411,7 @@ argument_list|)
 define|#
 directive|define
 name|INSTRUCTION_POINTER_IMPLEMENTED
-asm|__asm __volatile (	"call 1f\n1:	popl %0" : "=r"(ret) );
+asm|__asm __volatile("call 1f\n1:    popl %0":"=r"(ret));
 name|ret
 operator|=
 operator|(
@@ -443,7 +443,7 @@ argument_list|)
 define|#
 directive|define
 name|INSTRUCTION_POINTER_IMPLEMENTED
-asm|__asm __volatile (	"mov	%0=ip" : "=r"(ret) );
+asm|__asm __volatile("mov    %0=ip":"=r"(ret));
 elif|#
 directive|elif
 name|defined
@@ -463,7 +463,7 @@ argument_list|)
 define|#
 directive|define
 name|INSTRUCTION_POINTER_IMPLEMENTED
-asm|__asm __volatile (	"blr	%%r0,%0\n\tnop" : "=r"(ret) );
+asm|__asm __volatile("blr    %%r0,%0\n\tnop":"=r"(ret));
 name|ret
 operator|=
 operator|(
@@ -499,12 +499,12 @@ name|void
 modifier|*
 name|scratch
 decl_stmt|;
-asm|__asm __volatile (	"move	%1,$31\n\t"
+asm|__asm __volatile("move   %1,$31\n\t"
 comment|/* save ra */
-literal|"bal	.+8; nop\n\t"
-literal|"move	%0,$31\n\t"
-literal|"move	$31,%1"
+literal|"bal    .+8; nop\n\t"
+literal|"move   %0,$31\n\t"
 comment|/* restore ra */
+literal|"move   $31,%1"
 operator|:
 literal|"=r"
 operator|(
@@ -579,7 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm __volatile (	"mfspr	%1,8\n\t"
+asm|__asm __volatile("mfspr  %1,8\n\t"
 end_asm
 
 begin_comment
@@ -587,10 +587,10 @@ comment|/* save lr */
 end_comment
 
 begin_expr_stmt
-literal|"bl	$+4\n\t"
-literal|"mfspr	%0,8\n\t"
+literal|"bl     $+4\n\t"
+literal|"mfspr  %0,8\n\t"
 comment|/* mflr ret */
-literal|"mtspr	8,%1"
+literal|"mtspr  8,%1"
 comment|/* restore lr */
 operator|:
 literal|"=r"
@@ -630,7 +630,7 @@ name|INSTRUCTION_POINTER_IMPLEMENTED
 end_define
 
 begin_asm
-asm|__asm __volatile (	"bras	%0,1f\n1:" : "=r"(ret) );
+asm|__asm __volatile("bras   %0,1f\n1:":"=r"(ret));
 end_asm
 
 begin_expr_stmt
@@ -685,13 +685,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm __volatile (	"mov	%%o7,%1\n\t"
+asm|__asm __volatile("mov    %%o7,%1\n\t"
 end_asm
 
 begin_expr_stmt
-literal|"call	.+8; nop\n\t"
-literal|"mov	%%o7,%0\n\t"
-literal|"mov	%1,%%o7"
+literal|"call   .+8; nop\n\t"
+literal|"mov    %%o7,%0\n\t"
+literal|"mov    %1,%%o7"
 operator|:
 literal|"=r"
 operator|(
@@ -730,7 +730,7 @@ name|INSTRUCTION_POINTER_IMPLEMENTED
 end_define
 
 begin_asm
-asm|__asm __volatile (	"leaq	0(%%rip),%0" : "=r"(ret) );
+asm|__asm __volatile("leaq   0(%%rip),%0":"=r"(ret));
 end_asm
 
 begin_expr_stmt
@@ -894,7 +894,7 @@ return|return
 name|instruction_pointer
 argument_list|()
 return|;
-comment|/* Below we essentially cover vendor compilers which do not support  * inline assembler... */
+comment|/*      * Below we essentially cover vendor compilers which do not support      * inline assembler...      */
 elif|#
 directive|elif
 name|defined
@@ -912,7 +912,7 @@ name|gp
 block|,
 operator|*
 name|env
-block|; }
+block|;     }
 operator|*
 name|p
 operator|=
@@ -1287,7 +1287,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * In case you wonder why there is no #ifdef __linux. All Linux targets  * are GCC-based and therefore are covered by instruction_pointer above  * [well, some are covered by by the one below]...  */
+comment|/*      * In case you wonder why there is no #ifdef __linux. All Linux targets      * are GCC-based and therefore are covered by instruction_pointer above      * [well, some are covered by by the one below]...      */
 end_comment
 
 begin_elif

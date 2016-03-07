@@ -4,7 +4,7 @@ comment|/* crypto/asn1/asn1_mac.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -69,13 +69,13 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|ASN1_const_CTX c; \ 	type ret=NULL; \ 	\ 	c.pp=(const unsigned char **)pp; \ 	c.q= *(const unsigned char **)pp; \ 	c.error=ERR_R_NESTED_ASN1_ERROR; \ 	if ((a == NULL) || ((*a) == NULL)) \ 		{ if ((ret=(type)func()) == NULL) \ 			{ c.line=__LINE__; goto err; } } \ 	else	ret=(*a);
+value|ASN1_const_CTX c; \         type ret=NULL; \         \         c.pp=(const unsigned char **)pp; \         c.q= *(const unsigned char **)pp; \         c.error=ERR_R_NESTED_ASN1_ERROR; \         if ((a == NULL) || ((*a) == NULL)) \                 { if ((ret=(type)func()) == NULL) \                         { c.line=__LINE__; goto err; } } \         else    ret=(*a);
 define|#
 directive|define
 name|M_ASN1_D2I_Init
 parameter_list|()
 define|\
-value|c.p= *(const unsigned char **)pp; \ 	c.max=(length == 0)?0:(c.p+length);
+value|c.p= *(const unsigned char **)pp; \         c.max=(length == 0)?0:(c.p+length);
 define|#
 directive|define
 name|M_ASN1_D2I_Finish_2
@@ -83,7 +83,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|if (!asn1_const_Finish(&c)) \ 		{ c.line=__LINE__; goto err; } \ 	*(const unsigned char **)pp=c.p; \ 	if (a != NULL) (*a)=ret; \ 	return(ret);
+value|if (!asn1_const_Finish(&c)) \                 { c.line=__LINE__; goto err; } \         *(const unsigned char **)pp=c.p; \         if (a != NULL) (*a)=ret; \         return(ret);
 define|#
 directive|define
 name|M_ASN1_D2I_Finish
@@ -95,13 +95,13 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|M_ASN1_D2I_Finish_2(a); \ err:\ 	ASN1_MAC_H_err((e),c.error,c.line); \ 	asn1_add_error(*(const unsigned char **)pp,(int)(c.q- *pp)); \ 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \ 	return(NULL)
+value|M_ASN1_D2I_Finish_2(a); \ err:\         ASN1_MAC_H_err((e),c.error,c.line); \         asn1_add_error(*(const unsigned char **)pp,(int)(c.q- *pp)); \         if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \         return(NULL)
 define|#
 directive|define
 name|M_ASN1_D2I_start_sequence
 parameter_list|()
 define|\
-value|if (!asn1_GetSequence(&c,&length)) \ 		{ c.line=__LINE__; goto err; }
+value|if (!asn1_GetSequence(&c,&length)) \                 { c.line=__LINE__; goto err; }
 comment|/* Begin reading ASN1 without a surrounding sequence */
 define|#
 directive|define
@@ -121,13 +121,13 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|*pp=c.p; \ 	if (a != NULL) (*a)=ret; \ 	return(ret); \ err:\ 	ASN1_MAC_H_err((e),c.error,c.line); \ 	asn1_add_error(*pp,(int)(c.q- *pp)); \ 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \ 	return(NULL)
+value|*pp=c.p; \         if (a != NULL) (*a)=ret; \         return(ret); \ err:\         ASN1_MAC_H_err((e),c.error,c.line); \         asn1_add_error(*pp,(int)(c.q- *pp)); \         if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \         return(NULL)
 define|#
 directive|define
 name|M_ASN1_D2I_end_sequence
 parameter_list|()
 define|\
-value|(((c.inf&1) == 0)?(c.slen<= 0): \ 		(c.eos=ASN1_const_check_infinite_end(&c.p,c.slen)))
+value|(((c.inf&1) == 0)?(c.slen<= 0): \                 (c.eos=ASN1_const_check_infinite_end(&c.p,c.slen)))
 comment|/* Don't use this with d2i_ASN1_BOOLEAN() */
 define|#
 directive|define
@@ -138,7 +138,7 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (func(&(b),&c.p,c.slen) == NULL) \ 		{c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (func(&(b),&c.p,c.slen) == NULL) \                 {c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 comment|/* Don't use this with d2i_ASN1_BOOLEAN() */
 define|#
 directive|define
@@ -151,7 +151,7 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (((D2I_OF(type))func)(&(b),&c.p,c.slen) == NULL) \ 		{c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (((D2I_OF(type))func)(&(b),&c.p,c.slen) == NULL) \                 {c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 comment|/* use this instead () */
 define|#
 directive|define
@@ -162,7 +162,7 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (func(&(b),&c.p,c.slen)< 0) \ 		{c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (func(&(b),&c.p,c.slen)< 0) \                 {c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 define|#
 directive|define
 name|M_ASN1_D2I_get_opt
@@ -174,7 +174,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) \ 		== (V_ASN1_UNIVERSAL|(type)))) \ 		{ \ 		M_ASN1_D2I_get(b,func); \ 		}
+value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) \                 == (V_ASN1_UNIVERSAL|(type)))) \                 { \                 M_ASN1_D2I_get(b,func); \                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_imp
@@ -186,7 +186,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|M_ASN1_next=(_tmp& V_ASN1_CONSTRUCTED)|type; \ 	c.q=c.p; \ 	if (func(&(b),&c.p,c.slen) == NULL) \ 		{c.line=__LINE__; M_ASN1_next_prev = _tmp; goto err; } \ 	c.slen-=(c.p-c.q);\ 	M_ASN1_next_prev=_tmp;
+value|M_ASN1_next=(_tmp& V_ASN1_CONSTRUCTED)|type; \         c.q=c.p; \         if (func(&(b),&c.p,c.slen) == NULL) \                 {c.line=__LINE__; M_ASN1_next_prev = _tmp; goto err; } \         c.slen-=(c.p-c.q);\         M_ASN1_next_prev=_tmp;
 define|#
 directive|define
 name|M_ASN1_D2I_get_IMP_opt
@@ -200,7 +200,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) == \ 		(V_ASN1_CONTEXT_SPECIFIC|(tag)))) \ 		{ \ 		unsigned char _tmp = M_ASN1_next; \ 		M_ASN1_D2I_get_imp(b,func, type);\ 		}
+value|if ((c.slen != 0)&& ((M_ASN1_next& (~V_ASN1_CONSTRUCTED)) == \                 (V_ASN1_CONTEXT_SPECIFIC|(tag)))) \                 { \                 unsigned char _tmp = M_ASN1_next; \                 M_ASN1_D2I_get_imp(b,func, type);\                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_set
@@ -212,7 +212,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set(r,func,free_func, \ 			V_ASN1_SET,V_ASN1_UNIVERSAL);
+value|M_ASN1_D2I_get_imp_set(r,func,free_func, \                         V_ASN1_SET,V_ASN1_UNIVERSAL);
 define|#
 directive|define
 name|M_ASN1_D2I_get_set_type
@@ -226,7 +226,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func, \ 			V_ASN1_SET,V_ASN1_UNIVERSAL);
+value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func, \                         V_ASN1_SET,V_ASN1_UNIVERSAL);
 define|#
 directive|define
 name|M_ASN1_D2I_get_set_opt
@@ -238,7 +238,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \ 		V_ASN1_CONSTRUCTED|V_ASN1_SET)))\ 		{ M_ASN1_D2I_get_set(r,func,free_func); }
+value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \                 V_ASN1_CONSTRUCTED|V_ASN1_SET)))\                 { M_ASN1_D2I_get_set(r,func,free_func); }
 define|#
 directive|define
 name|M_ASN1_D2I_get_set_opt_type
@@ -252,7 +252,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \ 		V_ASN1_CONSTRUCTED|V_ASN1_SET)))\ 		{ M_ASN1_D2I_get_set_type(type,r,func,free_func); }
+value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \                 V_ASN1_CONSTRUCTED|V_ASN1_SET)))\                 { M_ASN1_D2I_get_set_type(type,r,func,free_func); }
 define|#
 directive|define
 name|M_ASN1_I2D_len_SET_opt
@@ -262,7 +262,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 		M_ASN1_I2D_len_SET(a,f);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                 M_ASN1_I2D_len_SET(a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_put_SET_opt
@@ -272,7 +272,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 		M_ASN1_I2D_put_SET(a,f);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                 M_ASN1_I2D_put_SET(a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_put_SEQUENCE_opt
@@ -282,7 +282,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 		M_ASN1_I2D_put_SEQUENCE(a,f);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                 M_ASN1_I2D_put_SEQUENCE(a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_put_SEQUENCE_opt_type
@@ -294,7 +294,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 		M_ASN1_I2D_put_SEQUENCE_type(type,a,f);
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                 M_ASN1_I2D_put_SEQUENCE_type(type,a,f);
 define|#
 directive|define
 name|M_ASN1_D2I_get_IMP_set_opt
@@ -308,7 +308,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& \ 		(M_ASN1_next == \ 		(V_ASN1_CONTEXT_SPECIFIC|V_ASN1_CONSTRUCTED|(tag))))\ 		{ \ 		M_ASN1_D2I_get_imp_set(b,func,free_func,\ 			tag,V_ASN1_CONTEXT_SPECIFIC); \ 		}
+value|if ((c.slen != 0)&& \                 (M_ASN1_next == \                 (V_ASN1_CONTEXT_SPECIFIC|V_ASN1_CONSTRUCTED|(tag))))\                 { \                 M_ASN1_D2I_get_imp_set(b,func,free_func,\                         tag,V_ASN1_CONTEXT_SPECIFIC); \                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_IMP_set_opt_type
@@ -324,7 +324,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& \ 		(M_ASN1_next == \ 		(V_ASN1_CONTEXT_SPECIFIC|V_ASN1_CONSTRUCTED|(tag))))\ 		{ \ 		M_ASN1_D2I_get_imp_set_type(type,b,func,free_func,\ 			tag,V_ASN1_CONTEXT_SPECIFIC); \ 		}
+value|if ((c.slen != 0)&& \                 (M_ASN1_next == \                 (V_ASN1_CONTEXT_SPECIFIC|V_ASN1_CONSTRUCTED|(tag))))\                 { \                 M_ASN1_D2I_get_imp_set_type(type,b,func,free_func,\                         tag,V_ASN1_CONTEXT_SPECIFIC); \                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_seq
@@ -336,7 +336,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set(r,func,free_func,\ 			V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL);
+value|M_ASN1_D2I_get_imp_set(r,func,free_func,\                         V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL);
 define|#
 directive|define
 name|M_ASN1_D2I_get_seq_type
@@ -350,7 +350,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func,\ 					    V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL)
+value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func,\                                             V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL)
 define|#
 directive|define
 name|M_ASN1_D2I_get_seq_opt
@@ -362,7 +362,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \ 		V_ASN1_CONSTRUCTED|V_ASN1_SEQUENCE)))\ 		{ M_ASN1_D2I_get_seq(r,func,free_func); }
+value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \                 V_ASN1_CONSTRUCTED|V_ASN1_SEQUENCE)))\                 { M_ASN1_D2I_get_seq(r,func,free_func); }
 define|#
 directive|define
 name|M_ASN1_D2I_get_seq_opt_type
@@ -376,7 +376,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \ 		V_ASN1_CONSTRUCTED|V_ASN1_SEQUENCE)))\ 		{ M_ASN1_D2I_get_seq_type(type,r,func,free_func); }
+value|if ((c.slen != 0)&& (M_ASN1_next == (V_ASN1_UNIVERSAL| \                 V_ASN1_CONSTRUCTED|V_ASN1_SEQUENCE)))\                 { M_ASN1_D2I_get_seq_type(type,r,func,free_func); }
 define|#
 directive|define
 name|M_ASN1_D2I_get_IMP_set
@@ -390,7 +390,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set(r,func,free_func,\ 			x,V_ASN1_CONTEXT_SPECIFIC);
+value|M_ASN1_D2I_get_imp_set(r,func,free_func,\                         x,V_ASN1_CONTEXT_SPECIFIC);
 define|#
 directive|define
 name|M_ASN1_D2I_get_IMP_set_type
@@ -406,7 +406,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func,\ 			x,V_ASN1_CONTEXT_SPECIFIC);
+value|M_ASN1_D2I_get_imp_set_type(type,r,func,free_func,\                         x,V_ASN1_CONTEXT_SPECIFIC);
 define|#
 directive|define
 name|M_ASN1_D2I_get_imp_set
@@ -422,7 +422,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (d2i_ASN1_SET(&(r),&c.p,c.slen,(char *(*)())func,\ 		(void (*)())free_func,a,b) == NULL) \ 		{ c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (d2i_ASN1_SET(&(r),&c.p,c.slen,(char *(*)())func,\                 (void (*)())free_func,a,b) == NULL) \                 { c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 define|#
 directive|define
 name|M_ASN1_D2I_get_imp_set_type
@@ -440,7 +440,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (d2i_ASN1_SET_OF_##type(&(r),&c.p,c.slen,func,\ 				   free_func,a,b) == NULL) \ 		{ c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (d2i_ASN1_SET_OF_##type(&(r),&c.p,c.slen,func,\                                    free_func,a,b) == NULL) \                 { c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 define|#
 directive|define
 name|M_ASN1_D2I_get_set_strings
@@ -454,7 +454,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|c.q=c.p; \ 	if (d2i_ASN1_STRING_SET(&(r),&c.p,c.slen,a,b) == NULL) \ 		{ c.line=__LINE__; goto err; } \ 	c.slen-=(c.p-c.q);
+value|c.q=c.p; \         if (d2i_ASN1_STRING_SET(&(r),&c.p,c.slen,a,b) == NULL) \                 { c.line=__LINE__; goto err; } \         c.slen-=(c.p-c.q);
 define|#
 directive|define
 name|M_ASN1_D2I_get_EXP_opt
@@ -466,7 +466,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|if ((c.slen != 0L)&& (M_ASN1_next == \ 		(V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \ 		{ \ 		int Tinf,Ttag,Tclass; \ 		long Tlen; \ 		\ 		c.q=c.p; \ 		Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \ 		if (Tinf& 0x80) \ 			{ c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \ 			c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) \ 					Tlen = c.slen - (c.p - c.q) - 2; \ 		if (func(&(r),&c.p,Tlen) == NULL) \ 			{ c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \ 			Tlen = c.slen - (c.p - c.q); \ 			if(!ASN1_const_check_infinite_end(&c.p, Tlen)) \ 				{ c.error=ERR_R_MISSING_ASN1_EOS; \ 				c.line=__LINE__; goto err; } \ 		}\ 		c.slen-=(c.p-c.q); \ 		}
+value|if ((c.slen != 0L)&& (M_ASN1_next == \                 (V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \                 { \                 int Tinf,Ttag,Tclass; \                 long Tlen; \                 \                 c.q=c.p; \                 Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \                 if (Tinf& 0x80) \                         { c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \                         c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) \                                         Tlen = c.slen - (c.p - c.q) - 2; \                 if (func(&(r),&c.p,Tlen) == NULL) \                         { c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \                         Tlen = c.slen - (c.p - c.q); \                         if(!ASN1_const_check_infinite_end(&c.p, Tlen)) \                                 { c.error=ERR_R_MISSING_ASN1_EOS; \                                 c.line=__LINE__; goto err; } \                 }\                 c.slen-=(c.p-c.q); \                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_EXP_set_opt
@@ -482,7 +482,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == \ 		(V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \ 		{ \ 		int Tinf,Ttag,Tclass; \ 		long Tlen; \ 		\ 		c.q=c.p; \ 		Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \ 		if (Tinf& 0x80) \ 			{ c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \ 			c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) \ 					Tlen = c.slen - (c.p - c.q) - 2; \ 		if (d2i_ASN1_SET(&(r),&c.p,Tlen,(char *(*)())func, \ 			(void (*)())free_func, \ 			b,V_ASN1_UNIVERSAL) == NULL) \ 			{ c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \ 			Tlen = c.slen - (c.p - c.q); \ 			if(!ASN1_check_infinite_end(&c.p, Tlen)) \ 				{ c.error=ERR_R_MISSING_ASN1_EOS; \ 				c.line=__LINE__; goto err; } \ 		}\ 		c.slen-=(c.p-c.q); \ 		}
+value|if ((c.slen != 0)&& (M_ASN1_next == \                 (V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \                 { \                 int Tinf,Ttag,Tclass; \                 long Tlen; \                 \                 c.q=c.p; \                 Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \                 if (Tinf& 0x80) \                         { c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \                         c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) \                                         Tlen = c.slen - (c.p - c.q) - 2; \                 if (d2i_ASN1_SET(&(r),&c.p,Tlen,(char *(*)())func, \                         (void (*)())free_func, \                         b,V_ASN1_UNIVERSAL) == NULL) \                         { c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \                         Tlen = c.slen - (c.p - c.q); \                         if(!ASN1_check_infinite_end(&c.p, Tlen)) \                                 { c.error=ERR_R_MISSING_ASN1_EOS; \                                 c.line=__LINE__; goto err; } \                 }\                 c.slen-=(c.p-c.q); \                 }
 define|#
 directive|define
 name|M_ASN1_D2I_get_EXP_set_opt_type
@@ -500,7 +500,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|if ((c.slen != 0)&& (M_ASN1_next == \ 		(V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \ 		{ \ 		int Tinf,Ttag,Tclass; \ 		long Tlen; \ 		\ 		c.q=c.p; \ 		Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \ 		if (Tinf& 0x80) \ 			{ c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \ 			c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) \ 					Tlen = c.slen - (c.p - c.q) - 2; \ 		if (d2i_ASN1_SET_OF_##type(&(r),&c.p,Tlen,func, \ 			free_func,b,V_ASN1_UNIVERSAL) == NULL) \ 			{ c.line=__LINE__; goto err; } \ 		if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \ 			Tlen = c.slen - (c.p - c.q); \ 			if(!ASN1_check_infinite_end(&c.p, Tlen)) \ 				{ c.error=ERR_R_MISSING_ASN1_EOS; \ 				c.line=__LINE__; goto err; } \ 		}\ 		c.slen-=(c.p-c.q); \ 		}
+value|if ((c.slen != 0)&& (M_ASN1_next == \                 (V_ASN1_CONSTRUCTED|V_ASN1_CONTEXT_SPECIFIC|tag))) \                 { \                 int Tinf,Ttag,Tclass; \                 long Tlen; \                 \                 c.q=c.p; \                 Tinf=ASN1_get_object(&c.p,&Tlen,&Ttag,&Tclass,c.slen); \                 if (Tinf& 0x80) \                         { c.error=ERR_R_BAD_ASN1_OBJECT_HEADER; \                         c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) \                                         Tlen = c.slen - (c.p - c.q) - 2; \                 if (d2i_ASN1_SET_OF_##type(&(r),&c.p,Tlen,func, \                         free_func,b,V_ASN1_UNIVERSAL) == NULL) \                         { c.line=__LINE__; goto err; } \                 if (Tinf == (V_ASN1_CONSTRUCTED+1)) { \                         Tlen = c.slen - (c.p - c.q); \                         if(!ASN1_check_infinite_end(&c.p, Tlen)) \                                 { c.error=ERR_R_MISSING_ASN1_EOS; \                                 c.line=__LINE__; goto err; } \                 }\                 c.slen-=(c.p-c.q); \                 }
 comment|/* New macros */
 define|#
 directive|define
@@ -511,7 +511,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if ((ret=(type *)OPENSSL_malloc(sizeof(type))) == NULL) \ 		{ c.line=__LINE__; goto err2; }
+value|if ((ret=(type *)OPENSSL_malloc(sizeof(type))) == NULL) \                 { c.line=__LINE__; goto err2; }
 define|#
 directive|define
 name|M_ASN1_New
@@ -529,10 +529,10 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-comment|/*	err:	ASN1_MAC_H_err((a),ERR_R_NESTED_ASN1_ERROR,c.line); \ 		return(NULL);*/
+comment|/*-     err:    ASN1_MAC_H_err((a),ERR_R_NESTED_ASN1_ERROR,c.line); \                 return(NULL);*/
 define|\
-value|err2:	ASN1_MAC_H_err((a),ERR_R_MALLOC_FAILURE,c.line); \ 		return(NULL)
-comment|/* BIG UGLY WARNING!  This is so damn ugly I wanna puke.  Unfortunately,    some macros that use ASN1_const_CTX still insist on writing in the input    stream.  ARGH!  ARGH!  ARGH!  Let's get rid of this macro package.    Please?						-- Richard Levitte */
+value|err2:   ASN1_MAC_H_err((a),ERR_R_MALLOC_FAILURE,c.line); \                 return(NULL)
+comment|/*  * BIG UGLY WARNING! This is so damn ugly I wanna puke.  Unfortunately, some  * macros that use ASN1_const_CTX still insist on writing in the input  * stream.  ARGH! ARGH! ARGH! Let's get rid of this macro package. Please? --  * Richard Levitte  */
 define|#
 directive|define
 name|M_ASN1_next
@@ -548,7 +548,7 @@ name|M_ASN1_I2D_vars
 parameter_list|(
 name|a
 parameter_list|)
-value|int r=0,ret=0; \ 				unsigned char *p; \ 				if (a == NULL) return(0)
+value|int r=0,ret=0; \                                 unsigned char *p; \                                 if (a == NULL) return(0)
 comment|/* Length Macros */
 define|#
 directive|define
@@ -589,7 +589,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,V_ASN1_SET, \ 					    V_ASN1_UNIVERSAL,IS_SET);
+value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,V_ASN1_SET, \                                             V_ASN1_UNIVERSAL,IS_SET);
 define|#
 directive|define
 name|M_ASN1_I2D_len_SEQUENCE
@@ -599,7 +599,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|ret+=i2d_ASN1_SET(a,NULL,f,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL, \ 				  IS_SEQUENCE);
+value|ret+=i2d_ASN1_SET(a,NULL,f,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL, \                                   IS_SEQUENCE);
 define|#
 directive|define
 name|M_ASN1_I2D_len_SEQUENCE_type
@@ -611,7 +611,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,V_ASN1_SEQUENCE, \ 					    V_ASN1_UNIVERSAL,IS_SEQUENCE)
+value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,V_ASN1_SEQUENCE, \                                             V_ASN1_UNIVERSAL,IS_SEQUENCE)
 define|#
 directive|define
 name|M_ASN1_I2D_len_SEQUENCE_opt
@@ -621,7 +621,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			M_ASN1_I2D_len_SEQUENCE(a,f);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         M_ASN1_I2D_len_SEQUENCE(a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_len_SEQUENCE_opt_type
@@ -633,7 +633,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			M_ASN1_I2D_len_SEQUENCE_type(type,a,f);
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         M_ASN1_I2D_len_SEQUENCE_type(type,a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SET
@@ -659,7 +659,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \ 					    V_ASN1_CONTEXT_SPECIFIC,IS_SET);
+value|ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \                                             V_ASN1_CONTEXT_SPECIFIC,IS_SET);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SET_opt
@@ -671,7 +671,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \ 					  IS_SET);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \                                           IS_SET);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SET_opt_type
@@ -685,7 +685,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \ 					       V_ASN1_CONTEXT_SPECIFIC,IS_SET);
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \                                                V_ASN1_CONTEXT_SPECIFIC,IS_SET);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SEQUENCE
@@ -697,7 +697,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \ 				  IS_SEQUENCE);
+value|ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \                                   IS_SEQUENCE);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SEQUENCE_opt
@@ -709,7 +709,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \ 					  IS_SEQUENCE);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         ret+=i2d_ASN1_SET(a,NULL,f,x,V_ASN1_CONTEXT_SPECIFIC, \                                           IS_SEQUENCE);
 define|#
 directive|define
 name|M_ASN1_I2D_len_IMP_SEQUENCE_opt_type
@@ -723,7 +723,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \ 						    V_ASN1_CONTEXT_SPECIFIC, \ 						    IS_SEQUENCE);
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         ret+=i2d_ASN1_SET_OF_##type(a,NULL,f,x, \                                                     V_ASN1_CONTEXT_SPECIFIC, \                                                     IS_SEQUENCE);
 define|#
 directive|define
 name|M_ASN1_I2D_len_EXP_opt
@@ -737,7 +737,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if (a != NULL)\ 			{ \ 			v=f(a,NULL); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
+value|if (a != NULL)\                         { \                         v=f(a,NULL); \                         ret+=ASN1_object_size(1,v,mtag); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_len_EXP_SET_opt
@@ -753,7 +753,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0))\ 			{ \ 			v=i2d_ASN1_SET(a,NULL,f,tag,V_ASN1_UNIVERSAL,IS_SET); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
+value|if ((a != NULL)&& (sk_num(a) != 0))\                         { \                         v=i2d_ASN1_SET(a,NULL,f,tag,V_ASN1_UNIVERSAL,IS_SET); \                         ret+=ASN1_object_size(1,v,mtag); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_len_EXP_SEQUENCE_opt
@@ -769,7 +769,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0))\ 			{ \ 			v=i2d_ASN1_SET(a,NULL,f,tag,V_ASN1_UNIVERSAL, \ 				       IS_SEQUENCE); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
+value|if ((a != NULL)&& (sk_num(a) != 0))\                         { \                         v=i2d_ASN1_SET(a,NULL,f,tag,V_ASN1_UNIVERSAL, \                                        IS_SEQUENCE); \                         ret+=ASN1_object_size(1,v,mtag); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_len_EXP_SEQUENCE_opt_type
@@ -787,7 +787,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0))\ 			{ \ 			v=i2d_ASN1_SET_OF_##type(a,NULL,f,tag, \ 						 V_ASN1_UNIVERSAL, \ 						 IS_SEQUENCE); \ 			ret+=ASN1_object_size(1,v,mtag); \ 			}
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0))\                         { \                         v=i2d_ASN1_SET_OF_##type(a,NULL,f,tag, \                                                  V_ASN1_UNIVERSAL, \                                                  IS_SEQUENCE); \                         ret+=ASN1_object_size(1,v,mtag); \                         }
 comment|/* Put Macros */
 define|#
 directive|define
@@ -809,7 +809,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|if (a != NULL) \ 			{ \ 			unsigned char *q=p; \ 			f(a,&p); \ 			*q=(V_ASN1_CONTEXT_SPECIFIC|t|(*q&V_ASN1_CONSTRUCTED));\ 			}
+value|if (a != NULL) \                         { \                         unsigned char *q=p; \                         f(a,&p); \                         *q=(V_ASN1_CONTEXT_SPECIFIC|t|(*q&V_ASN1_CONSTRUCTED));\                         }
 define|#
 directive|define
 name|M_ASN1_I2D_put_SET
@@ -818,7 +818,7 @@ name|a
 parameter_list|,
 name|f
 parameter_list|)
-value|i2d_ASN1_SET(a,&p,f,V_ASN1_SET,\ 			V_ASN1_UNIVERSAL,IS_SET)
+value|i2d_ASN1_SET(a,&p,f,V_ASN1_SET,\                         V_ASN1_UNIVERSAL,IS_SET)
 define|#
 directive|define
 name|M_ASN1_I2D_put_SET_type
@@ -841,7 +841,7 @@ name|f
 parameter_list|,
 name|x
 parameter_list|)
-value|i2d_ASN1_SET(a,&p,f,x,\ 			V_ASN1_CONTEXT_SPECIFIC,IS_SET)
+value|i2d_ASN1_SET(a,&p,f,x,\                         V_ASN1_CONTEXT_SPECIFIC,IS_SET)
 define|#
 directive|define
 name|M_ASN1_I2D_put_IMP_SET_type
@@ -866,7 +866,7 @@ name|f
 parameter_list|,
 name|x
 parameter_list|)
-value|i2d_ASN1_SET(a,&p,f,x,\ 			V_ASN1_CONTEXT_SPECIFIC,IS_SEQUENCE)
+value|i2d_ASN1_SET(a,&p,f,x,\                         V_ASN1_CONTEXT_SPECIFIC,IS_SEQUENCE)
 define|#
 directive|define
 name|M_ASN1_I2D_put_SEQUENCE
@@ -875,7 +875,7 @@ name|a
 parameter_list|,
 name|f
 parameter_list|)
-value|i2d_ASN1_SET(a,&p,f,V_ASN1_SEQUENCE,\ 					     V_ASN1_UNIVERSAL,IS_SEQUENCE)
+value|i2d_ASN1_SET(a,&p,f,V_ASN1_SEQUENCE,\                                              V_ASN1_UNIVERSAL,IS_SEQUENCE)
 define|#
 directive|define
 name|M_ASN1_I2D_put_SEQUENCE_type
@@ -887,7 +887,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|i2d_ASN1_SET_OF_##type(a,&p,f,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL, \ 			    IS_SEQUENCE)
+value|i2d_ASN1_SET_OF_##type(a,&p,f,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL, \                             IS_SEQUENCE)
 define|#
 directive|define
 name|M_ASN1_I2D_put_SEQUENCE_opt
@@ -897,7 +897,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			M_ASN1_I2D_put_SEQUENCE(a,f);
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         M_ASN1_I2D_put_SEQUENCE(a,f);
 define|#
 directive|define
 name|M_ASN1_I2D_put_IMP_SET_opt
@@ -909,7 +909,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			{ i2d_ASN1_SET(a,&p,f,x,V_ASN1_CONTEXT_SPECIFIC, \ 				       IS_SET); }
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         { i2d_ASN1_SET(a,&p,f,x,V_ASN1_CONTEXT_SPECIFIC, \                                        IS_SET); }
 define|#
 directive|define
 name|M_ASN1_I2D_put_IMP_SET_opt_type
@@ -923,7 +923,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			{ i2d_ASN1_SET_OF_##type(a,&p,f,x, \ 						 V_ASN1_CONTEXT_SPECIFIC, \ 						 IS_SET); }
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         { i2d_ASN1_SET_OF_##type(a,&p,f,x, \                                                  V_ASN1_CONTEXT_SPECIFIC, \                                                  IS_SET); }
 define|#
 directive|define
 name|M_ASN1_I2D_put_IMP_SEQUENCE_opt
@@ -935,7 +935,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			{ i2d_ASN1_SET(a,&p,f,x,V_ASN1_CONTEXT_SPECIFIC, \ 				       IS_SEQUENCE); }
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         { i2d_ASN1_SET(a,&p,f,x,V_ASN1_CONTEXT_SPECIFIC, \                                        IS_SEQUENCE); }
 define|#
 directive|define
 name|M_ASN1_I2D_put_IMP_SEQUENCE_opt_type
@@ -949,7 +949,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			{ i2d_ASN1_SET_OF_##type(a,&p,f,x, \ 						 V_ASN1_CONTEXT_SPECIFIC, \ 						 IS_SEQUENCE); }
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         { i2d_ASN1_SET_OF_##type(a,&p,f,x, \                                                  V_ASN1_CONTEXT_SPECIFIC, \                                                  IS_SEQUENCE); }
 define|#
 directive|define
 name|M_ASN1_I2D_put_EXP_opt
@@ -963,7 +963,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if (a != NULL) \ 			{ \ 			ASN1_put_object(&p,1,v,tag,V_ASN1_CONTEXT_SPECIFIC); \ 			f(a,&p); \ 			}
+value|if (a != NULL) \                         { \                         ASN1_put_object(&p,1,v,tag,V_ASN1_CONTEXT_SPECIFIC); \                         f(a,&p); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_put_EXP_SET_opt
@@ -979,7 +979,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			{ \ 			ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \ 			i2d_ASN1_SET(a,&p,f,tag,V_ASN1_UNIVERSAL,IS_SET); \ 			}
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         { \                         ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \                         i2d_ASN1_SET(a,&p,f,tag,V_ASN1_UNIVERSAL,IS_SET); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_put_EXP_SEQUENCE_opt
@@ -995,7 +995,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_num(a) != 0)) \ 			{ \ 			ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \ 			i2d_ASN1_SET(a,&p,f,tag,V_ASN1_UNIVERSAL,IS_SEQUENCE); \ 			}
+value|if ((a != NULL)&& (sk_num(a) != 0)) \                         { \                         ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \                         i2d_ASN1_SET(a,&p,f,tag,V_ASN1_UNIVERSAL,IS_SEQUENCE); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_put_EXP_SEQUENCE_opt_type
@@ -1013,13 +1013,13 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \ 			{ \ 			ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \ 			i2d_ASN1_SET_OF_##type(a,&p,f,tag,V_ASN1_UNIVERSAL, \ 					       IS_SEQUENCE); \ 			}
+value|if ((a != NULL)&& (sk_##type##_num(a) != 0)) \                         { \                         ASN1_put_object(&p,1,v,mtag,V_ASN1_CONTEXT_SPECIFIC); \                         i2d_ASN1_SET_OF_##type(a,&p,f,tag,V_ASN1_UNIVERSAL, \                                                IS_SEQUENCE); \                         }
 define|#
 directive|define
 name|M_ASN1_I2D_seq_total
 parameter_list|()
 define|\
-value|r=ASN1_object_size(1,ret,V_ASN1_SEQUENCE); \ 		if (pp == NULL) return(r); \ 		p= *pp; \ 		ASN1_put_object(&p,1,ret,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL)
+value|r=ASN1_object_size(1,ret,V_ASN1_SEQUENCE); \                 if (pp == NULL) return(r); \                 p= *pp; \                 ASN1_put_object(&p,1,ret,V_ASN1_SEQUENCE,V_ASN1_UNIVERSAL)
 define|#
 directive|define
 name|M_ASN1_I2D_INF_seq_start
@@ -1029,7 +1029,7 @@ parameter_list|,
 name|ctx
 parameter_list|)
 define|\
-value|*(p++)=(V_ASN1_CONSTRUCTED|(tag)|(ctx)); \ 		*(p++)=0x80
+value|*(p++)=(V_ASN1_CONSTRUCTED|(tag)|(ctx)); \                 *(p++)=0x80
 define|#
 directive|define
 name|M_ASN1_I2D_INF_seq_end
@@ -1039,7 +1039,7 @@ define|#
 directive|define
 name|M_ASN1_I2D_finish
 parameter_list|()
-value|*pp=p; \ 				return(r);
+value|*pp=p; \                                 return(r);
 name|int
 name|asn1_GetSequence
 parameter_list|(

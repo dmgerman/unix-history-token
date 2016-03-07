@@ -4,7 +4,7 @@ comment|/* ssl/ssl_sess.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -136,7 +136,7 @@ name|SSL_SESSION
 modifier|*
 name|sess
 decl_stmt|;
-comment|/* Need to lock this all up rather than just use CRYPTO_add so that 	 * somebody doesn't free ssl->session between when we check it's 	 * non-null and when we up the reference count. */
+comment|/*      * Need to lock this all up rather than just use CRYPTO_add so that      * somebody doesn't free ssl->session between when we check it's non-null      * and when we up the reference count.      */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_SSL_SESSION
@@ -493,14 +493,14 @@ name|tlsext_hostname
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 name|dest
 operator|->
 name|tlsext_tick
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 operator|&
@@ -671,8 +671,6 @@ name|err
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ticket
@@ -722,6 +720,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|dest
 return|;
@@ -783,7 +783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Even with SSLv2, we have 16 bytes (128 bits) of session ID space. SSLv3/TLSv1  * has 32 bytes (256 bits). As such, filling the ID with random gunk repeatedly  * until we have no conflict is going to complete in one iteration pretty much  * "most" of the time (btw: understatement). So, if it takes us 10 iterations  * and we still can't avoid a conflict - well that's a reasonable point to call  * it quits. Either the RAND code is broken or someone is trying to open roughly  * very close to 2^128 (or 2^256) SSL sessions to our server. How you might  * store that many sessions is perhaps a more interesting question ... */
+comment|/*  * Even with SSLv2, we have 16 bytes (128 bits) of session ID space.  * SSLv3/TLSv1 has 32 bytes (256 bits). As such, filling the ID with random  * gunk repeatedly until we have no conflict is going to complete in one  * iteration pretty much "most" of the time (btw: understatement). So, if it  * takes us 10 iterations and we still can't avoid a conflict - well that's a  * reasonable point to call it quits. Either the RAND code is broken or  * someone is trying to open roughly very close to 2^128 (or 2^256) SSL  * sessions to our server. How you might store that many sessions is perhaps  * a more interesting question ...  */
 end_comment
 
 begin_define
@@ -866,7 +866,7 @@ return|return
 literal|1
 return|;
 comment|/* else - woops a session_id match */
-comment|/* XXX We should also check the external cache -- 	 * but the probability of a collision is negligible, and 	 * we could not prevent the concurrent creation of sessions 	 * with identical IDs since we currently don't have means 	 * to atomically check whether a session ID already exists 	 * and make a reservation for it if it does not 	 * (this problem applies to the internal cache as well). 	 */
+comment|/*      * XXX We should also check the external cache -- but the probability of      * a collision is negligible, and we could not prevent the concurrent      * creation of sessions with identical IDs since we currently don't have      * means to atomically check whether a session ID already exists and make      * a reservation for it if it does not (this problem applies to the      * internal cache as well).      */
 return|return
 literal|0
 return|;
@@ -1215,7 +1215,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Don't allow the callback to set the session length to zero. 		 * nor set it higher than it was. */
+comment|/*          * Don't allow the callback to set the session length to zero. nor          * set it higher than it was.          */
 if|if
 condition|(
 operator|!
@@ -1519,6 +1519,23 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|session_id
+operator|+
+name|len
+operator|>
+name|limit
+condition|)
+block|{
+name|fatal
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT
@@ -1768,7 +1785,7 @@ operator|.
 name|sess_cb_hit
 operator|++
 expr_stmt|;
-comment|/* Increment reference count now if the session callback 			 * asks us to do so (note that if the session structures 			 * returned by the callback are shared between threads, 			 * it must handle the reference count itself [i.e. copy == 0], 			 * or things won't be thread-safe). */
+comment|/*              * Increment reference count now if the session callback asks us              * to do so (note that if the session structures returned by the              * callback are shared between threads, it must handle the              * reference count itself [i.e. copy == 0], or things won't be              * thread-safe).              */
 if|if
 condition|(
 name|copy
@@ -1785,7 +1802,7 @@ argument_list|,
 name|CRYPTO_LOCK_SSL_SESSION
 argument_list|)
 expr_stmt|;
-comment|/* Add the externally cached session to the internal 			 * cache as well if and only if we are supposed to. */
+comment|/*              * Add the externally cached session to the internal cache as              * well if and only if we are supposed to.              */
 if|if
 condition|(
 operator|!
@@ -1799,7 +1816,7 @@ operator|&
 name|SSL_SESS_CACHE_NO_INTERNAL_STORE
 operator|)
 condition|)
-comment|/* The following should not return 1, otherwise, 				 * things are very strange */
+comment|/*                  * The following should not return 1, otherwise, things are                  * very strange                  */
 name|SSL_CTX_add_session
 argument_list|(
 name|s
@@ -1847,12 +1864,12 @@ name|sid_ctx_length
 argument_list|)
 condition|)
 block|{
-comment|/* We've found the session named by the client, but we don't 		 * want to use it in this context. */
+comment|/*          * We've found the session named by the client, but we don't want to          * use it in this context.          */
 if|#
 directive|if
 literal|0
-comment|/* The client cannot always know when a session is not appropriate,        * so we shouldn't generate an error message. */
-block|SSLerr(SSL_F_SSL_GET_PREV_SESSION,SSL_R_ATTEMPT_TO_REUSE_SESSION_IN_DIFFERENT_CONTEXT);
+comment|/* The client cannot always know when a                                  * session is not appropriate, so we                                  * shouldn't generate an error message. */
+block|SSLerr(SSL_F_SSL_GET_PREV_SESSION,                SSL_R_ATTEMPT_TO_REUSE_SESSION_IN_DIFFERENT_CONTEXT);
 endif|#
 directive|endif
 goto|goto
@@ -1877,7 +1894,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We can't be sure if this session is being used out of 		 * context, which is especially important for SSL_VERIFY_PEER. 		 * The application should have used SSL[_CTX]_set_session_id_context. 		 * 		 * For this error case, we generate an error instead of treating 		 * the event like a cache miss (otherwise it would be easy for 		 * applications to effectively disable the session cache by 		 * accident without anyone noticing). 		 */
+comment|/*          * We can't be sure if this session is being used out of context,          * which is especially important for SSL_VERIFY_PEER. The application          * should have used SSL[_CTX]_set_session_id_context. For this error          * case, we generate an error instead of treating the event like a          * cache miss (otherwise it would be easy for applications to          * effectively disable the session cache by accident without anyone          * noticing).          */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL_GET_PREV_SESSION
@@ -1996,8 +2013,8 @@ if|#
 directive|if
 literal|0
 comment|/* This is way too late. */
-comment|/* If a thread got the session, then 'swaped', and another got 	 * it and then due to a time-out decided to 'OPENSSL_free' it we could 	 * be in trouble.  So I'll increment it now, then double decrement 	 * later - am I speaking rubbish?. */
-block|CRYPTO_add(&ret->references,1,CRYPTO_LOCK_SSL_SESSION);
+comment|/*      * If a thread got the session, then 'swaped', and another got it and      * then due to a time-out decided to 'OPENSSL_free' it we could be in      * trouble.  So I'll increment it now, then double decrement later - am I      * speaking rubbish?.      */
+block|CRYPTO_add(&ret->references, 1, CRYPTO_LOCK_SSL_SESSION);
 endif|#
 directive|endif
 if|if
@@ -2020,8 +2037,8 @@ operator|->
 name|time
 argument_list|)
 condition|)
-comment|/* timeout */
 block|{
+comment|/* timeout */
 name|s
 operator|->
 name|ctx
@@ -2054,9 +2071,9 @@ operator|.
 name|sess_hit
 operator|++
 expr_stmt|;
-comment|/* ret->time=time(NULL); */
-comment|/* rezero timeout? */
-comment|/* again, just leave the session  	 * if it is the same session, we have just incremented and 	 * then decremented the reference count :-) */
+comment|/*- ret->time=time(NULL); */
+comment|/*      * rezero timeout?      */
+comment|/*      * again, just leave the session if it is the same session, we have just      * incremented and then decremented the reference count :-)      */
 if|if
 condition|(
 name|s
@@ -2143,7 +2160,7 @@ name|SSL_SESSION
 modifier|*
 name|s
 decl_stmt|;
-comment|/* add just 1 reference count for the SSL_CTX's session cache 	 * even though it has two ways of access: each session is in a 	 * doubly linked list and an lhash */
+comment|/*      * add just 1 reference count for the SSL_CTX's session cache even though      * it has two ways of access: each session is in a doubly linked list and      * an lhash      */
 name|CRYPTO_add
 argument_list|(
 operator|&
@@ -2156,7 +2173,7 @@ argument_list|,
 name|CRYPTO_LOCK_SSL_SESSION
 argument_list|)
 expr_stmt|;
-comment|/* if session c is in already in cache, we take back the increment later */
+comment|/*      * if session c is in already in cache, we take back the increment later      */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_SSL_CTX
@@ -2177,7 +2194,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* s != NULL iff we already had a session with the given PID. 	 * In this case, s == c should hold (then we did not really modify 	 * ctx->sessions), or we're in trouble. */
+comment|/*      * s != NULL iff we already had a session with the given PID. In this      * case, s == c should hold (then we did not really modify      * ctx->sessions), or we're in trouble.      */
 if|if
 condition|(
 name|s
@@ -2202,7 +2219,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* ... so pretend the other session did not exist in cache 		 * (we cannot handle two SSL_SESSION structures with identical 		 * session ID in the same cache, which could happen e.g. when 		 * two threads concurrently obtain the same session from an external 		 * cache) */
+comment|/*          * ... so pretend the other session did not exist in cache (we cannot          * handle two SSL_SESSION structures with identical session ID in the          * same cache, which could happen e.g. when two threads concurrently          * obtain the same session from an external cache)          */
 name|s
 operator|=
 name|NULL
@@ -2229,7 +2246,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* existing cache entry -- decrement previously incremented reference 		 * count because it already takes into account the cache */
+comment|/*          * existing cache entry -- decrement previously incremented reference          * count because it already takes into account the cache          */
 name|SSL_SESSION_free
 argument_list|(
 name|s
@@ -2243,7 +2260,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* new cache entry -- remove old ones if cache has become too large */
+comment|/*          * new cache entry -- remove old ones if cache has become too large          */
 name|ret
 operator|=
 literal|1
@@ -2932,7 +2949,7 @@ block|}
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_KRB5 */
-comment|/* CRYPTO_w_lock(CRYPTO_LOCK_SSL);*/
+comment|/* CRYPTO_w_lock(CRYPTO_LOCK_SSL); */
 name|CRYPTO_add
 argument_list|(
 operator|&
@@ -2976,7 +2993,7 @@ name|session
 operator|->
 name|verify_result
 expr_stmt|;
-comment|/* CRYPTO_w_unlock(CRYPTO_LOCK_SSL);*/
+comment|/* CRYPTO_w_unlock(CRYPTO_LOCK_SSL); */
 name|ret
 operator|=
 literal|1
@@ -3327,9 +3344,9 @@ name|timeout
 operator|)
 operator|)
 condition|)
-comment|/* timeout */
 block|{
-comment|/* The reason we don't call SSL_CTX_remove_session() is to 		 * save on locking overhead */
+comment|/* timeout */
+comment|/*          * The reason we don't call SSL_CTX_remove_session() is to save on          * locking overhead          */
 name|lh_delete
 argument_list|(
 name|p

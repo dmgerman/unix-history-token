@@ -8,7 +8,7 @@ comment|/* demos/bio/saccept.c */
 end_comment
 
 begin_comment
-comment|/* A minimal program to server an SSL connection.  * It uses blocking.  * saccept host:port  * host is the interface IP to use.  If any interface, use *:port  * The default it *:4433  *  * cc -I../../include saccept.c -L../.. -lssl -lcrypto  */
+comment|/*-  * A minimal program to server an SSL connection.  * It uses blocking.  * saccept host:port  * host is the interface IP to use.  If any interface, use *:port  * The default it *:4433  *  * cc -I../../include saccept.c -L../.. -lssl -lcrypto  */
 end_comment
 
 begin_include
@@ -246,7 +246,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* This means that when a new connection is acceptede on 'in', 	 * The ssl_bio will be 'dupilcated' and have the new socket 	 * BIO push into it.  Basically it means the SSL BIO will be 	 * automatically setup */
+comment|/*      * This means that when a new connection is acceptede on 'in', The      * ssl_bio will be 'dupilcated' and have the new socket BIO push into it.      * Basically it means the SSL BIO will be automatically setup      */
 name|BIO_set_accept_bios
 argument_list|(
 name|in
@@ -256,7 +256,7 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
-comment|/* The first call will setup the accept socket, and the second 	 * will get a socket.  In this loop, the first actual accept 	 * will occur in the BIO_read() function. */
+comment|/*      * The first call will setup the accept socket, and the second will get a      * socket.  In this loop, the first actual accept will occur in the      * BIO_read() function.      */
 if|if
 condition|(
 name|BIO_do_accept
@@ -293,7 +293,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If we have finished, remove the underlying 			 * BIO stack so the next time we call any function 			 * for this BIO, it will attempt to do an 			 * accept */
+comment|/*              * If we have finished, remove the underlying BIO stack so the              * next time we call any function for this BIO, it will attempt              * to do an accept              */
 name|printf
 argument_list|(
 literal|"Done\n"

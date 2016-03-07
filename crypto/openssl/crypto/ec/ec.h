@@ -8,11 +8,11 @@ comment|/*  * Originally written by Bodo Moeller for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_ifndef
@@ -149,7 +149,7 @@ typedef|;
 typedef|typedef
 name|struct
 name|ec_group_st
-comment|/* 	 EC_METHOD *meth; 	 -- field definition 	 -- curve coefficients 	 -- optional generator with associated information (order, cofactor) 	 -- optional extra data (precomputed table for fast computation of multiples of generator) 	 -- ASN1 stuff 	*/
+comment|/*-      EC_METHOD *meth;      -- field definition      -- curve coefficients      -- optional generator with associated information (order, cofactor)      -- optional extra data (precomputed table for fast computation of multiples of generator)      -- ASN1 stuff     */
 name|EC_GROUP
 typedef|;
 typedef|typedef
@@ -157,7 +157,7 @@ name|struct
 name|ec_point_st
 name|EC_POINT
 typedef|;
-comment|/* EC_METHODs for curves over GF(p).  * EC_GFp_simple_method provides the basis for the optimized methods.  */
+comment|/*  * EC_METHODs for curves over GF(p). EC_GFp_simple_method provides the basis  * for the optimized methods.  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -182,7 +182,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* EC_METHOD for curves over GF(2^m).  */
+comment|/*  * EC_METHOD for curves over GF(2^m).  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -519,7 +519,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_check_discriminant() returns 1 if the discriminant of the  * elliptic curve is not zero, 0 otherwise */
+comment|/*  * EC_GROUP_check_discriminant() returns 1 if the discriminant of the  * elliptic curve is not zero, 0 otherwise  */
 name|int
 name|EC_GROUP_check_discriminant
 parameter_list|(
@@ -547,7 +547,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*()  * after choosing an appropriate EC_METHOD */
+comment|/*  * EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*() after  * choosing an appropriate EC_METHOD  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new_curve_GFp
@@ -594,7 +594,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_new_by_curve_name() creates a EC_GROUP structure  * specified by a curve name (in form of a NID) */
+comment|/*  * EC_GROUP_new_by_curve_name() creates a EC_GROUP structure specified by a  * curve name (in form of a NID)  */
 name|EC_GROUP
 modifier|*
 name|EC_GROUP_new_by_curve_name
@@ -618,7 +618,7 @@ decl_stmt|;
 block|}
 name|EC_builtin_curve
 typedef|;
-comment|/* EC_builtin_curves(EC_builtin_curve *r, size_t size) returns number   * of all available curves or zero if a error occurred.   * In case r ist not zero nitems EC_builtin_curve structures   * are filled with the data of the first nitems internal groups */
+comment|/*  * EC_builtin_curves(EC_builtin_curve *r, size_t size) returns number of all  * available curves or zero if a error occurred. In case r ist not zero  * nitems EC_builtin_curve structures are filled with the data of the first  * nitems internal groups  */
 name|size_t
 name|EC_get_builtin_curves
 parameter_list|(
@@ -1220,7 +1220,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_precompute_mult() stores multiples of generator for faster point multiplication */
+comment|/*  * EC_GROUP_precompute_mult() stores multiples of generator for faster point  * multiplication  */
 name|int
 name|EC_GROUP_precompute_mult
 parameter_list|(
@@ -1231,7 +1231,7 @@ name|BN_CTX
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_have_precompute_mult() reports whether such precomputation has been done */
+comment|/*  * EC_GROUP_have_precompute_mult() reports whether such precomputation has  * been done  */
 name|int
 name|EC_GROUP_have_precompute_mult
 parameter_list|(
@@ -1241,7 +1241,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* ASN1 stuff */
-comment|/* EC_GROUP_get_basis_type() returns the NID of the basis type  * used to represent the field elements */
+comment|/*  * EC_GROUP_get_basis_type() returns the NID of the basis type used to  * represent the field elements  */
 name|int
 name|EC_GROUP_get_basis_type
 parameter_list|(
@@ -1363,7 +1363,7 @@ name|fp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_i2d_fp(i2d_ECPKParameters,(fp), \ 		(unsigned char *)(x))
+value|ASN1_i2d_fp(i2d_ECPKParameters,(fp), \                 (unsigned char *)(x))
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_BIO
@@ -1762,7 +1762,7 @@ modifier|*
 name|out
 parameter_list|)
 function_decl|;
-comment|/* de- and encoding functions for EC public key  * (octet string, not DER -- hence 'o2i' and 'i2o') */
+comment|/*  * de- and encoding functions for EC public key (octet string, not DER --  * hence 'o2i' and 'i2o')  */
 name|EC_KEY
 modifier|*
 name|o2i_ECPublicKey
@@ -1903,7 +1903,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_EC_strings
 parameter_list|(

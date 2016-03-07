@@ -4,7 +4,7 @@ comment|/* crypto/bn/bn_div.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -42,17 +42,17 @@ literal|0
 end_if
 
 begin_comment
-unit|int BN_div(BIGNUM *dv, BIGNUM *rem, const BIGNUM *m, const BIGNUM *d, 	   BN_CTX *ctx) 	{ 	int i,nm,nd; 	int ret = 0; 	BIGNUM *D;  	bn_check_top(m); 	bn_check_top(d); 	if (BN_is_zero(d)) 		{ 		BNerr(BN_F_BN_DIV,BN_R_DIV_BY_ZERO); 		return(0); 		}  	if (BN_ucmp(m,d)< 0) 		{ 		if (rem != NULL) 			{ if (BN_copy(rem,m) == NULL) return(0); } 		if (dv != NULL) BN_zero(dv); 		return(1); 		}  	BN_CTX_start(ctx); 	D = BN_CTX_get(ctx); 	if (dv == NULL) dv = BN_CTX_get(ctx); 	if (rem == NULL) rem = BN_CTX_get(ctx); 	if (D == NULL || dv == NULL || rem == NULL) 		goto end;  	nd=BN_num_bits(d); 	nm=BN_num_bits(m); 	if (BN_copy(D,d) == NULL) goto end; 	if (BN_copy(rem,m) == NULL) goto end;
-comment|/* The next 2 are needed so we can do a dv->d[0]|=1 later 	 * since BN_lshift1 will only work once there is a value :-) */
+unit|int BN_div(BIGNUM *dv, BIGNUM *rem, const BIGNUM *m, const BIGNUM *d,            BN_CTX *ctx) {     int i, nm, nd;     int ret = 0;     BIGNUM *D;      bn_check_top(m);     bn_check_top(d);     if (BN_is_zero(d)) {         BNerr(BN_F_BN_DIV, BN_R_DIV_BY_ZERO);         return (0);     }      if (BN_ucmp(m, d)< 0) {         if (rem != NULL) {             if (BN_copy(rem, m) == NULL)                 return (0);         }         if (dv != NULL)             BN_zero(dv);         return (1);     }      BN_CTX_start(ctx);     D = BN_CTX_get(ctx);     if (dv == NULL)         dv = BN_CTX_get(ctx);     if (rem == NULL)         rem = BN_CTX_get(ctx);     if (D == NULL || dv == NULL || rem == NULL)         goto end;      nd = BN_num_bits(d);     nm = BN_num_bits(m);     if (BN_copy(D, d) == NULL)         goto end;     if (BN_copy(rem, m) == NULL)         goto end;
+comment|/*      * The next 2 are needed so we can do a dv->d[0]|=1 later since      * BN_lshift1 will only work once there is a value :-)      */
 end_comment
 
 begin_comment
-unit|BN_zero(dv); 	if(bn_wexpand(dv,1) == NULL) goto end; 	dv->top=1;  	if (!BN_lshift(D,D,nm-nd)) goto end; 	for (i=nm-nd; i>=0; i--) 		{ 		if (!BN_lshift1(dv,dv)) goto end; 		if (BN_ucmp(rem,D)>= 0) 			{ 			dv->d[0]|=1; 			if (!BN_usub(rem,rem,D)) goto end; 			}
+unit|BN_zero(dv);     if (bn_wexpand(dv, 1) == NULL)         goto end;     dv->top = 1;      if (!BN_lshift(D, D, nm - nd))         goto end;     for (i = nm - nd; i>= 0; i--) {         if (!BN_lshift1(dv, dv))             goto end;         if (BN_ucmp(rem, D)>= 0) {             dv->d[0] |= 1;             if (!BN_usub(rem, rem, D))                 goto end;         }
 comment|/* CAN IMPROVE (and have now :=) */
 end_comment
 
 begin_else
-unit|if (!BN_rshift1(D,D)) goto end; 		} 	rem->neg=BN_is_zero(rem)?0:m->neg; 	dv->neg=m->neg^d->neg; 	ret = 1;  end: 	BN_CTX_end(ctx); 	return(ret); 	}
+unit|if (!BN_rshift1(D, D))             goto end;     }     rem->neg = BN_is_zero(rem) ? 0 : m->neg;     dv->neg = m->neg ^ d->neg;     ret = 1;  end:     BN_CTX_end(ctx);     return (ret); }
 else|#
 directive|else
 end_else
@@ -114,7 +114,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*     * There were two reasons for implementing this template:     * - GNU C generates a call to a function (__udivdi3 to be exact)     *   in reply to ((((BN_ULLONG)n0)<<BN_BITS2)|n1)/d0 (I fail to     *   understand why...);     * - divl doesn't only calculate quotient, but also leaves     *   remainder in %edx which we can definitely use here:-)     *     *<appro@fy.chalmers.se>     */
+comment|/*-     * There were two reasons for implementing this template:     * - GNU C generates a call to a function (__udivdi3 to be exact)     *   in reply to ((((BN_ULLONG)n0)<<BN_BITS2)|n1)/d0 (I fail to     *   understand why...);     * - divl doesn't only calculate quotient, but also leaves     *   remainder in %edx which we can definitely use here:-)     *     *<appro@fy.chalmers.se>     */
 end_comment
 
 begin_define
@@ -129,7 +129,7 @@ parameter_list|,
 name|d0
 parameter_list|)
 define|\
-value|({  asm volatile (			\ 		"divl	%4"			\ 		: "=a"(q), "=d"(rem)		\ 		: "a"(n1), "d"(n0), "g"(d0)	\ 		: "cc");			\ 	    q;					\ 	})
+value|({  asm volatile (                      \                 "divl   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "g"(d0)     \                 : "cc");                        \             q;                                  \         })
 end_define
 
 begin_define
@@ -168,7 +168,7 @@ parameter_list|,
 name|d0
 parameter_list|)
 define|\
-value|({  asm volatile (			\ 		"divq	%4"			\ 		: "=a"(q), "=d"(rem)		\ 		: "a"(n1), "d"(n0), "g"(d0)	\ 		: "cc");			\ 	    q;					\ 	})
+value|({  asm volatile (                      \                 "divq   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "g"(d0)     \                 : "cc");                        \             q;                                  \         })
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ comment|/* OPENSSL_NO_ASM */
 end_comment
 
 begin_comment
-comment|/* BN_div[_no_branch] computes  dv := num / divisor,  rounding towards  * zero, and sets up rm  such that  dv*divisor + rm = num  holds.  * Thus:  *     dv->neg == num->neg ^ divisor->neg  (unless the result is zero)  *     rm->neg == num->neg                 (unless the remainder is zero)  * If 'dv' or 'rm' is NULL, the respective value is not returned.  */
+comment|/*-  * BN_div[_no_branch] computes  dv := num / divisor,  rounding towards  * zero, and sets up rm  such that  dv*divisor + rm = num  holds.  * Thus:  *     dv->neg == num->neg ^ divisor->neg  (unless the result is zero)  *     rm->neg == num->neg                 (unless the remainder is zero)  * If 'dv' or 'rm' is NULL, the respective value is not returned.  */
 end_comment
 
 begin_function_decl
@@ -304,7 +304,7 @@ name|num_n
 decl_stmt|,
 name|div_n
 decl_stmt|;
-comment|/* Invalid zero-padding would have particularly bad consequences 	 * in the case of 'num', so don't just rely on bn_check_top() for this one 	 * (bn_check_top() works only for BN_DEBUG builds) */
+comment|/*      * Invalid zero-padding would have particularly bad consequences in the      * case of 'num', so don't just rely on bn_check_top() for this one      * (bn_check_top() works only for BN_DEBUG builds)      */
 if|if
 condition|(
 name|num
@@ -393,8 +393,8 @@ argument_list|(
 name|rm
 argument_list|)
 expr_stmt|;
-comment|/* bn_check_top(num); */
-comment|/* 'num' has been checked already */
+comment|/*- bn_check_top(num); */
+comment|/*      * 'num' has been checked already      */
 name|bn_check_top
 argument_list|(
 name|divisor
@@ -623,7 +623,7 @@ name|num_n
 operator|-
 name|div_n
 expr_stmt|;
-comment|/* Lets setup a 'window' into snum 	 * This is the part that corresponds to the current 	 * 'area' being divided */
+comment|/*      * Lets setup a 'window' into snum This is the part that corresponds to      * the current 'area' being divided      */
 name|wnum
 operator|.
 name|neg
@@ -650,7 +650,7 @@ name|top
 operator|=
 name|div_n
 expr_stmt|;
-comment|/* only needed when BN_ucmp messes up the values between top and max */
+comment|/*      * only needed when BN_ucmp messes up the values between top and max      */
 name|wnum
 operator|.
 name|dmax
@@ -792,7 +792,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* If BN_DEBUG_RAND is defined BN_ucmp changes (via 		 * bn_pollute) the const bignum arguments => 		 * clean the values between top and max again */
+comment|/*          * If BN_DEBUG_RAND is defined BN_ucmp changes (via bn_pollute) the          * const bignum arguments => clean the values between top and max          * again          */
 name|bn_clear_top2max
 argument_list|(
 operator|&
@@ -828,7 +828,7 @@ operator|->
 name|top
 operator|--
 expr_stmt|;
-comment|/* if res->top == 0 then clear the neg value otherwise decrease 	 * the resp pointer */
+comment|/*      * if res->top == 0 then clear the neg value otherwise decrease the resp      * pointer      */
 if|if
 condition|(
 name|res
@@ -874,7 +874,7 @@ name|q
 decl_stmt|,
 name|l0
 decl_stmt|;
-comment|/* the first part of the loop uses the top two words of 		 * snum and sdiv to calculate a BN_ULONG q such that 		 * | wnum - sdiv * q |< sdiv */
+comment|/*          * the first part of the loop uses the top two words of snum and sdiv          * to calculate a BN_ULONG q such that | wnum - sdiv * q |< sdiv          */
 if|#
 directive|if
 name|defined
@@ -946,8 +946,8 @@ operator|=
 name|BN_MASK2
 expr_stmt|;
 else|else
-comment|/* n0< d0 */
 block|{
+comment|/* n0< d0 */
 ifdef|#
 directive|ifdef
 name|BN_LLONG
@@ -1033,7 +1033,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|REMAINDER_IS_ALREADY_CALCULATED
-comment|/* 			 * rem doesn't have to be BN_ULLONG. The least we 			 * know it's less that d0, isn't it? 			 */
+comment|/*              * rem doesn't have to be BN_ULLONG. The least we              * know it's less that d0, isn't it?              */
 name|rem
 operator|=
 operator|(
@@ -1365,7 +1365,7 @@ operator|.
 name|d
 operator|--
 expr_stmt|;
-comment|/* ingore top values of the bignums just sub the two  		 * BN_ULONG arrays with bn_sub_words */
+comment|/*          * ingore top values of the bignums just sub the two BN_ULONG arrays          * with bn_sub_words          */
 if|if
 condition|(
 name|bn_sub_words
@@ -1388,7 +1388,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* Note: As we have considered only the leading 			 * two BN_ULONGs in the calculation of q, sdiv * q 			 * might be greater than wnum (but then (q-1) * sdiv 			 * is less or equal than wnum) 			 */
+comment|/*              * Note: As we have considered only the leading two BN_ULONGs in              * the calculation of q, sdiv * q might be greater than wnum (but              * then (q-1) * sdiv is less or equal than wnum)              */
 name|q
 operator|--
 expr_stmt|;
@@ -1411,7 +1411,7 @@ argument_list|,
 name|div_n
 argument_list|)
 condition|)
-comment|/* we can't have an overflow here (assuming 				 * that q != 0, but if q == 0 then tmp is 				 * zero anyway) */
+comment|/*                  * we can't have an overflow here (assuming that q != 0, but                  * if q == 0 then tmp is zero anyway)                  */
 operator|(
 operator|*
 name|wnump
@@ -1438,7 +1438,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Keep a copy of the neg flag in num because if rm==num 		 * BN_rshift() will overwrite it. 		 */
+comment|/*          * Keep a copy of the neg flag in num because if rm==num BN_rshift()          * will overwrite it.          */
 name|int
 name|neg
 init|=
@@ -1506,7 +1506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* BN_div_no_branch is a special version of BN_div. It does not contain  * branches that may leak sensitive information.  */
+comment|/*  * BN_div_no_branch is a special version of BN_div. It does not contain  * branches that may leak sensitive information.  */
 end_comment
 
 begin_function
@@ -1586,8 +1586,8 @@ argument_list|(
 name|rm
 argument_list|)
 expr_stmt|;
-comment|/* bn_check_top(num); */
-comment|/* 'num' has been checked in BN_div() */
+comment|/*- bn_check_top(num); */
+comment|/*      * 'num' has been checked in BN_div()      */
 name|bn_check_top
 argument_list|(
 name|divisor
@@ -1737,7 +1737,7 @@ name|neg
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Since we don't know whether snum is larger than sdiv, 	 * we pad snum with enough zeroes without changing its 	 * value.  	 */
+comment|/*      * Since we don't know whether snum is larger than sdiv, we pad snum with      * enough zeroes without changing its value.      */
 if|if
 condition|(
 name|snum
@@ -1863,7 +1863,7 @@ name|num_n
 operator|-
 name|div_n
 expr_stmt|;
-comment|/* Lets setup a 'window' into snum 	 * This is the part that corresponds to the current 	 * 'area' being divided */
+comment|/*      * Lets setup a 'window' into snum This is the part that corresponds to      * the current 'area' being divided      */
 name|wnum
 operator|.
 name|neg
@@ -1890,7 +1890,7 @@ name|top
 operator|=
 name|div_n
 expr_stmt|;
-comment|/* only needed when BN_ucmp messes up the values between top and max */
+comment|/*      * only needed when BN_ucmp messes up the values between top and max      */
 name|wnum
 operator|.
 name|dmax
@@ -2021,7 +2021,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* if res->top == 0 then clear the neg value otherwise decrease 	 * the resp pointer */
+comment|/*      * if res->top == 0 then clear the neg value otherwise decrease the resp      * pointer      */
 if|if
 condition|(
 name|res
@@ -2067,7 +2067,7 @@ name|q
 decl_stmt|,
 name|l0
 decl_stmt|;
-comment|/* the first part of the loop uses the top two words of 		 * snum and sdiv to calculate a BN_ULONG q such that 		 * | wnum - sdiv * q |< sdiv */
+comment|/*          * the first part of the loop uses the top two words of snum and sdiv          * to calculate a BN_ULONG q such that | wnum - sdiv * q |< sdiv          */
 if|#
 directive|if
 name|defined
@@ -2139,8 +2139,8 @@ operator|=
 name|BN_MASK2
 expr_stmt|;
 else|else
-comment|/* n0< d0 */
 block|{
+comment|/* n0< d0 */
 ifdef|#
 directive|ifdef
 name|BN_LLONG
@@ -2226,7 +2226,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|REMAINDER_IS_ALREADY_CALCULATED
-comment|/* 			 * rem doesn't have to be BN_ULLONG. The least we 			 * know it's less that d0, isn't it? 			 */
+comment|/*              * rem doesn't have to be BN_ULLONG. The least we              * know it's less that d0, isn't it?              */
 name|rem
 operator|=
 operator|(
@@ -2558,7 +2558,7 @@ operator|.
 name|d
 operator|--
 expr_stmt|;
-comment|/* ingore top values of the bignums just sub the two  		 * BN_ULONG arrays with bn_sub_words */
+comment|/*          * ingore top values of the bignums just sub the two BN_ULONG arrays          * with bn_sub_words          */
 if|if
 condition|(
 name|bn_sub_words
@@ -2581,7 +2581,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* Note: As we have considered only the leading 			 * two BN_ULONGs in the calculation of q, sdiv * q 			 * might be greater than wnum (but then (q-1) * sdiv 			 * is less or equal than wnum) 			 */
+comment|/*              * Note: As we have considered only the leading two BN_ULONGs in              * the calculation of q, sdiv * q might be greater than wnum (but              * then (q-1) * sdiv is less or equal than wnum)              */
 name|q
 operator|--
 expr_stmt|;
@@ -2604,7 +2604,7 @@ argument_list|,
 name|div_n
 argument_list|)
 condition|)
-comment|/* we can't have an overflow here (assuming 				 * that q != 0, but if q == 0 then tmp is 				 * zero anyway) */
+comment|/*                  * we can't have an overflow here (assuming that q != 0, but                  * if q == 0 then tmp is zero anyway)                  */
 operator|(
 operator|*
 name|wnump
@@ -2631,7 +2631,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Keep a copy of the neg flag in num because if rm==num 		 * BN_rshift() will overwrite it. 		 */
+comment|/*          * Keep a copy of the neg flag in num because if rm==num BN_rshift()          * will overwrite it.          */
 name|int
 name|neg
 init|=

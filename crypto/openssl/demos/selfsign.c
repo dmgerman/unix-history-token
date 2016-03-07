@@ -557,7 +557,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* This function creates and adds the entry, working out the 	 * correct string type and performing checks on its length. 	 * Normally we'd check the return value for errors... 	 */
+comment|/*      * This function creates and adds the entry, working out the correct      * string type and performing checks on its length. Normally we'd check      * the return value for errors...      */
 name|X509_NAME_add_entry_by_txt
 argument_list|(
 name|name
@@ -603,7 +603,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Add extension using V3 code: we can set the config file as NULL 	 * because we wont reference any other sections. We can also set          * the context to NULL because none of these extensions below will need 	 * to access it. 	 */
+comment|/*      * Add extension using V3 code: we can set the config file as NULL      * because we wont reference any other sections. We can also set the      * context to NULL because none of these extensions below will need to      * access it.      */
 name|ex
 operator|=
 name|X509V3_EXT_conf_nid
@@ -692,7 +692,7 @@ if|#
 directive|if
 literal|0
 comment|/* might want something like this too.... */
-block|ex = X509V3_EXT_conf_nid(NULL, NULL, NID_basic_constraints, 							"critical,CA:TRUE");   	X509_add_ext(x,ex,-1); 	X509_EXTENSION_free(ex);
+block|ex = X509V3_EXT_conf_nid(NULL, NULL, NID_basic_constraints,                              "critical,CA:TRUE");      X509_add_ext(x, ex, -1);     X509_EXTENSION_free(ex);
 endif|#
 directive|endif
 ifdef|#

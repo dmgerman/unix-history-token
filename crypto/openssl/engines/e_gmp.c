@@ -4,19 +4,19 @@ comment|/* crypto/engine/e_gmp.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2003.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2003.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* This engine is not (currently) compiled in by default. Do enable it,  * reconfigure OpenSSL with "enable-gmp -lgmp". The GMP libraries and  * headers must reside in one of the paths searched by the compiler/linker,  * otherwise paths must be specified - eg. try configuring with  * "enable-gmp -I<includepath> -L<libpath> -lgmp". YMMV. */
+comment|/*  * This engine is not (currently) compiled in by default. Do enable it,  * reconfigure OpenSSL with "enable-gmp -lgmp". The GMP libraries and headers  * must reside in one of the paths searched by the compiler/linker, otherwise  * paths must be specified - eg. try configuring with "enable-gmp  * -I<includepath> -L<libpath> -lgmp". YMMV.  */
 end_comment
 
 begin_comment
-comment|/* As for what this does - it's a largely unoptimised implementation of an  * ENGINE that uses the GMP library to perform RSA private key operations. To  * obtain more information about what "unoptimised" means, see my original mail  * on the subject (though ignore the build instructions which have since  * changed);  *  *    http://www.mail-archive.com/openssl-dev@openssl.org/msg12227.html  *  * On my athlon system at least, it appears the builtin OpenSSL code is now  * slightly faster, which is to say that the RSA-related MPI performance  * between OpenSSL's BIGNUM and GMP's mpz implementations is probably pretty  * balanced for this chip, and so the performance degradation in this ENGINE by  * having to convert to/from GMP formats (and not being able to cache  * montgomery forms) is probably the difference. However, if some unconfirmed  * reports from users is anything to go by, the situation on some other  * chipsets might be a good deal more favourable to the GMP version (eg. PPC).  * Feedback welcome. */
+comment|/*-  * As for what this does - it's a largely unoptimised implementation of an  * ENGINE that uses the GMP library to perform RSA private key operations. To  * obtain more information about what "unoptimised" means, see my original mail  * on the subject (though ignore the build instructions which have since  * changed);  *  *    http://www.mail-archive.com/openssl-dev@openssl.org/msg12227.html  *  * On my athlon system at least, it appears the builtin OpenSSL code is now  * slightly faster, which is to say that the RSA-related MPI performance  * between OpenSSL's BIGNUM and GMP's mpz implementations is probably pretty  * balanced for this chip, and so the performance degradation in this ENGINE by  * having to convert to/from GMP formats (and not being able to cache  * montgomery forms) is probably the difference. However, if some unconfirmed  * reports from users is anything to go by, the situation on some other  * chipsets might be a good deal more favourable to the GMP version (eg. PPC).  * Feedback welcome. */
 end_comment
 
 begin_include
@@ -216,7 +216,7 @@ comment|/* The definitions for control commands specific to this engine */
 end_comment
 
 begin_comment
-comment|/* #define E_GMP_CMD_SO_PATH		ENGINE_CMD_BASE */
+comment|/* #define E_GMP_CMD_SO_PATH            ENGINE_CMD_BASE */
 end_comment
 
 begin_decl_stmt
@@ -230,7 +230,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|{E_GMP_CMD_SO_PATH, 		"SO_PATH", 		"Specifies the path to the 'e_gmp' shared library", 		ENGINE_CMD_FLAG_STRING},
+block|{E_GMP_CMD_SO_PATH,      "SO_PATH",      "Specifies the path to the 'e_gmp' shared library",      ENGINE_CMD_FLAG_STRING},
 endif|#
 directive|endif
 block|{
@@ -280,7 +280,7 @@ name|NULL
 block|,
 name|e_gmp_rsa_finish
 block|,
-comment|/* These flags initialise montgomery crud that GMP ignores, however it 	 * makes sure the public key ops (which are done in openssl) don't seem 	 * *slower* than usual :-) */
+comment|/*      * These flags initialise montgomery crud that GMP ignores, however it      * makes sure the public key ops (which are done in openssl) don't seem      * *slower* than usual :-)      */
 name|RSA_FLAG_CACHE_PUBLIC
 operator||
 name|RSA_FLAG_CACHE_PRIVATE
@@ -326,7 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_gmp() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_gmp() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -754,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Most often limb sizes will be the same. If not, we use hex conversion  * which is neat, but extremely inefficient. */
+comment|/*  * Most often limb sizes will be the same. If not, we use hex conversion  * which is neat, but extremely inefficient.  */
 end_comment
 
 begin_function
@@ -1231,7 +1231,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* These inits could probably be replaced by more intelligent 	 * mpz_init2() versions, to reduce malloc-thrashing. */
+comment|/*      * These inits could probably be replaced by more intelligent mpz_init2()      * versions, to reduce malloc-thrashing.      */
 name|mpz_init
 argument_list|(
 name|hptr
@@ -1803,7 +1803,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* This is basically the CRT logic in crypto/rsa/rsa_eay.c reworded into 	 * GMP-speak. It may be that GMP's API facilitates cleaner formulations 	 * of this stuff, eg. better handling of negatives, or functions that 	 * combine operations. */
+comment|/*      * This is basically the CRT logic in crypto/rsa/rsa_eay.c reworded into      * GMP-speak. It may be that GMP's API facilitates cleaner formulations      * of this stuff, eg. better handling of negatives, or functions that      * combine operations.      */
 name|mpz_mod
 argument_list|(
 name|hptr
@@ -2036,7 +2036,7 @@ comment|/* !OPENSSL_NO_GMP */
 end_comment
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

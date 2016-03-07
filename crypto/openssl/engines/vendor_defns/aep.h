@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This header declares the necessary definitions for using the exponentiation  * acceleration capabilities, and rnd number generation of the AEP card.   *  */
+comment|/*  * This header declares the necessary definitions for using the  * exponentiation acceleration capabilities, and rnd number generation of the  * AEP card.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  *  * Some AEP defines  *  */
 end_comment
 
 begin_comment
-comment|/*Successful return value*/
+comment|/*  * Successful return value  */
 end_comment
 
 begin_define
@@ -19,7 +19,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/*Miscelleanous unsuccessful return value*/
+comment|/*  * Miscelleanous unsuccessful return value  */
 end_comment
 
 begin_define
@@ -30,7 +30,7 @@ value|0x10000001
 end_define
 
 begin_comment
-comment|/*Insufficient host memory*/
+comment|/*  * Insufficient host memory  */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ value|0x10000006
 end_define
 
 begin_comment
-comment|/*Invalid arguments in function call*/
+comment|/*  * Invalid arguments in function call  */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ value|0x10030000
 end_define
 
 begin_comment
-comment|/*Error occuring on socket operation*/
+comment|/*  * Error occuring on socket operation  */
 end_comment
 
 begin_define
@@ -77,7 +77,7 @@ value|0x10000010
 end_define
 
 begin_comment
-comment|/*Socket has been closed from the other end*/
+comment|/*  * Socket has been closed from the other end  */
 end_comment
 
 begin_define
@@ -88,7 +88,7 @@ value|0x10000011
 end_define
 
 begin_comment
-comment|/*Invalid handles*/
+comment|/*  * Invalid handles  */
 end_comment
 
 begin_define
@@ -106,7 +106,7 @@ value|0x10040000
 end_define
 
 begin_comment
-comment|/*Transaction has not yet returned from accelerator*/
+comment|/*  * Transaction has not yet returned from accelerator  */
 end_comment
 
 begin_define
@@ -117,7 +117,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/*There is already a thread waiting on this transaction*/
+comment|/*  * There is already a thread waiting on this transaction  */
 end_comment
 
 begin_define
@@ -128,7 +128,7 @@ value|0x10050000
 end_define
 
 begin_comment
-comment|/*The transaction timed out*/
+comment|/*  * The transaction timed out  */
 end_comment
 
 begin_define
@@ -153,7 +153,7 @@ value|0x10080000
 end_define
 
 begin_comment
-comment|/*Error in the AEP daemon process*/
+comment|/*  * Error in the AEP daemon process  */
 end_comment
 
 begin_define
@@ -164,7 +164,7 @@ value|0x10090000
 end_define
 
 begin_comment
-comment|/*Invalid ctx id*/
+comment|/*  * Invalid ctx id  */
 end_comment
 
 begin_define
@@ -182,7 +182,7 @@ value|0x1000a000
 end_define
 
 begin_comment
-comment|/*Error obtaining a mutex*/
+comment|/*  * Error obtaining a mutex  */
 end_comment
 
 begin_define
@@ -193,7 +193,7 @@ value|0x000001A0
 end_define
 
 begin_comment
-comment|/*Fxn call before AEP_Initialise ot after AEP_Finialise*/
+comment|/*  * Fxn call before AEP_Initialise ot after AEP_Finialise  */
 end_comment
 
 begin_define
@@ -204,7 +204,7 @@ value|0x10000190
 end_define
 
 begin_comment
-comment|/*AEP_Initialise has already been called*/
+comment|/*  * AEP_Initialise has already been called  */
 end_comment
 
 begin_define
@@ -215,7 +215,7 @@ value|0x10000191
 end_define
 
 begin_comment
-comment|/*Maximum number of connections to daemon reached*/
+comment|/*  * Maximum number of connections to daemon reached  */
 end_comment
 
 begin_define
@@ -264,7 +264,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Unsigned value, at least 16 bits long*/
+comment|/*  * Unsigned value, at least 16 bits long  */
 end_comment
 
 begin_typedef
@@ -414,7 +414,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Used to identify an AEP connection handle*/
+comment|/*  * Used to identify an AEP connection handle  */
 end_comment
 
 begin_typedef
@@ -425,7 +425,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Pointer to an AEP connection handle*/
+comment|/*  * Pointer to an AEP connection handle  */
 end_comment
 
 begin_typedef
@@ -437,7 +437,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Used by an application (in conjunction with the apps process id) to  identify an individual transaction*/
+comment|/*  * Used by an application (in conjunction with the apps process id) to  * identify an individual transaction  */
 end_comment
 
 begin_typedef
@@ -448,7 +448,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Pointer to an applications transaction identifier*/
+comment|/*  * Pointer to an applications transaction identifier  */
 end_comment
 
 begin_typedef
@@ -460,7 +460,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*Return value type*/
+comment|/*  * Return value type  */
 end_comment
 
 begin_typedef

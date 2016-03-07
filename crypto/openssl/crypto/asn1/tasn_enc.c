@@ -4,11 +4,11 @@ comment|/* tasn_enc.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -169,7 +169,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Top level i2d equivalents: the 'ndef' variant instructs the encoder  * to use indefinite length constructed encoding, where appropriate  */
+comment|/*  * Top level i2d equivalents: the 'ndef' variant instructs the encoder to use  * indefinite length constructed encoding, where appropriate  */
 end_comment
 
 begin_function
@@ -243,7 +243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Encode an ASN1 item, this is use by the  * standard 'i2d' function. 'out' points to   * a buffer to output the data to.  *  * The new i2d has one additional feature. If the output  * buffer is NULL (i.e. *out == NULL) then a buffer is  * allocated and populated with the encoding.  */
+comment|/*  * Encode an ASN1 item, this is use by the standard 'i2d' function. 'out'  * points to a buffer to output the data to. The new i2d has one additional  * feature. If the output buffer is NULL (i.e. *out == NULL) then a buffer is  * allocated and populated with the encoding.  */
 end_comment
 
 begin_function
@@ -381,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Encode an item, taking care of IMPLICIT tagging (if any).  * This function performs the normal item handling: it can be  * used in external types.  */
+comment|/*  * Encode an item, taking care of IMPLICIT tagging (if any). This function  * performs the normal item handling: it can be used in external types.  */
 end_comment
 
 begin_function
@@ -722,7 +722,7 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-comment|/* Fixup for IMPLICIT tag: note this messes up for tags> 30, 		 * but so did the old code. Tags> 30 are very rare anyway. 		 */
+comment|/*          * Fixup for IMPLICIT tag: note this messes up for tags> 30, but so          * did the old code. Tags> 30 are very rare anyway.          */
 if|if
 condition|(
 name|out
@@ -1173,7 +1173,7 @@ name|tt
 operator|->
 name|flags
 expr_stmt|;
-comment|/* Work out tag and class to use: tagging may come 	 * either from the template or the arguments, not both 	 * because this would create ambiguity. Additionally 	 * the iclass argument may contain some additional flags 	 * which should be noted and passed down to other levels. 	 */
+comment|/*      * Work out tag and class to use: tagging may come either from the      * template or the arguments, not both because this would create      * ambiguity. Additionally the iclass argument may contain some      * additional flags which should be noted and passed down to other      * levels.      */
 if|if
 condition|(
 name|flags
@@ -1241,13 +1241,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  	 * Remove any class mask from iflag. 	 */
+comment|/*      * Remove any class mask from iflag.      */
 name|iclass
 operator|&=
 operator|~
 name|ASN1_TFLG_TAG_CLASS
 expr_stmt|;
-comment|/* At this point 'ttag' contains the outer tag to use, 	 * 'tclass' is the class and iclass is any flags passed 	 * to this function. 	 */
+comment|/*      * At this point 'ttag' contains the outer tag to use, 'tclass' is the      * class and iclass is any flags passed to this function.      */
 comment|/* if template and arguments require ndef, use it */
 if|if
 condition|(
@@ -1350,7 +1350,7 @@ name|isset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Work out inner tag value: if EXPLICIT 		 * or no tagging use underlying type. 		 */
+comment|/*          * Work out inner tag value: if EXPLICIT or no tagging use underlying          * type.          */
 if|if
 condition|(
 operator|(
@@ -2260,7 +2260,7 @@ name|it
 operator|->
 name|utype
 expr_stmt|;
-comment|/* Get length of content octets and maybe find 	 * out the underlying type. 	 */
+comment|/*      * Get length of content octets and maybe find out the underlying type.      */
 name|len
 operator|=
 name|asn1_ex_i2c
@@ -2275,7 +2275,7 @@ argument_list|,
 name|it
 argument_list|)
 expr_stmt|;
-comment|/* If SEQUENCE, SET or OTHER then header is 	 * included in pseudo content octets so don't 	 * include tag+length. We need to check here 	 * because the call to asn1_ex_i2c() could change 	 * utype. 	 */
+comment|/*      * If SEQUENCE, SET or OTHER then header is included in pseudo content      * octets so don't include tag+length. We need to check here because the      * call to asn1_ex_i2c() could change utype.      */
 if|if
 condition|(
 operator|(
@@ -2693,7 +2693,7 @@ operator|!=
 name|V_ASN1_ANY
 condition|)
 block|{
-comment|/* Default handling if value == size field then omit */
+comment|/*              * Default handling if value == size field then omit              */
 if|if
 condition|(
 operator|*
@@ -2780,7 +2780,7 @@ case|:
 case|case
 name|V_ASN1_NEG_ENUMERATED
 case|:
-comment|/* These are all have the same content format 		 * as ASN1_INTEGER 		 */
+comment|/*          * These are all have the same content format as ASN1_INTEGER          */
 return|return
 name|i2c_ASN1_INTEGER
 argument_list|(

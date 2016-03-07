@@ -4,7 +4,7 @@ comment|/* crypto/objects/objects.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -1674,7 +1674,7 @@ comment|/* 28 Jun 1996 - eay */
 end_comment
 
 begin_comment
-comment|/* #define OBJ_sha1			1L,3L,14L,2L,26L,05L<- wrong */
+comment|/* #define OBJ_sha1                     1L,3L,14L,2L,26L,05L<- wrong */
 end_comment
 
 begin_define
@@ -1794,7 +1794,7 @@ value|OBJ_pkcs,5L,11L
 end_define
 
 begin_comment
-comment|/* proposed by microsoft to RSA as pbeWithSHA1AndRC4: it is now  * defined explicitly in PKCS#5 v2.0 as id-PBKDF2 which is something  * completely different.  */
+comment|/*  * proposed by microsoft to RSA as pbeWithSHA1AndRC4: it is now defined  * explicitly in PKCS#5 v2.0 as id-PBKDF2 which is something completely  * different.  */
 end_comment
 
 begin_define
@@ -2516,7 +2516,7 @@ value|2L,5L,8L,3L,101L
 end_define
 
 begin_comment
-comment|/* An alternative?			1L,3L,14L,3L,2L,19L */
+comment|/* An alternative?                      1L,3L,14L,3L,2L,19L */
 end_comment
 
 begin_define
@@ -2958,7 +2958,7 @@ value|1L,2L,840L,113533L,7L,66L,12L
 end_define
 
 begin_comment
-comment|/* This is one sun will soon be using :-(  * id-dsa-with-sha1 ID  ::= {  *   iso(1) member-body(2) us(840) x9-57 (10040) x9cm(4) 3 }  */
+comment|/*-  * This is one sun will soon be using :-(  * id-dsa-with-sha1 ID  ::= {  *   iso(1) member-body(2) us(840) x9-57 (10040) x9cm(4) 3 }  */
 end_comment
 
 begin_define
@@ -3095,7 +3095,7 @@ value|1L,3L,36L,3L,2L,1L
 end_define
 
 begin_comment
-comment|/* The name should actually be rsaSignatureWithripemd160, but I'm going  * to continue using the convention I'm using with the other ciphers */
+comment|/*  * The name should actually be rsaSignatureWithripemd160, but I'm going to  * continue using the convention I'm using with the other ciphers  */
 end_comment
 
 begin_define
@@ -3127,7 +3127,7 @@ value|1L,3L,36L,3L,3L,1L,2L
 end_define
 
 begin_comment
-comment|/* Taken from rfc2040  *  RC5_CBC_Parameters ::= SEQUENCE {  *	version           INTEGER (v1_0(16)),  *	rounds            INTEGER (8..127),  *	blockSizeInBits   INTEGER (64, 128),  *	iv                OCTET STRING OPTIONAL  *	}  */
+comment|/*-  * Taken from rfc2040  *  RC5_CBC_Parameters ::= SEQUENCE {  *      version           INTEGER (v1_0(16)),  *      rounds            INTEGER (8..127),  *      blockSizeInBits   INTEGER (64, 128),  *      iv                OCTET STRING OPTIONAL  *      }  */
 end_comment
 
 begin_define
@@ -5286,7 +5286,7 @@ name|in
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_OBJ_strings
 parameter_list|(
