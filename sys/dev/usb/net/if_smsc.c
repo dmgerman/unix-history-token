@@ -4949,9 +4949,9 @@ name|SMSC_PM_CTRL
 argument_list|,
 name|SMSC_PM_CTRL_PHY_RST
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|smsc_warn_printf
