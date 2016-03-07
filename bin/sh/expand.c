@@ -2464,10 +2464,6 @@ name|in
 operator|.
 name|buf
 expr_stmt|;
-name|lastc
-operator|=
-literal|'\0'
-expr_stmt|;
 name|nnl
 operator|=
 literal|0
@@ -6572,13 +6568,6 @@ name|backtrack
 goto|;
 block|}
 else|else
-name|wc
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
 name|q
 operator|++
 expr_stmt|;

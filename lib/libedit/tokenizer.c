@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tokenizer.c,v 1.24 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: tokenizer.c,v 1.22 2016/01/30 04:02:51 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tokenizer.c,v 1.24 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: tokenizer.c,v 1.22 2016/01/30 04:02:51 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,13 +88,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -1684,18 +1684,10 @@ name|p
 operator|==
 name|NULL
 condition|)
-block|{
-name|tok
-operator|->
-name|amax
-operator|-=
-name|AINCR
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
 name|tok
 operator|->
 name|argv

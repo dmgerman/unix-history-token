@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.43 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.35 2015/05/14 10:44:15 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: map.c,v 1.43 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: map.c,v 1.35 2015/05/14 10:44:15 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,37 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"help.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"parse.h"
 end_include
 
 begin_function_decl
@@ -146,9 +122,9 @@ parameter_list|,
 name|el_action_t
 modifier|*
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|,
-name|wint_t
+name|Int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4816,10 +4792,10 @@ name|el_action_t
 modifier|*
 name|map
 parameter_list|,
-name|wint_t
+name|Int
 name|first
 parameter_list|,
-name|wint_t
+name|Int
 name|last
 parameter_list|)
 block|{
@@ -4857,9 +4833,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|Char
-operator|)
 name|first
 expr_stmt|;
 name|firstbuf
@@ -4874,9 +4847,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|Char
-operator|)
 name|last
 expr_stmt|;
 name|lastbuf
@@ -5762,7 +5732,9 @@ name|el_errfile
 argument_list|,
 literal|""
 name|FSTR
-literal|": Invalid switch `%lc'.\n"
+literal|": Invalid switch `"
+name|FCHAR
+literal|"'.\n"
 argument_list|,
 name|argv
 index|[
@@ -5770,7 +5742,7 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|wint_t
+name|Int
 operator|)
 name|p
 index|[

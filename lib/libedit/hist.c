@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hist.c,v 1.24 2016/02/16 22:53:14 christos Exp $	*/
+comment|/*	$NetBSD: hist.c,v 1.20 2011/07/29 15:16:33 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: hist.c,v 1.24 2016/02/16 22:53:14 christos Exp $"
+literal|"$NetBSD: hist.c,v 1.20 2011/07/29 15:16:33 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include

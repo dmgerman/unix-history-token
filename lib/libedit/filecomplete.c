@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: filecomplete.c,v 1.40 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: filecomplete.c,v 1.34 2014/10/18 15:07:02 riz Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: filecomplete.c,v 1.40 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: filecomplete.c,v 1.34 2014/10/18 15:07:02 riz Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,7 +75,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -93,43 +135,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"el.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fcns.h"
+end_include
+
+begin_comment
+comment|/* for EL_NUM_FCNS */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"histedit.h"
 end_include
 
 begin_include

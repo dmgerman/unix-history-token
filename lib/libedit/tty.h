@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.h,v 1.19 2016/02/27 18:13:21 christos Exp $	*/
+comment|/*	$NetBSD: tty.h,v 1.15 2014/05/19 19:54:12 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,18 @@ define|#
 directive|define
 name|_h_el_tty
 end_define
+
+begin_include
+include|#
+directive|include
+file|"sys.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"histedit.h"
+end_include
 
 begin_include
 include|#
@@ -2967,17 +2979,12 @@ decl_stmt|;
 name|speed_t
 name|t_speed
 decl_stmt|;
-name|unsigned
-name|char
+name|int
 name|t_mode
 decl_stmt|;
 name|unsigned
 name|char
 name|t_vdisable
-decl_stmt|;
-name|unsigned
-name|char
-name|t_initialized
 decl_stmt|;
 block|}
 name|el_tty_t

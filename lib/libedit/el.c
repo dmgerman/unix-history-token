@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: el.c,v 1.83 2016/02/24 17:13:22 christos Exp $	*/
+comment|/*	$NetBSD: el.c,v 1.74 2015/12/08 12:56:55 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: el.c,v 1.83 2016/02/24 17:13:22 christos Exp $"
+literal|"$NetBSD: el.c,v 1.74 2015/12/08 12:56:55 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -96,13 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -114,14 +108,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdarg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIDECHAR
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -135,21 +129,10 @@ directive|include
 file|<langinfo.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"el.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"parse.h"
 end_include
 
 begin_comment
@@ -355,6 +338,9 @@ name|el_flags
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WIDECHAR
 if|if
 condition|(
 name|setlocale
@@ -388,6 +374,8 @@ operator||=
 name|CHARSET_IS_UTF8
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|terminal_init
@@ -870,9 +858,6 @@ name|el
 argument_list|,
 name|p
 argument_list|,
-operator|(
-name|Char
-operator|)
 name|c
 argument_list|,
 name|op
@@ -1329,6 +1314,13 @@ name|el
 argument_list|,
 name|rc
 argument_list|)
+expr_stmt|;
+name|el
+operator|->
+name|el_flags
+operator|&=
+operator|~
+name|NARROW_READ
 expr_stmt|;
 break|break;
 block|}
@@ -2153,9 +2145,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|ssize_t
-name|slen
-decl_stmt|;
 name|char
 modifier|*
 name|ptr
@@ -2324,33 +2313,21 @@ operator|-
 literal|1
 return|;
 block|}
-name|ptr
-operator|=
-name|NULL
-expr_stmt|;
-name|len
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
-name|slen
-operator|=
-name|getline
-argument_list|(
-operator|&
 name|ptr
+operator|=
+name|fgetln
+argument_list|(
+name|fp
 argument_list|,
 operator|&
 name|len
-argument_list|,
-name|fp
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
 if|if
@@ -2362,27 +2339,6 @@ literal|'\n'
 condition|)
 continue|continue;
 comment|/* Empty line. */
-if|if
-condition|(
-name|slen
-operator|>
-literal|0
-operator|&&
-name|ptr
-index|[
-operator|--
-name|slen
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|ptr
-index|[
-name|slen
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|dptr
 operator|=
 name|ct_decode_string
@@ -2401,6 +2357,24 @@ operator|!
 name|dptr
 condition|)
 continue|continue;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|dptr
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+operator|--
+name|len
+expr_stmt|;
 comment|/* loop until first non-space char or EOL */
 while|while
 condition|(
@@ -2445,11 +2419,6 @@ literal|1
 condition|)
 break|break;
 block|}
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 name|el_free
 argument_list|(
 name|path
