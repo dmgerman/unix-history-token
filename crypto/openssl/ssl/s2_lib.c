@@ -112,39 +112,13 @@ block|,
 name|SSL_ALL_STRENGTHS
 block|,      }
 block|,
+if|#
+directive|if
+literal|0
 comment|/* RC4_128_EXPORT40_WITH_MD5 */
-block|{
-literal|1
-block|,
-name|SSL2_TXT_RC4_128_EXPORT40_WITH_MD5
-block|,
-name|SSL2_CK_RC4_128_EXPORT40_WITH_MD5
-block|,
-name|SSL_kRSA
-operator||
-name|SSL_aRSA
-operator||
-name|SSL_RC4
-operator||
-name|SSL_MD5
-operator||
-name|SSL_SSLV2
-block|,
-name|SSL_EXPORT
-operator||
-name|SSL_EXP40
-block|,
-name|SSL2_CF_5_BYTE_ENC
-block|,
-literal|40
-block|,
-literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
-block|,      }
-block|,
+block|{      1,      SSL2_TXT_RC4_128_EXPORT40_WITH_MD5,      SSL2_CK_RC4_128_EXPORT40_WITH_MD5,      SSL_kRSA | SSL_aRSA | SSL_RC4 | SSL_MD5 | SSL_SSLV2,      SSL_EXPORT | SSL_EXP40,      SSL2_CF_5_BYTE_ENC,      40,      128,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
+endif|#
+directive|endif
 comment|/* RC2_128_CBC_WITH_MD5 */
 block|{
 literal|1
@@ -178,39 +152,13 @@ block|,
 name|SSL_ALL_STRENGTHS
 block|,      }
 block|,
+if|#
+directive|if
+literal|0
 comment|/* RC2_128_CBC_EXPORT40_WITH_MD5 */
-block|{
-literal|1
-block|,
-name|SSL2_TXT_RC2_128_CBC_EXPORT40_WITH_MD5
-block|,
-name|SSL2_CK_RC2_128_CBC_EXPORT40_WITH_MD5
-block|,
-name|SSL_kRSA
-operator||
-name|SSL_aRSA
-operator||
-name|SSL_RC2
-operator||
-name|SSL_MD5
-operator||
-name|SSL_SSLV2
-block|,
-name|SSL_EXPORT
-operator||
-name|SSL_EXP40
-block|,
-name|SSL2_CF_5_BYTE_ENC
-block|,
-literal|40
-block|,
-literal|128
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
-block|,      }
-block|,
+block|{      1,      SSL2_TXT_RC2_128_CBC_EXPORT40_WITH_MD5,      SSL2_CK_RC2_128_CBC_EXPORT40_WITH_MD5,      SSL_kRSA | SSL_aRSA | SSL_RC2 | SSL_MD5 | SSL_SSLV2,      SSL_EXPORT | SSL_EXP40,      SSL2_CF_5_BYTE_ENC,      40,      128,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
+endif|#
+directive|endif
 comment|/* IDEA_128_CBC_WITH_MD5 */
 ifndef|#
 directive|ifndef
@@ -249,39 +197,13 @@ block|,      }
 block|,
 endif|#
 directive|endif
-comment|/* DES_64_CBC_WITH_MD5 */
-block|{
-literal|1
-block|,
-name|SSL2_TXT_DES_64_CBC_WITH_MD5
-block|,
-name|SSL2_CK_DES_64_CBC_WITH_MD5
-block|,
-name|SSL_kRSA
-operator||
-name|SSL_aRSA
-operator||
-name|SSL_DES
-operator||
-name|SSL_MD5
-operator||
-name|SSL_SSLV2
-block|,
-name|SSL_NOT_EXP
-operator||
-name|SSL_LOW
-block|,
+if|#
+directive|if
 literal|0
-block|,
-literal|56
-block|,
-literal|56
-block|,
-name|SSL_ALL_CIPHERS
-block|,
-name|SSL_ALL_STRENGTHS
-block|,      }
-block|,
+comment|/* DES_64_CBC_WITH_MD5 */
+block|{      1,      SSL2_TXT_DES_64_CBC_WITH_MD5,      SSL2_CK_DES_64_CBC_WITH_MD5,      SSL_kRSA | SSL_aRSA | SSL_DES | SSL_MD5 | SSL_SSLV2,      SSL_NOT_EXP | SSL_LOW,      0,      56,      56,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
+endif|#
+directive|endif
 comment|/* DES_192_EDE3_CBC_WITH_MD5 */
 block|{
 literal|1

@@ -7767,6 +7767,19 @@ name|SSL_OP_LEGACY_SERVER_CONNECT
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*      * Disable SSLv2 by default, callers that want to enable SSLv2 will have to      * explicitly clear this option via either of SSL_CTX_clear_options() or      * SSL_clear_options().      */
+end_comment
+
+begin_expr_stmt
+name|ret
+operator|->
+name|options
+operator||=
+name|SSL_OP_NO_SSLv2
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
