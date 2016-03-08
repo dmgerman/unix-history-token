@@ -23287,7 +23287,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|__devinit
 name|init_cong_ctrl
 parameter_list|(
 name|unsigned
@@ -33287,7 +33286,7 @@ argument_list|)
 condition|)
 name|speed
 operator|=
-name|SPEED_100
+literal|100
 expr_stmt|;
 elseif|else
 if|if
@@ -33301,7 +33300,7 @@ argument_list|)
 condition|)
 name|speed
 operator|=
-name|SPEED_1000
+literal|1000
 expr_stmt|;
 elseif|else
 if|if
@@ -33315,7 +33314,7 @@ argument_list|)
 condition|)
 name|speed
 operator|=
-name|SPEED_10000
+literal|10000
 expr_stmt|;
 elseif|else
 if|if
@@ -33329,7 +33328,7 @@ argument_list|)
 condition|)
 name|speed
 operator|=
-name|SPEED_40000
+literal|40000
 expr_stmt|;
 name|for_each_port
 argument_list|(
@@ -33511,7 +33510,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|__devinit
 name|get_pci_mode
 parameter_list|(
 name|struct
@@ -33588,7 +33586,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|__devinit
 name|init_link_config
 parameter_list|(
 name|struct
@@ -33955,7 +33952,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|__devinit
 name|set_pcie_completion_timeout
 parameter_list|(
 name|struct

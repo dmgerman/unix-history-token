@@ -10046,7 +10046,7 @@ if|if
 condition|(
 name|speed
 operator|==
-name|SPEED_10000
+literal|10000
 condition|)
 name|ifmr
 operator|->
@@ -10059,7 +10059,7 @@ if|if
 condition|(
 name|speed
 operator|==
-name|SPEED_1000
+literal|1000
 condition|)
 name|ifmr
 operator|->
@@ -10072,7 +10072,7 @@ if|if
 condition|(
 name|speed
 operator|==
-name|SPEED_100
+literal|100
 condition|)
 name|ifmr
 operator|->
@@ -10085,7 +10085,7 @@ if|if
 condition|(
 name|speed
 operator|==
-name|SPEED_10
+literal|10
 condition|)
 name|ifmr
 operator|->
