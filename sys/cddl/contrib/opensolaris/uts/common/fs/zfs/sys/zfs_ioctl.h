@@ -662,6 +662,9 @@ decl_stmt|;
 name|uint64_t
 name|zi_timer
 decl_stmt|;
+name|uint64_t
+name|zi_nlanes
+decl_stmt|;
 name|uint32_t
 name|zi_cmd
 decl_stmt|;

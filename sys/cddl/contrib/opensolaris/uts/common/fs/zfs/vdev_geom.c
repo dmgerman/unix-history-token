@@ -3900,7 +3900,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|zio_interrupt
+name|zio_delay_interrupt
 argument_list|(
 name|zio
 argument_list|)
@@ -4155,6 +4155,15 @@ case|:
 case|case
 name|ZIO_TYPE_WRITE
 case|:
+name|zio
+operator|->
+name|io_target_timestamp
+operator|=
+name|zio_handle_io_delay
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|bio_cmd
