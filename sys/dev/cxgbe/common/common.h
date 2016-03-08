@@ -21,6 +21,13 @@ directive|include
 file|"t4_hw.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GLBL_INTR_MASK
+value|(F_CIM | F_MPS | F_PL | F_PCIE | F_MC0 | F_EDC0 | \ 		F_EDC1 | F_LE | F_TP | F_MA | F_PM_TX | F_PM_RX | F_ULP_RX | \ 		F_CPL_SWITCH | F_SGE | F_ULP_TX)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -2267,6 +2274,30 @@ end_function_decl
 begin_function_decl
 name|void
 name|t4_fatal_err
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_db_full
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_db_dropped
 parameter_list|(
 name|struct
 name|adapter
