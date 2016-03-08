@@ -870,6 +870,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * According to POSIX and Linux implementation 	 * the alarm() system call is always successfull. 	 * Ignore errors and return 0 as a Linux do. 	 */
 name|kern_setitimer
 argument_list|(
 name|td
