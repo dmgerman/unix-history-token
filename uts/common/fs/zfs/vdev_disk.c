@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Joyent, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -2900,7 +2900,7 @@ name|vdev_buf_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zio_interrupt
+name|zio_delay_interrupt
 argument_list|(
 name|zio
 argument_list|)
@@ -3257,6 +3257,15 @@ operator|->
 name|io_type
 operator|==
 name|ZIO_TYPE_WRITE
+argument_list|)
+expr_stmt|;
+name|zio
+operator|->
+name|io_target_timestamp
+operator|=
+name|zio_handle_io_delay
+argument_list|(
+name|zio
 argument_list|)
 expr_stmt|;
 name|vb
