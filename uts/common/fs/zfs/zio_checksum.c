@@ -353,6 +353,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The flag corresponding to the "verify" in dedup=[checksum,]verify  * must be cleared first, so callers should use ZIO_CHECKSUM_MASK.  */
+end_comment
+
 begin_function
 name|spa_feature_t
 name|zio_checksum_to_feature
@@ -362,6 +366,18 @@ name|zio_checksum
 name|cksum
 parameter_list|)
 block|{
+name|VERIFY
+argument_list|(
+operator|(
+name|cksum
+operator|&
+operator|~
+name|ZIO_CHECKSUM_MASK
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cksum
