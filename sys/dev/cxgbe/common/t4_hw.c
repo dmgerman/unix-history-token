@@ -33315,6 +33315,67 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *	t4_link_down_rc_str - return a string for a Link Down Reason Code  *	@link_down_rc: Link Down Reason Code  *  *	Returns a string representation of the Link Down Reason Code.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|t4_link_down_rc_str
+parameter_list|(
+name|unsigned
+name|char
+name|link_down_rc
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|reason
+index|[]
+init|=
+block|{
+literal|"Link Down"
+block|,
+literal|"Remote Fault"
+block|,
+literal|"Auto-negotiation Failure"
+block|,
+literal|"Reserved3"
+block|,
+literal|"Insufficient Airflow"
+block|,
+literal|"Unable To Determine Reason"
+block|,
+literal|"No RX Signal Detected"
+block|,
+literal|"Reserved7"
+block|, 	}
+decl_stmt|;
+if|if
+condition|(
+name|link_down_rc
+operator|>=
+name|ARRAY_SIZE
+argument_list|(
+name|reason
+argument_list|)
+condition|)
+return|return
+literal|"Bad Reason Code"
+return|;
+return|return
+name|reason
+index|[
+name|link_down_rc
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *	t4_handle_fw_rpl - process a FW reply message  *	@adap: the adapter  *	@rpl: start of the FW message  *  *	Processes a FW message, such as link state change messages.  */
 end_comment
 

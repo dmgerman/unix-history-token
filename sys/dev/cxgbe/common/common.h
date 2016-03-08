@@ -4818,6 +4818,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|t4_link_down_rc_str
+parameter_list|(
+name|unsigned
+name|char
+name|link_down_rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|t4_handle_fw_rpl
 parameter_list|(
