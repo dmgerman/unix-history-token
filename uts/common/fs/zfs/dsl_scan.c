@@ -4044,7 +4044,7 @@ operator|->
 name|ds_is_snapshot
 condition|)
 block|{
-comment|/* Note, scn_cur_{min,max}_txg stays the same. */
+comment|/* 			 * Note: 			 *  - scn_cur_{min,max}_txg stays the same. 			 *  - Setting the flag is not really necessary if 			 *    scn_cur_max_txg == scn_max_txg, because there 			 *    is nothing after this snapshot that we care 			 *    about.  However, we set it anyway and then 			 *    ignore it when we retraverse it in 			 *    dsl_scan_visitds(). 			 */
 name|scn
 operator|->
 name|scn_phys
@@ -4269,21 +4269,6 @@ name|ds_object
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|zfs_dbgmsg
-argument_list|(
-literal|"destroying ds %llu; ignoring"
-argument_list|,
-operator|(
-name|u_longlong_t
-operator|)
-name|ds
-operator|->
-name|ds_object
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * dsl_scan_sync() should be called after this, and should sync 	 * out our changed state, but just to be safe, do it here. 	 */
 name|dsl_scan_sync_state
@@ -5239,6 +5224,73 @@ name|ds
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scn
+operator|->
+name|scn_phys
+operator|.
+name|scn_cur_min_txg
+operator|>=
+name|scn
+operator|->
+name|scn_phys
+operator|.
+name|scn_max_txg
+condition|)
+block|{
+comment|/* 		 * This can happen if this snapshot was created after the 		 * scan started, and we already completed a previous snapshot 		 * that was created after the scan started.  This snapshot 		 * only references blocks with: 		 * 		 *	birth< our ds_creation_txg 		 *	cur_min_txg is no less than ds_creation_txg. 		 *	We have already visited these blocks. 		 * or 		 *	birth> scn_max_txg 		 *	The scan requested not to visit these blocks. 		 * 		 * Subsequent snapshots (and clones) can reference our 		 * blocks, or blocks with even higher birth times. 		 * Therefore we do not need to visit them either, 		 * so we do not add them to the work queue. 		 * 		 * Note that checking for cur_min_txg>= cur_max_txg 		 * is not sufficient, because in that case we may need to 		 * visit subsequent snapshots.  This happens when min_txg> 0, 		 * which raises cur_min_txg.  In this case we will visit 		 * this dataset but skip all of its blocks, because the 		 * rootbp's birth time is< cur_min_txg.  Then we will 		 * add the next snapshots/clones to the work queue. 		 */
+name|char
+modifier|*
+name|dsname
+init|=
+name|kmem_alloc
+argument_list|(
+name|MAXNAMELEN
+argument_list|,
+name|KM_SLEEP
+argument_list|)
+decl_stmt|;
+name|dsl_dataset_name
+argument_list|(
+name|ds
+argument_list|,
+name|dsname
+argument_list|)
+expr_stmt|;
+name|zfs_dbgmsg
+argument_list|(
+literal|"scanning dataset %llu (%s) is unnecessary because "
+literal|"cur_min_txg (%llu)>= max_txg (%llu)"
+argument_list|,
+name|dsobj
+argument_list|,
+name|dsname
+argument_list|,
+name|scn
+operator|->
+name|scn_phys
+operator|.
+name|scn_cur_min_txg
+argument_list|,
+name|scn
+operator|->
+name|scn_phys
+operator|.
+name|scn_max_txg
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|dsname
+argument_list|,
+name|MAXNAMELEN
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|dmu_objset_from_ds
