@@ -4194,9 +4194,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|,
-literal|"register and memory window"
+literal|"indirect register access"
 argument_list|,
 literal|0
 argument_list|,
@@ -6946,7 +6946,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 condition|)
 name|mtx_destroy
@@ -6954,7 +6954,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -22723,7 +22723,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -23133,7 +23133,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_get_vi_stats
@@ -23163,7 +23163,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -23294,7 +23294,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_read_indirect
@@ -23320,7 +23320,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|tnl_cong_drops
@@ -31955,7 +31955,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_tp_get_cpl_stats
@@ -31971,7 +31971,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -38218,7 +38218,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_tp_get_rdma_stats
@@ -38234,7 +38234,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -38357,7 +38357,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_tp_get_tcp_stats
@@ -38376,7 +38376,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -38895,7 +38895,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|t4_tp_get_err_stats
@@ -38911,7 +38911,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -48226,7 +48226,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 name|for_each_vi
@@ -48261,7 +48261,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|regwin_lock
+name|reg_lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Since this command accepts a port, clear stats for 		 * all VIs on this port. 		 */

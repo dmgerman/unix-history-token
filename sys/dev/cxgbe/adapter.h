@@ -2929,9 +2929,9 @@ name|sfl_callout
 decl_stmt|;
 name|struct
 name|mtx
-name|regwin_lock
+name|reg_lock
 decl_stmt|;
-comment|/* for indirect reads and memory windows */
+comment|/* for indirect register access */
 name|an_handler_t
 name|an_handler
 name|__aligned
