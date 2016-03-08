@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2016 Gary Mills  */
 end_comment
 
 begin_include
@@ -7579,6 +7579,12 @@ condition|)
 return|return;
 if|if
 condition|(
+name|dp
+operator|->
+name|dp_free_dir
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|scn
 operator|->
@@ -7768,6 +7774,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|dp
+operator|->
+name|dp_free_dir
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|scn
 operator|->
