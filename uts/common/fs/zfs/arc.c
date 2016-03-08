@@ -12500,7 +12500,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|clock_t
+name|hrtime_t
 name|growtime
 init|=
 literal|0
@@ -12568,14 +12568,13 @@ expr_stmt|;
 comment|/* 			 * Wait at least zfs_grow_retry (default 60) seconds 			 * before considering growing. 			 */
 name|growtime
 operator|=
-name|ddi_get_lbolt
+name|gethrtime
 argument_list|()
 operator|+
-operator|(
+name|SEC2NSEC
+argument_list|(
 name|arc_grow_retry
-operator|*
-name|hz
-operator|)
+argument_list|)
 expr_stmt|;
 name|arc_kmem_reap_now
 argument_list|()
@@ -12646,7 +12645,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ddi_get_lbolt
+name|gethrtime
 argument_list|()
 operator|>=
 name|growtime
@@ -12697,7 +12696,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|cv_timedwait
+name|cv_timedwait_hires
 argument_list|(
 operator|&
 name|arc_reclaim_thread_cv
@@ -12705,10 +12704,17 @@ argument_list|,
 operator|&
 name|arc_reclaim_lock
 argument_list|,
-name|ddi_get_lbolt
-argument_list|()
-operator|+
-name|hz
+name|SEC2NSEC
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+name|MSEC2NSEC
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|CALLB_CPR_SAFE_END
