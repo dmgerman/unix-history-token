@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
+end_comment
 
 begin_include
 include|#
@@ -505,6 +502,7 @@ name|zhp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|zhp
 operator|=
 name|zpool_open_canfail
@@ -516,6 +514,9 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
