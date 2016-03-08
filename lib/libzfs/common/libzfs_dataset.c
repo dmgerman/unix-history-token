@@ -8899,10 +8899,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|zplprops
-condition|)
 name|nvlist_free
 argument_list|(
 name|zplprops
@@ -19560,10 +19556,6 @@ operator|&
 name|zc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nvlist
-condition|)
 name|nvlist_free
 argument_list|(
 name|nvlist

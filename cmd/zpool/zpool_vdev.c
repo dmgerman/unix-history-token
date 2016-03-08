@@ -5763,12 +5763,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|newroot
-operator|!=
-name|NULL
-condition|)
 name|nvlist_free
 argument_list|(
 name|newroot
