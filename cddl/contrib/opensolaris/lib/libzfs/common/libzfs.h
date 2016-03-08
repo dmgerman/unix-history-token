@@ -1165,7 +1165,7 @@ block|,
 comment|/* device being resilvered */
 name|ZPOOL_STATUS_OFFLINE_DEV
 block|,
-comment|/* device online */
+comment|/* device offline */
 name|ZPOOL_STATUS_REMOVED_DEV
 block|,
 comment|/* removed device */
