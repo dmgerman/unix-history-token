@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the  * "Software"), to deal in the Software without restriction, including  * without limitation the rights to use, copy, modify, merge, publish,  * distribute, sub license, and/or sell copies of the Software, and to  * permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
+comment|/*  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the  * "Software"), to deal in the Software without restriction, including  * without limitation the rights to use, copy, modify, merge, publish,  * distribute, sub license, and/or sell copies of the Software, and to  * permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UAPI_I915_DRM_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UAPI_I915_DRM_H_
+end_define
 
 begin_include
 include|#
@@ -17,27 +29,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_I915_DRM_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_I915_DRM_H_
-end_define
-
-begin_comment
-comment|/* Please note that modifications to all structs defined here are  * subject to backwards-compatibility constraints.  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<dev/drm2/drm.h>
 end_include
+
+begin_comment
+comment|/* Please note that modifications to all structs defined here are  * subject to backwards-compatibility constraints.  */
+end_comment
 
 begin_comment
 comment|/* Each region is a minimum of 16k, and there are at most 255 of them.  */
@@ -79,11 +79,6 @@ block|,
 name|I915_RESUME_DMA
 init|=
 literal|0x03
-block|,
-comment|/* Since this struct isn't versioned, just used a new 		 * 'func' code to indicate the presence of dri2 sarea 		 * info. */
-name|I915_INIT_DMA2
-init|=
-literal|0x04
 block|}
 name|func
 enum|;
@@ -149,10 +144,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|chipset
-decl_stmt|;
-name|unsigned
-name|int
-name|sarea_handle
 decl_stmt|;
 block|}
 name|drm_i915_init_t
@@ -317,21 +308,18 @@ decl_stmt|;
 name|int
 name|pipeB_h
 decl_stmt|;
-comment|/* Triple buffering */
+comment|/* fill out some space for old userspace triple buffer */
 name|drm_handle_t
-name|third_handle
+name|unused_handle
 decl_stmt|;
-name|int
-name|third_offset
+name|__u32
+name|unused1
+decl_stmt|,
+name|unused2
+decl_stmt|,
+name|unused3
 decl_stmt|;
-name|int
-name|third_size
-decl_stmt|;
-name|unsigned
-name|int
-name|third_tiled
-decl_stmt|;
-comment|/* buffer object handles for the static buffers.  May change 	 * over the lifetime of the client, though it doesn't in our current 	 * implementation. 	 */
+comment|/* buffer object handles for static buffers. May change 	 * over the lifetime of the client. 	 */
 name|__u32
 name|front_bo_handle
 decl_stmt|;
@@ -339,7 +327,7 @@ name|__u32
 name|back_bo_handle
 decl_stmt|;
 name|__u32
-name|third_bo_handle
+name|unused_bo_handle
 decl_stmt|;
 name|__u32
 name|depth_bo_handle
@@ -407,43 +395,6 @@ define|#
 directive|define
 name|planeB_h
 value|pipeB_h
-end_define
-
-begin_comment
-comment|/* Driver specific fence types and classes.  */
-end_comment
-
-begin_comment
-comment|/* The only fence class we support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_I915_FENCE_CLASS_ACCEL
-value|0
-end_define
-
-begin_comment
-comment|/* Fence type that guarantees read-write flush */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_I915_FENCE_TYPE_RW
-value|2
-end_define
-
-begin_comment
-comment|/* MI_FLUSH programmed just before the fence */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_I915_FENCE_FLAG_FLUSHED
-value|0x01000000
 end_define
 
 begin_comment
@@ -604,22 +555,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_I915_MMIO
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
 name|DRM_I915_HWS_ADDR
 value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_I915_EXECBUFFER
-value|0x12
 end_define
 
 begin_define
@@ -800,6 +737,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_I915_GEM_WAIT
+value|0x2c
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_I915_GEM_CONTEXT_CREATE
 value|0x2d
 end_define
@@ -809,6 +753,27 @@ define|#
 directive|define
 name|DRM_I915_GEM_CONTEXT_DESTROY
 value|0x2e
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_GEM_SET_CACHING
+value|0x2f
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_GEM_GET_CACHING
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_REG_READ
+value|0x31
 end_define
 
 begin_define
@@ -829,7 +794,7 @@ begin_define
 define|#
 directive|define
 name|DRM_IOCTL_I915_FLIP
-value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_FLIP, drm_i915_flip_t)
+value|DRM_IO ( DRM_COMMAND_BASE + DRM_I915_FLIP)
 end_define
 
 begin_define
@@ -926,8 +891,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_IOCTL_I915_MMIO
-value|DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_MMIO, drm_i915_mmio)
+name|DRM_IOCTL_I915_HWS_ADDR
+value|DRM_IOW(DRM_COMMAND_BASE + DRM_I915_HWS_ADDR, struct drm_i915_gem_init)
 end_define
 
 begin_define
@@ -970,6 +935,20 @@ define|#
 directive|define
 name|DRM_IOCTL_I915_GEM_BUSY
 value|DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_BUSY, struct drm_i915_gem_busy)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_GEM_SET_CACHING
+value|DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SET_CACHING, struct drm_i915_gem_caching)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_GEM_GET_CACHING
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_GET_CACHING, struct drm_i915_gem_caching)
 end_define
 
 begin_define
@@ -1081,7 +1060,7 @@ begin_define
 define|#
 directive|define
 name|DRM_IOCTL_I915_OVERLAY_PUT_IMAGE
-value|DRM_IOW(DRM_COMMAND_BASE + DRM_IOCTL_I915_OVERLAY_PUT_IMAGE, struct drm_intel_overlay_put_image)
+value|DRM_IOW(DRM_COMMAND_BASE + DRM_I915_OVERLAY_PUT_IMAGE, struct drm_intel_overlay_put_image)
 end_define
 
 begin_define
@@ -1108,6 +1087,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_IOCTL_I915_GEM_WAIT
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_WAIT, struct drm_i915_gem_wait)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_I915_GEM_CONTEXT_CREATE
 value|DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
 end_define
@@ -1119,23 +1105,12 @@ name|DRM_IOCTL_I915_GEM_CONTEXT_DESTROY
 value|DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
 end_define
 
-begin_comment
-comment|/* Asynchronous page flipping:  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_i915_flip
-block|{
-comment|/* 	 * This is really talking about planes, and we could rename it 	 * except for the fact that some of the duplicated i915_drm.h files 	 * out there check for HAVE_I915_FLIP and so might pick up this 	 * version. 	 */
-name|int
-name|pipes
-decl_stmt|;
-block|}
-name|drm_i915_flip_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_REG_READ
+value|DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_REG_READ, struct drm_i915_reg_read)
+end_define
 
 begin_comment
 comment|/* Allow drivers to submit batchbuffers directly to hardware, relying  * on the security mechanisms provided by hardware.  */
@@ -1383,6 +1358,48 @@ name|I915_PARAM_HAS_ALIASING_PPGTT
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_WAIT_TIMEOUT
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_SEMAPHORES
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_PRIME_VMAP_FLUSH
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_PARAM_RSVD_FOR_FUTURE_USE
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_SECURE_BATCHES
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_PARAM_HAS_PINNED_BATCHES
+value|24
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1593,146 +1610,6 @@ name|drm_i915_vblank_swap_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|I915_MMIO_READ
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_MMIO_WRITE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_MMIO_MAY_READ
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_MMIO_MAY_WRITE
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_IA_PRIMATIVES_COUNT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_IA_VERTICES_COUNT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_VS_INVOCATION_COUNT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_GS_PRIMITIVES_COUNT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_GS_INVOCATION_COUNT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_CL_PRIMITIVES_COUNT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_CL_INVOCATION_COUNT
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_PS_INVOCATION_COUNT
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_REGS_PS_DEPTH_COUNT
-value|8
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_i915_mmio_entry
-block|{
-name|unsigned
-name|int
-name|flag
-decl_stmt|;
-name|unsigned
-name|int
-name|offset
-decl_stmt|;
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-block|}
-name|drm_i915_mmio_entry_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_i915_mmio
-block|{
-name|unsigned
-name|int
-name|read_write
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|int
-name|reg
-range|:
-literal|31
-decl_stmt|;
-name|void
-name|__user
-modifier|*
-name|data
-decl_stmt|;
-block|}
-name|drm_i915_mmio_t
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1745,53 +1622,6 @@ block|}
 name|drm_i915_hws_addr_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Relocation header is 4 uint32_ts  * 0 - 32 bit reloc count  * 1 - 32-bit relocation type  * 2-3 - 64-bit user buffer handle ptr for another list of relocs.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I915_RELOC_HEADER
-value|4
-end_define
-
-begin_comment
-comment|/*  * type 0 relocation has 4-uint32_t stride  * 0 - offset into buffer  * 1 - delta to add in  * 2 - buffer handle  * 3 - reserved (for optimisations later).  */
-end_comment
-
-begin_comment
-comment|/*  * type 1 relocation has 4-uint32_t stride.  * Hangs off the first item in the op list.  * Performed after all valiations are done.  * Try to group relocs into the same relocatee together for  * performance reasons.  * 0 - offset into buffer  * 1 - delta to add in  * 2 - buffer index in op list.  * 3 - relocatee index in op list.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I915_RELOC_TYPE_0
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_RELOC0_STRIDE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_RELOC_TYPE_1
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I915_RELOC1_STRIDE
-value|4
-end_define
 
 begin_struct
 struct|struct
@@ -1847,11 +1677,10 @@ comment|/** Length of data to read */
 name|__u64
 name|size
 decl_stmt|;
-comment|/** Pointer to write the data into. */
+comment|/** 	 * Pointer to write the data into. 	 * 	 * This is a fixed-size type for 32/64 compatibility. 	 */
 name|__u64
 name|data_ptr
 decl_stmt|;
-comment|/* void *, but pointers are not 32/64 compatible */
 block|}
 struct|;
 end_struct
@@ -1875,11 +1704,10 @@ comment|/** Length of data to write */
 name|__u64
 name|size
 decl_stmt|;
-comment|/** Pointer to read the data from. */
+comment|/** 	 * Pointer to read the data from. 	 * 	 * This is a fixed-size type for 32/64 compatibility. 	 */
 name|__u64
 name|data_ptr
 decl_stmt|;
-comment|/* void *, but pointers are not 32/64 compatible */
 block|}
 struct|;
 end_struct
@@ -1903,11 +1731,10 @@ comment|/** 	 * Length of data to map. 	 * 	 * The value will be page-aligned. 	
 name|__u64
 name|size
 decl_stmt|;
-comment|/** Returned pointer the data was mapped at */
+comment|/** 	 * Returned pointer the data was mapped at. 	 * 	 * This is a fixed-size type for 32/64 compatibility. 	 */
 name|__u64
 name|addr_ptr
 decl_stmt|;
-comment|/* void *, but pointers are not 32/64 compatible */
 block|}
 struct|;
 end_struct
@@ -2136,10 +1963,10 @@ decl_stmt|;
 name|__u32
 name|num_cliprects
 decl_stmt|;
+comment|/** This is a struct drm_clip_rect *cliprects */
 name|__u64
 name|cliprects_ptr
 decl_stmt|;
-comment|/* struct drm_clip_rect *cliprects */
 block|}
 struct|;
 end_struct
@@ -2178,7 +2005,6 @@ decl_stmt|;
 name|__u64
 name|rsvd1
 decl_stmt|;
-comment|/* now used for context info */
 name|__u64
 name|rsvd2
 decl_stmt|;
@@ -2263,6 +2089,7 @@ decl_stmt|;
 name|__u64
 name|rsvd1
 decl_stmt|;
+comment|/* now used for context info */
 name|__u64
 name|rsvd2
 decl_stmt|;
@@ -2279,6 +2106,28 @@ define|#
 directive|define
 name|I915_EXEC_GEN7_SOL_RESET
 value|(1<<8)
+end_define
+
+begin_comment
+comment|/** Request a privileged ("secure") batch buffer. Note only available for  * DRM_ROOT_ONLY | DRM_MASTER processes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I915_EXEC_SECURE
+value|(1<<9)
+end_define
+
+begin_comment
+comment|/** Inform the kernel that the batch is and will always be pinned. This  * negates the requirement for a workaround to be performed to avoid  * an incoherent CS (such as can be found on 830/845). If this flag is  * not passed, the kernel will endeavour to make sure the batch is  * coherent with the CS before execution. If this flag is passed,  * userspace assumes the responsibility for ensuring the same.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I915_EXEC_IS_PINNED
+value|(1<<10)
 end_define
 
 begin_define
@@ -2358,9 +2207,39 @@ comment|/** Handle of the buffer to check for busy */
 name|__u32
 name|handle
 decl_stmt|;
-comment|/** Return busy status (1 if busy, 0 if idle) */
+comment|/** Return busy status (1 if busy, 0 if idle). 	 * The high word is used to indicate on which rings the object 	 * currently resides: 	 *  16:31 - busy (r or r/w) rings (16 render, 17 bsd, 18 blt, etc) 	 */
 name|__u32
 name|busy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|I915_CACHING_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_CACHING_CACHED
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|drm_i915_gem_caching
+block|{
+comment|/** 	 * Handle of the buffer to set/get the caching level of. */
+name|__u32
+name|handle
+decl_stmt|;
+comment|/** 	 * Cacheing level to apply or return value 	 * 	 * bits0-15 are for generic caching control (i.e. the above defined 	 * values). bits16-31 are reserved for platform-specific variations 	 * (e.g. l3$ caching on gen7). */
+name|__u32
+name|caching
 decl_stmt|;
 block|}
 struct|;
@@ -2544,7 +2423,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I915_MADV_PURGED_INTERNAL
+name|__I915_MADV_PURGED
 value|2
 end_define
 
@@ -2571,6 +2450,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* flags */
+end_comment
 
 begin_define
 define|#
@@ -2882,6 +2765,25 @@ end_struct
 
 begin_struct
 struct|struct
+name|drm_i915_gem_wait
+block|{
+comment|/** Handle of BO we shall wait on */
+name|__u32
+name|bo_handle
+decl_stmt|;
+name|__u32
+name|flags
+decl_stmt|;
+comment|/** Number of nanoseconds to wait, Returns time remaining. */
+name|__s64
+name|timeout_ns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|drm_i915_gem_context_create
 block|{
 comment|/*  output: id of new context*/
@@ -2909,13 +2811,83 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|drm_i915_reg_read
+block|{
+name|__u64
+name|offset
+decl_stmt|;
+name|__u64
+name|val
+decl_stmt|;
+comment|/* Return value */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* For use by IPS driver */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|long
+name|i915_read_mch_val
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|i915_gpu_raise
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|i915_gpu_lower
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|i915_gpu_busy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|i915_gpu_turbo_disable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _I915_DRM_H_ */
+comment|/* _UAPI_I915_DRM_H_ */
 end_comment
 
 end_unit

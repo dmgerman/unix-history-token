@@ -1,18 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright Â© 2006 Intel Corporation  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  * Authors:  *    Eric Anholt<eric@anholt.net>  *  * $FreeBSD$  */
+comment|/*  * Copyright Â© 2006 Intel Corporation  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  * Authors:  *    Eric Anholt<eric@anholt.net>  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drmP.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm.h>
+file|<dev/drm2/drmP.h>
 end_include
 
 begin_include
@@ -813,7 +821,7 @@ if|if
 condition|(
 name|index
 operator|>=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|ptrs
 operator|->
@@ -1040,6 +1048,12 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|panel_fixed_mode
+condition|)
+return|return;
 name|fill_detail_timing_data
 argument_list|(
 name|panel_fixed_mode
@@ -1148,7 +1162,7 @@ name|downclock
 operator|*
 literal|10
 expr_stmt|;
-name|DRM_DEBUG
+name|DRM_DEBUG_KMS
 argument_list|(
 literal|"LVDS downclock is found in VBT. "
 literal|"Normal Clock %dKHz, downclock %dKHz\n"
@@ -1344,6 +1358,12 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|panel_fixed_mode
+condition|)
+return|return;
 name|fill_detail_timing_data
 argument_list|(
 name|panel_fixed_mode
@@ -1520,9 +1540,17 @@ name|general
 operator|->
 name|display_clock_mode
 expr_stmt|;
+name|dev_priv
+operator|->
+name|fdi_rx_polarity_inverted
+operator|=
+name|general
+operator|->
+name|fdi_rx_polarity_inverted
+expr_stmt|;
 name|DRM_DEBUG_KMS
 argument_list|(
-literal|"BDB_GENERAL_FEATURES int_tv_support %d int_crt_support %d lvds_use_ssc %d lvds_ssc_freq %d display_clock_mode %d\n"
+literal|"BDB_GENERAL_FEATURES int_tv_support %d int_crt_support %d lvds_use_ssc %d lvds_ssc_freq %d display_clock_mode %d fdi_rx_polarity_inverted %d\n"
 argument_list|,
 name|dev_priv
 operator|->
@@ -1543,6 +1571,10 @@ argument_list|,
 name|dev_priv
 operator|->
 name|display_clock_mode
+argument_list|,
+name|dev_priv
+operator|->
+name|fdi_rx_polarity_inverted
 argument_list|)
 expr_stmt|;
 block|}
@@ -2145,21 +2177,11 @@ name|edp
 operator|.
 name|support
 condition|)
-block|{
 name|DRM_DEBUG_KMS
 argument_list|(
-literal|"No eDP BDB found but eDP panel "
-literal|"supported, assume %dbpp panel color "
-literal|"depth.\n"
-argument_list|,
-name|dev_priv
-operator|->
-name|edp
-operator|.
-name|bpp
+literal|"No eDP BDB found but eDP panel supported.\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 switch|switch
@@ -2595,13 +2617,13 @@ name|child_dev
 operator|=
 name|malloc
 argument_list|(
+name|count
+operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
 name|p_child
 argument_list|)
-operator|*
-name|count
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
@@ -2610,6 +2632,21 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dev_priv
+operator|->
+name|child_dev
+condition|)
+block|{
+name|DRM_DEBUG_KMS
+argument_list|(
+literal|"No memory space for child device\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dev_priv
 operator|->
 name|child_dev_num
@@ -2780,21 +2817,13 @@ operator|->
 name|lvds_ssc_freq
 argument_list|)
 expr_stmt|;
-comment|/* eDP data */
-name|dev_priv
-operator|->
-name|edp
-operator|.
-name|bpp
-operator|=
-literal|18
-expr_stmt|;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|int
+name|__init
 name|intel_no_opregion_vbt_callback
 parameter_list|(
 specifier|const
@@ -2870,7 +2899,7 @@ comment|/**  * intel_parse_bios - find VBT and initialize settings from the BIOS
 end_comment
 
 begin_function
-name|bool
+name|int
 name|intel_parse_bios
 parameter_list|(
 name|struct
@@ -2888,6 +2917,17 @@ name|dev
 operator|->
 name|dev_private
 decl_stmt|;
+name|device_t
+name|vga_dev
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+operator|->
+name|dev
+argument_list|)
+decl_stmt|;
+empty_stmt|;
 name|struct
 name|bdb_header
 modifier|*
@@ -2896,8 +2936,11 @@ init|=
 name|NULL
 decl_stmt|;
 name|u8
+name|__iomem
 modifier|*
 name|bios
+init|=
+name|NULL
 decl_stmt|;
 name|init_vbt_defaults
 argument_list|(
@@ -2986,32 +3029,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|bios
-operator|=
-name|NULL
-expr_stmt|;
-if|#
-directive|if
-literal|1
-if|if
-condition|(
-name|bdb
-operator|==
-name|NULL
-condition|)
-block|{
-name|KIB_NOTYET
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|bdb
@@ -3034,9 +3051,9 @@ name|i
 decl_stmt|;
 name|bios
 operator|=
-name|pci_map_rom
+name|vga_pci_map_bios
 argument_list|(
-name|pdev
+name|vga_dev
 argument_list|,
 operator|&
 name|size
@@ -3110,9 +3127,9 @@ argument_list|(
 literal|"VBT signature missing\n"
 argument_list|)
 expr_stmt|;
-name|pci_unmap_rom
+name|vga_pci_unmap_bios
 argument_list|(
-name|pdev
+name|vga_dev
 argument_list|,
 name|bios
 argument_list|)
@@ -3140,8 +3157,6 @@ name|bdb_offset
 operator|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Grab useful general definitions */
 name|parse_general_features
 argument_list|(
@@ -3199,15 +3214,91 @@ argument_list|,
 name|bdb
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (bios) 		pci_unmap_rom(pdev, bios);
-endif|#
-directive|endif
+if|if
+condition|(
+name|bios
+condition|)
+name|vga_pci_unmap_bios
+argument_list|(
+name|vga_dev
+argument_list|,
+name|bios
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * NOTE Linux<->FreeBSD:  * Apparently, Linux doesn't free those pointers.  * TODO: Report that upstream.  */
+end_comment
+
+begin_function
+name|void
+name|intel_free_parsed_bios_data
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|drm_i915_private
+modifier|*
+name|dev_priv
+init|=
+name|dev
+operator|->
+name|dev_private
+decl_stmt|;
+name|free
+argument_list|(
+name|dev_priv
+operator|->
+name|lfp_lvds_vbt_mode
+argument_list|,
+name|DRM_MEM_KMS
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dev_priv
+operator|->
+name|sdvo_lvds_vbt_mode
+argument_list|,
+name|DRM_MEM_KMS
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dev_priv
+operator|->
+name|child_dev
+argument_list|,
+name|DRM_MEM_KMS
+argument_list|)
+expr_stmt|;
+name|dev_priv
+operator|->
+name|lfp_lvds_vbt_mode
+operator|=
+name|NULL
+expr_stmt|;
+name|dev_priv
+operator|->
+name|sdvo_lvds_vbt_mode
+operator|=
+name|NULL
+expr_stmt|;
+name|dev_priv
+operator|->
+name|child_dev
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -3237,23 +3328,25 @@ decl_stmt|;
 comment|/* Set the Panel Power On/Off timings if uninitialized. */
 if|if
 condition|(
-operator|(
+operator|!
+name|HAS_PCH_SPLIT
+argument_list|(
+name|dev
+argument_list|)
+operator|&&
 name|I915_READ
 argument_list|(
 name|PP_ON_DELAYS
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|I915_READ
 argument_list|(
 name|PP_OFF_DELAYS
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* Set T2 to 40ms and T5 to 200ms */

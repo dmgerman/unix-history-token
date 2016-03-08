@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sglist.h>
 end_include
 
@@ -91,24 +97,49 @@ struct|struct
 name|intel_gtt
 block|{
 comment|/* Size of memory reserved for graphics by the BIOS */
-name|u_int
+name|unsigned
+name|int
 name|stolen_size
 decl_stmt|;
 comment|/* Total number of gtt entries. */
-name|u_int
+name|unsigned
+name|int
 name|gtt_total_entries
 decl_stmt|;
-comment|/* 	 * Part of the gtt that is mappable by the cpu, for those 	 * chips where this is not the full gtt. 	 */
-name|u_int
+comment|/* Part of the gtt that is mappable by the cpu, for those chips where 	 * this is not the full gtt. */
+name|unsigned
+name|int
 name|gtt_mappable_entries
 decl_stmt|;
-comment|/* 	 * Always false. 	 */
-name|u_int
-name|do_idle_maps
+comment|/* Whether i915 needs to use the dmar apis or not. */
+name|unsigned
+name|int
+name|needs_dmar
+range|:
+literal|1
 decl_stmt|;
-comment|/* 	 * Share the scratch page dma with ppgtts. 	 */
+comment|/* Whether we idle the gpu before mapping/unmapping */
+name|unsigned
+name|int
+name|do_idle_maps
+range|:
+literal|1
+decl_stmt|;
+comment|/* Share the scratch page dma with ppgtts. */
 name|vm_paddr_t
 name|scratch_page_dma
+decl_stmt|;
+name|vm_page_t
+name|scratch_page
+decl_stmt|;
+comment|/* for ppgtt PDE access */
+name|uint32_t
+modifier|*
+name|gtt
+decl_stmt|;
+comment|/* needed for ioremap in drm/i915 */
+name|bus_addr_t
+name|gma_bus_addr
 decl_stmt|;
 block|}
 struct|;
@@ -236,6 +267,7 @@ end_function_decl
 begin_function_decl
 name|struct
 name|intel_gtt
+modifier|*
 name|intel_gtt_get
 parameter_list|(
 name|void

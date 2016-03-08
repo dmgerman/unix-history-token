@@ -26,19 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm.h>
+file|<dev/drm2/i915/i915_drv.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/drm2/i915/i915_drm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/drm2/i915/i915_drv.h>
 end_include
 
 begin_function
@@ -102,8 +96,14 @@ parameter_list|,
 name|unsigned
 name|alignment
 parameter_list|,
+name|unsigned
+name|cache_level
+parameter_list|,
 name|bool
 name|mappable
+parameter_list|,
+name|bool
+name|nonblocking
 parameter_list|)
 block|{
 name|drm_i915_private_t
@@ -169,7 +169,7 @@ name|min_size
 argument_list|,
 name|alignment
 argument_list|,
-literal|0
+name|cache_level
 argument_list|,
 literal|0
 argument_list|,
@@ -194,7 +194,7 @@ name|min_size
 argument_list|,
 name|alignment
 argument_list|,
-literal|0
+name|cache_level
 argument_list|)
 expr_stmt|;
 comment|/* First see if there is a large enough contiguous idle region... */
@@ -221,6 +221,13 @@ goto|goto
 name|found
 goto|;
 block|}
+if|if
+condition|(
+name|nonblocking
+condition|)
+goto|goto
+name|none
+goto|;
 comment|/* Now merge in the soon-to-be-expired objects... */
 name|list_for_each_entry
 argument_list|(
@@ -231,16 +238,6 @@ argument_list|,
 argument|mm_list
 argument_list|)
 block|{
-comment|/* Does the object require an outstanding flush? */
-if|if
-condition|(
-name|obj
-operator|->
-name|base
-operator|.
-name|write_domain
-condition|)
-continue|continue;
 if|if
 condition|(
 name|mark_free
@@ -255,63 +252,8 @@ goto|goto
 name|found
 goto|;
 block|}
-comment|/* Finally add anything with a pending flush (in order of retirement) */
-name|list_for_each_entry
-argument_list|(
-argument|obj
-argument_list|,
-argument|&dev_priv->mm.flushing_list
-argument_list|,
-argument|mm_list
-argument_list|)
-block|{
-if|if
-condition|(
-name|mark_free
-argument_list|(
-name|obj
-argument_list|,
-operator|&
-name|unwind_list
-argument_list|)
-condition|)
-goto|goto
-name|found
-goto|;
-block|}
-name|list_for_each_entry
-argument_list|(
-argument|obj
-argument_list|,
-argument|&dev_priv->mm.active_list
-argument_list|,
-argument|mm_list
-argument_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|obj
-operator|->
-name|base
-operator|.
-name|write_domain
-condition|)
-continue|continue;
-if|if
-condition|(
-name|mark_free
-argument_list|(
-name|obj
-argument_list|,
-operator|&
-name|unwind_list
-argument_list|)
-condition|)
-goto|goto
-name|found
-goto|;
-block|}
+name|none
+label|:
 comment|/* Nothing found, clean up and bail out! */
 while|while
 condition|(
@@ -345,17 +287,9 @@ operator|->
 name|gtt_space
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|BUG_ON
 argument_list|(
 name|ret
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"drm_mm_scan_remove_block failed %d"
-operator|,
-name|ret
-operator|)
 argument_list|)
 expr_stmt|;
 name|list_del_init
@@ -512,9 +446,6 @@ name|struct
 name|drm_device
 modifier|*
 name|dev
-parameter_list|,
-name|bool
-name|purgeable_only
 parameter_list|)
 block|{
 name|drm_i915_private_t
@@ -559,16 +490,6 @@ name|dev_priv
 operator|->
 name|mm
 operator|.
-name|flushing_list
-argument_list|)
-operator|&&
-name|list_empty
-argument_list|(
-operator|&
-name|dev_priv
-operator|->
-name|mm
-operator|.
 name|active_list
 argument_list|)
 operator|)
@@ -581,15 +502,13 @@ return|return
 operator|-
 name|ENOSPC
 return|;
-name|CTR2
+name|CTR1
 argument_list|(
 name|KTR_DRM
 argument_list|,
-literal|"evict_everything %p %d"
+literal|"evict_everything %p"
 argument_list|,
 name|dev
-argument_list|,
-name|purgeable_only
 argument_list|)
 expr_stmt|;
 comment|/* The gpu_idle will flush everything in the write domain to the 	 * active list. Then we must move everything off the active list 	 * with retire requests. 	 */
@@ -612,23 +531,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|list_empty
-argument_list|(
-operator|&
-name|dev_priv
-operator|->
-name|mm
-operator|.
-name|flushing_list
-argument_list|)
-argument_list|,
-operator|(
-literal|"flush list not empty"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Having flushed everything, unbind() should never raise an error */
 name|list_for_each_entry_safe
 argument_list|(
@@ -640,19 +542,6 @@ argument|&dev_priv->mm.inactive_list
 argument_list|,
 argument|mm_list
 argument_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|purgeable_only
-operator|||
-name|obj
-operator|->
-name|madv
-operator|!=
-name|I915_MADV_WILLNEED
-condition|)
-block|{
 if|if
 condition|(
 name|obj
@@ -661,13 +550,14 @@ name|pin_count
 operator|==
 literal|0
 condition|)
+name|WARN_ON
+argument_list|(
 name|i915_gem_object_unbind
 argument_list|(
 name|obj
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
-block|}
 return|return
 literal|0
 return|;

@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/drm2/i915/i915_drm.h>
 end_include
 
@@ -39,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<dev/drm2/i915/intel_drv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/drm2/i915/i915_reg.h>
 end_include
 
 begin_function
@@ -203,6 +203,8 @@ name|array
 operator|=
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|save_palette_a
 expr_stmt|;
 else|else
@@ -210,6 +212,8 @@ name|array
 operator|=
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|save_palette_b
 expr_stmt|;
 for|for
@@ -329,6 +333,8 @@ name|array
 operator|=
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|save_palette_a
 expr_stmt|;
 else|else
@@ -336,6 +342,8 @@ name|array
 operator|=
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|save_palette_b
 expr_stmt|;
 for|for
@@ -605,6 +613,8 @@ decl_stmt|;
 comment|/* VGA color palette registers */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDACMASK
 operator|=
 name|I915_READ8
@@ -615,6 +625,8 @@ expr_stmt|;
 comment|/* MSR bits */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMSR
 operator|=
 name|I915_READ8
@@ -626,6 +638,8 @@ if|if
 condition|(
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMSR
 operator|&
 name|VGA_MSR_CGA_MODE
@@ -702,6 +716,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCR
 index|[
 name|i
@@ -721,6 +737,8 @@ expr_stmt|;
 comment|/* Make sure we don't turn off CR group 0 writes */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCR
 index|[
 literal|0x11
@@ -737,6 +755,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveAR_INDEX
 operator|=
 name|I915_READ8
@@ -759,6 +779,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveAR
 index|[
 name|i
@@ -786,6 +808,8 @@ name|VGA_AR_INDEX
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveAR_INDEX
 argument_list|)
 expr_stmt|;
@@ -810,6 +834,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 name|i
@@ -828,6 +854,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x10
@@ -846,6 +874,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x11
@@ -864,6 +894,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x18
@@ -896,6 +928,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSR
 index|[
 name|i
@@ -952,6 +986,8 @@ name|VGA_MSR_WRITE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMSR
 argument_list|)
 expr_stmt|;
@@ -959,6 +995,8 @@ if|if
 condition|(
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMSR
 operator|&
 name|VGA_MSR_CGA_MODE
@@ -1018,6 +1056,8 @@ name|i
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSR
 index|[
 name|i
@@ -1038,6 +1078,8 @@ literal|0x11
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCR
 index|[
 literal|0x11
@@ -1069,6 +1111,8 @@ name|i
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCR
 index|[
 name|i
@@ -1101,6 +1145,8 @@ name|i
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 name|i
@@ -1119,6 +1165,8 @@ literal|0x10
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x10
@@ -1137,6 +1185,8 @@ literal|0x11
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x11
@@ -1155,6 +1205,8 @@ literal|0x18
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGR
 index|[
 literal|0x18
@@ -1191,6 +1243,8 @@ name|i
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveAR
 index|[
 name|i
@@ -1211,6 +1265,8 @@ name|VGA_AR_INDEX
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveAR_INDEX
 operator||
 literal|0x20
@@ -1228,6 +1284,8 @@ name|VGA_DACMASK
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDACMASK
 argument_list|)
 expr_stmt|;
@@ -1270,6 +1328,8 @@ return|return;
 comment|/* Cursor state */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURACNTR
 operator|=
 name|I915_READ
@@ -1279,6 +1339,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURAPOS
 operator|=
 name|I915_READ
@@ -1288,6 +1350,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURABASE
 operator|=
 name|I915_READ
@@ -1297,6 +1361,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBCNTR
 operator|=
 name|I915_READ
@@ -1306,6 +1372,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBPOS
 operator|=
 name|I915_READ
@@ -1315,6 +1383,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBBASE
 operator|=
 name|I915_READ
@@ -1331,6 +1401,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURSIZE
 operator|=
 name|I915_READ
@@ -1348,6 +1420,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePCH_DREF_CONTROL
 operator|=
 name|I915_READ
@@ -1357,6 +1431,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDISP_ARB_CTL
 operator|=
 name|I915_READ
@@ -1368,6 +1444,8 @@ block|}
 comment|/* Pipe& plane A info */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEACONF
 operator|=
 name|I915_READ
@@ -1377,6 +1455,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEASRC
 operator|=
 name|I915_READ
@@ -1394,6 +1474,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA0
 operator|=
 name|I915_READ
@@ -1403,6 +1485,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA1
 operator|=
 name|I915_READ
@@ -1412,6 +1496,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A
 operator|=
 name|I915_READ
@@ -1424,6 +1510,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA0
 operator|=
 name|I915_READ
@@ -1433,6 +1521,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA1
 operator|=
 name|I915_READ
@@ -1442,6 +1532,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A
 operator|=
 name|I915_READ
@@ -1469,6 +1561,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A_MD
 operator|=
 name|I915_READ
@@ -1478,6 +1572,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHTOTAL_A
 operator|=
 name|I915_READ
@@ -1487,6 +1583,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHBLANK_A
 operator|=
 name|I915_READ
@@ -1496,6 +1594,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHSYNC_A
 operator|=
 name|I915_READ
@@ -1505,6 +1605,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVTOTAL_A
 operator|=
 name|I915_READ
@@ -1514,6 +1616,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVBLANK_A
 operator|=
 name|I915_READ
@@ -1523,6 +1627,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVSYNC_A
 operator|=
 name|I915_READ
@@ -1540,6 +1646,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBCLRPAT_A
 operator|=
 name|I915_READ
@@ -1557,6 +1665,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DATA_M1
 operator|=
 name|I915_READ
@@ -1566,6 +1676,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DATA_N1
 operator|=
 name|I915_READ
@@ -1575,6 +1687,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_LINK_M1
 operator|=
 name|I915_READ
@@ -1584,6 +1698,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_LINK_N1
 operator|=
 name|I915_READ
@@ -1593,6 +1709,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_TXA_CTL
 operator|=
 name|I915_READ
@@ -1602,6 +1720,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXA_CTL
 operator|=
 name|I915_READ
@@ -1611,6 +1731,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_CTL_1
 operator|=
 name|I915_READ
@@ -1620,6 +1742,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_WIN_SZ
 operator|=
 name|I915_READ
@@ -1629,6 +1753,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_WIN_POS
 operator|=
 name|I915_READ
@@ -1638,6 +1764,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANSACONF
 operator|=
 name|I915_READ
@@ -1647,6 +1775,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HTOTAL_A
 operator|=
 name|I915_READ
@@ -1656,6 +1786,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HBLANK_A
 operator|=
 name|I915_READ
@@ -1665,6 +1797,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HSYNC_A
 operator|=
 name|I915_READ
@@ -1674,6 +1808,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VTOTAL_A
 operator|=
 name|I915_READ
@@ -1683,6 +1819,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VBLANK_A
 operator|=
 name|I915_READ
@@ -1692,6 +1830,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VSYNC_A
 operator|=
 name|I915_READ
@@ -1702,6 +1842,8 @@ expr_stmt|;
 block|}
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPACNTR
 operator|=
 name|I915_READ
@@ -1711,6 +1853,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASTRIDE
 operator|=
 name|I915_READ
@@ -1720,6 +1864,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASIZE
 operator|=
 name|I915_READ
@@ -1729,6 +1875,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPAPOS
 operator|=
 name|I915_READ
@@ -1738,6 +1886,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPAADDR
 operator|=
 name|I915_READ
@@ -1759,6 +1909,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASURF
 operator|=
 name|I915_READ
@@ -1768,6 +1920,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPATILEOFF
 operator|=
 name|I915_READ
@@ -1785,6 +1939,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEASTAT
 operator|=
 name|I915_READ
@@ -1795,6 +1951,8 @@ expr_stmt|;
 comment|/* Pipe& plane B info */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEBCONF
 operator|=
 name|I915_READ
@@ -1804,6 +1962,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEBSRC
 operator|=
 name|I915_READ
@@ -1821,6 +1981,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB0
 operator|=
 name|I915_READ
@@ -1830,6 +1992,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB1
 operator|=
 name|I915_READ
@@ -1839,6 +2003,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B
 operator|=
 name|I915_READ
@@ -1851,6 +2017,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB0
 operator|=
 name|I915_READ
@@ -1860,6 +2028,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB1
 operator|=
 name|I915_READ
@@ -1869,6 +2039,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B
 operator|=
 name|I915_READ
@@ -1896,6 +2068,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B_MD
 operator|=
 name|I915_READ
@@ -1905,6 +2079,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHTOTAL_B
 operator|=
 name|I915_READ
@@ -1914,6 +2090,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHBLANK_B
 operator|=
 name|I915_READ
@@ -1923,6 +2101,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHSYNC_B
 operator|=
 name|I915_READ
@@ -1932,6 +2112,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVTOTAL_B
 operator|=
 name|I915_READ
@@ -1941,6 +2123,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVBLANK_B
 operator|=
 name|I915_READ
@@ -1950,6 +2134,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVSYNC_B
 operator|=
 name|I915_READ
@@ -1967,6 +2153,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBCLRPAT_B
 operator|=
 name|I915_READ
@@ -1984,6 +2172,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DATA_M1
 operator|=
 name|I915_READ
@@ -1993,6 +2183,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DATA_N1
 operator|=
 name|I915_READ
@@ -2002,6 +2194,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_LINK_M1
 operator|=
 name|I915_READ
@@ -2011,6 +2205,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_LINK_N1
 operator|=
 name|I915_READ
@@ -2020,6 +2216,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_TXB_CTL
 operator|=
 name|I915_READ
@@ -2029,6 +2227,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXB_CTL
 operator|=
 name|I915_READ
@@ -2038,6 +2238,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_CTL_1
 operator|=
 name|I915_READ
@@ -2047,6 +2249,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_WIN_SZ
 operator|=
 name|I915_READ
@@ -2056,6 +2260,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_WIN_POS
 operator|=
 name|I915_READ
@@ -2065,6 +2271,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANSBCONF
 operator|=
 name|I915_READ
@@ -2074,6 +2282,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HTOTAL_B
 operator|=
 name|I915_READ
@@ -2083,6 +2293,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HBLANK_B
 operator|=
 name|I915_READ
@@ -2092,6 +2304,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HSYNC_B
 operator|=
 name|I915_READ
@@ -2101,6 +2315,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VTOTAL_B
 operator|=
 name|I915_READ
@@ -2110,6 +2326,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VBLANK_B
 operator|=
 name|I915_READ
@@ -2119,6 +2337,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VSYNC_B
 operator|=
 name|I915_READ
@@ -2129,6 +2349,8 @@ expr_stmt|;
 block|}
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBCNTR
 operator|=
 name|I915_READ
@@ -2138,6 +2360,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSTRIDE
 operator|=
 name|I915_READ
@@ -2147,6 +2371,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSIZE
 operator|=
 name|I915_READ
@@ -2156,6 +2382,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBPOS
 operator|=
 name|I915_READ
@@ -2165,6 +2393,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBADDR
 operator|=
 name|I915_READ
@@ -2186,6 +2416,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSURF
 operator|=
 name|I915_READ
@@ -2195,6 +2427,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBTILEOFF
 operator|=
 name|I915_READ
@@ -2212,6 +2446,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEBSTAT
 operator|=
 name|I915_READ
@@ -2251,6 +2487,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2289,6 +2527,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2341,6 +2581,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2377,6 +2619,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2395,6 +2639,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* CRT state */
+if|if
+condition|(
+name|HAS_PCH_SPLIT
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|dev_priv
+operator|->
+name|regfile
+operator|.
+name|saveADPA
+operator|=
+name|I915_READ
+argument_list|(
+name|PCH_ADPA
+argument_list|)
+expr_stmt|;
+else|else
+name|dev_priv
+operator|->
+name|regfile
+operator|.
+name|saveADPA
+operator|=
+name|I915_READ
+argument_list|(
+name|ADPA
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -2488,6 +2763,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2526,6 +2803,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2581,6 +2860,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2614,6 +2895,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFENCE
 index|[
 name|i
@@ -2696,6 +2979,8 @@ name|PCH_DREF_CONTROL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePCH_DREF_CONTROL
 argument_list|)
 expr_stmt|;
@@ -2705,6 +2990,8 @@ name|DISP_ARB_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDISP_ARB_CTL
 argument_list|)
 expr_stmt|;
@@ -2715,6 +3002,8 @@ if|if
 condition|(
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A
 operator|&
 name|DPLL_VCO_ENABLE
@@ -2726,6 +3015,8 @@ name|dpll_a_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A
 operator|&
 operator|~
@@ -2749,6 +3040,8 @@ name|fpa0_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA0
 argument_list|)
 expr_stmt|;
@@ -2758,6 +3051,8 @@ name|fpa1_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPA1
 argument_list|)
 expr_stmt|;
@@ -2768,6 +3063,8 @@ name|dpll_a_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A
 argument_list|)
 expr_stmt|;
@@ -2805,6 +3102,8 @@ name|_DPLL_A_MD
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_A_MD
 argument_list|)
 expr_stmt|;
@@ -2826,6 +3125,8 @@ name|_HTOTAL_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHTOTAL_A
 argument_list|)
 expr_stmt|;
@@ -2835,6 +3136,8 @@ name|_HBLANK_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHBLANK_A
 argument_list|)
 expr_stmt|;
@@ -2844,6 +3147,8 @@ name|_HSYNC_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHSYNC_A
 argument_list|)
 expr_stmt|;
@@ -2853,6 +3158,8 @@ name|_VTOTAL_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVTOTAL_A
 argument_list|)
 expr_stmt|;
@@ -2862,6 +3169,8 @@ name|_VBLANK_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVBLANK_A
 argument_list|)
 expr_stmt|;
@@ -2871,6 +3180,8 @@ name|_VSYNC_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVSYNC_A
 argument_list|)
 expr_stmt|;
@@ -2888,6 +3199,8 @@ name|_BCLRPAT_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBCLRPAT_A
 argument_list|)
 expr_stmt|;
@@ -2905,6 +3218,8 @@ name|_PIPEA_DATA_M1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DATA_M1
 argument_list|)
 expr_stmt|;
@@ -2914,6 +3229,8 @@ name|_PIPEA_DATA_N1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DATA_N1
 argument_list|)
 expr_stmt|;
@@ -2923,6 +3240,8 @@ name|_PIPEA_LINK_M1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_LINK_M1
 argument_list|)
 expr_stmt|;
@@ -2932,6 +3251,8 @@ name|_PIPEA_LINK_N1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_LINK_N1
 argument_list|)
 expr_stmt|;
@@ -2941,6 +3262,8 @@ name|_FDI_RXA_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXA_CTL
 argument_list|)
 expr_stmt|;
@@ -2950,6 +3273,8 @@ name|_FDI_TXA_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_TXA_CTL
 argument_list|)
 expr_stmt|;
@@ -2959,6 +3284,8 @@ name|_PFA_CTL_1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_CTL_1
 argument_list|)
 expr_stmt|;
@@ -2968,6 +3295,8 @@ name|_PFA_WIN_SZ
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_WIN_SZ
 argument_list|)
 expr_stmt|;
@@ -2977,6 +3306,8 @@ name|_PFA_WIN_POS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFA_WIN_POS
 argument_list|)
 expr_stmt|;
@@ -2986,6 +3317,8 @@ name|_TRANSACONF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANSACONF
 argument_list|)
 expr_stmt|;
@@ -2995,6 +3328,8 @@ name|_TRANS_HTOTAL_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HTOTAL_A
 argument_list|)
 expr_stmt|;
@@ -3004,6 +3339,8 @@ name|_TRANS_HBLANK_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HBLANK_A
 argument_list|)
 expr_stmt|;
@@ -3013,6 +3350,8 @@ name|_TRANS_HSYNC_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HSYNC_A
 argument_list|)
 expr_stmt|;
@@ -3022,6 +3361,8 @@ name|_TRANS_VTOTAL_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VTOTAL_A
 argument_list|)
 expr_stmt|;
@@ -3031,6 +3372,8 @@ name|_TRANS_VBLANK_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VBLANK_A
 argument_list|)
 expr_stmt|;
@@ -3040,6 +3383,8 @@ name|_TRANS_VSYNC_A
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VSYNC_A
 argument_list|)
 expr_stmt|;
@@ -3051,6 +3396,8 @@ name|_DSPASIZE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASIZE
 argument_list|)
 expr_stmt|;
@@ -3060,6 +3407,8 @@ name|_DSPAPOS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPAPOS
 argument_list|)
 expr_stmt|;
@@ -3069,6 +3418,8 @@ name|_PIPEASRC
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEASRC
 argument_list|)
 expr_stmt|;
@@ -3078,6 +3429,8 @@ name|_DSPAADDR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPAADDR
 argument_list|)
 expr_stmt|;
@@ -3087,6 +3440,8 @@ name|_DSPASTRIDE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASTRIDE
 argument_list|)
 expr_stmt|;
@@ -3108,6 +3463,8 @@ name|_DSPASURF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPASURF
 argument_list|)
 expr_stmt|;
@@ -3117,6 +3474,8 @@ name|_DSPATILEOFF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPATILEOFF
 argument_list|)
 expr_stmt|;
@@ -3127,6 +3486,8 @@ name|_PIPEACONF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEACONF
 argument_list|)
 expr_stmt|;
@@ -3144,6 +3505,8 @@ name|_DSPACNTR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPACNTR
 argument_list|)
 expr_stmt|;
@@ -3162,6 +3525,8 @@ if|if
 condition|(
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B
 operator|&
 name|DPLL_VCO_ENABLE
@@ -3173,6 +3538,8 @@ name|dpll_b_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B
 operator|&
 operator|~
@@ -3196,6 +3563,8 @@ name|fpb0_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB0
 argument_list|)
 expr_stmt|;
@@ -3205,6 +3574,8 @@ name|fpb1_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFPB1
 argument_list|)
 expr_stmt|;
@@ -3215,6 +3586,8 @@ name|dpll_b_reg
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B
 argument_list|)
 expr_stmt|;
@@ -3252,6 +3625,8 @@ name|_DPLL_B_MD
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPLL_B_MD
 argument_list|)
 expr_stmt|;
@@ -3273,6 +3648,8 @@ name|_HTOTAL_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHTOTAL_B
 argument_list|)
 expr_stmt|;
@@ -3282,6 +3659,8 @@ name|_HBLANK_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHBLANK_B
 argument_list|)
 expr_stmt|;
@@ -3291,6 +3670,8 @@ name|_HSYNC_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveHSYNC_B
 argument_list|)
 expr_stmt|;
@@ -3300,6 +3681,8 @@ name|_VTOTAL_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVTOTAL_B
 argument_list|)
 expr_stmt|;
@@ -3309,6 +3692,8 @@ name|_VBLANK_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVBLANK_B
 argument_list|)
 expr_stmt|;
@@ -3318,6 +3703,8 @@ name|_VSYNC_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVSYNC_B
 argument_list|)
 expr_stmt|;
@@ -3335,6 +3722,8 @@ name|_BCLRPAT_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBCLRPAT_B
 argument_list|)
 expr_stmt|;
@@ -3352,6 +3741,8 @@ name|_PIPEB_DATA_M1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DATA_M1
 argument_list|)
 expr_stmt|;
@@ -3361,6 +3752,8 @@ name|_PIPEB_DATA_N1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DATA_N1
 argument_list|)
 expr_stmt|;
@@ -3370,6 +3763,8 @@ name|_PIPEB_LINK_M1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_LINK_M1
 argument_list|)
 expr_stmt|;
@@ -3379,6 +3774,8 @@ name|_PIPEB_LINK_N1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_LINK_N1
 argument_list|)
 expr_stmt|;
@@ -3388,6 +3785,8 @@ name|_FDI_RXB_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXB_CTL
 argument_list|)
 expr_stmt|;
@@ -3397,6 +3796,8 @@ name|_FDI_TXB_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_TXB_CTL
 argument_list|)
 expr_stmt|;
@@ -3406,6 +3807,8 @@ name|_PFB_CTL_1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_CTL_1
 argument_list|)
 expr_stmt|;
@@ -3415,6 +3818,8 @@ name|_PFB_WIN_SZ
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_WIN_SZ
 argument_list|)
 expr_stmt|;
@@ -3424,6 +3829,8 @@ name|_PFB_WIN_POS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFB_WIN_POS
 argument_list|)
 expr_stmt|;
@@ -3433,6 +3840,8 @@ name|_TRANSBCONF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANSBCONF
 argument_list|)
 expr_stmt|;
@@ -3442,6 +3851,8 @@ name|_TRANS_HTOTAL_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HTOTAL_B
 argument_list|)
 expr_stmt|;
@@ -3451,6 +3862,8 @@ name|_TRANS_HBLANK_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HBLANK_B
 argument_list|)
 expr_stmt|;
@@ -3460,6 +3873,8 @@ name|_TRANS_HSYNC_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_HSYNC_B
 argument_list|)
 expr_stmt|;
@@ -3469,6 +3884,8 @@ name|_TRANS_VTOTAL_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VTOTAL_B
 argument_list|)
 expr_stmt|;
@@ -3478,6 +3895,8 @@ name|_TRANS_VBLANK_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VBLANK_B
 argument_list|)
 expr_stmt|;
@@ -3487,6 +3906,8 @@ name|_TRANS_VSYNC_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveTRANS_VSYNC_B
 argument_list|)
 expr_stmt|;
@@ -3498,6 +3919,8 @@ name|_DSPBSIZE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSIZE
 argument_list|)
 expr_stmt|;
@@ -3507,6 +3930,8 @@ name|_DSPBPOS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBPOS
 argument_list|)
 expr_stmt|;
@@ -3516,6 +3941,8 @@ name|_PIPEBSRC
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEBSRC
 argument_list|)
 expr_stmt|;
@@ -3525,6 +3952,8 @@ name|_DSPBADDR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBADDR
 argument_list|)
 expr_stmt|;
@@ -3534,6 +3963,8 @@ name|_DSPBSTRIDE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSTRIDE
 argument_list|)
 expr_stmt|;
@@ -3555,6 +3986,8 @@ name|_DSPBSURF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBSURF
 argument_list|)
 expr_stmt|;
@@ -3564,6 +3997,8 @@ name|_DSPBTILEOFF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBTILEOFF
 argument_list|)
 expr_stmt|;
@@ -3574,6 +4009,8 @@ name|_PIPEBCONF
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEBCONF
 argument_list|)
 expr_stmt|;
@@ -3591,6 +4028,8 @@ name|_DSPBCNTR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPBCNTR
 argument_list|)
 expr_stmt|;
@@ -3611,6 +4050,8 @@ name|_CURAPOS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURAPOS
 argument_list|)
 expr_stmt|;
@@ -3620,6 +4061,8 @@ name|_CURACNTR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURACNTR
 argument_list|)
 expr_stmt|;
@@ -3629,6 +4072,8 @@ name|_CURABASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURABASE
 argument_list|)
 expr_stmt|;
@@ -3638,6 +4083,8 @@ name|_CURBPOS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBPOS
 argument_list|)
 expr_stmt|;
@@ -3647,6 +4094,8 @@ name|_CURBCNTR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBCNTR
 argument_list|)
 expr_stmt|;
@@ -3656,6 +4105,8 @@ name|_CURBBASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURBBASE
 argument_list|)
 expr_stmt|;
@@ -3672,7 +4123,40 @@ name|CURSIZE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCURSIZE
+argument_list|)
+expr_stmt|;
+comment|/* CRT state */
+if|if
+condition|(
+name|HAS_PCH_SPLIT
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|I915_WRITE
+argument_list|(
+name|PCH_ADPA
+argument_list|,
+name|dev_priv
+operator|->
+name|regfile
+operator|.
+name|saveADPA
+argument_list|)
+expr_stmt|;
+else|else
+name|I915_WRITE
+argument_list|(
+name|ADPA
+argument_list|,
+name|dev_priv
+operator|->
+name|regfile
+operator|.
+name|saveADPA
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3702,6 +4186,8 @@ decl_stmt|;
 comment|/* Display arbitration control */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPARB
 operator|=
 name|I915_READ
@@ -3710,43 +4196,12 @@ name|DSPARB
 argument_list|)
 expr_stmt|;
 comment|/* This is only meaningful in non-KMS mode */
-comment|/* Don't save them in KMS mode */
+comment|/* Don't regfile.save them in KMS mode */
 name|i915_save_modeset_reg
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* CRT state */
-if|if
-condition|(
-name|HAS_PCH_SPLIT
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-name|dev_priv
-operator|->
-name|saveADPA
-operator|=
-name|I915_READ
-argument_list|(
-name|PCH_ADPA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|dev_priv
-operator|->
-name|saveADPA
-operator|=
-name|I915_READ
-argument_list|(
-name|ADPA
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* LVDS state */
 if|if
 condition|(
@@ -3758,6 +4213,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_CONTROL
 operator|=
 name|I915_READ
@@ -3767,6 +4224,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL
 operator|=
 name|I915_READ
@@ -3776,6 +4235,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL2
 operator|=
 name|I915_READ
@@ -3785,6 +4246,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_CPU_PWM_CTL
 operator|=
 name|I915_READ
@@ -3794,6 +4257,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_CPU_PWM_CTL2
 operator|=
 name|I915_READ
@@ -3803,6 +4268,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveLVDS
 operator|=
 name|I915_READ
@@ -3815,6 +4282,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_CONTROL
 operator|=
 name|I915_READ
@@ -3824,6 +4293,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFIT_PGM_RATIOS
 operator|=
 name|I915_READ
@@ -3833,6 +4304,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL
 operator|=
 name|I915_READ
@@ -3842,6 +4315,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_HIST_CTL
 operator|=
 name|I915_READ
@@ -3862,6 +4337,8 @@ literal|4
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL2
 operator|=
 name|I915_READ
@@ -3884,6 +4361,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveLVDS
 operator|=
 name|I915_READ
@@ -3914,6 +4393,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFIT_CONTROL
 operator|=
 name|I915_READ
@@ -3931,6 +4412,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_ON_DELAYS
 operator|=
 name|I915_READ
@@ -3940,6 +4423,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_OFF_DELAYS
 operator|=
 name|I915_READ
@@ -3949,6 +4434,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_DIVISOR
 operator|=
 name|I915_READ
@@ -3961,6 +4448,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_ON_DELAYS
 operator|=
 name|I915_READ
@@ -3970,6 +4459,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_OFF_DELAYS
 operator|=
 name|I915_READ
@@ -3979,6 +4470,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_DIVISOR
 operator|=
 name|I915_READ
@@ -3987,6 +4480,17 @@ name|PP_DIVISOR
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_MODESET
+argument_list|)
+condition|)
+block|{
 comment|/* Display Port state */
 if|if
 condition|(
@@ -3998,6 +4502,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_B
 operator|=
 name|I915_READ
@@ -4007,6 +4513,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_C
 operator|=
 name|I915_READ
@@ -4016,6 +4524,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_D
 operator|=
 name|I915_READ
@@ -4025,6 +4535,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_GMCH_DATA_M
 operator|=
 name|I915_READ
@@ -4034,6 +4546,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_GMCH_DATA_M
 operator|=
 name|I915_READ
@@ -4043,6 +4557,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_GMCH_DATA_N
 operator|=
 name|I915_READ
@@ -4052,6 +4568,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_GMCH_DATA_N
 operator|=
 name|I915_READ
@@ -4061,6 +4579,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DP_LINK_M
 operator|=
 name|I915_READ
@@ -4070,6 +4590,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DP_LINK_M
 operator|=
 name|I915_READ
@@ -4079,6 +4601,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DP_LINK_N
 operator|=
 name|I915_READ
@@ -4088,6 +4612,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DP_LINK_N
 operator|=
 name|I915_READ
@@ -4096,8 +4622,9 @@ name|_PIPEB_DP_LINK_N
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* FIXME: save TV& SDVO state */
-comment|/* Only save FBC state on the platform that supports FBC */
+comment|/* FIXME: regfile.save TV& SDVO state */
+block|}
+comment|/* Only regfile.save FBC state on the platform that supports FBC */
 if|if
 condition|(
 name|I915_HAS_FBC
@@ -4116,6 +4643,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPFC_CB_BASE
 operator|=
 name|I915_READ
@@ -4135,6 +4664,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPFC_CB_BASE
 operator|=
 name|I915_READ
@@ -4147,6 +4678,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CFB_BASE
 operator|=
 name|I915_READ
@@ -4156,6 +4689,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_LL_BASE
 operator|=
 name|I915_READ
@@ -4165,6 +4700,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CONTROL2
 operator|=
 name|I915_READ
@@ -4174,6 +4711,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CONTROL
 operator|=
 name|I915_READ
@@ -4186,6 +4725,8 @@ block|}
 comment|/* VGA state */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA0
 operator|=
 name|I915_READ
@@ -4195,6 +4736,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA1
 operator|=
 name|I915_READ
@@ -4204,6 +4747,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA_PD
 operator|=
 name|I915_READ
@@ -4220,6 +4765,8 @@ argument_list|)
 condition|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGACNTRL
 operator|=
 name|I915_READ
@@ -4230,6 +4777,8 @@ expr_stmt|;
 else|else
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGACNTRL
 operator|=
 name|I915_READ
@@ -4272,9 +4821,22 @@ name|DSPARB
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDSPARB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_MODESET
+argument_list|)
+condition|)
+block|{
 comment|/* Display port ratios (must be done before clock is set) */
 if|if
 condition|(
@@ -4290,6 +4852,8 @@ name|_PIPEA_GMCH_DATA_M
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_GMCH_DATA_M
 argument_list|)
 expr_stmt|;
@@ -4299,6 +4863,8 @@ name|_PIPEB_GMCH_DATA_M
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_GMCH_DATA_M
 argument_list|)
 expr_stmt|;
@@ -4308,6 +4874,8 @@ name|_PIPEA_GMCH_DATA_N
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_GMCH_DATA_N
 argument_list|)
 expr_stmt|;
@@ -4317,6 +4885,8 @@ name|_PIPEB_GMCH_DATA_N
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_GMCH_DATA_N
 argument_list|)
 expr_stmt|;
@@ -4326,6 +4896,8 @@ name|_PIPEA_DP_LINK_M
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DP_LINK_M
 argument_list|)
 expr_stmt|;
@@ -4335,6 +4907,8 @@ name|_PIPEB_DP_LINK_M
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DP_LINK_M
 argument_list|)
 expr_stmt|;
@@ -4344,6 +4918,8 @@ name|_PIPEA_DP_LINK_N
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEA_DP_LINK_N
 argument_list|)
 expr_stmt|;
@@ -4353,42 +4929,18 @@ name|_PIPEB_DP_LINK_N
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePIPEB_DP_LINK_N
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* This is only meaningful in non-KMS mode */
 comment|/* Don't restore them in KMS mode */
 name|i915_restore_modeset_reg
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-comment|/* CRT state */
-if|if
-condition|(
-name|HAS_PCH_SPLIT
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-name|I915_WRITE
-argument_list|(
-name|PCH_ADPA
-argument_list|,
-name|dev_priv
-operator|->
-name|saveADPA
-argument_list|)
-expr_stmt|;
-else|else
-name|I915_WRITE
-argument_list|(
-name|ADPA
-argument_list|,
-name|dev_priv
-operator|->
-name|saveADPA
 argument_list|)
 expr_stmt|;
 comment|/* LVDS state */
@@ -4415,6 +4967,8 @@ name|BLC_PWM_CTL2
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL2
 argument_list|)
 expr_stmt|;
@@ -4432,6 +4986,8 @@ name|PCH_LVDS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveLVDS
 argument_list|)
 expr_stmt|;
@@ -4456,6 +5012,8 @@ name|LVDS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveLVDS
 argument_list|)
 expr_stmt|;
@@ -4485,6 +5043,8 @@ name|PFIT_CONTROL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFIT_CONTROL
 argument_list|)
 expr_stmt|;
@@ -4502,6 +5062,8 @@ name|BLC_PWM_PCH_CTL1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL
 argument_list|)
 expr_stmt|;
@@ -4511,7 +5073,21 @@ name|BLC_PWM_PCH_CTL2
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL2
+argument_list|)
+expr_stmt|;
+comment|/* NOTE: BLC_PWM_CPU_CTL must be written after BLC_PWM_CPU_CTL2; 		 * otherwise we get blank eDP screen after S3 on some machines 		 */
+name|I915_WRITE
+argument_list|(
+name|BLC_PWM_CPU_CTL2
+argument_list|,
+name|dev_priv
+operator|->
+name|regfile
+operator|.
+name|saveBLC_CPU_PWM_CTL2
 argument_list|)
 expr_stmt|;
 name|I915_WRITE
@@ -4520,16 +5096,9 @@ name|BLC_PWM_CPU_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_CPU_PWM_CTL
-argument_list|)
-expr_stmt|;
-name|I915_WRITE
-argument_list|(
-name|BLC_PWM_CPU_CTL2
-argument_list|,
-name|dev_priv
-operator|->
-name|saveBLC_CPU_PWM_CTL2
 argument_list|)
 expr_stmt|;
 name|I915_WRITE
@@ -4538,6 +5107,8 @@ name|PCH_PP_ON_DELAYS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_ON_DELAYS
 argument_list|)
 expr_stmt|;
@@ -4547,6 +5118,8 @@ name|PCH_PP_OFF_DELAYS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_OFF_DELAYS
 argument_list|)
 expr_stmt|;
@@ -4556,6 +5129,8 @@ name|PCH_PP_DIVISOR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_DIVISOR
 argument_list|)
 expr_stmt|;
@@ -4565,6 +5140,8 @@ name|PCH_PP_CONTROL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_CONTROL
 argument_list|)
 expr_stmt|;
@@ -4574,6 +5151,8 @@ name|RSTDBYCTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMCHBAR_RENDER_STANDBY
 argument_list|)
 expr_stmt|;
@@ -4586,6 +5165,8 @@ name|PFIT_PGM_RATIOS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePFIT_PGM_RATIOS
 argument_list|)
 expr_stmt|;
@@ -4595,6 +5176,8 @@ name|BLC_PWM_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_PWM_CTL
 argument_list|)
 expr_stmt|;
@@ -4604,6 +5187,8 @@ name|BLC_HIST_CTL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveBLC_HIST_CTL
 argument_list|)
 expr_stmt|;
@@ -4613,6 +5198,8 @@ name|PP_ON_DELAYS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_ON_DELAYS
 argument_list|)
 expr_stmt|;
@@ -4622,6 +5209,8 @@ name|PP_OFF_DELAYS
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_OFF_DELAYS
 argument_list|)
 expr_stmt|;
@@ -4631,6 +5220,8 @@ name|PP_DIVISOR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_DIVISOR
 argument_list|)
 expr_stmt|;
@@ -4640,10 +5231,23 @@ name|PP_CONTROL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePP_CONTROL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_MODESET
+argument_list|)
+condition|)
+block|{
 comment|/* Display Port state */
 if|if
 condition|(
@@ -4659,6 +5263,8 @@ name|DP_B
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_B
 argument_list|)
 expr_stmt|;
@@ -4668,6 +5274,8 @@ name|DP_C
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_C
 argument_list|)
 expr_stmt|;
@@ -4677,11 +5285,14 @@ name|DP_D
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDP_D
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* FIXME: restore TV& SDVO state */
+block|}
 comment|/* only restore FBC info on the platform that supports FBC*/
 name|intel_disable_fbc
 argument_list|(
@@ -4710,6 +5321,8 @@ name|ILK_DPFC_CB_BASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPFC_CB_BASE
 argument_list|)
 expr_stmt|;
@@ -4729,6 +5342,8 @@ name|DPFC_CB_BASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDPFC_CB_BASE
 argument_list|)
 expr_stmt|;
@@ -4741,6 +5356,8 @@ name|FBC_CFB_BASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CFB_BASE
 argument_list|)
 expr_stmt|;
@@ -4750,6 +5367,8 @@ name|FBC_LL_BASE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_LL_BASE
 argument_list|)
 expr_stmt|;
@@ -4759,6 +5378,8 @@ name|FBC_CONTROL2
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CONTROL2
 argument_list|)
 expr_stmt|;
@@ -4768,6 +5389,8 @@ name|FBC_CONTROL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFBC_CONTROL
 argument_list|)
 expr_stmt|;
@@ -4787,6 +5410,8 @@ name|CPU_VGACNTRL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGACNTRL
 argument_list|)
 expr_stmt|;
@@ -4797,6 +5422,8 @@ name|VGACNTRL
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGACNTRL
 argument_list|)
 expr_stmt|;
@@ -4806,6 +5433,8 @@ name|VGA0
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA0
 argument_list|)
 expr_stmt|;
@@ -4815,6 +5444,8 @@ name|VGA1
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA1
 argument_list|)
 expr_stmt|;
@@ -4824,6 +5455,8 @@ name|VGA_PD
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveVGA_PD
 argument_list|)
 expr_stmt|;
@@ -4867,11 +5500,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|dev_priv
-operator|->
-name|saveLBB
-operator|=
-name|pci_read_config
+name|pci_read_config_byte
 argument_list|(
 name|dev
 operator|->
@@ -4879,17 +5508,12 @@ name|dev
 argument_list|,
 name|LBB
 argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Hardware status page */
+operator|&
 name|dev_priv
 operator|->
-name|saveHWS
-operator|=
-name|I915_READ
-argument_list|(
-name|HWS_PGA
+name|regfile
+operator|.
+name|saveLBB
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -4902,6 +5526,17 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_MODESET
+argument_list|)
+condition|)
+block|{
 comment|/* Interrupt state */
 if|if
 condition|(
@@ -4913,6 +5548,8 @@ condition|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDEIER
 operator|=
 name|I915_READ
@@ -4922,6 +5559,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDEIMR
 operator|=
 name|I915_READ
@@ -4931,6 +5570,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGTIER
 operator|=
 name|I915_READ
@@ -4940,6 +5581,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGTIMR
 operator|=
 name|I915_READ
@@ -4949,6 +5592,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXA_IMR
 operator|=
 name|I915_READ
@@ -4958,6 +5603,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXB_IMR
 operator|=
 name|I915_READ
@@ -4967,6 +5614,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMCHBAR_RENDER_STANDBY
 operator|=
 name|I915_READ
@@ -4976,6 +5625,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePCH_PORT_HOTPLUG
 operator|=
 name|I915_READ
@@ -4988,6 +5639,8 @@ else|else
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveIER
 operator|=
 name|I915_READ
@@ -4997,6 +5650,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveIMR
 operator|=
 name|I915_READ
@@ -5005,30 +5660,8 @@ name|IMR
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|IS_IRONLAKE_M
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-name|ironlake_disable_drps
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|INTEL_INFO
-argument_list|(
-name|dev
-argument_list|)
-operator|->
-name|gen
-operator|>=
-literal|6
-condition|)
-name|gen6_disable_rps
+block|}
+name|intel_disable_gt_powersave
 argument_list|(
 name|dev
 argument_list|)
@@ -5036,6 +5669,8 @@ expr_stmt|;
 comment|/* Cache mode state */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCACHE_MODE_0
 operator|=
 name|I915_READ
@@ -5046,6 +5681,8 @@ expr_stmt|;
 comment|/* Memory Arbitration state */
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMI_ARB_STATE
 operator|=
 name|I915_READ
@@ -5070,6 +5707,8 @@ control|)
 block|{
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF0
 index|[
 name|i
@@ -5088,6 +5727,8 @@ argument_list|)
 expr_stmt|;
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF1
 index|[
 name|i
@@ -5120,6 +5761,8 @@ operator|++
 control|)
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF2
 index|[
 name|i
@@ -5169,7 +5812,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|pci_write_config
+name|pci_write_config_byte
 argument_list|(
 name|dev
 operator|->
@@ -5179,9 +5822,9 @@ name|LBB
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveLBB
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -5189,21 +5832,22 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Hardware status page */
-name|I915_WRITE
-argument_list|(
-name|HWS_PGA
-argument_list|,
-name|dev_priv
-operator|->
-name|saveHWS
-argument_list|)
-expr_stmt|;
 name|i915_restore_display
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|drm_core_check_feature
+argument_list|(
+name|dev
+argument_list|,
+name|DRIVER_MODESET
+argument_list|)
+condition|)
+block|{
 comment|/* Interrupt state */
 if|if
 condition|(
@@ -5219,6 +5863,8 @@ name|DEIER
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDEIER
 argument_list|)
 expr_stmt|;
@@ -5228,6 +5874,8 @@ name|DEIMR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveDEIMR
 argument_list|)
 expr_stmt|;
@@ -5237,6 +5885,8 @@ name|GTIER
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGTIER
 argument_list|)
 expr_stmt|;
@@ -5246,6 +5896,8 @@ name|GTIMR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveGTIMR
 argument_list|)
 expr_stmt|;
@@ -5255,6 +5907,8 @@ name|_FDI_RXA_IMR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXA_IMR
 argument_list|)
 expr_stmt|;
@@ -5264,6 +5918,8 @@ name|_FDI_RXB_IMR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveFDI_RXB_IMR
 argument_list|)
 expr_stmt|;
@@ -5273,6 +5929,8 @@ name|PCH_PORT_HOTPLUG
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|savePCH_PORT_HOTPLUG
 argument_list|)
 expr_stmt|;
@@ -5285,6 +5943,8 @@ name|IER
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveIER
 argument_list|)
 expr_stmt|;
@@ -5294,9 +5954,12 @@ name|IMR
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveIMR
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Cache mode state */
 name|I915_WRITE
@@ -5305,6 +5968,8 @@ name|CACHE_MODE_0
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveCACHE_MODE_0
 operator||
 literal|0xffff0000
@@ -5317,6 +5982,8 @@ name|MI_ARB_STATE
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveMI_ARB_STATE
 operator||
 literal|0xffff0000
@@ -5348,6 +6015,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF0
 index|[
 name|i
@@ -5366,6 +6035,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF1
 index|[
 name|i
@@ -5398,6 +6069,8 @@ operator|)
 argument_list|,
 name|dev_priv
 operator|->
+name|regfile
+operator|.
 name|saveSWF2
 index|[
 name|i
@@ -5409,7 +6082,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|intel_iic_reset
+name|intel_i2c_reset
 argument_list|(
 name|dev
 argument_list|)

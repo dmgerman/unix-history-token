@@ -506,7 +506,17 @@ decl_stmt|;
 name|u8
 name|rsvd9
 range|:
-literal|6
+literal|1
+decl_stmt|;
+name|u8
+name|fdi_rx_polarity_inverted
+range|:
+literal|1
+decl_stmt|;
+name|u8
+name|rsvd10
+range|:
+literal|4
 decl_stmt|;
 comment|/* finish byte */
 comment|/* bits 4 */
@@ -2040,8 +2050,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|int
 name|intel_parse_bios
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intel_free_parsed_bios_data
 parameter_list|(
 name|struct
 name|drm_device

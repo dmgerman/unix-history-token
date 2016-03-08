@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/drm2/i915/i915_drm.h>
 end_include
 
@@ -45,112 +39,59 @@ begin_comment
 comment|/*  * The BIOS typically reserves some of the system's memory for the exclusive  * use of the integrated graphics. This memory is no longer available for  * use by the OS and so the user finds that his system has less memory  * available than he put in. We refer to this memory as stolen.  *  * The BIOS will allocate its framebuffer from the stolen memory. Our  * goal is try to reuse that object for our own fbcon which must always  * be available for panics. Anything else we can reuse the stolen memory  * for is a boon.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PTE_ADDRESS_MASK
-value|0xfffff000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_ADDRESS_MASK_HIGH
-value|0x000000f0
-end_define
-
-begin_comment
-comment|/* i915+ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_MAPPING_TYPE_UNCACHED
-value|(0<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MAPPING_TYPE_DCACHE
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/* i830 only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_MAPPING_TYPE_CACHED
-value|(3<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_MAPPING_TYPE_MASK
-value|(3<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_VALID
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/**  * i915_stolen_to_phys - take an offset into stolen memory and turn it into  *                       a physical one  * @dev: drm device  * @offset: address to translate  *  * Some chip functions require allocations from stolen space and need the  * physical address of the memory in question.  */
-end_comment
-
 begin_function
 specifier|static
 name|unsigned
 name|long
-name|i915_stolen_to_phys
+name|i915_stolen_to_physical
 parameter_list|(
 name|struct
 name|drm_device
 modifier|*
 name|dev
-parameter_list|,
-name|u32
-name|offset
 parameter_list|)
 block|{
-name|struct
-name|drm_i915_private
-modifier|*
-name|dev_priv
-init|=
-name|dev
-operator|->
-name|dev_private
-decl_stmt|;
-name|device_t
-name|pdev
-init|=
-name|dev_priv
-operator|->
-name|bridge_dev
-decl_stmt|;
 name|u32
 name|base
 decl_stmt|;
-if|#
-directive|if
+comment|/* On the machines I have tested the Graphics Base of Stolen Memory 	 * is unreliable, so on those compute the base by subtracting the 	 * stolen memory from the Top of Low Usable DRAM which is where the 	 * BIOS places the graphics stolen memory. 	 * 	 * On gen2, the layout is slightly different with the Graphics Segment 	 * immediately following Top of Memory (or Top of Usable DRAM). Note 	 * it appears that TOUD is only reported by 865g, so we just use the 	 * top of memory as determined by the e820 probe. 	 * 	 * XXX gen2 requires an unavailable symbol and 945gm fails with 	 * its value of TOLUD. 	 */
+name|base
+operator|=
 literal|0
-comment|/* On the machines I have tested the Graphics Base of Stolen Memory 	 * is unreliable, so compute the base by subtracting the stolen memory 	 * from the Top of Low Usable DRAM which is where the BIOS places 	 * the graphics stolen memory. 	 */
-block|if (INTEL_INFO(dev)->gen> 3 || IS_G33(dev)) {
-comment|/* top 32bits are reserved = 0 */
-block|pci_read_config_dword(pdev, 0xA4,&base); 	} else {
-comment|/* XXX presume 8xx is the same as i915 */
-block|pci_bus_read_config_dword(pdev->bus, 2, 0x5C,&base); 	}
-else|#
-directive|else
+expr_stmt|;
+if|if
+condition|(
+name|INTEL_INFO
+argument_list|(
+name|dev
+argument_list|)
+operator|->
+name|gen
+operator|>=
+literal|6
+condition|)
+block|{
+comment|/* Read Base Data of Stolen Memory Register (BDSM) directly. 		 * Note that there is also a MCHBAR miror at 0x1080c0 or 		 * we could use device 2:0x5c instead. 		*/
+name|pci_read_config_dword
+argument_list|(
+name|dev
+operator|->
+name|dev
+argument_list|,
+literal|0xB0
+argument_list|,
+operator|&
+name|base
+argument_list|)
+expr_stmt|;
+name|base
+operator|&=
+operator|~
+literal|4095
+expr_stmt|;
+comment|/* lower bits used for locking register */
+block|}
+elseif|else
 if|if
 condition|(
 name|INTEL_INFO
@@ -168,70 +109,32 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|u16
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|pci_read_config
+comment|/* Read Graphics Base of Stolen Memory directly */
+name|pci_read_config_dword
 argument_list|(
-name|pdev
-argument_list|,
-literal|0xb0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|base
-operator|=
-name|val
-operator|>>
-literal|4
-operator|<<
-literal|20
-expr_stmt|;
-block|}
-else|else
-block|{
-name|u8
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|pci_read_config
-argument_list|(
-name|pdev
-argument_list|,
-literal|0x9c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|base
-operator|=
-name|val
-operator|>>
-literal|3
-operator|<<
-literal|27
-expr_stmt|;
-block|}
-name|base
-operator|-=
-name|dev_priv
+name|dev
 operator|->
-name|mm
-operator|.
-name|gtt
-operator|.
-name|stolen_size
+name|dev
+argument_list|,
+literal|0xA4
+argument_list|,
+operator|&
+name|base
+argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|} else if (IS_GEN3(dev)) { 		u8 val;
+comment|/* Stolen is immediately below Top of Low Usable DRAM */
+block|pci_read_config_byte(pdev, 0x9c,&val); 		base = val>> 3<< 27; 		base -= dev_priv->mm.gtt->stolen_size; 	} else {
+comment|/* Stolen is immediately above Top of Memory */
+block|base = max_low_pfn_mapped<< PAGE_SHIFT;
 endif|#
 directive|endif
+block|}
 return|return
 name|base
-operator|+
-name|offset
 return|;
 block|}
 end_function
@@ -289,7 +192,10 @@ modifier|*
 name|compressed_fb
 decl_stmt|,
 modifier|*
+name|uninitialized_var
+argument_list|(
 name|compressed_llb
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|long
@@ -350,14 +256,15 @@ name|err
 goto|;
 name|cfb_base
 operator|=
-name|i915_stolen_to_phys
-argument_list|(
-name|dev
-argument_list|,
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|stolen_base
+operator|+
 name|compressed_fb
 operator|->
 name|start
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -426,14 +333,15 @@ name|err_fb
 goto|;
 name|ll_base
 operator|=
-name|i915_stolen_to_phys
-argument_list|(
-name|dev
-argument_list|,
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|stolen_base
+operator|+
 name|compressed_llb
 operator|->
 name|start
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -518,8 +426,14 @@ name|DRM_DEBUG_KMS
 argument_list|(
 literal|"FBC base 0x%08lx, ll base 0x%08lx, size %dM\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cfb_base
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ll_base
 argument_list|,
 name|size
@@ -656,9 +570,52 @@ operator|->
 name|mm
 operator|.
 name|gtt
-operator|.
+operator|->
 name|stolen_size
 decl_stmt|;
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|stolen_base
+operator|=
+name|i915_stolen_to_physical
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|stolen_base
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|DRM_DEBUG_KMS
+argument_list|(
+literal|"found %d bytes of stolen memory at %08lx\n"
+argument_list|,
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|gtt
+operator|->
+name|stolen_size
+argument_list|,
+name|dev_priv
+operator|->
+name|mm
+operator|.
+name|stolen_base
+argument_list|)
+expr_stmt|;
 comment|/* Basic memrange allocator for stolen space */
 name|drm_mm_init
 argument_list|(

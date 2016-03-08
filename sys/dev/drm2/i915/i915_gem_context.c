@@ -147,9 +147,6 @@ argument_list|(
 name|GEN7_CXT_SIZE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD_WIP
 if|if
 condition|(
 name|IS_HASWELL
@@ -167,8 +164,6 @@ operator|*
 literal|64
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|ret
 operator|=
 name|GEN7_CXT_TOTAL_SIZE
@@ -267,7 +262,7 @@ name|ctx
 operator|==
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -449,7 +444,7 @@ operator|=
 operator|&
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -639,7 +634,7 @@ return|;
 comment|/* We may need to do things with the shrinker which require us to 	 * immediately switch back to the default context. This can cause a 	 * problem as pinning the default context also requires GTT space which 	 * may not be available. To avoid this we always pin the 	 * default context. 	 */
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -657,6 +652,8 @@ operator|->
 name|obj
 argument_list|,
 name|CONTEXT_ALIGN
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|)
@@ -760,7 +757,7 @@ name|hw_contexts_disabled
 operator|||
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -788,7 +785,7 @@ name|dev_priv
 operator|->
 name|hw_context_size
 operator|=
-name|roundup
+name|round_up
 argument_list|(
 name|dev_priv
 operator|->
@@ -880,7 +877,7 @@ name|i915_gem_object_unpin
 argument_list|(
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -894,7 +891,7 @@ name|do_destroy
 argument_list|(
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]
@@ -1301,6 +1298,8 @@ argument_list|,
 name|CONTEXT_ALIGN
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -1438,11 +1437,6 @@ argument_list|(
 name|from_obj
 argument_list|,
 name|ring
-argument_list|,
-name|i915_gem_next_request_seqno
-argument_list|(
-name|ring
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* As long as MI_SET_CONTEXT is serializing, ie. it flushes the 		 * whole damn pipeline, we don't need to explicitly mark the 		 * object dirty. The only exception is that the context must be 		 * correct in case the object gets swapped out. Ideally we'd be 		 * able to defer doing this until we know the object would be 		 * swapped, but there is no way to do that yet. 		 */
@@ -1563,7 +1557,7 @@ operator|!=
 operator|&
 name|dev_priv
 operator|->
-name|rings
+name|ring
 index|[
 name|RCS
 index|]

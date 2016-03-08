@@ -59,7 +59,7 @@ name|atomic_read
 parameter_list|(
 name|p
 parameter_list|)
-value|(*(volatile u_int *)(p))
+value|atomic_load_acq_int(p)
 end_define
 
 begin_define
@@ -71,7 +71,7 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|do { *(u_int *)(p) = (v); } while (0)
+value|atomic_store_rel_int(p, v)
 end_define
 
 begin_define
@@ -349,6 +349,28 @@ name|new
 parameter_list|)
 define|\
 value|(atomic_cmpset_int((volatile u_int *)(ptr),(old),(new)) ? (old) : (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_inc_not_zero
+parameter_list|(
+name|p
+parameter_list|)
+value|atomic_inc(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_clear_mask
+parameter_list|(
+name|b
+parameter_list|,
+name|p
+parameter_list|)
+value|atomic_clear_int((p), (b))
 end_define
 
 begin_function
