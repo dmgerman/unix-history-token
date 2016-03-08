@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright 2016 Joyent, Inc.  */
 end_comment
 
 begin_comment
@@ -549,29 +549,37 @@ modifier|*
 name|string
 parameter_list|)
 block|{
+name|char
+name|c
+decl_stmt|;
 while|while
 condition|(
+operator|(
+name|c
+operator|=
 operator|*
 name|string
+operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|string
+name|c
 operator|>
 literal|' '
 operator|&&
-operator|*
-name|string
+name|c
 operator|!=
 literal|'\\'
 operator|&&
-operator|*
-name|string
+name|c
 operator|<
 literal|'\177'
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -581,12 +589,12 @@ name|fp
 argument_list|,
 literal|"%c"
 argument_list|,
-operator|*
-name|string
-operator|++
+name|c
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -596,11 +604,13 @@ name|fp
 argument_list|,
 literal|"\\%03o"
 argument_list|,
-operator|*
-name|string
-operator|++
+operator|(
+name|uint8_t
+operator|)
+name|c
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
