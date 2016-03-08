@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2016 RackTop Systems.  */
 end_comment
 
 begin_ifndef
@@ -205,6 +205,7 @@ define|#
 directive|define
 name|DMU_BACKUP_MAGIC
 value|0x2F5bacbacULL
+comment|/*  * Send stream flags.  Bits 24-31 are reserved for vendor-specific  * implementations and should not be used.  */
 define|#
 directive|define
 name|DRR_FLAG_CLONE

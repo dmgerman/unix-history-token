@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright 2016 RackTop Systems.  */
 end_comment
 
 begin_include
@@ -202,6 +202,18 @@ operator|*
 literal|1024
 operator|*
 literal|1024
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set this tunable to FALSE to disable setting of DRR_FLAG_FREERECORDS */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_send_set_freerecords_bit
+init|=
+name|B_TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -3820,6 +3832,10 @@ name|drr_flags
 operator||=
 name|DRR_FLAG_CI_DATA
 expr_stmt|;
+if|if
+condition|(
+name|zfs_send_set_freerecords_bit
+condition|)
 name|drr
 operator|->
 name|drr_u
