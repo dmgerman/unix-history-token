@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
 end_comment
 
 begin_include
@@ -3296,6 +3296,8 @@ name|NULL
 decl_stmt|;
 name|uint64_t
 name|volsize
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -3692,6 +3694,8 @@ decl_stmt|;
 name|nvlist_t
 modifier|*
 name|real_props
+init|=
+name|NULL
 decl_stmt|;
 name|uint64_t
 name|spa_version
@@ -3715,6 +3719,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strchr
@@ -3726,6 +3731,9 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|p
@@ -10607,6 +10615,8 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -10849,6 +10859,8 @@ name|cb_sortcol
 decl_stmt|;
 name|unsigned
 name|type
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|char
@@ -18081,6 +18093,8 @@ name|int
 name|c
 decl_stmt|,
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|recvflags_t
 name|flags
@@ -19288,7 +19302,6 @@ end_function
 begin_function
 specifier|static
 name|int
-specifier|inline
 name|who_type2weight
 parameter_list|(
 name|zfs_deleg_who_type_t
@@ -20365,7 +20378,6 @@ end_function
 begin_function
 specifier|static
 name|void
-specifier|inline
 name|set_deleg_perm_node
 parameter_list|(
 name|uu_avl_t
@@ -20714,6 +20726,8 @@ decl_stmt|;
 name|uu_avl_pool_t
 modifier|*
 name|avl_pool
+init|=
+name|NULL
 decl_stmt|;
 name|zfs_deleg_who_type_t
 name|perm_type
@@ -20840,6 +20854,13 @@ operator|->
 name|fsp_uge_avl
 expr_stmt|;
 break|break;
+default|default:
+name|assert
+argument_list|(
+operator|!
+literal|"unhandled zfs_deleg_who_type_t"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -21021,6 +21042,8 @@ name|g
 operator|->
 name|gr_name
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 if|if
@@ -22350,6 +22373,7 @@ name|opts
 operator|->
 name|prt_usage
 condition|)
+block|{
 if|if
 condition|(
 name|argc
@@ -22375,6 +22399,7 @@ argument_list|(
 name|B_FALSE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|opts
@@ -22748,9 +22773,13 @@ index|]
 decl_stmt|;
 name|char
 name|base_type
+init|=
+literal|'\0'
 decl_stmt|;
 name|char
 name|set_type
+init|=
+literal|'\0'
 decl_stmt|;
 name|nvlist_t
 modifier|*
@@ -22960,6 +22989,19 @@ literal|1
 index|]
 operator|=
 name|ZFS_DELEG_DESCENDENT
+expr_stmt|;
+break|break;
+default|default:
+name|assert
+argument_list|(
+name|set_type
+operator|!=
+literal|'\0'
+operator|&&
+name|base_type
+operator|!=
+literal|'\0'
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -23549,6 +23591,8 @@ name|who
 decl_stmt|;
 name|zfs_deleg_who_type_t
 name|who_type
+init|=
+name|ZFS_DELEG_WHO_UNKNOWN
 decl_stmt|;
 name|char
 modifier|*
@@ -23810,6 +23854,7 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -23835,6 +23880,7 @@ argument_list|(
 name|rid
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -24211,7 +24257,6 @@ end_function
 begin_function
 specifier|static
 name|void
-specifier|inline
 name|print_uge_deleg_perms
 parameter_list|(
 name|uu_avl_t
@@ -24469,6 +24514,15 @@ expr_stmt|;
 name|who_name
 operator|=
 name|NULL
+expr_stmt|;
+break|break;
+default|default:
+name|assert
+argument_list|(
+name|who
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|prt_who
@@ -27712,9 +27766,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|shared_nfs
 operator|&&
 name|shared_smb
+operator|)
 operator|||
 operator|(
 name|shared_nfs
@@ -29862,6 +29918,8 @@ decl_stmt|;
 name|uu_avl_t
 modifier|*
 name|tree
+init|=
+name|NULL
 decl_stmt|;
 name|unshare_unmount_node_t
 modifier|*
@@ -31882,6 +31940,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|atp
 operator|=
 name|strchr
@@ -31890,6 +31949,9 @@ name|copy
 argument_list|,
 literal|'@'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|atp
