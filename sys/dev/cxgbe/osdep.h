@@ -336,6 +336,12 @@ end_endif
 begin_define
 define|#
 directive|define
+name|__force
+end_define
+
+begin_define
+define|#
+directive|define
 name|mdelay
 parameter_list|(
 name|x

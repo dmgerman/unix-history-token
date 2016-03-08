@@ -3900,6 +3900,10 @@ name|sge
 modifier|*
 name|s
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|buf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
@@ -4347,13 +4351,35 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Prepare the adapter for operation */
+comment|/* Prepare the adapter for operation. */
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|PAGE_SIZE
+argument_list|,
+name|M_CXGBE
+argument_list|,
+name|M_ZERO
+operator||
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 operator|-
 name|t4_prep_adapter
 argument_list|(
 name|sc
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_CXGBE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4736,7 +4762,7 @@ operator|=
 operator|-
 name|t4_port_init
 argument_list|(
-name|pi
+name|sc
 argument_list|,
 name|sc
 operator|->
@@ -4747,6 +4773,8 @@ operator|->
 name|pf
 argument_list|,
 literal|0
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 if|if

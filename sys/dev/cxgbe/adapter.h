@@ -2692,6 +2692,14 @@ name|unsigned
 name|int
 name|mbox
 decl_stmt|;
+name|unsigned
+name|int
+name|vpd_busy
+decl_stmt|;
+name|unsigned
+name|int
+name|vpd_flag
+decl_stmt|;
 comment|/* Interrupt information */
 name|int
 name|intr_type
