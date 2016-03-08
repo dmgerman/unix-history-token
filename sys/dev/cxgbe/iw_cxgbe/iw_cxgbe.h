@@ -5275,17 +5275,6 @@ name|SGE_CTRLQ_NUM
 value|0
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|spg_creds
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Status Page size in credit units(1 unit = 64) */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

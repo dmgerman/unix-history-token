@@ -2409,30 +2409,6 @@ struct|struct
 name|sge
 block|{
 name|int
-name|timer_val
-index|[
-name|SGE_NTIMERS
-index|]
-decl_stmt|;
-name|int
-name|counter_val
-index|[
-name|SGE_NCOUNTERS
-index|]
-decl_stmt|;
-name|int
-name|fl_starve_threshold
-decl_stmt|;
-name|int
-name|fl_starve_threshold2
-decl_stmt|;
-name|int
-name|eq_s_qpp
-decl_stmt|;
-name|int
-name|iq_s_qpp
-decl_stmt|;
-name|int
 name|nrxq
 decl_stmt|;
 comment|/* total # of Ethernet rx queues */
@@ -2556,12 +2532,6 @@ modifier|*
 name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
-name|int
-name|pad_boundary
-decl_stmt|;
-name|int
-name|pack_boundary
-decl_stmt|;
 name|int8_t
 name|safe_hwidx1
 decl_stmt|;

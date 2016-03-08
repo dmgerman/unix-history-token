@@ -24380,6 +24380,8 @@ name|CTLFLAG_RD
 argument_list|,
 name|sc
 operator|->
+name|params
+operator|.
 name|sge
 operator|.
 name|timer_val
@@ -24388,6 +24390,8 @@ sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
+name|params
+operator|.
 name|sge
 operator|.
 name|timer_val
@@ -24416,6 +24420,8 @@ name|CTLFLAG_RD
 argument_list|,
 name|sc
 operator|->
+name|params
+operator|.
 name|sge
 operator|.
 name|counter_val
@@ -24424,6 +24430,8 @@ sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
+name|params
+operator|.
 name|sge
 operator|.
 name|counter_val
