@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
 end_comment
 
 begin_comment
@@ -2160,9 +2160,15 @@ name|type
 decl_stmt|;
 name|replication_level_t
 name|lastrep
-decl_stmt|,
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+name|replication_level_t
 name|rep
-decl_stmt|,
+decl_stmt|;
+name|replication_level_t
 modifier|*
 name|ret
 decl_stmt|;
@@ -4150,6 +4156,8 @@ name|path
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|buf
