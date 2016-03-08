@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -297,21 +297,57 @@ literal|"\t\tClear the particular record (if given a numeric ID), or\n"
 literal|"\t\tall records if 'all' is specificed.\n"
 literal|"\n"
 literal|"\tzinject -p<function name> pool\n"
+literal|"\n"
 literal|"\t\tInject a panic fault at the specified function. Only \n"
 literal|"\t\tfunctions which call spa_vdev_config_exit(), or \n"
 literal|"\t\tspa_vdev_exit() will trigger a panic.\n"
 literal|"\n"
 literal|"\tzinject -d device [-e errno] [-L<nvlist|uber|pad1|pad2>] [-F]\n"
 literal|"\t    [-T<read|write|free|claim|all> pool\n"
+literal|"\n"
 literal|"\t\tInject a fault into a particular device or the device's\n"
 literal|"\t\tlabel.  Label injection can either be 'nvlist', 'uber',\n "
 literal|"\t\t'pad1', or 'pad2'.\n"
 literal|"\t\t'errno' can be 'nxio' (the default), 'io', or 'dtl'.\n"
 literal|"\n"
 literal|"\tzinject -d device -A<degrade|fault> pool\n"
+literal|"\n"
 literal|"\t\tPerform a specific action on a particular device\n"
 literal|"\n"
+literal|"\tzinject -d device -D latency:lanes pool\n"
+literal|"\n"
+literal|"\t\tAdd an artificial delay to IO requests on a particular\n"
+literal|"\t\tdevice, such that the requests take a minimum of 'latency'\n"
+literal|"\t\tmilliseconds to complete. Each delay has an associated\n"
+literal|"\t\tnumber of 'lanes' which defines the number of concurrent\n"
+literal|"\t\tIO requests that can be processed.\n"
+literal|"\n"
+literal|"\t\tFor example, with a single lane delay of 10 ms (-D 10:1),\n"
+literal|"\t\tthe device will only be able to service a single IO request\n"
+literal|"\t\tat a time with each request taking 10 ms to complete. So,\n"
+literal|"\t\tif only a single request is submitted every 10 ms, the\n"
+literal|"\t\taverage latency will be 10 ms; but if more than one request\n"
+literal|"\t\tis submitted every 10 ms, the average latency will be more\n"
+literal|"\t\tthan 10 ms.\n"
+literal|"\n"
+literal|"\t\tSimilarly, if a delay of 10 ms is specified to have two\n"
+literal|"\t\tlanes (-D 10:2), then the device will be able to service\n"
+literal|"\t\ttwo requests at a time, each with a minimum latency of\n"
+literal|"\t\t10 ms. So, if two requests are submitted every 10 ms, then\n"
+literal|"\t\tthe average latency will be 10 ms; but if more than two\n"
+literal|"\t\trequests are submitted every 10 ms, the average latency\n"
+literal|"\t\twill be more than 10 ms.\n"
+literal|"\n"
+literal|"\t\tAlso note, these delays are additive. So two invocations\n"
+literal|"\t\tof '-D 10:1', is roughly equivalent to a single invocation\n"
+literal|"\t\tof '-D 10:2'. This also means, one can specify multiple\n"
+literal|"\t\tlanes with differing target latencies. For example, an\n"
+literal|"\t\tinvocation of '-D 10:1' followed by '-D 25:2' will\n"
+literal|"\t\tcreate 3 lanes on the device; one lane with a latency\n"
+literal|"\t\tof 10 ms and two lanes with a 25 ms latency.\n"
+literal|"\n"
 literal|"\tzinject -I [-s<seconds> | -g<txgs>] pool\n"
+literal|"\n"
 literal|"\t\tCause the pool to stop writing blocks yet not\n"
 literal|"\t\treport errors for a duration.  Simulates buggy hardware\n"
 literal|"\t\tthat fails to honor cache flush requests.\n"
@@ -728,6 +764,19 @@ operator|)
 return|;
 if|if
 condition|(
+name|record
+operator|->
+name|zi_cmd
+operator|==
+name|ZINJECT_DELAY_IO
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 operator|*
 name|count
 operator|==
@@ -772,6 +821,154 @@ argument_list|,
 name|id
 argument_list|,
 name|pool
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|record
+operator|->
+name|zi_guid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|print_delay_handler
+parameter_list|(
+name|int
+name|id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pool
+parameter_list|,
+name|zinject_record_t
+modifier|*
+name|record
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|int
+modifier|*
+name|count
+init|=
+name|data
+decl_stmt|;
+if|if
+condition|(
+name|record
+operator|->
+name|zi_guid
+operator|==
+literal|0
+operator|||
+name|record
+operator|->
+name|zi_func
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|record
+operator|->
+name|zi_cmd
+operator|!=
+name|ZINJECT_DELAY_IO
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|*
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%3s  %-15s  %-15s  %-15s  %s\n"
+argument_list|,
+literal|"ID"
+argument_list|,
+literal|"POOL"
+argument_list|,
+literal|"DELAY (ms)"
+argument_list|,
+literal|"LANES"
+argument_list|,
+literal|"GUID"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"---  ---------------  ---------------  "
+literal|"---------------  ----------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|count
+operator|+=
+literal|1
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%3d  %-15s  %-15llu  %-15llu  %llx\n"
+argument_list|,
+name|id
+argument_list|,
+name|pool
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|NSEC2MSEC
+argument_list|(
+name|record
+operator|->
+name|zi_timer
+argument_list|)
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|record
+operator|->
+name|zi_nlanes
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -920,6 +1117,41 @@ operator|)
 name|iter_handlers
 argument_list|(
 name|print_device_handler
+argument_list|,
+operator|&
+name|count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
+operator|>
+literal|0
+condition|)
+block|{
+name|total
+operator|+=
+name|count
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|iter_handlers
+argument_list|(
+name|print_delay_handler
 argument_list|,
 operator|&
 name|count
@@ -1688,6 +1920,88 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|int
+name|parse_delay
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|uint64_t
+modifier|*
+name|delay
+parameter_list|,
+name|uint64_t
+modifier|*
+name|nlanes
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|scan_delay
+decl_stmt|;
+name|unsigned
+name|long
+name|scan_nlanes
+decl_stmt|;
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|str
+argument_list|,
+literal|"%lu:%lu"
+argument_list|,
+operator|&
+name|scan_delay
+argument_list|,
+operator|&
+name|scan_nlanes
+argument_list|)
+operator|!=
+literal|2
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * We explicitly disallow a delay of zero here, because we key 	 * off this value being non-zero in translate_device(), to 	 * determine if the fault is a ZINJECT_DELAY_IO fault or not. 	 */
+if|if
+condition|(
+name|scan_delay
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * The units for the CLI delay parameter is milliseconds, but 	 * the data passed to the kernel is interpreted as nanoseconds. 	 * Thus we scale the milliseconds to nanoseconds here, and this 	 * nanosecond value is used to pass the delay to the kernel. 	 */
+operator|*
+name|delay
+operator|=
+name|MSEC2NSEC
+argument_list|(
+name|scan_delay
+argument_list|)
+expr_stmt|;
+operator|*
+name|nlanes
+operator|=
+name|scan_nlanes
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -2047,30 +2361,28 @@ break|break;
 case|case
 literal|'D'
 case|:
-name|record
-operator|.
-name|zi_timer
+name|ret
 operator|=
-name|strtoull
+name|parse_delay
 argument_list|(
 name|optarg
 argument_list|,
 operator|&
-name|end
+name|record
+operator|.
+name|zi_timer
 argument_list|,
-literal|10
+operator|&
+name|record
+operator|.
+name|zi_nlanes
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
+name|ret
 operator|!=
 literal|0
-operator|||
-operator|*
-name|end
-operator|!=
-literal|'\0'
 condition|)
 block|{
 operator|(
