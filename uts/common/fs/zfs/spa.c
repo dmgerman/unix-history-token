@@ -27166,12 +27166,6 @@ argument_list|,
 name|FTAG
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|spa
-operator|->
-name|spa_config_syncing
-condition|)
 name|nvlist_free
 argument_list|(
 name|spa
