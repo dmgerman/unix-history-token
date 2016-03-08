@@ -15032,10 +15032,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|props
-condition|)
 name|nvlist_free
 argument_list|(
 name|props
@@ -15102,10 +15098,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|props
-condition|)
 name|nvlist_free
 argument_list|(
 name|props

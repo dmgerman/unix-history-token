@@ -13981,10 +13981,6 @@ argument_list|(
 name|stream_avl
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|stream_nv
-condition|)
 name|nvlist_free
 argument_list|(
 name|stream_nv
