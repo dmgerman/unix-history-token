@@ -2417,18 +2417,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_check_fw_version
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|t4_init_hw
 parameter_list|(
 name|struct
