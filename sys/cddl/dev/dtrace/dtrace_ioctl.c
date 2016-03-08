@@ -134,6 +134,10 @@ name|curproc
 expr_stmt|;
 if|if
 condition|(
+name|dhp
+operator|==
+name|NULL
+operator|||
 name|p
 operator|->
 name|p_pid
@@ -192,12 +196,14 @@ name|p
 operator|->
 name|p_flag
 operator|&
+operator|(
 name|P_TRACED
 operator||
 name|P_WEXIT
 operator|)
-operator|==
-literal|0
+operator|)
+operator|!=
+name|P_TRACED
 operator|||
 name|p
 operator|->
