@@ -843,7 +843,7 @@ name|mips_timer_init_params
 argument_list|(
 name|platform_counter_freq
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
