@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ name|struct
 name|iro
 name|e2_iro_arr
 index|[
-literal|379
+literal|385
 index|]
 init|=
 block|{
@@ -1368,6 +1368,58 @@ block|}
 block|,
 comment|// TSTORM_ASSERT_LIST_INDEX_OFFSET
 block|{
+literal|0x1aa8
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x10
+block|}
+block|,
+comment|// TSTORM_MEASURE_PCI_LATENCY_CTRL_OFFSET
+block|{
+literal|0x1ab8
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x10
+block|}
+block|,
+comment|// TSTORM_MEASURE_PCI_LATENCY_DATA_OFFSET
+block|{
+literal|0x1
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|}
+block|,
+comment|// TSTORM_AGG_MEASURE_PCI_LATENCY_INDEX
+block|{
+literal|0x2
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|}
+block|,
+comment|// TSTORM_AGG_MEASURE_PCI_LATENCY_COMP_TYPE
+block|{
 literal|0x17e0
 block|,
 literal|0x8
@@ -2681,7 +2733,7 @@ block|}
 block|,
 comment|// TSTORM_APPROXIMATE_MATCH_MULTICAST_FILTERING_OFFSET(pfId)
 block|{
-literal|0x3128
+name|UNDEF_IRO
 block|,
 literal|0x0
 block|,
@@ -2689,10 +2741,36 @@ literal|0x0
 block|,
 literal|0x0
 block|,
-literal|0x8
+literal|0x0
 block|}
 block|,
 comment|// TSTORM_ACCEPT_CLASSIFY_FAILED_OFFSET
+block|{
+literal|0x3128
+block|,
+literal|0x8
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x1
+block|}
+block|,
+comment|// TSTORM_ACCEPT_CLASSIFY_FAIL_E2_ENABLE_OFFSET(portId)
+block|{
+literal|0x3129
+block|,
+literal|0x8
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x1
+block|}
+block|,
+comment|// TSTORM_ACCEPT_CLASSIFY_FAIL_E2_VNIC_OFFSET(portId)
 block|{
 literal|0x62a20
 block|,
@@ -4800,7 +4878,7 @@ block|}
 block|,
 comment|// XSTORM_DEBUG_OFFSET
 block|{
-literal|0xd858
+literal|0xd868
 block|,
 literal|0x0
 block|,
@@ -4813,7 +4891,7 @@ block|}
 block|,
 comment|// TSTORM_STAT_FCOE_VER_CNT_OFFSET
 block|{
-literal|0xd850
+literal|0xd860
 block|,
 literal|0x0
 block|,
@@ -4826,7 +4904,7 @@ block|}
 block|,
 comment|// TSTORM_STAT_FCOE_RX_PKT_CNT_OFFSET
 block|{
-literal|0xd854
+literal|0xd864
 block|,
 literal|0x0
 block|,
@@ -4839,7 +4917,7 @@ block|}
 block|,
 comment|// TSTORM_STAT_FCOE_RX_BYTE_CNT_OFFSET
 block|{
-literal|0xd85c
+literal|0xd86c
 block|,
 literal|0x0
 block|,
@@ -4852,7 +4930,7 @@ block|}
 block|,
 comment|// TSTORM_STAT_FCOE_RX_DROP_PKT_CNT_OFFSET
 block|{
-literal|0xd850
+literal|0xd860
 block|,
 literal|0x0
 block|,
@@ -4865,7 +4943,7 @@ block|}
 block|,
 comment|// TSTORM_STAT_OFFSET
 block|{
-literal|0xd840
+literal|0xd850
 block|,
 literal|0x0
 block|,
@@ -4878,7 +4956,7 @@ block|}
 block|,
 comment|// TSTORM_PORT_DEBUG_WAIT_FOR_YOUR_TURN_SP_CNT_OFFSET
 block|{
-literal|0xd844
+literal|0xd854
 block|,
 literal|0x0
 block|,
@@ -4891,7 +4969,7 @@ block|}
 block|,
 comment|// TSTORM_PORT_DEBUG_AFEX_ERROR_PACKETS_OFFSET
 block|{
-literal|0xd840
+literal|0xd850
 block|,
 literal|0x0
 block|,

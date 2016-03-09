@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -472,14 +472,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DMAE_REG_BACKWARD_COMP_EN
-define|\
-value|0x10207cUL
-end_define
-
-begin_define
-define|#
-directive|define
 name|DMAE_REG_CMD_MEM
 define|\
 value|0x102400UL
@@ -680,14 +672,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DORQ_REG_MAX_RVFID_SIZE
-define|\
-value|0x1701ecUL
-end_define
-
-begin_define
-define|#
-directive|define
 name|DORQ_REG_NORM_CID_OFST
 define|\
 value|0x17002cUL
@@ -699,86 +683,6 @@ directive|define
 name|DORQ_REG_PF_USAGE_CNT
 define|\
 value|0x1701d0UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_NORM_CID_BASE
-define|\
-value|0x1701a0UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_NORM_CID_OFST
-define|\
-value|0x1701f4UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_NORM_CID_WND_SIZE
-define|\
-value|0x1701a4UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_NORM_MAX_CID_COUNT
-define|\
-value|0x1701e4UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_NORM_VF_BASE
-define|\
-value|0x1701a8UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_TYPE_MASK_0
-define|\
-value|0x170218UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_TYPE_MAX_MCID_0
-define|\
-value|0x1702d8UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_TYPE_MIN_MCID_0
-define|\
-value|0x170298UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_TYPE_VALUE_0
-define|\
-value|0x170258UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|DORQ_REG_VF_USAGE_CT_LIMIT
-define|\
-value|0x170340UL
 end_define
 
 begin_define
@@ -4066,7 +3970,7 @@ define|#
 directive|define
 name|PGLUE_B_REG_LATCHED_ERRORS_CLR
 define|\
-value|0x943CUL
+value|0x943cUL
 end_define
 
 begin_define
@@ -5987,14 +5891,6 @@ directive|define
 name|SRC_REG_LASTFREE0
 define|\
 value|0x40530UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|SRC_REG_NUMBER_HASH_BITS0
-define|\
-value|0x40400UL
 end_define
 
 begin_define
@@ -8236,15 +8132,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HW_LOCK_RESOURCE_MDIO
-value|0
+name|HW_LOCK_RESOURCE_GPIO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HW_LOCK_RESOURCE_GPIO
-value|1
+name|HW_LOCK_RESOURCE_MDIO
+value|0
 end_define
 
 begin_define
@@ -15349,6 +15245,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|MDIO_AN_REG_848xx_ID_MSB
+value|0xffe2
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM84858_PHY_ID
+value|0x600d
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_AN_REG_848xx_ID_LSB
+value|0xffe3
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIO_AN_REG_8481_LEGACY_AN_ADV
 value|0xffe4
 end_define
@@ -15605,169 +15522,169 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* These are mailbox register set used by 84833. */
+comment|/* These are mailbox register set used by 84833/84858. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG0
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG0
 value|0x4005
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG1
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG1
 value|0x4006
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG2
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG2
 value|0x4007
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG3
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG3
 value|0x4008
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG4
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG4
 value|0x4009
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG26
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG26
 value|0x4037
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG27
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG27
 value|0x4038
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG28
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG28
 value|0x4039
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG29
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG29
 value|0x403a
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG30
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG30
 value|0x403b
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_TOP_CFG_SCRATCH_REG31
+name|MDIO_848xx_TOP_CFG_SCRATCH_REG31
 value|0x403c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_COMMAND
-value|MDIO_84833_TOP_CFG_SCRATCH_REG0
+name|MDIO_848xx_CMD_HDLR_COMMAND
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_STATUS
-value|MDIO_84833_TOP_CFG_SCRATCH_REG26
+name|MDIO_848xx_CMD_HDLR_STATUS
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_DATA1
-value|MDIO_84833_TOP_CFG_SCRATCH_REG27
+name|MDIO_848xx_CMD_HDLR_DATA1
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG27)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_DATA2
-value|MDIO_84833_TOP_CFG_SCRATCH_REG28
+name|MDIO_848xx_CMD_HDLR_DATA2
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_DATA3
-value|MDIO_84833_TOP_CFG_SCRATCH_REG29
+name|MDIO_848xx_CMD_HDLR_DATA3
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG29)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_DATA4
-value|MDIO_84833_TOP_CFG_SCRATCH_REG30
+name|MDIO_848xx_CMD_HDLR_DATA4
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG30)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MDIO_84833_CMD_HDLR_DATA5
-value|MDIO_84833_TOP_CFG_SCRATCH_REG31
+name|MDIO_848xx_CMD_HDLR_DATA5
+value|(MDIO_848xx_TOP_CFG_SCRATCH_REG31)
 end_define
 
 begin_comment
-comment|/* Mailbox command set used by 84833. */
+comment|/* Mailbox command set used by 84833/84858 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY84833_CMD_SET_PAIR_SWAP
+name|PHY848xx_CMD_SET_PAIR_SWAP
 value|0x8001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY84833_CMD_GET_EEE_MODE
+name|PHY848xx_CMD_GET_EEE_MODE
 value|0x8008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY84833_CMD_SET_EEE_MODE
+name|PHY848xx_CMD_SET_EEE_MODE
 value|0x8009
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY84833_CMD_GET_CURRENT_TEMP
+name|PHY848xx_CMD_GET_CURRENT_TEMP
 value|0x8031
 end_define
 
 begin_comment
-comment|/* Mailbox status set used by 84833. */
+comment|/* Mailbox status set used by 84833 only */
 end_comment
 
 begin_define
@@ -15831,6 +15748,70 @@ define|#
 directive|define
 name|PHY84833_STATUS_CMD_OPEN_OVERRIDE
 value|0xa5a5
+end_define
+
+begin_comment
+comment|/* Mailbox Process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY84833_MB_PROCESS1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84833_MB_PROCESS2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84833_MB_PROCESS3
+value|3
+end_define
+
+begin_comment
+comment|/* Mailbox status set used by 84858 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY84858_STATUS_CMD_RECEIVED
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84858_STATUS_CMD_IN_PROGRESS
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84858_STATUS_CMD_COMPLETE_PASS
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84858_STATUS_CMD_COMPLETE_ERROR
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY84858_STATUS_CMD_SYSTEM_BUSY
+value|0xbbbb
 end_define
 
 begin_comment
@@ -16001,6 +15982,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MDIO_WC_REG_TX0_TX_DRIVER_IFIR_OFFSET
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_WC_REG_TX0_TX_DRIVER_IFIR_MASK
+value|0x000e
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIO_WC_REG_TX0_TX_DRIVER_IPRE_DRIVER_OFFSET
 value|0x04
 end_define
@@ -16115,6 +16110,13 @@ define|#
 directive|define
 name|MDIO_WC_REG_XGXSBLK2_UNICORE_MODE_10G
 value|0x8104
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_WC_REG_XGXSBLK2_LANE_RESET
+value|0x810a
 end_define
 
 begin_define
@@ -17356,7 +17358,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Fields of IGU PF CONFIGRATION REGISTER */
+comment|/* Fields of IGU PF CONFIGURATION REGISTER */
 end_comment
 
 begin_define
@@ -17426,7 +17428,7 @@ comment|/* simd all ones mode     */
 end_comment
 
 begin_comment
-comment|/* Fields of IGU VF CONFIGRATION REGISTER */
+comment|/* Fields of IGU VF CONFIGURATION REGISTER */
 end_comment
 
 begin_define

@@ -621,7 +621,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 init|=
@@ -739,7 +739,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -794,7 +794,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 operator|*
 operator|(
@@ -820,7 +820,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 operator|>>
 literal|2
@@ -993,7 +993,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 decl_stmt|;
@@ -1349,7 +1349,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 decl_stmt|;
@@ -2881,7 +2881,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 init|=
@@ -2934,7 +2934,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dmae_command
+name|dmae_cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6798,7 +6798,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 decl_stmt|;
@@ -7479,7 +7479,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 decl_stmt|;
