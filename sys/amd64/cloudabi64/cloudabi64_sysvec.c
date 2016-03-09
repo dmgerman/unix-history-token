@@ -578,6 +578,8 @@ operator|=
 name|SV_ABI_CLOUDABI
 operator||
 name|SV_CAPSICUM
+operator||
+name|SV_LP64
 block|,
 operator|.
 name|sv_set_syscall_retval
