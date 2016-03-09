@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1897,6 +1897,8 @@ block|,
 name|ECORE_AFEX_FCOE_Q_UPDATE_PENDING
 block|,
 name|ECORE_AFEX_PENDING_VIFSET_MCP_ACK
+block|,
+name|ECORE_FILTER_VXLAN_PENDING
 block|}
 enum|;
 end_enum
@@ -2046,6 +2048,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ecore_vxlan_fltr_ramrod_data
+block|{
+name|uint8_t
+name|innermac
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|vni
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ecore_classification_ramrod_data
@@ -2061,6 +2080,10 @@ decl_stmt|;
 name|struct
 name|ecore_vlan_mac_ramrod_data
 name|vlan_mac
+decl_stmt|;
+name|struct
+name|ecore_vxlan_fltr_ramrod_data
+name|vxlan_fltr
 decl_stmt|;
 block|}
 union|;
@@ -2414,6 +2437,28 @@ name|ECORE_DONT_CONSUME_CAM_CREDIT_DEST
 block|, }
 enum|;
 end_enum
+
+begin_comment
+comment|/* When looking for matching filters, some flags are not interesting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ECORE_VLAN_MAC_CMP_MASK
+value|(1<< ECORE_UC_LIST_MAC | \ 				 1<< ECORE_ETH_MAC | \ 				 1<< ECORE_ISCSI_ETH_MAC | \ 				 1<< ECORE_NETQ_ETH_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECORE_VLAN_MAC_CMP_FLAGS
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags)& ECORE_VLAN_MAC_CMP_MASK)
+end_define
 
 begin_struct
 struct|struct
@@ -3483,26 +3528,12 @@ name|ECORE_RSS_IPV6_TCP
 block|,
 name|ECORE_RSS_IPV6_UDP
 block|,
-name|ECORE_RSS_TUNNELING
+name|ECORE_RSS_IPV4_VXLAN
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__VMKLNX__
-argument_list|)
-operator|&&
-operator|(
-name|VMWARE_ESX_DDK_VERSION
-operator|<
-literal|55000
-operator|)
-comment|/* ! BNX2X_UPSTREAM */
-name|ECORE_RSS_MODE_ESX51
+name|ECORE_RSS_IPV6_VXLAN
 block|,
-endif|#
-directive|endif
-block|}
+name|ECORE_RSS_TUNN_INNER_HDRS
+block|, }
 enum|;
 end_enum
 
@@ -3546,13 +3577,6 @@ decl_stmt|;
 comment|/* valid only iff ECORE_RSS_UPDATE_TOE is set */
 name|uint16_t
 name|toe_rss_bitmap
-decl_stmt|;
-comment|/* valid iff ECORE_RSS_TUNNELING is set */
-name|uint16_t
-name|tunnel_value
-decl_stmt|;
-name|uint16_t
-name|tunnel_mask
 decl_stmt|;
 block|}
 struct|;
@@ -3643,6 +3667,10 @@ block|,
 name|ECORE_Q_UPDATE_TX_SWITCHING_CHNG
 block|,
 name|ECORE_Q_UPDATE_TX_SWITCHING
+block|,
+name|ECORE_Q_UPDATE_PTP_PKTS_CHNG
+block|,
+name|ECORE_Q_UPDATE_PTP_PKTS
 block|, }
 enum|;
 end_enum
@@ -3856,6 +3884,17 @@ name|MAC_PAD
 value|(ECORE_ALIGN(ETH_ALEN, sizeof(uint32_t)) - ETH_ALEN)
 end_define
 
+begin_comment
+comment|/* DMAE channel to be used by FW for timesync workaroun. A driver that sends  * timesync-related ramrods must not use this DMAE command ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_DMAE_CMD_ID
+value|6
+end_define
+
 begin_struct
 struct|struct
 name|ecore_queue_init_params
@@ -3965,6 +4004,53 @@ end_struct
 
 begin_struct
 struct|struct
+name|ecore_queue_update_tpa_params
+block|{
+name|ecore_dma_addr_t
+name|sge_map
+decl_stmt|;
+name|uint8_t
+name|update_ipv4
+decl_stmt|;
+name|uint8_t
+name|update_ipv6
+decl_stmt|;
+name|uint8_t
+name|max_tpa_queues
+decl_stmt|;
+name|uint8_t
+name|max_sges_pkt
+decl_stmt|;
+name|uint8_t
+name|complete_on_both_clients
+decl_stmt|;
+name|uint8_t
+name|dont_verify_thr
+decl_stmt|;
+name|uint8_t
+name|tpa_mode
+decl_stmt|;
+name|uint8_t
+name|_pad
+decl_stmt|;
+name|uint16_t
+name|sge_buff_sz
+decl_stmt|;
+name|uint16_t
+name|max_agg_sz
+decl_stmt|;
+name|uint16_t
+name|sge_pause_thr_low
+decl_stmt|;
+name|uint16_t
+name|sge_pause_thr_high
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|rxq_pause_params
 block|{
 name|uint16_t
@@ -4014,6 +4100,9 @@ name|mtu
 decl_stmt|;
 name|uint8_t
 name|cos
+decl_stmt|;
+name|uint8_t
+name|fp_hsi
 decl_stmt|;
 block|}
 struct|;
@@ -4195,6 +4284,10 @@ block|{
 name|struct
 name|ecore_queue_update_params
 name|update
+decl_stmt|;
+name|struct
+name|ecore_queue_update_tpa_params
+name|update_tpa
 decl_stmt|;
 name|struct
 name|ecore_queue_setup_params
@@ -4396,6 +4489,38 @@ comment|/********************** Function state update **************************
 end_comment
 
 begin_comment
+comment|/* UPDATE command options */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|ECORE_F_UPDATE_TX_SWITCH_SUSPEND_CHNG
+block|,
+name|ECORE_F_UPDATE_TX_SWITCH_SUSPEND
+block|,
+name|ECORE_F_UPDATE_SD_VLAN_TAG_CHNG
+block|,
+name|ECORE_F_UPDATE_SD_VLAN_ETH_TYPE_CHNG
+block|,
+name|ECORE_F_UPDATE_VLAN_FORCE_PRIO_CHNG
+block|,
+name|ECORE_F_UPDATE_VLAN_FORCE_PRIO_FLAG
+block|,
+name|ECORE_F_UPDATE_TUNNEL_CFG_CHNG
+block|,
+name|ECORE_F_UPDATE_TUNNEL_INNER_CLSS_L2GRE
+block|,
+name|ECORE_F_UPDATE_TUNNEL_INNER_CLSS_VXLAN
+block|,
+name|ECORE_F_UPDATE_TUNNEL_INNER_CLSS_L2GENEVE
+block|,
+name|ECORE_F_UPDATE_TUNNEL_INNER_RSS
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/* Allowed Function states */
 end_comment
 
@@ -4442,6 +4567,8 @@ name|ECORE_F_CMD_TX_START
 block|,
 name|ECORE_F_CMD_SWITCH_UPDATE
 block|,
+name|ECORE_F_CMD_SET_TIMESYNC
+block|,
 name|ECORE_F_CMD_MAX
 block|, }
 enum|;
@@ -4487,17 +4614,64 @@ comment|/* Function cos mode */
 name|uint8_t
 name|network_cos_mode
 decl_stmt|;
-comment|/* NVGRE classification enablement */
-name|uint8_t
-name|nvgre_clss_en
+comment|/* UDP dest port for VXLAN */
+name|uint16_t
+name|vxlan_dst_port
 decl_stmt|;
-comment|/* NO_GRE_TUNNEL/NVGRE_TUNNEL/L2GRE_TUNNEL/IPGRE_TUNNEL */
-name|uint8_t
-name|gre_tunnel_mode
+comment|/* UDP dest port for Geneve */
+name|uint16_t
+name|geneve_dst_port
 decl_stmt|;
-comment|/* GRE_OUTER_HEADERS_RSS/GRE_INNER_HEADERS_RSS/NVGRE_KEY_ENTROPY_RSS */
+comment|/* Enable inner Rx classifications for L2GRE packets */
 name|uint8_t
-name|gre_tunnel_rss
+name|inner_clss_l2gre
+decl_stmt|;
+comment|/* Enable inner Rx classifications for L2-Geneve packets */
+name|uint8_t
+name|inner_clss_l2geneve
+decl_stmt|;
+comment|/* Enable inner Rx classification for vxlan packets */
+name|uint8_t
+name|inner_clss_vxlan
+decl_stmt|;
+comment|/* Enable RSS according to inner header */
+name|uint8_t
+name|inner_rss
+decl_stmt|;
+comment|/** Allows accepting of packets failing MF classification, possibly 	 * only matching a given ethertype 	 */
+name|uint8_t
+name|class_fail
+decl_stmt|;
+name|uint16_t
+name|class_fail_ethtype
+decl_stmt|;
+comment|/* Override priority of output packets */
+name|uint8_t
+name|sd_vlan_force_pri
+decl_stmt|;
+name|uint8_t
+name|sd_vlan_force_pri_val
+decl_stmt|;
+comment|/* Replace vlan's ethertype */
+name|uint16_t
+name|sd_vlan_eth_type
+decl_stmt|;
+comment|/* Prevent inner vlans from being added by FW */
+name|uint8_t
+name|no_added_tags
+decl_stmt|;
+comment|/* Inner-to-Outer vlan priority mapping */
+name|uint8_t
+name|c2s_pri
+index|[
+name|MAX_VLAN_PRIORITIES
+index|]
+decl_stmt|;
+name|uint8_t
+name|c2s_pri_default
+decl_stmt|;
+name|uint8_t
+name|c2s_pri_valid
 decl_stmt|;
 block|}
 struct|;
@@ -4507,8 +4681,25 @@ begin_struct
 struct|struct
 name|ecore_func_switch_update_params
 block|{
+name|unsigned
+name|long
+name|changes
+decl_stmt|;
+comment|/* ECORE_F_UPDATE_XX bits */
+name|uint16_t
+name|vlan
+decl_stmt|;
+name|uint16_t
+name|vlan_eth_type
+decl_stmt|;
 name|uint8_t
-name|suspend
+name|vlan_force_prio
+decl_stmt|;
+name|uint16_t
+name|vxlan_dst_port
+decl_stmt|;
+name|uint16_t
+name|geneve_dst_port
 decl_stmt|;
 block|}
 struct|;
@@ -4571,6 +4762,42 @@ decl_stmt|;
 name|uint8_t
 name|dont_add_pri_0
 decl_stmt|;
+name|uint8_t
+name|dcb_outer_pri
+index|[
+name|MAX_TRAFFIC_TYPES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ecore_func_set_timesync_params
+block|{
+comment|/* Reset, set or keep the current drift value */
+name|uint8_t
+name|drift_adjust_cmd
+decl_stmt|;
+comment|/* Dec, inc or keep the current offset */
+name|uint8_t
+name|offset_cmd
+decl_stmt|;
+comment|/* Drift value direction */
+name|uint8_t
+name|add_sub_drift_adjust_value
+decl_stmt|;
+comment|/* Drift, period and offset values to be used according to the commands 	 * above. 	 */
+name|uint8_t
+name|drift_adjust_value
+decl_stmt|;
+name|uint32_t
+name|drift_adjust_period
+decl_stmt|;
+name|uint64_t
+name|offset_delta
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4624,6 +4851,10 @@ decl_stmt|;
 name|struct
 name|ecore_func_tx_start_params
 name|tx_start
+decl_stmt|;
+name|struct
+name|ecore_func_set_timesync_params
+name|set_timesync
 decl_stmt|;
 block|}
 name|params
@@ -5236,6 +5467,60 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ecore_init_vxlan_fltr_obj
+parameter_list|(
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ecore_vlan_mac_obj
+modifier|*
+name|vlan_mac_obj
+parameter_list|,
+name|uint8_t
+name|cl_id
+parameter_list|,
+name|uint32_t
+name|cid
+parameter_list|,
+name|uint8_t
+name|func_id
+parameter_list|,
+name|void
+modifier|*
+name|rdata
+parameter_list|,
+name|ecore_dma_addr_t
+name|rdata_mapping
+parameter_list|,
+name|int
+name|state
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|pstate
+parameter_list|,
+name|ecore_obj_type
+name|type
+parameter_list|,
+name|struct
+name|ecore_credit_pool_obj
+modifier|*
+name|macs_pool
+parameter_list|,
+name|struct
+name|ecore_credit_pool_obj
+modifier|*
+name|vlans_pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ecore_vlan_mac_h_read_lock
 parameter_list|(
@@ -5510,6 +5795,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ecore_init_credit_pool
+parameter_list|(
+name|struct
+name|ecore_credit_pool_obj
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|int
+name|credit
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/****************** RSS CONFIGURATION ****************/
 end_comment
@@ -5602,26 +5905,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* set as inline so printout will show the offending function */
-end_comment
-
-begin_function_decl
-name|int
-name|validate_vlan_mac
+begin_define
+define|#
+directive|define
+name|PF_MAC_CREDIT_E2
 parameter_list|(
-name|struct
-name|bxe_softc
-modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|ecore_vlan_mac_obj
-modifier|*
-name|vlan_mac
+name|func_num
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|((MAX_MAC_CREDIT_E2 - GET_NUM_VFS_PER_PATH(sc) * VF_MAC_CREDIT_CNT) /	\ 	 func_num + GET_NUM_VFS_PER_PF(sc) * VF_MAC_CREDIT_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_VLAN_CREDIT_E2
+parameter_list|(
+name|sc
+parameter_list|,
+name|func_num
+parameter_list|)
+define|\
+value|((MAX_MAC_CREDIT_E2 - GET_NUM_VFS_PER_PATH(sc) * VF_VLAN_CREDIT_CNT) / \ 	 func_num + GET_NUM_VFS_PER_PF(sc) * VF_VLAN_CREDIT_CNT)
+end_define
 
 begin_endif
 endif|#

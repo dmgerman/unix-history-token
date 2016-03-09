@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2014 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2017 QLogic Corporation. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|CSTORM_ASSERT_LIST_INDEX_OFFSET
-value|(IRO[148].base)
+value|(IRO[152].base)
 end_define
 
 begin_define
@@ -44,7 +44,7 @@ parameter_list|(
 name|assertListEntry
 parameter_list|)
 define|\
-value|(IRO[147].base + ((assertListEntry) * IRO[147].m1))
+value|(IRO[151].base + ((assertListEntry) * IRO[151].m1))
 end_define
 
 begin_define
@@ -55,7 +55,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[153].base + (((pfId)>>1) * IRO[153].m1) + (((pfId)&1) * \ 	IRO[153].m2))
+value|(IRO[157].base + (((pfId)>>1) * IRO[157].m1) + (((pfId)&1) * \ 	IRO[157].m2))
 end_define
 
 begin_define
@@ -66,7 +66,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[154].base + (((pfId)>>1) * IRO[154].m1) + (((pfId)&1) * \ 	IRO[154].m2))
+value|(IRO[158].base + (((pfId)>>1) * IRO[158].m1) + (((pfId)&1) * \ 	IRO[158].m2))
 end_define
 
 begin_define
@@ -77,7 +77,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[159].base + ((funcId) * IRO[159].m1))
+value|(IRO[163].base + ((funcId) * IRO[163].m1))
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[149].base + ((funcId) * IRO[149].m1))
+value|(IRO[153].base + ((funcId) * IRO[153].m1))
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ parameter_list|,
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[139].base + ((hcIndex) * IRO[139].m1) + ((sbId) * IRO[139].m2))
+value|(IRO[143].base + ((hcIndex) * IRO[143].m1) + ((sbId) * IRO[143].m2))
 end_define
 
 begin_define
@@ -114,14 +114,14 @@ parameter_list|,
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[138].base + (((hcIndex)>>2) * IRO[138].m1) + (((hcIndex)&3) \ 	* IRO[138].m2) + ((sbId) * IRO[138].m3))
+value|(IRO[142].base + (((hcIndex)>>2) * IRO[142].m1) + (((hcIndex)&3) \ 	* IRO[142].m2) + ((sbId) * IRO[142].m3))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTORM_IGU_MODE_OFFSET
-value|(IRO[157].base)
+value|(IRO[161].base)
 end_define
 
 begin_define
@@ -132,7 +132,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[317].base + ((pfId) * IRO[317].m1))
+value|(IRO[323].base + ((pfId) * IRO[323].m1))
 end_define
 
 begin_define
@@ -143,7 +143,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[318].base + ((pfId) * IRO[318].m1))
+value|(IRO[324].base + ((pfId) * IRO[324].m1))
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[310].base + ((pfId) * IRO[310].m1) + ((iscsiEqId) * IRO[310].m2))
+value|(IRO[316].base + ((pfId) * IRO[316].m1) + ((iscsiEqId) * IRO[316].m2))
 end_define
 
 begin_define
@@ -169,7 +169,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[312].base + ((pfId) * IRO[312].m1) + ((iscsiEqId) * IRO[312].m2))
+value|(IRO[318].base + ((pfId) * IRO[318].m1) + ((iscsiEqId) * IRO[318].m2))
 end_define
 
 begin_define
@@ -182,7 +182,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[311].base + ((pfId) * IRO[311].m1) + ((iscsiEqId) * IRO[311].m2))
+value|(IRO[317].base + ((pfId) * IRO[317].m1) + ((iscsiEqId) * IRO[317].m2))
 end_define
 
 begin_define
@@ -195,7 +195,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[313].base + ((pfId) * IRO[313].m1) + ((iscsiEqId) * IRO[313].m2))
+value|(IRO[319].base + ((pfId) * IRO[319].m1) + ((iscsiEqId) * IRO[319].m2))
 end_define
 
 begin_define
@@ -208,7 +208,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[309].base + ((pfId) * IRO[309].m1) + ((iscsiEqId) * IRO[309].m2))
+value|(IRO[315].base + ((pfId) * IRO[315].m1) + ((iscsiEqId) * IRO[315].m2))
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[315].base + ((pfId) * IRO[315].m1) + ((iscsiEqId) * IRO[315].m2))
+value|(IRO[321].base + ((pfId) * IRO[321].m1) + ((iscsiEqId) * IRO[321].m2))
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ parameter_list|,
 name|iscsiEqId
 parameter_list|)
 define|\
-value|(IRO[314].base + ((pfId) * IRO[314].m1) + ((iscsiEqId) * IRO[314].m2))
+value|(IRO[320].base + ((pfId) * IRO[320].m1) + ((iscsiEqId) * IRO[320].m2))
 end_define
 
 begin_define
@@ -245,7 +245,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[316].base + ((pfId) * IRO[316].m1))
+value|(IRO[322].base + ((pfId) * IRO[322].m1))
 end_define
 
 begin_define
@@ -256,7 +256,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[308].base + ((pfId) * IRO[308].m1))
+value|(IRO[314].base + ((pfId) * IRO[314].m1))
 end_define
 
 begin_define
@@ -267,7 +267,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[307].base + ((pfId) * IRO[307].m1))
+value|(IRO[313].base + ((pfId) * IRO[313].m1))
 end_define
 
 begin_define
@@ -278,7 +278,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[306].base + ((pfId) * IRO[306].m1))
+value|(IRO[312].base + ((pfId) * IRO[312].m1))
 end_define
 
 begin_define
@@ -289,7 +289,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[151].base + ((funcId) * IRO[151].m1))
+value|(IRO[155].base + ((funcId) * IRO[155].m1))
 end_define
 
 begin_define
@@ -300,7 +300,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[142].base + ((pfId) * IRO[142].m1))
+value|(IRO[146].base + ((pfId) * IRO[146].m1))
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[143].base + ((pfId) * IRO[143].m1))
+value|(IRO[147].base + ((pfId) * IRO[147].m1))
 end_define
 
 begin_define
@@ -322,14 +322,14 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[141].base + ((pfId) * IRO[141].m1))
+value|(IRO[145].base + ((pfId) * IRO[145].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTORM_SP_STATUS_BLOCK_SIZE
-value|(IRO[141].size)
+value|(IRO[145].size)
 end_define
 
 begin_define
@@ -340,14 +340,14 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[144].base + ((pfId) * IRO[144].m1))
+value|(IRO[148].base + ((pfId) * IRO[148].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTORM_SP_SYNC_BLOCK_SIZE
-value|(IRO[144].size)
+value|(IRO[148].size)
 end_define
 
 begin_define
@@ -360,7 +360,7 @@ parameter_list|,
 name|hcIndex
 parameter_list|)
 define|\
-value|(IRO[136].base + ((sbId) * IRO[136].m1) + ((hcIndex) * IRO[136].m2))
+value|(IRO[140].base + ((sbId) * IRO[140].m1) + ((hcIndex) * IRO[140].m2))
 end_define
 
 begin_define
@@ -371,7 +371,7 @@ parameter_list|(
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[133].base + ((sbId) * IRO[133].m1))
+value|(IRO[137].base + ((sbId) * IRO[137].m1))
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ parameter_list|(
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[134].base + ((sbId) * IRO[134].m1))
+value|(IRO[138].base + ((sbId) * IRO[138].m1))
 end_define
 
 begin_define
@@ -395,7 +395,7 @@ parameter_list|,
 name|hcIndex
 parameter_list|)
 define|\
-value|(IRO[135].base + ((sbId) * IRO[135].m1) + ((hcIndex) * IRO[135].m2))
+value|(IRO[139].base + ((sbId) * IRO[139].m1) + ((hcIndex) * IRO[139].m2))
 end_define
 
 begin_define
@@ -406,14 +406,14 @@ parameter_list|(
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[132].base + ((sbId) * IRO[132].m1))
+value|(IRO[136].base + ((sbId) * IRO[136].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTORM_STATUS_BLOCK_SIZE
-value|(IRO[132].size)
+value|(IRO[136].size)
 end_define
 
 begin_define
@@ -424,14 +424,14 @@ parameter_list|(
 name|sbId
 parameter_list|)
 define|\
-value|(IRO[137].base + ((sbId) * IRO[137].m1))
+value|(IRO[141].base + ((sbId) * IRO[141].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTORM_SYNC_BLOCK_SIZE
-value|(IRO[137].size)
+value|(IRO[141].size)
 end_define
 
 begin_define
@@ -442,14 +442,14 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[150].base + ((funcId) * IRO[150].m1))
+value|(IRO[154].base + ((funcId) * IRO[154].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|TSTORM_ACCEPT_CLASSIFY_FAILED_OFFSET
-value|(IRO[204].base)
+value|(IRO[208].base)
 end_define
 
 begin_define
@@ -460,7 +460,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[203].base + ((pfId) * IRO[203].m1))
+value|(IRO[207].base + ((pfId) * IRO[207].m1))
 end_define
 
 begin_define
@@ -489,7 +489,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[201].base + ((pfId) * IRO[201].m1))
+value|(IRO[205].base + ((pfId) * IRO[205].m1))
 end_define
 
 begin_define
@@ -500,7 +500,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[103].base + ((funcId) * IRO[103].m1))
+value|(IRO[107].base + ((funcId) * IRO[107].m1))
 end_define
 
 begin_define
@@ -511,7 +511,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[272].base + ((pfId) * IRO[272].m1))
+value|(IRO[278].base + ((pfId) * IRO[278].m1))
 end_define
 
 begin_define
@@ -522,7 +522,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[271].base + ((pfId) * IRO[271].m1))
+value|(IRO[277].base + ((pfId) * IRO[277].m1))
 end_define
 
 begin_define
@@ -533,7 +533,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[270].base + ((pfId) * IRO[270].m1))
+value|(IRO[276].base + ((pfId) * IRO[276].m1))
 end_define
 
 begin_define
@@ -544,7 +544,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[269].base + ((pfId) * IRO[269].m1))
+value|(IRO[275].base + ((pfId) * IRO[275].m1))
 end_define
 
 begin_define
@@ -555,7 +555,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[268].base + ((pfId) * IRO[268].m1))
+value|(IRO[274].base + ((pfId) * IRO[274].m1))
 end_define
 
 begin_define
@@ -566,7 +566,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[278].base + ((pfId) * IRO[278].m1))
+value|(IRO[284].base + ((pfId) * IRO[284].m1))
 end_define
 
 begin_define
@@ -577,7 +577,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[264].base + ((pfId) * IRO[264].m1))
+value|(IRO[270].base + ((pfId) * IRO[270].m1))
 end_define
 
 begin_define
@@ -588,7 +588,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[265].base + ((pfId) * IRO[265].m1))
+value|(IRO[271].base + ((pfId) * IRO[271].m1))
 end_define
 
 begin_define
@@ -599,7 +599,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[266].base + ((pfId) * IRO[266].m1))
+value|(IRO[272].base + ((pfId) * IRO[272].m1))
 end_define
 
 begin_define
@@ -610,7 +610,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[267].base + ((pfId) * IRO[267].m1))
+value|(IRO[273].base + ((pfId) * IRO[273].m1))
 end_define
 
 begin_define
@@ -621,7 +621,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[202].base + ((pfId) * IRO[202].m1))
+value|(IRO[206].base + ((pfId) * IRO[206].m1))
 end_define
 
 begin_define
@@ -632,7 +632,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[105].base + ((funcId) * IRO[105].m1))
+value|(IRO[109].base + ((funcId) * IRO[109].m1))
 end_define
 
 begin_define
@@ -643,7 +643,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[217].base + ((pfId) * IRO[217].m1))
+value|(IRO[223].base + ((pfId) * IRO[223].m1))
 end_define
 
 begin_define
@@ -654,28 +654,28 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[104].base + ((funcId) * IRO[104].m1))
+value|(IRO[108].base + ((funcId) * IRO[108].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|USTORM_AGG_DATA_OFFSET
-value|(IRO[206].base)
+value|(IRO[212].base)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USTORM_AGG_DATA_SIZE
-value|(IRO[206].size)
+value|(IRO[212].size)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USTORM_ASSERT_LIST_INDEX_OFFSET
-value|(IRO[177].base)
+value|(IRO[181].base)
 end_define
 
 begin_define
@@ -686,7 +686,7 @@ parameter_list|(
 name|assertListEntry
 parameter_list|)
 define|\
-value|(IRO[176].base + ((assertListEntry) * IRO[176].m1))
+value|(IRO[180].base + ((assertListEntry) * IRO[180].m1))
 end_define
 
 begin_define
@@ -697,7 +697,7 @@ parameter_list|(
 name|portId
 parameter_list|)
 define|\
-value|(IRO[183].base + ((portId) * IRO[183].m1))
+value|(IRO[187].base + ((portId) * IRO[187].m1))
 end_define
 
 begin_define
@@ -708,7 +708,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[319].base + ((pfId) * IRO[319].m1))
+value|(IRO[325].base + ((pfId) * IRO[325].m1))
 end_define
 
 begin_define
@@ -719,7 +719,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[178].base + ((funcId) * IRO[178].m1))
+value|(IRO[182].base + ((funcId) * IRO[182].m1))
 end_define
 
 begin_define
@@ -730,7 +730,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[283].base + ((pfId) * IRO[283].m1))
+value|(IRO[289].base + ((pfId) * IRO[289].m1))
 end_define
 
 begin_define
@@ -741,7 +741,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[284].base + ((pfId) * IRO[284].m1))
+value|(IRO[290].base + ((pfId) * IRO[290].m1))
 end_define
 
 begin_define
@@ -752,7 +752,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[288].base + ((pfId) * IRO[288].m1))
+value|(IRO[294].base + ((pfId) * IRO[294].m1))
 end_define
 
 begin_define
@@ -763,7 +763,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[285].base + ((pfId) * IRO[285].m1))
+value|(IRO[291].base + ((pfId) * IRO[291].m1))
 end_define
 
 begin_define
@@ -774,7 +774,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[281].base + ((pfId) * IRO[281].m1))
+value|(IRO[287].base + ((pfId) * IRO[287].m1))
 end_define
 
 begin_define
@@ -785,7 +785,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[280].base + ((pfId) * IRO[280].m1))
+value|(IRO[286].base + ((pfId) * IRO[286].m1))
 end_define
 
 begin_define
@@ -796,7 +796,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[279].base + ((pfId) * IRO[279].m1))
+value|(IRO[285].base + ((pfId) * IRO[285].m1))
 end_define
 
 begin_define
@@ -807,7 +807,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[282].base + ((pfId) * IRO[282].m1))
+value|(IRO[288].base + ((pfId) * IRO[288].m1))
 end_define
 
 begin_define
@@ -818,7 +818,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[286].base + ((pfId) * IRO[286].m1))
+value|(IRO[292].base + ((pfId) * IRO[292].m1))
 end_define
 
 begin_define
@@ -829,7 +829,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[287].base + ((pfId) * IRO[287].m1))
+value|(IRO[293].base + ((pfId) * IRO[293].m1))
 end_define
 
 begin_define
@@ -840,7 +840,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[182].base + ((pfId) * IRO[182].m1))
+value|(IRO[186].base + ((pfId) * IRO[186].m1))
 end_define
 
 begin_define
@@ -851,7 +851,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[180].base + ((funcId) * IRO[180].m1))
+value|(IRO[184].base + ((funcId) * IRO[184].m1))
 end_define
 
 begin_define
@@ -864,7 +864,7 @@ parameter_list|,
 name|clientId
 parameter_list|)
 define|\
-value|(IRO[209].base + ((portId) * IRO[209].m1) + ((clientId) * \ 	IRO[209].m2))
+value|(IRO[215].base + ((portId) * IRO[215].m1) + ((clientId) * \ 	IRO[215].m2))
 end_define
 
 begin_define
@@ -875,21 +875,21 @@ parameter_list|(
 name|qzoneId
 parameter_list|)
 define|\
-value|(IRO[210].base + ((qzoneId) * IRO[210].m1))
+value|(IRO[216].base + ((qzoneId) * IRO[216].m1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|USTORM_TPA_BTR_OFFSET
-value|(IRO[207].base)
+value|(IRO[213].base)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USTORM_TPA_BTR_SIZE
-value|(IRO[207].size)
+value|(IRO[213].size)
 end_define
 
 begin_define
@@ -900,7 +900,7 @@ parameter_list|(
 name|funcId
 parameter_list|)
 define|\
-value|(IRO[179].base + ((funcId) * IRO[179].m1))
+value|(IRO[183].base + ((funcId) * IRO[183].m1))
 end_define
 
 begin_define
@@ -976,7 +976,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[296].base + ((pfId) * IRO[296].m1))
+value|(IRO[302].base + ((pfId) * IRO[302].m1))
 end_define
 
 begin_define
@@ -987,7 +987,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[299].base + ((pfId) * IRO[299].m1))
+value|(IRO[305].base + ((pfId) * IRO[305].m1))
 end_define
 
 begin_define
@@ -998,7 +998,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[300].base + ((pfId) * IRO[300].m1))
+value|(IRO[306].base + ((pfId) * IRO[306].m1))
 end_define
 
 begin_define
@@ -1009,7 +1009,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[301].base + ((pfId) * IRO[301].m1))
+value|(IRO[307].base + ((pfId) * IRO[307].m1))
 end_define
 
 begin_define
@@ -1020,7 +1020,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[302].base + ((pfId) * IRO[302].m1))
+value|(IRO[308].base + ((pfId) * IRO[308].m1))
 end_define
 
 begin_define
@@ -1031,7 +1031,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[303].base + ((pfId) * IRO[303].m1))
+value|(IRO[309].base + ((pfId) * IRO[309].m1))
 end_define
 
 begin_define
@@ -1042,7 +1042,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[304].base + ((pfId) * IRO[304].m1))
+value|(IRO[310].base + ((pfId) * IRO[310].m1))
 end_define
 
 begin_define
@@ -1053,7 +1053,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[305].base + ((pfId) * IRO[305].m1))
+value|(IRO[311].base + ((pfId) * IRO[311].m1))
 end_define
 
 begin_define
@@ -1064,7 +1064,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[295].base + ((pfId) * IRO[295].m1))
+value|(IRO[301].base + ((pfId) * IRO[301].m1))
 end_define
 
 begin_define
@@ -1075,7 +1075,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[294].base + ((pfId) * IRO[294].m1))
+value|(IRO[300].base + ((pfId) * IRO[300].m1))
 end_define
 
 begin_define
@@ -1086,7 +1086,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[293].base + ((pfId) * IRO[293].m1))
+value|(IRO[299].base + ((pfId) * IRO[299].m1))
 end_define
 
 begin_define
@@ -1097,7 +1097,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[298].base + ((pfId) * IRO[298].m1))
+value|(IRO[304].base + ((pfId) * IRO[304].m1))
 end_define
 
 begin_define
@@ -1108,7 +1108,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[297].base + ((pfId) * IRO[297].m1))
+value|(IRO[303].base + ((pfId) * IRO[303].m1))
 end_define
 
 begin_define
@@ -1119,7 +1119,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[292].base + ((pfId) * IRO[292].m1))
+value|(IRO[298].base + ((pfId) * IRO[298].m1))
 end_define
 
 begin_define
@@ -1130,7 +1130,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[291].base + ((pfId) * IRO[291].m1))
+value|(IRO[297].base + ((pfId) * IRO[297].m1))
 end_define
 
 begin_define
@@ -1141,7 +1141,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[290].base + ((pfId) * IRO[290].m1))
+value|(IRO[296].base + ((pfId) * IRO[296].m1))
 end_define
 
 begin_define
@@ -1152,7 +1152,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[289].base + ((pfId) * IRO[289].m1))
+value|(IRO[295].base + ((pfId) * IRO[295].m1))
 end_define
 
 begin_define
@@ -1225,7 +1225,7 @@ parameter_list|(
 name|portId
 parameter_list|)
 define|\
-value|(IRO[211].base + ((portId) * IRO[211].m1))
+value|(IRO[217].base + ((portId) * IRO[217].m1))
 end_define
 
 begin_define
@@ -1236,7 +1236,7 @@ parameter_list|(
 name|portId
 parameter_list|)
 define|\
-value|(IRO[212].base + ((portId) * IRO[212].m1))
+value|(IRO[218].base + ((portId) * IRO[218].m1))
 end_define
 
 begin_define
@@ -1247,7 +1247,7 @@ parameter_list|(
 name|pfId
 parameter_list|)
 define|\
-value|(IRO[214].base + (((pfId)>>1) * IRO[214].m1) + (((pfId)&1) * \ 	IRO[214].m2))
+value|(IRO[220].base + (((pfId)>>1) * IRO[220].m1) + (((pfId)&1) * \ 	IRO[220].m2))
 end_define
 
 begin_define
@@ -1266,6 +1266,17 @@ define|#
 directive|define
 name|COMMON_ASM_INVALID_ASSERT_OPCODE
 value|(IRO[7].base)
+end_define
+
+begin_comment
+comment|/* eth hsi version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_FP_HSI_VERSION
+value|(ETH_FP_HSI_VER_2)
 end_define
 
 begin_comment
@@ -1862,6 +1873,13 @@ name|SDM_TIMER_TICK_RESUL_CHIP
 value|(4 * (1e-6))
 end_define
 
+begin_define
+define|#
+directive|define
+name|TSDM_TIMER_TICK_RESUL_CHIP
+value|(1 * (1e-6))
+end_define
+
 begin_comment
 comment|/**** END DEFINES FOR TIMERS/CLOCKS RESOLUTIONS ****/
 end_comment
@@ -1916,6 +1934,13 @@ begin_define
 define|#
 directive|define
 name|MAX_PFC_PRIORITIES
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_VLAN_PRIORITIES
 value|8
 end_define
 

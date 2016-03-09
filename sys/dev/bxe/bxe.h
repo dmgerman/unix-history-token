@@ -461,6 +461,20 @@ directive|include
 file|"bxe_elink.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|VF_MAC_CREDIT_CNT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VF_VLAN_CREDIT_CNT
+value|(0)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -3845,7 +3859,7 @@ name|bxe_slowpath
 block|{
 comment|/* used by the DMAE command executer */
 name|struct
-name|dmae_command
+name|dmae_cmd
 name|dmae
 index|[
 name|MAX_DMAE_C
@@ -6411,7 +6425,7 @@ name|bxe_fw_port_stats_old
 name|fw_stats_old
 decl_stmt|;
 name|struct
-name|dmae_command
+name|dmae_cmd
 name|stats_dmae
 decl_stmt|;
 comment|/* used by dmae command loader */
@@ -7557,70 +7571,70 @@ begin_define
 define|#
 directive|define
 name|DMAE_CMD_SRC_PCI
-value|(DMAE_SRC_PCI<< DMAE_COMMAND_SRC_SHIFT)
+value|(DMAE_SRC_PCI<< DMAE_CMD_SRC_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_SRC_GRC
-value|(DMAE_SRC_GRC<< DMAE_COMMAND_SRC_SHIFT)
+value|(DMAE_SRC_GRC<< DMAE_CMD_SRC_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_DST_PCI
-value|(DMAE_DST_PCI<< DMAE_COMMAND_DST_SHIFT)
+value|(DMAE_DST_PCI<< DMAE_CMD_DST_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_DST_GRC
-value|(DMAE_DST_GRC<< DMAE_COMMAND_DST_SHIFT)
+value|(DMAE_DST_GRC<< DMAE_CMD_DST_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_C_DST_PCI
-value|(DMAE_COMP_PCI<< DMAE_COMMAND_C_DST_SHIFT)
+value|(DMAE_COMP_PCI<< DMAE_CMD_C_DST_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_C_DST_GRC
-value|(DMAE_COMP_GRC<< DMAE_COMMAND_C_DST_SHIFT)
+value|(DMAE_COMP_GRC<< DMAE_CMD_C_DST_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_ENDIANITY_NO_SWAP
-value|(0<< DMAE_COMMAND_ENDIANITY_SHIFT)
+value|(0<< DMAE_CMD_ENDIANITY_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_ENDIANITY_B_SWAP
-value|(1<< DMAE_COMMAND_ENDIANITY_SHIFT)
+value|(1<< DMAE_CMD_ENDIANITY_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_ENDIANITY_DW_SWAP
-value|(2<< DMAE_COMMAND_ENDIANITY_SHIFT)
+value|(2<< DMAE_CMD_ENDIANITY_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAE_CMD_ENDIANITY_B_DW_SWAP
-value|(3<< DMAE_COMMAND_ENDIANITY_SHIFT)
+value|(3<< DMAE_CMD_ENDIANITY_SHIFT)
 end_define
 
 begin_define
@@ -7634,7 +7648,7 @@ begin_define
 define|#
 directive|define
 name|DMAE_CMD_PORT_1
-value|DMAE_COMMAND_PORT
+value|DMAE_CMD_PORT
 end_define
 
 begin_define
@@ -8364,7 +8378,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|dmae_command
+name|dmae_cmd
 modifier|*
 name|dmae
 parameter_list|,
