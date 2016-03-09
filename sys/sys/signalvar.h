@@ -647,6 +647,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD6
+end_ifdef
+
 begin_struct
 struct|struct
 name|osigevent
@@ -675,6 +681,11 @@ comment|/* Signal value */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
