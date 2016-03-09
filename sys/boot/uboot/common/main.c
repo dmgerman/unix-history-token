@@ -1624,7 +1624,13 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|void
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
 parameter_list|)
 block|{
 name|struct
@@ -1651,9 +1657,20 @@ name|char
 modifier|*
 name|ldev
 decl_stmt|;
-comment|/* 	 * If we can't find the magic signature and related info, exit with a 	 * unique error code that U-Boot reports as "## Application terminated, 	 * rc = 0xnnbadab1". Hopefully 'badab1' looks enough like "bad api" to 	 * provide a clue. It's better than 0xffffffff anyway. 	 */
+comment|/* 	 * We first check if a command line argument was passed to us containing 	 * API's signature address. If it wasn't then we try to search for the 	 * API signature via the usual hinted address. 	 * If we can't find the magic signature and related info, exit with a 	 * unique error code that U-Boot reports as "## Application terminated, 	 * rc = 0xnnbadab1". Hopefully 'badab1' looks enough like "bad api" to 	 * provide a clue. It's better than 0xffffffff anyway. 	 */
 if|if
 condition|(
+operator|!
+name|api_parse_cmdline_sig
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+operator|&
+name|sig
+argument_list|)
+operator|&&
 operator|!
 name|api_search_sig
 argument_list|(
