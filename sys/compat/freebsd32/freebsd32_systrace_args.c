@@ -8049,13 +8049,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* freebsd32_aio_cancel */
+comment|/* aio_cancel */
 case|case
 literal|316
 case|:
 block|{
 name|struct
-name|freebsd32_aio_cancel_args
+name|aio_cancel_args
 modifier|*
 name|p
 init|=
@@ -8083,7 +8083,7 @@ name|p
 operator|->
 name|aiocbp
 expr_stmt|;
-comment|/* struct aiocb32 * */
+comment|/* struct aiocb * */
 operator|*
 name|n_args
 operator|=
@@ -8120,135 +8120,6 @@ operator|*
 name|n_args
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* freebsd32_oaio_read */
-case|case
-literal|318
-case|:
-block|{
-name|struct
-name|freebsd32_oaio_read_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|aiocbp
-expr_stmt|;
-comment|/* struct oaiocb32 * */
-operator|*
-name|n_args
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* freebsd32_oaio_write */
-case|case
-literal|319
-case|:
-block|{
-name|struct
-name|freebsd32_oaio_write_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|aiocbp
-expr_stmt|;
-comment|/* struct oaiocb32 * */
-operator|*
-name|n_args
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* freebsd32_olio_listio */
-case|case
-literal|320
-case|:
-block|{
-name|struct
-name|freebsd32_olio_listio_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|mode
-expr_stmt|;
-comment|/* int */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|acb_list
-expr_stmt|;
-comment|/* struct oaiocb32 *const * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|nent
-expr_stmt|;
-comment|/* int */
-name|uarg
-index|[
-literal|3
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|sig
-expr_stmt|;
-comment|/* struct osigevent32 * */
-operator|*
-name|n_args
-operator|=
-literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -24220,7 +24091,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* freebsd32_aio_cancel */
+comment|/* aio_cancel */
 case|case
 literal|316
 case|:
@@ -24242,7 +24113,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct aiocb32 *"
+literal|"struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24265,96 +24136,6 @@ case|:
 name|p
 operator|=
 literal|"struct aiocb32 *"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* freebsd32_oaio_read */
-case|case
-literal|318
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"struct oaiocb32 *"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* freebsd32_oaio_write */
-case|case
-literal|319
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"struct oaiocb32 *"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* freebsd32_olio_listio */
-case|case
-literal|320
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"struct oaiocb32 *const *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-name|p
-operator|=
-literal|"struct osigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -35119,7 +34900,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* freebsd32_aio_cancel */
+comment|/* aio_cancel */
 case|case
 literal|316
 case|:
@@ -35141,63 +34922,6 @@ break|break;
 comment|/* freebsd32_aio_error */
 case|case
 literal|317
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* freebsd32_oaio_read */
-case|case
-literal|318
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* freebsd32_oaio_write */
-case|case
-literal|319
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* freebsd32_olio_listio */
-case|case
-literal|320
 case|:
 if|if
 condition|(
