@@ -34142,11 +34142,7 @@ name|m_pkthdr
 operator|.
 name|len
 operator|!=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+name|orglen
 condition|)
 block|{
 name|ipseclog
