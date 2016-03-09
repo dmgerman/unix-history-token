@@ -312,7 +312,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%jd.%.9d"
+literal|"%jd.%.9ld"
 argument_list|,
 operator|(
 name|intmax_t
