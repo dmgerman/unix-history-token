@@ -3133,7 +3133,7 @@ name|powerbuf
 argument_list|,
 name|wvalue
 argument_list|,
-name|numPowers
+name|window
 argument_list|)
 condition|)
 goto|goto
