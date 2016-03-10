@@ -2461,6 +2461,9 @@ name|sysctl_oid
 modifier|*
 name|hn_rx_sysctl_tree
 decl_stmt|;
+name|int
+name|hn_rx_flags
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -2488,6 +2491,13 @@ define|#
 directive|define
 name|HN_TRUST_HCSUM_UDP
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_ATTACHED
+value|0x1
 end_define
 
 begin_struct
@@ -2619,6 +2629,9 @@ name|sysctl_oid
 modifier|*
 name|hn_tx_sysctl_tree
 decl_stmt|;
+name|int
+name|hn_tx_flags
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -2626,6 +2639,13 @@ name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|HN_TX_FLAG_ATTACHED
+value|0x1
+end_define
 
 begin_comment
 comment|/*  * Device-specific softc structure  */
