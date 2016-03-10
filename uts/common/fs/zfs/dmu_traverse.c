@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -181,6 +181,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|td_arg
+decl_stmt|;
+name|boolean_t
+name|td_realloc_possible
 decl_stmt|;
 block|}
 name|traverse_data_t
@@ -988,13 +991,26 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Since this block has a birth time of 0 it must be a 		 * hole created before the SPA_FEATURE_HOLE_BIRTH 		 * feature was enabled.  If SPA_FEATURE_HOLE_BIRTH 		 * was enabled before the min_txg for this traveral we 		 * know the hole must have been created before the 		 * min_txg for this traveral, so we can skip it. If 		 * SPA_FEATURE_HOLE_BIRTH was enabled after the min_txg 		 * for this traveral we cannot tell if the hole was 		 * created before or after the min_txg for this 		 * traversal, so we cannot skip it. 		 */
+comment|/* 		 * Since this block has a birth time of 0 it must be one of 		 * two things: a hole created before the 		 * SPA_FEATURE_HOLE_BIRTH feature was enabled, or a hole 		 * which has always been a hole in an object. 		 * 		 * If a file is written sparsely, then the unwritten parts of 		 * the file were "always holes" -- that is, they have been 		 * holes since this object was allocated.  However, we (and 		 * our callers) can not necessarily tell when an object was 		 * allocated.  Therefore, if it's possible that this object 		 * was freed and then its object number reused, we need to 		 * visit all the holes with birth==0. 		 * 		 * If it isn't possible that the object number was reused, 		 * then if SPA_FEATURE_HOLE_BIRTH was enabled before we wrote 		 * all the blocks we will visit as part of this traversal, 		 * then this hole must have always existed, so we can skip 		 * it.  We visit blocks born after (exclusive) td_min_txg. 		 * 		 * Note that the meta-dnode cannot be reallocated. 		 */
 if|if
 condition|(
+operator|(
+operator|!
+name|td
+operator|->
+name|td_realloc_possible
+operator|||
+name|zb
+operator|->
+name|zb_object
+operator|==
+name|DMU_META_DNODE_OBJECT
+operator|)
+operator|&&
 name|td
 operator|->
 name|td_hole_birth_enabled_txg
-operator|<
+operator|<=
 name|td
 operator|->
 name|td_min_txg
@@ -1651,6 +1667,23 @@ name|zb_objset
 argument_list|,
 name|DMU_META_DNODE_OBJECT
 argument_list|)
+expr_stmt|;
+comment|/* 		 * See the block comment above for the goal of this variable. 		 * If the maxblkid of the meta-dnode is 0, then we know that 		 * we've never had more than DNODES_PER_BLOCK objects in the 		 * dataset, which means we can't have reused any object ids. 		 */
+if|if
+condition|(
+name|osp
+operator|->
+name|os_meta_dnode
+operator|.
+name|dn_maxblkid
+operator|==
+literal|0
+condition|)
+name|td
+operator|->
+name|td_realloc_possible
+operator|=
+name|B_FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -2875,6 +2908,20 @@ name|td_paused
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|td
+operator|.
+name|td_realloc_possible
+operator|=
+operator|(
+name|txg_start
+operator|==
+literal|0
+condition|?
+name|B_FALSE
+else|:
+name|B_TRUE
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|spa_feature_is_active
@@ -2907,7 +2954,7 @@ name|td
 operator|.
 name|td_hole_birth_enabled_txg
 operator|=
-literal|0
+name|UINT64_MAX
 expr_stmt|;
 block|}
 name|pd
