@@ -3686,6 +3686,16 @@ argument_list|)
 operator|&&
 name|pp
 operator|->
+name|stripesize
+operator|<=
+operator|(
+literal|1
+operator|<<
+name|SPA_MAXASHIFT
+operator|)
+operator|&&
+name|pp
+operator|->
 name|stripeoffset
 operator|==
 literal|0
