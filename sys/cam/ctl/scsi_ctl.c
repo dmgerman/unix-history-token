@@ -6965,6 +6965,9 @@ case|:
 case|case
 name|XPT_GET_SIM_KNOB
 case|:
+case|case
+name|XPT_GET_SIM_KNOB_OLD
+case|:
 break|break;
 default|default:
 name|panic

@@ -11993,6 +11993,9 @@ case|case
 name|XPT_NOTIFY_ACKNOWLEDGE
 case|:
 case|case
+name|XPT_GET_SIM_KNOB_OLD
+case|:
+case|case
 name|XPT_GET_SIM_KNOB
 case|:
 case|case

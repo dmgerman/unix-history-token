@@ -23143,6 +23143,10 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+name|XPT_GET_SIM_KNOB_OLD
+case|:
+comment|/* Get SIM knobs -- compat value */
+case|case
 name|XPT_GET_SIM_KNOB
 case|:
 comment|/* Get SIM knobs */
