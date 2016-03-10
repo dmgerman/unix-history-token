@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2007, 2012, 2013, 2015  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2007, 2012, 2013, 2015, 2016  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1259,9 +1259,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_auth
-operator|==
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1279,9 +1281,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_sexpr_binaryp
+argument_list|(
 name|hmd5
-operator|==
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2540,9 +2544,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|isccc_cc_lookupuint32
 argument_list|(
@@ -2748,9 +2754,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2807,9 +2815,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2922,13 +2932,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 operator|||
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_data
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|isccc_cc_lookupuint32
 argument_list|(
@@ -3812,9 +3826,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|isccc_cc_lookupstring
 argument_list|(
