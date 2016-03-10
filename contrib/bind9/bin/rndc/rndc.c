@@ -818,13 +818,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|data
-operator|==
-name|NULL
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"no data section in response"
+literal|"bad or missing data section in response"
 argument_list|)
 expr_stmt|;
 name|result
@@ -1140,13 +1142,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|_ctrl
-operator|==
-name|NULL
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"_ctrl section missing"
+literal|"bad or missing ctrl section in response"
 argument_list|)
 expr_stmt|;
 name|nonce

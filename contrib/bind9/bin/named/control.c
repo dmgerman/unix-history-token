@@ -245,9 +245,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|isccc_alist_alistp
+argument_list|(
 name|data
-operator|==
-name|NULL
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * No data section. 		 */
