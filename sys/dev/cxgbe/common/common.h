@@ -834,6 +834,10 @@ name|u32
 name|size
 decl_stmt|;
 comment|/* size of log */
+name|u32
+name|addr
+decl_stmt|;
+comment|/* start address in flat addr space */
 block|}
 struct|;
 end_struct
