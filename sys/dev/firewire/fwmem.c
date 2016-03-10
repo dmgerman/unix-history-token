@@ -1773,13 +1773,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|&
-name|BIO_READ
-operator|)
 operator|==
 name|BIO_READ
 condition|)
