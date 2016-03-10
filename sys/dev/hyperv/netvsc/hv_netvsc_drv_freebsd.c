@@ -1084,7 +1084,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|hn_ring_cnt
+name|hn_chan_cnt
 init|=
 literal|1
 decl_stmt|;
@@ -1097,16 +1097,16 @@ name|_hw_hn
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ring_cnt
+name|chan_cnt
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|hn_ring_cnt
+name|hn_chan_cnt
 argument_list|,
 literal|0
 argument_list|,
-literal|"# of TX/RX rings to used"
+literal|"# of channels to use; each channel has one RX ring and one TX ring"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1114,7 +1114,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|hn_single_tx_ring
+name|hn_tx_ring_cnt
 init|=
 literal|1
 decl_stmt|;
@@ -1127,16 +1127,16 @@ name|_hw_hn
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|single_tx_ring
+name|tx_ring_cnt
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|hn_single_tx_ring
+name|hn_tx_ring_cnt
 argument_list|,
 literal|0
 argument_list|,
-literal|"Use one TX ring"
+literal|"# of TX rings to use"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2120,9 +2120,10 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Figure out the # of RX rings (ring_cnt) and the # of TX rings 	 * to use (tx_ring_cnt). 	 * 	 * NOTE: 	 * The # of RX rings to use is same as the # of channels to use. 	 */
 name|ring_cnt
 operator|=
-name|hn_ring_cnt
+name|hn_chan_cnt
 expr_stmt|;
 if|if
 condition|(
@@ -2131,13 +2132,43 @@ operator|<=
 literal|0
 operator|||
 name|ring_cnt
-operator|>=
+operator|>
 name|mp_ncpus
 condition|)
 name|ring_cnt
 operator|=
 name|mp_ncpus
 expr_stmt|;
+name|tx_ring_cnt
+operator|=
+name|hn_tx_ring_cnt
+expr_stmt|;
+if|if
+condition|(
+name|tx_ring_cnt
+operator|<=
+literal|0
+operator|||
+name|tx_ring_cnt
+operator|>
+name|ring_cnt
+condition|)
+name|tx_ring_cnt
+operator|=
+name|ring_cnt
+expr_stmt|;
+if|if
+condition|(
+name|hn_use_if_start
+condition|)
+block|{
+comment|/* ifnet.if_start only needs one TX ring. */
+name|tx_ring_cnt
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Set the leader CPU for channels. 	 */
 name|sc
 operator|->
 name|hn_cpu
@@ -2152,23 +2183,6 @@ argument_list|)
 operator|%
 name|mp_ncpus
 expr_stmt|;
-name|tx_ring_cnt
-operator|=
-name|ring_cnt
-expr_stmt|;
-if|if
-condition|(
-name|hn_single_tx_ring
-operator|||
-name|hn_use_if_start
-condition|)
-block|{
-comment|/* 		 * - Explicitly asked to use single TX ring. 		 * - ifnet.if_start is used; ifnet.if_start only needs 		 *   one TX ring. 		 */
-name|tx_ring_cnt
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|error
 operator|=
 name|hn_create_tx_data
@@ -2462,8 +2476,18 @@ operator|->
 name|net_dev
 operator|->
 name|num_channel
+operator|>
+literal|0
+operator|&&
+name|sc
+operator|->
+name|net_dev
+operator|->
+name|num_channel
 operator|<=
-name|ring_cnt
+name|sc
+operator|->
+name|hn_rx_ring_inuse
 argument_list|,
 operator|(
 literal|"invalid channel count %u, should be less than %d"
@@ -2474,11 +2498,13 @@ name|net_dev
 operator|->
 name|num_channel
 operator|,
-name|ring_cnt
+name|sc
+operator|->
+name|hn_rx_ring_inuse
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set # of TX/RX rings that could be used according to 	 * the # of channels that host offered. 	 */
+comment|/* 	 * Set the # of TX/RX rings that could be used according to 	 * the # of channels that host offered. 	 */
 if|if
 condition|(
 name|sc
