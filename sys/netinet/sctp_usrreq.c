@@ -29798,6 +29798,17 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|sctp_chunk_output
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_OUTPUT_FROM_SOCKOPT
+argument_list|,
+name|SCTP_SO_LOCKED
+argument_list|)
+expr_stmt|;
 name|out_of_it
 label|:
 name|SCTP_TCB_UNLOCK
