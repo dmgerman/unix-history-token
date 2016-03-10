@@ -11621,9 +11621,7 @@ operator|>=
 name|mw_end
 operator|||
 name|addr
-operator|+
-name|len
-operator|<=
+operator|<
 name|mw
 operator|->
 name|mw_curpos
