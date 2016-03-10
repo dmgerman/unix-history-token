@@ -387,6 +387,9 @@ name|tmp
 decl_stmt|,
 name|en_dedup
 decl_stmt|;
+name|int
+name|summary
+decl_stmt|;
 name|struct
 name|iovec
 name|iov
@@ -456,6 +459,10 @@ name|en_dedup
 operator|=
 literal|0
 expr_stmt|;
+name|summary
+operator|=
+literal|0
+expr_stmt|;
 name|handler
 operator|=
 operator|&
@@ -472,7 +479,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"o:s:vZdL"
+literal|"o:s:vZdLS"
 argument_list|)
 operator|)
 operator|!=
@@ -559,6 +566,14 @@ name|handler
 operator|=
 operator|&
 name|ulzma_fmt
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|summary
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1425,6 +1440,10 @@ condition|(
 name|verbose
 operator|!=
 literal|0
+operator|||
+name|summary
+operator|!=
+literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -1627,7 +1646,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkuzip [-vZdL] [-o outfile] [-s cluster_size] "
+literal|"usage: mkuzip [-vZdLS] [-o outfile] [-s cluster_size] "
 literal|"infile\n"
 argument_list|)
 expr_stmt|;
