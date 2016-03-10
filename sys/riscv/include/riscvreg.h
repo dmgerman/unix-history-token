@@ -539,6 +539,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|INSN_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSR_ZIMM
 parameter_list|(
 name|val
