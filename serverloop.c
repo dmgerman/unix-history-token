@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.178 2015/02/20 22:17:21 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.182 2016/02/08 10:57:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -242,12 +242,6 @@ begin_include
 include|#
 directive|include
 file|"serverloop.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"roaming.h"
 end_include
 
 begin_include
@@ -1665,14 +1659,9 @@ name|readset
 argument_list|)
 condition|)
 block|{
-name|int
-name|cont
-init|=
-literal|0
-decl_stmt|;
 name|len
 operator|=
-name|roaming_read
+name|read
 argument_list|(
 name|connection_in
 argument_list|,
@@ -1682,9 +1671,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-argument_list|,
-operator|&
-name|cont
 argument_list|)
 expr_stmt|;
 if|if
@@ -1694,11 +1680,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|cont
-condition|)
-return|return;
 name|verbose
 argument_list|(
 literal|"Connection closed by %.100s"
@@ -3377,10 +3358,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|rekeying
-init|=
-literal|0
-decl_stmt|,
 name|max_fd
 decl_stmt|;
 name|u_int
@@ -3483,27 +3460,13 @@ block|{
 name|process_buffered_input_packets
 argument_list|()
 expr_stmt|;
-name|rekeying
-operator|=
-operator|(
-name|active_state
-operator|->
-name|kex
-operator|!=
-name|NULL
-operator|&&
-operator|!
-name|active_state
-operator|->
-name|kex
-operator|->
-name|done
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|rekeying
+name|ssh_packet_is_rekeying
+argument_list|(
+name|active_state
+argument_list|)
 operator|&&
 name|packet_not_very_much_data_to_write
 argument_list|()
@@ -3522,7 +3485,10 @@ operator|&&
 name|compat20
 operator|&&
 operator|!
-name|rekeying
+name|ssh_packet_is_rekeying
+argument_list|(
+name|active_state
+argument_list|)
 condition|)
 name|rekey_timeout_ms
 operator|=
@@ -3581,9 +3547,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|rekeying
+name|ssh_packet_is_rekeying
+argument_list|(
+name|active_state
+argument_list|)
 condition|)
-block|{
 name|channel_after_select
 argument_list|(
 name|readset
@@ -3591,32 +3559,6 @@ argument_list|,
 name|writeset
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|packet_need_rekeying
-argument_list|()
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"need rekeying"
-argument_list|)
-expr_stmt|;
-name|active_state
-operator|->
-name|kex
-operator|->
-name|done
-operator|=
-literal|0
-expr_stmt|;
-name|kex_send_kexinit
-argument_list|(
-name|active_state
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|process_input
 argument_list|(
 name|readset
@@ -5078,6 +5020,8 @@ argument_list|(
 name|sigbuf
 argument_list|)
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -5420,6 +5364,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|allocated_listen_port
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|r
 operator|=

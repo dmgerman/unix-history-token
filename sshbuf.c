@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.c,v 1.4 2015/10/05 17:11:21 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf.c,v 1.6 2016/01/12 23:42:54 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -792,15 +792,6 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * If we are a child, the free our parent to decrement its reference 	 * count and possibly free it. 	 */
-if|if
-condition|(
-name|buf
-operator|->
-name|parent
-operator|!=
-name|NULL
-condition|)
-block|{
 name|sshbuf_free
 argument_list|(
 name|buf
@@ -814,7 +805,6 @@ name|parent
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 comment|/* 	 * If we are a parent with still-extant children, then don't free just 	 * yet. The last child's call to sshbuf_free should decrement our 	 * refcount to 0 and trigger the actual free. 	 */
 name|buf
 operator|->

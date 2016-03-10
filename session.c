@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.278 2015/04/24 01:36:00 deraadt Exp $ */
+comment|/* $OpenBSD: session.c,v 1.280 2016/02/16 03:37:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -773,6 +773,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|is_child
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|in_chroot
 init|=
 literal|0
 decl_stmt|;
@@ -3288,17 +3297,17 @@ modifier|*
 name|forced
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|tty
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|session_type
 index|[
 literal|1024
 index|]
-decl_stmt|,
-modifier|*
-name|tty
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -3497,7 +3506,7 @@ expr_stmt|;
 block|}
 name|verbose
 argument_list|(
-literal|"Starting session: %s%s%s for %s from %.200s port %d"
+literal|"Starting session: %s%s%s for %s from %.200s port %d id %d"
 argument_list|,
 name|session_type
 argument_list|,
@@ -3528,6 +3537,10 @@ argument_list|()
 argument_list|,
 name|get_remote_port
 argument_list|()
+argument_list|,
+name|s
+operator|->
+name|self
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6875,16 +6888,6 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_LIBIAF
-name|int
-name|doing_chroot
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
 name|platform_setusercontext
 argument_list|(
 name|pw
@@ -7023,6 +7026,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|in_chroot
+operator|&&
 name|options
 operator|.
 name|chroot_directory
@@ -7112,15 +7118,10 @@ name|chroot_directory
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_LIBIAF
-name|doing_chroot
+name|in_chroot
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -7176,14 +7177,11 @@ directive|else
 ifdef|#
 directive|ifdef
 name|USE_LIBIAF
-comment|/* In a chroot environment, the set_id() will always fail; typically   * because of the lack of necessary authentication services and runtime  * such as ./usr/lib/libiaf.so, ./usr/lib/libpam.so.1, and ./etc/passwd  * We skip it in the internal sftp chroot case.  * We'll lose auditing and ACLs but permanently_set_uid will  * take care of the rest.  */
+comment|/* 		 * In a chroot environment, the set_id() will always fail; 		 * typically because of the lack of necessary authentication 		 * services and runtime such as ./usr/lib/libiaf.so, 		 * ./usr/lib/libpam.so.1, and ./etc/passwd We skip it in the 		 * internal sftp chroot case.  We'll lose auditing and ACLs but 		 * permanently_set_uid will take care of the rest. 		 */
 if|if
 condition|(
-operator|(
-name|doing_chroot
-operator|==
-literal|0
-operator|)
+operator|!
+name|in_chroot
 operator|&&
 name|set_id
 argument_list|(
@@ -7194,7 +7192,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|fatal
 argument_list|(
 literal|"set_id(%s) Failed"
@@ -7204,7 +7201,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* USE_LIBIAF */
@@ -8058,23 +8054,10 @@ if|if
 condition|(
 name|r
 operator|||
-name|options
-operator|.
-name|chroot_directory
-operator|==
-name|NULL
-operator|||
-name|strcasecmp
-argument_list|(
-name|options
-operator|.
-name|chroot_directory
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
+operator|!
+name|in_chroot
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -8092,6 +8075,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|r
@@ -11550,20 +11534,25 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
-name|debug
+name|verbose
 argument_list|(
-literal|"session_close: session %d pid %ld"
+literal|"Close session: user %s from %.200s port %d id %d"
+argument_list|,
+name|s
+operator|->
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|,
+name|get_remote_port
+argument_list|()
 argument_list|,
 name|s
 operator|->
 name|self
-argument_list|,
-operator|(
-name|long
-operator|)
-name|s
-operator|->
-name|pid
 argument_list|)
 expr_stmt|;
 if|if

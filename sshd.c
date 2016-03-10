@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.458 2015/08/20 22:32:42 deraadt Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.465 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -443,12 +443,6 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"roaming.h"
 end_include
 
 begin_include
@@ -1667,7 +1661,7 @@ expr_stmt|;
 comment|/* Send our protocol version identification. */
 if|if
 condition|(
-name|roaming_atomicio
+name|atomicio
 argument_list|(
 name|vwrite
 argument_list|,
@@ -1735,7 +1729,7 @@ control|)
 block|{
 if|if
 condition|(
-name|roaming_atomicio
+name|atomicio
 argument_list|(
 name|read
 argument_list|,
@@ -2568,6 +2562,20 @@ comment|/* Demote the private keys to public keys. */
 name|demote_sensitive_data
 argument_list|()
 expr_stmt|;
+comment|/* Demote the child */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|||
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Change our root directory */
 if|if
 condition|(
@@ -2631,13 +2639,6 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX not ready, too heavy after chroot */
-block|do_setusercontext(privsep_pw);
-else|#
-directive|else
 name|gidset
 index|[
 literal|0
@@ -2673,8 +2674,7 @@ argument_list|(
 name|privsep_pw
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 block|}
 end_function
 
@@ -2981,19 +2981,6 @@ argument_list|,
 name|pmonitor
 argument_list|)
 expr_stmt|;
-comment|/* Demote the child */
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|==
-literal|0
-operator|||
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-condition|)
 name|privsep_preauth_child
 argument_list|()
 expr_stmt|;
@@ -3422,6 +3409,34 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* for RSA we also support SHA2 signatures */
+if|if
+condition|(
+name|key
+operator|->
+name|type
+operator|==
+name|KEY_RSA
+condition|)
+block|{
+name|p
+operator|=
+literal|",rsa-sha2-512,rsa-sha2-256"
+expr_stmt|;
+name|buffer_append
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|p
+argument_list|,
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 comment|/* If the private key has a cert peer, then list that too */
@@ -5569,12 +5584,6 @@ condition|)
 name|sighup_restart
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|fdset
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|fdset
@@ -6579,6 +6588,10 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 ifdef|#
 directive|ifdef
 name|HAVE_SECUREWARE
@@ -6859,10 +6872,7 @@ literal|'E'
 case|:
 name|logfile
 operator|=
-name|xstrdup
-argument_list|(
 name|optarg
-argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
@@ -7328,18 +7338,11 @@ name|logfile
 operator|!=
 name|NULL
 condition|)
-block|{
 name|log_redirect_stderr_to
 argument_list|(
 name|logfile
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|logfile
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Force logging to stderr until we have loaded the private host 	 * key (unless started from inetd) 	 */
 name|log_init
 argument_list|(
@@ -11045,6 +11048,11 @@ parameter_list|,
 name|size_t
 name|dlen
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alg
+parameter_list|,
 name|u_int
 name|flag
 parameter_list|)
@@ -11080,6 +11088,8 @@ argument_list|,
 name|data
 argument_list|,
 name|xxx_dlen
+argument_list|,
+name|alg
 argument_list|)
 operator|<
 literal|0
@@ -11122,6 +11132,8 @@ argument_list|,
 name|data
 argument_list|,
 name|xxx_dlen
+argument_list|,
+name|alg
 argument_list|)
 operator|<
 literal|0
@@ -11163,6 +11175,8 @@ argument_list|,
 name|data
 argument_list|,
 name|dlen
+argument_list|,
+name|alg
 argument_list|,
 name|datafellows
 argument_list|)
@@ -11321,9 +11335,6 @@ name|rekey_interval
 condition|)
 name|packet_set_rekey_limits
 argument_list|(
-operator|(
-name|u_int32_t
-operator|)
 name|options
 operator|.
 name|rekey_limit

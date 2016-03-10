@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.66 2015/01/30 01:13:33 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.70 2016/02/08 10:57:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -391,6 +391,17 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssh_packet_is_rekeying
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1018,7 +1029,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ssh_packet_need_rekeying
+name|ssh_remote_port
 parameter_list|(
 name|struct
 name|ssh
@@ -1035,7 +1046,7 @@ name|struct
 name|ssh
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|u_int64_t
 parameter_list|,
 name|time_t
 parameter_list|)
@@ -1046,40 +1057,6 @@ begin_function_decl
 name|time_t
 name|ssh_packet_get_rekey_timeout
 parameter_list|(
-name|struct
-name|ssh
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX FIXME */
-end_comment
-
-begin_function_decl
-name|void
-name|ssh_packet_backup_state
-parameter_list|(
-name|struct
-name|ssh
-modifier|*
-parameter_list|,
-name|struct
-name|ssh
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ssh_packet_restore_state
-parameter_list|(
-name|struct
-name|ssh
-modifier|*
-parameter_list|,
 name|struct
 name|ssh
 modifier|*

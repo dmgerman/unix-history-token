@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-bsdauth.c,v 1.13 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: auth-bsdauth.c,v 1.14 2015/10/20 23:24:25 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -425,7 +425,7 @@ name|authctxt
 operator|->
 name|as
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 argument_list|(

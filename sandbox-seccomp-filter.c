@@ -518,6 +518,16 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__NR_getrandom
+name|SC_ALLOW
+argument_list|(
+name|getrandom
+argument_list|)
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__NR_gettimeofday
 name|SC_ALLOW
 argument_list|(

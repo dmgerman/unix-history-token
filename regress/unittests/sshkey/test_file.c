@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_file.c,v 1.4 2015/07/07 14:53:30 markus Exp $ */
+comment|/* 	$OpenBSD: test_file.c,v 1.5 2015/10/06 01:20:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -245,8 +245,6 @@ name|buf
 argument_list|,
 literal|""
 argument_list|,
-literal|"rsa1_1"
-argument_list|,
 operator|&
 name|k1
 argument_list|,
@@ -321,8 +319,6 @@ name|sshbuf_ptr
 argument_list|(
 name|pw
 argument_list|)
-argument_list|,
-literal|"rsa1_1_pw"
 argument_list|,
 operator|&
 name|k2
@@ -558,8 +554,6 @@ name|buf
 argument_list|,
 literal|""
 argument_list|,
-literal|"rsa_1"
-argument_list|,
 operator|&
 name|k1
 argument_list|,
@@ -681,8 +675,6 @@ argument_list|(
 name|pw
 argument_list|)
 argument_list|,
-literal|"rsa_1_pw"
-argument_list|,
 operator|&
 name|k2
 argument_list|,
@@ -743,8 +735,6 @@ argument_list|(
 name|buf
 argument_list|,
 literal|""
-argument_list|,
-literal|"rsa_n"
 argument_list|,
 operator|&
 name|k2
@@ -814,8 +804,6 @@ name|sshbuf_ptr
 argument_list|(
 name|pw
 argument_list|)
-argument_list|,
-literal|"rsa_n_pw"
 argument_list|,
 operator|&
 name|k2
@@ -1176,8 +1164,6 @@ name|buf
 argument_list|,
 literal|""
 argument_list|,
-literal|"dsa_1"
-argument_list|,
 operator|&
 name|k1
 argument_list|,
@@ -1299,8 +1285,6 @@ argument_list|(
 name|pw
 argument_list|)
 argument_list|,
-literal|"dsa_1_pw"
-argument_list|,
 operator|&
 name|k2
 argument_list|,
@@ -1361,8 +1345,6 @@ argument_list|(
 name|buf
 argument_list|,
 literal|""
-argument_list|,
-literal|"dsa_n"
 argument_list|,
 operator|&
 name|k2
@@ -1432,8 +1414,6 @@ name|sshbuf_ptr
 argument_list|(
 name|pw
 argument_list|)
-argument_list|,
-literal|"dsa_n_pw"
 argument_list|,
 operator|&
 name|k2
@@ -1797,8 +1777,6 @@ name|buf
 argument_list|,
 literal|""
 argument_list|,
-literal|"ecdsa_1"
-argument_list|,
 operator|&
 name|k1
 argument_list|,
@@ -1963,8 +1941,6 @@ argument_list|(
 name|pw
 argument_list|)
 argument_list|,
-literal|"ecdsa_1_pw"
-argument_list|,
 operator|&
 name|k2
 argument_list|,
@@ -2025,8 +2001,6 @@ argument_list|(
 name|buf
 argument_list|,
 literal|""
-argument_list|,
-literal|"ecdsa_n"
 argument_list|,
 operator|&
 name|k2
@@ -2096,8 +2070,6 @@ name|sshbuf_ptr
 argument_list|(
 name|pw
 argument_list|)
-argument_list|,
-literal|"ecdsa_n_pw"
 argument_list|,
 operator|&
 name|k2
@@ -2461,8 +2433,6 @@ name|buf
 argument_list|,
 literal|""
 argument_list|,
-literal|"ed25519_1"
-argument_list|,
 operator|&
 name|k1
 argument_list|,
@@ -2524,8 +2494,6 @@ name|sshbuf_ptr
 argument_list|(
 name|pw
 argument_list|)
-argument_list|,
-literal|"ed25519_1_pw"
 argument_list|,
 operator|&
 name|k2

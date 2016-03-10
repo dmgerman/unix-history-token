@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.54 2015/08/19 23:18:26 djm Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.58 2016/01/13 23:04:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -7531,6 +7531,8 @@ modifier|*
 name|data
 decl_stmt|;
 comment|/* Get reasonable local authentication information. */
+if|if
+condition|(
 name|client_x11_get_proto
 argument_list|(
 name|display
@@ -7553,7 +7555,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Request forwarding with authentication spoofing. */
 name|debug
 argument_list|(
@@ -7574,6 +7579,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* XXX exit_on_forward_failure */
 name|client_expect_confirm
 argument_list|(
 name|id
@@ -7583,7 +7589,7 @@ argument_list|,
 name|CONFIRM_WARN
 argument_list|)
 expr_stmt|;
-comment|/* XXX exit_on_forward_failure */
+block|}
 block|}
 if|if
 condition|(
@@ -9493,7 +9499,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%u\n"
+literal|"%i\n"
 argument_list|,
 name|fwd
 operator|->
@@ -10323,6 +10329,33 @@ block|}
 name|muxclient_request_id
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|pledge
+argument_list|(
+literal|"stdio proc tty"
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s pledge(): %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|platform_pledge_mux
+argument_list|()
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -10850,6 +10883,33 @@ literal|"%s: send fds failed"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pledge
+argument_list|(
+literal|"stdio proc tty"
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s pledge(): %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|platform_pledge_mux
+argument_list|()
 expr_stmt|;
 name|debug3
 argument_list|(
@@ -11683,7 +11743,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Master running (pid=%d)\r\n"
+literal|"Master running (pid=%u)\r\n"
 argument_list|,
 name|pid
 argument_list|)

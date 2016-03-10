@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.77 2015/01/14 20:05:27 djm Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.78 2015/11/15 22:26:49 jcs Exp $ */
 end_comment
 
 begin_comment
@@ -929,6 +929,8 @@ index|]
 decl_stmt|,
 modifier|*
 name|passphrase
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|comment
@@ -1199,21 +1201,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|explicit_bzero
-argument_list|(
-name|passphrase
-argument_list|,
-name|strlen
-argument_list|(
-name|passphrase
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|passphrase
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|private
@@ -1229,6 +1216,46 @@ literal|"bad passphrase given, try again..."
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|private
+operator|!=
+name|NULL
+condition|)
+name|maybe_add_key_to_agent
+argument_list|(
+name|authfile
+argument_list|,
+name|private
+argument_list|,
+name|comment
+argument_list|,
+name|passphrase
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|passphrase
+operator|!=
+name|NULL
+condition|)
+block|{
+name|explicit_bzero
+argument_list|(
+name|passphrase
+argument_list|,
+name|strlen
+argument_list|(
+name|passphrase
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|passphrase
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* We no longer need the comment. */
 name|free

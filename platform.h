@@ -129,5 +129,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* in platform-pledge.c */
+end_comment
+
+begin_function_decl
+name|void
+name|platform_pledge_agent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_pledge_sftp_server
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_pledge_mux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

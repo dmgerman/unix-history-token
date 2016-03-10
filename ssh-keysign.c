@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.49 2015/07/03 03:56:25 djm Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.52 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_ifdef
@@ -198,6 +204,14 @@ end_decl_stmt
 begin_comment
 comment|/* XXX needed for linking */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* XXX readconf.c needs these */
@@ -958,6 +972,33 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
+if|if
+condition|(
+name|pledge
+argument_list|(
+literal|"stdio rpath getpw dns id"
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: pledge: %s"
+argument_list|,
+name|__progname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Ensure that stdin and stdout are connected */
 if|if
 condition|(
@@ -1334,6 +1375,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|pledge
+argument_list|(
+literal|"stdio dns"
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: pledge: %s"
+argument_list|,
+name|__progname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|b
 operator|=
@@ -1347,7 +1411,7 @@ name|fatal
 argument_list|(
 literal|"%s: sshbuf_new failed"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1386,7 +1450,7 @@ name|fatal
 argument_list|(
 literal|"%s: buffer error: %s"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -1433,7 +1497,7 @@ name|fatal
 argument_list|(
 literal|"%s: buffer error: %s"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -1501,7 +1565,7 @@ name|fatal
 argument_list|(
 literal|"%s: buffer error: %s"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -1611,7 +1675,7 @@ name|fatal
 argument_list|(
 literal|"%s: sshkey_fingerprint failed"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -1652,6 +1716,8 @@ argument_list|,
 name|data
 argument_list|,
 name|dlen
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -1701,7 +1767,7 @@ name|fatal
 argument_list|(
 literal|"%s: buffer error: %s"
 argument_list|,
-name|__func__
+name|__progname
 argument_list|,
 name|ssh_err
 argument_list|(

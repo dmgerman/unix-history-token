@@ -64,13 +64,13 @@ end_if
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLOB_H_
+name|_COMPAT_GLOB_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLOB_H_
+name|_COMPAT_GLOB_H_
 end_define
 
 begin_include
@@ -78,6 +78,39 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|glob_t
+value|_ssh_compat_glob_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|glob
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|_ssh__compat_glob(a, b, c, d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|globfree
+parameter_list|(
+name|a
+parameter_list|)
+value|_ssh__compat_globfree(a)
+end_define
 
 begin_struct_decl
 struct_decl|struct

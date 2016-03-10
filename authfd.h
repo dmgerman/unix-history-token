@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.h,v 1.38 2015/01/14 20:05:27 djm Exp $ */
+comment|/* $OpenBSD: authfd.h,v 1.39 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -258,6 +258,11 @@ parameter_list|,
 name|size_t
 name|datalen
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alg
+parameter_list|,
 name|u_int
 name|compat
 parameter_list|)
@@ -486,6 +491,20 @@ define|#
 directive|define
 name|SSH_AGENT_OLD_SIGNATURE
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENT_RSA_SHA2_256
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENT_RSA_SHA2_512
+value|0x04
 end_define
 
 begin_endif
