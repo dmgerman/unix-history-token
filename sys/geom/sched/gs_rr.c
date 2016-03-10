@@ -1406,7 +1406,7 @@ operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|&
+operator|==
 name|BIO_WRITE
 operator|)
 condition|)
