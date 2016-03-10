@@ -1388,7 +1388,7 @@ name|name
 operator|=
 literal|"volume label"
 expr_stmt|;
-name|strlcpy
+name|strncpy
 argument_list|(
 name|sblock
 operator|.

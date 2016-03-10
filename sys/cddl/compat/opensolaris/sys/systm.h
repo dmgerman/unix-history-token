@@ -68,6 +68,27 @@ parameter_list|)
 value|pause("soldelay", (x))
 end_define
 
+begin_define
+define|#
+directive|define
+name|timeout_generic
+parameter_list|(
+name|type
+parameter_list|,
+name|fn
+parameter_list|,
+name|arg
+parameter_list|,
+name|t
+parameter_list|,
+name|r
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|timeout(fn, arg, t / (NANOSEC/hz) + 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif

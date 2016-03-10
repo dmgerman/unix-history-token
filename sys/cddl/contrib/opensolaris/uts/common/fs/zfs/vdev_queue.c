@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -3580,21 +3580,6 @@ name|zio_t
 modifier|*
 name|nio
 decl_stmt|;
-if|if
-condition|(
-name|zio_injection_enabled
-condition|)
-name|delay
-argument_list|(
-name|SEC_TO_TICK
-argument_list|(
-name|zio_handle_io_delay
-argument_list|(
-name|zio
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&

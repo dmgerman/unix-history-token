@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016, OmniTI Computer Consulting, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -259,6 +259,13 @@ name|ds
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|spa_asize_inflation
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Figure out how much of this delta should be propogated to the dsl_dir  * layer.  If there's a refreservation, that space has already been  * partially accounted for in our ancestors.  */
@@ -15199,6 +15206,14 @@ modifier|*
 name|tx
 parameter_list|)
 block|{
+comment|/* 	 * "slack" factor for received datasets with refquota set on them. 	 * See the bottom of this function for details on its use. 	 */
+name|uint64_t
+name|refquota_slack
+init|=
+name|DMU_MAX_ACCESS
+operator|*
+name|spa_asize_inflation
+decl_stmt|;
 name|int64_t
 name|unused_refres_delta
 decl_stmt|;
@@ -15412,7 +15427,7 @@ name|ENOSPC
 argument_list|)
 operator|)
 return|;
-comment|/* clone can't be over the head's refquota */
+comment|/* 	 * The clone can't be too much over the head's refquota. 	 * 	 * To ensure that the entire refquota can be used, we allow one 	 * transaction to exceed the the refquota.  Therefore, this check 	 * needs to also allow for the space referenced to be more than the 	 * refquota.  The maximum amount of space that one transaction can use 	 * on disk is DMU_MAX_ACCESS * spa_asize_inflation.  Allowing this 	 * overage ensures that we are able to receive a filesystem that 	 * exceeds the refquota on the source system. 	 * 	 * So that overage is the refquota_slack we use below. 	 */
 if|if
 condition|(
 name|origin_head
@@ -15431,6 +15446,8 @@ operator|>
 name|origin_head
 operator|->
 name|ds_quota
+operator|+
+name|refquota_slack
 condition|)
 return|return
 operator|(
@@ -15486,6 +15503,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NOTE: On DEBUG kernels there could be a race between this and 	 * the check function if spa_asize_inflation is adjusted... 	 */
 name|ASSERT
 argument_list|(
 name|origin_head
@@ -15504,6 +15522,10 @@ operator|<=
 name|origin_head
 operator|->
 name|ds_quota
+operator|+
+name|DMU_MAX_ACCESS
+operator|*
+name|spa_asize_inflation
 argument_list|)
 expr_stmt|;
 name|ASSERT3P

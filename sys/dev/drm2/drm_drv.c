@@ -2372,6 +2372,31 @@ expr_stmt|;
 if|if
 condition|(
 name|retcode
+operator|==
+operator|-
+name|ERESTARTSYS
+condition|)
+block|{
+comment|/* 		 * FIXME: Find where in i915 ERESTARTSYS should be 		 * converted to EINTR. 		 */
+name|DRM_DEBUG
+argument_list|(
+literal|"ret = %d -> %d\n"
+argument_list|,
+name|retcode
+argument_list|,
+operator|-
+name|EINTR
+argument_list|)
+expr_stmt|;
+name|retcode
+operator|=
+operator|-
+name|EINTR
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|retcode
 condition|)
 name|DRM_DEBUG
 argument_list|(

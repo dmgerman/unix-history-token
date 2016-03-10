@@ -97,6 +97,27 @@ end_decl_stmt
 
 begin_function_decl
 name|int
+name|api_parse_cmdline_sig
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|,
+name|struct
+name|api_signature
+modifier|*
+modifier|*
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|api_search_sig
 parameter_list|(
 name|struct

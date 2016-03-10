@@ -532,6 +532,16 @@ specifier|extern
 name|fasttrap_hash_t
 name|fasttrap_tpoints
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|illumos
+specifier|extern
+name|struct
+name|rmlock
+name|fasttrap_tp_lock
+decl_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|FASTTRAP_TPOINTS_INDEX

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_rootdevname.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_geom.h"
 end_include
 
@@ -9262,9 +9268,18 @@ name|start
 operator|=
 name|mdstart_preload
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MD_ROOT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ROOTDEVNAME
+argument_list|)
 if|if
 condition|(
 name|sc

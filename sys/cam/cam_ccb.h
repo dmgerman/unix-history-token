@@ -596,16 +596,21 @@ operator||
 name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Execute the requested ATA I/O operation */
-name|XPT_GET_SIM_KNOB
+name|XPT_GET_SIM_KNOB_OLD
 init|=
 literal|0x18
 block|,
-comment|/* 				 * Get SIM specific knob values. 				 */
+comment|/* Compat only */
 name|XPT_SET_SIM_KNOB
 init|=
 literal|0x19
 block|,
 comment|/* 				 * Set SIM specific knob values. 				 */
+name|XPT_GET_SIM_KNOB
+init|=
+literal|0x1a
+block|,
+comment|/* 				 * Get SIM specific knob values. 				 */
 name|XPT_SMP_IO
 init|=
 literal|0x1b

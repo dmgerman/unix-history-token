@@ -16810,6 +16810,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|retval
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * This system call resulted in the current thread's exit, 		 * so there is no return value or error to display. 		 */
+name|fprintf
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|errorp
 condition|)
 block|{

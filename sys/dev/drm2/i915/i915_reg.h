@@ -593,100 +593,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GEN6_GTT_ADDR_ENCODE
-parameter_list|(
-name|addr
-parameter_list|)
-value|((addr) | (((addr)>> 28)& 0xff0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PDE_VALID
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PDE_LARGE_PAGE
-value|(2<< 0)
-end_define
-
-begin_comment
-comment|/* use 32kb pages */
-end_comment
-
-begin_comment
-comment|/* gen6+ has bit 11-4 for physical addr bit 39-32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEN6_PDE_ADDR_ENCODE
-parameter_list|(
-name|addr
-parameter_list|)
-value|GEN6_GTT_ADDR_ENCODE(addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_VALID
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_UNCACHED
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_CACHE_LLC
-value|(2<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_CACHE_LLC_MLC
-value|(3<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_CACHE_BITS
-value|(3<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_GFDT
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_PTE_ADDR_ENCODE
-parameter_list|(
-name|addr
-parameter_list|)
-value|GEN6_GTT_ADDR_ENCODE(addr)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RING_PP_DIR_BASE
 parameter_list|(
 name|ring
@@ -4470,34 +4376,6 @@ define|#
 directive|define
 name|GEN6_BSD_GO_INDICATOR
 value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_BSD_SLEEP_PSMI_CONTROL_RC_ILDL_MESSAGE_MODIFY_MASK
-value|(1<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_BSD_SLEEP_PSMI_CONTROL_RC_ILDL_MESSAGE_DISABLE
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_BSD_SLEEP_PSMI_CONTROL_RC_ILDL_MESSAGE_ENABLE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEN6_BSD_SLEEP_PSMI_CONTROL_IDLE_INDICATOR
-value|(1<< 3)
 end_define
 
 begin_define
@@ -10566,35 +10444,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HDMIB_HOTPLUG_INT_STATUS
+name|DPB_HOTPLUG_LIVE_STATUS
 value|(1<< 29)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DPB_HOTPLUG_INT_STATUS
-value|(1<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDMIC_HOTPLUG_INT_STATUS
+name|DPC_HOTPLUG_LIVE_STATUS
 value|(1<< 28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DPC_HOTPLUG_INT_STATUS
-value|(1<< 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDMID_HOTPLUG_INT_STATUS
+name|DPD_HOTPLUG_LIVE_STATUS
 value|(1<< 27)
 end_define
 
@@ -10602,16 +10466,68 @@ begin_define
 define|#
 directive|define
 name|DPD_HOTPLUG_INT_STATUS
-value|(1<< 27)
+value|(3<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPC_HOTPLUG_INT_STATUS
+value|(3<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPB_HOTPLUG_INT_STATUS
+value|(3<< 17)
 end_define
 
 begin_comment
 comment|/* HDMI bits are shared with the DP bits */
 end_comment
 
-begin_comment
-comment|/* #define   HDMIB_HOTPLUG_LIVE_STATUS             (1<< 29) #define   HDMIC_HOTPLUG_LIVE_STATUS             (1<< 28) #define   HDMID_HOTPLUG_LIVE_STATUS             (1<< 27) #define   HDMID_HOTPLUG_INT_STATUS		(3<< 21) #define   HDMIC_HOTPLUG_INT_STATUS		(3<< 19) #define   HDMIB_HOTPLUG_INT_STATUS		(3<< 17) */
-end_comment
+begin_define
+define|#
+directive|define
+name|HDMIB_HOTPLUG_LIVE_STATUS
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIC_HOTPLUG_LIVE_STATUS
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMID_HOTPLUG_LIVE_STATUS
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMID_HOTPLUG_INT_STATUS
+value|(3<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIC_HOTPLUG_INT_STATUS
+value|(3<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMIB_HOTPLUG_INT_STATUS
+value|(3<< 17)
+end_define
 
 begin_comment
 comment|/* CRT/TV common between gen3+ */
@@ -10657,20 +10573,6 @@ define|#
 directive|define
 name|CRT_HOTPLUG_MONITOR_NONE
 value|(0<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDVOC_HOTPLUG_INT_STATUS
-value|(1<< 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDVOB_HOTPLUG_INT_STATUS
-value|(1<< 6)
 end_define
 
 begin_comment
@@ -19407,41 +19309,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCH_DSPCLK_GATE_D
-value|0x42020
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPFCUNIT_CLOCK_GATE_DISABLE
-value|(1<< 9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPFCRUNIT_CLOCK_GATE_DISABLE
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPFDUNIT_CLOCK_GATE_DISABLE
-value|(1<< 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPARBUNIT_CLOCK_GATE_DISABLE
-value|(1<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCH_3DCGDIS0
 value|0x46020
 end_define
@@ -20509,59 +20376,6 @@ define|#
 directive|define
 name|ILK_DESKTOP
 value|(1<<23)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILK_DSPCLK_GATE
-value|0x42020
-end_define
-
-begin_define
-define|#
-directive|define
-name|IVB_VRHUNIT_CLK_GATE
-value|(1<<28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILK_DPARB_CLK_GATE
-value|(1<<5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILK_DPFD_CLK_GATE
-value|(1<<7)
-end_define
-
-begin_comment
-comment|/* According to spec this bit 7/8/9 of 0x42020 should be set to enable FBC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILK_CLK_FBC
-value|(1<<7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILK_DPFC_DIS1
-value|(1<<8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ILK_DPFC_DIS2
-value|(1<<9)
 end_define
 
 begin_define
@@ -22149,7 +21963,7 @@ begin_define
 define|#
 directive|define
 name|VLV_VIDEO_DIP_CTL_A
-value|0x60220
+value|0x60200
 end_define
 
 begin_define
@@ -22901,13 +22715,6 @@ parameter_list|(
 name|pipe
 parameter_list|)
 value|_PIPE(pipe, _TRANSA_CHICKEN2, _TRANSB_CHICKEN2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRANS_AUTOTRAIN_GEN_STALL_DIS
-value|(1<<31)
 end_define
 
 begin_define
@@ -23871,184 +23678,8 @@ value|0xfe004
 end_define
 
 begin_comment
-comment|/* CRT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCH_ADPA
-value|0xe1100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_TRANS_SELECT_MASK
-value|(1<<30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_TRANS_A_SELECT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_TRANS_B_SELECT
-value|(1<<30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_MASK
-value|0x03ff0000
-end_define
-
-begin_comment
-comment|/* bit 25-16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_MONITOR_NONE
-value|(0<<24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_MONITOR_MASK
-value|(3<<24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_MONITOR_COLOR
-value|(3<<24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_MONITOR_MONO
-value|(2<<24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_ENABLE
-value|(1<<23)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_PERIOD_64
-value|(0<<22)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_PERIOD_128
-value|(1<<22)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_WARMUP_5MS
-value|(0<<21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_WARMUP_10MS
-value|(1<<21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_SAMPLE_2S
-value|(0<<20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_SAMPLE_4S
-value|(1<<20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLTAGE_40
-value|(0<<18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLTAGE_50
-value|(1<<18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLTAGE_60
-value|(2<<18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLTAGE_70
-value|(3<<18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLREF_325MV
-value|(0<<17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_VOLREF_475MV
-value|(1<<17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADPA_CRT_HOTPLUG_FORCE_TRIGGER
-value|(1<<16)
-end_define
-
-begin_comment
 comment|/* or SDVOB */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VLV_HDMIB
-value|0x61140
-end_define
 
 begin_define
 define|#
@@ -24304,90 +23935,6 @@ define|#
 directive|define
 name|PIPEB_PP_DIVISOR
 value|0x61310
-end_define
-
-begin_define
-define|#
-directive|define
-name|BLC_PWM_CPU_CTL2
-value|0x48250
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_ENABLE
-value|(1<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_PIPE_A
-value|(0<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_PIPE_B
-value|(1<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BLC_PWM_CPU_CTL
-value|0x48254
-end_define
-
-begin_define
-define|#
-directive|define
-name|BLC_PWM_PCH_CTL1
-value|0xc8250
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_PCH_ENABLE
-value|(1<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_POLARITY_ACTIVE_LOW
-value|(1<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_POLARITY_ACTIVE_HIGH
-value|(0<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_POLARITY_ACTIVE_LOW2
-value|(1<< 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PWM_POLARITY_ACTIVE_HIGH2
-value|(0<< 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BLC_PWM_PCH_CTL2
-value|0xc8254
 end_define
 
 begin_define
@@ -28037,55 +27584,6 @@ begin_define
 define|#
 directive|define
 name|TRANS_CLK_SEL_PORT
-parameter_list|(
-name|x
-parameter_list|)
-value|((x+1)<<29)
-end_define
-
-begin_comment
-comment|/* Pipe clock selection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIPE_CLK_SEL_A
-value|0x46140
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIPE_CLK_SEL_B
-value|0x46144
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIPE_CLK_SEL
-parameter_list|(
-name|pipe
-parameter_list|)
-value|_PIPE(pipe, \ 					PIPE_CLK_SEL_A, \ 					PIPE_CLK_SEL_B)
-end_define
-
-begin_comment
-comment|/* For each pipe, we need to select the corresponding port clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIPE_CLK_SEL_DISABLED
-value|(0x0<<29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIPE_CLK_SEL_PORT
 parameter_list|(
 name|x
 parameter_list|)

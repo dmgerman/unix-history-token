@@ -188,7 +188,7 @@ begin_struct
 struct|struct
 name|threadinfo
 block|{
-name|SLIST_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|threadinfo
 argument_list|)
@@ -239,7 +239,7 @@ name|procabi
 modifier|*
 name|abi
 decl_stmt|;
-name|SLIST_HEAD
+name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|threadinfo

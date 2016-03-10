@@ -530,7 +530,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|link_elf_reloc_local
 parameter_list|(
 name|linker_file_t
@@ -2335,11 +2335,22 @@ name|ef
 operator|->
 name|nprogtab
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"lost progbits"
+literal|"%s: lost progbits\n"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|rl
@@ -2348,11 +2359,22 @@ name|ef
 operator|->
 name|nreltab
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"lost reltab"
+literal|"%s: lost reltab\n"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|ra
@@ -2361,17 +2383,39 @@ name|ef
 operator|->
 name|nrelatab
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"lost relatab"
+literal|"%s: lost relatab\n"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Local intra-module relocations */
+name|error
+operator|=
 name|link_elf_reloc_local
 argument_list|(
 name|lf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 operator|*
 name|result
 operator|=
@@ -3455,11 +3499,22 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"lost symbol table index"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Allocate space for and load the symbol table */
 name|ef
 operator|->
@@ -3572,11 +3627,22 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"lost symbol string index"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Allocate space for and load the symbol strings */
 name|ef
 operator|->
@@ -5046,11 +5112,22 @@ name|ef
 operator|->
 name|nprogtab
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"lost progbits"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|rl
@@ -5059,11 +5136,22 @@ name|ef
 operator|->
 name|nreltab
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"lost reltab"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|ra
@@ -5072,11 +5160,22 @@ name|ef
 operator|->
 name|nrelatab
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"lost relatab"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|mapbase
@@ -5090,9 +5189,18 @@ name|address
 operator|+
 name|mapsize
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"mapbase 0x%lx != address %p + mapsize 0x%lx (0x%lx)\n"
+literal|"%s: mapbase 0x%lx != address %p + mapsize 0x%lx (0x%lx)\n"
+argument_list|,
+name|filename
+operator|!=
+name|NULL
+condition|?
+name|filename
+else|:
+literal|"<none>"
 argument_list|,
 operator|(
 name|u_long
@@ -5121,12 +5229,31 @@ operator|+
 name|mapsize
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Local intra-module relocations */
+name|error
+operator|=
 name|link_elf_reloc_local
 argument_list|(
 name|lf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* Pull in dependencies */
 name|VOP_UNLOCK
 argument_list|(
@@ -5899,11 +6026,24 @@ name|rel
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost a reltab!"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 name|rellim
 operator|=
 name|rel
@@ -5939,11 +6079,24 @@ name|base
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost base for reltab"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 for|for
 control|(
 init|;
@@ -6032,7 +6185,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 block|}
@@ -6071,11 +6226,24 @@ name|rela
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost a relatab!"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 name|relalim
 operator|=
 name|rela
@@ -6111,11 +6279,24 @@ name|base
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost base for relatab"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 for|for
 control|(
 init|;
@@ -6204,7 +6385,9 @@ name|symname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 block|}
@@ -6216,7 +6399,9 @@ name|ef
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7672,7 +7857,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|link_elf_reloc_local
 parameter_list|(
 name|linker_file_t
@@ -7760,11 +7945,24 @@ name|rel
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
-literal|"lost a reltab!"
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
+literal|"lost a reltab"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 name|rellim
 operator|=
 name|rel
@@ -7800,11 +7998,24 @@ name|base
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost base for reltab"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 for|for
 control|(
 init|;
@@ -7904,11 +8115,24 @@ name|rela
 operator|==
 name|NULL
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
 literal|"lost a relatab!"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 name|relalim
 operator|=
 name|rela
@@ -7944,11 +8168,24 @@ name|base
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|link_elf_error
 argument_list|(
-literal|"lost base for relatab"
+name|ef
+operator|->
+name|lf
+operator|.
+name|filename
+argument_list|,
+literal|"lost base for reltab"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 for|for
 control|(
 init|;
@@ -8014,6 +8251,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

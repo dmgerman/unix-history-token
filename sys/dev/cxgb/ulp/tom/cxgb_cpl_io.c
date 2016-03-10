@@ -1308,10 +1308,6 @@ directive|endif
 name|KASSERT
 argument_list|(
 name|tid
-operator|>=
-literal|0
-operator|&&
-name|tid
 operator|<
 name|t
 operator|->

@@ -793,9 +793,6 @@ decl_stmt|;
 name|u_int
 name|secs
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -873,8 +870,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-name|error
-operator|=
+comment|/* 	 * According to POSIX and Linux implementation 	 * the alarm() system call is always successfull. 	 * Ignore errors and return 0 as a Linux does. 	 */
 name|kern_setitimer
 argument_list|(
 name|td
@@ -888,15 +884,6 @@ operator|&
 name|old_it
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|timevalisset

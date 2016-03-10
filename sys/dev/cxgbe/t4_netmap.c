@@ -172,28 +172,6 @@ begin_comment
 comment|/* XXXNM */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|spg_len
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXXNM */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fl_pktshift
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXXNM */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -1362,6 +1340,18 @@ operator|->
 name|adapter
 decl_stmt|;
 name|struct
+name|sge_params
+modifier|*
+name|sp
+init|=
+operator|&
+name|sc
+operator|->
+name|params
+operator|.
+name|sge
+decl_stmt|;
+name|struct
 name|netmap_adapter
 modifier|*
 name|na
@@ -1427,6 +1417,8 @@ name|num_rx_desc
 operator|*
 name|EQ_ESIZE
 operator|+
+name|sp
+operator|->
 name|spg_len
 argument_list|)
 expr_stmt|;
@@ -1717,6 +1709,8 @@ name|num_rx_desc
 operator|/
 literal|8
 operator|+
+name|sp
+operator|->
 name|spg_len
 operator|/
 name|EQ_ESIZE
@@ -1796,6 +1790,8 @@ name|vi
 operator|->
 name|qsize_rxq
 operator|-
+name|sp
+operator|->
 name|spg_len
 operator|/
 name|IQ_ESIZE
@@ -2356,6 +2352,12 @@ name|num_tx_desc
 operator|*
 name|EQ_ESIZE
 operator|+
+name|sc
+operator|->
+name|params
+operator|.
+name|sge
+operator|.
 name|spg_len
 expr_stmt|;
 name|bzero
@@ -2712,6 +2714,8 @@ name|s_qpp
 init|=
 name|sc
 operator|->
+name|params
+operator|.
 name|sge
 operator|.
 name|eq_s_qpp
@@ -6210,6 +6214,12 @@ name|vi
 operator|->
 name|qsize_txq
 operator|-
+name|sc
+operator|->
+name|params
+operator|.
+name|sge
+operator|.
 name|spg_len
 operator|/
 name|EQ_ESIZE
@@ -6799,6 +6809,12 @@ argument_list|(
 name|lq
 argument_list|)
 operator|-
+name|sc
+operator|->
+name|params
+operator|.
+name|sge
+operator|.
 name|fl_pktshift
 expr_stmt|;
 name|ring

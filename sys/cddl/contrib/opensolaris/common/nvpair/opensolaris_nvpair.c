@@ -2037,15 +2037,6 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|nvlp
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
 name|nvlist_free
 argument_list|(
 name|nvlp

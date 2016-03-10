@@ -484,16 +484,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The module initialization routine for POSIX asynchronous I/O will  * set this to the version of AIO that it implements.  (Zero means  * that it is not implemented.)  This value is used here by pathconf()  * and in kern_descrip.c by fpathconf().  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|async_io_version
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Sync each mounted filesystem.  */
 end_comment
 
@@ -11453,23 +11443,6 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-comment|/* If asynchronous I/O is available, it works for all files. */
-if|if
-condition|(
-name|name
-operator|==
-name|_PC_ASYNC_IO
-condition|)
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
-name|async_io_version
-expr_stmt|;
-else|else
 name|error
 operator|=
 name|VOP_PATHCONF

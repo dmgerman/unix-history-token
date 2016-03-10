@@ -785,6 +785,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDF_5_400
+value|10,2,0xFF,0x10,80,0,FDC_300KBPS,1,0x2e,1,0,FL_MFM
+end_define
+
+begin_comment
+comment|/* RX50 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FDF_5_360
 value|9,2,0xFF,0x23,40,0,FDC_300KBPS,2,0x50,1,0,FL_MFM
 end_define

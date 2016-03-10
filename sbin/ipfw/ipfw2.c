@@ -2026,6 +2026,15 @@ name|b
 operator|->
 name|size
 expr_stmt|;
+name|b
+operator|->
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 end_function
 

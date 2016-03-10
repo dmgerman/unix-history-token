@@ -407,6 +407,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|int
 name|tcprexmtthresh

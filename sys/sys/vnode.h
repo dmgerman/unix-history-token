@@ -1710,17 +1710,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|async_io_version
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 0 or POSIX version of AIO i'face */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|desiredvnodes
 decl_stmt|;
 end_decl_stmt

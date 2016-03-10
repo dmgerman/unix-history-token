@@ -5791,12 +5791,6 @@ name|ce
 operator|->
 name|ce_next
 expr_stmt|;
-if|if
-condition|(
-name|ce
-operator|->
-name|ce_config
-condition|)
 name|nvlist_free
 argument_list|(
 name|ce

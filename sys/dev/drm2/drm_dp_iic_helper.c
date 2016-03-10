@@ -546,7 +546,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
+operator|<
 literal|0
 condition|)
 break|break;
@@ -622,7 +622,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
+operator|<
 literal|0
 condition|)
 break|break;

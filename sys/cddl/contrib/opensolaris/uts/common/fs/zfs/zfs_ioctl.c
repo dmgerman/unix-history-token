@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -6822,10 +6822,6 @@ argument_list|(
 name|config
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|props
-condition|)
 name|nvlist_free
 argument_list|(
 name|props
@@ -16945,6 +16941,8 @@ operator|=
 name|zio_checksum_to_feature
 argument_list|(
 name|intval
+operator|&
+name|ZIO_CHECKSUM_MASK
 argument_list|)
 expr_stmt|;
 if|if
@@ -26697,6 +26695,41 @@ goto|goto
 name|out
 goto|;
 block|}
+break|break;
+case|case
+name|ZFS_IOCVER_RESUME
+case|:
+if|if
+condition|(
+name|zc_iocparm
+operator|->
+name|zfs_cmd_size
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|zfs_cmd_resume_t
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|SET_ERROR
+argument_list|(
+name|EFAULT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|compat
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_RESUME
+expr_stmt|;
 break|break;
 case|case
 name|ZFS_IOCVER_EDBP

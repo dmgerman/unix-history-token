@@ -365,6 +365,17 @@ begin_comment
 comment|/* IP fragment */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IC_VNIC
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* TP Ingress Config's F_VNIC 						   bit.  It indicates whether 						   T4_FILTER_VNIC bit means VNIC 						   id (PF/VF) or outer VLAN. 						   0 = oVLAN, 1 = VNIC */
+end_comment
+
 begin_comment
 comment|/* Filter action */
 end_comment
@@ -504,7 +515,7 @@ comment|/* 	 * A combination of these (upto 36 bits) is available.  TP_VLAN_PRI_
 name|uint16_t
 name|vnic
 decl_stmt|;
-comment|/* VNIC id or outer VLAN tag */
+comment|/* VNIC id (PF/VF) or outer VLAN tag */
 name|uint16_t
 name|vlan
 decl_stmt|;
@@ -558,11 +569,17 @@ literal|1
 decl_stmt|;
 comment|/* VLAN valid */
 name|uint32_t
-name|vnic_vld
+name|ovlan_vld
 range|:
 literal|1
 decl_stmt|;
-comment|/* VNIC id/outer VLAN tag valid */
+comment|/* outer VLAN tag valid, value in "vnic" */
+name|uint32_t
+name|pfvf_vld
+range|:
+literal|1
+decl_stmt|;
+comment|/* VNIC id (PF/VF) valid, value in "vnic" */
 block|}
 struct|;
 end_struct

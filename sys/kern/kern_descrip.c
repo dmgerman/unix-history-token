@@ -6299,7 +6299,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* If asynchronous I/O is available, it works for all descriptors. */
 if|if
 condition|(
 name|uap
@@ -6316,7 +6315,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|async_io_version
+name|_POSIX_ASYNCHRONOUS_IO
 expr_stmt|;
 goto|goto
 name|out
