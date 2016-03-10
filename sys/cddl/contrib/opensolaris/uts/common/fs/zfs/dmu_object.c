@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  */
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ name|os
 operator|->
 name|os_obj_next
 expr_stmt|;
-comment|/* 		 * Each time we polish off an L2 bp worth of dnodes 		 * (2^13 objects), move to another L2 bp that's still 		 * reasonably sparse (at most 1/4 full).  Look from the 		 * beginning once, but after that keep looking from here. 		 * If we can't find one, just keep going from here. 		 */
+comment|/* 		 * Each time we polish off an L2 bp worth of dnodes 		 * (2^13 objects), move to another L2 bp that's still 		 * reasonably sparse (at most 1/4 full).  Look from the 		 * beginning once, but after that keep looking from here. 		 * If we can't find one, just keep going from here. 		 * 		 * Note that dmu_traverse depends on the behavior that we use 		 * multiple blocks of the dnode object before going back to 		 * reuse objects.  Any change to this algorithm should preserve 		 * that property or find another solution to the issues 		 * described in traverse_visitbp. 		 */
 if|if
 condition|(
 name|P2PHASE
