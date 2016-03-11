@@ -367,7 +367,7 @@ name|int
 name|fd
 parameter_list|,
 name|int
-name|power
+name|power_val
 parameter_list|,
 name|int
 name|workload
@@ -432,7 +432,7 @@ name|cmd
 operator|.
 name|cdw11
 operator|=
-name|power
+name|power_val
 operator||
 operator|(
 name|workload
@@ -603,7 +603,7 @@ name|powerflag
 init|=
 literal|0
 decl_stmt|,
-name|power
+name|power_val
 init|=
 literal|0
 decl_stmt|,
@@ -660,7 +660,7 @@ name|powerflag
 operator|=
 literal|1
 expr_stmt|;
-name|power
+name|power_val
 operator|=
 name|strtol
 argument_list|(
@@ -812,7 +812,7 @@ name|power_set
 argument_list|(
 name|fd
 argument_list|,
-name|power
+name|power_val
 argument_list|,
 name|workload
 argument_list|,
