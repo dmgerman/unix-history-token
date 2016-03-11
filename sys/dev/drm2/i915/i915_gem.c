@@ -12954,7 +12954,7 @@ operator|*
 name|node
 argument_list|)
 argument_list|,
-name|DRM_I915_GEM
+name|DRM_MEM_MM
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -13079,7 +13079,7 @@ name|free
 argument_list|(
 name|node
 argument_list|,
-name|DRM_I915_GEM
+name|DRM_MEM_MM
 argument_list|)
 expr_stmt|;
 return|return
