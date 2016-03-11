@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.116 2015/07/09 09:49:46 markus Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.120 2015/12/11 04:21:11 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -1132,12 +1132,6 @@ literal|0
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|buffer
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|buffer
@@ -1289,8 +1283,6 @@ name|buffer
 argument_list|,
 name|passphrase
 argument_list|,
-name|filename
-argument_list|,
 name|keyp
 argument_list|,
 name|commentp
@@ -1313,12 +1305,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buffer
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|buffer
@@ -2051,23 +2037,11 @@ literal|0
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|file
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pub
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|pub
@@ -2269,23 +2243,11 @@ name|NULL
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|key
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cert
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|cert
@@ -2557,12 +2519,6 @@ name|SSH_ERR_KEY_NOT_FOUND
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|pub
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|pub

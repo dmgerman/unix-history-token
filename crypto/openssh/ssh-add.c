@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.123 2015/07/03 03:43:18 djm Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.128 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -254,7 +254,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* we keep a cache of one passphrases */
+comment|/* we keep a cache of one passphrase */
 end_comment
 
 begin_decl_stmt
@@ -574,23 +574,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|cert
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|cert
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|public
-operator|!=
-name|NULL
-condition|)
 name|sshkey_free
 argument_list|(
 name|public
@@ -897,8 +885,6 @@ name|keyblob
 argument_list|,
 literal|""
 argument_list|,
-name|filename
-argument_list|,
 operator|&
 name|private
 argument_list|,
@@ -955,8 +941,6 @@ name|keyblob
 argument_list|,
 name|pass
 argument_list|,
-name|filename
-argument_list|,
 operator|&
 name|private
 argument_list|,
@@ -993,19 +977,6 @@ block|}
 block|}
 if|if
 condition|(
-name|comment
-operator|==
-name|NULL
-condition|)
-name|comment
-operator|=
-name|xstrdup
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|private
 operator|==
 name|NULL
@@ -1022,9 +993,9 @@ argument_list|,
 sizeof|sizeof
 name|msg
 argument_list|,
-literal|"Enter passphrase for %.200s%s: "
+literal|"Enter passphrase for %s%s: "
 argument_list|,
-name|comment
+name|filename
 argument_list|,
 name|confirm
 condition|?
@@ -1073,12 +1044,11 @@ name|keyblob
 argument_list|,
 name|pass
 argument_list|,
-name|filename
-argument_list|,
 operator|&
 name|private
 argument_list|,
-name|NULL
+operator|&
+name|comment
 argument_list|)
 operator|)
 operator|==
@@ -1112,11 +1082,6 @@ label|:
 name|clear_pass
 argument_list|()
 expr_stmt|;
-name|free
-argument_list|(
-name|comment
-argument_list|)
-expr_stmt|;
 name|sshbuf_free
 argument_list|(
 name|keyblob
@@ -1137,9 +1102,9 @@ argument_list|,
 sizeof|sizeof
 name|msg
 argument_list|,
-literal|"Bad passphrase, try again for %.200s%s: "
+literal|"Bad passphrase, try again for %s%s: "
 argument_list|,
-name|comment
+name|filename
 argument_list|,
 name|confirm
 condition|?
@@ -1150,6 +1115,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|comment
+operator|==
+name|NULL
+operator|||
+operator|*
+name|comment
+operator|==
+literal|'\0'
+condition|)
+name|comment
+operator|=
+name|xstrdup
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
 name|sshbuf_free
 argument_list|(
 name|keyblob
@@ -1808,7 +1791,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d %s %s (%s)\n"
+literal|"%u %s %s (%s)\n"
 argument_list|,
 name|sshkey_size
 argument_list|(
@@ -2384,6 +2367,10 @@ name|Dflag
 init|=
 literal|0
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()

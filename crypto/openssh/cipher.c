@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.c,v 1.100 2015/01/14 10:29:45 djm Exp $ */
+comment|/* $OpenBSD: cipher.c,v 1.101 2015/12/10 17:08:40 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -1967,12 +1967,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|junk
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|junk

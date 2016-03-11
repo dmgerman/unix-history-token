@@ -87,6 +87,20 @@ name|POLLERR
 value|0x0008
 end_define
 
+begin_define
+define|#
+directive|define
+name|POLLHUP
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLNVAL
+value|0x0020
+end_define
+
 begin_if
 if|#
 directive|if
@@ -102,20 +116,6 @@ define|#
 directive|define
 name|POLLPRI
 value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|POLLHUP
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|POLLNVAL
-value|0x0020
 end_define
 
 begin_define

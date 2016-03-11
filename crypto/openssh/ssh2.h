@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh2.h,v 1.15 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: ssh2.h,v 1.17 2016/01/14 16:17:40 markus Exp $ */
 end_comment
 
 begin_comment
@@ -157,6 +157,13 @@ define|#
 directive|define
 name|SSH2_MSG_SERVICE_ACCEPT
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_EXT_INFO
+value|7
 end_define
 
 begin_comment
@@ -575,45 +582,6 @@ define|#
 directive|define
 name|SSH2_EXTENDED_DATA_STDERR
 value|1
-end_define
-
-begin_comment
-comment|/* kex messages for resume@appgate.com */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH2_MSG_KEX_ROAMING_RESUME
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH2_MSG_KEX_ROAMING_AUTH_REQUIRED
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH2_MSG_KEX_ROAMING_AUTH
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH2_MSG_KEX_ROAMING_AUTH_OK
-value|33
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSH2_MSG_KEX_ROAMING_AUTH_FAIL
-value|34
 end_define
 
 begin_comment

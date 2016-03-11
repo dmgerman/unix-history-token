@@ -48,6 +48,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_ssh__compat_glob
+value|Fssh__ssh__compat_glob
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ssh__compat_globfree
+value|Fssh__ssh__compat_globfree
+end_define
+
+begin_define
+define|#
+directive|define
 name|_ssh_compat_realpath
 value|Fssh__ssh_compat_realpath
 end_define
@@ -2386,13 +2400,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|glob
-value|Fssh_glob
-end_define
-
-begin_define
-define|#
-directive|define
 name|glob0
 value|Fssh_glob0
 end_define
@@ -2416,13 +2423,6 @@ define|#
 directive|define
 name|globextend
 value|Fssh_globextend
-end_define
-
-begin_define
-define|#
-directive|define
-name|globfree
-value|Fssh_globfree
 end_define
 
 begin_define
@@ -2645,6 +2645,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|kex_input_ext_info
+value|Fssh_kex_input_ext_info
+end_define
+
+begin_define
+define|#
+directive|define
 name|kex_input_kexinit
 value|Fssh_kex_input_kexinit
 end_define
@@ -2717,6 +2724,13 @@ define|#
 directive|define
 name|kex_setup
 value|Fssh_kex_setup
+end_define
+
+begin_define
+define|#
+directive|define
+name|kex_start_rekex
+value|Fssh_kex_start_rekex
 end_define
 
 begin_define
@@ -3282,13 +3296,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_backup_state
-value|Fssh_packet_backup_state
-end_define
-
-begin_define
-define|#
-directive|define
 name|packet_close
 value|Fssh_packet_close
 end_define
@@ -3340,13 +3347,6 @@ define|#
 directive|define
 name|packet_read_seqnr
 value|Fssh_packet_read_seqnr
-end_define
-
-begin_define
-define|#
-directive|define
-name|packet_restore_state
-value|Fssh_packet_restore_state
 end_define
 
 begin_define
@@ -3501,6 +3501,34 @@ define|#
 directive|define
 name|plain_key_blob
 value|Fssh_plain_key_blob
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_agent
+value|Fssh_platform_pledge_agent
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_mux
+value|Fssh_platform_pledge_mux
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_sftp_server
+value|Fssh_platform_pledge_sftp_server
+end_define
+
+begin_define
+define|#
+directive|define
+name|pledge
+value|Fssh_pledge
 end_define
 
 begin_define
@@ -4290,6 +4318,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_malloc_init
+value|Fssh_ssh_malloc_init
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_msg_recv
 value|Fssh_ssh_msg_recv
 end_define
@@ -4320,13 +4355,6 @@ define|#
 directive|define
 name|ssh_output_space
 value|Fssh_ssh_output_space
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_backup_state
-value|Fssh_ssh_packet_backup_state
 end_define
 
 begin_define
@@ -4514,6 +4542,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_packet_is_rekeying
+value|Fssh_ssh_packet_is_rekeying
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_packet_need_rekeying
 value|Fssh_ssh_packet_need_rekeying
 end_define
@@ -4663,13 +4698,6 @@ define|#
 directive|define
 name|ssh_packet_remaining
 value|Fssh_ssh_packet_remaining
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_restore_state
-value|Fssh_ssh_packet_restore_state
 end_define
 
 begin_define
@@ -4859,6 +4887,13 @@ define|#
 directive|define
 name|ssh_remote_ipaddr
 value|Fssh_ssh_remote_ipaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_remote_port
+value|Fssh_ssh_remote_port
 end_define
 
 begin_define
@@ -5482,6 +5517,13 @@ define|#
 directive|define
 name|sshkey_fingerprint_raw
 value|Fssh_sshkey_fingerprint_raw
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshkey_format_cert_validity
+value|Fssh_sshkey_format_cert_validity
 end_define
 
 begin_define

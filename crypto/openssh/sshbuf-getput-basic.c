@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-getput-basic.c,v 1.4 2015/01/14 15:02:39 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf-getput-basic.c,v 1.5 2015/10/20 23:24:25 mmcc Exp $	*/
 end_comment
 
 begin_comment
@@ -621,7 +621,7 @@ if|if
 condition|(
 name|valp
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|valp
@@ -805,7 +805,7 @@ if|if
 condition|(
 name|valp
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|valp
@@ -2318,7 +2318,7 @@ if|if
 condition|(
 name|valp
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|valp

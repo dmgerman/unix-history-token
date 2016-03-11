@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.32 2015/04/24 01:36:01 deraadt Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.33 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -65,6 +65,34 @@ include|#
 directive|include
 file|"log.h"
 end_include
+
+begin_function
+name|void
+name|ssh_malloc_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+specifier|extern
+name|char
+modifier|*
+name|malloc_options
+decl_stmt|;
+name|malloc_options
+operator|=
+literal|"S"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __OpenBSD__ */
+block|}
+end_function
 
 begin_function
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.85 2015/05/01 03:23:51 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.87 2016/01/14 16:17:40 markus Exp $ */
 end_comment
 
 begin_comment
@@ -305,12 +305,6 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"roaming.h"
 end_include
 
 begin_include
@@ -1096,6 +1090,11 @@ name|data
 parameter_list|,
 name|u_int
 name|datalen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostkey_alg
 parameter_list|)
 block|{
 name|struct
@@ -1149,6 +1148,14 @@ argument_list|,
 name|data
 argument_list|,
 name|datalen
+argument_list|)
+expr_stmt|;
+name|buffer_put_cstring
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|hostkey_alg
 argument_list|)
 expr_stmt|;
 name|mm_request_send
