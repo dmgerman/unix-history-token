@@ -261,14 +261,14 @@ define|#
 directive|define
 name|KEX_SERVER_ENCRYPT
 define|\
-value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr" \ 	AESGCM_CIPHER_MODES
+value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr" \ 	AESGCM_CIPHER_MODES \ 	",aes128-cbc,aes192-cbc,aes256-cbc"
 end_define
 
 begin_define
 define|#
 directive|define
 name|KEX_CLIENT_ENCRYPT
-value|KEX_SERVER_ENCRYPT "," \ 	"aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc"
+value|KEX_SERVER_ENCRYPT "," \ 	"3des-cbc"
 end_define
 
 begin_define
