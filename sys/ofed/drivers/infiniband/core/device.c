@@ -2962,7 +2962,7 @@ name|ibcore
 argument_list|,
 name|ibcore_mod
 argument_list|,
-name|SI_SUB_SMP
+name|SI_SUB_LAST
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
