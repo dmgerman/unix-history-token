@@ -925,6 +925,10 @@ name|int
 name|tp_vers
 decl_stmt|;
 name|unsigned
+name|int
+name|exprom_vers
+decl_stmt|;
+name|unsigned
 name|short
 name|mtus
 index|[
