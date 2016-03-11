@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -126,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_ifdef
@@ -254,12 +248,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
 
 begin_include
 include|#
@@ -767,12 +755,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|fnametab
-condition|)
 name|free
 argument_list|(
 name|a
@@ -912,9 +894,9 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -923,10 +905,6 @@ operator|&
 name|freeIt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -981,9 +959,9 @@ name|libName
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1083,9 +1061,9 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -1094,10 +1072,6 @@ operator|&
 name|freeIt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -1209,9 +1183,9 @@ name|memName
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Now form an archive spec and recurse to deal with nested 	     * variables and multi-word variable values.... The results 	     * are just placed at the end of the nodeLst we're returning. 	     */
@@ -2588,12 +2562,6 @@ operator|->
 name|members
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ar
-operator|->
-name|fnametab
-condition|)
 name|free
 argument_list|(
 name|ar
@@ -3657,19 +3625,11 @@ argument_list|,
 literal|"r+"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p2
-condition|)
 name|free
 argument_list|(
 name|p2
@@ -3942,19 +3902,11 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p2
-condition|)
 name|free
 argument_list|(
 name|p2
