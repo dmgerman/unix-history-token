@@ -635,7 +635,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:tUv:w:X"
+literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:tT:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -994,6 +994,20 @@ operator|&
 name|newfs_arg
 argument_list|,
 literal|"-t"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|argappend
+argument_list|(
+operator|&
+name|mount_arg
+argument_list|,
+literal|"-t %s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
