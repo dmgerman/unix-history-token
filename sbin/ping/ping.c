@@ -4332,14 +4332,14 @@ block|{
 if|if
 condition|(
 name|sweepmin
-operator|>=
+operator|>
 name|sweepmax
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"Maximum packet size must be greater than the minimum packet size"
+literal|"Maximum packet size must be no less than the minimum packet size"
 argument_list|)
 expr_stmt|;
 if|if
