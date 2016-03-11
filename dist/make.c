@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.c,v 1.92 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: make.c,v 1.95 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: make.c,v 1.92 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: make.c,v 1.95 2016/02/18 18:29:14 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: make.c,v 1.92 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: make.c,v 1.95 2016/02/18 18:29:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1401,12 +1401,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|gn
-operator|->
-name|name
-condition|)
 name|free
 argument_list|(
 name|gn
@@ -1429,9 +1423,7 @@ name|uname
 argument_list|,
 name|pgn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -1900,10 +1892,6 @@ operator|&
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -2591,10 +2579,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -2833,10 +2817,6 @@ argument_list|,
 name|pgn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p2
-condition|)
 name|free
 argument_list|(
 name|p2
@@ -2910,10 +2890,6 @@ name|pgn
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -3053,10 +3029,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.206 2015/11/26 00:23:04 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -115,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -258,6 +252,10 @@ name|int
 name|cond_depth
 decl_stmt|;
 comment|/* 'if' nesting when file opened */
+name|Boolean
+name|depending
+decl_stmt|;
+comment|/* state of doing_depend on EOF */
 name|char
 modifier|*
 name|P_str
@@ -3008,9 +3006,7 @@ name|line
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|Parse_Error
@@ -4098,9 +4094,9 @@ name|cp
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -4109,10 +4105,6 @@ operator|&
 name|freeIt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -6284,9 +6276,9 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
+operator||
+name|VARF_ASSIGN
 argument_list|)
 expr_stmt|;
 name|oldVars
@@ -6349,9 +6341,9 @@ name|cp
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|freeCp
@@ -6946,6 +6938,9 @@ parameter_list|,
 name|Boolean
 name|isSystem
 parameter_list|,
+name|Boolean
+name|depinc
+parameter_list|,
 name|int
 name|silent
 parameter_list|)
@@ -7355,6 +7350,15 @@ name|lf
 operator|=
 name|lf
 expr_stmt|;
+if|if
+condition|(
+name|depinc
+condition|)
+name|doing_depend
+operator|=
+name|depinc
+expr_stmt|;
+comment|/* only turn it on */
 block|}
 end_function
 
@@ -7519,9 +7523,7 @@ name|file
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|Parse_include_file
@@ -7531,6 +7533,13 @@ argument_list|,
 name|endc
 operator|==
 literal|'>'
+argument_list|,
+operator|(
+operator|*
+name|line
+operator|==
+literal|'d'
+operator|)
 argument_list|,
 name|silent
 argument_list|)
@@ -7640,19 +7649,11 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-condition|)
 name|free
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dp
-condition|)
 name|free
 argument_list|(
 name|dp
@@ -8157,6 +8158,13 @@ name|lf
 operator|=
 name|NULL
 expr_stmt|;
+name|curFile
+operator|->
+name|depending
+operator|=
+name|doing_depend
+expr_stmt|;
+comment|/* restore this on EOF */
 name|assert
 argument_list|(
 name|nextbuf
@@ -8351,9 +8359,7 @@ name|file
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -8432,6 +8438,8 @@ expr_stmt|;
 name|Parse_include_file
 argument_list|(
 name|file
+argument_list|,
+name|FALSE
 argument_list|,
 name|FALSE
 argument_list|,
@@ -8575,9 +8583,7 @@ name|value
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -8625,6 +8631,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|doing_depend
+operator|=
+name|curFile
+operator|->
+name|depending
+expr_stmt|;
+comment|/* restore this */
 comment|/* get next input buffer, if any */
 name|ptr
 operator|=
@@ -9856,6 +9869,13 @@ index|[
 literal|0
 index|]
 operator|==
+literal|'d'
+operator|||
+name|cp
+index|[
+literal|0
+index|]
+operator|==
 literal|'s'
 operator|||
 name|cp
@@ -10591,9 +10611,9 @@ name|line
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Need a non-circular list for the target nodes 	     */
