@@ -24915,7 +24915,7 @@ name|caps_decoder
 index|[]
 init|=
 block|{
-literal|"\20\0011IPMI\002NCSI"
+literal|"\20\001IPMI\002NCSI"
 block|,
 comment|/* 0: NBM */
 literal|"\20\001PPP\002QFC\003DCBX"
