@@ -2865,9 +2865,6 @@ block|{
 name|f_reqnode
 modifier|*
 name|r
-decl_stmt|,
-modifier|*
-name|r_tmp
 decl_stmt|;
 name|f_provnode
 modifier|*
@@ -2948,10 +2945,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|r_tmp
-operator|=
-name|r
-expr_stmt|;
 name|satisfy_req
 argument_list|(
 name|r
@@ -2967,12 +2960,6 @@ name|r
 operator|->
 name|next
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (was_set == 0) 			free(r_tmp);
-endif|#
-directive|endif
 block|}
 name|fnode
 operator|->
