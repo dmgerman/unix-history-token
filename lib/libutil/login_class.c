@@ -286,6 +286,14 @@ name|RLIMIT_KQUEUES
 block|}
 block|,
 block|{
+literal|"umtxp"
+block|,
+name|login_getcapnum
+block|,
+name|RLIMIT_UMTXP
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
