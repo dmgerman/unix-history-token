@@ -820,7 +820,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|ATF_REQUIRE
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|mlock
 argument_list|(
@@ -832,6 +832,13 @@ name|page
 argument_list|)
 operator|==
 literal|0
+argument_list|,
+literal|"mlock failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
