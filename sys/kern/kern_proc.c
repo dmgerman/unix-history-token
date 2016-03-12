@@ -15604,6 +15604,10 @@ name|allproc_gen
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * stop_all_proc() purpose is to stop all process which have usermode,  * except current process for obvious reasons.  This makes it somewhat  * unreliable when invoked from multithreaded process.  The service  * must not be user-callable anyway.  */
+end_comment
+
 begin_function
 name|void
 name|stop_all_proc
@@ -15636,34 +15640,6 @@ decl_stmt|;
 name|cp
 operator|=
 name|curproc
-expr_stmt|;
-comment|/* 	 * stop_all_proc() assumes that all process which have 	 * usermode must be stopped, except current process, for 	 * obvious reasons.  Since other threads in the process 	 * establishing global stop could unstop something, disable 	 * calls from multithreaded processes as precaution.  The 	 * service must not be user-callable anyway. 	 */
-name|KASSERT
-argument_list|(
-operator|(
-name|cp
-operator|->
-name|p_flag
-operator|&
-name|P_HADTHREADS
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|cp
-operator|->
-name|p_flag
-operator|&
-name|P_KTHREAD
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"mt stop_all_proc"
-operator|)
-argument_list|)
 expr_stmt|;
 name|allproc_loop
 label|:
@@ -16062,12 +16038,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|TOTAL_STOP_DEBUG
-value|1
-end_define
+begin_comment
+comment|/* #define	TOTAL_STOP_DEBUG	1 */
+end_comment
 
 begin_ifdef
 ifdef|#
