@@ -1507,8 +1507,6 @@ modifier|*
 name|ops
 decl_stmt|;
 name|int
-name|argsize
-decl_stmt|,
 name|pagesize
 decl_stmt|;
 name|size_t
@@ -1917,8 +1915,9 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|argsize
-operator|=
+operator|(
+name|void
+operator|)
 name|asprintf
 argument_list|(
 operator|&
