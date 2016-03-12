@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/condvar.h>
 end_include
 
@@ -142,25 +148,6 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/capsicum.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -647,16 +634,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
 name|cap_rights_t
 name|rights
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -726,11 +706,6 @@ operator|*
 operator|)
 name|data
 argument_list|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -739,8 +714,6 @@ argument_list|,
 name|CAP_PWRITE
 argument_list|)
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|filemon
 operator|->
