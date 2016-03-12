@@ -612,11 +612,12 @@ name|Elf_Size
 name|version
 decl_stmt|;
 comment|/* Version number of struct format */
-name|struct
-name|Struct_Obj_Entry
-modifier|*
+name|TAILQ_ENTRY
+argument_list|(
+argument|Struct_Obj_Entry
+argument_list|)
 name|next
-decl_stmt|;
+expr_stmt|;
 name|char
 modifier|*
 name|path
@@ -1147,6 +1148,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* dlopen()-ed (vs. load statically) */
+name|bool
+name|marker
+range|:
+literal|1
+decl_stmt|;
+comment|/* marker on the global obj list */
 name|struct
 name|link_map
 name|linkmap
@@ -1191,6 +1198,16 @@ directive|define
 name|RTLD_VERSION
 value|1
 end_define
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|obj_entry_q
+argument_list|,
+name|Struct_Obj_Entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1731,6 +1748,32 @@ parameter_list|,
 name|Elf_Addr
 parameter_list|,
 name|Elf_Addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Obj_Entry
+modifier|*
+name|globallist_curr
+parameter_list|(
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Obj_Entry
+modifier|*
+name|globallist_next
+parameter_list|(
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
 parameter_list|)
 function_decl|;
 end_function_decl
