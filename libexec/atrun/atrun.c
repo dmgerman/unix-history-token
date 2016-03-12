@@ -1935,8 +1935,6 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 name|size_t
-name|ncpu
-decl_stmt|,
 name|ncpusz
 decl_stmt|;
 name|double
@@ -1944,6 +1942,9 @@ name|load_avg
 init|=
 operator|-
 literal|1
+decl_stmt|;
+name|int
+name|ncpu
 decl_stmt|;
 else|#
 directive|else
