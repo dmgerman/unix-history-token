@@ -8021,6 +8021,12 @@ operator|->
 name|mmio_map
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NOTE Linux<->FreeBSD: Linux forgots to call 	 * i915_gem_gtt_fini(), causing memory leaks. 	 */
+name|i915_gem_gtt_fini
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev_priv
