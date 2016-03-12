@@ -1341,6 +1341,17 @@ begin_comment
 comment|/* do direct ioctl in GEOM */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ERELOOKUP
+value|(-5)
+end_define
+
+begin_comment
+comment|/* retry the directory lookup */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
