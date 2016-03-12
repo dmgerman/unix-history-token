@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/condvar.h>
 end_include
 
@@ -142,25 +148,6 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900041
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/capability.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -703,24 +690,6 @@ name|EEXIST
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|900041
-define|#
-directive|define
-name|FGET_WRITE
-parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|a3
-parameter_list|)
-value|fget_write((a1), (a2), (a3))
-else|#
-directive|else
 define|#
 directive|define
 name|FGET_WRITE
@@ -732,8 +701,6 @@ parameter_list|,
 name|a3
 parameter_list|)
 value|fget_write((a1), (a2), CAP_WRITE | CAP_SEEK, (a3))
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
