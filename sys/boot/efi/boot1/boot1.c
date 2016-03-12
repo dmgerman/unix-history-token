@@ -1716,7 +1716,7 @@ name|mod
 operator|->
 name|name
 argument_list|,
-name|bufsize
+name|loadersize
 argument_list|,
 name|EFI_ERROR_CODE
 argument_list|(
