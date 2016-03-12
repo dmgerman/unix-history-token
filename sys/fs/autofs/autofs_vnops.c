@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -392,14 +398,13 @@ name|vap
 operator|->
 name|va_size
 operator|=
-literal|512
+name|S_BLKSIZE
 expr_stmt|;
-comment|/* XXX */
 name|vap
 operator|->
 name|va_blocksize
 operator|=
-literal|512
+name|S_BLKSIZE
 expr_stmt|;
 name|vap
 operator|->
@@ -455,9 +460,8 @@ name|vap
 operator|->
 name|va_bytes
 operator|=
-literal|512
+name|S_BLKSIZE
 expr_stmt|;
-comment|/* XXX */
 name|vap
 operator|->
 name|va_filerev
