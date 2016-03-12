@@ -123,12 +123,9 @@ name|SYS_break
 value|17
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_getfsstat
-value|18
-end_define
+begin_comment
+comment|/* 18 is freebsd4 getfsstat */
+end_comment
 
 begin_comment
 comment|/* 19 is old lseek */
@@ -925,19 +922,13 @@ begin_comment
 comment|/* 156 is old getdirentries */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_statfs
-value|157
-end_define
+begin_comment
+comment|/* 157 is freebsd4 statfs */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_fstatfs
-value|158
-end_define
+begin_comment
+comment|/* 158 is freebsd4 fstatfs */
+end_comment
 
 begin_define
 define|#
@@ -953,26 +944,17 @@ name|SYS_getfh
 value|161
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_getdomainname
-value|162
-end_define
+begin_comment
+comment|/* 162 is freebsd4 getdomainname */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_setdomainname
-value|163
-end_define
+begin_comment
+comment|/* 163 is freebsd4 setdomainname */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_uname
-value|164
-end_define
+begin_comment
+comment|/* 164 is freebsd4 uname */
+end_comment
 
 begin_define
 define|#
@@ -1009,19 +991,13 @@ name|SYS_shmsys
 value|171
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_pread
-value|173
-end_define
+begin_comment
+comment|/* 173 is freebsd6 pread */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_pwrite
-value|174
-end_define
+begin_comment
+comment|/* 174 is freebsd6 pwrite */
+end_comment
 
 begin_define
 define|#
@@ -1114,12 +1090,9 @@ name|SYS_getdirentries
 value|196
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_mmap
-value|197
-end_define
+begin_comment
+comment|/* 197 is freebsd6 mmap */
+end_comment
 
 begin_define
 define|#
@@ -1128,26 +1101,17 @@ name|SYS___syscall
 value|198
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_lseek
-value|199
-end_define
+begin_comment
+comment|/* 199 is freebsd6 lseek */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_truncate
-value|200
-end_define
+begin_comment
+comment|/* 200 is freebsd6 truncate */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_ftruncate
-value|201
-end_define
+begin_comment
+comment|/* 201 is freebsd6 ftruncate */
+end_comment
 
 begin_define
 define|#
@@ -1499,12 +1463,9 @@ name|SYS_pwritev
 value|290
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_fhstatfs
-value|297
-end_define
+begin_comment
+comment|/* 297 is freebsd4 fhstatfs */
+end_comment
 
 begin_define
 define|#
@@ -1643,26 +1604,17 @@ name|SYS_aio_error
 value|317
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_aio_read
-value|318
-end_define
+begin_comment
+comment|/* 318 is freebsd6 aio_read */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_aio_write
-value|319
-end_define
+begin_comment
+comment|/* 319 is freebsd6 aio_write */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd6_lio_listio
-value|320
-end_define
+begin_comment
+comment|/* 320 is freebsd6 lio_listio */
+end_comment
 
 begin_define
 define|#
@@ -1763,12 +1715,9 @@ name|SYS_utrace
 value|335
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_sendfile
-value|336
-end_define
+begin_comment
+comment|/* 336 is freebsd4 sendfile */
+end_comment
 
 begin_define
 define|#
@@ -1805,12 +1754,9 @@ name|SYS_sigsuspend
 value|341
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_sigaction
-value|342
-end_define
+begin_comment
+comment|/* 342 is freebsd4 sigaction */
+end_comment
 
 begin_define
 define|#
@@ -1819,12 +1765,9 @@ name|SYS_sigpending
 value|343
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_freebsd4_sigreturn
-value|344
-end_define
+begin_comment
+comment|/* 344 is freebsd4 sigreturn */
+end_comment
 
 begin_define
 define|#
