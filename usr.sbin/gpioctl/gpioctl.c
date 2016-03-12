@@ -74,13 +74,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|PIN_TYPE_UNKNOWN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|PIN_TYPE_NUMBER
 value|1
 end_define
@@ -1059,9 +1052,7 @@ condition|(
 name|pin_type
 condition|)
 block|{
-case|case
-name|PIN_TYPE_UNKNOWN
-case|:
+default|default:
 comment|/* First test if it is a pin number */
 name|pinn
 operator|=
