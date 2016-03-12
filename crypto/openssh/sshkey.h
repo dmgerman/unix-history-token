@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.h,v 1.9 2015/08/04 05:23:06 djm Exp $ */
+comment|/* $OpenBSD: sshkey.h,v 1.12 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -731,6 +731,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|size_t
+name|sshkey_format_cert_validity
+parameter_list|(
+specifier|const
+name|struct
+name|sshkey_cert
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__bounded__
+parameter_list|(
+name|__string__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|int
 name|sshkey_ecdsa_nid_from_name
 parameter_list|(
@@ -1054,6 +1084,10 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
@@ -1234,11 +1268,6 @@ name|char
 modifier|*
 name|passphrase
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
 name|struct
 name|sshkey
 modifier|*
@@ -1317,8 +1346,10 @@ parameter_list|,
 name|size_t
 name|datalen
 parameter_list|,
-name|u_int
-name|compat
+specifier|const
+name|char
+modifier|*
+name|ident
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1336,10 +1367,10 @@ parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-name|signature
+name|sig
 parameter_list|,
 name|size_t
-name|signaturelen
+name|siglen
 parameter_list|,
 specifier|const
 name|u_char
@@ -1348,9 +1379,6 @@ name|data
 parameter_list|,
 name|size_t
 name|datalen
-parameter_list|,
-name|u_int
-name|compat
 parameter_list|)
 function_decl|;
 end_function_decl

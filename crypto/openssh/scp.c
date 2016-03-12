@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.182 2015/04/24 01:36:00 deraadt Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.184 2015/11/27 00:49:31 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -2215,6 +2215,40 @@ name|showprogress
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+condition|)
+block|{
+comment|/* Cannot pledge: -p allows setuid/setgid files... */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|pledge
+argument_list|(
+literal|"stdio rpath wpath cpath fattr tty proc exec"
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"pledge"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|remin
 operator|=
 name|STDIN_FILENO
@@ -4621,7 +4655,7 @@ if|if
 condition|(
 name|last
 operator|==
-literal|0
+name|NULL
 condition|)
 name|last
 operator|=

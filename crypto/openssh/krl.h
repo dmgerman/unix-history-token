@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.h,v 1.4 2015/01/13 19:06:49 djm Exp $ */
+comment|/* $OpenBSD: krl.h,v 1.5 2015/12/30 23:46:14 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -153,24 +153,6 @@ name|krl
 parameter_list|,
 name|u_int64_t
 name|version
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ssh_krl_set_sign_key
-parameter_list|(
-name|struct
-name|ssh_krl
-modifier|*
-name|krl
-parameter_list|,
-specifier|const
-name|struct
-name|sshkey
-modifier|*
-name|sign_key
 parameter_list|)
 function_decl|;
 end_function_decl

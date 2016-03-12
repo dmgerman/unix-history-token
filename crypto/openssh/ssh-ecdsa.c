@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ecdsa.c,v 1.11 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: ssh-ecdsa.c,v 1.12 2015/12/11 04:21:12 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -472,23 +472,11 @@ name|digest
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|b
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bb
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|bb
@@ -887,23 +875,11 @@ name|digest
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sigbuf
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|sigbuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|b
-operator|!=
-name|NULL
-condition|)
 name|sshbuf_free
 argument_list|(
 name|b

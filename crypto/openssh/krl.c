@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.33 2015/07/03 03:43:18 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.37 2015/12/31 00:33:52 djm Exp $ */
 end_comment
 
 begin_include
@@ -3942,9 +3942,9 @@ name|krl
 operator|->
 name|generated_date
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 operator|||
 operator|(
 name|r
@@ -4341,6 +4341,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -4628,13 +4630,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|subsect
-operator|!=
-name|NULL
-condition|)
-block|{
 name|sshbuf_free
 argument_list|(
 name|subsect
@@ -4644,7 +4639,6 @@ name|subsect
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5759,11 +5753,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|sshbuf_len
-argument_list|(
-name|buf
-argument_list|)
-operator|-
 name|sig_off
 argument_list|,
 literal|0
@@ -5867,7 +5856,6 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -5944,13 +5932,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|sect
-operator|!=
-name|NULL
-condition|)
-block|{
 name|sshbuf_free
 argument_list|(
 name|sect
@@ -5960,7 +5941,6 @@ name|sect
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -6183,6 +6163,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|sect
+operator|!=
+name|NULL
+operator|&&
 name|sshbuf_len
 argument_list|(
 name|sect

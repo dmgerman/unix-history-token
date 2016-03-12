@@ -2132,14 +2132,6 @@ comment|/* #undef HAVE_LIBNETWORK */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `nsl' library (-lnsl). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBNSL */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `pam' library (-lpam). */
 end_comment
 
@@ -2604,6 +2596,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `pledge' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PLEDGE */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `poll' function. */
 end_comment
 
@@ -2631,6 +2631,22 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_PRCTL */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `priv_basicset' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRIV_BASICSET */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<priv.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRIV_H */
 end_comment
 
 begin_comment
@@ -2969,6 +2985,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SETPCRED */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setppriv' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SETPPRIV */
 end_comment
 
 begin_comment
@@ -4597,6 +4621,14 @@ comment|/* #undef NO_SSH_LASTLOG */
 end_comment
 
 begin_comment
+comment|/* Define to disable UID restoration test */
+end_comment
+
+begin_comment
+comment|/* #undef NO_UID_RESTORATION_TEST */
+end_comment
+
+begin_comment
 comment|/* Define if X11 doesn't support AF_UNIX sockets on that system */
 end_comment
 
@@ -4847,6 +4879,14 @@ comment|/* #undef SANDBOX_NULL */
 end_comment
 
 begin_comment
+comment|/* Sandbox using pledge(2) */
+end_comment
+
+begin_comment
+comment|/* #undef SANDBOX_PLEDGE */
+end_comment
+
+begin_comment
 comment|/* Sandbox using setrlimit(2) */
 end_comment
 
@@ -4880,6 +4920,14 @@ directive|define
 name|SANDBOX_SKIP_RLIMIT_NOFILE
 value|1
 end_define
+
+begin_comment
+comment|/* Sandbox using Solaris/Illumos privileges */
+end_comment
+
+begin_comment
+comment|/* #undef SANDBOX_SOLARIS */
+end_comment
 
 begin_comment
 comment|/* Sandbox using systrace(4) */
@@ -5192,6 +5240,14 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_PIPES */
+end_comment
+
+begin_comment
+comment|/* Define if you have Solaris privileges */
+end_comment
+
+begin_comment
+comment|/* #undef USE_SOLARIS_PRIVS */
 end_comment
 
 begin_comment

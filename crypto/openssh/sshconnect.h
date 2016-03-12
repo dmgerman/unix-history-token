@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.h,v 1.28 2013/10/16 02:31:47 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.h,v 1.29 2015/11/15 22:26:49 jcs Exp $ */
 end_comment
 
 begin_comment
@@ -244,6 +244,25 @@ name|int
 name|ssh_local_cmd
 parameter_list|(
 specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|maybe_add_key_to_agent
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|Key
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
