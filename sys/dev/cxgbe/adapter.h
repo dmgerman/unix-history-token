@@ -2962,7 +2962,13 @@ name|t4_virt_res
 name|vres
 decl_stmt|;
 name|uint16_t
+name|nbmcaps
+decl_stmt|;
+name|uint16_t
 name|linkcaps
+decl_stmt|;
+name|uint16_t
+name|switchcaps
 decl_stmt|;
 name|uint16_t
 name|niccaps
@@ -2972,6 +2978,9 @@ name|toecaps
 decl_stmt|;
 name|uint16_t
 name|rdmacaps
+decl_stmt|;
+name|uint16_t
+name|tlscaps
 decl_stmt|;
 name|uint16_t
 name|iscsicaps
