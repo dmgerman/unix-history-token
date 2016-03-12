@@ -83,10 +83,6 @@ name|long
 name|cn_namelen
 decl_stmt|;
 comment|/* length of looked up component */
-name|long
-name|cn_consume
-decl_stmt|;
-comment|/* chars to consume in lookup() */
 block|}
 struct|;
 end_struct
