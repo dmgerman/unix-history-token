@@ -1384,6 +1384,45 @@ value|0x60
 end_define
 
 begin_comment
+comment|/*  * G33 registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_MASK
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_SIZE_1M
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_SIZE_2M
+value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_GMS_STOLEN_128M
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_GMS_STOLEN_256M
+value|0x90
+end_define
+
+begin_comment
 comment|/*  * G965 registers  */
 end_comment
 
@@ -1392,6 +1431,13 @@ define|#
 directive|define
 name|AGP_I965_GTTMMADR
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_APBASE
+value|0x18
 end_define
 
 begin_define
@@ -1458,68 +1504,8 @@ value|0x70
 end_define
 
 begin_comment
-comment|/*  * G33 registers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AGP_G33_MGGC_GGMS_MASK
-value|(3<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G33_MGGC_GGMS_SIZE_1M
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G33_MGGC_GGMS_SIZE_2M
-value|(2<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G33_GCC1_GMS_STOLEN_128M
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G33_GCC1_GMS_STOLEN_256M
-value|0x90
-end_define
-
-begin_comment
 comment|/*  * G4X registers  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AGP_G4X_GMADR
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G4X_MMADR
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|AGP_G4X_GTTADR
-value|0x18
-end_define
 
 begin_define
 define|#
