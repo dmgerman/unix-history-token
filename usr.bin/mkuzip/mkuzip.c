@@ -976,7 +976,13 @@ name|open
 argument_list|(
 name|oname
 argument_list|,
+operator|(
+name|en_dedup
+condition|?
+name|O_RDWR
+else|:
 name|O_WRONLY
+operator|)
 operator||
 name|O_TRUNC
 operator||
