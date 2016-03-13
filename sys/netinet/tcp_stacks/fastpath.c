@@ -406,14 +406,6 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|tcprexmtthresh
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
