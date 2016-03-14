@@ -3897,7 +3897,7 @@ name|uint8_t
 name|len
 decl_stmt|;
 name|uint8_t
-name|class
+name|i_class
 decl_stmt|;
 comment|/* operating class */
 comment|/* Annex E, E.1 Country information and operating classes */
