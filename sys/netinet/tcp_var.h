@@ -2649,7 +2649,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* statistics (read-only) */
+comment|/* statistics */
 end_comment
 
 begin_define
