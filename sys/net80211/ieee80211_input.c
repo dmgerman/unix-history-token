@@ -2677,6 +2677,12 @@ case|:
 case|case
 name|IEEE80211_ELEMID_PWRCNSTR
 case|:
+case|case
+name|IEEE80211_ELEMID_BSSLOAD
+case|:
+case|case
+name|IEEE80211_ELEMID_APCHANREP
+case|:
 comment|/* NB: avoid debugging complaints */
 break|break;
 case|case
@@ -2793,6 +2799,10 @@ name|meshconf
 operator|=
 name|frm
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_ELEMID_MESHEXTCAP
+case|:
 break|break;
 endif|#
 directive|endif

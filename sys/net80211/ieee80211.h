@@ -3587,6 +3587,10 @@ name|IEEE80211_ELEMID_COUNTRY
 init|=
 literal|7
 block|,
+name|IEEE80211_ELEMID_BSSLOAD
+init|=
+literal|11
+block|,
 name|IEEE80211_ELEMID_CHALLENGE
 init|=
 literal|16
@@ -3651,6 +3655,10 @@ block|,
 name|IEEE80211_ELEMID_XRATES
 init|=
 literal|50
+block|,
+name|IEEE80211_ELEMID_APCHANREP
+init|=
+literal|51
 block|,
 name|IEEE80211_ELEMID_HTINFO
 init|=
@@ -3717,6 +3725,10 @@ init|=
 literal|126
 block|,
 comment|/* 127 Extended Capabilities */
+name|IEEE80211_ELEMID_MESHEXTCAP
+init|=
+literal|127
+block|,
 comment|/* 128-129 reserved */
 name|IEEE80211_ELEMID_MESHPREQ
 init|=
@@ -3846,6 +3858,456 @@ name|IEEE80211_COUNTRY_MAX_SIZE
 define|\
 value|(sizeof(struct ieee80211_country_ie) + 3*(IEEE80211_COUNTRY_MAX_BANDS-1))
 end_define
+
+begin_struct
+struct|struct
+name|ieee80211_bss_load_ie
+block|{
+name|uint8_t
+name|ie
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint16_t
+name|sta_count
+decl_stmt|;
+comment|/* station count */
+name|uint8_t
+name|chan_load
+decl_stmt|;
+comment|/* channel utilization */
+name|uint8_t
+name|aac
+decl_stmt|;
+comment|/* available admission capacity */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_ap_chan_report_ie
+block|{
+name|uint8_t
+name|ie
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|class
+decl_stmt|;
+comment|/* operating class */
+comment|/* Annex E, E.1 Country information and operating classes */
+name|uint8_t
+name|chan_list
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_CMS
+value|(1ULL<<  0)
+end_define
+
+begin_comment
+comment|/* 20/40 BSS coexistence management support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RSVD_1
+value|(1ULL<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_ECS
+value|(1ULL<<  2)
+end_define
+
+begin_comment
+comment|/* extended channel switching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RSVD_3
+value|(1ULL<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_PSMP_CAP
+value|(1ULL<<  4)
+end_define
+
+begin_comment
+comment|/* PSMP capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RSVD_5
+value|(1ULL<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_S_PSMP_SUPP
+value|(1ULL<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_EVENT
+value|(1ULL<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_DIAGNOSTICS
+value|(1ULL<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_MCAST_DIAG
+value|(1ULL<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_LOC_TRACKING
+value|(1ULL<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_FMS
+value|(1ULL<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_PROXY_ARP
+value|(1ULL<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_CIR
+value|(1ULL<< 13)
+end_define
+
+begin_comment
+comment|/* collocated interference reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_CIVIC_LOC
+value|(1ULL<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_GEOSPATIAL_LOC
+value|(1ULL<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TFS
+value|(1ULL<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_WNM_SLEEPMODE
+value|(1ULL<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TIM_BROADCAST
+value|(1ULL<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_BSS_TRANSITION
+value|(1ULL<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_QOS_TRAF_CAP
+value|(1ULL<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_AC_STA_COUNT
+value|(1ULL<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_M_BSSID
+value|(1ULL<< 22)
+end_define
+
+begin_comment
+comment|/* multiple BSSID field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TIMING_MEAS
+value|(1ULL<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_CHAN_USAGE
+value|(1ULL<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_SSID_LIST
+value|(1ULL<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_DMS
+value|(1ULL<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_UTC_TSF_OFFSET
+value|(1ULL<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_BUF_STA_SUPP
+value|(1ULL<< 28)
+end_define
+
+begin_comment
+comment|/* TDLS peer U-APSP buffer STA support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_PPSM_SUPP
+value|(1ULL<< 29)
+end_define
+
+begin_comment
+comment|/* TDLS peer PSM support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_CH_SW
+value|(1ULL<< 30)
+end_define
+
+begin_comment
+comment|/* TDLS channel switching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_INTERWORKING
+value|(1ULL<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_QOSMAP
+value|(1ULL<< 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_EBR
+value|(1ULL<< 33)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_SSPN_IF
+value|(1ULL<< 34)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RSVD_35
+value|(1ULL<< 35)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_MSGCF_CAP
+value|(1ULL<< 36)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_SUPP
+value|(1ULL<< 37)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_PROHIB
+value|(1ULL<< 38)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_TLDS_CH_SW_PROHIB
+value|(1ULL<< 39)
+end_define
+
+begin_comment
+comment|/* TDLS channel switching prohibited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RUF
+value|(1ULL<< 40)
+end_define
+
+begin_comment
+comment|/* reject unadmitted frame */
+end_comment
+
+begin_comment
+comment|/* service interval granularity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_SIG
+define|\
+value|((1ULL<< 41) | (1ULL<< 42) | (1ULL<< 43))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_ID_LOC
+value|(1ULL<< 44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_U_APSD_COEX
+value|(1ULL<< 45)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_WNM_NOTIFICATION
+value|(1ULL<< 46)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_RSVD_47
+value|(1ULL<< 47)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_EXTCAP_SSID
+value|(1ULL<< 48)
+end_define
+
+begin_comment
+comment|/* UTF-8 SSID */
+end_comment
+
+begin_comment
+comment|/* bits 49-n are reserved */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_extcap_ie
+block|{
+name|uint8_t
+name|ie
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * 802.11h Quiet Time Element.  */
