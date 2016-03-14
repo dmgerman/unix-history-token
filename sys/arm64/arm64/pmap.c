@@ -3143,14 +3143,6 @@ decl_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-name|sva
-operator|>>=
-name|PAGE_SHIFT
-expr_stmt|;
-name|eva
-operator|>>=
-name|PAGE_SHIFT
-expr_stmt|;
 asm|__asm __volatile("dsb	sy");
 for|for
 control|(
@@ -3163,7 +3155,8 @@ operator|<
 name|eva
 condition|;
 name|addr
-operator|++
+operator|+=
+name|PAGE_SIZE
 control|)
 block|{
 asm|__asm __volatile(
@@ -3173,6 +3166,8 @@ operator|:
 literal|"r"
 operator|(
 name|addr
+operator|>>
+name|PAGE_SHIFT
 operator|)
 block|)
 empty_stmt|;
