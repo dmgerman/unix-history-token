@@ -343,24 +343,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|packet_backup_state
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|packet_restore_state
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|packet_set_connection
 parameter_list|(
 name|int
@@ -882,15 +864,6 @@ name|nbytes
 parameter_list|)
 define|\
 value|ssh_packet_send_ignore(active_state, (nbytes))
-end_define
-
-begin_define
-define|#
-directive|define
-name|packet_need_rekeying
-parameter_list|()
-define|\
-value|ssh_packet_need_rekeying(active_state)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server-main.c,v 1.4 2009/02/21 19:32:04 tobias Exp $ */
+comment|/* $OpenBSD: sftp-server-main.c,v 1.5 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -61,6 +61,12 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
+
 begin_function
 name|void
 name|cleanup_exit
@@ -95,6 +101,10 @@ name|passwd
 modifier|*
 name|user_pw
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()

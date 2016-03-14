@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.h,v 1.4 2015/01/14 15:02:39 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf.h,v 1.6 2015/12/10 07:01:35 mmcc Exp $	*/
 end_comment
 
 begin_comment
@@ -386,7 +386,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns a read-only pointer to the start of the the data in buf  */
+comment|/*  * Returns a read-only pointer to the start of the data in buf  */
 end_comment
 
 begin_function_decl
@@ -405,7 +405,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns a mutable pointer to the start of the the data in buf, or  * NULL if the buffer is read-only.  */
+comment|/*  * Returns a mutable pointer to the start of the data in buf, or  * NULL if the buffer is read-only.  */
 end_comment
 
 begin_function_decl
@@ -1262,7 +1262,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(((u_int64_t)(((u_char *)(p))[0])<< 56) | \ 	 ((u_int64_t)(((u_char *)(p))[1])<< 48) | \ 	 ((u_int64_t)(((u_char *)(p))[2])<< 40) | \ 	 ((u_int64_t)(((u_char *)(p))[3])<< 32) | \ 	 ((u_int64_t)(((u_char *)(p))[4])<< 24) | \ 	 ((u_int64_t)(((u_char *)(p))[5])<< 16) | \ 	 ((u_int64_t)(((u_char *)(p))[6])<< 8) | \ 	  (u_int64_t)(((u_char *)(p))[7]))
+value|(((u_int64_t)(((const u_char *)(p))[0])<< 56) | \ 	 ((u_int64_t)(((const u_char *)(p))[1])<< 48) | \ 	 ((u_int64_t)(((const u_char *)(p))[2])<< 40) | \ 	 ((u_int64_t)(((const u_char *)(p))[3])<< 32) | \ 	 ((u_int64_t)(((const u_char *)(p))[4])<< 24) | \ 	 ((u_int64_t)(((const u_char *)(p))[5])<< 16) | \ 	 ((u_int64_t)(((const u_char *)(p))[6])<< 8) | \ 	  (u_int64_t)(((const u_char *)(p))[7]))
 end_define
 
 begin_define
@@ -1273,7 +1273,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(((u_int32_t)(((u_char *)(p))[0])<< 24) | \ 	 ((u_int32_t)(((u_char *)(p))[1])<< 16) | \ 	 ((u_int32_t)(((u_char *)(p))[2])<< 8) | \ 	  (u_int32_t)(((u_char *)(p))[3]))
+value|(((u_int32_t)(((const u_char *)(p))[0])<< 24) | \ 	 ((u_int32_t)(((const u_char *)(p))[1])<< 16) | \ 	 ((u_int32_t)(((const u_char *)(p))[2])<< 8) | \ 	  (u_int32_t)(((const u_char *)(p))[3]))
 end_define
 
 begin_define
@@ -1284,7 +1284,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(((u_int16_t)(((u_char *)(p))[0])<< 8) | \ 	  (u_int16_t)(((u_char *)(p))[1]))
+value|(((u_int16_t)(((const u_char *)(p))[0])<< 8) | \ 	  (u_int16_t)(((const u_char *)(p))[1]))
 end_define
 
 begin_define
@@ -1297,7 +1297,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do { \ 		((u_char *)(p))[0] = (((u_int64_t)(v))>> 56)& 0xff; \ 		((u_char *)(p))[1] = (((u_int64_t)(v))>> 48)& 0xff; \ 		((u_char *)(p))[2] = (((u_int64_t)(v))>> 40)& 0xff; \ 		((u_char *)(p))[3] = (((u_int64_t)(v))>> 32)& 0xff; \ 		((u_char *)(p))[4] = (((u_int64_t)(v))>> 24)& 0xff; \ 		((u_char *)(p))[5] = (((u_int64_t)(v))>> 16)& 0xff; \ 		((u_char *)(p))[6] = (((u_int64_t)(v))>> 8)& 0xff; \ 		((u_char *)(p))[7] = ((u_int64_t)(v))& 0xff; \ 	} while (0)
+value|do { \ 		const u_int64_t __v = (v); \ 		((u_char *)(p))[0] = (__v>> 56)& 0xff; \ 		((u_char *)(p))[1] = (__v>> 48)& 0xff; \ 		((u_char *)(p))[2] = (__v>> 40)& 0xff; \ 		((u_char *)(p))[3] = (__v>> 32)& 0xff; \ 		((u_char *)(p))[4] = (__v>> 24)& 0xff; \ 		((u_char *)(p))[5] = (__v>> 16)& 0xff; \ 		((u_char *)(p))[6] = (__v>> 8)& 0xff; \ 		((u_char *)(p))[7] = __v& 0xff; \ 	} while (0)
 end_define
 
 begin_define
@@ -1310,7 +1310,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do { \ 		((u_char *)(p))[0] = (((u_int64_t)(v))>> 24)& 0xff; \ 		((u_char *)(p))[1] = (((u_int64_t)(v))>> 16)& 0xff; \ 		((u_char *)(p))[2] = (((u_int64_t)(v))>> 8)& 0xff; \ 		((u_char *)(p))[3] = ((u_int64_t)(v))& 0xff; \ 	} while (0)
+value|do { \ 		const u_int32_t __v = (v); \ 		((u_char *)(p))[0] = (__v>> 24)& 0xff; \ 		((u_char *)(p))[1] = (__v>> 16)& 0xff; \ 		((u_char *)(p))[2] = (__v>> 8)& 0xff; \ 		((u_char *)(p))[3] = __v& 0xff; \ 	} while (0)
 end_define
 
 begin_define
@@ -1323,7 +1323,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do { \ 		((u_char *)(p))[0] = (((u_int64_t)(v))>> 8)& 0xff; \ 		((u_char *)(p))[1] = ((u_int64_t)(v))& 0xff; \ 	} while (0)
+value|do { \ 		const u_int16_t __v = (v); \ 		((u_char *)(p))[0] = (__v>> 8)& 0xff; \ 		((u_char *)(p))[1] = __v& 0xff; \ 	} while (0)
 end_define
 
 begin_comment

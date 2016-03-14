@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.h,v 1.81 2015/08/04 05:23:06 djm Exp $ */
+comment|/* $OpenBSD: ssh.h,v 1.83 2015/12/11 03:19:09 djm Exp $ */
 end_comment
 
 begin_comment
@@ -30,6 +30,17 @@ value|22
 end_define
 
 begin_comment
+comment|/*  * Maximum number of certificate files that can be specified  * in configuration files or on the command line.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_MAX_CERTIFICATE_FILES
+value|100
+end_define
+
+begin_comment
 comment|/*  * Maximum number of RSA authentication identity files that can be specified  * in configuration files or on the command line.  */
 end_comment
 
@@ -48,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|SSH_MAX_PUBKEY_BYTES
-value|8192
+value|16384
 end_define
 
 begin_comment

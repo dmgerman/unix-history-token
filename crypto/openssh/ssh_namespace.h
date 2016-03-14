@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "Fssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  # nm libprivatessh.a | LC_ALL=C awk '      /^[0-9a-z]+ [Tt] [A-Za-z_][0-9A-Za-z_]*$/&& $3 !~ /^Fssh_/ {          printf("#define %-39s Fssh_%s\n", $3, $3)      }' | unexpand -a | LC_ALL=C sort -u  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "Fssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  # nm libssh.a | LC_ALL=C awk '      /^[0-9a-z]+ [Tt] [A-Za-z_][0-9A-Za-z_]*$/&& $3 !~ /^Fssh_/ {          printf("#define %-39s Fssh_%s\n", $3, $3)      }' | unexpand -a | LC_ALL=C sort -u  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -43,6 +43,20 @@ define|#
 directive|define
 name|Blowfish_stream2word
 value|Fssh_Blowfish_stream2word
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ssh__compat_glob
+value|Fssh__ssh__compat_glob
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ssh__compat_globfree
+value|Fssh__ssh__compat_globfree
 end_define
 
 begin_define
@@ -2393,13 +2407,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|glob
-value|Fssh_glob
-end_define
-
-begin_define
-define|#
-directive|define
 name|glob0
 value|Fssh_glob0
 end_define
@@ -2423,13 +2430,6 @@ define|#
 directive|define
 name|globextend
 value|Fssh_globextend
-end_define
-
-begin_define
-define|#
-directive|define
-name|globfree
-value|Fssh_globfree
 end_define
 
 begin_define
@@ -2645,6 +2645,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|kex_input_ext_info
+value|Fssh_kex_input_ext_info
+end_define
+
+begin_define
+define|#
+directive|define
 name|kex_input_kexinit
 value|Fssh_kex_input_kexinit
 end_define
@@ -2717,6 +2724,13 @@ define|#
 directive|define
 name|kex_setup
 value|Fssh_kex_setup
+end_define
+
+begin_define
+define|#
+directive|define
+name|kex_start_rekex
+value|Fssh_kex_start_rekex
 end_define
 
 begin_define
@@ -3289,13 +3303,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_backup_state
-value|Fssh_packet_backup_state
-end_define
-
-begin_define
-define|#
-directive|define
 name|packet_close
 value|Fssh_packet_close
 end_define
@@ -3347,13 +3354,6 @@ define|#
 directive|define
 name|packet_read_seqnr
 value|Fssh_packet_read_seqnr
-end_define
-
-begin_define
-define|#
-directive|define
-name|packet_restore_state
-value|Fssh_packet_restore_state
 end_define
 
 begin_define
@@ -3508,6 +3508,34 @@ define|#
 directive|define
 name|plain_key_blob
 value|Fssh_plain_key_blob
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_agent
+value|Fssh_platform_pledge_agent
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_mux
+value|Fssh_platform_pledge_mux
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_pledge_sftp_server
+value|Fssh_platform_pledge_sftp_server
+end_define
+
+begin_define
+define|#
+directive|define
+name|pledge
+value|Fssh_pledge
 end_define
 
 begin_define
@@ -4304,6 +4332,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_malloc_init
+value|Fssh_ssh_malloc_init
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_msg_recv
 value|Fssh_ssh_msg_recv
 end_define
@@ -4334,13 +4369,6 @@ define|#
 directive|define
 name|ssh_output_space
 value|Fssh_ssh_output_space
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_backup_state
-value|Fssh_ssh_packet_backup_state
 end_define
 
 begin_define
@@ -4528,6 +4556,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_packet_is_rekeying
+value|Fssh_ssh_packet_is_rekeying
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_packet_need_rekeying
 value|Fssh_ssh_packet_need_rekeying
 end_define
@@ -4677,13 +4712,6 @@ define|#
 directive|define
 name|ssh_packet_remaining
 value|Fssh_ssh_packet_remaining
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_restore_state
-value|Fssh_ssh_packet_restore_state
 end_define
 
 begin_define
@@ -4873,6 +4901,13 @@ define|#
 directive|define
 name|ssh_remote_ipaddr
 value|Fssh_ssh_remote_ipaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_remote_port
+value|Fssh_ssh_remote_port
 end_define
 
 begin_define
@@ -5496,6 +5531,13 @@ define|#
 directive|define
 name|sshkey_fingerprint_raw
 value|Fssh_sshkey_fingerprint_raw
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshkey_format_cert_validity
+value|Fssh_sshkey_format_cert_validity
 end_define
 
 begin_define

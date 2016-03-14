@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.11 2015/08/20 22:32:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.12 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1306,6 +1306,10 @@ name|char
 modifier|*
 name|__progname
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 name|TAILQ_INIT
 argument_list|(
 operator|&

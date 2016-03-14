@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh_api.c,v 1.4 2015/02/16 22:13:32 djm Exp $ */
+comment|/* $OpenBSD: ssh_api.c,v 1.5 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -227,6 +227,10 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
@@ -263,6 +267,9 @@ name|u_char
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|,
+name|char
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -328,6 +335,10 @@ name|data
 parameter_list|,
 name|u_int
 name|datalen
+parameter_list|,
+name|char
+modifier|*
+name|alg
 parameter_list|,
 name|u_int
 name|compat
@@ -2931,6 +2942,11 @@ parameter_list|,
 name|size_t
 name|dlen
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alg
+parameter_list|,
 name|u_int
 name|compat
 parameter_list|)
@@ -2947,6 +2963,8 @@ argument_list|,
 name|data
 argument_list|,
 name|dlen
+argument_list|,
+name|alg
 argument_list|,
 name|compat
 argument_list|)

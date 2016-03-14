@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.110 2015/07/10 06:21:53 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.113 2016/01/14 16:17:40 markus Exp $ */
 end_comment
 
 begin_comment
@@ -322,6 +322,34 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
+name|int
+name|num_certificate_files
+decl_stmt|;
+comment|/* Number of extra certificates for ssh. */
+name|char
+modifier|*
+name|certificate_files
+index|[
+name|SSH_MAX_CERTIFICATE_FILES
+index|]
+decl_stmt|;
+name|int
+name|certificate_file_userprovided
+index|[
+name|SSH_MAX_CERTIFICATE_FILES
+index|]
+decl_stmt|;
+name|struct
+name|sshkey
+modifier|*
+name|certificates
+index|[
+name|SSH_MAX_CERTIFICATE_FILES
+index|]
+decl_stmt|;
+name|int
+name|add_keys_to_agent
+decl_stmt|;
 comment|/* Local TCP/IP forward requests. */
 name|int
 name|num_local_forwards
@@ -413,9 +441,6 @@ name|permit_local_command
 decl_stmt|;
 name|int
 name|visual_host_key
-decl_stmt|;
-name|int
-name|use_roaming
 decl_stmt|;
 name|int
 name|request_tty
@@ -812,6 +837,22 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|add_certificate_file
+parameter_list|(
+name|Options
 modifier|*
 parameter_list|,
 specifier|const

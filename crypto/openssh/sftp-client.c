@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.120 2015/05/28 04:50:53 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.121 2016/02/11 02:21:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -10511,7 +10511,7 @@ argument_list|,
 name|handle_len
 argument_list|)
 operator|!=
-name|SSH2_FX_OK
+literal|0
 condition|)
 name|status
 operator|=
@@ -10576,9 +10576,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|u_int
-name|status
-decl_stmt|;
 name|DIR
 modifier|*
 name|dirp
@@ -10604,6 +10601,9 @@ name|sb
 decl_stmt|;
 name|Attrib
 name|a
+decl_stmt|,
+modifier|*
+name|dirattrib
 decl_stmt|;
 if|if
 condition|(
@@ -10736,8 +10736,9 @@ operator|&=
 operator|~
 name|SSH2_FILEXFER_ATTR_ACMODTIME
 expr_stmt|;
-name|status
-operator|=
+comment|/* 	 * sftp lacks a portable status value to match errno EEXIST, 	 * so if we get a failure back then we must check whether 	 * the path already existed and is a directory. 	 */
+if|if
+condition|(
 name|do_mkdir
 argument_list|(
 name|conn
@@ -10749,27 +10750,15 @@ name|a
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-comment|/* 	 * we lack a portable status for errno EEXIST, 	 * so if we get a SSH2_FX_FAILURE back we must check 	 * if it was created successfully. 	 */
-if|if
-condition|(
-name|status
 operator|!=
-name|SSH2_FX_OK
+literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|status
-operator|!=
-name|SSH2_FX_FAILURE
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|(
+name|dirattrib
+operator|=
 name|do_stat
 argument_list|(
 name|conn
@@ -10778,6 +10767,7 @@ name|dst
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -10785,6 +10775,29 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|dirattrib
+operator|->
+name|perm
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"\"%s\" exists but is not a directory"
+argument_list|,
+name|dst
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 if|if
 condition|(

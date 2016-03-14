@@ -55,6 +55,7 @@ file|<errno.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

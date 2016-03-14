@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.204 2015/07/08 20:24:02 markus Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.212 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1999,6 +1999,56 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+specifier|static
+name|char
+modifier|*
+name|agent_decode_alg
+parameter_list|(
+name|struct
+name|sshkey
+modifier|*
+name|key
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|)
+block|{
+if|if
+condition|(
+name|key
+operator|->
+name|type
+operator|==
+name|KEY_RSA
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SSH_AGENT_RSA_SHA2_256
+condition|)
+return|return
+literal|"rsa-sha2-256"
+return|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|SSH_AGENT_RSA_SHA2_512
+condition|)
+return|return
+literal|"rsa-sha2-512"
+return|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* ssh2 only */
 end_comment
@@ -2187,7 +2237,7 @@ name|__func__
 argument_list|,
 name|ssh_err
 argument_list|(
-name|ok
+name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2273,6 +2323,13 @@ name|data
 argument_list|,
 name|dlen
 argument_list|,
+name|agent_decode_alg
+argument_list|(
+name|key
+argument_list|,
+name|flags
+argument_list|)
+argument_list|,
 name|compat
 argument_list|)
 operator|)
@@ -2288,7 +2345,7 @@ name|__func__
 argument_list|,
 name|ssh_err
 argument_list|(
-name|ok
+name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6672,6 +6729,10 @@ decl_stmt|;
 name|mode_t
 name|prev_mask
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()
@@ -7314,6 +7375,11 @@ operator|)
 name|parent_pid
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 goto|goto
 name|skip
 goto|;
@@ -7713,6 +7779,33 @@ expr_stmt|;
 name|nalloc
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|pledge
+argument_list|(
+literal|"stdio cpath unix id proc exec"
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: pledge: %s"
+argument_list|,
+name|__progname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|platform_pledge_agent
+argument_list|()
 expr_stmt|;
 while|while
 condition|(

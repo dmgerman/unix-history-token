@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.347 2015/07/01 02:26:31 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.349 2016/02/05 13:28:19 naddy Exp $ */
 end_comment
 
 begin_comment
@@ -2744,7 +2744,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"  #%d %.300s (t%d r%d i%d/%d o%d/%d fd %d/%d cc %d)\r\n"
+literal|"  #%d %.300s (t%d r%d i%u/%d o%u/%d fd %d/%d cc %d)\r\n"
 argument_list|,
 name|c
 operator|->
@@ -9713,19 +9713,33 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 literal|0
+operator|&&
+operator|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|)
 condition|)
-block|{
+return|return
+name|buffer_len
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|)
+return|;
 if|if
 condition|(
-name|errno
-operator|!=
-name|EINTR
-operator|&&
-name|errno
-operator|!=
-name|EAGAIN
+name|len
+operator|<=
+literal|0
 condition|)
 block|{
 name|debug2
@@ -9751,7 +9765,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 block|}
 else|else
 name|buffer_append

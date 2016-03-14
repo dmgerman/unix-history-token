@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssherr.c,v 1.4 2015/02/16 22:13:32 djm Exp $	*/
+comment|/*	$OpenBSD: ssherr.c,v 1.5 2015/09/13 14:39:16 tim Exp $	*/
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ case|case
 name|SSH_ERR_PASSPHRASE_TOO_SHORT
 case|:
 return|return
-literal|"passphrase is too short (minimum four characters)"
+literal|"passphrase is too short (minimum five characters)"
 return|;
 case|case
 name|SSH_ERR_FILE_CHANGED

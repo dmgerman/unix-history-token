@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.73 2015/07/30 00:01:34 djm Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.76 2016/02/08 10:57:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -191,13 +191,6 @@ define|#
 directive|define
 name|KEX_DHGEX_SHA256
 value|"diffie-hellman-group-exchange-sha256"
-end_define
-
-begin_define
-define|#
-directive|define
-name|KEX_RESUME
-value|"resume@appgate.com"
 end_define
 
 begin_define
@@ -440,6 +433,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|char
+modifier|*
+name|hostkey_alg
+decl_stmt|;
 name|int
 name|hostkey_type
 decl_stmt|;
@@ -450,7 +447,10 @@ name|u_int
 name|kex_type
 decl_stmt|;
 name|int
-name|roaming
+name|rsa_sha2
+decl_stmt|;
+name|int
+name|ext_info_c
 decl_stmt|;
 name|struct
 name|sshbuf
@@ -578,6 +578,10 @@ name|u_char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -827,6 +831,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kex_input_ext_info
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kex_derive_keys
 parameter_list|(
 name|struct
@@ -869,6 +887,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|kex_send_newkeys
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kex_start_rekex
 parameter_list|(
 name|struct
 name|ssh
