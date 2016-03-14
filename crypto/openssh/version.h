@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_FREEBSD
-value|"FreeBSD-20140420"
+value|"FreeBSD-20160314"
 end_define
 
 begin_define
