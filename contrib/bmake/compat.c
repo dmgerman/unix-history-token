@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.104 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.104 2016/02/18 18:29:14 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.104 2016/02/18 18:29:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -282,10 +282,6 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -509,9 +505,7 @@ name|cmd
 argument_list|,
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/*      * brk_string will return an argv with a NULL in av[0], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
@@ -1065,19 +1059,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|mav
-condition|)
 name|free
 argument_list|(
 name|mav
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
 name|free
 argument_list|(
 name|bp
@@ -1636,10 +1622,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -2029,10 +2011,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1

@@ -2705,8 +2705,12 @@ name|dev
 operator|->
 name|dev
 argument_list|,
-literal|"taking over the fictitious range 0x%lx-0x%lx\n"
+literal|"taking over the fictitious range 0x%jx-0x%jx\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|dev_priv
 operator|->
 name|mm
@@ -2714,7 +2718,12 @@ operator|.
 name|gtt_base_addr
 operator|+
 name|start
+argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|dev_priv
 operator|->
 name|mm
@@ -2728,6 +2737,7 @@ operator|->
 name|mm
 operator|.
 name|mappable_gtt_total
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_phys_fictitious_reg_range

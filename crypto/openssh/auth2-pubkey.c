@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.53 2015/06/15 18:44:22 jsing Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.55 2016/01/27 00:53:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -316,6 +316,11 @@ name|pkalg
 decl_stmt|,
 modifier|*
 name|userstyle
+decl_stmt|,
+modifier|*
+name|fp
+init|=
+name|NULL
 decl_stmt|;
 name|u_char
 modifier|*
@@ -351,7 +356,9 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"userauth_pubkey: disabled because of invalid user"
+literal|"%s: disabled because of invalid user"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -372,7 +379,9 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"userauth_pubkey: SSH_BUG_PKAUTH"
+literal|"%s: SSH_BUG_PKAUTH"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* no explicit pkalg given */
@@ -455,7 +464,9 @@ block|{
 comment|/* this is perfectly legal */
 name|logit
 argument_list|(
-literal|"userauth_pubkey: unsupported public key algorithm: %s"
+literal|"%s: unsupported public key algorithm: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|pkalg
 argument_list|)
@@ -482,7 +493,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"userauth_pubkey: cannot decode key: %s"
+literal|"%s: cannot decode key: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|pkalg
 argument_list|)
@@ -502,8 +515,10 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"userauth_pubkey: type mismatch for decoded key "
+literal|"%s: type mismatch for decoded key "
 literal|"(received %d, expected %d)"
+argument_list|,
+name|__func__
 argument_list|,
 name|key
 operator|->
@@ -546,6 +561,19 @@ goto|goto
 name|done
 goto|;
 block|}
+name|fp
+operator|=
+name|sshkey_fingerprint
+argument_list|(
+name|key
+argument_list|,
+name|options
+operator|.
+name|fingerprint_hash
+argument_list|,
+name|SSH_FP_DEFAULT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|auth2_userkey_already_used
@@ -610,6 +638,20 @@ condition|(
 name|have_sig
 condition|)
 block|{
+name|debug3
+argument_list|(
+literal|"%s: have signature for %s %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 name|sig
 operator|=
 name|packet_get_string
@@ -881,7 +923,16 @@ else|else
 block|{
 name|debug
 argument_list|(
-literal|"test whether pkalg/pkblob are acceptable"
+literal|"%s: test whether pkalg/pkblob are acceptable for %s %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 name|packet_check_eom
@@ -952,7 +1003,9 @@ name|done
 label|:
 name|debug2
 argument_list|(
-literal|"userauth_pubkey: authenticated %d pkalg %s"
+literal|"%s: authenticated %d pkalg %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|authenticated
 argument_list|,
@@ -978,6 +1031,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|pkblob
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4355,7 +4413,7 @@ continue|continue;
 block|}
 name|verbose
 argument_list|(
-literal|"Accepted certificate ID \"%s\" "
+literal|"Accepted certificate ID \"%s\" (serial %llu) "
 literal|"signed by %s CA %s via %s"
 argument_list|,
 name|key
@@ -4363,6 +4421,17 @@ operator|->
 name|cert
 operator|->
 name|key_id
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|key
+operator|->
+name|cert
+operator|->
+name|serial
 argument_list|,
 name|key_type
 argument_list|(
@@ -4767,13 +4836,25 @@ name|out
 goto|;
 name|verbose
 argument_list|(
-literal|"Accepted certificate ID \"%s\" signed by %s CA %s via %s"
+literal|"Accepted certificate ID \"%s\" (serial %llu) signed by "
+literal|"%s CA %s via %s"
 argument_list|,
 name|key
 operator|->
 name|cert
 operator|->
 name|key_id
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|key
+operator|->
+name|cert
+operator|->
+name|serial
 argument_list|,
 name|key_type
 argument_list|(

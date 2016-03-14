@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexecdhs.c,v 1.14 2015/01/26 06:10:03 djm Exp $ */
+comment|/* $OpenBSD: kexecdhs.c,v 1.15 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -788,6 +788,10 @@ argument_list|,
 name|hash
 argument_list|,
 name|hashlen
+argument_list|,
+name|kex
+operator|->
+name|hostkey_alg
 argument_list|,
 name|ssh
 operator|->

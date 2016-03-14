@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.98 2015/07/03 03:43:18 djm Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.100 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2011,6 +2011,75 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* encode signature algoritm in flag bits, so we can keep the msg format */
+end_comment
+
+begin_function
+specifier|static
+name|u_int
+name|agent_encode_alg
+parameter_list|(
+name|struct
+name|sshkey
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|alg
+operator|!=
+name|NULL
+operator|&&
+name|key
+operator|->
+name|type
+operator|==
+name|KEY_RSA
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|alg
+argument_list|,
+literal|"rsa-sha2-256"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|SSH_AGENT_RSA_SHA2_256
+return|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|alg
+argument_list|,
+literal|"rsa-sha2-512"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|SSH_AGENT_RSA_SHA2_512
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* ask agent to sign data, returns err.h code on error, 0 on success */
 end_comment
 
@@ -2042,6 +2111,11 @@ name|data
 parameter_list|,
 name|size_t
 name|datalen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alg
 parameter_list|,
 name|u_int
 name|compat
@@ -2144,6 +2218,15 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|flags
+operator||=
+name|agent_encode_alg
+argument_list|(
+name|key
+argument_list|,
+name|alg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2218,9 +2301,9 @@ name|msg
 argument_list|,
 name|msg
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 goto|goto
 name|out

@@ -2280,7 +2280,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr));	\ })
+value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr));	\ })
 end_define
 
 begin_comment

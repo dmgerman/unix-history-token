@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.96 2015/09/21 21:50:16 pooka Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.98 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -113,6 +119,24 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_CLOEXEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FD_CLOEXEC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2068,6 +2092,27 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VARF_UNDEFERR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARF_WANTRES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARF_ASSIGN
+value|4
+end_define
 
 begin_ifdef
 ifdef|#

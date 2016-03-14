@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.107 2015/08/20 22:32:42 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.109 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -8882,6 +8882,10 @@ name|char
 modifier|*
 name|__progname
 decl_stmt|;
+name|ssh_malloc_init
+argument_list|()
+expr_stmt|;
+comment|/* must be called before any mallocs */
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -9311,6 +9315,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(HAVE_PRCTL)&& defined(PR_SET_DUMPABLE) */
+comment|/* Drop any fine-grained privileges we don't need */
+name|platform_pledge_sftp_server
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9476,8 +9484,10 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|set_size
+name|rset
 operator|=
+name|xcalloc
+argument_list|(
 name|howmany
 argument_list|(
 name|max
@@ -9486,24 +9496,30 @@ literal|1
 argument_list|,
 name|NFDBITS
 argument_list|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|fd_mask
 argument_list|)
-expr_stmt|;
-name|rset
-operator|=
-name|xmalloc
-argument_list|(
-name|set_size
 argument_list|)
 expr_stmt|;
 name|wset
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
-name|set_size
+name|howmany
+argument_list|(
+name|max
+operator|+
+literal|1
+argument_list|,
+name|NFDBITS
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9537,6 +9553,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|set_size
+operator|=
+name|howmany
+argument_list|(
+name|max
+operator|+
+literal|1
+argument_list|,
+name|NFDBITS
+argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;

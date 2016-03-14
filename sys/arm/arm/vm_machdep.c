@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -637,7 +643,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__ARMEB__
-comment|/* 	 * __syscall returns an off_t while most other syscalls return an 	 * int. As an off_t is 64-bits and an int is 32-bits we need to 	 * place the returned data into r1. As the lseek and frerebsd6_lseek 	 * syscalls also return an off_t they do not need this fixup. 	 */
+comment|/* 	 * __syscall returns an off_t while most other syscalls return an 	 * int. As an off_t is 64-bits and an int is 32-bits we need to 	 * place the returned data into r1. As the lseek and freebsd6_lseek 	 * syscalls also return an off_t they do not need this fixup. 	 */
 name|call
 operator|=
 name|frame
@@ -691,10 +697,23 @@ expr_stmt|;
 name|fixup
 operator|=
 operator|(
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SYS_freebsd6_lseek
+argument_list|)
 name|code
 operator|!=
 name|SYS_freebsd6_lseek
 operator|&&
+endif|#
+directive|endif
 name|code
 operator|!=
 name|SYS_lseek

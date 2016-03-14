@@ -1936,7 +1936,7 @@ name|optc
 operator|=
 name|nextopt
 argument_list|(
-literal|"HSatfdsmcnuvlbpwk"
+literal|"HSatfdsmcnuvlbpwko"
 argument_list|)
 operator|)
 operator|!=

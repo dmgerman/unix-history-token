@@ -275,14 +275,33 @@ name|IRQ_MASK
 value|0x30
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MSI_IRQ
+value|0x3ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_IRQ
+value|0x3ff
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* !SOC_MV_DISCOVERY&& !SOC_MV_LOKIPLUS */
-end_comment
 
 begin_define
 define|#

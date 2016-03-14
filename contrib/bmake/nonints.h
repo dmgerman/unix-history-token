@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nonints.h,v 1.69 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: nonints.h,v 1.72 2016/02/18 20:25:08 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -466,6 +466,19 @@ modifier|*
 name|getTmpdir
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
+name|s2Boolean
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1175,9 +1188,7 @@ parameter_list|,
 name|GNode
 modifier|*
 parameter_list|,
-name|Boolean
-parameter_list|,
-name|Boolean
+name|int
 parameter_list|,
 name|int
 modifier|*
@@ -1205,9 +1216,7 @@ parameter_list|,
 name|GNode
 modifier|*
 parameter_list|,
-name|Boolean
-parameter_list|,
-name|Boolean
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

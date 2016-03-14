@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -144,12 +144,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_if
@@ -1643,7 +1637,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1660,7 +1654,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 comment|/*      * We mark the input side of the pipe non-blocking; we poll(2) the      * pipe when we're waiting for a job token, but we might lose the      * race for the token when a new one becomes available, so the read       * from the pipe should not block.      */
@@ -2327,9 +2321,7 @@ name|job
 operator|->
 name|node
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|cmdTemplate
@@ -2945,10 +2937,6 @@ argument_list|(
 name|cmdStart
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|escCmd
-condition|)
 name|free
 argument_list|(
 name|escCmd
@@ -3064,9 +3052,7 @@ operator|*
 operator|)
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4225,10 +4211,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -5544,7 +5526,7 @@ argument_list|)
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Send the commands to the command file, flush all its buffers then 	 * rewind and remove the thing. 	 */
@@ -7501,9 +7483,7 @@ literal|"}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -7998,10 +7978,6 @@ name|line
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|shellArgv
-condition|)
 name|free
 argument_list|(
 name|UNCONST
@@ -9162,10 +9138,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|CLEANUP
-if|if
-condition|(
-name|shellArgv
-condition|)
 name|free
 argument_list|(
 name|shellArgv
@@ -9837,7 +9809,7 @@ name|jp_0
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9849,7 +9821,7 @@ name|jp_1
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 return|return;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.47 2015/07/10 06:21:53 markus Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.50 2016/02/09 05:30:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_PK_ALG
 define|\
-value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-ed25519-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-ed25519," \ 	"ssh-rsa," \ 	"ssh-dss"
+value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-ed25519-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-ed25519," \ 	"rsa-sha2-512," \ 	"rsa-sha2-256," \ 	"ssh-rsa," \ 	"ssh-dss"
 end_define
 
 begin_comment
@@ -261,14 +261,14 @@ define|#
 directive|define
 name|KEX_SERVER_ENCRYPT
 define|\
-value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr" \ 	AESGCM_CIPHER_MODES
+value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr" \ 	AESGCM_CIPHER_MODES \ 	",aes128-cbc,aes192-cbc,aes256-cbc"
 end_define
 
 begin_define
 define|#
 directive|define
 name|KEX_CLIENT_ENCRYPT
-value|KEX_SERVER_ENCRYPT "," \ 	"arcfour256,arcfour128," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
+value|KEX_SERVER_ENCRYPT "," \ 	"3des-cbc"
 end_define
 
 begin_define
@@ -283,13 +283,17 @@ begin_define
 define|#
 directive|define
 name|KEX_CLIENT_MAC
-value|KEX_SERVER_MAC "," \ 	"hmac-md5-etm@openssh.com," \ 	"hmac-ripemd160-etm@openssh.com," \ 	"hmac-sha1-96-etm@openssh.com," \ 	"hmac-md5-96-etm@openssh.com," \ 	"hmac-md5," \ 	"hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96," \ 	"hmac-md5-96"
+value|KEX_SERVER_MAC
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 begin_define
 define|#

@@ -1241,6 +1241,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_WIN_USB3_CTRL
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x8 * (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_USB3_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x8 * (n) + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_USB3_MAX
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_WIN_ETH_BASE
 parameter_list|(
 name|n

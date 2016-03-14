@@ -8,7 +8,7 @@ comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2016 Pedro Giffuni.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -97,21 +97,15 @@ name|drp
 operator|->
 name|dr_bitmap
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+name|n
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ulong_t
 argument_list|)
-operator|*
-name|n
 argument_list|)
-expr_stmt|;
-name|drp
-operator|->
-name|dr_size
-operator|=
-name|nregs
 expr_stmt|;
 if|if
 condition|(
@@ -133,19 +127,11 @@ name|NULL
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
 name|drp
 operator|->
-name|dr_bitmap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ulong_t
-argument_list|)
-operator|*
-name|n
-argument_list|)
+name|dr_size
+operator|=
+name|nregs
 expr_stmt|;
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.41 2015/11/30 23:37:56 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.53 2016/03/07 21:45:43 christos Exp $ */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Implement 'meta' mode.  * Adapted from John Birrell's patches to F
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009-2010, Juniper Networks, Inc.  * Portions Copyright (c) 2009, John Birrell.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions   * are met:   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.    *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2009-2016, Juniper Networks, Inc.  * Portions Copyright (c) 2009, John Birrell.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions   * are met:   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.    *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   */
 end_comment
 
 begin_if
@@ -47,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_ifdef
@@ -204,6 +198,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|metaBailiwickStr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string storage for the list */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|Lst
 name|metaIgnorePaths
 decl_stmt|;
@@ -211,6 +217,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* paths we deliberately ignore */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|metaIgnorePathsStr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string storage for the list */
 end_comment
 
 begin_ifndef
@@ -589,7 +607,7 @@ name|mon_fd
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 operator|(
@@ -603,7 +621,7 @@ name|filemon_fd
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1273,13 +1291,6 @@ name|i
 operator|--
 control|)
 block|{
-if|if
-condition|(
-name|p
-index|[
-name|i
-index|]
-condition|)
 name|free
 argument_list|(
 name|p
@@ -1410,9 +1421,7 @@ name|cmd
 argument_list|,
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -1502,10 +1511,6 @@ break|break;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|mp
-condition|)
 name|free
 argument_list|(
 name|mp
@@ -1593,9 +1598,7 @@ name|mfp
 operator|->
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1610,10 +1613,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cp
-condition|)
 name|free
 argument_list|(
 name|cp
@@ -1980,9 +1979,7 @@ literal|"}"
 argument_list|,
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -2038,20 +2035,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-name|makeDependfile
-argument_list|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
 if|if
 condition|(
 operator|!
@@ -2289,13 +2272,6 @@ name|i
 operator|--
 control|)
 block|{
-if|if
-condition|(
-name|p
-index|[
-name|i
-index|]
-condition|)
 name|free
 argument_list|(
 name|p
@@ -2625,7 +2601,7 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|cp
+name|metaBailiwickStr
 operator|=
 name|Var_Subst
 argument_list|(
@@ -2635,21 +2611,19 @@ literal|"${.MAKE.META.BAILIWICK:O:u:tA}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|metaBailiwickStr
 condition|)
 block|{
 name|str2Lst_Append
 argument_list|(
 name|metaBailiwick
 argument_list|,
-name|cp
+name|metaBailiwickStr
 argument_list|,
 name|NULL
 argument_list|)
@@ -2672,7 +2646,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-name|cp
+name|metaIgnorePathsStr
 operator|=
 name|Var_Subst
 argument_list|(
@@ -2684,21 +2658,19 @@ literal|":O:u:tA}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|metaIgnorePathsStr
 condition|)
 block|{
 name|str2Lst_Append
 argument_list|(
 name|metaIgnorePaths
 argument_list|,
-name|cp
+name|metaIgnorePathsStr
 argument_list|,
 name|NULL
 argument_list|)
@@ -2964,9 +2936,6 @@ name|job
 operator|->
 name|bm
 expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 operator|!
@@ -2978,6 +2947,9 @@ name|job
 operator|->
 name|node
 expr_stmt|;
+block|}
+else|else
+block|{
 name|pbm
 operator|=
 operator|&
@@ -3065,8 +3037,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pbm
-operator|&&
 name|pbm
 operator|->
 name|meta_fname
@@ -3189,9 +3159,7 @@ literal|"}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -3418,6 +3386,40 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|meta_finish
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|Lst_Destroy
+argument_list|(
+name|metaBailiwick
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|metaBailiwickStr
+argument_list|)
+expr_stmt|;
+name|Lst_Destroy
+argument_list|(
+name|metaIgnorePaths
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|metaIgnorePathsStr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4448,10 +4450,6 @@ name|latestdir
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tp
-condition|)
 name|free
 argument_list|(
 name|tp
@@ -4487,10 +4485,6 @@ name|lcwd
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tp
-condition|)
 name|free
 argument_list|(
 name|tp
@@ -5791,9 +5785,9 @@ name|cmd
 argument_list|,
 name|gn
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
+operator||
+name|VARF_UNDEFERR
 argument_list|)
 expr_stmt|;
 if|if
@@ -6122,17 +6116,6 @@ name|oodate
 operator|=
 name|TRUE
 expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-name|missingFiles
-argument_list|,
-operator|(
-name|FreeProc
-operator|*
-operator|)
-name|free
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -6170,6 +6153,17 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
+name|Lst_Destroy
+argument_list|(
+name|missingFiles
+argument_list|,
+operator|(
+name|FreeProc
+operator|*
+operator|)
+name|free
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oodate
@@ -6204,10 +6198,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cp
-condition|)
 name|free
 argument_list|(
 name|cp
@@ -6317,7 +6307,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6332,7 +6322,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}

@@ -15419,6 +15419,12 @@ return|return
 literal|" IBSSPARMS"
 return|;
 case|case
+name|IEEE80211_ELEMID_BSSLOAD
+case|:
+return|return
+literal|" BSSLOAD"
+return|;
+case|case
 name|IEEE80211_ELEMID_CHALLENGE
 case|:
 return|return
@@ -15483,6 +15489,12 @@ name|IEEE80211_ELEMID_IBSSDFS
 case|:
 return|return
 literal|" IBSSDFS"
+return|;
+case|case
+name|IEEE80211_ELEMID_APCHANREP
+case|:
+return|return
+literal|" APCHANREP"
 return|;
 case|case
 name|IEEE80211_ELEMID_TPC

@@ -388,35 +388,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Limits and constants  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTOFS_NAMELEN
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUTOFS_FSNAMELEN
-value|16
-end_define
-
-begin_comment
-comment|/* equal to MFSNAMELEN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTOFS_DELEN
-value|(8 + AUTOFS_NAMELEN)
-end_define
-
 begin_function_decl
 name|int
 name|autofs_init

@@ -2532,14 +2532,6 @@ name|cn
 operator|->
 name|cn_pnbuf
 expr_stmt|;
-name|cn
-operator|->
-name|cn_consume
-operator|=
-name|cnp
-operator|->
-name|cn_consume
-expr_stmt|;
 if|if
 condition|(
 name|nameiop
@@ -4299,12 +4291,6 @@ name|cn
 operator|.
 name|cn_pnbuf
 expr_stmt|;
-name|cn
-operator|.
-name|cn_consume
-operator|=
-literal|0
-expr_stmt|;
 name|vref
 argument_list|(
 name|udvp
@@ -5709,12 +5695,6 @@ operator|.
 name|cn_cred
 operator|=
 name|cred
-expr_stmt|;
-name|cn
-operator|.
-name|cn_consume
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 			 * check entry in lower. 			 * Sometimes, readdir function returns 			 * wrong entry. 			 */
 name|lookuperr

@@ -887,6 +887,24 @@ operator|->
 name|obj
 argument_list|)
 expr_stmt|;
+comment|/* When default context is created and switched to, base object refcount 	 * will be 2 (+1 from object creation and +1 from do_switch()). 	 * i915_gem_context_fini() will be called after gpu_idle() has switched 	 * to default context. So we need to unreference the base object once 	 * to offset the do_switch part, so that i915_gem_context_unreference() 	 * can then free the base object correctly. */
+name|drm_gem_object_unreference
+argument_list|(
+operator|&
+name|dev_priv
+operator|->
+name|ring
+index|[
+name|RCS
+index|]
+operator|.
+name|default_context
+operator|->
+name|obj
+operator|->
+name|base
+argument_list|)
+expr_stmt|;
 name|do_destroy
 argument_list|(
 name|dev_priv

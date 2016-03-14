@@ -1481,6 +1481,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|pci_vtnet_netmap_writev
 parameter_list|(
@@ -1573,7 +1574,7 @@ name|r
 operator|==
 name|nmd
 operator|->
-name|cur_rx_ring
+name|cur_tx_ring
 condition|)
 break|break;
 continue|continue;
@@ -1618,6 +1619,20 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|len
+operator|+
+name|iov
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+operator|>
+literal|2048
+condition|)
+break|break;
 name|memcpy
 argument_list|(
 operator|&
@@ -1706,7 +1721,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|pci_vtnet_netmap_readv
 parameter_list|(
@@ -2281,6 +2296,11 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * No more packets, but still some avail ring 			 * entries.  Interrupt if needed/appropriate. 			 */
+name|vq_retchain
+argument_list|(
+name|vq
+argument_list|)
+expr_stmt|;
 name|vq_endchains
 argument_list|(
 name|vq
@@ -3890,7 +3910,7 @@ argument_list|,
 name|VIRTIO_VENDOR
 argument_list|)
 expr_stmt|;
-comment|/* Link is up if we managed to open tap device. */
+comment|/* Link is up if we managed to open tap device or vale port. */
 name|sc
 operator|->
 name|vsc_config
@@ -3907,6 +3927,12 @@ operator|->
 name|vsc_tapfd
 operator|>=
 literal|0
+operator|||
+name|sc
+operator|->
+name|vsc_nmd
+operator|!=
+name|NULL
 operator|)
 expr_stmt|;
 comment|/* use BAR 1 to map MSI-X table and PBA, if we're using MSI-X */

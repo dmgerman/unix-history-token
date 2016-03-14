@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -852,7 +858,7 @@ name|sbp
 operator|->
 name|f_bsize
 operator|=
-literal|512
+name|S_BLKSIZE
 expr_stmt|;
 name|sbp
 operator|->

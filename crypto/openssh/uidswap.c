@@ -634,7 +634,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
+name|NO_UID_RESTORATION_TEST
 name|uid_t
 name|old_uid
 init|=
@@ -683,8 +683,8 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
-comment|/* Try restoration of UID if changed (test clearing of saved uid) */
+name|NO_UID_RESTORATION_TEST
+comment|/* 	 * Try restoration of UID if changed (test clearing of saved uid). 	 * 	 * Note that we don't do this on Cygwin, or on Solaris-based platforms 	 * where fine-grained privileges are available (the user might be 	 * deliberately allowed the right to setuid back to root). 	 */
 if|if
 condition|(
 name|old_uid
@@ -925,7 +925,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
+name|NO_UID_RESTORATION_TEST
 name|uid_t
 name|old_uid
 init|=
@@ -1095,7 +1095,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
+name|NO_UID_RESTORATION_TEST
 comment|/* Try restoration of GID if changed (test clearing of saved gid) */
 if|if
 condition|(
@@ -1185,7 +1185,7 @@ expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
+name|NO_UID_RESTORATION_TEST
 comment|/* Try restoration of UID if changed (test clearing of saved uid) */
 if|if
 condition|(

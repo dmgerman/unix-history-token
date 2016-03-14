@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.21 2015/07/18 08:02:17 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.22 2016/02/12 00:20:30 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1641,6 +1641,15 @@ name|keyid_attrib
 operator|->
 name|ulValueLen
 expr_stmt|;
+if|if
+condition|(
+name|k11
+operator|->
+name|keyid_len
+operator|>
+literal|0
+condition|)
+block|{
 name|k11
 operator|->
 name|keyid
@@ -1667,6 +1676,7 @@ operator|->
 name|keyid_len
 argument_list|)
 expr_stmt|;
+block|}
 name|k11
 operator|->
 name|orig_finish

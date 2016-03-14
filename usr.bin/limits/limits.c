@@ -1404,7 +1404,7 @@ begin_define
 define|#
 directive|define
 name|RCS_STRING
-value|"tfdscmlunbvpwk"
+value|"tfdscmlunbvpwko"
 end_define
 
 begin_function_decl
@@ -3236,7 +3236,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: limits [-C class|-P pid|-U user] [-eaSHBE] "
-literal|"[-bcdflmnstuvpwk [val]] [[name=val ...] cmd]\n"
+literal|"[-bcdfklmnostuvpw [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3774,6 +3774,9 @@ name|RLIMIT_NPTS
 case|:
 case|case
 name|RLIMIT_KQUEUES
+case|:
+case|case
+name|RLIMIT_UMTXP
 case|:
 name|res
 operator|=

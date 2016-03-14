@@ -36039,6 +36039,10 @@ name|getspi_count
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"IPsec: Initialized Security Association Processing.\n"

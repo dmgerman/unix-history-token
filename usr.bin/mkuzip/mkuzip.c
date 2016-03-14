@@ -387,6 +387,18 @@ name|tmp
 decl_stmt|,
 name|en_dedup
 decl_stmt|;
+struct|struct
+block|{
+name|int
+name|en
+decl_stmt|;
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+block|}
+name|summary
+struct|;
 name|struct
 name|iovec
 name|iov
@@ -456,6 +468,18 @@ name|en_dedup
 operator|=
 literal|0
 expr_stmt|;
+name|summary
+operator|.
+name|en
+operator|=
+literal|0
+expr_stmt|;
+name|summary
+operator|.
+name|f
+operator|=
+name|stderr
+expr_stmt|;
 name|handler
 operator|=
 operator|&
@@ -472,7 +496,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"o:s:vZdL"
+literal|"o:s:vZdLS"
 argument_list|)
 operator|)
 operator|!=
@@ -559,6 +583,22 @@ name|handler
 operator|=
 operator|&
 name|ulzma_fmt
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|summary
+operator|.
+name|en
+operator|=
+literal|1
+expr_stmt|;
+name|summary
+operator|.
+name|f
+operator|=
+name|stdout
 expr_stmt|;
 break|break;
 default|default:
@@ -936,7 +976,13 @@ name|open
 argument_list|(
 name|oname
 argument_list|,
+operator|(
+name|en_dedup
+condition|?
+name|O_RDWR
+else|:
 name|O_WRONLY
+operator|)
 operator||
 name|O_TRUNC
 operator||
@@ -1425,10 +1471,18 @@ condition|(
 name|verbose
 operator|!=
 literal|0
+operator|||
+name|summary
+operator|.
+name|en
+operator|!=
+literal|0
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|summary
+operator|.
+name|f
 argument_list|,
 literal|"compressed data to %ju bytes, saved %lld "
 literal|"bytes, %.2f%% decrease.\n"
@@ -1627,7 +1681,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkuzip [-vZdL] [-o outfile] [-s cluster_size] "
+literal|"usage: mkuzip [-vZdLS] [-o outfile] [-s cluster_size] "
 literal|"infile\n"
 argument_list|)
 expr_stmt|;

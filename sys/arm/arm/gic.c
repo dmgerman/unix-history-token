@@ -3798,6 +3798,10 @@ condition|(
 name|tripol
 operator|&
 literal|0x0a
+operator|&&
+name|irq
+operator|>=
+name|GIC_FIRST_SPI
 condition|)
 block|{
 name|device_printf

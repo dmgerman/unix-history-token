@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.97 2015/04/24 01:36:00 deraadt Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.101 2016/01/20 09:22:39 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -2758,6 +2764,20 @@ condition|)
 goto|goto
 name|append
 goto|;
+if|if
+condition|(
+operator|*
+name|string
+operator|==
+literal|'\0'
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: invalid format"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -3034,6 +3054,23 @@ literal|1
 decl_stmt|,
 name|sock
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|tunbase
+init|=
+literal|"tun"
+decl_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|SSH_TUNMODE_ETHERNET
+condition|)
+name|tunbase
+operator|=
+literal|"tap"
+expr_stmt|;
 comment|/* Open the tunnel device */
 if|if
 condition|(
@@ -3051,7 +3088,9 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|,
-literal|"/dev/tun%d"
+literal|"/dev/%s%d"
+argument_list|,
+name|tunbase
 argument_list|,
 name|tun
 argument_list|)
@@ -3097,7 +3136,9 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|,
-literal|"/dev/tun%d"
+literal|"/dev/%s%d"
+argument_list|,
+name|tunbase
 argument_list|,
 name|tun
 argument_list|)
@@ -3132,10 +3173,8 @@ name|tun
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -3147,7 +3186,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"%s: %s open failed: %s"
+literal|"%s: %s open: %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3160,10 +3199,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 name|debug
@@ -3179,7 +3216,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* Set the tunnel device operation mode */
+comment|/* Bring interface up if it is not already */
 name|snprintf
 argument_list|(
 name|ifr
@@ -3193,7 +3230,9 @@ operator|.
 name|ifr_name
 argument_list|)
 argument_list|,
-literal|"tun%d"
+literal|"%s%d"
+argument_list|,
+name|tunbase
 argument_list|,
 name|tun
 argument_list|)
@@ -3234,56 +3273,39 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|failed
-goto|;
-comment|/* Set interface mode */
-name|ifr
-operator|.
-name|ifr_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
-if|if
-condition|(
-name|mode
-operator|==
-name|SSH_TUNMODE_ETHERNET
-condition|)
-name|ifr
-operator|.
-name|ifr_flags
-operator||=
-name|IFF_LINK0
-expr_stmt|;
-else|else
-name|ifr
-operator|.
-name|ifr_flags
-operator|&=
-operator|~
-name|IFF_LINK0
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
+block|{
+name|debug
 argument_list|(
-name|sock
+literal|"%s: get interface %s flags: %s"
 argument_list|,
-name|SIOCSIFFLAGS
+name|__func__
 argument_list|,
-operator|&
 name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|failed
 goto|;
-comment|/* Bring interface up */
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ifr
+operator|.
+name|ifr_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+block|{
 name|ifr
 operator|.
 name|ifr_flags
@@ -3305,18 +3327,35 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|debug
+argument_list|(
+literal|"%s: activate interface %s: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|failed
 goto|;
+block|}
+block|}
 name|close
 argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|fd
-operator|)
 return|;
 name|failed
 label|:
@@ -3342,27 +3381,9 @@ argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
-name|debug
-argument_list|(
-literal|"%s: failed to set %s mode %d: %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|name
-argument_list|,
-name|mode
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 else|#
 directive|else
@@ -5732,9 +5753,18 @@ name|int
 name|s
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPV6_V6ONLY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|int
 name|on
 init|=

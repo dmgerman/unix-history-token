@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.75 2015/12/20 22:44:10 sjg Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.75 2015/12/20 22:44:10 sjg Exp $"
+literal|"$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.75 2015/12/20 22:44:10 sjg Exp $"
+literal|"$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4896,9 +4896,9 @@ name|name
 argument_list|,
 name|pgn
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -5087,9 +5087,9 @@ name|cp
 argument_list|,
 name|pgn
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|len
@@ -5112,10 +5112,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -6132,10 +6128,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1

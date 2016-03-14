@@ -6155,6 +6155,21 @@ condition|(
 name|ret
 operator|==
 operator|-
+name|ERESTARTSYS
+condition|)
+block|{
+comment|/* 		 * NOTE Linux<->FreeBSD: Convert Linux' -ERESTARTSYS to 		 * the more common -EINTR, so the page fault is retried. 		 */
+name|ret
+operator|=
+operator|-
+name|EINTR
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
 name|EAGAIN
 operator|||
 name|ret
@@ -12954,7 +12969,7 @@ operator|*
 name|node
 argument_list|)
 argument_list|,
-name|DRM_I915_GEM
+name|DRM_MEM_MM
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -13079,7 +13094,7 @@ name|free
 argument_list|(
 name|node
 argument_list|,
-name|DRM_I915_GEM
+name|DRM_MEM_MM
 argument_list|)
 expr_stmt|;
 return|return

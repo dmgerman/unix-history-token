@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.200 2015/12/01 07:26:08 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -205,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Similar to var_Error, but returned when the 'errnum' flag for Var_Parse is  * set false. Why not just use a constant? Well, gcc likes to condense  * identical string instances...  */
+comment|/*  * Similar to var_Error, but returned when the 'VARF_UNDEFERR' flag for  * Var_Parse is not set. Why not just use a constant? Well, gcc likes  * to condense identical string instances...  */
 end_comment
 
 begin_decl_stmt
@@ -215,6 +215,26 @@ name|varNoError
 index|[]
 init|=
 literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Traditionally we consume $$ during := like any other expansion.  * Other make's do not.  * This knob allows controlling the behavior.  * FALSE for old behavior.  * TRUE for new compatible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVE_DOLLARS
+value|".MAKE.SAVE_DOLLARS"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|save_dollars
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -389,6 +409,17 @@ define|#
 directive|define
 name|VAR_EXPORT_PARENT
 value|1
+end_define
+
+begin_comment
+comment|/*  * We pass this to Var_Export1 to tell it to leave the value alone.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VAR_EXPORT_LITERAL
+value|2
 end_define
 
 begin_comment
@@ -1931,9 +1962,7 @@ name|name
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -2122,7 +2151,7 @@ modifier|*
 name|name
 parameter_list|,
 name|int
-name|parent
+name|flags
 parameter_list|)
 block|{
 name|char
@@ -2143,6 +2172,15 @@ name|NULL
 decl_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|int
+name|parent
+init|=
+operator|(
+name|flags
+operator|&
+name|VAR_EXPORT_PARENT
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -2251,6 +2289,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|VAR_EXPORT_LITERAL
+operator|)
+operator|==
+literal|0
+operator|&&
 name|strchr
 argument_list|(
 name|val
@@ -2332,9 +2378,7 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -2595,9 +2639,7 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -2700,7 +2742,7 @@ modifier|*
 name|as
 decl_stmt|;
 name|int
-name|track
+name|flags
 decl_stmt|;
 name|int
 name|ac
@@ -2731,6 +2773,10 @@ expr_stmt|;
 comment|/* use with caution! */
 return|return;
 block|}
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -2745,19 +2791,39 @@ operator|==
 literal|0
 condition|)
 block|{
-name|track
-operator|=
-literal|0
-expr_stmt|;
 name|str
 operator|+=
 literal|4
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|str
+argument_list|,
+literal|"-literal"
+argument_list|,
+literal|8
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|str
+operator|+=
+literal|8
+expr_stmt|;
+name|flags
+operator||=
+name|VAR_EXPORT_LITERAL
+expr_stmt|;
+block|}
 else|else
 block|{
-name|track
-operator|=
+name|flags
+operator||=
 name|VAR_EXPORT_PARENT
 expr_stmt|;
 block|}
@@ -2771,9 +2837,7 @@ name|str
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -2857,7 +2921,7 @@ name|Var_Export1
 argument_list|(
 name|name
 argument_list|,
-name|track
+name|flags
 argument_list|)
 condition|)
 block|{
@@ -2875,7 +2939,11 @@ if|if
 condition|(
 name|isExport
 operator|&&
-name|track
+operator|(
+name|flags
+operator|&
+name|VAR_EXPORT_PARENT
+operator|)
 condition|)
 block|{
 name|Var_Append
@@ -3190,9 +3258,7 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -3360,9 +3426,7 @@ name|tmp
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|Var_Set
@@ -3477,9 +3541,7 @@ name|name
 argument_list|,
 name|ctxt
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -3793,6 +3855,35 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'.'
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+name|SAVE_DOLLARS
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|save_dollars
+operator|=
+name|s2Boolean
+argument_list|(
+name|val
+argument_list|,
+name|save_dollars
+argument_list|)
+expr_stmt|;
+block|}
 name|out
 label|:
 name|free
@@ -3875,9 +3966,7 @@ name|name
 argument_list|,
 name|ctxt
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -4118,9 +4207,7 @@ name|name
 argument_list|,
 name|ctxt
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -5015,9 +5102,7 @@ name|rhs
 argument_list|,
 name|ctx
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|Str_SYSVSubst
@@ -5866,7 +5951,7 @@ name|void
 name|VarREError
 parameter_list|(
 name|int
-name|errnum
+name|reerr
 parameter_list|,
 name|regex_t
 modifier|*
@@ -5889,7 +5974,7 @@ name|errlen
 operator|=
 name|regerror
 argument_list|(
-name|errnum
+name|reerr
 argument_list|,
 name|pat
 argument_list|,
@@ -5907,7 +5992,7 @@ argument_list|)
 expr_stmt|;
 name|regerror
 argument_list|(
-name|errnum
+name|reerr
 argument_list|,
 name|pat
 argument_list|,
@@ -6682,8 +6767,8 @@ argument_list|,
 name|loop
 operator|->
 name|errnum
-argument_list|,
-name|TRUE
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 if|if
@@ -7979,7 +8064,7 @@ name|vpstate
 name|MAKE_ATTR_UNUSED
 parameter_list|,
 name|int
-name|errnum
+name|flags
 parameter_list|,
 specifier|const
 name|char
@@ -7992,7 +8077,7 @@ name|delim
 parameter_list|,
 name|int
 modifier|*
-name|flags
+name|vflags
 parameter_list|,
 name|int
 modifier|*
@@ -8017,6 +8102,13 @@ name|buf
 decl_stmt|;
 name|int
 name|junk
+decl_stmt|;
+name|int
+name|errnum
+init|=
+name|flags
+operator|&
+name|VARF_UNDEFERR
 decl_stmt|;
 name|Buf_Init
 argument_list|(
@@ -8115,7 +8207,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|flags
+name|vflags
 operator|==
 name|NULL
 condition|)
@@ -8131,7 +8223,7 @@ expr_stmt|;
 else|else
 comment|/* 		     * Unescaped $ at end of pattern => anchor 		     * pattern at end. 		     */
 operator|*
-name|flags
+name|vflags
 operator||=
 name|VAR_MATCH_END
 expr_stmt|;
@@ -8140,13 +8232,13 @@ else|else
 block|{
 if|if
 condition|(
-name|flags
+name|vflags
 operator|==
 name|NULL
 operator|||
 operator|(
 operator|*
-name|flags
+name|vflags
 operator|&
 name|VAR_NOSUBST
 operator|)
@@ -8175,8 +8267,8 @@ argument_list|,
 name|ctxt
 argument_list|,
 name|errnum
-argument_list|,
-name|TRUE
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|len
@@ -9068,11 +9160,8 @@ name|GNode
 modifier|*
 name|ctxt
 parameter_list|,
-name|Boolean
-name|errnum
-parameter_list|,
-name|Boolean
-name|wantit
+name|int
+name|flags
 parameter_list|,
 name|int
 modifier|*
@@ -9184,9 +9273,7 @@ name|tstr
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|rlen
@@ -9295,9 +9382,7 @@ name|v
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|used
@@ -9316,7 +9401,11 @@ name|nstr
 operator|==
 name|varNoError
 operator|&&
-name|errnum
+operator|(
+name|flags
+operator|&
+name|VARF_UNDEFERR
+operator|)
 operator|==
 literal|0
 operator|)
@@ -9494,7 +9583,7 @@ name|int
 name|how
 decl_stmt|;
 name|int
-name|flags
+name|vflags
 decl_stmt|;
 if|if
 condition|(
@@ -9643,10 +9732,12 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|flags
+name|vflags
 operator|=
 operator|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 operator|)
 condition|?
 literal|0
@@ -9664,7 +9755,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -9672,7 +9763,7 @@ argument_list|,
 name|delim
 argument_list|,
 operator|&
-name|flags
+name|vflags
 argument_list|,
 operator|&
 name|pattern
@@ -9729,7 +9820,9 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 condition|)
 block|{
 switch|switch
@@ -9865,7 +9958,7 @@ name|VarLoop_t
 name|loop
 decl_stmt|;
 name|int
-name|flags
+name|vflags
 init|=
 name|VAR_NOSUBST
 decl_stmt|;
@@ -9892,7 +9985,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -9900,7 +9993,7 @@ argument_list|,
 name|delim
 argument_list|,
 operator|&
-name|flags
+name|vflags
 argument_list|,
 operator|&
 name|loop
@@ -9930,7 +10023,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -9938,7 +10031,7 @@ argument_list|,
 name|delim
 argument_list|,
 operator|&
-name|flags
+name|vflags
 argument_list|,
 operator|&
 name|loop
@@ -9967,7 +10060,9 @@ name|loop
 operator|.
 name|errnum
 operator|=
-name|errnum
+name|flags
+operator|&
+name|VARF_UNDEFERR
 expr_stmt|;
 name|loop
 operator|.
@@ -9990,6 +10085,15 @@ name|VarLoopExpand
 argument_list|,
 operator|&
 name|loop
+argument_list|)
+expr_stmt|;
+name|Var_Delete
+argument_list|(
+name|loop
+operator|.
+name|tvar
+argument_list|,
+name|ctxt
 argument_list|)
 expr_stmt|;
 name|free
@@ -10020,14 +10124,18 @@ name|buf
 decl_stmt|;
 comment|/* Buffer for patterns */
 name|int
-name|wantit_
+name|nflags
 decl_stmt|;
-comment|/* want data in buffer */
 if|if
 condition|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 condition|)
 block|{
+name|int
+name|wantres
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -10035,7 +10143,7 @@ name|tstr
 operator|==
 literal|'U'
 condition|)
-name|wantit_
+name|wantres
 operator|=
 operator|(
 operator|(
@@ -10050,7 +10158,7 @@ literal|0
 operator|)
 expr_stmt|;
 else|else
-name|wantit_
+name|wantres
 operator|=
 operator|(
 operator|(
@@ -10064,11 +10172,26 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+name|nflags
+operator|=
+name|flags
+operator|&
+operator|~
+name|VARF_WANTRES
+expr_stmt|;
+if|if
+condition|(
+name|wantres
+condition|)
+name|nflags
+operator||=
+name|VARF_WANTRES
+expr_stmt|;
 block|}
 else|else
-name|wantit_
+name|nflags
 operator|=
-name|wantit
+name|flags
 expr_stmt|;
 comment|/* 		 * Pass through tstr looking for 1) escaped delimiters, 		 * '$'s and backslashes (place the escaped character in 		 * uninterpreted) and 2) unescaped $'s that aren't before 		 * the delimiter (expand the variable substitution). 		 * The result is left in the Buffer buf. 		 */
 name|Buf_Init
@@ -10198,9 +10321,7 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit_
+name|nflags
 argument_list|,
 operator|&
 name|len
@@ -10272,7 +10393,9 @@ name|VAR_KEEP
 expr_stmt|;
 if|if
 condition|(
-name|wantit_
+name|nflags
+operator|&
+name|VARF_WANTRES
 condition|)
 block|{
 name|newStr
@@ -10509,7 +10632,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -10534,7 +10657,9 @@ name|cleanup
 goto|;
 if|if
 condition|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 condition|)
 name|newStr
 operator|=
@@ -10631,7 +10756,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -11431,6 +11556,23 @@ operator|==
 literal|'\\'
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|xp
+init|=
+operator|&
+name|tstr
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|base
+init|=
+literal|8
+decl_stmt|;
+comment|/* assume octal */
 switch|switch
 condition|(
 name|tstr
@@ -11471,6 +11613,29 @@ operator|+
 literal|4
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+name|base
+operator|=
+literal|16
+expr_stmt|;
+name|xp
+operator|++
+expr_stmt|;
+goto|goto
+name|get_numeric
+goto|;
+case|case
+literal|'0'
+case|:
+name|base
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|get_numeric
+goto|;
 default|default:
 if|if
 condition|(
@@ -11491,22 +11656,20 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
+name|get_numeric
+label|:
 name|parsestate
 operator|.
 name|varSpace
 operator|=
 name|strtoul
 argument_list|(
-operator|&
-name|tstr
-index|[
-literal|3
-index|]
+name|xp
 argument_list|,
 operator|&
 name|ep
 argument_list|,
-literal|0
+name|base
 argument_list|)
 expr_stmt|;
 if|if
@@ -12156,9 +12319,9 @@ name|cp2
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|TRUE
+name|flags
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 name|free
@@ -12309,7 +12472,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -12349,7 +12512,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -12491,7 +12654,9 @@ decl_stmt|;
 comment|/* find ':', and then substitute accordingly */
 if|if
 condition|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 condition|)
 block|{
 name|cond_rc
@@ -12598,7 +12763,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -12641,7 +12806,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -12829,7 +12994,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -12863,7 +13028,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -13540,7 +13705,9 @@ name|emsg
 decl_stmt|;
 if|if
 condition|(
-name|wantit
+name|flags
+operator|&
+name|VARF_WANTRES
 condition|)
 block|{
 name|newStr
@@ -13708,7 +13875,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -13752,7 +13919,7 @@ argument_list|,
 operator|&
 name|parsestate
 argument_list|,
-name|errnum
+name|flags
 argument_list|,
 operator|&
 name|cp
@@ -14097,7 +14264,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Input:  *	str		The string to parse  *	ctxt		The context for the variable  *	errnum		TRUE if undefined variables are an error  *	wantit		TRUE if we actually want the result  *	lengthPtr	OUT: The length of the specification  *	freePtr		OUT: Non-NULL if caller should free *freePtr  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2...?).  *	If *freePtr is non-NULL then it's a pointer that the caller  *	should pass to free() to free memory used by the result.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Input:  *	str		The string to parse  *	ctxt		The context for the variable  *	flags		VARF_UNDEFERR	if undefineds are an error  *			VARF_WANTRES	if we actually want the result  *			VARF_ASSIGN	if we are in a := assignment  *	lengthPtr	OUT: The length of the specification  *	freePtr		OUT: Non-NULL if caller should free *freePtr  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2...?).  *	If *freePtr is non-NULL then it's a pointer that the caller  *	should pass to free() to free memory used by the result.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -14118,11 +14285,8 @@ name|GNode
 modifier|*
 name|ctxt
 parameter_list|,
-name|Boolean
-name|errnum
-parameter_list|,
-name|Boolean
-name|wantit
+name|int
+name|flags
 parameter_list|,
 name|int
 modifier|*
@@ -14354,12 +14518,14 @@ block|}
 comment|/* 	     * Error 	     */
 return|return
 operator|(
-name|errnum
+name|flags
+operator|&
+name|VARF_UNDEFERR
+operator|)
 condition|?
 name|var_Error
 else|:
 name|varNoError
-operator|)
 return|;
 block|}
 else|else
@@ -14502,9 +14668,7 @@ name|tstr
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|rlen
@@ -15011,12 +15175,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errnum
+name|flags
+operator|&
+name|VARF_UNDEFERR
+operator|)
 condition|?
 name|var_Error
 else|:
 name|varNoError
-operator|)
 return|;
 block|}
 block|}
@@ -15142,9 +15308,7 @@ name|nstr
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|)
 expr_stmt|;
 operator|*
@@ -15211,9 +15375,7 @@ name|v
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|used
@@ -15248,9 +15410,7 @@ name|v
 argument_list|,
 name|ctxt
 argument_list|,
-name|errnum
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|used
@@ -15419,7 +15579,11 @@ else|else
 block|{
 name|nstr
 operator|=
-name|errnum
+operator|(
+name|flags
+operator|&
+name|VARF_UNDEFERR
+operator|)
 condition|?
 name|var_Error
 else|:
@@ -15473,7 +15637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If undefErr is TRUE, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Input:  *	var		Named variable || NULL for all  *	str		the string which to substitute  *	ctxt		the context wherein to find variables  *	undefErr	TRUE if undefineds are an error  *	wantit		TRUE if we actually want the result  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If flags& VARF_UNDEFERR, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Input:  *	var		Named variable || NULL for all  *	str		the string which to substitute  *	ctxt		the context wherein to find variables  *	flags		VARF_UNDEFERR	if undefineds are an error  *			VARF_WANTRES	if we actually want the result  *			VARF_ASSIGN	if we are in a := assignment  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -15495,11 +15659,8 @@ name|GNode
 modifier|*
 name|ctxt
 parameter_list|,
-name|Boolean
-name|undefErr
-parameter_list|,
-name|Boolean
-name|wantit
+name|int
+name|flags
 parameter_list|)
 block|{
 name|Buffer
@@ -15594,6 +15755,25 @@ operator|)
 condition|)
 block|{
 comment|/* 	     * A dollar sign may be escaped either with another dollar sign. 	     * In such a case, we skip over the escape character and store the 	     * dollar sign into the buffer directly. 	     */
+if|if
+condition|(
+name|save_dollars
+operator|&&
+operator|(
+name|flags
+operator|&
+name|VARF_ASSIGN
+operator|)
+condition|)
+name|Buf_AddByte
+argument_list|(
+operator|&
+name|buf
+argument_list|,
+operator|*
+name|str
+argument_list|)
+expr_stmt|;
 name|str
 operator|++
 expr_stmt|;
@@ -15936,9 +16116,7 @@ name|str
 argument_list|,
 name|ctxt
 argument_list|,
-name|undefErr
-argument_list|,
-name|wantit
+name|flags
 argument_list|,
 operator|&
 name|length
@@ -15973,7 +16151,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|undefErr
+operator|(
+name|flags
+operator|&
+name|VARF_UNDEFERR
+operator|)
 operator|||
 name|val
 operator|==

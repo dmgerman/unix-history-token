@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.h,v 1.13 2015/05/27 23:39:18 dtucker Exp $ */
+comment|/* $OpenBSD: dh.h,v 1.14 2015/10/16 22:32:22 djm Exp $ */
 end_comment
 
 begin_comment
@@ -147,14 +147,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Min and max values from RFC4419. */
+comment|/*  * Max value from RFC4419.  * Miniumum increased in light of DH precomputation attacks.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DH_GRP_MIN
-value|1024
+value|2048
 end_define
 
 begin_define
