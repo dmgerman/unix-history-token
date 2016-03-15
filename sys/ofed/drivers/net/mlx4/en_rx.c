@@ -3086,15 +3086,19 @@ goto|goto
 name|next
 goto|;
 block|}
+comment|/* forward Toeplitz compatible hash value */
 name|mb
 operator|->
 name|m_pkthdr
 operator|.
 name|flowid
 operator|=
-name|cq
+name|be32_to_cpu
+argument_list|(
+name|cqe
 operator|->
-name|ring
+name|immed_rss_invalid
+argument_list|)
 expr_stmt|;
 name|M_HASHTYPE_SET
 argument_list|(
