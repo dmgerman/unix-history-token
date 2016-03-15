@@ -333,6 +333,13 @@ name|uint64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|out
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
