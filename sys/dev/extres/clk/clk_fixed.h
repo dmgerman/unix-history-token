@@ -62,11 +62,6 @@ name|struct
 name|clk_fixed_def
 modifier|*
 name|clkdef
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|dev_mtx
 parameter_list|)
 function_decl|;
 end_function_decl
