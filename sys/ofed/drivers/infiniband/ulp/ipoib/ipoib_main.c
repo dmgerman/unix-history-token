@@ -1188,6 +1188,24 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* check if detaching */
+if|if
+condition|(
+name|priv
+operator|==
+name|NULL
+operator|||
+name|priv
+operator|->
+name|gone
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 switch|switch
 condition|(
 name|command
@@ -3809,6 +3827,12 @@ name|flags
 argument_list|)
 condition|)
 block|{
+name|priv
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
 name|bpfdetach
 argument_list|(
 name|dev
