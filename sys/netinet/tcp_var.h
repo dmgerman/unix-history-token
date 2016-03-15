@@ -2326,13 +2326,6 @@ name|uint64_t
 name|tcps_sig_err_nosigopt
 decl_stmt|;
 comment|/* No signature provided by segment */
-comment|/* Running connection count. */
-name|uint64_t
-name|tcps_states
-index|[
-name|TCP_NSTATES
-index|]
-decl_stmt|;
 name|uint64_t
 name|_pad
 index|[
@@ -2423,26 +2416,6 @@ parameter_list|)
 value|TCPSTAT_ADD(name, 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TCPSTAT_DEC
-parameter_list|(
-name|name
-parameter_list|)
-value|TCPSTAT_ADD(name, -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPSTAT_FETCH
-parameter_list|(
-name|name
-parameter_list|)
-value|VNET_PCPUSTAT_FETCH(struct tcpstat, tcpstat, \ 				    name)
-end_define
-
 begin_comment
 comment|/*  * Kernel module consumers must use this accessor macro.  */
 end_comment
@@ -2466,6 +2439,43 @@ name|name
 parameter_list|)
 define|\
 value|kmod_tcpstat_inc(offsetof(struct tcpstat, name) / sizeof(uint64_t))
+end_define
+
+begin_comment
+comment|/*  * Running TCP connection count by state.  */
+end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|counter_u64_t
+argument_list|,
+name|tcps_states
+index|[
+name|TCP_NSTATES
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|TCPSTATES_INC
+parameter_list|(
+name|state
+parameter_list|)
+value|counter_u64_add(VNET(tcps_states)[state], 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPSTATES_DEC
+parameter_list|(
+name|state
+parameter_list|)
+value|counter_u64_add(VNET(tcps_states)[state], -1)
 end_define
 
 begin_comment
@@ -2771,6 +2781,17 @@ end_define
 
 begin_comment
 comment|/* drop tcp connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_STATES
+value|16
+end_define
+
+begin_comment
+comment|/* connection counts by TCP state */
 end_comment
 
 begin_ifdef

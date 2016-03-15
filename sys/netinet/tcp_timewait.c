@@ -2713,12 +2713,9 @@ argument_list|,
 name|tw
 argument_list|)
 expr_stmt|;
-name|TCPSTAT_DEC
+name|TCPSTATES_DEC
 argument_list|(
-name|tcps_states
-index|[
 name|TCPS_TIME_WAIT
-index|]
 argument_list|)
 expr_stmt|;
 block|}
