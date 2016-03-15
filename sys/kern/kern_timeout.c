@@ -4939,7 +4939,7 @@ name|_callout_stop_safe
 parameter_list|(
 name|c
 parameter_list|,
-name|safe
+name|flags
 parameter_list|)
 name|struct
 name|callout
@@ -4947,7 +4947,7 @@ modifier|*
 name|c
 decl_stmt|;
 name|int
-name|safe
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -4976,8 +4976,13 @@ decl_stmt|;
 comment|/* 	 * Some old subsystems don't hold Giant while running a callout_stop(), 	 * so just discard this check for the moment. 	 */
 if|if
 condition|(
-operator|!
-name|safe
+operator|(
+name|flags
+operator|&
+name|CS_DRAIN
+operator|)
+operator|==
+literal|0
 operator|&&
 name|c
 operator|->
@@ -5266,7 +5271,13 @@ return|;
 block|}
 if|if
 condition|(
-name|safe
+operator|(
+name|flags
+operator|&
+name|CS_DRAIN
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * The current callout is running (or just 			 * about to run) and blocking is allowed, so 			 * just wait for the current invocation to 			 * finish. 			 */
@@ -5626,6 +5637,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|flags
+operator|&
+name|CS_MIGRBLOCK
+operator|)
+operator|!=
 literal|0
 operator|)
 return|;

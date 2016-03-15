@@ -2351,12 +2351,14 @@ comment|/* 	 * If callout_stop() fails, then the timeout is running on 	 * anoth
 elseif|else
 if|if
 condition|(
-name|callout_stop
+name|_callout_stop_safe
 argument_list|(
 operator|&
 name|td
 operator|->
 name|td_slpcallout
+argument_list|,
+name|CS_MIGRBLOCK
 argument_list|)
 operator|==
 literal|0
