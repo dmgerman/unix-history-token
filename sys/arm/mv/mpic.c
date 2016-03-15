@@ -224,7 +224,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IRQ_MASK
+name|MPIC_IRQ_MASK
 value|0x3ff
 end_define
 
@@ -1927,7 +1927,7 @@ operator|=
 name|mv_mpic_get_cause
 argument_list|()
 operator|&
-name|IRQ_MASK
+name|MPIC_IRQ_MASK
 expr_stmt|;
 name|CTR2
 argument_list|(
@@ -1944,7 +1944,7 @@ if|if
 condition|(
 name|irq
 operator|!=
-name|IRQ_MASK
+name|MPIC_IRQ_MASK
 condition|)
 block|{
 if|if
