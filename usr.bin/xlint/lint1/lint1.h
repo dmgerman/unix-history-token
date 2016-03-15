@@ -40,17 +40,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALIGN
+name|LINT_ALIGN
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALIGN
+name|LINT_ALIGN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) + 7)& ~7)
+value|(((x) + 15)& ~15)
 end_define
 
 begin_endif
