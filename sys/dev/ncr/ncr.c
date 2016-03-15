@@ -11554,6 +11554,33 @@ name|ccb
 operator|->
 name|csio
 expr_stmt|;
+comment|/* 		 * Make sure we support this request. We can't do 		 * PHYS pointers. 		 */
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_CDB_PHYS
+condition|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_INVALID
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * Last time we need to check if this CCB needs to 		 * be aborted. 		 */
 if|if
 condition|(
@@ -12521,7 +12548,6 @@ operator|=
 name|msglen2
 expr_stmt|;
 comment|/* 		**	command 		*/
-comment|/* XXX JGibbs - Support other command types */
 name|cp
 operator|->
 name|phys
@@ -12532,11 +12558,10 @@ name|addr
 operator|=
 name|vtophys
 argument_list|(
+name|scsiio_cdb_ptr
+argument_list|(
 name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -12601,19 +12626,6 @@ operator|.
 name|target_lun
 operator|<<
 literal|5
-expr_stmt|;
-name|cp
-operator|->
-name|sensecmd
-index|[
-literal|4
-index|]
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_sense_data
-argument_list|)
 expr_stmt|;
 name|cp
 operator|->
