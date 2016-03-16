@@ -38273,7 +38273,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Detect packet forwarding. 	 * If the input interface is different from the output interface we're 	 * forwarding. 	 * We do need to be careful about bridges. If the 	 * net.link.bridge.pfil_bridge sysctl is set we can be filtering on a 	 * bridge, so if the input interface is a bridge member and the output 	 * interface is its bridge we're not actually forwarding but bridging. 	 */
+comment|/* Detect packet forwarding. 	 * If the input interface is different from the output interface we're 	 * forwarding. 	 * We do need to be careful about bridges. If the 	 * net.link.bridge.pfil_bridge sysctl is set we can be filtering on a 	 * bridge, so if the input interface is a bridge member and the output 	 * interface is its bridge or a member of the same bridge we're not 	 * actually forwarding but bridging. 	 */
 if|if
 condition|(
 name|dir
@@ -38305,6 +38305,7 @@ name|if_bridge
 operator|==
 name|NULL
 operator|||
+operator|(
 name|m
 operator|->
 name|m_pkthdr
@@ -38316,6 +38317,19 @@ operator|!=
 name|ifp
 operator|->
 name|if_softc
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_bridge
+operator|!=
+name|ifp
+operator|->
+name|if_bridge
+operator|)
 operator|)
 condition|)
 name|fwdir
