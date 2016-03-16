@@ -932,6 +932,12 @@ name|state
 operator|=
 name|ROUTE_RESOLVED
 expr_stmt|;
+name|cb
+operator|->
+name|child_cm_id
+operator|=
+name|cma_id
+expr_stmt|;
 name|wake_up_interruptible
 argument_list|(
 operator|&
