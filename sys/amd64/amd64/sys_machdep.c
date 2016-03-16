@@ -2964,11 +2964,12 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|;
+name|unsigned
 name|int
 name|largest_ld
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|mdproc
