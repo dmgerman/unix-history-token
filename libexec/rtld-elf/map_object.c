@@ -81,20 +81,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|convert_prot
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Elf flags -> mmap protection */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
 name|convert_flags
 parameter_list|(
 name|int
@@ -2237,7 +2223,6 @@ comment|/*  * Given a set of ELF protection flags, return the corresponding prot
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|convert_prot
 parameter_list|(

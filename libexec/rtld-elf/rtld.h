@@ -1954,6 +1954,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|convert_prot
+parameter_list|(
+name|int
+name|elfflags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * MD function declarations.  */
 end_comment
