@@ -1425,6 +1425,7 @@ name|vpo_dev
 argument_list|,
 literal|"XPT_SCSI_IO (0x%x) request\n"
 argument_list|,
+operator|*
 name|scsiio_cdb_ptr
 argument_list|(
 name|csio
