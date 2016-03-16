@@ -211,7 +211,7 @@ value|32473
 end_define
 
 begin_comment
-comment|/* Bail; use "example" number */
+comment|/* Fallback to the "example" number */
 end_comment
 
 begin_endif
