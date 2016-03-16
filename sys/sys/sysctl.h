@@ -2316,7 +2316,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    (ptr), (len), sysctl_handle_counter_u64_array, "S", descr);	\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE)
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    (ptr), (len), sysctl_handle_counter_u64_array, "S", descr);	\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE)&&	\ 	    sizeof(counter_u64_t) == sizeof(*(ptr))&&			\ 	    sizeof(uint64_t) == sizeof(**(ptr)))
 end_define
 
 begin_define
