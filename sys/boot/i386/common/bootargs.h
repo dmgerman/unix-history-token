@@ -168,6 +168,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|geli_boot_args
+block|{
+name|uint32_t
+name|size
+decl_stmt|;
+name|char
+name|gelipw
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

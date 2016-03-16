@@ -98,6 +98,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GPT */
+end_comment
+
 begin_function_decl
 name|uint64_t
 name|drvsize
@@ -109,15 +118,6 @@ name|dskp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GPT */
-end_comment
 
 begin_endif
 endif|#

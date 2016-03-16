@@ -70,12 +70,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -191,15 +185,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GPT */
-end_comment
 
 begin_ifndef
 ifndef|#

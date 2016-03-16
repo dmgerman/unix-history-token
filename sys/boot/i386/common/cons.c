@@ -330,6 +330,24 @@ end_function
 
 begin_function
 name|int
+name|getchar
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xgetc
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|keyhit
 parameter_list|(
 name|unsigned

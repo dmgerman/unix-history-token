@@ -77,6 +77,12 @@ decl_stmt|;
 name|uint64_t
 name|primary_vdev
 decl_stmt|;
+name|char
+name|gelipw
+index|[
+literal|256
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

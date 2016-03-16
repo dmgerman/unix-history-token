@@ -180,6 +180,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|ptblread
+parameter_list|(
+name|void
+modifier|*
+name|d
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|blocks
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Print information about slices on a disk.  */
 end_comment
