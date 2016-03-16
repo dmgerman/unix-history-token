@@ -345,6 +345,18 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * A unified flag for all outbound check sum flags is useful,  * and it helps avoiding unnecessary check sum calculation in  * network forwarding scenario.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_CSUM_FOR_OUTBOUND
+define|\
+value|(CSUM_IP|CSUM_IP_UDP|CSUM_IP_TCP|CSUM_IP_SCTP|CSUM_IP_TSO|		\     CSUM_IP_ISCSI|CSUM_IP6_UDP|CSUM_IP6_TCP|CSUM_IP6_SCTP|		\     CSUM_IP6_TSO|CSUM_IP6_ISCSI)
+end_define
+
+begin_comment
 comment|/*  * Data types  */
 end_comment
 
@@ -1971,15 +1983,20 @@ operator|&
 literal|0xfff
 expr_stmt|;
 block|}
+comment|/* Only check the flags for outbound and ignore the ones for inbound */
 if|if
 condition|(
 literal|0
 operator|==
+operator|(
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
+operator|&
+name|HV_CSUM_FOR_OUTBOUND
+operator|)
 condition|)
 block|{
 goto|goto
