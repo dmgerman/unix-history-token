@@ -1608,6 +1608,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_ACTION_VHT
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_ACTION_CAT_VENDOR
 value|127
 end_define
@@ -3756,7 +3763,19 @@ init|=
 literal|60
 block|,
 comment|/* XXX: remove */
-block|}
+comment|/* 802.11ac */
+name|IEEE80211_ELEMID_VHT_CAP
+init|=
+literal|191
+block|,
+name|IEEE80211_ELEMID_VHT_OPMODE
+init|=
+literal|192
+block|,
+name|IEEE80211_ELEMID_VHT_PWR_ENV
+init|=
+literal|195
+block|, }
 enum|;
 end_enum
 
