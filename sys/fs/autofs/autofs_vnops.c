@@ -1519,11 +1519,9 @@ block|{
 name|size_t
 name|reclen
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|autofs_readdir_one
 argument_list|(
 name|NULL
@@ -1535,17 +1533,6 @@ literal|1
 argument_list|,
 operator|&
 name|reclen
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|error
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"autofs_readdir_one() failed"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
