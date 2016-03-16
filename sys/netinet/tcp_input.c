@@ -1324,6 +1324,9 @@ name|VNET_NAME
 argument_list|(
 name|tcps_states
 argument_list|)
+index|[
+literal|0
+index|]
 argument_list|,
 name|TCP_NSTATES
 argument_list|,
