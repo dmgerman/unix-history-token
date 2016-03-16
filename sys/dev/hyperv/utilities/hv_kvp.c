@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -440,6 +446,14 @@ name|struct
 name|proc
 modifier|*
 name|daemon_task
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|selinfo
+name|hv_kvp_selinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -2922,6 +2936,13 @@ operator|.
 name|dev_sema
 argument_list|)
 expr_stmt|;
+comment|/* We should wake up the daemon, in case it's doing poll() */
+name|selwakeup
+argument_list|(
+operator|&
+name|hv_kvp_selinfo
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4035,7 +4056,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-name|__unused
 parameter_list|)
 block|{
 name|int
@@ -4063,6 +4083,15 @@ condition|)
 name|revents
 operator|=
 name|POLLIN
+expr_stmt|;
+else|else
+name|selrecord
+argument_list|(
+name|td
+argument_list|,
+operator|&
+name|hv_kvp_selinfo
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
