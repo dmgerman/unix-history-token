@@ -15508,6 +15508,24 @@ case|:
 return|return
 literal|" CCKM"
 return|;
+case|case
+name|IEEE80211_ELEMID_VHT_CAP
+case|:
+return|return
+literal|" VHTCAP"
+return|;
+case|case
+name|IEEE80211_ELEMID_VHT_OPMODE
+case|:
+return|return
+literal|" VHTOPMODE"
+return|;
+case|case
+name|IEEE80211_ELEMID_VHT_PWR_ENV
+case|:
+return|return
+literal|" VHTPWRENV"
+return|;
 block|}
 return|return
 literal|" ???"
