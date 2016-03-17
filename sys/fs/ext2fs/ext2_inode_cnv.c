@@ -607,10 +607,10 @@ name|ei
 operator|->
 name|e2di_flags
 operator|&
-name|EXT4_INDEX
+name|EXT3_INDEX
 operator|)
 condition|?
-name|IN_E4INDEX
+name|IN_E3INDEX
 else|:
 literal|0
 expr_stmt|;
@@ -995,10 +995,10 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IN_E4INDEX
+name|IN_E3INDEX
 operator|)
 condition|?
-name|EXT4_INDEX
+name|EXT3_INDEX
 else|:
 literal|0
 expr_stmt|;

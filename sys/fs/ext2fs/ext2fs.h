@@ -439,6 +439,10 @@ modifier|*
 name|e2fs_clustersum
 decl_stmt|;
 comment|/* cluster summary in each cyl group */
+name|int32_t
+name|e2fs_uhash
+decl_stmt|;
+comment|/* 3 if hash should be signed, 0 if not */
 block|}
 struct|;
 end_struct
@@ -652,6 +656,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT2F_COMPAT_SUPP
+value|EXT2F_COMPAT_DIRHASHINDEX
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_ROCOMPAT_SUPP
 value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT2F_ROCOMPAT_EXTRA_ISIZE)
 end_define
@@ -752,6 +763,24 @@ end_define
 begin_comment
 comment|/* Errors detected */
 end_comment
+
+begin_comment
+comment|/*  * Filesystem miscellaneous flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E2FS_SIGNED_HASH
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|E2FS_UNSIGNED_HASH
+value|0x0002
+end_define
 
 begin_comment
 comment|/* ext2 file system block group descriptor */

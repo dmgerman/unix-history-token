@@ -97,7 +97,7 @@ value|((ino_t)11)
 end_define
 
 begin_comment
-comment|/*  * Inode flags  * The system supports EXT2_IMMUTABLE, EXT2_APPEND and EXT2_NODUMP flags.  * The current implementation also uses EXT4_INDEX, EXT4_EXTENTS and  * EXT4_HUGE_FILE with some restrictions, imposed the lack of write  * support.  */
+comment|/*  * Inode flags  * The system supports EXT2_IMMUTABLE, EXT2_APPEND and EXT2_NODUMP flags.  * The current implementation also uses EXT3_INDEX, EXT4_EXTENTS and  * EXT4_HUGE_FILE with some restrictions, imposed the lack of write  * support.  */
 end_comment
 
 begin_define
@@ -191,7 +191,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT4_INDEX
+name|EXT3_INDEX
 value|0x00001000
 end_define
 

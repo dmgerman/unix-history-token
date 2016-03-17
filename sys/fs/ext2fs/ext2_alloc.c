@@ -1817,6 +1817,12 @@ expr_stmt|;
 comment|/* 	 * The question is whether using VGET was such good idea at all: 	 * Linux doesn't read the old inode in when it is allocating a 	 * new one. I will set at least i_size and i_blocks to zero. 	 */
 name|ip
 operator|->
+name|i_flag
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
 name|i_size
 operator|=
 literal|0
