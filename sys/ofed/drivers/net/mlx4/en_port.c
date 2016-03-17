@@ -162,6 +162,7 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|test_bit
@@ -182,6 +183,7 @@ expr_stmt|;
 name|index
 operator|++
 expr_stmt|;
+block|}
 name|filter
 operator|->
 name|entry
