@@ -1326,7 +1326,7 @@ name|CPSW_DEBUGF
 parameter_list|(
 name|a
 parameter_list|)
-value|do {					\ 	IF_DEBUG(sc) {						\ 		cpsw_debugf_head(__func__);			\ 		cpsw_debugf a;					\ 	}							\ } while (0)
+value|do {						\ 	IF_DEBUG(sc) {							\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1340,7 +1340,7 @@ name|CPSW_TX_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {					\ 		mtx_assert(&(sc)->rx.lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->tx.lock);				\ } while (0)
+value|do {						\ 		mtx_assert(&(sc)->rx.lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->tx.lock);				\ } while (0)
 end_define
 
 begin_define
@@ -1370,7 +1370,7 @@ name|CPSW_RX_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {					\ 		mtx_assert(&(sc)->tx.lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
+value|do {						\ 		mtx_assert(&(sc)->tx.lock, MA_NOTOWNED);		\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
 end_define
 
 begin_define
@@ -1400,7 +1400,7 @@ name|CPSW_GLOBAL_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {					\ 		if ((mtx_owned(&(sc)->tx.lock) ? 1 : 0) !=	\ 		    (mtx_owned(&(sc)->rx.lock) ? 1 : 0)) {		\ 			panic("cpsw deadlock possibility detection!");	\ 		}							\ 		mtx_lock(&(sc)->tx.lock);				\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
+value|do {					\ 		if ((mtx_owned(&(sc)->tx.lock) ? 1 : 0) !=		\ 		    (mtx_owned(&(sc)->rx.lock) ? 1 : 0)) {		\ 			panic("cpsw deadlock possibility detection!");	\ 		}							\ 		mtx_lock(&(sc)->tx.lock);				\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
 end_define
 
 begin_define
@@ -1410,7 +1410,7 @@ name|CPSW_GLOBAL_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {					\ 		CPSW_RX_UNLOCK(sc);				\ 		CPSW_TX_UNLOCK(sc);				\ } while (0)
+value|do {					\ 		CPSW_RX_UNLOCK(sc);					\ 		CPSW_TX_UNLOCK(sc);					\ } while (0)
 end_define
 
 begin_define
