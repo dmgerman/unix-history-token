@@ -2378,11 +2378,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|defrouter_remove
 parameter_list|(
 name|struct
-name|nd_defrouter
+name|in6_addr
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

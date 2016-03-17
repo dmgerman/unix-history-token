@@ -3884,11 +3884,6 @@ condition|)
 block|{
 comment|/* 			 * The peer dropped the router flag. 			 * Remove the sender from the Default Router List and 			 * update the Destination Cache entries. 			 */
 name|struct
-name|nd_defrouter
-modifier|*
-name|dr
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|nd6_ifp
@@ -3902,12 +3897,10 @@ operator|->
 name|lle_tbl
 argument_list|)
 expr_stmt|;
-name|ND6_WLOCK
-argument_list|()
-expr_stmt|;
-name|dr
-operator|=
-name|defrouter_lookup_locked
+if|if
+condition|(
+operator|!
+name|defrouter_remove
 argument_list|(
 operator|&
 name|ln
@@ -3918,32 +3911,7 @@ name|addr6
 argument_list|,
 name|nd6_ifp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dr
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* releases the ND lock */
-name|defrouter_remove
-argument_list|(
-name|dr
-argument_list|)
-expr_stmt|;
-name|dr
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ND6_WUNLOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|(
 name|ND_IFINFO
 argument_list|(
@@ -3957,8 +3925,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* 					 * Even if the neighbor is not in the default 					 * router list, the neighbor may be used 					 * as a next hop for some destinations 					 * (e.g. redirect case). So we must 					 * call rt6_flush explicitly. 					 */
+comment|/* 				 * Even if the neighbor is not in the default 				 * router list, the neighbor may be used as a 				 * next hop for some destinations (e.g. redirect 				 * case). So we must call rt6_flush explicitly. 				 */
 name|rt6_flush
 argument_list|(
 operator|&
@@ -3969,8 +3936,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 name|ln
 operator|->
