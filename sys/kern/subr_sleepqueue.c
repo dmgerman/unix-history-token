@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_stack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -4246,6 +4252,12 @@ begin_comment
 comment|/*  * Prints the stacks of all threads presently sleeping on wchan/queue to  * the sbuf sb.  Sets count_stacks_printed to the number of stacks actually  * printed.  Typically, this will equal the number of threads sleeping on the  * queue, but may be less if sb overflowed before all stacks were printed.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STACK
+end_ifdef
+
 begin_function
 name|int
 name|sleepq_sbuf_print_stacks
@@ -4740,6 +4752,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -399,11 +399,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/sbuf.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STACK
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
@@ -427,6 +433,11 @@ name|count_stacks_printed
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

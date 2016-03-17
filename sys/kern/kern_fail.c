@@ -36,6 +36,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_stack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ctype.h>
 end_include
 
@@ -2805,6 +2811,9 @@ condition|(
 name|verbose
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|STACK
 comment|/* Print number of sleeping threads. queue=0 is the argument 		 * used by msleep when sending our threads to sleep. */
 name|sbuf_printf
 argument_list|(
@@ -2835,6 +2844,8 @@ argument_list|,
 literal|"},\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -2844,6 +2855,9 @@ argument_list|,
 name|cnt_sleeping
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STACK
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -2873,6 +2887,8 @@ argument_list|,
 literal|"},\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sbuf_printf
 argument_list|(
 name|sb
