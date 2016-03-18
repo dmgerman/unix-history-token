@@ -1243,7 +1243,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_config_intr
+name|intr_irq_config
 argument_list|(
 name|irq
 argument_list|,
@@ -1386,8 +1386,15 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_teardown_intr
+name|intr_irq_remove_handler
 argument_list|(
+name|child
+argument_list|,
+name|rman_get_start
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
 name|ih
 argument_list|)
 operator|)
@@ -1423,7 +1430,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_intr_bind
+name|intr_irq_bind
 argument_list|(
 name|rman_get_start
 argument_list|(

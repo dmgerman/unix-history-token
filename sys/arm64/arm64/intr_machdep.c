@@ -1525,8 +1525,14 @@ end_function
 
 begin_function
 name|int
-name|arm_teardown_intr
+name|intr_irq_remove_handler
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|irq
+parameter_list|,
 name|void
 modifier|*
 name|cookie
@@ -1606,7 +1612,7 @@ end_function
 
 begin_function
 name|int
-name|arm_config_intr
+name|intr_irq_config
 parameter_list|(
 name|u_int
 name|hw_irq
@@ -1819,7 +1825,7 @@ end_function
 
 begin_function
 name|void
-name|arm_cpu_intr
+name|intr_irq_handler
 parameter_list|(
 name|struct
 name|trapframe
@@ -1997,7 +2003,7 @@ end_comment
 
 begin_function
 name|int
-name|arm_intr_bind
+name|intr_irq_bind
 parameter_list|(
 name|u_int
 name|hw_irq
