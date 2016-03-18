@@ -287,15 +287,8 @@ begin_comment
 comment|/* An invalid address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|L0_BLOCK
-value|0x1
-end_define
-
 begin_comment
-comment|/* A block */
+comment|/* 0x1 Level 0 doesn't support block translation */
 end_comment
 
 begin_comment
@@ -349,7 +342,7 @@ begin_define
 define|#
 directive|define
 name|L1_BLOCK
-value|L0_BLOCK
+value|0x1
 end_define
 
 begin_define
@@ -388,21 +381,21 @@ begin_define
 define|#
 directive|define
 name|L2_INVAL
-value|L0_INVAL
+value|L1_INVAL
 end_define
 
 begin_define
 define|#
 directive|define
 name|L2_BLOCK
-value|L0_BLOCK
+value|L1_BLOCK
 end_define
 
 begin_define
 define|#
 directive|define
 name|L2_TABLE
-value|L0_TABLE
+value|L1_TABLE
 end_define
 
 begin_define
