@@ -632,6 +632,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Msg
@@ -652,6 +653,7 @@ parameter_list|(
 name|UINT32
 name|NumSegments
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Pathname

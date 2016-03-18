@@ -108,6 +108,7 @@ decl_stmt|;
 name|UINT8
 name|Offset
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|Name

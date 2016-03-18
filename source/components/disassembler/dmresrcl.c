@@ -45,6 +45,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|AcpiDmAddressNames
@@ -66,6 +67,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|AcpiDmMemoryNames
@@ -2142,6 +2144,7 @@ begin_function
 name|void
 name|AcpiDmVendorCommon
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Name

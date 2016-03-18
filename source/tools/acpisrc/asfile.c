@@ -2121,7 +2121,7 @@ name|Size
 argument_list|)
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|ErrorFree
 goto|;
 block|}
 name|Buffer
@@ -2168,6 +2168,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|ErrorFree
+label|:
+name|free
+argument_list|(
+name|Buffer
+argument_list|)
+expr_stmt|;
 name|ErrorExit
 label|:
 name|fclose

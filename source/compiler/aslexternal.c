@@ -274,6 +274,9 @@ name|ArgCount
 init|=
 literal|0
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|CallName
 operator|=
 name|AcpiNsGetNormalizedPathname
@@ -353,7 +356,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|CallName
@@ -362,6 +364,21 @@ name|ExternalName
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|ExternalName
+argument_list|)
+expr_stmt|;
+name|Next
+operator|=
+name|Next
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+continue|continue;
+block|}
 name|Next
 operator|->
 name|Asl
@@ -374,11 +391,9 @@ name|CompileFlags
 operator||=
 name|NODE_VISITED
 expr_stmt|;
-comment|/*              * Since we will reposition Externals to the Root, set Namepath              * to the fully qualified name and recalculate the aml length              */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+comment|/*          * Since we will reposition Externals to the Root, set Namepath          * to the fully qualified name and recalculate the aml length          */
+name|Status
+operator|=
 name|UtInternalizeName
 argument_list|(
 name|ExternalName
@@ -392,6 +407,17 @@ name|Value
 operator|.
 name|String
 argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|ExternalName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -484,15 +510,11 @@ name|ArgCount
 expr_stmt|;
 break|break;
 block|}
-name|Next
-operator|=
-name|Next
-operator|->
-name|Asl
-operator|.
-name|Next
+name|ACPI_FREE
+argument_list|(
+name|CallName
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

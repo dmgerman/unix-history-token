@@ -178,32 +178,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Module globals */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|AcpiGbl_LowerHexDigits
-index|[]
-init|=
-literal|"0123456789abcdef"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|AcpiGbl_UpperHexDigits
-index|[]
-init|=
-literal|"0123456789ABCDEF"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtBoundStringLength  *  * PARAMETERS:  String              - String with boundary  *              Count               - Boundary of the string  *  * RETURN:      Length of the string. Less than or equal to Count.  *  * DESCRIPTION: Calculate the length of a string with boundary.  *  ******************************************************************************/
 end_comment
 

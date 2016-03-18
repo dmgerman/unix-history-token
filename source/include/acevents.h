@@ -568,17 +568,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiEvAssociateRegMethod
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|RegionObj
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|AcpiEvExecuteRegMethods
 parameter_list|(
 name|ACPI_NAMESPACE_NODE

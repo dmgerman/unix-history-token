@@ -498,7 +498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  CompressedId    - EISAID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISAID to string representation. Return  *              buffer must be large enough to hold the string. The string  *              returned is always exactly of length ACPI_EISAID_STRING_SIZE  *              (includes null terminator). The EISAID is always 32 bits.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  OutString       - Where to put the converted string (8 bytes)  *              CompressedId    - EISAID to be converted  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISAID to string representation. Return  *              buffer must be large enough to hold the string. The string  *              returned is always exactly of length ACPI_EISAID_STRING_SIZE  *              (includes null terminator). The EISAID is always 32 bits.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -696,7 +696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIntegerToString  *  * PARAMETERS:  OutString       - Where to put the converted string. At least  *                                21 bytes are needed to hold the largest  *                                possible 64-bit integer.  *              Value           - Value to be converted  *  * RETURN:      None, string  *  * DESCRIPTION: Convert a 64-bit integer to decimal string representation.  *              Assumes string buffer is large enough to hold the string. The  *              largest string is (ACPI_MAX64_DECIMAL_DIGITS + 1).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIntegerToString  *  * PARAMETERS:  OutString       - Where to put the converted string. At least  *                                21 bytes are needed to hold the largest  *                                possible 64-bit integer.  *              Value           - Value to be converted  *  * RETURN:      Converted string in OutString  *  * DESCRIPTION: Convert a 64-bit integer to decimal string representation.  *              Assumes string buffer is large enough to hold the string. The  *              largest string is (ACPI_MAX64_DECIMAL_DIGITS + 1).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -790,7 +790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciClsToString  *  * PARAMETERS:  OutString       - Where to put the converted string (7 bytes)  * PARAMETERS:  ClassCode       - PCI class code to be converted (3 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert 3-bytes PCI class code to string representation.  *              Return buffer must be large enough to hold the string. The  *              string returned is always exactly of length  *              ACPI_PCICLS_STRING_SIZE (includes null terminator).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciClsToString  *  * PARAMETERS:  OutString       - Where to put the converted string (7 bytes)  *              ClassCode       - PCI class code to be converted (3 bytes)  *  * RETURN:      Converted string in OutString  *  * DESCRIPTION: Convert 3-bytes PCI class code to string representation.  *              Return buffer must be large enough to hold the string. The  *              string returned is always exactly of length  *              ACPI_PCICLS_STRING_SIZE (includes null terminator).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -931,7 +931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSpaceId  *  * PARAMETERS:  SpaceId             - ID to be validated  *  * RETURN:      TRUE if valid/supported ID.  *  * DESCRIPTION: Validate an operation region SpaceID.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSpaceId  *  * PARAMETERS:  SpaceId             - ID to be validated  *  * RETURN:      TRUE if SpaceId is a valid/supported ID.  *  * DESCRIPTION: Validate an operation region SpaceID.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -941,6 +941,12 @@ name|Address
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYSTEM_SYSCTL
+argument_list|)
 name|size_t
 name|Length
 init|=
@@ -949,6 +955,8 @@ argument_list|(
 name|Address
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Get main ACPI tables from memory on first invocation of this function */
 if|if
 condition|(
@@ -1017,6 +1025,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYSTEM_SYSCTL
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -1049,6 +1063,8 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|Address

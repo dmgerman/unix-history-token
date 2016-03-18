@@ -899,6 +899,23 @@ name|PARSEOP_INCLUDE_END
 case|:
 comment|/* Ignore the "default arg" nodes, they are extraneous at this point */
 break|break;
+case|case
+name|PARSEOP_EXTERNAL
+case|:
+if|if
+condition|(
+name|Gbl_DoExternals
+operator|==
+name|TRUE
+condition|)
+block|{
+name|CgGenerateAmlOpcodeLength
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|CgGenerateAmlOpcodeLength
 argument_list|(

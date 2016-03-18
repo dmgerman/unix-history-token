@@ -480,6 +480,7 @@ modifier|*
 name|PrefixNode
 decl_stmt|;
 comment|/* Input: starting node */
+specifier|const
 name|char
 modifier|*
 name|RelativePathname

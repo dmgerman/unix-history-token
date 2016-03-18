@@ -1147,11 +1147,6 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiEvAssociateRegMethod
-argument_list|(
-name|RegionObj
-argument_list|)
-expr_stmt|;
 name|RegionObj
 operator|->
 name|Common

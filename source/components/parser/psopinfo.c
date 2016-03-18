@@ -309,6 +309,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiPsGetOpcodeName

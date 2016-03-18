@@ -3465,6 +3465,7 @@ typedef|typedef
 struct|struct
 name|acpi_predefined_names
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -4393,6 +4394,7 @@ typedef|typedef
 struct|struct
 name|acpi_memory_list
 block|{
+specifier|const
 name|char
 modifier|*
 name|ListName

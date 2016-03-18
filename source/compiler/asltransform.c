@@ -658,11 +658,19 @@ break|break;
 case|case
 name|PARSEOP_EXTERNAL
 case|:
+if|if
+condition|(
+name|Gbl_DoExternals
+operator|==
+name|TRUE
+condition|)
+block|{
 name|ExDoExternal
 argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* Nothing to do here for other opcodes */

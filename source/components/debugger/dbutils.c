@@ -81,16 +81,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|Gbl_HexToAscii
-init|=
-literal|"0123456789ABCDEF"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchArgument  *  * PARAMETERS:  UserArgument            - User command line  *              Arguments               - Array of commands to match against  *  * RETURN:      Index into command array or ACPI_TYPE_NOT_FOUND if not found  *  * DESCRIPTION: Search command array for a command match  *  ******************************************************************************/
 end_comment
@@ -151,14 +141,24 @@ if|if
 condition|(
 name|strstr
 argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|Arguments
 index|[
 name|i
 index|]
 operator|.
 name|Name
+argument_list|)
+argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
 argument_list|,
 name|UserArgument
+argument_list|)
 argument_list|)
 operator|==
 name|Arguments
@@ -799,7 +799,7 @@ index|[
 name|i
 index|]
 operator|=
-name|Gbl_HexToAscii
+name|AcpiGbl_UpperHexDigits
 index|[
 name|Value
 operator|&

@@ -237,6 +237,8 @@ literal|"Get Command Status"
 block|,
 literal|"Set Error Type With Address"
 block|,
+literal|"Get Execute Timings"
+block|,
 literal|"Unknown Action"
 block|}
 decl_stmt|;
@@ -308,6 +310,8 @@ block|,
 literal|"Get Error Address Length"
 block|,
 literal|"Get Error Attributes"
+block|,
+literal|"Execute Timings"
 block|,
 literal|"Unknown Action"
 block|}
@@ -450,6 +454,18 @@ comment|/* ACPI 5.0 */
 literal|"MCE"
 block|,
 comment|/* ACPI 5.0 */
+literal|"GPIO"
+block|,
+comment|/* ACPI 6.0 */
+literal|"SEA"
+block|,
+comment|/* ACPI 6.1 */
+literal|"SEI"
+block|,
+comment|/* ACPI 6.1 */
+literal|"GSIV"
+block|,
+comment|/* ACPI 6.1 */
 literal|"Unknown Notify Type"
 comment|/* Reserved */
 block|}

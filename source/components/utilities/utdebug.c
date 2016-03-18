@@ -54,7 +54,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|ACPI_THREAD_ID
-name|AcpiGbl_PrevThreadId
+name|AcpiGbl_PreviousThreadId
 init|=
 operator|(
 name|ACPI_THREAD_ID
@@ -65,9 +65,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
-name|AcpiGbl_FnEntryStr
+name|AcpiGbl_FunctionEntryPrefix
 init|=
 literal|"----Entry"
 decl_stmt|;
@@ -75,32 +76,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 init|=
 literal|"----Exit-"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Local prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiUtTrimFunctionName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|FunctionName
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitStackPtrTrace  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Save the current CPU stack pointer at subsystem startup  *  ******************************************************************************/
@@ -307,7 +290,7 @@ if|if
 condition|(
 name|ThreadId
 operator|!=
-name|AcpiGbl_PrevThreadId
+name|AcpiGbl_PreviousThreadId
 condition|)
 block|{
 if|if
@@ -324,7 +307,7 @@ argument_list|,
 operator|(
 name|UINT32
 operator|)
-name|AcpiGbl_PrevThreadId
+name|AcpiGbl_PreviousThreadId
 argument_list|,
 operator|(
 name|UINT32
@@ -333,7 +316,7 @@ name|ThreadId
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiGbl_PrevThreadId
+name|AcpiGbl_PreviousThreadId
 operator|=
 name|ThreadId
 expr_stmt|;
@@ -560,7 +543,7 @@ name|ComponentId
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|AcpiGbl_FnEntryStr
+name|AcpiGbl_FunctionEntryPrefix
 argument_list|)
 expr_stmt|;
 block|}
@@ -598,6 +581,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|Pointer
@@ -634,7 +618,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %p\n"
 argument_list|,
-name|AcpiGbl_FnEntryStr
+name|AcpiGbl_FunctionEntryPrefix
 argument_list|,
 name|Pointer
 argument_list|)
@@ -667,6 +651,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|String
@@ -703,7 +688,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %s\n"
 argument_list|,
-name|AcpiGbl_FnEntryStr
+name|AcpiGbl_FunctionEntryPrefix
 argument_list|,
 name|String
 argument_list|)
@@ -771,7 +756,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %08X\n"
 argument_list|,
-name|AcpiGbl_FnEntryStr
+name|AcpiGbl_FunctionEntryPrefix
 argument_list|,
 name|Integer
 argument_list|)
@@ -830,7 +815,7 @@ name|ComponentId
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 argument_list|)
 expr_stmt|;
 block|}
@@ -914,7 +899,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %s\n"
 argument_list|,
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -939,7 +924,7 @@ name|ComponentId
 argument_list|,
 literal|"%s ****Exception****: %s\n"
 argument_list|,
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1021,7 +1006,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %8.8X%8.8X\n"
 argument_list|,
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1103,7 +1088,7 @@ name|ComponentId
 argument_list|,
 literal|"%s %p\n"
 argument_list|,
-name|AcpiGbl_FnExitStr
+name|AcpiGbl_FunctionExitPrefix
 argument_list|,
 name|Ptr
 argument_list|)

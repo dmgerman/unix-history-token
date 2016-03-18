@@ -99,6 +99,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -126,6 +127,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -1419,6 +1421,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -1571,6 +1574,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -2239,12 +2243,17 @@ if|if
 condition|(
 name|strstr
 argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
 operator|.
 name|Name
+argument_list|)
 argument_list|,
 name|UserCommand
 argument_list|)

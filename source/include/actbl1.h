@@ -1461,10 +1461,30 @@ init|=
 literal|6
 block|,
 comment|/* ACPI 5.0 */
-name|ACPI_HEST_NOTIFY_RESERVED
+name|ACPI_HEST_NOTIFY_GPIO
 init|=
 literal|7
-comment|/* 7 and greater are reserved */
+block|,
+comment|/* ACPI 6.0 */
+name|ACPI_HEST_NOTIFY_SEA
+init|=
+literal|8
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_SEI
+init|=
+literal|9
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_GSIV
+init|=
+literal|10
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_RESERVED
+init|=
+literal|11
+comment|/* 11 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1926,13 +1946,117 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-name|UINT64
-name|TimeStamp
-decl_stmt|;
 block|}
 name|ACPI_HEST_GENERIC_DATA
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Extension for revision 0x0300 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_hest_generic_data_v300
+block|{
+name|UINT8
+name|SectionType
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT32
+name|ErrorSeverity
+decl_stmt|;
+name|UINT16
+name|Revision
+decl_stmt|;
+name|UINT8
+name|ValidationBits
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
+name|UINT32
+name|ErrorDataLength
+decl_stmt|;
+name|UINT8
+name|FruId
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT8
+name|FruText
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|UINT64
+name|TimeStamp
+decl_stmt|;
+block|}
+name|ACPI_HEST_GENERIC_DATA_V300
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for ErrorSeverity above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_RECOVERABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_FATAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_CORRECTED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_NONE
+value|3
+end_define
+
+begin_comment
+comment|/* Flags for ValidationBits above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_FRU_ID
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_FRU_STRING
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_TIMESTAMP
+value|(1<<2)
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * MADT - Multiple APIC Description Table  *        Version 3  *  ******************************************************************************/
@@ -2902,7 +3026,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * NFIT - NVDIMM Interface Table (ACPI 6.0)  *        Version 1  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * NFIT - NVDIMM Interface Table (ACPI 6.0+)  *        Version 1  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3300,9 +3424,18 @@ name|UINT16
 name|SubsystemRevisionId
 decl_stmt|;
 name|UINT8
+name|ValidFields
+decl_stmt|;
+name|UINT8
+name|ManufacturingLocation
+decl_stmt|;
+name|UINT16
+name|ManufacturingDate
+decl_stmt|;
+name|UINT8
 name|Reserved
 index|[
-literal|6
+literal|2
 index|]
 decl_stmt|;
 comment|/* Reserved, must be zero */
@@ -3358,6 +3491,21 @@ end_define
 
 begin_comment
 comment|/* Block Data Windows implementation is buffered */
+end_comment
+
+begin_comment
+comment|/* ValidFields bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CONTROL_MFG_INFO_VALID
+value|(1)
+end_define
+
+begin_comment
+comment|/* Manufacturing fields are valid */
 end_comment
 
 begin_comment

@@ -601,7 +601,9 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|AsciiAddress
 argument_list|,
-literal|0
+name|ACPI_ANY_BASE
+argument_list|,
+name|ACPI_MAX64_BYTE_WIDTH
 argument_list|,
 operator|&
 name|LongAddress

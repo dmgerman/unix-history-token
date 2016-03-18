@@ -171,9 +171,20 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*                  * The called method is untyped at this time (typically a                  * forward reference).                  *                  * Check for a recursive method call first.                  */
+comment|/*                  * The called method is untyped at this time (typically a                  * forward reference).                  *                  * Check for a recursive method call first. Note: the                  * Child->Node will be null if the method has not been                  * resolved.                  */
 if|if
 condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Node
+operator|&&
+operator|(
 name|Op
 operator|->
 name|Asl
@@ -191,6 +202,7 @@ operator|.
 name|Node
 operator|->
 name|Op
+operator|)
 condition|)
 block|{
 comment|/* We must type the method here */

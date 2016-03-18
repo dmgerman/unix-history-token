@@ -180,6 +180,10 @@ name|AcpiNsLookup
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|InitVal
 operator|->
 name|Name

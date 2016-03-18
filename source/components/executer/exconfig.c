@@ -238,9 +238,15 @@ comment|/* Execute any module-level code that was found in the table */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_GroupModuleLevelCode
+condition|)
+block|{
 name|AcpiNsExecModuleCodeList
 argument_list|()
 expr_stmt|;
+block|}
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;

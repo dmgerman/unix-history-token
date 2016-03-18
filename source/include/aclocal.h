@@ -3911,6 +3911,17 @@ begin_comment
 comment|/* External() statement has been emitted */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_ORIGIN_FROM_OPCODE
+value|0x10
+end_define
+
+begin_comment
+comment|/* External came from a External() opcode */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct

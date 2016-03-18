@@ -2919,7 +2919,13 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
-literal|"ACPI_FPDT_S3PT_PTR"
+literal|"ACPI_FPDT_BOOT_POINTER"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"ACPI_FPDT_S3PT_POINTER"
 block|,
 name|SRC_TYPE_STRUCT
 block|}
@@ -3028,6 +3034,12 @@ block|}
 block|,
 block|{
 literal|"ACPI_HEST_GENERIC_DATA"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"ACPI_HEST_GENERIC_DATA_V300"
 block|,
 name|SRC_TYPE_STRUCT
 block|}

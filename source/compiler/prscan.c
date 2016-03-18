@@ -2149,6 +2149,27 @@ operator|==
 name|EOF
 condition|)
 block|{
+comment|/*              * On EOF: If there is anything in the line buffer, terminate              * it with a newline, and catch the EOF on the next call              * to this function.              */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+name|Gbl_CurrentLineBuffer
+index|[
+name|i
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|ASL_EOF

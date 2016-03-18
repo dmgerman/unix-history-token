@@ -215,6 +215,7 @@ parameter_list|(
 name|UINT8
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -239,6 +240,7 @@ parameter_list|(
 name|UINT16
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -263,6 +265,7 @@ parameter_list|(
 name|UINT32
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -287,6 +290,7 @@ parameter_list|(
 name|UINT64
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name

@@ -752,7 +752,7 @@ name|ACPI_FPDT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT_POINTER,f)
 end_define
 
 begin_define
@@ -762,7 +762,7 @@ name|ACPI_FPDT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_PTR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_POINTER,f)
 end_define
 
 begin_define
@@ -943,6 +943,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(UINT16) ACPI_OFFSET (ACPI_IORT_SMMU,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT4_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_IORT_SMMU_V3,f)
 end_define
 
 begin_define
@@ -1472,7 +1482,7 @@ name|ACPI_S3PTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_S3PT_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_HEADER,f)
 end_define
 
 begin_define
@@ -1771,6 +1781,18 @@ parameter_list|,
 name|o
 parameter_list|)
 value|ACPI_FLAG_OFFSET (ACPI_IORT_SMMU,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT4_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_IORT_SMMU_V3,f,o)
 end_define
 
 begin_define
@@ -7109,64 +7131,12 @@ block|,
 block|{
 name|ACPI_DMT_UINT64
 block|,
-name|ACPI_FPDT0_OFFSET
+name|ACPI_FPDT1_OFFSET
 argument_list|(
-name|ResetEnd
+name|Address
 argument_list|)
 block|,
-literal|"Reset End"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|LoadStart
-argument_list|)
-block|,
-literal|"Load Image Start"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|StartupStart
-argument_list|)
-block|,
-literal|"Start Image Start"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|ExitServicesEntry
-argument_list|)
-block|,
-literal|"Exit Services Entry"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|ExitServicesExit
-argument_list|)
-block|,
-literal|"Exit Services Exit"
+literal|"FPDT Boot Record Address"
 block|,
 literal|0
 block|}
@@ -7207,7 +7177,7 @@ argument_list|(
 name|Address
 argument_list|)
 block|,
-literal|"S3PT Address"
+literal|"S3PT Record Address"
 block|,
 literal|0
 block|}
@@ -7216,6 +7186,22 @@ name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Boot Performance Record, not supported at this time. */
+end_comment
+
+begin_endif
+unit|{ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ResetEnd),               "Reset End", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (LoadStart),              "Load Image Start", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (StartupStart),           "Start Image Start", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ExitServicesEntry),      "Exit Services Entry", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ExitServicesExit),       "Exit Services Exit", 0},
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * GTDT - Generic Timer Description Table  *  ******************************************************************************/
@@ -10081,6 +10067,168 @@ block|,
 literal|"PMU Interrupt"
 block|,
 name|DT_OPTIONAL
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0x04: SMMUv3 */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIort4
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_IORT4_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"COHACC Override"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_IORT4_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"HTTU Override"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|VatosAddress
+argument_list|)
+block|,
+literal|"VATOS Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Model
+argument_list|)
+block|,
+literal|"Model"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|EventGsiv
+argument_list|)
+block|,
+literal|"Event GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|PriGsiv
+argument_list|)
+block|,
+literal|"PRI GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|GerrGsiv
+argument_list|)
+block|,
+literal|"GERR GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|SyncGsiv
+argument_list|)
+block|,
+literal|"Sync GSIV"
+block|,
+literal|0
 block|}
 block|,
 name|ACPI_DMT_TERMINATOR
@@ -14108,7 +14256,46 @@ literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT48
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ValidFields
+argument_list|)
+block|,
+literal|"Valid Fields"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ManufacturingLocation
+argument_list|)
+block|,
+literal|"Manufacturing Location"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ManufacturingDate
+argument_list|)
+block|,
+literal|"Manufacturing Date"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
 block|,
 name|ACPI_NFIT4_OFFSET
 argument_list|(

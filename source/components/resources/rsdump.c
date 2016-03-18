@@ -52,10 +52,12 @@ specifier|static
 name|void
 name|AcpiRsOutString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Value
@@ -68,6 +70,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger8
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -83,6 +86,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger16
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -98,6 +102,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger32
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -113,6 +118,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger64
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -128,6 +134,7 @@ specifier|static
 name|void
 name|AcpiRsOutTitle
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -511,6 +518,7 @@ name|UINT8
 modifier|*
 name|PreviousTarget
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -630,10 +638,6 @@ name|AcpiRsOutString
 argument_list|(
 name|Name
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|Table
 operator|->
 name|Pointer
@@ -641,7 +645,6 @@ index|[
 operator|*
 name|Target
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -709,10 +712,6 @@ name|AcpiRsOutString
 argument_list|(
 name|Name
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|Table
 operator|->
 name|Pointer
@@ -723,7 +722,6 @@ operator|&
 literal|0x01
 index|]
 argument_list|)
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -732,10 +730,6 @@ case|:
 name|AcpiRsOutString
 argument_list|(
 name|Name
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
 argument_list|,
 name|Table
 operator|->
@@ -747,7 +741,6 @@ operator|&
 literal|0x03
 index|]
 argument_list|)
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -756,10 +749,6 @@ case|:
 name|AcpiRsOutString
 argument_list|(
 name|Name
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
 argument_list|,
 name|Table
 operator|->
@@ -770,7 +759,6 @@ name|Target
 operator|&
 literal|0x07
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1106,10 +1094,12 @@ specifier|static
 name|void
 name|AcpiRsOutString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Value
@@ -1150,6 +1140,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger8
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1175,6 +1166,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger16
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1200,6 +1192,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger32
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1225,6 +1218,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger64
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1253,6 +1247,7 @@ specifier|static
 name|void
 name|AcpiRsOutTitle
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title

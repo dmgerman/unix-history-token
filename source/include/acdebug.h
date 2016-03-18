@@ -56,6 +56,7 @@ typedef|typedef
 struct|struct
 name|acpi_db_command_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -99,6 +100,7 @@ typedef|typedef
 struct|struct
 name|acpi_db_argument_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name

@@ -216,7 +216,7 @@ comment|/*    ASL_MSG_INPUT_FILE_OPEN */
 literal|"Could not open input file"
 block|,
 comment|/*    ASL_MSG_INTEGER_LENGTH */
-literal|"64-bit integer in 32-bit table, truncating (DSDT version< 2)"
+literal|"64-bit integer in 32-bit table, truncating (DSDT or SSDT version< 2)"
 block|,
 comment|/*    ASL_MSG_INTEGER_OPTIMIZATION */
 literal|"Integer optimized to single-byte AML opcode"
@@ -498,7 +498,7 @@ comment|/*    ASL_MSG_TOO_MANY_TEMPS */
 literal|"Method requires too many temporary variables (_T_x)"
 block|,
 comment|/*    ASL_MSG_TRUNCATION */
-literal|"64-bit return value will be truncated to 32 bits (DSDT version< 2)"
+literal|"64-bit return value will be truncated to 32 bits (DSDT or SSDT version< 2)"
 block|,
 comment|/*    ASL_MSG_UNKNOWN_RESERVED_NAME */
 literal|"Unknown reserved name"

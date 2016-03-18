@@ -1424,6 +1424,13 @@ name|ACPI_FADT_V6_SIZE
 value|(UINT32) (sizeof (ACPI_TABLE_FADT))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_CONFORMANCE
+value|"ACPI 6.1 (FADT version 6)"
+end_define
+
 begin_endif
 endif|#
 directive|endif

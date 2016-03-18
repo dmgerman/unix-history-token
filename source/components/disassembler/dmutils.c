@@ -365,10 +365,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%*.s"
 argument_list|,
-name|ACPI_MUL_4
-argument_list|(
+operator|(
 name|Level
-argument_list|)
+operator|*
+literal|4
+operator|)
 argument_list|,
 literal|" "
 argument_list|)

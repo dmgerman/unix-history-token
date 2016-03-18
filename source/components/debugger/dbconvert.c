@@ -747,6 +747,8 @@ name|String
 argument_list|,
 literal|16
 argument_list|,
+name|AcpiGbl_IntegerByteWidth
+argument_list|,
 operator|&
 name|Object
 operator|->

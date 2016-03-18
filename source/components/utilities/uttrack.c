@@ -120,6 +120,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiUtCreateList
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ListName

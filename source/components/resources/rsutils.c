@@ -1229,6 +1229,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path

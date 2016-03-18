@@ -1304,6 +1304,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * aslpld - ToPLD macro support  */
+end_comment
+
+begin_function_decl
+name|void
+name|OpcDoPld
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * aslprintf - Printf/Fprintf macros  */
 end_comment
 

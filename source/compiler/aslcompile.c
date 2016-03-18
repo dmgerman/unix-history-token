@@ -640,6 +640,11 @@ name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
 comment|/* Resolve External Declarations */
+if|if
+condition|(
+name|Gbl_DoExternals
+condition|)
+block|{
 name|Event
 operator|=
 name|UtBeginEvent
@@ -672,6 +677,7 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*      * Semantic analysis. This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=

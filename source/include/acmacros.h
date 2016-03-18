@@ -996,6 +996,20 @@ value|(((ACPI_SIZE) value)& (sizeof(ACPI_SIZE)-1))
 end_define
 
 begin_comment
+comment|/* Generic (power-of-two) rounding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_POWER_OF_TWO
+parameter_list|(
+name|a
+parameter_list|)
+value|(((a)& ((a) - 1)) == 0)
+end_define
+
+begin_comment
 comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
 end_comment
 

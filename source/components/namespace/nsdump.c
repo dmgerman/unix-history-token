@@ -163,6 +163,7 @@ parameter_list|(
 name|UINT32
 name|NumSegments
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Pathname
@@ -273,6 +274,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OBSOLETE_FUNCTIONS
+end_ifdef
+
+begin_comment
+comment|/* Not used at this time, perhaps later */
+end_comment
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpPathname  *  * PARAMETERS:  Handle              - Object  *              Msg                 - Prefix message  *              Level               - Desired debug level  *              Component           - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Print an object's full namespace pathname  *              Manages allocation/freeing of a pathname buffer  *  ******************************************************************************/
 end_comment
@@ -284,6 +295,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Msg
@@ -332,6 +344,11 @@ name|return_VOID
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDumpOneObject  *  * PARAMETERS:  ObjHandle           - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *              ReturnValue         - Not used  *  * RETURN:      Status  *  * DESCRIPTION: Dump a single Node  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ******************************************************************************/

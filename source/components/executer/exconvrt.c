@@ -203,6 +203,8 @@ name|Pointer
 argument_list|,
 name|Flags
 argument_list|,
+name|AcpiGbl_IntegerByteWidth
+argument_list|,
 operator|&
 name|Result
 argument_list|)

@@ -1261,6 +1261,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIort4
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoIortAcc
 index|[]
 decl_stmt|;
@@ -3080,6 +3088,7 @@ parameter_list|(
 name|UINT8
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3094,6 +3103,7 @@ parameter_list|(
 name|UINT16
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3108,6 +3118,7 @@ parameter_list|(
 name|UINT32
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3122,6 +3133,7 @@ parameter_list|(
 name|UINT64
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3445,6 +3457,7 @@ begin_function_decl
 name|void
 name|AcpiDmVendorCommon
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Name

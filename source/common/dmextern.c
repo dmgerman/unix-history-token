@@ -1622,82 +1622,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmEternalIsMatch  *  * PARAMETERS:  NamePath            - Path to match to External Name  *              ExternalPath        - External NamePath to be matched  *  * RETURN:      BOOLEAN  *  * DESCRIPTION: Returns TRUE if NamePath matches the last NamePath-length  *              characters of ExternalPath.  *  *              External (_SB_.DEV0.ABCD) will match:  *                  _SB_.DEV0.ABCD  *                  DEV0.ABCD  *                  ABCD  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|BOOLEAN
-name|AcpiDmExternalIsMatch
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|NamePath
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ListNamePath
-parameter_list|)
-block|{
-name|BOOLEAN
-name|Match
-init|=
-name|FALSE
-decl_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|ListNamePath
-argument_list|)
-operator|>=
-name|strlen
-argument_list|(
-name|NamePath
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|ListNamePath
-operator|+
-operator|(
-name|strlen
-argument_list|(
-name|ListNamePath
-argument_list|)
-operator|-
-name|strlen
-argument_list|(
-name|NamePath
-argument_list|)
-operator|)
-argument_list|,
-name|NamePath
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-name|Match
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmCreateNewExternal  *  * PARAMETERS:  ExternalPath        - External path to the object  *              InternalPath        - Internal (AML) path to the object  *              Type                - ACPI object type to be added  *              Value               - Arg count if adding a Method object  *              Flags               - To be passed to the external object  *  * RETURN:      Status  *  * DESCRIPTION: Common low-level function to insert a new name into the global  *              list of Externals which will in turn be later emitted as  *              External() declarations in the disassembled output.  *  *              Note: The external name should not include a root prefix  *              (backslash). We do not want External() statements to contain  *              a leading '\', as this prevents duplicate external statements  *              of the form:  *  *                  External (\ABCD)  *                  External (ABCD)  *  *              This would cause a compile time error when the disassembled  *              output file is recompiled.  *  *              There are two cases that are handled here. For both, we emit  *              an External() statement:  *              1) The name was simply not found in the namespace.  *              2) The name was found, but it originated in a table other than  *              the table that is being disassembled.  *  ******************************************************************************/
 end_comment
 
@@ -1756,7 +1680,8 @@ block|{
 comment|/* Check for duplicates */
 if|if
 condition|(
-name|AcpiDmExternalIsMatch
+operator|!
+name|strcmp
 argument_list|(
 name|ExternalPath
 argument_list|,
@@ -1766,58 +1691,19 @@ name|Path
 argument_list|)
 condition|)
 block|{
-comment|/* Duplicate method, check that the Value (ArgCount) is the same */
+comment|/*              * If this external came from an External() opcode, we are              * finished with this one. (No need to check any further).              */
 if|if
 condition|(
-operator|(
-name|NextExternal
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_METHOD
-operator|)
-operator|&&
-operator|(
 name|NextExternal
 operator|->
 name|Flags
 operator|&
-name|ANOBJ_IS_EXTERNAL
-operator|)
-operator|&&
-operator|(
-name|NextExternal
-operator|->
-name|Value
-operator|!=
-name|Value
-operator|)
-operator|&&
-operator|(
-name|Value
-operator|>
-literal|0
-operator|)
+name|ACPI_EXT_ORIGIN_FROM_OPCODE
 condition|)
 block|{
-name|ACPI_ERROR
+name|return_ACPI_STATUS
 argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"External method arg count mismatch %s: "
-literal|"Current %u, attempted %u"
-operator|,
-name|NextExternal
-operator|->
-name|Path
-operator|,
-name|NextExternal
-operator|->
-name|Value
-operator|,
-name|Value
-operator|)
+name|AE_ALREADY_EXISTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1825,11 +1711,19 @@ comment|/* Allow upgrade of type from ANY */
 elseif|else
 if|if
 condition|(
+operator|(
 name|NextExternal
 operator|->
 name|Type
 operator|==
 name|ACPI_TYPE_ANY
+operator|)
+operator|&&
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_ANY
+operator|)
 condition|)
 block|{
 name|NextExternal
@@ -1838,6 +1732,17 @@ name|Type
 operator|=
 name|Type
 expr_stmt|;
+block|}
+comment|/* Update the argument count as necessary */
+if|if
+condition|(
+name|Value
+operator|<
+name|NextExternal
+operator|->
+name|Value
+condition|)
+block|{
 name|NextExternal
 operator|->
 name|Value
@@ -2385,20 +2290,63 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Emit any unresolved method externals in a single text block */
-name|NextExternal
+if|if
+condition|(
+name|Gbl_ExternalRefFilename
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    /*\n     * External declarations were imported from\n"
+literal|"     * a reference file -- %s\n     */\n\n"
+argument_list|,
+name|Gbl_ExternalRefFilename
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Walk and emit the list of externals found during the AML parsing      */
+while|while
+condition|(
+name|AcpiGbl_ExternalList
+condition|)
+block|{
+name|AcpiGbl_ExternalList
 operator|=
 name|AcpiGbl_ExternalList
 expr_stmt|;
-while|while
+if|if
 condition|(
-name|NextExternal
+operator|!
+operator|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Flags
+operator|&
+name|ACPI_EXT_EXTERNAL_EMITTED
+operator|)
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    External (%s%s)"
+argument_list|,
+name|AcpiGbl_ExternalList
+operator|->
+name|Path
+argument_list|,
+name|AcpiDmGetObjectTypeName
+argument_list|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Check for "unresolved" method reference */
 if|if
 condition|(
 operator|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Type
 operator|==
@@ -2408,7 +2356,7 @@ operator|&&
 operator|(
 operator|!
 operator|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Flags
 operator|&
@@ -2419,111 +2367,29 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    External (%s%s"
+literal|"    // Warning: Unknown method, "
+literal|"guessing %u arguments"
 argument_list|,
-name|NextExternal
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|NextExternal
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|")    // Warning: Unresolved method, "
-literal|"guessing %u arguments\n"
-argument_list|,
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Value
 argument_list|)
 expr_stmt|;
-name|NextExternal
-operator|->
-name|Flags
-operator||=
-name|ACPI_EXT_EXTERNAL_EMITTED
-expr_stmt|;
 block|}
-name|NextExternal
-operator|=
-name|NextExternal
-operator|->
-name|Next
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* Emit externals that were imported from a file */
+comment|/* Check for external from a external references file */
+elseif|else
 if|if
 condition|(
-name|Gbl_ExternalRefFilename
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    /*\n     * External declarations that were imported from\n"
-literal|"     * the reference file [%s]\n     */\n"
-argument_list|,
-name|Gbl_ExternalRefFilename
-argument_list|)
-expr_stmt|;
-name|NextExternal
-operator|=
 name|AcpiGbl_ExternalList
-expr_stmt|;
-while|while
-condition|(
-name|NextExternal
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|NextExternal
-operator|->
-name|Flags
-operator|&
-name|ACPI_EXT_EXTERNAL_EMITTED
-operator|)
-operator|&&
-operator|(
-name|NextExternal
 operator|->
 name|Flags
 operator|&
 name|ACPI_EXT_ORIGIN_FROM_FILE
-operator|)
 condition|)
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    External (%s%s"
-argument_list|,
-name|NextExternal
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|NextExternal
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Type
 operator|==
@@ -2532,76 +2398,23 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // %u Arguments\n"
+literal|"    // %u Arguments"
 argument_list|,
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Value
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"    // From external reference file"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* This is the normal external case */
 else|else
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|")\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|NextExternal
-operator|->
-name|Flags
-operator||=
-name|ACPI_EXT_EXTERNAL_EMITTED
-expr_stmt|;
-block|}
-name|NextExternal
-operator|=
-name|NextExternal
-operator|->
-name|Next
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Walk the list of externals found during the AML parsing      */
-while|while
-condition|(
-name|AcpiGbl_ExternalList
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Flags
-operator|&
-name|ACPI_EXT_EXTERNAL_EMITTED
-operator|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    External (%s%s"
-argument_list|,
-name|AcpiGbl_ExternalList
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* For methods, add a comment with the number of arguments */
 if|if
 condition|(
@@ -2614,7 +2427,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // %u Arguments\n"
+literal|"    // %u Arguments"
 argument_list|,
 name|AcpiGbl_ExternalList
 operator|->
@@ -2622,14 +2435,12 @@ name|Value
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Free this external info block and move on to next external */
 name|NextExternal
@@ -2789,7 +2600,7 @@ name|sprintf
 argument_list|(
 name|ExternalWarningPart1
 argument_list|,
-literal|"%s iASL Warning: There were %u external control methods found during\n"
+literal|"%s iASL Warning: There %s %u external control method%s found during\n"
 literal|"%s disassembly, but only %u %s resolved (%u unresolved). Additional\n"
 literal|"%s ACPI tables may be required to properly disassemble the code. This\n"
 literal|"%s resulting disassembler output file may not compile because the\n"
@@ -2799,7 +2610,27 @@ literal|"%s runtime and may or may not be available via the host OS.\n"
 argument_list|,
 name|Format
 argument_list|,
+operator|(
 name|AcpiGbl_NumExternalMethods
+operator|!=
+literal|1
+condition|?
+literal|"were"
+else|:
+literal|"was"
+operator|)
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|!=
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+operator|)
 argument_list|,
 name|Format
 argument_list|,
@@ -2807,7 +2638,7 @@ name|AcpiGbl_ResolvedExternalMethods
 argument_list|,
 operator|(
 name|AcpiGbl_ResolvedExternalMethods
-operator|>
+operator|!=
 literal|1
 condition|?
 literal|"were"
@@ -2926,7 +2757,7 @@ block|{
 comment|/* The -e option was specified, but there are still some unresolved externals */
 name|AcpiOsPrintf
 argument_list|(
-literal|"    /*\n%s     *\n     *\n     */\n"
+literal|"    /*\n%s     *\n%s     *\n%s     */\n"
 argument_list|,
 name|ExternalWarningPart1
 argument_list|,

@@ -232,10 +232,6 @@ modifier|*
 name|Table
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|NewFilename
-decl_stmt|;
 name|UINT8
 name|Checksum
 decl_stmt|;
@@ -335,15 +331,10 @@ break|break;
 default|default:
 break|break;
 block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* Print and validate the table checksum */
 name|AcpiOsPrintf
 argument_list|(
-literal|" *     Checksum         0x%2.2X"
+literal|"\n *     Checksum         0x%2.2X"
 argument_list|,
 name|Table
 operator|->
@@ -451,75 +442,10 @@ argument_list|(
 literal|" */\n"
 argument_list|)
 expr_stmt|;
-comment|/* Create AML output filename based on input filename */
-if|if
-condition|(
-name|Filename
-condition|)
-block|{
-name|NewFilename
-operator|=
-name|FlGenerateFilename
-argument_list|(
-name|Filename
-argument_list|,
-literal|"aml"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|NewFilename
-operator|=
-name|UtStringCacheCalloc
-argument_list|(
-literal|9
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NewFilename
-condition|)
-block|{
-name|strncat
-argument_list|(
-name|NewFilename
-argument_list|,
-name|Table
-operator|->
-name|Signature
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|NewFilename
-argument_list|,
-literal|".aml"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|NewFilename
-condition|)
-block|{
+comment|/*      * Open the ASL definition block.      *      * Note: the AMLFilename string is left zero-length in order to just let      * the compiler create it when the disassembled file is compiled. This      * makes it easier to rename the disassembled ASL file if needed.      */
 name|AcpiOsPrintf
 argument_list|(
-literal|" **** Could not generate AML output filename\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Open the ASL definition block */
-name|AcpiOsPrintf
-argument_list|(
-literal|"DefinitionBlock (\"%s\", \"%4.4s\", %hu, \"%.6s\", \"%.8s\", 0x%8.8X)\n"
-argument_list|,
-name|NewFilename
+literal|"DefinitionBlock (\"\", \"%4.4s\", %hu, \"%.6s\", \"%.8s\", 0x%8.8X)\n"
 argument_list|,
 name|Table
 operator|->

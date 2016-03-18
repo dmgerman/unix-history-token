@@ -302,44 +302,6 @@ name|AcpiGbl_EarlyInitialization
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * Install the default operation region handlers. These are the      * handlers that are defined by the ACPI specification to be      * "always accessible" -- namely, SystemMemory, SystemIO, and      * PCI_Config. This also means that no _REG methods need to be      * run for these address spaces. We need to have these handlers      * installed before any AML code can be executed, especially any      * module-level code (11/2015).      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_GroupModuleLevelCode
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiEvInstallRegionHandlers
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"During Region initialization"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|#
 directive|if
 operator|(
@@ -578,8 +540,7 @@ block|{
 name|AcpiNsExecModuleCodeList
 argument_list|()
 expr_stmt|;
-block|}
-comment|/*      * Initialize the objects that remain uninitialized. This runs the      * executable AML that may be part of the declaration of these objects:      * OperationRegions, BufferFields, Buffers, and Packages.      */
+comment|/*          * Initialize the objects that remain uninitialized. This          * runs the executable AML that may be part of the          * declaration of these objects:          * OperationRegions, BufferFields, Buffers, and Packages.          */
 if|if
 condition|(
 operator|!
@@ -590,15 +551,6 @@ name|ACPI_NO_OBJECT_INIT
 operator|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"[Init] Completing Initialization of ACPI Objects\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsInitializeObjects
@@ -619,10 +571,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|AcpiGbl_NamespaceInitialized
-operator|=
-name|TRUE
-expr_stmt|;
+block|}
 comment|/*      * Initialize all device/region objects in the namespace. This runs      * the device _STA and _INI methods and region _REG methods.      */
 if|if
 condition|(

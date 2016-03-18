@@ -1381,10 +1381,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_MatchOps
 index|[
 operator|(
@@ -1398,7 +1394,6 @@ name|Value
 operator|.
 name|Integer
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

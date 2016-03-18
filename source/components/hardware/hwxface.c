@@ -1133,15 +1133,10 @@ name|Info
 operator|->
 name|RelativePathname
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_SleepStateNames
 index|[
 name|SleepState
 index|]
-argument_list|)
 expr_stmt|;
 name|Status
 operator|=

@@ -432,7 +432,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoul64  *  * PARAMETERS:  String          - Null terminated string  *              Base            - Radix of the string: 16 or ACPI_ANY_BASE;  *                                ACPI_ANY_BASE means 'in behalf of ToInteger'  *              RetInteger      - Where the converted integer is returned  *  * RETURN:      Status and Converted value  *  * DESCRIPTION: Convert a string into an unsigned value. Performs either a  *              32-bit or 64-bit conversion, depending on the current mode  *              of the interpreter.  *  * NOTES:       AcpiGbl_IntegerByteWidth should be set to the proper width.  *              For the core ACPICA code, this width depends on the DSDT  *              version. For iASL, the default byte width is always 8.  *  *              Does not support Octal strings, not needed at this time.  *  *              There is an earlier version of the function after this one,  *              below. It is slightly different than this one, and the two  *              may eventually may need to be merged. (01/2016).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoul64  *  * PARAMETERS:  String                  - Null terminated string  *              Base                    - Radix of the string: 16 or 10 or  *                                        ACPI_ANY_BASE  *              MaxIntegerByteWidth     - Maximum allowable integer,in bytes:  *                                        4 or 8 (32 or 64 bits)  *              RetInteger              - Where the converted integer is  *                                        returned  *  * RETURN:      Status and Converted value  *  * DESCRIPTION: Convert a string into an unsigned value. Performs either a  *              32-bit or 64-bit conversion, depending on the input integer  *              size (often the current mode of the interpreter).  *  * NOTES:       Negative numbers are not supported, as they are not supported  *              by ACPI.  *  *              AcpiGbl_IntegerByteWidth should be set to the proper width.  *              For the core ACPICA code, this width depends on the DSDT  *              version. For iASL, the default byte width is always 8 for the  *              parser, but error checking is performed later to flag cases  *              where a 64-bit constant is defined in a 32-bit DSDT/SSDT.  *  *              Does not support Octal strings, not needed at this time.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -445,6 +445,9 @@ name|String
 parameter_list|,
 name|UINT32
 name|Base
+parameter_list|,
+name|UINT32
+name|MaxIntegerByteWidth
 parameter_list|,
 name|UINT64
 modifier|*
@@ -466,24 +469,6 @@ name|Quotient
 decl_stmt|;
 name|UINT64
 name|Dividend
-decl_stmt|;
-name|UINT32
-name|ToIntegerOp
-init|=
-operator|(
-name|Base
-operator|==
-name|ACPI_ANY_BASE
-operator|)
-decl_stmt|;
-name|UINT32
-name|Mode32
-init|=
-operator|(
-name|AcpiGbl_IntegerByteWidth
-operator|==
-literal|4
-operator|)
 decl_stmt|;
 name|UINT8
 name|ValidDigits
@@ -514,6 +499,9 @@ condition|)
 block|{
 case|case
 name|ACPI_ANY_BASE
+case|:
+case|case
+literal|10
 case|:
 case|case
 literal|16
@@ -568,10 +556,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ToIntegerOp
+name|Base
+operator|==
+name|ACPI_ANY_BASE
 condition|)
 block|{
-comment|/*          * Base equal to ACPI_ANY_BASE means 'ToInteger operation case'.          * We need to determine if it is decimal or hexadecimal.          */
+comment|/*          * Base equal to ACPI_ANY_BASE means 'Either decimal or hex'.          * We need to determine if it is decimal or hexadecimal.          */
 if|if
 condition|(
 operator|(
@@ -647,7 +637,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ToIntegerOp
+name|Base
+operator|==
+name|ACPI_ANY_BASE
 condition|)
 block|{
 goto|goto
@@ -661,11 +653,13 @@ name|AllDone
 goto|;
 block|}
 block|}
-comment|/*      * Perform a 32-bit or 64-bit conversion, depending upon the current      * execution mode of the interpreter      */
+comment|/*      * Perform a 32-bit or 64-bit conversion, depending upon the input      * byte width      */
 name|Dividend
 operator|=
 operator|(
-name|Mode32
+name|MaxIntegerByteWidth
+operator|<=
+name|ACPI_MAX32_BYTE_WIDTH
 operator|)
 condition|?
 name|ACPI_UINT32_MAX
@@ -771,7 +765,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ToIntegerOp
+name|Base
+operator|==
+name|ACPI_ANY_BASE
 condition|)
 block|{
 goto|goto
@@ -829,12 +825,16 @@ operator|>
 literal|8
 operator|)
 operator|&&
-name|Mode32
+operator|(
+name|MaxIntegerByteWidth
+operator|<=
+name|ACPI_MAX32_BYTE_WIDTH
+operator|)
 operator|)
 operator|)
 condition|)
 block|{
-comment|/*              * This is ToInteger operation case.              * No any restrictions for string-to-integer conversion,              * see ACPI spec.              */
+comment|/*              * This is ToInteger operation case.              * No restrictions for string-to-integer conversion,              * see ACPI spec.              */
 goto|goto
 name|ErrorExit
 goto|;
@@ -871,7 +871,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ToIntegerOp
+name|Base
+operator|==
+name|ACPI_ANY_BASE
 condition|)
 block|{
 goto|goto
@@ -924,7 +926,7 @@ argument_list|)
 expr_stmt|;
 name|ErrorExit
 label|:
-comment|/* Base was set/validated above */
+comment|/* Base was set/validated above (10 or 16) */
 if|if
 condition|(
 name|Base
@@ -956,11 +958,7 @@ name|_OBSOLETE_FUNCTIONS
 end_ifdef
 
 begin_comment
-comment|/* TBD: use version in ACPICA main code base? */
-end_comment
-
-begin_comment
-comment|/* DONE: 01/2016 */
+comment|/* Removed: 01/2016 */
 end_comment
 
 begin_comment

@@ -61,6 +61,7 @@ parameter_list|,
 name|UINT64
 name|Address
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|RegisterName
@@ -118,6 +119,7 @@ typedef|typedef
 struct|struct
 name|acpi_fadt_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -495,6 +497,7 @@ parameter_list|,
 name|UINT64
 name|Address
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|RegisterName
@@ -875,7 +878,7 @@ name|UINT32
 name|Length
 parameter_list|)
 block|{
-comment|/*      * Check if the FADT is larger than the largest table that we expect      * (the ACPI 5.0 version). If so, truncate the table, and issue      * a warning.      */
+comment|/*      * Check if the FADT is larger than the largest table that we expect      * (typically the current ACPI specification version). If so, truncate      * the table, and issue a warning.      */
 if|if
 condition|(
 name|Length
@@ -891,12 +894,14 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"FADT (revision %u) is longer than ACPI 5.0 version, "
+literal|"FADT (revision %u) is longer than %s length, "
 literal|"truncating length %u to %u"
 operator|,
 name|Table
 operator|->
 name|Revision
+operator|,
+name|ACPI_FADT_CONFORMANCE
 operator|,
 name|Length
 operator|,
@@ -986,6 +991,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -1434,10 +1440,26 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Optional FADT field %s has zero address or length: "
+literal|"Optional FADT field %s has valid %s but zero %s: "
 literal|"0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
+operator|,
+operator|(
+name|Length
+condition|?
+literal|"Length"
+else|:
+literal|"Address"
+operator|)
+operator|,
+operator|(
+name|Length
+condition|?
+literal|"Address"
+else|:
+literal|"Length"
+operator|)
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(

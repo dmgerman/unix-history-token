@@ -2506,7 +2506,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_S3PT_HEADER
+name|ACPI_FPDT_HEADER
 modifier|*
 name|S3ptHeader
 decl_stmt|;
@@ -2619,7 +2619,7 @@ name|S3ptHeader
 operator|=
 name|ACPI_CAST_PTR
 argument_list|(
-name|ACPI_S3PT_HEADER
+name|ACPI_FPDT_HEADER
 argument_list|,
 name|Subtable
 operator|->

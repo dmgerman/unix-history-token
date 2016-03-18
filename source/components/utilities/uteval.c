@@ -51,6 +51,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -372,6 +373,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiUtEvaluateNumericObject
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ObjectName

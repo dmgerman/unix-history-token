@@ -733,12 +733,33 @@ parameter_list|,
 name|UINT32
 name|Base
 parameter_list|,
+name|UINT32
+name|MaxIntegerByteWidth
+parameter_list|,
 name|UINT64
 modifier|*
 name|RetInteger
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Values for MaxIntegerByteWidth above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX32_BYTE_WIDTH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX64_BYTE_WIDTH
+value|8
+end_define
 
 begin_comment
 comment|/*  * utglobal - Global data structures and procedures  */
@@ -1137,6 +1158,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|Pointer
@@ -1190,6 +1212,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|String
@@ -1487,6 +1510,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -1506,6 +1530,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtEvaluateNumericObject
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ObjectName
@@ -2325,6 +2350,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ObjHandle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -2816,6 +2842,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtCreateList
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ListName

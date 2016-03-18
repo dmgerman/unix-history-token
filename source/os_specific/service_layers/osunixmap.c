@@ -86,6 +86,11 @@ name|defined
 argument_list|(
 name|_FreeBSD
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_QNX
+argument_list|)
 end_if
 
 begin_define
