@@ -2800,12 +2800,13 @@ operator|=
 name|frm
 expr_stmt|;
 break|break;
-case|case
-name|IEEE80211_ELEMID_MESHEXTCAP
-case|:
-break|break;
 endif|#
 directive|endif
+comment|/* Extended capabilities; nothing handles it for now */
+case|case
+name|IEEE80211_ELEMID_EXTCAP
+case|:
+break|break;
 case|case
 name|IEEE80211_ELEMID_VENDOR
 case|:

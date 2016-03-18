@@ -4334,7 +4334,7 @@ init|=
 literal|126
 block|,
 comment|/* 127 Extended Capabilities */
-name|IEEE80211_ELEMID_MESHEXTCAP
+name|IEEE80211_ELEMID_EXTCAP
 init|=
 literal|127
 block|,
