@@ -73,6 +73,11 @@ name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|mbuf

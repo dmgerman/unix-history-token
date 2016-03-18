@@ -6152,6 +6152,15 @@ argument_list|,
 name|received
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|received
 operator|=
 name|next
@@ -7642,6 +7651,15 @@ argument_list|(
 name|ifp
 argument_list|,
 name|received
+argument_list|)
+expr_stmt|;
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|received
@@ -9152,6 +9170,14 @@ name|padlen
 operator|)
 argument_list|)
 expr_stmt|;
+name|slot
+operator|->
+name|ifp
+operator|=
+name|sc
+operator|->
+name|ifp
+expr_stmt|;
 comment|/* If there is only one segment, the for() loop 		 * gets skipped and the single buffer gets set up 		 * as both SOP and EOP. */
 comment|/* Start by setting up the first buffer */
 name|bd
@@ -9959,6 +9985,23 @@ operator|->
 name|mbuf
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|ifp
+condition|)
+name|if_inc_counter
+argument_list|(
+name|slot
+operator|->
+name|ifp
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Dequeue any additional buffers used by this packet. */
 while|while
