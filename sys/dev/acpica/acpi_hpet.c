@@ -2361,7 +2361,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"memory region width %ld too small\n"
+literal|"memory region width %jd too small\n"
 argument_list|,
 name|rman_get_size
 argument_list|(

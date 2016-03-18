@@ -23277,7 +23277,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %ld"
+literal|" %jd"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -23594,7 +23594,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"using %s irq %ld\n"
+literal|"using %s irq %jd\n"
 argument_list|,
 name|sc
 operator|->
@@ -24460,7 +24460,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"impossible memory region size %ld\n"
+literal|"impossible memory region size %jd\n"
 argument_list|,
 name|rman_get_size
 argument_list|(

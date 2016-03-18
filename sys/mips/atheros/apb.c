@@ -869,7 +869,7 @@ name|NULL
 expr_stmt|;
 name|dprintf
 argument_list|(
-literal|"%s: entry (%p, %p, %d, %d, %p, %p, %ld, %d)\n"
+literal|"%s: entry (%p, %p, %d, %d, %p, %p, %jd, %d)\n"
 argument_list|,
 name|__func__
 argument_list|,

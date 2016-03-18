@@ -1315,7 +1315,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"0x%lx"
+literal|"0x%jx"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -1352,7 +1352,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lu"
+literal|"%ju"
 argument_list|,
 name|rman_get_start
 argument_list|(

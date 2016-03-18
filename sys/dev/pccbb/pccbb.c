@@ -962,7 +962,7 @@ name|dev
 argument_list|,
 literal|"Danger Will Robinson: Resource "
 literal|"left allocated!  This is a bug... "
-literal|"(rid=%x, type=%d, addr=%lx)\n"
+literal|"(rid=%x, type=%d, addr=%jx)\n"
 argument_list|,
 name|rle
 operator|->
@@ -5226,8 +5226,8 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"requested interrupt %ld-%ld,"
-literal|"count = %ld not supported by cbb\n"
+literal|"requested interrupt %jd-%jd,"
+literal|"count = %jd not supported by cbb\n"
 argument_list|,
 name|start
 argument_list|,
@@ -6211,8 +6211,8 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"requested interrupt %ld-%ld,"
-literal|"count = %ld not supported by cbb\n"
+literal|"requested interrupt %jd-%jd,"
+literal|"count = %jd not supported by cbb\n"
 argument_list|,
 name|start
 argument_list|,

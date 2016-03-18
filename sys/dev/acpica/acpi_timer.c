@@ -615,7 +615,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't set resource (%s 0x%lx+0x%lx)\n"
+literal|"couldn't set resource (%s 0x%jx+0x%jx)\n"
 argument_list|,
 operator|(
 name|rtype

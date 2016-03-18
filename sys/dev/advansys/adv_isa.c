@@ -403,7 +403,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid baseport of 0x%lx specified. "
+literal|"Invalid baseport of 0x%jx specified. "
 literal|"Nearest valid baseport is 0x%x.  Failing "
 literal|"probe.\n"
 argument_list|,

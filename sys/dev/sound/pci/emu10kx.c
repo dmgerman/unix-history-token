@@ -19593,7 +19593,7 @@ name|status
 argument_list|,
 literal|255
 argument_list|,
-literal|"rev %d at io 0x%lx irq %ld"
+literal|"rev %d at io 0x%jx irq %jd"
 argument_list|,
 name|sc
 operator|->

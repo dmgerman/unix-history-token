@@ -226,9 +226,9 @@ name|printf
 argument_list|(
 name|hexmode
 condition|?
-literal|"0x%lx"
+literal|"0x%jx"
 else|:
-literal|"%lu"
+literal|"%ju"
 argument_list|,
 name|res
 operator|->
@@ -247,9 +247,9 @@ name|printf
 argument_list|(
 name|hexmode
 condition|?
-literal|"-0x%lx"
+literal|"-0x%jx"
 else|:
-literal|"-%lu"
+literal|"-%ju"
 argument_list|,
 name|res
 operator|->

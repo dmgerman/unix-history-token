@@ -1026,7 +1026,7 @@ argument_list|(
 name|bus
 argument_list|,
 literal|"Could not map resource "
-literal|"%#lx-%#lx\n"
+literal|"%#jx-%#jx\n"
 argument_list|,
 name|start
 argument_list|,
@@ -1147,7 +1147,7 @@ argument_list|(
 name|bus
 argument_list|,
 literal|"Invalid MEM range"
-literal|"%#lx-%#lx\n"
+literal|"%#jx-%#jx\n"
 argument_list|,
 name|start
 argument_list|,

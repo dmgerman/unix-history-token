@@ -2052,7 +2052,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"lazy allocation of irq %ld for %s\n"
+literal|"lazy allocation of irq %jd for %s\n"
 argument_list|,
 name|start
 argument_list|,

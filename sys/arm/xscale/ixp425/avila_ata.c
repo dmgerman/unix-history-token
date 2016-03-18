@@ -1278,7 +1278,7 @@ operator|==
 name|ATA_IRQ_RID
 argument_list|,
 operator|(
-literal|"type %u rid %u start %lu end %lu count %lu flags %u"
+literal|"type %u rid %u start %ju end %ju count %ju flags %u"
 operator|,
 name|type
 operator|,

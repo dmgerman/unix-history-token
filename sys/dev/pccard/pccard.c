@@ -2736,7 +2736,7 @@ argument_list|(
 operator|(
 name|bus
 operator|,
-literal|"I/O rid %d start %#lx end %#lx\n"
+literal|"I/O rid %d start %#jx end %#jx\n"
 operator|,
 name|i
 operator|,
@@ -2906,7 +2906,7 @@ argument_list|(
 operator|(
 name|bus
 operator|,
-literal|"Memory rid %d start %#lx end %#lx\ncardaddr %#lx hostaddr %#lx length %#lx\n"
+literal|"Memory rid %d start %#jx end %#jx\ncardaddr %#jx hostaddr %#jx length %#jx\n"
 operator|,
 name|i
 operator|,
@@ -3260,7 +3260,7 @@ name|dev
 argument_list|,
 literal|"function_free: Resource still owned by "
 literal|"child, oops. "
-literal|"(type=%d, rid=%d, addr=%#lx)\n"
+literal|"(type=%d, rid=%d, addr=%#jx)\n"
 argument_list|,
 name|rle
 operator|->
@@ -3770,7 +3770,7 @@ argument_list|(
 operator|(
 name|dev
 operator|,
-literal|"ccr_res == %#lx-%#lx, base=%#x\n"
+literal|"ccr_res == %#jx-%#jx, base=%#x\n"
 operator|,
 name|rman_get_start
 argument_list|(
@@ -6524,7 +6524,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Allocated resource not found, "
-literal|"%d %#x %#lx %#lx\n"
+literal|"%d %#x %#jx %#jx\n"
 argument_list|,
 name|type
 argument_list|,

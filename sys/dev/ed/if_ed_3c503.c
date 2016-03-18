@@ -1069,7 +1069,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be 3-5,9 for 3c503\n"
+literal|"Invalid irq configuration (%jd) must be 3-5,9 for 3c503\n"
 argument_list|,
 name|irq
 argument_list|)

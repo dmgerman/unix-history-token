@@ -534,7 +534,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"rman_manage_region:<%s> request: start %#lx, end %#lx\n"
+literal|"rman_manage_region:<%s> request: start %#jx, end %#jx\n"
 operator|,
 name|rm
 operator|->
@@ -620,7 +620,8 @@ name|s
 operator|->
 name|r_end
 operator|==
-name|ULONG_MAX
+operator|~
+literal|0
 condition|)
 break|break;
 if|if
@@ -2076,8 +2077,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"rman_reserve_resource_bound:<%s> request: [%#lx, %#lx], "
-literal|"length %#lx, flags %u, device %s\n"
+literal|"rman_reserve_resource_bound:<%s> request: [%#jx, %#jx], "
+literal|"length %#jx, flags %x, device %s\n"
 operator|,
 name|rm
 operator|->
@@ -2139,6 +2140,51 @@ operator|->
 name|rm_mtx
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|rm
+operator|->
+name|rm_list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"NULL list head\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"rman_reserve_resource_bound: trying %#jx<%#jx,%#jx>\n"
+operator|,
+name|r
+operator|->
+name|r_end
+operator|,
+name|start
+operator|,
+name|count
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|r
@@ -2172,7 +2218,26 @@ argument_list|,
 name|r_link
 argument_list|)
 control|)
+block|{
 empty_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"rman_reserve_resource_bound: tried %#jx<%#jx,%#jx>\n"
+operator|,
+name|r
+operator|->
+name|r_end
+operator|,
+name|start
+operator|,
+name|count
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|r
@@ -2194,7 +2259,7 @@ block|}
 name|amask
 operator|=
 operator|(
-literal|1ul
+literal|1ull
 operator|<<
 name|RF_ALIGNMENT
 argument_list|(
@@ -2208,12 +2273,12 @@ name|KASSERT
 argument_list|(
 name|start
 operator|<=
-name|ULONG_MAX
+name|RM_MAX_END
 operator|-
 name|amask
 argument_list|,
 operator|(
-literal|"start (%#lx) + amask (%#lx) would wrap around"
+literal|"start (%#jx) + amask (%#jx) would wrap around"
 operator|,
 name|start
 operator|,
@@ -2253,7 +2318,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"considering [%#lx, %#lx]\n"
+literal|"considering [%#jx, %#jx]\n"
 operator|,
 name|s
 operator|->
@@ -2284,7 +2349,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"s->r_start (%#lx) + count - 1> end (%#lx)\n"
+literal|"s->r_start (%#jx) + count - 1> end (%#jx)\n"
 operator|,
 name|s
 operator|->
@@ -2302,7 +2367,7 @@ name|s
 operator|->
 name|r_start
 operator|>
-name|ULONG_MAX
+name|RM_MAX_END
 operator|-
 name|amask
 condition|)
@@ -2310,7 +2375,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"s->r_start (%#lx) + amask (%#lx) too large\n"
+literal|"s->r_start (%#jx) + amask (%#jx) too large\n"
 operator|,
 name|s
 operator|->
@@ -2342,7 +2407,7 @@ continue|continue;
 block|}
 name|rstart
 operator|=
-name|ulmax
+name|ummax
 argument_list|(
 name|s
 operator|->
@@ -2420,13 +2485,13 @@ condition|)
 do|;
 name|rend
 operator|=
-name|ulmin
+name|ummin
 argument_list|(
 name|s
 operator|->
 name|r_end
 argument_list|,
-name|ulmax
+name|ummax
 argument_list|(
 name|rstart
 operator|+
@@ -2457,7 +2522,7 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"truncated region: [%#lx, %#lx]; size %#lx (requested %#lx)\n"
+literal|"truncated region: [%#jx, %#jx]; size %#jx (requested %#jx)\n"
 operator|,
 name|rstart
 operator|,
@@ -2491,7 +2556,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"candidate region: [%#lx, %#lx], size %#lx\n"
+literal|"candidate region: [%#jx, %#jx], size %#jx\n"
 operator|,
 name|rstart
 operator|,
@@ -2625,7 +2690,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"splitting region in three parts: "
-literal|"[%#lx, %#lx]; [%#lx, %#lx]; [%#lx, %#lx]\n"
+literal|"[%#jx, %#jx]; [%#jx, %#jx]; [%#jx, %#jx]\n"
 operator|,
 name|s
 operator|->
@@ -4722,7 +4787,7 @@ condition|)
 return|return;
 name|db_printf
 argument_list|(
-literal|"rman %p: %s (0x%lx-0x%lx full range)\n"
+literal|"rman %p: %s (0x%jx-0x%jx full range)\n"
 argument_list|,
 name|rm
 argument_list|,
@@ -4730,10 +4795,16 @@ name|rm
 operator|->
 name|rm_descr
 argument_list|,
+operator|(
+name|rman_res_t
+operator|)
 name|rm
 operator|->
 name|rm_start
 argument_list|,
+operator|(
+name|rman_res_t
+operator|)
 name|rm
 operator|->
 name|rm_end
@@ -4813,7 +4884,7 @@ name|NULL
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"    0x%lx-0x%lx (RID=%d) "
+literal|"    0x%jx-0x%jx (RID=%d) "
 argument_list|,
 name|r
 operator|->

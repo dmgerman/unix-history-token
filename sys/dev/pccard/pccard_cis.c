@@ -593,7 +593,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cis mem map %#x (resource: %#lx)\n"
+literal|"cis mem map %#x (resource: %#jx)\n"
 operator|,
 operator|(
 name|unsigned
@@ -2393,7 +2393,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" %#lx"
+literal|" %#jx"
 argument_list|,
 name|cfe
 operator|->
@@ -2418,7 +2418,7 @@ name|length
 condition|)
 name|printf
 argument_list|(
-literal|"-%#lx"
+literal|"-%#jx"
 argument_list|,
 name|cfe
 operator|->
@@ -2473,7 +2473,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" %#lx"
+literal|" %#jx"
 argument_list|,
 name|cfe
 operator|->
@@ -2498,7 +2498,7 @@ name|length
 condition|)
 name|printf
 argument_list|(
-literal|"-%#lx"
+literal|"-%#jx"
 argument_list|,
 name|cfe
 operator|->
@@ -2534,7 +2534,7 @@ name|hostaddr
 condition|)
 name|printf
 argument_list|(
-literal|"@%#lx"
+literal|"@%#jx"
 argument_list|,
 name|cfe
 operator|->

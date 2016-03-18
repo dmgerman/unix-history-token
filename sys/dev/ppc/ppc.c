@@ -7057,7 +7057,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%lx\n"
+literal|"parallel port found at 0x%jx\n"
 argument_list|,
 name|port
 argument_list|)
@@ -7103,7 +7103,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%lx\n"
+literal|"parallel port found at 0x%jx\n"
 argument_list|,
 name|port
 argument_list|)

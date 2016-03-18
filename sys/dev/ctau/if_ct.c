@@ -2481,7 +2481,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ct%d: probing for Tau-ISA at %lx faild\n"
+literal|"ct%d: probing for Tau-ISA at %jx faild\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3572,7 +3572,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ct%d: irq %ld not functional\n"
+literal|"ct%d: irq %jd not functional\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3701,7 +3701,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ct%d: Can't setup irq %ld\n"
+literal|"ct%d: Can't setup irq %jd\n"
 argument_list|,
 name|unit
 argument_list|,

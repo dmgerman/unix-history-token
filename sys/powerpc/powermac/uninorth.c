@@ -2785,7 +2785,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"unin mapdev: start %zx, len %ld\n"
+literal|"unin mapdev: start %zx, len %jd\n"
 argument_list|,
 name|start
 argument_list|,

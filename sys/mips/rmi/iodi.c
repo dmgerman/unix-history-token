@@ -631,7 +631,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"IRQ resource - for %s %lx-%lx\n"
+literal|"IRQ resource - for %s %jx-%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -651,7 +651,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"IOPORT resource - for %s %lx-%lx\n"
+literal|"IOPORT resource - for %s %jx-%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -671,7 +671,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"MEMORY resource - for %s %lx-%lx\n"
+literal|"MEMORY resource - for %s %jx-%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(

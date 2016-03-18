@@ -1846,7 +1846,7 @@ name|ofw_pci_range
 modifier|*
 name|rp
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|start
 decl_stmt|;
 name|int
@@ -1855,7 +1855,7 @@ decl_stmt|;
 name|start
 operator|=
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|rman_get_start
 argument_list|(
@@ -1973,8 +1973,11 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ofw_pci mapdev: start %zx, len %ld\n"
+literal|"ofw_pci mapdev: start %jx, len %jd\n"
 argument_list|,
+operator|(
+name|rman_res_t
+operator|)
 name|start
 argument_list|,
 name|rman_get_size

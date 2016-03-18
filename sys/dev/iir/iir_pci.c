@@ -1160,7 +1160,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot access DPMEM at 0x%lx (shadowed?)\n"
+literal|"cannot access DPMEM at 0x%jx (shadowed?)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(

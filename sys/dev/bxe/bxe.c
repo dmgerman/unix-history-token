@@ -56840,7 +56840,7 @@ name|BLOGI
 argument_list|(
 name|sc
 argument_list|,
-literal|"PCI BAR%d [%02x] memory allocated: %p-%p (%ld) -> %p\n"
+literal|"PCI BAR%d [%02x] memory allocated: %p-%p (%jd) -> %p\n"
 argument_list|,
 name|i
 argument_list|,

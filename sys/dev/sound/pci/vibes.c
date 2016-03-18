@@ -4204,8 +4204,14 @@ argument_list|,
 literal|"sv_attach: resource assumptions not met "
 literal|"(midi 0x%08lx, games 0x%08lx)\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|midi_start
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|games_start
 argument_list|)
 expr_stmt|;
@@ -4596,7 +4602,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld %s"
+literal|"at io 0x%jx irq %jd %s"
 argument_list|,
 name|rman_get_start
 argument_list|(

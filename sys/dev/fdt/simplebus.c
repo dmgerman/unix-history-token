@@ -1963,7 +1963,7 @@ argument_list|(
 name|bus
 argument_list|,
 literal|"Could not map resource "
-literal|"%#lx-%#lx\n"
+literal|"%#jx-%#jx\n"
 argument_list|,
 name|start
 argument_list|,
@@ -2044,7 +2044,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|rv
@@ -2060,7 +2060,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 return|return

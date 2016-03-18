@@ -281,7 +281,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s:%#lx"
+literal|"%s:%#jx"
 argument_list|,
 name|proto_isa_prefix
 argument_list|,

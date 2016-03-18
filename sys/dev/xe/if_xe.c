@@ -7936,7 +7936,7 @@ argument_list|,
 operator|(
 name|dev
 operator|,
-literal|"RealPort port 0x%0lx, size 0x%0lx\n"
+literal|"RealPort port 0x%0jx, size 0x%0jx\n"
 operator|,
 name|bus_get_resource_start
 argument_list|(
@@ -8167,7 +8167,7 @@ argument_list|,
 operator|(
 name|dev
 operator|,
-literal|"CEM2/CEM3 port 0x%0lx, size 0x%0lx\n"
+literal|"CEM2/CEM3 port 0x%0jx, size 0x%0jx\n"
 operator|,
 name|bus_get_resource_start
 argument_list|(

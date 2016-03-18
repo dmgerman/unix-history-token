@@ -1378,7 +1378,7 @@ name|passthrough
 decl_stmt|;
 name|dprintf
 argument_list|(
-literal|"%s: entry (%p, %p, %d, %p, %p, %p, %ld, %d)\n"
+literal|"%s: entry (%p, %p, %d, %p, %p, %p, %jd, %d)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1749,7 +1749,7 @@ name|rle
 decl_stmt|;
 name|dprintf
 argument_list|(
-literal|"%s: entry (%p, %p, %d, %d, %p, %ld)\n"
+literal|"%s: entry (%p, %p, %d, %d, %p, %jd)\n"
 argument_list|,
 name|__func__
 argument_list|,

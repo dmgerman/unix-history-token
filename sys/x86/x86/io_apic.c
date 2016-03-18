@@ -4778,20 +4778,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PAE
-comment|/* 	 * Resources use long's to track resources, so we can't 	 * include memory regions above 4GB. 	 */
-if|if
-condition|(
-name|base
-operator|>=
-operator|~
-literal|0ul
-condition|)
-return|return;
-endif|#
-directive|endif
 name|error
 operator|=
 name|bus_set_resource

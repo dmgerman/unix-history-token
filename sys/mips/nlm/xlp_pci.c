@@ -1950,7 +1950,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Interrupt allocation %lu != %lu\n"
+literal|"Interrupt allocation %ju != %ju\n"
 argument_list|,
 name|rman_get_start
 argument_list|(

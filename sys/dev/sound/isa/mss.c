@@ -6958,7 +6958,7 @@ name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
-literal|"No MSS signature detected on port 0x%lx (0x%x)\n"
+literal|"No MSS signature detected on port 0x%jx (0x%x)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -9108,7 +9108,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %d%s bufsz %u"
+literal|"at io 0x%jx irq %jd drq %d%s bufsz %u"
 argument_list|,
 name|rman_get_start
 argument_list|(
