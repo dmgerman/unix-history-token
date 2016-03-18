@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.78 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5968,6 +5968,12 @@ block|,
 comment|/* Must be second */
 block|}
 decl_stmt|;
+name|LstNode
+name|ln
+decl_stmt|,
+name|nln
+decl_stmt|;
+comment|/* Next suffix node to check */
 name|int
 name|i
 decl_stmt|;
@@ -6194,6 +6200,56 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*      * Set $@ for compatibility with other makes      */
+name|Var_Set
+argument_list|(
+name|TARGET
+argument_list|,
+name|gn
+operator|->
+name|name
+argument_list|,
+name|gn
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*      * Now we've got the important local variables set, expand any sources      * that still contain variables or wildcards in their names.      */
+for|for
+control|(
+name|ln
+operator|=
+name|Lst_First
+argument_list|(
+name|gn
+operator|->
+name|children
+argument_list|)
+init|;
+name|ln
+operator|!=
+name|NULL
+condition|;
+name|ln
+operator|=
+name|nln
+control|)
+block|{
+name|nln
+operator|=
+name|Lst_Succ
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+name|SuffExpandChildren
+argument_list|(
+name|ln
+argument_list|,
+name|gn
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ms
@@ -6202,9 +6258,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 	 * Member has a known suffix, so look for a transformation rule from 	 * it to a possible suffix of the archive. Rather than searching 	 * through the entire list, we just look at suffixes to which the 	 * member's suffix may be transformed... 	 */
-name|LstNode
-name|ln
-decl_stmt|;
 name|SuffixCmpData
 name|sd
 decl_stmt|;
@@ -6331,12 +6384,16 @@ operator||=
 name|OP_DEPENDS
 expr_stmt|;
 block|}
-comment|/*      * Flag the member as such so we remember to look in the archive for      * its modification time.      */
+comment|/*      * Flag the member as such so we remember to look in the archive for      * its modification time. The OP_JOIN | OP_MADE is needed because this      * target should never get made.      */
 name|mem
 operator|->
 name|type
 operator||=
 name|OP_MEMBER
+operator||
+name|OP_JOIN
+operator||
+name|OP_MADE
 expr_stmt|;
 block|}
 end_function

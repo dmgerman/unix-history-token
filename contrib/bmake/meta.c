@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.53 2016/03/07 21:45:43 christos Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.54 2016/03/11 07:01:21 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -5112,6 +5112,19 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|Lst_Find
+argument_list|(
+name|missingFiles
+argument_list|,
+name|p
+argument_list|,
+name|string_match
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|Lst_AtEnd
 argument_list|(
 name|missingFiles
@@ -5561,27 +5574,26 @@ block|{
 comment|/* 			     * A referenced file outside of CWD is missing. 			     * We cannot catch every eventuality here... 			     */
 if|if
 condition|(
-name|DEBUG
+name|Lst_Find
 argument_list|(
-name|META
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|debug_file
-argument_list|,
-literal|"%s: %d: file '%s' may have moved?...\n"
-argument_list|,
-name|fname
-argument_list|,
-name|lineno
+name|missingFiles
 argument_list|,
 name|p
+argument_list|,
+name|string_match
 argument_list|)
-expr_stmt|;
-name|oodate
-operator|=
-name|TRUE
+operator|==
+name|NULL
+condition|)
+name|Lst_AtEnd
+argument_list|(
+name|missingFiles
+argument_list|,
+name|bmake_strdup
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
