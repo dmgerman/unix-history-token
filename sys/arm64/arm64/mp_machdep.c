@@ -727,7 +727,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COUNT_IPI
+name|INTR_IPI_COUNT
 condition|;
 name|i
 operator|++
@@ -951,7 +951,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COUNT_IPI
+name|INTR_IPI_COUNT
 condition|;
 name|i
 operator|++
@@ -1121,7 +1121,7 @@ name|uintptr_t
 operator|)
 name|arg
 operator|<
-name|COUNT_IPI
+name|INTR_IPI_COUNT
 argument_list|,
 operator|(
 literal|"Invalid IPI %ju"

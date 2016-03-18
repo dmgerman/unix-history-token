@@ -36,7 +36,7 @@ name|IPI_STOP_HARD
 block|,
 name|IPI_HARDCLOCK
 block|,
-name|COUNT_IPI
+name|INTR_IPI_COUNT
 block|, }
 enum|;
 end_enum
