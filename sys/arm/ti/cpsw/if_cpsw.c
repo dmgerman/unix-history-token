@@ -753,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|CPSW_TXFRAGS
-value|8
+value|16
 end_define
 
 begin_comment
