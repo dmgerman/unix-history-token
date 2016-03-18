@@ -2560,7 +2560,7 @@ name|res
 decl_stmt|;
 name|debugf
 argument_list|(
-literal|"%s: enter %d start %lx end %lx count %lx\n"
+literal|"%s: enter %d start %#jx end %#jx count %#jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2678,7 +2678,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"rman_reserve_resource: start=%#lx, end=%#lx, count=%#lx\n"
+literal|"rman_reserve_resource: start=%#jx, end=%#jx, count=%#jx\n"
 argument_list|,
 name|start
 argument_list|,
@@ -2771,7 +2771,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"%s FAIL: type=%d, rid=%d, "
-literal|"start=%016lx, end=%016lx, count=%016lx, flags=%x\n"
+literal|"start=%016jx, end=%016jx, count=%016jx, flags=%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2961,10 +2961,10 @@ name|resource
 modifier|*
 name|res
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|start
 parameter_list|,
-name|u_long
+name|rman_res_t
 name|end
 parameter_list|)
 block|{
@@ -2987,7 +2987,7 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"%s: %d start %lx end %lx \n"
+literal|"%s: %d start %jx end %jx \n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3199,7 +3199,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: start %zx, len %ld\n"
+literal|"%s: start %zx, len %jd\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3444,7 +3444,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"route pin %d for device %d.%d to %lu\n"
+literal|"route pin %d for device %d.%d to %ju\n"
 argument_list|,
 name|pin
 argument_list|,
