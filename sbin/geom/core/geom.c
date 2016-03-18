@@ -3325,14 +3325,6 @@ operator|=
 name|glabel_class_commands
 expr_stmt|;
 block|}
-else|else
-name|errx
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
-literal|"Invalid class name."
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* !STATIC_GEOM_CLASSES */
