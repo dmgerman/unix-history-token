@@ -6442,7 +6442,7 @@ name|printf
 argument_list|(
 literal|" mask=%s"
 argument_list|,
-name|pr_addr
+name|inet_ntoa
 argument_list|(
 operator|*
 operator|(
