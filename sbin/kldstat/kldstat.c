@@ -71,12 +71,27 @@ directive|include
 file|<sys/linker.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|POINTER_WIDTH
 value|((int)(sizeof(void *) * 2 + 2))
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|showdata
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -91,6 +106,17 @@ name|struct
 name|module_stat
 name|stat
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|stat
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stat
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stat
 operator|.
 name|version
@@ -120,7 +146,46 @@ argument_list|,
 name|modid
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|showdata
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\t\t%2d %s (%d, %u, 0x%lx)\n"
+argument_list|,
+name|stat
+operator|.
+name|id
+argument_list|,
+name|stat
+operator|.
+name|name
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|intval
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|uintval
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|ulongval
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"\t\t%2d %s\n"
@@ -134,6 +199,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -351,14 +417,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldstat [-h] [-q] [-v] [-i id] [-n filename]\n"
+literal|"usage: kldstata[-d] [-h] [-q] [-v] [-i id] [-n filename]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       kldstat [-q] [-m modname]\n"
+literal|"       kldstat [-d] [-q] [-m modname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -432,7 +498,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hi:m:n:qv"
+literal|"dhi:m:n:qv"
 argument_list|)
 operator|)
 operator|!=
@@ -444,6 +510,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|showdata
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'h'
 case|:
@@ -620,6 +694,54 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|showdata
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Id  Refs Name data..(int, uint, ulong)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%3d %4d %s (%d, %u, 0x%lx)\n"
+argument_list|,
+name|stat
+operator|.
+name|id
+argument_list|,
+name|stat
+operator|.
+name|refs
+argument_list|,
+name|stat
+operator|.
+name|name
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|intval
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|uintval
+argument_list|,
+name|stat
+operator|.
+name|data
+operator|.
+name|ulongval
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"Id  Refs Name\n"
@@ -642,6 +764,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
