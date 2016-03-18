@@ -15398,21 +15398,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* unaligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((u_int32_t)					\ 	 ((((const u_int8_t *)(p))[0]      ) |		\ 	  (((const u_int8_t *)(p))[1]<<  8) |		\ 	  (((const u_int8_t *)(p))[2]<< 16) |		\ 	  (((const u_int8_t *)(p))[3]<< 24)))
-end_define
-
 begin_function
 specifier|static
 name|__inline
