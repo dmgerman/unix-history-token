@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.212 2016/02/19 06:19:06 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4167,6 +4167,10 @@ block|}
 else|else
 block|{
 comment|/* Done with this word; on to the next. */
+name|cp
+operator|=
+name|line
+expr_stmt|;
 continue|continue;
 block|}
 block|}
