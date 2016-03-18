@@ -7457,8 +7457,7 @@ operator|<
 name|delay
 condition|;
 name|x
-operator|+=
-literal|5
+operator|++
 control|)
 block|{
 if|if
@@ -7479,7 +7478,7 @@ operator|)
 return|;
 name|DELAY
 argument_list|(
-literal|5
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
