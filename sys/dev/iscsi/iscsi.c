@@ -1350,6 +1350,11 @@ name|bool
 name|requeue
 parameter_list|)
 block|{
+name|ISCSI_SESSION_LOCK_ASSERT
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|io
