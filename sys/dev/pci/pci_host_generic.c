@@ -2777,7 +2777,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"rman_reserve_resource: start=%#lx, end=%#lx, count=%#lx\n"
+literal|"rman_reserve_resource: start=%#jx, end=%#jx, count=%#jx\n"
 argument_list|,
 name|start
 argument_list|,
@@ -2863,7 +2863,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"%s FAIL: type=%d, rid=%d, "
-literal|"start=%016lx, end=%016lx, count=%016lx, flags=%x\n"
+literal|"start=%016jx, end=%016jx, count=%016jx, flags=%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3818,7 +3818,7 @@ argument_list|(
 name|bus
 argument_list|,
 literal|"Could not map resource "
-literal|"%#lx-%#lx\n"
+literal|"%#jx-%#jx\n"
 argument_list|,
 name|start
 argument_list|,
