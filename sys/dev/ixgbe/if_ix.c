@@ -22714,21 +22714,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Checks to validate new value */
-if|if
-condition|(
-name|adapter
-operator|->
-name|advertise
-operator|==
-name|advertise
-condition|)
-comment|/* no change */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 return|return
 name|ixgbe_set_advertise
 argument_list|(
@@ -22765,6 +22750,21 @@ decl_stmt|;
 name|ixgbe_link_speed
 name|speed
 decl_stmt|;
+comment|/* Checks to validate new value */
+if|if
+condition|(
+name|adapter
+operator|->
+name|advertise
+operator|==
+name|advertise
+condition|)
+comment|/* no change */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|hw
 operator|=
 operator|&
