@@ -4081,6 +4081,81 @@ value|0x20000000
 end_define
 
 begin_comment
+comment|/*  * VHT Transmit Power Envelope element - 802.11ac-2013 8.4.2.164  *  * This defines the maximum transmit power for various bandwidths.  */
+end_comment
+
+begin_comment
+comment|/*  * Count is how many elements follow and what they're for:  *  * 0 - 20 MHz  * 1 - 20+40 MHz  * 2 - 20+40+80 MHz  * 3 - 20+40+80+(160, 80+80) MHz  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHT_TXPWRENV_INFO_COUNT_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHT_TXPWRENV_INFO_COUNT_MASK
+value|0x07
+end_define
+
+begin_comment
+comment|/*  * Unit is the tx power representation.  It should be EIRP for now;  * other values are reserved.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHT_TXPWRENV_UNIT_MASK
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHT_TXPWRENV_UNIT_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* This value is within the unit mask/shift above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHT_TXPWRENV_UNIT_EIRP
+value|0
+end_define
+
+begin_struct
+struct|struct
+name|ieee80211_ie_vht_txpwrenv
+block|{
+name|uint8_t
+name|ie
+decl_stmt|;
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|tx_info
+decl_stmt|;
+name|int8_t
+name|tx_elem
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* TX power elements, 1/2 dB, signed */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* VHT action codes */
 end_comment
 
