@@ -448,6 +448,14 @@ literal|"Intel Wildcat Point USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x8d318086
+case|:
+return|return
+operator|(
+literal|"Intel Wellsburg USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x9cb18086
 case|:
 return|return

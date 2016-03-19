@@ -559,6 +559,22 @@ literal|"Intel Wildcat Point USB 2.0 controller USB-B"
 operator|)
 return|;
 case|case
+literal|0x8d268086
+case|:
+return|return
+operator|(
+literal|"Intel Wellsburg USB 2.0 controller"
+operator|)
+return|;
+case|case
+literal|0x8d2d8086
+case|:
+return|return
+operator|(
+literal|"Intel Wellsburg USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x9c268086
 case|:
 return|return
