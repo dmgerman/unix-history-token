@@ -7491,10 +7491,31 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Only process scans in sync pass 1. 	 */
+if|if
+condition|(
+name|spa_sync_pass
+argument_list|(
+name|dp
+operator|->
+name|dp_spa
+argument_list|)
+operator|>
+literal|1
+condition|)
+return|return;
+comment|/* 	 * If the spa is shutting down, then stop scanning. This will 	 * ensure that the scan does not dirty any new data during the 	 * shutdown phase. 	 */
+if|if
+condition|(
+name|spa_shutting_down
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+return|return;
 comment|/* 	 * If the scan is inactive due to a stalled async destroy, try again. 	 */
 if|if
 condition|(
-operator|(
 operator|!
 name|scn
 operator|->
@@ -7505,16 +7526,6 @@ name|dsl_scan_active
 argument_list|(
 name|scn
 argument_list|)
-operator|)
-operator|||
-name|spa_sync_pass
-argument_list|(
-name|dp
-operator|->
-name|dp_spa
-argument_list|)
-operator|>
-literal|1
 condition|)
 return|return;
 name|scn
