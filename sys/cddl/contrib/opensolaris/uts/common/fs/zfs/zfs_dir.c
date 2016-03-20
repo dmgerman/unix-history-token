@@ -697,6 +697,13 @@ condition|(
 name|dzp
 operator|->
 name|z_unlinked
+operator|&&
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZXATTR
+operator|)
 condition|)
 block|{
 name|mutex_exit
