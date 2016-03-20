@@ -2140,6 +2140,7 @@ name|linux_statfs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -2154,6 +2155,7 @@ argument_list|(
 name|linux_statfs
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2418,6 +2420,7 @@ name|linux_statfs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -2432,6 +2435,7 @@ argument_list|(
 name|linux_statfs
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2648,6 +2652,7 @@ name|linux_statfs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -2662,6 +2667,7 @@ argument_list|(
 name|linux_statfs
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
