@@ -136,6 +136,39 @@ name|taskqueue_ih
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|taskqueue_fast_enqueue
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|taskqueue_swi_enqueue
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|taskqueue_swi_giant_enqueue
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|taskqueue_busy
@@ -231,6 +264,13 @@ define|#
 directive|define
 name|TQ_FLAGS_BLOCKED
 value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TQ_FLAGS_UNLOCKED_ENQUEUE
+value|(1<< 2)
 end_define
 
 begin_define
@@ -333,7 +373,7 @@ name|queue
 operator|->
 name|tq_mutex
 argument_list|,
-literal|0
+name|CALLOUT_RETURNUNLOCKED
 argument_list|)
 expr_stmt|;
 name|timeout_task
@@ -529,6 +569,30 @@ operator|->
 name|tq_flags
 operator||=
 name|TQ_FLAGS_ACTIVE
+expr_stmt|;
+if|if
+condition|(
+name|enqueue
+operator|==
+name|taskqueue_fast_enqueue
+operator|||
+name|enqueue
+operator|==
+name|taskqueue_swi_enqueue
+operator|||
+name|enqueue
+operator|==
+name|taskqueue_swi_giant_enqueue
+operator|||
+name|enqueue
+operator|==
+name|taskqueue_thread_enqueue
+condition|)
+name|queue
+operator|->
+name|tq_flags
+operator||=
+name|TQ_FLAGS_UNLOCKED_ENQUEUE
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -874,6 +938,11 @@ operator|->
 name|ta_pending
 operator|++
 expr_stmt|;
+name|TQ_UNLOCK
+argument_list|(
+name|queue
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1011,6 +1080,23 @@ name|queue
 operator|->
 name|tq_flags
 operator|&
+name|TQ_FLAGS_UNLOCKED_ENQUEUE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|TQ_UNLOCK
+argument_list|(
+name|queue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|queue
+operator|->
+name|tq_flags
+operator|&
 name|TQ_FLAGS_BLOCKED
 operator|)
 operator|==
@@ -1025,6 +1111,24 @@ operator|->
 name|tq_context
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|queue
+operator|->
+name|tq_flags
+operator|&
+name|TQ_FLAGS_UNLOCKED_ENQUEUE
+operator|)
+operator|==
+literal|0
+condition|)
+name|TQ_UNLOCK
+argument_list|(
+name|queue
+argument_list|)
+expr_stmt|;
+comment|/* Return with lock released. */
 return|return
 operator|(
 literal|0
@@ -1065,11 +1169,7 @@ argument_list|,
 name|task
 argument_list|)
 expr_stmt|;
-name|TQ_UNLOCK
-argument_list|(
-name|queue
-argument_list|)
-expr_stmt|;
+comment|/* The lock is released inside. */
 return|return
 operator|(
 name|res
@@ -1149,6 +1249,7 @@ operator|->
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* The lock is released inside. */
 block|}
 end_function
 
@@ -1240,6 +1341,7 @@ operator|->
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* The lock is released inside. */
 block|}
 else|else
 block|{
@@ -1308,12 +1410,12 @@ name|timeout_task
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|TQ_UNLOCK
 argument_list|(
 name|queue
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|res
@@ -2772,11 +2874,6 @@ name|tq
 operator|=
 operator|*
 name|tqp
-expr_stmt|;
-name|TQ_ASSERT_LOCKED
-argument_list|(
-name|tq
-argument_list|)
 expr_stmt|;
 name|wakeup_one
 argument_list|(
