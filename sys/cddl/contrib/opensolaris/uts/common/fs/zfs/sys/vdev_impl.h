@@ -144,7 +144,7 @@ name|psize
 parameter_list|)
 function_decl|;
 typedef|typedef
-name|int
+name|void
 name|vdev_io_start_func_t
 parameter_list|(
 name|zio_t

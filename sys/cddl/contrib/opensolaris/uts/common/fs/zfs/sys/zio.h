@@ -282,14 +282,6 @@ define|#
 directive|define
 name|ZIO_FAILURE_MODE_PANIC
 value|2
-define|#
-directive|define
-name|ZIO_PIPELINE_CONTINUE
-value|0x100
-define|#
-directive|define
-name|ZIO_PIPELINE_STOP
-value|0x101
 enum|enum
 name|zio_flag
 block|{

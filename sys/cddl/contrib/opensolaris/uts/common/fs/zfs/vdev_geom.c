@@ -3738,7 +3738,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_geom_io_start
 parameter_list|(
 name|zio_t
@@ -3798,6 +3798,12 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
+name|zio_interrupt
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 else|else
 block|{
@@ -3851,16 +3857,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|zio_interrupt
+name|zio_execute
 argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 case|case
 name|ZIO_TYPE_FREE
 case|:
@@ -3892,16 +3894,12 @@ goto|goto
 name|sendreq
 goto|;
 block|}
-name|zio_interrupt
+name|zio_execute
 argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 name|sendreq
 label|:
@@ -3959,11 +3957,7 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 name|bp
 operator|=
@@ -4112,11 +4106,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
 block|}
 end_function
 

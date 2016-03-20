@@ -380,6 +380,20 @@ end_endif
 begin_define
 define|#
 directive|define
+name|ZIO_PIPELINE_CONTINUE
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZIO_PIPELINE_STOP
+value|0x101
+end_define
+
+begin_define
+define|#
+directive|define
 name|BP_SPANB
 parameter_list|(
 name|indblkshift
@@ -13126,6 +13140,10 @@ begin_comment
 comment|/*  * ==========================================================================  * Read, write and delete to physical devices  * ==========================================================================  */
 end_comment
 
+begin_comment
+comment|/*  * Issue an I/O to the underlying vdev. Typically the issue pipeline  * stops after this stage and will resume upon I/O completion.  * However, there are instances where the vdev layer may need to  * continue the pipeline when an I/O was not issued. Since the I/O  * that was sent to the vdev layer might be different than the one  * currently active in the pipeline (see vdev_queue_io()), we explicitly  * force the underlying vdev layers to call either zio_execute() or  * zio_interrupt() to ensure that the pipeline continues with the correct I/O.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -13209,14 +13227,16 @@ name|RW_READER
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The mirror_ops handle multiple DVAs in a single BP. 		 */
-return|return
-operator|(
 name|vdev_mirror_ops
 operator|.
 name|vdev_op_io_start
 argument_list|(
 name|zio
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
@@ -13264,7 +13284,7 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
-comment|/* 	 * We keep track of time-sensitive I/Os so that the scan thread 	 * can quickly react to certain workloads.  In particular, we care 	 * about non-scrubbing, top-level reads and writes with the following 	 * characteristics: 	 * 	- synchronous writes of user data to non-slog devices 	 *	- any reads of user data 	 * When these conditions are met, adjust the timestamp of spa_last_io 	 * which allows the scan thread to adjust its workload accordingly. 	 */
+comment|/* 	 * We keep track of time-sensitive I/Os so that the scan thread 	 * can quickly react to certain workloads.  In particular, we care 	 * about non-scrubbing, top-level reads and writes with the following 	 * characteristics: 	 *	- synchronous writes of user data to non-slog devices 	 *	- any reads of user data 	 * When these conditions are met, adjust the timestamp of spa_last_io 	 * which allows the scan thread to adjust its workload accordingly. 	 */
 if|if
 condition|(
 operator|!
@@ -13757,8 +13777,6 @@ name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
-name|ret
-operator|=
 name|vd
 operator|->
 name|vdev_ops
@@ -13768,16 +13786,9 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ret
-operator|==
-name|ZIO_PIPELINE_STOP
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ret
+name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
