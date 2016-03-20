@@ -6207,6 +6207,17 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+name|zio
+operator|->
+name|io_bp_override
+operator|=
+name|NULL
+expr_stmt|;
+name|BP_ZERO
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
