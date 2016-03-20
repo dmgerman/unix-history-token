@@ -3988,7 +3988,7 @@ operator|*
 operator|(
 name|tcp_opt
 operator|+
-literal|2
+literal|3
 operator|)
 operator|!=
 literal|10
