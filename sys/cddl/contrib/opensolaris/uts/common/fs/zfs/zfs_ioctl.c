@@ -15953,24 +15953,32 @@ name|zc_cookie
 operator|&
 literal|1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
+name|char
+modifier|*
+name|at
+decl_stmt|;
 name|boolean_t
 name|allow_mounted
 init|=
+name|B_TRUE
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|allow_mounted
+operator|=
+operator|(
 name|zc
 operator|->
 name|zc_cookie
 operator|&
 literal|2
-decl_stmt|;
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
-name|char
-modifier|*
-name|at
-decl_stmt|;
 name|zc
 operator|->
 name|zc_value
@@ -16075,20 +16083,6 @@ name|at
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
-if|if
-condition|(
-name|zc
-operator|->
-name|zc_objset_type
-operator|==
-name|DMU_OST_ZFS
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|zc
@@ -16100,8 +16094,6 @@ operator|&&
 name|allow_mounted
 condition|)
 block|{
-endif|#
-directive|endif
 name|error
 operator|=
 name|dmu_objset_find
@@ -16220,6 +16212,9 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zfs_check_settable
@@ -17067,7 +17062,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Checks for a race condition to make sure we don't increment a feature flag  * multiple times.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zfs_prop_activate_feature_check
@@ -17124,7 +17125,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The callback invoked on feature activation in the sync task caused by  * zfs_prop_activate_feature.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|zfs_prop_activate_feature_sync
@@ -17166,7 +17173,13 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Activates a feature on a pool in response to a property setting. This  * creates a new sync task which modifies the pool to reflect the feature  * as being active.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zfs_prop_activate_feature
@@ -17226,7 +17239,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Removes properties from the given props list that fail permission checks  * needed to clear them and to restore them in case of a receive error. For each  * property, make sure we have both set and inherit permissions.  *  * Returns the first error encountered if any permission checks fail. If the  * caller provides a non-NULL errlist, it also gives the complete list of names  * of all the properties that failed a permission check along with the  * corresponding error numbers. The caller is responsible for freeing the  * returned errlist.  *  * If every property checks out successfully, zero is returned and the list  * pointed at by errlist is NULL.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zfs_check_clearable
@@ -17501,6 +17520,9 @@ name|rv
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|boolean_t
 name|propval_equals
@@ -17726,7 +17748,13 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Remove properties from props if they are not going to change (as determined  * by comparison with origprops). Remove them from origprops as well, since we  * do not need to clear or restore properties that won't change.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|props_reduce
@@ -17852,16 +17880,31 @@ name|next_pair
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|boolean_t
 name|zfs_ioc_recv_inject_err
 decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * inputs:  * zc_name		name of containing filesystem  * zc_nvlist_src{_size}	nvlist of properties to apply  * zc_value		name of snapshot to create  * zc_string		name of clone origin (if DRR_FLAG_CLONE)  * zc_cookie		file descriptor to recv from  * zc_begin_record	the BEGIN record of the stream (not byteswapped)  * zc_guid		force flag  * zc_cleanup_fd	cleanup-on-exit file descriptor  * zc_action_handle	handle for this guid/ds mapping (or zero on first call)  * zc_resumable		if data is incomplete assume sender will resume  *  * outputs:  * zc_cookie		number of bytes read  * zc_nvlist_dst{_size} error for each unapplied received property  * zc_obj		zprop_errflags_t  * zc_action_handle	handle for this guid/ds mapping  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zfs_ioc_recv
@@ -18705,7 +18748,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * inputs:  * zc_name	name of snapshot to send  * zc_cookie	file descriptor to send stream to  * zc_obj	fromorigin flag (mutually exclusive with zc_fromobj)  * zc_sendobj	objsetid of snapshot to send  * zc_fromobj	objsetid of incremental fromsnap (may be zero)  * zc_guid	if set, estimate size of stream only.  zc_cookie is ignored.  *		output size in zc_objset_type.  * zc_flags	lzc_send_flags  *  * outputs:  * zc_objset_type	estimated size, if zc_guid is set  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zfs_ioc_send
@@ -19182,20 +19231,23 @@ name|zc_cookie
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * inputs:  * zc_name	name of snapshot on which to report progress  * zc_cookie	file descriptor of send stream  *  * outputs:  * zc_cookie	number of bytes written in send stream thus far  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|int
 name|zfs_ioc_send_progress
 parameter_list|(
