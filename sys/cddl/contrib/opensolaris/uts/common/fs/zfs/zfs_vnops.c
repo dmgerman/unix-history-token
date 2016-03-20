@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3366,6 +3366,32 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In a case vp->v_vfsp != zp->z_zfsvfs->z_vfs (e.g. snapshots) our 	 * callers might not be able to detect properly that we are read-only, 	 * so check it explicitly here. 	 */
+if|if
+condition|(
+name|zfsvfs
+operator|->
+name|z_vfs
+operator|->
+name|vfs_flag
+operator|&
+name|VFS_RDONLY
+condition|)
+block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EROFS
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/* 	 * If immutable or not appending then return EPERM 	 */
 if|if
 condition|(
@@ -22294,6 +22320,32 @@ operator|(
 name|SET_ERROR
 argument_list|(
 name|EINVAL
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/* 	 * In a case vp->v_vfsp != zp->z_zfsvfs->z_vfs (e.g. snapshots) our 	 * callers might not be able to detect properly that we are read-only, 	 * so check it explicitly here. 	 */
+if|if
+condition|(
+name|zfsvfs
+operator|->
+name|z_vfs
+operator|->
+name|vfs_flag
+operator|&
+name|VFS_RDONLY
+condition|)
+block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EROFS
 argument_list|)
 operator|)
 return|;
