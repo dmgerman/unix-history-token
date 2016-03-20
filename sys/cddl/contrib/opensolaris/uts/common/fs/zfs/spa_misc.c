@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1070,11 +1070,15 @@ argument_list|(
 name|spa
 argument_list|,
 name|locks
-operator|^
+operator|&
+operator|(
 operator|(
 literal|1
 operator|<<
 name|i
+operator|)
+operator|-
+literal|1
 operator|)
 argument_list|,
 name|tag
@@ -1123,11 +1127,15 @@ argument_list|(
 name|spa
 argument_list|,
 name|locks
-operator|^
+operator|&
+operator|(
 operator|(
 literal|1
 operator|<<
 name|i
+operator|)
+operator|-
+literal|1
 operator|)
 argument_list|,
 name|tag
