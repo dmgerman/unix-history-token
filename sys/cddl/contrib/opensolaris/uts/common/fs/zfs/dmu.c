@@ -5967,7 +5967,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -6302,6 +6302,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !illumos */
+end_comment
 
 begin_function
 name|int
@@ -6646,13 +6650,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Allocate a loaned anonymous arc buffer.  */

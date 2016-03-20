@@ -134,14 +134,11 @@ directive|include
 file|<assert.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_define
 define|#
@@ -154,10 +151,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* FreeBSD */
-end_comment
 
 begin_include
 include|#
@@ -205,10 +198,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* defined(sun) */
-end_comment
 
 begin_define
 define|#
@@ -1387,12 +1376,9 @@ block|,
 literal|"units"
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 block|{
 literal|'I'
 block|,
@@ -1404,7 +1390,6 @@ literal|"nsec"
 block|,
 else|#
 directive|else
-comment|/* FreeBSD */
 block|{
 literal|'I'
 block|,
@@ -1498,13 +1483,9 @@ literal|"(N/A)"
 block|}
 block|, }
 block|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 specifier|static
 name|char
 operator|*
@@ -3422,12 +3403,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -3818,12 +3796,9 @@ literal|'I'
 condition|)
 block|{
 comment|/* 		 * For interrupt events, arg0 (normally the lock pointer) is 		 * the CPU address plus the current pil, and arg1 (normally 		 * the number of nanoseconds) is the number of nanoseconds 		 * late -- and it's stored in arg2. 		 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|arg0
 operator|=
 literal|"(uintptr_t)curthread->t_cpu + \n"
@@ -4439,12 +4414,9 @@ end_function
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|status_fire
 parameter_list|(
 name|void
@@ -7197,12 +7169,9 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 while|while
 condition|(
 name|waitpid
@@ -7390,12 +7359,9 @@ literal|"failed to walk aggregate"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -7562,12 +7528,9 @@ decl_stmt|,
 modifier|*
 name|oldlsp
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|newlsp
 operator|=
 name|memalign
@@ -8400,12 +8363,9 @@ operator|==
 literal|0
 condition|)
 comment|/* CPU+PIL */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)

@@ -5215,7 +5215,7 @@ case|:
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 			 * Verify the mlslabel string and convert to 			 * internal hex label string. 			 */
 name|m_label_t
 modifier|*
@@ -5412,7 +5412,7 @@ expr_stmt|;
 comment|/* OK if null */
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|zfs_error_aux
 argument_list|(
 name|hdl
@@ -5439,7 +5439,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 goto|goto
 name|error
 goto|;
@@ -11154,7 +11154,7 @@ case|:
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|m_label_t
 modifier|*
 name|new_sl
@@ -11289,7 +11289,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|propbuf
 index|[
 literal|0
@@ -11299,7 +11299,7 @@ literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 break|break;
 case|case
@@ -11805,7 +11805,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|idmap_get_handle_t
 modifier|*
 name|get_hdl
@@ -11922,7 +11922,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|assert
 argument_list|(
 operator|!
@@ -11937,7 +11937,7 @@ return|;
 comment|// silence compiler warning
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -12095,7 +12095,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 		 * It's a SID name (eg "user@domain") that needs to be 		 * turned into S-1-domainID-RID. 		 */
 name|int
 name|flag
@@ -12324,7 +12324,7 @@ expr_stmt|;
 comment|/* will be further decoded below */
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 return|return
 operator|(
 name|ENOENT
@@ -12332,7 +12332,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 if|if
 condition|(
@@ -19800,7 +19800,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -20269,7 +20269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function

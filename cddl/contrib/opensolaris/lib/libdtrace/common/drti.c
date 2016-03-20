@@ -94,14 +94,11 @@ literal|"/dev/dtrace/helper"
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -143,14 +140,11 @@ begin_comment
 comment|/* DOF helper generation */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -293,15 +287,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_function
 specifier|static
@@ -488,14 +478,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -541,12 +528,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dof_hdr_t
 modifier|*
 name|dof
@@ -586,12 +570,9 @@ name|Link_map
 modifier|*
 name|lmp
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|Lmid_t
 name|lmid
 decl_stmt|;
@@ -632,13 +613,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|Elf
 modifier|*
 name|e
@@ -763,12 +740,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dlinfo
@@ -823,13 +797,9 @@ else|else
 name|modname
 operator|++
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|elf_version
 argument_list|(
 name|EV_CURRENT
@@ -1315,12 +1285,9 @@ argument_list|,
 name|devnamep
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 		 * If the device path wasn't explicitly set, try again with 		 * the old device path. 		 */
 if|if
 condition|(
@@ -1652,13 +1619,9 @@ argument_list|,
 name|dof
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|gen
 operator|=
 name|dh
@@ -1676,13 +1639,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* End of while loop */
 name|dof
 operator|=
@@ -1707,14 +1666,11 @@ directive|endif
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#

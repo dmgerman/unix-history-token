@@ -4598,7 +4598,7 @@ name|ENOSPC
 case|:
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|ENOSTR
 case|:

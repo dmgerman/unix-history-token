@@ -392,7 +392,7 @@ value|EVCH_SET_CHAN_LEN
 comment|/* Last command */
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Shared user/kernel event channel interface definitions  */
 specifier|extern
 name|int
@@ -528,13 +528,13 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 ifndef|#
 directive|ifndef
 name|_KERNEL
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Userland-only event channel interfaces  */
 include|#
 directive|include
@@ -648,7 +648,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 else|#
 directive|else
 comment|/*  * Kernel log_event interfaces.  */
@@ -736,7 +736,7 @@ parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 specifier|extern
 name|char
 modifier|*
@@ -805,7 +805,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 endif|#
 directive|endif
 comment|/* _KERNEL */

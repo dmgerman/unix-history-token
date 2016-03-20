@@ -7,14 +7,11 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -1210,12 +1207,9 @@ decl_stmt|;
 name|GElf_Sym
 name|sym
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|prsyminfo_t
 name|info
 decl_stmt|;
@@ -1283,12 +1277,9 @@ literal|0
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|info
@@ -2180,12 +2171,9 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|const
 name|psinfo_t
 modifier|*
@@ -2627,12 +2615,9 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|ucred_t
 modifier|*
 name|ucp
@@ -2696,12 +2681,9 @@ operator|=
 name|g_pname
 expr_stmt|;
 comment|/* rewrite argv[0] for getopt errors */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * Make sure we have the required dtrace_proc privilege. 	 */
 if|if
 condition|(
@@ -3575,12 +3557,9 @@ literal|"%s: tracing enabled for pid %d\n"
 argument_list|,
 name|g_pname
 argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|int
 operator|)

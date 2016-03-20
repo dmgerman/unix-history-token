@@ -4623,7 +4623,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|znode_t
 modifier|*
 name|zp
@@ -4755,7 +4755,6 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
 name|ZFS_LOG
 argument_list|(
 literal|0
@@ -4770,7 +4769,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
 block|}
 end_function
 

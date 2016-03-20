@@ -58,7 +58,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/*  * Unicode encoding conversion functions and their macros.  */
 define|#
 directive|define
@@ -218,7 +218,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/*  * UTF-8 text preparation functions and their macros.  *  * Among the macros defined, U8_CANON_DECOMP, U8_COMPAT_DECOMP, and  * U8_CANON_COMP are not public interfaces and must not be used directly  * at the flag input argument.  */
 define|#
 directive|define

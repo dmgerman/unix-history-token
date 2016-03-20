@@ -2543,7 +2543,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 operator|(
 name|void
 operator|)

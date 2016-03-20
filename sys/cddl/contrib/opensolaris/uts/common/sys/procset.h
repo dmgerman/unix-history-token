@@ -245,12 +245,9 @@ value|(psp)->p_op		= (op); \ 			(psp)->p_lidtype	= (ltype); \ 			(psp)->p_lid		=
 endif|#
 directive|endif
 comment|/* !defined(_XPG4_2) || defined(__EXTENSIONS__) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 ifdef|#
 directive|ifdef
 name|_KERNEL

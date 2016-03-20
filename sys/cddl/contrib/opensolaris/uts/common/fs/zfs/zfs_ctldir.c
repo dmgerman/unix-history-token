@@ -228,7 +228,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -307,10 +307,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !sun */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -355,10 +351,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !sun */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -418,7 +410,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -486,10 +478,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
-end_comment
-
-begin_comment
 comment|/*  * Root directory elements.  We only have two entries  * snapshot and shares.  */
 end_comment
 
@@ -547,7 +535,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|VERIFY
 argument_list|(
 name|gfs_make_opsvec
@@ -572,7 +560,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Remove vfsctl vnode ops 	 */
 if|if
 condition|(
@@ -641,7 +629,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -1974,7 +1962,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -2046,13 +2034,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -2197,7 +2185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -2715,7 +2703,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|VN_HOLD
 argument_list|(
 name|svp
@@ -2803,7 +2791,6 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
 name|vfs_ref
 argument_list|(
 name|vn_mountedvfs
@@ -2829,14 +2816,13 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
 block|}
 end_function
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -3206,13 +3192,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -3588,13 +3574,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -3899,7 +3885,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -4746,7 +4732,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !illumos */
+comment|/* illumos */
 block|}
 name|sep
 operator|=
@@ -6320,7 +6306,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -6612,7 +6598,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !sun */
+comment|/* !illumos */
 end_comment
 
 begin_decl_stmt
@@ -6758,7 +6744,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !sun */
+comment|/* illumos */
 end_comment
 
 begin_comment

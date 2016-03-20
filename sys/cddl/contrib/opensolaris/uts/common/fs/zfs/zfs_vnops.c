@@ -1023,7 +1023,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|ddi_copyout
@@ -2785,7 +2785,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|(
@@ -2941,7 +2941,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 while|while
 condition|(
 name|n
@@ -3515,7 +3515,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Pre-fault the pages to ensure slow (eg NFS) pages 	 * don't hold up txg. 	 * Skip this if uio contains loaned arc_buf. 	 */
 if|if
 condition|(
@@ -3564,7 +3564,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 comment|/* 	 * If in append mode, set the io offset pointer to eof. 	 */
 if|if
 condition|(
@@ -4714,7 +4713,7 @@ name|nbytes
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -4738,7 +4737,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 block|}
 name|zfs_range_unlock
 argument_list|(
@@ -11902,7 +11900,7 @@ name|S_IFMT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|vap
 operator|->
 name|va_fsid
@@ -11996,7 +11994,7 @@ name|z_size
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|vap
 operator|->
 name|va_rdev
@@ -19351,7 +19349,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -20471,7 +20469,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -20737,7 +20735,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -22397,7 +22395,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_expr_stmt
@@ -22898,7 +22896,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|_PC_XATTR_EXISTS
 case|:
@@ -23091,7 +23089,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 case|case
 name|_PC_MIN_HOLE_SIZE
 case|:
@@ -23110,7 +23108,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|_PC_TIMESTAMP_RESOLUTION
 case|:
@@ -23127,7 +23125,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* sun */
 case|case
 name|_PC_ACL_EXTENDED
 case|:
@@ -23400,7 +23397,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -25153,7 +25150,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function

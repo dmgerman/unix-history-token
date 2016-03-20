@@ -656,12 +656,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|abort
 argument_list|()
 expr_stmt|;

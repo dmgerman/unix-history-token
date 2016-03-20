@@ -252,7 +252,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -911,7 +911,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -958,7 +958,7 @@ name|inuse
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|dm_inuse_swap
@@ -1294,7 +1294,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|struct
 name|dk_gpt
 modifier|*
@@ -3299,7 +3299,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -3823,7 +3823,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -4196,7 +4196,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|nvlist_lookup_uint64
@@ -5835,7 +5835,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -6173,7 +6173,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Run through the vdev specification and label any whole disks found. 	 */
 if|if
 condition|(

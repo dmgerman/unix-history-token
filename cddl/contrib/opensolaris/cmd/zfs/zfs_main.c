@@ -208,7 +208,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_include
@@ -11101,7 +11101,7 @@ name|id
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|int
 name|err
 decl_stmt|;
@@ -11152,7 +11152,7 @@ name|USTYPE_SMB_GRP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|err
 operator|=
 name|sid_to_id
@@ -11176,7 +11176,7 @@ name|USTYPE_SMB_USR
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|err
 operator|=
 name|sid_to_id
@@ -11194,7 +11194,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|err
@@ -29476,7 +29476,7 @@ expr_stmt|;
 comment|/* 	 * Search for the given (major,minor) pair in the mount table. 	 */
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|rewind
 argument_list|(
 name|mnttab_file

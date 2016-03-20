@@ -3156,7 +3156,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|libzfs_fru_clear
 argument_list|(
 name|hdl
@@ -3356,7 +3356,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|rewind
 argument_list|(
 name|hdl
@@ -3461,7 +3461,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 if|if
 condition|(
 name|ret

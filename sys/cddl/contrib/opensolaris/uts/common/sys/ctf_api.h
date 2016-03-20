@@ -92,12 +92,9 @@ name|ulong_t
 name|cts_flags
 decl_stmt|;
 comment|/* section flags (ELF SHF_... value) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|const
 name|void
 modifier|*

@@ -3853,7 +3853,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -3973,7 +3973,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -3993,7 +3993,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|char
 name|diskname
 index|[
@@ -4127,14 +4127,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 block|}
 end_function
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -4369,7 +4369,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -4501,7 +4501,7 @@ block|}
 comment|/* this file is too small to hold a zpool */
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|S_ISREG
@@ -4557,7 +4557,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 if|if
 condition|(
 name|statbuf
@@ -4579,7 +4579,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 if|if
 condition|(
 operator|(

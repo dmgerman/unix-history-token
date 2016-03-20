@@ -32,14 +32,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -81,14 +78,11 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -137,14 +131,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -8393,13 +8384,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* 			 * Our linker doesn't understand the SUNW_IGNORE ndx and 			 * will try to use this relocation when we build the 			 * final executable. Since we are done processing this 			 * relocation, mark it as inexistant and let libelf 			 * remove it from the file. 			 * If this wasn't done, we would have garbage added to 			 * the executable file as the symbol is going to be 			 * change from UND to ABS. 			 */
 if|if
 condition|(
@@ -8492,13 +8479,9 @@ name|ELF_F_DIRTY
 argument_list|)
 expr_stmt|;
 comment|/* 			 * This symbol may already have been marked to 			 * be ignored by another relocation referencing 			 * the same symbol or if this object file has 			 * already been processed by an earlier link 			 * invocation. 			 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 define|#
 directive|define
 name|SHN_SUNW_IGNORE
@@ -8569,13 +8552,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|nsym
@@ -8685,13 +8664,9 @@ name|objv
 index|[]
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|char
 name|tfile
 index|[
@@ -8785,13 +8760,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|access
@@ -9201,12 +9172,9 @@ literal|1
 operator|)
 return|;
 comment|/* errno is set for us */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * Create a temporary file and then unlink it if we're going to 	 * combine it with drti.o later.  We can still refer to it in child 	 * processes as /dev/fd/<fd>. 	 */
 if|if
 condition|(
@@ -9422,12 +9390,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|!
@@ -9445,12 +9410,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dtp
@@ -9558,12 +9520,9 @@ operator|->
 name|dt_lazyload
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|const
 name|char
 modifier|*
@@ -9910,13 +9869,9 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* 		 * FreeBSD's ld(1) is not instructed to interpret and add 		 * correctly the SUNW_dof section present in tfile. 		 * We use libelf to add this section manually and hope the next 		 * ld invocation won't remove it. 		 */
 name|elf_version
 argument_list|(
@@ -10349,13 +10304,9 @@ argument_list|,
 name|dof
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|unlink
 argument_list|(
 name|tfile

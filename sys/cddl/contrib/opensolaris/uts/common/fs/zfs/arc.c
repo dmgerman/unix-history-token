@@ -6238,7 +6238,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 block|}
 end_function
 
@@ -6740,7 +6739,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 block|}
 end_function
 
@@ -9261,7 +9259,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 if|if
 condition|(
 name|type
@@ -13499,7 +13496,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * check that we're out of range of the pageout scanner.  It starts to 	 * schedule paging if freemem is less than lotsfree and needfree. 	 * lotsfree is the high-water mark for pageout, and needfree is the 	 * number of needed free pages.  We add extra pages here to make sure 	 * the scanner doesn't start up while we're freeing memory. 	 */
 name|n
 operator|=
@@ -13595,7 +13592,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 if|#
 directive|if
 name|defined
@@ -14022,7 +14019,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|zio_arena
@@ -16039,7 +16036,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 if|if
 condition|(
 name|hash_lock
@@ -19162,7 +19158,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* illumos */
 name|mutex_exit
 argument_list|(
 name|hash_lock
@@ -21267,7 +21262,7 @@ literal|8
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -21294,7 +21289,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/* set min cache to 1/32 of all memory, or 16MB, whichever is more */
 name|arc_c_min
 operator|=
