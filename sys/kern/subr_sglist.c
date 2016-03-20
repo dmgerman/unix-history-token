@@ -767,6 +767,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|sg
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
 name|refcount_release
 argument_list|(
 operator|&
