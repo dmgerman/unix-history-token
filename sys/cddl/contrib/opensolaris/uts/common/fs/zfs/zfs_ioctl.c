@@ -5597,7 +5597,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|SET_ERROR
+argument_list|(
+name|EFAULT
+argument_list|)
 operator|)
 return|;
 block|}
