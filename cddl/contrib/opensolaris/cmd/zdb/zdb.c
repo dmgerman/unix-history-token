@@ -20259,11 +20259,15 @@ operator|=
 name|libzfs_init
 argument_list|()
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|g_zfs
-operator|!=
+operator|==
 name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Fail to initialize zfs"
 argument_list|)
 expr_stmt|;
 if|if
