@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2015 by Syneto S.R.L. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -946,8 +946,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|verify
-argument_list|(
+if|if
+condition|(
 name|nvlist_lookup_nvlist
 argument_list|(
 name|config
@@ -957,10 +957,14 @@ argument_list|,
 operator|&
 name|features
 argument_list|)
-operator|==
+operator|!=
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|features
