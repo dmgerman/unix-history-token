@@ -3628,7 +3628,7 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
-name|int
+name|ssize_t
 name|cnt
 decl_stmt|;
 name|int
@@ -7006,7 +7006,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* XXX: aio_nbytes is later casted to signed types. */
 if|if
 condition|(
 name|job
@@ -7015,7 +7014,7 @@ name|uaiocb
 operator|.
 name|aio_nbytes
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 condition|)
 block|{
 name|uma_zfree
@@ -8683,7 +8682,7 @@ name|kaioinfo
 modifier|*
 name|ki
 decl_stmt|;
-name|int
+name|long
 name|status
 decl_stmt|,
 name|error
@@ -11672,11 +11671,12 @@ name|aiocb
 modifier|*
 name|ujob
 decl_stmt|;
-name|int
+name|long
 name|error
 decl_stmt|,
 name|status
-decl_stmt|,
+decl_stmt|;
+name|int
 name|timo
 decl_stmt|;
 name|ops
