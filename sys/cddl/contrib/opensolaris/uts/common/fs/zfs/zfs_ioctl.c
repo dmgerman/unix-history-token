@@ -16938,6 +16938,8 @@ operator|=
 name|zio_checksum_to_feature
 argument_list|(
 name|intval
+operator|&
+name|ZIO_CHECKSUM_MASK
 argument_list|)
 expr_stmt|;
 if|if
