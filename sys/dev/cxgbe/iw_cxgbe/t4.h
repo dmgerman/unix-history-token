@@ -257,13 +257,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|T4_MAX_NUM_STAG
-value|(1<<15)
-end_define
-
-begin_define
-define|#
-directive|define
 name|T4_MAX_MR_SIZE
 value|(~0ULL - 1)
 end_define
@@ -2826,6 +2819,12 @@ name|size
 operator|>>
 literal|4
 operator|)
+operator|||
+name|cq
+operator|->
+name|cidx_inc
+operator|==
+name|M_CIDXINC
 condition|)
 block|{
 name|u32

@@ -2363,11 +2363,17 @@ operator|=
 name|wr
 operator|->
 name|sg_list
+condition|?
+name|wr
+operator|->
+name|sg_list
 index|[
 literal|0
 index|]
 operator|.
 name|length
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(

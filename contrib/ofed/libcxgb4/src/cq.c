@@ -3173,10 +3173,11 @@ name|cqe
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ret
+name|wc
+operator|->
+name|status
 operator|=
-operator|-
-name|EINVAL
+name|IBV_WC_FATAL_ERR
 expr_stmt|;
 block|}
 block|}

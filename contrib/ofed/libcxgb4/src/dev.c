@@ -100,7 +100,7 @@ define|#
 directive|define
 name|CH_PCI_DEVICE_ID_TABLE_DEFINE_BEGIN
 define|\
-value|struct { \ 		unsigned vendor; \ 		unsigned device; \ 		unsigned chip_version; \ 	} hca_table[] = {
+value|struct { \ 		unsigned vendor; \ 		unsigned device; \ 	} hca_table[] = {
 end_define
 
 begin_define
@@ -119,7 +119,7 @@ parameter_list|(
 name|__DeviceID
 parameter_list|)
 define|\
-value|{ \ 			.vendor = PCI_VENDOR_ID_CHELSIO, \ 			.device = (__DeviceID), \ 			.chip_version = CHELSIO_PCI_ID_CHIP_VERSION(__DeviceID), \ 		}
+value|{ \ 			.vendor = PCI_VENDOR_ID_CHELSIO, \ 			.device = (__DeviceID), \ 		}
 end_define
 
 begin_define
@@ -2687,12 +2687,15 @@ name|vendor
 argument_list|,
 name|device
 argument_list|,
+name|CHELSIO_PCI_ID_CHIP_VERSION
+argument_list|(
 name|hca_table
 index|[
 name|i
 index|]
 operator|.
-name|chip_version
+name|device
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dev
@@ -2738,12 +2741,15 @@ name|dev
 operator|->
 name|chip_version
 operator|=
+name|CHELSIO_PCI_ID_CHIP_VERSION
+argument_list|(
 name|hca_table
 index|[
 name|i
 index|]
 operator|.
-name|chip_version
+name|device
+argument_list|)
 expr_stmt|;
 name|dev
 operator|->
