@@ -2170,43 +2170,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* swaps (undocumented, useful?) */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|u_int32_t
-name|bswap32
-parameter_list|(
-name|u_int32_t
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_int64_t
-name|bswap64
-parameter_list|(
-name|u_int64_t
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* null functions for device/filesystem switches (undocumented) */
 end_comment
 
