@@ -16494,6 +16494,15 @@ name|ic
 operator|->
 name|ic_softc
 decl_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags_ext
+operator|&
+name|IEEE80211_FEXT_BGSCAN
+condition|)
+block|{
 name|RUM_LOCK
 argument_list|(
 name|sc
@@ -16532,6 +16541,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
