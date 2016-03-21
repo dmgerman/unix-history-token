@@ -676,6 +676,51 @@ value|(((n * 3)& 3)<< 16)
 end_define
 
 begin_comment
+comment|/* possible flags for register MAC_CSR11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2573_AUTO_WAKEUP
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TBCN_EXP
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TBCN_EXP_MAX
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TBCN_DELAY
+parameter_list|(
+name|t
+parameter_list|)
+value|(t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TBCN_DELAY_MAX
+value|0xff
+end_define
+
+begin_comment
 comment|/* possible flags for register TXRX_CSR0 */
 end_comment
 
@@ -767,6 +812,13 @@ end_define
 begin_comment
 comment|/* possible flags for register TXRX_CSR4 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2573_ACKCTS_PWRMGT
+value|(1<< 16)
+end_define
 
 begin_define
 define|#
@@ -979,11 +1031,29 @@ name|RT2573_LED_OFF
 value|0x0
 end_define
 
+begin_comment
+comment|/* USB vendor requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2573_MCU_SLEEP
+value|7
+end_define
+
 begin_define
 define|#
 directive|define
 name|RT2573_MCU_RUN
-value|(1<< 3)
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MCU_WAKEUP
+value|9
 end_define
 
 begin_define
