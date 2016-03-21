@@ -74,6 +74,26 @@ parameter_list|)
 value|((n) / (NANOSEC / MILLISEC))
 end_define
 
+begin_define
+define|#
+directive|define
+name|NSEC2SEC
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) / (NANOSEC / SEC))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEC2NSEC
+parameter_list|(
+name|m
+parameter_list|)
+value|((hrtime_t)(m) * (NANOSEC / SEC))
+end_define
+
 begin_typedef
 typedef|typedef
 name|longlong_t
