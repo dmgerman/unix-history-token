@@ -1202,6 +1202,9 @@ break|break;
 block|}
 break|break;
 case|case
+name|IEEE80211_S_SLEEP
+case|:
+case|case
 name|IEEE80211_S_RUN
 case|:
 switch|switch
@@ -1227,7 +1230,7 @@ name|vap
 operator|->
 name|iv_state
 operator|=
-name|ostate
+name|IEEE80211_S_RUN
 expr_stmt|;
 comment|/* stay RUN */
 break|break;
