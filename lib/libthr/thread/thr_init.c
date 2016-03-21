@@ -2040,9 +2040,6 @@ expr_stmt|;
 name|_thr_list_init
 argument_list|()
 expr_stmt|;
-name|__thr_pshared_init
-argument_list|()
-expr_stmt|;
 name|_thr_wake_addr_init
 argument_list|()
 expr_stmt|;
@@ -2065,6 +2062,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|__thr_pshared_init
+argument_list|()
+expr_stmt|;
 comment|/* Find the stack top */
 name|mib
 index|[

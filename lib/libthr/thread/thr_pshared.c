@@ -942,5 +942,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|__thr_pshared_atfork_pre
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|_thr_rwl_rdlock
+argument_list|(
+operator|&
+name|pshared_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|__thr_pshared_atfork_post
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|_thr_rwl_unlock
+argument_list|(
+operator|&
+name|pshared_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -4085,6 +4085,26 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|__thr_pshared_atfork_pre
+argument_list|(
+name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__thr_pshared_atfork_post
+argument_list|(
+name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
