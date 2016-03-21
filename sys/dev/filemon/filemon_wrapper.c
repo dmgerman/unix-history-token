@@ -389,10 +389,7 @@ name|NULL
 expr_stmt|;
 name|vn_fullpath
 argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
+name|curthread
 argument_list|,
 name|imgp
 operator|->
