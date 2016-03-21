@@ -8483,6 +8483,12 @@ argument_list|(
 name|dcp
 argument_list|)
 expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|err_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -8543,6 +8549,12 @@ argument_list|(
 operator|*
 name|dcp
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|err_lock
 argument_list|)
 expr_stmt|;
 return|return
