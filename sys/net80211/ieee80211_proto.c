@@ -7786,7 +7786,7 @@ argument_list|,
 argument|iv_next
 argument_list|)
 block|{
-comment|/* 		 * We only pass events through for sta vap's in RUN state; 		 * may be too restrictive but for now this saves all the 		 * handlers duplicating these checks. 		 */
+comment|/* 		 * We only pass events through for sta vap's in RUN+ state; 		 * may be too restrictive but for now this saves all the 		 * handlers duplicating these checks. 		 */
 if|if
 condition|(
 name|vap
@@ -7862,7 +7862,7 @@ condition|(
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 condition|)
 block|{
@@ -7917,13 +7917,12 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* XXX sleep state? */
 name|KASSERT
 argument_list|(
 name|vap
 operator|->
 name|iv_state
-operator|==
+operator|>=
 name|IEEE80211_S_RUN
 argument_list|,
 operator|(
