@@ -689,6 +689,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5887,6 +5891,7 @@ operator|<<
 literal|0
 operator|)
 argument_list|,
+comment|/* Member list */
 operator|(
 literal|1
 operator|<<
@@ -5904,8 +5909,30 @@ literal|1
 operator|<<
 literal|0
 operator|)
+argument_list|,
+comment|/* Untagged egress */
+operator|(
+literal|1
+operator|<<
+operator|(
+name|sc
+operator|->
+name|unit
+operator|+
+literal|1
+operator|)
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* mcast reg flood */
 block|}
 name|mii_mediachg
 argument_list|(
@@ -12596,6 +12623,12 @@ name|ports
 parameter_list|,
 name|int
 name|untag
+parameter_list|,
+name|int
+name|mcregflood
+parameter_list|,
+name|int
+name|mcunregflood
 parameter_list|)
 block|{
 name|int
@@ -12713,6 +12746,22 @@ literal|7
 operator|)
 operator|<<
 literal|24
+operator||
+operator|(
+name|mcregflood
+operator|&
+literal|7
+operator|)
+operator|<<
+literal|16
+operator||
+operator|(
+name|mcunregflood
+operator|&
+literal|7
+operator|)
+operator|<<
+literal|8
 operator||
 operator|(
 name|ports

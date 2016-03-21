@@ -504,7 +504,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALE_VLAN_REGFLOOD
+name|ALE_VLAN_UNREGFLOOD
 parameter_list|(
 name|_a
 parameter_list|)
@@ -514,7 +514,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALE_VLAN_UNREGFLOOD
+name|ALE_VLAN_REGFLOOD
 parameter_list|(
 name|_a
 parameter_list|)
