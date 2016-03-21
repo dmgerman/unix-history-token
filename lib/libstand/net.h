@@ -273,6 +273,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|intf_mtu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|debug
 decl_stmt|;

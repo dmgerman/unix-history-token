@@ -213,6 +213,16 @@ comment|/* subnet or net mask */
 end_comment
 
 begin_decl_stmt
+name|u_int
+name|intf_mtu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interface mtu from bootp/dhcp */
+end_comment
+
+begin_decl_stmt
 name|int
 name|errno
 decl_stmt|;
