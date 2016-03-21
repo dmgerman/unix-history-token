@@ -215,17 +215,11 @@ name|illumos
 include|#
 directive|include
 file|<sys/cyclic.h>
+endif|#
+directive|endif
 include|#
 directive|include
 file|<sys/callo.h>
-else|#
-directive|else
-comment|/* FreeBSD */
-include|#
-directive|include
-file|<sys/callout.h>
-endif|#
-directive|endif
 include|#
 directive|include
 file|<sys/disp.h>
