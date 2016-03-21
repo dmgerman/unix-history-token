@@ -1262,14 +1262,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|zhp
-operator|->
-name|zpool_old_config
-operator|!=
-name|NULL
-condition|)
 name|nvlist_free
 argument_list|(
 name|zhp

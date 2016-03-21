@@ -25612,12 +25612,6 @@ argument_list|(
 name|perm_nvl
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|update_perm_nvl
-operator|!=
-name|NULL
-condition|)
 name|nvlist_free
 argument_list|(
 name|update_perm_nvl
