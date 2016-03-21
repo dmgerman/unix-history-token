@@ -9396,7 +9396,7 @@ argument_list|(
 operator|&
 name|zp
 operator|->
-name|z_acl_lock
+name|z_lock
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -9404,7 +9404,7 @@ argument_list|(
 operator|&
 name|zp
 operator|->
-name|z_lock
+name|z_acl_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -9517,8 +9517,6 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|mutex_exit
 argument_list|(
 operator|&
