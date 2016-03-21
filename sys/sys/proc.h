@@ -354,6 +354,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|filemon
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kaioinfo
 struct_decl|;
 end_struct_decl
@@ -2715,6 +2721,12 @@ name|int
 name|p_pendingexits
 decl_stmt|;
 comment|/* (c) Count of pending thread exits. */
+name|struct
+name|filemon
+modifier|*
+name|p_filemon
+decl_stmt|;
+comment|/* (c) filemon-specific data. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
