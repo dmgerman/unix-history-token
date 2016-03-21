@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Portions Copyright 2016 Pedro Giffuni.  All rights reserved.  */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -235,10 +239,10 @@ name|sp
 operator|->
 name|str_hash
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|nbuckets
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|dt_strhash_t
@@ -257,21 +261,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|bzero
-argument_list|(
-name|sp
-operator|->
-name|str_hash
-argument_list|,
-name|nbuckets
-operator|*
-sizeof|sizeof
-argument_list|(
-name|dt_strhash_t
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sp
 operator|->
 name|str_hashsz
