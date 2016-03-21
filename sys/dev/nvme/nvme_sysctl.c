@@ -41,59 +41,6 @@ directive|include
 file|"nvme_private.h"
 end_include
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|nvme
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"NVM Express"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Intel NVMe controllers have a slow path for I/Os that span a 128KB  * stripe boundary but ZFS limits ashift, which is derived from  * d_stripesize, to 13 (8KB) so we limit the stripesize reported to  * geom(8) to 4KB by default.  *  * This may result in a small number of additional I/Os to require  * splitting in nvme(4), however the NVMe I/O path is very efficient  * so these additional I/Os will cause very minimal (if any) difference  * in performance or CPU utilisation.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nvme_max_optimal_sectorsize
-init|=
-literal|1
-operator|<<
-literal|12
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_nvme
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_optimal_sectorsize
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|nvme_max_optimal_sectorsize
-argument_list|,
-literal|0
-argument_list|,
-literal|"The maximum optimal sectorsize reported"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * CTLTYPE_S64 and sysctl_handle_64 were added in r217616.  Define these  *  explicitly here for older kernels that don't include the r217616  *  changeset.  */
 end_comment

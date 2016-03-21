@@ -2582,18 +2582,6 @@ end_function_decl
 
 begin_function_decl
 name|uint32_t
-name|nvme_ns_get_optimal_sector_size
-parameter_list|(
-name|struct
-name|nvme_namespace
-modifier|*
-name|ns
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
 name|nvme_ns_get_stripesize
 parameter_list|(
 name|struct
