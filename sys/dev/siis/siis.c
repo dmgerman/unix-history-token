@@ -2046,7 +2046,7 @@ name|unit
 operator|<<
 literal|13
 decl_stmt|;
-name|long
+name|rman_res_t
 name|st
 decl_stmt|;
 switch|switch
