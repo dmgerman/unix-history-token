@@ -220,9 +220,9 @@ init|=
 name|data
 decl_stmt|;
 name|boolean_t
-name|dontclose
+name|should_close
 init|=
-name|B_FALSE
+name|B_TRUE
 decl_stmt|;
 name|boolean_t
 name|include_snaps
@@ -415,9 +415,9 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-name|dontclose
+name|should_close
 operator|=
-name|B_TRUE
+name|B_FALSE
 expr_stmt|;
 block|}
 else|else
@@ -569,8 +569,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|dontclose
+name|should_close
 condition|)
 name|zfs_close
 argument_list|(
