@@ -634,23 +634,11 @@ operator|&=
 operator|~
 name|ADC_STEP_RFM_MSK
 expr_stmt|;
-name|val
-operator||=
-name|ADC_STEP_RFM_VREFN
-operator|<<
-name|ADC_STEP_RFM_SHIFT
-expr_stmt|;
 comment|/* Set the positive voltage reference. */
 name|val
 operator|&=
 operator|~
 name|ADC_STEP_RFP_MSK
-expr_stmt|;
-name|val
-operator||=
-name|ADC_STEP_RFP_VREFP
-operator|<<
-name|ADC_STEP_RFP_SHIFT
 expr_stmt|;
 comment|/* Set the samples average. */
 name|val
@@ -1998,23 +1986,11 @@ operator|&=
 operator|~
 name|ADC_STEP_RFM_MSK
 expr_stmt|;
-name|val
-operator||=
-name|ADC_STEP_RFM_VREFN
-operator|<<
-name|ADC_STEP_RFM_SHIFT
-expr_stmt|;
 comment|/* Set the positive voltage reference. */
 name|val
 operator|&=
 operator|~
 name|ADC_STEP_RFP_MSK
-expr_stmt|;
-name|val
-operator||=
-name|ADC_STEP_RFP_VREFP
-operator|<<
-name|ADC_STEP_RFP_SHIFT
 expr_stmt|;
 comment|/* Connect the input to VREFN. */
 name|val
@@ -2116,6 +2092,23 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+comment|/* Activate the ADC_TSC module. */
+name|err
+operator|=
+name|ti_prcm_clk_enable
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 name|rid
 operator|=
 literal|0
@@ -2279,23 +2272,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Activate the ADC_TSC module. */
-name|err
-operator|=
-name|ti_prcm_clk_enable
-argument_list|(
-name|TSC_ADC_CLK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-operator|(
-name|err
-operator|)
-return|;
 comment|/* Check the ADC revision. */
 name|rev
 operator|=
