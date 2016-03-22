@@ -807,6 +807,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_nd6_timer_ch
+value|VNET(nd6_timer_ch)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1163,7 +1170,7 @@ operator|&
 name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
-comment|/* start timer */
+comment|/* Start timers. */
 name|callout_init
 argument_list|(
 operator|&
@@ -1182,6 +1189,26 @@ operator|*
 name|hz
 argument_list|,
 name|nd6_slowtimo
+argument_list|,
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|V_nd6_timer_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|V_nd6_timer_ch
+argument_list|,
+name|hz
+argument_list|,
+name|nd6_timer
 argument_list|,
 name|curvnet
 argument_list|)

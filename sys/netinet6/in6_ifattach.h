@@ -38,6 +38,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|in6_ifattach_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|in6_ifdetach
 parameter_list|(
 name|struct
