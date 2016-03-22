@@ -6377,7 +6377,7 @@ modifier|*
 name|optp
 parameter_list|)
 block|{
-name|u_int
+name|u_int32_t
 name|mask
 decl_stmt|,
 name|optlen

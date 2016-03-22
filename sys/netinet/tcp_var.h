@@ -1564,7 +1564,7 @@ begin_struct
 struct|struct
 name|tcpopt
 block|{
-name|u_int64_t
+name|u_int32_t
 name|to_flags
 decl_stmt|;
 comment|/* which options are present */
