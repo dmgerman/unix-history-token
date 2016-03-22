@@ -104,6 +104,206 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|mbuf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE5_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__init
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__gethdr
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__get
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__getcl
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint16_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__clget
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE4_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__cljget
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"uint32_t"
+argument_list|,
+literal|"void*"
+argument_list|,
+literal|"void*"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__cljset
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE1_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__free
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE1_XLATE
+argument_list|(
+name|mbuf
+argument_list|, , ,
+name|m__freem
+argument_list|,
+literal|"struct mbuf *"
+argument_list|,
+literal|"mbufinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
