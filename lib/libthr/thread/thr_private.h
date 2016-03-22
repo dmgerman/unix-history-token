@@ -534,6 +534,31 @@ name|MAX_DEFER_WAITERS
 value|50
 end_define
 
+begin_comment
+comment|/*  * Values for pthread_mutex m_ps indicator.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMUTEX_INITSTAGE_ALLOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMUTEX_INITSTAGE_BUSY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMUTEX_INITSTAGE_DONE
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|pthread_mutex
@@ -558,6 +583,10 @@ decl_stmt|;
 name|int
 name|m_yieldloops
 decl_stmt|;
+name|int
+name|m_ps
+decl_stmt|;
+comment|/* pshared init stage */
 comment|/* 	 * Link for all mutexes a thread currently owns, of the same 	 * prio type. 	 */
 name|TAILQ_ENTRY
 argument_list|(
