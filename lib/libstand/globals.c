@@ -197,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* swap ip address */
+comment|/* gateway ip address */
 end_comment
 
 begin_decl_stmt
