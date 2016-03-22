@@ -376,6 +376,11 @@ init|=
 literal|0x00000800
 block|,
 comment|/* dump Tx power values */
+name|URTWN_DEBUG_RSSI
+init|=
+literal|0x00001000
+block|,
+comment|/* dump RSSI lookups */
 name|URTWN_DEBUG_ANY
 init|=
 literal|0xffffffff
@@ -430,6 +435,26 @@ name|wh
 parameter_list|)
 value|IEEE80211_IS_DSTODS(wh)
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|urtwn_enable_11n
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.urtwn.enable_11n"
+argument_list|,
+operator|&
+name|urtwn_enable_11n
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* various supported device vendors/products */
@@ -3244,6 +3269,44 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|urtwn_update_chw
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|int
+name|urtwn_ampdu_enable
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+block|{
+comment|/* We're driving this ourselves (eventually); don't involve net80211 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|urtwn_attach
 parameter_list|(
@@ -3733,9 +3796,13 @@ comment|/* short preamble supported */
 operator||
 name|IEEE80211_C_SHSLOT
 comment|/* short slot time supported */
-operator||
-name|IEEE80211_C_BGSCAN
+if|#
+directive|if
+literal|0
+expr|| IEEE80211_C_BGSCAN
 comment|/* capable of bg scanning */
+endif|#
+directive|endif
 operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
@@ -3753,6 +3820,53 @@ name|IEEE80211_CRYPTO_TKIP
 operator||
 name|IEEE80211_CRYPTO_AES_CCM
 expr_stmt|;
+comment|/* Assume they're all 11n capable for now */
+if|if
+condition|(
+name|urtwn_enable_11n
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"enabling 11n\n"
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_htcaps
+operator|=
+name|IEEE80211_HTC_HT
+operator||
+name|IEEE80211_HTC_AMPDU
+operator||
+name|IEEE80211_HTC_AMSDU
+operator||
+name|IEEE80211_HTCAP_MAXAMSDU_3839
+operator||
+name|IEEE80211_HTCAP_SMPS_OFF
+expr_stmt|;
+comment|/* no HT40 just yet */
+comment|// ic->ic_htcaps |= IEEE80211_HTCAP_CHWIDTH40;
+comment|/* XXX TODO: verify chains versus streams for urtwn */
+name|ic
+operator|->
+name|ic_txstream
+operator|=
+name|sc
+operator|->
+name|ntxchains
+expr_stmt|;
+name|ic
+operator|->
+name|ic_rxstream
+operator|=
+name|sc
+operator|->
+name|nrxchains
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|bands
@@ -3777,6 +3891,17 @@ argument_list|(
 name|bands
 argument_list|,
 name|IEEE80211_MODE_11G
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|urtwn_enable_11n
+condition|)
+name|setbit
+argument_list|(
+name|bands
+argument_list|,
+name|IEEE80211_MODE_11NG
 argument_list|)
 expr_stmt|;
 name|ieee80211_init_channels
@@ -3903,6 +4028,18 @@ operator|=
 name|urtwn_r88e_node_free
 expr_stmt|;
 block|}
+name|ic
+operator|->
+name|ic_update_chw
+operator|=
+name|urtwn_update_chw
+expr_stmt|;
+name|ic
+operator|->
+name|ic_ampdu_enable
+operator|=
+name|urtwn_ampdu_enable
+expr_stmt|;
 name|ieee80211_radiotap_attach
 argument_list|(
 name|ic
@@ -6026,6 +6163,8 @@ name|stat
 operator|->
 name|rxdw5
 expr_stmt|;
+comment|/* XXX 20/40? */
+comment|/* XXX shortgi? */
 comment|/* Map HW rate index to 802.11 rate. */
 if|if
 condition|(
@@ -6420,6 +6559,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_AMPDU
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -10348,6 +10501,9 @@ name|struct
 name|ieee80211_rateset
 modifier|*
 name|rs
+decl_stmt|,
+modifier|*
+name|rs_ht
 decl_stmt|;
 name|struct
 name|r92c_fw_cmd_macid_cfg
@@ -10388,6 +10544,18 @@ name|ni
 operator|->
 name|ni_rates
 expr_stmt|;
+name|rs_ht
+operator|=
+operator|(
+expr|struct
+name|ieee80211_rateset
+operator|*
+operator|)
+operator|&
+name|ni
+operator|->
+name|ni_htrates
+expr_stmt|;
 comment|/* Get normal and basic rates mask. */
 name|rates
 operator|=
@@ -10401,6 +10569,7 @@ name|maxbasicrate
 operator|=
 literal|0
 expr_stmt|;
+comment|/* This is for 11bg */
 for|for
 control|(
 name|i
@@ -10510,6 +10679,94 @@ name|j
 expr_stmt|;
 block|}
 block|}
+comment|/* If we're doing 11n, enable 11n rates */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|rs_ht
+operator|->
+name|rs_nrates
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|rs_ht
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+operator|&
+literal|0x7f
+operator|)
+operator|>
+literal|0xf
+condition|)
+continue|continue;
+comment|/* 11n rates start at index 12 */
+name|j
+operator|=
+operator|(
+operator|(
+name|rs_ht
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator|+
+literal|12
+expr_stmt|;
+name|rates
+operator||=
+operator|(
+literal|1
+operator|<<
+name|j
+operator|)
+expr_stmt|;
+comment|/* Guard against the rate table being oddly ordered */
+if|if
+condition|(
+name|j
+operator|>
+name|maxrate
+condition|)
+name|maxrate
+operator|=
+name|j
+expr_stmt|;
+block|}
+block|}
+if|#
+directive|if
+literal|0
+block|if (ic->ic_curmode == IEEE80211_MODE_11NG) 		raid = R92C_RAID_11GN;
+endif|#
+directive|endif
+comment|/* NB: group addressed frames are done at 11bg rates for now */
 if|if
 condition|(
 name|ic
@@ -10527,6 +10784,7 @@ name|mode
 operator|=
 name|R92C_RAID_11BG
 expr_stmt|;
+comment|/* XXX misleading 'mode' value here for unicast frames */
 name|URTWN_DPRINTF
 argument_list|(
 name|sc
@@ -10637,6 +10895,36 @@ name|maxbasicrate
 argument_list|)
 expr_stmt|;
 comment|/* Set rates mask for unicast frames. */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|mode
+operator|=
+name|R92C_RAID_11GN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_11B
+condition|)
+name|mode
+operator|=
+name|R92C_RAID_11B
+expr_stmt|;
+else|else
+name|mode
+operator|=
+name|R92C_RAID_11BG
+expr_stmt|;
 name|cmd
 operator|.
 name|macid
@@ -10729,6 +11017,32 @@ name|maxrate
 argument_list|)
 expr_stmt|;
 comment|/* Indicate highest supported rate. */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|ni
+operator|->
+name|ni_txrate
+operator|=
+name|rs_ht
+operator|->
+name|rs_rates
+index|[
+name|rs_ht
+operator|->
+name|rs_nrates
+operator|-
+literal|1
+index|]
+operator||
+name|IEEE80211_RATE_MCS
+expr_stmt|;
+else|else
 name|ni
 operator|->
 name|ni_txrate
@@ -14040,7 +14354,7 @@ name|URTWN_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|URTWN_DEBUG_RA
+name|URTWN_DEBUG_RSSI
 argument_list|,
 literal|"%s: PWDB %d, EMA %d\n"
 argument_list|,
@@ -14515,11 +14829,32 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
+if|if
+condition|(
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
+condition|)
+block|{
+comment|/* 11n rates start at idx 12 */
+return|return
+operator|(
+operator|(
+name|rate
+operator|&
+literal|0xf
+operator|)
+operator|+
+literal|12
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|rate
 condition|)
 block|{
+comment|/* 11g */
 case|case
 literal|12
 case|:
@@ -14568,6 +14903,7 @@ case|:
 return|return
 literal|11
 return|;
+comment|/* 11b */
 case|case
 literal|2
 case|:
@@ -14900,6 +15236,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* XXX TODO: drop the default rate for 11b/11g? */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|rate
+operator|=
+name|IEEE80211_RATE_MCS
+operator||
+literal|0x4
+expr_stmt|;
+comment|/* MCS4 */
+elseif|else
 if|if
 condition|(
 name|ic
@@ -14919,6 +15272,7 @@ literal|22
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * XXX TODO: this should be per-node, for 11b versus 11bg 	 * nodes in hostap mode 	 */
 name|ridx
 operator|=
 name|rate2ridx
@@ -14926,6 +15280,19 @@ argument_list|(
 name|rate
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|raid
+operator|=
+name|R92C_RAID_11GN
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ic
@@ -15142,13 +15509,25 @@ argument_list|(
 name|R92C_TXDW1_AGGBK
 argument_list|)
 expr_stmt|;
+comment|/* protmode, non-HT */
+comment|/* XXX TODO: noack frames? */
 if|if
 condition|(
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|ic
 operator|->
 name|ic_flags
 operator|&
 name|IEEE80211_F_USEPROT
+operator|)
 condition|)
 block|{
 switch|switch
@@ -15192,6 +15571,38 @@ default|default:
 break|break;
 block|}
 block|}
+comment|/* protmode, HT */
+comment|/* XXX TODO: noack frames? */
+if|if
+condition|(
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_htprotmode
+operator|==
+name|IEEE80211_PROT_RTSCTS
+operator|)
+condition|)
+block|{
+name|txd
+operator|->
+name|txdw4
+operator||=
+name|htole32
+argument_list|(
+name|R92C_TXDW4_RTSEN
+operator||
+name|R92C_TXDW4_HWRTSEN
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* XXX TODO: rtsrate is configurable? 24mbit may 			 * be a bit high for RTS rate? */
 name|txd
 operator|->
 name|txdw4
@@ -15255,6 +15666,10 @@ name|raid
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: 40MHZ flag? */
+comment|/* XXX TODO: AMPDU flag? (AGG_ENABLE or AGG_BREAK?) Density shift? */
+comment|/* XXX Short preamble? */
+comment|/* XXX Short-GI? */
 if|if
 condition|(
 name|sc
@@ -15315,6 +15730,14 @@ name|sc
 argument_list|)
 operator|||
 name|ismcast
+operator|||
+operator|(
+name|tp
+operator|->
+name|ucastrate
+operator|!=
+name|IEEE80211_FIXED_RATE_NONE
+operator|)
 operator|||
 operator|(
 name|m
@@ -15711,6 +16134,7 @@ return|;
 block|}
 block|}
 block|}
+comment|/* XXX TODO: 11n checks, matching urtwn_tx_data() */
 name|wh
 operator|=
 name|mtod
@@ -15909,6 +16333,7 @@ name|URTWN_MACID_BC
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: rate index/config (RAID) for 11n? */
 name|txd
 operator|->
 name|txdw1
