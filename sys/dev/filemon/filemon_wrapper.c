@@ -100,6 +100,9 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|filemon
@@ -181,6 +184,8 @@ condition|)
 name|bwillwrite
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
 name|fo_write
 argument_list|(
 name|filemon
@@ -198,6 +203,18 @@ literal|0
 argument_list|,
 name|curthread
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|filemon
+operator|->
+name|error
+operator|=
+name|error
 expr_stmt|;
 block|}
 end_function

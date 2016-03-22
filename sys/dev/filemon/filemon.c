@@ -325,6 +325,10 @@ literal|1024
 index|]
 decl_stmt|;
 comment|/* Output message buffer. */
+name|int
+name|error
+decl_stmt|;
+comment|/* Log write error, returned on close(2). */
 name|u_int
 name|refcnt
 decl_stmt|;
@@ -997,7 +1001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The devfs file is being closed.  Untrace all processes. */
+comment|/*  * The devfs file is being closed.  Untrace all processes.  It is possible  * filemon_close/close(2) was not called.  */
 end_comment
 
 begin_function
@@ -1596,6 +1600,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Called on close of last devfs file handle, before filemon_dtr(). */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1622,9 +1630,69 @@ name|td
 name|__unused
 parameter_list|)
 block|{
+name|struct
+name|filemon
+modifier|*
+name|filemon
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|devfs_get_cdevpriv
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|filemon
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
 return|return
 operator|(
-literal|0
+name|error
+operator|)
+return|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|filemon
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|filemon_close_log
+argument_list|(
+name|filemon
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|filemon
+operator|->
+name|error
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|filemon
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Processes are still being traced but won't log anything 	 * now.  After this call returns filemon_dtr() is called which 	 * will detach processes. 	 */
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
