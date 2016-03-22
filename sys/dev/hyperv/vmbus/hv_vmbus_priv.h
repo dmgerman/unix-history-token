@@ -426,7 +426,11 @@ block|,
 name|HV_VMBUS_MESSAGE_SINT
 init|=
 literal|2
-block|}
+block|,
+name|HV_VMBUS_TIMER_SINT
+init|=
+literal|4
+block|, }
 enum|;
 end_enum
 

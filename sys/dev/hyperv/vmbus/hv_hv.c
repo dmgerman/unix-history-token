@@ -1253,6 +1253,17 @@ operator|.
 name|as_uint64_t
 argument_list|)
 expr_stmt|;
+name|wrmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
+argument_list|,
+name|shared_sint
+operator|.
+name|as_uint64_t
+argument_list|)
+expr_stmt|;
 comment|/* Enable the global synic bit */
 name|sctrl
 operator|.
@@ -1359,12 +1370,43 @@ name|masked
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Disable the interrupt 	 */
+comment|/* 	 * Disable the interrupt 0 	 */
 name|wrmsr
 argument_list|(
 name|HV_X64_MSR_SINT0
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
+argument_list|,
+name|shared_sint
+operator|.
+name|as_uint64_t
+argument_list|)
+expr_stmt|;
+name|shared_sint
+operator|.
+name|as_uint64_t
+operator|=
+name|rdmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
+argument_list|)
+expr_stmt|;
+name|shared_sint
+operator|.
+name|u
+operator|.
+name|masked
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 * Disable the interrupt 1 	 */
+name|wrmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
 argument_list|,
 name|shared_sint
 operator|.

@@ -545,7 +545,7 @@ operator|*
 operator|)
 name|page_addr
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|HV_VMBUS_TIMER_SINT
 expr_stmt|;
 comment|/* we call eventtimer process the message */
 if|if
@@ -566,6 +566,12 @@ operator|.
 name|message_type
 operator|=
 name|HV_MESSAGE_TYPE_NONE
+expr_stmt|;
+comment|/* call intrrupt handler of event timer */
+name|hv_et_intr
+argument_list|(
+name|frame
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 */
 name|atomic_thread_fence_seq_cst
@@ -593,17 +599,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|hv_et_intr
-argument_list|(
-name|frame
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
+name|msg
+operator|=
+operator|(
+name|hv_vmbus_message
+operator|*
+operator|)
+name|page_addr
+operator|+
+name|HV_VMBUS_MESSAGE_SINT
+expr_stmt|;
 if|if
 condition|(
 name|msg
