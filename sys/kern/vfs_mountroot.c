@@ -219,6 +219,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|vfs_mountroot_wait
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|vfs_mountroot_wait_if_neccessary
 parameter_list|(
@@ -2102,6 +2112,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|vfs_mountroot_wait
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nLoader variables:\n"
