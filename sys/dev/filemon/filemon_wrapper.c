@@ -239,9 +239,6 @@ name|int
 name|ret
 decl_stmt|;
 name|size_t
-name|done
-decl_stmt|;
-name|size_t
 name|len
 decl_stmt|;
 name|struct
@@ -296,8 +293,7 @@ operator|->
 name|fname1
 argument_list|)
 argument_list|,
-operator|&
-name|done
+name|NULL
 argument_list|)
 expr_stmt|;
 name|len
@@ -498,9 +494,6 @@ name|fd
 parameter_list|)
 block|{
 name|size_t
-name|done
-decl_stmt|;
-name|size_t
 name|len
 decl_stmt|;
 name|struct
@@ -564,8 +557,7 @@ operator|->
 name|fname1
 argument_list|)
 argument_list|,
-operator|&
-name|done
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -947,9 +939,6 @@ name|int
 name|ret
 decl_stmt|;
 name|size_t
-name|done
-decl_stmt|;
-name|size_t
 name|len
 decl_stmt|;
 name|struct
@@ -1004,8 +993,7 @@ operator|->
 name|fname1
 argument_list|)
 argument_list|,
-operator|&
-name|done
+name|NULL
 argument_list|)
 expr_stmt|;
 name|copyinstr
@@ -1025,8 +1013,7 @@ operator|->
 name|fname2
 argument_list|)
 argument_list|,
-operator|&
-name|done
+name|NULL
 argument_list|)
 expr_stmt|;
 name|len
@@ -1525,9 +1512,6 @@ name|int
 name|ret
 decl_stmt|;
 name|size_t
-name|done
-decl_stmt|;
-name|size_t
 name|len
 decl_stmt|;
 name|struct
@@ -1582,8 +1566,7 @@ operator|->
 name|fname1
 argument_list|)
 argument_list|,
-operator|&
-name|done
+name|NULL
 argument_list|)
 expr_stmt|;
 name|len
