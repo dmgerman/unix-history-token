@@ -8481,10 +8481,10 @@ block|{
 name|int32_t
 name|cwnd
 decl_stmt|;
-name|int32_t
+name|int8_t
 name|increase
 decl_stmt|;
-name|int32_t
+name|int8_t
 name|drop_percent
 decl_stmt|;
 block|}
@@ -8499,6 +8499,8 @@ value|73
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|sctp_hs_raise_drop
 name|sctp_cwnd_adjust
@@ -9305,6 +9307,9 @@ name|incr
 operator|=
 operator|(
 operator|(
+operator|(
+name|int32_t
+operator|)
 name|sctp_cwnd_adjust
 index|[
 name|indx
@@ -9483,6 +9488,9 @@ operator|/
 literal|100
 operator|)
 operator|*
+operator|(
+name|int32_t
+operator|)
 name|sctp_cwnd_adjust
 index|[
 name|net
@@ -12784,6 +12792,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|sctp_cc_functions
 name|sctp_cc_functions

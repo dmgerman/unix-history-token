@@ -193,6 +193,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|sack_track
 name|sack_array
@@ -51308,6 +51309,7 @@ name|sctp_gap_ack_block
 modifier|*
 name|gap_descriptor
 decl_stmt|;
+specifier|const
 name|struct
 name|sack_track
 modifier|*

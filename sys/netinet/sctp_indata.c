@@ -9641,6 +9641,8 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|int8_t
 name|sctp_map_lookup_tab
 index|[

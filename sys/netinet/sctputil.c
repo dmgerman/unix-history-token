@@ -154,6 +154,7 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|sctp_cc_functions
 name|sctp_cc_functions
@@ -163,6 +164,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|sctp_ss_functions
 name|sctp_ss_functions
