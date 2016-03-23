@@ -479,7 +479,8 @@ expr_stmt|;
 else|else
 name|fwname
 operator|=
-literal|"/usr/share/firmware/ar5523.bin"
+name|_PATH_FIRMWARE
+literal|"/ar5523.bin"
 expr_stmt|;
 name|fw
 operator|=
