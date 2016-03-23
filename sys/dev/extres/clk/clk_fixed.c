@@ -648,8 +648,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
+name|intptr_t
+name|clk_type
+decl_stmt|;
+name|clk_type
+operator|=
 name|ofw_bus_search_compatible
 argument_list|(
 name|dev
@@ -658,10 +661,15 @@ name|compat_data
 argument_list|)
 operator|->
 name|ocd_data
-operator|!=
-literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|clk_type
 condition|)
 block|{
+case|case
+name|CLK_TYPE_FIXED
+case|:
 name|device_set_desc
 argument_list|(
 name|dev
@@ -674,12 +682,28 @@ operator|(
 name|BUS_PROBE_DEFAULT
 operator|)
 return|;
-block|}
+case|case
+name|CLK_TYPE_FIXED_FACTOR
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Fixed factor clock"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+default|default:
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -834,7 +858,7 @@ argument_list|,
 operator|&
 name|def
 operator|->
-name|mult
+name|div
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -858,13 +882,13 @@ return|;
 comment|/* Get name of parent clock */
 name|rv
 operator|=
-name|clk_get_by_ofw_name
+name|clk_get_by_ofw_index
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"clocks"
+literal|0
 argument_list|,
 operator|&
 name|parent
