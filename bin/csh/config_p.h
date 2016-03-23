@@ -130,12 +130,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|SAVESIGVEC
-end_define
-
-begin_define
-define|#
-directive|define
 name|NLS_BUGS
 end_define
 
