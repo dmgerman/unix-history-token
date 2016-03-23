@@ -876,6 +876,7 @@ name|out_names
 parameter_list|,
 name|uint32_t
 modifier|*
+modifier|*
 name|indices
 parameter_list|)
 function_decl|;

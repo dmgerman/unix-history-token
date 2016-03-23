@@ -5221,6 +5221,7 @@ name|out_names
 parameter_list|,
 name|uint32_t
 modifier|*
+modifier|*
 name|indices
 parameter_list|)
 block|{
@@ -5234,6 +5235,7 @@ name|out_names
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
 name|indices
 operator|=
 name|NULL
@@ -5340,6 +5342,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|*
 name|indices
 argument_list|,
 name|M_OFWPROP
