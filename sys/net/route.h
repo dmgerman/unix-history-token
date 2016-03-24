@@ -2107,7 +2107,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|rt_gen_t
+name|u_int
 name|rt_tables_get_gen
 parameter_list|(
 name|int

@@ -3468,7 +3468,7 @@ comment|/* signal EHOSTDOWN, as it flushes the cached route */
 name|in_pcbnotifyall
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|faddr
 argument_list|,

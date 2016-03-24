@@ -882,7 +882,7 @@ block|}
 end_function
 
 begin_function
-name|rt_gen_t
+name|u_int
 name|rt_tables_get_gen
 parameter_list|(
 name|int
