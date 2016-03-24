@@ -39,6 +39,12 @@ directive|include
 file|<sys/_rwlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -571,15 +577,35 @@ name|inp_lle
 decl_stmt|;
 comment|/* cached L2 information */
 name|struct
-name|rtentry
-modifier|*
-name|inp_rt
-decl_stmt|;
-comment|/* cached L3 information */
-name|struct
 name|rwlock
 name|inp_lock
 decl_stmt|;
+name|rt_gen_t
+name|inp_rt_cookie
+decl_stmt|;
+comment|/* generation for route entry */
+union|union
+block|{
+comment|/* cached L3 information */
+name|struct
+name|route
+name|inpu_route
+decl_stmt|;
+name|struct
+name|route_in6
+name|inpu_route6
+decl_stmt|;
+block|}
+name|inp_rtu
+union|;
+define|#
+directive|define
+name|inp_route
+value|inp_rtu.inpu_route
+define|#
+directive|define
+name|inp_route6
+value|inp_rtu.inpu_route6
 block|}
 struct|;
 end_struct
@@ -3307,6 +3333,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|in_pcbrele_wlocked
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_losing
 parameter_list|(
 name|struct
 name|inpcb

@@ -881,6 +881,42 @@ return|;
 block|}
 end_function
 
+begin_function
+name|rt_gen_t
+name|rt_tables_get_gen
+parameter_list|(
+name|int
+name|table
+parameter_list|,
+name|int
+name|fam
+parameter_list|)
+block|{
+name|struct
+name|rib_head
+modifier|*
+name|rnh
+decl_stmt|;
+name|rnh
+operator|=
+operator|*
+name|rt_tables_get_rnh_ptr
+argument_list|(
+name|table
+argument_list|,
+name|fam
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rnh
+operator|->
+name|rnh_gen
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * route initialization must occur before ip6_init2(), which happenas at  * SI_ORDER_MIDDLE.  */
 end_comment
@@ -7092,6 +7128,12 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+name|rnh
+operator|->
+name|rnh_gen
+operator|++
+expr_stmt|;
+comment|/* Routing table updated */
 name|RT_UNLOCK
 argument_list|(
 name|rt

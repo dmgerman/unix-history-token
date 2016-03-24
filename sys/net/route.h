@@ -285,6 +285,34 @@ name|rmx_state
 value|rmx_weight
 end_define
 
+begin_comment
+comment|/*  * Keep a generation count of routing table, incremented on route addition,  * so we can invalidate caches.  This is accessed without a lock, as precision  * is not required.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|u_int
+name|rt_gen_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* tree generation (for adds) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_GEN
+parameter_list|(
+name|fibnum
+parameter_list|,
+name|af
+parameter_list|)
+value|rt_tables_get_gen(fibnum, af)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1820,6 +1848,24 @@ parameter_list|)
 value|do {					\ 	if ((_ro)->ro_rt) {					\ 		if ((_ro)->ro_flags& RT_NORTREF) {		\ 			(_ro)->ro_flags&= ~RT_NORTREF;		\ 			(_ro)->ro_rt = NULL;			\ 		} else {					\ 			RT_LOCK((_ro)->ro_rt);			\ 			RTFREE_LOCKED((_ro)->ro_rt);		\ 		}						\ 	}							\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * Validate a cached route based on a supplied cookie.  If there is an  * out-of-date cache, simply free it.  Update the generation number  * for the new allocation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_VALIDATE
+parameter_list|(
+name|ro
+parameter_list|,
+name|cookiep
+parameter_list|,
+name|fibnum
+parameter_list|)
+value|do {				\ 	rt_gen_t cookie = RT_GEN(fibnum, (ro)->ro_dst.sa_family);	\ 	if (*(cookiep) != cookie&& (ro)->ro_rt != NULL) {		\ 		RTFREE((ro)->ro_rt);					\ 		(ro)->ro_rt = NULL;					\ 		*(cookiep) = cookie;					\ 	}								\ } while (0)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|ifmultiaddr
@@ -2056,6 +2102,19 @@ parameter_list|(
 name|struct
 name|rib_head
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rt_gen_t
+name|rt_tables_get_gen
+parameter_list|(
+name|int
+name|table
+parameter_list|,
+name|int
+name|fam
 parameter_list|)
 function_decl|;
 end_function_decl

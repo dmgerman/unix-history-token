@@ -58,7 +58,7 @@ modifier|*
 name|rnh_close
 decl_stmt|;
 comment|/*do something when the last ref drops*/
-name|u_int
+name|rt_gen_t
 name|rnh_gen
 decl_stmt|;
 comment|/* generation counter */

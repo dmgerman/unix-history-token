@@ -3799,7 +3799,10 @@ name|m
 argument_list|,
 name|optp
 argument_list|,
-name|NULL
+operator|&
+name|inp
+operator|->
+name|inp_route6
 argument_list|,
 name|flags
 argument_list|,

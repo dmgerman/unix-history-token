@@ -3758,8 +3758,16 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
+else|else
 endif|#
 directive|endif
+name|in_losing
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_rttvar
