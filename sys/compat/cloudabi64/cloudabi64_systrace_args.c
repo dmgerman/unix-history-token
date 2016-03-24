@@ -339,7 +339,7 @@ operator|->
 name|iov
 expr_stmt|;
 comment|/* const cloudabi64_iovec_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -348,7 +348,7 @@ name|p
 operator|->
 name|iovcnt
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 name|iarg
 index|[
 literal|3
@@ -401,7 +401,7 @@ operator|->
 name|iov
 expr_stmt|;
 comment|/* const cloudabi64_ciovec_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -410,7 +410,7 @@ name|p
 operator|->
 name|iovcnt
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 name|iarg
 index|[
 literal|3
@@ -463,7 +463,7 @@ operator|->
 name|iov
 expr_stmt|;
 comment|/* const cloudabi64_iovec_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -472,7 +472,7 @@ name|p
 operator|->
 name|iovcnt
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 operator|*
 name|n_args
 operator|=
@@ -726,7 +726,7 @@ operator|->
 name|iov
 expr_stmt|;
 comment|/* const cloudabi64_ciovec_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -735,7 +735,7 @@ name|p
 operator|->
 name|iovcnt
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 operator|*
 name|n_args
 operator|=
@@ -1017,7 +1017,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|fd
+name|dirfd
 expr_stmt|;
 comment|/* cloudabi_lookup_t */
 name|uarg
@@ -1192,7 +1192,7 @@ name|p
 operator|->
 name|buf
 expr_stmt|;
-comment|/* void * */
+comment|/* char * */
 name|uarg
 index|[
 literal|4
@@ -1656,7 +1656,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flag
+name|flags
 expr_stmt|;
 comment|/* cloudabi_ulflags_t */
 operator|*
@@ -2110,16 +2110,16 @@ operator|->
 name|out
 expr_stmt|;
 comment|/* cloudabi64_event_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
 operator|=
 name|p
 operator|->
-name|nevents
+name|nsubscriptions
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 operator|*
 name|n_args
 operator|=
@@ -2333,7 +2333,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -2375,7 +2375,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|iarg
@@ -2437,7 +2437,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|iarg
@@ -2499,7 +2499,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|iarg
@@ -2538,7 +2538,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -2593,7 +2593,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|s
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -2648,7 +2648,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|fd
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|iarg
@@ -2687,7 +2687,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|fd
+name|sock
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -2873,7 +2873,7 @@ operator|->
 name|in
 expr_stmt|;
 comment|/* const cloudabi64_subscription_t * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -2882,7 +2882,7 @@ name|p
 operator|->
 name|nin
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 name|uarg
 index|[
 literal|3
@@ -2896,7 +2896,7 @@ operator|->
 name|out
 expr_stmt|;
 comment|/* cloudabi64_event_t * */
-name|iarg
+name|uarg
 index|[
 literal|4
 index|]
@@ -2905,7 +2905,7 @@ name|p
 operator|->
 name|nout
 expr_stmt|;
-comment|/* cloudabi64_size_t */
+comment|/* size_t */
 name|uarg
 index|[
 literal|5
@@ -3199,7 +3199,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 case|case
@@ -3245,7 +3245,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 case|case
@@ -3291,7 +3291,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -3487,7 +3487,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -3825,7 +3825,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4497,7 +4497,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -5043,7 +5043,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 case|case
@@ -5059,7 +5059,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 case|case
@@ -5296,7 +5296,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 comment|/* cloudabi64_sys_fd_pwrite */
@@ -5315,7 +5315,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 comment|/* cloudabi64_sys_fd_read */
@@ -5334,7 +5334,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_fd_replace */
@@ -5448,7 +5448,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_file_advise */
@@ -5885,7 +5885,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_exec */
@@ -6060,7 +6060,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"void"
 expr_stmt|;
 break|break;
 comment|/* cloudabi64_sys_sock_send */
@@ -6079,7 +6079,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"void"
 expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_shutdown */
@@ -6197,7 +6197,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"cloudabi64_size_t"
+literal|"size_t"
 expr_stmt|;
 break|break;
 default|default:

@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_syscalldefs.h>
+file|<contrib/cloudabi/cloudabi_types_common.h>
 end_include
 
 begin_struct_decl

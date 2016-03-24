@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_util.h>
+file|<contrib/cloudabi/cloudabi64_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_syscalldefs.h>
+file|<compat/cloudabi/cloudabi_util.h>
 end_include
 
 begin_include
@@ -358,7 +358,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 operator|&
 name|msghdr
@@ -690,7 +690,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 operator|&
 name|msghdr

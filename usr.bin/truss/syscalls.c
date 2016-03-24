@@ -210,7 +210,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_syscalldefs.h>
+file|<contrib/cloudabi/cloudabi_types_common.h>
 end_include
 
 begin_include
@@ -9808,7 +9808,7 @@ init|=
 block|{
 name|X
 argument_list|(
-argument|SOCKSTAT_ACCEPTCONN
+argument|SOCKSTATE_ACCEPTCONN
 argument_list|)
 name|XEND
 block|}
