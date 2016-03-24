@@ -1296,10 +1296,7 @@ name|rh
 argument_list|,
 name|vfs_free_netcred
 argument_list|,
-operator|&
 name|rnh
-operator|->
-name|rh
 argument_list|)
 expr_stmt|;
 name|RADIX_NODE_HEAD_UNLOCK
