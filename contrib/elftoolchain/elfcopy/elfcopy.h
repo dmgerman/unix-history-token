@@ -393,9 +393,13 @@ struct|struct
 name|segment
 block|{
 name|uint64_t
-name|addr
+name|vaddr
 decl_stmt|;
-comment|/* load addr */
+comment|/* virtual addr (VMA) */
+name|uint64_t
+name|paddr
+decl_stmt|;
+comment|/* physical addr (LMA) */
 name|uint64_t
 name|off
 decl_stmt|;
