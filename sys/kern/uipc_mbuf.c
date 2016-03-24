@@ -108,17 +108,9 @@ file|<sys/sdt.h>
 end_include
 
 begin_expr_stmt
-name|SDT_PROVIDER_DEFINE
-argument_list|(
-name|mbuf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SDT_PROBE_DEFINE5_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__init
 argument_list|,
@@ -148,7 +140,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE3_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__gethdr
 argument_list|,
@@ -170,7 +162,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE3_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__get
 argument_list|,
@@ -192,7 +184,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE4_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__getcl
 argument_list|,
@@ -218,7 +210,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE3_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__clget
 argument_list|,
@@ -240,7 +232,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE4_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__cljget
 argument_list|,
@@ -266,7 +258,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__cljset
 argument_list|)
@@ -276,7 +268,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE1_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__free
 argument_list|,
@@ -290,7 +282,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DEFINE1_XLATE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__freem
 argument_list|,

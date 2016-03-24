@@ -87,7 +87,7 @@ parameter_list|,
 name|arg0
 parameter_list|)
 define|\
-value|SDT_PROBE1(mbuf, , , probe, arg0)
+value|SDT_PROBE1(sdt, , , probe, arg0)
 end_define
 
 begin_define
@@ -102,7 +102,7 @@ parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE2(mbuf, , , probe, arg0, arg1)
+value|SDT_PROBE2(sdt, , , probe, arg0, arg1)
 end_define
 
 begin_define
@@ -119,7 +119,7 @@ parameter_list|,
 name|arg2
 parameter_list|)
 define|\
-value|SDT_PROBE3(mbuf, , , probe, arg0, arg1, arg2)
+value|SDT_PROBE3(sdt, , , probe, arg0, arg1, arg2)
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|SDT_PROBE4(mbuf, , , probe, arg0, arg1, arg2, arg3)
+value|SDT_PROBE4(sdt, , , probe, arg0, arg1, arg2, arg3)
 end_define
 
 begin_define
@@ -159,21 +159,13 @@ parameter_list|,
 name|arg4
 parameter_list|)
 define|\
-value|SDT_PROBE5(mbuf, , , probe, arg0, arg1, arg2, arg3, arg4)
+value|SDT_PROBE5(sdt, , , probe, arg0, arg1, arg2, arg3, arg4)
 end_define
-
-begin_expr_stmt
-name|SDT_PROVIDER_DECLARE
-argument_list|(
-name|mbuf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__init
 argument_list|)
@@ -183,7 +175,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__gethdr
 argument_list|)
@@ -193,7 +185,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__get
 argument_list|)
@@ -203,7 +195,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__getcl
 argument_list|)
@@ -213,7 +205,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__clget
 argument_list|)
@@ -223,7 +215,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__cljget
 argument_list|)
@@ -233,7 +225,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__cljset
 argument_list|)
@@ -243,7 +235,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__free
 argument_list|)
@@ -253,7 +245,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SDT_PROBE_DECLARE
 argument_list|(
-name|mbuf
+name|sdt
 argument_list|, , ,
 name|m__freem
 argument_list|)
