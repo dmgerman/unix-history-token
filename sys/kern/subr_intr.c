@@ -1229,11 +1229,10 @@ comment|/*  *  Allocate interrupt source.  */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|intr_irqsrc
 modifier|*
-name|isrc_alloc
+name|intr_isrc_alloc
 parameter_list|(
 name|u_int
 name|type
@@ -1318,9 +1317,8 @@ comment|/*  *  Free interrupt source.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|isrc_free
+name|intr_isrc_free
 parameter_list|(
 name|struct
 name|intr_irqsrc
@@ -1835,7 +1833,7 @@ name|error
 decl_stmt|;
 name|new_isrc
 operator|=
-name|isrc_alloc
+name|intr_isrc_alloc
 argument_list|(
 name|INTR_ISRCT_NAMESPACE
 argument_list|,
@@ -1872,7 +1870,7 @@ operator|&
 name|isrc_table_lock
 argument_list|)
 expr_stmt|;
-name|isrc_free
+name|intr_isrc_free
 argument_list|(
 name|new_isrc
 argument_list|)
@@ -1906,7 +1904,7 @@ operator|&
 name|isrc_table_lock
 argument_list|)
 expr_stmt|;
-name|isrc_free
+name|intr_isrc_free
 argument_list|(
 name|new_isrc
 argument_list|)
@@ -2139,7 +2137,7 @@ argument_list|)
 expr_stmt|;
 name|new_isrc
 operator|=
-name|isrc_alloc
+name|intr_isrc_alloc
 argument_list|(
 name|INTR_ISRCT_FDT
 argument_list|,
@@ -2176,7 +2174,7 @@ operator|&
 name|isrc_table_lock
 argument_list|)
 expr_stmt|;
-name|isrc_free
+name|intr_isrc_free
 argument_list|(
 name|new_isrc
 argument_list|)
@@ -2210,7 +2208,7 @@ operator|&
 name|isrc_table_lock
 argument_list|)
 expr_stmt|;
-name|isrc_free
+name|intr_isrc_free
 argument_list|(
 name|new_isrc
 argument_list|)
