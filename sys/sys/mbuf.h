@@ -3557,8 +3557,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|m
 operator|->
@@ -3612,6 +3610,11 @@ name|m
 argument_list|,
 name|how
 argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|MBUF_PROBE5
 argument_list|(
