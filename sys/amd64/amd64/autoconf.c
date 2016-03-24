@@ -296,10 +296,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* 	 * Enable interrupts on the processor.  The interrupts are still 	 * disabled in the interrupt controllers until interrupt handlers 	 * are registered. 	 */
-name|enable_intr
-argument_list|()
-expr_stmt|;
 comment|/* initialize new bus architecture */
 name|root_bus_configure
 argument_list|()
