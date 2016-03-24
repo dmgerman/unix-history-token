@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/tree.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -689,7 +695,7 @@ comment|/* 	 * Not terribly efficient, but at least not recursive. 	 */
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|RB_EMPTY
 argument_list|(
 operator|&
 name|amp
@@ -702,8 +708,10 @@ condition|)
 block|{
 name|anp
 operator|=
-name|TAILQ_FIRST
+name|RB_MIN
 argument_list|(
+name|autofs_node_tree
+argument_list|,
 operator|&
 name|amp
 operator|->
@@ -715,7 +723,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|RB_EMPTY
 argument_list|(
 operator|&
 name|anp
@@ -725,8 +733,10 @@ argument_list|)
 condition|)
 name|anp
 operator|=
-name|TAILQ_FIRST
+name|RB_MIN
 argument_list|(
+name|autofs_node_tree
+argument_list|,
 operator|&
 name|anp
 operator|->
