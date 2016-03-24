@@ -2947,10 +2947,10 @@ name|dn_drain_queue
 argument_list|()
 expr_stmt|;
 block|}
-name|DN_BH_WUNLOCK
+name|dn_reschedule
 argument_list|()
 expr_stmt|;
-name|dn_reschedule
+name|DN_BH_WUNLOCK
 argument_list|()
 expr_stmt|;
 if|if

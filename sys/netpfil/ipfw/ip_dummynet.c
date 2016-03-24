@@ -248,6 +248,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|dn_gone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|task
 name|dn_task
@@ -299,6 +306,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|dn_gone
+operator|!=
+literal|0
+condition|)
+return|return;
 name|callout_reset_sbt
 argument_list|(
 operator|&
@@ -11556,15 +11570,15 @@ name|int
 name|last
 parameter_list|)
 block|{
-name|callout_drain
-argument_list|(
-operator|&
-name|dn_timeout
-argument_list|)
-expr_stmt|;
 name|DN_BH_WLOCK
 argument_list|()
 expr_stmt|;
+comment|/* ensure no more callouts are started */
+name|dn_gone
+operator|=
+literal|1
+expr_stmt|;
+comment|/* check for last */
 if|if
 condition|(
 name|last
@@ -11589,6 +11603,12 @@ argument_list|()
 expr_stmt|;
 name|DN_BH_WUNLOCK
 argument_list|()
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|dn_timeout
+argument_list|)
 expr_stmt|;
 name|taskqueue_drain
 argument_list|(

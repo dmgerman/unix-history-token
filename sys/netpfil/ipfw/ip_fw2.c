@@ -11209,23 +11209,13 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|IPFW_UH_WLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
-name|IPFW_WLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 name|ipfw_dyn_uninit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* run the callout_drain */
-name|IPFW_WUNLOCK
+name|IPFW_UH_WLOCK
 argument_list|(
 name|chain
 argument_list|)
