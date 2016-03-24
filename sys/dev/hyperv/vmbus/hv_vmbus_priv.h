@@ -498,6 +498,14 @@ name|MAXCPU
 index|]
 decl_stmt|;
 name|struct
+name|taskqueue
+modifier|*
+name|hv_msg_tq
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+name|struct
 name|task
 name|hv_msg_task
 index|[
