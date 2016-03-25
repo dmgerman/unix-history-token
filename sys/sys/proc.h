@@ -736,6 +736,10 @@ name|int
 name|td_swvoltick
 decl_stmt|;
 comment|/* (t) Time at last SW_VOL switch. */
+name|int
+name|td_swinvoltick
+decl_stmt|;
+comment|/* (t) Time at last SW_INVOL switch. */
 name|u_int
 name|td_cow
 decl_stmt|;

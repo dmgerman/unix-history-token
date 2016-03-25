@@ -1769,6 +1769,7 @@ name|ticks
 expr_stmt|;
 block|}
 else|else
+block|{
 name|td
 operator|->
 name|td_ru
@@ -1776,6 +1777,13 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
+name|td
+operator|->
+name|td_swinvoltick
+operator|=
+name|ticks
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SCHED_STATS
