@@ -6483,6 +6483,11 @@ name|pbuf
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|pbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|AIO_LOCK
 argument_list|(
 name|ki
