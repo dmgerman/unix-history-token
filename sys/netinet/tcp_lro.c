@@ -3191,7 +3191,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|TCP_LRO_CANNOT
+name|TCP_LRO_NO_ENTRIES
 operator|)
 return|;
 comment|/* Start a new segment chain. */

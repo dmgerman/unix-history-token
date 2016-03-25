@@ -409,6 +409,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|TCP_LRO_NO_ENTRIES
+value|-2
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCP_LRO_CANNOT
 value|-1
 end_define
