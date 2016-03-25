@@ -165,10 +165,10 @@ directive|include
 file|<vendor/osm_vendor_al.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_error
 error|#
