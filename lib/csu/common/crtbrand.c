@@ -107,7 +107,7 @@ block|,
 operator|.
 name|desc
 operator|=
-name|__FreeBSD_version
+literal|1003000
 block|}
 struct|;
 end_struct
