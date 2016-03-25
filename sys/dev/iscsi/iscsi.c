@@ -10491,6 +10491,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|iscsi_outstanding_remove
+argument_list|(
+name|is
+argument_list|,
+name|io
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
