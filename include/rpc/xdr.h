@@ -670,10 +670,6 @@ parameter_list|)
 value|XDR_CONTROL(xdrs, req, op)
 end_define
 
-begin_comment
-comment|/*  * Solaris strips the '_t' from these types -- not sure why.  * But, let's be compatible.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -683,7 +679,7 @@ name|xdrs
 parameter_list|,
 name|versp
 parameter_list|)
-value|xdr_u_int32(xdrs, versp)
+value|xdr_u_int32_t(xdrs, versp)
 end_define
 
 begin_define
@@ -695,7 +691,7 @@ name|xdrs
 parameter_list|,
 name|progp
 parameter_list|)
-value|xdr_u_int32(xdrs, progp)
+value|xdr_u_int32_t(xdrs, progp)
 end_define
 
 begin_define
@@ -707,7 +703,7 @@ name|xdrs
 parameter_list|,
 name|procp
 parameter_list|)
-value|xdr_u_int32(xdrs, procp)
+value|xdr_u_int32_t(xdrs, procp)
 end_define
 
 begin_define
@@ -719,7 +715,7 @@ name|xdrs
 parameter_list|,
 name|protp
 parameter_list|)
-value|xdr_u_int32(xdrs, protp)
+value|xdr_u_int32_t(xdrs, protp)
 end_define
 
 begin_define
@@ -731,7 +727,7 @@ name|xdrs
 parameter_list|,
 name|portp
 parameter_list|)
-value|xdr_u_int32(xdrs, portp)
+value|xdr_u_int32_t(xdrs, portp)
 end_define
 
 begin_comment
