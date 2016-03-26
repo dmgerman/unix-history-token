@@ -1166,6 +1166,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 802.3 tx */
 comment|/* 		 * Encapsulate the packet in prep for transmission. 		 */
+name|IEEE80211_TX_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|mcopy
 operator|=
 name|ieee80211_encap
@@ -1185,6 +1190,11 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: stat+msg handled in ieee80211_encap */
+name|IEEE80211_TX_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni
@@ -1217,6 +1227,11 @@ argument_list|(
 name|ic
 argument_list|,
 name|mcopy
+argument_list|)
+expr_stmt|;
+name|IEEE80211_TX_UNLOCK
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 if|if
