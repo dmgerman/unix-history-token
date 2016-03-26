@@ -257,7 +257,7 @@ expr_stmt|;
 name|ns8250
 operator|->
 name|ier
-operator|=
+operator||=
 name|ns8250
 operator|->
 name|ier_rxbits
@@ -956,15 +956,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"got UART clock: %lld\n"
-argument_list|,
-name|freq
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|uart_bus_probe
