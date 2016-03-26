@@ -7870,6 +7870,8 @@ argument_list|,
 name|m
 operator|->
 name|m_flags
+operator|&
+name|M_COPYFLAGS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8035,6 +8037,8 @@ argument_list|,
 name|m
 operator|->
 name|m_flags
+operator|&
+name|M_COPYFLAGS
 argument_list|)
 expr_stmt|;
 if|if
