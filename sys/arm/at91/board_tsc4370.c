@@ -2126,6 +2126,10 @@ return|return
 name|fake_preload_metadata
 argument_list|(
 name|abp
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
