@@ -305,6 +305,23 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|md
+operator|.
+name|md_iterations
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* XXX TODO: Support loading key files */
+comment|/* Disk does not have a passphrase, skip it */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|geli_e
 operator|=
 name|malloc
@@ -521,6 +538,25 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Prepare Derived-Key from the user passphrase. 		 */
+if|if
+condition|(
+name|geli_e
+operator|->
+name|md
+operator|.
+name|md_iterations
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* XXX TODO: Support loading key files */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|geli_e
