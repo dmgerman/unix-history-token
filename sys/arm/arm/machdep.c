@@ -5066,14 +5066,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|init_static_kenv
-argument_list|(
-name|cmdline
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return;
 name|cmdline
 operator|+=
@@ -5083,7 +5075,6 @@ name|size
 operator|-=
 name|guard_len
 expr_stmt|;
-block|}
 block|}
 comment|/* Skip leading spaces. */
 for|for
@@ -8523,6 +8514,10 @@ name|LINUX_BOOT_ABI
 argument_list|)
 if|if
 condition|(
+name|loader_envp
+operator|==
+name|NULL
+operator|&&
 name|fdt_get_chosen_bootargs
 argument_list|(
 name|linux_command_line
