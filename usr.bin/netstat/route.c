@@ -2131,6 +2131,10 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|protrusion
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
