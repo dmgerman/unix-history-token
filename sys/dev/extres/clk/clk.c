@@ -3271,6 +3271,20 @@ comment|/* We have exclusive topology lock, node lock is not needed. */
 name|CLK_TOPO_XASSERT
 argument_list|()
 expr_stmt|;
+comment|/* Check for no change */
+if|if
+condition|(
+name|clknode
+operator|->
+name|freq
+operator|==
+name|freq
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|parent_freq
 operator|=
 literal|0
