@@ -989,14 +989,6 @@ operator|(
 name|SOL_SOCKET
 operator|)
 return|;
-case|case
-name|LINUX_SOL_IPV6
-case|:
-return|return
-operator|(
-name|IPPROTO_IPV6
-operator|)
-return|;
 block|}
 return|return
 operator|(

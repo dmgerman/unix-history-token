@@ -1548,13 +1548,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SOL_IPV6
-value|41
-end_define
-
-begin_define
-define|#
-directive|define
 name|LINUX_SOL_IPX
 value|256
 end_define
