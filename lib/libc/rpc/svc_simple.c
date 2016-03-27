@@ -1160,12 +1160,12 @@ name|xdrbuf
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
+operator|(
+name|size_t
+operator|)
 name|pl
 operator|->
 name|p_recvsz
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Assuming that sizeof (xdrbuf) would be enough 			 * for the arguments; if not then the program 			 * may bomb. BEWARE! 			 */
