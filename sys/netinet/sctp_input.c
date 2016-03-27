@@ -11857,6 +11857,10 @@ name|sctp_pathmtu_adjustment
 argument_list|(
 name|stcb
 argument_list|,
+call|(
+name|uint16_t
+call|)
+argument_list|(
 operator|(
 operator|*
 name|netp
@@ -11868,6 +11872,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|udphdr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16549,6 +16554,9 @@ name|tp1
 operator|->
 name|book_size
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 operator|(
 name|uintptr_t
 operator|)
@@ -28472,12 +28480,17 @@ name|length
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|len
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sctp_gen_error_cause
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

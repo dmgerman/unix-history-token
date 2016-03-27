@@ -16558,6 +16558,9 @@ name|cmh
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cpsize
 argument_list|,
 operator|(
@@ -20654,12 +20657,17 @@ name|uh_ulen
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|packet_length
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21886,7 +21894,10 @@ name|ip6h
 operator|->
 name|ip6_plen
 operator|=
-operator|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|packet_length
 operator|-
 sizeof|sizeof
@@ -21894,7 +21905,7 @@ argument_list|(
 expr|struct
 name|ip6_hdr
 argument_list|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|ip6h
 operator|->
@@ -22611,12 +22622,17 @@ name|uh_ulen
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|packet_length
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip6_hdr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -32879,6 +32895,9 @@ block|}
 comment|/* get the new end of length */
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 operator|*
@@ -32891,6 +32910,9 @@ block|{
 comment|/* how much is left at the end? */
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 operator|*
@@ -33657,6 +33679,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -33666,6 +33692,7 @@ operator|+
 name|ca
 operator|->
 name|sndlen
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -34458,6 +34485,9 @@ expr_stmt|;
 comment|/* save space for the data chunk header */
 name|cancpy
 operator|=
+operator|(
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 name|ret
@@ -34596,6 +34626,9 @@ literal|0
 expr_stmt|;
 name|cancpy
 operator|=
+operator|(
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 name|at
@@ -34763,6 +34796,9 @@ name|ca
 operator|->
 name|sndlen
 operator|=
+operator|(
+name|int
+operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -35624,6 +35660,9 @@ index|]
 operator|->
 name|book_size
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 operator|(
 name|uintptr_t
 operator|)
@@ -37921,7 +37960,10 @@ name|chk
 operator|->
 name|send_size
 operator|=
-operator|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|to_move
 operator|+
 sizeof|sizeof
@@ -37929,7 +37971,7 @@ argument_list|(
 expr|struct
 name|sctp_data_chunk
 argument_list|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|chk
 operator|->
@@ -38168,6 +38210,9 @@ name|sctp_misc_ints
 argument_list|(
 name|SCTP_STRMOUT_LOG_SEND
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 operator|(
 name|uintptr_t
 operator|)
@@ -48718,6 +48763,9 @@ operator|->
 name|book_size
 argument_list|,
 operator|(
+name|uint32_t
+operator|)
+operator|(
 name|uintptr_t
 operator|)
 name|data_list
@@ -50777,6 +50825,10 @@ operator|)
 expr_stmt|;
 name|cnt_of_space
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 name|chk
@@ -51965,6 +52017,10 @@ argument_list|)
 expr_stmt|;
 name|space
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 name|a_chk
@@ -53068,6 +53124,10 @@ name|a_chk
 operator|->
 name|send_size
 operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -53091,6 +53151,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SCTP_BUF_LEN
@@ -53188,6 +53249,10 @@ name|a_chk
 operator|->
 name|send_size
 operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -53211,6 +53276,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SCTP_BUF_LEN
@@ -54953,6 +55019,10 @@ name|uh_ulen
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -54974,6 +55044,7 @@ operator|+
 name|cause_len
 operator|+
 name|padding_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -55123,6 +55194,10 @@ name|chunk_length
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -55130,6 +55205,7 @@ name|sctp_chunkhdr
 argument_list|)
 operator|+
 name|cause_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -55391,12 +55467,17 @@ name|ip6
 operator|->
 name|ip6_plen
 operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|len
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip6_hdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -57296,12 +57377,17 @@ name|chk
 operator|->
 name|send_size
 operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|len
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sctp_pktdrop_chunk
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -58155,7 +58241,10 @@ expr_stmt|;
 block|}
 name|len
 operator|=
-operator|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -58170,7 +58259,7 @@ argument_list|)
 operator|*
 name|number_entries
 operator|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|req_out
 operator|->
@@ -58533,7 +58622,10 @@ expr_stmt|;
 comment|/* now how long will this param be? */
 name|len
 operator|=
-operator|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -58548,7 +58640,7 @@ argument_list|)
 operator|*
 name|number_entries
 operator|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|req_in
 operator|->
@@ -62448,6 +62540,9 @@ name|sp
 operator|->
 name|length
 operator|=
+operator|(
+name|uint32_t
+operator|)
 name|min
 argument_list|(
 name|uio
@@ -63271,6 +63366,10 @@ return|;
 block|}
 name|sndlen
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -65311,6 +65410,10 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -65318,6 +65421,7 @@ name|sctp_paramhdr
 argument_list|)
 operator|+
 name|tot_out
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ph
@@ -67409,6 +67513,9 @@ name|SCTP_BLOCK_LOG_INTO_BLK
 argument_list|,
 name|asoc
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|uio
 operator|->
 name|uio_resid

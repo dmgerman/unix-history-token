@@ -85,6 +85,17 @@ value|0xffff
 end_define
 
 begin_comment
+comment|/* Largest length of an error cause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_CAUSE_LENGTH
+value|0xffff
+end_define
+
+begin_comment
 comment|/* Number of addresses where we just skip the counting */
 end_comment
 
