@@ -82,6 +82,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|taskqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|timeval
 struct_decl|;
 end_struct_decl
@@ -272,6 +278,14 @@ name|int
 name|um_writesuspended
 decl_stmt|;
 comment|/* suspension in progress */
+name|u_int
+name|um_trim_inflight
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|um_trim_tq
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
