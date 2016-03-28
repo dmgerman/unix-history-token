@@ -1041,7 +1041,7 @@ comment|/* 		 * No next-level page table; pdpe describes one 1GB page. 		 */
 name|a
 operator|=
 operator|(
-name|pde
+name|pdpe
 operator|&
 name|AMD64_PG_1GB_FRAME
 operator|)
