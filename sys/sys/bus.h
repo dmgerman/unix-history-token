@@ -522,6 +522,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|devctl_safe_quote
+parameter_list|(
+name|char
+modifier|*
+name|__dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__src
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * Device name parsers.  Hook to allow device enumerators to map  * scheme-specific names to a device.  */
 end_comment
