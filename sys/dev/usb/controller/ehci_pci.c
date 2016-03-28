@@ -571,7 +571,7 @@ literal|0x00e01033
 case|:
 return|return
 operator|(
-literal|"NEC uPD 720100 USB 2.0 controller"
+literal|"NEC uPD 72010x USB 2.0 controller"
 operator|)
 return|;
 case|case
