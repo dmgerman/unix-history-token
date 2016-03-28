@@ -258,6 +258,8 @@ name|int
 name|usesleep
 decl_stmt|,
 name|rawout
+decl_stmt|,
+name|showexit
 decl_stmt|;
 end_decl_stmt
 
@@ -472,6 +474,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Shut up stupid "may be used uninitialized" GCC 			   warning. (not needed w/clang) */
+name|showexit
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -980,11 +986,15 @@ literal|0
 index|]
 condition|)
 block|{
+name|showexit
+operator|=
+literal|1
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fscript
 argument_list|,
-literal|"command: "
+literal|"Command: "
 argument_list|)
 expr_stmt|;
 for|for
@@ -1887,6 +1897,24 @@ condition|(
 operator|!
 name|rawout
 condition|)
+block|{
+if|if
+condition|(
+name|showexit
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fscript
+argument_list|,
+literal|"\nCommand exit status:"
+literal|" %d"
+argument_list|,
+name|eno
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1903,6 +1931,7 @@ name|tvec
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
