@@ -30637,6 +30637,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_send_queue
+argument_list|)
+operator|||
 name|cnt_ctrl_ready
 operator|||
 name|stcb
