@@ -2754,7 +2754,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|svc_callout
+name|svc_loss_callout
 argument_list|)
 argument_list|,
 name|M_RPC
