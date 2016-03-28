@@ -1304,7 +1304,7 @@ begin_define
 define|#
 directive|define
 name|APIC_LVTT_TM
-value|0x00020000
+value|0x00060000
 end_define
 
 begin_define
@@ -1319,6 +1319,20 @@ define|#
 directive|define
 name|APIC_LVTT_TM_PERIODIC
 value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_LVTT_TM_TSCDLT
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_LVTT_TM_RSRV
+value|0x00060000
 end_define
 
 begin_comment
