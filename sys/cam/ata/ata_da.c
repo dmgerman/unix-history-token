@@ -1396,24 +1396,6 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Samsung 843T Series SSDs 		 * 4k optimised 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"*"
-block|,
-literal|"SAMSUNG MZ7WD*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|ADA_Q_4K
-block|}
-block|,
-block|{
 comment|/* 		 * Samsung 850 SSDs 		 * 4k optimised 		 */
 block|{
 name|T_DIRECT
@@ -1432,7 +1414,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Samsung PM853T Series SSDs 		 * 4k optimised 		 */
+comment|/* 		 * Samsung 843T Series SSDs (MZ7WD*) 		 * Samsung PM851 Series SSDs (MZ7TE*) 		 * Samsung PM853T Series SSDs (MZ7GE*) 		 * Samsung SM863 Series SSDs (MZ7KM*) 		 * 4k optimised 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1440,25 +1422,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"*"
 block|,
-literal|"SAMSUNG MZ7GE*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|ADA_Q_4K
-block|}
-block|,
-block|{
-comment|/* 		 * Samsung SM863 Series SSDs 		 * 4k optimised 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"*"
-block|,
-literal|"SAMSUNG MZ7KM*"
+literal|"SAMSUNG MZ7*"
 block|,
 literal|"*"
 block|}
