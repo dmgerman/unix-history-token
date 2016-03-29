@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofwpci.h>
 end_include
 
 begin_include
@@ -128,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -141,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<powerpc/ofw/ofw_pci.h>
 end_include
 
 begin_include
