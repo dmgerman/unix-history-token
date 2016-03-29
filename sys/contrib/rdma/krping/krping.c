@@ -950,6 +950,15 @@ break|break;
 case|case
 name|RDMA_CM_EVENT_CONNECT_REQUEST
 case|:
+if|if
+condition|(
+name|cb
+operator|->
+name|state
+operator|==
+name|IDLE
+condition|)
+block|{
 name|cb
 operator|->
 name|state
@@ -962,6 +971,22 @@ name|child_cm_id
 operator|=
 name|cma_id
 expr_stmt|;
+block|}
+else|else
+block|{
+name|PRINTF
+argument_list|(
+name|cb
+argument_list|,
+literal|"Received connection request in wrong state"
+literal|" (%d)\n"
+argument_list|,
+name|cb
+operator|->
+name|state
+argument_list|)
+expr_stmt|;
+block|}
 name|DEBUG_LOG
 argument_list|(
 name|cb
