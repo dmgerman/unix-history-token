@@ -369,6 +369,14 @@ literal|"AMD CS5536 (Geode) USB 2.0 controller"
 operator|)
 return|;
 case|case
+literal|0x78081022
+case|:
+return|return
+operator|(
+literal|"AMD FCH USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x43451002
 case|:
 return|return
