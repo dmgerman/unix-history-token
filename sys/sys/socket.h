@@ -3010,13 +3010,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SFK_COMPAT
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
 name|SF_READAHEAD
 parameter_list|(
 name|flags
