@@ -1287,15 +1287,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENOBUFS
-return|;
 name|so
 operator|->
 name|so_pcb
