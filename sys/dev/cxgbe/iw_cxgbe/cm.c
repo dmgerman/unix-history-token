@@ -9791,6 +9791,11 @@ argument_list|,
 name|MPA_REQ_RCVD
 argument_list|)
 expr_stmt|;
+name|STOP_EP_TIMER
+argument_list|(
+name|ep
+argument_list|)
+expr_stmt|;
 comment|/* drive upcall */
 name|mutex_lock
 argument_list|(
