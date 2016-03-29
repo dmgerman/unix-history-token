@@ -3449,7 +3449,9 @@ end_function
 begin_function
 name|int
 name|ipi_nmi_handler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|cpuid
