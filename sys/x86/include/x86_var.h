@@ -354,6 +354,20 @@ name|dumperinfo
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * The interface type of the interrupt handler entry point cannot be  * expressed in C.  Use simplest non-variadic function type as an  * approximation.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|alias_for_inthand_t
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|void
 modifier|*

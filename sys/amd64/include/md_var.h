@@ -29,30 +29,6 @@ name|vm_page_dump
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|alias_for_inthand_t
-parameter_list|(
-name|u_int
-name|cs
-parameter_list|,
-name|u_int
-name|ef
-parameter_list|,
-name|u_int
-name|esp
-parameter_list|,
-name|u_int
-name|ss
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct_decl
 struct_decl|struct
 name|savefpu
