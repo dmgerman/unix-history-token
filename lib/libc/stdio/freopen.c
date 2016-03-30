@@ -205,6 +205,11 @@ name|NULL
 operator|)
 return|;
 block|}
+else|else
+name|sverrno
+operator|=
+literal|0
+expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
