@@ -1637,7 +1637,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -1824,7 +1824,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
