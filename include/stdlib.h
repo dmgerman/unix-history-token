@@ -655,6 +655,11 @@ directive|if
 name|__ISO_C_VISIBLE
 operator|>=
 literal|1999
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 end_if
 
 begin_ifdef
