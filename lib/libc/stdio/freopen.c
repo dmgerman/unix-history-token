@@ -219,10 +219,6 @@ name|__sinit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If the filename is a NULL pointer, the caller is asking us to 	 * re-open the same file with a different mode. We allow this only 	 * if the modes are compatible. 	 */
-name|sverrno
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|file
