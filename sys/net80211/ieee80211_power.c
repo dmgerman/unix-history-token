@@ -2599,7 +2599,7 @@ comment|/* If we've done any data within our idle interval, bail */
 comment|/* XXX hard-coded to one second for now, ew! */
 if|if
 condition|(
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ic
 operator|->

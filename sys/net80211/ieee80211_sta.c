@@ -5072,7 +5072,7 @@ operator|==
 name|IEEE80211_S_RUN
 operator|&&
 comment|/* XXX? */
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,
@@ -5147,7 +5147,7 @@ argument_list|)
 operator|&&
 endif|#
 directive|endif
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,
@@ -5160,7 +5160,7 @@ operator|->
 name|iv_bgscanintvl
 argument_list|)
 operator|&&
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,

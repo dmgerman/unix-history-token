@@ -6441,7 +6441,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,
@@ -6466,7 +6466,7 @@ operator|->
 name|ic_curchan
 argument_list|)
 operator|&&
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,

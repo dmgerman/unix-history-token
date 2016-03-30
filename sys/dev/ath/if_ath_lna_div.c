@@ -3098,7 +3098,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,

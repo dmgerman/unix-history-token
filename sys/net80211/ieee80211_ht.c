@@ -6667,7 +6667,7 @@ operator|&
 name|IEEE80211_FHT_NONHT_PR
 operator|)
 operator|&&
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,

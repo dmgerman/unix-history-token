@@ -1070,7 +1070,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|time_after
+name|ieee80211_time_after
 parameter_list|(
 name|a
 parameter_list|,
@@ -1082,19 +1082,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|time_before
+name|ieee80211_time_before
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|time_after(b,a)
+value|ieee80211_time_after(b,a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|time_after_eq
+name|ieee80211_time_after_eq
 parameter_list|(
 name|a
 parameter_list|,
@@ -1106,13 +1106,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|time_before_eq
+name|ieee80211_time_before_eq
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|time_after_eq(b,a)
+value|ieee80211_time_after_eq(b,a)
 end_define
 
 begin_function_decl
