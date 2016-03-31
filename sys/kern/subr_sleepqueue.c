@@ -1581,6 +1581,15 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cold
+condition|)
+name|panic
+argument_list|(
+literal|"timed sleep before timers are working"
+argument_list|)
+expr_stmt|;
 name|callout_reset_sbt_on
 argument_list|(
 operator|&
