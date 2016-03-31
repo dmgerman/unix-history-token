@@ -359,6 +359,15 @@ argument_list|,
 name|argdatalen
 argument_list|)
 block|,
+name|VAL
+argument_list|(
+name|CLOUDABI_AT_BASE
+argument_list|,
+name|args
+operator|->
+name|base
+argument_list|)
+block|,
 name|PTR
 argument_list|(
 name|CLOUDABI_AT_CANARY
