@@ -459,7 +459,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|nicpf_iov_addr_vf
+name|nicpf_iov_add_vf
 parameter_list|(
 name|device_t
 parameter_list|,
@@ -528,7 +528,7 @@ name|DEVMETHOD
 argument_list|(
 name|pci_iov_add_vf
 argument_list|,
-name|nicpf_iov_addr_vf
+name|nicpf_iov_add_vf
 argument_list|)
 block|,
 endif|#
@@ -1189,7 +1189,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|nicpf_iov_addr_vf
+name|nicpf_iov_add_vf
 parameter_list|(
 name|device_t
 name|dev
