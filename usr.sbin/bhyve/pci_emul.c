@@ -9816,6 +9816,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|value
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|size
