@@ -25373,8 +25373,6 @@ decl_stmt|;
 name|int
 name|lsize
 decl_stmt|,
-name|reqsize
-decl_stmt|,
 name|size
 decl_stmt|;
 name|object
@@ -25489,7 +25487,7 @@ name|cnt
 operator|.
 name|v_vnodepgsin
 argument_list|,
-name|reqsize
+name|count
 argument_list|)
 expr_stmt|;
 name|lsize
