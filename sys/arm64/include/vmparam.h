@@ -413,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_USER_ADDRESS
-value|(0x0000008000000000UL)
+value|(0x0001000000000000UL)
 end_define
 
 begin_define

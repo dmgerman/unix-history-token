@@ -279,6 +279,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|L0_SIZE
+value|(1ul<< L0_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_OFFSET
+value|(L0_SIZE - 1ul)
+end_define
+
+begin_define
+define|#
+directive|define
 name|L0_INVAL
 value|0x0
 end_define
@@ -462,8 +476,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|L0_ENTRIES_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_ENTRIES
+value|(1<< L0_ENTRIES_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_ADDR_MASK
+value|(L0_ENTRIES - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ln_ENTRIES_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|Ln_ENTRIES
-value|(1<< 9)
+value|(1<< Ln_ENTRIES_SHIFT)
 end_define
 
 begin_define

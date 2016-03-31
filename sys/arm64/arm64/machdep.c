@@ -4098,6 +4098,10 @@ name|pmap_bootstrap
 argument_list|(
 name|abp
 operator|->
+name|kern_l0pt
+argument_list|,
+name|abp
+operator|->
 name|kern_l1pt
 argument_list|,
 name|KERNBASE

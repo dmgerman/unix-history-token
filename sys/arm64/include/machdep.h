@@ -32,6 +32,10 @@ decl_stmt|;
 name|vm_offset_t
 name|kern_stack
 decl_stmt|;
+name|vm_offset_t
+name|kern_l0pt
+decl_stmt|;
+comment|/* L1 page table for the kernel */
 block|}
 struct|;
 end_struct
