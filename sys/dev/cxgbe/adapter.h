@@ -988,9 +988,6 @@ name|int
 name|first_rxq
 decl_stmt|;
 comment|/* index of first rx queue */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|int
 name|nofldtxq
 decl_stmt|;
@@ -1007,8 +1004,6 @@ name|int
 name|first_ofld_rxq
 decl_stmt|;
 comment|/* index of first offload rx queue */
-endif|#
-directive|endif
 name|int
 name|tmr_idx
 decl_stmt|;
@@ -1185,17 +1180,12 @@ block|{
 name|u_int
 name|refcount
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|struct
 name|fl_sdesc
 modifier|*
 name|sd
 decl_stmt|;
 comment|/* For debug only.  Could easily be stale */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -2108,12 +2098,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
-end_ifdef
-
 begin_comment
 comment|/* ofld_rxq: SGE ingress queue + SGE free list + miscellaneous items */
 end_comment
@@ -2169,11 +2153,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -2304,12 +2283,6 @@ name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-end_ifdef
 
 begin_struct
 struct|struct
@@ -2471,11 +2444,6 @@ argument_list|)
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|sge
@@ -2488,9 +2456,6 @@ name|int
 name|ntxq
 decl_stmt|;
 comment|/* total # of Ethernet tx tx queues */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|int
 name|nofldrxq
 decl_stmt|;
@@ -2499,11 +2464,6 @@ name|int
 name|nofldtxq
 decl_stmt|;
 comment|/* total # of TOE tx queues */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
 name|int
 name|nnmrxq
 decl_stmt|;
@@ -2512,8 +2472,6 @@ name|int
 name|nnmtxq
 decl_stmt|;
 comment|/* total # of netmap tx queues */
-endif|#
-directive|endif
 name|int
 name|niq
 decl_stmt|;
@@ -2550,9 +2508,6 @@ modifier|*
 name|rxq
 decl_stmt|;
 comment|/* NIC rx queues */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|struct
 name|sge_wrq
 modifier|*
@@ -2565,11 +2520,6 @@ modifier|*
 name|ofld_rxq
 decl_stmt|;
 comment|/* TOE rx queues */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
 name|struct
 name|sge_nm_txq
 modifier|*
@@ -2582,8 +2532,6 @@ modifier|*
 name|nm_rxq
 decl_stmt|;
 comment|/* netmap rx queues */
-endif|#
-directive|endif
 name|uint16_t
 name|iq_start
 decl_stmt|;
@@ -2832,9 +2780,6 @@ index|[
 name|MAX_NCHAN
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|void
 modifier|*
 name|tom_softc
@@ -2854,8 +2799,6 @@ modifier|*
 name|iscsi_ulp_softc
 decl_stmt|;
 comment|/* (struct cxgbei_data *) */
-endif|#
-directive|endif
 name|struct
 name|l2t_data
 modifier|*
@@ -2869,9 +2812,6 @@ decl_stmt|;
 name|uint16_t
 name|doorbells
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|int
 name|offload_map
 decl_stmt|;
@@ -2880,8 +2820,6 @@ name|int
 name|active_ulds
 decl_stmt|;
 comment|/* ULDs activated on this adapter */
-endif|#
-directive|endif
 name|int
 name|flags
 decl_stmt|;
@@ -3054,9 +2992,6 @@ literal|0xef
 index|]
 decl_stmt|;
 comment|/* NUM_CPL_CMDS */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 specifier|const
 name|char
 modifier|*
@@ -3070,8 +3005,6 @@ decl_stmt|;
 name|int
 name|last_op_flags
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|sc_do_rxcopy
 decl_stmt|;
