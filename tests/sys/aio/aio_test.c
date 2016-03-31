@@ -2999,7 +2999,7 @@ literal|0
 condition|)
 name|atf_tc_fail
 argument_list|(
-literal|"aio_read() from /dev/null returned data: %zd"
+literal|"aio_read() from empty file returned data: %zd"
 argument_list|,
 name|nread
 argument_list|)
@@ -3109,7 +3109,7 @@ expr_stmt|;
 block|}
 name|atf_tc_fail
 argument_list|(
-literal|"aio_read() of too large read size from /dev/null returned: %zd"
+literal|"aio_read() of too large read size returned: %zd"
 argument_list|,
 name|nread
 argument_list|)
