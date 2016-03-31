@@ -592,8 +592,8 @@ return|;
 block|}
 while|while
 condition|(
-operator|--
 name|pos
+operator|--
 condition|)
 block|{
 name|addr
@@ -614,7 +614,8 @@ name|bit
 operator|+
 name|__flsl
 argument_list|(
-name|mask
+operator|*
+name|addr
 argument_list|)
 operator|)
 return|;
