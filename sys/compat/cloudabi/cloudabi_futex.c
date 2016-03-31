@@ -673,7 +673,7 @@ name|void
 modifier|*
 name|object
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|scope
 parameter_list|)
 block|{
@@ -694,7 +694,7 @@ name|scope
 condition|)
 block|{
 case|case
-name|CLOUDABI_MAP_PRIVATE
+name|CLOUDABI_SCOPE_PRIVATE
 case|:
 return|return
 operator|(
@@ -714,7 +714,7 @@ argument_list|)
 operator|)
 return|;
 case|case
-name|CLOUDABI_MAP_SHARED
+name|CLOUDABI_SCOPE_SHARED
 case|:
 return|return
 operator|(
@@ -862,7 +862,7 @@ name|cloudabi_condvar_t
 modifier|*
 name|address
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|scope
 parameter_list|,
 name|struct
@@ -997,7 +997,7 @@ name|cloudabi_condvar_t
 modifier|*
 name|condvar
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|condvar_scope
 parameter_list|,
 specifier|const
@@ -1005,7 +1005,7 @@ name|cloudabi_lock_t
 modifier|*
 name|lock
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|lock_scope
 parameter_list|,
 name|struct
@@ -1470,7 +1470,7 @@ name|cloudabi_lock_t
 modifier|*
 name|address
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|scope
 parameter_list|,
 name|struct
@@ -4090,14 +4090,14 @@ name|cloudabi_condvar_t
 modifier|*
 name|condvar
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|condvar_scope
 parameter_list|,
 name|cloudabi_lock_t
 modifier|*
 name|lock
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|lock_scope
 parameter_list|,
 name|cloudabi_clockid_t
@@ -4412,7 +4412,7 @@ name|cloudabi_lock_t
 modifier|*
 name|lock
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|scope
 parameter_list|,
 name|cloudabi_clockid_t
@@ -4502,7 +4502,7 @@ name|cloudabi_lock_t
 modifier|*
 name|lock
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 name|scope
 parameter_list|,
 name|cloudabi_clockid_t

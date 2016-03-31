@@ -141,7 +141,7 @@ name|p
 operator|->
 name|scope
 expr_stmt|;
-comment|/* cloudabi_mflags_t */
+comment|/* cloudabi_scope_t */
 name|iarg
 index|[
 literal|2
@@ -1700,7 +1700,7 @@ name|p
 operator|->
 name|scope
 expr_stmt|;
-comment|/* cloudabi_mflags_t */
+comment|/* cloudabi_scope_t */
 operator|*
 name|n_args
 operator|=
@@ -2786,7 +2786,7 @@ name|p
 operator|->
 name|scope
 expr_stmt|;
-comment|/* cloudabi_mflags_t */
+comment|/* cloudabi_scope_t */
 operator|*
 name|n_args
 operator|=
@@ -3043,7 +3043,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_mflags_t"
+literal|"cloudabi_scope_t"
 expr_stmt|;
 break|break;
 case|case
@@ -4193,7 +4193,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_mflags_t"
+literal|"cloudabi_scope_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -4978,7 +4978,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_mflags_t"
+literal|"cloudabi_scope_t"
 expr_stmt|;
 break|break;
 default|default:

@@ -184,12 +184,12 @@ parameter_list|,
 name|cloudabi_condvar_t
 modifier|*
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 parameter_list|,
 name|cloudabi_lock_t
 modifier|*
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 parameter_list|,
 name|cloudabi_clockid_t
 parameter_list|,
@@ -211,7 +211,7 @@ parameter_list|,
 name|cloudabi_lock_t
 modifier|*
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 parameter_list|,
 name|cloudabi_clockid_t
 parameter_list|,
@@ -233,7 +233,7 @@ parameter_list|,
 name|cloudabi_lock_t
 modifier|*
 parameter_list|,
-name|cloudabi_mflags_t
+name|cloudabi_scope_t
 parameter_list|,
 name|cloudabi_clockid_t
 parameter_list|,
