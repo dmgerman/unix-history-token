@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -664,13 +670,6 @@ name|hypercall_page
 operator|=
 name|virt_addr
 expr_stmt|;
-name|tc_init
-argument_list|(
-operator|&
-name|hv_timecounter
-argument_list|)
-expr_stmt|;
-comment|/* register virtual timecount */
 name|hv_et_init
 argument_list|()
 expr_stmt|;
@@ -1483,6 +1482,47 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_function
+specifier|static
+name|void
+name|hv_tc_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
+condition|)
+return|return;
+comment|/* register virtual timecounter */
+name|tc_init
+argument_list|(
+operator|&
+name|hv_timecounter
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|hv_tc_init
+argument_list|,
+name|SI_SUB_HYPERVISOR
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|hv_tc_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
