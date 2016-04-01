@@ -313,7 +313,7 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|SLIST_INIT
+name|LIST_INIT
 argument_list|(
 operator|&
 name|lc
@@ -321,7 +321,7 @@ operator|->
 name|lro_free
 argument_list|)
 expr_stmt|;
-name|SLIST_INIT
+name|LIST_INIT
 argument_list|(
 operator|&
 name|lc
@@ -433,7 +433,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|SLIST_INSERT_HEAD
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|lc
@@ -474,7 +474,7 @@ name|unsigned
 name|x
 decl_stmt|;
 comment|/* reset LRO free list */
-name|SLIST_INIT
+name|LIST_INIT
 argument_list|(
 operator|&
 name|lc
@@ -488,7 +488,7 @@ condition|(
 operator|(
 name|le
 operator|=
-name|SLIST_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|lc
@@ -500,12 +500,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SLIST_REMOVE_HEAD
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
+name|le
 argument_list|,
 name|next
 argument_list|)
@@ -956,7 +953,7 @@ condition|(
 operator|(
 name|le
 operator|=
-name|SLIST_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|lc
@@ -968,12 +965,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SLIST_REMOVE_HEAD
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
+name|le
 argument_list|,
 name|next
 argument_list|)
@@ -1019,7 +1013,7 @@ name|tv
 decl_stmt|;
 if|if
 condition|(
-name|SLIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
 name|lc
@@ -1042,7 +1036,7 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH_SAFE
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|le
 argument_list|,
@@ -1069,16 +1063,9 @@ operator|>=
 argument_list|)
 condition|)
 block|{
-name|SLIST_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
-argument_list|,
 name|le
-argument_list|,
-name|lro_entry
 argument_list|,
 name|next
 argument_list|)
@@ -1568,7 +1555,7 @@ name|le
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|lc
@@ -2688,7 +2675,7 @@ name|th_seq
 argument_list|)
 expr_stmt|;
 comment|/* Try to find a matching previous segment. */
-name|SLIST_FOREACH
+name|LIST_FOREACH
 argument_list|(
 argument|le
 argument_list|,
@@ -2833,16 +2820,9 @@ name|tcp_data_len
 operator|)
 condition|)
 block|{
-name|SLIST_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
-argument_list|,
 name|le
-argument_list|,
-name|lro_entry
 argument_list|,
 name|next
 argument_list|)
@@ -2884,16 +2864,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* Out of order packet or duplicate ACK. */
-name|SLIST_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
-argument_list|,
 name|le
-argument_list|,
-name|lro_entry
 argument_list|,
 name|next
 argument_list|)
@@ -3050,16 +3023,9 @@ operator|->
 name|lro_ackcnt_lim
 condition|)
 block|{
-name|SLIST_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
-argument_list|,
 name|le
-argument_list|,
-name|lro_entry
 argument_list|,
 name|next
 argument_list|)
@@ -3140,16 +3106,9 @@ name|if_mtu
 operator|)
 condition|)
 block|{
-name|SLIST_REMOVE
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_active
-argument_list|,
 name|le
-argument_list|,
-name|lro_entry
 argument_list|,
 name|next
 argument_list|)
@@ -3180,7 +3139,7 @@ block|}
 comment|/* Try to find an empty slot. */
 if|if
 condition|(
-name|SLIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
 name|lc
@@ -3196,7 +3155,7 @@ return|;
 comment|/* Start a new segment chain. */
 name|le
 operator|=
-name|SLIST_FIRST
+name|LIST_FIRST
 argument_list|(
 operator|&
 name|lc
@@ -3204,17 +3163,14 @@ operator|->
 name|lro_free
 argument_list|)
 expr_stmt|;
-name|SLIST_REMOVE_HEAD
+name|LIST_REMOVE
 argument_list|(
-operator|&
-name|lc
-operator|->
-name|lro_free
+name|le
 argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|lc
