@@ -5153,7 +5153,9 @@ begin_function
 specifier|static
 name|void
 name|racct_decay
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ASSERT_RACCT_ENABLED
 argument_list|()
