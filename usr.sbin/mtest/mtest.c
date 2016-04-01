@@ -1822,6 +1822,10 @@ argument_list|)
 condition|)
 empty_stmt|;
 comment|/* Skip whitespace. */
+name|n
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -2971,10 +2975,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* First determine our current filter mode. */
-name|n
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|getsourcefilter
