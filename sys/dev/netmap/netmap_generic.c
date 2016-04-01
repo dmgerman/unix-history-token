@@ -296,8 +296,6 @@ argument_list|,
 name|MT_DATA
 argument_list|,
 name|M_PKTHDR
-operator||
-name|M_NOFREE
 argument_list|)
 expr_stmt|;
 if|if
@@ -305,6 +303,13 @@ condition|(
 name|m
 condition|)
 block|{
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_NOFREE
+expr_stmt|;
+comment|/* XXXNP: Almost certainly incorrect. */
 name|m
 operator|->
 name|m_ext
