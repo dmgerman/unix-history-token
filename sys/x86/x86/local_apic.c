@@ -2676,7 +2676,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"LAPIC: ipi_wait() us multiplier %jd (r %jd tsc %jd)\n"
+literal|"LAPIC: ipi_wait() us multiplier %ju (r %ju tsc %ju)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7979,9 +7979,7 @@ name|delay
 parameter_list|)
 block|{
 name|uint64_t
-name|i
-decl_stmt|,
-name|counter
+name|rx
 decl_stmt|;
 comment|/* LAPIC_ICR.APIC_DELSTAT_MASK is undefined in x2APIC mode */
 if|if
@@ -7993,15 +7991,9 @@ operator|(
 literal|1
 operator|)
 return|;
-name|counter
-operator|=
-name|lapic_ipi_wait_mult
-operator|*
-name|delay
-expr_stmt|;
 for|for
 control|(
-name|i
+name|rx
 operator|=
 literal|0
 init|;
@@ -8010,11 +8002,13 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|i
+name|rx
 operator|<
-name|counter
+name|lapic_ipi_wait_mult
+operator|*
+name|delay
 condition|;
-name|i
+name|rx
 operator|++
 control|)
 block|{
