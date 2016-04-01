@@ -561,33 +561,49 @@ name|unmapped_buf_allowed
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|iosize_max_clamp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|devfs_iosize_max_clamp
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|IOSIZE_MAX
-value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+value|iosize_max()
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEVFS_IOSIZE_MAX
-value|(devfs_iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+value|devfs_iosize_max()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IOSIZE_MAX
+value|SSIZE_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVFS_IOSIZE_MAX
+value|SSIZE_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * General function declarations.  */
@@ -3395,6 +3411,35 @@ name|cdev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_function_decl
+name|size_t
+name|devfs_iosize_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|iosize_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
