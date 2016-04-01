@@ -2763,12 +2763,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RCTL
-if|if
-condition|(
-operator|!
-name|force
-condition|)
-block|{
 name|error
 operator|=
 name|rctl_enforce
@@ -2783,6 +2777,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|force
 operator|&&
 name|RACCT_IS_DENIABLE
 argument_list|(
@@ -2810,7 +2807,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -3268,9 +3264,6 @@ directive|ifdef
 name|RCTL
 if|if
 condition|(
-operator|!
-name|force
-operator|&&
 name|diff_proc
 operator|>
 literal|0
@@ -3290,6 +3283,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+operator|!
+name|force
 operator|&&
 name|RACCT_IS_DENIABLE
 argument_list|(
