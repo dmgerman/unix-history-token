@@ -1908,11 +1908,16 @@ name|vnode_t
 modifier|*
 name|vp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|VFS_HOLD
 argument_list|(
 name|vfsp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vp
 operator|=
 name|gfs_dir_create
@@ -2305,6 +2310,9 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|VFS_RELE
 argument_list|(
 name|vp
@@ -2312,6 +2320,8 @@ operator|->
 name|v_vfsp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
