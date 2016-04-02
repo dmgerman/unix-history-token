@@ -2432,7 +2432,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/* 				 * A retry was scheuled, so 				 * just return. 				 */
+comment|/* 				 * A retry was scheduled, so 				 * just return. 				 */
 return|return;
 block|}
 elseif|else
