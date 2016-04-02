@@ -1463,6 +1463,10 @@ argument_list|(
 name|flag
 operator|==
 literal|0
+operator|||
+name|flag
+operator|==
+name|CALLOUT_FLAG_ABSOLUTE
 argument_list|)
 expr_stmt|;
 name|top
@@ -1470,7 +1474,15 @@ label|:
 name|delta
 operator|=
 name|tim
-operator|-
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|CALLOUT_FLAG_ABSOLUTE
+condition|)
+name|delta
+operator|-=
 name|gethrtime
 argument_list|()
 expr_stmt|;
