@@ -406,6 +406,7 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
+comment|/* 	 * The code does not rely on this (len being a multiple of 8).  We keep 	 * this assertion because of the corresponding assertion in 	 * receive_read().  Keeping this assertion ensures that we do not 	 * inadvertently break backwards compatibility (causing the assertion 	 * in receive_read() to trigger on old software). 	 * 	 * Removing the assertions could be rolled into a new feature that uses 	 * data that isn't 8-byte aligned; if the assertions were removed, a 	 * feature flag would have to be added. 	 */
 name|ASSERT0
 argument_list|(
 name|len
@@ -9280,7 +9281,7 @@ name|done
 init|=
 literal|0
 decl_stmt|;
-comment|/* some things will require 8-byte alignment, so everything must */
+comment|/* 	 * The code doesn't rely on this (lengths being multiples of 8).  See 	 * comment in dump_bytes. 	 */
 name|ASSERT0
 argument_list|(
 name|len
