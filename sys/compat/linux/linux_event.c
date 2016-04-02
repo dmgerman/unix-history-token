@@ -3655,6 +3655,16 @@ operator|->
 name|efd_lock
 argument_list|)
 expr_stmt|;
+comment|/* Do not not return the number of bytes written */
+name|uio
+operator|->
+name|uio_resid
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|eventfd_t
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EAGAIN
