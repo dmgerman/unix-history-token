@@ -4270,6 +4270,7 @@ name|timesp
 operator|=
 name|times
 expr_stmt|;
+comment|/* This breaks POSIX, but is what the Linux kernel does 		 * _on purpose_ (documented in the man page for utimensat(2)), 		 * so we must follow that behaviour. */
 if|if
 condition|(
 name|times
@@ -4290,7 +4291,6 @@ name|tv_nsec
 operator|==
 name|UTIME_OMIT
 condition|)
-comment|/* This breaks POSIX, but is what the Linux kernel does 		 * _on purpose_ (documented in the man page for utimensat(2)), 		 * so we must follow that behaviour. */
 return|return
 operator|(
 literal|0
