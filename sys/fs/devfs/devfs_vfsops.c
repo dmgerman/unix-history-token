@@ -756,6 +756,16 @@ literal|"devfs_unmount unmounted devfs_mount"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mntflags
+operator|&
+name|MNT_FORCE
+condition|)
+name|flags
+operator||=
+name|FORCECLOSE
+expr_stmt|;
 comment|/* There is 1 extra root vnode reference from devfs_mount(). */
 name|error
 operator|=
