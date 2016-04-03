@@ -4270,7 +4270,6 @@ name|timesp
 operator|=
 name|times
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|times
@@ -4297,6 +4296,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|args
