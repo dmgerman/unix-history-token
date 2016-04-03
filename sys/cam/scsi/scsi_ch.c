@@ -2411,6 +2411,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|announce_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|error
 operator|=
 name|cherror
