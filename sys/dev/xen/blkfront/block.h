@@ -357,7 +357,21 @@ init|=
 literal|1
 operator|<<
 literal|6
+block|,
 comment|/* 				     * No new work until oustanding work 				     * completes. 				     */
+name|XBDF_DISCARD
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/* backend supports discard */
+name|XBDF_PERSISTENT
+init|=
+literal|1
+operator|<<
+literal|8
+comment|/* backend supports persistent grants */
 block|}
 name|xbd_flag_t
 typedef|;
@@ -477,6 +491,10 @@ parameter_list|,
 name|unsigned
 name|long
 name|sector_size
+parameter_list|,
+name|unsigned
+name|long
+name|phys_sector_size
 parameter_list|)
 function_decl|;
 end_function_decl
