@@ -45722,9 +45722,12 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int error;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vap
@@ -45748,7 +45751,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"%s: controller panicked, iv_state = %d; "
-literal|"resetting...\n"
+literal|"restarting\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -45757,6 +45760,17 @@ operator|->
 name|iv_state
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This is not enough work. We need to also reinitialise 	 * the correct transmit state for aggregation enabled queues, 	 * which has a very specific requirement of 	 * ring index = 802.11 seqno % 256.  If we don't do this (which 	 * we definitely don't!) then the firmware will just panic again. 	 */
+if|#
+directive|if
+literal|1
+name|ieee80211_restart_all
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|IWN_LOCK
 argument_list|(
 name|sc
@@ -45845,6 +45859,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
