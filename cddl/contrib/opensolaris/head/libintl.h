@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_LIBINTL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -106,9 +99,6 @@ name|m
 parameter_list|)
 define|\
 value|((((m) == 0) || ((m) == 1)) ? 1 : -1)
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|extern
 name|char
 modifier|*
@@ -306,98 +296,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-specifier|extern
-name|char
-modifier|*
-name|dcgettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|dgettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|gettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|textdomain
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|bindtextdomain
-parameter_list|()
-function_decl|;
-comment|/*  * LI18NUX 2000 Globalization Specification Version 1.0  * with Amendment 2  */
-specifier|extern
-name|char
-modifier|*
-name|dcngettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|dngettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|ngettext
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|bind_textdomain_codeset
-parameter_list|()
-function_decl|;
-comment|/* Word handling functions --- requires dynamic linking */
-comment|/* Warning: these are experimental and subject to change. */
-specifier|extern
-name|int
-name|wdinit
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|wdchkind
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|wdbindf
-parameter_list|()
-function_decl|;
-specifier|extern
-name|wchar_t
-modifier|*
-name|wddelim
-parameter_list|()
-function_decl|;
-specifier|extern
-name|wchar_t
-name|mcfiller
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|mcwrap
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus
