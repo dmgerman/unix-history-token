@@ -657,7 +657,7 @@ name|l
 operator|->
 name|__mb_sb_limit
 operator|=
-literal|256
+literal|128
 expr_stmt|;
 return|return
 operator|(
@@ -1189,7 +1189,7 @@ name|l
 operator|->
 name|__mb_sb_limit
 operator|=
-literal|196
+literal|128
 expr_stmt|;
 return|return
 operator|(
@@ -1455,7 +1455,7 @@ name|l
 operator|->
 name|__mb_sb_limit
 operator|=
-literal|256
+literal|128
 expr_stmt|;
 return|return
 operator|(
