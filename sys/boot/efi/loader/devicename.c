@@ -105,7 +105,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Point (dev) at an allocated device specifier for the device matching the  * path in (devspec). If it contains an explicit device specification,  * use that.  If not, use the default device.  */
+comment|/*  * Point (dev) at an allocated device specifier for the device matching the  * path in (devspec). If it contains an explicit device specification,  * use that.  If not, use the default device.  */
 end_comment
 
 begin_function

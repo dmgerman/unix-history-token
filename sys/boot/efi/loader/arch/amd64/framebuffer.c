@@ -818,10 +818,10 @@ name|printf
 argument_list|(
 literal|" -- error %lu\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1438,7 +1438,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * There's no reliable way to detect the frame buffer or the 	 * offset within the frame buffer of the visible region, nor 	 * the stride. Our only option is to look at the system and 	 * fill in the blanks based on that. Luckily, UGA was mostly 	 * only used on Apple hardware.  	 */
+comment|/* 	 * There's no reliable way to detect the frame buffer or the 	 * offset within the frame buffer of the visible region, nor 	 * the stride. Our only option is to look at the system and 	 * fill in the blanks based on that. Luckily, UGA was mostly 	 * only used on Apple hardware. 	 */
 name|offset
 operator|=
 operator|-
@@ -2231,10 +2231,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2350,10 +2350,10 @@ index|]
 argument_list|,
 name|mode
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2641,10 +2641,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
-operator|&
-operator|~
-name|EFI_ERROR_MASK
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
