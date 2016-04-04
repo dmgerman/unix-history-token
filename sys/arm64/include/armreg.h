@@ -220,6 +220,45 @@ value|(((reg)& CTR_ILINE_MASK)>> CTR_ILINE_SHIFT)
 end_define
 
 begin_comment
+comment|/* DCZID_EL0 - Data Cache Zero ID register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCZID_DZP
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* DC ZVA prohibited if non-0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCZID_BS_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCZID_BS_MASK
+value|(0xf<< DCZID_BS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCZID_BS_SIZE
+parameter_list|(
+name|reg
+parameter_list|)
+value|(((reg)& DCZID_BS_MASK)>> DCZID_BS_SHIFT)
+end_define
+
+begin_comment
 comment|/* ESR_ELx */
 end_comment
 
