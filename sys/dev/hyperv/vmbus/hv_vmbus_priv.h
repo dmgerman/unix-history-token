@@ -135,6 +135,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HV_STATUS_SUCCESS
+value|((uint16_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HV_STATUS_INSUFFICIENT_BUFFERS
 value|((uint16_t)0x0013)
 end_define
@@ -426,7 +433,11 @@ block|,
 name|HV_VMBUS_MESSAGE_SINT
 init|=
 literal|2
-block|}
+block|,
+name|HV_VMBUS_TIMER_SINT
+init|=
+literal|4
+block|, }
 enum|;
 end_enum
 
@@ -487,16 +498,16 @@ name|MAXCPU
 index|]
 decl_stmt|;
 name|struct
-name|intr_event
+name|taskqueue
 modifier|*
-name|hv_msg_intr_event
+name|hv_msg_tq
 index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-name|void
-modifier|*
-name|msg_swintr
+name|struct
+name|task
+name|hv_msg_task
 index|[
 name|MAXCPU
 index|]

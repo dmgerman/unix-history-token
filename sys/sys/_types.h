@@ -485,8 +485,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|__uintmax_t
 name|__rman_res_t
 typedef|;
 end_typedef

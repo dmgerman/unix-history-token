@@ -718,9 +718,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
-name|kflags
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2321,9 +2318,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
-name|kflags
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2356,8 +2350,6 @@ argument_list|,
 name|sent
 argument_list|,
 name|flags
-argument_list|,
-name|kflags
 argument_list|,
 name|td
 argument_list|)

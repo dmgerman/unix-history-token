@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -664,13 +670,6 @@ name|hypercall_page
 operator|=
 name|virt_addr
 expr_stmt|;
-name|tc_init
-argument_list|(
-operator|&
-name|hv_timecounter
-argument_list|)
-expr_stmt|;
-comment|/* register virtual timecount */
 name|hv_et_init
 argument_list|()
 expr_stmt|;
@@ -1253,6 +1252,17 @@ operator|.
 name|as_uint64_t
 argument_list|)
 expr_stmt|;
+name|wrmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
+argument_list|,
+name|shared_sint
+operator|.
+name|as_uint64_t
+argument_list|)
+expr_stmt|;
 comment|/* Enable the global synic bit */
 name|sctrl
 operator|.
@@ -1359,12 +1369,43 @@ name|masked
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Disable the interrupt 	 */
+comment|/* 	 * Disable the interrupt 0 	 */
 name|wrmsr
 argument_list|(
 name|HV_X64_MSR_SINT0
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
+argument_list|,
+name|shared_sint
+operator|.
+name|as_uint64_t
+argument_list|)
+expr_stmt|;
+name|shared_sint
+operator|.
+name|as_uint64_t
+operator|=
+name|rdmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
+argument_list|)
+expr_stmt|;
+name|shared_sint
+operator|.
+name|u
+operator|.
+name|masked
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 	 * Disable the interrupt 1 	 */
+name|wrmsr
+argument_list|(
+name|HV_X64_MSR_SINT0
+operator|+
+name|HV_VMBUS_TIMER_SINT
 argument_list|,
 name|shared_sint
 operator|.
@@ -1441,6 +1482,47 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_function
+specifier|static
+name|void
+name|hv_tc_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
+condition|)
+return|return;
+comment|/* register virtual timecounter */
+name|tc_init
+argument_list|(
+operator|&
+name|hv_timecounter
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|hv_tc_init
+argument_list|,
+name|SI_SUB_HYPERVISOR
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|hv_tc_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

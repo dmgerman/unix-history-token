@@ -765,7 +765,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|retval

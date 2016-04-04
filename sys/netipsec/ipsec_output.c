@@ -1873,7 +1873,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-name|ntohs
+name|htons
 argument_list|(
 name|IP_DF
 argument_list|)

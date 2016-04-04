@@ -70,13 +70,6 @@ directive|include
 file|"gpt.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAXTBLENTS
-value|128
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct

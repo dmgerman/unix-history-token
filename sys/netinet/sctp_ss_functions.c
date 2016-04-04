@@ -4312,6 +4312,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|sctp_ss_functions
 name|sctp_ss_functions

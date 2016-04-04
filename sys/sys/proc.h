@@ -354,6 +354,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|filemon
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kaioinfo
 struct_decl|;
 end_struct_decl
@@ -730,6 +736,10 @@ name|int
 name|td_swvoltick
 decl_stmt|;
 comment|/* (t) Time at last SW_VOL switch. */
+name|int
+name|td_swinvoltick
+decl_stmt|;
+comment|/* (t) Time at last SW_INVOL switch. */
 name|u_int
 name|td_cow
 decl_stmt|;
@@ -2715,6 +2725,12 @@ name|int
 name|p_pendingexits
 decl_stmt|;
 comment|/* (c) Count of pending thread exits. */
+name|struct
+name|filemon
+modifier|*
+name|p_filemon
+decl_stmt|;
+comment|/* (c) filemon-specific data. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define

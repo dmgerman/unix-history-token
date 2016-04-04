@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_enc.h>
 end_include
 

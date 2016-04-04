@@ -111,20 +111,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|uintptr_t
-name|dtrace_in_probe_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|dtrace_in_probe
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|dtrace_id_t
 name|dtrace_probeid_error
 decl_stmt|;

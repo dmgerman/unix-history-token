@@ -3802,8 +3802,6 @@ name|n
 operator|<=
 operator|(
 name|SPINES_MAX_NUM
-operator|+
-literal|1
 operator|)
 condition|;
 name|n
@@ -3890,8 +3888,6 @@ name|n
 operator|<=
 operator|(
 name|LINES_MAX_NUM
-operator|+
-literal|1
 operator|)
 condition|;
 name|n

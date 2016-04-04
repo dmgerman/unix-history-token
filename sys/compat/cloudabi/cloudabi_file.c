@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_proto.h>
+file|<contrib/cloudabi/cloudabi_types_common.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_syscalldefs.h>
+file|<compat/cloudabi/cloudabi_proto.h>
 end_include
 
 begin_include
@@ -635,6 +635,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd1
+operator|.
+name|fd
 argument_list|,
 name|uap
 operator|->
@@ -650,11 +652,11 @@ operator|(
 name|uap
 operator|->
 name|fd1
+operator|.
+name|flags
 operator|&
 name|CLOUDABI_LOOKUP_SYMLINK_FOLLOW
 operator|)
-operator|!=
-literal|0
 condition|?
 name|FOLLOW
 else|:
@@ -1007,7 +1009,9 @@ condition|(
 operator|(
 name|uap
 operator|->
-name|fd
+name|dirfd
+operator|.
+name|flags
 operator|&
 name|CLOUDABI_LOOKUP_SYMLINK_FOLLOW
 operator|)
@@ -1124,6 +1128,8 @@ name|path
 argument_list|,
 name|uap
 operator|->
+name|dirfd
+operator|.
 name|fd
 argument_list|,
 operator|&
@@ -3153,6 +3159,8 @@ operator|(
 name|uap
 operator|->
 name|fd
+operator|.
+name|flags
 operator|&
 name|CLOUDABI_LOOKUP_SYMLINK_FOLLOW
 operator|)
@@ -3165,6 +3173,8 @@ name|AT_SYMLINK_NOFOLLOW
 argument_list|,
 name|uap
 operator|->
+name|fd
+operator|.
 name|fd
 argument_list|,
 name|path
@@ -3480,6 +3490,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+operator|.
+name|fd
 argument_list|,
 name|path
 argument_list|,
@@ -3493,11 +3505,11 @@ operator|(
 name|uap
 operator|->
 name|fd
+operator|.
+name|flags
 operator|&
 name|CLOUDABI_LOOKUP_SYMLINK_FOLLOW
 operator|)
-operator|!=
-literal|0
 condition|?
 literal|0
 else|:
@@ -3691,7 +3703,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|flag
+name|flags
 operator|&
 name|CLOUDABI_UNLINK_REMOVEDIR
 condition|)

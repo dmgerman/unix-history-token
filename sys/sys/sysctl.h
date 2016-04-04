@@ -919,6 +919,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sysctl_handle_counter_u64_array
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_handle_uma_zone_max
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
@@ -2280,7 +2289,59 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr));	\ })
+value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr));	\ })
+end_define
+
+begin_comment
+comment|/* Oid for an array of counter(9)s.  The pointer and length must be non zero. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_COUNTER_U64_ARRAY
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    (ptr), (len), sysctl_handle_counter_u64_array, "S", descr);	\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE)&&	\ 	    sizeof(counter_u64_t) == sizeof(*(ptr))&&			\ 	    sizeof(uint64_t) == sizeof(**(ptr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_COUNTER_U64_ARRAY
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,	\
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, len, sysctl_handle_counter_u64_array, "S",		\ 	    __DESCR(descr));						\ })
 end_define
 
 begin_comment

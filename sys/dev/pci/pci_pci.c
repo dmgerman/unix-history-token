@@ -1225,7 +1225,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"I/O range %#lx-%#lx overlaps with an ISA alias\n"
+literal|"I/O range %#jx-%#jx overlaps with an ISA alias\n"
 argument_list|,
 name|start
 argument_list|,
@@ -1676,7 +1676,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"allocating non-ISA range %#lx-%#lx\n"
+literal|"allocating non-ISA range %#jx-%#jx\n"
 argument_list|,
 name|start
 argument_list|,
@@ -3351,7 +3351,7 @@ name|bus
 operator|->
 name|dev
 argument_list|,
-literal|"allocated bus range (%lu-%lu) for rid %d of %s\n"
+literal|"allocated bus range (%ju-%ju) for rid %d of %s\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -3475,7 +3475,7 @@ name|bus
 operator|->
 name|dev
 argument_list|,
-literal|"grew bus range to %lu-%lu\n"
+literal|"grew bus range to %ju-%ju\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -3707,14 +3707,14 @@ name|bus
 operator|->
 name|dev
 argument_list|,
-literal|"attempting to grow bus range for %lu buses\n"
+literal|"attempting to grow bus range for %ju buses\n"
 argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tback candidate range: %lu-%lu\n"
+literal|"\tback candidate range: %ju-%ju\n"
 argument_list|,
 name|start_free
 argument_list|,
@@ -6044,7 +6044,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"allocated %s range (%#lx-%#lx) for rid %x of %s\n"
+literal|"allocated %s range (%#jx-%#jx) for rid %x of %s\n"
 argument_list|,
 name|w
 operator|->
@@ -7101,7 +7101,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"failed to allocate initial %s window (%#lx-%#lx,%#lx)\n"
+literal|"failed to allocate initial %s window (%#jx-%#jx,%#jx)\n"
 argument_list|,
 name|w
 operator|->
@@ -7166,7 +7166,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"attempting to grow %s window for (%#lx-%#lx,%#lx)\n"
+literal|"attempting to grow %s window for (%#jx-%#jx,%#jx)\n"
 argument_list|,
 name|w
 operator|->
@@ -7283,7 +7283,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\tfront candidate range: %#lx-%#lx\n"
+literal|"\tfront candidate range: %#jx-%#jx\n"
 argument_list|,
 name|front
 argument_list|,
@@ -7402,7 +7402,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"\tback candidate range: %#lx-%#lx\n"
+literal|"\tback candidate range: %#jx-%#jx\n"
 argument_list|,
 name|start_free
 argument_list|,
@@ -8604,7 +8604,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ioport: end (%lx)< start (%lx)\n"
+literal|"ioport: end (%jx)< start (%jx)\n"
 argument_list|,
 name|end
 argument_list|,
@@ -8635,7 +8635,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"%s%srequested unsupported I/O "
-literal|"range 0x%lx-0x%lx (decoding 0x%x-0x%x)\n"
+literal|"range 0x%jx-0x%jx (decoding 0x%x-0x%x)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -8668,7 +8668,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s%srequested I/O range 0x%lx-0x%lx: in range\n"
+literal|"%s%srequested I/O range 0x%jx-0x%jx: in range\n"
 argument_list|,
 name|name
 argument_list|,
@@ -8919,7 +8919,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"memory: end (%lx)< start (%lx)\n"
+literal|"memory: end (%jx)< start (%jx)\n"
 argument_list|,
 name|end
 argument_list|,
@@ -8950,7 +8950,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s%srequested unsupported memory range %#lx-%#lx "
+literal|"%s%srequested unsupported memory range %#jx-%#jx "
 literal|"(decoding %#jx-%#jx, %#jx-%#jx)\n"
 argument_list|,
 name|name
@@ -9009,7 +9009,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"%s%srequested memory range "
-literal|"0x%lx-0x%lx: good\n"
+literal|"0x%jx-0x%jx: good\n"
 argument_list|,
 name|name
 argument_list|,

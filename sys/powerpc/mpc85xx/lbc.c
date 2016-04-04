@@ -3529,8 +3529,8 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"failed to reserve resource %#lx - %#lx "
-literal|"(%#lx)\n"
+literal|"failed to reserve resource %#jx - %#jx "
+literal|"(%#jx)\n"
 argument_list|,
 name|start
 argument_list|,
@@ -3678,7 +3678,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|rv
@@ -3691,7 +3691,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|rv

@@ -2633,7 +2633,7 @@ argument_list|(
 operator|(
 name|cbdev
 operator|,
-literal|"CIS Mapped to %#lx\n"
+literal|"CIS Mapped to %#jx\n"
 operator|,
 name|rman_get_start
 argument_list|(

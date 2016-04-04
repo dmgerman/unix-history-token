@@ -58,7 +58,7 @@ begin_struct
 struct|struct
 name|lro_entry
 block|{
-name|SLIST_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|lro_entry
 argument_list|)
@@ -164,7 +164,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|LIST_HEAD
 argument_list|(
 name|lro_head
 argument_list|,
@@ -405,6 +405,13 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|TCP_LRO_NO_ENTRIES
+value|-2
+end_define
 
 begin_define
 define|#

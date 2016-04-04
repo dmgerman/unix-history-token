@@ -249,6 +249,13 @@ name|struct
 name|arm_boot_params
 modifier|*
 name|abp
+parameter_list|,
+name|void
+modifier|*
+name|dtb_ptr
+parameter_list|,
+name|size_t
+name|dtb_size
 parameter_list|)
 function_decl|;
 end_function_decl

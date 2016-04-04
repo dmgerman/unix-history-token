@@ -9725,7 +9725,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"port 0x%lx-0x%lx irq %ld at device %d.%d on pci%d"
+literal|"port 0x%jx-0x%jx irq %jd at device %d.%d on pci%d"
 argument_list|,
 name|rman_get_start
 argument_list|(

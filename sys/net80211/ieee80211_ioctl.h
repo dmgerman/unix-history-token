@@ -821,9 +821,17 @@ name|is_ampdu_bar_tx_fail
 decl_stmt|;
 comment|/* A-MPDU BAR frames TX fail */
 name|uint32_t
+name|is_ff_encapfail
+decl_stmt|;
+comment|/* failed FF encap */
+name|uint32_t
+name|is_amsdu_encapfail
+decl_stmt|;
+comment|/* failed A-MSDU encap */
+name|uint32_t
 name|is_spare
 index|[
-literal|7
+literal|5
 index|]
 decl_stmt|;
 block|}

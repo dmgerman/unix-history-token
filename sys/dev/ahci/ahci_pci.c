@@ -2514,6 +2514,8 @@ block|,
 name|AHCI_Q_FORCE_PI
 operator||
 name|AHCI_Q_RESTORE_CAP
+operator||
+name|AHCI_Q_NOMSIX
 block|}
 block|,
 block|{
@@ -3340,6 +3342,18 @@ condition|)
 return|return
 name|ENXIO
 return|;
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOMSIX
+condition|)
+name|msix_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Read MSI-x BAR IDs if supported */
 if|if
 condition|(

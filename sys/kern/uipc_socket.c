@@ -1249,7 +1249,7 @@ name|sysctl_maxsockets
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|"Maximum number of sockets avaliable"
+literal|"Maximum number of sockets available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -708,7 +708,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-.9s"
+literal|" %-.15s"
 argument_list|,
 name|prphone
 argument_list|(

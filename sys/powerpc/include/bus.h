@@ -94,6 +94,31 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOKE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXADDR
+value|0xFFFFFFFFFULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXSIZE
+value|0xFFFFFFFFUL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -107,6 +132,11 @@ directive|define
 name|BUS_SPACE_MAXSIZE
 value|0xFFFFFFFFUL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

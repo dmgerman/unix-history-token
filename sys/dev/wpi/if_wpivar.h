@@ -708,21 +708,11 @@ decl_stmt|;
 comment|/* Tasks used by the driver. */
 name|struct
 name|task
-name|sc_reinittask
-decl_stmt|;
-name|struct
-name|task
 name|sc_radiooff_task
 decl_stmt|;
 name|struct
 name|task
 name|sc_radioon_task
-decl_stmt|;
-comment|/* Taskqueue */
-name|struct
-name|taskqueue
-modifier|*
-name|sc_tq
 decl_stmt|;
 comment|/* Eeprom info. */
 name|uint8_t

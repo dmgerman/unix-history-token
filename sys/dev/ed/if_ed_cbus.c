@@ -4379,7 +4379,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%lx) "
+literal|"Invalid i/o port configuration (0x%jx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
@@ -4428,7 +4428,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Please change window address(0x%lx)\n"
+literal|"Please change window address(0x%jx)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -4482,8 +4482,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Please change iobase address(0x%lx) "
-literal|"or window address(0x%lx)\n"
+literal|"Please change iobase address(0x%jx) "
+literal|"or window address(0x%jx)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -4777,7 +4777,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be "
+literal|"Invalid irq configuration (%jd) must be "
 literal|"%s for %s\n"
 argument_list|,
 name|conf_irq
@@ -4940,7 +4940,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%lx) "
+literal|"Invalid i/o port configuration (0x%jx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
@@ -5102,7 +5102,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be "
+literal|"Invalid irq configuration (%jd) must be "
 literal|"%s for %s\n"
 argument_list|,
 name|conf_irq
@@ -5354,7 +5354,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be "
+literal|"Invalid irq configuration (%jd) must be "
 literal|"%s for %s\n"
 argument_list|,
 name|conf_irq
@@ -5539,7 +5539,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be "
+literal|"Invalid irq configuration (%jd) must be "
 literal|"%s for %s\n"
 argument_list|,
 name|conf_irq
@@ -6025,7 +6025,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid i/o port configuration (0x%lx) "
+literal|"Invalid i/o port configuration (0x%jx) "
 literal|"must be %s for %s\n"
 argument_list|,
 name|rman_get_start
@@ -6184,7 +6184,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Invalid irq configuration (%ld) must be "
+literal|"Invalid irq configuration (%jd) must be "
 literal|"%s for %s\n"
 argument_list|,
 name|conf_irq

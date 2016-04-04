@@ -127,12 +127,24 @@ name|MMC_RSP_R3
 value|(MMC_RSP_PRESENT)
 define|#
 directive|define
+name|MMC_RSP_R4
+value|(MMC_RSP_PRESENT)
+define|#
+directive|define
+name|MMC_RSP_R5
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
+define|#
+directive|define
+name|MMC_RSP_R5B
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE | MMC_RSP_BUSY)
+define|#
+directive|define
 name|MMC_RSP_R6
-value|(MMC_RSP_PRESENT | MMC_RSP_CRC)
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
 define|#
 directive|define
 name|MMC_RSP_R7
-value|(MMC_RSP_PRESENT | MMC_RSP_CRC)
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
 define|#
 directive|define
 name|MMC_RSP

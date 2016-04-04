@@ -104,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_proto.h>
+file|<contrib/cloudabi/cloudabi_types_common.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_syscalldefs.h>
+file|<compat/cloudabi/cloudabi_proto.h>
 end_include
 
 begin_include
@@ -502,7 +502,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 name|NULL
 argument_list|,
@@ -541,7 +541,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 operator|(
 name|void
@@ -670,7 +670,7 @@ name|fd
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 operator|(
 expr|struct
@@ -746,7 +746,7 @@ name|fd
 argument_list|,
 name|uap
 operator|->
-name|s
+name|sock
 argument_list|,
 operator|(
 expr|struct
@@ -786,7 +786,7 @@ name|s
 operator|=
 name|uap
 operator|->
-name|s
+name|sock
 block|,
 operator|.
 name|backlog
@@ -835,7 +835,7 @@ name|s
 operator|=
 name|uap
 operator|->
-name|fd
+name|sock
 block|, 	}
 decl_stmt|;
 switch|switch
@@ -947,7 +947,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|fd
+name|sock
 argument_list|,
 name|cap_rights_init
 argument_list|(
@@ -1161,7 +1161,7 @@ name|ss
 operator|.
 name|ss_state
 operator||=
-name|CLOUDABI_SOCKSTAT_ACCEPTCONN
+name|CLOUDABI_SOCKSTATE_ACCEPTCONN
 expr_stmt|;
 name|fdrop
 argument_list|(

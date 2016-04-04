@@ -10219,7 +10219,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at %s 0x%lx irq %ld %s"
+literal|"at %s 0x%jx irq %jd %s"
 argument_list|,
 operator|(
 name|es

@@ -87,6 +87,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_PORT_P_VLAN
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_PORT_OFFSET + 0x14 + ((p) * 0x100))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_PORT_P_TX_PRI_MAP
 parameter_list|(
 name|p
@@ -370,6 +380,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_ALE_CTL_ENABLE
+value|(1U<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_ALE_CTL_CLEAR_TBL
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_ALE_CTL_BYPASS
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_ALE_CTL_VLAN_AWARE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_ALE_TBLCTL
 value|(CPSW_ALE_OFFSET + 0x20)
 end_define
@@ -393,6 +431,114 @@ define|#
 directive|define
 name|CPSW_ALE_TBLW0
 value|(CPSW_ALE_OFFSET + 0x3C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_MCAST
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[1]>> 8)& 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_MCAST_FWD
+value|(3<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTS
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[2]>> 2)& 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_TYPE
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[1]>> 28)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_TYPE_ADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_TYPE_VLAN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_TYPE_VLAN_ADDR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_VLAN
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[1]>> 16)& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_VLAN_UNREGFLOOD
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[0]>> 8)& 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_VLAN_REGFLOOD
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[0]>> 16)& 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_VLAN_UNTAG
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a[0]>> 24)& 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_VLAN_MEMBERS
+parameter_list|(
+name|_a
+parameter_list|)
+value|(_a[0]& 7)
 end_define
 
 begin_define
@@ -424,6 +570,41 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(CPSW_SL_OFFSET + (0x40 * (p)) + 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_MACTL_IFCTL_B
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_MACTL_IFCTL_A
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_MACTL_GIG
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_MACTL_GMII_ENABLE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_SL_MACTL_FULLDUPLEX
+value|(1<< 0)
 end_define
 
 begin_define
@@ -503,6 +684,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|MDIOCTL_ENABLE
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIOCTL_FAULTENB
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIOLINKINTRAW
+value|(MDIO_OFFSET + 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIOLINKINTMASKED
+value|(MDIO_OFFSET + 0x14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIOUSERACCESS0
 value|(MDIO_OFFSET + 0x80)
 end_define
@@ -512,6 +721,48 @@ define|#
 directive|define
 name|MDIOUSERPHYSEL0
 value|(MDIO_OFFSET + 0x84)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIOUSERACCESS1
+value|(MDIO_OFFSET + 0x88)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIOUSERPHYSEL1
+value|(MDIO_OFFSET + 0x8C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_PHYSEL_LINKINTENB
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_PHYACCESS_GO
+value|(1U<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_PHYACCESS_WRITE
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDIO_PHYACCESS_ACK
+value|(1<< 29)
 end_define
 
 begin_define
@@ -625,6 +876,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_WR_C_MISC_EVNT_PEND
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_MISC_STAT_PEND
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_MISC_HOST_PEND
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_MISC_MDIOLINK
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_MISC_MDIOUSER
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_CPPI_RAM_OFFSET
 value|0x2000
 end_define
@@ -647,35 +933,35 @@ begin_define
 define|#
 directive|define
 name|CPDMA_BD_SOP
-value|(1<<15)
+value|(1<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPDMA_BD_EOP
-value|(1<<14)
+value|(1<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPDMA_BD_OWNER
-value|(1<<13)
+value|(1<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPDMA_BD_EOQ
-value|(1<<12)
+value|(1<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPDMA_BD_TDOWNCMPLT
-value|(1<<11)
+value|(1<< 11)
 end_define
 
 begin_define
@@ -683,6 +969,20 @@ define|#
 directive|define
 name|CPDMA_BD_PKT_ERR_MASK
 value|(3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_TO_PORT
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPDMA_BD_PORT_MASK
+value|3
 end_define
 
 begin_struct

@@ -724,7 +724,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ptblread
 parameter_list|(

@@ -534,6 +534,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|fdt_get_chosen_bootargs
+parameter_list|(
+name|char
+modifier|*
+name|bootargs
+parameter_list|,
+name|size_t
+name|max_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

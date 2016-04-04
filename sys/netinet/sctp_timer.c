@@ -3110,6 +3110,9 @@ operator|->
 name|book_size
 argument_list|,
 operator|(
+name|uint32_t
+operator|)
+operator|(
 name|uintptr_t
 operator|)
 name|chk
@@ -3799,6 +3802,9 @@ name|chk
 operator|->
 name|book_size
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 operator|(
 name|uintptr_t
 operator|)

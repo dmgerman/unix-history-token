@@ -2514,17 +2514,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|attribute
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-if|if
-condition|(
 operator|!
 operator|(
 name|ump

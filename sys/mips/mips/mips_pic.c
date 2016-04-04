@@ -122,6 +122,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pmc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -828,6 +840,19 @@ operator|&
 name|TDP_CALLCHAIN
 operator|)
 condition|)
+block|{
+name|struct
+name|trapframe
+modifier|*
+name|tf
+init|=
+name|PCPU_GET
+argument_list|(
+name|curthread
+argument_list|)
+operator|->
+name|td_intr_frame
+decl_stmt|;
 name|pmc_hook
 argument_list|(
 name|PCPU_GET
@@ -840,6 +865,7 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return

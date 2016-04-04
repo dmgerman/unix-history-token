@@ -316,7 +316,7 @@ value|(racct_types[X]& RACCT_IN_MILLIONS)
 end_define
 
 begin_comment
-comment|/*  * Resource usage can drop, as opposed to only grow.  When the process  * terminates, its resource usage is freed from the respective  * per-credential racct containers.  */
+comment|/*  * Resource usage can drop, as opposed to only grow.  When the process  * terminates, its resource usage is subtracted from the respective  * per-credential racct containers.  */
 end_comment
 
 begin_define
@@ -372,7 +372,7 @@ value|(racct_types[X]& RACCT_SLOPPY)
 end_define
 
 begin_comment
-comment|/*  * When a process terminates, its resource usage is not automatically  * subtracted from per-credential racct containers.  Instead, the resource  * usage of per-credential racct containers decays in time.  * Resource usage can olso drop for such resource.  * So far, the only such resource is RACCT_PCTCPU.  */
+comment|/*  * When a process terminates, its resource usage is not automatically  * subtracted from per-credential racct containers.  Instead, the resource  * usage of per-credential racct containers decays in time.  * Resource usage can also drop for such resource.  */
 end_comment
 
 begin_define

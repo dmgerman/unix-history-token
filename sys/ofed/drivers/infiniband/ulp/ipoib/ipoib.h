@@ -1032,6 +1032,9 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
+name|int
+name|gone
+decl_stmt|;
 name|struct
 name|mutex
 name|vlan_mutex

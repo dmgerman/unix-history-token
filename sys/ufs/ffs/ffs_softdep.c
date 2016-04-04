@@ -10842,6 +10842,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ACQUIRE_LOCK
+argument_list|(
+name|ump
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -10849,11 +10854,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|ACQUIRE_LOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 block|}
 name|ump
 operator|->

@@ -272,7 +272,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_l1addr
+name|pcb_l0addr
 operator|=
 name|vtophys
 argument_list|(
@@ -285,7 +285,7 @@ operator|->
 name|p_vmspace
 argument_list|)
 operator|->
-name|pm_l1
+name|pm_l0
 argument_list|)
 expr_stmt|;
 name|tf

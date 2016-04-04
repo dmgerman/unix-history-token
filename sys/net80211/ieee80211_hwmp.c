@@ -1377,6 +1377,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|hwmp_vattach
 parameter_list|(
@@ -1467,6 +1468,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|hwmp_vdetach
 parameter_list|(
@@ -1512,6 +1514,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|hwmp_newstate
 parameter_list|(

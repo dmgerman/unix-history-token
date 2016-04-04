@@ -334,7 +334,7 @@ name|ATAG_SIZE
 parameter_list|(
 name|a
 parameter_list|)
-value|(a)->tag_hdr.size
+value|((a)->tag_hdr.size * sizeof(uint32_t))
 end_define
 
 begin_define

@@ -18554,9 +18554,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
-name|kflags
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -18927,9 +18924,6 @@ name|sent
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|kflags
 parameter_list|,
 name|struct
 name|thread

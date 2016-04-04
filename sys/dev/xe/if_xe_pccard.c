@@ -688,7 +688,7 @@ argument_list|,
 operator|(
 name|dev
 operator|,
-literal|"CEM I/O port 0x%0lx, size 0x%0lx\n"
+literal|"CEM I/O port 0x%0jx, size 0x%0jx\n"
 operator|,
 name|bus_get_resource_start
 argument_list|(

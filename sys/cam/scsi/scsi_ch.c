@@ -2411,6 +2411,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|announce_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|error
 operator|=
 name|cherror
@@ -2432,7 +2439,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/* 				 * A retry was scheuled, so 				 * just return. 				 */
+comment|/* 				 * A retry was scheduled, so 				 * just return. 				 */
 return|return;
 block|}
 elseif|else

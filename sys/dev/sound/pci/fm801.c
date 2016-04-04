@@ -3250,7 +3250,7 @@ name|status
 argument_list|,
 literal|64
 argument_list|,
-literal|"at %s 0x%lx irq %ld %s"
+literal|"at %s 0x%jx irq %jd %s"
 argument_list|,
 operator|(
 name|fm801

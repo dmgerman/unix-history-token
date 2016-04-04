@@ -34,19 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
 end_include
 
 begin_include
@@ -59,18 +47,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_all.h>
 end_include
 
 begin_include

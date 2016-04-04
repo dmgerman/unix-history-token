@@ -1790,7 +1790,7 @@ directive|ifdef
 name|WLDEBUG
 name|printf
 argument_list|(
-literal|"wlattach: base %lx, unit %d\n"
+literal|"wlattach: base %jx, unit %d\n"
 argument_list|,
 name|rman_get_start
 argument_list|(

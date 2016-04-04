@@ -163,7 +163,7 @@ decl_stmt|;
 comment|/* pmap statictics */
 name|pd_entry_t
 modifier|*
-name|pm_l1
+name|pm_l0
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
@@ -449,6 +449,8 @@ name|pmap_bootstrap
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
+name|vm_offset_t
+parameter_list|,
 name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
@@ -586,6 +588,10 @@ parameter_list|(
 name|pmap_t
 parameter_list|,
 name|vm_offset_t
+parameter_list|,
+name|pd_entry_t
+modifier|*
+modifier|*
 parameter_list|,
 name|pd_entry_t
 modifier|*

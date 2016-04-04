@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi/cloudabi_util.h>
+file|<contrib/cloudabi/cloudabi64_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_syscalldefs.h>
+file|<compat/cloudabi/cloudabi_util.h>
 end_include
 
 begin_include
@@ -1156,7 +1156,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|nevents
+name|nsubscriptions
 operator|==
 literal|1
 condition|)
@@ -1492,7 +1492,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|nevents
+name|nsubscriptions
 operator|==
 literal|2
 condition|)
@@ -2267,7 +2267,7 @@ name|td
 argument_list|,
 name|uap
 operator|->
-name|nevents
+name|nsubscriptions
 argument_list|,
 operator|&
 name|copyops

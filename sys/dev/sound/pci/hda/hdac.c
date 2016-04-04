@@ -1060,6 +1060,16 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_AMD_HUDSON2
+block|,
+literal|"AMD Hudson-2"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_RDC_M3010
 block|,
 literal|"RDC M3010"
@@ -1124,6 +1134,16 @@ block|{
 name|HDA_ATI_ALL
 block|,
 literal|"ATI"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_AMD_ALL
+block|,
+literal|"AMD"
 block|,
 literal|0
 block|,

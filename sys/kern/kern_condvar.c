@@ -358,15 +358,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
-block|{
-comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
 return|return;
-block|}
 name|sleepq_lock
 argument_list|(
 name|cvp
@@ -637,13 +632,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 block|{
-comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
 name|class
 operator|->
 name|lc_unlock
@@ -860,19 +852,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
-block|{
-comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * procs or panic below, in case this is the idle process and 		 * already asleep. 		 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|sleepq_lock
 argument_list|(
 name|cvp
@@ -1161,17 +1148,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
-block|{
-comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * thread or panic below, in case this is the idle process and 		 * already asleep. 		 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 name|sleepq_lock
 argument_list|(
 name|cvp
@@ -1469,17 +1453,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
-block|{
-comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * thread or panic below, in case this is the idle process and 		 * already asleep. 		 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 name|sleepq_lock
 argument_list|(
 name|cvp

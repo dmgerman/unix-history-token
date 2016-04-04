@@ -596,13 +596,10 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 block|{
-comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
 if|if
 condition|(
 name|lock
@@ -1095,19 +1092,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cold
-operator|||
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
-block|{
-comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|sleepq_lock
 argument_list|(
 name|ident
@@ -1769,6 +1761,7 @@ name|ticks
 expr_stmt|;
 block|}
 else|else
+block|{
 name|td
 operator|->
 name|td_ru
@@ -1776,6 +1769,13 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
+name|td
+operator|->
+name|td_swinvoltick
+operator|=
+name|ticks
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SCHED_STATS

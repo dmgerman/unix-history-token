@@ -4629,7 +4629,7 @@ name|CAM_DATA_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* We may have extra byte already red but not stored. */
+comment|/* We may have extra byte already read but not stored. */
 if|if
 condition|(
 name|resid

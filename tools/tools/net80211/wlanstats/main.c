@@ -105,6 +105,12 @@ literal|"input,output,ampdu_reorder,ampdu_oor,rx_dup,ampdu_flush,ampdu_move,"
 literal|"ampdu_drop,ampdu_bar,ampdu_baroow,ampdu_barmove,ampdu_bartx,"
 literal|"ampdu_bartxfail,ampdu_bartxretry,rssi,rate"
 block|}
+block|,
+block|{
+literal|"amsdu"
+block|,
+literal|"input,output,amsdu_tooshort,amsdu_split,amsdu_decap,amsdu_encap,rssi,rate"
+block|}
 block|, }
 struct|;
 end_struct

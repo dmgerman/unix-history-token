@@ -691,6 +691,27 @@ name|HDA_ATI_ALL
 value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMD_VENDORID
+value|0x1022
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_AMD_HUDSON2
+value|HDA_MODEL_CONSTRUCT(AMD, 0x780d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_AMD_ALL
+value|HDA_MODEL_CONSTRUCT(AMD, 0xffff)
+end_define
+
 begin_comment
 comment|/* RDC */
 end_comment

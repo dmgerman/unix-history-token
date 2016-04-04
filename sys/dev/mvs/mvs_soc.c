@@ -2015,7 +2015,7 @@ operator|&
 literal|0x03
 argument_list|)
 decl_stmt|;
-name|long
+name|rman_res_t
 name|st
 decl_stmt|;
 switch|switch

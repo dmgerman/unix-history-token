@@ -667,7 +667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Populate the essential fields in the nfsv3_diskless structure.  *  * The loader is expected to export the following environment variables:  *  * boot.netif.name		name of boot interface  * boot.netif.ip		IP address on boot interface  * boot.netif.netmask		netmask on boot interface  * boot.netif.gateway		default gateway (optional)  * boot.netif.hwaddr		hardware address of boot interface  * boot.nfsroot.server		IP address of root filesystem server  * boot.nfsroot.path		path of the root filesystem on server  * boot.nfsroot.nfshandle	NFS handle for root filesystem on server  * boot.nfsroot.nfshandlelen	and length of this handle (for NFSv3 only)  * boot.nfsroot.options		NFS options for the root filesystem  */
+comment|/*  * Populate the essential fields in the nfsv3_diskless structure.  *  * The loader is expected to export the following environment variables:  *  * boot.netif.name		name of boot interface  * boot.netif.ip		IP address on boot interface  * boot.netif.netmask		netmask on boot interface  * boot.netif.gateway		default gateway (optional)  * boot.netif.hwaddr		hardware address of boot interface  * boot.netif.mtu		interface mtu from bootp/dhcp (optional)  * boot.nfsroot.server		IP address of root filesystem server  * boot.nfsroot.path		path of the root filesystem on server  * boot.nfsroot.nfshandle	NFS handle for root filesystem on server  * boot.nfsroot.nfshandlelen	and length of this handle (for NFSv3 only)  * boot.nfsroot.options		NFS options for the root filesystem  */
 end_comment
 
 begin_function

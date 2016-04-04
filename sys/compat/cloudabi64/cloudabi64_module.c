@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_syscalldefs.h>
+file|<contrib/cloudabi/cloudabi64_types.h>
 end_include
 
 begin_include
@@ -357,6 +357,15 @@ argument_list|(
 name|CLOUDABI_AT_ARGDATALEN
 argument_list|,
 name|argdatalen
+argument_list|)
+block|,
+name|VAL
+argument_list|(
+name|CLOUDABI_AT_BASE
+argument_list|,
+name|args
+operator|->
+name|base
 argument_list|)
 block|,
 name|PTR

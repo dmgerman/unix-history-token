@@ -17,7 +17,7 @@ end_define
 
 begin_function_decl
 name|int
-name|arm_config_intr
+name|intr_irq_config
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -32,10 +32,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm_cpu_intr
+name|intr_irq_handler
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|intr_irq_remove_handler
+parameter_list|(
+name|device_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -220,16 +234,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|arm_teardown_intr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|arm_unmask_irq
 parameter_list|(
@@ -245,21 +249,21 @@ name|SMP
 end_ifdef
 
 begin_function_decl
-name|void
-name|arm_init_secondary
+name|int
+name|intr_irq_bind
 parameter_list|(
-name|void
+name|u_int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|arm_intr_bind
+name|void
+name|arm_init_secondary
 parameter_list|(
-name|u_int
-parameter_list|,
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

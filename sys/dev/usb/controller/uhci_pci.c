@@ -477,6 +477,22 @@ literal|"Intel 82801EB (ICH5) USB controller USB-D"
 operator|)
 return|;
 case|case
+literal|0x25a98086
+case|:
+return|return
+operator|(
+literal|"Intel 6300ESB USB controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x25aa8086
+case|:
+return|return
+operator|(
+literal|"Intel 6300ESB USB controller USB-B"
+operator|)
+return|;
+case|case
 literal|0x26588086
 case|:
 return|return

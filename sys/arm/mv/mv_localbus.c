@@ -1406,7 +1406,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|rv
@@ -1419,7 +1419,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|rv

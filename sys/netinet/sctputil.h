@@ -1014,14 +1014,17 @@ name|sockaddr
 modifier|*
 name|addr
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|totaddr
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|num_v4
 parameter_list|,
+name|unsigned
 name|int
 modifier|*
 name|num_v6
@@ -1030,6 +1033,7 @@ name|int
 modifier|*
 name|error
 parameter_list|,
+name|unsigned
 name|int
 name|limit
 parameter_list|,
@@ -1681,7 +1685,7 @@ name|struct
 name|sctp_association
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

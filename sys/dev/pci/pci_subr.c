@@ -550,7 +550,7 @@ name|hr
 operator|->
 name|hr_pcib
 argument_list|,
-literal|"decoding %d %srange %#lx-%#lx\n"
+literal|"decoding %d %srange %#jx-%#jx\n"
 argument_list|,
 name|type
 argument_list|,
@@ -805,7 +805,7 @@ condition|)
 continue|continue;
 name|new_start
 operator|=
-name|ulmax
+name|ummax
 argument_list|(
 name|start
 argument_list|,
@@ -816,7 +816,7 @@ argument_list|)
 expr_stmt|;
 name|new_end
 operator|=
-name|ulmin
+name|ummin
 argument_list|(
 name|end
 argument_list|,
@@ -886,7 +886,7 @@ name|hr
 operator|->
 name|hr_pcib
 argument_list|,
-literal|"allocated type %d (%#lx-%#lx) for rid %x of %s\n"
+literal|"allocated type %d (%#jx-%#jx) for rid %x of %s\n"
 argument_list|,
 name|type
 argument_list|,

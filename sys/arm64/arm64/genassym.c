@@ -215,14 +215,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PCB_L1ADDR
+name|PCB_L0ADDR
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|pcb
 argument_list|,
-name|pcb_l1addr
+name|pcb_l0addr
 argument_list|)
 argument_list|)
 expr_stmt|;

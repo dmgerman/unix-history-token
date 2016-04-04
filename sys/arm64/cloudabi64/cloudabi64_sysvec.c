@@ -622,6 +622,11 @@ operator|&
 name|cloudabi64_elf_sysvec
 block|,
 operator|.
+name|flags
+operator|=
+name|BI_CAN_EXEC_DYN
+block|,
+operator|.
 name|compat_3_brand
 operator|=
 literal|"CloudABI"

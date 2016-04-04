@@ -894,7 +894,7 @@ literal|"at mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"0x%08lx"
+literal|"0x%08jx"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -910,7 +910,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2052,7 +2052,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"lazy allocation of irq %ld for %s\n"
+literal|"lazy allocation of irq %jd for %s\n"
 argument_list|,
 name|start
 argument_list|,

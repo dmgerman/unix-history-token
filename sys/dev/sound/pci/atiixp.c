@@ -4927,7 +4927,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at memory 0x%lx irq %ld %s"
+literal|"at memory 0x%jx irq %jd %s"
 argument_list|,
 name|rman_get_start
 argument_list|(

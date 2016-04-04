@@ -1978,7 +1978,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -1991,7 +1991,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2096,7 +2096,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|resource_list_print_type
@@ -2107,7 +2107,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2785,7 +2785,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"unin mapdev: start %zx, len %ld\n"
+literal|"unin mapdev: start %zx, len %jd\n"
 argument_list|,
 name|start
 argument_list|,

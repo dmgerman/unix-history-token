@@ -1809,6 +1809,10 @@ operator|==
 literal|1
 condition|)
 return|return;
+name|newvol
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|gethdr
 goto|;

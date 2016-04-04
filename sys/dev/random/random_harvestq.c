@@ -589,7 +589,7 @@ name|SYSINIT
 argument_list|(
 name|random_device_h_proc
 argument_list|,
-name|SI_SUB_CREATE_INIT
+name|SI_SUB_KICK_SCHEDULER
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,

@@ -754,7 +754,7 @@ name|__BSD_VISIBLE
 end_ifdef
 
 begin_function_decl
-name|int
+name|ssize_t
 name|aio_waitcomplete
 parameter_list|(
 name|struct

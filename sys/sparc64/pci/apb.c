@@ -448,7 +448,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s0x%lx-0x%lx"
+literal|"%s0x%jx-0x%jx"
 argument_list|,
 name|first
 condition|?
@@ -1092,7 +1092,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"device %s requested unsupported "
-literal|"I/O range 0x%lx-0x%lx\n"
+literal|"I/O range 0x%jx-0x%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1125,7 +1125,7 @@ operator|.
 name|dev
 argument_list|,
 literal|"device "
-literal|"%s requested decoded I/O range 0x%lx-0x%lx\n"
+literal|"%s requested decoded I/O range 0x%jx-0x%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1163,7 +1163,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"device %s requested unsupported "
-literal|"memory range 0x%lx-0x%lx\n"
+literal|"memory range 0x%jx-0x%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1196,7 +1196,7 @@ operator|.
 name|dev
 argument_list|,
 literal|"device "
-literal|"%s requested decoded memory range 0x%lx-0x%lx\n"
+literal|"%s requested decoded memory range 0x%jx-0x%jx\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(

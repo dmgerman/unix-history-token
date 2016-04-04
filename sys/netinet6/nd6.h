@@ -1456,24 +1456,6 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|callout
-argument_list|,
-name|nd6_timer_ch
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_nd6_timer_ch
-value|VNET(nd6_timer_ch)
-end_define
-
 begin_comment
 comment|/* nd6_rtr.c */
 end_comment
@@ -2378,11 +2360,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|defrouter_remove
 parameter_list|(
 name|struct
-name|nd_defrouter
+name|in6_addr
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

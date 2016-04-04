@@ -1005,7 +1005,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|time_after_eq
+name|ieee80211_time_after_eq
 argument_list|(
 name|now
 argument_list|,

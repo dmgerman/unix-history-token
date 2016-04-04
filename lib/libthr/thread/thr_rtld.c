@@ -815,6 +815,9 @@ expr_stmt|;
 name|_malloc_postfork
 argument_list|()
 expr_stmt|;
+name|getpid
+argument_list|()
+expr_stmt|;
 name|syscall
 argument_list|(
 name|SYS_getpid

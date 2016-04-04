@@ -11621,8 +11621,6 @@ condition|(
 name|bio
 operator|->
 name|bio_cmd
-operator|&
-literal|0x03
 condition|)
 block|{
 case|case
@@ -11970,8 +11968,6 @@ condition|(
 name|bio
 operator|->
 name|bio_cmd
-operator|&
-literal|0x03
 condition|)
 block|{
 case|case

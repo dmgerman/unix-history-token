@@ -226,6 +226,13 @@ comment|/* RTC module */
 name|RTC_CLK
 init|=
 literal|1900
+block|,
+comment|/* McSPI */
+name|SPI0_CLK
+init|=
+literal|2000
+block|,
+name|SPI1_CLK
 block|, }
 name|clk_ident_t
 typedef|;

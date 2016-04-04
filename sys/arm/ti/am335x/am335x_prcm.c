@@ -230,6 +230,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CM_PER_SPI0_CLKCTRL
+value|(CM_PER + 0x04C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_PER_SPI1_CLKCTRL
+value|(CM_PER + 0x050)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CM_PER_UART1_CLKCTRL
 value|(CM_PER + 0x06C)
 end_define
@@ -1273,6 +1287,17 @@ argument_list|(
 name|I2C3_CLK
 argument_list|)
 block|,
+comment|/* McSPI we use hwmods as reference, not units in spec */
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|SPI0_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|SPI1_CLK
+argument_list|)
+block|,
 comment|/* TSC_ADC */
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
@@ -1614,6 +1639,25 @@ argument_list|(
 name|I2C3_CLK
 argument_list|,
 name|CM_PER_I2C2_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* McSPI modules, hwmods start with spi0 */
+name|_CLK_DETAIL
+argument_list|(
+name|SPI0_CLK
+argument_list|,
+name|CM_PER_SPI0_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|SPI1_CLK
+argument_list|,
+name|CM_PER_SPI1_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)

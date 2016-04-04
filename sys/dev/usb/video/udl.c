@@ -1088,7 +1088,18 @@ argument_list|,
 argument|DLUNK
 argument_list|)
 block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_DISPLAYLINK
+argument_list|,
+argument|USB_PRODUCT_DISPLAYLINK_ITEC
+argument_list|,
+argument|DL165
+argument_list|)
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

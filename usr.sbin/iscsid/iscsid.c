@@ -1460,7 +1460,13 @@ name|idf
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|saved_errno
 decl_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1524,6 +1530,10 @@ literal|1
 argument_list|,
 literal|"ISCSIDFAIL"
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 block|}
 end_function

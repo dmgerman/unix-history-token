@@ -252,7 +252,14 @@ begin_comment
 comment|/* bytes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
 begin_decl_stmt
+specifier|static
 name|int
 name|iosize_max_clamp
 init|=
@@ -282,6 +289,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|devfs_iosize_max_clamp
 init|=
@@ -309,6 +317,11 @@ literal|"Clamp max i/o size to INT_MAX for devices"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Assert that the return value of read(2) and write(2) syscalls fits  * into a register.  If not, an architecture will need to provide the  * usermode wrappers to reconstruct the result.  */
@@ -734,6 +747,65 @@ modifier|*
 name|mtxpool_select
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_function
+name|size_t
+name|devfs_iosize_max
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|devfs_iosize_max_clamp
+operator|||
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_ILP32
+argument_list|)
+condition|?
+name|INT_MAX
+else|:
+name|SSIZE_MAX
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|size_t
+name|iosize_max
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|iosize_max_clamp
+operator|||
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_ILP32
+argument_list|)
+condition|?
+name|INT_MAX
+else|:
+name|SSIZE_MAX
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

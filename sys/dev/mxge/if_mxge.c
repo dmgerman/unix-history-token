@@ -13843,58 +13843,14 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-while|while
-condition|(
-operator|!
-name|SLIST_EMPTY
+name|tcp_lro_flush_all
 argument_list|(
 operator|&
 name|ss
 operator|->
 name|lc
-operator|.
-name|lro_active
-argument_list|)
-condition|)
-block|{
-name|struct
-name|lro_entry
-modifier|*
-name|lro
-init|=
-name|SLIST_FIRST
-argument_list|(
-operator|&
-name|ss
-operator|->
-name|lc
-operator|.
-name|lro_active
-argument_list|)
-decl_stmt|;
-name|SLIST_REMOVE_HEAD
-argument_list|(
-operator|&
-name|ss
-operator|->
-name|lc
-operator|.
-name|lro_active
-argument_list|,
-name|next
 argument_list|)
 expr_stmt|;
-name|tcp_lro_flush
-argument_list|(
-operator|&
-name|ss
-operator|->
-name|lc
-argument_list|,
-name|lro
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -23277,7 +23233,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %ld"
+literal|" %jd"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -23594,7 +23550,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"using %s irq %ld\n"
+literal|"using %s irq %jd\n"
 argument_list|,
 name|sc
 operator|->
@@ -24460,7 +24416,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"impossible memory region size %ld\n"
+literal|"impossible memory region size %jd\n"
 argument_list|,
 name|rman_get_size
 argument_list|(

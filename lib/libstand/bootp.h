@@ -303,6 +303,13 @@ name|TAG_ROOTPATH
 value|((unsigned char)  17)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TAG_INTF_MTU
+value|((unsigned char)  26)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

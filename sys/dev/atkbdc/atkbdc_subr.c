@@ -192,7 +192,7 @@ name|retval
 operator|+=
 name|printf
 argument_list|(
-literal|" irq %ld"
+literal|" irq %jd"
 argument_list|,
 name|irq
 argument_list|)

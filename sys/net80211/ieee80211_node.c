@@ -11384,7 +11384,7 @@ operator|&
 name|IEEE80211_FEXT_NONERP_PR
 operator|)
 operator|&&
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 argument_list|,

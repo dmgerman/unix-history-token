@@ -214,15 +214,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|DEFINE_MUTEX
-argument_list|(
-name|dequeue_mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|listen_port_info
@@ -1675,12 +1666,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mutex_lock
-argument_list|(
-operator|&
-name|dequeue_mutex
-argument_list|)
-expr_stmt|;
 comment|/* Dequeue& process  all new 'so' connection requests for this cmid */
 while|while
 condition|(
@@ -1799,12 +1784,6 @@ block|}
 block|}
 name|err
 label|:
-name|mutex_unlock
-argument_list|(
-operator|&
-name|dequeue_mutex
-argument_list|)
-expr_stmt|;
 name|kfree
 argument_list|(
 name|work
@@ -1851,12 +1830,6 @@ name|cm_id
 init|=
 name|arg
 decl_stmt|;
-name|mutex_lock
-argument_list|(
-operator|&
-name|dequeue_mutex
-argument_list|)
-expr_stmt|;
 comment|/* check whether iw_so_event_handler() already dequeued this 'so' */
 name|so
 operator|=
@@ -1922,12 +1895,6 @@ operator|&
 name|work
 operator|->
 name|work
-argument_list|)
-expr_stmt|;
-name|mutex_unlock
-argument_list|(
-operator|&
-name|dequeue_mutex
 argument_list|)
 expr_stmt|;
 return|return

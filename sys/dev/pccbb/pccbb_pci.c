@@ -1379,7 +1379,7 @@ argument_list|(
 operator|(
 name|brdev
 operator|,
-literal|"Found memory at %08lx\n"
+literal|"Found memory at %jx\n"
 operator|,
 name|rman_get_start
 argument_list|(

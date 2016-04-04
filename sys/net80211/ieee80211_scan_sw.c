@@ -1303,7 +1303,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|ticks
 argument_list|,
@@ -2814,7 +2814,7 @@ operator|&
 name|ISCAN_ABORT
 operator|)
 operator|||
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 operator|+
@@ -2866,7 +2866,7 @@ expr_stmt|;
 comment|/* 	 * Watch for truncation due to the scan end time. 	 */
 if|if
 condition|(
-name|time_after
+name|ieee80211_time_after
 argument_list|(
 name|ticks
 operator|+
@@ -3314,7 +3314,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|ticks
 operator|+
@@ -3786,7 +3786,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|time_after_eq
+name|ieee80211_time_after_eq
 argument_list|(
 name|ticks
 argument_list|,

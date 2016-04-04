@@ -279,6 +279,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|L0_SIZE
+value|(1ul<< L0_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_OFFSET
+value|(L0_SIZE - 1ul)
+end_define
+
+begin_define
+define|#
+directive|define
 name|L0_INVAL
 value|0x0
 end_define
@@ -287,15 +301,8 @@ begin_comment
 comment|/* An invalid address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|L0_BLOCK
-value|0x1
-end_define
-
 begin_comment
-comment|/* A block */
+comment|/* 0x1 Level 0 doesn't support block translation */
 end_comment
 
 begin_comment
@@ -349,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|L1_BLOCK
-value|L0_BLOCK
+value|0x1
 end_define
 
 begin_define
@@ -388,21 +395,21 @@ begin_define
 define|#
 directive|define
 name|L2_INVAL
-value|L0_INVAL
+value|L1_INVAL
 end_define
 
 begin_define
 define|#
 directive|define
 name|L2_BLOCK
-value|L0_BLOCK
+value|L1_BLOCK
 end_define
 
 begin_define
 define|#
 directive|define
 name|L2_TABLE
-value|L0_TABLE
+value|L1_TABLE
 end_define
 
 begin_define
@@ -469,8 +476,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|L0_ENTRIES_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_ENTRIES
+value|(1<< L0_ENTRIES_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L0_ADDR_MASK
+value|(L0_ENTRIES - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ln_ENTRIES_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|Ln_ENTRIES
-value|(1<< 9)
+value|(1<< Ln_ENTRIES_SHIFT)
 end_define
 
 begin_define

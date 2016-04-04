@@ -154,6 +154,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<atomic>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<condition_variable>
 end_include
 

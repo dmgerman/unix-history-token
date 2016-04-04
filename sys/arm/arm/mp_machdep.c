@@ -1488,7 +1488,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|ARM_INTRNG
-name|intr_ipi_set_handler
+name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_RENDEZVOUS
 argument_list|,
@@ -1497,11 +1497,9 @@ argument_list|,
 name|ipi_rendezvous
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|intr_ipi_set_handler
+name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_AST
 argument_list|,
@@ -1510,11 +1508,9 @@ argument_list|,
 name|ipi_ast
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|intr_ipi_set_handler
+name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_STOP
 argument_list|,
@@ -1523,11 +1519,9 @@ argument_list|,
 name|ipi_stop
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|intr_ipi_set_handler
+name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_PREEMPT
 argument_list|,
@@ -1536,11 +1530,9 @@ argument_list|,
 name|ipi_preempt
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|intr_ipi_set_handler
+name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_HARDCLOCK
 argument_list|,
@@ -1549,8 +1541,6 @@ argument_list|,
 name|ipi_hardclock
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -1779,6 +1769,18 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_INTRNG
+name|intr_ipi_send
+argument_list|(
+name|other_cpus
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pic_ipi_send
 argument_list|(
 name|other_cpus
@@ -1786,6 +1788,8 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1830,6 +1834,18 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_INTRNG
+name|intr_ipi_send
+argument_list|(
+name|cpus
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pic_ipi_send
 argument_list|(
 name|cpus
@@ -1837,6 +1853,8 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1862,6 +1880,18 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_INTRNG
+name|intr_ipi_send
+argument_list|(
+name|cpus
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pic_ipi_send
 argument_list|(
 name|cpus
@@ -1869,6 +1899,8 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

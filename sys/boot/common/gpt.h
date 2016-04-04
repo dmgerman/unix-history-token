@@ -27,6 +27,13 @@ directive|include
 file|<drv.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXTBLENTS
+value|128
+end_define
+
 begin_function_decl
 name|int
 name|gptread

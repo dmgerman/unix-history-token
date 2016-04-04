@@ -3666,7 +3666,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %ld bufsz %u %s"
+literal|"at io 0x%jx irq %jd drq %jd bufsz %u %s"
 argument_list|,
 name|rman_get_start
 argument_list|(

@@ -20893,7 +20893,7 @@ name|BWN_LO_PWRVEC_EXPIRE
 expr_stmt|;
 if|if
 condition|(
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|lo
 operator|->
@@ -20940,7 +20940,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|cal
 operator|->
@@ -42075,7 +42075,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|lo
 operator|->
@@ -61470,7 +61470,7 @@ operator|&
 name|BWN_TXPWR_IGNORE_TIME
 operator|)
 operator|&&
-name|time_before
+name|ieee80211_time_before
 argument_list|(
 name|now
 argument_list|,

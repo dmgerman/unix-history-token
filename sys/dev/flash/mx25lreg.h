@@ -103,6 +103,20 @@ name|CMD_BLOCK_32K_ERASE
 value|0x52
 end_define
 
+begin_define
+define|#
+directive|define
+name|CMD_ENTER_4B_MODE
+value|0xB7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_EXIT_4B_MODE
+value|0xE9
+end_define
+
 begin_comment
 comment|/*  * Status register flags  */
 end_comment

@@ -71,12 +71,6 @@ directive|include
 file|"pw.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
-end_include
-
 begin_function
 name|void
 name|copymkdir

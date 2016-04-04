@@ -789,7 +789,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"nexus mapdev: start %jx, len %ld\n"
+literal|"nexus mapdev: start %jx, len %jd\n"
 argument_list|,
 operator|(
 name|uintmax_t

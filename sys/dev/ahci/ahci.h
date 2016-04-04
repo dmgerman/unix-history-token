@@ -3241,9 +3241,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|AHCI_Q_NOMSIX
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHCI_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\023FORCE_PI"          \ 	"\024RESTORE_CAP"
+value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\023FORCE_PI"          \ 	"\024RESTORE_CAP"	\ 	"\025NOMSIX"
 end_define
 
 begin_function_decl

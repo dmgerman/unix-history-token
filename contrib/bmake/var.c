@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.207 2016/03/11 15:12:39 matthias Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.207 2016/03/11 15:12:39 matthias Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.206 2016/03/07 20:20:35 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.207 2016/03/11 15:12:39 matthias Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14492,7 +14492,7 @@ case|:
 return|return
 name|UNCONST
 argument_list|(
-literal|"$(.ARCHIVE)"
+literal|"$(.MEMBER)"
 argument_list|)
 return|;
 case|case
@@ -14510,7 +14510,7 @@ case|:
 return|return
 name|UNCONST
 argument_list|(
-literal|"$(.MEMBER)"
+literal|"$(.ARCHIVE)"
 argument_list|)
 return|;
 block|}

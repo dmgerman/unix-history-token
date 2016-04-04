@@ -8649,7 +8649,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"using IRQ %lu for MSI-X\n"
+literal|"using IRQ %ju for MSI-X\n"
 argument_list|,
 name|rle
 operator|->
@@ -8666,7 +8666,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"using IRQs %lu"
+literal|"using IRQs %ju"
 argument_list|,
 name|rle
 operator|->
@@ -8755,7 +8755,7 @@ block|}
 comment|/* Start new range. */
 name|printf
 argument_list|(
-literal|",%lu"
+literal|",%ju"
 argument_list|,
 name|rle
 operator|->
@@ -17908,7 +17908,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"allocating %lu bus%s failed\n"
+literal|"allocating %ju bus%s failed\n"
 argument_list|,
 name|count
 argument_list|,
@@ -17935,7 +17935,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"Lazy allocation of %lu bus%s at %lu\n"
+literal|"Lazy allocation of %ju bus%s at %ju\n"
 argument_list|,
 name|count
 argument_list|,
@@ -21811,7 +21811,7 @@ literal|"port"
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -21824,7 +21824,7 @@ literal|"mem"
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-literal|"%#lx"
+literal|"%#jx"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -21837,7 +21837,7 @@ literal|"irq"
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-literal|"%ld"
+literal|"%jd"
 argument_list|)
 expr_stmt|;
 if|if
@@ -24923,7 +24923,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%#lx bytes of rid %#x res %d failed (%#lx, %#lx).\n"
+literal|"%#jx bytes of rid %#x res %d failed (%#jx, %#jx).\n"
 argument_list|,
 name|count
 argument_list|,
@@ -24949,7 +24949,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"Lazy allocation of %#lx bytes rid %#x type %d at %#lx\n"
+literal|"Lazy allocation of %#jx bytes rid %#x type %d at %#jx\n"
 argument_list|,
 name|count
 argument_list|,
@@ -26269,7 +26269,7 @@ name|dev
 argument_list|,
 literal|"delete_resource: "
 literal|"Resource still owned by child, oops. "
-literal|"(type=%d, rid=%d, addr=%lx)\n"
+literal|"(type=%d, rid=%d, addr=%jx)\n"
 argument_list|,
 name|type
 argument_list|,

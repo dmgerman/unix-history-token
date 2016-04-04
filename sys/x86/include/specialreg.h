@@ -2510,6 +2510,17 @@ name|MSR_PP1_ENERGY_STATUS
 value|0x641
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSR_TSC_DEADLINE
+value|0x6e0
+end_define
+
+begin_comment
+comment|/* Writes are not serializing */
+end_comment
+
 begin_comment
 comment|/*  * VMX MSRs  */
 end_comment
@@ -2620,7 +2631,7 @@ value|0x490
 end_define
 
 begin_comment
-comment|/*  * X2APIC MSRs  */
+comment|/*  * X2APIC MSRs.  * Writes are not serializing.  */
 end_comment
 
 begin_define

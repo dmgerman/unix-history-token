@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reader.c,v 1.59 2015/07/11 00:39:03 tom Exp $ */
+comment|/* $Id: reader.c,v 1.60 2016/03/25 00:51:07 tom Exp $ */
 end_comment
 
 begin_include
@@ -3638,8 +3638,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|i
-operator|=
+operator|(
+name|void
+operator|)
 name|trim_blanks
 argument_list|(
 name|buf

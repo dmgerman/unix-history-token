@@ -2524,7 +2524,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%s: assign 0x%lx:0x%lx%s\n"
+literal|"%s: assign 0x%jx:0x%jx%s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2575,7 +2575,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%s: no mapping for 0x%lx:0x%lx\n"
+literal|"%s: no mapping for 0x%jx:0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2623,7 +2623,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%s: cannot reserve 0x%lx:0x%lx\n"
+literal|"%s: cannot reserve 0x%jx:0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2804,7 +2804,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"%s: no mapping for 0x%lx:0x%lx\n"
+literal|"%s: no mapping for 0x%jx:0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,

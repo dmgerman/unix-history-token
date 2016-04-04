@@ -146,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<powerpc/ofw/ofw_pci.h>
+file|<dev/ofw/ofwpci.h>
 end_include
 
 begin_include

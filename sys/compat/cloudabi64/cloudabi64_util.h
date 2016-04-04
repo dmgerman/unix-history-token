@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_syscalldefs.h>
+file|<contrib/cloudabi/cloudabi64_types.h>
 end_include
 
 begin_struct_decl

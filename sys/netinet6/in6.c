@@ -10245,7 +10245,6 @@ name|if_type
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|&
 name|lle
 operator|->
 name|ll_addr

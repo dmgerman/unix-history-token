@@ -1517,7 +1517,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s%lx"
+literal|"%s%jx"
 argument_list|,
 operator|(
 operator|(
@@ -1548,7 +1548,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s%lx-0x%lx"
+literal|"%s%jx-0x%jx"
 argument_list|,
 operator|(
 operator|(
@@ -1646,7 +1646,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s%lx"
+literal|"%s%jx"
 argument_list|,
 operator|(
 operator|(
@@ -1677,7 +1677,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s%lx-0x%lx"
+literal|"%s%jx-0x%jx"
 argument_list|,
 operator|(
 operator|(
@@ -1766,7 +1766,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"irq %ld"
+literal|"irq %jd"
 argument_list|,
 name|rle
 operator|->
@@ -1832,7 +1832,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"drq %lx"
+literal|"drq %jx"
 argument_list|,
 name|rle
 operator|->

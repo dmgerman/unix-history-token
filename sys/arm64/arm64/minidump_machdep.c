@@ -947,6 +947,9 @@ parameter_list|)
 block|{
 name|pd_entry_t
 modifier|*
+name|l0
+decl_stmt|,
+modifier|*
 name|l1
 decl_stmt|,
 modifier|*
@@ -1028,6 +1031,9 @@ name|pmap_kernel
 argument_list|()
 argument_list|,
 name|va
+argument_list|,
+operator|&
+name|l0
 argument_list|,
 operator|&
 name|l1
@@ -1627,6 +1633,9 @@ name|pmap_kernel
 argument_list|()
 argument_list|,
 name|va
+argument_list|,
+operator|&
+name|l0
 argument_list|,
 operator|&
 name|l1

@@ -1690,7 +1690,7 @@ name|sscanf
 argument_list|(
 name|ln
 argument_list|,
-literal|"%4x:"
+literal|"%6x:"
 argument_list|,
 operator|&
 name|curchar
@@ -1723,11 +1723,17 @@ name|height
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* ln is guaranteed to have a colon here. */
 name|p
 operator|=
+name|strchr
+argument_list|(
 name|ln
+argument_list|,
+literal|':'
+argument_list|)
 operator|+
-literal|5
+literal|1
 expr_stmt|;
 name|chars_per_row
 operator|=

@@ -523,6 +523,9 @@ expr_stmt|;
 name|_malloc_prefork
 argument_list|()
 expr_stmt|;
+name|__thr_pshared_atfork_pre
+argument_list|()
+expr_stmt|;
 name|_rtld_atfork_pre
 argument_list|(
 name|rtld_locks
@@ -611,11 +614,16 @@ if|if
 condition|(
 name|was_threaded
 condition|)
+block|{
 name|_rtld_atfork_post
 argument_list|(
 name|rtld_locks
 argument_list|)
 expr_stmt|;
+name|__thr_pshared_atfork_post
+argument_list|()
+expr_stmt|;
+block|}
 name|_thr_setthreaded
 argument_list|(
 literal|0
@@ -713,6 +721,9 @@ name|_rtld_atfork_post
 argument_list|(
 name|rtld_locks
 argument_list|)
+expr_stmt|;
+name|__thr_pshared_atfork_post
+argument_list|()
 expr_stmt|;
 name|_malloc_postfork
 argument_list|()

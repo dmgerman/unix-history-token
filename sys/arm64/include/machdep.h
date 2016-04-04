@@ -32,6 +32,10 @@ decl_stmt|;
 name|vm_offset_t
 name|kern_stack
 decl_stmt|;
+name|vm_offset_t
+name|kern_l0pt
+decl_stmt|;
+comment|/* L1 page table for the kernel */
 block|}
 struct|;
 end_struct
@@ -57,6 +61,20 @@ name|initarm
 parameter_list|(
 name|struct
 name|arm64_bootparams
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|pagezero
+function_decl|)
+parameter_list|(
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

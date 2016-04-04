@@ -784,7 +784,7 @@ name|start
 expr_stmt|;
 name|count
 operator|=
-name|ulmax
+name|ummax
 argument_list|(
 name|count
 argument_list|,
@@ -795,7 +795,7 @@ argument_list|)
 expr_stmt|;
 name|end
 operator|=
-name|ulmax
+name|ummax
 argument_list|(
 name|rle
 operator|->

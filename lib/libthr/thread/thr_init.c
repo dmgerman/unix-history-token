@@ -406,12 +406,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pid_t
-name|_thr_pid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|_thr_is_smp
 init|=
@@ -1593,8 +1587,6 @@ name|curthread
 parameter_list|)
 block|{
 name|int
-name|fd
-decl_stmt|,
 name|first
 decl_stmt|,
 name|dlopened
@@ -1655,108 +1647,6 @@ expr_stmt|;
 name|__thr_interpose_libc
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Check for the special case of this process running as 	 * or in place of init as pid = 1: 	 */
-if|if
-condition|(
-operator|(
-name|_thr_pid
-operator|=
-name|getpid
-argument_list|()
-operator|)
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* 		 * Setup a new session for this process which is 		 * assumed to be running as root. 		 */
-if|if
-condition|(
-name|setsid
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-name|PANIC
-argument_list|(
-literal|"Can't set session ID"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|revoke
-argument_list|(
-name|_PATH_CONSOLE
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Can't revoke console"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|__sys_openat
-argument_list|(
-name|AT_FDCWD
-argument_list|,
-name|_PATH_CONSOLE
-argument_list|,
-name|O_RDWR
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Can't open console"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|setlogin
-argument_list|(
-literal|"root"
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|PANIC
-argument_list|(
-literal|"Can't set login to root"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|_ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|TIOCSCTTY
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|PANIC
-argument_list|(
-literal|"Can't set controlling terminal"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Initialize pthread private data. */
 name|init_private
 argument_list|()
@@ -2144,9 +2034,6 @@ expr_stmt|;
 name|_thr_list_init
 argument_list|()
 expr_stmt|;
-name|__thr_pshared_init
-argument_list|()
-expr_stmt|;
 name|_thr_wake_addr_init
 argument_list|()
 expr_stmt|;
@@ -2169,6 +2056,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|__thr_pshared_init
+argument_list|()
+expr_stmt|;
 comment|/* Find the stack top */
 name|mib
 index|[

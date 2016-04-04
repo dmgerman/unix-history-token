@@ -161,11 +161,11 @@ begin_struct
 struct|struct
 name|autofs_node
 block|{
-name|TAILQ_ENTRY
+name|RB_ENTRY
 argument_list|(
 argument|autofs_node
 argument_list|)
-name|an_next
+name|an_link
 expr_stmt|;
 name|char
 modifier|*
@@ -179,8 +179,9 @@ name|autofs_node
 modifier|*
 name|an_parent
 decl_stmt|;
-name|TAILQ_HEAD
+name|RB_HEAD
 argument_list|(
+argument|autofs_node_tree
 argument_list|,
 argument|autofs_node
 argument_list|)
@@ -571,6 +572,20 @@ name|vpp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|RB_PROTOTYPE
+argument_list|(
+name|autofs_node_tree
+argument_list|,
+name|autofs_node
+argument_list|,
+name|an_link
+argument_list|,
+name|autofs_node_cmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

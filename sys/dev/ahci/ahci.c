@@ -3512,7 +3512,7 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-name|long
+name|rman_res_t
 name|st
 decl_stmt|;
 name|int

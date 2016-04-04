@@ -155,6 +155,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_FIRMWARE
+value|"/usr/share/firmware"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_FTPUSERS
 value|"/etc/ftpusers"
 end_define
