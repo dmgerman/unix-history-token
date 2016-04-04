@@ -85,6 +85,8 @@ name|void
 modifier|*
 parameter_list|,
 name|cpuset_t
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_typedef

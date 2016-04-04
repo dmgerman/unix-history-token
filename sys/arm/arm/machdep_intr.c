@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: intr.c,v 1.12 2003/07/15 00:24:41 lukem Exp $	*/
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 2004 Olivier Houchard.  * Copyright (c) 1994-1998 Mark Brinicombe.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Brinicombe  *	for the NetBSD Project.  * 4. The name of the company nor the name of the author may be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Soft interrupt and other generic interrupt functions.  */
+comment|/*-  * Copyright (c) 2015-2016 Svatopluk Kraus  * Copyright (c) 2015-2016 Michal Meloun  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -196,12 +192,6 @@ name|ipi_sources
 index|[
 name|INTR_IPI_COUNT
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|ipi_next_num
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +409,8 @@ operator|->
 name|ii_send_arg
 argument_list|,
 name|cpus
+argument_list|,
+name|ipi
 argument_list|)
 expr_stmt|;
 block|}
@@ -574,6 +566,9 @@ name|arg
 parameter_list|,
 name|cpuset_t
 name|cpus
+parameter_list|,
+name|u_int
+name|ipi
 parameter_list|)
 block|{
 name|KASSERT
@@ -596,6 +591,8 @@ argument_list|,
 name|arg
 argument_list|,
 name|cpus
+argument_list|,
+name|ipi
 argument_list|)
 expr_stmt|;
 block|}
@@ -647,27 +644,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|isrc
-operator|=
-name|intr_isrc_alloc
-argument_list|(
-name|INTR_ISRCT_NAMESPACE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|isrc
-operator|->
-name|isrc_nspc_type
-operator|=
-name|INTR_IRQ_NSPC_IPI
-expr_stmt|;
-name|isrc
-operator|->
-name|isrc_nspc_num
-operator|=
-name|ipi_next_num
-expr_stmt|;
 name|error
 operator|=
 name|PIC_IPI_SETUP
@@ -676,6 +652,7 @@ name|intr_irq_root_dev
 argument_list|,
 name|ipi
 argument_list|,
+operator|&
 name|isrc
 argument_list|)
 expr_stmt|;
@@ -690,20 +667,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|ipi_next_num
-operator|++
-expr_stmt|;
-name|isrc
-operator|->
-name|isrc_dev
-operator|=
-name|intr_irq_root_dev
-expr_stmt|;
 name|isrc
 operator|->
 name|isrc_handlers
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 name|intr_ipi_setup
 argument_list|(
