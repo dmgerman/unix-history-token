@@ -37,6 +37,12 @@ name|MAX_GPIO_INTRS
 value|8
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_struct
 struct|struct
 name|ti_gpio_mask_arg
@@ -52,6 +58,37 @@ block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|ti_gpio_irqsrc
+block|{
+name|struct
+name|intr_irqsrc
+name|tgi_isrc
+decl_stmt|;
+name|u_int
+name|tgi_irq
+decl_stmt|;
+name|uint32_t
+name|tgi_mask
+decl_stmt|;
+name|uint32_t
+name|tgi_cfgreg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  *	Structure that stores the driver context.  *  *	This structure is allocated during driver attach.  */
 end_comment
@@ -66,6 +103,9 @@ decl_stmt|;
 name|device_t
 name|sc_busdev
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
 comment|/* Interrupt trigger type and level. */
 name|enum
 name|intr_trigger
@@ -77,6 +117,8 @@ name|intr_polarity
 modifier|*
 name|sc_irq_polarity
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|sc_bank
 decl_stmt|;
@@ -103,6 +145,9 @@ name|resource
 modifier|*
 name|sc_irq_res
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
 comment|/* Interrupt events. */
 name|struct
 name|intr_event
@@ -115,6 +160,15 @@ name|ti_gpio_mask_arg
 modifier|*
 name|sc_mask_args
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|ti_gpio_irqsrc
+modifier|*
+name|sc_isrcs
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* The handle for the register IRQ handlers. */
 name|void
 modifier|*
