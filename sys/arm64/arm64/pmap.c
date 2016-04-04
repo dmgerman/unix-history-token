@@ -902,27 +902,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|pagezero
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|bzero
-argument_list|(
-name|p
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define

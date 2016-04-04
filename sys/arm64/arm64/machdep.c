@@ -474,6 +474,50 @@ begin_comment
 comment|/* The size of cache line the dc zva zeroes */
 end_comment
 
+begin_comment
+comment|/* pagezero_* implementations are provided in support.S */
+end_comment
+
+begin_function_decl
+name|void
+name|pagezero_simple
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pagezero_cache
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* pagezero_simple is default pagezero */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|pagezero
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+init|=
+name|pagezero_simple
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -3756,6 +3800,11 @@ name|int
 argument_list|)
 operator|<<
 name|dczva_line_shift
+expr_stmt|;
+comment|/* Change pagezero function */
+name|pagezero
+operator|=
+name|pagezero_cache
 expr_stmt|;
 block|}
 block|}
