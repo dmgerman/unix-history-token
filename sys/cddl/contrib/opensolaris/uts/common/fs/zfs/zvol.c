@@ -3153,8 +3153,8 @@ operator|==
 name|ZFS_VOLMODE_DEV
 condition|)
 block|{
-if|if
-condition|(
+name|error
+operator|=
 name|make_dev_p
 argument_list|(
 name|MAKEDEV_CHECKNAME
@@ -3181,6 +3181,10 @@ name|ZVOL_DRIVER
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -3211,10 +3215,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|SET_ERROR
-argument_list|(
-name|ENXIO
-argument_list|)
+name|error
 operator|)
 return|;
 block|}
