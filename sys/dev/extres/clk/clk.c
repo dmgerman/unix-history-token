@@ -1882,7 +1882,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Clock: %s, parent: %s(%d), freq: %llu\n"
+literal|"Clock: %s, parent: %s(%d), freq: %ju\n"
 argument_list|,
 name|clknode
 operator|->
@@ -1906,7 +1906,10 @@ name|clknode
 operator|->
 name|parent_idx
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|(
 name|rv
 operator|==
@@ -1916,7 +1919,7 @@ condition|?
 name|freq
 else|:
 name|rv
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
