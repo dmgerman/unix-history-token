@@ -141,6 +141,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCP7941X_CTRL_SQWE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DS1307_CTRL_SQWE
 value|(1<< 4)
 end_define
