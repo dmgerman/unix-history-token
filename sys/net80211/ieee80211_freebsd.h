@@ -1191,7 +1191,7 @@ value|M_PROTO6
 end_define
 
 begin_comment
-comment|/* fast frame */
+comment|/* fast frame / A-MSDU */
 end_comment
 
 begin_define
