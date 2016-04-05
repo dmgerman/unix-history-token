@@ -502,6 +502,12 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_function
 name|void
 name|pic_ipi_send
@@ -664,6 +670,11 @@ name|ipi
 parameter_list|)
 block|{ }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
