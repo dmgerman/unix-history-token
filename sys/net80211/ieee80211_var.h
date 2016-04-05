@@ -1605,12 +1605,13 @@ modifier|*
 name|iv_ic
 decl_stmt|;
 comment|/* back ptr to common state */
-specifier|const
-name|uint8_t
-modifier|*
-name|iv_myaddr
-decl_stmt|;
 comment|/* MAC address: ifp or ic */
+name|uint8_t
+name|iv_myaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|iv_debug
 decl_stmt|;
