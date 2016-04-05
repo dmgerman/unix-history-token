@@ -50,21 +50,21 @@ begin_define
 define|#
 directive|define
 name|ICONV_ENGINE
-value|"iconv"
+value|"libiconv"
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICONV_OPEN
-value|"iconv_open"
+value|"libiconv_open"
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICONV_CLOSE
-value|"iconv_close"
+value|"libiconv_close"
 end_define
 
 begin_typedef
