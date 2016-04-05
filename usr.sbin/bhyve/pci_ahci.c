@@ -2018,9 +2018,6 @@ name|int
 name|slot
 decl_stmt|;
 name|int
-name|ncq
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|assert
@@ -2102,14 +2099,6 @@ index|]
 operator|==
 name|ATA_SEND_FPDMA_QUEUED
 condition|)
-name|ncq
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ncq
-condition|)
 name|p
 operator|->
 name|sact
@@ -2121,6 +2110,7 @@ operator|<<
 name|slot
 operator|)
 expr_stmt|;
+comment|/* NCQ */
 else|else
 name|p
 operator|->
