@@ -4682,17 +4682,6 @@ operator|>=
 name|netisr_maxthreads
 condition|)
 break|break;
-comment|/* XXXRW: Is skipping absent CPUs still required here? */
-if|if
-condition|(
-name|CPU_ABSENT
-argument_list|(
-name|pc
-operator|->
-name|pc_cpuid
-argument_list|)
-condition|)
-continue|continue;
 comment|/* Worker will already be present for boot CPU. */
 if|if
 condition|(
