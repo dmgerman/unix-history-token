@@ -730,6 +730,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * 802.11n rate manipulation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HT_RC_2_MCS
+parameter_list|(
+name|_rc
+parameter_list|)
+value|((_rc)& 0x1f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HT_RC_2_STREAMS
+parameter_list|(
+name|_rc
+parameter_list|)
+value|((((_rc)& 0x78)>> 3) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_HT_RATE
+parameter_list|(
+name|_rc
+parameter_list|)
+value|( (_rc)& IEEE80211_RATE_MCS)
+end_define
+
 begin_function_decl
 name|uint32_t
 name|ieee80211_compute_duration_ht
