@@ -640,8 +640,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|smp_started
-operator|&&
 operator|!
 name|CPU_EMPTY
 argument_list|(
