@@ -3402,6 +3402,17 @@ begin_comment
 comment|/* CAPABILITY: do sleep here */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_SWAMSDUTX
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: software A-MSDU TX */
+end_comment
+
 begin_comment
 comment|/* 0x7c0000 available */
 end_comment
