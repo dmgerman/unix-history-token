@@ -772,6 +772,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Add a cache level to the cache topology description.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1025,6 +1029,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Determine topology of processing units and caches for AMD CPUs.  * See:  *  - AMD CPUID Specification (Publication # 25481)  *  - BKDG For AMD Family 10h Processors (Publication # 31116), section 2.15  *  - BKDG for AMD NPT Family 0Fh Processors (Publication # 32559)  * XXX At the moment the code does not recognize grouping of AMD CMT threads,  * if supported, into cores, so each thread is treated as being in its own  * core.  In other words, each logical CPU is considered to be a core.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1332,6 +1340,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Determine topology of processing units for Intel CPUs  * using CPUID Leaf 1 and Leaf 4, if supported.  * See:  *  - Intel 64 Architecture Processor Topology Enumeration  *  - Intel 64 and IA-32 ArchitecturesSoftware Developerâs Manual,  *    Volume 3A: System Programming Guide, PROGRAMMING CONSIDERATIONS  *    FOR HARDWARE MULTI-THREADING CAPABLE PROCESSORS  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1450,6 +1462,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Determine topology of processing units for Intel CPUs  * using CPUID Leaf 11, if supported.  * See:  *  - Intel 64 Architecture Processor Topology Enumeration  *  - Intel 64 and IA-32 ArchitecturesSoftware Developerâs Manual,  *    Volume 3A: System Programming Guide, PROGRAMMING CONSIDERATIONS  *    FOR HARDWARE MULTI-THREADING CAPABLE PROCESSORS  */
+end_comment
 
 begin_function
 specifier|static
@@ -1600,6 +1616,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Determine topology of caches for Intel CPUs.  * See:  *  - Intel 64 Architecture Processor Topology Enumeration  *  - Intel 64 and IA-32 Architectures Software Developerâs Manual  *    Volume 2A: Instruction Set Reference, A-M,  *    CPUID instruction  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1748,6 +1768,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Determine topology of processing units and caches for Intel CPUs.  * See:  *  - Intel 64 Architecture Processor Topology Enumeration  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1756,7 +1780,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * See Intel(R) 64 Architecture Processor 	 * Topology Enumeration article for details. 	 * 	 * Note that 0x1<= cpu_high< 4 case should be 	 * compatible with topo_probe_intel_0x4() logic when 	 * CPUID.1:EBX[23:16]> 0 (cpu_cores will be 1) 	 * or it should trigger the fallback otherwise. 	 */
+comment|/* 	 * Note that 0x1<= cpu_high< 4 case should be 	 * compatible with topo_probe_intel_0x4() logic when 	 * CPUID.1:EBX[23:16]> 0 (cpu_cores will be 1) 	 * or it should trigger the fallback otherwise. 	 */
 if|if
 condition|(
 name|cpu_high
@@ -2846,6 +2870,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Add a scheduling group, a group of logical processors sharing  * a particular cache (and, thus having an affinity), to the scheduling  * topology.  * This function recursively works on lower level caches.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2943,6 +2971,7 @@ name|root
 operator|->
 name|subtype
 expr_stmt|;
+comment|/* 	 * Check how many core nodes we have under the given root node. 	 * If we have multiple logical processors, but not multiple 	 * cores, then those processors must be hardware threads. 	 */
 name|ncores
 operator|=
 literal|0
@@ -3015,6 +3044,7 @@ name|cg_flags
 operator|=
 name|CG_FLAG_SMT
 expr_stmt|;
+comment|/* 	 * Find out how many cache nodes we have under the given root node. 	 * We ignore cache nodes that cover all the same processors as the 	 * root node.  Also, we do not descend below found cache nodes. 	 * That is, we count top-level "non-redundant" caches under the root 	 * node. 	 */
 name|nchildren
 operator|=
 literal|0
@@ -3101,6 +3131,7 @@ name|cg_children
 operator|=
 name|nchildren
 expr_stmt|;
+comment|/* 	 * Now find again the same cache nodes as above and recursively 	 * build scheduling topologies for them. 	 */
 name|node
 operator|=
 name|root
@@ -3199,6 +3230,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Build the MI scheduling topology from the discovered hardware topology.  */
+end_comment
+
 begin_function
 name|struct
 name|cpu_group
@@ -3247,6 +3282,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Add a logical CPU to the topology.  */
+end_comment
 
 begin_function
 name|void
