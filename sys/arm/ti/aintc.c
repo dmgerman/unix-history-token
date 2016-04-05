@@ -216,7 +216,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTS_SIR_ACTIVE_MASK
+name|INTC_SIR_ACTIVE_MASK
 value|0x7f
 end_define
 
@@ -567,7 +567,7 @@ block|}
 comment|/* Only level-sensitive interrupts detection is supported. */
 name|irq
 operator|&=
-name|INTS_SIR_ACTIVE_MASK
+name|INTC_SIR_ACTIVE_MASK
 expr_stmt|;
 if|if
 condition|(
