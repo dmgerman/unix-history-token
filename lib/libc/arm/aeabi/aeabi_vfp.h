@@ -67,7 +67,8 @@ name|AEABI_ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|ENTRY(__aeabi_ ## x)
+define|\
+value|.set __fbsd_ ## x, __aeabi_ ## x;		\     ENTRY(__aeabi_ ## x)
 end_define
 
 begin_define
