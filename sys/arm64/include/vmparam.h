@@ -331,13 +331,6 @@ name|DMAP_MAX_ADDRESS
 value|(0xffffffdfffffffffUL)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
-name|dmap_phys_base
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -545,6 +538,19 @@ directive|define
 name|UMA_MD_SMALL_ALLOC
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -565,6 +571,11 @@ name|vm_offset_t
 name|init_pt_va
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
