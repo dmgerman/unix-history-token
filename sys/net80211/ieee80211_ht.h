@@ -166,6 +166,21 @@ value|(((tap)->txa_flags& IEEE80211_AGGR_RUNNING) != 0)
 end_define
 
 begin_comment
+comment|/* return non-zero if AMPDU tx for the TID was NACKed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AMPDU_NACKED
+parameter_list|(
+name|tap
+parameter_list|)
+define|\
+value|(!! ((tap)->txa_flags& IEEE80211_AGGR_NAK))
+end_define
+
+begin_comment
 comment|/* return non-zero if AMPDU tx for the TID is running or started */
 end_comment
 

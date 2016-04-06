@@ -4680,15 +4680,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
-elseif|else
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_ath_flags
-operator|&
-name|IEEE80211_NODE_ATH
-condition|)
+comment|/* Always do FF node cleanup; for A-MSDU */
 name|ieee80211_ff_node_cleanup
 argument_list|(
 name|ni
