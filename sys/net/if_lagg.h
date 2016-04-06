@@ -19,6 +19,12 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -746,13 +752,63 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* List of interfaces to have the MAC address modified */
+comment|/* Adding new entry here, SHOULD also have relevant entry in llq_action */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|LAGG_LLQ_MIN
+init|=
+literal|0
+block|,
+name|LAGG_LLQ_LLADDR
+init|=
+name|LAGG_LLQ_MIN
+block|,
+comment|/* MAC Address index */
+name|LAGG_LLQ_MTU
+block|,
+comment|/*  MTU index */
+name|LAGG_LLQ_MAX
+comment|/* This SHOULD be the last entry */
+block|}
+name|lagg_llq_idx
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Common list entry definition for each taskq operation */
 end_comment
 
 begin_struct
 struct|struct
-name|lagg_llq
+name|lagg_llq_slist_entry
 block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|lagg_llq_slist_entry
+argument_list|)
+name|llq_entries
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Context for lladdr llq operation part of lagg soft context */
+end_comment
+
+begin_struct
+struct|struct
+name|lagg_lladdr_llq_ctxt
+block|{
+name|struct
+name|lagg_llq_slist_entry
+name|llq_cmn
+decl_stmt|;
+comment|/* This SHOULD be the first 						member */
 name|struct
 name|ifnet
 modifier|*
@@ -767,12 +823,50 @@ decl_stmt|;
 name|lagg_llqtype
 name|llq_type
 decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|lagg_llq
-argument_list|)
-name|llq_entries
-expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Context for mtu llq operation part of lagg soft context */
+end_comment
+
+begin_struct
+struct|struct
+name|lagg_mtu_llq_ctxt
+block|{
+name|struct
+name|lagg_llq_slist_entry
+name|llq_cmn
+decl_stmt|;
+comment|/* This SHOULD be the first 						member */
+name|struct
+name|ifnet
+modifier|*
+name|llq_ifp
+decl_stmt|;
+name|struct
+name|ifreq
+name|llq_ifr
+decl_stmt|;
+name|uint32_t
+name|llq_old_mtu
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|llq_ioctl
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -786,6 +880,49 @@ name|val
 index|[
 name|IFCOUNTERS
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Conditional variables context for lagg operations */
+end_comment
+
+begin_struct
+struct|struct
+name|lagg_signal
+block|{
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|struct
+name|cv
+name|cv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Lagg MTU context */
+end_comment
+
+begin_struct
+struct|struct
+name|lagg_mtu_ctxt
+block|{
+name|struct
+name|lagg_signal
+name|mtu_sync
+decl_stmt|;
+comment|/* Synchronize cmd completion */
+name|int
+name|mtu_cmd_ret
+decl_stmt|;
+name|bool
+name|busy
 decl_stmt|;
 block|}
 struct|;
@@ -861,17 +998,26 @@ name|sc_entries
 expr_stmt|;
 name|struct
 name|task
-name|sc_lladdr_task
+name|sc_llq_task
 decl_stmt|;
+comment|/* SYNC& ASYNC ops 							enqueued here */
+name|struct
+name|lagg_mtu_ctxt
+name|sc_mtu_ctxt
+decl_stmt|;
+comment|/* MTU programming */
+comment|/*  List of LLQs */
 name|SLIST_HEAD
 argument_list|(
 argument|__llqhd
 argument_list|,
-argument|lagg_llq
+argument|lagg_llq_slist_entry
 argument_list|)
-name|sc_llq_head
+name|sc_llq
+index|[
+name|LAGG_LLQ_MAX
+index|]
 expr_stmt|;
-comment|/* interfaces to program 							   the lladdr on */
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
