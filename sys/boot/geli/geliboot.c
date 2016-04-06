@@ -202,12 +202,33 @@ decl_stmt|;
 name|u_char
 name|buf
 index|[
-name|DEV_BSIZE
+name|DEV_GELIBOOT_BSIZE
 index|]
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|off_t
+name|alignsector
+decl_stmt|;
+name|alignsector
+operator|=
+operator|(
+name|lastsector
+operator|*
+name|DEV_BSIZE
+operator|)
+operator|&
+operator|~
+call|(
+name|off_t
+call|)
+argument_list|(
+name|DEV_GELIBOOT_BSIZE
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|read_func
@@ -216,20 +237,12 @@ name|NULL
 argument_list|,
 name|dskp
 argument_list|,
-operator|(
-name|off_t
-operator|)
-name|lastsector
-operator|*
-name|DEV_BSIZE
+name|alignsector
 argument_list|,
 operator|&
 name|buf
 argument_list|,
-operator|(
-name|size_t
-operator|)
-name|DEV_BSIZE
+name|DEV_GELIBOOT_BSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -245,11 +258,18 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* Extract the last DEV_BSIZE bytes from the block. */
 name|error
 operator|=
 name|eli_metadata_decode
 argument_list|(
 name|buf
+operator|+
+operator|(
+name|DEV_GELIBOOT_BSIZE
+operator|-
+name|DEV_BSIZE
+operator|)
 argument_list|,
 operator|&
 name|md
@@ -279,7 +299,7 @@ name|G_ELI_FLAG_ONETIME
 operator|)
 condition|)
 block|{
-comment|/* Swap device, skip it */
+comment|/* Swap device, skip it. */
 return|return
 operator|(
 literal|1
@@ -298,7 +318,7 @@ name|G_ELI_FLAG_BOOT
 operator|)
 condition|)
 block|{
-comment|/* Disk is not GELI boot device, skip it */
+comment|/* Disk is not GELI boot device, skip it. */
 return|return
 operator|(
 literal|1
@@ -314,8 +334,8 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* XXX TODO: Support loading key files */
-comment|/* Disk does not have a passphrase, skip it */
+comment|/* XXX TODO: Support loading key files. */
+comment|/* Disk does not have a passphrase, skip it. */
 return|return
 operator|(
 literal|1
@@ -549,7 +569,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* XXX TODO: Support loading key files */
+comment|/* XXX TODO: Support loading key files. */
 return|return
 operator|(
 literal|1
@@ -617,8 +637,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Calculating GELI Decryption Key disk%dp%d @ %lu "
-literal|"iterations...\n"
+literal|"Calculating GELI Decryption Key disk%dp%d @ %lu"
+literal|" iterations...\n"
 argument_list|,
 name|dskp
 operator|->
@@ -930,7 +950,7 @@ name|mkey
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the per-sector IV */
+comment|/* Initialize the per-sector IV. */
 switch|switch
 condition|(
 name|geli_e
@@ -988,7 +1008,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Disk not found */
+comment|/* Disk not found. */
 return|return
 operator|(
 literal|2
@@ -1079,7 +1099,7 @@ name|int
 name|error
 decl_stmt|;
 name|off_t
-name|os
+name|dstoff
 decl_stmt|;
 name|uint64_t
 name|keyno
@@ -1087,12 +1107,18 @@ decl_stmt|;
 name|size_t
 name|n
 decl_stmt|,
-name|nb
+name|nsec
+decl_stmt|,
+name|secsize
 decl_stmt|;
 name|struct
 name|g_eli_key
 name|gkey
 decl_stmt|;
+name|pbuf
+operator|=
+name|buf
+expr_stmt|;
 name|SLIST_FOREACH_SAFE
 argument_list|(
 argument|geli_e
@@ -1118,46 +1144,59 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|nb
+name|secsize
+operator|=
+name|geli_e
+operator|->
+name|sc
+operator|.
+name|sc_sectorsize
+expr_stmt|;
+name|nsec
 operator|=
 name|bytes
 operator|/
-name|DEV_BSIZE
+name|secsize
 expr_stmt|;
+if|if
+condition|(
+name|nsec
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * A read of less than the GELI sector size has been 			 * requested. The caller provided destination buffer may 			 * not be big enough to boost the read to a full sector, 			 * so just attempt to decrypt the truncated sector. 			 */
+name|secsize
+operator|=
+name|bytes
+expr_stmt|;
+name|nsec
+operator|=
+literal|1
+expr_stmt|;
+block|}
 for|for
 control|(
 name|n
 operator|=
 literal|0
+operator|,
+name|dstoff
+operator|=
+name|offset
 init|;
 name|n
 operator|<
-name|nb
+name|nsec
 condition|;
 name|n
 operator|++
+operator|,
+name|dstoff
+operator|+=
+name|secsize
 control|)
 block|{
-name|os
-operator|=
-name|offset
-operator|+
-operator|(
-name|n
-operator|*
-name|DEV_BSIZE
-operator|)
-expr_stmt|;
-name|pbuf
-operator|=
-name|buf
-operator|+
-operator|(
-name|n
-operator|*
-name|DEV_BSIZE
-operator|)
-expr_stmt|;
 name|g_eli_crypto_ivgen
 argument_list|(
 operator|&
@@ -1165,23 +1204,23 @@ name|geli_e
 operator|->
 name|sc
 argument_list|,
-name|os
+name|dstoff
 argument_list|,
 name|iv
 argument_list|,
 name|G_ELI_IVKEYLEN
 argument_list|)
 expr_stmt|;
-comment|/* Get the key that corresponds to this offset */
+comment|/* Get the key that corresponds to this offset. */
 name|keyno
 operator|=
 operator|(
-name|os
+name|dstoff
 operator|>>
 name|G_ELI_KEY_SHIFT
 operator|)
 operator|/
-name|DEV_BSIZE
+name|secsize
 expr_stmt|;
 name|g_eli_key_fill
 argument_list|(
@@ -1210,7 +1249,7 @@ literal|0
 argument_list|,
 name|pbuf
 argument_list|,
-name|DEV_BSIZE
+name|secsize
 argument_list|,
 name|gkey
 operator|.
@@ -1254,6 +1293,10 @@ name|error
 operator|)
 return|;
 block|}
+name|pbuf
+operator|+=
+name|secsize
+expr_stmt|;
 block|}
 name|bzero
 argument_list|(
