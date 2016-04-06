@@ -618,7 +618,10 @@ name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_AMPDU_TX
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -667,7 +670,7 @@ name|tap
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Operational, mark frame for aggregation. 			 * 			 * XXX do tx aggregation here 			 */
+comment|/* 				 * Operational, mark frame for aggregation. 				 * 				 * XXX do tx aggregation here 				 */
 name|m
 operator|->
 name|m_flags
@@ -694,7 +697,7 @@ name|tap
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Not negotiated yet, request service. 			 */
+comment|/* 				 * Not negotiated yet, request service. 				 */
 name|ieee80211_ampdu_request
 argument_list|(
 name|ni
@@ -705,13 +708,84 @@ expr_stmt|;
 comment|/* XXX hold frame for reply? */
 block|}
 block|}
-comment|/* 	 * XXX If we aren't doing AMPDU TX then we /could/ do 	 * fast-frames encapsulation, however right now this 	 * output logic doesn't handle that case. 	 * 	 * So we'll be limited to "fast-frames" xmit for non-11n STA 	 * and "no fast frames" xmit for 11n STAs. 	 * It'd be nice to eventually test fast-frames out by 	 * gracefully falling from failing A-MPDU transmission 	 * (driver says no, fail to negotiate it with peer) to 	 * using fast-frames. 	 * 	 * Note: we can actually put A-MSDU's inside an A-MPDU, 	 * so hopefully we can figure out how to make that particular 	 * combination work right. 	 */
+block|}
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
+comment|/* 	 * Check for AMSDU/FF; queue for aggregation 	 * 	 * Note: we don't bother trying to do fast frames or 	 * A-MSDU encapsulation for 802.3 drivers.  Now, we 	 * likely could do it for FF (because it's a magic 	 * atheros tunnel LLC type) but I don't think we're going 	 * to really need to.  For A-MSDU we'd have to set the 	 * A-MSDU QoS bit in the wifi header, so we just plain 	 * can't do it. 	 * 	 * Strictly speaking, we could actually /do/ A-MSDU / FF 	 * with A-MPDU together which for certain circumstances 	 * is beneficial (eg A-MSDU of TCK ACKs.)  However, 	 * I'll ignore that for now so existing behaviour is maintained. 	 * Later on it would be good to make "amsdu + ampdu" configurable. 	 */
 elseif|else
 if|if
 condition|(
+name|__predict_true
+argument_list|(
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_8023ENCAP
+operator|)
+operator|==
+literal|0
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|!
+name|mcast
+operator|)
+operator|&&
+name|ieee80211_amsdu_tx_ok
+argument_list|(
+name|ni
+argument_list|)
+condition|)
+block|{
+name|m
+operator|=
+name|ieee80211_amsdu_check
+argument_list|(
+name|ni
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* NB: any ni ref held on stageq */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SUPERG
+argument_list|,
+literal|"%s: amsdu_check queued frame\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+operator|!
+name|mcast
+operator|)
+operator|&&
 name|IEEE80211_ATH_CAP
 argument_list|(
 name|vap
@@ -739,11 +813,23 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: any ni ref held on stageq */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SUPERG
+argument_list|,
+literal|"%s: ff_check queued frame\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 endif|#
@@ -4804,6 +4890,11 @@ name|uint8_t
 modifier|*
 name|qos
 decl_stmt|;
+name|int
+name|is_amsdu
+init|=
+literal|0
+decl_stmt|;
 name|IEEE80211_TX_LOCK_ASSERT
 argument_list|(
 name|ic
@@ -5411,7 +5502,48 @@ block|{
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
-comment|/* 		 * Aggregated frame. 		 */
+comment|/* 		 * Aggregated frame.  Check if it's for AMSDU or FF. 		 * 		 * XXX TODO: IEEE80211_NODE_AMSDU* isn't implemented 		 * anywhere for some reason.  But, since 11n requires 		 * AMSDU RX, we can just assume "11n" == "AMSDU". 		 */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_SUPERG
+argument_list|,
+literal|"%s: called; M_FF\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ieee80211_amsdu_tx_ok
+argument_list|(
+name|ni
+argument_list|)
+condition|)
+block|{
+name|m
+operator|=
+name|ieee80211_amsdu_encap
+argument_list|(
+name|vap
+argument_list|,
+name|m
+argument_list|,
+name|hdrspace
+operator|+
+name|meshhdrsize
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+name|is_amsdu
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|m
 operator|=
 name|ieee80211_ff_encap
@@ -5427,6 +5559,7 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
@@ -6291,6 +6424,18 @@ index|]
 operator||=
 name|IEEE80211_FC0_SUBTYPE_QOS
 expr_stmt|;
+comment|/* 		 * If this is an A-MSDU then ensure we set the 		 * relevant field. 		 */
+if|if
+condition|(
+name|is_amsdu
+condition|)
+name|qos
+index|[
+literal|0
+index|]
+operator||=
+name|IEEE80211_QOS_AMSDU
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6373,6 +6518,18 @@ argument_list|(
 name|m
 argument_list|,
 name|seqno
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX TODO: we shouldn't allow EAPOL, etc that would 		 * be forced to be non-QoS traffic to be A-MSDU encapsulated. 		 */
+if|if
+condition|(
+name|is_amsdu
+condition|)
+name|printf
+argument_list|(
+literal|"%s: XXX ERROR: is_amsdu set; not QoS!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

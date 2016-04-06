@@ -4067,7 +4067,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compile the text following an a or i command.  */
+comment|/*  * Compile the text following an a, c, or i command.  */
 end_comment
 
 begin_function
@@ -4165,9 +4165,6 @@ expr_stmt|;
 name|p
 operator|=
 name|lbuf
-expr_stmt|;
-name|EATSPACE
-argument_list|()
 expr_stmt|;
 for|for
 control|(

@@ -862,7 +862,11 @@ expr_stmt|;
 block|}
 name|shift
 operator|=
+operator|(
 name|state
+operator|-
+literal|1
+operator|)
 operator|*
 name|SUPER_MUX_MUX_WIDTH
 expr_stmt|;

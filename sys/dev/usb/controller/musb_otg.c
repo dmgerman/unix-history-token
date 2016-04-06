@@ -12,7 +12,7 @@ comment|/*  * Thanks to Mentor Graphics for providing a reference driver for thi
 end_comment
 
 begin_comment
-comment|/*  * This file contains the driver for the Mentor Graphics Inventra USB  * 2.0 High Speed Dual-Role controller.  *  * NOTE: The current implementation only supports Device Side Mode!  */
+comment|/*  * This file contains the driver for the Mentor Graphics Inventra USB  * 2.0 High Speed Dual-Role controller.  *  */
 end_comment
 
 begin_ifdef

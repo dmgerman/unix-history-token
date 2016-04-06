@@ -135,17 +135,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_decl_stmt
 specifier|volatile
 name|cpuset_t
@@ -3581,6 +3570,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Add a child node with the given ID under the given parent.  * Do nothing if there is already a child with that ID.  */
+end_comment
+
 begin_function
 name|struct
 name|topo_node
@@ -3715,6 +3708,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Find a child node with the given ID under the given parent.  */
+end_comment
+
 begin_function
 name|struct
 name|topo_node
@@ -3785,6 +3782,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Given a node change the order of its parent's child nodes such  * that the node becomes the firt child while preserving the cyclic  * order of the children.  In other words, the given node is promoted  * by rotation.  */
+end_comment
 
 begin_function
 name|void
@@ -3904,6 +3905,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Iterate to the next node in the depth-first search (traversal) of  * the topology tree.  */
+end_comment
+
 begin_function
 name|struct
 name|topo_node
@@ -4007,6 +4012,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Iterate to the next node in the depth-first search of the topology tree,  * but without descending below the current node.  */
+end_comment
+
 begin_function
 name|struct
 name|topo_node
@@ -4088,6 +4097,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Assign the given ID to the given topology node that represents a logical  * processor.  */
+end_comment
 
 begin_function
 name|void
@@ -4212,6 +4225,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Check if the topology is uniform, that is, each package has the same number  * of cores in it and each core has the same number of threads (logical  * processors) in it.  If so, calculate the number of package, the number of  * cores per package and the number of logical processors per core.  * 'all' parameter tells whether to include administratively disabled logical  * processors into the analysis.  */
+end_comment
 
 begin_function
 name|int

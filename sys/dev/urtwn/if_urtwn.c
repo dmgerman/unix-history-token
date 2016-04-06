@@ -265,6 +265,23 @@ directive|include
 file|<net80211/ieee80211_ratectl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_superg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -3809,6 +3826,12 @@ comment|/* 802.11i */
 operator||
 name|IEEE80211_C_WME
 comment|/* 802.11e */
+operator||
+name|IEEE80211_C_SWAMSDUTX
+comment|/* Do software A-MSDU TX */
+operator||
+name|IEEE80211_C_FF
+comment|/* Atheros fast-frames */
 expr_stmt|;
 name|ic
 operator|->
@@ -3839,8 +3862,12 @@ name|ic_htcaps
 operator|=
 name|IEEE80211_HTC_HT
 operator||
-name|IEEE80211_HTC_AMPDU
-operator||
+if|#
+directive|if
+literal|0
+expr|IEEE80211_HTC_AMPDU |
+endif|#
+directive|endif
 name|IEEE80211_HTC_AMSDU
 operator||
 name|IEEE80211_HTCAP_MAXAMSDU_3839
@@ -5350,6 +5377,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+comment|/* 	 * For 88E chips we can tie the FF flushing here; 	 * this is where we do know exactly how deep the 	 * transmit queue is. 	 * 	 * But it won't work for R92 chips, so we can't 	 * take the easy way out. 	 */
 if|if
 condition|(
 name|sc
@@ -6466,7 +6494,9 @@ literal|"mbuf isn't NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|finish
+goto|;
 block|}
 name|STAILQ_REMOVE_HEAD
 argument_list|(
@@ -6694,6 +6724,38 @@ goto|;
 block|}
 break|break;
 block|}
+name|finish
+label|:
+comment|/* Finished receive; age anything left on the FF queue by a little bump */
+comment|/* 	 * XXX TODO: just make this a callout timer schedule so we can 	 * flush the FF staging queue if we're approaching idle. 	 */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+name|URTWN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ieee80211_ff_age_all
+argument_list|(
+name|ic
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|URTWN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Kick-start more transmit in case we stalled */
+name|urtwn_start
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6742,6 +6804,19 @@ name|m
 argument_list|,
 name|status
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_tx_n_active
+operator|>
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_tx_n_active
+operator|--
 expr_stmt|;
 name|data
 operator|->
@@ -7285,6 +7360,21 @@ argument_list|(
 name|xfer
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_ic
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|urtwn_data
 modifier|*
@@ -7378,6 +7468,12 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_n_active
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|finish
 goto|;
@@ -7423,6 +7519,11 @@ name|usbd_transfer_submit
 argument_list|(
 name|xfer
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_n_active
+operator|++
 expr_stmt|;
 break|break;
 default|default:
@@ -7484,6 +7585,63 @@ break|break;
 block|}
 name|finish
 label|:
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+comment|/* 	 * If the TX active queue drops below a certain 	 * threshold, ensure we age fast-frames out so they're 	 * transmitted. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_tx_n_active
+operator|<=
+literal|1
+condition|)
+block|{
+comment|/* XXX ew - net80211 should defer this for us! */
+comment|/* 		 * Note: this sc_tx_n_active currently tracks 		 * the number of pending transmit submissions 		 * and not the actual depth of the TX frames 		 * pending to the hardware.  That means that 		 * we're going to end up with some sub-optimal 		 * aggregation behaviour. 		 */
+comment|/* 		 * XXX TODO: just make this a callout timer schedule so we can 		 * flush the FF staging queue if we're approaching idle. 		 */
+name|URTWN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ieee80211_ff_flush
+argument_list|(
+name|ic
+argument_list|,
+name|WME_AC_VO
+argument_list|)
+expr_stmt|;
+name|ieee80211_ff_flush
+argument_list|(
+name|ic
+argument_list|,
+name|WME_AC_VI
+argument_list|)
+expr_stmt|;
+name|ieee80211_ff_flush
+argument_list|(
+name|ic
+argument_list|,
+name|WME_AC_BE
+argument_list|)
+expr_stmt|;
+name|ieee80211_ff_flush
+argument_list|(
+name|ic
+argument_list|,
+name|WME_AC_BK
+argument_list|)
+expr_stmt|;
+name|URTWN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Kick-start more transmit */
 name|urtwn_start
 argument_list|(
@@ -16961,6 +17119,19 @@ operator|.
 name|rcvif
 operator|=
 name|NULL
+expr_stmt|;
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: called; m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -28222,6 +28393,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: called; m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* prevent management frames from being sent if we're not ready */
 name|URTWN_LOCK
 argument_list|(

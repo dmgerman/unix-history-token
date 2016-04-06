@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|URTWN_RX_LIST_COUNT
-value|1
+value|64
 end_define
 
 begin_define
@@ -28,14 +28,22 @@ begin_define
 define|#
 directive|define
 name|URTWN_RXBUFSZ
-value|(16 * 1024)
+value|(8 * 1024)
 end_define
+
+begin_comment
+comment|//#define URTWN_TXBUFSZ	(sizeof(struct r92c_tx_desc) + IEEE80211_MAX_LEN)
+end_comment
+
+begin_comment
+comment|/* Leave enough space for an A-MSDU frame */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|URTWN_TXBUFSZ
-value|(sizeof(struct r92c_tx_desc) + IEEE80211_MAX_LEN)
+value|(16 * 1024)
 end_define
 
 begin_define
@@ -675,6 +683,9 @@ index|]
 decl_stmt|;
 name|urtwn_datahead
 name|sc_tx_active
+decl_stmt|;
+name|int
+name|sc_tx_n_active
 decl_stmt|;
 name|urtwn_datahead
 name|sc_tx_inactive

@@ -4553,7 +4553,7 @@ name|HT_RC_2_MCS
 parameter_list|(
 name|_rc
 parameter_list|)
-value|((_rc)& 0xf)
+value|((_rc)& 0x1f)
 end_define
 
 begin_define

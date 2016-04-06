@@ -15,6 +15,12 @@ directive|define
 name|_BCM2815_BCM2836_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -48,6 +54,11 @@ name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

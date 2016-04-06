@@ -2874,8 +2874,12 @@ name|ic_htcaps
 operator|=
 name|IEEE80211_HTC_HT
 operator||
-name|IEEE80211_HTC_AMPDU
-operator||
+if|#
+directive|if
+literal|0
+expr|IEEE80211_HTC_AMPDU |
+endif|#
+directive|endif
 name|IEEE80211_HTC_AMSDU
 operator||
 name|IEEE80211_HTCAP_MAXAMSDU_3839

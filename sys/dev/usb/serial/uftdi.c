@@ -8159,7 +8159,7 @@ block|{
 comment|/* 	 * This do-nothing open routine exists for the sole purpose of this 	 * DPRINTF() so that you can see the point at which open gets called 	 * when debugging is enabled. 	 */
 name|DPRINTF
 argument_list|(
-literal|""
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8179,7 +8179,7 @@ block|{
 comment|/* 	 * This do-nothing close routine exists for the sole purpose of this 	 * DPRINTF() so that you can see the point at which close gets called 	 * when debugging is enabled. 	 */
 name|DPRINTF
 argument_list|(
-literal|""
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8226,6 +8226,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|USB_GET_STATE
@@ -8465,6 +8472,13 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|usbd_xfer_status
 argument_list|(
 name|xfer
@@ -8813,6 +8827,15 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"DTR=%u\n"
+argument_list|,
+name|onoff
+argument_list|)
+expr_stmt|;
 name|wValue
 operator|=
 name|onoff
@@ -8921,6 +8944,15 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"RTS=%u\n"
+argument_list|,
+name|onoff
+argument_list|)
+expr_stmt|;
 name|wValue
 operator|=
 name|onoff
@@ -9029,6 +9061,15 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"BREAK=%u\n"
+argument_list|,
+name|onoff
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|onoff
@@ -9984,6 +10025,11 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uftdi_set_parm_soft
@@ -10007,11 +10053,6 @@ operator|=
 name|cfg
 operator|.
 name|lcr
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 name|req
 operator|.
@@ -10242,8 +10283,10 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
+literal|3
+argument_list|,
 literal|"msr=0x%02x lsr=0x%02x\n"
 argument_list|,
 name|sc
@@ -10298,6 +10341,13 @@ decl_stmt|;
 name|usb_device_request_t
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -10396,6 +10446,13 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -10533,6 +10590,13 @@ decl_stmt|;
 name|usb_device_request_t
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -10632,6 +10696,13 @@ decl_stmt|;
 name|usb_device_request_t
 name|req
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|latency
@@ -10748,6 +10819,13 @@ decl_stmt|;
 name|uint8_t
 name|buf
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -10853,6 +10931,13 @@ decl_stmt|;
 name|uint8_t
 name|enable
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|enable
 operator|=
 operator|(
@@ -10965,6 +11050,13 @@ decl_stmt|;
 name|uint8_t
 name|enable
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|enable
 operator|=
 operator|(
@@ -11086,6 +11178,13 @@ name|wlength
 decl_stmt|,
 name|woffset
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* Offset and length must both be evenly divisible by two. */
 if|if
 condition|(
@@ -11260,6 +11359,13 @@ name|wlength
 decl_stmt|,
 name|woffset
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* Offset and length must both be evenly divisible by two. */
 if|if
 condition|(
@@ -11424,6 +11530,13 @@ decl_stmt|;
 name|usb_error_t
 name|err
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* Small effort to prevent accidental erasure. */
 if|if
 condition|(
@@ -11544,17 +11657,6 @@ name|uftdi_bitmode
 modifier|*
 name|mode
 decl_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"portno: %d cmd: %#x\n"
-argument_list|,
-name|ucom
-operator|->
-name|sc_portno
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd

@@ -2365,13 +2365,16 @@ index|[
 name|opmode
 index|]
 expr_stmt|;
+name|IEEE80211_ADDR_COPY
+argument_list|(
 name|vap
 operator|->
 name|iv_myaddr
-operator|=
+argument_list|,
 name|ic
 operator|->
 name|ic_macaddr
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -2828,13 +2831,16 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+name|IEEE80211_ADDR_COPY
+argument_list|(
 name|vap
 operator|->
 name|iv_myaddr
-operator|=
+argument_list|,
 name|IF_LLADDR
 argument_list|(
 name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* hook output method setup by ether_ifattach */
