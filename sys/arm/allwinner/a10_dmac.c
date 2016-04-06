@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/allwinner/a10_clk.h>
+file|<dev/extres/clk/clk.h>
 end_include
 
 begin_include
@@ -374,6 +374,9 @@ name|unsigned
 name|int
 name|index
 decl_stmt|;
+name|clk_t
+name|clk
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -426,9 +429,65 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* Activate DMA controller clock */
-name|a10_clk_dmac_activate
-argument_list|()
+name|error
+operator|=
+name|clk_get_by_ofw_index
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|clk
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cannot get clock\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|error
+operator|=
+name|clk_enable
+argument_list|(
+name|clk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cannot enable clock\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* Disable all interrupts and clear pending status */
 name|DMA_WRITE
 argument_list|(
