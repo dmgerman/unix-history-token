@@ -447,10 +447,6 @@ name|hp
 parameter_list|)
 block|{
 name|struct
-name|stat
-name|st
-decl_stmt|;
-name|struct
 name|cb_file
 modifier|*
 name|cf
@@ -556,7 +552,9 @@ name|cf
 operator|->
 name|cf_size
 operator|=
-name|st
+name|cf
+operator|->
+name|cf_stat
 operator|.
 name|st_size
 expr_stmt|;
