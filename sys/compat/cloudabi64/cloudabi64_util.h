@@ -84,7 +84,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cloudabi64_thread_setregs
 parameter_list|(
 name|struct
@@ -94,6 +94,8 @@ parameter_list|,
 specifier|const
 name|cloudabi64_threadattr_t
 modifier|*
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
