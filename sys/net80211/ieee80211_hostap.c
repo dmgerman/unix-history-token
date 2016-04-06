@@ -8994,15 +8994,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
-elseif|else
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_ath_flags
-operator|&
-name|IEEE80211_NODE_ATH
-condition|)
+comment|/* Always do ff node cleanup; for A-MSDU */
 name|ieee80211_ff_node_cleanup
 argument_list|(
 name|ni
@@ -9079,6 +9071,17 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+comment|/* Always do ff node cleanup; for A-MSDU */
+name|ieee80211_ff_node_cleanup
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vap
 operator|->
 name|iv_stats
