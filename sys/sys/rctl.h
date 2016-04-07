@@ -449,8 +449,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|RCTL_ACTION_THROTTLE
+value|(RCTL_ACTION_SIGNAL_MAX + 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RCTL_ACTION_MAX
-value|RCTL_ACTION_DEVCTL
+value|RCTL_ACTION_THROTTLE
 end_define
 
 begin_define
@@ -552,6 +559,21 @@ name|resource
 parameter_list|,
 name|uint64_t
 name|amount
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rctl_throttle_decay
+parameter_list|(
+name|struct
+name|racct
+modifier|*
+name|racct
+parameter_list|,
+name|int
+name|resource
 parameter_list|)
 function_decl|;
 end_function_decl
