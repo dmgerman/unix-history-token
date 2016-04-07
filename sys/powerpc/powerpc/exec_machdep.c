@@ -959,6 +959,10 @@ name|void
 operator|*
 operator|)
 operator|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
 name|td
 operator|->
 name|td_sigstk
@@ -973,6 +977,10 @@ name|ss_size
 operator|-
 name|rndfsize
 operator|)
+operator|&
+operator|~
+literal|0xFul
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -984,6 +992,7 @@ name|void
 operator|*
 operator|)
 operator|(
+operator|(
 name|tf
 operator|->
 name|fixreg
@@ -992,6 +1001,10 @@ literal|1
 index|]
 operator|-
 name|rndfsize
+operator|)
+operator|&
+operator|~
+literal|0xFul
 operator|)
 expr_stmt|;
 block|}
