@@ -38,7 +38,7 @@ typedef|typedef
 struct|struct
 block|{
 specifier|volatile
-name|u_long
+name|long
 name|counter
 decl_stmt|;
 block|}
