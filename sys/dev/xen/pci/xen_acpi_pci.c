@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/acpica/acpi_pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pciio.h>
 end_include
 
@@ -174,6 +180,35 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|xen_acpi_pci_child_added
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|acpi_pci_child_added
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+name|xen_pci_child_added_method
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -208,7 +243,7 @@ name|DEVMETHOD
 argument_list|(
 name|pci_child_added
 argument_list|,
-name|xen_pci_child_added_method
+name|xen_acpi_pci_child_added
 argument_list|)
 block|,
 name|DEVMETHOD_END
