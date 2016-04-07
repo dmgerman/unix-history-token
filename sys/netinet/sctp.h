@@ -755,6 +755,17 @@ comment|/* Options for CC 							 * modules */
 end_comment
 
 begin_comment
+comment|/* For I-DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_INTERLEAVING_SUPPORTED
+value|0x00001206
+end_define
+
+begin_comment
 comment|/* read only */
 end_comment
 
@@ -1742,6 +1753,13 @@ begin_comment
 comment|/************0x40 series ***********/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_IDATA
+value|0x40
+end_define
+
 begin_comment
 comment|/************0x80 series ***********/
 end_comment
@@ -1814,6 +1832,13 @@ define|#
 directive|define
 name|SCTP_ASCONF
 value|0xc1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IFORWARD_CUM_TSN
+value|0xc2
 end_define
 
 begin_comment

@@ -1008,7 +1008,7 @@ name|uint32_t
 name|TSN_seq
 decl_stmt|;
 comment|/* the TSN of this transmit */
-name|uint16_t
+name|uint32_t
 name|stream_seq
 decl_stmt|;
 comment|/* the stream sequence number of this transmit */
@@ -1036,6 +1036,10 @@ name|timeval
 name|timetodrop
 decl_stmt|;
 comment|/* time we drop it from queue */
+name|uint32_t
+name|fsn_num
+decl_stmt|;
+comment|/* Fragment Sequence Number */
 name|uint8_t
 name|doing_fast_retransmit
 decl_stmt|;
@@ -1231,7 +1235,7 @@ name|uint16_t
 name|sinfo_stream
 decl_stmt|;
 comment|/* off the wire */
-name|uint16_t
+name|uint32_t
 name|sinfo_ssn
 decl_stmt|;
 comment|/* off the wire */
@@ -1265,6 +1269,10 @@ decl_stmt|;
 comment|/* our assoc id */
 comment|/* Non sinfo stuff */
 name|uint32_t
+name|msg_id
+decl_stmt|;
+comment|/* Fragment Index */
+name|uint32_t
 name|length
 decl_stmt|;
 comment|/* length of data */
@@ -1272,6 +1280,14 @@ name|uint32_t
 name|held_length
 decl_stmt|;
 comment|/* length held in sb */
+name|uint32_t
+name|top_fsn
+decl_stmt|;
+comment|/* Highest FSN in queue */
+name|uint32_t
+name|fsn_included
+decl_stmt|;
+comment|/* Highest FSN in *data portion */
 name|struct
 name|sctp_nets
 modifier|*
@@ -1308,6 +1324,16 @@ argument|sctp_queued_to_read
 argument_list|)
 name|next
 expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|sctp_queued_to_read
+argument_list|)
+name|next_instrm
+expr_stmt|;
+name|struct
+name|sctpchunk_listhead
+name|reasm
+decl_stmt|;
 name|uint16_t
 name|port_from
 decl_stmt|;
@@ -1325,11 +1351,40 @@ name|uint8_t
 name|pdapi_aborted
 decl_stmt|;
 name|uint8_t
+name|pdapi_started
+decl_stmt|;
+name|uint8_t
 name|some_taken
+decl_stmt|;
+name|uint8_t
+name|last_frag_seen
+decl_stmt|;
+name|uint8_t
+name|first_frag_seen
+decl_stmt|;
+name|uint8_t
+name|on_read_q
+decl_stmt|;
+name|uint8_t
+name|on_strm_q
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SCTP_ON_ORDERED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ON_UNORDERED
+value|2
+end_define
 
 begin_comment
 comment|/* This data structure will be on the outbound  * stream queues. Data will be pulled off from  * the front of the mbuf data and chunk-ified  * by the output routines. We will custom  * fit every chunk we pull to the send/sent  * queue to make up the next full packet  * if we can. An entry cannot be removed  * from the stream_out queue until  * the msg_is_complete flag is set. This  * means at times data/tail_mbuf MIGHT  * be NULL.. If that occurs it happens  * for one of two reasons. Either the user  * is blocked on a send() call and has not  * awoken to copy more data down... OR  * the user is in the explict MSG_EOR mode  * and wrote some data, but has not completed  * sending.  */
@@ -1370,6 +1425,12 @@ argument|sctp_stream_queue_pending
 argument_list|)
 name|ss_next
 expr_stmt|;
+name|uint32_t
+name|fsn
+decl_stmt|;
+name|uint32_t
+name|msg_id
+decl_stmt|;
 name|uint32_t
 name|length
 decl_stmt|;
@@ -1438,15 +1499,22 @@ name|struct
 name|sctp_readhead
 name|inqueue
 decl_stmt|;
-name|uint16_t
-name|stream_no
+name|struct
+name|sctp_readhead
+name|uno_inqueue
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|last_sequence_delivered
 decl_stmt|;
 comment|/* used for re-order */
+name|uint16_t
+name|stream_no
+decl_stmt|;
 name|uint8_t
 name|delivery_started
+decl_stmt|;
+name|uint8_t
+name|pd_api_started
 decl_stmt|;
 block|}
 struct|;
@@ -1686,13 +1754,13 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|uint16_t
-name|stream_no
-decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|next_sequence_send
 decl_stmt|;
 comment|/* next one I expect to send out */
+name|uint16_t
+name|stream_no
+decl_stmt|;
 name|uint8_t
 name|last_msg_incomplete
 decl_stmt|;
@@ -1793,11 +1861,11 @@ decl_stmt|;
 name|uint32_t
 name|tsn
 decl_stmt|;
-name|uint16_t
-name|strm
+name|uint32_t
+name|seq
 decl_stmt|;
 name|uint16_t
-name|seq
+name|strm
 decl_stmt|;
 name|uint16_t
 name|sz
@@ -1810,6 +1878,9 @@ name|in_pos
 decl_stmt|;
 name|uint16_t
 name|in_out
+decl_stmt|;
+name|uint16_t
+name|resv
 decl_stmt|;
 block|}
 struct|;
@@ -2659,11 +2730,6 @@ name|struct
 name|sctpchunk_listhead
 name|send_queue
 decl_stmt|;
-comment|/* re-assembly queue for fragmented chunks on the inbound path */
-name|struct
-name|sctpchunk_listhead
-name|reasmqueue
-decl_stmt|;
 comment|/* Scheduling queues */
 name|union
 name|scheduling_data
@@ -2779,6 +2845,9 @@ name|stream_scheduling_module
 decl_stmt|;
 name|uint32_t
 name|vrf_id
+decl_stmt|;
+name|uint32_t
+name|assoc_msg_id
 decl_stmt|;
 name|uint32_t
 name|cookie_preserve_req
@@ -3347,6 +3416,9 @@ name|nrsack_supported
 decl_stmt|;
 name|uint8_t
 name|pktdrop_supported
+decl_stmt|;
+name|uint8_t
+name|idata_supported
 decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t

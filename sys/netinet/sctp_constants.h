@@ -1692,7 +1692,7 @@ name|IS_SCTP_CONTROL
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->chunk_type != SCTP_DATA)
+value|(((a)->chunk_type != SCTP_DATA)&& ((a)->chunk_type != SCTP_IDATA))
 end_define
 
 begin_define
@@ -1702,7 +1702,7 @@ name|IS_SCTP_DATA
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)->chunk_type == SCTP_DATA)
+value|(((a)->chunk_type == SCTP_DATA) || ((a)->chunk_type == SCTP_IDATA))
 end_define
 
 begin_comment
@@ -4102,13 +4102,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_UINT16_GT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a< b)&& ((uint16_t)(b - a)> (1U<<15))) || \                               ((a> b)&& ((uint16_t)(a - b)< (1U<<15))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_UINT16_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_UINT16_GT(a, b) || (a == b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_UINT32_GT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a< b)&& ((uint32_t)(b - a)> (1U<<31))) || \                               ((a> b)&& ((uint32_t)(a - b)< (1U<<31))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_UINT32_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_UINT32_GT(a, b) || (a == b))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_SSN_GT
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a< b)&& ((uint16_t)(b - a)> (1U<<15))) || \                            ((a> b)&& ((uint16_t)(a - b)< (1U<<15))))
+value|SCTP_UINT16_GT(a, b)
 end_define
 
 begin_define
@@ -4120,7 +4168,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(SCTP_SSN_GT(a, b) || (a == b))
+value|SCTP_UINT16_GE(a, b)
 end_define
 
 begin_define
@@ -4132,7 +4180,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a< b)&& ((uint32_t)(b - a)> (1U<<31))) || \                            ((a> b)&& ((uint32_t)(a - b)< (1U<<31))))
+value|SCTP_UINT32_GT(a, b)
 end_define
 
 begin_define
@@ -4144,7 +4192,35 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(SCTP_TSN_GT(a, b) || (a == b))
+value|SCTP_UINT32_GE(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MSGID_GT
+parameter_list|(
+name|o
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((o == 1) ? SCTP_UINT16_GT((uint16_t)a, (uint16_t)b) : SCTP_UINT32_GT(a, b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MSGID_GE
+parameter_list|(
+name|o
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((o == 1) ? SCTP_UINT16_GE((uint16_t)a, (uint16_t)b) : SCTP_UINT32_GE(a, b))
 end_define
 
 begin_comment

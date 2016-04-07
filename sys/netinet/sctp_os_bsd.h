@@ -2112,7 +2112,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		panic("Counter goes negative"); \ 	} \ }
+value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val);      \ 	if (oldval< val) { \ 		panic("Counter goes negative addr:%p val:%d oldval:%d", addr, val, oldval); \ 	} \ }
 end_define
 
 begin_else
