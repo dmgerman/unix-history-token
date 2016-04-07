@@ -4935,7 +4935,11 @@ name|isrc
 operator|->
 name|isrc_flags
 operator|&
+operator|(
 name|INTR_ISRCF_PPI
+operator||
+name|INTR_ISRCF_IPI
+operator|)
 condition|)
 continue|continue;
 if|if
