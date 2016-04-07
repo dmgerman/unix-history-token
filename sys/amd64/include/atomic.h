@@ -2028,6 +2028,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_fetchadd_64
+value|atomic_fetchadd_long
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_testandset_64
 value|atomic_testandset_long
 end_define
