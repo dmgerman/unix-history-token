@@ -52066,6 +52066,15 @@ argument_list|)
 expr_stmt|;
 name|strseq_m
 operator|->
+name|reserved
+operator|=
+name|ntohs
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|strseq_m
+operator|->
 name|msg_id
 operator|=
 name|ntohl

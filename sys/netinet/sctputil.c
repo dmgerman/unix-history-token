@@ -31512,15 +31512,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"Impossible data==NULL length !=0 control:%p stcb:%p length:%d"
-argument_list|,
-name|control
-argument_list|,
-name|stcb
-argument_list|,
-name|control
-operator|->
-name|length
+literal|"Impossible data==NULL length !=0"
 argument_list|)
 expr_stmt|;
 endif|#

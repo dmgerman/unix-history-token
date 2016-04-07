@@ -1944,7 +1944,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_STRICT_DATA_ORDER_DEFAULT
-value|1
+value|0
 end_define
 
 begin_comment
