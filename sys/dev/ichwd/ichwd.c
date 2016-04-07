@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2004 Texas A&M University  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * Intel ICH Watchdog Timer (WDT) driver  *  * Originally developed by Wm. Daryl Hawkins of Texas A&M  * Heavily modified by<des@FreeBSD.org>  *  * This is a tricky one.  The ICH WDT can't be treated as a regular PCI  * device as it's actually an integrated function of the ICH LPC interface  * bridge.  Detection is also awkward, because we can only infer the  * presence of the watchdog timer from the fact that the machine has an  * ICH chipset, or, on ACPI 2.x systems, by the presence of the 'WDDT'  * ACPI table (although this driver does not support the ACPI detection  * method).  *  * There is one slight problem on non-ACPI or ACPI 1.x systems: we have no  * way of knowing if the WDT is permanently disabled (either by the BIOS  * or in hardware).  *  * The WDT is programmed through I/O registers in the ACPI I/O space.  * Intel swears it's always at offset 0x60, so we use that.  *  * For details about the ICH WDT, see Intel Application Note AP-725  * (document no. 292273-001).  The WDT is also described in the individual  * chipset datasheets, e.g. Intel82801EB ICH5 / 82801ER ICH5R Datasheet  * (document no. 252516-001) sections 9.10 and 9.11.  *  * ICH6/7/8 support by Takeharu KATO<takeharu1219@ybb.ne.jp>  */
+comment|/*  * Intel ICH Watchdog Timer (WDT) driver  *  * Originally developed by Wm. Daryl Hawkins of Texas A&M  * Heavily modified by<des@FreeBSD.org>  *  * This is a tricky one.  The ICH WDT can't be treated as a regular PCI  * device as it's actually an integrated function of the ICH LPC interface  * bridge.  Detection is also awkward, because we can only infer the  * presence of the watchdog timer from the fact that the machine has an  * ICH chipset, or, on ACPI 2.x systems, by the presence of the 'WDDT'  * ACPI table (although this driver does not support the ACPI detection  * method).  *  * There is one slight problem on non-ACPI or ACPI 1.x systems: we have no  * way of knowing if the WDT is permanently disabled (either by the BIOS  * or in hardware).  *  * The WDT is programmed through I/O registers in the ACPI I/O space.  * Intel swears it's always at offset 0x60, so we use that.  *  * For details about the ICH WDT, see Intel Application Note AP-725  * (document no. 292273-001).  The WDT is also described in the individual  * chipset datasheets, e.g. Intel82801EB ICH5 / 82801ER ICH5R Datasheet  * (document no. 252516-001) sections 9.10 and 9.11.  *  * ICH6/7/8 support by Takeharu KATO<takeharu1219@ybb.ne.jp>  * SoC PMC support by Denir Li<denir.li@cas-well.com>  */
 end_comment
 
 begin_include
@@ -107,12 +107,16 @@ block|,
 literal|"Intel 82801AA watchdog timer"
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 block|{
 name|DEVICEID_82801AB
 block|,
 literal|"Intel 82801AB watchdog timer"
+block|,
+literal|1
 block|,
 literal|1
 block|}
@@ -123,6 +127,8 @@ block|,
 literal|"Intel 82801BA watchdog timer"
 block|,
 literal|2
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -131,6 +137,8 @@ block|,
 literal|"Intel 82801BAM watchdog timer"
 block|,
 literal|2
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -139,6 +147,8 @@ block|,
 literal|"Intel 82801CA watchdog timer"
 block|,
 literal|3
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -147,6 +157,8 @@ block|,
 literal|"Intel 82801CAM watchdog timer"
 block|,
 literal|3
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -155,6 +167,8 @@ block|,
 literal|"Intel 82801DB watchdog timer"
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -163,6 +177,8 @@ block|,
 literal|"Intel 82801DBM watchdog timer"
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -171,6 +187,8 @@ block|,
 literal|"Intel 82801E watchdog timer"
 block|,
 literal|5
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -179,6 +197,8 @@ block|,
 literal|"Intel 82801EB watchdog timer"
 block|,
 literal|5
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -187,6 +207,8 @@ block|,
 literal|"Intel 82801EB/ER watchdog timer"
 block|,
 literal|5
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -195,6 +217,8 @@ block|,
 literal|"Intel 6300ESB watchdog timer"
 block|,
 literal|5
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -203,6 +227,8 @@ block|,
 literal|"Intel 82801FB/FR watchdog timer"
 block|,
 literal|6
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -211,6 +237,8 @@ block|,
 literal|"Intel ICH6M watchdog timer"
 block|,
 literal|6
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -219,6 +247,8 @@ block|,
 literal|"Intel ICH6W watchdog timer"
 block|,
 literal|6
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -227,6 +257,8 @@ block|,
 literal|"Intel ICH7 watchdog timer"
 block|,
 literal|7
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -235,6 +267,8 @@ block|,
 literal|"Intel ICH7DH watchdog timer"
 block|,
 literal|7
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -243,6 +277,8 @@ block|,
 literal|"Intel ICH7M watchdog timer"
 block|,
 literal|7
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -251,6 +287,8 @@ block|,
 literal|"Intel ICH7MDH watchdog timer"
 block|,
 literal|7
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -259,6 +297,8 @@ block|,
 literal|"Intel NM10 watchdog timer"
 block|,
 literal|7
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -267,6 +307,8 @@ block|,
 literal|"Intel ICH8 watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -275,6 +317,8 @@ block|,
 literal|"Intel ICH8DH watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -283,6 +327,8 @@ block|,
 literal|"Intel ICH8DO watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -291,6 +337,8 @@ block|,
 literal|"Intel ICH8M watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -299,6 +347,8 @@ block|,
 literal|"Intel ICH8M-E watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -307,6 +357,8 @@ block|,
 literal|"Intel 63XXESB watchdog timer"
 block|,
 literal|8
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -315,6 +367,8 @@ block|,
 literal|"Intel ICH9 watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -323,6 +377,8 @@ block|,
 literal|"Intel ICH9DH watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -331,6 +387,8 @@ block|,
 literal|"Intel ICH9DO watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -339,6 +397,8 @@ block|,
 literal|"Intel ICH9M watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -347,6 +407,8 @@ block|,
 literal|"Intel ICH9M-E watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -355,6 +417,8 @@ block|,
 literal|"Intel ICH9R watchdog timer"
 block|,
 literal|9
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -363,6 +427,8 @@ block|,
 literal|"Intel ICH10 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -371,6 +437,8 @@ block|,
 literal|"Intel ICH10D watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -379,6 +447,8 @@ block|,
 literal|"Intel ICH10DO watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -387,6 +457,8 @@ block|,
 literal|"Intel ICH10R watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -395,6 +467,8 @@ block|,
 literal|"Intel PCH watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -403,6 +477,8 @@ block|,
 literal|"Intel PCH watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -411,6 +487,8 @@ block|,
 literal|"Intel P55 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -419,6 +497,8 @@ block|,
 literal|"Intel PM55 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -427,6 +507,8 @@ block|,
 literal|"Intel H55 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -435,6 +517,8 @@ block|,
 literal|"Intel QM57 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -443,6 +527,8 @@ block|,
 literal|"Intel H57 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -451,6 +537,8 @@ block|,
 literal|"Intel HM55 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -459,6 +547,8 @@ block|,
 literal|"Intel Q57 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -467,6 +557,8 @@ block|,
 literal|"Intel HM57 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -475,6 +567,8 @@ block|,
 literal|"Intel PCHMSFF watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -483,6 +577,8 @@ block|,
 literal|"Intel QS57 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -491,6 +587,8 @@ block|,
 literal|"Intel 3400 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -499,6 +597,8 @@ block|,
 literal|"Intel 3420 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -507,6 +607,8 @@ block|,
 literal|"Intel 3450 watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -515,6 +617,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -523,6 +627,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -531,6 +637,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -539,6 +647,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -547,6 +657,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -555,6 +667,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -563,6 +677,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -571,6 +687,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -579,6 +697,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -587,6 +707,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -595,6 +717,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -603,6 +727,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -611,6 +737,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -619,6 +747,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -627,6 +757,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -635,6 +767,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -643,6 +777,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -651,6 +787,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -659,6 +797,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -667,6 +807,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -675,6 +817,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -683,6 +827,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -691,6 +837,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -699,14 +847,18 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
-name|DEVICEID_CPT23
+name|DEVICEID_CPT24
 block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -715,6 +867,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -723,6 +877,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -731,6 +887,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -739,6 +897,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -747,6 +907,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -755,6 +917,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -763,6 +927,8 @@ block|,
 literal|"Intel Cougar Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -771,6 +937,8 @@ block|,
 literal|"Intel Patsburg watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -779,6 +947,8 @@ block|,
 literal|"Intel Patsburg watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -787,6 +957,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -795,6 +967,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -803,6 +977,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -811,6 +987,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -819,6 +997,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -827,6 +1007,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -835,6 +1017,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -843,6 +1027,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -851,6 +1037,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -859,6 +1047,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -867,6 +1057,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -875,6 +1067,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -883,6 +1077,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -891,6 +1087,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -899,6 +1097,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -907,6 +1107,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -915,6 +1117,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -923,6 +1127,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -931,6 +1137,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -939,6 +1147,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -947,6 +1157,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -955,6 +1167,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -963,6 +1177,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -971,6 +1187,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -979,6 +1197,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -987,6 +1207,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -995,6 +1217,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1003,6 +1227,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1011,6 +1237,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1019,6 +1247,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1027,6 +1257,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1035,6 +1267,8 @@ block|,
 literal|"Intel Panther Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1043,6 +1277,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1051,6 +1287,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1059,6 +1297,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1067,6 +1307,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1075,6 +1317,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1083,6 +1327,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1091,6 +1337,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1099,6 +1347,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1107,6 +1357,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1115,6 +1367,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1123,6 +1377,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1131,6 +1387,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1139,6 +1397,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1147,6 +1407,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1155,6 +1417,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1163,6 +1427,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1171,6 +1437,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1179,6 +1447,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1187,6 +1457,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1195,6 +1467,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1203,6 +1477,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1211,6 +1487,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1219,6 +1497,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1227,6 +1507,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1235,6 +1517,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1243,6 +1527,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1251,6 +1537,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1259,6 +1547,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1267,6 +1557,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1275,6 +1567,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1283,6 +1577,8 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1291,6 +1587,18 @@ block|,
 literal|"Intel Lynx Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT1
+block|,
+literal|"Intel Wildcat Point watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1299,6 +1607,18 @@ block|,
 literal|"Intel Wildcat Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT3
+block|,
+literal|"Intel Wildcat Point watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1307,6 +1627,8 @@ block|,
 literal|"Intel Wildcat Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1315,6 +1637,478 @@ block|,
 literal|"Intel Wildcat Point watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG0
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG1
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG2
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG3
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG4
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG5
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG6
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG7
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG8
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG9
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG10
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG11
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG12
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG13
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG14
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG15
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG16
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG17
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG18
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG19
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG20
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG21
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG22
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG23
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG24
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG25
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG26
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG27
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG28
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG29
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG30
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WBG31
+block|,
+literal|"Intel Wellsburg watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP0
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP1
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP2
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP3
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP4
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP5
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP6
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_LPT_LP7
+block|,
+literal|"Intel Lynx Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP1
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP2
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP3
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP5
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP6
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP7
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_WCPT_LP9
+block|,
+literal|"Intel Wildcat Point-LP watchdog timer"
+block|,
+literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1323,6 +2117,8 @@ block|,
 literal|"Intel DH89xxCC watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -1331,12 +2127,76 @@ block|,
 literal|"Intel Coleto Creek watchdog timer"
 block|,
 literal|10
+block|,
+literal|2
+block|}
+block|,
+block|{
+name|DEVICEID_AVN0
+block|,
+literal|"Intel Avoton/Rangeley SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
+block|}
+block|,
+block|{
+name|DEVICEID_AVN1
+block|,
+literal|"Intel Avoton/Rangeley SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
+block|}
+block|,
+block|{
+name|DEVICEID_AVN2
+block|,
+literal|"Intel Avoton/Rangeley SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
+block|}
+block|,
+block|{
+name|DEVICEID_AVN3
+block|,
+literal|"Intel Avoton/Rangeley SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
+block|}
+block|,
+block|{
+name|DEVICEID_BAYTRAIL
+block|,
+literal|"Intel Bay Trail SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
+block|}
+block|,
+block|{
+name|DEVICEID_BRASWELL
+block|,
+literal|"Intel Braswell SoC watchdog timer"
+block|,
+literal|10
+block|,
+literal|3
 block|}
 block|,
 block|{
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1416,6 +2276,23 @@ define|\
 value|bus_read_4((sc)->gcs_res, (off))
 end_define
 
+begin_comment
+comment|/* NB: TCO version 3 devices use the gcs_res resource for the PMC register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ichwd_read_pmc_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|bus_read_4((sc)->gcs_res, (off))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1480,6 +2357,25 @@ begin_define
 define|#
 directive|define
 name|ichwd_write_gcs_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_write_4((sc)->gcs_res, (off), (val))
+end_define
+
+begin_comment
+comment|/* NB: TCO version 3 devices use the gcs_res resource for the PMC register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ichwd_write_pmc_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -1797,9 +2693,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|ich_version
-operator|<=
-literal|5
+name|tco_version
+operator|==
+literal|1
 condition|)
 name|ichwd_write_tco_1
 argument_list|(
@@ -1857,9 +2753,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|ich_version
-operator|<=
-literal|5
+name|tco_version
+operator|==
+literal|1
 condition|)
 block|{
 name|uint8_t
@@ -1991,15 +2887,16 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* try to clear the NO_REBOOT bit */
-if|if
+switch|switch
 condition|(
 name|sc
 operator|->
-name|ich_version
-operator|<=
-literal|5
+name|tco_version
 condition|)
 block|{
+case|case
+literal|1
+case|:
 name|status
 operator|=
 name|pci_read_config
@@ -2054,9 +2951,10 @@ name|rc
 operator|=
 name|EIO
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+literal|2
+case|:
 name|status
 operator|=
 name|ichwd_read_gcs_4
@@ -2099,6 +2997,68 @@ name|rc
 operator|=
 name|EIO
 expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|status
+operator|=
+name|ichwd_read_pmc_4
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|status
+operator|&=
+operator|~
+name|ICH_PMC_NO_REBOOT
+expr_stmt|;
+name|ichwd_write_pmc_4
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|ichwd_read_pmc_4
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+name|ICH_PMC_NO_REBOOT
+condition|)
+name|rc
+operator|=
+name|EIO
+expr_stmt|;
+break|break;
+default|default:
+name|ichwd_verbose_printf
+argument_list|(
+name|sc
+operator|->
+name|device
+argument_list|,
+literal|"Unknown TCO Version: %d, can't set NO_REBOOT.\n"
+argument_list|,
+name|sc
+operator|->
+name|tco_version
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -2307,7 +3267,7 @@ literal|"found ICH%d or equivalent chipset: %s\n"
 argument_list|,
 name|id
 operator|->
-name|version
+name|ich_version
 argument_list|,
 name|id
 operator|->
@@ -2362,7 +3322,7 @@ name|device_t
 name|dev
 decl_stmt|;
 name|uint32_t
-name|rcba
+name|base_address
 decl_stmt|;
 name|int
 name|rc
@@ -2433,17 +3393,22 @@ operator|->
 name|desc
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|id_p
 operator|->
-name|version
-operator|>=
-literal|6
+name|tco_version
 condition|)
 block|{
+case|case
+literal|1
+case|:
+break|break;
+case|case
+literal|2
+case|:
 comment|/* get RCBA (root complex base address) */
-name|rcba
+name|base_address
 operator|=
 name|pci_read_config
 argument_list|(
@@ -2465,7 +3430,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|rcba
+name|base_address
 operator|&
 literal|0xffffc000
 operator|)
@@ -2483,9 +3448,79 @@ name|ichwd_verbose_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Can not set memory resource for RCBA\n"
+literal|"Can not set TCO v%d memory resource for RCBA\n"
+argument_list|,
+name|id_p
+operator|->
+name|tco_version
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+comment|/* get PBASE (Power Management Controller base address) */
+name|base_address
+operator|=
+name|pci_read_config
+argument_list|(
+name|ich
+argument_list|,
+name|ICH_PBASE
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+name|bus_set_resource
+argument_list|(
+name|ich
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|base_address
+operator|&
+literal|0xfffffe00
+operator|)
+operator|+
+name|ICH_PMC_OFFSET
+argument_list|,
+name|ICH_PMC_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+condition|)
+name|ichwd_verbose_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not set TCO v%d memory resource for PBASE\n"
+argument_list|,
+name|id_p
+operator|->
+name|tco_version
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|ichwd_verbose_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not set unknown TCO v%d memory resource for unknown base address\n"
+argument_list|,
+name|id_p
+operator|->
+name|tco_version
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -2603,7 +3638,15 @@ name|ich_version
 operator|=
 name|id_p
 operator|->
-name|version
+name|ich_version
+expr_stmt|;
+name|sc
+operator|->
+name|tco_version
+operator|=
+name|id_p
+operator|->
+name|tco_version
 expr_stmt|;
 comment|/* get ACPI base address */
 name|pmbase
@@ -2768,9 +3811,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|ich_version
+name|tco_version
 operator|>=
-literal|6
+literal|2
 condition|)
 block|{
 name|sc
@@ -2832,10 +3875,9 @@ name|dev
 argument_list|,
 literal|"%s (ICH%d or equivalent)\n"
 argument_list|,
-name|device_get_desc
-argument_list|(
-name|dev
-argument_list|)
+name|id_p
+operator|->
+name|desc
 argument_list|,
 name|sc
 operator|->
