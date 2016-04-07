@@ -3012,13 +3012,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 value|0x70000001
 end_define
 
 begin_comment
 comment|/* unwind information */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_AMD64_UNWIND
+value|SHT_X86_64_UNWIND
+end_define
 
 begin_define
 define|#
