@@ -395,7 +395,7 @@ name|message_type
 operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
-comment|/* 	     * Make sure the write to message_type (ie set to 	     * HV_MESSAGE_TYPE_NONE) happens before we read the 	     * message_pending and EOMing. Otherwise, the EOMing will 	     * not deliver any more messages 	     * since there is no empty slot 	     * 	     * NOTE: 	     * mb() is used here, since atomic_thread_fence_seq_cst() 	     * will become compler fence on UP kernel. 	     */
+comment|/* 	     * Make sure the write to message_type (ie set to 	     * HV_MESSAGE_TYPE_NONE) happens before we read the 	     * message_pending and EOMing. Otherwise, the EOMing will 	     * not deliver any more messages 	     * since there is no empty slot 	     * 	     * NOTE: 	     * mb() is used here, since atomic_thread_fence_seq_cst() 	     * will become compiler fence on UP kernel. 	     */
 name|mb
 argument_list|()
 expr_stmt|;
@@ -577,7 +577,7 @@ argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compler fence on UP kernel. 		 */
+comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
 name|mb
 argument_list|()
 expr_stmt|;
