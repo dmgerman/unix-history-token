@@ -5717,11 +5717,15 @@ condition|)
 block|{
 name|i
 operator|=
+operator|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|flowid
+operator|%
+literal|128
+operator|)
 operator|%
 name|priv
 operator|->
