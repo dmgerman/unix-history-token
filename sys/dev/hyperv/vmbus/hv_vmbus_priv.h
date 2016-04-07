@@ -512,8 +512,7 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-comment|/* 	 * Host use this vector to intrrupt guest for vmbus channel 	 * event and msg. 	 */
-name|unsigned
+comment|/* 	 * Host use this vector to interrupt guest for vmbus channel 	 * event and msg. 	 */
 name|int
 name|hv_cb_vector
 decl_stmt|;
