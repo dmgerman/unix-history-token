@@ -4466,8 +4466,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* no quirk found */
-break|break;
 block|}
 name|mtx_unlock
 argument_list|(
