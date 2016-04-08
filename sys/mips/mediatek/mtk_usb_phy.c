@@ -816,6 +816,16 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Things currently seem to work a lot better without slew rate calibration  * both on MT7621 and MT7688, so we leave it out for now.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1087,6 +1097,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -1096,6 +1111,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 name|struct
 name|mtk_usb_phy_softc
 modifier|*
@@ -1123,6 +1141,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1258,8 +1278,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* Slew rate calibration */
-comment|//mtk_usb_phy_slew_rate_calibration(sc);
+name|mtk_usb_phy_slew_rate_calibration
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
