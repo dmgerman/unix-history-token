@@ -4180,7 +4180,6 @@ operator|->
 name|ev_tq
 argument_list|)
 expr_stmt|;
-comment|/* Run the task queue with lowest priority */
 name|taskqueue_start_threads
 argument_list|(
 operator|&
@@ -4190,7 +4189,7 @@ name|ev_tq
 argument_list|,
 literal|1
 argument_list|,
-literal|255
+name|PRIBIO
 argument_list|,
 literal|"%s taskq"
 argument_list|,
