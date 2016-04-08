@@ -1432,24 +1432,6 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Samsung SM863 Series SSDs 		 * 4k optimised 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"*"
-block|,
-literal|"SAMSUNG MZ7KM*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|ADA_Q_4K
-block|}
-block|,
-block|{
 comment|/* 		 * SuperTalent TeraDrive CT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
