@@ -290,6 +290,25 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|md
+operator|.
+name|md_flags
+operator|&
+name|G_ELI_FLAG_GELIBOOT
+operator|)
+condition|)
+block|{
+comment|/* The GELIBOOT feature is not activated */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|md
 operator|.
@@ -300,25 +319,6 @@ operator|)
 condition|)
 block|{
 comment|/* Swap device, skip it. */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|md
-operator|.
-name|md_flags
-operator|&
-name|G_ELI_FLAG_BOOT
-operator|)
-condition|)
-block|{
-comment|/* Disk is not GELI boot device, skip it. */
 return|return
 operator|(
 literal|1
