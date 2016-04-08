@@ -991,7 +991,7 @@ name|bus_space_map
 argument_list|(
 name|bst
 argument_list|,
-name|MTK_DEFAULT_BASE
+name|base
 argument_list|,
 name|MTK_DEFAULT_SIZE
 argument_list|,
