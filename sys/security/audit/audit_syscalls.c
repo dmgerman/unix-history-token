@@ -1176,8 +1176,8 @@ operator|.
 name|au_qctrl64
 operator|.
 name|aq64_minfree
-operator|<
-literal|0
+operator|>
+literal|100
 operator|)
 operator|||
 operator|(
@@ -1186,8 +1186,8 @@ operator|.
 name|au_qctrl64
 operator|.
 name|aq64_minfree
-operator|>
-literal|100
+operator|<
+literal|0
 operator|)
 condition|)
 return|return
