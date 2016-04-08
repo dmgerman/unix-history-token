@@ -69,6 +69,22 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread_mutex
+argument_list|)
+operator|<=
+name|PAGE_SIZE
+argument_list|,
+literal|"pthread_mutex is too large for off-page"
+argument_list|)
+assert|;
+end_assert
+
 begin_comment
 comment|/*  * For adaptive mutexes, how many times to spin doing trylock2  * before entering the kernel to block  */
 end_comment

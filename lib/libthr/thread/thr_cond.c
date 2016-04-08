@@ -51,6 +51,22 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread_cond
+argument_list|)
+operator|<=
+name|PAGE_SIZE
+argument_list|,
+literal|"pthread_cond too large"
+argument_list|)
+assert|;
+end_assert
+
 begin_comment
 comment|/*  * Prototypes  */
 end_comment
