@@ -44,13 +44,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Provide the equivelant to Solaris thr_main() function  */
+comment|/*  * Provide the equivalent to Solaris thr_main() function.  */
 end_comment
 
 begin_function
 name|int
 name|_pthread_main_np
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

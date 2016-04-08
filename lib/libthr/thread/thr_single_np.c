@@ -40,7 +40,9 @@ end_expr_stmt
 begin_function
 name|int
 name|_pthread_single_np
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
 name|_pthread_suspend_all_np

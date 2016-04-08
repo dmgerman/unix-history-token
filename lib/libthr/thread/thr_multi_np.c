@@ -40,7 +40,9 @@ end_expr_stmt
 begin_function
 name|int
 name|_pthread_multi_np
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Return to multi-threaded scheduling mode: */
 comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 1; 	 */
