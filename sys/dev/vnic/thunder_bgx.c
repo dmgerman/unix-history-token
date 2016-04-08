@@ -1087,7 +1087,7 @@ block|{
 name|int
 name|timeout
 init|=
-literal|100
+literal|10
 decl_stmt|;
 name|uint64_t
 name|reg_val
@@ -1142,7 +1142,7 @@ operator|)
 return|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|timeout
