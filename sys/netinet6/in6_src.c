@@ -990,7 +990,8 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-name|odstzone
+literal|0
+comment|/* XXX */
 argument_list|)
 expr_stmt|;
 if|if
