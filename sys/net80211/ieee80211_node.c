@@ -2936,6 +2936,9 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2945,9 +2948,6 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_DEBUG
 name|struct
 name|ieee80211com
 modifier|*
