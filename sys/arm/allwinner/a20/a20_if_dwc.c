@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/extres/regulator/regulator.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"if_dwc_if.h"
 end_include
 
@@ -169,6 +175,9 @@ name|clk_t
 name|clk_tx
 decl_stmt|,
 name|clk_tx_parent
+decl_stmt|;
+name|regulator_t
+name|reg
 decl_stmt|;
 name|phandle_t
 name|node
@@ -311,6 +320,50 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"could not set tx clk parent\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+comment|/* Enable PHY regulator if applicable */
+if|if
+condition|(
+name|regulator_get_by_ofw_property
+argument_list|(
+name|dev
+argument_list|,
+literal|"phy-supply"
+argument_list|,
+operator|&
+name|reg
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|regulator_enable
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not enable PHY regulator\n"
 argument_list|)
 expr_stmt|;
 return|return
