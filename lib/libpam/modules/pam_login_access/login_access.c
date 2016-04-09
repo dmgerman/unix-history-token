@@ -662,7 +662,7 @@ argument_list|)
 init|;
 name|tok
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|tok
 operator|=
@@ -750,7 +750,7 @@ if|if
 condition|(
 name|tok
 operator|==
-literal|0
+name|NULL
 operator|||
 name|list_match
 argument_list|(

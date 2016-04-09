@@ -3553,7 +3553,7 @@ name|NULL
 expr_stmt|;
 name|keyblock
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|retval
 operator|=
