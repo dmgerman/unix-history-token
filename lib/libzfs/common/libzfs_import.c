@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2015 RackTop Systems.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2015 RackTop Systems.  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -4569,7 +4569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, clear (zero) the label information.  This function  * is currently only used in the appliance stack as part of the ZFS sysevent  * module.  */
+comment|/*  * Given a file descriptor, clear (zero) the label information.  */
 end_comment
 
 begin_function
@@ -4784,7 +4784,7 @@ name|char
 modifier|*
 name|default_dir
 init|=
-literal|"/dev/dsk"
+name|ZFS_DISK_ROOT
 decl_stmt|;
 name|pool_list_t
 name|pools
@@ -4869,8 +4869,10 @@ modifier|*
 name|t
 decl_stmt|;
 name|char
-modifier|*
 name|rdsk
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|int
 name|dfd
@@ -4968,19 +4970,41 @@ name|strcmp
 argument_list|(
 name|path
 argument_list|,
-literal|"/dev/dsk/"
+name|ZFS_DISK_ROOTD
 argument_list|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
 name|rdsk
-operator|=
-literal|"/dev/rdsk/"
+argument_list|,
+name|ZFS_RDISK_ROOTD
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rdsk
+argument_list|)
+argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
 name|rdsk
-operator|=
+argument_list|,
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rdsk
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

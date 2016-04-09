@@ -110,20 +110,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|DISK_ROOT
-value|"/dev/dsk"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RDISK_ROOT
-value|"/dev/rdsk"
-end_define
-
-begin_define
-define|#
-directive|define
 name|BACKUP_SLICE
 value|"s2"
 end_define
@@ -1215,7 +1201,7 @@ argument_list|)
 argument_list|,
 literal|"%s%s%s"
 argument_list|,
-name|RDISK_ROOT
+name|ZFS_RDISK_ROOT
 argument_list|,
 name|strrchr
 argument_list|(
@@ -1441,7 +1427,7 @@ argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|DISK_ROOT
+name|ZFS_DISK_ROOT
 argument_list|,
 name|arg
 argument_list|)
@@ -1494,7 +1480,7 @@ argument_list|)
 argument_list|,
 name|arg
 argument_list|,
-name|DISK_ROOT
+name|ZFS_DISK_ROOT
 argument_list|)
 expr_stmt|;
 operator|(
