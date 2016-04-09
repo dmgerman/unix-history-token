@@ -6904,6 +6904,17 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Always initialise FF/superg state; we can use this 		 * for doing A-MSDU encapsulation as well. 		 */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
+name|ieee80211_ff_node_init
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Configure state now that we are associated. 		 * 		 * XXX may need different/additional driver callbacks? 		 */
 if|if
 condition|(
