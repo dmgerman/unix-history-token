@@ -575,7 +575,7 @@ if|if
 condition|(
 name|r
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|errno

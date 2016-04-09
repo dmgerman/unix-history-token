@@ -495,13 +495,13 @@ name|xfer
 operator|->
 name|priv_sc0
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|xfer
 operator|->
 name|priv_sc1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|xfer
 operator|->
