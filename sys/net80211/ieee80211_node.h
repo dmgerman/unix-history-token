@@ -1273,6 +1273,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ieee80211_ibss_merge_check
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ieee80211_ibss_merge
 parameter_list|(
 name|struct
