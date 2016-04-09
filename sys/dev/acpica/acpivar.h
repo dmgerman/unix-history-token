@@ -2579,14 +2579,6 @@ begin_comment
 comment|/*  * Map a PXM to a VM domain.  *  * Returns the VM domain ID if found, or -1 if not found / invalid.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-end_if
-
 begin_function_decl
 specifier|extern
 name|int
@@ -2597,11 +2589,6 @@ name|pxm
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern

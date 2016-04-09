@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -190,10 +196,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vm_domains
+name|domain_pxm
 index|[
-name|VM_PHYSSEG_MAX
+name|MAXMEMDOM
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ndomain
 decl_stmt|;
 end_decl_stmt
 
@@ -503,11 +516,16 @@ name|slit
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 comment|/* Tell the VM about it! */
 name|mem_locality
 operator|=
 name|vm_locality_table
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1480,7 +1498,7 @@ decl_stmt|,
 name|slot
 decl_stmt|;
 comment|/* Enumerate all the domains. */
-name|vm_ndomains
+name|ndomain
 operator|=
 literal|0
 expr_stmt|;
@@ -1507,7 +1525,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|vm_ndomains
+name|ndomain
 condition|;
 name|j
 operator|++
@@ -1515,7 +1533,7 @@ control|)
 block|{
 if|if
 condition|(
-name|vm_domains
+name|domain_pxm
 index|[
 name|j
 index|]
@@ -1533,9 +1551,9 @@ if|if
 condition|(
 name|j
 operator|<
-name|vm_ndomains
+name|ndomain
 operator|&&
-name|vm_domains
+name|domain_pxm
 index|[
 name|j
 index|]
@@ -1557,7 +1575,7 @@ for|for
 control|(
 name|j
 operator|=
-name|vm_ndomains
+name|ndomain
 init|;
 name|j
 operator|>
@@ -1566,19 +1584,19 @@ condition|;
 name|j
 operator|--
 control|)
-name|vm_domains
+name|domain_pxm
 index|[
 name|j
 index|]
 operator|=
-name|vm_domains
+name|domain_pxm
 index|[
 name|j
 operator|-
 literal|1
 index|]
 expr_stmt|;
-name|vm_domains
+name|domain_pxm
 index|[
 name|slot
 index|]
@@ -1590,17 +1608,17 @@ index|]
 operator|.
 name|domain
 expr_stmt|;
-name|vm_ndomains
+name|ndomain
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|vm_ndomains
+name|ndomain
 operator|>
 name|MAXMEMDOM
 condition|)
 block|{
-name|vm_ndomains
+name|ndomain
 operator|=
 literal|1
 expr_stmt|;
@@ -1616,7 +1634,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Renumber each domain to its index in the sorted 'domains' list. */
+comment|/* Renumber each domain to its index in the sorted 'domain_pxm' list. */
 for|for
 control|(
 name|i
@@ -1625,7 +1643,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|vm_ndomains
+name|ndomain
 condition|;
 name|i
 operator|++
@@ -1634,7 +1652,7 @@ block|{
 comment|/* 		 * If the domain is already the right value, no need 		 * to renumber. 		 */
 if|if
 condition|(
-name|vm_domains
+name|domain_pxm
 index|[
 name|i
 index|]
@@ -1665,7 +1683,7 @@ index|]
 operator|.
 name|domain
 operator|==
-name|vm_domains
+name|domain_pxm
 index|[
 name|i
 index|]
@@ -1708,7 +1726,7 @@ index|]
 operator|.
 name|domain
 operator|==
-name|vm_domains
+name|domain_pxm
 index|[
 name|i
 index|]
@@ -1723,17 +1741,6 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
-name|vm_ndomains
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"renumber_domains: invalid final vm_ndomains setup"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1853,11 +1860,20 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 comment|/* Point vm_phys at our memory affinity table. */
+name|vm_ndomains
+operator|=
+name|ndomain
+expr_stmt|;
 name|mem_affinity
 operator|=
 name|mem_info
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2173,7 +2189,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|vm_ndomains
+name|ndomain
 condition|;
 name|i
 operator|++
@@ -2181,7 +2197,7 @@ control|)
 block|{
 if|if
 condition|(
-name|vm_domains
+name|domain_pxm
 index|[
 name|i
 index|]
@@ -2194,6 +2210,32 @@ name|i
 operator|)
 return|;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* MAXMEMDOM == 1 */
+end_comment
+
+begin_function
+name|int
+name|acpi_map_pxm_to_vm_domainid
+parameter_list|(
+name|int
+name|pxm
+parameter_list|)
+block|{
 return|return
 operator|(
 operator|-

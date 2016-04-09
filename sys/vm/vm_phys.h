@@ -400,11 +400,9 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 name|int
 name|domn
 decl_stmt|,

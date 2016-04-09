@@ -69,24 +69,11 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -195,6 +182,12 @@ argument_list|)
 assert|;
 end_assert
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|mem_affinity
@@ -209,6 +202,11 @@ modifier|*
 name|mem_locality
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -582,13 +580,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -679,13 +675,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1293,11 +1287,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 name|struct
 name|thread
 modifier|*
@@ -1352,11 +1344,9 @@ modifier|*
 name|vi
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 name|struct
 name|vm_domain_policy
 name|lcl
@@ -1368,11 +1358,9 @@ argument_list|(
 name|vi
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 comment|/* Copy out the thread policy */
 name|vm_domain_policy_localcopy
 argument_list|(
@@ -2030,11 +2018,9 @@ name|int
 name|t
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 if|if
 condition|(
 name|mem_locality
@@ -2088,13 +2074,11 @@ directive|endif
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
+end_ifdef
 
 begin_comment
 comment|/*  * Outputs the VM locality table.  */
@@ -2495,6 +2479,9 @@ name|vm_paddr_t
 name|end
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
 name|int
 name|i
 decl_stmt|;
@@ -2633,6 +2620,19 @@ operator|.
 name|end
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|_vm_phys_create_seg
+argument_list|(
+name|start
+argument_list|,
+name|end
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

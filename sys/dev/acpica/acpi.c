@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_device_numa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -5372,11 +5378,9 @@ modifier|*
 name|domain
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
+ifdef|#
+directive|ifdef
+name|DEVICE_NUMA
 name|ACPI_HANDLE
 name|h
 decl_stmt|;
