@@ -1496,7 +1496,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: creating %s on channel %u\n"
+literal|"%s: creating %s on channel %u%c\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1511,6 +1511,11 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
+name|chan
+argument_list|)
+argument_list|,
+name|ieee80211_channel_type_char
+argument_list|(
 name|chan
 argument_list|)
 argument_list|)
