@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -136,20 +136,6 @@ name|sb
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|DISK_ROOT
-value|"/dev/dsk"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RDISK_ROOT
-value|"/dev/rdsk"
-end_define
 
 begin_define
 define|#
@@ -10889,7 +10875,7 @@ argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|RDISK_ROOT
+name|ZFS_RDISK_ROOT
 argument_list|,
 name|name
 argument_list|)
@@ -11295,7 +11281,7 @@ name|pathname
 operator|+=
 name|strlen
 argument_list|(
-name|DISK_ROOT
+name|ZFS_DISK_ROOT
 argument_list|)
 operator|+
 literal|1
@@ -16049,16 +16035,22 @@ name|strncmp
 argument_list|(
 name|path
 argument_list|,
-literal|"/dev/dsk/"
+name|ZFS_DISK_ROOTD
 argument_list|,
-literal|9
+name|strlen
+argument_list|(
+name|ZFS_DISK_ROOTD
+argument_list|)
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|path
 operator|+=
-literal|9
+name|strlen
+argument_list|(
+name|ZFS_DISK_ROOTD
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -18189,7 +18181,7 @@ argument_list|)
 argument_list|,
 literal|"%s%s"
 argument_list|,
-name|RDISK_ROOT
+name|ZFS_RDISK_ROOT
 argument_list|,
 name|strrchr
 argument_list|(
@@ -18569,7 +18561,7 @@ argument_list|)
 argument_list|,
 literal|"%s/%s%s"
 argument_list|,
-name|RDISK_ROOT
+name|ZFS_RDISK_ROOT
 argument_list|,
 name|name
 argument_list|,
