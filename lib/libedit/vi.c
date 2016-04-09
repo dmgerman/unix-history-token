@@ -4607,7 +4607,7 @@ name|wep
 operator|=
 name|wsp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 do|do
 block|{
@@ -4684,7 +4684,7 @@ if|if
 condition|(
 name|wsp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|el
