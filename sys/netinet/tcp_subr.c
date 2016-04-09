@@ -3301,14 +3301,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_RFC7413
-name|tcp_fastopen_destroy
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|tcp_hc_destroy
 argument_list|()
 expr_stmt|;
@@ -3334,6 +3326,15 @@ argument_list|(
 name|V_tcpcb_zone
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
+comment|/* 	 * Cannot free the zone until all tcpcbs are released as we attach 	 * the allocations to them. 	 */
+name|tcp_fastopen_destroy
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|hhook_head_deregister
