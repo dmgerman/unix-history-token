@@ -3093,7 +3093,7 @@ if|if
 condition|(
 name|redir
 operator|==
-literal|0
+name|NULL
 condition|)
 name|rpp
 operator|=
