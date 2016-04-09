@@ -2998,7 +2998,7 @@ name|tcp_inpcb_init
 argument_list|,
 name|NULL
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|,
 name|IPI_HASHFIELDS_4TUPLE
 argument_list|)
