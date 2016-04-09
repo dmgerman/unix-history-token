@@ -5299,9 +5299,11 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: called"
+literal|"%s: called (%p)"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
 argument_list|)
 expr_stmt|;
 if|if
@@ -5324,9 +5326,11 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: calling cleanup"
+literal|"%s: calling cleanup (%p)"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
 argument_list|)
 expr_stmt|;
 name|ieee80211_ht_node_cleanup
@@ -5425,9 +5429,11 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: called"
+literal|"%s: called (%p)"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
 argument_list|)
 expr_stmt|;
 name|KASSERT
