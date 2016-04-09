@@ -318,9 +318,16 @@ name|hp
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: hash not empty"
+literal|"%s: hashtbl %p not empty "
+literal|"(malloc type %s)"
 operator|,
 name|__func__
+operator|,
+name|hashtbl
+operator|,
+name|type
+operator|->
+name|ks_shortdesc
 operator|)
 argument_list|)
 expr_stmt|;
