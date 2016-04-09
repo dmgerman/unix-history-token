@@ -16885,6 +16885,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -16927,7 +16930,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -16953,6 +16956,14 @@ argument_list|,
 name|path
 argument_list|,
 name|fd
+argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_FUTIMES
+argument_list|)
 argument_list|,
 name|td
 argument_list|)
