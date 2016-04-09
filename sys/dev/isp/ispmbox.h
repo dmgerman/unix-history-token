@@ -7540,8 +7540,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNS_RSPN_ID
+value|0x218
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNS_RFF_ID
 value|0x21F
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_RSNN_NN
+value|0x239
 end_define
 
 begin_typedef
