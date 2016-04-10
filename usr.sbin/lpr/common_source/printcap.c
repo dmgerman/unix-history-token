@@ -764,7 +764,7 @@ name|bp
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|PCAPERR_OSERR
@@ -1830,7 +1830,7 @@ condition|(
 operator|*
 name|result
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|PCAPERR_OSERR
@@ -2050,7 +2050,7 @@ if|if
 condition|(
 name|nameend
 operator|==
-literal|0
+name|NULL
 condition|)
 name|nameend
 operator|=
@@ -2073,7 +2073,7 @@ literal|1
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|retval

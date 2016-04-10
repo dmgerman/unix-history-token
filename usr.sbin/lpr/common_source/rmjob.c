@@ -1465,7 +1465,7 @@ if|if
 condition|(
 name|iov
 operator|==
-literal|0
+name|NULL
 condition|)
 name|fatal
 argument_list|(

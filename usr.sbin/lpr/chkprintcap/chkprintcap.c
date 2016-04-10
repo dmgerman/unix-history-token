@@ -847,7 +847,7 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -945,7 +945,7 @@ argument_list|)
 expr_stmt|;
 name|last
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -1049,7 +1049,7 @@ if|if
 condition|(
 name|dp2
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|equal
 argument_list|(
@@ -1216,7 +1216,7 @@ if|if
 condition|(
 name|gr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(

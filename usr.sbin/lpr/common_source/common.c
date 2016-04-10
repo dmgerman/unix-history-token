@@ -1205,7 +1205,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|buf
 operator|=
@@ -1297,7 +1297,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|buf
 operator|=
