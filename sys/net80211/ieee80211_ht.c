@@ -9947,11 +9947,14 @@ name|txa_attempts
 operator|>=
 name|ieee80211_addba_maxtries
 operator|&&
+name|ieee80211_time_after
+argument_list|(
 name|ticks
-operator|<
+argument_list|,
 name|tap
 operator|->
 name|txa_nextrequest
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Don't retry too often; txa_nextrequest is set 		 * to the minimum interval we'll retry after 		 * ieee80211_addba_maxtries failed attempts are made. 		 */
