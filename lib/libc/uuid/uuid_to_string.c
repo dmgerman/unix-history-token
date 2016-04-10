@@ -63,7 +63,7 @@ if|if
 condition|(
 name|s
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if

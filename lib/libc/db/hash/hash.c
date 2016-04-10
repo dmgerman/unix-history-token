@@ -4123,7 +4123,7 @@ name|hashp
 operator|->
 name|cpage
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

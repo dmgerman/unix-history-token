@@ -730,7 +730,7 @@ if|if
 condition|(
 name|pos
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* A non-base64 character. */
 return|return

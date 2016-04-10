@@ -86,8 +86,6 @@ specifier|static
 name|char
 modifier|*
 name|default_domain
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +107,8 @@ decl_stmt|;
 if|if
 condition|(
 name|default_domain
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -149,10 +149,6 @@ condition|)
 block|{
 name|default_domain
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -172,7 +168,7 @@ if|if
 condition|(
 name|default_domain
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -227,7 +223,7 @@ name|get_default_domain
 argument_list|()
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

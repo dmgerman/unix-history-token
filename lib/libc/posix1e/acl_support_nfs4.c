@@ -340,7 +340,7 @@ name|flags
 operator|->
 name|name
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|flags
 operator|++

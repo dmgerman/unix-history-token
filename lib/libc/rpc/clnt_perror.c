@@ -176,14 +176,10 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|CLNT_PERROR_BUFLEN
@@ -261,7 +257,7 @@ if|if
 condition|(
 name|str
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -916,7 +912,7 @@ if|if
 condition|(
 name|str
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

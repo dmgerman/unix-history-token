@@ -707,7 +707,7 @@ for|for
 control|(
 name|dpv
 operator|=
-literal|0
+name|NULL
 init|;
 condition|;
 control|)

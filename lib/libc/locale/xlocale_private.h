@@ -325,7 +325,9 @@ name|val
 decl_stmt|;
 name|long
 name|count
-init|=
+decl_stmt|;
+name|count
+operator|=
 name|atomic_fetchadd_long
 argument_list|(
 operator|&
@@ -340,23 +342,19 @@ literal|1
 argument_list|)
 operator|-
 literal|1
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|count
 operator|<
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-literal|0
-operator|!=
+operator|&&
 name|obj
 operator|->
 name|destructor
+operator|!=
+name|NULL
 condition|)
-block|{
 name|obj
 operator|->
 name|destructor
@@ -364,8 +362,6 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
