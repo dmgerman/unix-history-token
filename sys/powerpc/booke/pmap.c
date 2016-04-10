@@ -696,6 +696,8 @@ name|vm_offset_t
 name|tlb1_map_base
 init|=
 name|VM_MAXUSER_ADDRESS
+operator|+
+name|PAGE_SIZE
 decl_stmt|;
 end_decl_stmt
 
