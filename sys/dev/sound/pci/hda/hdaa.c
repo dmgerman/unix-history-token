@@ -4758,7 +4758,6 @@ argument|);
 argument_list|)
 empty_stmt|;
 block|}
-empty_stmt|;
 block|}
 name|hdaa_presence_handler
 argument_list|(
@@ -5182,7 +5181,6 @@ name|HDA_CONFIG_DEFAULTCONF_COLOR_MASK
 operator|)
 expr_stmt|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -5348,7 +5346,6 @@ operator|)
 expr_stmt|;
 continue|continue;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -5515,7 +5512,6 @@ operator|)
 expr_stmt|;
 continue|continue;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i

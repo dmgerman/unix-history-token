@@ -4561,7 +4561,6 @@ operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
 comment|/* SM power save off */
-empty_stmt|;
 comment|/* 		 * Enable short-GI for HT20 only if the hardware 		 * advertises support. 		 * Notably, anything earlier than the AR9287 doesn't. 		 */
 if|if
 condition|(

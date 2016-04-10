@@ -2653,7 +2653,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb

@@ -3002,7 +3002,6 @@ name|PART_FREEBSD_ZFS
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|PART_UNKNOWN

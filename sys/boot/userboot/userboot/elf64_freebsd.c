@@ -576,7 +576,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* return address */
-empty_stmt|;
 name|stack
 index|[
 literal|1

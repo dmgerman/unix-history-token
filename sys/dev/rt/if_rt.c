@@ -2660,7 +2660,6 @@ operator|=
 name|INT_TXQ0_DONE
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* allocate Tx and Rx rings */
 for|for
 control|(

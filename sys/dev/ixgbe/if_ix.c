@@ -9670,7 +9670,6 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-empty_stmt|;
 return|return
 operator|(
 name|mta

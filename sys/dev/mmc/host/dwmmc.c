@@ -893,7 +893,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|device_printf
 argument_list|(
 name|sc

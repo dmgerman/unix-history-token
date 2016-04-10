@@ -13475,7 +13475,6 @@ name|i_ptr
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -14386,7 +14385,6 @@ literal|", "
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|db_printf
 argument_list|(
 literal|"\n"

@@ -3169,7 +3169,6 @@ goto|goto
 name|out_unmap
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|vfct

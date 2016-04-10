@@ -413,7 +413,6 @@ name|MII_MEDIA_10_T_FDX
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|IFM_100_TX

@@ -2091,7 +2091,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|OF_getprop
 argument_list|(
 name|edma_node
@@ -2165,15 +2164,12 @@ block|{
 comment|/* found */
 break|break;
 block|}
-empty_stmt|;
 name|edma_sc
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|edma_sc
@@ -2196,7 +2192,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|edma_sc
@@ -2234,7 +2229,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0

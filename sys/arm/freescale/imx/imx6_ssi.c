@@ -2191,7 +2191,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|sdma_sc

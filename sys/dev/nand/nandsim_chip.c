@@ -1638,7 +1638,6 @@ name|ev
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|NANDSIM_CHIP_UNLOCK
 argument_list|(
 name|chip

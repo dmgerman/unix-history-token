@@ -5787,7 +5787,6 @@ name|umem
 operator|->
 name|nmap
 expr_stmt|;
-empty_stmt|;
 name|mr
 operator|->
 name|mtt

@@ -472,7 +472,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 comment|/* Try to name node */
 if|if
 condition|(
@@ -936,7 +935,6 @@ operator|)
 return|;
 comment|/* XXX: find smth better */
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|m

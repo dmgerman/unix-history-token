@@ -13311,7 +13311,6 @@ operator|-
 name|EINVAL
 return|;
 block|}
-empty_stmt|;
 comment|/* update the admin& oper state on the link state */
 name|s_info
 operator|=

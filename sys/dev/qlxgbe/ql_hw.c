@@ -17816,7 +17816,6 @@ operator|+
 name|hdrlen
 operator|)
 expr_stmt|;
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -17962,7 +17961,6 @@ operator|+
 name|hdrlen
 operator|)
 expr_stmt|;
-empty_stmt|;
 block|}
 else|else
 block|{

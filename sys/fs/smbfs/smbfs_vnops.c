@@ -1607,7 +1607,6 @@ goto|goto
 name|out
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|isreadonly

@@ -2659,7 +2659,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!

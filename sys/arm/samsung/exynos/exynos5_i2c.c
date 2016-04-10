@@ -1328,7 +1328,6 @@ name|IIC_ENOACK
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1721,7 +1720,6 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|clear_ipend
 argument_list|(
 name|sc
@@ -1970,7 +1968,6 @@ name|IIC_ENOACK
 operator|)
 return|;
 block|}
-empty_stmt|;
 operator|(
 operator|*
 name|sent

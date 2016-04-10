@@ -626,7 +626,6 @@ name|i
 index|]
 expr_stmt|;
 block|}
-empty_stmt|;
 name|fill_checksum
 argument_list|(
 name|msg_dout
@@ -746,7 +745,6 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-empty_stmt|;
 name|free
 argument_list|(
 name|msg_dout

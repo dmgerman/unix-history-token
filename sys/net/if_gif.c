@@ -4943,7 +4943,6 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sc

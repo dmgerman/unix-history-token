@@ -2152,7 +2152,6 @@ operator|=
 name|last
 expr_stmt|;
 block|}
-empty_stmt|;
 name|ow_release_bus
 argument_list|(
 name|dev

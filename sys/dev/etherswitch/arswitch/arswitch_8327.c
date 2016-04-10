@@ -2687,7 +2687,6 @@ expr_stmt|;
 comment|/* start PHY autonegotiation? */
 comment|/* XXX is this done as part of the normal PHY setup? */
 block|}
-empty_stmt|;
 comment|/* Let things settle */
 name|DELAY
 argument_list|(

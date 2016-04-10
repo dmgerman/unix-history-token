@@ -2705,7 +2705,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-empty_stmt|;
 name|bktr
 operator|->
 name|clr_on_start
@@ -14861,7 +14860,6 @@ operator|++
 operator|=
 name|OP_JUMP
 expr_stmt|;
-empty_stmt|;
 operator|*
 name|dma_prog
 operator|=

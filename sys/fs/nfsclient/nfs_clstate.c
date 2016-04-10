@@ -6495,7 +6495,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|fl
@@ -17227,7 +17226,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|error

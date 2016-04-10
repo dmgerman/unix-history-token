@@ -17715,7 +17715,6 @@ literal|"Out of memory?!"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|child
 operator|=
 name|device_add_child
@@ -18323,7 +18322,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|child
 operator|=
 name|device_add_child

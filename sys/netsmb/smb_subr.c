@@ -885,7 +885,6 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

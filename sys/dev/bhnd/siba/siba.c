@@ -402,7 +402,6 @@ name|cleanup
 goto|;
 block|}
 block|}
-empty_stmt|;
 block|}
 name|cleanup
 label|:

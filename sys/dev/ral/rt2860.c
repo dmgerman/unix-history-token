@@ -19375,7 +19375,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX (val>> 1)& 1 */
-empty_stmt|;
 comment|/* check if we have a hardware radio switch */
 name|sc
 operator|->

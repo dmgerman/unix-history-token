@@ -2442,7 +2442,6 @@ name|start
 operator|+
 literal|4
 expr_stmt|;
-empty_stmt|;
 block|}
 for|for
 control|(

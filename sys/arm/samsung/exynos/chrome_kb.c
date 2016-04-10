@@ -912,7 +912,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -951,7 +950,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sc
@@ -1355,7 +1353,6 @@ name|sc_repeat_key
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sc
@@ -1443,7 +1440,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -1537,7 +1533,6 @@ condition|)
 block|{
 continue|continue;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|newbit
@@ -3615,7 +3610,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 name|kbd_init_struct
 argument_list|(
 name|kbd
@@ -3752,7 +3746,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|KBD_CONFIG_DONE
 argument_list|(
 name|kbd

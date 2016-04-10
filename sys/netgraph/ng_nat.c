@@ -3496,7 +3496,6 @@ name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Final free. */
 name|LibAliasUninit
 argument_list|(

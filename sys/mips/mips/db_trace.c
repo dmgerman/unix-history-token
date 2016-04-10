@@ -1038,7 +1038,6 @@ literal|1
 expr_stmt|;
 comment|/* stop now */
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|OP_BCOND
@@ -1100,7 +1099,6 @@ literal|2
 expr_stmt|;
 comment|/* stop after next instruction */
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|OP_SW

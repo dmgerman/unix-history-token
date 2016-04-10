@@ -2564,13 +2564,11 @@ literal|0
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|n
 operator|+=
 name|ngpio
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 operator|-
@@ -3412,7 +3410,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|bus_alloc_resources
@@ -3492,7 +3489,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|dev

@@ -2628,7 +2628,6 @@ name|inq
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|flags
@@ -4768,7 +4767,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|flags

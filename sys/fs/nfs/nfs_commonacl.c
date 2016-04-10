@@ -2079,7 +2079,6 @@ break|break;
 default|default:
 continue|continue;
 block|}
-empty_stmt|;
 name|retlen
 operator|+=
 name|nfsrv_buildace
@@ -2382,7 +2381,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|acep1
 operator|++
 expr_stmt|;

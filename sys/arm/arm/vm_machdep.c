@@ -539,7 +539,6 @@ name|md_saved_cspr
 operator|=
 name|PSR_SVC32_MODE
 expr_stmt|;
-empty_stmt|;
 if|#
 directive|if
 name|__ARM_ARCH

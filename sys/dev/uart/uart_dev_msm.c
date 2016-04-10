@@ -452,7 +452,6 @@ name|ulcon
 argument_list|)
 expr_stmt|;
 comment|/* Set 115200 for both TX and RX. */
-empty_stmt|;
 name|uart_setreg
 argument_list|(
 name|bas

@@ -1346,7 +1346,6 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|error

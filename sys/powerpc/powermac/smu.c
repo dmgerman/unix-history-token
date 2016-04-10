@@ -4405,7 +4405,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-empty_stmt|;
 block|}
 comment|/* We can only read the RPM from a PWM controlled fan, so return. */
 if|if

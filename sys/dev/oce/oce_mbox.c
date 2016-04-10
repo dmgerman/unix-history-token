@@ -10710,7 +10710,6 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 1 for def RX */
-empty_stmt|;
 block|}
 name|error
 label|:
@@ -11279,7 +11278,6 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 1 for def RX */
-empty_stmt|;
 block|}
 name|error
 label|:

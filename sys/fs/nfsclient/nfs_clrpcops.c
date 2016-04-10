@@ -2971,7 +2971,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -13356,7 +13355,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -23300,7 +23298,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|start

@@ -7401,7 +7401,6 @@ name|trysel
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 operator|*
 name|p
 operator|++
@@ -7592,7 +7591,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 operator|*
 name|p
 operator|++
@@ -7798,7 +7796,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 operator|*
 name|p
 operator|++
@@ -7980,7 +7977,6 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -8186,7 +8182,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|relocs
@@ -8400,7 +8395,6 @@ literal|4
 expr_stmt|;
 block|}
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -10566,7 +10560,6 @@ operator|->
 name|minsync
 expr_stmt|;
 block|}
-empty_stmt|;
 name|usrwide
 operator|=
 operator|(
@@ -11056,7 +11049,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-empty_stmt|;
 comment|/* 	**	Install the interrupt handler. 	*/
 name|rid
 operator|=
@@ -11430,7 +11422,6 @@ operator|=
 literal|100
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -11655,7 +11646,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|cp
 operator|->
 name|ccb
@@ -11788,9 +11778,7 @@ operator|=
 name|NS_SYNC
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 comment|/*--------------------------------------------------- 		** 		**	choose a new tag ... 		** 		**---------------------------------------------------- 		*/
 name|lp
 operator|=
@@ -11917,9 +11905,7 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -11930,7 +11916,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------------------- 		** 		**	Build the identify / tag / sdtr message 		** 		**---------------------------------------------------- 		*/
 name|idmsg
 operator|=
@@ -12182,7 +12167,6 @@ block|}
 empty_stmt|;
 break|break;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------------------- 		** 		**	Build the identify message for getcc. 		** 		**---------------------------------------------------- 		*/
 name|cp
 operator|->
@@ -14274,7 +14258,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	Check for extended errors. 	*/
 if|if
 condition|(
@@ -14327,7 +14310,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|cp
@@ -14343,7 +14325,6 @@ operator|=
 name|HS_FAIL
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	Check the status. 	*/
 if|if
 condition|(
@@ -14695,7 +14676,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|cp
 operator|=
 name|cp
@@ -14703,7 +14683,6 @@ operator|->
 name|link_nccb
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 specifier|static
 name|void
@@ -16214,7 +16193,6 @@ operator|=
 name|scntl3
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 comment|/*========================================================== ** **	Switch wide mode for current job and its target **	SCSI specs say: a SCSI device that accepts a WDTR  **	message shall reset the synchronous agreement to  **	asynchronous mode. ** **========================================================== */
 specifier|static
@@ -16622,7 +16600,6 @@ operator|=
 name|scntl3
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 comment|/*========================================================== ** ** **	ncr timeout handler. ** ** **========================================================== ** **	Misused to keep the driver running when **	interrupts are not configured correctly. ** **---------------------------------------------------------- */
 specifier|static
@@ -16733,7 +16710,6 @@ name|SIGP
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------------------- 		** 		**	handle nccb timeouts 		** 		**---------------------------------------------------- 		*/
 for|for
 control|(
@@ -16833,7 +16809,6 @@ name|skip
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 switch|switch
 condition|(
 name|cp
@@ -16858,7 +16833,6 @@ operator|=
 name|HS_TIMEOUT
 expr_stmt|;
 block|}
-empty_stmt|;
 name|cp
 operator|->
 name|tag
@@ -16874,7 +16848,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 name|callout_reset
 argument_list|(
@@ -16939,7 +16912,6 @@ literal|"}"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 comment|/*========================================================== ** **	log message for real hard errors ** **	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ name (dsp:dbc)." **	"	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf." ** **	exception register: **		ds:	dstat **		si:	sist ** **	SCSI bus lines: **		so:	control lines as driver by NCR. **		si:	control lines as seen by NCR. **		sd:	scsi data lines as seen by NCR. ** **	wide/fastmode: **		sxfer:	(see the manual) **		scntl3:	(see the manual) ** **	current script command: **		dsp:	script address (relative to start of script). **		dbc:	first word of script command. ** **	First 16 register of the chip: **		r0..rf ** **========================================================== */
 specifier|static
@@ -17328,7 +17300,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -17458,7 +17429,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*------------------------------------------- 	**	selection timeout 	** 	**	IID excluded from dstat mask! 	**	(chip bug) 	**------------------------------------------- 	*/
 if|if
 condition|(
@@ -17512,7 +17482,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*------------------------------------------- 	**      Phase mismatch. 	**------------------------------------------- 	*/
 if|if
 condition|(
@@ -17570,7 +17539,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------- 	**	move command with length 0 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -17647,7 +17615,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*------------------------------------------- 	**	Programmed interrupt 	**------------------------------------------- 	*/
 if|if
 condition|(
@@ -17712,7 +17679,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*======================================== 	**	log message for real hard errors 	**======================================== 	*/
 name|ncr_log_hard_error
 argument_list|(
@@ -17799,7 +17765,6 @@ operator|=
 name|sist
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------- 	**	clean up the dma fifo 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -18011,7 +17976,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------- 	**	cannot disconnect 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -18108,7 +18072,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|device_printf
 argument_list|(
 name|np
@@ -18128,7 +18091,6 @@ expr_stmt|;
 comment|/* 		**	return without restarting the NCR. 		**	timeout will do the real work. 		*/
 return|return;
 block|}
-empty_stmt|;
 comment|/*---------------------------------------- 	**	single step 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -18192,7 +18154,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, or  **	if targets are switched on or off while the driver is running. */
 if|if
 condition|(
@@ -18283,7 +18244,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|val
 operator|=
 name|bus_read_1
@@ -18322,7 +18282,6 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
@@ -18350,7 +18309,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 ifdef|#
 directive|ifdef
 name|NCR_FREEZE
@@ -18463,7 +18421,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	repair start queue 	*/
 name|scratcha
 operator|=
@@ -18526,7 +18483,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|ncr_init
 argument_list|(
 name|np
@@ -18778,7 +18734,6 @@ name|rest
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|OUTB
 argument_list|(
 name|nc_ctest3
@@ -19065,7 +19020,6 @@ operator|=
 name|dsp
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	log the information 	*/
 if|if
 condition|(
@@ -19109,7 +19063,6 @@ name|ss0
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -19146,7 +19099,6 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	get old startaddress and old length. 	*/
 name|oadr
 operator|=
@@ -19225,7 +19177,6 @@ operator|&
 literal|0xffffff
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -19269,7 +19220,6 @@ name|oadr
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	**	if old phase not dataphase, leave here. 	*/
 if|if
 condition|(
@@ -19373,7 +19323,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 	**	choose the correct patch area. 	**	if savep points to one, choose the other. 	*/
 name|newcmd
 operator|=
@@ -19626,7 +19575,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|i
@@ -19664,7 +19612,6 @@ literal|2
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|1
@@ -19979,7 +19926,6 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|cp
@@ -20022,7 +19968,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 		**	no job, resume normal processing 		*/
 if|if
 condition|(
@@ -20167,7 +20112,6 @@ name|nego_status
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		**	any error in negotiation: 		**	fall back to default mode. 		*/
 switch|switch
 condition|(
@@ -20209,7 +20153,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|np
 operator|->
 name|msgin
@@ -20286,7 +20229,6 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		**	get requested values. 		*/
 name|chg
 operator|=
@@ -20588,7 +20530,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return;
 case|case
 name|NS_WIDE
@@ -20606,9 +20547,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		**	It was a request. Set value and 		**      prepare an answer message 		*/
 name|ncr_setsync
 argument_list|(
@@ -20784,7 +20723,6 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		**	get requested values. 		*/
 name|chg
 operator|=
@@ -20937,7 +20875,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return;
 case|case
 name|NS_SYNC
@@ -20957,9 +20894,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		**	It was a request, set value and 		**      prepare an answer message 		*/
 name|ncr_setwide
 argument_list|(
@@ -21276,7 +21211,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 		**	else remove the interrupt. 		*/
 name|device_printf
 argument_list|(
@@ -21304,7 +21238,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|out
 label|:
 name|OUTB
@@ -22422,7 +22355,6 @@ name|vaddr
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -22499,7 +22431,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|segment
@@ -22597,7 +22528,6 @@ literal|0x10
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -22791,7 +22721,6 @@ literal|0x20
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* 	**	Check termination position. 	*/
 if|if
 condition|(
@@ -22850,7 +22779,6 @@ literal|0x40
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* 	**	Show results. 	*/
 if|if
 condition|(
@@ -22879,7 +22807,6 @@ operator||=
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|host_rd
@@ -22907,7 +22834,6 @@ operator||=
 literal|2
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|ncr_bk
@@ -22935,7 +22861,6 @@ operator||=
 literal|4
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|err

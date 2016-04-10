@@ -2782,7 +2782,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|error

@@ -1426,7 +1426,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|OP_BCOND
@@ -1758,7 +1757,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|OP_COP1
@@ -1936,7 +1934,6 @@ name|ft
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|OP_J

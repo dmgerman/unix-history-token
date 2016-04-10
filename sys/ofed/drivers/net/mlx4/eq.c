@@ -3839,7 +3839,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 operator|++
 name|eq
 operator|->

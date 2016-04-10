@@ -611,7 +611,6 @@ operator|*
 literal|2
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Take first unused eDMA channel */
 name|ch
 operator|=
@@ -659,7 +658,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|ch
@@ -675,7 +673,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|chnum
 operator|=
 name|i

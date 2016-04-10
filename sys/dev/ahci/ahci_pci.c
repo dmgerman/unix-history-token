@@ -3572,7 +3572,6 @@ name|error
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* Setup interrupts. */
 comment|/* Setup MSI register parameters */
 comment|/* Process hints. */

@@ -1782,7 +1782,6 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|reg
 operator|=
 name|READ4
@@ -1837,9 +1836,7 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -2022,9 +2019,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|OF_peer

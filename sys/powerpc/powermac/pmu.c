@@ -6151,7 +6151,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int

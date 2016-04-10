@@ -7274,7 +7274,6 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 * On some parts, SPI write time could vary from 0-20mSec on 3.3V 	 * devices (and only 0-5mSec on 5V devices) 	 */
 if|if
 condition|(
@@ -7526,7 +7525,6 @@ operator|>>
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* We leave the "DI" bit set to "0" when we leave this routine. */
 name|eec
 operator|&=
