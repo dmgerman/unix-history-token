@@ -11536,14 +11536,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|TASKQUEUE_DEFINE_THREAD
-argument_list|(
-name|ffs_trim
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|ffs_blkfree_trim_params
@@ -11653,6 +11645,19 @@ name|ump
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|ump
+operator|->
+name|um_trim_inflight
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|tp
@@ -11708,7 +11713,11 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_ffs_trim
+name|tp
+operator|->
+name|ump
+operator|->
+name|um_trim_tq
 argument_list|,
 operator|&
 name|tp
@@ -11860,6 +11869,16 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Postpone the set of the free bit in the cg bitmap until the 	 * BIO_DELETE is completed.  Otherwise, due to disk queue 	 * reordering, TRIM might be issued after we reuse the block 	 * and write some new data into it. 	 */
+name|atomic_add_int
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|um_trim_inflight
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|malloc
