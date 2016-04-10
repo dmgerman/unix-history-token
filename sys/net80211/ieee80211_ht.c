@@ -1011,12 +1011,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1057,11 +1051,6 @@ literal|"AMPDU max reorder age (ms)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1301,9 +1290,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Setup HT parameters that depends on the clock frequency. 	 */
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
 name|ieee80211_ampdu_age
 operator|=
 name|msecs_to_ticks
@@ -1311,8 +1297,6 @@ argument_list|(
 literal|500
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ieee80211_addba_timeout
 operator|=
 name|msecs_to_ticks
@@ -3747,12 +3731,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
-end_ifdef
-
 begin_comment
 comment|/*  * Dispatch all frames in the A-MPDU re-order queue.  */
 end_comment
@@ -3872,15 +3850,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IEEE80211_AMPDU_AGE */
-end_comment
 
 begin_comment
 comment|/*  * Dispatch all frames in the A-MPDU re-order queue  * preceding the specified sequence number.  This logic  * handles window moves due to a received MSDU or BAR.  */
@@ -4572,9 +4541,6 @@ name|rxa_wnd
 condition|)
 block|{
 comment|/* 		 * Common case (hopefully): in the BA window. 		 * Sec 9.10.7.6.2 a) (p.137) 		 */
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
 comment|/*  		 * Check for frames sitting too long in the reorder queue. 		 * This should only ever happen if frames are not delivered 		 * without the sender otherwise notifying us (e.g. with a 		 * BAR to move the window).  Typically this happens because 		 * of vendor bugs that cause the sequence number to jump. 		 * When this happens we get a gap in the reorder queue that 		 * leaves frame sitting on the queue until they get pushed 		 * out due to window moves.  When the vendor does not send 		 * BAR this move only happens due to explicit packet sends 		 * 		 * NB: we only track the time of the oldest frame in the 		 * reorder q; this means that if we flush we might push 		 * frames that still "new"; if this happens then subsequent 		 * frames will result in BA window moves which cost something 		 * but is still better than a big throughput dip. 		 */
 if|if
 condition|(
@@ -4649,9 +4615,6 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* IEEE80211_AMPDU_AGE */
 comment|/* save packet */
 if|if
 condition|(
@@ -5549,9 +5512,6 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
 name|struct
 name|ieee80211vap
 modifier|*
@@ -5564,8 +5524,6 @@ decl_stmt|;
 name|uint8_t
 name|tid
 decl_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|ni
@@ -5579,9 +5537,6 @@ literal|"not an HT sta"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_AMPDU_AGE
 for|for
 control|(
 name|tid
@@ -5666,9 +5621,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* IEEE80211_AMPDU_AGE */
 block|}
 end_function
 
