@@ -623,6 +623,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_RLIMIT_LOCKS
+value|RLIM_NLIMITS + 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_SIGPENDING
+value|RLIM_NLIMITS + 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_MSGQUEUE
+value|RLIM_NLIMITS + 3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_NICE
+value|RLIM_NLIMITS + 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_RTPRIO
+value|RLIM_NLIMITS + 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_RTTIME
+value|RLIM_NLIMITS + 6
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_RLIM_INFINITY
 value|(~0UL)
 end_define
