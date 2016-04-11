@@ -94,6 +94,17 @@ name|HV_NANOSECONDS_PER_SEC
 value|1000000000L
 end_define
 
+begin_define
+define|#
+directive|define
+name|HYPERV_INTERFACE
+value|0x31237648
+end_define
+
+begin_comment
+comment|/* HV#1 */
+end_comment
+
 begin_function_decl
 specifier|static
 name|u_int
@@ -1462,8 +1473,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|0x31237648
-comment|/* HV#1 */
+name|HYPERV_INTERFACE
 condition|)
 return|return
 operator|(
