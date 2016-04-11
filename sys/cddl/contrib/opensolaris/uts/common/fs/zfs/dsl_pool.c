@@ -133,11 +133,19 @@ directive|include
 file|<sys/dsl_userhold.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -238,11 +246,19 @@ literal|2000
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
