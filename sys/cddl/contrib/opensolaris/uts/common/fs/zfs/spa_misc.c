@@ -163,6 +163,37 @@ directive|include
 file|<sys/zfeature.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * SPA locking  *  * There are four basic locks for managing spa_t structures:  *  * spa_namespace_lock (global mutex)  *  *	This lock must be acquired to do any of the following:  *  *		- Lookup a spa_t by name  *		- Add or remove a spa_t from the namespace  *		- Increase spa_refcount from non-zero  *		- Check if spa_refcount is zero  *		- Rename a spa_t  *		- add/remove/attach/detach devices  *		- Held for the duration of create/destroy/import/export  *  *	It does not need to handle recursion.  A create or destroy may  *	reference objects (files or zvols) in other pools, but by  *	definition they must have an existing reference, and will never need  *	to lookup a spa_t by name.  *  * spa_refcount (per-spa refcount_t protected by mutex)  *  *	This reference count keep track of any active users of the spa_t.  The  *	spa_t cannot be destroyed or freed while this is non-zero.  Internally,  *	the refcount is never really 'zero' - opening a pool implicitly keeps  *	some references in the DMU.  Internally we check against spa_minref, but  *	present the image of a zero/non-zero value to consumers.  *  * spa_config_lock[] (per-spa array of rwlocks)  *  *	This protects the spa_t from config changes, and must be held in  *	the following circumstances:  *  *		- RW_READER to perform I/O to the spa  *		- RW_WRITER to change the vdev config  *  * The locking order is fairly straightforward:  *  *		spa_namespace_lock	->	spa_refcount  *  *	The namespace lock must be acquired to increase the refcount from 0  *	or to check if it is zero.  *  *		spa_refcount		->	spa_config_lock[]  *  *	There must be at least one valid reference on the spa_t to acquire  *	the config lock.  *  *		spa_namespace_lock	->	spa_config_lock[]  *  *	The namespace lock must always be taken before the config lock.  *  *  * The spa_namespace_lock can be acquired directly and is globally visible.  *  * The namespace is manipulated using the following functions, all of which  * require the spa_namespace_lock to be held.  *  *	spa_lookup()		Lookup a spa_t by name.  *  *	spa_add()		Create a new spa_t in the namespace.  *  *	spa_remove()		Remove a spa_t from the namespace.  This also  *				frees up any memory associated with the spa_t.  *  *	spa_next()		Returns the next spa_t in the system, or the  *				first if NULL is passed.  *  *	spa_evict_all()		Shutdown and remove all spa_t structures in  *				the system.  *  *	spa_guid_exists()	Determine whether a pool/device guid exists.  *  * The spa_refcount is manipulated using the following functions:  *  *	spa_open_ref()		Adds a reference to the given spa_t.  Must be  *				called with spa_namespace_lock held if the  *				refcount is currently zero.  *  *	spa_close()		Remove a reference from the spa_t.  This will  *				not free the spa_t or remove it from the  *				namespace.  No locking is required.  *  *	spa_refcount_zero()	Returns true if the refcount is currently  *				zero.  Must be called with spa_namespace_lock  *				held.  *  * The spa_config_lock[] is an array of rwlocks, ordered as follows:  * SCL_CONFIG> SCL_STATE> SCL_ALLOC> SCL_ZIO> SCL_FREE> SCL_VDEV.  * spa_config_lock[] is manipulated with spa_config_{enter,exit,held}().  *  * To read the configuration, it suffices to hold one of these locks as reader.  * To modify the configuration, you must hold all locks as writer.  To modify  * vdev state without altering the vdev tree's topology (e.g. online/offline),  * you must hold SCL_STATE and SCL_ZIO as writer.  *  * We use these distinct config locks to avoid recursive lock entry.  * For example, spa_sync() (which holds SCL_CONFIG as reader) induces  * block allocations (SCL_ALLOC), which may require reading space maps  * from disk (dmu_read() -> zio_read() -> SCL_ZIO).  *  * The spa config locks cannot be normal rwlocks because we need the  * ability to hand off ownership.  For example, SCL_ZIO is acquired  * by the issuing thread and later released by an interrupt thread.  * They do, however, obey the usual write-wanted semantics to prevent  * writer (i.e. system administrator) starvation.  *  * The lock acquisition rules are as follows:  *  * SCL_CONFIG  *	Protects changes to the vdev tree topology, such as vdev  *	add/remove/attach/detach.  Protects the dirty config list  *	(spa_config_dirty_list) and the set of spares and l2arc devices.  *  * SCL_STATE  *	Protects changes to pool state and vdev state, such as vdev  *	online/offline/fault/degrade/clear.  Protects the dirty state list  *	(spa_state_dirty_list) and global pool state (spa_state).  *  * SCL_ALLOC  *	Protects changes to metaslab groups and classes.  *	Held as reader by metaslab_alloc() and metaslab_claim().  *  * SCL_ZIO  *	Held by bp-level zios (those which have no io_vd upon entry)  *	to prevent changes to the vdev tree.  The bp-level zio implicitly  *	protects all of its vdev child zios, which do not hold SCL_ZIO.  *  * SCL_FREE  *	Protects changes to metaslab groups and classes.  *	Held as reader by metaslab_free().  SCL_FREE is distinct from  *	SCL_ALLOC, and lower than SCL_ZIO, so that we can safely free  *	blocks in zio_done() while another i/o that holds either  *	SCL_ALLOC or SCL_ZIO is waiting for this i/o to complete.  *  * SCL_VDEV  *	Held as reader to prevent changes to the vdev tree during trivial  *	inquiries such as bp_get_dsize().  SCL_VDEV is distinct from the  *	other locks, and lower than all of them, to ensure that it's safe  *	to acquire regardless of caller context.  *  * In addition, the following rules apply:  *  * (a)	spa_props_lock protects pool properties, spa_config and spa_config_list.  *	The lock ordering is SCL_CONFIG> spa_props_lock.  *  * (b)	I/O operations on leaf vdevs.  For any zio operation that takes  *	an explicit vdev_t argument -- such as zio_ioctl(), zio_read_phys(),  *	or zio_write_phys() -- the caller must ensure that the config cannot  *	cannot change in the interim, and that the vdev cannot be reopened.  *	SCL_STATE as reader suffices for both.  *  * The vdev configuration is protected by spa_vdev_enter() / spa_vdev_exit().  *  *	spa_vdev_enter()	Acquire the namespace lock and the config lock  *				for writing.  *  *	spa_vdev_exit()		Release the config lock, wait for all I/O  *				to complete, sync the updated configs to the  *				cache, and release the namespace lock.  *  * vdev state is protected by spa_vdev_state_enter() / spa_vdev_state_exit().  * Like spa_vdev_enter/exit, these are convenience wrappers -- the actual  * locking is, always, based on spa_namespace_lock and spa_config_lock[].  *  * spa_rename() is also implemented within this file since it requires  * manipulation of the namespace.  */
 end_comment
@@ -295,6 +326,81 @@ init|=
 name|B_FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * If destroy encounters an EIO while reading metadata (e.g. indirect  * blocks), space referenced by the missing metadata can not be freed.  * Normally this causes the background destroy to become "stalled", as  * it is unable to make forward progress.  While in this stalled state,  * all remaining space to free from the error-encountering filesystem is  * "temporarily leaked".  Set this flag to cause it to ignore the EIO,  * permanently leak the space from indirect blocks that can not be read,  * and continue to free everything else that it can.  *  * The default, "stalling" behavior is useful if the storage partially  * fails (i.e. some but not all i/os fail), and then later recovers.  In  * this case, we will be able to continue pool operations while it is  * partially failed, and when it recovers, we can continue to free the  * space, with no leaks.  However, note that this case is actually  * fairly rare.  *  * Typically pools either (a) fail completely (but perhaps temporarily,  * e.g. a top-level vdev going offline), or (b) have localized,  * permanent errors (e.g. disk returns the wrong data due to bit flip or  * firmware bug).  In case (a), this setting does not matter because the  * pool will be suspended and the sync thread will not be able to make  * forward progress regardless.  In case (b), because the error is  * permanent, the best we can do is leak the minimum amount of space,  * which is what setting this flag will do.  Therefore, it is reasonable  * for this flag to normally be set, but we chose the more conservative  * approach of not setting it, so that there is no possibility of  * leaking space in the "partial temporary" failure case.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zfs_free_leak_on_eio
+init|=
+name|B_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Expiration time in milliseconds. This value has two meanings. First it is  * used to determine when the spa_deadman() logic should fire. By default the  * spa_deadman() will fire if spa_sync() has not completed in 1000 seconds.  * Secondly, the value determines if an I/O is considered "hung". Any I/O that  * has not completed in zfs_deadman_synctime_ms is considered "hung" resulting  * in a system panic.  */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_deadman_synctime_ms
+init|=
+literal|1000000ULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Check time in milliseconds. This defines the frequency at which we check  * for hung I/O.  */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_deadman_checktime_ms
+init|=
+literal|5000ULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Default value of -1 for zfs_deadman_enabled is resolved in  * zfs_deadman_init()  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfs_deadman_enabled
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The worst case is single-sector max-parity RAID-Z blocks, in which  * case the space requirement is exactly (VDEV_RAIDZ_MAXPARITY + 1)  * times the size; so just assume that.  Add to this the fact that  * we can have up to 3 DVAs per bp, and one more factor of 2 because  * the block may be dittoed with up to 3 DVAs by ddt_sync().  All together,  * the worst case is:  *     (VDEV_RAIDZ_MAXPARITY + 1) * SPA_DVAS_PER_BP * 2 == 24  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|spa_asize_inflation
+init|=
+literal|24
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -431,30 +537,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * If destroy encounters an EIO while reading metadata (e.g. indirect  * blocks), space referenced by the missing metadata can not be freed.  * Normally this causes the background destroy to become "stalled", as  * it is unable to make forward progress.  While in this stalled state,  * all remaining space to free from the error-encountering filesystem is  * "temporarily leaked".  Set this flag to cause it to ignore the EIO,  * permanently leak the space from indirect blocks that can not be read,  * and continue to free everything else that it can.  *  * The default, "stalling" behavior is useful if the storage partially  * fails (i.e. some but not all i/os fail), and then later recovers.  In  * this case, we will be able to continue pool operations while it is  * partially failed, and when it recovers, we can continue to free the  * space, with no leaks.  However, note that this case is actually  * fairly rare.  *  * Typically pools either (a) fail completely (but perhaps temporarily,  * e.g. a top-level vdev going offline), or (b) have localized,  * permanent errors (e.g. disk returns the wrong data due to bit flip or  * firmware bug).  In case (a), this setting does not matter because the  * pool will be suspended and the sync thread will not be able to make  * forward progress regardless.  In case (b), because the error is  * permanent, the best we can do is leak the minimum amount of space,  * which is what setting this flag will do.  Therefore, it is reasonable  * for this flag to normally be set, but we chose the more conservative  * approach of not setting it, so that there is no possibility of  * leaking space in the "partial temporary" failure case.  */
-end_comment
-
-begin_decl_stmt
-name|boolean_t
-name|zfs_free_leak_on_eio
-init|=
-name|B_FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Expiration time in milliseconds. This value has two meanings. First it is  * used to determine when the spa_deadman() logic should fire. By default the  * spa_deadman() will fire if spa_sync() has not completed in 1000 seconds.  * Secondly, the value determines if an I/O is considered "hung". Any I/O that  * has not completed in zfs_deadman_synctime_ms is considered "hung" resulting  * in a system panic.  */
-end_comment
-
-begin_decl_stmt
-name|uint64_t
-name|zfs_deadman_synctime_ms
-init|=
-literal|1000000ULL
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
@@ -475,18 +557,6 @@ literal|"Stalled ZFS I/O expiration time in milliseconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Check time in milliseconds. This defines the frequency at which we check  * for hung I/O.  */
-end_comment
-
-begin_decl_stmt
-name|uint64_t
-name|zfs_deadman_checktime_ms
-init|=
-literal|5000ULL
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_UQUAD
@@ -509,19 +579,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Default value of -1 for zfs_deadman_enabled is resolved in  * zfs_deadman_init()  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|zfs_deadman_enabled
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -543,18 +600,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * The worst case is single-sector max-parity RAID-Z blocks, in which  * case the space requirement is exactly (VDEV_RAIDZ_MAXPARITY + 1)  * times the size; so just assume that.  Add to this the fact that  * we can have up to 3 DVAs per bp, and one more factor of 2 because  * the block may be dittoed with up to 3 DVAs by ddt_sync().  All together,  * the worst case is:  *     (VDEV_RAIDZ_MAXPARITY + 1) * SPA_DVAS_PER_BP * 2 == 24  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|spa_asize_inflation
-init|=
-literal|24
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -575,6 +620,11 @@ literal|"Worst case inflation factor for single sector writes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
