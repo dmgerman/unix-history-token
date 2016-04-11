@@ -3859,6 +3859,13 @@ argument_list|(
 literal|"failed to iterate objects\n"
 argument_list|)
 expr_stmt|;
+name|dt_proc_unlock
+argument_list|(
+name|dtp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|dt_proc_release
 argument_list|(
 name|dtp
