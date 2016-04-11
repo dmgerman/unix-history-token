@@ -213,7 +213,7 @@ name|l
 operator|->
 name|__mb_sb_limit
 operator|=
-literal|256
+literal|224
 expr_stmt|;
 return|return
 operator|(
