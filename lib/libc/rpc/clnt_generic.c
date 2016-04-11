@@ -1689,7 +1689,6 @@ argument_list|)
 expr_stmt|;
 comment|/*		(void) CLNT_CONTROL(cl, CLSET_POP_TIMOD, NULL);  */
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|cl
