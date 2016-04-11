@@ -1054,6 +1054,22 @@ modifier|*
 name|dn
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|DNODE_IS_CACHEABLE
+parameter_list|(
+name|_dn
+parameter_list|)
+define|\
+value|((_dn)->dn_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(DMU_OT_IS_METADATA((_dn)->dn_type)&&				\ 	(_dn)->dn_objset->os_primary_cache == ZFS_CACHE_METADATA))
+define|#
+directive|define
+name|DNODE_META_IS_CACHEABLE
+parameter_list|(
+name|_dn
+parameter_list|)
+define|\
+value|((_dn)->dn_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(_dn)->dn_objset->os_primary_cache == ZFS_CACHE_METADATA)
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
