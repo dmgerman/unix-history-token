@@ -832,7 +832,7 @@ literal|"additional queue entry"
 argument_list|,
 name|QENTRY_LEN
 argument_list|,
-name|storage
+name|qe1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1175,7 +1175,7 @@ literal|"first queue entry"
 argument_list|,
 name|QENTRY_LEN
 argument_list|,
-name|fqe
+name|qe0
 argument_list|)
 expr_stmt|;
 block|}
@@ -18972,7 +18972,7 @@ literal|"additional queue entry"
 argument_list|,
 name|QENTRY_LEN
 argument_list|,
-name|storage
+name|qe1
 argument_list|)
 expr_stmt|;
 block|}
@@ -19158,7 +19158,7 @@ literal|"first queue entry"
 argument_list|,
 name|QENTRY_LEN
 argument_list|,
-name|fqe
+name|qe0
 argument_list|)
 expr_stmt|;
 block|}
