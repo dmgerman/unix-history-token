@@ -517,6 +517,12 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|illumos
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ZFS_DEBUG
 end_ifdef
 
@@ -540,6 +546,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -654,14 +665,10 @@ name|align
 init|=
 literal|0
 decl_stmt|;
-name|size_t
+name|int
 name|cflags
 init|=
-operator|(
-name|size
-operator|>
-name|zio_buf_debug_limit
-operator|)
+name|zio_exclude_metadata
 condition|?
 name|KMC_NODEBUG
 else|:
