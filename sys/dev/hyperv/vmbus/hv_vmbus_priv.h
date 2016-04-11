@@ -1100,10 +1100,56 @@ block|,
 name|HV_CPU_ID_FUNCTION_MS_HV_IMPLEMENTATION_LIMITS
 init|=
 literal|0x40000005
+block|,
+name|HV_CPU_ID_FUNCTION_MS_HV_HARDWARE_FEATURE
+init|=
+literal|0x40000006
 block|}
 name|hv_vmbus_cpuid_function
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_TIME_REFCNT
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_SYNCIC
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_STIMER
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_APIC
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_HYPERCALL
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_GUEST_IDLE
+value|(1<< 10)
+end_define
 
 begin_comment
 comment|/*  * Define the format of the SIMP register  */
