@@ -1113,43 +1113,161 @@ begin_define
 define|#
 directive|define
 name|HV_FEATURE_MSR_TIME_REFCNT
-value|(1<< 1)
+value|0x0002
 end_define
+
+begin_comment
+comment|/* MSR_TIME_REF_COUNT */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HV_FEATURE_MSR_SYNCIC
-value|(1<< 2)
+name|HV_FEATURE_MSR_SYNIC
+value|0x0004
 end_define
+
+begin_comment
+comment|/* MSRs for SynIC */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HV_FEATURE_MSR_STIMER
-value|(1<< 3)
+name|HV_FEATURE_MSR_SYNTIMER
+value|0x0008
 end_define
+
+begin_comment
+comment|/* MSRs for SynTimer */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|HV_FEATURE_MSR_APIC
-value|(1<< 4)
+value|0x0010
 end_define
+
+begin_comment
+comment|/* MSR_{EOI,ICR,TPR} */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|HV_FEATURE_MSR_HYPERCALL
-value|(1<< 5)
+value|0x0020
 end_define
+
+begin_comment
+comment|/* MSR_{GUEST_OS_ID,HYPERCALL} */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|HV_FEATURE_MSR_GUEST_IDLE
-value|(1<< 10)
+value|0x0400
 end_define
+
+begin_comment
+comment|/* MSR_GUEST_IDLE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_CSTATE_MASK
+value|0x000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_C3_HPET
+value|0x0010
+end_define
+
+begin_comment
+comment|/* C3 requires HPET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_CSTATE
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& HV_PM_FEATURE_CSTATE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_MWAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* MWAIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_XMM_HYPERCALL
+value|0x0010
+end_define
+
+begin_comment
+comment|/* hypercall input through XMM regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_GUEST_IDLE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* guest idle support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_NUMA
+value|0x0080
+end_define
+
+begin_comment
+comment|/* NUMA distance query support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_TIME_FREQ
+value|0x0100
+end_define
+
+begin_comment
+comment|/* timer frequency query (TSC, LAPIC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_MSR_CRASH
+value|0x0400
+end_define
+
+begin_comment
+comment|/* MSRs for guest crash */
+end_comment
 
 begin_comment
 comment|/*  * Define the format of the SIMP register  */

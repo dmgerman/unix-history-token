@@ -119,6 +119,20 @@ name|hyperv_recommends
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|hyperv_pm_features
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|hyperv_features3
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/**  * Globals  */
 end_comment
@@ -1495,6 +1509,20 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|hyperv_pm_features
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|hyperv_features3
+operator|=
+name|regs
+index|[
+literal|3
+index|]
+expr_stmt|;
 name|op
 operator|=
 name|HV_CPU_ID_FUNCTION_MS_HV_VERSION
@@ -1537,26 +1565,97 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Features: 0x%b\n"
+literal|"  Features=0x%b\n"
 argument_list|,
 name|hyperv_features
 argument_list|,
 literal|"\020"
 literal|"\001VPRUNTIME"
+comment|/* MSR_VP_RUNTIME */
 literal|"\002TMREFCNT"
-literal|"\003SYNCIC"
-literal|"\004SYNCTM"
+comment|/* MSR_TIME_REF_COUNT */
+literal|"\003SYNIC"
+comment|/* MSRs for SynIC */
+literal|"\004SYNTM"
+comment|/* MSRs for SynTimer */
 literal|"\005APIC"
+comment|/* MSR_{EOI,ICR,TPR} */
 literal|"\006HYERCALL"
+comment|/* MSR_{GUEST_OS_ID,HYPERCALL} */
 literal|"\007VPINDEX"
+comment|/* MSR_VP_INDEX */
 literal|"\010RESET"
+comment|/* MSR_RESET */
 literal|"\011STATS"
+comment|/* MSR_STATS_ */
 literal|"\012REFTSC"
+comment|/* MSR_REFERENCE_TSC */
 literal|"\013IDLE"
+comment|/* MSR_GUEST_IDLE */
 literal|"\014TMFREQ"
+comment|/* MSR_{TSC,APIC}_FREQUENCY */
 literal|"\015DEBUG"
 argument_list|)
 expr_stmt|;
+comment|/* MSR_SYNTH_DEBUG_ */
+name|printf
+argument_list|(
+literal|"  PM Features=max C%u, 0x%b\n"
+argument_list|,
+name|HV_PM_FEATURE_CSTATE
+argument_list|(
+name|hyperv_pm_features
+argument_list|)
+argument_list|,
+operator|(
+name|hyperv_pm_features
+operator|&
+operator|~
+name|HV_PM_FEATURE_CSTATE_MASK
+operator|)
+argument_list|,
+literal|"\020"
+literal|"\005C3HPET"
+argument_list|)
+expr_stmt|;
+comment|/* HPET is required for C3 state */
+name|printf
+argument_list|(
+literal|"  Features3=0x%b\n"
+argument_list|,
+name|hyperv_features3
+argument_list|,
+literal|"\020"
+literal|"\001MWAIT"
+comment|/* MWAIT */
+literal|"\002DEBUG"
+comment|/* guest debug support */
+literal|"\003PERFMON"
+comment|/* performance monitor */
+literal|"\004PCPUDPE"
+comment|/* physical CPU dynamic partition event */
+literal|"\005XMMHC"
+comment|/* hypercall input through XMM regs */
+literal|"\006IDLE"
+comment|/* guest idle support */
+literal|"\007SLEEP"
+comment|/* hypervisor sleep support */
+literal|"\010NUMA"
+comment|/* NUMA distance query support */
+literal|"\011TMFREQ"
+comment|/* timer frequency query (TSC, LAPIC) */
+literal|"\012SYNCMC"
+comment|/* inject synthetic machine checks */
+literal|"\013CRASH"
+comment|/* MSRs for guest crash */
+literal|"\014DEBUGMSR"
+comment|/* MSRs for guest debug */
+literal|"\015NPIEP"
+comment|/* NPIEP */
+literal|"\016HVDIS"
+argument_list|)
+expr_stmt|;
+comment|/* disabling hypervisor */
 name|op
 operator|=
 name|HV_CPU_ID_FUNCTION_MS_HV_ENLIGHTENMENT_INFORMATION
