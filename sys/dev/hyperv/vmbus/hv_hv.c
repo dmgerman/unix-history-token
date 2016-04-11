@@ -555,13 +555,6 @@ name|hypercall_page
 operator|=
 name|virt_addr
 expr_stmt|;
-name|tc_init
-argument_list|(
-operator|&
-name|hv_timecounter
-argument_list|)
-expr_stmt|;
-comment|/* register virtual timecount */
 name|hv_et_init
 argument_list|()
 expr_stmt|;
@@ -1704,6 +1697,21 @@ name|hyperv_identify
 argument_list|()
 condition|)
 return|return;
+if|if
+condition|(
+name|hyperv_features
+operator|&
+name|HV_FEATURE_MSR_TIME_REFCNT
+condition|)
+block|{
+comment|/* Register virtual timecount */
+name|tc_init
+argument_list|(
+operator|&
+name|hv_timecounter
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
