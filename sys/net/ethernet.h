@@ -2330,6 +2330,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ETHERTYPE_TEST
+value|0x8822
+end_define
+
+begin_comment
+comment|/* Network Conformance Testing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ETHERTYPE_MPLS
 value|0x8847
 end_define
