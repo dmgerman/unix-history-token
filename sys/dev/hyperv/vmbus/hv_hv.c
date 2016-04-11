@@ -178,42 +178,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Query the cpuid for presence of windows hypervisor  */
-end_comment
-
-begin_function
-name|int
-name|hv_vmbus_query_hypervisor_presence
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|vm_guest
-operator|!=
-name|VM_GUEST_HV
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-name|hv_high
-operator|>=
-name|HV_X64_CPUID_MIN
-operator|&&
-name|hv_high
-operator|<=
-name|HV_X64_CPUID_MAX
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * @brief Get version of the windows hypervisor  */
 end_comment
 

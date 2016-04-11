@@ -1998,15 +1998,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|hv_vmbus_query_hypervisor_presence
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|hv_device
 modifier|*
