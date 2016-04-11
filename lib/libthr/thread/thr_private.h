@@ -1994,14 +1994,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|pid_t
-name|_thr_pid
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|_thr_is_smp
 name|__hidden
