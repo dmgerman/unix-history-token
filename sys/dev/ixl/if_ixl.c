@@ -16588,7 +16588,7 @@ name|entry
 operator|->
 name|stat
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|SYSCTL_ADD_UQUAD
@@ -17033,7 +17033,7 @@ name|entry
 operator|->
 name|stat
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|SYSCTL_ADD_UQUAD

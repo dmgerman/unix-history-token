@@ -1518,6 +1518,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Stop the re-seed timer before freeing resources.  No need to 	 * possibly schedule it another time. 	 */
+name|callout_drain
+argument_list|(
+operator|&
+name|V_tcp_syncache
+operator|.
+name|secret
+operator|.
+name|reseed
+argument_list|)
+expr_stmt|;
 comment|/* Cleanup hash buckets: stop timers, free entries, destroy locks. */
 for|for
 control|(
@@ -1658,16 +1669,6 @@ operator|.
 name|hashbase
 argument_list|,
 name|M_SYNCACHE
-argument_list|)
-expr_stmt|;
-name|callout_drain
-argument_list|(
-operator|&
-name|V_tcp_syncache
-operator|.
-name|secret
-operator|.
-name|reseed
 argument_list|)
 expr_stmt|;
 block|}

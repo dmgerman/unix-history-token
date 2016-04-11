@@ -8819,7 +8819,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|ti_std
@@ -9032,7 +9031,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|ti_jumbo
@@ -9239,7 +9237,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sc
 operator|->
 name|ti_mini

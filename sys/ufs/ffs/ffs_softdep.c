@@ -155,6 +155,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -10504,7 +10510,7 @@ if|if
 condition|(
 name|wktail
 operator|==
-literal|0
+name|NULL
 condition|)
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -30385,6 +30391,37 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+name|racct_add_buf
+argument_list|(
+name|curproc
+argument_list|,
+name|bp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* RACCT */
 name|curthread
 operator|->
 name|td_ru
@@ -32487,7 +32524,7 @@ name|id_extupdt
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocdirect
 argument_list|(
@@ -33790,7 +33827,7 @@ name|id_inoupdt
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocdirect
 argument_list|(
@@ -33839,7 +33876,7 @@ name|id_extupdt
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocdirect
 argument_list|(
@@ -38498,8 +38535,6 @@ decl_stmt|;
 name|ufs1_daddr_t
 modifier|*
 name|bap1
-init|=
-literal|0
 decl_stmt|;
 name|ufs2_daddr_t
 name|nb
@@ -38508,8 +38543,6 @@ name|nnb
 decl_stmt|,
 modifier|*
 name|bap2
-init|=
-literal|0
 decl_stmt|;
 name|ufs_lbn_t
 name|lbnadd
@@ -38837,6 +38870,10 @@ name|ufs1fmt
 operator|=
 literal|1
 expr_stmt|;
+name|bap2
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -38862,6 +38899,10 @@ expr_stmt|;
 name|ufs1fmt
 operator|=
 literal|0
+expr_stmt|;
+name|bap1
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|level
@@ -39671,8 +39712,6 @@ name|struct
 name|newdirblk
 modifier|*
 name|newdirblk
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|mkdir
@@ -40285,8 +40324,6 @@ name|struct
 name|newdirblk
 modifier|*
 name|newdirblk
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|mkdir
@@ -40462,6 +40499,10 @@ operator|->
 name|b_lblkno
 operator|>=
 name|NDADDR
+expr_stmt|;
+name|newdirblk
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -40898,6 +40939,8 @@ expr_stmt|;
 if|if
 condition|(
 name|newdirblk
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * There is nothing to do if we are already tracking 		 * this block. 		 */
@@ -50016,7 +50059,7 @@ name|ir_deplisthd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocindir
 argument_list|(
@@ -50043,7 +50086,7 @@ name|ir_donehd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocindir
 argument_list|(
@@ -50070,7 +50113,7 @@ name|ir_writehd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocindir
 argument_list|(
@@ -50097,7 +50140,7 @@ name|ir_completehd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cancel_allocindir
 argument_list|(
@@ -54735,7 +54778,7 @@ name|ir_writehd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|LIST_REMOVE
@@ -54815,7 +54858,7 @@ name|ir_donehd
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|handle_allocindir_partdone

@@ -1176,8 +1176,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_ASSOC_SUPPORTS_INTERLEAVING
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_ASSOC_SUPPORTS_MAX
-value|0x05
+value|0x06
 end_define
 
 begin_comment

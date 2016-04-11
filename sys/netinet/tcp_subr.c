@@ -2998,7 +2998,7 @@ name|tcp_inpcb_init
 argument_list|,
 name|NULL
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|,
 name|IPI_HASHFIELDS_4TUPLE
 argument_list|)
@@ -3026,7 +3026,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -3082,7 +3082,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Skip initialization of globals for non-default instances. */
@@ -3301,14 +3301,14 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_RFC7413
-name|tcp_fastopen_destroy
-argument_list|()
+comment|/* 	 * All our processes are gone, all our sockets should be cleaned 	 * up, which means, we should be past the tcp_discardcb() calls. 	 * Sleep to let all tcpcb timers really disappear and then cleanup. 	 * Timewait will cleanup its queue and will be ready to go. 	 * XXX-BZ In theory a few ticks should be good enough to make sure 	 * the timers are all really gone.  We should see if we could use a 	 * better metric here and, e.g., check a tcbcb count as an optimization? 	 */
+name|DELAY
+argument_list|(
+literal|1000000
+operator|/
+name|hz
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tcp_hc_destroy
 argument_list|()
 expr_stmt|;
@@ -3324,6 +3324,7 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
+comment|/* tcp_discardcb() clears the sack_holes up. */
 name|uma_zdestroy
 argument_list|(
 name|V_sack_hole_zone
@@ -3334,6 +3335,15 @@ argument_list|(
 name|V_tcpcb_zone
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
+comment|/* 	 * Cannot free the zone until all tcpcbs are released as we attach 	 * the allocations to them. 	 */
+name|tcp_fastopen_destroy
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|hhook_head_deregister

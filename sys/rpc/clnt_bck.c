@@ -1696,7 +1696,6 @@ operator|=
 name|RPC_CANTRECV
 expr_stmt|;
 block|}
-empty_stmt|;
 name|errp
 operator|->
 name|re_status

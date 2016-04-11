@@ -394,6 +394,16 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|cold
+condition|)
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+else|else
 name|mtx_sleep
 argument_list|(
 name|sc

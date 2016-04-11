@@ -6791,7 +6791,6 @@ name|EBADF
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|sb
 operator|->
 name|st_mode

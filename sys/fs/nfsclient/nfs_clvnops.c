@@ -4630,7 +4630,6 @@ name|n_mtx
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 else|else
 block|{

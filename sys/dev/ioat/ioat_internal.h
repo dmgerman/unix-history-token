@@ -1467,6 +1467,9 @@ name|boolean_t
 name|quiescing
 decl_stmt|;
 name|boolean_t
+name|destroying
+decl_stmt|;
+name|boolean_t
 name|is_resize_pending
 decl_stmt|;
 name|boolean_t

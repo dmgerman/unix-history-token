@@ -7342,7 +7342,6 @@ name|cur
 expr_stmt|;
 continue|continue;
 block|}
-empty_stmt|;
 comment|/* 		 *  We use the bogus value 0xf00ff00f ;-) 		 *  to reserve data area in SCRIPTS. 		 */
 if|if
 condition|(
@@ -7614,7 +7613,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 comment|/* 		 *  Scriptify:) the opcode. 		 */
 operator|*
 name|cur
@@ -7777,7 +7775,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -11724,7 +11721,6 @@ name|PPR_OPT_DT
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|cp
 operator|->
 name|nego_status
@@ -11772,9 +11768,7 @@ name|msgptr
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 return|return
 name|msglen
 return|;
@@ -15571,7 +15565,6 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -15793,7 +15786,6 @@ name|unknown_int
 goto|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 	 *  Now, interrupts that donnot happen in normal 	 *  situations and that we may need to recover from. 	 * 	 *  On SCSI RESET (RST), we reset everything. 	 *  On SCSI BUS MODE CHANGE (SBMC), we complete all 	 *  active CCBs with RESET status, prepare all devices 	 *  for negotiating again and restart the SCRIPTS. 	 *  On STO and UDC, we complete the CCB with the corres- 	 *  ponding status and restart the SCRIPTS. 	 */
 if|if
 condition|(
@@ -15823,7 +15815,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|OUTB
 argument_list|(
 name|nc_ctest3
@@ -15918,7 +15909,6 @@ name|unknown_int
 goto|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 	 *  Now, interrupts we are not able to recover cleanly. 	 * 	 *  Log message for hard errors. 	 *  Reset everything. 	 */
 name|sym_log_hard_error
 argument_list|(
@@ -15965,7 +15955,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|unknown_int
 label|:
 comment|/* 	 *  We just miss the cause of the interrupt. :( 	 *  Print a message. The timeout will do the real work. 	 */
@@ -17029,7 +17018,6 @@ name|rest
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 		 *  Clear fifos. 		 */
 name|OUTB
 argument_list|(
@@ -17231,7 +17219,6 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -17354,7 +17341,6 @@ operator|&
 literal|0xffffff
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -17395,7 +17381,6 @@ name|oadr
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 *  check cmd against assumed interrupted script command. 	 *  If dt data phase, the MOVE instruction hasn't bit 4 of 	 *  the phase. 	 */
 if|if
 condition|(
@@ -17461,7 +17446,6 @@ goto|goto
 name|reset_all
 goto|;
 block|}
-empty_stmt|;
 comment|/* 	 *  if old phase not dataphase, leave here. 	 */
 if|if
 condition|(
@@ -17510,7 +17494,6 @@ goto|goto
 name|unexpected_phase
 goto|;
 block|}
-empty_stmt|;
 comment|/* 	 *  Choose the correct PM save area. 	 * 	 *  Look at the PM_SAVE SCRIPT if you want to understand 	 *  this stuff. The equivalent code is implemented in 	 *  SCRIPTS for the 895A, 896 and 1010 that are able to 	 *  handle PM from the SCRIPTS processor. 	 */
 name|hflags0
 operator|=
@@ -21556,7 +21539,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|i
@@ -21594,7 +21576,6 @@ literal|2
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|1
@@ -21711,7 +21692,6 @@ name|msgin
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 * request or answer ? 	 */
 if|if
 condition|(
@@ -22190,7 +22170,6 @@ name|msgin
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 *  get requested values. 	 */
 name|chg
 operator|=
@@ -22937,7 +22916,6 @@ name|msgin
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 * Is it a request from the device? 	 */
 if|if
 condition|(
@@ -23217,7 +23195,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 comment|/* 	 *  It was a request, set value and 	 *  prepare an answer message 	 */
 name|sym_setwide
 argument_list|(
@@ -23458,7 +23435,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|np
 operator|->
 name|msgin
@@ -24318,7 +24294,6 @@ goto|goto
 name|out
 goto|;
 block|}
-empty_stmt|;
 name|out
 label|:
 name|OUTONB_STD
@@ -26065,7 +26040,6 @@ literal|0x10
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -26239,7 +26213,6 @@ literal|0x20
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* 	 *  Check for fatal DMA errors. 	 */
 name|dstat
 operator|=
@@ -26409,7 +26382,6 @@ literal|0x40
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* 	 *  Show results. 	 */
 if|if
 condition|(
@@ -26438,7 +26410,6 @@ operator||=
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|host_rd
@@ -26466,7 +26437,6 @@ operator||=
 literal|2
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sym_bk
@@ -26494,7 +26464,6 @@ operator||=
 literal|4
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|err
@@ -34572,7 +34541,6 @@ goto|goto
 name|attach_failed
 goto|;
 block|}
-empty_stmt|;
 comment|/* 	 *  Now deal with CAM. 	 *  Hopefully, we will succeed with that one.:) 	 */
 if|if
 condition|(

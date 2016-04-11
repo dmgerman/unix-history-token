@@ -6619,7 +6619,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* PDQ_HOST_INT_STATE_CHANGE 	|PDQ_HOST_INT_FATAL_ERROR|PDQ_HOST_INT_CMD_RSP_ENABLE 	|PDQ_HOST_INT_UNSOL_ENABLE */
-empty_stmt|;
 name|PDQ_CSR_WRITE
 argument_list|(
 name|csrs

@@ -3120,7 +3120,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|bytesize
@@ -3255,7 +3254,6 @@ break|break;
 endif|#
 directive|endif
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -3431,7 +3429,6 @@ break|break;
 endif|#
 directive|endif
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -9957,7 +9954,6 @@ name|NFSATTRBIT_MAX
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 comment|/* 	 * some clients pad the attrlist, so we need to skip over the 	 * padding. 	 */
 if|if
@@ -13467,7 +13463,6 @@ name|bitpos
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 block|}
 if|if

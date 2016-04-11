@@ -289,8 +289,6 @@ name|struct
 name|ifaddrs
 modifier|*
 name|cif
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1016,6 +1014,10 @@ expr_stmt|;
 name|idx
 operator|=
 literal|0
+expr_stmt|;
+name|cif
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

@@ -1135,7 +1135,7 @@ if|if
 condition|(
 name|iovp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|-

@@ -223,7 +223,7 @@ name|users
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -258,7 +258,7 @@ name|jobids
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE

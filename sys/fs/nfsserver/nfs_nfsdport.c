@@ -12068,7 +12068,6 @@ name|VA_UTIMES_NULL
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|NFSM_DISSECT
 argument_list|(
 name|tl
@@ -12147,7 +12146,6 @@ name|VA_UTIMES_NULL
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|ND_NFSV4
@@ -12170,7 +12168,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|nfsmout
 label|:
 name|NFSEXITCODE2
@@ -13233,7 +13230,6 @@ name|NFSATTRBIT_MAX
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 comment|/* 	 * some clients pad the attrlist, so we need to skip over the 	 * padding. 	 */
 if|if

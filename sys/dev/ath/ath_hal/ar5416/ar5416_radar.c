@@ -1588,7 +1588,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 break|break;
 case|case
 name|EXT_CH_RADAR_FOUND

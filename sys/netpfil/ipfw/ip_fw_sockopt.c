@@ -1232,7 +1232,6 @@ name|i
 expr_stmt|;
 comment|/* this might be good */
 block|}
-empty_stmt|;
 return|return
 name|hi
 return|;

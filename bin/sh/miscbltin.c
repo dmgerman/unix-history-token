@@ -1392,7 +1392,7 @@ name|ap
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 argument_list|(

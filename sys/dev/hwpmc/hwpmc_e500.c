@@ -2672,7 +2672,7 @@ name|pe_cpu_mask
 operator|=
 name|ev
 operator|->
-name|pe_code
+name|pe_cpu
 operator|&
 name|PMC_PPC_E500V1
 expr_stmt|;
@@ -2684,7 +2684,7 @@ name|pe_cpu_mask
 operator|=
 name|ev
 operator|->
-name|pe_code
+name|pe_cpu
 operator|&
 name|PMC_PPC_E500V2
 expr_stmt|;
@@ -2699,7 +2699,7 @@ name|pe_cpu_mask
 operator|=
 name|ev
 operator|->
-name|pe_code
+name|pe_cpu
 operator|&
 name|PMC_PPC_E500MC
 expr_stmt|;

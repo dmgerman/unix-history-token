@@ -5776,6 +5776,13 @@ argument_list|,
 literal|"NODELETE"
 argument_list|)
 expr_stmt|;
+name|ADD_FLAG
+argument_list|(
+name|G_ELI_FLAG_GELIBOOT
+argument_list|,
+literal|"GELIBOOT"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|ADD_FLAG

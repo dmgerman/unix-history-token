@@ -1717,7 +1717,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-empty_stmt|;
 block|}
 end_function
 

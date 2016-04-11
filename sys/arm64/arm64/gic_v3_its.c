@@ -7041,22 +7041,9 @@ argument_list|)
 expr_stmt|;
 name|bsf
 operator|=
-name|PCI_RID
-argument_list|(
-name|pci_get_bus
+name|pci_get_rid
 argument_list|(
 name|pci_dev
-argument_list|)
-argument_list|,
-name|pci_get_slot
-argument_list|(
-name|pci_dev
-argument_list|)
-argument_list|,
-name|pci_get_function
-argument_list|(
-name|pci_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check if accessing internal PCIe (low bus numbers) */

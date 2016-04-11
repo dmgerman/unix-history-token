@@ -5882,7 +5882,6 @@ literal|"unionfs_checkuppervp"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 endif|#
 directive|endif
 return|return
@@ -5961,7 +5960,6 @@ literal|"unionfs_checklowervp"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 endif|#
 directive|endif
 return|return

@@ -418,7 +418,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -470,7 +470,7 @@ name|c
 operator|->
 name|c_generic
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|generic
 argument_list|(
@@ -914,7 +914,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -959,7 +959,7 @@ name|c
 operator|->
 name|c_generic
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|generic
 argument_list|(
@@ -1044,7 +1044,7 @@ literal|0
 expr_stmt|;
 name|found
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -1297,7 +1297,7 @@ operator|*
 name|argp
 operator|++
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function

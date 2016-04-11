@@ -81,10 +81,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -117,10 +117,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -150,7 +150,7 @@ name|rttvar
 argument_list|,
 literal|"uint64_t"
 argument_list|,
-comment|/* The Vtag<< 32 | localport<< 16 | remoteport */
+comment|/* The Vtag<< 32 | localport<< 16 | 				 * remoteport */
 literal|"uint64_t"
 argument_list|,
 comment|/* obw | nbw */
@@ -182,7 +182,7 @@ name|rttstep
 argument_list|,
 literal|"uint64_t"
 argument_list|,
-comment|/* The Vtag<< 32 | localport<< 16 | remoteport */
+comment|/* The Vtag<< 32 | localport<< 16 | 				 * remoteport */
 literal|"uint64_t"
 argument_list|,
 comment|/* obw | nbw */
@@ -221,10 +221,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -257,10 +257,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -293,10 +293,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -329,10 +329,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -365,10 +365,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The old value of the cwnd */
@@ -409,7 +409,7 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"int"
 argument_list|,
 comment|/* The up/down amount */
@@ -450,10 +450,10 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"uintptr_t"
 argument_list|,
-comment|/* The pointer to the struct sctp_nets * changing */
+comment|/* The pointer to the struct sctp_nets * 				 * changing */
 literal|"int"
 argument_list|,
 comment|/* The up/down amount */
@@ -494,7 +494,7 @@ argument_list|,
 comment|/* The Vtag for this end */
 literal|"uint32_t"
 argument_list|,
-comment|/* 			 * The port number of the local side<< 16 | port number 			 * of remote in network byte order. 			 */
+comment|/* The port number of the local side<< 16 | 				 * port number of remote in network byte 				 * order. */
 literal|"int"
 argument_list|,
 comment|/* The up/down amount */

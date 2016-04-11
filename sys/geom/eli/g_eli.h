@@ -320,6 +320,17 @@ value|0x00000040
 end_define
 
 begin_comment
+comment|/* This GELI supports GELIBoot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_GELIBOOT
+value|0x00000080
+end_define
+
+begin_comment
 comment|/* RUNTIME FLAGS. */
 end_comment
 

@@ -1679,7 +1679,6 @@ goto|;
 endif|#
 directive|endif
 block|}
-empty_stmt|;
 name|error
 operator|=
 name|gre_set_tunnel
@@ -4821,7 +4820,6 @@ operator|=
 name|ENETDOWN
 expr_stmt|;
 block|}
-empty_stmt|;
 name|drop
 label|:
 if|if

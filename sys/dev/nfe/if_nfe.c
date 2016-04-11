@@ -14037,7 +14037,6 @@ goto|goto
 name|done
 goto|;
 block|}
-empty_stmt|;
 name|if_multiaddr_array
 argument_list|(
 name|ifp

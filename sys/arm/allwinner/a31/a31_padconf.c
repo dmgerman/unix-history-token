@@ -462,7 +462,7 @@ literal|"gmac"
 block|,
 literal|"lcd1"
 block|,
-literal|"dmic"
+literal|"clk_out_a"
 block|,
 name|NULL
 block|,
@@ -514,7 +514,7 @@ literal|"gmac"
 block|,
 literal|"lcd1"
 block|,
-literal|"clk_out_b"
+literal|"dmic"
 block|,
 name|NULL
 block|,
@@ -529,7 +529,7 @@ literal|"PA18"
 block|,
 literal|0
 block|,
-literal|17
+literal|18
 block|,
 block|{
 literal|"gpio_in"
@@ -540,7 +540,7 @@ literal|"gmac"
 block|,
 literal|"lcd1"
 block|,
-literal|"pwm3"
+literal|"clk_out_b"
 block|,
 name|NULL
 block|,
@@ -555,7 +555,7 @@ literal|"PA19"
 block|,
 literal|0
 block|,
-literal|17
+literal|19
 block|,
 block|{
 literal|"gpio_in"
@@ -581,7 +581,7 @@ literal|"PA20"
 block|,
 literal|0
 block|,
-literal|17
+literal|20
 block|,
 block|{
 literal|"gpio_in"
@@ -592,7 +592,7 @@ literal|"gmac"
 block|,
 literal|"lcd1"
 block|,
-literal|"spi3"
+literal|"pwm3"
 block|,
 name|NULL
 block|,
@@ -607,7 +607,7 @@ literal|"PA21"
 block|,
 literal|0
 block|,
-literal|17
+literal|21
 block|,
 block|{
 literal|"gpio_in"
@@ -633,7 +633,7 @@ literal|"PA22"
 block|,
 literal|0
 block|,
-literal|17
+literal|22
 block|,
 block|{
 literal|"gpio_in"
@@ -659,7 +659,7 @@ literal|"PA23"
 block|,
 literal|0
 block|,
-literal|17
+literal|23
 block|,
 block|{
 literal|"gpio_in"
@@ -685,7 +685,7 @@ literal|"PA24"
 block|,
 literal|0
 block|,
-literal|17
+literal|24
 block|,
 block|{
 literal|"gpio_in"
@@ -711,7 +711,7 @@ literal|"PA25"
 block|,
 literal|0
 block|,
-literal|17
+literal|25
 block|,
 block|{
 literal|"gpio_in"
@@ -737,7 +737,7 @@ literal|"PA26"
 block|,
 literal|0
 block|,
-literal|17
+literal|26
 block|,
 block|{
 literal|"gpio_in"
@@ -763,7 +763,7 @@ literal|"PA27"
 block|,
 literal|0
 block|,
-literal|17
+literal|27
 block|,
 block|{
 literal|"gpio_in"
@@ -2765,7 +2765,7 @@ literal|"PE12"
 block|,
 literal|4
 block|,
-literal|11
+literal|12
 block|,
 block|{
 literal|"gpio_in"
@@ -2791,7 +2791,7 @@ literal|"PE13"
 block|,
 literal|4
 block|,
-literal|11
+literal|13
 block|,
 block|{
 literal|"gpio_in"
@@ -2817,7 +2817,7 @@ literal|"PE14"
 block|,
 literal|4
 block|,
-literal|11
+literal|14
 block|,
 block|{
 literal|"gpio_in"
@@ -2843,7 +2843,7 @@ literal|"PE15"
 block|,
 literal|4
 block|,
-literal|11
+literal|15
 block|,
 block|{
 literal|"gpio_in"
@@ -2869,7 +2869,7 @@ literal|"PE16"
 block|,
 literal|4
 block|,
-literal|11
+literal|16
 block|,
 block|{
 literal|"gpio_in"
@@ -4273,7 +4273,7 @@ literal|"PH28"
 block|,
 literal|7
 block|,
-literal|27
+literal|28
 block|,
 block|{
 literal|"gpio_in"
@@ -4299,7 +4299,7 @@ literal|"PH29"
 block|,
 literal|7
 block|,
-literal|27
+literal|29
 block|,
 block|{
 literal|"gpio_in"
@@ -4325,7 +4325,7 @@ literal|"PH30"
 block|,
 literal|7
 block|,
-literal|27
+literal|30
 block|,
 block|{
 literal|"gpio_in"

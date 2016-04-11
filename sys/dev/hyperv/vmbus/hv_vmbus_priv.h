@@ -512,8 +512,7 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-comment|/* 	 * Host use this vector to intrrupt guest for vmbus channel 	 * event and msg. 	 */
-name|unsigned
+comment|/* 	 * Host use this vector to interrupt guest for vmbus channel 	 * event and msg. 	 */
 name|int
 name|hv_cb_vector
 decl_stmt|;
@@ -1101,10 +1100,174 @@ block|,
 name|HV_CPU_ID_FUNCTION_MS_HV_IMPLEMENTATION_LIMITS
 init|=
 literal|0x40000005
+block|,
+name|HV_CPU_ID_FUNCTION_MS_HV_HARDWARE_FEATURE
+init|=
+literal|0x40000006
 block|}
 name|hv_vmbus_cpuid_function
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_TIME_REFCNT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* MSR_TIME_REF_COUNT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_SYNIC
+value|0x0004
+end_define
+
+begin_comment
+comment|/* MSRs for SynIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_SYNTIMER
+value|0x0008
+end_define
+
+begin_comment
+comment|/* MSRs for SynTimer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_APIC
+value|0x0010
+end_define
+
+begin_comment
+comment|/* MSR_{EOI,ICR,TPR} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_HYPERCALL
+value|0x0020
+end_define
+
+begin_comment
+comment|/* MSR_{GUEST_OS_ID,HYPERCALL} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE_MSR_GUEST_IDLE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* MSR_GUEST_IDLE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_CSTATE_MASK
+value|0x000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_C3_HPET
+value|0x0010
+end_define
+
+begin_comment
+comment|/* C3 requires HPET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_FEATURE_CSTATE
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& HV_PM_FEATURE_CSTATE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_MWAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* MWAIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_XMM_HYPERCALL
+value|0x0010
+end_define
+
+begin_comment
+comment|/* hypercall input through XMM regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_GUEST_IDLE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* guest idle support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_NUMA
+value|0x0080
+end_define
+
+begin_comment
+comment|/* NUMA distance query support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_TIME_FREQ
+value|0x0100
+end_define
+
+begin_comment
+comment|/* timer frequency query (TSC, LAPIC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_FEATURE3_MSR_CRASH
+value|0x0400
+end_define
+
+begin_comment
+comment|/* MSRs for guest crash */
+end_comment
 
 begin_comment
 comment|/*  * Define the format of the SIMP register  */
@@ -1669,6 +1832,20 @@ name|hv_vmbus_g_connection
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|hyperv_features
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|hyperv_recommends
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -1994,15 +2171,6 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|hv_vmbus_query_hypervisor_presence
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

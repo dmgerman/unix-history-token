@@ -3807,7 +3807,6 @@ break|break;
 default|default:
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0

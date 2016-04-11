@@ -669,7 +669,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|reg
 operator|=
 name|READ4

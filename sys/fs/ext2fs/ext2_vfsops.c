@@ -1498,7 +1498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This computes the fields of the  ext2_sb_info structure from the  * data in the ext2_super_block structure read in.  */
+comment|/*  * This computes the fields of the m_ext2fs structure from the  * data in the ext2fs structure read in.  */
 end_comment
 
 begin_function
@@ -3068,7 +3068,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * I don't know whether this is the right strategy. Note that 	 * we dynamically allocate both an ext2_sb_info and an ext2_super_block 	 * while Linux keeps the super block in a locked buffer. 	 */
+comment|/* 	 * I don't know whether this is the right strategy. Note that 	 * we dynamically allocate both an m_ext2fs and an ext2fs 	 * while Linux keeps the super block in a locked buffer. 	 */
 name|ump
 operator|->
 name|um_e2fs

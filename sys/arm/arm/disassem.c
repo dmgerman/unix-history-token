@@ -2822,7 +2822,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-empty_stmt|;
 name|di
 operator|->
 name|di_printf

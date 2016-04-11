@@ -334,7 +334,7 @@ if|if
 condition|(
 name|err_file
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err_set_file
 argument_list|(
@@ -470,7 +470,7 @@ if|if
 condition|(
 name|err_file
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err_set_file
 argument_list|(
@@ -666,7 +666,7 @@ if|if
 condition|(
 name|err_file
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err_set_file
 argument_list|(
@@ -780,7 +780,7 @@ if|if
 condition|(
 name|err_file
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err_set_file
 argument_list|(

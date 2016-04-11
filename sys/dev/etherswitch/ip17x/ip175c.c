@@ -1063,7 +1063,6 @@ name|ETHERSWITCH_VLAN_PORT
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 comment|/* Reset vlans. */
 name|ip17x_reset_vlans
 argument_list|(

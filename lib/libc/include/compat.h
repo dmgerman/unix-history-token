@@ -34,6 +34,12 @@ define|\
 value|.symver impl, sym@verid
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT7
+end_ifndef
+
 begin_expr_stmt
 name|__sym_compat
 argument_list|(
@@ -72,6 +78,11 @@ literal|.0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#

@@ -2205,7 +2205,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|uaa

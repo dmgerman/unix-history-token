@@ -1534,7 +1534,6 @@ name|img_offset
 operator|=
 literal|13107200
 expr_stmt|;
-empty_stmt|;
 name|pimg
 operator|->
 name|img_size

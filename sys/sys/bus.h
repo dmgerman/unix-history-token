@@ -2857,6 +2857,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|device_t
+name|device_lookup_by_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|device_print_prettyname
 parameter_list|(

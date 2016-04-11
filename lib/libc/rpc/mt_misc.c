@@ -441,7 +441,7 @@ name|rpc_createerr
 modifier|*
 name|rce_addr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

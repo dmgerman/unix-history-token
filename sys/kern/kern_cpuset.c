@@ -3269,6 +3269,8 @@ name|set
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 name|cpuset_zone
 operator|=
@@ -3425,13 +3427,35 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* MD Code is responsible for initializing sets if vm_ndomains> 1. */
+comment|/* 	 * If MD code has not initialized per-domain cpusets, place all 	 * CPUs in domain 0. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXMEMDOM
+condition|;
+name|i
+operator|++
+control|)
 if|if
 condition|(
-name|vm_ndomains
-operator|==
-literal|1
+operator|!
+name|CPU_EMPTY
+argument_list|(
+operator|&
+name|cpuset_domain
+index|[
+name|i
+index|]
+argument_list|)
 condition|)
+goto|goto
+name|domains_set
+goto|;
 name|CPU_COPY
 argument_list|(
 operator|&
@@ -3444,6 +3468,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|domains_set
+label|:
 return|return
 operator|(
 name|set
@@ -4619,7 +4645,7 @@ name|uap
 operator|->
 name|id
 operator|>=
-name|vm_ndomains
+name|MAXMEMDOM
 condition|)
 name|error
 operator|=

@@ -614,7 +614,6 @@ name|SD_BLOCK_SIZE
 operator|/
 literal|4
 expr_stmt|;
-empty_stmt|;
 name|AT91C_BASE_PDC_MCI
 operator|->
 name|PDC_PTCR

@@ -1536,7 +1536,6 @@ name|flag
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|error
 operator|=
 literal|0

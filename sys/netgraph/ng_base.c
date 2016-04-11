@@ -7650,7 +7650,6 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Queue the request for later. */
 name|ng_queue_rw
 argument_list|(

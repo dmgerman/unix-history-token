@@ -2139,6 +2139,8 @@ argument_list|(
 name|test
 operator|->
 name|channel_index
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

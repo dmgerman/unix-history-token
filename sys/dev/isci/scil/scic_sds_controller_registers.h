@@ -738,7 +738,7 @@ parameter_list|(
 name|controller
 parameter_list|)
 define|\
-value|scu_ptsg_register_read( \        contoller, \        real_time_clock \     )
+value|scu_ptsg_register_read( \        controller, \        real_time_clock \     )
 comment|/*@}*/
 ifdef|#
 directive|ifdef

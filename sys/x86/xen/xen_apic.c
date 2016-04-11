@@ -1004,6 +1004,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1038,15 +1047,6 @@ name|XEN_APIC_UNSUPPORTED
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_function
 specifier|static
@@ -1278,6 +1278,8 @@ name|ipi_wait
 operator|=
 name|xen_pv_lapic_ipi_wait
 block|,
+endif|#
+directive|endif
 operator|.
 name|ipi_alloc
 operator|=
@@ -1288,8 +1290,6 @@ name|ipi_free
 operator|=
 name|xen_pv_lapic_ipi_free
 block|,
-endif|#
-directive|endif
 operator|.
 name|set_lvt_mask
 operator|=

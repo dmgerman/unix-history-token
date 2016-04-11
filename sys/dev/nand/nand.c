@@ -4493,7 +4493,6 @@ name|block
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|NANDBUS_UNLOCK
 argument_list|(
 name|nandbus

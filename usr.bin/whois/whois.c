@@ -457,6 +457,12 @@ literal|"ReferralServer:  whois://"
 argument_list|)
 block|,
 comment|/* ARIN */
+name|WHOIS_REFERRAL
+argument_list|(
+literal|"descr:          region. Please query"
+argument_list|)
+block|,
+comment|/* AfriNIC */
 block|{
 name|NULL
 block|,
@@ -465,6 +471,25 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|actually_arin
+index|[]
+init|=
+block|{
+literal|"netname:        ERX-NETBLOCK\n"
+block|,
+comment|/* APNIC */
+literal|"netname:        NON-RIPE-NCC-MANAGED-ADDRESS-BLOCK\n"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2312,6 +2337,53 @@ name|host
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|actually_arin
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+name|actually_arin
+index|[
+name|i
+index|]
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|s_asprintf
+argument_list|(
+operator|&
+name|nhost
+argument_list|,
+literal|"%s"
+argument_list|,
+name|ANICHOST
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 comment|/* Verisign etc. */

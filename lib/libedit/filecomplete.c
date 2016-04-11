@@ -2314,7 +2314,7 @@ if|if
 condition|(
 name|point
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|point
@@ -2410,7 +2410,7 @@ block|}
 else|else
 name|matches
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

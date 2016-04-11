@@ -1235,7 +1235,7 @@ if|if
 condition|(
 name|cmd
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|DPRINTF

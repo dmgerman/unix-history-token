@@ -2841,7 +2841,6 @@ name|util_sc
 operator|.
 name|receive_buffer
 expr_stmt|;
-empty_stmt|;
 name|channel
 operator|=
 name|sc

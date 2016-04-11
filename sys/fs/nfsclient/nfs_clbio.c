@@ -3310,7 +3310,6 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|n
@@ -7844,7 +7843,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|error

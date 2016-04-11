@@ -957,6 +957,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bus_child_deleted
+argument_list|,
+name|pci_child_deleted
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_child_detached
 argument_list|,
 name|pci_child_detached
@@ -25960,7 +25967,7 @@ end_function
 
 begin_function
 name|void
-name|pci_delete_child
+name|pci_child_deleted
 parameter_list|(
 name|device_t
 name|dev
@@ -25998,19 +26005,17 @@ name|dinfo
 operator|->
 name|resources
 expr_stmt|;
+comment|/* Turn off access to resources we're about to free */
 if|if
 condition|(
-name|device_is_attached
+name|bus_child_present
 argument_list|(
 name|child
 argument_list|)
+operator|!=
+literal|0
 condition|)
-name|device_detach
-argument_list|(
-name|child
-argument_list|)
-expr_stmt|;
-comment|/* Turn off access to resources we're about to free */
+block|{
 name|pci_write_config
 argument_list|(
 name|child
@@ -26036,6 +26041,12 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|pci_disable_busmaster
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Free all allocated resources */
 name|STAILQ_FOREACH
 argument_list|(
@@ -26144,13 +26155,6 @@ block|}
 name|resource_list_free
 argument_list|(
 name|rl
-argument_list|)
-expr_stmt|;
-name|device_delete_child
-argument_list|(
-name|dev
-argument_list|,
-name|child
 argument_list|)
 expr_stmt|;
 name|pci_freecfg

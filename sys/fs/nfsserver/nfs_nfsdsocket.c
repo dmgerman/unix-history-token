@@ -8629,7 +8629,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|error

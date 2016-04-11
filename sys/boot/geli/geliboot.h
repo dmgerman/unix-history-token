@@ -136,6 +136,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|DEV_GELIBOOT_BSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEV_GELIBOOT_BSIZE
+value|4096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MIN
 end_ifndef
 

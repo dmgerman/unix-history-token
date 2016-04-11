@@ -6233,7 +6233,6 @@ break|break;
 default|default:
 break|break;
 block|}
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -6330,7 +6329,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|NFSVNO_SETATTRVAL
 argument_list|(
 operator|&
@@ -6580,7 +6578,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 comment|/* 	 * Iff doesn't exist, create it 	 * otherwise just truncate to 0 length 	 *   should I set the mode too ? 	 */
 name|nd
@@ -13673,7 +13670,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -14997,7 +14993,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 name|lo
 operator|.
 name|lo_first
@@ -15685,7 +15680,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 name|stp
 operator|->
 name|ls_ownerlen
@@ -16546,7 +16540,6 @@ default|default:
 comment|/* nd_repstat will be set to NFSERR_INVAL below. */
 break|break;
 block|}
-empty_stmt|;
 block|}
 switch|switch
 condition|(
@@ -16595,7 +16588,6 @@ operator|=
 name|NFSERR_INVAL
 expr_stmt|;
 block|}
-empty_stmt|;
 name|i
 operator|=
 name|fxdr_unsigned
@@ -16658,7 +16650,6 @@ operator|=
 name|NFSERR_INVAL
 expr_stmt|;
 block|}
-empty_stmt|;
 name|clientid
 operator|.
 name|lval
@@ -17139,7 +17130,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 block|}
 elseif|else
 if|if
@@ -17588,7 +17578,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 name|nfsvno_open
 argument_list|(
@@ -17710,7 +17699,6 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
-empty_stmt|;
 name|stp
 operator|->
 name|ls_flags
@@ -20344,7 +20332,6 @@ operator|=
 name|NFSERR_BADXDR
 expr_stmt|;
 block|}
-empty_stmt|;
 name|i
 operator|=
 name|fxdr_unsigned
@@ -20406,7 +20393,6 @@ operator|=
 name|NFSERR_BADXDR
 expr_stmt|;
 block|}
-empty_stmt|;
 name|clientid
 operator|.
 name|lval

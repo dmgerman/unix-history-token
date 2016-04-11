@@ -281,13 +281,13 @@ name|usage_page
 modifier|*
 name|curpage
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
 name|hidname
 operator|==
-literal|0
+name|NULL
 condition|)
 name|hidname
 operator|=
@@ -613,7 +613,7 @@ if|if
 condition|(
 name|pages
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|npagesmax

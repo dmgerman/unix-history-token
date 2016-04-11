@@ -902,7 +902,7 @@ name|xbp
 operator|->
 name|ovfl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|xbp
 operator|=
@@ -1405,7 +1405,7 @@ name|bp
 operator|->
 name|ovfl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bp
 operator|->

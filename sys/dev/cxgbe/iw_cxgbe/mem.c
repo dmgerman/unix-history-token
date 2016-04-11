@@ -4883,7 +4883,6 @@ operator|-
 name|ENOMEM
 argument_list|)
 return|;
-empty_stmt|;
 name|pci_unmap_addr_set
 argument_list|(
 name|c4pl

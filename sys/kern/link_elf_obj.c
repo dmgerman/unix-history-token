@@ -1209,7 +1209,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif
@@ -1717,7 +1717,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif
@@ -1776,7 +1776,7 @@ index|]
 operator|.
 name|sh_type
 operator|==
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 condition|)
 name|ef
 operator|->
@@ -3254,7 +3254,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif
@@ -3920,7 +3920,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif
@@ -4192,7 +4192,7 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif
@@ -4330,7 +4330,7 @@ index|]
 operator|.
 name|sh_type
 operator|==
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 condition|)
 name|ef
 operator|->
@@ -4546,7 +4546,7 @@ index|]
 operator|.
 name|sh_type
 operator|==
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 endif|#
 directive|endif
 condition|)

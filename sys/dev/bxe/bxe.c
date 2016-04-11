@@ -7620,7 +7620,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
 

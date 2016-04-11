@@ -3626,7 +3626,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|fo
 operator|=
@@ -4353,7 +4353,7 @@ index|[
 name|n
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|fo
 operator|=
@@ -8884,7 +8884,7 @@ name|pp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|syslog

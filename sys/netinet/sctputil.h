@@ -448,6 +448,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sctp_wakeup_the_read_socket
+parameter_list|(
+name|struct
+name|sctp_inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sctp_add_to_readq
 parameter_list|(
 name|struct

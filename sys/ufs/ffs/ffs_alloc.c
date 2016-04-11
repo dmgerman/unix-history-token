@@ -1111,11 +1111,6 @@ decl_stmt|;
 name|int64_t
 name|delta
 decl_stmt|;
-operator|*
-name|bpp
-operator|=
-literal|0
-expr_stmt|;
 name|vp
 operator|=
 name|ITOV
@@ -1464,6 +1459,11 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Check for extension in the existing location. 	 */
+operator|*
+name|bpp
+operator|=
+name|NULL
+expr_stmt|;
 name|cg
 operator|=
 name|dtog
@@ -2407,8 +2407,6 @@ name|sbap
 decl_stmt|,
 modifier|*
 name|ebap
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|cluster_save
@@ -2876,6 +2874,10 @@ name|in_off
 expr_stmt|;
 block|}
 comment|/* 	 * If the block range spans two block maps, get the second map. 	 */
+name|ebap
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|end_lvl
@@ -3722,8 +3724,6 @@ name|sbap
 decl_stmt|,
 modifier|*
 name|ebap
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|cluster_save
@@ -4190,6 +4190,10 @@ name|in_off
 expr_stmt|;
 block|}
 comment|/* 	 * If the block range spans two block maps, get the second map. 	 */
+name|ebap
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|end_lvl
@@ -14273,7 +14277,7 @@ if|if
 condition|(
 name|mp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strncmp
 argument_list|(

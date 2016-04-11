@@ -137,7 +137,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Called first to acquire a reference to the DMA channel  */
+comment|/*  * Called first to acquire a reference to the DMA channel  *  * Flags may be M_WAITOK or M_NOWAIT.  */
 end_comment
 
 begin_function_decl
@@ -146,6 +146,9 @@ name|ioat_get_dmaengine
 parameter_list|(
 name|uint32_t
 name|channel_index
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

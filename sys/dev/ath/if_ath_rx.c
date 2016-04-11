@@ -1184,6 +1184,23 @@ block|{
 case|case
 name|IEEE80211_FC0_SUBTYPE_BEACON
 case|:
+comment|/* 		 * Only do the following processing if it's for 		 * the current BSS. 		 * 		 * In scan and IBSS mode we receive all beacons, 		 * which means we need to filter out stuff 		 * that isn't for us or we'll end up constantly 		 * trying to sync / merge to BSSes that aren't 		 * actually us. 		 */
+if|if
+condition|(
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|ni
+operator|->
+name|ni_bssid
+argument_list|,
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|)
+condition|)
+block|{
 comment|/* update rssi statistics for use by the hal */
 comment|/* XXX unlocked check against vap->iv_bss? */
 name|ATH_RSSI_LPF
@@ -1237,7 +1254,7 @@ operator|->
 name|sc_ah
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Let's calculate the delta and remainder, so we can see 		 * if the beacon timer from the AP is varying by more than 		 * a few TU.  (Which would be a huge, huge problem.) 		 */
+comment|/* 			 * Let's calculate the delta and remainder, so we can see 			 * if the beacon timer from the AP is varying by more than 			 * a few TU.  (Which would be a huge, huge problem.) 			 */
 name|tsf_delta
 operator|=
 operator|(
@@ -1258,7 +1275,7 @@ name|tsf_delta
 operator|/
 name|tsf_intval
 expr_stmt|;
-comment|/* 		 * If our delta is greater than half the beacon interval, 		 * let's round the bmiss value up to the next beacon 		 * interval.  Ie, we're running really, really early 		 * on the next beacon. 		 */
+comment|/* 			 * If our delta is greater than half the beacon interval, 			 * let's round the bmiss value up to the next beacon 			 * interval.  Ie, we're running really, really early 			 * on the next beacon. 			 */
 if|if
 condition|(
 name|tsf_delta
@@ -1295,7 +1312,7 @@ operator|)
 name|tsf_intval
 operator|)
 expr_stmt|;
-comment|/* 		 * The remainder using '%' is between 0 .. intval-1. 		 * If we're actually running too fast, then the remainder 		 * will be some large number just under intval-1. 		 * So we need to look at whether we're running 		 * before or after the target beacon interval 		 * and if we are, modify how we do the remainder 		 * calculation. 		 */
+comment|/* 			 * The remainder using '%' is between 0 .. intval-1. 			 * If we're actually running too fast, then the remainder 			 * will be some large number just under intval-1. 			 * So we need to look at whether we're running 			 * before or after the target beacon interval 			 * and if we are, modify how we do the remainder 			 * calculation. 			 */
 if|if
 condition|(
 name|tsf_beacon
@@ -1413,8 +1430,15 @@ operator|+
 name|tsf_intval
 argument_list|)
 expr_stmt|;
+comment|/* We only do syncbeacon on STA VAPs; not on IBSS */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_STA
+operator|&&
 name|sc
 operator|->
 name|sc_syncbeacon
@@ -1451,7 +1475,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Resync beacon timers using the tsf of the beacon 			 * frame we just received. 			 */
+comment|/* 				 * Resync beacon timers using the tsf of the beacon 				 * frame we just received. 				 */
 name|ath_beacon_config
 argument_list|(
 name|sc
@@ -1465,6 +1489,7 @@ name|sc_syncbeacon
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* fall thru... */
 case|case
@@ -1483,6 +1508,11 @@ operator|->
 name|iv_state
 operator|==
 name|IEEE80211_S_RUN
+operator|&&
+name|ieee80211_ibss_merge_check
+argument_list|(
+name|ni
+argument_list|)
 condition|)
 block|{
 name|uint32_t

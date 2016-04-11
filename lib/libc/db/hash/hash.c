@@ -2217,6 +2217,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|hashp
+operator|->
+name|save_file
+condition|)
 operator|(
 name|void
 operator|)
@@ -4117,7 +4123,7 @@ name|hashp
 operator|->
 name|cpage
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

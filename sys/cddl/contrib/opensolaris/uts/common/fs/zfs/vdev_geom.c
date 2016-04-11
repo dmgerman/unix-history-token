@@ -3145,8 +3145,14 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
+comment|/* 			 * Check that the label's vdev guid matches the 			 * desired guid.  If the label has a pool guid, 			 * check that it matches too. (Inactive spares 			 * and L2ARCs do not have any pool guid in the 			 * label.) 			 */
 if|if
 condition|(
+operator|(
+name|pguid
+operator|!=
+literal|0
+operator|&&
 name|pguid
 operator|!=
 name|spa_guid
@@ -3155,6 +3161,7 @@ name|vd
 operator|->
 name|vdev_spa
 argument_list|)
+operator|)
 operator|||
 name|vguid
 operator|!=

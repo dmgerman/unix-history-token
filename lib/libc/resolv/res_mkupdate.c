@@ -6409,7 +6409,7 @@ if|if
 condition|(
 name|pp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|(
@@ -6498,7 +6498,7 @@ if|if
 condition|(
 name|ss
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|(

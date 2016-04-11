@@ -978,7 +978,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* set below */
-empty_stmt|;
 name|IFP2IFATM
 argument_list|(
 name|sc

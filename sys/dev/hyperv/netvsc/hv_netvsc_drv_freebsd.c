@@ -385,6 +385,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_RING_CNT_DEF_MAX
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_RNDIS_MSG_LEN
 define|\
 value|(sizeof(rndis_msg) +		\      RNDIS_HASH_PPI_SIZE +		\      RNDIS_VLAN_PPI_SIZE +		\      RNDIS_TSO_PPI_SIZE +		\      RNDIS_CSUM_PPI_SIZE)
@@ -1093,7 +1100,7 @@ specifier|static
 name|int
 name|hn_chan_cnt
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,7 +1130,7 @@ specifier|static
 name|int
 name|hn_tx_ring_cnt
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2198,15 +2205,37 @@ condition|(
 name|ring_cnt
 operator|<=
 literal|0
-operator|||
-name|ring_cnt
-operator|>
-name|mp_ncpus
 condition|)
+block|{
+comment|/* Default */
 name|ring_cnt
 operator|=
 name|mp_ncpus
 expr_stmt|;
+if|if
+condition|(
+name|ring_cnt
+operator|>
+name|HN_RING_CNT_DEF_MAX
+condition|)
+name|ring_cnt
+operator|=
+name|HN_RING_CNT_DEF_MAX
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ring_cnt
+operator|>
+name|mp_ncpus
+condition|)
+block|{
+name|ring_cnt
+operator|=
+name|mp_ncpus
+expr_stmt|;
+block|}
 name|tx_ring_cnt
 operator|=
 name|hn_tx_ring_cnt

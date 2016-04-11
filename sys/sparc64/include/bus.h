@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|BUS_SPACE_MAXADDR
-value|0xFFFFFFFF
+value|0xFFFFFFFFFFFFFFFF
 end_define
 
 begin_define

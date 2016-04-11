@@ -12412,7 +12412,7 @@ else|else
 block|{
 name|roundingPrecisionName
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 ifdef|#
@@ -12434,7 +12434,7 @@ literal|0
 case|:
 name|roundingModeName
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|roundingCode
 operator|=
@@ -12504,7 +12504,7 @@ literal|0
 case|:
 name|tininessModeName
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|tininessCode
 operator|=

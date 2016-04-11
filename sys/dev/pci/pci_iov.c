@@ -2878,7 +2878,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|pci_delete_child
+name|device_delete_child
 argument_list|(
 name|bus
 argument_list|,
@@ -3825,7 +3825,7 @@ argument_list|,
 name|vf
 argument_list|)
 condition|)
-name|pci_delete_child
+name|device_delete_child
 argument_list|(
 name|bus
 argument_list|,

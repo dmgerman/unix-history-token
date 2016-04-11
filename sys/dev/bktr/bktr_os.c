@@ -1539,7 +1539,6 @@ name|BUS_PROBE_DEFAULT
 return|;
 block|}
 block|}
-empty_stmt|;
 return|return
 name|ENXIO
 return|;

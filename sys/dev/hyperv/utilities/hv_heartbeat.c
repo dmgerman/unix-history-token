@@ -166,7 +166,6 @@ name|softc
 operator|->
 name|receive_buffer
 expr_stmt|;
-empty_stmt|;
 name|channel
 operator|=
 name|softc

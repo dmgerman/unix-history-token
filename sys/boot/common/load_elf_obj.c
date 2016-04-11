@@ -1043,7 +1043,7 @@ argument_list|(
 name|__amd64__
 argument_list|)
 case|case
-name|SHT_AMD64_UNWIND
+name|SHT_X86_64_UNWIND
 case|:
 endif|#
 directive|endif

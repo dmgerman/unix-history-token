@@ -5887,7 +5887,6 @@ name|bitpos
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 block|}
 operator|*

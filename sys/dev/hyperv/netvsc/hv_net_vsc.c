@@ -2706,11 +2706,6 @@ expr_stmt|;
 name|cleanup
 label|:
 comment|/* 	 * Free the packet buffers on the netvsc device packet queue. 	 * Release other resources. 	 */
-if|if
-condition|(
-name|net_dev
-condition|)
-block|{
 name|sema_destroy
 argument_list|(
 operator|&
@@ -2726,7 +2721,6 @@ argument_list|,
 name|M_NETVSC
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL

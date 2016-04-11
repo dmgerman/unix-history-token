@@ -407,6 +407,48 @@ name|RT_RXDESC_SDL0_DDONE
 value|(1<< 15)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT305X_RXD_SRC_L4_CSUM_FAIL
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT305X_RXD_SRC_IP_CSUM_FAIL
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7620_RXD_SRC_L4_CSUM_FAIL
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7620_RXD_SRC_IP_CSUM_FAIL
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7621_RXD_SRC_L4_CSUM_FAIL
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7621_RXD_SRC_IP_CSUM_FAIL
+value|(1<< 26)
+end_define
+
 begin_struct
 struct|struct
 name|rt_rxdesc
@@ -423,9 +465,10 @@ decl_stmt|;
 name|uint32_t
 name|sdp1
 decl_stmt|;
-name|uint16_t
-name|foe
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint16_t foe;
 define|#
 directive|define
 name|RXDSXR_FOE_ENTRY_VALID
@@ -434,9 +477,7 @@ define|#
 directive|define
 name|RXDSXR_FOE_ENTRY_MASK
 value|0x3f
-name|uint8_t
-name|ai
-decl_stmt|;
+block|uint8_t ai;
 define|#
 directive|define
 name|RXDSXR_AI_COU_REASON
@@ -445,9 +486,7 @@ define|#
 directive|define
 name|RXDSXR_AI_PARSER_RSLT_MASK
 value|0xff
-name|uint8_t
-name|src
-decl_stmt|;
+block|uint8_t src;
 define|#
 directive|define
 name|RXDSXR_SRC_IPFVLD
@@ -472,6 +511,11 @@ define|#
 directive|define
 name|RXDSXR_SRC_PORT_MASK
 value|0x07
+endif|#
+directive|endif
+name|uint32_t
+name|word3
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -879,6 +923,12 @@ decl_stmt|;
 comment|/* chip specific registers config */
 name|int
 name|rx_ring_count
+decl_stmt|;
+name|uint32_t
+name|csum_fail_l4
+decl_stmt|;
+name|uint32_t
+name|csum_fail_ip
 decl_stmt|;
 name|uint32_t
 name|int_rx_done_mask

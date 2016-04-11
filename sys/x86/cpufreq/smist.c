@@ -992,7 +992,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|DPRINT
 argument_list|(
 name|dev

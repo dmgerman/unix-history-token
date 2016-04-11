@@ -3236,7 +3236,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-empty_stmt|;
 block|}
 name|ch
 operator|->

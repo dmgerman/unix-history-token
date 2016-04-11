@@ -2805,7 +2805,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-empty_stmt|;
 name|h
 operator|=
 name|ether_crc32_be

@@ -366,6 +366,40 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * RSPN_ID Requet CT_IU  *  * Source: INCITS 463-2010 Generic Services 6 Section 5.2.5.32  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ct_hdr_t
+name|rspnid_hdr
+decl_stmt|;
+name|uint8_t
+name|rspnid_reserved
+decl_stmt|;
+name|uint8_t
+name|rspnid_portid
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|rspnid_length
+decl_stmt|;
+name|uint8_t
+name|rspnid_name
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|rspn_id_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * RFF_ID Requet CT_IU  *  * Source: INCITS 463-2010 Generic Services 6 Section 5.2.5.34  */
 end_comment
 
@@ -396,6 +430,37 @@ name|rffid_fc4type
 decl_stmt|;
 block|}
 name|rff_id_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * RSNN_NN Requet CT_IU  *  * Source: INCITS 463-2010 Generic Services 6 Section 5.2.5.35  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ct_hdr_t
+name|rsnnnn_hdr
+decl_stmt|;
+name|uint8_t
+name|rsnnnn_nodename
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint8_t
+name|rsnnnn_length
+decl_stmt|;
+name|uint8_t
+name|rsnnnn_name
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|rsnn_nn_t
 typedef|;
 end_typedef
 

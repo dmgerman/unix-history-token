@@ -684,7 +684,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sc

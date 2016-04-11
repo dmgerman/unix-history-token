@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT7
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_WANT_SEMUN_OLD
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -74,6 +85,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT7
+end_ifndef
+
 begin_function_decl
 name|int
 name|freebsd7___semctl
@@ -112,6 +129,11 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -215,6 +237,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT7
+end_ifndef
 
 begin_function
 name|int
@@ -331,6 +359,11 @@ literal|.0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

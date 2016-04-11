@@ -2900,7 +2900,7 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
-name|u_char
+name|int
 name|p_throttled
 decl_stmt|;
 comment|/* (c) Flag for racct pcpu throttling */

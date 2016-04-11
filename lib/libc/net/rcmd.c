@@ -1200,7 +1200,7 @@ if|if
 condition|(
 name|fd2p
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|_write

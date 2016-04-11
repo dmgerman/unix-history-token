@@ -929,7 +929,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|seg
@@ -3919,7 +3918,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bp
@@ -4200,7 +4198,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|i
 operator|=
 literal|0

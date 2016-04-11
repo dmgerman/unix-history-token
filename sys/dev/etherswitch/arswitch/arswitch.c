@@ -1011,7 +1011,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Reset VLANs. */
 name|sc
 operator|->

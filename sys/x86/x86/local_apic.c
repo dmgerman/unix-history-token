@@ -1771,6 +1771,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -1793,15 +1802,6 @@ name|vector
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1927,6 +1927,8 @@ name|ipi_wait
 operator|=
 name|native_lapic_ipi_wait
 block|,
+endif|#
+directive|endif
 operator|.
 name|ipi_alloc
 operator|=
@@ -1937,8 +1939,6 @@ name|ipi_free
 operator|=
 name|native_lapic_ipi_free
 block|,
-endif|#
-directive|endif
 operator|.
 name|set_lvt_mask
 operator|=
@@ -8463,6 +8463,15 @@ comment|/* DETECT_DEADLOCK */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
 begin_comment
 comment|/*  * Since the IDT is shared by all CPUs the IPI slot update needs to be globally  * visible.  *  * Consider the case where an IPI is generated immediately after allocation:  *     vector = lapic_ipi_alloc(ipifunc);  *     ipi_selected(other_cpus, vector);  *  * In xAPIC mode a write to ICR_LO has serializing semantics because the  * APIC page is mapped as an uncached region. In x2APIC mode there is an  * explicit 'mfence' before the ICR MSR is written. Therefore in both cases  * the IDT slot update is globally visible before the IPI is delivered.  */
 end_comment
@@ -8711,15 +8720,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 end_unit
 

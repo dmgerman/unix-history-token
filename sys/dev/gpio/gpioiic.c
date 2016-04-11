@@ -704,10 +704,11 @@ name|data
 operator|!=
 name|NULL
 operator|&&
+operator|*
 operator|(
 name|int
-operator|)
 operator|*
+operator|)
 name|data
 operator|==
 name|IIC_WAIT

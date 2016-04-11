@@ -277,16 +277,11 @@ if|if
 condition|(
 name|ap
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ap
 operator|=
-operator|(
-expr|struct
-name|authnone_private
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -302,7 +297,7 @@ if|if
 condition|(
 name|ap
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|mutex_unlock

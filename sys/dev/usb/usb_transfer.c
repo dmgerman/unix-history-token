@@ -3444,7 +3444,7 @@ if|if
 condition|(
 name|ifaces
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|DPRINTFN

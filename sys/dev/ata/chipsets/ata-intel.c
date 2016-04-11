@@ -3009,7 +3009,6 @@ operator|=
 name|ata_intel_sata_sidpr_write
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 if|if
 condition|(

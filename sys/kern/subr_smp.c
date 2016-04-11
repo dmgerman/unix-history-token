@@ -4194,8 +4194,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|!
 name|CPU_ISSET
 argument_list|(
 name|id
@@ -4205,8 +4206,16 @@ name|node
 operator|->
 name|cpuset
 argument_list|)
-condition|)
-break|break;
+argument_list|,
+operator|(
+literal|"logical ID %u is already set in node %p"
+operator|,
+name|id
+operator|,
+name|node
+operator|)
+argument_list|)
+expr_stmt|;
 name|CPU_SET
 argument_list|(
 name|id

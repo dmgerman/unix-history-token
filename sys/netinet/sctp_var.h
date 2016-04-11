@@ -263,6 +263,29 @@ begin_comment
 comment|/*  * I tried to cache the readq entries at one point. But the reality  * is that it did not add any performance since this meant we had to  * lock the STCB on read. And at that point once you have to do an  * extra lock, it really does not matter if the lock is in the ZONE  * stuff or in our code. Note that this same problem would occur with  * an mbuf cache as well so it is not really worth doing, at least  * right now :-D  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sctp_free_a_readq
+parameter_list|(
+name|_stcb
+parameter_list|,
+name|_readq
+parameter_list|)
+value|{ \ 	if ((_readq)->on_strm_q) \ 		panic("On strm q stcb:%p readq:%p", (_stcb), (_readq)); \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_readq), (_readq)); \ 	SCTP_DECR_READQ_COUNT(); \ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -274,6 +297,11 @@ name|_readq
 parameter_list|)
 value|{ \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_readq), (_readq)); \ 	SCTP_DECR_READQ_COUNT(); \ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -376,7 +404,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (stcb) { \ 		atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \ 		atomic_add_int(&(stcb)->asoc.my_rwnd_control_len, MSIZE); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (stcb) { \ 		atomic_add_int(&(stcb)->asoc.sb_cc, SCTP_BUF_LEN((m))); \ 		atomic_add_int(&(stcb)->asoc.my_rwnd_control_len, MSIZE); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define

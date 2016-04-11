@@ -4146,7 +4146,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 block|}
 end_function
 

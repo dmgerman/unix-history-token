@@ -1827,7 +1827,6 @@ operator|.
 name|unit
 operator|++
 expr_stmt|;
-empty_stmt|;
 block|}
 block|}
 name|cleanup
@@ -1979,7 +1978,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* Fetch the list to be populated */
 name|sports
 operator|=

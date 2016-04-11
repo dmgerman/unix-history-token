@@ -1630,7 +1630,6 @@ name|bytes
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|error
 label|:
 operator|*

@@ -415,6 +415,57 @@ name|SCTP_PACKED
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sctp_idata
+block|{
+name|uint32_t
+name|tsn
+decl_stmt|;
+name|uint16_t
+name|stream_id
+decl_stmt|;
+name|uint16_t
+name|reserved
+decl_stmt|;
+comment|/* Where does the SSN go? */
+name|uint32_t
+name|msg_id
+decl_stmt|;
+union|union
+block|{
+name|uint32_t
+name|protocol_id
+decl_stmt|;
+name|uint32_t
+name|fsn
+decl_stmt|;
+comment|/* Fragment Sequence Number */
+block|}
+union|;
+comment|/* user data follows */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_idata_chunk
+block|{
+name|struct
+name|sctp_chunkhdr
+name|ch
+decl_stmt|;
+name|struct
+name|sctp_idata
+name|dp
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Structures for the control chunks  */
 end_comment
@@ -1139,6 +1190,23 @@ name|sequence
 decl_stmt|;
 block|}
 name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_strseq_mid
+block|{
+name|uint16_t
+name|stream
+decl_stmt|;
+name|uint16_t
+name|reserved
+decl_stmt|;
+name|uint32_t
+name|msg_id
+decl_stmt|;
+block|}
 struct|;
 end_struct
 

@@ -3504,7 +3504,6 @@ operator|->
 name|quirks
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 return|return
 operator|(

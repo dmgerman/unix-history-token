@@ -592,7 +592,6 @@ operator|->
 name|quirks
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|// TODO
 switch|switch
 condition|(

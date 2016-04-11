@@ -4118,7 +4118,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|RMAN_IS_DEFAULT_RANGE

@@ -1438,7 +1438,6 @@ name|hz
 operator|/
 name|LPTOUTINITIAL
 expr_stmt|;
-empty_stmt|;
 name|callout_reset
 argument_list|(
 operator|&

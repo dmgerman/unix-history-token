@@ -1496,7 +1496,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: creating %s on channel %u\n"
+literal|"%s: creating %s on channel %u%c\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1511,6 +1511,11 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
+name|chan
+argument_list|)
+argument_list|,
+name|ieee80211_channel_type_char
+argument_list|(
 name|chan
 argument_list|)
 argument_list|)
@@ -2812,13 +2817,9 @@ begin_comment
 comment|/* IEEE80211_DEBUG */
 end_comment
 
-begin_comment
-comment|/*  * Handle 802.11 ad hoc network merge.  The  * convention, set by the Wireless Ethernet Compatibility Alliance  * (WECA), is that an 802.11 station will change its BSSID to match  * the "oldest" 802.11 ad hoc network, on the same channel, that  * has the station's desired SSID.  The "oldest" 802.11 network  * sends beacons with the greatest TSF timestamp.  *  * The caller is assumed to validate TSF's before attempting a merge.  *  * Return !0 if the BSSID changed, 0 otherwise.  */
-end_comment
-
 begin_function
 name|int
-name|ieee80211_ibss_merge
+name|ieee80211_ibss_merge_check
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -2835,20 +2836,6 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_DEBUG
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|ni
-operator|->
-name|ni_ic
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ni
@@ -2929,6 +2916,60 @@ return|return
 literal|0
 return|;
 block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Handle 802.11 ad hoc network merge.  The  * convention, set by the Wireless Ethernet Compatibility Alliance  * (WECA), is that an 802.11 station will change its BSSID to match  * the "oldest" 802.11 ad hoc network, on the same channel, that  * has the station's desired SSID.  The "oldest" 802.11 network  * sends beacons with the greatest TSF timestamp.  *  * The caller is assumed to validate TSF's before attempting a merge.  *  * Return !0 if the BSSID changed, 0 otherwise.  */
+end_comment
+
+begin_function
+name|int
+name|ieee80211_ibss_merge
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ni
+operator|->
+name|ni_vap
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|ieee80211_ibss_merge_check
+argument_list|(
+name|ni
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
