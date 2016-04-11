@@ -452,6 +452,11 @@ name|MSR_AMDK8_IPM
 case|:
 comment|/* 		 * Ignore writes to the "Interrupt Pending Message" MSR. 		 */
 break|break;
+case|case
+name|MSR_K8_UCODE_UPDATE
+case|:
+comment|/* 		 * Ignore writes to microcode update register. 		 */
+break|break;
 default|default:
 name|error
 operator|=
