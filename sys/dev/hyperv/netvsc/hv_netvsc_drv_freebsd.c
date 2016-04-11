@@ -1100,7 +1100,7 @@ specifier|static
 name|int
 name|hn_chan_cnt
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,7 +1130,7 @@ specifier|static
 name|int
 name|hn_tx_ring_cnt
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
