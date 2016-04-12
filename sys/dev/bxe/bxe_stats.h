@@ -654,6 +654,10 @@ decl_stmt|;
 name|uint32_t
 name|mbuf_alloc_tpa
 decl_stmt|;
+comment|/* num. of times tx queue full occured */
+name|uint32_t
+name|tx_queue_full_return
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -925,6 +929,10 @@ name|mbuf_alloc_sge
 decl_stmt|;
 name|uint32_t
 name|mbuf_alloc_tpa
+decl_stmt|;
+comment|/* num. of times tx queue full occured */
+name|uint32_t
+name|tx_queue_full_return
 decl_stmt|;
 block|}
 struct|;
