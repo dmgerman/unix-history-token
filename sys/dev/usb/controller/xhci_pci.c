@@ -381,6 +381,14 @@ name|device_id
 condition|)
 block|{
 case|case
+literal|0x78141022
+case|:
+return|return
+operator|(
+literal|"AMD FCH USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x01941033
 case|:
 return|return

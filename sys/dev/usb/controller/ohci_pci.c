@@ -464,6 +464,14 @@ literal|"AMD-766 USB Controller"
 operator|)
 return|;
 case|case
+literal|0x78071022
+case|:
+return|return
+operator|(
+literal|"AMD FCH USB Controller"
+operator|)
+return|;
+case|case
 literal|0x43741002
 case|:
 return|return
