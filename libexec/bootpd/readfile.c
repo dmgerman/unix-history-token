@@ -2007,7 +2007,7 @@ name|nhosts
 operator|++
 expr_stmt|;
 block|}
-comment|/* by HW addr if known. */
+comment|/* Register by HW addr if known. */
 if|if
 condition|(
 name|hp
@@ -2103,7 +2103,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* by IP addr if known. */
+comment|/* Register by IP addr if known. */
 if|if
 condition|(
 name|hp
@@ -2169,7 +2169,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* by Name (always known) */
+comment|/* Register by Name (always known) */
 name|hashcode
 operator|=
 name|hash_HashFunction
