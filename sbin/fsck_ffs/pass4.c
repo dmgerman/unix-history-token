@@ -558,7 +558,7 @@ if|if
 condition|(
 name|dlp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|clrbmap

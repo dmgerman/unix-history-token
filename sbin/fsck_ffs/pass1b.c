@@ -436,7 +436,7 @@ if|if
 condition|(
 name|muldup
 operator|==
-literal|0
+name|NULL
 operator|||
 name|duphead
 operator|==

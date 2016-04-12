@@ -650,7 +650,7 @@ index|]
 operator|.
 name|il_stat
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -1005,7 +1005,7 @@ index|]
 operator|.
 name|il_stat
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -2927,7 +2927,7 @@ if|if
 condition|(
 name|muldup
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|duplist
@@ -2940,7 +2940,7 @@ name|new
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
