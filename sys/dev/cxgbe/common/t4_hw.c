@@ -1288,7 +1288,7 @@ name|adap
 argument_list|,
 name|cmd_rpl
 argument_list|,
-name|size
+name|MBOX_LEN
 operator|/
 literal|8
 argument_list|,
