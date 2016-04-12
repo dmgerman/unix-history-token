@@ -2254,6 +2254,7 @@ name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
+else|else
 name|shared_mutex_init
 argument_list|(
 operator|*
