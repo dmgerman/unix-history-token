@@ -1506,7 +1506,7 @@ name|mss
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1557,7 +1557,7 @@ name|mss
 operator|->
 name|drq2
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1596,7 +1596,7 @@ name|mss
 operator|->
 name|drq1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1625,7 +1625,7 @@ name|mss
 operator|->
 name|io_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1654,7 +1654,7 @@ name|mss
 operator|->
 name|conf_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1683,7 +1683,7 @@ name|mss
 operator|->
 name|indir
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -8502,7 +8502,7 @@ name|mss
 operator|->
 name|conf_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}

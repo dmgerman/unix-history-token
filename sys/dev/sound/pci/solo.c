@@ -4627,7 +4627,7 @@ name|sc
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4657,7 +4657,7 @@ name|sc
 operator|->
 name|io
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4687,7 +4687,7 @@ name|sc
 operator|->
 name|sb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4717,7 +4717,7 @@ name|sc
 operator|->
 name|vc
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4747,7 +4747,7 @@ name|sc
 operator|->
 name|mpu
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4777,7 +4777,7 @@ name|sc
 operator|->
 name|gp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if

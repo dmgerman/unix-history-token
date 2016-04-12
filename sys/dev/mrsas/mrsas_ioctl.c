@@ -307,7 +307,7 @@ name|void
 modifier|*
 name|ioctl_sense_mem
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|bus_addr_t
 name|ioctl_sense_phys_addr

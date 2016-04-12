@@ -3333,7 +3333,7 @@ name|xl
 operator|->
 name|vnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -3383,7 +3383,7 @@ name|dp
 operator|->
 name|vnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
@@ -3457,7 +3457,7 @@ name|dp
 operator|->
 name|m
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|m2
 operator|=
@@ -3769,7 +3769,7 @@ name|dp
 operator|->
 name|vnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|dp
 operator|->
@@ -3890,7 +3890,7 @@ name|dp
 operator|->
 name|vnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
@@ -6207,7 +6207,7 @@ name|dp
 operator|->
 name|m
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|m
 operator|->
@@ -6503,7 +6503,7 @@ name|dp
 operator|->
 name|vnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sc
 operator|->

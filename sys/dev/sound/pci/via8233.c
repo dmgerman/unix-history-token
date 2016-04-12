@@ -6048,7 +6048,7 @@ name|via_info
 modifier|*
 name|via
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|status

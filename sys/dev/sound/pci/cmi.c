@@ -3919,13 +3919,13 @@ name|sc
 operator|->
 name|mpu_intr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
 name|mpu
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|snd_mtxunlock
 argument_list|(
@@ -4284,7 +4284,7 @@ name|sc
 operator|->
 name|mpu_intr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function

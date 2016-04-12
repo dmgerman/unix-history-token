@@ -1282,7 +1282,7 @@ name|sb
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1319,7 +1319,7 @@ name|sb
 operator|->
 name|drq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1346,7 +1346,7 @@ name|sb
 operator|->
 name|io_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if

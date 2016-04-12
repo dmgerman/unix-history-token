@@ -2591,7 +2591,7 @@ if|if
 condition|(
 name|disk
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|rap
 operator|->

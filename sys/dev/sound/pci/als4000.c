@@ -3693,7 +3693,7 @@ name|sc
 operator|->
 name|reg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -3720,7 +3720,7 @@ name|sc
 operator|->
 name|ih
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -3749,7 +3749,7 @@ name|sc
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -3844,7 +3844,7 @@ name|sc
 operator|->
 name|reg
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -3906,7 +3906,7 @@ name|sc
 operator|->
 name|irq
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf

@@ -1703,7 +1703,7 @@ name|irq
 operator|.
 name|r_irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(
