@@ -171,12 +171,10 @@ name|unsigned
 name|tablesize
 decl_stmt|;
 block|{
-specifier|register
 name|hash_tbl
 modifier|*
 name|hashtblptr
 decl_stmt|;
-specifier|register
 name|unsigned
 name|totalsize
 decl_stmt|;
@@ -449,12 +447,10 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-specifier|register
 name|unsigned
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|unsigned
 name|accum
 decl_stmt|;
@@ -531,7 +527,6 @@ modifier|*
 name|key
 decl_stmt|;
 block|{
-specifier|register
 name|hash_member
 modifier|*
 name|memberptr
@@ -1069,11 +1064,9 @@ modifier|*
 name|hashtable
 decl_stmt|;
 block|{
-specifier|register
 name|unsigned
 name|bucket
 decl_stmt|;
-specifier|register
 name|hash_member
 modifier|*
 name|memberptr

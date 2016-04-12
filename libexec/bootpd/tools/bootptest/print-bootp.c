@@ -322,13 +322,11 @@ operator|->
 name|bp_hlen
 condition|)
 block|{
-specifier|register
 name|struct
 name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|e
@@ -396,13 +394,13 @@ expr_stmt|;
 else|else
 name|e
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
 name|e
 operator|==
-literal|0
+name|NULL
 operator|||
 name|bcmp
 argument_list|(
@@ -1074,7 +1072,6 @@ name|bp
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|bp
@@ -1090,7 +1087,6 @@ name|u_char
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -1544,7 +1540,6 @@ name|bp
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|bp
@@ -1557,10 +1552,6 @@ name|struct
 name|cmu_vend
 modifier|*
 name|v
-decl_stmt|;
-name|u_char
-modifier|*
-name|ep
 decl_stmt|;
 name|printf
 argument_list|(
@@ -1596,13 +1587,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Setup end pointer */
-name|ep
-operator|=
-name|bp
-operator|+
-name|length
-expr_stmt|;
 comment|/* Subnet mask */
 if|if
 condition|(
@@ -1794,7 +1778,6 @@ name|bp
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|bp

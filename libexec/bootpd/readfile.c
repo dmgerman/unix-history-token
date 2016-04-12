@@ -2007,7 +2007,7 @@ name|nhosts
 operator|++
 expr_stmt|;
 block|}
-comment|/* Register by HW addr if known. */
+comment|/* by HW addr if known. */
 if|if
 condition|(
 name|hp
@@ -2103,7 +2103,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* Register by IP addr if known. */
+comment|/* by IP addr if known. */
 if|if
 condition|(
 name|hp
@@ -2169,7 +2169,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* Register by Name (always known) */
+comment|/* by Name (always known) */
 name|hashcode
 operator|=
 name|hash_HashFunction
@@ -5142,7 +5142,6 @@ name|goodname
 parameter_list|(
 name|hostname
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|hostname
@@ -5953,7 +5952,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|t
@@ -6015,7 +6013,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|t
@@ -6362,7 +6359,6 @@ index|[
 name|MAXSTRINGLEN
 index|]
 decl_stmt|;
-specifier|register
 name|u_int32
 name|value
 decl_stmt|;
@@ -7098,7 +7094,6 @@ modifier|*
 name|src
 decl_stmt|;
 block|{
-specifier|register
 name|u_int32
 name|value
 decl_stmt|,
