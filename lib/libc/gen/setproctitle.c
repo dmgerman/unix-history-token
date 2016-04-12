@@ -480,10 +480,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|ul_ps_strings
-operator|=
-name|PS_STRINGS
-expr_stmt|;
+return|return;
 name|ps_strings
 operator|=
 operator|(
