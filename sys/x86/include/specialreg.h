@@ -4883,6 +4883,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_EXTFEATURES
+value|0xc0011005
+end_define
+
+begin_comment
+comment|/* Extended CPUID Features override */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_IC_CFG
 value|0xc0011021
 end_define
