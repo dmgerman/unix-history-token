@@ -9352,22 +9352,20 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Must be called with something useful to do */
-name|dbdiff
-operator|=
-name|IDXDIFF
+name|MPASS
 argument_list|(
 name|eq
 operator|->
 name|pidx
-argument_list|,
+operator|==
 name|eq
 operator|->
 name|dbidx
-argument_list|,
-name|eq
-operator|->
-name|sidx
 argument_list|)
+expr_stmt|;
+name|dbdiff
+operator|=
+literal|0
 expr_stmt|;
 do|do
 block|{
@@ -9444,7 +9442,7 @@ name|available
 operator|<
 name|n
 condition|)
-return|return;
+break|break;
 name|dst
 operator|=
 operator|(
