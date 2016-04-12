@@ -564,6 +564,28 @@ begin_comment
 comment|/* atio result queue (24xx) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYNC_IFORDEV
+value|6
+end_define
+
+begin_comment
+comment|/* synchrounous IOCB, sync for ISP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_IFORCPU
+value|7
+end_define
+
+begin_comment
+comment|/* synchrounous IOCB, sync for CPU */
+end_comment
+
 begin_comment
 comment|/*  * Request/Response Queue defines and macros.  * The maximum is defined per platform (and can be based on board type).  */
 end_comment
@@ -2095,6 +2117,14 @@ decl_stmt|;
 name|isp_hdl_t
 modifier|*
 name|isp_xffree
+decl_stmt|;
+comment|/* 	 * DMA mapped in area for synchronous IOCB requests. 	 */
+name|void
+modifier|*
+name|isp_iocb
+decl_stmt|;
+name|XS_DMA_ADDR_T
+name|isp_iocb_dma
 decl_stmt|;
 comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
 name|void

@@ -2074,7 +2074,6 @@ name|RPC_CANTSEND
 expr_stmt|;
 continue|continue;
 block|}
-empty_stmt|;
 ifdef|#
 directive|ifdef
 name|RPC_DEBUG

@@ -462,7 +462,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|intel_fix_cpuid
+name|fix_cpuid
 parameter_list|(
 name|void
 parameter_list|)

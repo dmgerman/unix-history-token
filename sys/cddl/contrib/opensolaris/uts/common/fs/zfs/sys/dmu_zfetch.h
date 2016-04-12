@@ -61,6 +61,10 @@ name|uint64_t
 name|zs_pf_blkid
 decl_stmt|;
 comment|/* next block to prefetch */
+comment|/* 	 * We will next prefetch the L1 indirect block of this level-0 	 * block id. 	 */
+name|uint64_t
+name|zs_ipf_blkid
+decl_stmt|;
 name|kmutex_t
 name|zs_lock
 decl_stmt|;
@@ -136,6 +140,8 @@ parameter_list|,
 name|uint64_t
 parameter_list|,
 name|uint64_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 ifdef|#

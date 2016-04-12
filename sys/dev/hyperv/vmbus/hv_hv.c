@@ -429,7 +429,7 @@ name|void
 modifier|*
 name|virt_addr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|memset
 argument_list|(

@@ -1650,7 +1650,6 @@ return|return
 name|NS_NOTFOUND
 return|;
 block|}
-empty_stmt|;
 name|serv
 operator|=
 name|va_arg
@@ -2348,7 +2347,6 @@ break|break;
 default|default:
 break|break;
 block|}
-empty_stmt|;
 name|st
 operator|->
 name|compat_mode_active
@@ -2576,7 +2574,6 @@ return|return
 name|NS_NOTFOUND
 return|;
 block|}
-empty_stmt|;
 name|serv
 operator|=
 name|va_arg
@@ -3253,7 +3250,6 @@ break|break;
 default|default:
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|NS_UNAVAIL
@@ -3462,7 +3458,6 @@ return|return
 name|NS_NOTFOUND
 return|;
 block|}
-empty_stmt|;
 name|serv
 operator|=
 name|va_arg
@@ -3863,7 +3858,6 @@ block|}
 block|}
 break|break;
 block|}
-empty_stmt|;
 name|rv
 operator|=
 name|parse_result
@@ -4014,7 +4008,6 @@ break|break;
 default|default:
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|NS_UNAVAIL

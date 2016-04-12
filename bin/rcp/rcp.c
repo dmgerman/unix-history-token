@@ -2469,7 +2469,7 @@ if|if
 condition|(
 name|last
 operator|==
-literal|0
+name|NULL
 condition|)
 name|last
 operator|=

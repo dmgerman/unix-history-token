@@ -2323,7 +2323,10 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|read
+name|DNODE_META_IS_CACHEABLE
+argument_list|(
+name|dn
+argument_list|)
 operator|&&
 name|length
 operator|<=
@@ -2340,6 +2343,13 @@ argument_list|,
 name|blkid
 argument_list|,
 name|nblks
+argument_list|,
+name|read
+operator|&&
+name|DNODE_IS_CACHEABLE
+argument_list|(
+name|dn
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

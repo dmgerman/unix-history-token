@@ -3483,10 +3483,12 @@ name|w
 parameter_list|,
 name|n
 parameter_list|,
+name|a
+parameter_list|,
 name|v4
 parameter_list|)
 define|\
-value|do {								\ 		if (w) {						\ 			(n)->n_mtime = (n)->n_vattr.na_vattr.va_mtime; \ 			if (v4)						\ 			    (n)->n_change = (n)->n_vattr.na_vattr.va_filerev; \ 		}							\ 	} while (0)
+value|do {								\ 		if (w) {						\ 			mtx_lock(&((n)->n_mtx));			\ 			(n)->n_mtime = (a)->na_mtime;			\ 			if (v4)						\ 				(n)->n_change = (a)->na_filerev;	\ 			mtx_unlock(&((n)->n_mtx));			\ 		}							\ 	} while (0)
 end_define
 
 begin_comment

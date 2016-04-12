@@ -205,7 +205,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ctld [-d][-f config-file]\n"
+literal|"usage: ctld [-d][-u][-f config-file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
