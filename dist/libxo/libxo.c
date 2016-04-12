@@ -19783,8 +19783,6 @@ specifier|const
 name|char
 modifier|*
 name|code
-init|=
-name|NULL
 decl_stmt|;
 comment|/*      * Start the buffer with an escape.  We don't want to add the '['      * now, since we let xo_effect_text_add unconditionally add the ';'.      * We'll replace the first ';' with a '[' when we're done.      */
 operator|*
