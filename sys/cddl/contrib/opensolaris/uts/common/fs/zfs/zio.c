@@ -13468,9 +13468,6 @@ name|new
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|illumos
 name|align
 operator|=
 literal|1ULL
@@ -13504,53 +13501,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|zio
-operator|->
-name|io_flags
-operator|&
-name|ZIO_FLAG_PHYSICAL
-condition|)
-name|align
-operator|=
-literal|1ULL
-operator|<<
-name|vd
-operator|->
-name|vdev_top
-operator|->
-name|vdev_logical_ashift
-expr_stmt|;
-else|else
-name|align
-operator|=
-literal|1ULL
-operator|<<
-name|vd
-operator|->
-name|vdev_top
-operator|->
-name|vdev_ashift
-expr_stmt|;
-if|if
-condition|(
-name|P2PHASE
-argument_list|(
-name|zio
-operator|->
-name|io_size
-argument_list|,
-name|align
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
 comment|/* Transform logical writes to be a full physical block size. */
 name|uint64_t
 name|asize
@@ -13656,9 +13606,6 @@ name|zio_subblock
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|illumos
 comment|/* 	 * If this is not a physical io, make sure that it is properly aligned 	 * before proceeding. 	 */
 if|if
 condition|(
@@ -13725,34 +13672,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|ASSERT0
-argument_list|(
-name|P2PHASE
-argument_list|(
-name|zio
-operator|->
-name|io_offset
-argument_list|,
-name|align
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|P2PHASE
-argument_list|(
-name|zio
-operator|->
-name|io_size
-argument_list|,
-name|align
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|VERIFY
 argument_list|(
 name|zio
@@ -13963,6 +13882,9 @@ name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zio_vdev_io_done
@@ -14236,7 +14158,13 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * For non-raidz ZIOs, we can just copy aside the bad data read from the  * disk, and use that to finish the checksum ereport later.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|zio_vsd_default_cksum_finish
@@ -14266,7 +14194,13 @@ name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*ARGSUSED*/
+end_comment
+
+begin_function
 name|void
 name|zio_vsd_default_cksum_report
 parameter_list|(
@@ -14334,6 +14268,9 @@ operator|=
 name|zio_buf_free
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zio_vdev_io_assess
@@ -14723,6 +14660,9 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|zio_vdev_io_reissue
 parameter_list|(
@@ -14756,6 +14696,9 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|zio_vdev_io_redone
 parameter_list|(
@@ -14780,6 +14723,9 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|zio_vdev_io_bypass
 parameter_list|(
@@ -14821,7 +14767,13 @@ operator|>>
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * ==========================================================================  * Generate and verify checksums  * ==========================================================================  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zio_checksum_generate
@@ -14940,6 +14892,9 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zio_checksum_verify
@@ -15080,7 +15035,13 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Called by RAID-Z to ensure we don't compute the checksum twice.  */
+end_comment
+
+begin_function
 name|void
 name|zio_checksum_verified
 parameter_list|(
@@ -15097,7 +15058,13 @@ operator|~
 name|ZIO_STAGE_CHECKSUM_VERIFY
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * ==========================================================================  * Error rank.  Error are ranked in the order 0, ENXIO, ECKSUM, EIO, other.  * An error of 0 indicates success.  ENXIO indicates whole-device failure,  * which may be transient (e.g. unplugged) or permament.  ECKSUM and EIO  * indicate errors that are specific to one I/O, and most likely permanent.  * Any other error is presumed to be worse because we weren't expecting it.  * ==========================================================================  */
+end_comment
+
+begin_function
 name|int
 name|zio_worst_error
 parameter_list|(
@@ -15202,7 +15169,13 @@ name|e2
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * ==========================================================================  * I/O completion  * ==========================================================================  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|zio_ready
@@ -15481,6 +15454,9 @@ name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zio_done
@@ -16770,7 +16746,13 @@ name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * ==========================================================================  * I/O pipeline definition  * ==========================================================================  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|zio_pipe_stage_t
 modifier|*
@@ -16823,7 +16805,13 @@ block|,
 name|zio_done
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Compare two zbookmark_phys_t's to see which we would reach first in a  * pre-order traversal of the object tree.  *  * This is simple in every case aside from the meta-dnode object. For all other  * objects, we traverse them in order (object 1 before object 2, and so on).  * However, all of these objects are traversed while traversing object 0, since  * the data it points to is the list of objects.  Thus, we need to convert to a  * canonical representation so we can compare meta-dnode bookmarks to  * non-meta-dnode bookmarks.  *  * We do this by calculating "equivalents" for each field of the zbookmark.  * zbookmarks outside of the meta-dnode use their own object and level, and  * calculate the level 0 equivalent (the first L0 blkid that is contained in the  * blocks this bookmark refers to) by multiplying their blkid by their span  * (the number of L0 blocks contained within one block at their level).  * zbookmarks inside the meta-dnode calculate their object equivalent  * (which is L0equiv * dnodes per data block), use 0 for their L0equiv, and use  * level + 1<<31 (any value larger than a level could ever be) for their level.  * This causes them to always compare before a bookmark in their object  * equivalent, compare appropriately to bookmarks in other objects, and to  * compare appropriately to other bookmarks in the meta-dnode.  */
+end_comment
+
+begin_function
 name|int
 name|zbookmark_compare
 parameter_list|(
@@ -17098,7 +17086,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  *  This function checks the following: given that last_block is the place that  *  our traversal stopped last time, does that guarantee that we've visited  *  every node under subtree_root?  Therefore, we can't just use the raw output  *  of zbookmark_compare.  We have to pass in a modified version of  *  subtree_root; by incrementing the block id, and then checking whether  *  last_block is before or equal to that, we can tell whether or not having  *  visited last_block implies that all of subtree_root's children have been  *  visited.  */
+end_comment
+
+begin_function
 name|boolean_t
 name|zbookmark_subtree_completed
 parameter_list|(
