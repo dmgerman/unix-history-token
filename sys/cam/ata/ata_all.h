@@ -319,6 +319,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_cmd_sbuf
+parameter_list|(
+name|struct
+name|ata_cmd
+modifier|*
+name|cmd
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|ata_res_string
@@ -377,9 +394,9 @@ name|int
 name|ata_res_sbuf
 parameter_list|(
 name|struct
-name|ccb_ataio
+name|ata_res
 modifier|*
-name|ataio
+name|res
 parameter_list|,
 name|struct
 name|sbuf
