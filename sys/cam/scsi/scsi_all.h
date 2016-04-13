@@ -13223,6 +13223,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|scsi_cdb_sbuf
+parameter_list|(
+name|u_int8_t
+modifier|*
+name|cdb_ptr
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|scsi_print_inquiry
 parameter_list|(
 name|struct
