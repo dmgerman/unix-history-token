@@ -2418,6 +2418,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|its_sc
+operator|!=
+name|NULL
+operator|&&
 name|device_is_attached
 argument_list|(
 name|its_sc
