@@ -17336,18 +17336,6 @@ name|scsi_inquiry_data
 modifier|*
 name|inq_data
 decl_stmt|;
-name|char
-name|cdb_str
-index|[
-operator|(
-name|SCSI_MAX_CDBLEN
-operator|*
-literal|3
-operator|)
-operator|+
-literal|1
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -17477,7 +17465,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s. CDB: %s"
+literal|"%s. CDB: "
 argument_list|,
 name|scsi_op_desc
 argument_list|(
@@ -17492,8 +17480,9 @@ index|]
 argument_list|,
 name|inq_data
 argument_list|)
-argument_list|,
-name|scsi_cdb_string
+argument_list|)
+expr_stmt|;
+name|scsi_cdb_sbuf
 argument_list|(
 name|csio
 operator|->
@@ -17501,13 +17490,7 @@ name|cdb_io
 operator|.
 name|cdb_ptr
 argument_list|,
-name|cdb_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cdb_str
-argument_list|)
-argument_list|)
+name|sb
 argument_list|)
 expr_stmt|;
 block|}
@@ -17517,7 +17500,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s. CDB: %s"
+literal|"%s. CDB: "
 argument_list|,
 name|scsi_op_desc
 argument_list|(
@@ -17532,8 +17515,9 @@ index|]
 argument_list|,
 name|inq_data
 argument_list|)
-argument_list|,
-name|scsi_cdb_string
+argument_list|)
+expr_stmt|;
+name|scsi_cdb_sbuf
 argument_list|(
 name|csio
 operator|->
@@ -17541,13 +17525,7 @@ name|cdb_io
 operator|.
 name|cdb_bytes
 argument_list|,
-name|cdb_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cdb_str
-argument_list|)
-argument_list|)
+name|sb
 argument_list|)
 expr_stmt|;
 block|}
