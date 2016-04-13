@@ -278,7 +278,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * Address space layout.  *  * ARMv8 implements up to a 48 bit virtual address space. The address space is  * split into 2 regions at each end of the 64 bit address space, with an  * out of range "hole" in the middle.  *  * We limit the size of the two spaces to 39 bits each.  *  * Upper region:	0xffffffffffffffff  *			0xffffff8000000000  *  * Hole:		0xffffff7fffffffff  *			0x0000008000000000  *  * Lower region:	0x0000007fffffffff  *			0x0000000000000000  *  * We use the upper region for the kernel, and the lower region for userland.  *  * We define some interesting address constants:  *  * VM_MIN_ADDRESS and VM_MAX_ADDRESS define the start and end of the entire  * 64 bit address space, mostly just for convenience.  *  * VM_MIN_KERNEL_ADDRESS and VM_MAX_KERNEL_ADDRESS define the start and end of  * mappable kernel virtual address space.  *  * VM_MIN_USER_ADDRESS and VM_MAX_USER_ADDRESS define the start and end of the  * user address space.  */
+comment|/**  * Address space layout.  *  * ARMv8 implements up to a 48 bit virtual address space. The address space is  * split into 2 regions at each end of the 64 bit address space, with an  * out of range "hole" in the middle.  *  * We use the full 48 bits for each region, however the kernel may only use  * a limited range within this space.  *  * Upper region:	0xffffffffffffffff  *			0xffff000000000000  *  * Hole:		0xfffeffffffffffff  *			0x0001000000000000  *  * Lower region:	0x0000ffffffffffff  *			0x0000000000000000  *  * We use the upper region for the kernel, and the lower region for userland.  *  * We define some interesting address constants:  *  * VM_MIN_ADDRESS and VM_MAX_ADDRESS define the start and end of the entire  * 64 bit address space, mostly just for convenience.  *  * VM_MIN_KERNEL_ADDRESS and VM_MAX_KERNEL_ADDRESS define the start and end of  * mappable kernel virtual address space.  *  * VM_MIN_USER_ADDRESS and VM_MAX_USER_ADDRESS define the start and end of the  * user address space.  */
 end_comment
 
 begin_define
@@ -296,39 +296,39 @@ value|(0xffffffffffffffffUL)
 end_define
 
 begin_comment
-comment|/* 32 GiB of kernel addresses */
+comment|/* 512 GiB of kernel addresses */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|(0xffffff8000000000UL)
+value|(0xffff000000000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(0xffffff8800000000UL)
+value|(0xffff008000000000UL)
 end_define
 
 begin_comment
-comment|/* Direct Map for 128 GiB of PA: 0x0 - 0x1fffffffff */
+comment|/* 2TiB for the direct map region */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DMAP_MIN_ADDRESS
-value|(0xffffffc000000000UL)
+value|(0xfffffd0000000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|(0xffffffdfffffffffUL)
+value|(0xffffff0000000000UL)
 end_define
 
 begin_define
@@ -356,7 +356,7 @@ name|PHYS_IN_DMAP
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa)>= DMAP_MIN_PHYSADDR&& \     (pa)<= DMAP_MAX_PHYSADDR)
+value|((pa)>= DMAP_MIN_PHYSADDR&& \     (pa)< DMAP_MAX_PHYSADDR)
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ name|VIRT_IN_DMAP
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)>= DMAP_MIN_ADDRESS&& \     (va)<= DMAP_MAX_ADDRESS)
+value|((va)>= DMAP_MIN_ADDRESS&& \     (va)< DMAP_MAX_ADDRESS)
 end_define
 
 begin_define
