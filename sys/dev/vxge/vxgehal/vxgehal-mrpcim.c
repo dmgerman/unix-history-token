@@ -20471,7 +20471,7 @@ if|if
 condition|(
 name|vpd_data
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 for|for

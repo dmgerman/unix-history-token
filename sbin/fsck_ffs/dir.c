@@ -4200,7 +4200,7 @@ if|if
 condition|(
 name|pdirbp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|pdirbp
 operator|->

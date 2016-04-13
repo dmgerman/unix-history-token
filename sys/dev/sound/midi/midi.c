@@ -6492,7 +6492,7 @@ parameter_list|)
 block|{
 name|unit
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(

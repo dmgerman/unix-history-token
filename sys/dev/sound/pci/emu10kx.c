@@ -14354,7 +14354,7 @@ name|sc
 operator|->
 name|cdev
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mtx_destroy
 argument_list|(

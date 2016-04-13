@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: fmt.c,v 1.16 2000/06/25 15:35:42 pjanzen Exp $	*/
+comment|/*	$OpenBSD: fmt.c,v 1.21 2004/04/01 23:14:19 tedu Exp $	*/
 end_comment
 
 begin_comment
@@ -449,7 +449,7 @@ name|wchar_t
 modifier|*
 name|output_buffer
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -928,7 +928,7 @@ case|:
 case|case
 literal|'9'
 case|:
-comment|/* XXX  this is not a stylistically approved use of getopt() */
+comment|/* 			 * XXX  this is not a stylistically approved use of 			 * getopt() 			 */
 if|if
 condition|(
 name|goal_length
@@ -1473,7 +1473,7 @@ operator|=
 name|hdr_Continuation
 expr_stmt|;
 block|}
-comment|/* We need a new paragraph if and only if:        *   this line is blank,        *   OR it's a troff request (and we don't format troff),        *   OR it's a mail header,        *   OR it's not a mail header AND the last line was one,        *   OR the indentation has changed        *      AND the line isn't a mail header continuation line        *      AND this isn't the second line of an indented paragraph.        */
+comment|/* 			 * We need a new paragraph if and only if: this line 			 * is blank, OR it's a troff request (and we don't 			 * format troff), OR it's a mail header, OR it's not 			 * a mail header AND the last line was one, OR the 			 * indentation has changed AND the line isn't a mail 			 * header continuation line AND this isn't the 			 * second line of an indented paragraph. 			 */
 if|if
 condition|(
 name|length
@@ -1612,7 +1612,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* If this is an indented paragraph other than a mail header          * continuation, set |last_indent|.          */
+comment|/* 				 * If this is an indented paragraph other 				 * than a mail header continuation, set 				 * |last_indent|. 				 */
 if|if
 condition|(
 name|np
@@ -2089,7 +2089,7 @@ name|pending_spaces
 operator|+
 name|width
 expr_stmt|;
-comment|/* If either |spaces==0| (at end of line) or |coalesce_spaces_P|    * (squashing internal whitespace), then add just one space;    * except that if the last character was a sentence-ender we    * actually add two spaces.    */
+comment|/* 	 * If either |spaces==0| (at end of line) or |coalesce_spaces_P| 	 * (squashing internal whitespace), then add just one space; except 	 * that if the last character was a sentence-ender we actually add 	 * two spaces. 	 */
 if|if
 condition|(
 name|coalesce_spaces_P
@@ -2123,7 +2123,7 @@ operator|<=
 name|goal_length
 condition|)
 block|{
-comment|/* After adding the word we still aren't at the goal length,      * so clearly we add it to the buffer rather than outputing it.      */
+comment|/* 		 * After adding the word we still aren't at the goal length, 		 * so clearly we add it to the buffer rather than outputing 		 * it. 		 */
 name|wmemset
 argument_list|(
 name|output_buffer
@@ -2178,7 +2178,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Adding the word takes us past the goal. Print the line-so-far,      * and the word too iff either (1) the lsf is empty or (2) that      * makes us nearer the goal but doesn't take us over the limit,      * or (3) the word on its own takes us over the limit.      * In case (3) we put a newline in between.      */
+comment|/* 		 * Adding the word takes us past the goal. Print the 		 * line-so-far, and the word too iff either (1) the lsf is 		 * empty or (2) that makes us nearer the goal but doesn't 		 * take us over the limit, or (3) the word on its own takes 		 * us over the limit. In case (3) we put a newline in 		 * between. 		 */
 if|if
 condition|(
 name|indent
@@ -2241,7 +2241,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* If the word takes us over the limit on its own, just        * spit it out and don't bother buffering it.        */
+comment|/* 			 * If the word takes us over the limit on its own, 			 * just spit it out and don't bother buffering it. 			 */
 if|if
 condition|(
 name|indent
@@ -2391,7 +2391,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|size_t

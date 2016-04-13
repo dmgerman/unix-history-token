@@ -341,7 +341,7 @@ name|char
 modifier|*
 name|doit
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

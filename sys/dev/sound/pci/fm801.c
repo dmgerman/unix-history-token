@@ -2856,7 +2856,7 @@ name|ac97_info
 modifier|*
 name|codec
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|fm801_info

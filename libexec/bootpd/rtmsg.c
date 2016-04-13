@@ -397,7 +397,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
@@ -406,13 +405,11 @@ init|=
 operator|&
 name|sin_m
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -741,7 +738,6 @@ decl_stmt|;
 name|int
 name|rlen
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -752,7 +748,6 @@ name|m_rtmsg
 operator|.
 name|m_rtm
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -761,7 +756,6 @@ name|m_rtmsg
 operator|.
 name|m_space
 decl_stmt|;
-specifier|register
 name|int
 name|l
 decl_stmt|;

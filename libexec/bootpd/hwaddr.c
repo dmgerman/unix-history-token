@@ -1569,7 +1569,6 @@ name|addr_out
 parameter_list|,
 name|len
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|addr_in

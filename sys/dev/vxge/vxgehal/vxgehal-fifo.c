@@ -3618,7 +3618,7 @@ operator|&&
 operator|(
 name|vaddr
 operator|!=
-literal|0
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -4064,7 +4064,7 @@ operator|&&
 operator|(
 name|vaddr
 operator|!=
-literal|0
+name|NULL
 operator|)
 operator|&&
 operator|(

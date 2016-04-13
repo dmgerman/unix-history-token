@@ -4537,7 +4537,7 @@ name|ac97_info
 modifier|*
 name|codec
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|bus_addr_t
 name|lowaddr

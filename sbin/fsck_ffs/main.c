@@ -1424,7 +1424,7 @@ literal|"operator"
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 name|mkdir
 argument_list|(

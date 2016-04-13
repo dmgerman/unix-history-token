@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* libxo/xo_config.h.  Generated from xo_config.h.in by configure.  */
 end_comment
 
@@ -609,7 +613,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION
-value|"0.4.3"
+value|"0.4.6"
 end_define
 
 begin_comment
@@ -631,7 +635,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_NUMBER
-value|4003
+value|4006
 end_define
 
 begin_comment
@@ -642,7 +646,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_STRING
-value|"4003"
+value|"4006"
 end_define
 
 begin_comment
@@ -708,7 +712,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.4.3"
+value|"libxo 0.4.6"
 end_define
 
 begin_comment
@@ -741,7 +745,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.4.3"
+value|"0.4.6"
 end_define
 
 begin_comment
@@ -771,7 +775,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.4.3"
+value|"0.4.6"
 end_define
 
 begin_comment

@@ -7178,7 +7178,7 @@ name|sc
 operator|->
 name|mpu_intr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|snd_mtxunlock
 argument_list|(

@@ -1856,7 +1856,6 @@ name|s
 parameter_list|,
 name|ep
 parameter_list|)
-specifier|register
 name|u_char
 modifier|*
 name|s
@@ -1868,7 +1867,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_char
 name|c
 decl_stmt|;

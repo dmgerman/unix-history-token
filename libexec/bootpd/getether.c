@@ -603,7 +603,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -618,7 +617,6 @@ name|struct
 name|ifconf
 name|ifc
 decl_stmt|;
-specifier|register
 name|struct
 name|ifreq
 modifier|*

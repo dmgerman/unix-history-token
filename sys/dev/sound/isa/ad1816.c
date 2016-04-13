@@ -2382,7 +2382,7 @@ name|ad1816
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2421,7 +2421,7 @@ name|ad1816
 operator|->
 name|drq1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2460,7 +2460,7 @@ name|ad1816
 operator|->
 name|drq2
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2489,7 +2489,7 @@ name|ad1816
 operator|->
 name|io_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
