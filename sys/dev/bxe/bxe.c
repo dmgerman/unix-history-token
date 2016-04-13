@@ -84543,6 +84543,9 @@ literal|"cdu_context i %d paddr %#jx vaddr %p size 0x%zx\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|context
@@ -84655,6 +84658,9 @@ name|sc
 argument_list|,
 literal|"event_queue paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|eq_dma
@@ -84676,6 +84682,9 @@ name|sc
 argument_list|,
 literal|"slow path paddr %#jx vaddr %p size 0x%lx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|sp_dma
@@ -84701,6 +84710,9 @@ name|sc
 argument_list|,
 literal|"slow path queue paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|spq_dma
@@ -84722,6 +84734,9 @@ name|sc
 argument_list|,
 literal|"fw_buf paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sc
 operator|->
 name|gz_buf_dma
@@ -84771,6 +84786,9 @@ literal|"FP status block fp %d paddr %#jx vaddr %p size 0x%lx\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|sb_dma
@@ -84798,6 +84816,9 @@ literal|"TX BD CHAIN fp %d paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|tx_dma
@@ -84825,6 +84846,9 @@ literal|"RX BD CHAIN fp %d paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|rx_dma
@@ -84852,6 +84876,9 @@ literal|"RX RCQ CHAIN fp %d paddr %#jx vaddr %p size 0x%lx\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|rcq_dma
@@ -84879,6 +84906,9 @@ literal|"RX SGE CHAIN fp %d paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fp
 operator|->
 name|rx_sge_dma
@@ -84933,6 +84963,10 @@ name|sc
 argument_list|,
 literal|"ECORE_ILT paddr %#jx vaddr %p size 0x%x\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -84955,6 +84989,7 @@ operator|)
 operator|)
 operator|->
 name|paddr
+argument_list|)
 argument_list|,
 operator|(
 operator|(
