@@ -97,11 +97,12 @@ begin_struct
 struct|struct
 name|ypldap_addr
 block|{
-name|struct
-name|ypldap_addr
-modifier|*
+name|TAILQ_ENTRY
+argument_list|(
+argument|ypldap_addr
+argument_list|)
 name|next
-decl_stmt|;
+expr_stmt|;
 name|struct
 name|sockaddr_storage
 name|ss
@@ -109,6 +110,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|ypldap_addr_list
+argument_list|,
+name|ypldap_addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_enum
 enum|enum
@@ -262,8 +273,7 @@ name|u_int32_t
 name|idm_list
 decl_stmt|;
 name|struct
-name|ypldap_addr
-modifier|*
+name|ypldap_addr_list
 name|idm_addr
 decl_stmt|;
 name|in_port_t

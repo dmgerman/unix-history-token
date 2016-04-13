@@ -958,20 +958,6 @@ argument_list|,
 literal|"Timeout waiting for stats finished\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|trigger_grcdump
-condition|)
-block|{
-comment|/* taking grcdump */
-name|bxe_grc_dump
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 name|cnt
@@ -6746,20 +6732,6 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|trigger_grcdump
-condition|)
-block|{
-comment|/* taking grcdump */
-name|bxe_grc_dump
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 name|atomic_store_rel_long
 argument_list|(
 operator|&

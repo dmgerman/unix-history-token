@@ -40,8 +40,6 @@ specifier|static
 name|VGLText
 modifier|*
 name|VGLTextFont
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

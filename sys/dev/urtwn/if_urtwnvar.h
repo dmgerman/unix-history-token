@@ -286,6 +286,9 @@ comment|/* must be the first */
 name|uint8_t
 name|id
 decl_stmt|;
+name|int
+name|last_rssi
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -657,6 +660,9 @@ name|ledlink
 decl_stmt|;
 name|int
 name|sc_txtimer
+decl_stmt|;
+name|int
+name|last_rssi
 decl_stmt|;
 name|int
 name|fwcur
