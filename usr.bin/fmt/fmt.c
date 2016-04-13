@@ -449,7 +449,7 @@ name|wchar_t
 modifier|*
 name|output_buffer
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2391,7 +2391,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|size_t
