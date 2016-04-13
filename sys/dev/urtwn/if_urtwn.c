@@ -2681,7 +2681,7 @@ specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
-name|urtwn_r88e_node_alloc
+name|urtwn_node_alloc
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -2700,7 +2700,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|urtwn_r88e_newassoc
+name|urtwn_newassoc
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -2714,7 +2714,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|urtwn_r88e_node_free
+name|urtwn_node_free
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -4032,13 +4032,13 @@ name|ic
 operator|->
 name|ic_node_alloc
 operator|=
-name|urtwn_r88e_node_alloc
+name|urtwn_node_alloc
 expr_stmt|;
 name|ic
 operator|->
 name|ic_newassoc
 operator|=
-name|urtwn_r88e_newassoc
+name|urtwn_newassoc
 expr_stmt|;
 name|sc
 operator|->
@@ -4052,7 +4052,7 @@ name|ic
 operator|->
 name|ic_node_free
 operator|=
-name|urtwn_r88e_node_free
+name|urtwn_node_free
 expr_stmt|;
 block|}
 name|ic
@@ -5958,9 +5958,8 @@ decl_stmt|;
 name|int8_t
 name|rssi
 init|=
-name|URTWN_NOISE_FLOOR
-operator|+
-literal|1
+operator|-
+literal|127
 decl_stmt|;
 name|int
 name|infosz
@@ -6074,6 +6073,19 @@ name|stat
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|URTWN_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|URTWN_DEBUG_RSSI
+argument_list|,
+literal|"%s: rssi=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rssi
 argument_list|)
 expr_stmt|;
 comment|/* Update our average RSSI. */
@@ -6237,6 +6249,7 @@ literal|12
 operator|)
 expr_stmt|;
 block|}
+comment|/* XXX TODO: this isn't right; should use the last good RSSI */
 name|tap
 operator|->
 name|wr_dbm_antsignal
@@ -6573,6 +6586,20 @@ operator|&
 name|rssi
 argument_list|)
 expr_stmt|;
+comment|/* Store a global last-good RSSI */
+if|if
+condition|(
+name|rssi
+operator|!=
+operator|-
+literal|127
+condition|)
+name|sc
+operator|->
+name|last_rssi
+operator|=
+name|rssi
+expr_stmt|;
 name|URTWN_UNLOCK
 argument_list|(
 name|sc
@@ -6589,6 +6616,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|rssi
+operator|!=
+operator|-
+literal|127
+condition|)
+name|URTWN_NODE
+argument_list|(
+name|ni
+argument_list|)
+operator|->
+name|last_rssi
+operator|=
+name|rssi
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -6612,7 +6655,12 @@ name|ni
 argument_list|,
 name|m
 argument_list|,
-name|rssi
+name|URTWN_NODE
+argument_list|(
+name|ni
+argument_list|)
+operator|->
+name|last_rssi
 operator|-
 name|nf
 argument_list|,
@@ -6627,6 +6675,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Use last good global RSSI */
 operator|(
 name|void
 operator|)
@@ -6636,7 +6685,9 @@ name|ic
 argument_list|,
 name|m
 argument_list|,
-name|rssi
+name|sc
+operator|->
+name|last_rssi
 operator|-
 name|nf
 argument_list|,
@@ -25828,7 +25879,7 @@ specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
-name|urtwn_r88e_node_alloc
+name|urtwn_node_alloc
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -25892,7 +25943,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|urtwn_r88e_newassoc
+name|urtwn_newassoc
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -25927,6 +25978,19 @@ decl_stmt|;
 name|uint8_t
 name|id
 decl_stmt|;
+comment|/* Only do this bit for R88E chips */
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|chip
+operator|&
+name|URTWN_CHIP_88E
+operator|)
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
@@ -26022,7 +26086,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|urtwn_r88e_node_free
+name|urtwn_node_free
 parameter_list|(
 name|struct
 name|ieee80211_node
