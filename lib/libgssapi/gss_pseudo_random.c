@@ -76,10 +76,6 @@ name|struct
 name|_gss_mech_switch
 modifier|*
 name|m
-init|=
-name|ctx
-operator|->
-name|gc_mech
 decl_stmt|;
 name|OM_uint32
 name|major_status
@@ -110,6 +106,12 @@ return|return
 name|GSS_S_NO_CONTEXT
 return|;
 block|}
+name|m
+operator|=
+name|ctx
+operator|->
+name|gc_mech
+expr_stmt|;
 if|if
 condition|(
 name|m

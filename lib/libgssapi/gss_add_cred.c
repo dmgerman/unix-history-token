@@ -437,7 +437,7 @@ expr_stmt|;
 comment|/* 	 * We go through all the mc attached to the input_cred_handle 	 * and check the mechanism. If it matches, we call 	 * gss_add_cred for that mechanism, otherwise we copy the mc 	 * to new_cred. 	 */
 name|target_mc
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -572,7 +572,7 @@ else|else
 block|{
 name|mn
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|m
