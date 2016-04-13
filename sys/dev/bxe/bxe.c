@@ -84629,7 +84629,7 @@ name|BLOGI
 argument_list|(
 name|sc
 argument_list|,
-literal|"def_status_block paddr %p vaddr %p size 0x%lx\n"
+literal|"def_status_block paddr %p vaddr %p size 0x%zx\n"
 argument_list|,
 operator|(
 name|void
@@ -84680,7 +84680,7 @@ name|BLOGI
 argument_list|(
 name|sc
 argument_list|,
-literal|"slow path paddr %#jx vaddr %p size 0x%lx\n"
+literal|"slow path paddr %#jx vaddr %p size 0x%zx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -84782,7 +84782,7 @@ name|BLOGI
 argument_list|(
 name|sc
 argument_list|,
-literal|"FP status block fp %d paddr %#jx vaddr %p size 0x%lx\n"
+literal|"FP status block fp %d paddr %#jx vaddr %p size 0x%zx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -84872,7 +84872,7 @@ name|BLOGI
 argument_list|(
 name|sc
 argument_list|,
-literal|"RX RCQ CHAIN fp %d paddr %#jx vaddr %p size 0x%lx\n"
+literal|"RX RCQ CHAIN fp %d paddr %#jx vaddr %p size 0x%zx\n"
 argument_list|,
 name|i
 argument_list|,
