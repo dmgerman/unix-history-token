@@ -7692,12 +7692,6 @@ init|=
 literal|"}-+?="
 decl_stmt|;
 name|int
-name|bracketed_name
-init|=
-literal|0
-decl_stmt|;
-comment|/* used to handle ${[0-9]*} variables */
-name|int
 name|linno
 decl_stmt|;
 name|int
@@ -7841,10 +7835,6 @@ operator|==
 literal|'{'
 condition|)
 block|{
-name|bracketed_name
-operator|=
-literal|1
-expr_stmt|;
 name|c
 operator|=
 name|pgetc_linecont
@@ -7990,7 +7980,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|bracketed_name
+name|subtype
+operator|!=
+name|VSNORMAL
 condition|)
 block|{
 do|do
