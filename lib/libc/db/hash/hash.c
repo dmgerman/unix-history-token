@@ -2217,6 +2217,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|hashp
+operator|->
+name|save_file
+condition|)
 operator|(
 name|void
 operator|)
