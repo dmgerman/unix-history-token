@@ -465,6 +465,13 @@ modifier|*
 name|table
 decl_stmt|;
 comment|/* allocated at runtime */
+name|void
+modifier|*
+name|pba_page
+decl_stmt|;
+name|int
+name|pba_page_offset
+decl_stmt|;
 block|}
 name|pi_msix
 struct|;
