@@ -9760,7 +9760,7 @@ name|addrp
 operator|->
 name|index
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -9771,7 +9771,7 @@ name|addrp
 operator|->
 name|index
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|addrp
 operator|->
@@ -9815,7 +9815,7 @@ name|addrp
 operator|->
 name|base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -10001,7 +10001,7 @@ name|addrp
 operator|->
 name|base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -10182,13 +10182,13 @@ name|addrp
 operator|->
 name|base
 operator|!=
-literal|0
+name|NULL
 operator|||
 name|addrp
 operator|->
 name|index
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|db_printf
@@ -10790,7 +10790,7 @@ name|LONG
 expr_stmt|;
 name|seg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 	 * Get prefixes 	 */
 name|rep
@@ -11033,7 +11033,7 @@ if|if
 condition|(
 name|ip
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ip

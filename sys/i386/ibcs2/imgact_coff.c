@@ -266,7 +266,7 @@ name|char
 modifier|*
 name|data_buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|size_t
 name|copy_len
@@ -653,7 +653,7 @@ name|char
 modifier|*
 name|ptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|nscns
@@ -1772,7 +1772,7 @@ name|char
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|foff

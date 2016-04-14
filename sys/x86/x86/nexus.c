@@ -1887,7 +1887,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -2466,7 +2466,7 @@ expr_stmt|;
 operator|*
 name|cookiep
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

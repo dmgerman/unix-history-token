@@ -1047,7 +1047,7 @@ name|msgbuf
 modifier|*
 name|msgbufp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,7 +1068,7 @@ name|pt_entry_t
 modifier|*
 name|PMAP1
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|PMAP2
@@ -1081,7 +1081,7 @@ name|pt_entry_t
 modifier|*
 name|PADDR1
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|PADDR2
