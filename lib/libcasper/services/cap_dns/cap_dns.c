@@ -3710,6 +3710,12 @@ name|ai_canonname
 operator|=
 name|NULL
 expr_stmt|;
+name|hints
+operator|.
+name|ai_next
+operator|=
+name|NULL
+expr_stmt|;
 name|hintsp
 operator|=
 operator|&
