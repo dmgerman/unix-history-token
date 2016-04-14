@@ -2829,7 +2829,17 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Searching by guid [%ju]."
+literal|"Searching by guids [%ju:%ju]."
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|spa_guid
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
