@@ -297,7 +297,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warn
