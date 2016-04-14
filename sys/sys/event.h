@@ -315,6 +315,17 @@ begin_comment
 comment|/* filter-specific flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EV_FLAG2
+value|0x4000
+end_define
+
+begin_comment
+comment|/* filter-specific flag */
+end_comment
+
 begin_comment
 comment|/* returned values */
 end_comment

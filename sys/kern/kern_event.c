@@ -1845,16 +1845,23 @@ operator||=
 name|EV_CLEAR
 expr_stmt|;
 comment|/* automatically set */
-comment|/* 	 * internal flag indicating registration done by kernel 	 */
+comment|/* 	 * Internal flag indicating registration done by kernel for the 	 * purposes of getting a NOTE_CHILD notification. 	 */
 if|if
 condition|(
 name|kn
 operator|->
 name|kn_flags
 operator|&
-name|EV_FLAG1
+name|EV_FLAG2
 condition|)
 block|{
+name|kn
+operator|->
+name|kn_flags
+operator|&=
+operator|~
+name|EV_FLAG2
+expr_stmt|;
 name|kn
 operator|->
 name|kn_data
@@ -1870,6 +1877,29 @@ name|kn_fflags
 operator|=
 name|NOTE_CHILD
 expr_stmt|;
+name|kn
+operator|->
+name|kn_sfflags
+operator|&=
+operator|~
+name|NOTE_EXIT
+expr_stmt|;
+name|immediate
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Force immediate activation of child note. */
+block|}
+comment|/* 	 * Internal flag indicating registration done by kernel (for other than 	 * NOTE_CHILD). 	 */
+if|if
+condition|(
+name|kn
+operator|->
+name|kn_flags
+operator|&
+name|EV_FLAG1
+condition|)
+block|{
 name|kn
 operator|->
 name|kn_flags
@@ -1896,7 +1926,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Immediately activate any exit notes if the target process is a 	 * zombie.  This is necessary to handle the case where the target 	 * process, e.g. a child, dies before the kevent is registered. 	 */
+comment|/* 	 * Immediately activate any child notes or, in the case of a zombie 	 * target process, exit notes.  The latter is necessary to handle the 	 * case where the target process, e.g. a child, dies before the kevent 	 * is registered. 	 */
 if|if
 condition|(
 name|immediate
@@ -2296,7 +2326,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * The NOTE_TRACK case. In addition to the activation 		 * of the event, we need to register new event to 		 * track the child. Drop the locks in preparation for 		 * the call to kqueue_register(). 		 */
+comment|/* 		 * The NOTE_TRACK case. In addition to the activation 		 * of the event, we need to register new events to 		 * track the child. Drop the locks in preparation for 		 * the call to kqueue_register(). 		 */
 name|kn
 operator|->
 name|kn_status
@@ -2317,7 +2347,90 @@ operator|->
 name|kl_lockarg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Activate existing knote and register a knote with 		 * new process. 		 */
+comment|/* 		 * Activate existing knote and register tracking knotes with 		 * new process. 		 * 		 * First register a knote to get just the child notice. This 		 * must be a separate note from a potential NOTE_EXIT 		 * notification since both NOTE_CHILD and NOTE_EXIT are defined 		 * to use the data field (in conflicting ways). 		 */
+name|kev
+operator|.
+name|ident
+operator|=
+name|pid
+expr_stmt|;
+name|kev
+operator|.
+name|filter
+operator|=
+name|kn
+operator|->
+name|kn_filter
+expr_stmt|;
+name|kev
+operator|.
+name|flags
+operator|=
+name|kn
+operator|->
+name|kn_flags
+operator||
+name|EV_ADD
+operator||
+name|EV_ENABLE
+operator||
+name|EV_ONESHOT
+operator||
+name|EV_FLAG2
+expr_stmt|;
+name|kev
+operator|.
+name|fflags
+operator|=
+name|kn
+operator|->
+name|kn_sfflags
+expr_stmt|;
+name|kev
+operator|.
+name|data
+operator|=
+name|kn
+operator|->
+name|kn_id
+expr_stmt|;
+comment|/* parent */
+name|kev
+operator|.
+name|udata
+operator|=
+name|kn
+operator|->
+name|kn_kevent
+operator|.
+name|udata
+expr_stmt|;
+comment|/* preserve udata */
+name|error
+operator|=
+name|kqueue_register
+argument_list|(
+name|kq
+argument_list|,
+operator|&
+name|kev
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|kn
+operator|->
+name|kn_fflags
+operator||=
+name|NOTE_TRACKERR
+expr_stmt|;
+comment|/* 		 * Then register another knote to track other potential events 		 * from the new process. 		 */
 name|kev
 operator|.
 name|ident
@@ -5168,7 +5281,7 @@ operator|==
 name|DTYPE_KQUEUE
 condition|)
 block|{
-comment|/* 			 * if we add some inteligence about what we are doing, 			 * we should be able to support events on ourselves. 			 * We need to know when we are doing this to prevent 			 * getting both the knlist lock and the kq lock since 			 * they are the same thing. 			 */
+comment|/* 			 * If we add some intelligence about what we are doing, 			 * we should be able to support events on ourselves. 			 * We need to know when we are doing this to prevent 			 * getting both the knlist lock and the kq lock since 			 * they are the same thing. 			 */
 if|if
 condition|(
 name|fp
@@ -5278,6 +5391,34 @@ argument_list|(
 name|kq
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If possible, find an existing knote to use for this kevent. 		 */
+if|if
+condition|(
+name|kev
+operator|->
+name|filter
+operator|==
+name|EVFILT_PROC
+operator|&&
+operator|(
+name|kev
+operator|->
+name|flags
+operator|&
+operator|(
+name|EV_FLAG1
+operator||
+name|EV_FLAG2
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* This is an internal creation of a process tracking 			 * note. Don't attempt to coalesce this with an 			 * existing note. 			 */
+empty_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|kq
@@ -5343,7 +5484,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* knote is in the process of changing, wait for it to stablize. */
+comment|/* knote is in the process of changing, wait for it to stabilize. */
 if|if
 condition|(
 name|kn
