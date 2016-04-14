@@ -3350,6 +3350,7 @@ argument_list|,
 name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Tell the drive to flush its intenral cache. if we 		 * can't flush in 5s we have big problems. No need to 		 * wait the default 60s to detect problems. 		 */
 name|ccb
 operator|.
 name|ccb_h
