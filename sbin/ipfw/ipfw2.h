@@ -1190,6 +1190,11 @@ begin_function_decl
 name|void
 name|print_unreach6_code
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|uint16_t
 name|code
 parameter_list|)

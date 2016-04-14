@@ -236,6 +236,11 @@ begin_function
 name|void
 name|print_unreach6_code
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|uint16_t
 name|code
 parameter_list|)
@@ -258,16 +263,20 @@ name|s
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"unreach6 %s"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"unreach6 %u"
 argument_list|,
 name|code
