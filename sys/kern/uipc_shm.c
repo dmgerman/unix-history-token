@@ -3590,7 +3590,7 @@ name|cr_prison
 operator|->
 name|pr_path
 expr_stmt|;
-comment|/* Construct a full pathname for jailed callers */
+comment|/* Construct a full pathname for jailed callers. */
 name|pr_pathlen
 operator|=
 name|strcmp
@@ -5497,7 +5497,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Return the jail-rooted pathname */
+comment|/* Return the jail-rooted pathname. */
 name|pr_pathlen
 operator|=
 name|strlen

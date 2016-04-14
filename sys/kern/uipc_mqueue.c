@@ -3296,7 +3296,7 @@ argument_list|,
 name|_POSIX_MESSAGE_PASSING
 argument_list|)
 expr_stmt|;
-comment|/* Note current jails */
+comment|/* Note current jails. */
 name|mqfs_osd_jail_slot
 operator|=
 name|osd_jail_register
