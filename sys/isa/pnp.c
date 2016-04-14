@@ -2150,7 +2150,7 @@ decl_stmt|,
 modifier|*
 name|startres
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|large_len
@@ -2191,7 +2191,7 @@ name|char
 modifier|*
 name|desc
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|resp
 operator|=
@@ -2433,7 +2433,7 @@ literal|0
 expr_stmt|;
 name|startres
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/*  			 * A new logical device. Scan for end of 			 * resources. 			 */
@@ -2650,7 +2650,7 @@ literal|0
 expr_stmt|;
 name|startres
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|scanning
 operator|=
@@ -3144,7 +3144,7 @@ name|u_char
 modifier|*
 name|resources
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|space
