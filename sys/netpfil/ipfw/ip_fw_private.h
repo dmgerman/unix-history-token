@@ -1185,18 +1185,18 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* object name */
+name|uint16_t
+name|etlv
+decl_stmt|;
+comment|/* Export TLV id */
 name|uint8_t
 name|subtype
 decl_stmt|;
 comment|/* object subtype within class */
 name|uint8_t
-name|etlv
-decl_stmt|;
-comment|/* Export TLV id */
-name|uint16_t
 name|spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|uint16_t

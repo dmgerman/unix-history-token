@@ -17721,6 +17721,9 @@ name|no
 operator|->
 name|etlv
 operator|==
+operator|(
+name|uint16_t
+operator|)
 name|type
 condition|)
 return|return
