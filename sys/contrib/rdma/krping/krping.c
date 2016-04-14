@@ -124,7 +124,7 @@ parameter_list|,
 name|x
 modifier|...
 parameter_list|)
-value|if (krping_debug) krping_printf((cb)->cookie, x)
+value|if (krping_debug) log(LOG_INFO, x)
 end_define
 
 begin_define
@@ -137,7 +137,7 @@ parameter_list|,
 name|x
 modifier|...
 parameter_list|)
-value|krping_printf((cb)->cookie, x)
+value|log(LOG_INFO, x)
 end_define
 
 begin_define
@@ -1516,8 +1516,11 @@ argument_list|(
 name|cb
 argument_list|,
 literal|"cq completion failed with "
-literal|"wr_id %Lx status %d opcode %d vender_err %x\n"
+literal|"wr_id %jx status %d opcode %d vender_err %x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -2660,8 +2663,11 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"recv buf dma_addr %llx size %d\n"
+literal|"recv buf dma_addr %jx size %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|addr
@@ -2752,8 +2758,11 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"send buf dma_addr %llx size %d\n"
+literal|"send buf dma_addr %jx size %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|addr
@@ -3200,8 +3209,11 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"rdma buf dma_addr %llx size %d mr rkey 0x%x\n"
+literal|"rdma buf dma_addr %jx size %d mr rkey 0x%x\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|addr
@@ -3396,8 +3408,11 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"start buf dma_addr %llx size %d\n"
+literal|"start buf dma_addr %jx size %d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|addr
@@ -4579,10 +4594,13 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"page_list[%d] 0x%llx\n"
+literal|"page_list[%d] 0x%jx\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -4592,7 +4610,7 @@ argument_list|(
 name|cb
 argument_list|,
 literal|"post_inv = %d, fastreg new rkey 0x%x shift %u len %u"
-literal|" iova_start %llx page_list_len %u\n"
+literal|" iova_start %jx page_list_len %u\n"
 argument_list|,
 name|post_inv
 argument_list|,
@@ -4626,6 +4644,9 @@ name|fast_reg
 operator|.
 name|length
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cb
 operator|->
 name|fastreg_wr
@@ -4859,7 +4880,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"binding mw rkey 0x%x to buf %llx mr rkey 0x%x\n"
+literal|"binding mw rkey 0x%x to buf %jx mr rkey 0x%x\n"
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -4870,6 +4891,9 @@ name|mw
 operator|->
 name|rkey
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 argument_list|,
 name|cb
@@ -6308,6 +6332,11 @@ name|cb
 argument_list|,
 literal|"delta sec %lu delta usec %lu iter %d size %d\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_sec
@@ -6315,7 +6344,13 @@ operator|-
 name|start_tv
 operator|.
 name|tv_sec
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_usec
@@ -6323,6 +6358,7 @@ operator|-
 name|start_tv
 operator|.
 name|tv_usec
+argument_list|)
 argument_list|,
 name|scnt
 argument_list|,
@@ -7060,6 +7096,11 @@ argument_list|,
 literal|"delta sec %lu delta usec %lu iter %d size %d cycle_iters %d"
 literal|" sum_post %llu sum_poll %llu sum_last_poll %llu\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_sec
@@ -7067,7 +7108,13 @@ operator|-
 name|start_tv
 operator|.
 name|tv_sec
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_usec
@@ -7075,6 +7122,7 @@ operator|-
 name|start_tv
 operator|.
 name|tv_usec
+argument_list|)
 argument_list|,
 name|scnt
 argument_list|,
@@ -7763,6 +7811,11 @@ argument_list|,
 literal|"delta sec %lu delta usec %lu iter %d size %d cycle_iters %d"
 literal|" sum_post %llu sum_poll %llu sum_last_poll %llu\n"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_sec
@@ -7770,7 +7823,13 @@ operator|-
 name|start_tv
 operator|.
 name|tv_sec
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|stop_tv
 operator|.
 name|tv_usec
@@ -7778,6 +7837,7 @@ operator|-
 name|start_tv
 operator|.
 name|tv_usec
+argument_list|)
 argument_list|,
 name|scnt
 argument_list|,
@@ -8423,8 +8483,13 @@ name|PRINTF
 argument_list|(
 name|cb
 argument_list|,
-literal|"Fastreg not supported - device_cap_flags 0x%x\n"
+literal|"Fastreg not supported - device_cap_flags 0x%llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|attr
 operator|.
 name|device_cap_flags
@@ -8438,8 +8503,11 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"Fastreg supported - device_cap_flags 0x%x\n"
+literal|"Fastreg supported - device_cap_flags 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|attr
 operator|.
 name|device_cap_flags
@@ -8797,7 +8865,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s pl %p size %lu\n"
+literal|"%s pl %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8827,7 +8895,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s mr %p size %lu\n"
+literal|"%s mr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8857,7 +8925,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s fr %p size %lu\n"
+literal|"%s fr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8887,7 +8955,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s sgl %p size %lu\n"
+literal|"%s sgl %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8917,7 +8985,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s read %p size %lu\n"
+literal|"%s read %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8947,7 +9015,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s buf %p size %lu\n"
+literal|"%s buf %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8977,7 +9045,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s dma_addr %p size %lu\n"
+literal|"%s dma_addr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9356,7 +9424,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s pl[%u]->page_list[%u] 0x%llx\n"
+literal|"%s pl[%u]->page_list[%u] 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9364,6 +9432,9 @@ name|scnt
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pl
 index|[
 name|scnt
@@ -9420,7 +9491,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s sgl[%u].lkey 0x%x length %u addr 0x%llx\n"
+literal|"%s sgl[%u].lkey 0x%x length %u addr 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9440,6 +9511,9 @@ index|]
 operator|.
 name|length
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sgl
 index|[
 name|scnt
@@ -9849,13 +9923,16 @@ name|PRINTF
 argument_list|(
 name|cb
 argument_list|,
-literal|"completion error %u wr_id %lld "
+literal|"completion error %u wr_id %ju "
 literal|"opcode %d\n"
 argument_list|,
 name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -10455,7 +10532,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s client STAG %x TO 0x%llx\n"
+literal|"%s client STAG %x TO 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10463,6 +10540,9 @@ name|cb
 operator|->
 name|remote_rkey
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cb
 operator|->
 name|remote_addr
@@ -10781,7 +10861,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s server STAG %x TO 0x%llx\n"
+literal|"%s server STAG %x TO 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10789,6 +10869,9 @@ name|cb
 operator|->
 name|remote_rkey
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cb
 operator|->
 name|remote_addr
@@ -10947,7 +11030,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s pl %p size %lu\n"
+literal|"%s pl %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10977,7 +11060,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s mr %p size %lu\n"
+literal|"%s mr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11007,7 +11090,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s fr %p size %lu\n"
+literal|"%s fr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11037,7 +11120,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s sgl %p size %lu\n"
+literal|"%s sgl %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11067,7 +11150,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s read %p size %lu\n"
+literal|"%s read %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11097,7 +11180,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s inv %p size %lu\n"
+literal|"%s inv %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11127,7 +11210,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s buf %p size %lu\n"
+literal|"%s buf %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11157,7 +11240,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s dma_addr %p size %lu\n"
+literal|"%s dma_addr %p size %zu\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11536,7 +11619,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s pl[%u]->page_list[%u] 0x%llx\n"
+literal|"%s pl[%u]->page_list[%u] 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11544,6 +11627,9 @@ name|scnt
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pl
 index|[
 name|scnt
@@ -11998,13 +12084,16 @@ name|PRINTF
 argument_list|(
 name|cb
 argument_list|,
-literal|"completion error %u wr_id %lld "
+literal|"completion error %u wr_id %ju "
 literal|"opcode %d\n"
 argument_list|,
 name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -12599,7 +12688,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s client STAG %x TO 0x%llx\n"
+literal|"%s client STAG %x TO 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12607,6 +12696,9 @@ name|cb
 operator|->
 name|remote_rkey
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cb
 operator|->
 name|remote_addr
@@ -12925,7 +13017,7 @@ name|DEBUG_LOG
 argument_list|(
 name|cb
 argument_list|,
-literal|"%s server STAG %x TO 0x%llx\n"
+literal|"%s server STAG %x TO 0x%jx\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12933,6 +13025,9 @@ name|cb
 operator|->
 name|remote_rkey
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cb
 operator|->
 name|remote_addr
