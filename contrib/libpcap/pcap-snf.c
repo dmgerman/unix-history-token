@@ -259,10 +259,6 @@ name|struct
 name|pcap_snf
 modifier|*
 name|ps
-init|=
-name|p
-operator|->
-name|priv
 decl_stmt|;
 if|if
 condition|(
@@ -271,6 +267,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ps
+operator|=
+name|p
+operator|->
+name|priv
+expr_stmt|;
 name|snf_ring_close
 argument_list|(
 name|ps
