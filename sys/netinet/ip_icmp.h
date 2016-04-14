@@ -326,6 +326,24 @@ comment|/* N.B.: must separately check that ip_hl>= 5 */
 end_comment
 
 begin_comment
+comment|/* This is the minimum length required by RFC 792. */
+end_comment
+
+begin_comment
+comment|/*  * ICMP_ADVLENPREF is the preferred number of bytes which should be contiguous.  * It currently reflects the required minimum.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_ADVLENPREF
+parameter_list|(
+name|p
+parameter_list|)
+value|(8 + ((p)->icmp_ip.ip_hl<< 2) + 8)
+end_define
+
+begin_comment
 comment|/*  * Definition of type and code field values.  */
 end_comment
 
