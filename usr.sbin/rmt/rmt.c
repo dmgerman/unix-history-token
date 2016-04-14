@@ -330,13 +330,23 @@ if|if
 condition|(
 name|debug
 operator|==
-literal|0
+name|NULL
 condition|)
+block|{
+name|DEBUG1
+argument_list|(
+literal|"rmtd: error to open %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1107,7 +1117,7 @@ if|if
 condition|(
 name|rec
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -1125,7 +1135,7 @@ if|if
 condition|(
 name|rec
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|DEBUG
