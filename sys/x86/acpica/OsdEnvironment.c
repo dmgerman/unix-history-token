@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -116,6 +122,22 @@ block|{
 name|long
 name|acpi_root
 decl_stmt|;
+if|if
+condition|(
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"acpi.rsdp"
+argument_list|,
+operator|&
+name|acpi_root
+argument_list|)
+condition|)
+return|return
+operator|(
+name|acpi_root
+operator|)
+return|;
+comment|/* 	 * The hints mechanism is unreliable (it fails if anybody ever 	 * compiled in hints to the kernel). It has been replaced 	 * by the tunable method, but is used here as a fallback to 	 * retain maximum compatibility between old loaders and new 	 * kernels. It can be removed after 11.0R. 	 */
 if|if
 condition|(
 name|resource_long_value
