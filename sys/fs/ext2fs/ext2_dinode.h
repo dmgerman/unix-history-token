@@ -513,6 +513,10 @@ name|uint32_t
 name|e2di_version_hi
 decl_stmt|;
 comment|/* 152: High bits of inode version */
+name|uint32_t
+name|e2di_projid
+decl_stmt|;
+comment|/* 156: Project ID */
 block|}
 struct|;
 end_struct

@@ -149,7 +149,7 @@ comment|/* block grp number of this sblk*/
 name|uint32_t
 name|e2fs_features_compat
 decl_stmt|;
-comment|/*  compatible feature set */
+comment|/* compatible feature set */
 name|uint32_t
 name|e2fs_features_incompat
 decl_stmt|;
@@ -226,8 +226,12 @@ name|e3fs_def_hash_version
 decl_stmt|;
 comment|/* Default hash version to use */
 name|char
-name|e3fs_reserved_char_pad
+name|e3fs_jnl_backup_type
 decl_stmt|;
+name|uint16_t
+name|e3fs_desc_size
+decl_stmt|;
+comment|/* size of group descriptor */
 name|uint32_t
 name|e3fs_default_mount_opts
 decl_stmt|;
@@ -249,15 +253,15 @@ comment|/* backup of the journal inode */
 name|uint32_t
 name|e4fs_bcount_hi
 decl_stmt|;
-comment|/* block count */
+comment|/* high bits of blocks count */
 name|uint32_t
 name|e4fs_rbcount_hi
 decl_stmt|;
-comment|/* reserved blocks count */
+comment|/* high bits of reserved blocks count */
 name|uint32_t
 name|e4fs_fbcount_hi
 decl_stmt|;
-comment|/* free blocks count */
+comment|/* high bits of free blocks count */
 name|uint16_t
 name|e4fs_min_extra_isize
 decl_stmt|;
@@ -291,18 +295,148 @@ name|e4fs_log_gpf
 decl_stmt|;
 comment|/* FLEX_BG group size */
 name|uint8_t
-name|e4fs_char_pad2
+name|e4fs_chksum_type
 decl_stmt|;
-name|uint16_t
-name|e4fs_pad
+comment|/* metadata checksum algorithm used */
+name|uint8_t
+name|e4fs_encrypt
 decl_stmt|;
+comment|/* versioning level for encryption */
+name|uint8_t
+name|e4fs_reserved_pad
+decl_stmt|;
+name|uint64_t
+name|e4fs_kbytes_written
+decl_stmt|;
+comment|/* number of lifetime kilobytes */
 name|uint32_t
-name|reserved2
+name|e4fs_snapinum
+decl_stmt|;
+comment|/* inode number of active snapshot */
+name|uint32_t
+name|e4fs_snapid
+decl_stmt|;
+comment|/* sequential ID of active snapshot */
+name|uint64_t
+name|e4fs_snaprbcount
+decl_stmt|;
+comment|/* reserved blocks for active snapshot */
+name|uint32_t
+name|e4fs_snaplist
+decl_stmt|;
+comment|/* inode number for on-disk snapshot */
+name|uint32_t
+name|e4fs_errcount
+decl_stmt|;
+comment|/* number of file system errors */
+name|uint32_t
+name|e4fs_first_errtime
+decl_stmt|;
+comment|/* first time an error happened */
+name|uint32_t
+name|e4fs_first_errino
+decl_stmt|;
+comment|/* inode involved in first error */
+name|uint64_t
+name|e4fs_first_errblk
+decl_stmt|;
+comment|/* block involved of first error */
+name|uint8_t
+name|e4fs_first_errfunc
 index|[
-literal|162
+literal|32
 index|]
 decl_stmt|;
-comment|/* Padding to the end of the block */
+comment|/* function where error happened */
+name|uint32_t
+name|e4fs_first_errline
+decl_stmt|;
+comment|/* line number where error happened */
+name|uint32_t
+name|e4fs_last_errtime
+decl_stmt|;
+comment|/* most recent time of an error */
+name|uint32_t
+name|e4fs_last_errino
+decl_stmt|;
+comment|/* inode involved in last error */
+name|uint32_t
+name|e4fs_last_errline
+decl_stmt|;
+comment|/* line number where error happened */
+name|uint64_t
+name|e4fs_last_errblk
+decl_stmt|;
+comment|/* block involved of last error */
+name|uint8_t
+name|e4fs_last_errfunc
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* function where error happened */
+name|uint8_t
+name|e4fs_mount_opts
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|uint32_t
+name|e4fs_usrquota_inum
+decl_stmt|;
+comment|/* inode for tracking user quota */
+name|uint32_t
+name|e4fs_grpquota_inum
+decl_stmt|;
+comment|/* inode for tracking group quota */
+name|uint32_t
+name|e4fs_overhead_clusters
+decl_stmt|;
+comment|/* overhead blocks/clusters */
+name|uint32_t
+name|e4fs_backup_bgs
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* groups with sparse_super2 SBs */
+name|uint8_t
+name|e4fs_encrypt_algos
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* encryption algorithms in use */
+name|uint8_t
+name|e4fs_encrypt_pw_salt
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* salt used for string2key */
+name|uint32_t
+name|e4fs_lpf_ino
+decl_stmt|;
+comment|/* location of the lost+found inode */
+name|uint32_t
+name|e4fs_proj_quota_inum
+decl_stmt|;
+comment|/* inode for tracking project quota */
+name|uint32_t
+name|e4fs_chksum_seed
+decl_stmt|;
+comment|/* checksum seed */
+name|uint32_t
+name|e4fs_reserved
+index|[
+literal|98
+index|]
+decl_stmt|;
+comment|/* padding to the end of the block */
+name|uint32_t
+name|e4fs_sbchksum
+decl_stmt|;
+comment|/* superblock checksum */
 block|}
 struct|;
 end_struct
