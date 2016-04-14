@@ -10185,10 +10185,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find and reference object (if any) stored in instruction @cmd.  *  * Saves object info in @pidx, sets  *  - @found to 1 if object was found and references  *  - @unresolved to 1 if object should exists but not found  *  * Returns non-zero value in case of error.  */
+comment|/*  * Find and reference object (if any) stored in instruction @cmd.  *  * Saves object info in @pidx, sets  *  - @unresolved to 1 if object should exists but not found  *  * Returns non-zero value in case of error.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ref_opcode_object
 parameter_list|(
@@ -10798,7 +10799,7 @@ goto|goto
 name|free
 goto|;
 comment|/* 	 * Note that ref_rule_objects() might have updated ci->object_opcodes 	 * to reflect actual number of object opcodes. 	 */
-comment|/* Perform rule rewrite */
+comment|/* Perform rewrite of remaining opcodes */
 name|p
 operator|=
 name|pidx_first
@@ -13040,7 +13041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lists all service objects.  * Data layout (v0)(current):  * Request: [ ipfw_obj_lheader ] size = ipfw_cfg_lheader.size  * Reply: [ ipfw_obj_lheader [ ipfw_obj_ntlv x N ] (optional) ]  * Returns 0 on success  */
+comment|/*  * Lists all service objects.  * Data layout (v0)(current):  * Request: [ ipfw_obj_lheader ] size = ipfw_obj_lheader.size  * Reply: [ ipfw_obj_lheader [ ipfw_obj_ntlv x N ] (optional) ]  * Returns 0 on success  */
 end_comment
 
 begin_function
