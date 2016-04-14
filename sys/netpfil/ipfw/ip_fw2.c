@@ -10839,6 +10839,29 @@ expr_stmt|;
 comment|/* exit outer loop */
 break|break;
 block|}
+case|case
+name|O_EXTERNAL_ACTION
+case|:
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* in any case exit inner loop */
+name|retval
+operator|=
+name|ipfw_run_eaction
+argument_list|(
+name|chain
+argument_list|,
+name|args
+argument_list|,
+name|cmd
+argument_list|,
+operator|&
+name|done
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -11640,6 +11663,13 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+name|ipfw_eaction_init
+argument_list|(
+name|chain
+argument_list|,
+name|first
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LINEAR_SKIPTO
@@ -11829,6 +11859,13 @@ name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_destroy_tables
+argument_list|(
+name|chain
+argument_list|,
+name|last
+argument_list|)
+expr_stmt|;
+name|ipfw_eaction_uninit
 argument_list|(
 name|chain
 argument_list|,

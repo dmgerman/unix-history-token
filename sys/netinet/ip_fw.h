@@ -778,6 +778,12 @@ comment|/* arg1=DSCP value */
 name|O_IP_FLOW_LOOKUP
 block|,
 comment|/* arg1=table number, u32=value	*/
+name|O_EXTERNAL_ACTION
+block|,
+comment|/* arg1=id of external action handler */
+name|O_EXTERNAL_INSTANCE
+block|,
+comment|/* arg1=id of eaction handler instance */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -2564,6 +2570,30 @@ define|#
 directive|define
 name|IPFW_TLV_RANGE
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_EACTION
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_EACTION_BASE
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_EACTION_NAME
+parameter_list|(
+name|arg
+parameter_list|)
+value|(IPFW_TLV_EACTION_BASE + (arg))
 end_define
 
 begin_comment
