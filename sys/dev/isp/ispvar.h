@@ -1763,57 +1763,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_TESTING_LINK
+name|LOOP_HAVE_ADDR
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LTEST_DONE
+name|LOOP_TESTING_LINK
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_LOOP
+name|LOOP_LTEST_DONE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_LSCAN_DONE
+name|LOOP_SCANNING_LOOP
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCANNING_FABRIC
+name|LOOP_LSCAN_DONE
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_FSCAN_DONE
+name|LOOP_SCANNING_FABRIC
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SYNCING_PDB
+name|LOOP_FSCAN_DONE
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_READY
+name|LOOP_SYNCING_PDB
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|10
 end_define
 
 begin_define
