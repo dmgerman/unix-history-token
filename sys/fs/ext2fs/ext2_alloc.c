@@ -1890,32 +1890,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set up a new generation number for this inode. 	 * XXX check if this makes sense in ext2 	 */
-if|if
-condition|(
-name|ip
-operator|->
-name|i_gen
-operator|==
-literal|0
-operator|||
-operator|++
-name|ip
-operator|->
-name|i_gen
-operator|==
-literal|0
-condition|)
+comment|/* 	 * Set up a new generation number for this inode. 	 */
 name|ip
 operator|->
 name|i_gen
 operator|=
-name|random
+name|arc4random
 argument_list|()
-operator|/
-literal|2
-operator|+
-literal|1
 expr_stmt|;
 name|vfs_timestamp
 argument_list|(
