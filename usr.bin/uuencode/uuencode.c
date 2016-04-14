@@ -178,6 +178,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|raw
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 modifier|*
 name|av
@@ -251,7 +260,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"mo:"
+literal|"mo:r"
 argument_list|)
 operator|)
 operator|!=
@@ -278,6 +287,14 @@ case|:
 name|outfile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|raw
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -519,6 +536,11 @@ name|sequence
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|raw
+condition|)
 name|fprintf
 argument_list|(
 name|output
@@ -628,6 +650,11 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|raw
+condition|)
 name|fprintf
 argument_list|(
 name|output
@@ -667,6 +694,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|raw
+condition|)
 operator|(
 name|void
 operator|)
@@ -941,6 +973,11 @@ argument_list|,
 literal|"read error"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|raw
+condition|)
 operator|(
 name|void
 operator|)
