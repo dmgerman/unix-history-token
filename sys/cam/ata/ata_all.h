@@ -106,6 +106,11 @@ directive|define
 name|CAM_ATAIO_DMA
 value|0x10
 comment|/* DMA command */
+define|#
+directive|define
+name|CAM_ATAIO_AUX_HACK
+value|0x20
+comment|/* Kludge to make FPDMA DSM TRIM work */
 name|u_int8_t
 name|command
 decl_stmt|;

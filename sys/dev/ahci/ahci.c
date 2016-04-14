@@ -15393,6 +15393,26 @@ index|]
 operator|=
 name|ATA_A_4BIT
 expr_stmt|;
+comment|/* Gross and vile hack -- makes ncq trim work w/o changing ataio size */
+if|if
+condition|(
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|cmd
+operator|.
+name|flags
+operator|&
+name|CAM_ATAIO_AUX_HACK
+condition|)
+name|fis
+index|[
+literal|16
+index|]
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -17048,6 +17068,8 @@ operator|=
 name|PIM_SEQSCAN
 operator||
 name|PIM_UNMAPPED
+operator||
+name|PIM_NCQ_KLUDGE
 expr_stmt|;
 name|cpi
 operator|->
