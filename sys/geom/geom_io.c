@@ -2138,7 +2138,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL bp->data in g_io_request(cmd=%hhu)"
+literal|"NULL bp->data in g_io_request(cmd=%hu)"
 operator|,
 name|bp
 operator|->
@@ -2167,7 +2167,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"non-NULL bp->data in g_io_request(cmd=%hhu)"
+literal|"non-NULL bp->data in g_io_request(cmd=%hu)"
 operator|,
 name|bp
 operator|->

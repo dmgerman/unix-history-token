@@ -189,11 +189,11 @@ decl_stmt|;
 name|int
 name|b_error
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|b_iocmd
 decl_stmt|;
 comment|/* BIO_* bio_cmd from bio.h */
-name|uint8_t
+name|uint16_t
 name|b_ioflags
 decl_stmt|;
 comment|/* BIO_* bio_flags from bio.h */

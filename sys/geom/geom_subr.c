@@ -7555,7 +7555,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  cflags: 0x%hhx\n"
+literal|"  cflags: 0x%hx\n"
 argument_list|,
 name|bp
 operator|->
@@ -7564,7 +7564,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  pflags: 0x%hhx\n"
+literal|"  pflags: 0x%hx\n"
 argument_list|,
 name|bp
 operator|->
