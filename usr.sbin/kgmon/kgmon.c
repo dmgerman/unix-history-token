@@ -1724,7 +1724,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warn
