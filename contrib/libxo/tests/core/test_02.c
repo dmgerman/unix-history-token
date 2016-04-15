@@ -247,6 +247,11 @@ name|XOF_UNITS
 argument_list|)
 expr_stmt|;
 comment|/* Always test w/ this */
+name|xo_set_file
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|xo_open_container_h
 argument_list|(
 name|NULL

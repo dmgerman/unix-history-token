@@ -297,6 +297,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<monitor.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MONITOR_H */
+end_comment
+
+begin_comment
 comment|/* Support printflike */
 end_comment
 
@@ -613,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION
-value|"0.4.7"
+value|"0.6.1"
 end_define
 
 begin_comment
@@ -635,7 +643,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_NUMBER
-value|4007
+value|6001
 end_define
 
 begin_comment
@@ -646,7 +654,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_STRING
-value|"4007"
+value|"6001"
 end_define
 
 begin_comment
@@ -712,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.4.7"
+value|"libxo 0.6.1"
 end_define
 
 begin_comment
@@ -745,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.4.7"
+value|"0.6.1"
 end_define
 
 begin_comment
@@ -775,8 +783,16 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.4.7"
+value|"0.6.1"
 end_define
+
+begin_comment
+comment|/* Retain hash bucket size */
+end_comment
+
+begin_comment
+comment|/* #undef XO_RETAIN_SIZE */
+end_comment
 
 begin_comment
 comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
