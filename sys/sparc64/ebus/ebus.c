@@ -1628,7 +1628,7 @@ name|eri
 operator|->
 name|eri_res
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|bus_release_resource
