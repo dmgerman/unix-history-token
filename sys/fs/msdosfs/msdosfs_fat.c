@@ -1018,7 +1018,7 @@ name|fatcache
 modifier|*
 name|closest
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
@@ -1070,7 +1070,7 @@ if|if
 condition|(
 name|closest
 operator|==
-literal|0
+name|NULL
 operator|||
 name|cn
 operator|>

@@ -2896,7 +2896,7 @@ name|dp
 operator|=
 name|dp1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -2954,7 +2954,7 @@ name|dp1
 expr_stmt|;
 name|dp1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}

@@ -3347,7 +3347,7 @@ if|if
 condition|(
 name|isodir
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|int
@@ -3567,7 +3567,7 @@ block|}
 else|else
 name|bp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ip
 operator|->
