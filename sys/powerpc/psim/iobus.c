@@ -1220,7 +1220,7 @@ name|child
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
