@@ -756,10 +756,15 @@ operator|->
 name|sc_lock
 argument_list|)
 expr_stmt|;
-comment|/* Insert new channel into channel_anchor. */
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"VMBUS get multi-channel offer, rel=%u,sub=%u\n"
+literal|"VMBUS get multi-channel offer, "
+literal|"rel=%u, sub=%u\n"
 argument_list|,
 name|new_channel
 operator|->
@@ -776,6 +781,8 @@ operator|.
 name|sub_channel_index
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Insert new channel into channel_anchor. */
 name|mtx_lock
 argument_list|(
 operator|&
