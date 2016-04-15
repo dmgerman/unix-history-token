@@ -1673,7 +1673,25 @@ name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
-comment|/* 		 * Samsung 843T Series SSDs (MZ7WD*) 		 * Samsung PM851 Series SSDs (MZ7TE*) 		 * Samsung PM853T Series SSDs (MZ7GE*) 		 * Samsung SM863 Series SSDs (MZ7KM*) 		 * 4k optimised, NCQ Trim believed working 		 */
+comment|/* 		 * Samsung SM863 Series SSDs (MZ7KM*) 		 * 4k optimised, NCQ believed to be working 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG MZ7KM*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 843T Series SSDs (MZ7WD*) 		 * Samsung PM851 Series SSDs (MZ7TE*) 		 * Samsung PM853T Series SSDs (MZ7GE*) 		 * 4k optimised, NCQ believed to be broken since these are 		 * appear to be built with the same controllers as the 840/850. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1688,6 +1706,8 @@ block|}
 block|,
 comment|/*quirks*/
 name|ADA_Q_4K
+operator||
+name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
