@@ -87,6 +87,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|errno
 operator|=
 literal|0
@@ -110,6 +113,8 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
