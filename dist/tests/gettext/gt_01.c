@@ -95,6 +95,7 @@ index|[]
 init|=
 literal|"gt_01"
 decl_stmt|;
+specifier|static
 name|char
 name|path
 index|[

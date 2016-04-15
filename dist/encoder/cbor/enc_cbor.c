@@ -665,7 +665,7 @@ condition|(
 name|minor
 operator|>
 operator|(
-literal|1UL
+literal|1ULL
 operator|<<
 literal|32
 operator|)
