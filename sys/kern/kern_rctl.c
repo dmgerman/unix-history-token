@@ -9486,7 +9486,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|rctl_rule_link_zone
@@ -9511,7 +9511,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set default values, making sure not to overwrite the ones 	 * fetched from tunables.  Most of those could be set at the 	 * declaration, except for the rctl_throttle_max - we cannot 	 * set it there due to hz not being compile time constant. 	 */
