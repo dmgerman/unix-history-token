@@ -2817,7 +2817,7 @@ name|sc
 operator|->
 name|mem_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function

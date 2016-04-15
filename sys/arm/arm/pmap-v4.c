@@ -756,7 +756,7 @@ name|msgbuf
 modifier|*
 name|msgbufp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2637,7 +2637,7 @@ name|l2b
 operator|->
 name|l2b_kva
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* We lost the race. */

@@ -818,7 +818,7 @@ name|sc
 operator|->
 name|intrhand
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -857,7 +857,7 @@ name|sc
 operator|->
 name|mem_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -890,7 +890,7 @@ name|sc
 operator|->
 name|irq_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif

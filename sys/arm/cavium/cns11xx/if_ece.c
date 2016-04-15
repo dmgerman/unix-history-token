@@ -5277,11 +5277,11 @@ index|]
 decl_stmt|;
 name|current
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mac_list_header
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|table_end
 operator|=
@@ -7864,7 +7864,7 @@ name|eth_tx_desc_t
 modifier|*
 name|desc
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|csum_flags
