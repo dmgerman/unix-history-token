@@ -953,6 +953,53 @@ argument_list|,
 literal|455
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:mode/%s}{e:mode_octal/%s} {t:links/%s} "
+literal|"{t:user/%s}  {t:group/%s}  \n"
+argument_list|,
+literal|"mode"
+argument_list|,
+literal|"octal"
+argument_list|,
+literal|"links"
+argument_list|,
+literal|"user"
+argument_list|,
+literal|"group"
+argument_list|,
+literal|"extra1"
+argument_list|,
+literal|"extra2"
+argument_list|,
+literal|"extra3"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{t:mode/%s}{e:mode_octal/%03o} {t:links/%*u} "
+literal|"{t:user/%-*s}  {t:group/%-*s}  \n"
+argument_list|,
+literal|"/some/file"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|0640
+argument_list|,
+literal|8
+argument_list|,
+literal|1
+argument_list|,
+literal|10
+argument_list|,
+literal|"user"
+argument_list|,
+literal|12
+argument_list|,
+literal|"group"
+argument_list|)
+expr_stmt|;
 name|xo_close_container_h
 argument_list|(
 name|NULL
