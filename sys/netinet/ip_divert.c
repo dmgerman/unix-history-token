@@ -640,7 +640,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|ip
@@ -2328,7 +2328,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|KMOD_IPSTAT_INC
@@ -2641,7 +2641,7 @@ if|if
 condition|(
 name|inp_list
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOMEM

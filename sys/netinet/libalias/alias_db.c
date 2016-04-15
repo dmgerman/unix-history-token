@@ -2346,8 +2346,6 @@ operator|++
 control|)
 if|if
 condition|(
-literal|0
-operator|!=
 operator|(
 name|search_result
 operator|=
@@ -2373,6 +2371,8 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 break|break;
 comment|/* Found a good range, return base */

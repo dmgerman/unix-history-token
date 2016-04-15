@@ -5620,7 +5620,7 @@ name|minlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|IGMPSTAT_INC

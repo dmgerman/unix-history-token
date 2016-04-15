@@ -4739,7 +4739,7 @@ if|if
 condition|(
 name|inp_list
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

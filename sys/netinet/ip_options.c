@@ -3109,7 +3109,7 @@ expr_stmt|;
 operator|*
 name|pcbopt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

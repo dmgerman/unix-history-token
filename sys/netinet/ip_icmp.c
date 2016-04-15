@@ -3393,7 +3393,7 @@ name|mbuf
 modifier|*
 name|opts
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|optlen
@@ -3892,7 +3892,7 @@ name|m
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|opts
