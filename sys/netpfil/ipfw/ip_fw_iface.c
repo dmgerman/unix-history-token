@@ -1711,7 +1711,7 @@ name|KASSERT
 argument_list|(
 name|i
 operator|!=
-literal|0
+name|NULL
 argument_list|,
 operator|(
 literal|"previously checked buffer is not enough"
