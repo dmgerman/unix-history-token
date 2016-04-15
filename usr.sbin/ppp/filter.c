@@ -289,7 +289,7 @@ if|if
 condition|(
 name|servent
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 name|ntohs
