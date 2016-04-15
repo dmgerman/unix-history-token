@@ -561,7 +561,7 @@ name|inpcb
 modifier|*
 name|last
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|mbuf

@@ -982,7 +982,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -1071,7 +1071,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -2513,7 +2513,7 @@ return|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -2655,7 +2655,7 @@ expr_stmt|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(

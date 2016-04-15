@@ -831,7 +831,7 @@ if|if
 condition|(
 name|ifr
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

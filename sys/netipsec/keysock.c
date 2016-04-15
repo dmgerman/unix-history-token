@@ -321,7 +321,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -408,7 +408,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|PFKEYSTAT_INC
@@ -745,11 +745,11 @@ if|if
 condition|(
 name|so
 operator|==
-literal|0
+name|NULL
 operator|||
 name|msg
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1653,7 +1653,7 @@ if|if
 condition|(
 name|kp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOBUFS

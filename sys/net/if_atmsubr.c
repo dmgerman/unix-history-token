@@ -777,7 +777,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -1224,7 +1224,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 comment|/* failed */

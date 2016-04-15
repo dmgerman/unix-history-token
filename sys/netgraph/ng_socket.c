@@ -1524,7 +1524,7 @@ if|if
 condition|(
 name|pcbp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2021,7 +2021,7 @@ if|if
 condition|(
 name|pcbp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

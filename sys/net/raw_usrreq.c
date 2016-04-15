@@ -221,7 +221,7 @@ name|last
 decl_stmt|;
 name|last
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mtx_lock
 argument_list|(

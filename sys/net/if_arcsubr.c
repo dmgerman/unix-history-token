@@ -839,7 +839,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -1126,7 +1126,7 @@ operator|->
 name|curr_frag
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|int
@@ -1147,7 +1147,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -1317,7 +1317,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -1430,7 +1430,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -1504,7 +1504,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -3123,7 +3123,7 @@ return|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -3238,7 +3238,7 @@ expr_stmt|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0

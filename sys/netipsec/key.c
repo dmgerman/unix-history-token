@@ -23170,13 +23170,13 @@ else|else
 block|{
 name|type
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sport
 operator|=
 name|dport
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -23369,7 +23369,7 @@ else|else
 block|{
 name|frag
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 endif|#
@@ -24715,7 +24715,7 @@ else|else
 block|{
 name|type
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -24908,7 +24908,7 @@ else|else
 block|{
 name|frag
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 endif|#
@@ -31052,7 +31052,7 @@ decl_stmt|,
 modifier|*
 name|newreg
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|IPSEC_ASSERT
 argument_list|(

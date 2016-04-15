@@ -1107,7 +1107,7 @@ name|mtu
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|IP6STAT_INC
@@ -2037,7 +2037,7 @@ if|if
 condition|(
 name|ro
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ro
@@ -4690,7 +4690,7 @@ name|exthdrs
 operator|->
 name|ip6e_hbh
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|mopt
@@ -5070,7 +5070,7 @@ if|if
 condition|(
 name|n
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -10182,7 +10182,7 @@ name|cmsghdr
 modifier|*
 name|cm
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

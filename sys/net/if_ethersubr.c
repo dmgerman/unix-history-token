@@ -4575,7 +4575,7 @@ return|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -4699,7 +4699,7 @@ expr_stmt|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
