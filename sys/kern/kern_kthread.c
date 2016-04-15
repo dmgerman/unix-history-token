@@ -1695,7 +1695,7 @@ condition|(
 operator|*
 name|procptr
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

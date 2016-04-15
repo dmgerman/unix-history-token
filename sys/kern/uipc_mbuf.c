@@ -2129,7 +2129,7 @@ name|top
 expr_stmt|;
 name|top
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 while|while
 condition|(

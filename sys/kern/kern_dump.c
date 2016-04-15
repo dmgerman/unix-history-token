@@ -703,7 +703,7 @@ expr_stmt|;
 comment|/* Update twiddle every 16MB */
 name|va
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|pgs
 operator|=

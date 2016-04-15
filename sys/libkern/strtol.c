@@ -380,7 +380,7 @@ if|if
 condition|(
 name|endptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|endptr

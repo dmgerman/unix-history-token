@@ -5584,14 +5584,14 @@ name|sembuf
 modifier|*
 name|sopptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|sem
 modifier|*
 name|semptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|sem_undo

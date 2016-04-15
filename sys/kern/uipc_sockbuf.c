@@ -2422,7 +2422,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|sbm_clrprotoflags
@@ -3106,7 +3106,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|m_clrprotoflags
@@ -3742,7 +3742,7 @@ if|if
 condition|(
 name|control
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(

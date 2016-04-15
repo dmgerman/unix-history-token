@@ -1635,7 +1635,7 @@ if|if
 condition|(
 name|bp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|tbp
