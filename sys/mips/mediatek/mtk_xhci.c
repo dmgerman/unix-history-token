@@ -346,14 +346,6 @@ name|devices_max
 operator|=
 name|XHCI_MAX_DEVICES
 expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|dma_bits
-operator|=
-literal|32
-expr_stmt|;
 name|rid
 operator|=
 literal|0
