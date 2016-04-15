@@ -5055,7 +5055,7 @@ if|if
 condition|(
 name|status_dev
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|destroy_dev
 argument_list|(
