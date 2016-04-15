@@ -51,6 +51,24 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MIPS_NIRQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIPS_NIRQ
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NIRQ
 end_ifndef
 
@@ -58,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|NIRQ
-value|128
+value|MIPS_NIRQ
 end_define
 
 begin_endif
