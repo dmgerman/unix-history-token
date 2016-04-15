@@ -2650,9 +2650,6 @@ name|pci_devinfo
 modifier|*
 name|vfinfo
 decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -2687,14 +2684,6 @@ name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|size
-operator|=
-name|dinfo
-operator|->
-name|cfg
-operator|.
-name|devinfo_size
 expr_stmt|;
 name|next_rid
 operator|=

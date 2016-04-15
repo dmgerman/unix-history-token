@@ -500,6 +500,8 @@ name|pci_read_device
 argument_list|(
 name|pcib
 argument_list|,
+name|dev
+argument_list|,
 name|pcib_get_domain
 argument_list|(
 name|dev
@@ -510,12 +512,6 @@ argument_list|,
 name|s
 argument_list|,
 name|f
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dinfo
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pci_add_child
