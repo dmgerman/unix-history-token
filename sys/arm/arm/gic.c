@@ -624,6 +624,13 @@ name|enum
 name|intr_trigger
 name|gi_trig
 decl_stmt|;
+define|#
+directive|define
+name|GI_FLAG_EARLY_EOI
+value|(1<< 0)
+name|u_int
+name|gi_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4324,11 +4331,15 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|gi
 operator|->
-name|gi_trig
+name|gi_flags
+operator|&
+name|GI_FLAG_EARLY_EOI
+operator|)
 operator|==
-name|INTR_TRIGGER_EDGE
+name|GI_FLAG_EARLY_EOI
 condition|)
 name|gic_c_write_4
 argument_list|(
@@ -4363,11 +4374,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|gi
 operator|->
-name|gi_trig
+name|gi_flags
+operator|&
+name|GI_FLAG_EARLY_EOI
+operator|)
 operator|!=
-name|INTR_TRIGGER_EDGE
+name|GI_FLAG_EARLY_EOI
 condition|)
 name|gic_c_write_4
 argument_list|(
@@ -5449,6 +5464,21 @@ name|gi_trig
 operator|=
 name|trig
 expr_stmt|;
+comment|/* Edge triggered interrupts need an early EOI sent */
+if|if
+condition|(
+name|gi
+operator|->
+name|gi_pol
+operator|==
+name|INTR_TRIGGER_EDGE
+condition|)
+name|gi
+operator|->
+name|gi_flags
+operator||=
+name|GI_FLAG_EARLY_EOI
+expr_stmt|;
 comment|/* 	 * XXX - In case that per CPU interrupt is going to be enabled in time 	 *       when SMP is already started, we need some IPI call which 	 *       enables it on others CPUs. Further, it's more complicated as 	 *       pic_enable_source() and pic_disable_source() should act on 	 *       per CPU basis only. Thus, it should be solved here somehow. 	 */
 if|if
 condition|(
@@ -5793,11 +5823,15 @@ decl_stmt|;
 comment|/* EOI for edge-triggered done earlier. */
 if|if
 condition|(
+operator|(
 name|gi
 operator|->
-name|gi_trig
+name|gi_flags
+operator|&
+name|GI_FLAG_EARLY_EOI
+operator|)
 operator|==
-name|INTR_TRIGGER_EDGE
+name|GI_FLAG_EARLY_EOI
 condition|)
 return|return;
 name|arm_irq_memory_barrier
