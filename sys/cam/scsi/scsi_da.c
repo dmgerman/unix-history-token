@@ -3913,7 +3913,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_LONG
+name|TUNABLE_INT64
 argument_list|(
 literal|"kern.cam.da.default_softtimeout"
 argument_list|,
