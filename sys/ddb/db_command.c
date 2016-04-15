@@ -835,7 +835,7 @@ name|command
 modifier|*
 name|db_last_command
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2015,7 +2015,7 @@ if|if
 condition|(
 name|cmd
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Execute the command. 	     */
