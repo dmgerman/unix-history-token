@@ -15418,7 +15418,6 @@ operator|)
 return|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 if|if
 condition|(

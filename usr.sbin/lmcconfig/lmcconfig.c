@@ -7162,7 +7162,6 @@ break|break;
 case|case
 literal|12
 case|:
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"framed X^11+X^9+1 w/7ZS\n"

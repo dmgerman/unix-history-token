@@ -245,7 +245,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|V
@@ -299,9 +298,7 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -346,10 +343,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return;
 block|}
-empty_stmt|;
 name|x
 operator|=
 name|V
@@ -425,7 +420,6 @@ name|kk
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|jj
 operator|+=
 name|start
@@ -554,9 +548,7 @@ name|k
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 while|while
 condition|(
 name|jj
@@ -625,9 +617,7 @@ name|k
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|jj
@@ -1088,9 +1078,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|len
@@ -1106,7 +1094,6 @@ operator|-
 name|len
 expr_stmt|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -1326,7 +1313,6 @@ name|y
 return|;
 block|}
 block|}
-empty_stmt|;
 name|x
 operator|=
 name|st
@@ -2497,7 +2483,6 @@ name|oldscore
 operator|--
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -2595,9 +2580,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 name|lenb
 operator|=
 literal|0
@@ -2684,11 +2667,8 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|lastscan
@@ -2808,9 +2788,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 name|lenf
 operator|+=
 name|lens
@@ -2822,7 +2800,6 @@ operator|-=
 name|lens
 expr_stmt|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|i
@@ -3055,9 +3032,7 @@ operator|-
 name|scan
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 name|BZ2_bzWriteClose
 argument_list|(
 operator|&

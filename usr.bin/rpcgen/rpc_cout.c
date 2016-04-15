@@ -276,7 +276,6 @@ literal|0
 condition|)
 return|return;
 block|}
-empty_stmt|;
 name|print_header
 argument_list|(
 name|def

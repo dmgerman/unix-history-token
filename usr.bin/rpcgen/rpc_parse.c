@@ -1629,7 +1629,6 @@ name|case_list
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|get_declaration
 argument_list|(
 operator|&

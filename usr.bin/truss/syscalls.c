@@ -11645,7 +11645,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-empty_stmt|;
 name|fprintf
 argument_list|(
 name|fp

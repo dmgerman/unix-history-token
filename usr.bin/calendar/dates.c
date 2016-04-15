@@ -1936,7 +1936,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|d

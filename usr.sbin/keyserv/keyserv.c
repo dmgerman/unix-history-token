@@ -2030,7 +2030,6 @@ name|st_priv_key
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|status
 operator|=
 name|pk_netput

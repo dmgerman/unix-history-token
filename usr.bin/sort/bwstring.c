@@ -1480,7 +1480,6 @@ operator|+=
 name|charlen
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 name|ret
 operator|->

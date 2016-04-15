@@ -3110,7 +3110,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
