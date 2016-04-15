@@ -1199,7 +1199,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Crucial M500 SSDs EU07 firmware 		 * NCQ Trim works ?  		 */
+comment|/* 		 * Crucial M500 SSDs MU07 firmware 		 * NCQ Trim works 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1209,7 +1209,7 @@ literal|"*"
 block|,
 literal|"Crucial CT*M500*"
 block|,
-literal|"EU07"
+literal|"MU07"
 block|}
 block|,
 comment|/*quirks*/
@@ -1286,6 +1286,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * FCCT M500 SSDs 		 * NCQ Trim doesn't work 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"FCCT*M500*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
@@ -1433,7 +1451,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Micron M500 SSDs firmware EU07 		 * NCQ Trim works? 		 */
+comment|/* 		 * Micron M500 SSDs firmware MU07 		 * NCQ Trim works? 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1443,7 +1461,7 @@ literal|"*"
 block|,
 literal|"Micron M500*"
 block|,
-literal|"EU07"
+literal|"MU07"
 block|}
 block|,
 comment|/*quirks*/
