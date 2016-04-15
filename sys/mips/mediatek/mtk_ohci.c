@@ -260,7 +260,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|self
 argument_list|,
-literal|"ralink,rt3xxx-ohci"
+literal|"generic-ohci"
 argument_list|)
 condition|)
 return|return

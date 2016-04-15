@@ -271,7 +271,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|self
 argument_list|,
-literal|"mtk,usb-xhci"
+literal|"mediatek,mt8173-xhci"
 argument_list|)
 condition|)
 return|return

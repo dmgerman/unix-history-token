@@ -1366,7 +1366,7 @@ name|OF_hasprop
 argument_list|(
 name|node
 argument_list|,
-literal|"mtk,num-pins"
+literal|"ralink,num-gpios"
 argument_list|)
 operator|&&
 operator|(
@@ -1374,7 +1374,7 @@ name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
-literal|"mtk,num-pins"
+literal|"ralink,num-gpios"
 argument_list|,
 operator|&
 name|num_pins
