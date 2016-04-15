@@ -1332,12 +1332,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HYPERV
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|inthand_t
@@ -1347,11 +1341,6 @@ name|hv_vmbus_callback
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * @brief Main vmbus driver initialization routine.  *  * Here, we  * - initialize the vmbus driver context  * - setup various driver entry points  * - invoke the vmbus hv main init routine  * - get the irq resource  * - invoke the vmbus to add the vmbus root device  * - setup the vmbus root device  * - retrieve the channel offers  */
@@ -1423,9 +1412,6 @@ name|ret
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|HYPERV
 comment|/* 	 * Find a free IDT slot for vmbus callback. 	 */
 name|hv_vmbus_g_context
 operator|.
@@ -1439,17 +1425,6 @@ name|hv_vmbus_callback
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|hv_vmbus_g_context
