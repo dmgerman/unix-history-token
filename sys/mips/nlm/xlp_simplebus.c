@@ -1189,7 +1189,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf
