@@ -36,7 +36,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_define

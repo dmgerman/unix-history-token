@@ -108,7 +108,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -556,7 +556,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_ifdef
@@ -794,7 +794,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 name|DEVMETHOD
 argument_list|(
 name|bus_config_intr
@@ -2321,7 +2321,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 return|return
 operator|(
 name|intr_setup_irq
@@ -2438,7 +2438,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 return|return
 operator|(
 name|intr_teardown_irq
@@ -2477,7 +2477,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -2658,7 +2658,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MIPS_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_function

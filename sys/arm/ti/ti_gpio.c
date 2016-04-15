@@ -186,7 +186,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -583,7 +583,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function_decl
@@ -1788,7 +1788,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_comment
@@ -2185,7 +2185,7 @@ name|sc
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|unsigned
 name|int
 name|i
@@ -2378,7 +2378,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 if|if
 condition|(
 name|ti_gpio_pic_attach
@@ -2679,7 +2679,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 if|if
 condition|(
 name|sc
@@ -2825,7 +2825,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -5347,7 +5347,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Interrupt controller interface */
 name|DEVMETHOD
 argument_list|(

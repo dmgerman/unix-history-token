@@ -120,7 +120,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -1160,7 +1160,7 @@ name|sc
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|MIPS_INTRNG
+name|INTRNG
 name|int
 name|error
 decl_stmt|;
@@ -1191,7 +1191,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 name|cpu_establish_hardintr
 argument_list|(
 literal|"clock"

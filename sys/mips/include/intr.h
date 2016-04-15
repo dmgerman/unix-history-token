@@ -22,7 +22,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MIPS_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_ifdef
@@ -187,7 +187,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MIPS_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_endif

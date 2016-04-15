@@ -151,7 +151,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_comment

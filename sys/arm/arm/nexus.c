@@ -295,7 +295,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_ifdef
@@ -357,7 +357,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function_decl
@@ -621,7 +621,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|DEVMETHOD
 argument_list|(
 name|bus_describe_intr
@@ -1234,7 +1234,7 @@ name|ENODEV
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|device_printf
 argument_list|(
 name|dev
@@ -1315,7 +1315,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|int
 name|irq
 decl_stmt|;
@@ -1340,7 +1340,7 @@ name|INTR_EXCL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 return|return
 operator|(
 name|intr_setup_irq
@@ -1442,7 +1442,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 return|return
 operator|(
 name|intr_teardown_irq
@@ -1478,7 +1478,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function

@@ -276,7 +276,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function_decl
@@ -583,7 +583,7 @@ name|loop_counter
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|int
 name|start
 init|=
@@ -796,7 +796,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Enable ipi */
 ifdef|#
 directive|ifdef
@@ -916,7 +916,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -1466,7 +1466,7 @@ name|loop_counter
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|int
 name|start
 init|=
@@ -1487,7 +1487,7 @@ condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_RENDEZVOUS
@@ -1771,7 +1771,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|intr_ipi_send
 argument_list|(
 name|other_cpus
@@ -1836,7 +1836,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|intr_ipi_send
 argument_list|(
 name|cpus
@@ -1882,7 +1882,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|intr_ipi_send
 argument_list|(
 name|cpus

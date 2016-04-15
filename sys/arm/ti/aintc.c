@@ -110,7 +110,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -230,7 +230,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_struct
@@ -279,7 +279,7 @@ name|ver
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|struct
 name|ti_aintc_irqsrc
 name|aintc_isrcs
@@ -394,7 +394,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -1332,7 +1332,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|arm_post_filter
 operator|=
 name|aintc_post_filter
@@ -1395,7 +1395,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|DEVMETHOD
 argument_list|(
 name|pic_disable_intr
@@ -1508,7 +1508,7 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function

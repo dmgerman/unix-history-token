@@ -110,7 +110,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -169,7 +169,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -602,7 +602,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_struct
@@ -709,7 +709,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_struct
@@ -759,7 +759,7 @@ name|gic_dev
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|void
 modifier|*
 name|gic_intrhand
@@ -814,7 +814,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* FDT child data */
 name|pcell_t
 name|addr_cells
@@ -839,7 +839,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_define
@@ -887,7 +887,7 @@ block|,
 comment|/* CPU Interrupt Intf. registers */
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 block|{
 name|SYS_RES_IRQ
 block|,
@@ -1006,7 +1006,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function_decl
@@ -1167,7 +1167,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -1349,7 +1349,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -1770,7 +1770,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_endif
@@ -1785,7 +1785,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function
@@ -2067,7 +2067,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -3023,7 +3023,7 @@ name|nirqs
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|phandle_t
 name|pxref
 decl_stmt|;
@@ -3199,7 +3199,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 if|if
 condition|(
 name|arm_gic_register_isrcs
@@ -3503,7 +3503,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 return|return
 operator|(
 literal|0
@@ -3756,7 +3756,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -7049,7 +7049,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_decl_stmt
@@ -7076,7 +7076,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -7323,7 +7323,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_comment

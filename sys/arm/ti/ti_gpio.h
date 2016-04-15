@@ -40,7 +40,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_struct
@@ -105,7 +105,7 @@ name|sc_busdev
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Interrupt trigger type and level. */
 name|enum
 name|intr_trigger
@@ -147,7 +147,7 @@ name|sc_irq_res
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Interrupt events. */
 name|struct
 name|intr_event
