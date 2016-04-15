@@ -3602,17 +3602,6 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|storvsc_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* fill in driver specific properties */
 name|sc
 operator|->

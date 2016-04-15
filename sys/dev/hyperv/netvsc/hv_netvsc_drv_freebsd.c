@@ -1998,16 +1998,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hn_softc_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hn_unit
