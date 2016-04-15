@@ -2390,6 +2390,9 @@ argument_list|,
 name|sectorsize
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|sectorsize
 condition|)
 block|{
@@ -2778,6 +2781,9 @@ argument_list|,
 name|sectorsize
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|sectorsize
 condition|)
 block|{
@@ -3606,6 +3612,9 @@ argument_list|,
 name|sectorsize
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|sectorsize
 condition|)
 name|syslog
