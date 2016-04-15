@@ -2223,6 +2223,12 @@ name|CAM_IOSCHED_FLAG_WORK_FLAGS
 value|((0xffffu)<< 16)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NETFLIX_IOSCHED
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2244,6 +2250,11 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -6175,6 +6186,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAM_NETFLIX_IOSCHED
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -6248,6 +6265,11 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
