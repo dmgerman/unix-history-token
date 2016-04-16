@@ -6350,6 +6350,7 @@ name|on
 init|=
 literal|1
 decl_stmt|;
+comment|/* Set all listening sockets to close-on-exec. */
 if|if
 condition|(
 operator|(
@@ -6366,6 +6367,8 @@ argument_list|,
 name|sep
 operator|->
 name|se_socktype
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -6404,47 +6407,6 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Set all listening sockets to close-on-exec. */
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|sep
-operator|->
-name|se_fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s/%s: fcntl (F_SETFD, FD_CLOEXEC): %m"
-argument_list|,
-name|sep
-operator|->
-name|se_service
-argument_list|,
-name|sep
-operator|->
-name|se_proto
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|sep
-operator|->
-name|se_fd
 argument_list|)
 expr_stmt|;
 return|return;
