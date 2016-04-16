@@ -401,14 +401,10 @@ name|lastdnptr
 operator|=
 name|dnptrs
 operator|+
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|dnptrs
-operator|/
-sizeof|sizeof
-name|dnptrs
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 comment|/* 	 * perform opcode specific processing 	 */
 switch|switch
