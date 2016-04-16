@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * ntp_control.c - respond to mode 6 control messages and send async  *		   traps.  Provides service to ntpq and others.  */
 end_comment
 
+begin_comment
+comment|/*  * $FreeBSD: projects/release-pkg/contrib/ntp/ntpd/ntp_control.c 277386 2015-01-19 16:15:12Z gjb $  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
