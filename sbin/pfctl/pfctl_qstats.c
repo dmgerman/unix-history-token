@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/altq/altq_fairq.h>
+file|<altq/altq_fairq.h>
 end_include
 
 begin_include
