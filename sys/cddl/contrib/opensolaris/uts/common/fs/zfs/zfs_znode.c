@@ -6518,10 +6518,6 @@ expr_stmt|;
 if|if
 condition|(
 name|vp
-operator|!=
-name|NULL
-operator|&&
-name|vp
 operator|->
 name|v_type
 operator|!=
@@ -6574,13 +6570,6 @@ name|doi
 operator|.
 name|doi_data_block_size
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|vn_pages_remove
 argument_list|(
 name|vp
@@ -6607,7 +6596,6 @@ operator|->
 name|z_size
 argument_list|)
 expr_stmt|;
-block|}
 name|ZFS_OBJ_HOLD_EXIT
 argument_list|(
 name|zfsvfs
