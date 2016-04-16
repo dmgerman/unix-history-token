@@ -784,7 +784,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-empty_stmt|;
 name|argv
 operator|+=
 name|optind

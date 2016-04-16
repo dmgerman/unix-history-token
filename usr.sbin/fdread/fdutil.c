@@ -880,7 +880,7 @@ if|if
 condition|(
 name|s
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -896,7 +896,7 @@ literal|','
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|s1

@@ -456,7 +456,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 operator|||
 name|M_LEN
 argument_list|(
@@ -707,7 +707,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -860,7 +860,7 @@ if|if
 condition|(
 name|pc
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* 		 * No filter means accept all. 		 */
 return|return

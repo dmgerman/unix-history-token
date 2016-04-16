@@ -74,7 +74,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|ARM_INTRNG
+name|INTRNG
 argument_list|)
 end_if
 

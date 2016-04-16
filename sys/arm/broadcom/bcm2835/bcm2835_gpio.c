@@ -134,7 +134,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -300,7 +300,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_struct
@@ -387,7 +387,7 @@ index|]
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 name|struct
 name|intr_event
 modifier|*
@@ -407,7 +407,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|struct
 name|bcm_gpio_irqsrc
 name|sc_isrcs
@@ -754,7 +754,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function_decl
@@ -3547,7 +3547,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function
@@ -3787,7 +3787,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -4476,7 +4476,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* The default is active-low interrupts. */
 name|sc
 operator|->
@@ -4592,7 +4592,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -7058,7 +7058,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Interrupt controller interface */
 name|DEVMETHOD
 argument_list|(

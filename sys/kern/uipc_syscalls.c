@@ -2178,7 +2178,7 @@ argument_list|)
 expr_stmt|;
 name|sa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|error
 operator|=

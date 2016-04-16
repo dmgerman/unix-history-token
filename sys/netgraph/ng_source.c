@@ -977,7 +977,7 @@ name|sc
 operator|->
 name|output_ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bzero
 argument_list|(

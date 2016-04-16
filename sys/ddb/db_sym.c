@@ -1566,7 +1566,7 @@ block|{
 operator|*
 name|namep
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return;
 block|}
@@ -1684,7 +1684,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 condition|)
 name|value
 operator|=
@@ -1717,7 +1717,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 operator|||
 name|d
 operator|>=

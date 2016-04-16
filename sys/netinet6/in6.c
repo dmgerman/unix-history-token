@@ -7806,7 +7806,7 @@ name|in6_ifaddr
 modifier|*
 name|besta
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|in6_ifaddr

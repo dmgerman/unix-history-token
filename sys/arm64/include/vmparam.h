@@ -314,7 +314,7 @@ value|(0xffff008000000000UL)
 end_define
 
 begin_comment
-comment|/* 2TiB for the direct map region */
+comment|/* 2 TiB maximum for the direct map region */
 end_comment
 
 begin_define
@@ -342,7 +342,7 @@ begin_define
 define|#
 directive|define
 name|DMAP_MAX_PHYSADDR
-value|(dmap_phys_base + (DMAP_MAX_ADDRESS - DMAP_MIN_ADDRESS))
+value|(dmap_phys_max)
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ name|VIRT_IN_DMAP
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)>= DMAP_MIN_ADDRESS&& \     (va)< DMAP_MAX_ADDRESS)
+value|((va)>= DMAP_MIN_ADDRESS&& \     (va)< (dmap_max_addr))
 end_define
 
 begin_define
@@ -548,6 +548,20 @@ begin_decl_stmt
 specifier|extern
 name|vm_paddr_t
 name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dmap_phys_max
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|dmap_max_addr
 decl_stmt|;
 end_decl_stmt
 

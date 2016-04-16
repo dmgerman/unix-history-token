@@ -1037,7 +1037,7 @@ name|int32_t
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

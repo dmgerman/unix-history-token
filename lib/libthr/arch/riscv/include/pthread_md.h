@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|TP_OFFSET
-value|0x10
+value|sizeof(struct tcb)
 end_define
 
 begin_comment

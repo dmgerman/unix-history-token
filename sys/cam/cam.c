@@ -1844,12 +1844,22 @@ argument_list|,
 name|path_str
 argument_list|)
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|"RES: "
+argument_list|)
+expr_stmt|;
 name|ata_res_sbuf
 argument_list|(
 operator|&
 name|ccb
 operator|->
 name|ataio
+operator|.
+name|res
 argument_list|,
 operator|&
 name|sb

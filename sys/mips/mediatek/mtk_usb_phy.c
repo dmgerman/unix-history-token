@@ -319,7 +319,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"ralink,mt7620a-usbphy"
+literal|"ralink,mt7620-usbphy"
 block|,
 name|MTK_SOC_MT7620A
 block|}
@@ -331,9 +331,15 @@ name|MTK_SOC_MT7628
 block|}
 block|,
 block|{
-literal|"ralink,rt3xxx-usbphy"
+literal|"ralink,rt3352-usbphy"
 block|,
 name|MTK_SOC_RT3352
+block|}
+block|,
+block|{
+literal|"ralink,rt3050-usbphy"
+block|,
+name|MTK_SOC_RT3050
 block|}
 block|,
 block|{

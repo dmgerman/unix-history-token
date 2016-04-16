@@ -298,7 +298,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -355,7 +355,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 operator|||
 name|m0
 operator|->
@@ -613,7 +613,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -670,7 +670,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad

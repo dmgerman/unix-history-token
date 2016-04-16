@@ -2865,7 +2865,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|print_return
 argument_list|(
 literal|"\t"

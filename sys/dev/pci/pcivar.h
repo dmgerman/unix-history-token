@@ -653,10 +653,6 @@ name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* flags defined above */
-name|size_t
-name|devinfo_size
-decl_stmt|;
-comment|/* Size of devinfo for this bus type. */
 name|struct
 name|pcicfg_bridge
 name|bridge

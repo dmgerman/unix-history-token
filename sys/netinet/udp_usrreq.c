@@ -1249,7 +1249,7 @@ name|mbuf
 modifier|*
 name|opts
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3918,7 +3918,7 @@ if|if
 condition|(
 name|inp_list
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

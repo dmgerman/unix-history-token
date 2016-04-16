@@ -180,7 +180,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -205,7 +205,7 @@ name|len
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -251,11 +251,11 @@ if|if
 condition|(
 name|str
 operator|==
-literal|0
+name|NULL
 operator|||
 name|e
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(

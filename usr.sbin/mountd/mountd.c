@@ -2374,7 +2374,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|modfind
@@ -6271,7 +6270,6 @@ operator|)
 return|;
 block|}
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -12901,7 +12899,6 @@ goto|goto
 name|error_exit
 goto|;
 block|}
-empty_stmt|;
 comment|/* 		 * For V4:, use the nfssvc() syscall, instead of mount(). 		 */
 if|if
 condition|(

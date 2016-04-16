@@ -2651,7 +2651,7 @@ name|llentry
 modifier|*
 name|la
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

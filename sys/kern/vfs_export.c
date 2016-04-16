@@ -365,7 +365,7 @@ decl_stmt|,
 modifier|*
 name|smask
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|#
 directive|if

@@ -1385,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|foundroot
 label|:

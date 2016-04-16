@@ -1450,7 +1450,7 @@ name|Elf_Rela
 modifier|*
 name|rela
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|relalim

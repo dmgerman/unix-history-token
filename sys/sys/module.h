@@ -410,7 +410,7 @@ value|static struct mod_version _##module##_version			\ 	    __section(".data") 
 end_define
 
 begin_comment
-comment|/**  * Generic macros to create pnp info hints that modules may export  * to allow external tools to parse their intenral device tables  * to make an informed guess about what driver(s) to load.  */
+comment|/**  * Generic macros to create pnp info hints that modules may export  * to allow external tools to parse their internal device tables  * to make an informed guess about what driver(s) to load.  */
 end_comment
 
 begin_define

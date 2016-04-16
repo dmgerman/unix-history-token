@@ -103,22 +103,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|krping_printf
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|krping_sigpending
 parameter_list|(

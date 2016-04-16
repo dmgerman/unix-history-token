@@ -3902,7 +3902,7 @@ continue|continue;
 block|}
 name|lsp2
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
@@ -4758,7 +4758,7 @@ name|sysctl_oid
 modifier|*
 name|op
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|rm_priotracker

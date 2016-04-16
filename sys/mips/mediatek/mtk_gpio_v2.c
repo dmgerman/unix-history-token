@@ -523,13 +523,13 @@ index|[]
 init|=
 block|{
 block|{
-literal|"mtk,mt7621-gpio"
+literal|"mtk,mt7621-gpio-bank"
 block|,
 literal|1
 block|}
 block|,
 block|{
-literal|"mtk,mt7628-gpio"
+literal|"mtk,mt7628-gpio-bank"
 block|,
 literal|1
 block|}
@@ -1395,6 +1395,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|sc
+operator|->
 name|num_pins
 condition|;
 name|i

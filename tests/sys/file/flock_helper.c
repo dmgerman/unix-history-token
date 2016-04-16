@@ -6233,7 +6233,7 @@ literal|0
 expr_stmt|;
 name|test_argv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|sa

@@ -1938,6 +1938,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|PIM_NCQ_KLUDGE
+init|=
+literal|0x200
+block|,
+comment|/* Supports the sata ncq trim kludge */
 name|PIM_EXTLUNS
 init|=
 literal|0x100

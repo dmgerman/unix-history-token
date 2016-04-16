@@ -369,6 +369,12 @@ name|RT_CHIPID_MT7621
 block|}
 block|,
 block|{
+literal|"mediatek,mt7621-eth"
+block|,
+name|RT_CHIPID_MT7621
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

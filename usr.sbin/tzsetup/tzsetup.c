@@ -1693,7 +1693,7 @@ name|len
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lineno
@@ -1766,7 +1766,7 @@ if|if
 condition|(
 name|t
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -1845,7 +1845,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -1880,7 +1880,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -2148,7 +2148,7 @@ if|if
 condition|(
 name|zp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2552,7 +2552,7 @@ name|len
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lineno
@@ -2664,7 +2664,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2960,7 +2960,7 @@ name|continent
 operator|->
 name|menu
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(

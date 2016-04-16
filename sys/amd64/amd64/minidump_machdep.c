@@ -156,26 +156,6 @@ name|SIZEOF_METADATA
 value|(64*1024)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MD_ALIGN
-parameter_list|(
-name|x
-parameter_list|)
-value|(((off_t)(x) + PAGE_MASK)& ~PAGE_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV_ALIGN
-parameter_list|(
-name|x
-parameter_list|)
-value|(((off_t)(x) + (DEV_BSIZE-1))& ~(DEV_BSIZE-1))
-end_define
-
 begin_decl_stmt
 name|uint64_t
 modifier|*
@@ -1037,6 +1017,9 @@ name|pt
 decl_stmt|,
 name|pa
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -1617,10 +1600,9 @@ name|SIZEOF_METADATA
 operator|+
 name|dumpsize
 operator|+
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|di
+operator|->
+name|blocksize
 operator|*
 literal|2
 condition|)
@@ -1647,10 +1629,9 @@ name|dumpsize
 expr_stmt|;
 name|dumplo
 operator|-=
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|di
+operator|->
+name|blocksize
 operator|*
 literal|2
 expr_stmt|;
@@ -1765,7 +1746,7 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|dump_write
+name|dump_write_pad
 argument_list|(
 name|di
 argument_list|,
@@ -1780,6 +1761,9 @@ sizeof|sizeof
 argument_list|(
 name|kdh
 argument_list|)
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -1791,10 +1775,7 @@ name|fail
 goto|;
 name|dumplo
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|size
 expr_stmt|;
 comment|/* Dump my header */
 name|bzero
@@ -2334,7 +2315,7 @@ goto|;
 comment|/* Dump trailer */
 name|error
 operator|=
-name|dump_write
+name|dump_write_pad
 argument_list|(
 name|di
 argument_list|,
@@ -2349,6 +2330,9 @@ sizeof|sizeof
 argument_list|(
 name|kdh
 argument_list|)
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2360,10 +2344,7 @@ name|fail
 goto|;
 name|dumplo
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|size
 expr_stmt|;
 comment|/* Signal completion, signoff and exit stage left. */
 name|dump_write

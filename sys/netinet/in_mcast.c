@@ -8152,7 +8152,7 @@ if|if
 condition|(
 name|imo
 operator|==
-literal|0
+name|NULL
 condition|)
 name|optval
 operator|=
@@ -8224,7 +8224,7 @@ if|if
 condition|(
 name|imo
 operator|==
-literal|0
+name|NULL
 condition|)
 name|optval
 operator|=

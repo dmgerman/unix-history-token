@@ -2196,7 +2196,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|setgid

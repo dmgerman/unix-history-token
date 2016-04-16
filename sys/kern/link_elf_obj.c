@@ -6673,7 +6673,7 @@ name|Elf_Sym
 modifier|*
 name|best
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -6773,7 +6773,7 @@ if|if
 condition|(
 name|best
 operator|==
-literal|0
+name|NULL
 condition|)
 operator|*
 name|diffp

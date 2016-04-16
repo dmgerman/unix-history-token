@@ -271,7 +271,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|self
 argument_list|,
-literal|"mtk,usb-xhci"
+literal|"mediatek,mt8173-xhci"
 argument_list|)
 condition|)
 return|return
@@ -345,14 +345,6 @@ operator|.
 name|devices_max
 operator|=
 name|XHCI_MAX_DEVICES
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|dma_bits
-operator|=
-literal|32
 expr_stmt|;
 name|rid
 operator|=

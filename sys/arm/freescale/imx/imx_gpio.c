@@ -144,7 +144,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -353,7 +353,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_struct
@@ -432,7 +432,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|struct
 name|gpio_irqsrc
 name|gpio_pic_irqsrc
@@ -712,7 +712,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -3024,7 +3024,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 if|if
 condition|(
 operator|(
@@ -3177,7 +3177,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|gpio_pic_register_isrcs
 argument_list|(
 name|sc
@@ -3364,7 +3364,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 comment|/* Interrupt controller interface */
 name|DEVMETHOD
 argument_list|(

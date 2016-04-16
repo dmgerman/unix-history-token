@@ -8754,7 +8754,7 @@ operator|->
 name|rt_ifa
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 operator|||
 operator|(
@@ -8766,7 +8766,7 @@ operator|->
 name|ifa_ifp
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 operator|||
 operator|(
@@ -8779,7 +8779,7 @@ name|rt
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|)
 return|return;
@@ -9717,7 +9717,7 @@ operator|=
 name|n
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|n

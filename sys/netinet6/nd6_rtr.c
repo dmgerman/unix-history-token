@@ -6005,7 +6005,7 @@ argument_list|(
 name|pr
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|pr
 operator|->

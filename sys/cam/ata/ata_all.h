@@ -106,6 +106,11 @@ directive|define
 name|CAM_ATAIO_DMA
 value|0x10
 comment|/* DMA command */
+define|#
+directive|define
+name|CAM_ATAIO_AUX_HACK
+value|0x20
+comment|/* Kludge to make FPDMA DSM TRIM work */
 name|u_int8_t
 name|command
 decl_stmt|;
@@ -319,6 +324,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_cmd_sbuf
+parameter_list|(
+name|struct
+name|ata_cmd
+modifier|*
+name|cmd
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|ata_res_string
@@ -377,9 +399,9 @@ name|int
 name|ata_res_sbuf
 parameter_list|(
 name|struct
-name|ccb_ataio
+name|ata_res
 modifier|*
-name|ataio
+name|res
 parameter_list|,
 name|struct
 name|sbuf

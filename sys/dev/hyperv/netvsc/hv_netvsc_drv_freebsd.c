@@ -1998,16 +1998,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hn_softc_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hn_unit
@@ -13239,6 +13229,11 @@ name|hv_chan_rxr
 operator|=
 name|rxr
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|sc
@@ -13256,6 +13251,7 @@ operator|.
 name|child_rel_id
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|idx
@@ -13315,6 +13311,11 @@ name|hn_chan
 operator|=
 name|chan
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|sc
@@ -13332,6 +13333,7 @@ operator|.
 name|child_rel_id
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Bind channel to a proper CPU */
 name|vmbus_channel_cpu_set

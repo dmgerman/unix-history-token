@@ -601,7 +601,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 name|flushsh
 argument_list|()
 expr_stmt|;

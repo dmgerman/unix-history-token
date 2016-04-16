@@ -102,7 +102,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function
@@ -179,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 end_unit

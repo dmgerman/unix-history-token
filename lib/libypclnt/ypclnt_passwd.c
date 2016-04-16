@@ -153,7 +153,7 @@ name|void
 modifier|*
 name|localhandle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|CLIENT
 modifier|*
@@ -467,7 +467,7 @@ name|void
 modifier|*
 name|localhandle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|CLIENT
 modifier|*

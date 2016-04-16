@@ -532,6 +532,26 @@ begin_comment
 comment|/* The start of the dmap region */
 end_comment
 
+begin_decl_stmt
+name|vm_paddr_t
+name|dmap_phys_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The limit of the dmap region */
+end_comment
+
+begin_decl_stmt
+name|vm_offset_t
+name|dmap_max_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The virtual address limit of the dmap */
+end_comment
+
 begin_comment
 comment|/* This code assumes all L1 DMAP entries will be used */
 end_comment
@@ -2249,7 +2269,10 @@ name|vm_offset_t
 name|kern_l1
 parameter_list|,
 name|vm_paddr_t
-name|kernstart
+name|min_pa
+parameter_list|,
+name|vm_paddr_t
+name|max_pa
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -2265,7 +2288,7 @@ name|pa
 operator|=
 name|dmap_phys_base
 operator|=
-name|kernstart
+name|min_pa
 operator|&
 operator|~
 name|L1_OFFSET
@@ -2280,6 +2303,10 @@ init|;
 name|va
 operator|<
 name|DMAP_MAX_ADDRESS
+operator|&&
+name|pa
+operator|<
+name|max_pa
 condition|;
 name|pa
 operator|+=
@@ -2331,6 +2358,15 @@ name|L1_BLOCK
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the upper limit of the DMAP region */
+name|dmap_phys_max
+operator|=
+name|pa
+expr_stmt|;
+name|dmap_max_addr
+operator|=
+name|va
+expr_stmt|;
 name|cpu_dcache_wb_range
 argument_list|(
 operator|(
@@ -2754,6 +2790,8 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|,
+name|max_pa
+decl_stmt|,
 name|min_pa
 decl_stmt|;
 name|int
@@ -2828,6 +2866,8 @@ expr_stmt|;
 comment|/* Assume the address we were loaded to is a valid physical address */
 name|min_pa
 operator|=
+name|max_pa
+operator|=
 name|KERNBASE
 operator|-
 name|kern_delta
@@ -2883,7 +2923,26 @@ index|[
 name|i
 index|]
 expr_stmt|;
-break|break;
+if|if
+condition|(
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|>
+name|max_pa
+condition|)
+name|max_pa
+operator|=
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
 block|}
 comment|/* Create a direct map region early so we can use it for pa -> va */
 name|pmap_bootstrap_dmap
@@ -2891,6 +2950,8 @@ argument_list|(
 name|l1pt
 argument_list|,
 name|min_pa
+argument_list|,
+name|max_pa
 argument_list|)
 expr_stmt|;
 name|va

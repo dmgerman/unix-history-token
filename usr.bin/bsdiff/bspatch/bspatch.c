@@ -1008,7 +1008,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Sanity-check */
 if|if
 condition|(
@@ -1231,7 +1230,6 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Clean up the bzip2 reads */
 name|BZ2_bzReadClose
 argument_list|(

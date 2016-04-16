@@ -9626,7 +9626,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|(
-literal|"Invalid request cflags=0x%hhx to=%s."
+literal|"Invalid request cflags=0x%hx to=%s."
 operator|,
 name|bp
 operator|->

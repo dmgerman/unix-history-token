@@ -1380,7 +1380,7 @@ name|qi
 operator|->
 name|cbarg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else

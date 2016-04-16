@@ -2008,7 +2008,6 @@ operator|=
 name|ptr
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -2064,7 +2063,6 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|NULL

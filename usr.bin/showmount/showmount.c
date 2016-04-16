@@ -821,7 +821,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|print_dump
 argument_list|(
 name|mntdump
@@ -1443,7 +1442,6 @@ goto|;
 block|}
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|val
@@ -1892,7 +1890,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|mp

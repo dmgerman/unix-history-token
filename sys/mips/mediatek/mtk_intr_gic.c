@@ -1240,7 +1240,7 @@ name|fdt
 operator|.
 name|ncells
 operator|!=
-literal|1
+literal|3
 operator|||
 name|data
 operator|->
@@ -1248,7 +1248,7 @@ name|fdt
 operator|.
 name|cells
 index|[
-literal|0
+literal|1
 index|]
 operator|>=
 name|sc
@@ -1273,7 +1273,7 @@ name|fdt
 operator|.
 name|cells
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 expr_stmt|;

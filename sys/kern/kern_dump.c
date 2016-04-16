@@ -156,17 +156,7 @@ name|MD_ALIGN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((off_t)(x) + PAGE_MASK)& ~PAGE_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV_ALIGN
-parameter_list|(
-name|x
-parameter_list|)
-value|(((off_t)(x) + (DEV_BSIZE-1))& ~(DEV_BSIZE-1))
+value|roundup2((off_t)(x), PAGE_SIZE)
 end_define
 
 begin_decl_stmt
@@ -178,16 +168,6 @@ end_decl_stmt
 begin_comment
 comment|/* Handle buffered writes. */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|buffer
-index|[
-name|DEV_BSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -476,7 +456,9 @@ condition|)
 block|{
 name|len
 operator|=
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 operator|-
 name|fragsz
 expr_stmt|;
@@ -490,13 +472,19 @@ name|len
 operator|=
 name|sz
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
-name|buffer
+operator|(
+name|char
+operator|*
+operator|)
+name|di
+operator|->
+name|blockbuf
 operator|+
 name|fragsz
+argument_list|,
+name|ptr
 argument_list|,
 name|len
 argument_list|)
@@ -517,7 +505,9 @@ if|if
 condition|(
 name|fragsz
 operator|==
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 condition|)
 block|{
 name|error
@@ -526,13 +516,17 @@ name|dump_write
 argument_list|(
 name|di
 argument_list|,
-name|buffer
+name|di
+operator|->
+name|blockbuf
 argument_list|,
 literal|0
 argument_list|,
 name|dumplo
 argument_list|,
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 argument_list|)
 expr_stmt|;
 if|if
@@ -546,7 +540,9 @@ operator|)
 return|;
 name|dumplo
 operator|+=
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 expr_stmt|;
 name|fragsz
 operator|=
@@ -592,18 +588,24 @@ name|dump_write
 argument_list|(
 name|di
 argument_list|,
-name|buffer
+name|di
+operator|->
+name|blockbuf
 argument_list|,
 literal|0
 argument_list|,
 name|dumplo
 argument_list|,
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 argument_list|)
 expr_stmt|;
 name|dumplo
 operator|+=
-name|DEV_BSIZE
+name|di
+operator|->
+name|blocksize
 expr_stmt|;
 name|fragsz
 operator|=
@@ -703,7 +705,7 @@ expr_stmt|;
 comment|/* Update twiddle every 16MB */
 name|va
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|pgs
 operator|=
@@ -1289,6 +1291,8 @@ name|hdrgap
 decl_stmt|;
 name|size_t
 name|hdrsz
+decl_stmt|,
+name|size
 decl_stmt|;
 name|int
 name|error
@@ -1517,9 +1521,16 @@ name|hdrgap
 operator|=
 name|fileofs
 operator|-
-name|DEV_ALIGN
+name|roundup2
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|hdrsz
+argument_list|,
+name|di
+operator|->
+name|blocksize
 argument_list|)
 expr_stmt|;
 comment|/* Determine dump offset on device. */
@@ -1533,10 +1544,9 @@ name|SIZEOF_METADATA
 operator|+
 name|dumpsize
 operator|+
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|di
+operator|->
+name|blocksize
 operator|*
 literal|2
 condition|)
@@ -1563,10 +1573,9 @@ name|dumpsize
 expr_stmt|;
 name|dumplo
 operator|-=
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|di
+operator|->
+name|blocksize
 operator|*
 literal|2
 expr_stmt|;
@@ -1607,7 +1616,7 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|dump_write
+name|dump_write_pad
 argument_list|(
 name|di
 argument_list|,
@@ -1622,6 +1631,9 @@ sizeof|sizeof
 argument_list|(
 name|kdh
 argument_list|)
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -1633,10 +1645,7 @@ name|fail
 goto|;
 name|dumplo
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
+name|size
 expr_stmt|;
 comment|/* Dump ELF header */
 name|error
@@ -1732,7 +1741,7 @@ goto|;
 comment|/* Dump trailer */
 name|error
 operator|=
-name|dump_write
+name|dump_write_pad
 argument_list|(
 name|di
 argument_list|,
@@ -1747,6 +1756,9 @@ sizeof|sizeof
 argument_list|(
 name|kdh
 argument_list|)
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if

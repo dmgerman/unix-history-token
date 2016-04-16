@@ -434,7 +434,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -981,7 +981,7 @@ if|if
 condition|(
 name|device
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -1147,7 +1147,7 @@ if|if
 condition|(
 name|fdtp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(

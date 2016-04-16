@@ -6791,14 +6791,14 @@ break|break;
 default|default:
 name|reg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|reg
 operator|==
-literal|0
+name|NULL
 condition|)
 name|pstr
 operator|+=

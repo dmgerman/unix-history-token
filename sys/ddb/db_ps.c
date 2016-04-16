@@ -695,6 +695,12 @@ if|if
 condition|(
 name|p
 operator|->
+name|p_pgrp
+operator|!=
+name|NULL
+operator|&&
+name|p
+operator|->
 name|p_session
 operator|!=
 name|NULL

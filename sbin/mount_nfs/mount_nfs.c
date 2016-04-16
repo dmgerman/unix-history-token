@@ -5457,7 +5457,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0

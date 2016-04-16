@@ -1156,7 +1156,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

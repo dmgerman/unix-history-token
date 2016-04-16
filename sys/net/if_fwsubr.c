@@ -497,7 +497,7 @@ else|else
 block|{
 name|destfw
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 switch|switch
@@ -1062,7 +1062,7 @@ else|else
 block|{
 name|mtail
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 			 * Add our encapsulation header to this 			 * fragment and hand it off to the link. 			 */
@@ -2990,7 +2990,7 @@ comment|/* 		 * No mapping needed. 		 */
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -3031,7 +3031,7 @@ return|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -3074,7 +3074,7 @@ expr_stmt|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -3097,7 +3097,7 @@ return|;
 operator|*
 name|llsa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 literal|0

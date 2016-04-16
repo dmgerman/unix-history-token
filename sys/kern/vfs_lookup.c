@@ -2071,7 +2071,7 @@ name|vnode
 modifier|*
 name|dp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* the directory we are searching */
 name|struct
@@ -4159,7 +4159,7 @@ name|vnode
 modifier|*
 name|dp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* the directory we are searching */
 name|int

@@ -1634,7 +1634,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-empty_stmt|;
 name|reached
 operator|=
 literal|1

@@ -821,7 +821,6 @@ name|timespec
 argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|bzero
 argument_list|(
 operator|&

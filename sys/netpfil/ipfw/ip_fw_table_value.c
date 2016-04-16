@@ -147,6 +147,7 @@ name|namedobj_instance
 modifier|*
 name|ni
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|key
@@ -167,6 +168,7 @@ name|named_object
 modifier|*
 name|no
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|key
@@ -295,6 +297,7 @@ name|namedobj_instance
 modifier|*
 name|ni
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|key
@@ -328,6 +331,7 @@ name|named_object
 modifier|*
 name|no
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|key

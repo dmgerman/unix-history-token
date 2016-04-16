@@ -7124,7 +7124,7 @@ expr_stmt|;
 return|return
 name|ge
 operator|!=
-literal|0
+name|NULL
 condition|?
 literal|0
 else|:

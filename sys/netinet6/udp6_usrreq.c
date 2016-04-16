@@ -5484,13 +5484,13 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
 name|addr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|hasv4addr
 operator|=

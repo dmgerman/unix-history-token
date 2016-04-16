@@ -1315,7 +1315,7 @@ argument_list|,
 operator|(
 name|L4PER_CM2_OFFSET
 operator|+
-literal|0x0140
+literal|0x0150
 operator|)
 argument_list|,
 name|CLKCTRL_MODULEMODE_ENABLE
@@ -1332,7 +1332,7 @@ argument_list|,
 operator|(
 name|L4PER_CM2_OFFSET
 operator|+
-literal|0x0148
+literal|0x0158
 operator|)
 argument_list|,
 name|CLKCTRL_MODULEMODE_ENABLE

@@ -1997,6 +1997,11 @@ name|off_t
 name|mediasize
 decl_stmt|;
 comment|/* Space available in bytes. */
+name|void
+modifier|*
+name|blockbuf
+decl_stmt|;
+comment|/* Buffer for padding shorter dump blocks */
 block|}
 struct|;
 end_struct
@@ -2038,6 +2043,29 @@ parameter_list|,
 name|off_t
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dump_write_pad
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|off_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

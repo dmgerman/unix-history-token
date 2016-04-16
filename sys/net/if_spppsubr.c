@@ -24224,7 +24224,7 @@ expr_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
 name|si
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|if_addr_rlock
 argument_list|(
@@ -24425,7 +24425,7 @@ decl_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
 name|si
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|if_addr_rlock
 argument_list|(
@@ -25374,7 +25374,7 @@ name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

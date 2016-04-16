@@ -3602,17 +3602,6 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|storvsc_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* fill in driver specific properties */
 name|sc
 operator|->
@@ -4868,6 +4857,12 @@ begin_comment
 comment|/* HVS_TIMEOUT_TEST */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/**  * @brief timeout handler for requests  *  * This function is called as a result of a callout expiring.  *  * @param arg pointer to a request  */
 end_comment
@@ -5114,6 +5109,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @brief StorVSC device poll function  *  * This function is responsible for servicing requests when  * interrupts are disabled (i.e when we are dumping core.)  *  * @param sim a pointer to a CAM SCSI interface module  */
@@ -5810,6 +5810,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|ccb
@@ -5915,6 +5918,8 @@ endif|#
 directive|endif
 comment|/* HVS_TIMEOUT_TEST */
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -8090,6 +8095,9 @@ name|hs_lock
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* 	 * callout_drain() will wait for the timer handler to finish 	 * if it is running. So we don't need any lock to synchronize 	 * between this routine and the timer handler. 	 * Note that we need to make sure reqp is not freed when timer 	 * handler is using or will use it. 	 */
 if|if
 condition|(
@@ -8111,6 +8119,8 @@ name|callout
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|ccb
 operator|->
 name|ccb_h
@@ -8417,17 +8427,17 @@ argument_list|,
 name|reqp
 argument_list|)
 expr_stmt|;
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|hs_lock
+argument_list|)
+expr_stmt|;
+name|xpt_done_direct
+argument_list|(
+name|ccb
 argument_list|)
 expr_stmt|;
 block|}

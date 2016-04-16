@@ -236,19 +236,19 @@ begin_struct
 struct|struct
 name|bio
 block|{
-name|uint8_t
+name|uint16_t
 name|bio_cmd
 decl_stmt|;
 comment|/* I/O operation. */
-name|uint8_t
+name|uint16_t
 name|bio_flags
 decl_stmt|;
 comment|/* General flags. */
-name|uint8_t
+name|uint16_t
 name|bio_cflags
 decl_stmt|;
 comment|/* Private use by the consumer. */
-name|uint8_t
+name|uint16_t
 name|bio_pflags
 decl_stmt|;
 comment|/* Private use by the provider. */

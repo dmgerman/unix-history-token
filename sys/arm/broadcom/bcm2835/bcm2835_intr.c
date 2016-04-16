@@ -127,7 +127,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_include
@@ -375,7 +375,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_define
@@ -430,7 +430,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_define
@@ -512,7 +512,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_define
@@ -575,7 +575,7 @@ name|intc_bsh
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|struct
 name|resource
 modifier|*
@@ -640,7 +640,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_function
@@ -1721,7 +1721,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|intptr_t
 name|xref
 decl_stmt|;
@@ -1782,7 +1782,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|xref
 operator|=
 name|OF_xref_from_node
@@ -1994,7 +1994,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 name|DEVMETHOD
 argument_list|(
 name|pic_disable_intr
@@ -2095,7 +2095,7 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_INTRNG
+name|INTRNG
 end_ifndef
 
 begin_function

@@ -39,7 +39,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_INTRNG
+name|INTRNG
 end_ifdef
 
 begin_ifndef
@@ -181,7 +181,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ARM_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_comment
@@ -567,7 +567,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_INTRNG */
+comment|/* INTRNG */
 end_comment
 
 begin_function_decl

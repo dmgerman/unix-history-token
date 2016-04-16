@@ -834,7 +834,7 @@ name|sc
 operator|->
 name|intrhand
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bus_generic_detach
 argument_list|(
@@ -871,7 +871,7 @@ name|sc
 operator|->
 name|mem_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -901,7 +901,7 @@ name|sc
 operator|->
 name|irq_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return;
 block|}

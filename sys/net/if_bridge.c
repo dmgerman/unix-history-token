@@ -14364,7 +14364,7 @@ name|hlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -14936,7 +14936,7 @@ name|hlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|KMOD_IPSTAT_INC

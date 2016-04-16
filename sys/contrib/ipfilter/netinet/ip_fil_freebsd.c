@@ -3964,7 +3964,7 @@ if|if
 condition|(
 name|m0
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|FREE_MB_T
@@ -4654,7 +4654,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m

@@ -215,6 +215,12 @@ name|MTK_SOC_MT7621
 block|}
 block|,
 block|{
+literal|"mediatek,mt7621-soc"
+block|,
+name|MTK_SOC_MT7621
+block|}
+block|,
+block|{
 literal|"ralink,mtk7621-soc"
 block|,
 name|MTK_SOC_MT7621
