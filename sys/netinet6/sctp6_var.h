@@ -132,24 +132,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|sctp6_notify
 parameter_list|(
 name|struct
 name|sctp_inpcb
-modifier|*
-parameter_list|,
-name|struct
-name|icmp6_hdr
-modifier|*
-parameter_list|,
-name|struct
-name|sctphdr
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
@@ -159,6 +146,12 @@ parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl

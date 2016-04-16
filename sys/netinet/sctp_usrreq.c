@@ -532,7 +532,6 @@ name|INET
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|sctp_notify
 parameter_list|(
@@ -651,7 +650,7 @@ name|ICMP_UNREACH_FILTER_PROHIB
 operator|)
 condition|)
 block|{
-comment|/* 		 * Hmm reachablity problems we must examine closely. If its 		 * not reachable, we may have lost a network. Or if there is 		 * NO protocol at the other end named SCTP. well we consider 		 * it a OOTB abort. 		 */
+comment|/* Mark the net unreachable. */
 if|if
 condition|(
 name|net
@@ -716,7 +715,7 @@ name|ICMP_UNREACH_PORT
 operator|)
 condition|)
 block|{
-comment|/* 		 * Here the peer is either playing tricks on us, including 		 * an address that belongs to someone who does not support 		 * SCTP OR was a userland implementation that shutdown and 		 * now is dead. In either case treat it like a OOTB abort 		 * with no TCB 		 */
+comment|/* Treat it like an ABORT. */
 name|sctp_abort_notification
 argument_list|(
 name|stcb
@@ -1043,9 +1042,9 @@ name|ch
 decl_stmt|;
 name|struct
 name|sockaddr_in
-name|to
+name|src
 decl_stmt|,
-name|from
+name|dst
 decl_stmt|;
 if|if
 condition|(
@@ -1192,52 +1191,37 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
-name|to
+name|src
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|to
+expr|struct
+name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|from
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|from
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|from
-operator|.
-name|sin_family
-operator|=
-name|to
+name|src
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|from
-operator|.
-name|sin_len
-operator|=
-name|to
+name|src
 operator|.
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|to
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
-name|from
+name|src
 operator|.
 name|sin_port
 operator|=
@@ -1245,7 +1229,7 @@ name|sh
 operator|->
 name|src_port
 expr_stmt|;
-name|from
+name|src
 operator|.
 name|sin_addr
 operator|=
@@ -1253,7 +1237,37 @@ name|inner_ip
 operator|->
 name|ip_src
 expr_stmt|;
-name|to
+name|memset
+argument_list|(
+operator|&
+name|dst
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|dst
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
+name|dst
 operator|.
 name|sin_port
 operator|=
@@ -1261,7 +1275,7 @@ name|sh
 operator|->
 name|dest_port
 expr_stmt|;
-name|to
+name|dst
 operator|.
 name|sin_addr
 operator|=
@@ -1269,7 +1283,7 @@ name|inner_ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * 'to' holds the dest of the packet that failed to be sent. 		 * 'from' holds our local endpoint address. Thus we reverse 		 * the to and the from in the lookup. 		 */
+comment|/* 		 * 'dst' holds the dest of the packet that failed to be 		 * sent. 'src' holds our local endpoint address. Thus we 		 * reverse the dst and the src in the lookup. 		 */
 name|inp
 operator|=
 name|NULL
@@ -1288,7 +1302,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|to
+name|dst
 argument_list|,
 operator|(
 expr|struct
@@ -1296,7 +1310,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|from
+name|src
 argument_list|,
 operator|&
 name|inp
