@@ -5597,6 +5597,13 @@ name|mnt_kern_flag
 operator||=
 name|MNTK_EXTENDED_SHARED
 expr_stmt|;
+name|vfsp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_NO_IOPF
+expr_stmt|;
+comment|/* vn_io_fault can be used */
 comment|/* 	 * The fsid is 64 bits, composed of an 8-bit fs type, which 	 * separates our fsid from any other filesystem types, and a 	 * 56-bit objset unique ID.  The objset unique ID is unique to 	 * all objsets open on this system, provided by unique_create(). 	 * The 8-bit fs type must be put in the low bits of fsid[1] 	 * because that's where other Solaris filesystems put it. 	 */
 name|fsid_guid
 operator|=
