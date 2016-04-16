@@ -3408,6 +3408,7 @@ literal|"\020"
 comment|/* RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE */
 literal|"\001FSGSBASE"
 literal|"\002TSCADJ"
+literal|"\003SGX"
 comment|/* Bit Manipulation Instructions */
 literal|"\004BMI1"
 comment|/* Hardware Lock Elision */
@@ -3427,9 +3428,9 @@ comment|/* Restricted Transactional Memory */
 literal|"\014RTM"
 literal|"\015PQM"
 literal|"\016NFPUSG"
-literal|"\020PQE"
 comment|/* Intel Memory Protection Extensions */
 literal|"\017MPX"
+literal|"\020PQE"
 comment|/* AVX512 Foundation */
 literal|"\021AVX512F"
 literal|"\022AVX512DQ"
@@ -3468,8 +3469,11 @@ argument_list|,
 literal|"\020"
 literal|"\001PREFETCHWT1"
 literal|"\002AVX512VBMI"
+literal|"\003UMIP"
 literal|"\004PKU"
 literal|"\005OSPKE"
+literal|"\027RDPID"
+literal|"\037SGXLC"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7408,7 +7412,16 @@ literal|0x63
 case|:
 name|printf
 argument_list|(
-literal|"Data TLB: 1 GByte pages, 4-way set associative, 4 entries\n"
+literal|"Data TLB: 2 MByte or 4 MByte pages, 4-way set associative, 32 entries and a separate array with 1 GByte pages, 4-way set associative, 4 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x64
+case|:
+name|printf
+argument_list|(
+literal|"Data TLB: 4 KBytes pages, 4-way set associative, 512 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7751,6 +7764,15 @@ case|:
 name|printf
 argument_list|(
 literal|"Shared 2nd-Level TLB: 4 KByte /2 MByte pages, 6-way associative, 1536 entries. Also 1GBbyte pages, 4-way, 16 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0xc4
+case|:
+name|printf
+argument_list|(
+literal|"DTLB: 2M/4M Byte pages, 4-way associative, 32 entries\n"
 argument_list|)
 expr_stmt|;
 break|break;
