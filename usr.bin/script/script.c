@@ -698,6 +698,8 @@ argument_list|(
 literal|"/dev/filemon"
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|==
@@ -725,6 +727,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|O_CLOEXEC
 argument_list|,
 name|S_IRUSR
 operator||
@@ -767,31 +771,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Cannot set filemon log file descriptor"
-argument_list|)
-expr_stmt|;
-comment|/* Set up these two fd's to close on exec. */
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fm_fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fm_log
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
