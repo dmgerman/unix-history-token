@@ -276,8 +276,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALTQT_MAX
+name|ALTQT_CODEL
 value|14
+end_define
+
+begin_comment
+comment|/* CoDel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTQT_MAX
+value|15
 end_define
 
 begin_comment

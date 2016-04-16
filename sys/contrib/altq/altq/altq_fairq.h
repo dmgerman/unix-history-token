@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<altq/altq_codel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<altq/altq_red.h>
 end_include
 
@@ -117,6 +123,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FARF_CODEL
+value|0x0008
+end_define
+
+begin_comment
+comment|/* use CoDel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FARF_CLEARDSCP
 value|0x0010
 end_define
@@ -195,7 +212,7 @@ name|pktcntr
 name|drop_cnt
 decl_stmt|;
 comment|/* dropped packet counter */
-comment|/* red and rio related info */
+comment|/* codel, red and rio related info */
 name|int
 name|qtype
 decl_stmt|;
@@ -207,6 +224,10 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* rio has 3 red stats */
+name|struct
+name|codel_stats
+name|codel
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -286,12 +307,31 @@ name|fairq_bucket_t
 modifier|*
 name|cl_polled
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|red
 modifier|*
 name|cl_red
 decl_stmt|;
 comment|/* RED state */
+name|struct
+name|codel
+modifier|*
+name|cl_codel
+decl_stmt|;
+comment|/* CoDel state */
+block|}
+name|cl_aqm
+union|;
+define|#
+directive|define
+name|cl_red
+value|cl_aqm.cl_red
+define|#
+directive|define
+name|cl_codel
+value|cl_aqm.cl_codel
 name|u_int
 name|cl_hogs_m1
 decl_stmt|;

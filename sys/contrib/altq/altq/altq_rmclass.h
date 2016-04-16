@@ -312,12 +312,31 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Class drop action. */
+union|union
+block|{
 name|struct
 name|red
 modifier|*
 name|red_
 decl_stmt|;
 comment|/* RED state pointer */
+name|struct
+name|codel
+modifier|*
+name|codel_
+decl_stmt|;
+comment|/* codel state pointer */
+block|}
+name|cl_aqm_
+union|;
+define|#
+directive|define
+name|red_
+value|cl_aqm_.red_
+define|#
+directive|define
+name|codel_
+value|cl_aqm_.codel_
 name|struct
 name|altq_pktattr
 modifier|*
@@ -551,6 +570,10 @@ directive|define
 name|RMCF_CLEARDSCP
 value|0x0010
 comment|/* clear diffserv codepoint */
+define|#
+directive|define
+name|RMCF_CODEL
+value|0x0020
 comment|/* flags for rmc_init */
 define|#
 directive|define
