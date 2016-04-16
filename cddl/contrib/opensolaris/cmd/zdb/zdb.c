@@ -11940,8 +11940,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"cannot open '%s': %s\n"
 argument_list|,
 name|cachefile
@@ -11974,8 +11976,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"failed to stat '%s': %s\n"
 argument_list|,
 name|cachefile
