@@ -19511,14 +19511,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scan the fabric for devices and add them to our port database.  *  * Use the GID_FT command to get all Port IDs for FC4 SCSI devices it knows.  *  * For 2100-23XX cards, we can use the SNS mailbox command to pass simple  * name server commands to the switch management server via the QLogic f/w.  *  * For the 24XX card, we have to use CT-Pass through run via the Execute IOCB  * mailbox command.  */
+comment|/*  * Scan the fabric for devices and add them to our port database.  *  * Use the GID_FT command to get all Port IDs for FC4 SCSI devices it knows.  *  * For 2100-23XX cards, we use the SNS mailbox command to pass simple name  * server commands to the switch management server via the QLogic f/w.  *  * For the 24XX and above card, we use CT Pass-through IOCB.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GIDLEN
-value|(ISP_FC_SCRLEN - (3 * QENTRY_LEN))
+value|ISP_FC_SCRLEN
 end_define
 
 begin_define
@@ -19527,39 +19527,6 @@ directive|define
 name|NGENT
 value|((GIDLEN - 16)>> 2)
 end_define
-
-begin_define
-define|#
-directive|define
-name|XTXOFF
-value|(ISP_FC_SCRLEN - (3 * QENTRY_LEN))
-end_define
-
-begin_comment
-comment|/* CT request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTXOFF
-value|(ISP_FC_SCRLEN - (2 * QENTRY_LEN))
-end_define
-
-begin_comment
-comment|/* Request IOCB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZTXOFF
-value|(ISP_FC_SCRLEN - (1 * QENTRY_LEN))
-end_define
-
-begin_comment
-comment|/* Response IOCB */
-end_comment
 
 begin_function
 specifier|static
@@ -19761,11 +19728,7 @@ operator|(
 name|sns_gid_ft_req_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|CTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 name|MEMORYBARRIER
@@ -19774,7 +19737,7 @@ name|isp
 argument_list|,
 name|SYNC_SFORDEV
 argument_list|,
-name|CTXOFF
+literal|0
 argument_list|,
 name|SNS_GID_FT_REQ_SIZE
 argument_list|,
@@ -19825,8 +19788,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -19841,8 +19802,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -19857,8 +19816,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|mbs
@@ -19873,8 +19830,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|CTXOFF
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -20127,8 +20082,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|XTXOFF
 argument_list|)
 expr_stmt|;
 name|pt
@@ -20145,8 +20098,6 @@ argument_list|(
 name|fcp
 operator|->
 name|isp_scdma
-operator|+
-name|XTXOFF
 argument_list|)
 expr_stmt|;
 name|pt
@@ -20605,11 +20556,7 @@ operator|(
 name|ct_hdr_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 name|rp
@@ -20621,8 +20568,6 @@ operator|)
 operator|&
 name|scp
 index|[
-name|XTXOFF
-operator|+
 sizeof|sizeof
 argument_list|(
 name|ct
@@ -20663,11 +20608,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|,
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -22983,11 +22924,7 @@ operator|(
 name|rft_id_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -23009,11 +22946,7 @@ argument_list|(
 name|rft_id_t
 argument_list|)
 argument_list|,
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -23367,11 +23300,7 @@ operator|(
 name|rff_id_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -23393,11 +23322,7 @@ argument_list|(
 name|rft_id_t
 argument_list|)
 argument_list|,
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -23717,8 +23642,6 @@ argument_list|(
 operator|&
 name|scp
 index|[
-name|XTXOFF
-operator|+
 name|len
 operator|+
 name|rp
@@ -23759,8 +23682,6 @@ argument_list|(
 operator|&
 name|scp
 index|[
-name|XTXOFF
-operator|+
 name|len
 operator|+
 name|rp
@@ -23794,8 +23715,6 @@ argument_list|(
 operator|&
 name|scp
 index|[
-name|XTXOFF
-operator|+
 name|len
 operator|+
 name|rp
@@ -23841,11 +23760,7 @@ operator|(
 name|rspn_id_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -23864,11 +23779,7 @@ literal|"CT request"
 argument_list|,
 name|len
 argument_list|,
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -24159,8 +24070,6 @@ argument_list|(
 operator|&
 name|scp
 index|[
-name|XTXOFF
-operator|+
 name|len
 operator|+
 name|rp
@@ -24224,11 +24133,7 @@ operator|(
 name|rsnn_nn_t
 operator|*
 operator|)
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -24247,11 +24152,7 @@ literal|"CT request"
 argument_list|,
 name|len
 argument_list|,
-operator|&
 name|scp
-index|[
-name|XTXOFF
-index|]
 argument_list|)
 expr_stmt|;
 if|if
