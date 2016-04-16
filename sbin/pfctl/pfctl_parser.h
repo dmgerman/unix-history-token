@@ -476,6 +476,53 @@ end_struct
 
 begin_struct
 struct|struct
+name|node_fairq_sc
+block|{
+name|struct
+name|node_queue_bw
+name|m1
+decl_stmt|;
+comment|/* slope of 1st segment; bps */
+name|u_int
+name|d
+decl_stmt|;
+comment|/* x-projection of m1; msec */
+name|struct
+name|node_queue_bw
+name|m2
+decl_stmt|;
+comment|/* slope of 2nd segment; bps */
+name|u_int8_t
+name|used
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|node_fairq_opts
+block|{
+name|struct
+name|node_fairq_sc
+name|linkshare
+decl_stmt|;
+name|struct
+name|node_queue_bw
+name|hogs_bw
+decl_stmt|;
+name|u_int
+name|nbuckets
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|node_queue_opt
 block|{
 name|int
@@ -494,6 +541,10 @@ decl_stmt|;
 name|struct
 name|node_hfsc_opts
 name|hfsc_opts
+decl_stmt|;
+name|struct
+name|node_fairq_opts
+name|fairq_opts
 decl_stmt|;
 block|}
 name|data

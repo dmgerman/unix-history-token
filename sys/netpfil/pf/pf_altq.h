@@ -105,6 +105,37 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * XXX this needs some work  */
+end_comment
+
+begin_struct
+struct|struct
+name|fairq_opts
+block|{
+name|u_int
+name|nbuckets
+decl_stmt|;
+name|u_int
+name|hogs_m1
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+comment|/* link sharing service curve */
+name|u_int
+name|lssc_m1
+decl_stmt|;
+name|u_int
+name|lssc_d
+decl_stmt|;
+name|u_int
+name|lssc_m2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|pf_altq
@@ -195,6 +226,10 @@ decl_stmt|;
 name|struct
 name|hfsc_opts
 name|hfsc_opts
+decl_stmt|;
+name|struct
+name|fairq_opts
+name|fairq_opts
 decl_stmt|;
 block|}
 name|pq_u

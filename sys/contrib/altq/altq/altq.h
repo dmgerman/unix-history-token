@@ -265,8 +265,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALTQT_MAX
+name|ALTQT_FAIRQ
 value|13
+end_define
+
+begin_comment
+comment|/* fairq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTQT_MAX
+value|14
 end_define
 
 begin_comment

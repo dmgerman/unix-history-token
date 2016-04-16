@@ -80,6 +80,10 @@ name|u_int32_t
 name|qid
 decl_stmt|;
 comment|/* queue id */
+name|u_int32_t
+name|qid_hash
+decl_stmt|;
+comment|/* queue hashid used by WFQ like algos */
 name|u_int16_t
 name|tag
 decl_stmt|;
