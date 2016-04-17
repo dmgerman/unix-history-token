@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -298,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|NLCINFO
-value|(sizeof(lcinfo)/sizeof(lcinfo[0]))
+value|nitems(lcinfo)
 end_define
 
 begin_comment
@@ -1918,15 +1924,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|kwinfo
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|_kwinfo
 argument_list|)
 condition|;
 name|i
