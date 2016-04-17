@@ -5133,7 +5133,8 @@ function_decl|)
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -5154,7 +5155,8 @@ function_decl|)
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -5311,8 +5313,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DTRACE_INVOP_PUSHQ_RBP
+value|DTRACE_INVOP_PUSHL_EBP
+end_define
+
+begin_define
+define|#
+directive|define
 name|DTRACE_INVOP_POPL_EBP
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTRACE_INVOP_POPQ_RBP
+value|DTRACE_INVOP_POPL_EBP
 end_define
 
 begin_define

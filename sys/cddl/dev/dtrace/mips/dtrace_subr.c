@@ -122,7 +122,8 @@ name|dtrace_invop
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -173,7 +174,8 @@ parameter_list|(
 name|uintptr_t
 name|addr
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 name|stack
 parameter_list|,

@@ -1398,7 +1398,7 @@ operator|)
 name|dtrace_invop_callsite
 condition|)
 block|{
-comment|/* 			 * In the case of amd64, we will use the pointer to the 			 * regs structure that was pushed when we took the 			 * trap.  To get this structure, we must increment 			 * beyond the frame structure, and then again beyond 			 * the calling RIP stored in dtrace_invop().  If the 			 * argument that we're seeking is passed on the stack, 			 * we'll pull the true stack pointer out of the saved 			 * registers and decrement our argument by the number 			 * of arguments passed in registers; if the argument 			 * we're seeking is passed in regsiters, we can just 			 * load it directly. 			 */
+comment|/* 			 * In the case of amd64, we will use the pointer to the 			 * regs structure that was pushed when we took the 			 * trap.  To get this structure, we must increment 			 * beyond the frame structure, and then again beyond 			 * the calling RIP stored in dtrace_invop().  If the 			 * argument that we're seeking is passed on the stack, 			 * we'll pull the true stack pointer out of the saved 			 * registers and decrement our argument by the number 			 * of arguments passed in registers; if the argument 			 * we're seeking is passed in registers, we can just 			 * load it directly. 			 */
 name|struct
 name|trapframe
 modifier|*
@@ -1409,21 +1409,11 @@ expr|struct
 name|trapframe
 operator|*
 operator|)
-operator|(
-operator|(
-name|uintptr_t
-operator|)
 operator|&
 name|fp
 index|[
 literal|1
 index|]
-operator|+
-sizeof|sizeof
-argument_list|(
-name|uintptr_t
-argument_list|)
-operator|)
 decl_stmt|;
 if|if
 condition|(

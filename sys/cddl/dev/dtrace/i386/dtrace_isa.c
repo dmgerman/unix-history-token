@@ -1759,8 +1759,10 @@ name|int
 name|aframes
 parameter_list|)
 block|{
-name|uintptr_t
-name|val
+name|struct
+name|trapframe
+modifier|*
+name|frame
 decl_stmt|;
 name|struct
 name|i386_frame
@@ -1778,6 +1780,8 @@ decl_stmt|;
 name|uintptr_t
 modifier|*
 name|stack
+decl_stmt|,
+name|val
 decl_stmt|;
 name|int
 name|i
@@ -1819,9 +1823,15 @@ operator|)
 name|dtrace_invop_callsite
 condition|)
 block|{
-comment|/* 			 * If we pass through the invalid op handler, we will 			 * use the pointer that it passed to the stack as the 			 * second argument to dtrace_invop() as the pointer to 			 * the stack.  When using this stack, we must step 			 * beyond the EIP/RIP that was pushed when the trap was 			 * taken -- hence the "+ 1" below. 			 */
-name|stack
+comment|/* 			 * If we pass through the invalid op handler, we will 			 * use the trap frame pointer that it pushed on the 			 * stack as the second argument to dtrace_invop() as 			 * the pointer to the stack.  When using this stack, we 			 * must skip the third argument to dtrace_invop(), 			 * which is included in the i386_frame. 			 */
+name|frame
 operator|=
+operator|(
+expr|struct
+name|trapframe
+operator|*
+operator|)
+operator|(
 operator|(
 operator|(
 name|uintptr_t
@@ -1837,8 +1847,20 @@ operator|)
 index|[
 literal|0
 index|]
+operator|)
+expr_stmt|;
+comment|/* 			 * Skip the three hardware-saved registers and the 			 * return address. 			 */
+name|stack
+operator|=
+operator|(
+name|uintptr_t
+operator|*
+operator|)
+name|frame
+operator|->
+name|tf_isp
 operator|+
-literal|1
+literal|4
 expr_stmt|;
 goto|goto
 name|load

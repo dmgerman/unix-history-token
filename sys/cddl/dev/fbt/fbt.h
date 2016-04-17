@@ -91,13 +91,20 @@ name|linker_symval
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|fbt_invop
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t

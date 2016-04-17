@@ -146,7 +146,8 @@ name|dtrace_invop
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -185,7 +186,8 @@ function_decl|)
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -215,9 +217,10 @@ parameter_list|(
 name|uintptr_t
 name|addr
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
-name|stack
+name|frame
 parameter_list|,
 name|uintptr_t
 name|eax
@@ -257,7 +260,7 @@ name|dtih_func
 argument_list|(
 name|addr
 argument_list|,
-name|stack
+name|frame
 argument_list|,
 name|eax
 argument_list|)
@@ -290,7 +293,8 @@ function_decl|)
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -344,7 +348,8 @@ function_decl|)
 parameter_list|(
 name|uintptr_t
 parameter_list|,
-name|uintptr_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|,
 name|uintptr_t
@@ -829,10 +834,6 @@ name|frame
 operator|->
 name|tf_elr
 argument_list|,
-operator|(
-name|uintptr_t
-operator|*
-operator|)
 name|frame
 argument_list|,
 name|frame
