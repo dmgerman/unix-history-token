@@ -335,6 +335,9 @@ name|task
 name|unload_task
 decl_stmt|;
 comment|/* (c) */
+name|u_int
+name|batch_no
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2186,6 +2189,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|dmar_match_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dmar_batch_coalesce
 decl_stmt|;
 end_decl_stmt
 

@@ -2910,6 +2910,14 @@ name|dmar_match_verbose
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|dmar_batch_coalesce
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -2967,6 +2975,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Verbose matching of the PCI devices to DMAR paths"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_dmar
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|batch_coalesce
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|dmar_batch_coalesce
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of qi batches between interrupt"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
