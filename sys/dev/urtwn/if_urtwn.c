@@ -4838,6 +4838,13 @@ name|iv_key_delete
 operator|=
 name|urtwn_key_delete
 expr_stmt|;
+comment|/* 802.11n parameters */
+name|vap
+operator|->
+name|iv_ampdu_density
+operator|=
+name|IEEE80211_HTCAP_MPDUDENSITY_16
+expr_stmt|;
 if|if
 condition|(
 name|opmode
