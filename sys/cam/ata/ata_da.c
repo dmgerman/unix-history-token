@@ -1711,6 +1711,26 @@ name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
+comment|/* 		 * Samsung PM851 Series SSDs Dell OEM 		 * device model          "SAMSUNG SSD PM851 mSATA 256GB" 		 * 4k optimised, NCQ broken 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG SSD PM851*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+operator||
+name|ADA_Q_NCQ_TRIM_BROKEN
+block|}
+block|,
+block|{
 comment|/* 		 * SuperTalent TeraDrive CT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
