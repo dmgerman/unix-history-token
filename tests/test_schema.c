@@ -211,7 +211,7 @@ name|match
 decl_stmt|;
 name|data
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -220,7 +220,7 @@ argument_list|)
 expr_stmt|;
 name|description
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -229,7 +229,7 @@ argument_list|)
 expr_stmt|;
 name|valid
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -402,7 +402,7 @@ return|;
 block|}
 name|schema
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -411,7 +411,7 @@ argument_list|)
 expr_stmt|;
 name|tests
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -420,7 +420,7 @@ argument_list|)
 expr_stmt|;
 name|description
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
@@ -471,7 +471,7 @@ condition|(
 operator|(
 name|test
 operator|=
-name|ucl_iterate_object
+name|ucl_object_iterate
 argument_list|(
 name|tests
 argument_list|,
@@ -648,7 +648,7 @@ condition|(
 operator|(
 name|elt
 operator|=
-name|ucl_iterate_object
+name|ucl_object_iterate
 argument_list|(
 name|obj
 argument_list|,

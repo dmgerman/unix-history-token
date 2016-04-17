@@ -287,6 +287,11 @@ name|state
 operator|=
 name|parse_err
 expr_stmt|;
+name|free
+argument_list|(
+name|st
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -697,6 +702,10 @@ name|free
 argument_list|(
 name|st
 argument_list|)
+expr_stmt|;
+name|st
+operator|=
+name|NULL
 expr_stmt|;
 name|p
 operator|++
