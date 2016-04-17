@@ -1938,11 +1938,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PIM_NCQ_KLUDGE
+name|PIM_ATA_EXT
 init|=
 literal|0x200
 block|,
-comment|/* Supports the sata ncq trim kludge */
+comment|/* ATA requests can understand ata_ext requests */
 name|PIM_EXTLUNS
 init|=
 literal|0x100
@@ -2497,13 +2497,16 @@ name|u_int8_t
 name|ata_flags
 decl_stmt|;
 comment|/* Flags for the rest of the buffer */
+define|#
+directive|define
+name|ATA_FLAG_AUX
+value|0x1
+name|uint32_t
+name|aux
+decl_stmt|;
 name|uint32_t
 name|unused
-index|[
-literal|2
-index|]
 decl_stmt|;
-comment|/* Keep the same size */
 block|}
 struct|;
 end_struct

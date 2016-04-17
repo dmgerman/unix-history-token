@@ -14550,6 +14550,36 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * It's a programming error to see AUXILIARY register requests. 	 */
+name|KASSERT
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|!=
+name|XPT_ATA_IO
+operator|||
+operator|(
+operator|(
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|ata_flags
+operator|&
+name|ATA_FLAG_AUX
+operator|)
+operator|==
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|"AUX register unsupported"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
