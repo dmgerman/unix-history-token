@@ -224,7 +224,10 @@ name|UCL_EINTERNAL
 block|,
 comment|/**< Internal unclassified error */
 name|UCL_ESSL
+block|,
 comment|/**< SSL error */
+name|UCL_EMERGE
+comment|/**< A merge error occured */
 block|}
 name|ucl_error_t
 typedef|;
@@ -298,28 +301,62 @@ name|ucl_parser_flags
 block|{
 name|UCL_PARSER_DEFAULT
 init|=
-literal|0x0
+literal|0
 block|,
 comment|/**< No special flags */
 name|UCL_PARSER_KEY_LOWERCASE
 init|=
-literal|0x1
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 block|,
 comment|/**< Convert all keys to lower case */
 name|UCL_PARSER_ZEROCOPY
 init|=
-literal|0x2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 block|,
 comment|/**< Parse input in zero-copy mode if possible */
 name|UCL_PARSER_NO_TIME
 init|=
-literal|0x4
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
 block|,
 comment|/**< Do not parse time and treat time values as strings */
 name|UCL_PARSER_NO_IMPLICIT_ARRAYS
 init|=
-literal|0x8
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
 comment|/** Create explicit arrays instead of implicit ones */
+name|UCL_PARSER_SAVE_COMMENTS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+comment|/** Save comments in the parser context */
+name|UCL_PARSER_DISABLE_MACRO
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+comment|/** Treat macros as comments */
 block|}
 name|ucl_parser_flags_t
 typedef|;
@@ -335,32 +372,56 @@ block|,
 comment|/**< Treat string as is */
 name|UCL_STRING_ESCAPE
 init|=
-literal|0x1
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 block|,
 comment|/**< Perform JSON escape */
 name|UCL_STRING_TRIM
 init|=
-literal|0x2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 block|,
 comment|/**< Trim leading and trailing whitespaces */
 name|UCL_STRING_PARSE_BOOLEAN
 init|=
-literal|0x4
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
 block|,
 comment|/**< Parse passed string and detect boolean */
 name|UCL_STRING_PARSE_INT
 init|=
-literal|0x8
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
 block|,
 comment|/**< Parse passed string and detect integer number */
 name|UCL_STRING_PARSE_DOUBLE
 init|=
-literal|0x10
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
 block|,
 comment|/**< Parse passed string and detect integer or float number */
 name|UCL_STRING_PARSE_TIME
 init|=
-literal|0x20
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
 block|,
 comment|/**< Parse time strings */
 name|UCL_STRING_PARSE_NUMBER
@@ -381,7 +442,11 @@ block|,
 comment|/**< 									Parse passed string (and detect booleans and numbers) */
 name|UCL_STRING_PARSE_BYTES
 init|=
-literal|0x40
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
 comment|/**< Treat numbers as bytes */
 block|}
 name|ucl_string_flags_t
@@ -678,7 +743,7 @@ name|priority
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
-comment|/**  * Create new object with userdata dtor  * @param dtor destructor function  * @return new object  */
+comment|/**  * Create new object with userdata dtor  * @param dtor destructor function  * @param emitter emitter for userdata  * @param ptr opaque pointer  * @return new object  */
 name|UCL_EXTERN
 name|ucl_object_t
 modifier|*
@@ -689,6 +754,10 @@ name|dtor
 argument_list|,
 name|ucl_userdata_emitter
 name|emitter
+argument_list|,
+name|void
+operator|*
+name|ptr
 argument_list|)
 name|UCL_WARN_UNUSED_RESULT
 decl_stmt|;
@@ -714,6 +783,32 @@ specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
+parameter_list|)
+function_decl|;
+comment|/**  * Converts ucl object type to its string representation  * @param type type of object  * @return constant string describing type  */
+name|UCL_EXTERN
+specifier|const
+name|char
+modifier|*
+name|ucl_object_type_to_string
+parameter_list|(
+name|ucl_type_t
+name|type
+parameter_list|)
+function_decl|;
+comment|/**  * Converts string that represents ucl type to real ucl type enum  * @param input C string with name of type  * @param res resulting target  * @return true if `input` is a name of type stored in `res`  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_string_to_type
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|,
+name|ucl_type_t
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 comment|/**  * Convert any string to an ucl object making the specified transformations  * @param str fixed size or NULL terminated string  * @param len length (if len is zero, than str is treated as NULL terminated)  * @param flags conversion flags  * @return new object  */
@@ -1297,7 +1392,7 @@ name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_object_find_key
+name|ucl_object_lookup
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1310,12 +1405,16 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_object_find_key
+value|ucl_object_lookup
 comment|/**  * Return object identified by a key in the specified object, if the first key is  * not found then look for the next one. This process is repeated unless  * the next argument in the list is not NULL. So, `ucl_object_find_any_key(obj, key, NULL)`  * is equal to `ucl_object_find_key(obj, key)`  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param ... list of alternative keys to search (NULL terminated)  * @return object matching the specified key or NULL if key was not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_object_find_any_key
+name|ucl_object_lookup_any
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1330,12 +1429,16 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_object_find_any_key
+value|ucl_object_lookup_any
 comment|/**  * Return object identified by a fixed size key in the specified object  * @param obj object to get a key from (must be of type UCL_OBJECT)  * @param key key to search  * @param klen length of a key  * @return object matching the specified key or NULL if key was not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_object_find_keyl
+name|ucl_object_lookup_len
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1351,12 +1454,16 @@ name|size_t
 name|klen
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_object_find_keyl
+value|ucl_object_lookup_len
 comment|/**  * Return object identified by dot notation string  * @param obj object to search in  * @param path dot.notation.path to the path to lookup. May use numeric .index on arrays  * @return object matched the specified path or NULL if path is not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_lookup_path
+name|ucl_object_lookup_path
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1369,12 +1476,16 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_lookup_path
+value|ucl_object_lookup_path
 comment|/**  * Return object identified by object notation string using arbitrary delimiter  * @param obj object to search in  * @param path dot.notation.path to the path to lookup. May use numeric .index on arrays  * @param sep the sepatorator to use in place of . (incase keys have . in them)  * @return object matched the specified path or NULL if path is not found  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_lookup_path_char
+name|ucl_object_lookup_path_char
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1390,6 +1501,10 @@ name|char
 name|sep
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_lookup_path_char
+value|ucl_object_lookup_path_char
 comment|/**  * Returns a key of an object as a NULL terminated string  * @param obj CL object  * @return key or NULL if there is no key  */
 name|UCL_EXTERN
 specifier|const
@@ -1464,6 +1579,24 @@ modifier|*
 name|o2
 parameter_list|)
 function_decl|;
+comment|/**  * Compare objects `o1` and `o2` useful for sorting  * @param o1 the first object  * @param o2 the second object  * @return values>0, 0 and<0 if `o1` is more than, equal and less than `o2`.  * The order of comparison:  * 1) Type of objects  * 2) Size of objects  * 3) Content of objects  */
+name|UCL_EXTERN
+name|int
+name|ucl_object_compare_qsort
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+modifier|*
+name|o1
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+modifier|*
+name|o2
+parameter_list|)
+function_decl|;
 comment|/**  * Sort UCL array using `cmp` compare function  * @param ar  * @param cmp  */
 name|UCL_EXTERN
 name|void
@@ -1530,7 +1663,7 @@ name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
 modifier|*
-name|ucl_iterate_object
+name|ucl_object_iterate
 parameter_list|(
 specifier|const
 name|ucl_object_t
@@ -1545,6 +1678,10 @@ name|bool
 name|expand_values
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ucl_iterate_object
+value|ucl_object_iterate
 comment|/**  * Create new safe iterator for the specified object  * @param obj object to iterate  * @return new iterator object that should be used with safe iterators API only  */
 name|UCL_EXTERN
 name|ucl_object_iter_t
@@ -2081,10 +2218,81 @@ modifier|*
 name|parser
 parameter_list|)
 function_decl|;
+comment|/**  * Get constant opaque pointer to comments structure for this parser. Increase  * refcount to prevent this object to be destroyed on parser's destruction  * @param parser parser structure  * @return ucl comments pointer or NULL  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_parser_get_comments
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|)
+function_decl|;
+comment|/**  * Utility function to find a comment object for the specified object in the input  * @param comments comments object  * @param srch search object  * @return string comment enclosed in ucl_object_t  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_comments_find
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|comments
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|srch
+parameter_list|)
+function_decl|;
+comment|/**  * Move comment from `from` object to `to` object  * @param comments comments object  * @param what source object  * @param whith destination object  * @return `true` if `from` has comment and it has been moved to `to`  */
+name|UCL_EXTERN
+name|bool
+name|ucl_comments_move
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|comments
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|from
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|to
+parameter_list|)
+function_decl|;
+comment|/**  * Adds a new comment for an object  * @param comments comments object  * @param obj object to add comment to  * @param comment string representation of a comment  */
+name|UCL_EXTERN
+name|void
+name|ucl_comments_add
+parameter_list|(
+name|ucl_object_t
+modifier|*
+name|comments
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|comment
+parameter_list|)
+function_decl|;
 comment|/**  * Add new public key to parser for signatures check  * @param parser parser object  * @param key PEM representation of a key  * @param len length of the key  * @param err if *err is NULL it is set to parser error  * @return true if a key has been successfully added  */
 name|UCL_EXTERN
 name|bool
-name|ucl_pubkey_add
+name|ucl_parser_pubkey_add
 parameter_list|(
 name|struct
 name|ucl_parser
@@ -2363,13 +2571,11 @@ name|ucl_object_t
 modifier|*
 name|top
 decl_stmt|;
-comment|/** The rest of context */
-name|unsigned
-name|char
-name|data
-index|[
-literal|1
-index|]
+comment|/** Optional comments */
+specifier|const
+name|ucl_object_t
+modifier|*
+name|comments
 decl_stmt|;
 block|}
 struct|;
@@ -2411,7 +2617,7 @@ modifier|*
 name|len
 parameter_list|)
 function_decl|;
-comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @param emitter a set of emitter functions  * @return dump of an object (must be freed after using) or NULL in case of error  */
+comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @param emitter a set of emitter functions  * @param comments optional comments for the parser  * @return dump of an object (must be freed after using) or NULL in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_object_emit_full
@@ -2429,6 +2635,11 @@ name|struct
 name|ucl_emitter_functions
 modifier|*
 name|emitter
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|comments
 parameter_list|)
 function_decl|;
 comment|/**  * Start streamlined UCL object emitter  * @param obj top UCL object  * @param emit_type emit type  * @param emitter a set of emitter functions  * @return new streamlined context that should be freed by  * `ucl_object_emit_streamline_finish`  */
@@ -2580,6 +2791,15 @@ comment|/**< constraint found */
 name|UCL_SCHEMA_MISSING_DEPENDENCY
 block|,
 comment|/**< missing dependency */
+name|UCL_SCHEMA_EXTERNAL_REF_MISSING
+block|,
+comment|/**< cannot fetch external ref */
+name|UCL_SCHEMA_EXTERNAL_REF_INVALID
+block|,
+comment|/**< invalid external ref */
+name|UCL_SCHEMA_INTERNAL_ERROR
+block|,
+comment|/**< something bad happened */
 name|UCL_SCHEMA_UNKNOWN
 comment|/**< generic error */
 block|}
@@ -2622,6 +2842,62 @@ specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
+parameter_list|,
+name|struct
+name|ucl_schema_error
+modifier|*
+name|err
+parameter_list|)
+function_decl|;
+comment|/**  * Validate object `obj` using schema object `schema` and root schema at `root`.  * @param schema schema object  * @param obj object to validate  * @param root root schema object  * @param err error pointer, if this parameter is not NULL and error has been  * occured, then `err` is filled with the exact error definition.  * @return true if `obj` is valid using `schema`  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_validate_root
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|schema
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|root
+parameter_list|,
+name|struct
+name|ucl_schema_error
+modifier|*
+name|err
+parameter_list|)
+function_decl|;
+comment|/**  * Validate object `obj` using schema object `schema` and root schema at `root`  * using some external references provided.  * @param schema schema object  * @param obj object to validate  * @param root root schema object  * @param ext_refs external references (might be modified during validation)  * @param err error pointer, if this parameter is not NULL and error has been  * occured, then `err` is filled with the exact error definition.  * @return true if `obj` is valid using `schema`  */
+name|UCL_EXTERN
+name|bool
+name|ucl_object_validate_root_ext
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|schema
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|root
+parameter_list|,
+name|ucl_object_t
+modifier|*
+name|ext_refs
 parameter_list|,
 name|struct
 name|ucl_schema_error

@@ -803,7 +803,7 @@ name|keylen
 condition|)
 block|{
 return|return
-name|strncmp
+name|memcmp
 argument_list|(
 name|k1
 operator|->
@@ -1551,7 +1551,7 @@ name|keylen
 condition|)
 block|{
 return|return
-name|strncasecmp
+name|memcmp
 argument_list|(
 name|k1
 operator|->
@@ -1704,7 +1704,6 @@ modifier|*
 name|hashlin
 parameter_list|,
 name|ucl_hash_free_func
-modifier|*
 name|func
 parameter_list|)
 block|{

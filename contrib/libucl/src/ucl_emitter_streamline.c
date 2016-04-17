@@ -67,34 +67,46 @@ struct|struct
 name|ucl_emitter_context_streamline
 block|{
 comment|/* Inherited from the main context */
+comment|/** Name of emitter (e.g. json, compact_json) */
 specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+comment|/** Unique id (e.g. UCL_EMIT_JSON for standard emitters */
 name|int
 name|id
 decl_stmt|;
+comment|/** A set of output functions */
 specifier|const
 name|struct
 name|ucl_emitter_functions
 modifier|*
 name|func
 decl_stmt|;
+comment|/** A set of output operations */
 specifier|const
 name|struct
 name|ucl_emitter_operations
 modifier|*
 name|ops
 decl_stmt|;
+comment|/** Current amount of indent tabs */
 name|unsigned
 name|int
-name|ident
+name|indent
 decl_stmt|;
+comment|/** Top level object */
 specifier|const
 name|ucl_object_t
 modifier|*
 name|top
+decl_stmt|;
+comment|/** Optional comments */
+specifier|const
+name|ucl_object_t
+modifier|*
+name|comments
 decl_stmt|;
 comment|/* Streamline specific fields */
 name|struct

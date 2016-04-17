@@ -42,7 +42,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
+function_decl|(
+modifier|*
 name|ucl_hash_cmp_func
+function_decl|)
 parameter_list|(
 specifier|const
 name|void
@@ -60,7 +63,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
+function_decl|(
+modifier|*
 name|ucl_hash_free_func
+function_decl|)
 parameter_list|(
 name|void
 modifier|*
@@ -123,7 +129,6 @@ modifier|*
 name|hashlin
 parameter_list|,
 name|ucl_hash_free_func
-modifier|*
 name|func
 parameter_list|)
 function_decl|;

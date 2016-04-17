@@ -108,7 +108,7 @@ condition|(
 operator|(
 name|obj
 operator|=
-name|ucl_iterate_object
+name|ucl_object_iterate
 argument_list|(
 name|tmp
 argument_list|,
@@ -235,7 +235,7 @@ condition|(
 operator|(
 name|cur
 operator|=
-name|ucl_iterate_object
+name|ucl_object_iterate
 argument_list|(
 name|obj
 argument_list|,
@@ -297,7 +297,7 @@ condition|(
 operator|(
 name|cur
 operator|=
-name|ucl_iterate_object
+name|ucl_object_iterate
 argument_list|(
 name|obj
 argument_list|,
@@ -848,7 +848,7 @@ argument_list|)
 expr_stmt|;
 name|par
 operator|=
-name|ucl_object_find_key
+name|ucl_object_lookup
 argument_list|(
 name|obj
 argument_list|,
