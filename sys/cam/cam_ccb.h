@@ -2494,22 +2494,16 @@ name|resid
 decl_stmt|;
 comment|/* Transfer residual length: 2's comp */
 name|u_int8_t
-name|tag_action
+name|ata_flags
 decl_stmt|;
-comment|/* What to do for tag queueing */
-comment|/* 	 * The tag action should be either the define below (to send a 	 * non-tagged transaction) or one of the defined scsi tag messages 	 * from scsi_message.h. 	 */
-define|#
-directive|define
-name|CAM_TAG_ACTION_NONE
-value|0x00
-name|u_int
-name|tag_id
+comment|/* Flags for the rest of the buffer */
+name|uint32_t
+name|unused
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* tag id from initator (target mode) */
-name|u_int
-name|init_id
-decl_stmt|;
-comment|/* initiator id of who selected */
+comment|/* Keep the same size */
 block|}
 struct|;
 end_struct
@@ -4628,6 +4622,7 @@ name|flags
 parameter_list|,
 name|u_int
 name|tag_action
+name|__unused
 parameter_list|,
 name|u_int8_t
 modifier|*
@@ -4694,9 +4689,9 @@ name|dxfer_len
 expr_stmt|;
 name|ataio
 operator|->
-name|tag_action
+name|ata_flags
 operator|=
-name|tag_action
+literal|0
 expr_stmt|;
 block|}
 end_function

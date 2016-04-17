@@ -8343,7 +8343,7 @@ name|adadone
 argument_list|,
 name|rw_op
 argument_list|,
-name|tag_code
+literal|0
 argument_list|,
 name|data_ptr
 argument_list|,

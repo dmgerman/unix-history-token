@@ -5018,14 +5018,9 @@ name|ataio
 operator|.
 name|resid
 argument_list|,
-name|ccb
-operator|->
-name|ataio
-operator|.
-name|tag_action
-operator|&
-literal|0x3
+literal|0
 argument_list|,
+comment|/* Not used in ATA */
 operator|(
 operator|(
 name|ccb
