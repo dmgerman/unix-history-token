@@ -2148,10 +2148,12 @@ operator|->
 name|write_stats
 operator|.
 name|current
+operator|&&
+name|iosched_debug
 condition|)
 name|printf
 argument_list|(
-literal|"Steering write from %d kBps to %d kBps due to latency of %ldus\n"
+literal|"Steering write from %d kBps to %d kBps due to latency of %jdms\n"
 argument_list|,
 name|old
 argument_list|,
@@ -2161,7 +2163,10 @@ name|write_stats
 operator|.
 name|current
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|(
 name|uint64_t
 operator|)
@@ -2171,7 +2176,7 @@ operator|(
 name|uint32_t
 operator|)
 name|lat
-operator|)
+argument_list|)
 operator|>>
 literal|32
 argument_list|)
