@@ -720,10 +720,6 @@ modifier|*
 name|td_limit
 decl_stmt|;
 comment|/* (k) Resource limits. */
-name|u_int
-name|td_estcpu
-decl_stmt|;
-comment|/* (t) estimated cpu utilization */
 name|int
 name|td_slptick
 decl_stmt|;

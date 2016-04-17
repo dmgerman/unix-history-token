@@ -4096,9 +4096,10 @@ name|kp
 operator|->
 name|ki_estcpu
 operator|+=
+name|sched_estcpu
+argument_list|(
 name|td
-operator|->
-name|td_estcpu
+argument_list|)
 expr_stmt|;
 name|thread_unlock
 argument_list|(
@@ -5677,9 +5678,10 @@ name|kp
 operator|->
 name|ki_estcpu
 operator|=
+name|sched_estcpu
+argument_list|(
 name|td
-operator|->
-name|td_estcpu
+argument_list|)
 expr_stmt|;
 name|kp
 operator|->

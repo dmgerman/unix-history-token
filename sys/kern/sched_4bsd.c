@@ -257,7 +257,7 @@ value|(MAXCOMLEN + sizeof(" td ") + sizeof(__XSTRING(UINT_MAX)))
 end_define
 
 begin_comment
-comment|/*  * The schedulable entity that runs a context.  * This is  an extension to the thread structure and is tailored to  * the requirements of this scheduler  */
+comment|/*  * The schedulable entity that runs a context.  * This is  an extension to the thread structure and is tailored to  * the requirements of this scheduler.  * All fields are protected by the scheduler lock.  */
 end_comment
 
 begin_struct
@@ -267,15 +267,19 @@ block|{
 name|fixpt_t
 name|ts_pctcpu
 decl_stmt|;
-comment|/* (j) %cpu during p_swtime. */
+comment|/* %cpu during p_swtime. */
+name|u_int
+name|ts_estcpu
+decl_stmt|;
+comment|/* Estimated cpu utilization. */
 name|int
 name|ts_cpticks
 decl_stmt|;
-comment|/* (j) Ticks of cpu time. */
+comment|/* Ticks of cpu time. */
 name|int
 name|ts_slptime
 decl_stmt|;
-comment|/* (j) Seconds !RUNNING. */
+comment|/* Seconds !RUNNING. */
 name|int
 name|ts_slice
 decl_stmt|;
@@ -1706,7 +1710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Constants for digital decay and forget:  *	90% of (td_estcpu) usage in 5 * loadav time  *	95% of (ts_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that schedclock() updates td_estcpu and p_cpticks asynchronously.  *  * We wish to decay away 90% of td_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		td_estcpu *= decay;  * will compute  * 	td_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
+comment|/*  * Constants for digital decay and forget:  *	90% of (ts_estcpu) usage in 5 * loadav time  *	95% of (ts_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that schedclock() updates ts_estcpu and p_cpticks asynchronously.  *  * We wish to decay away 90% of ts_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		ts_estcpu *= decay;  * will compute  * 	ts_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
 end_comment
 
 begin_comment
@@ -2111,17 +2115,17 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|=
 name|decay_cpu
 argument_list|(
 name|loadfac
 argument_list|,
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 argument_list|)
 expr_stmt|;
 name|resetpriority
@@ -2188,7 +2192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max td_estcpu of 255, sleeping for at  * least six times the loadfactor will decay td_estcpu to zero.  */
+comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max ts_estcpu of 255, sleeping for at  * least six times the loadfactor will decay ts_estcpu to zero.  */
 end_comment
 
 begin_function
@@ -2242,9 +2246,9 @@ literal|5
 operator|*
 name|loadfac
 condition|)
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|=
 literal|0
 expr_stmt|;
@@ -2252,9 +2256,9 @@ else|else
 block|{
 name|newcpu
 operator|=
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 expr_stmt|;
 name|ts
 operator|->
@@ -2280,9 +2284,9 @@ argument_list|,
 name|newcpu
 argument_list|)
 expr_stmt|;
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|=
 name|newcpu
 expr_stmt|;
@@ -2305,9 +2309,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-specifier|register
-name|unsigned
-name|int
+name|u_int
 name|newpriority
 decl_stmt|;
 if|if
@@ -2315,17 +2317,19 @@ condition|(
 name|td
 operator|->
 name|td_pri_class
-operator|==
+operator|!=
 name|PRI_TIMESHARE
 condition|)
-block|{
+return|return;
 name|newpriority
 operator|=
 name|PUSER
 operator|+
 name|td
 operator|->
-name|td_estcpu
+name|td_sched
+operator|->
+name|ts_estcpu
 operator|/
 name|INVERSE_ESTCPU_WEIGHT
 operator|+
@@ -2362,7 +2366,6 @@ argument_list|,
 name|newpriority
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2627,7 +2630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We adjust the priority of the current process.  The priority of  * a process gets worse as it accumulates CPU time.  The cpu usage  * estimator (td_estcpu) is increased here.  resetpriority() will  * compute a different priority each time td_estcpu increases by  * INVERSE_ESTCPU_WEIGHT  * (until MAXPRI is reached).  The cpu usage estimator ramps up  * quite quickly when the process is running (linearly), and decays  * away exponentially, at a rate which is proportionally slower when  * the system is busy.  The basic principle is that the system will  * 90% forget that the process used a lot of CPU time in 5 * loadav  * seconds.  This causes the system to favor processes which haven't  * run much recently, and to round-robin among other processes.  */
+comment|/*  * We adjust the priority of the current process.  The priority of a  * process gets worse as it accumulates CPU time.  The cpu usage  * estimator (ts_estcpu) is increased here.  resetpriority() will  * compute a different priority each time ts_estcpu increases by  * INVERSE_ESTCPU_WEIGHT (until PRI_MAX_TIMESHARE is reached).  The  * cpu usage estimator ramps up quite quickly when the process is  * running (linearly), and decays away exponentially, at a rate which  * is proportionally slower when the system is busy.  The basic  * principle is that the system will 90% forget that the process used  * a lot of CPU time in 5 * loadav seconds.  This causes the system to  * favor processes which haven't run much recently, and to round-robin  * among other processes.  */
 end_comment
 
 begin_function
@@ -2668,15 +2671,15 @@ operator|->
 name|ts_cpticks
 operator|++
 expr_stmt|;
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|=
 name|ESTCPULIM
 argument_list|(
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|+
 literal|1
 argument_list|)
@@ -2684,9 +2687,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|td
+name|ts
 operator|->
-name|td_estcpu
+name|ts_estcpu
 operator|%
 name|INVERSE_ESTCPU_WEIGHT
 operator|)
@@ -2862,17 +2865,23 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_estcpu
+name|td_sched
+operator|->
+name|ts_estcpu
 operator|=
 name|ESTCPULIM
 argument_list|(
 name|td
 operator|->
-name|td_estcpu
+name|td_sched
+operator|->
+name|ts_estcpu
 operator|+
 name|child
 operator|->
-name|td_estcpu
+name|td_sched
+operator|->
+name|ts_estcpu
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -2967,14 +2976,6 @@ name|NOCPU
 expr_stmt|;
 name|childtd
 operator|->
-name|td_estcpu
-operator|=
-name|td
-operator|->
-name|td_estcpu
-expr_stmt|;
-name|childtd
-operator|->
 name|td_lock
 operator|=
 operator|&
@@ -3015,6 +3016,16 @@ operator|*
 name|ts
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ts
+operator|->
+name|ts_estcpu
+operator|=
+name|td
+operator|->
+name|td_sched
+operator|->
+name|ts_estcpu
 expr_stmt|;
 name|ts
 operator|->
@@ -6616,13 +6627,25 @@ directive|endif
 end_endif
 
 begin_function
-name|void
-name|sched_tick
+name|u_int
+name|sched_estcpu
 parameter_list|(
-name|int
-name|cnt
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
-block|{ }
+block|{
+return|return
+operator|(
+name|td
+operator|->
+name|td_sched
+operator|->
+name|ts_estcpu
+operator|)
+return|;
+block|}
 end_function
 
 begin_comment

@@ -9926,18 +9926,23 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Called once per hz tick.  */
-end_comment
-
 begin_function
-name|void
-name|sched_tick
+name|u_int
+name|sched_estcpu
 parameter_list|(
-name|int
-name|cnt
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
 parameter_list|)
-block|{  }
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_function
 
 begin_comment

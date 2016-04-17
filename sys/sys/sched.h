@@ -158,6 +158,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|sched_estcpu
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sched_fork_thread
 parameter_list|(
@@ -332,18 +344,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|sched_preempt
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -411,7 +411,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sched_rem
+name|sched_preempt
 parameter_list|(
 name|struct
 name|thread
@@ -423,10 +423,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sched_tick
+name|sched_rem
 parameter_list|(
-name|int
-name|cnt
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1807,11 +1807,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|sched_tick
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_flags
@@ -2204,11 +2199,6 @@ block|}
 name|thread_lock
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-name|sched_tick
-argument_list|(
-name|cnt
 argument_list|)
 expr_stmt|;
 name|td
