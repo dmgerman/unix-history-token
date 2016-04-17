@@ -576,6 +576,8 @@ decl_stmt|;
 name|struct
 name|spi_command
 name|cmd
+init|=
+name|SPI_COMMAND_INITIALIZER
 decl_stmt|;
 name|int
 name|err
@@ -704,6 +706,8 @@ decl_stmt|;
 name|struct
 name|spi_command
 name|cmd
+init|=
+name|SPI_COMMAND_INITIALIZER
 decl_stmt|;
 name|int
 name|err
@@ -1557,6 +1561,8 @@ decl_stmt|;
 name|struct
 name|spi_command
 name|cmd
+init|=
+name|SPI_COMMAND_INITIALIZER
 decl_stmt|;
 name|device_t
 name|dev

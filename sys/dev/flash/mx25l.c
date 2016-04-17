@@ -2363,6 +2363,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2391,6 +2397,11 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
