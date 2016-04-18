@@ -4845,6 +4845,12 @@ name|iv_ampdu_density
 operator|=
 name|IEEE80211_HTCAP_MPDUDENSITY_16
 expr_stmt|;
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+operator|=
+name|IEEE80211_HTCAP_MAXRXAMPDU_64K
+expr_stmt|;
 if|if
 condition|(
 name|opmode
