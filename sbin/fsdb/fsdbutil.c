@@ -1727,7 +1727,7 @@ if|if
 condition|(
 name|bufp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
