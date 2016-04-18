@@ -483,7 +483,7 @@ literal|"r"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|set_input
