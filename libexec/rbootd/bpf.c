@@ -960,7 +960,7 @@ operator|)
 expr_stmt|;
 name|mp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|minunit
 operator|=
@@ -1114,7 +1114,7 @@ if|if
 condition|(
 name|mp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|(
