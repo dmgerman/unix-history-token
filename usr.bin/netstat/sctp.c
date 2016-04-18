@@ -471,7 +471,7 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|hp
@@ -2851,7 +2851,7 @@ name|len
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|xo_warnx
