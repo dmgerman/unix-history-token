@@ -2257,7 +2257,7 @@ if|if
 condition|(
 name|bin
 operator|==
-literal|0
+name|NULL
 condition|)
 name|abort
 argument_list|()
@@ -2596,7 +2596,7 @@ if|if
 condition|(
 name|man
 operator|==
-literal|0
+name|NULL
 condition|)
 name|abort
 argument_list|()
@@ -2793,7 +2793,7 @@ if|if
 condition|(
 name|src
 operator|==
-literal|0
+name|NULL
 condition|)
 name|abort
 argument_list|()
@@ -3139,7 +3139,7 @@ if|if
 condition|(
 name|src
 operator|==
-literal|0
+name|NULL
 condition|)
 name|abort
 argument_list|()
