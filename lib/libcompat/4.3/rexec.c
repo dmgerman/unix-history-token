@@ -920,7 +920,7 @@ condition|(
 operator|*
 name|aname
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
@@ -977,7 +977,7 @@ operator|(
 operator|*
 name|aname
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strcmp
 argument_list|(
@@ -1034,7 +1034,7 @@ operator|&&
 operator|*
 name|apass
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
@@ -1117,7 +1117,7 @@ operator|&&
 operator|*
 name|aacct
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
@@ -1611,7 +1611,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|herror
