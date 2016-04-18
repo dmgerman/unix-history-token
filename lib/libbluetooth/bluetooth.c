@@ -252,7 +252,7 @@ init|;
 operator|*
 name|cp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|cp
 operator|++
@@ -851,7 +851,7 @@ init|;
 operator|*
 name|cp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|cp
 operator|++
