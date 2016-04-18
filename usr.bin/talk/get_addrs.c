@@ -191,7 +191,7 @@ if|if
 condition|(
 name|sp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
