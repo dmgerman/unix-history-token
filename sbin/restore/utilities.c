@@ -152,7 +152,7 @@ if|if
 condition|(
 name|start
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 for|for

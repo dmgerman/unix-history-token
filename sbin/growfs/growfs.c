@@ -6231,7 +6231,7 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|snprintf
