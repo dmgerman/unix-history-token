@@ -1006,7 +1006,9 @@ name|struct
 name|ip
 modifier|*
 name|outer_ip
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|ip
 modifier|*
 name|inner_ip
 decl_stmt|;

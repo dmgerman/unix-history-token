@@ -1958,11 +1958,6 @@ modifier|*
 name|stcb
 parameter_list|,
 name|struct
-name|sctp_stream_in
-modifier|*
-name|strm
-parameter_list|,
-name|struct
 name|sctp_queued_to_read
 modifier|*
 name|control
@@ -2062,7 +2057,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Reass %x, CI:%x,TSN=%8.8x,SID=%4.4x,FSN=%4.4x, SSN:%4.4x"
+literal|"Reass %x,CI:%x,TSN=%8.8x,SID=%4.4x,FSN=%4.4x,SSN:%4.4x"
 argument_list|,
 name|opspot
 argument_list|,
@@ -2914,17 +2909,6 @@ name|control
 argument_list|)
 condition|)
 block|{
-name|char
-name|msg
-index|[
-name|SCTP_DIAG_INFO_LEN
-index|]
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|oper
-decl_stmt|;
 name|snprintf
 argument_list|(
 name|msg
@@ -2948,7 +2932,7 @@ argument_list|,
 name|control
 argument_list|)
 expr_stmt|;
-name|oper
+name|op_err
 operator|=
 name|sctp_generate_cause
 argument_list|(
@@ -2975,7 +2959,7 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|oper
+name|op_err
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -4030,6 +4014,10 @@ argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -4133,6 +4121,10 @@ argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return
@@ -4166,11 +4158,6 @@ name|struct
 name|sctp_association
 modifier|*
 name|asoc
-parameter_list|,
-name|struct
-name|sctp_stream_in
-modifier|*
-name|strm
 parameter_list|,
 name|struct
 name|sctp_queued_to_read
@@ -4293,8 +4280,6 @@ comment|/* 				 * Ok this should not happen, if it does we 				 * started the pd
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -4609,8 +4594,6 @@ name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
 argument_list|,
-name|strm
-argument_list|,
 name|control
 argument_list|,
 name|chk
@@ -4784,15 +4767,6 @@ operator|)
 condition|)
 block|{
 comment|/* Special handling needed for "old" data format */
-name|nctl
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|control
-argument_list|,
-name|next_instrm
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sctp_handle_old_data
@@ -5994,8 +5968,6 @@ name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
 argument_list|,
-name|strm
-argument_list|,
 name|control
 argument_list|,
 name|chk
@@ -6054,8 +6026,6 @@ name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
 argument_list|,
-name|strm
-argument_list|,
 name|control
 argument_list|,
 name|chk
@@ -6093,8 +6063,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|asoc
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -6146,8 +6114,6 @@ comment|/* 			 * Error on senders part, they either sent us two 			 * data chunk
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -6356,8 +6322,6 @@ name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
 argument_list|,
-name|strm
-argument_list|,
 name|control
 argument_list|,
 name|chk
@@ -6411,8 +6375,6 @@ expr_stmt|;
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -6481,8 +6443,6 @@ name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
 argument_list|,
-name|strm
-argument_list|,
 name|control
 argument_list|,
 name|chk
@@ -6538,8 +6498,6 @@ expr_stmt|;
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -6688,8 +6646,6 @@ expr_stmt|;
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
-argument_list|,
-name|strm
 argument_list|,
 name|control
 argument_list|,
@@ -6956,6 +6912,10 @@ argument_list|(
 name|stcb
 operator|->
 name|sctp_ep
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -7420,11 +7380,6 @@ name|clen
 condition|)
 block|{
 comment|/* 		 * Need to send an abort since we had a empty data chunk. 		 */
-name|struct
-name|mbuf
-modifier|*
-name|op_err
-decl_stmt|;
 name|op_err
 operator|=
 name|sctp_generate_no_user_data_cause
@@ -7470,18 +7425,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|ordered
-operator|=
-operator|(
-operator|(
-name|chunk_flags
-operator|&
-name|SCTP_DATA_UNORDERED
-operator|)
-operator|==
-literal|0
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

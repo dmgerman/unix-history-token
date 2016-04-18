@@ -1194,7 +1194,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-break|break;
 comment|/* Update the path MTU. */
 if|if
 condition|(
@@ -1451,6 +1450,10 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
+call|(
+name|int32_t
+call|)
+argument_list|(
 name|ip6cp
 operator|->
 name|ip6c_off
@@ -1461,6 +1464,7 @@ expr|struct
 name|sctphdr
 argument_list|,
 name|checksum
+argument_list|)
 argument_list|)
 condition|)
 block|{
