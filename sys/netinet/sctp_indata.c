@@ -2770,6 +2770,9 @@ argument_list|,
 name|next_instrm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 else|else
 block|{
@@ -2784,6 +2787,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|control
 operator|->
@@ -3215,11 +3220,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Control broken"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+return|return;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4869,6 +4882,9 @@ operator|->
 name|on_strm_q
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -4890,6 +4906,8 @@ name|on_strm_q
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5117,6 +5135,9 @@ operator|->
 name|on_strm_q
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -5138,6 +5159,8 @@ name|on_strm_q
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5321,6 +5344,9 @@ operator|->
 name|on_strm_q
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -5342,6 +5368,8 @@ name|on_strm_q
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5784,6 +5812,9 @@ name|on_strm_q
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 elseif|else
 if|if
@@ -5804,6 +5835,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|control
@@ -24325,6 +24358,9 @@ argument_list|,
 name|next_instrm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 else|else
 block|{
@@ -24341,6 +24377,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ctl
 operator|->
@@ -24600,6 +24638,9 @@ argument_list|,
 name|next_instrm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 else|else
 block|{
@@ -24616,6 +24657,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ctl
 operator|->
@@ -25814,6 +25857,9 @@ argument_list|,
 name|next_instrm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 elseif|else
 if|if
@@ -25836,6 +25882,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ctl
 operator|->

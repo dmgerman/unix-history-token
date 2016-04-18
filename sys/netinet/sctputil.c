@@ -28947,6 +28947,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -28968,6 +28971,8 @@ name|on_strm_q
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|sctp_free_remote_addr
 argument_list|(
 name|control
@@ -30945,6 +30950,9 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 name|control
@@ -30966,6 +30974,8 @@ name|on_strm_q
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|sctp_free_a_readq
 argument_list|(
 name|stcb

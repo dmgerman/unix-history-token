@@ -4681,6 +4681,9 @@ name|on_strm_q
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 block|}
 else|else
 block|{
@@ -4699,6 +4702,8 @@ operator|->
 name|on_strm_q
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|asoc
