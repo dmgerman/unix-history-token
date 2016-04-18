@@ -830,6 +830,14 @@ comment|/* 	 * XXX Chicken-and-egg problem; we want to have console output 	 * e
 name|cons_probe
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Initialise the block cache. Set the upper limit. 	 */
+name|bcache_init
+argument_list|(
+literal|32768
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Parse the args to set the console settings, etc 	 * boot1.efi passes these in, if it can read /boot.config or /boot/config 	 * or iPXE may be setup to pass these in. 	 * 	 * Loop through the args, and for each one that contains an '=' that is 	 * not the first character, add it to the environment.  This allows 	 * loader and kernel env vars to be passed on the command line.  Convert 	 * args from UCS-2 to ASCII (16 to 8 bit) as they are copied. 	 */
 name|howto
 operator|=

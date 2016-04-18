@@ -583,6 +583,9 @@ name|daddr_t
 name|dblk
 parameter_list|,
 name|size_t
+name|offset
+parameter_list|,
+name|size_t
 name|size
 parameter_list|,
 name|char

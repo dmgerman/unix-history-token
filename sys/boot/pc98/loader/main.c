@@ -606,15 +606,14 @@ expr_stmt|;
 name|cons_probe
 argument_list|()
 expr_stmt|;
-comment|/*      * Initialise the block cache      */
+comment|/*      * Initialise the block cache. Set the upper limit.      */
 name|bcache_init
 argument_list|(
-literal|32
+literal|32768
 argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-comment|/* 16k cache XXX tune this */
 comment|/*      * Special handling for PXE and CD booting.      */
 if|if
 condition|(

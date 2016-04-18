@@ -1307,6 +1307,8 @@ name|F_READ
 argument_list|,
 name|EXT2_SBLOCK
 argument_list|,
+literal|0
+argument_list|,
 name|EXT2_SBSIZE
 argument_list|,
 operator|(
@@ -1575,6 +1577,8 @@ operator|+
 name|EXT2_SBSIZE
 operator|/
 name|DEV_BSIZE
+argument_list|,
+literal|0
 argument_list|,
 name|len
 argument_list|,
@@ -2003,6 +2007,8 @@ argument_list|,
 name|disk_block
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 name|fs
 operator|->
 name|fs_bsize
@@ -2249,6 +2255,8 @@ name|f_bg
 argument_list|,
 name|inumber
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|fs
 operator|->
@@ -2613,6 +2621,8 @@ argument_list|,
 name|ind_block_num
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 name|fs
 operator|->
 name|fs_bsize
@@ -2946,6 +2956,8 @@ name|fs
 argument_list|,
 name|disk_block
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|block_size
 argument_list|,

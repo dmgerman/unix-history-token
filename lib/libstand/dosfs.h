@@ -328,15 +328,6 @@ modifier|*
 name|fd
 decl_stmt|;
 comment|/* file descriptor */
-name|u_char
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* buffer */
-name|u_int
-name|bufsec
-decl_stmt|;
-comment|/* buffered sector */
 name|u_int
 name|links
 decl_stmt|;

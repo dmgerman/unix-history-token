@@ -3675,7 +3675,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|intp
@@ -3825,6 +3825,11 @@ name|mdp
 operator|->
 name|d_path
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|cp
 argument_list|,
 name|clen
@@ -3845,6 +3850,11 @@ name|mdp
 operator|->
 name|d_path
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|best
 argument_list|,
 name|blen

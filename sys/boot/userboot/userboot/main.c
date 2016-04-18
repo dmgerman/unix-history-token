@@ -425,6 +425,14 @@ name|userboot_zfs_probe
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Initialise the block cache. Set the upper limit. 	 */
+name|bcache_init
+argument_list|(
+literal|32768
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
 comment|/* 	 * March through the device switch probing for things. 	 */
 for|for
 control|(

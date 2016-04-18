@@ -786,6 +786,8 @@ name|F_READ
 argument_list|,
 name|offset
 argument_list|,
+literal|0
+argument_list|,
 name|blocks
 operator|*
 name|od
@@ -1184,6 +1186,8 @@ name|d_offset
 operator|+
 name|offset
 argument_list|,
+literal|0
+argument_list|,
 name|blocks
 operator|*
 name|od
@@ -1259,6 +1263,8 @@ operator|->
 name|d_offset
 operator|+
 name|offset
+argument_list|,
+literal|0
 argument_list|,
 name|blocks
 operator|*

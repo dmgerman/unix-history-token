@@ -167,6 +167,8 @@ name|daddr_t
 parameter_list|,
 name|size_t
 parameter_list|,
+name|size_t
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -267,6 +269,9 @@ name|rw
 parameter_list|,
 name|daddr_t
 name|blk
+parameter_list|,
+name|size_t
+name|offset
 parameter_list|,
 name|size_t
 name|size
