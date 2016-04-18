@@ -218,7 +218,7 @@ if|if
 condition|(
 name|host
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 operator|*
@@ -335,7 +335,7 @@ name|ai0
 init|;
 name|ai
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ai
 operator|=
