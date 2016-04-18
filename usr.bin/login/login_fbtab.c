@@ -236,7 +236,7 @@ name|WSPACE
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 comment|/* empty or comment */
@@ -267,7 +267,7 @@ name|WSPACE
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|*
 name|cp
@@ -309,7 +309,7 @@ name|WSPACE
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|syslog
