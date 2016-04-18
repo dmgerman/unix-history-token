@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -385,19 +391,6 @@ ifndef|#
 directive|ifndef
 name|PIC
 end_ifndef
-
-begin_define
-define|#
-directive|define
-name|round
-parameter_list|(
-name|size
-parameter_list|,
-name|align
-parameter_list|)
-define|\
-value|(((size) + (align) - 1)& ~((align) - 1))
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -852,7 +845,7 @@ decl_stmt|;
 comment|/* 	 * Figure out the size of the initial TLS block so that we can 	 * find stuff which ___tls_get_addr() allocated dynamically. 	 */
 name|size
 operator|=
-name|round
+name|roundup2
 argument_list|(
 name|tls_static_space
 argument_list|,
@@ -941,7 +934,7 @@ name|oldsegbase
 decl_stmt|;
 name|size
 operator|=
-name|round
+name|roundup2
 argument_list|(
 name|tls_static_space
 argument_list|,
@@ -1424,7 +1417,7 @@ condition|)
 block|{
 name|tls_static_space
 operator|=
-name|round
+name|roundup2
 argument_list|(
 name|phdr
 index|[
