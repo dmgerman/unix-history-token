@@ -8788,13 +8788,15 @@ block|}
 comment|/* Make certain there are enough descriptors */
 if|if
 condition|(
-name|nsegs
-operator|>
 name|txr
 operator|->
 name|tx_avail
-operator|-
+operator|<
+operator|(
+name|nsegs
+operator|+
 literal|2
+operator|)
 condition|)
 block|{
 name|txr
