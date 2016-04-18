@@ -1460,7 +1460,7 @@ name|file
 modifier|*
 name|fp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|void
 modifier|*
@@ -1494,7 +1494,7 @@ name|iso_directory_record
 modifier|*
 name|dp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|rc
@@ -2224,7 +2224,7 @@ name|f
 operator|->
 name|f_fsdata
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(

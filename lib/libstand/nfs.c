@@ -2342,7 +2342,7 @@ argument_list|)
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|cp
 operator|=
@@ -2642,7 +2642,7 @@ argument_list|)
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -2657,7 +2657,7 @@ name|newfd
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|error
@@ -5703,7 +5703,7 @@ argument_list|)
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|cp
 operator|=
@@ -6018,7 +6018,7 @@ argument_list|)
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 continue|continue;
 block|}
@@ -6033,7 +6033,7 @@ name|newfd
 expr_stmt|;
 name|newfd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|error
