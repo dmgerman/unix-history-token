@@ -36548,7 +36548,8 @@ name|uint32_t
 name|to_move
 decl_stmt|,
 name|length
-decl_stmt|,
+decl_stmt|;
+name|int
 name|leading
 decl_stmt|;
 name|uint8_t
@@ -37953,9 +37954,6 @@ condition|)
 block|{
 name|leading
 operator|=
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -37967,9 +37965,6 @@ else|else
 block|{
 name|leading
 operator|=
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct

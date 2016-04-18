@@ -12731,9 +12731,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|size_t
-operator|)
 name|chk_length
 operator|<
 name|clen
