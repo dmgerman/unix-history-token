@@ -124,6 +124,13 @@ name|SYSCFG1_USB_HOST_MODE
 value|(1<<10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT3350_CHIPID0_3
+value|0x33335452
+end_define
+
 begin_function_decl
 specifier|extern
 name|uint32_t
