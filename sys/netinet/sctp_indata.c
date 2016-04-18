@@ -2363,7 +2363,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INDATA1
 argument_list|,
-literal|"Duplicate S-SEQ:%d delivered:%d from peer, Abort association\n"
+literal|"Duplicate S-SEQ: %u delivered: %u from peer, Abort association\n"
 argument_list|,
 name|control
 operator|->
@@ -2775,7 +2775,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"Huh control:%p is on_strm_q:%d"
+literal|"Huh control: %p is on_strm_q: %d"
 argument_list|,
 name|control
 argument_list|,
@@ -2929,7 +2929,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Queue to str mid:%d duplicate"
+literal|"Queue to str msg_id: %u duplicate"
 argument_list|,
 name|control
 operator|->
@@ -4203,7 +4203,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk is a first fsn:%d becomes fsn_included\n"
+literal|"chunk is a first fsn: %u becomes fsn_included\n"
 argument_list|,
 name|chk
 operator|->
@@ -4824,7 +4824,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Looking at control:%p e(%d) ssn:%d top_fsn:%d inc_fsn:%d -uo\n"
+literal|"Looking at control: %p e(%d) ssn: %u top_fsn: %u inc_fsn: %u -uo\n"
 argument_list|,
 name|control
 argument_list|,
@@ -4880,7 +4880,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Huh control:%p on_q:%d -- not unordered?"
+literal|"Huh control: %p on_q: %d -- not unordered?"
 argument_list|,
 name|control
 argument_list|,
@@ -5078,7 +5078,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Looking at control:%p e(%d) ssn:%d top_fsn:%d inc_fsn:%d (lastdel:%d)- o\n"
+literal|"Looking at control: %p e(%d) ssn: %u top_fsn: %u inc_fsn: %u (lastdel: %u)- o\n"
 argument_list|,
 name|control
 argument_list|,
@@ -5128,7 +5128,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Huh control:%p on_q:%d -- not ordered?"
+literal|"Huh control: %p on_q: %d -- not ordered?"
 argument_list|,
 name|control
 argument_list|,
@@ -5256,7 +5256,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Looking at control:%p e(%d) ssn:%d top_fsn:%d inc_fsn:%d (nxtdel:%d)- o\n"
+literal|"Looking at control: %p e(%d) ssn: %u top_fsn: %u inc_fsn: %u (nxtdel: %u)- o\n"
 argument_list|,
 name|control
 argument_list|,
@@ -5332,7 +5332,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Huh control:%p on_q:%d -- not ordered?"
+literal|"Huh control: %p on_q: %d -- not ordered?"
 argument_list|,
 name|control
 argument_list|,
@@ -5795,7 +5795,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Unknown state on ctrl:%p on_strm_q:%d"
+literal|"Unknown state on ctrl: %p on_strm_q: %d"
 argument_list|,
 name|control
 argument_list|,
@@ -6097,7 +6097,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk is a first fsn:%d becomes fsn_included\n"
+literal|"chunk is a first fsn: %u becomes fsn_included\n"
 argument_list|,
 name|chk
 operator|->
@@ -6235,7 +6235,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"We have a new top_fsn:%d\n"
+literal|"We have a new top_fsn: %u\n"
 argument_list|,
 name|chk
 operator|->
@@ -6276,7 +6276,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"The last fsn is now in place fsn:%d\n"
+literal|"The last fsn is now in place fsn: %u\n"
 argument_list|,
 name|chk
 operator|->
@@ -6366,7 +6366,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Duplicate last fsn:%d (top:%d) -- abort\n"
+literal|"Duplicate last fsn: %u (top: %u) -- abort\n"
 argument_list|,
 name|chk
 operator|->
@@ -6435,7 +6435,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"New fsn:%d is already seen in included_fsn:%d -- abort\n"
+literal|"New fsn: %u is already seen in included_fsn: %u -- abort\n"
 argument_list|,
 name|chk
 operator|->
@@ -6493,7 +6493,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"New fsn:%d is beyond or at top_fsn:%d -- abort\n"
+literal|"New fsn: %u is beyond or at top_fsn: %u -- abort\n"
 argument_list|,
 name|chk
 operator|->
@@ -6533,7 +6533,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk is a not first fsn:%d needs to be inserted\n"
+literal|"chunk is a not first fsn: %u needs to be inserted\n"
 argument_list|,
 name|chk
 operator|->
@@ -6580,7 +6580,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Insert it before fsn:%d\n"
+literal|"Insert it before fsn: %u\n"
 argument_list|,
 name|at
 operator|->
@@ -6647,7 +6647,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Duplicate to fsn:%d -- abort\n"
+literal|"Duplicate to fsn: %u -- abort\n"
 argument_list|,
 name|at
 operator|->
@@ -6690,7 +6690,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Inserting at tail of list fsn:%d\n"
+literal|"Inserting at tail of list fsn: %u\n"
 argument_list|,
 name|chk
 operator|->
@@ -6780,7 +6780,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Adding more to control:%p at:%p fsn:%d next_fsn:%d included:%d\n"
+literal|"Adding more to control: %p at: %p fsn: %u next_fsn: %u included: %u\n"
 argument_list|,
 name|control
 argument_list|,
@@ -8256,7 +8256,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk_flags:0x%x dup detected on msg_id:%d\n"
+literal|"chunk_flags: 0x%x dup detected on msg_id: %u\n"
 argument_list|,
 name|chunk_flags
 argument_list|,
@@ -8758,7 +8758,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INDATA1
 argument_list|,
-literal|"EVIL/Broken-Dup S-SEQ:%d delivered:%d from peer, Abort!\n"
+literal|"EVIL/Broken-Dup S-SEQ: %u delivered: %u from peer, Abort!\n"
 argument_list|,
 name|msg_id
 argument_list|,
@@ -9225,7 +9225,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk_flags:0x%x ordered:%d msgid:%d control:%p\n"
+literal|"chunk_flags: 0x%x ordered: %d msgid: %u control: %p\n"
 argument_list|,
 name|chunk_flags
 argument_list|,
@@ -9330,7 +9330,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Injecting control:%p to be read (mid:%d)\n"
+literal|"Injecting control: %p to be read (msg_id: %u)\n"
 argument_list|,
 name|control
 argument_list|,
@@ -9580,7 +9580,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Building ck:%p for control:%p to be read (mid:%d)\n"
+literal|"Building ck: %p for control: %p to be read (msg_id: %u)\n"
 argument_list|,
 name|chk
 argument_list|,
@@ -9844,7 +9844,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Unordered data to be read control:%p msg_id:%d\n"
+literal|"Unordered data to be read control: %p msg_id: %u\n"
 argument_list|,
 name|control
 argument_list|,
@@ -9891,7 +9891,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Queue control:%p for reordering msg_id:%d\n"
+literal|"Queue control: %p for reordering msg_id: %u\n"
 argument_list|,
 name|control
 argument_list|,
@@ -9951,7 +9951,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Queue data to stream for reasm control:%p msg_id:%d\n"
+literal|"Queue data to stream for reasm control: %p msg_id: %u\n"
 argument_list|,
 name|control
 argument_list|,
@@ -11402,7 +11402,7 @@ else|#
 directive|else
 name|SCTP_PRINTF
 argument_list|(
-literal|"impossible slide lgap:%x slide_end:%x slide_from:%x? at:%d\n"
+literal|"impossible slide lgap: %x slide_end: %x slide_from: %x? at: %d\n"
 argument_list|,
 name|lgap
 argument_list|,
@@ -11438,7 +11438,7 @@ else|#
 directive|else
 name|SCTP_PRINTF
 argument_list|(
-literal|"Gak, would have overrun map end:%d slide_end:%d\n"
+literal|"Gak, would have overrun map end: %d slide_end: %d\n"
 argument_list|,
 name|asoc
 operator|->
@@ -17129,7 +17129,7 @@ condition|)
 block|{
 name|SCTP_PRINTF
 argument_list|(
-literal|"Chk TSN:%u size:%d inflight cnt:%d\n"
+literal|"Chk TSN: %u size: %d inflight cnt: %d\n"
 argument_list|,
 name|chk
 operator|->
@@ -17228,7 +17228,7 @@ else|#
 directive|else
 name|SCTP_PRINTF
 argument_list|(
-literal|"asoc->total_flight:%d cnt:%d\n"
+literal|"asoc->total_flight: %d cnt: %d\n"
 argument_list|,
 name|entry_flight
 argument_list|,
@@ -17237,7 +17237,7 @@ argument_list|)
 expr_stmt|;
 name|SCTP_PRINTF
 argument_list|(
-literal|"Flight size-express incorrect F:%d I:%d R:%d Ab:%d ACK:%d\n"
+literal|"Flight size-express incorrect F: %d I: %d R: %d Ab: %d ACK: %d\n"
 argument_list|,
 name|inflight
 argument_list|,
@@ -20677,7 +20677,7 @@ condition|)
 block|{
 name|SCTP_PRINTF
 argument_list|(
-literal|"Got send_s from tsn:%x + 1 of tp1:%p\n"
+literal|"Got send_s from tsn:%x + 1 of tp1: %p\n"
 argument_list|,
 name|tp1
 operator|->
@@ -24330,7 +24330,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"strmin:%p ctl:%p unknown %d"
+literal|"strmin: %p ctl: %p unknown %d"
 argument_list|,
 name|strmin
 argument_list|,
@@ -24605,7 +24605,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"strmin:%p ctl:%p unknown %d"
+literal|"strmin: %p ctl: %p unknown %d"
 argument_list|,
 name|strmin
 argument_list|,
@@ -25825,7 +25825,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"strm:%p ctl:%p unknown %d"
+literal|"strm: %p ctl: %p unknown %d"
 argument_list|,
 name|strm
 argument_list|,
