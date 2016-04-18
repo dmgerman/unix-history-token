@@ -5756,6 +5756,7 @@ name|iv_state
 operator|==
 name|IEEE80211_S_SLEEP
 condition|)
+comment|/* 			 * XXX TODO: this isn't completely correct, as we've 			 * negotiated the higher of the two. 			 */
 name|ireq
 operator|->
 name|i_val
@@ -5806,6 +5807,7 @@ operator|==
 name|IEEE80211_S_SLEEP
 operator|)
 condition|)
+comment|/* 			 * XXX TODO: this isn't completely correct, as we've 			 * negotiated the higher of the two. 			 */
 name|ireq
 operator|->
 name|i_val
