@@ -345,7 +345,7 @@ literal|'P'
 argument_list|,
 literal|"parameter"
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"            set file engine parameter limits\n"
 literal|"                               indir        15 recursion limit for indirection\n"

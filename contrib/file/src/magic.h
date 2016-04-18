@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_VERSION
-value|522
+value|524
 end_define
 
 begin_comment
@@ -541,6 +541,10 @@ define|#
 directive|define
 name|MAGIC_PARAM_ELF_NOTES_MAX
 value|4
+define|#
+directive|define
+name|MAGIC_PARAM_REGEX_MAX
+value|5
 name|int
 name|magic_setparam
 parameter_list|(
