@@ -4044,7 +4044,7 @@ literal|'\n'
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|cp
