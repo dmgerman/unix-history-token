@@ -7286,6 +7286,8 @@ name|nch
 operator|->
 name|dp
 operator|.
+name|ppid_fsn
+operator|.
 name|fsn
 argument_list|)
 expr_stmt|;

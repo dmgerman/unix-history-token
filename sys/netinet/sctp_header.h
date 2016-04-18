@@ -442,6 +442,7 @@ name|fsn
 decl_stmt|;
 comment|/* Fragment Sequence Number */
 block|}
+name|ppid_fsn
 union|;
 comment|/* user data follows */
 block|}
