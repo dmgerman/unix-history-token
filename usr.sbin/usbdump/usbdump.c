@@ -258,18 +258,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HEADER_ALIGN
-parameter_list|(
-name|x
-parameter_list|,
-name|a
-parameter_list|)
-value|(((x) + (a) - 1)& ~((a) - 1))
-end_define
-
 begin_struct
 struct|struct
 name|header_32
@@ -3160,7 +3148,7 @@ name|next
 operator|=
 name|ptr
 operator|+
-name|HEADER_ALIGN
+name|roundup2
 argument_list|(
 name|temp
 operator|.

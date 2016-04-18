@@ -254,18 +254,6 @@ begin_comment
 comment|/* Maximum unsigned 32-bit quantity */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|align
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x) + (y) - 1)& ~((y) - 1))
-end_define
-
 begin_struct
 struct|struct
 name|hdr
@@ -2728,7 +2716,7 @@ name|p_paddr
 operator|=
 name|htole32
 argument_list|(
-name|align
+name|roundup2
 argument_list|(
 name|le32toh
 argument_list|(
