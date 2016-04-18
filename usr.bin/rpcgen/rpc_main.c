@@ -2446,7 +2446,7 @@ operator|(
 operator|(
 name|filename
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|?
 name|pathname
