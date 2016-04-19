@@ -4422,7 +4422,7 @@ name|ip6optlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
