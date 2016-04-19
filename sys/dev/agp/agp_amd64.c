@@ -1286,8 +1286,7 @@ begin_define
 define|#
 directive|define
 name|AGP_AMD64_TABLE_SIZE
-define|\
-value|(sizeof(agp_amd64_table) / sizeof(agp_amd64_table[0]))
+value|nitems(agp_amd64_table)
 end_define
 
 begin_function

@@ -793,8 +793,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|agp_max_size
-value|(sizeof(agp_max) / sizeof(agp_max[0]))
+name|AGP_MAX_SIZE
+value|nitems(agp_max)
 end_define
 
 begin_comment
@@ -927,7 +927,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|agp_max_size
+name|AGP_MAX_SIZE
 condition|;
 name|i
 operator|++
@@ -951,11 +951,11 @@ if|if
 condition|(
 name|i
 operator|==
-name|agp_max_size
+name|AGP_MAX_SIZE
 condition|)
 name|i
 operator|=
-name|agp_max_size
+name|AGP_MAX_SIZE
 operator|-
 literal|1
 expr_stmt|;

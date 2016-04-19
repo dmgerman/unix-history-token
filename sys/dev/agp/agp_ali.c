@@ -606,8 +606,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|agp_ali_table_size
-value|(sizeof(agp_ali_table) / sizeof(agp_ali_table[0]))
+name|AGP_ALI_TABLE_SIZE
+value|nitems(agp_ali_table)
 end_define
 
 begin_function
@@ -638,7 +638,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|agp_ali_table_size
+name|AGP_ALI_TABLE_SIZE
 condition|)
 return|return
 literal|0
@@ -678,7 +678,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|agp_ali_table_size
+name|AGP_ALI_TABLE_SIZE
 condition|;
 name|i
 operator|++
@@ -697,7 +697,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|agp_ali_table_size
+name|AGP_ALI_TABLE_SIZE
 condition|)
 return|return
 name|EINVAL
