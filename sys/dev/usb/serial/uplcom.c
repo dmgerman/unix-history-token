@@ -3263,7 +3263,7 @@ begin_define
 define|#
 directive|define
 name|N_UPLCOM_RATES
-value|(sizeof(uplcom_rates)/sizeof(uplcom_rates[0]))
+value|nitems(uplcom_rates)
 end_define
 
 begin_function

@@ -731,7 +731,7 @@ begin_define
 define|#
 directive|define
 name|NUM_DIVIDERS
-value|(sizeof (dividers) / sizeof (dividers[0]))
+value|nitems(dividers)
 end_define
 
 begin_decl_stmt
