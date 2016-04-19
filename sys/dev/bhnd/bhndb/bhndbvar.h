@@ -192,6 +192,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**   * bhndb child address space. Children either operate in the bridged  * SoC address space, or within the address space mapped to the host  * device (e.g. the PCI BAR(s)).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BHNDB_ADDRSPACE_BRIDGED
+block|,
+comment|/**< bridged (SoC) address space */
+name|BHNDB_ADDRSPACE_NATIVE
+comment|/**< host address space */
+block|}
+name|bhndb_addrspace
+typedef|;
+end_typedef
+
+begin_comment
 comment|/** bhndb child instance state */
 end_comment
 
@@ -199,6 +217,10 @@ begin_struct
 struct|struct
 name|bhndb_devinfo
 block|{
+name|bhndb_addrspace
+name|addrspace
+decl_stmt|;
+comment|/**< child address space. */
 name|struct
 name|resource_list
 name|resources
@@ -241,11 +263,6 @@ name|device_t
 name|hostb_dev
 decl_stmt|;
 comment|/**< child host bridge device, or NULL 							     if the @p bus_dev has not yet 							     called BHNDB_INIT_FULL_CONFIG() */
-name|struct
-name|rman
-name|mem_rman
-decl_stmt|;
-comment|/**< bridged bus memory manager */
 name|struct
 name|mtx
 name|sc_mtx

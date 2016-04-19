@@ -261,6 +261,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bhndb_addrspace
+name|bhndb_get_addrspace
+parameter_list|(
+name|struct
+name|bhndb_softc
+modifier|*
+name|sc
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|struct
 name|rman
@@ -271,6 +286,9 @@ name|struct
 name|bhndb_softc
 modifier|*
 name|sc
+parameter_list|,
+name|device_t
+name|child
 parameter_list|,
 name|int
 name|type
@@ -1737,6 +1755,11 @@ name|bridge_devclass
 parameter_list|)
 block|{
 name|struct
+name|bhndb_devinfo
+modifier|*
+name|dinfo
+decl_stmt|;
+name|struct
 name|bhndb_softc
 modifier|*
 name|sc
@@ -1820,98 +1843,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Set up a resource manager for the device's address space. */
-name|sc
-operator|->
-name|mem_rman
-operator|.
-name|rm_start
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|mem_rman
-operator|.
-name|rm_end
-operator|=
-name|BUS_SPACE_MAXADDR_32BIT
-expr_stmt|;
-name|sc
-operator|->
-name|mem_rman
-operator|.
-name|rm_type
-operator|=
-name|RMAN_ARRAY
-expr_stmt|;
-name|sc
-operator|->
-name|mem_rman
-operator|.
-name|rm_descr
-operator|=
-literal|"BHND I/O memory addresses"
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|rman_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mem_rman
-argument_list|)
-operator|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"could not initialize mem_rman\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-name|error
-operator|=
-name|rman_manage_region
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mem_rman
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_SPACE_MAXADDR_32BIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"could not configure mem_rman\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
-comment|/* Initialize basic resource allocation state. */
+comment|/* Populate generic resource allocation state. */
 name|sc
 operator|->
 name|bus_res
@@ -1936,22 +1868,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
+operator|)
+return|;
 block|}
 comment|/* Attach our bridged bus device */
 name|sc
 operator|->
 name|bus_dev
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 name|devclass_get_name
 argument_list|(
@@ -1979,6 +1911,23 @@ goto|goto
 name|failed
 goto|;
 block|}
+comment|/* Configure address space */
+name|dinfo
+operator|=
+name|device_get_ivars
+argument_list|(
+name|sc
+operator|->
+name|bus_dev
+argument_list|)
+expr_stmt|;
+name|dinfo
+operator|->
+name|addrspace
+operator|=
+name|BHNDB_ADDRSPACE_BRIDGED
+expr_stmt|;
+comment|/* Finish attach */
 return|return
 operator|(
 name|bus_generic_attach
@@ -1992,14 +1941,6 @@ label|:
 name|BHNDB_LOCK_DESTROY
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|rman_fini
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mem_rman
 argument_list|)
 expr_stmt|;
 if|if
@@ -2397,14 +2338,6 @@ name|error
 operator|)
 return|;
 comment|/* Clean up our driver state. */
-name|rman_fini
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mem_rman
-argument_list|)
-expr_stmt|;
 name|bhndb_free_resources
 argument_list|(
 name|sc
@@ -2907,7 +2840,92 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the rman instance for a given resource @p type, if any.  *   * @param sc The bhndb device state.  * @param type The resource type (e.g. SYS_RES_MEMORY, SYS_RES_IRQ, ...)  */
+comment|/**  * Return the address space for the given @p child device.  */
+end_comment
+
+begin_function
+name|bhndb_addrspace
+name|bhndb_get_addrspace
+parameter_list|(
+name|struct
+name|bhndb_softc
+modifier|*
+name|sc
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|struct
+name|bhndb_devinfo
+modifier|*
+name|dinfo
+decl_stmt|;
+name|device_t
+name|imd_dev
+decl_stmt|;
+comment|/* Find the directly attached parent of the requesting device */
+name|imd_dev
+operator|=
+name|child
+expr_stmt|;
+while|while
+condition|(
+name|imd_dev
+operator|!=
+name|NULL
+operator|&&
+name|device_get_parent
+argument_list|(
+name|imd_dev
+argument_list|)
+operator|!=
+name|sc
+operator|->
+name|dev
+condition|)
+name|imd_dev
+operator|=
+name|device_get_parent
+argument_list|(
+name|imd_dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|imd_dev
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"bhndb address space request for non-child device %s\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dinfo
+operator|=
+name|device_get_ivars
+argument_list|(
+name|imd_dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|dinfo
+operator|->
+name|addrspace
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return the rman instance for a given resource @p type, if any.  *   * @param sc The bhndb device state.  * @param child The requesting child.  * @param type The resource type (e.g. SYS_RES_MEMORY, SYS_RES_IRQ, ...)  */
 end_comment
 
 begin_function
@@ -2922,10 +2940,26 @@ name|bhndb_softc
 modifier|*
 name|sc
 parameter_list|,
+name|device_t
+name|child
+parameter_list|,
 name|int
 name|type
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|bhndb_get_addrspace
+argument_list|(
+name|sc
+argument_list|,
+name|child
+argument_list|)
+condition|)
+block|{
+case|case
+name|BHNDB_ADDRSPACE_NATIVE
+case|:
 switch|switch
 condition|(
 name|type
@@ -2935,10 +2969,51 @@ case|case
 name|SYS_RES_MEMORY
 case|:
 return|return
+operator|(
 operator|&
 name|sc
 operator|->
-name|mem_rman
+name|bus_res
+operator|->
+name|ht_mem_rman
+operator|)
+return|;
+case|case
+name|SYS_RES_IRQ
+case|:
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+empty_stmt|;
+case|case
+name|BHNDB_ADDRSPACE_BRIDGED
+case|:
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|SYS_RES_MEMORY
+case|:
+return|return
+operator|(
+operator|&
+name|sc
+operator|->
+name|bus_res
+operator|->
+name|br_mem_rman
+operator|)
 return|;
 case|case
 name|SYS_RES_IRQ
@@ -2958,6 +3033,7 @@ operator|)
 return|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_function
 
@@ -3052,6 +3128,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|dinfo
+operator|->
+name|addrspace
+operator|=
+name|BHNDB_ADDRSPACE_NATIVE
+expr_stmt|;
 name|resource_list_init
 argument_list|(
 operator|&
@@ -3850,6 +3932,8 @@ name|bhndb_get_rman
 argument_list|(
 name|sc
 argument_list|,
+name|child
+argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
@@ -3936,7 +4020,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"failed to activate entry %#x type %d for "
-literal|"child %s\n"
+literal|"child %s: %d\n"
 argument_list|,
 operator|*
 name|rid
@@ -3947,6 +4031,8 @@ name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|rman_release_resource
@@ -4162,6 +4248,8 @@ name|bhndb_get_rman
 argument_list|(
 name|sc
 argument_list|,
+name|child
+argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
@@ -4232,7 +4320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Initialize child resource @p r with a virtual address, tag, and handle  * copied from @p parent, adjusted to contain only the range defined by @p win.  *   * @param r The register to be initialized.  * @param parent The parent bus resource that fully contains the subregion.  * @param offset The subregion offset within @p parent.  * @param size The subregion size.  * @p r.  */
+comment|/**  * Initialize child resource @p r with a virtual address, tag, and handle  * copied from @p parent, adjusted to contain only the range defined by  * @p offsize and @p size.  *   * @param r The register to be initialized.  * @param parent The parent bus resource that fully contains the subregion.  * @param offset The subregion offset within @p parent.  * @param size The subregion size.  * @p r.  */
 end_comment
 
 begin_function
@@ -4843,12 +4931,6 @@ name|indirect
 operator|=
 name|false
 expr_stmt|;
-comment|/* Default to low priority */
-name|dw_priority
-operator|=
-name|BHNDB_PRIORITY_LOW
-expr_stmt|;
-comment|/* Look for a bus region matching the resource's address range */
 name|r_start
 operator|=
 name|rman_get_start
@@ -4863,6 +4945,123 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+comment|/* Activate native addrspace resources using the host address space */
+if|if
+condition|(
+name|bhndb_get_addrspace
+argument_list|(
+name|sc
+argument_list|,
+name|child
+argument_list|)
+operator|==
+name|BHNDB_ADDRSPACE_NATIVE
+condition|)
+block|{
+name|struct
+name|resource
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* Find the bridge resource referenced by the child */
+name|parent
+operator|=
+name|bhndb_find_resource_range
+argument_list|(
+name|sc
+operator|->
+name|bus_res
+argument_list|,
+name|r_start
+argument_list|,
+name|r_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parent
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"host resource not found "
+literal|"for 0x%llx-0x%llx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|r_start
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|r_start
+operator|+
+name|r_size
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+comment|/* Initialize child resource with the real bus values */
+name|error
+operator|=
+name|bhndb_init_child_resource
+argument_list|(
+name|r
+argument_list|,
+name|parent
+argument_list|,
+name|r_start
+operator|-
+name|rman_get_start
+argument_list|(
+name|parent
+argument_list|)
+argument_list|,
+name|r_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Try to activate child resource */
+return|return
+operator|(
+name|rman_activate_resource
+argument_list|(
+name|r
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/* Default to low priority */
+name|dw_priority
+operator|=
+name|BHNDB_PRIORITY_LOW
+expr_stmt|;
+comment|/* Look for a bus region matching the resource's address range */
 name|region
 operator|=
 name|bhndb_find_resource_region
@@ -5238,6 +5437,8 @@ name|bhndb_get_rman
 argument_list|(
 name|sc
 argument_list|,
+name|child
+argument_list|,
 name|type
 argument_list|)
 operator|)
@@ -5267,6 +5468,18 @@ name|error
 operator|)
 return|;
 comment|/* Free any dynamic window allocation. */
+if|if
+condition|(
+name|bhndb_get_addrspace
+argument_list|(
+name|sc
+argument_list|,
+name|child
+argument_list|)
+operator|==
+name|BHNDB_ADDRSPACE_BRIDGED
+condition|)
+block|{
 name|BHNDB_LOCK
 argument_list|(
 name|sc
@@ -5305,6 +5518,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -5616,7 +5830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhndb(4) implementation of BHND_BUS_ACTIVATE_RESOURCE().  *   * Attempts to activate a static register window, a dynamic register window,  * or configures @p r as an indirect resource -- in that order.  */
+comment|/**  * Default bhndb(4) implementation of BHND_BUS_ACTIVATE_RESOURCE().  *  * For BHNDB_ADDRSPACE_NATIVE children, all resources may be assumed to  * be actived by the bridge.  *   * For BHNDB_ADDRSPACE_BRIDGED children, attempts to activate a static register  * window, a dynamic register window, or configures @p r as an indirect  * resource -- in that order.  */
 end_comment
 
 begin_function
@@ -5651,9 +5865,6 @@ name|struct
 name|bhndb_region
 modifier|*
 name|region
-decl_stmt|;
-name|bhndb_priority_t
-name|r_prio
 decl_stmt|;
 name|rman_res_t
 name|r_start
@@ -5704,7 +5915,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Fetch the address range's resource priority */
 name|r_start
 operator|=
 name|rman_get_start
@@ -5723,10 +5933,22 @@ operator|->
 name|res
 argument_list|)
 expr_stmt|;
+comment|/* Verify bridged address range's resource priority, and skip direct 	 * allocation if the priority is too low. */
+if|if
+condition|(
+name|bhndb_get_addrspace
+argument_list|(
+name|sc
+argument_list|,
+name|child
+argument_list|)
+operator|==
+name|BHNDB_ADDRSPACE_BRIDGED
+condition|)
+block|{
+name|bhndb_priority_t
 name|r_prio
-operator|=
-name|BHNDB_PRIORITY_NONE
-expr_stmt|;
+decl_stmt|;
 name|region
 operator|=
 name|bhndb_find_resource_region
@@ -5752,7 +5974,12 @@ name|region
 operator|->
 name|priority
 expr_stmt|;
-comment|/* If less than the minimum dynamic window priority, this 	 * resource should always be indirect. */
+else|else
+name|r_prio
+operator|=
+name|BHNDB_PRIORITY_NONE
+expr_stmt|;
+comment|/* If less than the minimum dynamic window priority, this 		 * resource should always be indirect. */
 if|if
 condition|(
 name|r_prio
@@ -5768,6 +5995,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Attempt direct activation */
 name|error
 operator|=
@@ -5826,6 +6054,15 @@ name|BHNDB_DEBUG
 argument_list|(
 name|PRIO
 argument_list|)
+operator|&&
+name|bhndb_get_addrspace
+argument_list|(
+name|sc
+argument_list|,
+name|child
+argument_list|)
+operator|==
+name|BHNDB_ADDRSPACE_BRIDGED
 condition|)
 block|{
 name|device_printf

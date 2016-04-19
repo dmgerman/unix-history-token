@@ -83,6 +83,26 @@ begin_function_decl
 name|struct
 name|resource
 modifier|*
+name|bhndb_find_resource_range
+parameter_list|(
+name|struct
+name|bhndb_resources
+modifier|*
+name|br
+parameter_list|,
+name|rman_res_t
+name|start
+parameter_list|,
+name|rman_res_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|resource
+modifier|*
 name|bhndb_find_regwin_resource
 parameter_list|(
 name|struct
@@ -564,6 +584,16 @@ modifier|*
 name|res
 decl_stmt|;
 comment|/**< parent bus resources */
+name|struct
+name|rman
+name|ht_mem_rman
+decl_stmt|;
+comment|/**< host memory manager */
+name|struct
+name|rman
+name|br_mem_rman
+decl_stmt|;
+comment|/**< bridged memory manager */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
