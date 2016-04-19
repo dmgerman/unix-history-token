@@ -1303,14 +1303,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|mdt
-operator|/
-sizeof|sizeof
-name|mdt
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|i
 operator|++
