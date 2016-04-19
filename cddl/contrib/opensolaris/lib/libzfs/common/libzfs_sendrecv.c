@@ -17427,6 +17427,13 @@ condition|(
 name|clp
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|flags
+operator|->
+name|nomount
+condition|)
 name|err
 operator||=
 name|changelist_postfix
