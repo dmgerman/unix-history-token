@@ -1376,7 +1376,7 @@ expr_stmt|;
 block|}
 name|pendingDirectories
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
