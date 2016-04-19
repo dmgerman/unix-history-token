@@ -500,7 +500,7 @@ begin_define
 define|#
 directive|define
 name|MTRRTOMRTLEN
-value|(sizeof(amd64_mtrrtomrt) / sizeof(amd64_mtrrtomrt[0]))
+value|nitems(amd64_mtrrtomrt)
 end_define
 
 begin_function

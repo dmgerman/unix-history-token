@@ -1007,7 +1007,7 @@ parameter_list|(
 name|code
 parameter_list|)
 define|\
-value|((code)<sizeof(_bsd_to_linux_trapcode)/sizeof(*_bsd_to_linux_trapcode)? \      _bsd_to_linux_trapcode[(code)]: \      LINUX_T_UNKNOWN)
+value|((code)<nitems(_bsd_to_linux_trapcode)? \      _bsd_to_linux_trapcode[(code)]: \      LINUX_T_UNKNOWN)
 end_define
 
 begin_expr_stmt

@@ -1056,14 +1056,14 @@ begin_define
 define|#
 directive|define
 name|PHYS_AVAIL_ARRAY_END
-value|((sizeof(phys_avail) / sizeof(phys_avail[0])) - 2)
+value|(nitems(phys_avail) - 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DUMP_AVAIL_ARRAY_END
-value|((sizeof(dump_avail) / sizeof(dump_avail[0])) - 2)
+value|(nitems(dump_avail) - 2)
 end_define
 
 begin_decl_stmt
@@ -12024,14 +12024,10 @@ literal|0
 init|;
 name|x
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|ldt_segs
-operator|/
-sizeof|sizeof
-name|ldt_segs
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|x
 operator|++

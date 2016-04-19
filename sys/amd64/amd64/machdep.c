@@ -934,14 +934,14 @@ begin_define
 define|#
 directive|define
 name|PHYS_AVAIL_ARRAY_END
-value|((sizeof(phys_avail) / sizeof(phys_avail[0])) - 2)
+value|(nitems(phys_avail) - 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DUMP_AVAIL_ARRAY_END
-value|((sizeof(dump_avail) / sizeof(dump_avail[0])) - 2)
+value|(nitems(dump_avail) - 2)
 end_define
 
 begin_decl_stmt

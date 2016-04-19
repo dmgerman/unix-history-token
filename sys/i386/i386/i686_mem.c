@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|MTRRTOMRTLEN
-value|(sizeof(i686_mtrrtomrt) / sizeof(i686_mtrrtomrt[0]))
+value|(nitems(i686_mtrrtomrt))
 end_define
 
 begin_function

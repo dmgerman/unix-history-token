@@ -5518,14 +5518,9 @@ argument_list|(
 name|divisor
 argument_list|)
 operator|<=
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|lapic_timer_divisors
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
 argument_list|)
 argument_list|,
 operator|(
