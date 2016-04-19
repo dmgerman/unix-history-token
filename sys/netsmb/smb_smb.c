@@ -203,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|SMB_DIALECT_MAX
-value|(sizeof(smb_dialects) / sizeof(struct smb_dialect) - 2)
+value|(nitems(smb_dialects) - 2)
 end_define
 
 begin_function

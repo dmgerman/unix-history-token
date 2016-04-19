@@ -542,7 +542,7 @@ begin_define
 define|#
 directive|define
 name|NUM_SYSCLOCKS
-value|(sizeof(sysclocks) / sizeof(*sysclocks))
+value|nitems(sysclocks)
 end_define
 
 begin_decl_stmt

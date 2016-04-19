@@ -244,17 +244,9 @@ operator|=
 operator|&
 name|natmsw
 index|[
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|natmsw
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|natmsw
-index|[
-literal|0
-index|]
 argument_list|)
 index|]
 block|, }

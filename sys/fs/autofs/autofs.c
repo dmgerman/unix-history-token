@@ -1493,14 +1493,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|autofs_sig_set
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
 argument_list|)
 condition|;
 name|i

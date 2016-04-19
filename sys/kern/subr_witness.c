@@ -3281,15 +3281,9 @@ specifier|static
 name|int
 name|blessed_count
 init|=
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|blessed_list
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|witness_blessed
 argument_list|)
 decl_stmt|;
 end_decl_stmt

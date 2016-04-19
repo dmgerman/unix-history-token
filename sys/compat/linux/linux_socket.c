@@ -7630,7 +7630,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_AL_SIZE
-value|sizeof(lxs_args) / sizeof(lxs_args[0]) - 1
+value|(nitems(lxs_args) - 1)
 end_define
 
 begin_function

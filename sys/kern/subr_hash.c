@@ -410,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|NPRIMES
-value|(sizeof(primes) / sizeof(primes[0]))
+value|nitems(primes)
 end_define
 
 begin_comment
