@@ -4366,15 +4366,9 @@ name|int
 name|numentries
 init|=
 operator|(
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|part_types
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|part_type
 argument_list|)
 operator|)
 decl_stmt|;
