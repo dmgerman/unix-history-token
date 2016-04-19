@@ -5123,7 +5123,7 @@ name|NULL
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|emergency
@@ -5799,7 +5799,7 @@ if|if
 condition|(
 name|sprev
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|sessions
@@ -5950,7 +5950,7 @@ name|sp
 operator|->
 name|se_getty_argv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warning
@@ -6083,7 +6083,7 @@ name|sp
 operator|->
 name|se_window_argv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warning
