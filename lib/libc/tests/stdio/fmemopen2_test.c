@@ -1052,6 +1052,13 @@ argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
+name|fp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
 name|ftell
 argument_list|(
 name|fp
@@ -1084,6 +1091,13 @@ name|buf
 argument_list|)
 argument_list|,
 literal|"ab+"
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|fp
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
