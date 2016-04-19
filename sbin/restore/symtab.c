@@ -1699,7 +1699,7 @@ name|allocsize
 parameter_list|(
 name|size
 parameter_list|)
-value|(((size) + 1 + STRTBLINCR - 1)& ~(STRTBLINCR - 1))
+value|roundup2((size) + 1, STRTBLINCR)
 end_define
 
 begin_decl_stmt
@@ -1737,7 +1737,7 @@ name|strhdr
 modifier|*
 name|np
 decl_stmt|;
-name|long
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -1808,9 +1808,6 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|allocsize
 argument_list|(
 name|len
