@@ -297,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|MAS2_WIMGE_MASK
-value|0x0000001F
+value|0x0000007F
 end_define
 
 begin_define
@@ -538,6 +538,21 @@ name|KERNEL_REGION_MAX_TLB_ENTRIES
 value|4
 end_define
 
+begin_comment
+comment|/*  * Use MAS2_X0 to mark entries which will be copied  * to AP CPUs during SMP bootstrap. As result entries  * marked with _TLB_ENTRY_SHARED will be shared by all CPUs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_TLB_ENTRY_SHARED
+value|(MAS2_X0)
+end_define
+
+begin_comment
+comment|/* XXX under SMP? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -550,6 +565,13 @@ define|#
 directive|define
 name|_TLB_ENTRY_MEM
 value|(MAS2_M)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB1_MAX_ENTRIES
+value|64
 end_define
 
 begin_if
@@ -1055,6 +1077,15 @@ name|tlb_unlock
 parameter_list|(
 name|uint32_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tlb1_ap_prep
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

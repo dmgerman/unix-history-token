@@ -802,6 +802,14 @@ name|smp_cpus
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOKE
+name|tlb1_ap_prep
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|STAILQ_FOREACH
 argument_list|(
 argument|pc

@@ -335,24 +335,6 @@ name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|bp_ntlb1s
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|vm_paddr_t
 name|kernload
@@ -664,32 +646,6 @@ name|TLB1_MAXENTRIES
 value|64
 end_define
 
-begin_comment
-comment|/* In-ram copy of the TLB1 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|tlb_entry_t
-name|tlb1
-index|[
-name|TLB1_MAXENTRIES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Next free entry in the TLB1 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|tlb1_idx
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|vm_offset_t
@@ -745,8 +701,25 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|tlb1_read_entry
+parameter_list|(
+name|tlb_entry_t
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|tlb1_write_entry
 parameter_list|(
+name|tlb_entry_t
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
 parameter_list|)
@@ -1263,6 +1236,14 @@ ifdef|#
 directive|ifdef
 name|SMP
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|tlb_entry_t
+name|__boot_tlb1
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -6596,6 +6577,86 @@ end_ifdef
 
 begin_function
 name|void
+name|tlb1_ap_prep
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|tlb_entry_t
+modifier|*
+name|e
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+comment|/* Prepare TLB1 image for AP processors */
+name|e
+operator|=
+name|__boot_tlb1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|.
+name|mas1
+operator|&
+name|MAS1_VALID
+operator|)
+operator|&&
+operator|(
+name|tmp
+operator|.
+name|mas2
+operator|&
+name|_TLB_ENTRY_SHARED
+operator|)
+condition|)
+name|memcpy
+argument_list|(
+name|e
+operator|++
+argument_list|,
+operator|&
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|pmap_bootstrap_ap
 parameter_list|(
 specifier|volatile
@@ -6608,27 +6669,24 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Finish TLB1 configuration: the BSP already set up its TLB1 and we 	 * have the snapshot of its contents in the s/w tlb1[] table, so use 	 * these values directly to (re)program AP's TLB1 hardware. 	 */
+comment|/* 	 * Finish TLB1 configuration: the BSP already set up its TLB1 and we 	 * have the snapshot of its contents in the s/w __boot_tlb1[] table 	 * created by tlb1_ap_prep(), so use these values directly to 	 * (re)program AP's TLB1 hardware. 	 * 	 * Start at index 1 because index 0 has the kernel map. 	 */
 for|for
 control|(
 name|i
 operator|=
-name|bp_ntlb1s
+literal|1
 init|;
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
 control|)
 block|{
-comment|/* Skip invalid entries */
 if|if
 condition|(
-operator|!
-operator|(
-name|tlb1
+name|__boot_tlb1
 index|[
 name|i
 index|]
@@ -6636,11 +6694,15 @@ operator|.
 name|mas1
 operator|&
 name|MAS1_VALID
-operator|)
 condition|)
-continue|continue;
 name|tlb1_write_entry
 argument_list|(
+operator|&
+name|__boot_tlb1
+index|[
+name|i
+index|]
+argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
@@ -6793,6 +6855,9 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
+name|tlb_entry_t
+name|e
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -6805,20 +6870,25 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
 control|)
 block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|mas1
 operator|&
@@ -6830,45 +6900,30 @@ if|if
 condition|(
 name|va
 operator|>=
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|&&
 name|va
 operator|<
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|+
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|size
 condition|)
 return|return
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|phys
 operator|+
 operator|(
 name|va
 operator|-
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|)
@@ -11799,7 +11854,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
@@ -11993,6 +12048,12 @@ decl_stmt|;
 name|vm_size_t
 name|gran
 decl_stmt|;
+name|tlb_entry_t
+name|e
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* Minidumps are based on virtual memory addresses. */
 comment|/* Nothing to do... */
 if|if
@@ -12000,32 +12061,58 @@ condition|(
 name|do_minidump
 condition|)
 return|return;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|e
+operator|.
+name|mas1
+operator|&
+name|MAS1_VALID
+operator|)
+condition|)
+break|break;
+block|}
 comment|/* Raw physical memory dumps don't have a virtual address. */
-name|tlb1_idx
+name|i
 operator|--
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas1
 operator|=
 literal|0
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas2
 operator|=
 literal|0
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas3
 operator|=
@@ -12033,7 +12120,10 @@ literal|0
 expr_stmt|;
 name|tlb1_write_entry
 argument_list|(
-name|tlb1_idx
+operator|&
+name|e
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|gran
@@ -12072,31 +12162,22 @@ name|ofs
 operator|)
 condition|)
 block|{
-name|tlb1_idx
+name|i
 operator|--
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas1
 operator|=
 literal|0
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas2
 operator|=
 literal|0
 expr_stmt|;
-name|tlb1
-index|[
-name|tlb1_idx
-index|]
+name|e
 operator|.
 name|mas3
 operator|=
@@ -12104,7 +12185,10 @@ literal|0
 expr_stmt|;
 name|tlb1_write_entry
 argument_list|(
-name|tlb1_idx
+operator|&
+name|e
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -12515,6 +12599,9 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
+name|tlb_entry_t
+name|e
+decl_stmt|;
 name|void
 modifier|*
 name|res
@@ -12546,20 +12633,25 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
 control|)
 block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|mas1
 operator|&
@@ -12571,10 +12663,7 @@ if|if
 condition|(
 name|pa
 operator|>=
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|phys
 operator|&&
@@ -12585,17 +12674,11 @@ name|size
 operator|)
 operator|<=
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|phys
 operator|+
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|size
 operator|)
@@ -12606,10 +12689,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|+
@@ -12619,10 +12699,7 @@ call|)
 argument_list|(
 name|pa
 operator|-
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|phys
 argument_list|)
@@ -12751,8 +12828,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Wiring VA=%x to PA=%jx (size=%x), "
-literal|"using TLB1[%d]\n"
+literal|"Wiring VA=%x to PA=%jx (size=%x)\n"
 argument_list|,
 name|va
 argument_list|,
@@ -12762,8 +12838,6 @@ operator|)
 name|pa
 argument_list|,
 name|sz
-argument_list|,
-name|tlb1_idx
 argument_list|)
 expr_stmt|;
 name|tlb1_set_entry
@@ -12774,6 +12848,8 @@ name|pa
 argument_list|,
 name|sz
 argument_list|,
+name|_TLB_ENTRY_SHARED
+operator||
 name|tlb_calc_wimg
 argument_list|(
 name|pa
@@ -13007,6 +13083,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|tlb_entry_t
+name|e
+decl_stmt|;
 comment|/* Check TLB1 mappings */
 for|for
 control|(
@@ -13016,20 +13095,25 @@ literal|0
 init|;
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
 control|)
 block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|mas1
 operator|&
@@ -13041,26 +13125,17 @@ if|if
 condition|(
 name|addr
 operator|>=
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|&&
 name|addr
 operator|<
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|virt
 operator|+
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|size
 condition|)
@@ -13070,7 +13145,7 @@ if|if
 condition|(
 name|i
 operator|<
-name|tlb1_idx
+name|TLB1_ENTRIES
 condition|)
 block|{
 comment|/* Only allow full mappings to be modified for now. */
@@ -13093,10 +13168,7 @@ name|sz
 condition|;
 name|va
 operator|+=
-name|tlb1
-index|[
-name|j
-index|]
+name|e
 operator|.
 name|size
 operator|,
@@ -13104,14 +13176,19 @@ name|j
 operator|++
 control|)
 block|{
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|va
 operator|!=
-name|tlb1
-index|[
-name|j
-index|]
+name|e
 operator|.
 name|virt
 operator|||
@@ -13124,10 +13201,7 @@ operator|-
 name|addr
 operator|)
 operator|<
-name|tlb1
-index|[
-name|j
-index|]
+name|e
 operator|.
 name|size
 operator|)
@@ -13152,10 +13226,7 @@ name|sz
 condition|;
 name|va
 operator|+=
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|size
 operator|,
@@ -13163,29 +13234,28 @@ name|i
 operator|++
 control|)
 block|{
-name|tlb1
-index|[
+name|tlb1_read_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
 name|i
-index|]
+argument_list|)
+expr_stmt|;
+name|e
 operator|.
 name|mas2
 operator|&=
 operator|~
 name|MAS2_WIMGE_MASK
 expr_stmt|;
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|mas2
 operator||=
 name|tlb_calc_wimg
 argument_list|(
-name|tlb1
-index|[
-name|i
-index|]
+name|e
 operator|.
 name|phys
 argument_list|,
@@ -13195,6 +13265,9 @@ expr_stmt|;
 comment|/* 			 * Write it out to the TLB.  Should really re-sync with other 			 * cores. 			 */
 name|tlb1_write_entry
 argument_list|(
+operator|&
+name|e
+argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
@@ -13962,6 +14035,185 @@ comment|/*  * TLB1 mapping notes:  *  * TLB1[0]	Kernel text and data.  * TLB1[1-
 end_comment
 
 begin_comment
+comment|/*  * Read an entry from given TLB1 slot.  */
+end_comment
+
+begin_function
+name|void
+name|tlb1_read_entry
+parameter_list|(
+name|tlb_entry_t
+modifier|*
+name|entry
+parameter_list|,
+name|unsigned
+name|int
+name|slot
+parameter_list|)
+block|{
+name|uint32_t
+name|mas0
+decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|entry
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"%s(): Entry is NULL!"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|mas0
+operator|=
+name|MAS0_TLBSEL
+argument_list|(
+literal|1
+argument_list|)
+operator||
+name|MAS0_ESEL
+argument_list|(
+name|slot
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_MAS0
+argument_list|,
+name|mas0
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("isync; tlbre");
+name|entry
+operator|->
+name|mas1
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS1
+argument_list|)
+expr_stmt|;
+name|entry
+operator|->
+name|mas2
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS2
+argument_list|)
+expr_stmt|;
+name|entry
+operator|->
+name|mas3
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS3
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+operator|(
+name|mfpvr
+argument_list|()
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xFFFF
+condition|)
+block|{
+case|case
+name|FSL_E500v2
+case|:
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
+case|:
+name|entry
+operator|->
+name|mas7
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS7
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|entry
+operator|->
+name|mas7
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+name|entry
+operator|->
+name|virt
+operator|=
+name|entry
+operator|->
+name|mas2
+operator|&
+name|MAS2_EPN_MASK
+expr_stmt|;
+name|entry
+operator|->
+name|phys
+operator|=
+operator|(
+call|(
+name|vm_paddr_t
+call|)
+argument_list|(
+name|entry
+operator|->
+name|mas7
+operator|&
+name|MAS7_RPN
+argument_list|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
+name|entry
+operator|->
+name|mas3
+operator|&
+name|MAS3_RPN
+operator|)
+expr_stmt|;
+name|entry
+operator|->
+name|size
+operator|=
+name|tsize2size
+argument_list|(
+operator|(
+name|entry
+operator|->
+name|mas1
+operator|&
+name|MAS1_TSIZE_MASK
+operator|)
+operator|>>
+name|MAS1_TSIZE_SHIFT
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Write given entry to TLB1 hardware.  * Use 32 bit pa, clear 4 high-order bits of RPN (mas7).  */
 end_comment
 
@@ -13970,6 +14222,10 @@ specifier|static
 name|void
 name|tlb1_write_entry
 parameter_list|(
+name|tlb_entry_t
+modifier|*
+name|e
+parameter_list|,
 name|unsigned
 name|int
 name|idx
@@ -14005,11 +14261,8 @@ name|mtspr
 argument_list|(
 name|SPR_MAS1
 argument_list|,
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
+name|e
+operator|->
 name|mas1
 argument_list|)
 expr_stmt|;
@@ -14018,11 +14271,8 @@ name|mtspr
 argument_list|(
 name|SPR_MAS2
 argument_list|,
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
+name|e
+operator|->
 name|mas2
 argument_list|)
 expr_stmt|;
@@ -14031,11 +14281,8 @@ name|mtspr
 argument_list|(
 name|SPR_MAS3
 argument_list|,
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
+name|e
+operator|->
 name|mas3
 argument_list|)
 expr_stmt|;
@@ -14074,11 +14321,8 @@ name|mtspr
 argument_list|(
 name|SPR_MAS7
 argument_list|,
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
+name|e
+operator|->
 name|mas7
 argument_list|)
 expr_stmt|;
@@ -14204,6 +14448,9 @@ name|uint32_t
 name|flags
 parameter_list|)
 block|{
+name|tlb_entry_t
+name|e
+decl_stmt|;
 name|uint32_t
 name|ts
 decl_stmt|,
@@ -14214,16 +14461,90 @@ name|tsize
 decl_stmt|,
 name|index
 decl_stmt|;
+for|for
+control|(
 name|index
 operator|=
-name|atomic_fetchadd_int
+literal|0
+init|;
+name|index
+operator|<
+name|TLB1_ENTRIES
+condition|;
+name|index
+operator|++
+control|)
+block|{
+name|tlb1_read_entry
 argument_list|(
 operator|&
-name|tlb1_idx
+name|e
 argument_list|,
-literal|1
+name|index
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|e
+operator|.
+name|mas1
+operator|&
+name|MAS1_VALID
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* Check if we're just updating the flags, and update them. */
+if|if
+condition|(
+name|e
+operator|.
+name|phys
+operator|==
+name|pa
+operator|&&
+name|e
+operator|.
+name|virt
+operator|==
+name|va
+operator|&&
+name|e
+operator|.
+name|size
+operator|==
+name|size
+condition|)
+block|{
+name|e
+operator|.
+name|mas2
+operator|=
+operator|(
+name|va
+operator|&
+name|MAS2_EPN_MASK
+operator|)
+operator||
+name|flags
+expr_stmt|;
+name|tlb1_write_entry
+argument_list|(
+operator|&
+name|e
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|index
@@ -14272,38 +14593,25 @@ operator|)
 operator|&
 name|MAS1_TS_MASK
 expr_stmt|;
-comment|/* 	 * Atomicity is preserved by the atomic increment above since nothing 	 * is ever removed from tlb1. 	 */
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|phys
 operator|=
 name|pa
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|virt
 operator|=
 name|va
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|size
 operator|=
 name|size
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|mas1
 operator|=
@@ -14315,10 +14623,7 @@ name|ts
 operator||
 name|tid
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|mas1
 operator||=
@@ -14332,10 +14637,7 @@ operator|&
 name|MAS1_TSIZE_MASK
 operator|)
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|mas2
 operator|=
@@ -14348,10 +14650,7 @@ operator||
 name|flags
 expr_stmt|;
 comment|/* Set supervisor RWX permission bits */
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|mas3
 operator|=
@@ -14367,10 +14666,7 @@ name|MAS3_SW
 operator||
 name|MAS3_SX
 expr_stmt|;
-name|tlb1
-index|[
-name|index
-index|]
+name|e
 operator|.
 name|mas7
 operator|=
@@ -14384,6 +14680,9 @@ name|MAS7_RPN
 expr_stmt|;
 name|tlb1_write_entry
 argument_list|(
+operator|&
+name|e
+argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
@@ -14658,6 +14957,8 @@ name|pa
 argument_list|,
 name|pgsz
 argument_list|,
+name|_TLB_ENTRY_SHARED
+operator||
 name|_TLB_ENTRY_MEM
 argument_list|)
 expr_stmt|;
@@ -14702,55 +15003,27 @@ argument|mas2
 argument_list|,
 argument|mas3
 argument_list|,
-argument|mas7; 	uint32_t tsz; 	int i;  	tlb1_idx =
-literal|1
-argument|;  	tlb1_get_tlbconf();  	mas0 = MAS0_TLBSEL(
+argument|mas7; 	uint32_t tsz;  	tlb1_get_tlbconf();  	mas0 = MAS0_TLBSEL(
 literal|1
 argument|) | MAS0_ESEL(
 literal|0
 argument|); 	mtspr(SPR_MAS0, mas0);
 asm|__asm __volatile("isync; tlbre");
-argument|mas1 = mfspr(SPR_MAS1); 	mas2 = mfspr(SPR_MAS2); 	mas3 = mfspr(SPR_MAS3); 	mas7 = mfspr(SPR_MAS7);  	tlb1[
-literal|0
-argument|].mas1 = mas1; 	tlb1[
-literal|0
-argument|].mas2 = mfspr(SPR_MAS2); 	tlb1[
-literal|0
-argument|].mas3 = mas3; 	tlb1[
-literal|0
-argument|].mas7 = mas7; 	tlb1[
-literal|0
-argument|].virt = mas2& MAS2_EPN_MASK; 	tlb1[
-literal|0
-argument|].phys =  ((vm_paddr_t)(mas7& MAS7_RPN)<<
+argument|mas1 = mfspr(SPR_MAS1); 	mas2 = mfspr(SPR_MAS2); 	mas3 = mfspr(SPR_MAS3); 	mas7 = mfspr(SPR_MAS7);  	kernload =  ((vm_paddr_t)(mas7& MAS7_RPN)<<
 literal|32
-argument|) | 	    (mas3& MAS3_RPN);  	kernload = tlb1[
-literal|0
-argument|].phys;  	tsz = (mas1& MAS1_TSIZE_MASK)>> MAS1_TSIZE_SHIFT; 	tlb1[
-literal|0
-argument|].size = (tsz>
+argument|) | 	    (mas3& MAS3_RPN);  	tsz = (mas1& MAS1_TSIZE_MASK)>> MAS1_TSIZE_SHIFT; 	kernsize += (tsz>
 literal|0
 argument|) ? tsize2size(tsz) :
 literal|0
-argument|; 	kernsize += tlb1[
-literal|0
-argument|].size;
-ifdef|#
-directive|ifdef
-name|SMP
-argument|bp_ntlb1s = tlb1_idx;
-endif|#
-directive|endif
-comment|/* Purge the remaining entries */
-argument|for (i = tlb1_idx; i< TLB1_ENTRIES; i++) 		tlb1_write_entry(i);
+argument|;
 comment|/* Setup TLB miss defaults */
 argument|set_mas4_defaults(); }  vm_offset_t  pmap_early_io_map(vm_paddr_t pa, vm_size_t size) { 	vm_paddr_t pa_base; 	vm_offset_t va
 argument_list|,
-argument|sz; 	int i;  	KASSERT(!pmap_bootstrapped, (
+argument|sz; 	int i; 	tlb_entry_t e;  	KASSERT(!pmap_bootstrapped, (
 literal|"Do not use after PMAP is up!"
 argument|)); 	 	for (i =
 literal|0
-argument|; i< tlb1_idx; i++) { 		if (!(tlb1[i].mas1& MAS1_VALID)) 			continue; 		if (pa>= tlb1[i].phys&& (pa + size)<= 		    (tlb1[i].phys + tlb1[i].size)) 			return (tlb1[i].virt + (pa - tlb1[i].phys)); 	}  	pa_base = rounddown(pa, PAGE_SIZE); 	size = roundup(size + (pa - pa_base), PAGE_SIZE); 	tlb1_map_base = roundup2(tlb1_map_base,
+argument|; i< TLB1_ENTRIES; i++) { 		tlb1_read_entry(&e, i); 		if (!(e.mas1& MAS1_VALID)) 			continue; 		if (pa>= e.phys&& (pa + size)<= 		    (e.phys + e.size)) 			return (e.virt + (pa - e.phys)); 	}  	pa_base = rounddown(pa, PAGE_SIZE); 	size = roundup(size + (pa - pa_base), PAGE_SIZE); 	tlb1_map_base = roundup2(tlb1_map_base,
 literal|1
 argument|<< (ilog2(size)& ~
 literal|1
@@ -14758,16 +15031,9 @@ argument|)); 	va = tlb1_map_base + (pa - pa_base);  	do { 		sz =
 literal|1
 argument|<< (ilog2(size)& ~
 literal|1
-argument|); 		tlb1_set_entry(tlb1_map_base, pa_base, sz, _TLB_ENTRY_IO); 		size -= sz; 		pa_base += sz; 		tlb1_map_base += sz; 	} while (size>
+argument|); 		tlb1_set_entry(tlb1_map_base, pa_base, sz, 		    _TLB_ENTRY_SHARED | _TLB_ENTRY_IO); 		size -= sz; 		pa_base += sz; 		tlb1_map_base += sz; 	} while (size>
 literal|0
-argument|);
-ifdef|#
-directive|ifdef
-name|SMP
-argument|bp_ntlb1s = tlb1_idx;
-endif|#
-directive|endif
-argument|return (va); }
+argument|);  	return (va); }
 comment|/*  * Setup MAS4 defaults.  * These values are loaded to MAS0-2 on a TLB miss.  */
 argument|static void set_mas4_defaults(void) { 	uint32_t mas4;
 comment|/* Defaults: TLB0, PID0, TSIZED=4K */
@@ -14799,26 +15065,20 @@ literal|1
 argument|) | MAS0_ESEL(i); 		mtspr(SPR_MAS0, mas0);
 asm|__asm __volatile("isync; tlbre");
 argument|mas1 = mfspr(SPR_MAS1); 		mas2 = mfspr(SPR_MAS2); 		mas3 = mfspr(SPR_MAS3); 		mas7 = mfspr(SPR_MAS7);  		tlb_print_entry(i, mas1, mas2, mas3, mas7); 	} }
-comment|/*  * Print out contents of the in-ram tlb1 table.  */
-argument|void tlb1_print_entries(void) { 	int i;  	debugf(
-literal|"tlb1[] table entries:\n"
-argument|); 	for (i =
-literal|0
-argument|; i< TLB1_ENTRIES; i++) 		tlb_print_entry(i, tlb1[i].mas1, tlb1[i].mas2, tlb1[i].mas3, 		    tlb1[i].mas7); }
 comment|/*  * Return 0 if the physical IO range is encompassed by one of the  * the TLB1 entries, otherwise return related error code.  */
-argument|static int tlb1_iomapped(int i, vm_paddr_t pa, vm_size_t size, vm_offset_t *va) { 	uint32_t prot; 	vm_paddr_t pa_start; 	vm_paddr_t pa_end; 	unsigned int entry_tsize; 	vm_size_t entry_size;  	*va = (vm_offset_t)NULL;
+argument|static int tlb1_iomapped(int i, vm_paddr_t pa, vm_size_t size, vm_offset_t *va) { 	uint32_t prot; 	vm_paddr_t pa_start; 	vm_paddr_t pa_end; 	unsigned int entry_tsize; 	vm_size_t entry_size; 	tlb_entry_t e;  	*va = (vm_offset_t)NULL;  	tlb1_read_entry(&e, i);
 comment|/* Skip invalid entries */
-argument|if (!(tlb1[i].mas1& MAS1_VALID)) 		return (EINVAL);
+argument|if (!(e.mas1& MAS1_VALID)) 		return (EINVAL);
 comment|/* 	 * The entry must be cache-inhibited, guarded, and r/w 	 * so it can function as an i/o page 	 */
-argument|prot = tlb1[i].mas2& (MAS2_I | MAS2_G); 	if (prot != (MAS2_I | MAS2_G)) 		return (EPERM);  	prot = tlb1[i].mas3& (MAS3_SR | MAS3_SW); 	if (prot != (MAS3_SR | MAS3_SW)) 		return (EPERM);
+argument|prot = e.mas2& (MAS2_I | MAS2_G); 	if (prot != (MAS2_I | MAS2_G)) 		return (EPERM);  	prot = e.mas3& (MAS3_SR | MAS3_SW); 	if (prot != (MAS3_SR | MAS3_SW)) 		return (EPERM);
 comment|/* The address should be within the entry range. */
-argument|entry_tsize = (tlb1[i].mas1& MAS1_TSIZE_MASK)>> MAS1_TSIZE_SHIFT; 	KASSERT((entry_tsize), (
+argument|entry_tsize = (e.mas1& MAS1_TSIZE_MASK)>> MAS1_TSIZE_SHIFT; 	KASSERT((entry_tsize), (
 literal|"tlb1_iomapped: invalid entry tsize"
-argument|));  	entry_size = tsize2size(entry_tsize); 	pa_start = (((vm_paddr_t)tlb1[i].mas7& MAS7_RPN)<<
+argument|));  	entry_size = tsize2size(entry_tsize); 	pa_start = (((vm_paddr_t)e.mas7& MAS7_RPN)<<
 literal|32
-argument|) |  	    (tlb1[i].mas3& MAS3_RPN); 	pa_end = pa_start + entry_size;  	if ((pa< pa_start) || ((pa + size)> pa_end)) 		return (ERANGE);
+argument|) |  	    (e.mas3& MAS3_RPN); 	pa_end = pa_start + entry_size;  	if ((pa< pa_start) || ((pa + size)> pa_end)) 		return (ERANGE);
 comment|/* Return virtual address of this mapping. */
-argument|*va = (tlb1[i].mas2& MAS2_EPN_MASK) + (pa - pa_start); 	return (
+argument|*va = (e.mas2& MAS2_EPN_MASK) + (pa - pa_start); 	return (
 literal|0
 argument|); }
 comment|/*  * Invalidate all TLB0 entries which match the given TID. Note this is  * dedicated for cases when invalidations should NOT be propagated to other  * CPUs.  */

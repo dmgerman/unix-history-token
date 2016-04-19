@@ -963,7 +963,7 @@ end_if
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|TLB0_ENTRY_SIZE
+name|TLB_ENTRY_SIZE
 argument_list|,
 sizeof|sizeof
 argument_list|(
