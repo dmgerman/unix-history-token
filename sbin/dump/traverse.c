@@ -4821,7 +4821,7 @@ name|secsize
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|quit
 argument_list|(
