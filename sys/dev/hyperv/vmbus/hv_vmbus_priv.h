@@ -2300,6 +2300,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Wait for device creation */
+end_comment
+
+begin_function_decl
+name|void
+name|vmbus_scan
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The guest OS needs to register the guest ID with the hypervisor.  * The guest ID is a 64 bit entity and the structure of this ID is  * specified in the Hyper-V specification:  *  * http://msdn.microsoft.com/en-us/library/windows/  * hardware/ff542653%28v=vs.85%29.aspx  *  * While the current guideline does not specify how FreeBSD guest ID(s)  * need to be generated, our plan is to publish the guidelines for  * FreeBSD and other guest operating systems that currently are hosted  * on Hyper-V. The implementation here conforms to this yet  * unpublished guidelines.  *  * Bit(s)  * 63 - Indicates if the OS is Open Source or not; 1 is Open Source  * 62:56 - Os Type; Linux is 0x100, FreeBSD is 0x200  * 55:48 - Distro specific identification  * 47:16 - FreeBSD kernel version number  * 15:0  - Distro specific identification  *  */
 end_comment
 
