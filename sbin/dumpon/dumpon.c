@@ -201,14 +201,8 @@ decl_stmt|;
 name|size_t
 name|namelen
 init|=
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|name
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|name
 argument_list|)
 decl_stmt|;
