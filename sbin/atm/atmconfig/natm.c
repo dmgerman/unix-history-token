@@ -3611,7 +3611,7 @@ if|if
 condition|(
 name|aif
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
