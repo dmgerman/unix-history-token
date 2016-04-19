@@ -95,11 +95,12 @@ directive|include
 file|<sys/capsicum.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
+begin_define
+define|#
+directive|define
+name|_PATH_UNITSLIB
+value|"/usr/share/misc/units.lib"
+end_define
 
 begin_ifndef
 ifndef|#
