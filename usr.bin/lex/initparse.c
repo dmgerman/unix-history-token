@@ -5798,7 +5798,7 @@ if|if
 condition|(
 name|newss
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|-
@@ -5843,7 +5843,7 @@ if|if
 condition|(
 name|newvs
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|-
@@ -6020,7 +6020,7 @@ literal|"YYDEBUG"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|yyn

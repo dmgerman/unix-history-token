@@ -32911,7 +32911,7 @@ name|nmstr
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|format_synerr
 argument_list|(
