@@ -170,24 +170,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Declare a bhndb_pci_id entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHNDB_PCI_ID
-parameter_list|(
-name|_device
-parameter_list|,
-name|_desc
-parameter_list|,
-modifier|...
-parameter_list|)
-value|{	\ 	BHND_COREID_ ## _device, 			\ 	BHND_PCI_REGFMT_ ## _device,			\ 	(struct bhnd_device_quirk[]) {			\ 		__VA_ARGS__				\ 	}						\ }
-end_define
-
-begin_comment
 comment|/*   * PCI/PCIe-Gen1 endpoint-mode device quirks  */
 end_comment
 

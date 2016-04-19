@@ -128,7 +128,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|bhnd_set_generic_core_desc
+name|bhnd_set_default_core_desc
 argument_list|(
 name|dev
 argument_list|)

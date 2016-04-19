@@ -426,8 +426,77 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_HWREV_MATCH_ANY
+name|BHND_HWREV_ANY
 value|{ BHND_HWREV_INVALID, BHND_HWREV_INVALID }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_HWREV_IS_ANY
+parameter_list|(
+name|_m
+parameter_list|)
+define|\
+value|((_m)->start == BHND_HWREV_INVALID&& (_m)->end == BHND_HWREV_INVALID)
+end_define
+
+begin_comment
+comment|/**  * Hardware revision match descriptor for an inclusive range.  *   * @param _start The first applicable hardware revision.  * @param _end The last applicable hardware revision, or BHND_HWREV_INVALID  * to match on any revision.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_HWREV_RANGE
+parameter_list|(
+name|_start
+parameter_list|,
+name|_end
+parameter_list|)
+value|{ _start, _end }
+end_define
+
+begin_comment
+comment|/**  * Hardware revision match descriptor for a single revision.  *   * @param _hwrev The hardware revision to match on.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_HWREV_EQ
+parameter_list|(
+name|_hwrev
+parameter_list|)
+value|BHND_HWREV_RANGE(_hwrev, _hwrev)
+end_define
+
+begin_comment
+comment|/**  * Hardware revision match descriptor for any revision equal to or greater  * than @p _start.  *   * @param _start The first hardware revision to match on.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_HWREV_GTE
+parameter_list|(
+name|_start
+parameter_list|)
+value|BHND_HWREV_RANGE(_start, BHND_HWREV_INVALID)
+end_define
+
+begin_comment
+comment|/**  * Hardware revision match descriptor for any revision equal to or less  * than @p _end.  *   * @param _end The last hardware revision to match on.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_HWREV_LTE
+parameter_list|(
+name|_end
+parameter_list|)
+value|BHND_HWREV_RANGE(0, _end)
 end_define
 
 begin_comment
@@ -464,7 +533,38 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Revision-specific hardware quirk descriptor.  *   * Defines a set of quirk flags applicable to a range of hardware  * revisions.  */
+comment|/**  * Core match descriptor matching against the given @p _vendor, @p _device,  * and @p _hwrev match descriptors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CORE_MATCH
+parameter_list|(
+name|_vendor
+parameter_list|,
+name|_device
+parameter_list|,
+name|_hwrev
+parameter_list|)
+define|\
+value|{ _vendor, _device, _hwrev, BHND_DEVCLASS_INVALID, -1 }
+end_define
+
+begin_comment
+comment|/**   * Wildcard core match descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CORE_MATCH_ANY
+define|\
+value|{					\ 		.vendor = BHND_MFGID_INVALID,	\ 		.device = BHND_COREID_INVALID,	\ 		.hwrev = BHND_HWREV_ANY,	\ 		.class = BHND_DEVCLASS_INVALID,	\ 		.unit = -1			\ 	}
+end_define
+
+begin_comment
+comment|/**  * Device quirk table descriptor.  */
 end_comment
 
 begin_struct
@@ -479,90 +579,124 @@ comment|/**< applicable hardware revisions */
 name|uint32_t
 name|quirks
 decl_stmt|;
-comment|/**< applicable quirk flags */
+comment|/**< quirk flags */
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/**  * Define a bhnd_device_quirk over a range of hardware revisions.  *   * @param _start The first applicable hardware revision.  * @param _end The last applicable hardware revision, or BHND_HWREV_INVALID  * to match on any revision.  * @param _quirks Quirk flags applicable to this revision range.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|BHND_QUIRK_HWREV_RANGE
-parameter_list|(
-name|_start
-parameter_list|,
-name|_end
-parameter_list|,
-name|_quirks
-parameter_list|)
-define|\
-value|{ .hwrev = { _start, _end }, .quirks = _quirks }
+name|BHND_DEVICE_QUIRK_END
+value|{ BHND_HWREV_ANY, 0 }
 end_define
 
-begin_comment
-comment|/**  * Define a bhnd_device_quirk for a specific hardware revision.  *   * @param _hwrev The hardware revision to match on.  * @param _quirks Quirk flags applicable to this revision.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|BHND_QUIRK_HWREV_EQ
+name|BHND_DEVICE_QUIRK_IS_END
 parameter_list|(
-name|_hwrev
-parameter_list|,
-name|_quirks
+name|_q
 parameter_list|)
 define|\
-value|BHND_QUIRK_HWREV_RANGE(_hwrev, _hwrev, _quirks)
+value|(BHND_HWREV_IS_ANY(&(_q)->hwrev)&& (_q)->quirks == 0)
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|BHND_DF_ANY
+init|=
+literal|0
+block|,
+name|BHND_DF_HOSTB
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+comment|/**< core is serving as the bus' 					  *  host bridge */
+block|}
+enum|;
+end_enum
+
 begin_comment
-comment|/**  * Define a bhnd_device_quirk for any hardware revision equal or greater  * than @p _start.  *   * @param _start The first hardware revision to match on.  * @param _quirks Quirk flags applicable to this revision.  */
+comment|/** Device probe table descriptor */
 end_comment
+
+begin_struct
+struct|struct
+name|bhnd_device
+block|{
+specifier|const
+name|struct
+name|bhnd_core_match
+name|core
+decl_stmt|;
+comment|/**< core match descriptor */
+specifier|const
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/**< device description, or NULL. */
+specifier|const
+name|struct
+name|bhnd_device_quirk
+modifier|*
+name|quirks_table
+decl_stmt|;
+comment|/**< quirks table for this device, or NULL */
+name|uint32_t
+name|device_flags
+decl_stmt|;
+comment|/**< required BHND_DF_* flags */
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
-name|BHND_QUIRK_HWREV_GTE
+name|_BHND_DEVICE
 parameter_list|(
-name|_start
+name|_device
+parameter_list|,
+name|_desc
 parameter_list|,
 name|_quirks
+parameter_list|,
+name|_flags
+parameter_list|,
+modifier|...
 parameter_list|)
 define|\
-value|BHND_QUIRK_HWREV_RANGE(_start, BHND_HWREV_INVALID, _quirks)
+value|{ BHND_CORE_MATCH(BHND_MFGID_BCM, BHND_COREID_ ## _device, \ 	    BHND_HWREV_ANY), _desc, _quirks, _flags }
 end_define
-
-begin_comment
-comment|/**  * Define a bhnd_device_quirk for any hardware revision equal or less  * than @p _end.  *   * @param _end The last hardware revision to match on.  * @param _quirks Quirk flags applicable to this revision.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BHND_QUIRK_HWREV_LTE
+name|BHND_DEVICE
 parameter_list|(
-name|_end
+name|_device
+parameter_list|,
+name|_desc
 parameter_list|,
 name|_quirks
+parameter_list|,
+modifier|...
 parameter_list|)
 define|\
-value|BHND_QUIRK_HWREV_RANGE(0, _end, _quirks)
+value|_BHND_DEVICE(_device, _desc, _quirks, ## __VA_ARGS__, 0)
 end_define
-
-begin_comment
-comment|/** Mark the end of a bhnd_device_quirk table. */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BHND_QUIRK_HWREV_END
-value|{ BHND_HWREV_MATCH_ANY, 0 }
+name|BHND_DEVICE_END
+value|{ BHND_CORE_MATCH_ANY, NULL, NULL, 0 }
 end_define
 
 begin_function_decl
@@ -776,6 +910,47 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|struct
+name|bhnd_device
+modifier|*
+name|bhnd_device_lookup
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_device
+modifier|*
+name|table
+parameter_list|,
+name|size_t
+name|entry_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_device_quirks
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_device
+modifier|*
+name|table
+parameter_list|,
+name|size_t
+name|entry_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|bhnd_core_info
 name|bhnd_get_core_info
@@ -868,7 +1043,22 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|bhnd_set_generic_core_desc
+name|bhnd_set_custom_core_desc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhnd_set_default_core_desc
 parameter_list|(
 name|device_t
 name|dev
