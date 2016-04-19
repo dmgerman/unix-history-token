@@ -233,6 +233,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_AMD_MISC16_M30H
+value|0x1583
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_AMD_MISC17
 value|0x141d
 end_define
@@ -293,6 +300,12 @@ block|{
 name|VENDORID_AMD
 block|,
 name|DEVICEID_AMD_MISC16
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC16_M30H
 block|}
 block|,
 block|{
