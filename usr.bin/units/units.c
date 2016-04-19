@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_UNITSLIB
-value|"/usr/share/misc/units.lib"
+value|"/usr/share/misc/definitions.units"
 end_define
 
 begin_ifndef
