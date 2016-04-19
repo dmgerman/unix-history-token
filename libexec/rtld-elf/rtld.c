@@ -3683,7 +3683,7 @@ index|[
 name|AT_EXECPATH
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|char

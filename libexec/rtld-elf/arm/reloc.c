@@ -588,7 +588,7 @@ name|Elf_Rel
 modifier|*
 name|rel
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|rellim
