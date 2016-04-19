@@ -5259,6 +5259,8 @@ name|F_READ
 argument_list|,
 name|pos
 argument_list|,
+literal|0
+argument_list|,
 name|nsec
 operator|*
 name|bsize
@@ -5376,6 +5378,8 @@ operator|->
 name|f_devdata
 argument_list|,
 name|F_READ
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
