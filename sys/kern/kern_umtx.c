@@ -20471,13 +20471,13 @@ operator|=
 name|__umtx_op_wake
 block|,
 index|[
-name|UMTX_OP_MUTEX_LOCK
+name|UMTX_OP_MUTEX_TRYLOCK
 index|]
 operator|=
 name|__umtx_op_trylock_umutex
 block|,
 index|[
-name|UMTX_OP_MUTEX_TRYLOCK
+name|UMTX_OP_MUTEX_LOCK
 index|]
 operator|=
 name|__umtx_op_lock_umutex_compat32
