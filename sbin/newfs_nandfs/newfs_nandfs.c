@@ -4375,20 +4375,10 @@ name|i
 decl_stmt|;
 name|nuserfiles
 operator|=
-operator|(
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|user_files
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|user_files
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 expr_stmt|;
 comment|/* Count and assign blocks */
 name|count_seg_blocks
