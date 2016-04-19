@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -2305,20 +2305,15 @@ operator|==
 name|MAP_FAILED
 condition|)
 block|{
-name|printf
+name|warn
 argument_list|(
-literal|"Failed to map PBA page for MSI-X on %d/%d/%d: %s\n"
+literal|"Failed to map PBA page for MSI-X on %d/%d/%d"
 argument_list|,
 name|b
 argument_list|,
 name|s
 argument_list|,
 name|f
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2634,7 +2629,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
 literal|"passthru device %d/%d/%d BAR %d: "
 literal|"base %#lx or size %#lx not page aligned\n"
@@ -2959,9 +2954,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"failed to initialize MSI for PCI %d/%d/%d"
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 if|if
 condition|(
 name|cfginitbar
@@ -2973,9 +2981,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"failed to initialize BARs for PCI %d/%d/%d"
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|error
 operator|=
 literal|0
@@ -3052,11 +3073,9 @@ name|VM_MEM_F_WIRED
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passthru requires guest memory to be wired\n"
+literal|"passthru requires guest memory to be wired"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3087,9 +3106,18 @@ name|pcifd
 operator|<
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"failed to open %s"
+argument_list|,
+name|_PATH_DEVPCI
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -3115,9 +3143,18 @@ name|iofd
 operator|<
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"failed to open %s"
+argument_list|,
+name|_PATH_DEVIO
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -3143,9 +3180,18 @@ name|memfd
 operator|<
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"failed to open %s"
+argument_list|,
+name|_PATH_MEM
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -3171,9 +3217,16 @@ argument_list|)
 operator|!=
 literal|3
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid passthru options"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 if|if
 condition|(
 name|vm_assign_pptdev
@@ -3189,9 +3242,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"PCI device at %d/%d/%d is not using the ppt(4) driver"
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|sc
 operator|=
 name|calloc
@@ -3708,20 +3774,13 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vm_setup_pptdev_msi error %d\r\n"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"vm_setup_pptdev_msi"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -3852,21 +3911,13 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vm_setup_pptdev_msix error "
-literal|"%d\r\n"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"vm_setup_pptdev_msix"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
