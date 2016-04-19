@@ -2058,7 +2058,7 @@ if|if
 condition|(
 name|kd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|xo_errx
 argument_list|(
