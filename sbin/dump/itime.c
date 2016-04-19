@@ -163,7 +163,7 @@ modifier|*
 modifier|*
 name|ddatev
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -470,12 +470,6 @@ block|}
 comment|/* 	 *	arrayify the list, leaving enough room for the additional 	 *	record that we may have to add to the ddate structure 	 */
 name|ddatev
 operator|=
-operator|(
-expr|struct
-name|dumpdates
-operator|*
-operator|*
-operator|)
 name|calloc
 argument_list|(
 call|(
@@ -752,16 +746,12 @@ name|disk
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ddatev
 argument_list|)
 expr_stmt|;
 name|ddatev
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|nddates
 operator|=
