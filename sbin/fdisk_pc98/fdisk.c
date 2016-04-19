@@ -4365,12 +4365,10 @@ block|{
 name|int
 name|numentries
 init|=
-operator|(
 name|nitems
 argument_list|(
 name|part_types
 argument_list|)
-operator|)
 decl_stmt|;
 name|int
 name|counter
