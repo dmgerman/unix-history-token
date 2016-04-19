@@ -7199,14 +7199,10 @@ name|siotsunit
 operator|&&
 name|siotso
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|siots
-operator|/
-sizeof|sizeof
-name|siots
-index|[
-literal|0
-index|]
+argument_list|)
 condition|)
 name|nanouptime
 argument_list|(

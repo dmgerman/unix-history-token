@@ -1078,15 +1078,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|flash_devices
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mx25l_flash_ident
 argument_list|)
 condition|;
 name|i

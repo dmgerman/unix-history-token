@@ -953,14 +953,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|rc_ports
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
 argument_list|)
 condition|;
 name|i

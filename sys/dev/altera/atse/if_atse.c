@@ -7116,14 +7116,8 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|atse_mac_stats_regs
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|atse_mac_stats_regs
 argument_list|)
 condition|;

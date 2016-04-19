@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|DIGI_NVALIDIO
-value|(sizeof(digi_validio) / sizeof(digi_validio[0]))
+value|nitems(digi_validio)
 end_define
 
 begin_define
@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|DIGI_NVALIDMEM
-value|(sizeof(digi_validmem) / sizeof(digi_validmem[0]))
+value|(nitems(digi_validmem))
 end_define
 
 begin_function

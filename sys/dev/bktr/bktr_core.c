@@ -1389,7 +1389,7 @@ begin_define
 define|#
 directive|define
 name|PIXFMT_TABLE_SIZE
-value|( sizeof(pixfmt_table) / sizeof(pixfmt_table[0]) )
+value|nitems(pixfmt_table)
 end_define
 
 begin_comment
@@ -1544,7 +1544,7 @@ begin_define
 define|#
 directive|define
 name|METEOR_PIXFMT_TABLE_SIZE
-value|( sizeof(meteor_pixfmt_table) / \ 				   sizeof(meteor_pixfmt_table[0]) )
+value|nitems(meteor_pixfmt_table)
 end_define
 
 begin_define
