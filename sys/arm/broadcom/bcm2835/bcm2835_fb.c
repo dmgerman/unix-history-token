@@ -651,8 +651,6 @@ if|if
 condition|(
 name|bcm2835_mbox_fb_get_w_h
 argument_list|(
-name|dev
-argument_list|,
 operator|&
 name|fb
 argument_list|)
@@ -674,8 +672,6 @@ if|if
 condition|(
 name|bcm2835_mbox_fb_init
 argument_list|(
-name|dev
-argument_list|,
 operator|&
 name|fb
 argument_list|)
