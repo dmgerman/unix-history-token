@@ -341,6 +341,8 @@ name|gpio_pin
 name|pins
 index|[
 name|NCT_MAX_PIN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 block|}
