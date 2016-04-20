@@ -1469,14 +1469,6 @@ name|struct
 name|bcm2835_mbox_tag_fb_w_h
 name|physical_w_h
 decl_stmt|;
-name|struct
-name|bcm2835_mbox_tag_fb_w_h
-name|virtual_w_h
-decl_stmt|;
-name|struct
-name|bcm2835_mbox_tag_virtual_offset
-name|offset
-decl_stmt|;
 name|uint32_t
 name|end_tag
 decl_stmt|;
