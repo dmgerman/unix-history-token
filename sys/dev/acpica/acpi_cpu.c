@@ -1539,9 +1539,6 @@ name|buf
 decl_stmt|;
 name|ACPI_OBJECT
 name|arg
-index|[
-literal|1
-index|]
 decl_stmt|,
 modifier|*
 name|obj
@@ -2083,6 +2080,7 @@ name|arglist
 operator|.
 name|Pointer
 operator|=
+operator|&
 name|arg
 expr_stmt|;
 name|arglist
@@ -2092,18 +2090,12 @@ operator|=
 literal|1
 expr_stmt|;
 name|arg
-index|[
-literal|0
-index|]
 operator|.
 name|Type
 operator|=
 name|ACPI_TYPE_BUFFER
 expr_stmt|;
 name|arg
-index|[
-literal|0
-index|]
 operator|.
 name|Buffer
 operator|.
@@ -2115,9 +2107,6 @@ name|cap_set
 argument_list|)
 expr_stmt|;
 name|arg
-index|[
-literal|0
-index|]
 operator|.
 name|Buffer
 operator|.
