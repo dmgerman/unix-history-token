@@ -8111,6 +8111,11 @@ name|error
 operator|=
 name|ERANGE
 expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
