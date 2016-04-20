@@ -1372,26 +1372,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|size_t
-name|e500_event_codes_size
-init|=
-sizeof|sizeof
-argument_list|(
-name|e500_event_codes
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|e500_event_codes
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|pmc_value_t
