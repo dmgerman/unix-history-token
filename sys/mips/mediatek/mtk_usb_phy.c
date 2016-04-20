@@ -325,6 +325,12 @@ name|MTK_SOC_MT7620A
 block|}
 block|,
 block|{
+literal|"mediatek,mt7620-usbphy"
+block|,
+name|MTK_SOC_MT7620A
+block|}
+block|,
+block|{
 literal|"ralink,mt7628an-usbphy"
 block|,
 name|MTK_SOC_MT7628

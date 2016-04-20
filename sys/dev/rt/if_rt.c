@@ -363,6 +363,12 @@ name|RT_CHIPID_MT7620
 block|}
 block|,
 block|{
+literal|"mediatek,mt7620-eth"
+block|,
+name|RT_CHIPID_MT7620
+block|}
+block|,
+block|{
 literal|"ralink,mt7621-eth"
 block|,
 name|RT_CHIPID_MT7621
