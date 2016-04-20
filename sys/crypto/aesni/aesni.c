@@ -2492,6 +2492,10 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|authbuf
 operator|=
 name|NULL
