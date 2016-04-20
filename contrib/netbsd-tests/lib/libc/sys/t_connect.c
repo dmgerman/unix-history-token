@@ -156,6 +156,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ATF_REQUIRE
+argument_list|(
+name|sd
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|slist
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* bind listening socket */
 name|memset
 argument_list|(
@@ -410,6 +429,16 @@ argument_list|(
 name|sd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|close
+argument_list|(
+name|slist
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
