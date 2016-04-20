@@ -2167,6 +2167,17 @@ name|init_ui_hook
 operator|=
 name|kgdb_init
 expr_stmt|;
+if|#
+directive|if
+name|TARGET_CPUARCH
+operator|==
+name|arm
+name|frame_tdep_pc_fixup
+operator|=
+name|kgdb_trgt_pc_fixup
+expr_stmt|;
+endif|#
+directive|endif
 name|kgdb_sniffer_kluge
 operator|=
 name|kgdb_trgt_trapframe_sniffer

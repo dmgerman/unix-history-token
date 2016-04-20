@@ -1918,6 +1918,16 @@ name|frameoffset
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|frame_tdep_pc_fixup
+condition|)
+name|frame_tdep_pc_fixup
+argument_list|(
+operator|&
+name|prev_pc
+argument_list|)
+expr_stmt|;
 comment|/* Check for Thumb prologue.  */
 if|if
 condition|(

@@ -321,6 +321,32 @@ parameter_list|)
 value|kgdb_parse_1((exp), 1)
 end_define
 
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|arm_tdep_pc_fixup
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+modifier|*
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kgdb_trgt_pc_fixup
+parameter_list|(
+name|CORE_ADDR
+modifier|*
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
