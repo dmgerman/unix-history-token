@@ -1664,6 +1664,11 @@ decl_stmt|;
 name|device_t
 name|i2c
 decl_stmt|;
+name|bool
+name|res
+init|=
+name|false
+decl_stmt|;
 name|BUG_ON
 argument_list|(
 name|crt
@@ -1721,9 +1726,13 @@ argument_list|(
 literal|"CRT detected via DDC:0x50 [EDID]\n"
 argument_list|)
 expr_stmt|;
-return|return
+name|res
+operator|=
 name|true
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|DRM_DEBUG_KMS
 argument_list|(
@@ -1739,6 +1748,8 @@ literal|"CRT not detected via DDC:0x50 [no valid EDID found]\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 name|free
 argument_list|(
 name|edid
@@ -1747,7 +1758,7 @@ name|DRM_MEM_KMS
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|res
 return|;
 block|}
 end_function
