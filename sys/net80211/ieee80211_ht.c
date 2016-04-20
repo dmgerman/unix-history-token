@@ -10349,7 +10349,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: stop BA stream for TID %d (reason %d)"
+literal|"%s: stop BA stream for TID %d (reason: %d (%s))"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10358,6 +10358,11 @@ operator|->
 name|txa_tid
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vap
@@ -10426,7 +10431,8 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: BA stream for TID %d not running (reason %d)"
+literal|"%s: BA stream for TID %d not running "
+literal|"(reason: %d (%s))"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10435,6 +10441,11 @@ operator|->
 name|txa_tid
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vap
@@ -11991,7 +12002,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"send DELBA action: tid %d, initiator %d reason %d"
+literal|"send DELBA action: tid %d, initiator %d reason %d (%s)"
 argument_list|,
 name|args
 index|[
@@ -12007,6 +12018,14 @@ name|args
 index|[
 literal|2
 index|]
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|args
+index|[
+literal|2
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|IEEE80211_DPRINTF

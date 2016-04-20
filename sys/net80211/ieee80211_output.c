@@ -10089,9 +10089,14 @@ name|IEEE80211_MSG_AUTH
 argument_list|,
 name|ni
 argument_list|,
-literal|"send station deauthenticate (reason %d)"
+literal|"send station deauthenticate (reason: %d (%s))"
 argument_list|,
 name|arg
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -11240,9 +11245,14 @@ name|IEEE80211_MSG_ASSOC
 argument_list|,
 name|ni
 argument_list|,
-literal|"send station disassociate (reason %d)"
+literal|"send station disassociate (reason: %d (%s))"
 argument_list|,
 name|arg
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m

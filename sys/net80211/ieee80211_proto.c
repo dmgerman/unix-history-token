@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2012 IEEE  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -360,6 +360,429 @@ literal|"WME_UPSD"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Reason code descriptions were (mostly) obtained from  * IEEE Std 802.11-2012, pp. 442-445 Table 8-36.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|ieee80211_reason_to_string
+parameter_list|(
+name|uint16_t
+name|reason
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|reason
+condition|)
+block|{
+case|case
+name|IEEE80211_REASON_UNSPECIFIED
+case|:
+return|return
+operator|(
+literal|"unspecified"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_AUTH_EXPIRE
+case|:
+return|return
+operator|(
+literal|"previous authentication is expired"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_AUTH_LEAVE
+case|:
+return|return
+operator|(
+literal|"sending STA is leaving/has left IBSS or ESS"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_ASSOC_EXPIRE
+case|:
+return|return
+operator|(
+literal|"disassociated due to inactivity"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_ASSOC_TOOMANY
+case|:
+return|return
+operator|(
+literal|"too many associated STAs"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_NOT_AUTHED
+case|:
+return|return
+operator|(
+literal|"class 2 frame received from nonauthenticated STA"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_NOT_ASSOCED
+case|:
+return|return
+operator|(
+literal|"class 3 frame received from nonassociated STA"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_ASSOC_LEAVE
+case|:
+return|return
+operator|(
+literal|"sending STA is leaving/has left BSS"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_ASSOC_NOT_AUTHED
+case|:
+return|return
+operator|(
+literal|"STA requesting (re)association is not authenticated"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_DISASSOC_PWRCAP_BAD
+case|:
+return|return
+operator|(
+literal|"information in the Power Capability element is "
+literal|"unacceptable"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_DISASSOC_SUPCHAN_BAD
+case|:
+return|return
+operator|(
+literal|"information in the Supported Channels element is "
+literal|"unacceptable"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_IE_INVALID
+case|:
+return|return
+operator|(
+literal|"invalid element"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MIC_FAILURE
+case|:
+return|return
+operator|(
+literal|"MIC failure"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_4WAY_HANDSHAKE_TIMEOUT
+case|:
+return|return
+operator|(
+literal|"4-Way handshake timeout"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_GROUP_KEY_UPDATE_TIMEOUT
+case|:
+return|return
+operator|(
+literal|"group key update timeout"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_IE_IN_4WAY_DIFFERS
+case|:
+return|return
+operator|(
+literal|"element in 4-Way handshake different from "
+literal|"(re)association request/probe response/beacon frame"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_GROUP_CIPHER_INVALID
+case|:
+return|return
+operator|(
+literal|"invalid group cipher"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_PAIRWISE_CIPHER_INVALID
+case|:
+return|return
+operator|(
+literal|"invalid pairwise cipher"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_AKMP_INVALID
+case|:
+return|return
+operator|(
+literal|"invalid AKMP"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_UNSUPP_RSN_IE_VERSION
+case|:
+return|return
+operator|(
+literal|"unsupported version in RSN IE"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_INVALID_RSN_IE_CAP
+case|:
+return|return
+operator|(
+literal|"invalid capabilities in RSN IE"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_802_1X_AUTH_FAILED
+case|:
+return|return
+operator|(
+literal|"IEEE 802.1X authentication failed"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_CIPHER_SUITE_REJECTED
+case|:
+return|return
+operator|(
+literal|"cipher suite rejected because of the security "
+literal|"policy"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_UNSPECIFIED_QOS
+case|:
+return|return
+operator|(
+literal|"unspecified (QoS-related)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_INSUFFICIENT_BW
+case|:
+return|return
+operator|(
+literal|"QoS AP lacks sufficient bandwidth for this QoS STA"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_TOOMANY_FRAMES
+case|:
+return|return
+operator|(
+literal|"too many frames need to be acknowledged"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_OUTSIDE_TXOP
+case|:
+return|return
+operator|(
+literal|"STA is transmitting outside the limits of its TXOPs"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_LEAVING_QBSS
+case|:
+return|return
+operator|(
+literal|"requested from peer STA (the STA is "
+literal|"resetting/leaving the BSS)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_BAD_MECHANISM
+case|:
+return|return
+operator|(
+literal|"requested from peer STA (it does not want to use "
+literal|"the mechanism)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_SETUP_NEEDED
+case|:
+return|return
+operator|(
+literal|"requested from peer STA (setup is required for the "
+literal|"used mechanism)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_TIMEOUT
+case|:
+return|return
+operator|(
+literal|"requested from peer STA (timeout)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_PEER_LINK_CANCELED
+case|:
+return|return
+operator|(
+literal|"SME cancels the mesh peering instance (not related "
+literal|"to the maximum number of peer mesh STAs)"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_MAX_PEERS
+case|:
+return|return
+operator|(
+literal|"maximum number of peer mesh STAs was reached"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_CPVIOLATION
+case|:
+return|return
+operator|(
+literal|"the received information violates the Mesh "
+literal|"Configuration policy configured in the mesh STA "
+literal|"profile"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_CLOSE_RCVD
+case|:
+return|return
+operator|(
+literal|"the mesh STA has received a Mesh Peering Close "
+literal|"message requesting to close the mesh peering"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_MAX_RETRIES
+case|:
+return|return
+operator|(
+literal|"the mesh STA has resent dot11MeshMaxRetries Mesh "
+literal|"Peering Open messages, without receiving a Mesh "
+literal|"Peering Confirm message"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_CONFIRM_TIMEOUT
+case|:
+return|return
+operator|(
+literal|"the confirmTimer for the mesh peering instance times "
+literal|"out"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_INVALID_GTK
+case|:
+return|return
+operator|(
+literal|"the mesh STA fails to unwrap the GTK or the values "
+literal|"in the wrapped contents do not match"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_INCONS_PARAMS
+case|:
+return|return
+operator|(
+literal|"the mesh STA receives inconsistent information about "
+literal|"the mesh parameters between Mesh Peering Management "
+literal|"frames"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_INVALID_SECURITY
+case|:
+return|return
+operator|(
+literal|"the mesh STA fails the authenticated mesh peering "
+literal|"exchange because due to failure in selecting "
+literal|"pairwise/group ciphersuite"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_PERR_NO_PROXY
+case|:
+return|return
+operator|(
+literal|"the mesh STA does not have proxy information for "
+literal|"this external destination"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_PERR_NO_FI
+case|:
+return|return
+operator|(
+literal|"the mesh STA does not have forwarding information "
+literal|"for this destination"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_PERR_DEST_UNREACH
+case|:
+return|return
+operator|(
+literal|"the mesh STA determines that the link to the next "
+literal|"hop of an active path in its forwarding information "
+literal|"is no longer usable"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_MAC_ALRDY_EXISTS_MBSS
+case|:
+return|return
+operator|(
+literal|"the MAC address of the STA already exists in the "
+literal|"mesh BSS"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_REG
+case|:
+return|return
+operator|(
+literal|"the mesh STA performs channel switch to meet "
+literal|"regulatory requirements"
+operator|)
+return|;
+case|case
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_UNSPEC
+case|:
+return|return
+operator|(
+literal|"the mesh STA performs channel switch with "
+literal|"unspecified reason"
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|"reserved/unknown"
+operator|)
+return|;
+block|}
+block|}
+end_function
 
 begin_function_decl
 specifier|static

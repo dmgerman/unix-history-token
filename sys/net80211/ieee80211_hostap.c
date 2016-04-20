@@ -9465,7 +9465,7 @@ name|IEEE80211_MSG_AUTH
 argument_list|,
 name|ni
 argument_list|,
-literal|"recv %s (reason %d)"
+literal|"recv %s (reason: %d (%s))"
 argument_list|,
 name|ieee80211_mgt_subtype_name
 index|[
@@ -9475,6 +9475,11 @@ name|IEEE80211_FC0_SUBTYPE_SHIFT
 index|]
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

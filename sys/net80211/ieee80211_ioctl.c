@@ -7112,7 +7112,7 @@ name|IEEE80211_MSG_AUTH
 argument_list|,
 name|mac
 argument_list|,
-literal|"station authenticate %s via MLME (reason %d)"
+literal|"station authenticate %s via MLME (reason: %d (%s))"
 argument_list|,
 name|reason
 operator|==
@@ -7123,6 +7123,11 @@ else|:
 literal|"REJECT"
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7149,11 +7154,16 @@ name|IEEE80211_MSG_ANY
 argument_list|,
 name|mac
 argument_list|,
-literal|"unknown MLME request %d (reason %d)"
+literal|"unknown MLME request %d (reason: %d (%s))"
 argument_list|,
 name|op
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7204,7 +7214,7 @@ name|mask
 argument_list|,
 name|mac
 argument_list|,
-literal|"station %s via MLME (reason %d)"
+literal|"station %s via MLME (reason: %d (%s))"
 argument_list|,
 name|ops
 index|[
@@ -7214,6 +7224,11 @@ operator|.
 name|opstr
 argument_list|,
 name|reason
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|reason
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

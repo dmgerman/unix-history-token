@@ -123,6 +123,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ieee80211_reason_to_string
+parameter_list|(
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_proto_attach
 parameter_list|(

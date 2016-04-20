@@ -13574,7 +13574,7 @@ name|IEEE80211_MSG_MESH
 argument_list|,
 name|ni
 argument_list|,
-literal|"send PEER CLOSE action: localid 0x%x, peerid 0x%x reason %d"
+literal|"send PEER CLOSE action: localid 0x%x, peerid 0x%x reason %d (%s)"
 argument_list|,
 name|args
 index|[
@@ -13590,6 +13590,14 @@ name|args
 index|[
 literal|2
 index|]
+argument_list|,
+name|ieee80211_reason_to_string
+argument_list|(
+name|args
+index|[
+literal|2
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|IEEE80211_DPRINTF
