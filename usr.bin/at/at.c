@@ -1537,7 +1537,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|eqp
 operator|==
 name|NULL
 condition|)
