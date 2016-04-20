@@ -738,6 +738,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|cppp
 operator|==
 name|NULL
