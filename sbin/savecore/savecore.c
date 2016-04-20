@@ -2365,7 +2365,9 @@ argument_list|,
 literal|"%m"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|closefd
+goto|;
 block|}
 block|}
 if|if
@@ -4053,6 +4055,9 @@ name|fs_spec
 argument_list|)
 expr_stmt|;
 block|}
+name|endfsent
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
