@@ -7251,14 +7251,6 @@ block|{
 case|case
 name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
 case|:
-case|case
-name|IEEE80211_FC0_SUBTYPE_BEACON
-case|:
-block|{
-name|struct
-name|ieee80211_scanparams
-name|scan
-decl_stmt|;
 comment|/* 		 * We process beacon/probe response frames when scanning; 		 * otherwise we check beacon frames for overlapping non-ERP 		 * BSS in 11g and/or overlapping legacy BSS when in HT. 		 */
 if|if
 condition|(
@@ -7271,10 +7263,6 @@ name|IEEE80211_F_SCAN
 operator|)
 operator|==
 literal|0
-operator|&&
-name|subtype
-operator|==
-name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
 condition|)
 block|{
 name|vap
@@ -7286,6 +7274,15 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* FALLTHROUGH */
+case|case
+name|IEEE80211_FC0_SUBTYPE_BEACON
+case|:
+block|{
+name|struct
+name|ieee80211_scanparams
+name|scan
+decl_stmt|;
 comment|/* NB: accept off-channel frames */
 comment|/* XXX TODO: use rxstatus to determine off-channel details */
 if|if
