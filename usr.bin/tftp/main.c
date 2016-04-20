@@ -3954,7 +3954,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
