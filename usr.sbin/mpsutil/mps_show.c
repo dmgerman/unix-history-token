@@ -674,6 +674,16 @@ argument_list|,
 name|IOCStatus
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sas0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -700,7 +710,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sas0
+name|sas1
 operator|==
 name|NULL
 condition|)
@@ -714,6 +724,16 @@ argument_list|(
 literal|"Error retrieving SAS IO Unit page %d"
 argument_list|,
 name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sas0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1411,6 +1431,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|facts
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1447,6 +1472,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|man0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|facts
 argument_list|)
 expr_stmt|;
 return|return
@@ -2276,6 +2306,11 @@ argument_list|(
 literal|"Error retrieving device page"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2486,6 +2521,16 @@ argument_list|(
 literal|"Error retrieving expander page 1: 0x%x"
 argument_list|,
 name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -2850,6 +2895,11 @@ argument_list|(
 literal|"Error retrieving enclosure page"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3126,6 +3176,11 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"Error retrieving expander page 0"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3865,6 +3920,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|data
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
