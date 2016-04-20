@@ -68,7 +68,7 @@ expr_stmt|;
 comment|/* 	 * First time around, we calculate the size, second time, we 	 * encode the token. 	 */
 name|p
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(

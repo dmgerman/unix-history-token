@@ -201,7 +201,7 @@ return|;
 comment|/* 	 * We do this in two passes. The first pass, we just figure 	 * out the size. Second time around, we actually encode the 	 * number. 	 */
 name|res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(

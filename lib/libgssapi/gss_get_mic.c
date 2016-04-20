@@ -66,10 +66,6 @@ name|struct
 name|_gss_mech_switch
 modifier|*
 name|m
-init|=
-name|ctx
-operator|->
-name|gc_mech
 decl_stmt|;
 name|_gss_buffer_zero
 argument_list|(
@@ -94,6 +90,12 @@ name|GSS_S_NO_CONTEXT
 operator|)
 return|;
 block|}
+name|m
+operator|=
+name|ctx
+operator|->
+name|gc_mech
+expr_stmt|;
 return|return
 operator|(
 name|m
