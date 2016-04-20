@@ -11430,7 +11430,8 @@ name|count
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+operator|*
+name|caps
 argument_list|)
 expr_stmt|;
 name|arg
