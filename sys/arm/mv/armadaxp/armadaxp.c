@@ -738,17 +738,9 @@ expr_stmt|;
 comment|/* Check if CPU frequency field has correct value */
 name|array_size
 operator|=
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|cpu_clock_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|cpu_clock_table
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -768,17 +760,9 @@ expr_stmt|;
 comment|/* Check if fabric frequency field has correct value */
 name|array_size
 operator|=
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|freq_conf_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|freq_conf_table
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 if|if

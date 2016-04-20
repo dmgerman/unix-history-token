@@ -2199,12 +2199,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|hwvtrans
-operator|/
-sizeof|sizeof
-expr|*
-name|hwvtrans
+argument_list|)
 condition|;
 name|i
 operator|++

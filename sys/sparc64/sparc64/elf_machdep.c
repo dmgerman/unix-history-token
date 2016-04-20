@@ -2265,14 +2265,8 @@ name|R_SPARC_COPY
 operator|||
 name|rtype
 operator|>=
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|reloc_target_bitmask
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|reloc_target_bitmask
 argument_list|)
 condition|)

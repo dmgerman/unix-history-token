@@ -161,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|AML_CLKMSR_NCLKS
-value|(sizeof(aml8726_clkmsr_clks) \     / sizeof(aml8726_clkmsr_clks[0]))
+value|nitems(aml8726_clkmsr_clks)
 end_define
 
 begin_struct

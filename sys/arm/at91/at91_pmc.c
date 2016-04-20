@@ -1396,17 +1396,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|clock_list
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|clock_list
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -1592,17 +1584,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|clock_list
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|clock_list
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -2207,7 +2191,7 @@ begin_define
 define|#
 directive|define
 name|MAIN_CLOCK_TBL_LEN
-value|(sizeof(at91_main_clock_tbl) / sizeof(*at91_main_clock_tbl))
+value|nitems(at91_main_clock_tbl)
 end_define
 
 begin_endif
