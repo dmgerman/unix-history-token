@@ -7994,7 +7994,6 @@ name|qp_type
 operator|==
 name|IB_QPT_RAW_PACKET
 operator|&&
-operator|!
 name|priv_check
 argument_list|(
 name|curthread
@@ -18009,7 +18008,6 @@ name|EINVAL
 return|;
 if|if
 condition|(
-operator|!
 name|priv_check
 argument_list|(
 name|curthread
@@ -19694,7 +19692,6 @@ name|qp_type
 operator|==
 name|IB_QPT_RAW_PACKET
 operator|&&
-operator|!
 name|priv_check
 argument_list|(
 name|curthread
