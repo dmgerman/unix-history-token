@@ -1980,6 +1980,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * This should never happen because we are only called 		 * for undefined symbols. 		 */
+name|free
+argument_list|(
+name|sym
+argument_list|)
+expr_stmt|;
 name|INTERR
 expr_stmt|;
 return|return;
@@ -2158,6 +2163,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"out of memory"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ud
 argument_list|)
 expr_stmt|;
 return|return
@@ -3401,6 +3411,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"duplicate collating element definition"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|e
 argument_list|)
 expr_stmt|;
 return|return;

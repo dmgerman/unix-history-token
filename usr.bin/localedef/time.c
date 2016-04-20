@@ -210,6 +210,11 @@ case|case
 name|T_ERA_D_T_FMT
 case|:
 comment|/* Silently ignore it. */
+name|free
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|free
@@ -434,6 +439,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"too many list elements"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|str
 argument_list|)
 expr_stmt|;
 block|}
