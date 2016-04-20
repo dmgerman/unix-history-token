@@ -6338,7 +6338,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
 name|rl
 operator|.
 name|rlim_cur
@@ -6384,7 +6386,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
 name|rl
 operator|.
 name|rlim_cur
@@ -6494,6 +6498,8 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 name|lim_free
 argument_list|(
 name|limp
