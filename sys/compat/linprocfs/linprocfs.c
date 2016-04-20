@@ -6228,6 +6228,10 @@ name|res
 decl_stmt|,
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
