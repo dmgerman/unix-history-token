@@ -346,7 +346,8 @@ name|RACCT_IS_IN_MILLIONS
 parameter_list|(
 name|X
 parameter_list|)
-value|(racct_types[X]& RACCT_IN_MILLIONS)
+define|\
+value|((X) != RACCT_UNDEFINED&& (racct_types[(X)]& RACCT_IN_MILLIONS) != 0)
 end_define
 
 begin_comment
