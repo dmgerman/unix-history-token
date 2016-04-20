@@ -63,10 +63,6 @@ name|struct
 name|_gss_mech_switch
 modifier|*
 name|m
-init|=
-name|ctx
-operator|->
-name|gc_mech
 decl_stmt|;
 operator|*
 name|max_input_size
@@ -91,6 +87,12 @@ name|GSS_S_NO_CONTEXT
 operator|)
 return|;
 block|}
+name|m
+operator|=
+name|ctx
+operator|->
+name|gc_mech
+expr_stmt|;
 return|return
 operator|(
 name|m
