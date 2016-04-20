@@ -1379,6 +1379,11 @@ break|break;
 block|}
 block|}
 block|}
+name|free
+argument_list|(
+name|objp
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -2301,6 +2306,11 @@ name|elm_devnames
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|e_ptr
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
