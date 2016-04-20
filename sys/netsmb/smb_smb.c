@@ -199,13 +199,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|SMB_DIALECT_MAX
-value|(nitems(smb_dialects) - 2)
-end_define
-
 begin_function
 specifier|static
 name|u_int32_t
