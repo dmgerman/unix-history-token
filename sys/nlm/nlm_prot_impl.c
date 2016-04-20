@@ -5820,6 +5820,34 @@ return|;
 block|}
 end_if
 
+begin_if
+if|if
+condition|(
+name|addr_count
+operator|<
+literal|0
+operator|||
+name|addr_count
+operator|>
+literal|256
+condition|)
+block|{
+name|NLM_ERR
+argument_list|(
+literal|"NLM:  too many service addresses (%d) given, "
+literal|"max 256 - can't start server\n"
+argument_list|,
+name|addr_count
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+end_if
+
 begin_expr_stmt
 name|xprts
 operator|=
