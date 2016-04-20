@@ -1374,9 +1374,15 @@ condition|(
 operator|!
 name|new
 condition|)
+block|{
+name|block
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|block
 operator|=
 name|new
