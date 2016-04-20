@@ -694,7 +694,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|in
@@ -770,7 +770,7 @@ if|if
 condition|(
 name|proto
 operator|==
-literal|0
+name|NULL
 operator|||
 name|streq
 argument_list|(
@@ -924,7 +924,7 @@ if|if
 condition|(
 name|ports
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1256,14 +1256,14 @@ if|if
 condition|(
 name|in
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
 name|hosts
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

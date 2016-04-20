@@ -563,7 +563,7 @@ if|if
 condition|(
 name|wnd
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -585,7 +585,7 @@ if|if
 condition|(
 name|wnd
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -661,7 +661,7 @@ name|curcmd
 operator|->
 name|c_cmd
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 call|(
