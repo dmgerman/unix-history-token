@@ -186,7 +186,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|ieee80211_mgt_subtype_name
+name|mgt_subtype_name
 index|[]
 init|=
 block|{
@@ -229,7 +229,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|ieee80211_ctl_subtype_name
+name|ctl_subtype_name
 index|[]
 init|=
 block|{
@@ -2505,20 +2505,14 @@ argument_list|(
 literal|" %s"
 argument_list|,
 name|ieee80211_mgt_subtype_name
-index|[
-operator|(
+argument_list|(
 name|wh
 operator|->
 name|i_fc
 index|[
 literal|0
 index|]
-operator|&
-name|IEEE80211_FC0_SUBTYPE_MASK
-operator|)
-operator|>>
-name|IEEE80211_FC0_SUBTYPE_SHIFT
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

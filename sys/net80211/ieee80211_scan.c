@@ -2252,11 +2252,9 @@ else|:
 literal|""
 argument_list|,
 name|ieee80211_mgt_subtype_name
-index|[
+argument_list|(
 name|subtype
-operator|>>
-name|IEEE80211_FC0_SUBTYPE_SHIFT
-index|]
+argument_list|)
 argument_list|,
 name|sp
 operator|->

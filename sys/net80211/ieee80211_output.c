@@ -3018,15 +3018,9 @@ argument_list|,
 literal|"block %s frame in CAC state"
 argument_list|,
 name|ieee80211_mgt_subtype_name
-index|[
-operator|(
+argument_list|(
 name|type
-operator|&
-name|IEEE80211_FC0_SUBTYPE_MASK
-operator|)
-operator|>>
-name|IEEE80211_FC0_SUBTYPE_SHIFT
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vap
@@ -3220,15 +3214,9 @@ name|i_addr1
 argument_list|)
 argument_list|,
 name|ieee80211_mgt_subtype_name
-index|[
-operator|(
+argument_list|(
 name|type
-operator|&
-name|IEEE80211_FC0_SUBTYPE_MASK
-operator|)
-operator|>>
-name|IEEE80211_FC0_SUBTYPE_SHIFT
-index|]
+argument_list|)
 argument_list|,
 name|ieee80211_chan2ieee
 argument_list|(
