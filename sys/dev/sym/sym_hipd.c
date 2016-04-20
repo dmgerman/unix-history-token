@@ -35260,6 +35260,10 @@ name|sim
 operator|=
 name|sim
 expr_stmt|;
+name|sim
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|xpt_create_path
