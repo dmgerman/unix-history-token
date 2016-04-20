@@ -1566,6 +1566,28 @@ operator|.
 name|domain
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ndomain
+operator|>=
+name|MAXMEMDOM
+condition|)
+block|{
+name|ndomain
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SRAT: Too many memory domains\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EFBIG
+operator|)
+return|;
+block|}
 comment|/* Insert the new domain at slot 'j'. */
 name|slot
 operator|=
@@ -1611,28 +1633,6 @@ expr_stmt|;
 name|ndomain
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ndomain
-operator|>
-name|MAXMEMDOM
-condition|)
-block|{
-name|ndomain
-operator|=
-literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SRAT: Too many memory domains\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EFBIG
-operator|)
-return|;
-block|}
 block|}
 comment|/* Renumber each domain to its index in the sorted 'domain_pxm' list. */
 for|for
