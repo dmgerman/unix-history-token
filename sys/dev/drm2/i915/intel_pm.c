@@ -41,6 +41,12 @@ directive|include
 file|<sys/kdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -11864,9 +11870,9 @@ expr_stmt|;
 else|#
 directive|else
 name|uint64_t
-name|tsc_freq
+name|freq
 decl_stmt|;
-name|tsc_freq
+name|freq
 operator|=
 name|atomic_load_acq_64
 argument_list|(
@@ -11876,7 +11882,7 @@ argument_list|)
 expr_stmt|;
 name|max_ia_freq
 operator|=
-name|tsc_freq
+name|freq
 operator|/
 literal|1000
 expr_stmt|;
