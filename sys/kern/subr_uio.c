@@ -2286,7 +2286,7 @@ name|NO_FUEWORD
 end_ifdef
 
 begin_comment
-comment|/*  * XXXKIB The temporal implementation of fue*() functions which do not  * handle usermode -1 properly, mixing it with the fault code.  Keep  * this until MD code is written.  Currently sparc64, mips and arm do  * not have proper implementation.  */
+comment|/*  * XXXKIB The temporal implementation of fue*() functions which do not  * handle usermode -1 properly, mixing it with the fault code.  Keep  * this until MD code is written.  Currently sparc64 and mips do not  * have proper implementation.  */
 end_comment
 
 begin_function
