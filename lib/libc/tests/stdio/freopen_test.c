@@ -146,11 +146,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fclose
-argument_list|(
-name|fp1
-argument_list|)
-expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|success
