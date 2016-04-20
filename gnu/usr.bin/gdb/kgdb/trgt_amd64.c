@@ -993,5 +993,28 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function ensures, that the PC is inside the  * function section which is understood by GDB.  *  * Return 0 when fixup is necessary, -1 otherwise.  */
+end_comment
+
+begin_function
+name|int
+name|kgdb_trgt_pc_fixup
+parameter_list|(
+name|CORE_ADDR
+modifier|*
+name|pc
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
