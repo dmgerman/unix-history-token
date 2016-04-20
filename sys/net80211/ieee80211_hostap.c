@@ -4804,7 +4804,7 @@ value|(((x)<<24)|WPA_OUI)
 name|uint32_t
 name|w
 init|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|sel
 argument_list|)
@@ -4917,7 +4917,7 @@ value|(((x)<<24)|WPA_OUI)
 name|uint32_t
 name|w
 init|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|sel
 argument_list|)
@@ -5087,7 +5087,7 @@ comment|/* NB: len is payload only */
 comment|/* NB: iswpaoui already validated the OUI and type */
 name|w
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5167,7 +5167,7 @@ expr_stmt|;
 comment|/* unicast ciphers */
 name|n
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5278,7 +5278,7 @@ expr_stmt|;
 comment|/* key management algorithms */
 name|n
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5384,7 +5384,7 @@ name|rsn
 operator|->
 name|rsn_caps
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5424,7 +5424,7 @@ value|(((x)<<24)|RSN_OUI)
 name|uint32_t
 name|w
 init|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|sel
 argument_list|)
@@ -5546,7 +5546,7 @@ value|(((x)<<24)|RSN_OUI)
 name|uint32_t
 name|w
 init|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|sel
 argument_list|)
@@ -5710,7 +5710,7 @@ literal|2
 expr_stmt|;
 name|w
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5790,7 +5790,7 @@ expr_stmt|;
 comment|/* unicast ciphers */
 name|n
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -5901,7 +5901,7 @@ expr_stmt|;
 comment|/* key management algorithms */
 name|n
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)
@@ -6007,7 +6007,7 @@ name|rsn
 operator|->
 name|rsn_caps
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 argument_list|)

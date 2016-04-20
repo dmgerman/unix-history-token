@@ -8192,7 +8192,7 @@ block|}
 comment|/* XXX: are we sure there is no reallocating after m_pullup? */
 name|seq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|mc
 operator|->
@@ -10188,7 +10188,7 @@ name|mp
 operator|->
 name|peer_proto
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -10200,7 +10200,7 @@ name|mp
 operator|->
 name|peer_llinkid
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -10220,7 +10220,7 @@ name|mp
 operator|->
 name|peer_linkid
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -10256,7 +10256,7 @@ name|mp
 operator|->
 name|peer_rcode
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -10271,7 +10271,7 @@ name|mp
 operator|->
 name|peer_linkid
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -10283,7 +10283,7 @@ name|mp
 operator|->
 name|peer_rcode
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|mpie
@@ -11978,7 +11978,7 @@ name|ie
 operator|->
 name|gann_seq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|gannie
@@ -11990,7 +11990,7 @@ name|ie
 operator|->
 name|gann_interval
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|gannie

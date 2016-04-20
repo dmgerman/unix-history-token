@@ -6712,7 +6712,7 @@ name|ni
 operator|->
 name|ni_htcap
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|ie
 operator|+
@@ -6786,7 +6786,7 @@ argument_list|)
 expr_stmt|;
 name|w
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|htinfo
@@ -6807,7 +6807,7 @@ argument_list|)
 expr_stmt|;
 name|w
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|htinfo
@@ -8905,7 +8905,7 @@ index|]
 expr_stmt|;
 name|baparamset
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -8914,7 +8914,7 @@ argument_list|)
 expr_stmt|;
 name|batimeout
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -8923,7 +8923,7 @@ argument_list|)
 expr_stmt|;
 name|baseqctl
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -9217,7 +9217,7 @@ index|]
 expr_stmt|;
 name|code
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -9226,7 +9226,7 @@ argument_list|)
 expr_stmt|;
 name|baparamset
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -9262,7 +9262,7 @@ argument_list|)
 expr_stmt|;
 name|batimeout
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -9540,7 +9540,7 @@ name|tid
 decl_stmt|;
 name|baparamset
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+
@@ -9549,7 +9549,7 @@ argument_list|)
 expr_stmt|;
 name|code
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+

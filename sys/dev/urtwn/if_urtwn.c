@@ -244,12 +244,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_input.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
 
@@ -12304,7 +12298,7 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|,
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|k
@@ -12342,7 +12336,7 @@ operator|->
 name|wk_keyix
 argument_list|)
 argument_list|,
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|k
@@ -12394,7 +12388,7 @@ name|SM
 argument_list|(
 name|R92C_CAM_MACLO
 argument_list|,
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|k
@@ -13834,7 +13828,7 @@ name|R92C_BSSID
 operator|+
 literal|0
 argument_list|,
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|ni
@@ -13854,7 +13848,7 @@ name|R92C_BSSID
 operator|+
 literal|4
 argument_list|,
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|ni

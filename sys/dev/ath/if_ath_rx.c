@@ -1097,7 +1097,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -1113,7 +1113,7 @@ literal|32
 expr_stmt|;
 name|tsf_beacon_old
 operator||=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -1220,7 +1220,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -1236,7 +1236,7 @@ literal|32
 expr_stmt|;
 name|tsf_beacon
 operator||=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->

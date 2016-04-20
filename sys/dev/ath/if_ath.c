@@ -12865,7 +12865,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|dl
 operator|+
@@ -12896,7 +12896,7 @@ name|val
 expr_stmt|;
 name|val
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|dl
 operator|+

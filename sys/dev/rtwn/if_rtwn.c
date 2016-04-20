@@ -7467,7 +7467,7 @@ name|R92C_BSSID
 operator|+
 literal|0
 argument_list|,
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|ni
@@ -7487,7 +7487,7 @@ name|R92C_BSSID
 operator|+
 literal|4
 argument_list|,
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|ni

@@ -3679,7 +3679,7 @@ name|nexttbtt
 operator|=
 name|TSF_TO_TU
 argument_list|(
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -3690,7 +3690,7 @@ operator|+
 literal|4
 argument_list|)
 argument_list|,
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -3706,7 +3706,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->
@@ -3722,7 +3722,7 @@ literal|32
 expr_stmt|;
 name|tsf_beacon
 operator||=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|ni
 operator|->

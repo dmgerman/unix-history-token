@@ -125,31 +125,15 @@ begin_comment
 comment|/* !IEEE80211_DEBUG */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
 begin_comment
-comment|/* unalligned little endian access */
+comment|/* For le16toh() / le32dec() */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((uint16_t)					\ 	 ((((const uint8_t *)(p))[0]      ) |		\ 	  (((const uint8_t *)(p))[1]<<  8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((uint32_t)					\ 	 ((((const uint8_t *)(p))[0]      ) |		\ 	  (((const uint8_t *)(p))[1]<<  8) |		\ 	  (((const uint8_t *)(p))[2]<< 16) |		\ 	  (((const uint8_t *)(p))[3]<< 24)))
-end_define
 
 begin_function
 specifier|static
@@ -171,7 +155,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -211,7 +195,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -251,7 +235,7 @@ index|]
 operator|>
 literal|5
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -298,7 +282,7 @@ index|]
 operator|>
 literal|5
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -345,7 +329,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -385,7 +369,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -425,7 +409,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -465,7 +449,7 @@ index|]
 operator|>
 literal|3
 operator|&&
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|frm
 operator|+
@@ -484,16 +468,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_comment
-comment|/* For le16toh() */
-end_comment
 
 begin_comment
 comment|/*  * Check the current frame sequence number against the current TID  * state and return whether it's in sequence or should be dropped.  *  * Since out of order packet and duplicate packet eliminations should  * be done by the AMPDU RX code, this routine blindly accepts all  * frames from a HT station w/ a TID that is currently doing AMPDU-RX.  * HT stations without WME or where the TID is not doing AMPDU-RX  * are checked like non-HT stations.  *  * The routine only eliminates packets whose sequence/fragment  * match or are less than the last seen sequence/fragment number  * AND are retransmits It doesn't try to eliminate out of order packets.  *  * Since all frames after sequence number 4095 will be less than 4095  * (as the seqnum wraps), handle that special case so packets aren't  * incorrectly dropped - ie, if the next packet is sequence number 0  * but a retransmit since the initial packet didn't make it.  */

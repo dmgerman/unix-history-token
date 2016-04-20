@@ -4617,7 +4617,7 @@ name|wmep
 operator|->
 name|wmep_txopLimit
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|frm
 operator|+

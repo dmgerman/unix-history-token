@@ -619,34 +619,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* unalligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_WRITE_2
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	((uint8_t *)(p))[0] = (v)& 0xff;		\ 	((uint8_t *)(p))[1] = ((v)>> 8)& 0xff;	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_WRITE_4
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	((uint8_t *)(p))[0] = (v)& 0xff;		\ 	((uint8_t *)(p))[1] = ((v)>> 8)& 0xff;	\ 	((uint8_t *)(p))[2] = ((v)>> 16)& 0xff;	\ 	((uint8_t *)(p))[3] = ((v)>> 24)& 0xff;	\ } while (0)
-end_define
-
-begin_comment
 comment|/* NB: the Target Address set in a Proactive PREQ is the broadcast address. */
 end_comment
 
@@ -2268,7 +2240,7 @@ name|preq
 operator|->
 name|preq_id
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2294,7 +2266,7 @@ name|preq
 operator|->
 name|preq_origseq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2331,7 +2303,7 @@ name|preq
 operator|->
 name|preq_lifetime
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2344,7 +2316,7 @@ name|preq
 operator|->
 name|preq_metric
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2417,7 +2389,7 @@ index|]
 operator|.
 name|target_seq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2570,7 +2542,7 @@ name|prep
 operator|->
 name|prep_targetseq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2607,7 +2579,7 @@ name|prep
 operator|->
 name|prep_lifetime
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2620,7 +2592,7 @@ name|prep
 operator|->
 name|prep_metric
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2646,7 +2618,7 @@ name|prep
 operator|->
 name|prep_origseq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2848,7 +2820,7 @@ index|]
 operator|.
 name|dest_seq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -2900,7 +2872,7 @@ index|]
 operator|.
 name|dest_rcode
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|iefrm_t
 argument_list|)
@@ -3011,7 +2983,7 @@ name|rann
 operator|.
 name|rann_seq
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|mrann
@@ -3023,7 +2995,7 @@ name|rann
 operator|.
 name|rann_interval
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|mrann
@@ -3035,7 +3007,7 @@ name|rann
 operator|.
 name|rann_metric
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 operator|&
 name|mrann
@@ -3612,7 +3584,7 @@ name|frm
 parameter_list|,
 name|v
 parameter_list|)
-value|do {		\ 	frm[0] = (v)& 0xff;		\ 	frm[1] = (v)>> 8;		\ 	frm += 2;			\ } while (0)
+value|do {		\ 	le16enc(frm, v);		\ 	frm += 2;			\ } while (0)
 end_define
 
 begin_define
@@ -3624,7 +3596,7 @@ name|frm
 parameter_list|,
 name|v
 parameter_list|)
-value|do {		\ 	LE_WRITE_4(frm, v);		\ 	frm += 4;			\ } while (0)
+value|do {		\ 	le32enc(frm, v);		\ 	frm += 4;			\ } while (0)
 end_define
 
 begin_comment

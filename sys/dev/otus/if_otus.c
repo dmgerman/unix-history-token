@@ -223,12 +223,6 @@ directive|include
 file|<net80211/ieee80211_ratectl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211_input.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -10735,7 +10729,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|LE_READ_4
+name|le32dec
 argument_list|(
 name|dl
 operator|+

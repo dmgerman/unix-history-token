@@ -2584,7 +2584,7 @@ name|scan
 operator|->
 name|fhdwell
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|frm

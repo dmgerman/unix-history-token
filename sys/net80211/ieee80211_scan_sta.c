@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -3882,7 +3888,7 @@ condition|)
 block|{
 name|caps
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|htcap

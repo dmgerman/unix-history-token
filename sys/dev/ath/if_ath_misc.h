@@ -19,32 +19,6 @@ begin_comment
 comment|/*  * This is where definitions for "public things" in if_ath.c  * will go for the time being.  *  * Anything in here should eventually be moved out of if_ath.c  * and into something else.  */
 end_comment
 
-begin_comment
-comment|/* unaligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((u_int16_t)							\ 	 ((((u_int8_t *)(p))[0]      ) | (((u_int8_t *)(p))[1]<<  8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((u_int32_t)							\ 	 ((((u_int8_t *)(p))[0]      ) | (((u_int8_t *)(p))[1]<<  8) |	\ 	  (((u_int8_t *)(p))[2]<< 16) | (((u_int8_t *)(p))[3]<< 24)))
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|int

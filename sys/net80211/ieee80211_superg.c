@@ -888,7 +888,7 @@ name|ni
 operator|->
 name|ni_ath_defkeyix
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 operator|&
 name|ath
@@ -1007,7 +1007,7 @@ operator|)
 expr_stmt|;
 name|defkeyix
 operator|=
-name|LE_READ_2
+name|le16dec
 argument_list|(
 name|ath
 operator|->

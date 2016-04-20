@@ -5295,30 +5295,6 @@ value|6
 end_define
 
 begin_comment
-comment|/* Macros to access unaligned little-endian memory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)[0] | (x)[1]<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)[0] | (x)[1]<< 8 | (x)[2]<< 16 | (x)[3]<< 24)
-end_define
-
-begin_comment
 comment|/*  * Macros to access subfields in registers.  */
 end_comment
 

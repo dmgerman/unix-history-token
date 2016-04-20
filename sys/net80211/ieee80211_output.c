@@ -267,34 +267,6 @@ define|\
 value|memcpy(dst, src, sizeof(struct ether_header))
 end_define
 
-begin_comment
-comment|/* unalligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_WRITE_2
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	((uint8_t *)(p))[0] = (v)& 0xff;		\ 	((uint8_t *)(p))[1] = ((v)>> 8)& 0xff;	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_WRITE_4
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	((uint8_t *)(p))[0] = (v)& 0xff;		\ 	((uint8_t *)(p))[1] = ((v)>> 8)& 0xff;	\ 	((uint8_t *)(p))[2] = ((v)>> 16)& 0xff;	\ 	((uint8_t *)(p))[3] = ((v)>> 24)& 0xff;	\ } while (0)
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -6249,7 +6221,7 @@ operator|->
 name|ms_seq
 operator|++
 expr_stmt|;
-name|LE_WRITE_4
+name|le32enc
 argument_list|(
 name|mc
 operator|->
@@ -7699,7 +7671,7 @@ name|frm
 parameter_list|,
 name|v
 parameter_list|)
-value|do {	\ 	LE_WRITE_2(frm, v);	\ 	frm += 2;		\ } while (0)
+value|do {	\ 	le16enc(frm, v);	\ 	frm += 2;		\ } while (0)
 operator|*
 name|frm
 operator|++
@@ -7974,7 +7946,7 @@ name|frm
 parameter_list|,
 name|v
 parameter_list|)
-value|do {	\ 	LE_WRITE_2(frm, v);	\ 	frm += 2;		\ } while (0)
+value|do {	\ 	le16enc(frm, v);	\ 	frm += 2;		\ } while (0)
 comment|/* NB: this works 'cuz a param has an info at the front */
 specifier|static
 specifier|const
