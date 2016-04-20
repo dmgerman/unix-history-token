@@ -5618,6 +5618,17 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmh
+operator|!=
+name|NULL
+condition|)
+name|R_Free
+argument_list|(
+name|rmh
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
