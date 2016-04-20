@@ -11314,9 +11314,6 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|caps
-parameter_list|,
-name|bool
-name|query
 parameter_list|)
 block|{
 name|ACPI_OBJECT
@@ -11450,17 +11447,6 @@ name|uint8_t
 operator|*
 operator|)
 name|caps
-expr_stmt|;
-name|caps
-index|[
-literal|0
-index|]
-operator|=
-name|query
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 return|return
 operator|(

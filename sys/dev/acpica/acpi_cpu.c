@@ -2016,6 +2016,13 @@ condition|)
 block|{
 name|cap_set
 index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|cap_set
+index|[
 literal|1
 index|]
 operator|=
@@ -2038,8 +2045,6 @@ argument_list|,
 literal|2
 argument_list|,
 name|cap_set
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 if|if

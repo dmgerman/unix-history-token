@@ -1571,6 +1571,14 @@ block|,
 literal|0x66
 block|}
 decl_stmt|;
+comment|/* Query Support Flag */
+name|cap_set
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Support Field: Extended PCI Config Space, MSI */
 name|cap_set
 index|[
@@ -1605,8 +1613,6 @@ name|cap_set
 argument_list|)
 argument_list|,
 name|cap_set
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 if|if
