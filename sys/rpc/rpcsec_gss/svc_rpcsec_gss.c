@@ -1331,6 +1331,8 @@ name|strlen
 argument_list|(
 name|name
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
