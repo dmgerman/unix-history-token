@@ -64,6 +64,13 @@ name|COUNTONLY
 value|0x00000040
 end_define
 
+begin_define
+define|#
+directive|define
+name|DISPLAYTIDS
+value|0x00000080
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|procinfo

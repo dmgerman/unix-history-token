@@ -283,7 +283,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:facedDs:S"
+literal|"p:o:facedDs:SH"
 argument_list|)
 operator|)
 operator|!=
@@ -427,6 +427,16 @@ operator|->
 name|flags
 operator||=
 name|NOSIGS
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|DISPLAYTIDS
 expr_stmt|;
 break|break;
 default|default:
