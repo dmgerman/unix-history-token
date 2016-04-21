@@ -1496,6 +1496,12 @@ name|is_gw
 argument_list|,
 name|NULL
 argument_list|,
+name|is_gw
+condition|?
+name|rte
+operator|->
+name|rt_gateway
+else|:
 name|dst_in
 argument_list|,
 name|edst
@@ -1522,6 +1528,12 @@ name|is_gw
 argument_list|,
 name|NULL
 argument_list|,
+name|is_gw
+condition|?
+name|rte
+operator|->
+name|rt_gateway
+else|:
 name|dst_in
 argument_list|,
 name|edst
@@ -1533,12 +1545,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-comment|/* XXX: Shouldn't happen. */
-name|error
-operator|=
-operator|-
-name|EINVAL
-expr_stmt|;
+break|break;
 block|}
 name|RTFREE
 argument_list|(
