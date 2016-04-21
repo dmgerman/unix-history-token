@@ -8391,7 +8391,6 @@ name|sc
 operator|->
 name|sc_mh
 decl_stmt|;
-comment|/* 	 * NB: Ignore promisc in hostap mode; it's set by the 	 * bridge.  This is wrong but we have no way to 	 * identify internal requests (from the bridge) 	 * versus external requests such as for tcpdump. 	 */
 name|mwl_hal_setpromisc
 argument_list|(
 name|mh
@@ -8401,12 +8400,6 @@ operator|->
 name|ic_promisc
 operator|>
 literal|0
-operator|&&
-name|ic
-operator|->
-name|ic_opmode
-operator|!=
-name|IEEE80211_M_HOSTAP
 argument_list|)
 expr_stmt|;
 name|mwl_setmcastfilter
