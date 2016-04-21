@@ -332,6 +332,7 @@ specifier|extern
 name|void
 name|kdebug_mbufhdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -344,6 +345,7 @@ specifier|extern
 name|void
 name|kdebug_mbuf
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*

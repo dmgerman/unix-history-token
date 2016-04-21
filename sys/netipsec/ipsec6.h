@@ -169,6 +169,7 @@ specifier|extern
 name|int
 name|ipsec6_in_reject
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*

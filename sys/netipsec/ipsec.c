@@ -1368,6 +1368,7 @@ name|struct
 name|secpolicy
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1380,6 +1381,7 @@ specifier|static
 name|int
 name|ipsec_setspidx_inpcb
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1396,6 +1398,7 @@ specifier|static
 name|int
 name|ipsec_setspidx
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1414,6 +1417,7 @@ specifier|static
 name|void
 name|ipsec4_get_ulp
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1433,6 +1437,7 @@ specifier|static
 name|int
 name|ipsec4_setspidx_ipaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1455,6 +1460,7 @@ specifier|static
 name|void
 name|ipsec6_get_ulp
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1474,6 +1480,7 @@ specifier|static
 name|int
 name|ipsec6_setspidx_ipaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1778,6 +1785,7 @@ name|secpolicy
 modifier|*
 name|ipsec_getpolicybysock
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2222,6 +2230,7 @@ name|secpolicy
 modifier|*
 name|ipsec_getpolicybyaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2393,6 +2402,7 @@ name|secpolicy
 modifier|*
 name|ipsec4_checkpolicy
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2608,6 +2618,7 @@ specifier|static
 name|int
 name|ipsec_setspidx_inpcb
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2801,6 +2812,7 @@ specifier|static
 name|int
 name|ipsec_setspidx
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2817,22 +2829,24 @@ parameter_list|)
 block|{
 name|struct
 name|ip
+name|ipbuf
+decl_stmt|;
+specifier|const
+name|struct
+name|ip
 modifier|*
 name|ip
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|ip
-name|ipbuf
-decl_stmt|;
-name|u_int
-name|v
-decl_stmt|;
+specifier|const
 name|struct
 name|mbuf
 modifier|*
 name|n
+decl_stmt|;
+name|u_int
+name|v
 decl_stmt|;
 name|int
 name|len
@@ -2970,6 +2984,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -3157,6 +3172,7 @@ specifier|static
 name|void
 name|ipsec4_get_ulp
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -3221,6 +3237,7 @@ name|ip
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|struct
 name|ip
 modifier|*
@@ -3230,6 +3247,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -3625,6 +3643,7 @@ specifier|static
 name|int
 name|ipsec4_setspidx_ipaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -3770,6 +3789,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|struct
 name|ip
 modifier|*
@@ -3779,6 +3799,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -3852,6 +3873,7 @@ specifier|static
 name|void
 name|ipsec6_get_ulp
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4273,6 +4295,7 @@ specifier|static
 name|int
 name|ipsec6_setspidx_ipaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4286,14 +4309,15 @@ parameter_list|)
 block|{
 name|struct
 name|ip6_hdr
+name|ip6buf
+decl_stmt|;
+specifier|const
+name|struct
+name|ip6_hdr
 modifier|*
 name|ip6
 init|=
 name|NULL
-decl_stmt|;
-name|struct
-name|ip6_hdr
-name|ip6buf
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -4318,6 +4342,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -6441,6 +6466,7 @@ name|secpolicy
 modifier|*
 name|sp
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6711,6 +6737,7 @@ specifier|static
 name|int
 name|ipsec46_in_reject
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6836,6 +6863,7 @@ begin_function
 name|int
 name|ipsec4_in_reject
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6890,6 +6918,7 @@ begin_function
 name|int
 name|ipsec6_in_reject
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -7188,6 +7217,7 @@ begin_function
 name|size_t
 name|ipsec_hdrsiz
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -8279,21 +8309,23 @@ begin_function
 name|void
 name|ipsec_dumpmbuf
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
 name|m
 parameter_list|)
 block|{
+specifier|const
+name|u_char
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|totlen
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|u_char
-modifier|*
-name|p
 decl_stmt|;
 name|totlen
 operator|=
@@ -8315,6 +8347,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)

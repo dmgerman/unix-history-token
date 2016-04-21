@@ -2761,6 +2761,7 @@ begin_function
 name|void
 name|kdebug_mbufhdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2882,12 +2883,14 @@ begin_function
 name|void
 name|kdebug_mbuf
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
 name|m0
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2977,6 +2980,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_char
 operator|*
 argument_list|)

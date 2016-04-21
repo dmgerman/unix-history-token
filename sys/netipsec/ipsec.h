@@ -1273,6 +1273,7 @@ name|secpolicy
 modifier|*
 name|ipsec4_checkpolicy
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1296,6 +1297,7 @@ name|secpolicy
 modifier|*
 name|ipsec_getpolicybyaddr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1429,6 +1431,7 @@ specifier|extern
 name|int
 name|ipsec4_in_reject
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1485,6 +1488,7 @@ specifier|extern
 name|size_t
 name|ipsec_hdrsiz
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1557,6 +1561,7 @@ specifier|extern
 name|void
 name|ipsec_dumpmbuf
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
