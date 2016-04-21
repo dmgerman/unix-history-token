@@ -1949,7 +1949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Public access to scan_next for drivers that manage  * scanning themselves (e.g. for firmware-based devices).  */
+comment|/*  * Manually switch to the next channel in the channel list.  * Provided for drivers that manage scanning themselves  * (e.g. for firmware-based devices).  */
 end_comment
 
 begin_function
@@ -1997,7 +1997,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Public access to scan_next for drivers that are not able to scan single  * channels (e.g. for firmware-based devices).  */
+comment|/*  * Manually stop a scan that is currently running.  * Provided for drivers that are not able to scan single channels  * (e.g. for firmware-based devices).  */
 end_comment
 
 begin_function
@@ -2045,7 +2045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe the curent channel, if allowed, while scanning.  * If the channel is not marked passive-only then send  * a probe request immediately.  Otherwise mark state and  * listen for beacons on the channel; if we receive something  * then we'll transmit a probe request.  */
+comment|/*  * Probe the current channel, if allowed, while scanning.  * If the channel is not marked passive-only then send  * a probe request immediately.  Otherwise mark state and  * listen for beacons on the channel; if we receive something  * then we'll transmit a probe request.  */
 end_comment
 
 begin_function
