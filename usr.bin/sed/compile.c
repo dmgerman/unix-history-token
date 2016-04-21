@@ -819,7 +819,7 @@ decl_stmt|;
 comment|/* Number of addresses */
 name|stack
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -852,7 +852,7 @@ if|if
 condition|(
 name|stack
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -1085,7 +1085,7 @@ name|cmd
 operator|->
 name|a2
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1097,7 +1097,7 @@ name|cmd
 operator|->
 name|a2
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|nonsel
 label|:
@@ -1276,7 +1276,7 @@ if|if
 condition|(
 name|stack
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
