@@ -1126,75 +1126,6 @@ name|rctl_rule_link_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|rwlock
-name|rctl_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|RW_SYSINIT
-argument_list|(
-name|rctl_lock
-argument_list|,
-operator|&
-name|rctl_lock
-argument_list|,
-literal|"RCTL lock"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|RCTL_RLOCK
-parameter_list|()
-value|rw_rlock(&rctl_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTL_RUNLOCK
-parameter_list|()
-value|rw_runlock(&rctl_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTL_WLOCK
-parameter_list|()
-value|rw_wlock(&rctl_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTL_WUNLOCK
-parameter_list|()
-value|rw_wunlock(&rctl_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTL_LOCK_ASSERT
-parameter_list|()
-value|rw_assert(&rctl_lock, RA_LOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCTL_WLOCK_ASSERT
-parameter_list|()
-value|rw_assert(&rctl_lock, RA_WLOCKED)
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -1299,14 +1230,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|rctl_throttle_min
 operator|=
 name|val
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1371,14 +1302,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|rctl_throttle_max
 operator|=
 name|val
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1443,14 +1374,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|rctl_throttle_pct
 operator|=
 name|val
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1515,14 +1446,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|rctl_throttle_pct2
 operator|=
 name|val
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1759,7 +1690,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_LOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -1867,7 +1798,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_LOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|racct
@@ -1935,12 +1866,12 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
+name|RACCT_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|minavailable
 operator|=
 name|INT64_MAX
-expr_stmt|;
-name|RCTL_RLOCK
-argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -1990,9 +1921,6 @@ operator|->
 name|rr_amount
 expr_stmt|;
 block|}
-name|RCTL_RUNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|racct
@@ -2090,6 +2018,9 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
+name|RACCT_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|minavailable
 operator|=
 name|INT64_MAX
@@ -2097,9 +2028,6 @@ expr_stmt|;
 name|limit
 operator|=
 literal|0
-expr_stmt|;
-name|RCTL_RLOCK
-argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -2162,9 +2090,6 @@ name|rr_amount
 expr_stmt|;
 block|}
 block|}
-name|RCTL_RUNLOCK
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Return slightly less than actual value of the available 	 * %cpu resource.  This makes %cpu throttling more agressive 	 * and lets us act sooner than the limits are already exceeded. 	 */
 if|if
 condition|(
@@ -2358,7 +2283,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_RLOCK
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 comment|/* 	 * There may be more than one matching rule; go through all of them. 	 * Denial should be done last, after logging and sending signals. 	 */
@@ -2958,9 +2883,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|RCTL_RUNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|should_deny
@@ -3012,7 +2934,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_RLOCK
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 comment|/* 	 * There may be more than one matching rule; go through all of them. 	 * Denial should be done last, after logging and sending signals. 	 */
@@ -3064,9 +2986,6 @@ operator|->
 name|rr_amount
 expr_stmt|;
 block|}
-name|RCTL_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|amount
@@ -3112,7 +3031,7 @@ expr_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_RLOCK
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 comment|/* 	 * There may be more than one matching rule; go through all of them. 	 * Denial should be done last, after logging and sending signals. 	 */
@@ -3169,9 +3088,6 @@ operator|=
 name|available
 expr_stmt|;
 block|}
-name|RCTL_RUNLOCK
-argument_list|()
-expr_stmt|;
 comment|/* 	 * XXX: Think about this _hard_. 	 */
 name|allocated
 operator|=
@@ -3827,7 +3743,7 @@ name|rrl_exceeded
 operator|=
 literal|0
 expr_stmt|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -3842,7 +3758,7 @@ argument_list|,
 name|rrl_next
 argument_list|)
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -3884,7 +3800,7 @@ literal|"rule not fully specified"
 operator|)
 argument_list|)
 expr_stmt|;
-name|RCTL_WLOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|link
@@ -3981,7 +3897,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_WLOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH_SAFE
@@ -6045,7 +5961,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -6059,7 +5975,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -6104,7 +6020,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_WLOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|found
@@ -6182,7 +6098,7 @@ name|rr_subject
 operator|.
 name|rs_proc
 expr_stmt|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|found
@@ -6196,7 +6112,7 @@ argument_list|,
 name|filter
 argument_list|)
 expr_stmt|;
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -6276,7 +6192,7 @@ argument_list|,
 name|SA_LOCKED
 argument_list|)
 expr_stmt|;
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|FOREACH_PROC_IN_SYSTEM
@@ -6296,7 +6212,7 @@ name|filter
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -6870,6 +6786,9 @@ name|i
 argument_list|)
 condition|)
 continue|continue;
+name|RACCT_LOCK
+argument_list|()
+expr_stmt|;
 name|amount
 operator|=
 name|racct
@@ -6878,6 +6797,9 @@ name|r_resources
 index|[
 name|i
 index|]
+expr_stmt|;
+name|RACCT_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -7341,7 +7263,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_LOCK_ASSERT
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -7598,7 +7520,7 @@ argument_list|(
 argument|p
 argument_list|)
 block|{
-name|RCTL_RLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -7652,7 +7574,7 @@ literal|","
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_RUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -8065,7 +7987,7 @@ literal|"sbuf_new failed"
 operator|)
 argument_list|)
 expr_stmt|;
-name|RCTL_RLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -8094,7 +8016,7 @@ literal|","
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_RUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -8621,7 +8543,7 @@ name|rulecnt
 operator|=
 literal|0
 expr_stmt|;
-name|RCTL_RLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -8680,7 +8602,7 @@ argument_list|)
 name|rulecnt
 operator|++
 expr_stmt|;
-name|RCTL_RUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Create temporary list.  We've dropped the rctl_lock in order 	 * to use M_WAITOK. 	 */
@@ -8739,7 +8661,7 @@ name|newrules
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Assign rules to the newly allocated list entries. 	 */
-name|RCTL_WLOCK
+name|RACCT_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -9067,14 +8989,14 @@ name|rrl_next
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
 name|goaround
 label|:
-name|RCTL_WUNLOCK
+name|RACCT_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Rule list changed while we were not holding the rctl_lock. 	 * Free the new list and try again. 	 */
@@ -9164,17 +9086,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|child
-operator|->
-name|p_racct
-operator|->
-name|r_rule_links
-argument_list|)
-expr_stmt|;
 name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|KASSERT
@@ -9192,8 +9107,15 @@ name|parent
 operator|)
 argument_list|)
 expr_stmt|;
-name|RCTL_WLOCK
-argument_list|()
+name|LIST_INIT
+argument_list|(
+operator|&
+name|child
+operator|->
+name|p_racct
+operator|->
+name|r_rule_links
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Go through limits applicable to the parent and assign them 	 * to the child.  Rules with 'process' subject have to be duplicated 	 * in order to make their rr_subject point to the new process. 	 */
 name|LIST_FOREACH
@@ -9311,9 +9233,6 @@ name|fail
 goto|;
 block|}
 block|}
-name|RCTL_WUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9369,9 +9288,6 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_WUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|EAGAIN
@@ -9402,7 +9318,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|RCTL_WLOCK
+name|RACCT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 while|while
@@ -9449,9 +9365,6 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-name|RCTL_WUNLOCK
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
