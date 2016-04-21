@@ -265,26 +265,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|xscale_event_codes_size
-init|=
-sizeof|sizeof
-argument_list|(
-name|xscale_event_codes
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|xscale_event_codes
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Per-processor information.  */
 end_comment
@@ -744,7 +724,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|xscale_event_codes_size
+name|nitems
+argument_list|(
+name|xscale_event_codes
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -778,7 +761,10 @@ if|if
 condition|(
 name|i
 operator|==
-name|xscale_event_codes_size
+name|nitems
+argument_list|(
+name|xscale_event_codes
+argument_list|)
 condition|)
 return|return
 name|EINVAL

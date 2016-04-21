@@ -336,25 +336,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|adw_num_pci_devs
-init|=
-sizeof|sizeof
-argument_list|(
-name|adw_pci_ident_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|adw_pci_ident_table
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -595,7 +576,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|adw_num_pci_devs
+name|nitems
+argument_list|(
+name|adw_pci_ident_table
+argument_list|)
 condition|;
 name|i
 operator|++

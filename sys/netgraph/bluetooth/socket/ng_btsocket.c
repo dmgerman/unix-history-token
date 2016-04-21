@@ -796,17 +796,9 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ng_btsocket_protosw_size
-define|\
-value|(sizeof(ng_btsocket_protosw)/sizeof(ng_btsocket_protosw[0]))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ng_btsocket_protosw_end
 define|\
-value|&ng_btsocket_protosw[ng_btsocket_protosw_size]
+value|&ng_btsocket_protosw[nitems(ng_btsocket_protosw)]
 end_define
 
 begin_comment

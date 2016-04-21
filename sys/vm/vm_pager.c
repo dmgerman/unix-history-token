@@ -497,27 +497,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|npagers
-init|=
-sizeof|sizeof
-argument_list|(
-name|pagertab
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|pagertab
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Kernel address space for mapping pages.  * Used by pagers where KVAs are needed for IO.  *  * XXX needs to be large enough to support the number of pending async  * cleaning requests (NPENDINGIO == 64) * the maximum swap cluster size  * (MAXPHYS == 64k) if you want to get the most efficiency.  */
 end_comment
@@ -587,7 +566,10 @@ operator|<
 operator|&
 name|pagertab
 index|[
-name|npagers
+name|nitems
+argument_list|(
+name|pagertab
+argument_list|)
 index|]
 condition|;
 name|pgops

@@ -451,24 +451,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|num_cam_status_entries
-init|=
-sizeof|sizeof
-argument_list|(
-name|cam_status_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|cam_status_table
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1192,7 +1174,10 @@ argument_list|,
 operator|&
 name|cam_status_table
 argument_list|,
-name|num_cam_status_entries
+name|nitems
+argument_list|(
+name|cam_status_table
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(

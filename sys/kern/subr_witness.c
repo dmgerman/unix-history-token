@@ -3276,18 +3276,6 @@ block|{ }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|blessed_count
-init|=
-name|nitems
-argument_list|(
-name|blessed_list
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -9623,7 +9611,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|blessed_count
+name|nitems
+argument_list|(
+name|blessed_list
+argument_list|)
 condition|;
 name|i
 operator|++
