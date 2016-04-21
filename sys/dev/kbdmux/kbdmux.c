@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kbdmux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -138,6 +144,33 @@ include|#
 directive|include
 file|<dev/kbd/kbdreg.h>
 end_include
+
+begin_comment
+comment|/* the initial key map, accent map and fkey strings */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KBDMUX_DFLT_KEYMAP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KBD_DFLT_KEYMAP
+end_define
+
+begin_include
+include|#
+directive|include
+file|"kbdmuxmap.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
