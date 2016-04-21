@@ -6527,6 +6527,13 @@ name|URTWN_RIDX_COUNT
 value|28
 end_define
 
+begin_define
+define|#
+directive|define
+name|URTWN_RIDX_UNKNOWN
+value|(uint8_t)-1
+end_define
+
 begin_comment
 comment|/*  * MAC initialization values.  */
 end_comment
