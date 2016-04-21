@@ -2544,7 +2544,7 @@ name|msg
 operator|.
 name|offset
 argument_list|,
-name|GET_VIRTUAL_OFFSET
+name|SET_VIRTUAL_OFFSET
 argument_list|)
 expr_stmt|;
 name|msg
