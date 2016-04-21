@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|DIGI_NVALIDMEM
-value|(nitems(digi_validmem))
+value|nitems(digi_validmem)
 end_define
 
 begin_function

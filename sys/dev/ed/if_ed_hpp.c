@@ -701,12 +701,10 @@ if|if
 condition|(
 name|irq
 operator|>=
-operator|(
 name|nitems
 argument_list|(
 name|ed_hpp_intr_val
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(

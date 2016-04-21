@@ -21652,12 +21652,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|nitems
 argument_list|(
 name|scsi_sense_printers
 argument_list|)
-operator|)
 condition|;
 name|i
 operator|++

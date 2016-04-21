@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|MTRRTOMRTLEN
-value|(nitems(i686_mtrrtomrt))
+value|nitems(i686_mtrrtomrt)
 end_define
 
 begin_function
