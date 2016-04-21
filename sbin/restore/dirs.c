@@ -3601,13 +3601,12 @@ control|)
 block|{
 name|size
 operator|=
+name|MIN
+argument_list|(
 name|i
-operator|<
+argument_list|,
 name|BUFSIZ
-condition|?
-name|i
-else|:
-name|BUFSIZ
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
