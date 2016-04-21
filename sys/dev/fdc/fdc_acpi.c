@@ -493,6 +493,17 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|fdc_start_worker
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 if|if

@@ -861,7 +861,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
+name|fdc_start_worker
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+else|else
 name|fdc_release_resources
 argument_list|(
 name|fdc

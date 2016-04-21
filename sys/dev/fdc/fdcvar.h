@@ -260,6 +260,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fdc_start_worker
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fdc_hints_probe
 parameter_list|(
