@@ -407,8 +407,7 @@ begin_define
 define|#
 directive|define
 name|NLEMEDIA
-define|\
-value|(sizeof(le_lebuffer_media) / sizeof(le_lebuffer_media[0]))
+value|nitems(le_lebuffer_media)
 end_define
 
 begin_function_decl

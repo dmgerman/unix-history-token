@@ -1348,14 +1348,8 @@ argument_list|)
 expr_stmt|;
 name|num_entries
 operator|=
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|adv_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|adv_quirk_table
 argument_list|)
 expr_stmt|;

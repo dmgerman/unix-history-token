@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|NUM_FAMILIES
-value|(sizeof(gFamilies) / sizeof(*gFamilies))
+value|nitems(gFamilies)
 end_define
 
 begin_comment

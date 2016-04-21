@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|AIC_ISA_NUMPORTS
-value|(sizeof(aic_isa_ports) / sizeof(aic_isa_ports[0]))
+value|(nitems(aic_isa_ports))
 end_define
 
 begin_define

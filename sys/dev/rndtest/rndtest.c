@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|RNDTEST_NTESTS
-value|(sizeof(rndtest_funcs)/sizeof(rndtest_funcs[0]))
+value|nitems(rndtest_funcs)
 end_define
 
 begin_expr_stmt

@@ -279,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|AE_DEVS_COUNT
-value|(sizeof(ae_devs) / sizeof(*ae_devs))
+value|(nitems(ae_devs))
 end_define
 
 begin_decl_stmt

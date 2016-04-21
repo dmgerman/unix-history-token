@@ -204,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|MAX_ISA_IOPORT_INDEX
-value|(sizeof(adv_isa_ioports)/sizeof(u_int16_t) - 1)
+value|(nitems(adv_isa_ioports) - 1)
 end_define
 
 begin_function_decl

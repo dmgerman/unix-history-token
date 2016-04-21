@@ -717,8 +717,7 @@ begin_define
 define|#
 directive|define
 name|CREATOR_FB_MAP_SIZE
-define|\
-value|(sizeof(creator_fb_map) / sizeof(creator_fb_map[0]))
+value|nitems(creator_fb_map)
 end_define
 
 begin_decl_stmt

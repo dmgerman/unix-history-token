@@ -1208,7 +1208,7 @@ begin_define
 define|#
 directive|define
 name|SA_NUM_PROT_ENTS
-value|sizeof(sa_prot_table)/sizeof(sa_prot_table[0])
+value|nitems(sa_prot_table)
 end_define
 
 begin_define
@@ -5852,17 +5852,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|sa_param_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|sa_param_table
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -10343,14 +10335,8 @@ name|caddr_t
 operator|)
 name|sa_quirk_table
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|sa_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|sa_quirk_table
 argument_list|)
 argument_list|,

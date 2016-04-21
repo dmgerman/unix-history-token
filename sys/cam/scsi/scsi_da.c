@@ -8066,14 +8066,8 @@ name|caddr_t
 operator|)
 name|da_quirk_table
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|da_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|da_quirk_table
 argument_list|)
 argument_list|,

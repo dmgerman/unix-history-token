@@ -5927,14 +5927,8 @@ name|caddr_t
 operator|)
 name|ada_quirk_table
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
-name|ada_quirk_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
 name|ada_quirk_table
 argument_list|)
 argument_list|,
