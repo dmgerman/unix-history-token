@@ -1888,16 +1888,6 @@ argument_list|,
 literal|"node for CPU children"
 argument_list|)
 expr_stmt|;
-comment|/* Queue post cpu-probing task handler */
-name|AcpiOsExecute
-argument_list|(
-name|OSL_NOTIFY_HANDLER
-argument_list|,
-name|acpi_cpu_startup
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*      * Before calling any CPU methods, collect child driver feature hints      * and notify ACPI of them.  We support unified SMP power control      * so advertise this ourselves.  Note this is not the same as independent      * SMP control where each CPU can have different settings.      */
 name|sc
@@ -2196,6 +2186,9 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+name|int
+name|attached
+decl_stmt|;
 name|err
 operator|=
 name|devclass_get_devices
@@ -2223,6 +2216,37 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|attached
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|device_is_attached
+argument_list|(
+name|devices
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|attached
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2272,6 +2296,22 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|attached
+condition|)
+block|{
+comment|/* Queue post cpu-probing task handler */
+name|AcpiOsExecute
+argument_list|(
+name|OSL_NOTIFY_HANDLER
+argument_list|,
+name|acpi_cpu_startup
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
