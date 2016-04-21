@@ -4501,7 +4501,10 @@ name|snprintf
 argument_list|(
 name|devnamebuf
 argument_list|,
-literal|128
+sizeof|sizeof
+argument_list|(
+name|devnamebuf
+argument_list|)
 argument_list|,
 literal|"devname=%s%d"
 argument_list|,
