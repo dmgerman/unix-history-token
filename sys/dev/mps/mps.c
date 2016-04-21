@@ -4765,13 +4765,11 @@ name|fqdepth
 operator|=
 name|roundup2
 argument_list|(
-operator|(
 name|sc
 operator|->
 name|num_replies
 operator|+
 literal|1
-operator|)
 argument_list|,
 literal|16
 argument_list|)
@@ -4782,13 +4780,11 @@ name|pqdepth
 operator|=
 name|roundup2
 argument_list|(
-operator|(
 name|sc
 operator|->
 name|num_replies
 operator|+
 literal|1
-operator|)
 argument_list|,
 literal|16
 argument_list|)

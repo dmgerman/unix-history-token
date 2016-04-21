@@ -825,7 +825,7 @@ name|va
 parameter_list|,
 name|ps
 parameter_list|)
-value|((va)& ~(ps - 1))
+value|rounddown2(va, ps)
 end_define
 
 begin_define
@@ -837,7 +837,7 @@ name|va
 parameter_list|,
 name|ps
 parameter_list|)
-value|(((va) + (ps - 1))& ~(ps - 1))
+value|roundup2(va, ps)
 end_define
 
 begin_define

@@ -63314,19 +63314,17 @@ return|return;
 comment|/* 	 * Find the last inode in the block with dependencies. 	 */
 name|firstino
 operator|=
+name|rounddown2
+argument_list|(
 name|inodedep
 operator|->
 name|id_ino
-operator|&
-operator|~
-operator|(
+argument_list|,
 name|INOPB
 argument_list|(
 name|fs
 argument_list|)
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(

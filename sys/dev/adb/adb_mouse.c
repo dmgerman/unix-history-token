@@ -1727,11 +1727,10 @@ block|}
 comment|/* 	 * Some mice report high-numbered buttons on the wrong button number, 	 * so set the highest-numbered real button as pressed if there are 	 * mysterious high-numbered ones set. 	 * 	 * Don't do this for touchpads, because touchpads also trigger 	 * high button events when they are touched. 	 */
 if|if
 condition|(
+name|rounddown2
+argument_list|(
 name|buttons
-operator|&
-operator|~
-operator|(
-operator|(
+argument_list|,
 literal|1
 operator|<<
 name|sc
@@ -1739,10 +1738,7 @@ operator|->
 name|hw
 operator|.
 name|buttons
-operator|)
-operator|-
-literal|1
-operator|)
+argument_list|)
 operator|&&
 operator|!
 operator|(

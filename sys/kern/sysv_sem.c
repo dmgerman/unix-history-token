@@ -831,7 +831,7 @@ name|SEM_ALIGN
 parameter_list|(
 name|bytes
 parameter_list|)
-value|(((bytes) + (sizeof(long) - 1))& ~(sizeof(long) - 1))
+value|roundup2(bytes, sizeof(long))
 end_define
 
 begin_comment

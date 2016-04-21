@@ -155,7 +155,7 @@ name|DEV_ALIGN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((off_t)(x) + (DEV_BSIZE-1))& ~(DEV_BSIZE-1))
+value|roundup2((off_t)(x), DEV_BSIZE)
 end_define
 
 begin_decl_stmt

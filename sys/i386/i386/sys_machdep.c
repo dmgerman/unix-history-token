@@ -180,7 +180,7 @@ name|NEW_MAX_LD
 parameter_list|(
 name|num
 parameter_list|)
-value|((num + LD_PER_PAGE)& ~(LD_PER_PAGE-1))
+value|rounddown2(num + LD_PER_PAGE, LD_PER_PAGE)
 end_define
 
 begin_define

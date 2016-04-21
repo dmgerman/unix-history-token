@@ -4528,11 +4528,10 @@ name|pArray
 operator|->
 name|VDeviceCapacity
 operator|=
-operator|(
+name|rounddown2
+argument_list|(
 name|capacity
-operator|&
-operator|~
-operator|(
+argument_list|,
 name|pArray
 operator|->
 name|u
@@ -4540,10 +4539,7 @@ operator|.
 name|array
 operator|.
 name|bStripeWitch
-operator|-
-literal|1
-operator|)
-operator|)
+argument_list|)
 operator|*
 operator|(
 name|pArray

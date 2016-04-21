@@ -916,11 +916,7 @@ argument|off;
 comment|/* 	 * Align the address to a cacheline and adjust the length 	 * accordingly. Then round the length to a multiple of the 	 * cacheline for easy looping. 	 */
 argument|addr = (uintptr_t)ptr; 	off = addr& (cacheline_size -
 literal|1
-argument|); 	addr -= off; 	len = (len + off + cacheline_size -
-literal|1
-argument|)& ~(cacheline_size -
-literal|1
-argument|);  	while (len>
+argument|); 	addr -= off; 	len = roundup2(len + off, cacheline_size);  	while (len>
 literal|0
 argument|) {
 asm|__asm __volatile ("dcbf 0,%0" :: "r"(addr));

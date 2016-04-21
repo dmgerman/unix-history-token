@@ -5074,14 +5074,12 @@ name|i
 decl_stmt|;
 name|blkoff
 operator|=
+name|rounddown2
+argument_list|(
 name|offset
-operator|&
-operator|~
-operator|(
+argument_list|,
 name|DIRBLKSIZ
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* offset of start of block */
 name|entrypos

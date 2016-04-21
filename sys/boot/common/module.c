@@ -3521,7 +3521,7 @@ name|base
 parameter_list|,
 name|ptr
 parameter_list|)
-value|ptr = \ 	(base) + (((ptr) - (base) + sizeof(int) - 1)& ~(sizeof(int) - 1))
+value|ptr = \ 	(base) + roundup2((ptr) - (base), sizeof(int))
 end_define
 
 begin_function

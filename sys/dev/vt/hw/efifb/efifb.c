@@ -435,22 +435,14 @@ name|info
 operator|->
 name|fb_bpp
 operator|=
-operator|(
+name|roundup2
+argument_list|(
 name|info
 operator|->
 name|fb_depth
-operator|+
+argument_list|,
 name|NBBY
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-operator|(
-name|NBBY
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Stride in bytes, not pixels */
 name|info

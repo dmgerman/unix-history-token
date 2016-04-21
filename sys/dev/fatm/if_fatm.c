@@ -439,7 +439,7 @@ parameter_list|,
 name|VCI
 parameter_list|)
 define|\
-value|(((VPI)& ~((1<< IFP2IFATM((SC)->ifp)->mib.vpi_bits) - 1)) == 0&&	\ 	 (VCI) != 0&& ((VCI)& ~((1<< IFP2IFATM((SC)->ifp)->mib.vci_bits) - 1)) == 0)
+value|(rounddown2(VPI, 1<< IFP2IFATM((SC)->ifp)->mib.vpi_bits) == 0&&	\ 	 (VCI) != 0&& rounddown2(VCI, 1<< IFP2IFATM((SC)->ifp)->mib.vci_bits) == 0)
 end_define
 
 begin_function_decl

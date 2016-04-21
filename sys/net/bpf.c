@@ -451,7 +451,7 @@ name|BPF_WORDALIGN32
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)+(BPF_ALIGNMENT32-1))&~(BPF_ALIGNMENT32-1))
+value|roundup2(x, BPF_ALIGNMENT32)
 end_define
 
 begin_ifndef

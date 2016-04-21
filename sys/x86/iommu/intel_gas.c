@@ -1891,7 +1891,8 @@ return|;
 comment|/* 	 * The start + offset to start + offset + size region crosses 	 * the boundary.  Check if there is enough space after the 	 * next boundary after the prev->end. 	 */
 name|bs
 operator|=
-operator|(
+name|rounddown2
+argument_list|(
 name|a
 operator|->
 name|entry
@@ -1907,18 +1908,13 @@ operator|->
 name|common
 operator|->
 name|boundary
-operator|)
-operator|&
-operator|~
-operator|(
+argument_list|,
 name|a
 operator|->
 name|common
 operator|->
 name|boundary
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|start
 operator|=

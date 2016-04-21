@@ -2191,14 +2191,12 @@ name|dp
 operator|->
 name|i_diroff
 operator|=
+name|rounddown2
+argument_list|(
 name|i_offset
-operator|&
-operator|~
-operator|(
+argument_list|,
 name|DIRBLKSIZ
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if

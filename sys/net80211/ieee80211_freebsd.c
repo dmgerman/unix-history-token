@@ -1710,7 +1710,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {									\ 	(m)->m_data += (MCLBYTES - (len))&~ (sizeof(long) - 1);	\ } while (
+value|do {									\ 	(m)->m_data += rounddown2(MCLBYTES - (len), sizeof(long));	\ } while (
 comment|/* CONSTCOND */
 value|0)
 end_define

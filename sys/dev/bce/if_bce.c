@@ -13732,11 +13732,9 @@ name|rx_bd_mbuf_align_pad
 operator|=
 name|roundup2
 argument_list|(
-operator|(
 name|MSIZE
 operator|-
 name|MHLEN
-operator|)
 argument_list|,
 literal|16
 argument_list|)
