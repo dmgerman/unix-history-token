@@ -1755,20 +1755,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|ipsec_copypkt
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|m_checkalignment
 parameter_list|(
