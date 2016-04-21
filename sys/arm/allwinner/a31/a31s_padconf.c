@@ -47,6 +47,12 @@ directive|include
 file|<arm/allwinner/allwinner_pinctrl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_ALLWINNER_A31S
+end_ifdef
+
 begin_decl_stmt
 specifier|const
 specifier|static
@@ -3851,6 +3857,15 @@ name|a31s_pins
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOC_ALLWINNER_A31S */
+end_comment
 
 end_unit
 
