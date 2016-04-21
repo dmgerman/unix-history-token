@@ -676,6 +676,7 @@ name|SMP
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|sgi_to_ipi
 index|[
@@ -689,6 +690,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|sgi_first_unused
 init|=
