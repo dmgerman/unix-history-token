@@ -2624,7 +2624,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"suspend resource type=%d 0x%lx+0x%lx\n"
+literal|"suspend resource type=%d 0x%jx+0x%jx\n"
 argument_list|,
 name|type
 argument_list|,
@@ -2736,7 +2736,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"resume resource type=%d 0x%lx+0x%lx\n"
+literal|"resume resource type=%d 0x%jx+0x%jx\n"
 argument_list|,
 name|type
 argument_list|,
