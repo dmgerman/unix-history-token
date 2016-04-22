@@ -7043,7 +7043,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bhnd_bus_activate_resource
+name|bhnd_bus_deactivate_resource
 argument_list|,
 name|bhndb_deactivate_bhnd_resource
 argument_list|)
