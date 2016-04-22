@@ -4183,7 +4183,7 @@ operator|==
 name|ZIO_TASKQ_ISSUE
 condition|)
 name|pri
-operator|--
+operator|++
 expr_stmt|;
 name|tq
 operator|=
