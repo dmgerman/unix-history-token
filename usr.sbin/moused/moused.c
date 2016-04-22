@@ -15771,15 +15771,12 @@ label|:
 comment|/* we may still have something in the buffer */
 return|return
 operator|(
-operator|(
+name|MAX
+argument_list|(
 name|i
-operator|>
+argument_list|,
 literal|0
-operator|)
-condition|?
-name|i
-else|:
-literal|0
+argument_list|)
 operator|)
 return|;
 block|}
