@@ -1757,6 +1757,19 @@ break|break;
 endif|#
 directive|endif
 default|default:
+name|KASSERT
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+literal|"rdma_addr_resolve: Unreachable"
+operator|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 name|RTFREE
