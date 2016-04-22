@@ -664,7 +664,6 @@ name|tx_credits
 operator|/
 name|howmany
 argument_list|(
-operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -672,7 +671,6 @@ name|fw_ofld_tx_data_wr
 argument_list|)
 operator|+
 literal|1
-operator|)
 argument_list|,
 literal|16
 argument_list|)

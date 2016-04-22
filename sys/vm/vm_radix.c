@@ -151,7 +151,7 @@ define|#
 directive|define
 name|VM_RADIX_LIMIT
 define|\
-value|(howmany((sizeof(vm_pindex_t) * NBBY), VM_RADIX_WIDTH) - 1)
+value|(howmany(sizeof(vm_pindex_t) * NBBY, VM_RADIX_WIDTH) - 1)
 end_define
 
 begin_comment

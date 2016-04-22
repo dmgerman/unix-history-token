@@ -3083,7 +3083,7 @@ name|NKPDPE
 parameter_list|(
 name|ptpgs
 parameter_list|)
-value|howmany((ptpgs), NPDEPG)
+value|howmany(ptpgs, NPDEPG)
 end_define
 
 begin_function
