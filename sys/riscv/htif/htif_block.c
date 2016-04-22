@@ -384,6 +384,9 @@ operator|==
 name|data
 condition|)
 block|{
+name|wmb
+argument_list|()
+expr_stmt|;
 name|sc
 operator|->
 name|cmd_done
@@ -768,6 +771,9 @@ name|htif_blk_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|uint64_t
+name|req_paddr
+decl_stmt|;
 name|struct
 name|bio
 modifier|*
@@ -868,6 +874,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rmb
+argument_list|()
+expr_stmt|;
 name|req
 operator|.
 name|offset
@@ -918,6 +927,11 @@ name|addr
 operator|=
 name|paddr
 expr_stmt|;
+name|sc
+operator|->
+name|curtag
+operator|++
+expr_stmt|;
 name|req
 operator|.
 name|tag
@@ -961,7 +975,7 @@ operator|<<
 name|HTIF_CMD_SHIFT
 operator|)
 expr_stmt|;
-name|paddr
+name|req_paddr
 operator|=
 name|vtophys
 argument_list|(
@@ -971,18 +985,18 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|paddr
+name|req_paddr
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"paddr is 0"
+literal|"req_paddr is 0"
 operator|)
 argument_list|)
 expr_stmt|;
 name|cmd
 operator||=
-name|paddr
+name|req_paddr
 expr_stmt|;
 name|sc
 operator|->
