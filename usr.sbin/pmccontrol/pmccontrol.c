@@ -571,13 +571,12 @@ argument_list|)
 expr_stmt|;
 name|npmc
 operator|=
+name|MAX
+argument_list|(
 name|t
-operator|>
+argument_list|,
 name|npmc
-condition|?
-name|t
-else|:
-name|npmc
+argument_list|)
 expr_stmt|;
 block|}
 if|if
