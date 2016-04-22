@@ -1351,7 +1351,14 @@ name|count
 parameter_list|,
 name|uint32_t
 modifier|*
-name|caps
+name|caps_in
+parameter_list|,
+name|uint32_t
+modifier|*
+name|caps_out
+parameter_list|,
+name|bool
+name|query
 parameter_list|)
 function_decl|;
 end_function_decl
