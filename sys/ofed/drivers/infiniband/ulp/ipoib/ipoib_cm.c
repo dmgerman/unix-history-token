@@ -2439,6 +2439,13 @@ decl_stmt|;
 name|u_short
 name|proto
 decl_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|dev
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|ipoib_dbg_data
 argument_list|(
 name|priv
@@ -2551,7 +2558,9 @@ argument_list|,
 name|ipoib_recvq_size
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|p
 operator|=
@@ -2692,7 +2701,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 block|}
 if|if
@@ -3015,6 +3026,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|done
+label|:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+return|return;
 block|}
 end_function
 
