@@ -55,6 +55,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MDT_PNP_INFO
+value|4
+end_define
+
+begin_comment
+comment|/* Plug and play hints record */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MDT_STRUCT_VERSION
 value|1
 end_define
