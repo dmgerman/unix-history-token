@@ -5615,6 +5615,24 @@ name|u8
 name|port_num
 parameter_list|)
 function_decl|;
+comment|/* When calling get_netdev, the HW vendor's driver should return the 	 * net device of device @device at port @port_num. The function 	 * is called in rtnl_lock. The HW vendor's device driver must guarantee 	 * to return NULL before the net device has reached 	 * NETDEV_UNREGISTER_FINAL state. 	 */
+name|struct
+name|net_device
+modifier|*
+function_decl|(
+modifier|*
+name|get_netdev
+function_decl|)
+parameter_list|(
+name|struct
+name|ib_device
+modifier|*
+name|device
+parameter_list|,
+name|u8
+name|port_num
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*

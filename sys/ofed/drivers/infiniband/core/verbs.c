@@ -822,6 +822,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|u32
+name|scope_id
+init|=
+name|rdma_get_ipv6_scope_id
+argument_list|(
+name|device
+argument_list|,
+name|port_num
+argument_list|)
+decl_stmt|;
 name|ret
 operator|=
 name|rdma_addr_find_dmac_by_grh
@@ -844,6 +854,8 @@ operator|&
 name|ah_attr
 operator|->
 name|vlan_id
+argument_list|,
+name|scope_id
 argument_list|)
 expr_stmt|;
 if|if

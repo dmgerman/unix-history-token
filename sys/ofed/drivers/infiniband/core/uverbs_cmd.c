@@ -11212,6 +11212,9 @@ operator|&
 name|attr
 operator|->
 name|vlan_id
+argument_list|,
+operator|-
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -11233,6 +11236,9 @@ operator|->
 name|smac
 argument_list|,
 name|NULL
+argument_list|,
+operator|-
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
