@@ -4634,6 +4634,9 @@ name|fast_reg
 operator|.
 name|page_shift
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cb
 operator|->
 name|fastreg_wr
