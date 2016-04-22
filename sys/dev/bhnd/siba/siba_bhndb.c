@@ -69,6 +69,46 @@ begin_comment
 comment|/*  * Supports attachment of siba(4) bus devices via a bhndb bridge.  */
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// TODO: PCI rev< 6 interrupt handling
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On early PCI cores (rev< 6) interrupt masking is handled via interconnect
+end_comment
+
+begin_comment
+comment|// configuration registers (SBINTVEC), rather than the PCI_INT_MASK
+end_comment
+
+begin_comment
+comment|// config register.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On those devices, we should handle interrupts locally using SBINTVEC, rather
+end_comment
+
+begin_comment
+comment|// than delegating to our parent bhndb device.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
 begin_function
 specifier|static
 name|int

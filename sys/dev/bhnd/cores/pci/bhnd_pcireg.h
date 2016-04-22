@@ -1294,6 +1294,161 @@ value|((((f)& BHND_PCIE_CFG_ADDR_FUNC_MASK)<< BHND_PCIE_CFG_ADDR_FUNC_SHIFT) | \
 end_define
 
 begin_comment
+comment|/* BHND_PCIE_MDIO_CTL control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIOCTL_DIVISOR_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* clock divisor mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIOCTL_DIVISOR_VAL
+value|0x2
+end_define
+
+begin_comment
+comment|/* default clock divisor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIOCTL_PREAM_EN
+value|0x80
+end_define
+
+begin_comment
+comment|/* enable preamble mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIOCTL_DONE
+value|0x100
+end_define
+
+begin_comment
+comment|/* tranaction completed */
+end_comment
+
+begin_comment
+comment|/* PCIe BHND_PCIE_MDIO_DATA Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_PHYADDR_MASK
+value|0x0f800000
+end_define
+
+begin_comment
+comment|/* phy addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_PHYADDR_SHIFT
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_REGADDR_MASK
+value|0x007c0000
+end_define
+
+begin_comment
+comment|/* reg/dev addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_REGADDR_SHIFT
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_DATA_MASK
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* data  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_TA
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* slave turnaround time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_START
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* start of transaction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_CMD_WRITE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* write command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_CMD_READ
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* read command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_MDIODATA_ADDR
+parameter_list|(
+name|_phyaddr
+parameter_list|,
+name|_regaddr
+parameter_list|)
+value|(		\ 	(((_phyaddr)<< BHND_PCIE_MDIODATA_PHYADDR_SHIFT)&		\ 	    BHND_PCIE_MDIODATA_PHYADDR_MASK) |				\ 	(((_regaddr)<< BHND_PCIE_MDIODATA_REGADDR_SHIFT)&		\ 	    BHND_PCIE_MDIODATA_REGADDR_MASK)				\ )
+end_define
+
+begin_comment
 comment|/* PCIE protocol PHY diagnostic registers */
 end_comment
 

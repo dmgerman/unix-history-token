@@ -25,52 +25,13 @@ begin_comment
 comment|/* PCI bridge driver-specific state */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BHND_PCIB_MAX_RES
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIB_MAX_RSPEC
-value|(BHND_PCIB_MAX_RES+1)
-end_define
-
 begin_struct
 struct|struct
 name|bhnd_pcib_softc
 block|{
-name|device_t
-name|dev
-decl_stmt|;
-comment|/**< pci device */
 name|struct
-name|bhnd_resource
-modifier|*
-name|core
-decl_stmt|;
-comment|/**< core registers. */
-name|bhnd_pci_regfmt_t
-name|regfmt
-decl_stmt|;
-comment|/**< device register format */
-name|struct
-name|resource_spec
-name|rspec
-index|[
-name|BHND_PCIB_MAX_RSPEC
-index|]
-decl_stmt|;
-name|struct
-name|bhnd_resource
-modifier|*
-name|res
-index|[
-name|BHND_PCIB_MAX_RES
-index|]
+name|bhnd_pci_softc
+name|sc_common
 decl_stmt|;
 block|}
 struct|;
