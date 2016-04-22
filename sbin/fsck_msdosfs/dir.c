@@ -1047,13 +1047,12 @@ name|malloc
 argument_list|(
 name|len
 operator|=
+name|MAX
+argument_list|(
 name|b1
-operator|>
+argument_list|,
 name|b2
-condition|?
-name|b1
-else|:
-name|b2
+argument_list|)
 argument_list|)
 operator|)
 operator|==
