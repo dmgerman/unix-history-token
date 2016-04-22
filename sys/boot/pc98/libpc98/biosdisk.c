@@ -3585,9 +3585,7 @@ name|i386_devdesc
 modifier|*
 name|dev
 init|=
-name|f
-operator|->
-name|f_devdata
+name|devdata
 decl_stmt|;
 name|struct
 name|open_disk
@@ -3638,10 +3636,6 @@ name|bcache_strategy
 argument_list|(
 operator|&
 name|bcd
-argument_list|,
-name|od
-operator|->
-name|od_unit
 argument_list|,
 name|rw
 argument_list|,
