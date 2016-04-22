@@ -580,9 +580,6 @@ name|hypercall_page
 operator|=
 name|virt_addr
 expr_stmt|;
-name|hv_et_init
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
