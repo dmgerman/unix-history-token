@@ -18924,14 +18924,14 @@ argument_list|,
 literal|4
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"sahf"
 argument_list|,
 name|NORM
 argument_list|)
 block|,
-name|TNSx
+name|TNS
 argument_list|(
 literal|"lahf"
 argument_list|,
