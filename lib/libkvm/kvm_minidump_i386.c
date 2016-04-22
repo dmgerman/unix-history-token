@@ -240,7 +240,7 @@ if|if
 condition|(
 name|vmst
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|_kvm_err
