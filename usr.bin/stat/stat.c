@@ -4842,13 +4842,12 @@ argument_list|)
 argument_list|,
 literal|"%dld"
 argument_list|,
-name|prec
-operator|>
+name|MAX
+argument_list|(
 literal|9
-condition|?
-literal|9
-else|:
+argument_list|,
 name|prec
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
