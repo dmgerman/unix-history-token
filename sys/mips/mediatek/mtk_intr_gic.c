@@ -377,15 +377,6 @@ block|}
 block|,
 comment|/* Registers */
 block|{
-name|SYS_RES_IRQ
-block|,
-literal|0
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-comment|/* Parent interrupt 1 */
-block|{
 operator|-
 literal|1
 block|,
@@ -418,45 +409,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|READ4
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|)
-define|\
-value|bus_space_read_4((_sc)->bst, (_sc)->bsh, _reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE4
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|,
-name|_val
-parameter_list|)
-define|\
-value|bus_space_write_4((_sc)->bst, (_sc)->bsh, _reg, _val)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -482,11 +434,6 @@ name|_val
 parameter_list|)
 value|bus_write_4((_sc)->gic_res[0], (_reg), (_val))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -972,20 +919,9 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-if|if
-condition|(
-name|bus_setup_intr
+name|cpu_establish_hardintr
 argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|gic_res
-index|[
-literal|1
-index|]
-argument_list|,
-name|INTR_TYPE_CLK
+literal|"gic"
 argument_list|,
 name|mtk_gic_intr
 argument_list|,
@@ -993,31 +929,13 @@ name|NULL
 argument_list|,
 name|sc
 argument_list|,
-operator|&
-name|sc
-operator|->
-name|gic_intrhand
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
+literal|0
 argument_list|,
-literal|"could not setup irq handler\n"
+name|INTR_TYPE_CLK
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|intr_pic_deregister
-argument_list|(
-name|dev
-argument_list|,
-name|xref
-argument_list|)
-expr_stmt|;
-goto|goto
-name|cleanup
-goto|;
-block|}
 return|return
 operator|(
 literal|0
