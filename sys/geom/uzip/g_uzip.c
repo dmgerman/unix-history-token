@@ -393,7 +393,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|if (bcn>= ecn) { \ 		printf("DPRINTF_BRNG: invalid range (%ju, %ju), BUG BUG " \ 		    "BUG!\n", (uintmax_t)bcn, (uintmax_t)ecn); \ 	} else if (((lvl)<= g_uzip_debug) || \ 	    BLK_IN_RANGE(g_uzip_debug_block, bcn, \ 	     (intmax_t)ecn - (intmax_t)bcn)) { \ 		printf a; \ 	}
+value|KASSERT(bcn< ecn, ("DPRINTF_BRNG: invalid range (%ju, %ju)", \ 	    (uintmax_t)bcn, (uintmax_t)ecn)); \ 	if (((lvl)<= g_uzip_debug) || \ 	    BLK_IN_RANGE(g_uzip_debug_block, bcn, \ 	     (intmax_t)ecn - (intmax_t)bcn)) { \ 		printf a; \ 	}
 end_define
 
 begin_define
@@ -1377,10 +1377,45 @@ operator|<=
 name|MAXPHYS
 condition|)
 break|break;
+if|if
+condition|(
+name|end_blk
+operator|==
+operator|(
+name|start_blk
+operator|+
+literal|1
+operator|)
+condition|)
+block|{
+break|break;
+block|}
 name|end_blk
 operator|--
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|GUZ_DBG_IO
+argument_list|,
+operator|(
+literal|"%s/%s: bp2->bio_length = %jd\n"
+operator|,
+name|__func__
+operator|,
+name|gp
+operator|->
+name|name
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|bp2
+operator|->
+name|bio_length
+operator|)
+argument_list|)
+expr_stmt|;
 name|bp2
 operator|->
 name|bio_data
