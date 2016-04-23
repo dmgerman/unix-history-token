@@ -341,7 +341,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/*  * Structure for an NFSv4.1 session.  * Locking rules for this structure.  * To add/delete one of these structures from the lists, you must lock  * both: NFSLOCKSESSION(session hashhead) and NFSLOCKSTATE() in that order.  * To traverse the lists looking for one of these, you must hold one  * of these two locks.  * The exception is if the thread holds the exclusive root sleep lock.  * In this case, all other nfsd threads are blocked, so locking the  * mutexes isn't required.  * When manipulating sess_refcnt, NFSLOCKSTATE() must be locked.  * When manipulating the fields withinsess_cbsess except nfsess_xprt,  * sess_cbsess.nfsess_mtx must be locked.  * When manipulating sess_slots and sess_cbsess.nfsess_xprt,  * NFSLOCKSESSION(session hashhead) must be locked.  */
+comment|/*  * Structure for an NFSv4.1 session.  * Locking rules for this structure.  * To add/delete one of these structures from the lists, you must lock  * both: NFSLOCKSTATE() and NFSLOCKSESSION(session hashhead) in that order.  * To traverse the lists looking for one of these, you must hold one  * of these two locks.  * The exception is if the thread holds the exclusive root sleep lock.  * In this case, all other nfsd threads are blocked, so locking the  * mutexes isn't required.  * When manipulating sess_refcnt, NFSLOCKSTATE() must be locked.  * When manipulating the fields withinsess_cbsess except nfsess_xprt,  * sess_cbsess.nfsess_mtx must be locked.  * When manipulating sess_slots and sess_cbsess.nfsess_xprt,  * NFSLOCKSESSION(session hashhead) must be locked.  */
 end_comment
 
 begin_struct
