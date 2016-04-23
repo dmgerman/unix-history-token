@@ -962,7 +962,7 @@ operator|=
 block|{
 name|FUNC
 argument_list|(
-literal|"uart"
+literal|"uart0"
 argument_list|,
 literal|0
 argument_list|)
@@ -1124,7 +1124,7 @@ operator|=
 block|{
 name|FUNC
 argument_list|(
-literal|"uart"
+literal|"uart1"
 argument_list|,
 literal|0
 argument_list|)
@@ -1162,7 +1162,7 @@ operator|=
 block|{
 name|FUNC
 argument_list|(
-literal|"uart"
+literal|"uart2"
 argument_list|,
 literal|0
 argument_list|)
