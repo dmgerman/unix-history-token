@@ -9,21 +9,29 @@ name|mkuz_blk
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-name|struct
-name|mkuz_blk_info
-modifier|*
-name|mkuz_blkcache_regblock
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
+begin_struct_decl
+struct_decl|struct
+name|mkuz_bchain_link
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|mkuz_bchain_link
+block|{
 name|struct
 name|mkuz_blk
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|this
+decl_stmt|;
+name|struct
+name|mkuz_bchain_link
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 

@@ -5,25 +5,44 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|mkuz_blk
+name|mkuz_conveyor
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-name|struct
-name|mkuz_blk_info
-modifier|*
-name|mkuz_blkcache_regblock
-parameter_list|(
+begin_struct
+struct|struct
+name|mkuz_cfg
+block|{
 name|int
-parameter_list|,
+name|fdr
+decl_stmt|;
+name|int
+name|fdw
+decl_stmt|;
+name|int
+name|verbose
+decl_stmt|;
+name|int
+name|no_zcomp
+decl_stmt|;
+name|int
+name|en_dedup
+decl_stmt|;
+name|int
+name|nworkers
+decl_stmt|;
+name|int
+name|blksz
+decl_stmt|;
 specifier|const
 name|struct
-name|mkuz_blk
+name|mkuz_format
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|handler
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 

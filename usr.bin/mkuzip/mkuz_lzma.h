@@ -33,14 +33,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|mkuz_blk
+modifier|*
 name|mkuz_lzma_compress
 parameter_list|(
-specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|uint32_t
+specifier|const
+name|struct
+name|mkuz_blk
 modifier|*
 parameter_list|)
 function_decl|;
