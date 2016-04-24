@@ -5084,7 +5084,7 @@ if|if
 condition|(
 name|ip
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|ip

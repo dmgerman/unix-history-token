@@ -10965,7 +10965,7 @@ if|if
 condition|(
 name|savedcbp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|bcopy
@@ -13413,7 +13413,7 @@ if|if
 condition|(
 name|savedcbp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|bcopy
