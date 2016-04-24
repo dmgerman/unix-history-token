@@ -134,26 +134,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VFS_HOLD
-parameter_list|(
-name|vfsp
-parameter_list|)
-value|do {						\ 	MNT_ILOCK(vfsp);						\ 	MNT_REF(vfsp);							\ 	MNT_IUNLOCK(vfsp);						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_RELE
-parameter_list|(
-name|vfsp
-parameter_list|)
-value|do {						\ 	MNT_ILOCK(vfsp);						\ 	MNT_REL(vfsp);							\ 	MNT_IUNLOCK(vfsp);						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|fs_vscan
 parameter_list|(
 name|vp
