@@ -12549,6 +12549,17 @@ argument_list|)
 return|;
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 union|union
 block|{
 ifdef|#
@@ -12572,6 +12583,8 @@ directive|endif
 block|}
 name|addr
 union|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|dst_addr
