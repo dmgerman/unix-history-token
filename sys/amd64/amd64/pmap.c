@@ -3178,18 +3178,15 @@ decl_stmt|;
 comment|/* Allocate page table pages for the direct map */
 name|ndmpdp
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|ptoa
 argument_list|(
 name|Maxmem
 argument_list|)
-operator|+
+argument_list|,
 name|NBPDP
-operator|-
-literal|1
-operator|)
-operator|>>
-name|PDPSHIFT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
