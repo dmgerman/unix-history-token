@@ -320,6 +320,32 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|secasvar
+modifier|*
+name|key_allocsa_tunnel
+parameter_list|(
+name|union
+name|sockaddr_union
+modifier|*
+parameter_list|,
+name|union
+name|sockaddr_union
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|key_addrefsa
 parameter_list|(
@@ -368,6 +394,21 @@ name|spi
 parameter_list|)
 define|\
 value|key_allocsa(dst, proto, spi, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_ALLOCSA_TUNNEL
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|proto
+parameter_list|)
+define|\
+value|key_allocsa_tunnel(src, dst, proto, __FILE__, __LINE__)
 end_define
 
 begin_define
