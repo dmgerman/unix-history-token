@@ -966,7 +966,7 @@ name|csum
 modifier|*
 name|cgsum
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* 	 * Recompute the fs summary info from correct cs summaries. 	 */
@@ -10965,7 +10965,7 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|TAILQ_FOREACH
@@ -12303,7 +12303,7 @@ decl_stmt|;
 name|int
 name|readsize
 decl_stmt|;
-name|int
+name|u_int
 name|blocks
 decl_stmt|;
 name|int
@@ -12312,7 +12312,7 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* 	 * Read records until we exhaust the journal space.  If we find 	 * an invalid record we start searching for a valid segment header 	 * at the next block.  This is because we don't have a head/tail 	 * pointer and must recover the information indirectly.  At the gap 	 * between the head and tail we won't necessarily have a valid 	 * segment. 	 */
