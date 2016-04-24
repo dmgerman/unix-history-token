@@ -3330,6 +3330,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|VFS_HOLD
 argument_list|(
 name|zfsvfs
@@ -3337,6 +3340,8 @@ operator|->
 name|z_vfs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|zp
@@ -6928,6 +6933,9 @@ argument_list|,
 name|zp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|VFS_RELE
 argument_list|(
 name|zfsvfs
@@ -6935,6 +6943,8 @@ operator|->
 name|z_vfs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
