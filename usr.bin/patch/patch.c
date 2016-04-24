@@ -3649,8 +3649,7 @@ name|LINENUM
 name|i
 parameter_list|)
 block|{
-name|unsigned
-name|short
+name|size_t
 name|len
 decl_stmt|;
 specifier|const
