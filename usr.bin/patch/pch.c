@@ -6052,7 +6052,7 @@ operator|&
 literal|2
 condition|)
 block|{
-name|int
+name|LINENUM
 name|i
 decl_stmt|;
 name|char
@@ -6091,7 +6091,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%3d %c %c %s"
+literal|"%3ld %c %c %s"
 argument_list|,
 name|i
 argument_list|,
