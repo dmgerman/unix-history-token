@@ -37720,6 +37720,21 @@ operator|->
 name|dofs_entsize
 argument_list|)
 expr_stmt|;
+comment|/* See the check in dtrace_helper_provider_validate(). */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|strtab
+operator|+
+name|probe
+operator|->
+name|dofpr_func
+argument_list|)
+operator|>=
+name|DTRACE_FUNCNAMELEN
+condition|)
+continue|continue;
 name|dhpb
 operator|.
 name|dthpb_mod
@@ -66388,12 +66403,7 @@ argument_list|,
 literal|"function name too long"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+comment|/* 			 * Keep going if the function name is too long. 			 * Unlike provider and probe names, we cannot reasonably 			 * impose restrictions on function names, since they're 			 * a property of the code being instrumented. We will 			 * skip this probe in dtrace_helper_provide_one(). 			 */
 block|}
 if|if
 condition|(
