@@ -681,8 +681,6 @@ name|sbap
 decl_stmt|,
 modifier|*
 name|ebap
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|ext2mount
@@ -1040,6 +1038,10 @@ name|in_off
 expr_stmt|;
 block|}
 comment|/* 	 * If the block range spans two block maps, get the second map. 	 */
+name|ebap
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|end_lvl
