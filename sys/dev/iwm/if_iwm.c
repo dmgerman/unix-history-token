@@ -20080,9 +20080,6 @@ operator|&
 name|IWM_CSR_INT_BIT_SW_ERR
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IWM_DEBUG
 name|int
 name|i
 decl_stmt|;
@@ -20204,29 +20201,51 @@ operator|->
 name|iv_state
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* Don't stop the device; just do a VAP restart */
+name|IWM_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: null vap\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"fatal firmware error\n"
+literal|"%s: controller panicked, iv_state = %d; "
+literal|"restarting\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|vap
+operator|->
+name|iv_state
 argument_list|)
 expr_stmt|;
-name|iwm_stop
+comment|/* XXX TODO: turn this into a callout/taskqueue */
+name|ieee80211_restart_all
 argument_list|(
-name|sc
+name|ic
 argument_list|)
 expr_stmt|;
-name|rv
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
