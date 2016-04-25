@@ -782,7 +782,9 @@ name|DDB
 argument|ksym_start = MD_FETCH(kmdp, MODINFOMD_SSYM, uintptr_t); 			ksym_end = MD_FETCH(kmdp, MODINFOMD_ESYM, uintptr_t); 			db_fetch_ksymtab(ksym_start, ksym_end);
 endif|#
 directive|endif
-argument|} 	} else { 		bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start); 	}
+argument|} 	} else { 		bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start); 		init_static_kenv(NULL,
+literal|0
+argument|); 	}
 ifdef|#
 directive|ifdef
 name|BOOKE
