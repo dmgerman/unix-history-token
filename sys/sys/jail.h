@@ -1019,8 +1019,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PR_MAXMETHOD
+name|PR_METHOD_REMOVE
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_MAXMETHOD
+value|6
 end_define
 
 begin_comment
