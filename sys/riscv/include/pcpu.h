@@ -41,11 +41,9 @@ name|PCPU_MD_FIELDS
 define|\
 value|uint32_t pc_pending_ipis;
 comment|/* IPIs pending to this CPU */
-value|\ 	uint64_t pc_sptbr;
-comment|/* L0 page table base (VA) */
 value|\ 	uint64_t pc_reg;
 comment|/* CPU MMIO base (PA) */
-value|\ 	char __pad[109]
+value|\ 	char __pad[117]
 end_define
 
 begin_ifdef

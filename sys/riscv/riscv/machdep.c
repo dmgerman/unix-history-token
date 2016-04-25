@@ -320,13 +320,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|uint64_t
-name|pagetable_l0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|trapframe
@@ -1833,33 +1826,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|)
-block|{
-name|uint64_t
-name|addr
-decl_stmt|;
-name|addr
-operator|=
-operator|(
-name|uint64_t
-operator|)
-operator|&
-name|pagetable_l0
-expr_stmt|;
-name|addr
-operator|+=
-operator|(
-name|cpuid
-operator|*
-name|PAGE_SIZE
-operator|)
-expr_stmt|;
-name|pcpu
-operator|->
-name|pc_sptbr
-operator|=
-name|addr
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function

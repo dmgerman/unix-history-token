@@ -303,14 +303,14 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|(0xffffff8000000000UL)
+value|(0xffffffc000000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(0xffffff8800000000UL)
+value|(0xffffffc800000000UL)
 end_define
 
 begin_comment
@@ -321,14 +321,14 @@ begin_define
 define|#
 directive|define
 name|DMAP_MIN_ADDRESS
-value|(0xffffffc000000000UL)
+value|(0xffffffd000000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|(0xffffffdfffffffffUL)
+value|(0xffffffefffffffffUL)
 end_define
 
 begin_define
@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_USER_ADDRESS
-value|(0x0000008000000000UL)
+value|(0x0000004000000000UL)
 end_define
 
 begin_define
