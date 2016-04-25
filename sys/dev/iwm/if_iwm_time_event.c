@@ -731,9 +731,6 @@ name|uint32_t
 name|duration
 parameter_list|,
 name|uint32_t
-name|min_duration
-parameter_list|,
-name|uint32_t
 name|max_delay
 parameter_list|)
 block|{

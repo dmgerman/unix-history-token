@@ -513,9 +513,6 @@ name|struct
 name|iwm_node
 modifier|*
 name|in
-parameter_list|,
-name|int
-name|add
 parameter_list|)
 block|{
 return|return
@@ -525,7 +522,7 @@ name|sc
 argument_list|,
 name|in
 argument_list|,
-name|IWM_FW_CTXT_ACTION_ADD
+name|IWM_FW_CTXT_ACTION_MODIFY
 argument_list|)
 return|;
 block|}
@@ -547,7 +544,7 @@ name|in
 parameter_list|)
 block|{
 return|return
-name|iwm_mvm_binding_update
+name|iwm_mvm_binding_cmd
 argument_list|(
 name|sc
 argument_list|,

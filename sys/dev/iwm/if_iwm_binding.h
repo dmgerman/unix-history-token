@@ -66,9 +66,6 @@ name|struct
 name|iwm_node
 modifier|*
 name|in
-parameter_list|,
-name|int
-name|add
 parameter_list|)
 function_decl|;
 end_function_decl
