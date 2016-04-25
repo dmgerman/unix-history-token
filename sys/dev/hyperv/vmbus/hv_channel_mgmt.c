@@ -605,9 +605,6 @@ modifier|*
 name|new_channel
 parameter_list|)
 block|{
-name|boolean_t
-name|f_new
-decl_stmt|;
 name|hv_vmbus_channel
 modifier|*
 name|channel
@@ -618,14 +615,6 @@ decl_stmt|;
 name|uint32_t
 name|relid
 decl_stmt|;
-name|f_new
-operator|=
-name|TRUE
-expr_stmt|;
-name|channel
-operator|=
-name|NULL
-expr_stmt|;
 name|relid
 operator|=
 name|new_channel
@@ -719,20 +708,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|f_new
-operator|=
-name|FALSE
-expr_stmt|;
 break|break;
-block|}
 block|}
 if|if
 condition|(
-name|f_new
+name|channel
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* Insert at tail */
+comment|/* Install the new primary channel */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -757,8 +742,9 @@ expr_stmt|;
 comment|/*XXX add new channel to percpu_list */
 if|if
 condition|(
-operator|!
-name|f_new
+name|channel
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Check if this is a sub channel. 		 */
