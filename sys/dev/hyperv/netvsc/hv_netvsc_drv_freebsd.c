@@ -2024,7 +2024,7 @@ decl_stmt|;
 name|struct
 name|hv_vmbus_channel
 modifier|*
-name|chan
+name|pri_chan
 decl_stmt|;
 name|netvsc_device_info
 name|device_info
@@ -2355,7 +2355,7 @@ name|ring_cnt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Associate the first TX/RX ring w/ the primary channel. 	 */
-name|chan
+name|pri_chan
 operator|=
 name|device_ctx
 operator|->
@@ -2365,7 +2365,7 @@ name|KASSERT
 argument_list|(
 name|HV_VMBUS_CHAN_ISPRIMARY
 argument_list|(
-name|chan
+name|pri_chan
 argument_list|)
 argument_list|,
 operator|(
@@ -2375,7 +2375,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|chan
+name|pri_chan
 operator|->
 name|offer_msg
 operator|.
@@ -2388,7 +2388,7 @@ argument_list|,
 operator|(
 literal|"primary channel subidx %u"
 operator|,
-name|chan
+name|pri_chan
 operator|->
 name|offer_msg
 operator|.
@@ -2402,7 +2402,7 @@ name|hn_channel_attach
 argument_list|(
 name|sc
 argument_list|,
-name|chan
+name|pri_chan
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2633,6 +2633,61 @@ condition|)
 goto|goto
 name|failed
 goto|;
+if|if
+condition|(
+name|sc
+operator|->
+name|net_dev
+operator|->
+name|num_channel
+operator|>
+literal|1
+condition|)
+block|{
+name|struct
+name|hv_vmbus_channel
+modifier|*
+modifier|*
+name|subchan
+decl_stmt|;
+name|int
+name|subchan_cnt
+init|=
+name|sc
+operator|->
+name|net_dev
+operator|->
+name|num_channel
+operator|-
+literal|1
+decl_stmt|;
+comment|/* 		 * Wait for sub-channels setup to complete. 		 */
+name|subchan
+operator|=
+name|vmbus_get_subchan
+argument_list|(
+name|pri_chan
+argument_list|,
+name|subchan_cnt
+argument_list|)
+expr_stmt|;
+name|vmbus_rel_subchan
+argument_list|(
+name|subchan
+argument_list|,
+name|subchan_cnt
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%d sub-channels setup done\n"
+argument_list|,
+name|subchan_cnt
+argument_list|)
+expr_stmt|;
+block|}
 name|KASSERT
 argument_list|(
 name|sc
