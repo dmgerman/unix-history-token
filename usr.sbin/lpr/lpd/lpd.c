@@ -2969,24 +2969,7 @@ decl_stmt|,
 name|fpass
 decl_stmt|,
 name|good
-decl_stmt|,
-name|wantsl
 decl_stmt|;
-name|wantsl
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ch_opts
-operator|&
-name|LPD_LOGCONNERR
-condition|)
-name|wantsl
-operator|=
-literal|1
-expr_stmt|;
-comment|/* also syslog the errors */
 name|from_host
 operator|=
 literal|".na."
