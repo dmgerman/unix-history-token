@@ -1208,13 +1208,14 @@ name|arg
 argument_list|)
 operator|)
 operator|||
-operator|!
 name|shm_prison_cansee
 argument_list|(
 name|rpr
 argument_list|,
 name|shmseg
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
