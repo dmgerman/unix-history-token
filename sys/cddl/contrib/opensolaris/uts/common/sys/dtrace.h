@@ -160,7 +160,7 @@ value|64
 define|#
 directive|define
 name|DTRACE_FUNCNAMELEN
-value|128
+value|192
 define|#
 directive|define
 name|DTRACE_NAMELEN
