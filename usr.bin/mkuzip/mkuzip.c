@@ -302,22 +302,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|mkuz_memvcmp
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|char
