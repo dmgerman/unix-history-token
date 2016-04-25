@@ -55056,10 +55056,17 @@ name|vars
 operator|->
 name|eee_status
 operator|&=
+operator|(
+call|(
+name|uint32_t
+call|)
+argument_list|(
 operator|~
 name|SHMEM_EEE_1G_ADV
+argument_list|)
 operator|<<
 name|SHMEM_EEE_SUPPORTED_SHIFT
+operator|)
 expr_stmt|;
 if|if
 condition|(
