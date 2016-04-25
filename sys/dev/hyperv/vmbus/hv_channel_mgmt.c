@@ -739,7 +739,6 @@ operator|.
 name|channel_lock
 argument_list|)
 expr_stmt|;
-comment|/*XXX add new channel to percpu_list */
 if|if
 condition|(
 name|channel
@@ -875,7 +874,6 @@ operator|->
 name|primary_channel
 argument_list|)
 expr_stmt|;
-comment|/*XXX add it to percpu_list */
 name|new_channel
 operator|->
 name|state
