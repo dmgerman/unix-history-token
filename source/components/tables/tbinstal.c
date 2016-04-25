@@ -647,7 +647,7 @@ operator|,
 literal|"Table has invalid signature [%4.4s] (0x%8.8X), "
 literal|"must be SSDT or OEMx"
 operator|,
-name|AcpiUtValidAcpiName
+name|AcpiUtValidNameseg
 argument_list|(
 name|NewTableDesc
 operator|.

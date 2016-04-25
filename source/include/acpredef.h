@@ -74,6 +74,10 @@ block|,
 name|ACPI_PTYPE2_UUID_PAIR
 init|=
 literal|12
+block|,
+name|ACPI_PTYPE_CUSTOM
+init|=
+literal|13
 block|}
 enum|;
 end_enum
@@ -1026,7 +1030,7 @@ block|,
 comment|/* Fixed-length (16 Int),(4 Str) */
 name|PACKAGE_INFO
 argument_list|(
-name|ACPI_PTYPE1_FIXED
+name|ACPI_PTYPE_CUSTOM
 argument_list|,
 name|ACPI_RTYPE_INTEGER
 argument_list|,

@@ -506,7 +506,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|&&
 operator|(
@@ -522,7 +522,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 condition|)
@@ -566,7 +566,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|&&
 operator|(
@@ -580,7 +580,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{

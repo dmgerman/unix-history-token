@@ -1995,14 +1995,14 @@ define|#
 directive|define
 name|ACPI_RS_DUMP_COMMON_SERIAL_BUS
 define|\
-value|{ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.RevisionId),       "RevisionId",               NULL}, \     {ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.Type),             "Type",                     AcpiGbl_SbtDecode}, \     {ACPI_RSD_1BITFLAG, ACPI_RSD_OFFSET (CommonSerialBus.ProducerConsumer), "ProducerConsumer",         AcpiGbl_ConsumeDecode}, \     {ACPI_RSD_1BITFLAG, ACPI_RSD_OFFSET (CommonSerialBus.SlaveMode),        "SlaveMode",                AcpiGbl_SmDecode}, \     {ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.TypeRevisionId),   "TypeRevisionId",           NULL}, \     {ACPI_RSD_UINT16,   ACPI_RSD_OFFSET (CommonSerialBus.TypeDataLength),   "TypeDataLength",           NULL}, \     {ACPI_RSD_SOURCE,   ACPI_RSD_OFFSET (CommonSerialBus.ResourceSource),   "ResourceSource",           NULL}, \     {ACPI_RSD_UINT16,   ACPI_RSD_OFFSET (CommonSerialBus.VendorLength),     "VendorLength",             NULL}, \     {ACPI_RSD_SHORTLISTX,ACPI_RSD_OFFSET (CommonSerialBus.VendorData),      "VendorData",               NULL},
+value|{ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.RevisionId),       "RevisionId",               NULL}, \     {ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.Type),             "Type",                     AcpiGbl_SbtDecode}, \     {ACPI_RSD_1BITFLAG, ACPI_RSD_OFFSET (CommonSerialBus.ProducerConsumer), "ProducerConsumer",         AcpiGbl_ConsumeDecode}, \     {ACPI_RSD_1BITFLAG, ACPI_RSD_OFFSET (CommonSerialBus.SlaveMode),        "SlaveMode",                AcpiGbl_SmDecode}, \     {ACPI_RSD_1BITFLAG, ACPI_RSD_OFFSET (CommonSerialBus.ConnectionSharing),"ConnectionSharing",        AcpiGbl_ShrDecode}, \     {ACPI_RSD_UINT8,    ACPI_RSD_OFFSET (CommonSerialBus.TypeRevisionId),   "TypeRevisionId",           NULL}, \     {ACPI_RSD_UINT16,   ACPI_RSD_OFFSET (CommonSerialBus.TypeDataLength),   "TypeDataLength",           NULL}, \     {ACPI_RSD_SOURCE,   ACPI_RSD_OFFSET (CommonSerialBus.ResourceSource),   "ResourceSource",           NULL}, \     {ACPI_RSD_UINT16,   ACPI_RSD_OFFSET (CommonSerialBus.VendorLength),     "VendorLength",             NULL}, \     {ACPI_RSD_SHORTLISTX,ACPI_RSD_OFFSET (CommonSerialBus.VendorData),      "VendorData",               NULL},
 end_define
 
 begin_decl_stmt
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpCommonSerialBus
 index|[
-literal|10
+literal|11
 index|]
 init|=
 block|{
@@ -2028,7 +2028,7 @@ begin_decl_stmt
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpI2cSerialBus
 index|[
-literal|13
+literal|14
 index|]
 init|=
 block|{
@@ -2098,7 +2098,7 @@ begin_decl_stmt
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpSpiSerialBus
 index|[
-literal|17
+literal|18
 index|]
 init|=
 block|{
@@ -2228,7 +2228,7 @@ begin_decl_stmt
 name|ACPI_RSDUMP_INFO
 name|AcpiRsDumpUartSerialBus
 index|[
-literal|19
+literal|20
 index|]
 init|=
 block|{

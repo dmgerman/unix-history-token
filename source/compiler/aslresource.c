@@ -1687,6 +1687,9 @@ break|break;
 case|case
 name|PARSEOP_I2C_SERIALBUS
 case|:
+case|case
+name|PARSEOP_I2C_SERIALBUS_V2
+case|:
 name|Rnode
 operator|=
 name|RsDoI2cSerialBusDescriptor
@@ -1698,6 +1701,9 @@ break|break;
 case|case
 name|PARSEOP_SPI_SERIALBUS
 case|:
+case|case
+name|PARSEOP_SPI_SERIALBUS_V2
+case|:
 name|Rnode
 operator|=
 name|RsDoSpiSerialBusDescriptor
@@ -1708,6 +1714,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PARSEOP_UART_SERIALBUS
+case|:
+case|case
+name|PARSEOP_UART_SERIALBUS_V2
 case|:
 name|Rnode
 operator|=

@@ -140,7 +140,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|AcpiUtValidAcpiName
+name|AcpiUtValidNameseg
 argument_list|(
 name|Header
 operator|->

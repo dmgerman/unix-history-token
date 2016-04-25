@@ -75,29 +75,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Local Prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|AcpiDmCheckAscii
-parameter_list|(
-name|UINT8
-modifier|*
-name|Target
-parameter_list|,
-name|char
-modifier|*
-name|RepairedName
-parameter_list|,
-name|UINT32
-name|Count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Common format strings for commented values */
 end_comment
 
@@ -586,6 +563,9 @@ comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
 literal|"HW-Reduced Comm Subspace"
 block|,
 comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE */
+literal|"HW-Reduced Comm Subspace Type2"
+block|,
+comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE_TYPE2 */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -3038,7 +3018,7 @@ comment|/* Fixed length ASCII name fields */
 case|case
 name|ACPI_DMT_SIG
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3093,7 +3073,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME4
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3113,7 +3093,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME6
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3133,7 +3113,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME8
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -4218,92 +4198,6 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmCheckAscii  *  * PARAMETERS:  Name                - Ascii string  *              Count               - Number of characters to check  *  * RETURN:      None  *  * DESCRIPTION: Ensure that the requested number of characters are printable  *              Ascii characters. Sets non-printable and null chars to<space>.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|AcpiDmCheckAscii
-parameter_list|(
-name|UINT8
-modifier|*
-name|Name
-parameter_list|,
-name|char
-modifier|*
-name|RepairedName
-parameter_list|,
-name|UINT32
-name|Count
-parameter_list|)
-block|{
-name|UINT32
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|Count
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|RepairedName
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|char
-operator|)
-name|Name
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Name
-index|[
-name|i
-index|]
-condition|)
-block|{
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|isprint
-argument_list|(
-name|Name
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-block|{
-name|RepairedName
-index|[
-name|i
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 

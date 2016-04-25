@@ -263,7 +263,7 @@ block|,
 block|{
 literal|"Device"
 block|,
-literal|"(DeviceName) {ObjectList}"
+literal|"(DeviceName) {TermList}"
 block|,
 literal|"Declare a bus/device object"
 block|}
@@ -492,11 +492,11 @@ literal|"GPIO I/O Connection Resource Descriptor Macro"
 block|}
 block|,
 block|{
-literal|"I2cSerialBus"
+literal|"I2cSerialBusV2"
 block|,
 literal|"(SlaveAddress, SlaveModeKeyword, ConnectionSpeed, "
 literal|"AddressingModeKeyword, ResourceSource, "
-literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, Shared, "
 literal|"RawDataBuffer() {VendorData})"
 block|,
 literal|"I2C Serial Bus Connection Resource Descriptor Macro"
@@ -860,7 +860,7 @@ block|,
 block|{
 literal|"PowerResource"
 block|,
-literal|"(ResourceName, SystemLevel, ResourceOrder) {ObjectList}"
+literal|"(ResourceName, SystemLevel, ResourceOrder) {TermList}"
 block|,
 literal|"Declare a power resource object"
 block|}
@@ -868,7 +868,7 @@ block|,
 block|{
 literal|"Processor"
 block|,
-literal|"(ProcessorName, ProcessorID, PBlockAddress, PblockLength) {ObjectList}"
+literal|"(ProcessorName, ProcessorID, PBlockAddress, PblockLength) {TermList}"
 block|,
 literal|"Declare a processor package"
 block|}
@@ -978,7 +978,7 @@ block|,
 block|{
 literal|"Scope"
 block|,
-literal|"(Location) {ObjectList}"
+literal|"(Location) {TermList}"
 block|,
 literal|"Open named scope "
 block|}
@@ -1024,13 +1024,13 @@ literal|"Sleep n milliseconds (yields the processor)"
 block|}
 block|,
 block|{
-literal|"SpiSerialBus"
+literal|"SpiSerialBusV2"
 block|,
 literal|"(DeviceSelection, PolarityKeyword, WireModeKeyword, "
 literal|"DataBitLength, SlaveModeKeyword, "
 literal|"ConnectionSpeed, ClockPolarityKeyword, ClockPhaseKeyword, "
 literal|"ResourceSource, ResourceSourceIndex, "
-literal|"ResourceTypeKeyword, DescriptorName, RawDataBuffer() {VendorData})"
+literal|"ResourceTypeKeyword, DescriptorName, Shared, RawDataBuffer() {VendorData})"
 block|,
 literal|"SPI Serial Bus Connection Resource Descriptor Macro"
 block|}
@@ -1086,7 +1086,7 @@ block|,
 block|{
 literal|"ThermalZone"
 block|,
-literal|"(ThermalZoneName) {ObjectList}"
+literal|"(ThermalZoneName) {TermList}"
 block|,
 literal|"Declare a thermal zone package"
 block|}
@@ -1156,12 +1156,12 @@ literal|"Convert Ascii string to UUID"
 block|}
 block|,
 block|{
-literal|"UartSerialBus"
+literal|"UartSerialBusV2"
 block|,
 literal|"(ConnectionSpeed, ByteLengthKeyword, StopBitsKeyword, "
 literal|"LinesInUse, EndianKeyword, ParityKeyword, "
 literal|"FlowControlKeyword, ReceiveBufferSize, TransmitBufferSize, ResourceSource, "
-literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, Shared, "
 literal|"RawDataBuffer() {VendorData})"
 block|,
 literal|"UART Serial Bus Connection Resource Descriptor Macro"

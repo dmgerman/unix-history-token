@@ -1010,7 +1010,7 @@ value|(((a)& ((a) - 1)) == 0)
 end_define
 
 begin_comment
-comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
+comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  * MASK_BITS_ABOVE/BELOW accpets a bit offset to create a mask  * MASK_BITS_ABOVE/BELOW_32/64 accpets a bit width to create a mask  * Note: The ACPI_INTEGER_BIT_SIZE check is used to bypass compiler  * differences with the shift operator  */
 end_comment
 
 begin_define
@@ -1031,6 +1031,46 @@ parameter_list|(
 name|position
 parameter_list|)
 value|((ACPI_UINT64_MAX)<< ((UINT32) (position)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_BELOW(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 ACPI_UINT64_MAX : \                                                 ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 (UINT64) 0 : \                                                 ACPI_MASK_BITS_BELOW(width))
 end_define
 
 begin_comment
@@ -1100,7 +1140,7 @@ parameter_list|,
 name|Mask
 parameter_list|)
 define|\
-value|((*SourcePtr>> Position)& Mask)
+value|((*(SourcePtr)>> (Position))& (Mask))
 end_define
 
 begin_define
@@ -1117,7 +1157,7 @@ parameter_list|,
 name|Value
 parameter_list|)
 define|\
-value|(*TargetPtr |= ((Value& Mask)<< Position))
+value|(*(TargetPtr) |= (((Value)& (Mask))<< (Position)))
 end_define
 
 begin_define

@@ -1490,6 +1490,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* I2CSERIALBUSV2 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* IF */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -3376,6 +3388,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* SPISERIALBUSV2 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* STALL */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -3665,6 +3689,18 @@ literal|0
 argument_list|)
 block|,
 comment|/* UART_SERIALBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* UART_SERIALBUSV2 */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_DEFAULT_ARG_OP

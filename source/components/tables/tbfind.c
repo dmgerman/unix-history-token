@@ -82,7 +82,7 @@ comment|/* Validate the input table signature */
 if|if
 condition|(
 operator|!
-name|AcpiIsValidSignature
+name|AcpiUtValidNameseg
 argument_list|(
 name|Signature
 argument_list|)

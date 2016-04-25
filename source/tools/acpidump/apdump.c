@@ -63,7 +63,7 @@ comment|/* Make sure signature is all ASCII and a valid ACPI name */
 if|if
 condition|(
 operator|!
-name|AcpiUtValidAcpiName
+name|AcpiUtValidNameseg
 argument_list|(
 name|Table
 operator|->
@@ -970,6 +970,25 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|AcpiUtValidNameseg
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|)
+condition|)
+block|{
+name|AcpiLogError
+argument_list|(
+literal|"No valid ACPI signature was found in input file %s\n"
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* File must be at least as long as the table length */
 if|if

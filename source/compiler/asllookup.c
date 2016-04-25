@@ -502,6 +502,10 @@ case|:
 case|case
 name|ACPI_TYPE_LOCAL_RESOURCE
 case|:
+case|case
+name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
+case|:
+comment|/* Names assigned to descriptor elements */
 return|return
 operator|(
 name|AE_OK
@@ -536,7 +540,13 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"Name is within method [%4.4s]"
+literal|"Name [%4.4s] is within a method [%4.4s]"
+argument_list|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 argument_list|,
 name|Next
 operator|->

@@ -877,15 +877,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiOsPrintf
+name|AslError
 argument_list|(
-literal|"Found a null name, external = %s\n"
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
 argument_list|,
 name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
+argument_list|,
+literal|"zero length name found"
 argument_list|)
 expr_stmt|;
 block|}

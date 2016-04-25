@@ -430,17 +430,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BOOLEAN
-name|AcpiIsValidSignature
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|AxCheckAscii
 parameter_list|(

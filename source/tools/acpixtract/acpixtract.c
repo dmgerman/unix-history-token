@@ -506,7 +506,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n%d binary ACPI tables extracted\n"
+literal|"\n%u binary ACPI tables extracted\n"
 argument_list|,
 name|Gbl_TableCount
 argument_list|)
@@ -839,7 +839,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n%d binary ACPI tables extracted and written to %s (%u bytes)\n"
+literal|"\n%u binary ACPI tables extracted and written to %s (%u bytes)\n"
 argument_list|,
 name|Gbl_TableCount
 argument_list|,
@@ -1081,7 +1081,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiIsValidSignature
+name|AcpiUtValidNameseg
 argument_list|(
 name|TableHeader
 operator|->

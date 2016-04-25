@@ -537,17 +537,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|BOOLEAN
-name|AcpiIsValidSignature
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * tbxfload  */
 end_comment

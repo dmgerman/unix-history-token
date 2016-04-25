@@ -677,6 +677,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|BOOLEAN
+name|ApFindNameInDeviceTree
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslerror - error handling/reporting  */
 end_comment
@@ -1719,6 +1734,21 @@ directive|define
 name|ASL_WALK_VISIT_TWICE
 value|(ASL_WALK_VISIT_DOWNWARD | ASL_WALK_VISIT_UPWARD)
 end_define
+
+begin_function_decl
+name|void
+name|TrSetParent
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_PARSE_OBJECT

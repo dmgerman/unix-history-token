@@ -1885,6 +1885,14 @@ operator|=
 name|AcpiDmTableInfoPcct1
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE_TYPE2
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoPcct2
+expr_stmt|;
+break|break;
 default|default:
 name|DtFatal
 argument_list|(

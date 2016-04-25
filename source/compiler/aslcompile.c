@@ -424,11 +424,11 @@ name|TrWalkParseTree
 argument_list|(
 name|Gbl_ParseTreeRoot
 argument_list|,
-name|ASL_WALK_VISIT_DOWNWARD
-argument_list|,
-name|OpcAmlConstantWalk
+name|ASL_WALK_VISIT_UPWARD
 argument_list|,
 name|NULL
+argument_list|,
+name|OpcAmlConstantWalk
 argument_list|,
 name|NULL
 argument_list|)

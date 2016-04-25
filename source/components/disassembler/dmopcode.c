@@ -488,7 +488,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 condition|)
 block|{
 return|return;
@@ -499,7 +499,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 expr_stmt|;
 comment|/* Predefined name must start with an underscore */
 name|NameString
@@ -814,7 +814,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 condition|)
 block|{
 return|return;
@@ -825,7 +825,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 expr_stmt|;
 comment|/*      * Op must be one of the Create* operators: CreateField, CreateBitField,      * CreateByteField, CreateWordField, CreateDwordField, CreateQwordField      */
 name|OpInfo
@@ -2561,7 +2561,7 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|ElseOp
 decl_stmt|;
-comment|/* Examine the first child of the Else */
+comment|/*      * To be able to perform the conversion, two conditions must be satisfied:      * 1) The first child of the Else must be an If statement.      * 2) The If block can only be followed by an Else block and these must      *    be the only blocks under the original Else.      */
 name|IfOp
 operator|=
 name|OriginalElseOp
@@ -2585,6 +2585,28 @@ operator|.
 name|AmlOpcode
 operator|!=
 name|AML_IF_OP
+operator|)
+operator|||
+operator|(
+name|IfOp
+operator|->
+name|Asl
+operator|.
+name|Next
+operator|&&
+operator|(
+name|IfOp
+operator|->
+name|Asl
+operator|.
+name|Next
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_ELSE_OP
+operator|)
 operator|)
 condition|)
 block|{

@@ -2310,10 +2310,6 @@ condition|(
 name|AcpiGbl_ExternalList
 condition|)
 block|{
-name|AcpiGbl_ExternalList
-operator|=
-name|AcpiGbl_ExternalList
-expr_stmt|;
 if|if
 condition|(
 operator|!

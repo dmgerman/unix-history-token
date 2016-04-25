@@ -1401,6 +1401,19 @@ block|}
 block|,
 block|{
 operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+operator|+
+literal|2
+block|,
+name|ACPI_RESTAG_INTERRUPTSHARE
+block|}
+block|,
+comment|/* V2 - ACPI 6.0 */
+block|{
+operator|(
 literal|7
 operator|*
 literal|8
@@ -1460,6 +1473,19 @@ block|,
 name|ACPI_RESTAG_SLAVEMODE
 block|}
 block|,
+block|{
+operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+operator|+
+literal|2
+block|,
+name|ACPI_RESTAG_INTERRUPTSHARE
+block|}
+block|,
+comment|/* V2 - ACPI 6.0 */
 block|{
 operator|(
 literal|7
@@ -1564,6 +1590,19 @@ name|ACPI_RESTAG_SLAVEMODE
 block|}
 block|,
 comment|/* Note: not part of original macro */
+block|{
+operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+operator|+
+literal|2
+block|,
+name|ACPI_RESTAG_INTERRUPTSHARE
+block|}
+block|,
+comment|/* V2 - ACPI 6.0 */
 block|{
 operator|(
 literal|7

@@ -2884,7 +2884,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_NAMED
+name|ACPI_PARSEOP_NAMED_OBJECT
 value|0x02
 end_define
 
@@ -2937,7 +2937,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 value|0x02
 end_define
 
@@ -2951,7 +2951,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 value|0x08
 end_define
 
@@ -2965,7 +2965,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_COMPOUND
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
 value|0x20
 end_define
 

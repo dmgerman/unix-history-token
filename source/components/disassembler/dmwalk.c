@@ -1101,10 +1101,9 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
-block|}
-comment|/*          * A Zero predicate indicates the possibility of one or more          * External() opcodes within the If() block.          */
+comment|/*              * A Zero predicate indicates the possibility of one or more              * External() opcodes within the If() block.              */
 if|if
 condition|(
 name|NextOp
@@ -1153,6 +1152,7 @@ operator|(
 name|AE_CTRL_DEPTH
 operator|)
 return|;
+block|}
 block|}
 block|}
 block|}
@@ -1290,7 +1290,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 operator|&&
@@ -1736,7 +1736,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1752,7 +1752,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -1783,7 +1783,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1799,7 +1799,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1815,7 +1815,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -1984,7 +1984,7 @@ argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
-comment|/*                  * Bank Value. This is a TermArg in the middle of the parameter                  * list, must handle it here.                  *                  * Disassemble the TermArg parse tree. ACPI_PARSEOP_PARAMLIST                  * eliminates newline in the output.                  */
+comment|/*                  * Bank Value. This is a TermArg in the middle of the parameter                  * list, must handle it here.                  *                  * Disassemble the TermArg parse tree. ACPI_PARSEOP_PARAMETER_LIST                  * eliminates newline in the output.                  */
 name|NextOp
 operator|=
 name|NextOp
@@ -1997,7 +1997,7 @@ name|Info
 operator|->
 name|Flags
 operator|=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|AcpiDmWalkParseTree
 argument_list|(
@@ -2182,7 +2182,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -2219,7 +2219,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 block|}
 return|return
@@ -2251,7 +2251,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 block|}
 return|return
@@ -2487,7 +2487,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 operator|&&
@@ -2511,7 +2511,7 @@ name|Info
 operator|->
 name|Flags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2713,7 +2713,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 operator|&&
@@ -2775,7 +2775,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2800,7 +2800,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 condition|)
 block|{
 if|if
@@ -2824,7 +2824,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2834,7 +2834,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMLIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
+comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMETER_LIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
 name|ParentOp
 operator|=
 name|Op

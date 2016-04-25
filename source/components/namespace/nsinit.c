@@ -501,7 +501,7 @@ name|Num_INI
 operator|++
 expr_stmt|;
 block|}
-comment|/*          * Execute \_SB._INI. 	 * There appears to be a strict order requirement for \_SB._INI,          * which should be evaluated before any _REG evaluations.          */
+comment|/*          * Execute \_SB._INI.          * There appears to be a strict order requirement for \_SB._INI,          * which should be evaluated before any _REG evaluations.          */
 name|Status
 operator|=
 name|AcpiGetHandle

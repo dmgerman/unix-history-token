@@ -1199,7 +1199,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"I2cSerialBus (0x%4.4X, %s, 0x%8.8X,\n"
+literal|"I2cSerialBusV2 (0x%4.4X, %s, 0x%8.8X,\n"
 argument_list|,
 name|Resource
 operator|->
@@ -1329,9 +1329,24 @@ comment|/* Insert a descriptor name */
 name|AcpiDmDescriptorName
 argument_list|()
 expr_stmt|;
+comment|/* Share */
 name|AcpiOsPrintf
 argument_list|(
-literal|",\n"
+literal|", %s,\n"
+argument_list|,
+name|AcpiGbl_ShrDecode
+index|[
+name|ACPI_EXTRACT_1BIT_FLAG
+argument_list|(
+name|Resource
+operator|->
+name|I2cSerialBus
+operator|.
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Dump the vendor data */
@@ -1407,7 +1422,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"SpiSerialBus (0x%4.4X, %s, %s, 0x%2.2X,\n"
+literal|"SpiSerialBusV2 (0x%4.4X, %s, %s, 0x%2.2X,\n"
 argument_list|,
 name|Resource
 operator|->
@@ -1594,9 +1609,24 @@ comment|/* Insert a descriptor name */
 name|AcpiDmDescriptorName
 argument_list|()
 expr_stmt|;
+comment|/* Share */
 name|AcpiOsPrintf
 argument_list|(
-literal|",\n"
+literal|", %s,\n"
+argument_list|,
+name|AcpiGbl_ShrDecode
+index|[
+name|ACPI_EXTRACT_1BIT_FLAG
+argument_list|(
+name|Resource
+operator|->
+name|SpiSerialBus
+operator|.
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Dump the vendor data */
@@ -1672,7 +1702,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"UartSerialBus (0x%8.8X, %s, %s,\n"
+literal|"UartSerialBusV2 (0x%8.8X, %s, %s,\n"
 argument_list|,
 name|Resource
 operator|->
@@ -1870,9 +1900,24 @@ comment|/* Insert a descriptor name */
 name|AcpiDmDescriptorName
 argument_list|()
 expr_stmt|;
+comment|/* Share */
 name|AcpiOsPrintf
 argument_list|(
-literal|",\n"
+literal|", %s,\n"
+argument_list|,
+name|AcpiGbl_ShrDecode
+index|[
+name|ACPI_EXTRACT_1BIT_FLAG
+argument_list|(
+name|Resource
+operator|->
+name|UartSerialBus
+operator|.
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Dump the vendor data */

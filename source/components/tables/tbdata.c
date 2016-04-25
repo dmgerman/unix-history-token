@@ -759,7 +759,7 @@ operator|,
 literal|"%4.4s 0x%8.8X%8.8X"
 literal|" Attempted table install failed"
 operator|,
-name|AcpiUtValidAcpiName
+name|AcpiUtValidNameseg
 argument_list|(
 name|TableDesc
 operator|->

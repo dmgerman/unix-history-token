@@ -61,6 +61,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetParent  *  * PARAMETERS:  Op                  - To be set to new parent  *              ParentOp            - The parent  *  * RETURN:      None, sets Op parent directly  *  * DESCRIPTION: Change the parent of a parse op.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|TrSetParent
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|=
+name|ParentOp
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    TrGetNextNode  *  * PARAMETERS:  None  *  * RETURN:      New parse node. Aborts on allocation failure  *  * DESCRIPTION: Allocate a new parse node for the parse tree. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 

@@ -3117,6 +3117,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_IORT_SMMU_V3"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_IVRS_HEADER"
 block|,
 name|SRC_TYPE_STRUCT
@@ -3364,6 +3370,12 @@ block|}
 block|,
 block|{
 literal|"ACPI_PCCT_HW_REDUCED"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"ACPI_PCCT_HW_REDUCED_TYPE2"
 block|,
 name|SRC_TYPE_STRUCT
 block|}

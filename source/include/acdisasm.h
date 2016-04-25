@@ -1789,6 +1789,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct2
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoRsdp1
 index|[]
 decl_stmt|;

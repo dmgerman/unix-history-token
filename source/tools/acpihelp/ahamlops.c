@@ -919,9 +919,9 @@ literal|"TermObject"
 block|,
 literal|"NameString"
 block|,
-literal|"ObjectList"
+literal|"TermList"
 block|,
-literal|"DefDevice := DeviceOp PkgLength NameString ObjectList"
+literal|"DefDevice := DeviceOp PkgLength NameString TermList"
 block|}
 block|,
 block|{
@@ -937,9 +937,9 @@ literal|"TermObject"
 block|,
 literal|"NameString ByteData DWordData ByteData"
 block|,
-literal|"ObjectList"
+literal|"TermList"
 block|,
-literal|"DefProcessor := ProcessorOp PkgLength NameString ProcId PblkAddr PblkLen ObjectList"
+literal|"DefProcessor := ProcessorOp PkgLength NameString ProcId PblkAddr PblkLen TermList"
 block|}
 block|,
 block|{
@@ -955,9 +955,9 @@ literal|"TermObject"
 block|,
 literal|"NameString ByteData WordData"
 block|,
-literal|"ObjectList"
+literal|"TermList"
 block|,
-literal|"DefPowerRes := PowerResOp PkgLength NameString SystemLevel ResourceOrder ObjectList"
+literal|"DefPowerRes := PowerResOp PkgLength NameString SystemLevel ResourceOrder TermList"
 block|}
 block|,
 block|{
@@ -973,9 +973,9 @@ literal|"TermObject"
 block|,
 literal|"NameString"
 block|,
-literal|"ObjectList"
+literal|"TermList"
 block|,
-literal|"DefThermalZone := ThermalZoneOp PkgLength NameString ObjectList"
+literal|"DefThermalZone := ThermalZoneOp PkgLength NameString TermList"
 block|}
 block|,
 block|{

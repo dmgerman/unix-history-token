@@ -393,7 +393,7 @@ name|ACPI_NAME_SIZE
 operator|)
 operator|&&
 operator|(
-name|AcpiUtValidAcpiChar
+name|AcpiUtValidNameChar
 argument_list|(
 operator|*
 name|AmlAddress

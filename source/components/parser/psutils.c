@@ -236,7 +236,7 @@ condition|)
 block|{
 name|Flags
 operator|=
-name|ACPI_PARSEOP_NAMED
+name|ACPI_PARSEOP_NAMED_OBJECT
 expr_stmt|;
 block|}
 elseif|else

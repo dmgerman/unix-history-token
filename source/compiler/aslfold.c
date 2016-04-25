@@ -176,7 +176,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlConstantWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Reduce an Op and its subtree to a constant if possible.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlConstantWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Reduce an Op and its subtree to a constant if possible.  *              Called during ascent of the parse tree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -411,17 +411,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Abort the walk of this subtree, we are done with it */
 return|return
 operator|(
-name|AE_CTRL_DEPTH
+name|AE_OK
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlCheckForConstant  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check one Op for a reducible type 3/4/5 AML opcode.  *              This is performed via a downward walk of the parse subtree.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    OpcAmlCheckForConstant  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check one Op for a reducible type 3/4/5 AML opcode.  *              This is performed via an upward walk of the parse subtree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1183,13 +1182,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|DbgPrint
-argument_list|(
-name|ASL_PARSE_OUTPUT
-argument_list|,
-literal|"Reduction/Transform to StoreOp: Store(Constant, Target)\n"
-argument_list|)
-expr_stmt|;
 comment|/* Extract the operands */
 name|Child1
 operator|=
@@ -1252,6 +1244,25 @@ operator|)
 return|;
 block|}
 block|}
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"Reduction/Transform to StoreOp: Store(%s, %s)\n"
+argument_list|,
+name|Child1
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+name|Child2
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|)
+expr_stmt|;
 comment|/*      * Create a NULL (zero) target so that we can use the      * interpreter to evaluate the expression.      */
 name|NewTarget
 operator|=

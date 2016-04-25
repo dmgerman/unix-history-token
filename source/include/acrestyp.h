@@ -1271,7 +1271,7 @@ name|ACPI_RESOURCE_SERIAL_COMMON
 define|\
 value|UINT8                           RevisionId; \     UINT8                           Type; \     UINT8                           ProducerConsumer;
 comment|/* For values, see Producer/Consumer above */
-value|\     UINT8                           SlaveMode; \     UINT8                           TypeRevisionId; \     UINT16                          TypeDataLength; \     UINT16                          VendorLength; \     ACPI_RESOURCE_SOURCE            ResourceSource; \     UINT8                           *VendorData;
+value|\     UINT8                           SlaveMode; \     UINT8                           ConnectionSharing; \     UINT8                           TypeRevisionId; \     UINT16                          TypeDataLength; \     UINT16                          VendorLength; \     ACPI_RESOURCE_SOURCE            ResourceSource; \     UINT8                           *VendorData;
 end_define
 
 begin_typedef

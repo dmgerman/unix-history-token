@@ -1031,6 +1031,19 @@ name|Mutex
 operator|.
 name|SyncLevel
 expr_stmt|;
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Mutex
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 comment|/* Always increase acquisition depth */

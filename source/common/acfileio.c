@@ -206,11 +206,13 @@ operator|==
 name|ACPI_UINT32_MAX
 condition|)
 block|{
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_ERROR
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|fprintf
 argument_list|(
@@ -236,11 +238,13 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_BAD_HEADER
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Check for an non-binary file */
 if|if
@@ -327,11 +331,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Print table header for iASL/disassembler only */
 ifdef|#
@@ -440,6 +442,8 @@ operator|=
 name|ListHead
 expr_stmt|;
 block|}
+name|ErrorExit
+label|:
 name|fclose
 argument_list|(
 name|File
@@ -939,7 +943,7 @@ comment|/* Validate the signature (limited ASCII chars) */
 if|if
 condition|(
 operator|!
-name|AcpiIsValidSignature
+name|AcpiUtValidNameseg
 argument_list|(
 name|TableHeader
 operator|.
