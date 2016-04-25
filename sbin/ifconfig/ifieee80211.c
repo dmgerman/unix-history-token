@@ -1102,7 +1102,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|j
 decl_stmt|;
 if|if
@@ -1427,7 +1427,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -1541,7 +1541,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -15145,7 +15145,7 @@ decl_stmt|;
 name|size_t
 name|maxlen
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -21941,7 +21941,7 @@ index|[
 name|IEEE80211_KEYBUF_SIZE
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|keylen
 init|=
 name|ik
@@ -22153,7 +22153,7 @@ condition|(
 name|printcontents
 condition|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|printf
