@@ -890,7 +890,6 @@ name|sc_creation_callback
 operator|!=
 name|NULL
 condition|)
-block|{
 name|channel
 operator|->
 name|sc_creation_callback
@@ -898,7 +897,6 @@ argument_list|(
 name|new_channel
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 name|hv_vmbus_free_vmbus_channel
