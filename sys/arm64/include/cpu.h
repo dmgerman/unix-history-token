@@ -80,11 +80,8 @@ define|#
 directive|define
 name|cpu_spinwait
 parameter_list|()
+value|__asm __volatile("yield" ::: "memory")
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_comment
 comment|/* Extract CPU affinity levels 0-3 */
