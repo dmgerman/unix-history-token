@@ -155,7 +155,7 @@ name|BHND_DEVICE
 argument_list|(
 name|CC
 argument_list|,
-name|NULL
+literal|"CC"
 argument_list|,
 name|chipc_quirks
 argument_list|)
