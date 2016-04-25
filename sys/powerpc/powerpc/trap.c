@@ -1884,6 +1884,9 @@ operator|<<
 literal|32
 operator|)
 operator||
+operator|(
+name|u_register_t
+operator|)
 name|mfspr
 argument_list|(
 name|SPR_MCAR
