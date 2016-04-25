@@ -897,6 +897,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"VMBUS: duplicated primary channel%u\n"
+argument_list|,
+name|new_channel
+operator|->
+name|offer_msg
+operator|.
+name|child_rel_id
+argument_list|)
+expr_stmt|;
 name|hv_vmbus_free_vmbus_channel
 argument_list|(
 name|new_channel
