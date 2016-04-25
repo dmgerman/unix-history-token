@@ -248,22 +248,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Return the largest number>= x that is a multiple of m */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CEIL_TO_MULTIPLE
-parameter_list|(
-name|x
-parameter_list|,
-name|m
-parameter_list|)
-value|((((x) + (m) - 1)/(m))*(m))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_read_t
@@ -688,7 +672,7 @@ expr_stmt|;
 comment|/* 			 * Belt-and-braces. 			 * Round up the read length to a crypto block size multiple, 			 * which is what the underlying generator is expecting. 			 * See the random_buf size requirements in the Yarrow/Fortuna code. 			 */
 name|read_len
 operator|=
-name|CEIL_TO_MULTIPLE
+name|roundup
 argument_list|(
 name|read_len
 argument_list|,
@@ -861,7 +845,7 @@ block|{
 comment|/* 			 * Belt-and-braces. 			 * Round up the read length to a crypto block size multiple, 			 * which is what the underlying generator is expecting. 			 */
 name|read_len
 operator|=
-name|CEIL_TO_MULTIPLE
+name|roundup
 argument_list|(
 name|len
 argument_list|,
