@@ -1021,6 +1021,10 @@ define|#
 directive|define
 name|IWM_FLAG_BUSY
 value|(1<< 4)
+define|#
+directive|define
+name|IWM_FLAG_DORESUME
+value|(1<< 5)
 name|struct
 name|intr_config_hook
 name|sc_preinit_hook
