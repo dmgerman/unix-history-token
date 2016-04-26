@@ -1382,7 +1382,7 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
-comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 * 			 * XXX TODO: .. and the rate is an 11n rate? 			 */
 if|if
 condition|(
 name|ic
@@ -1390,6 +1390,14 @@ operator|->
 name|ic_htcaps
 operator|&
 name|IEEE80211_HTCAP_TXSTBC
+operator|&&
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_flags_ht
+operator|&
+name|IEEE80211_FHT_STBC_TX
 operator|&&
 name|ni
 operator|->
@@ -1423,7 +1431,6 @@ operator||=
 name|ATH_RC_STBC_FLAG
 expr_stmt|;
 block|}
-comment|/* 			 * XXX TODO: LDPC 			 */
 comment|/* 			 * Dual / Triple stream rate? 			 */
 if|if
 condition|(
@@ -2438,6 +2445,7 @@ operator||=
 name|HAL_RATESERIES_STBC
 expr_stmt|;
 block|}
+comment|/* 		 * TODO: If we're all doing 11n rates then we can set LDPC. 		 * If we've been asked to /do/ LDPC but we are handed a 		 * legacy rate, then we should complain.  Loudly. 		 */
 comment|/* 		 * PktDuration doesn't include slot, ACK, RTS, etc timing - 		 * it's just the packet duration 		 */
 if|if
 condition|(
