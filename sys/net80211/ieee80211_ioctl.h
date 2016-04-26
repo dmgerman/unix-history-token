@@ -2832,6 +2832,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_LDPC
+value|114
+end_define
+
+begin_comment
+comment|/* LDPC Tx/RX (on, off) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_MESH_ID
 value|170
 end_define
