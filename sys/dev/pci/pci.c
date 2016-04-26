@@ -18418,6 +18418,7 @@ name|flags
 operator|=
 name|RF_PREFETCHABLE
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|PCIM_EA_P_VF_MEM
 case|:
