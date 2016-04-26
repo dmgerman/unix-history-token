@@ -148,29 +148,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* An entry in the list of all pmaps */
-end_comment
-
-begin_struct
-struct|struct
-name|pmap_list_entry
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|pmap_list_entry
-argument_list|)
-name|pmap_link
-expr_stmt|;
-name|struct
-name|pmap
-modifier|*
-name|pmap
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|pmap
@@ -196,12 +173,13 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|struct
-name|pmap_list_entry
-modifier|*
-name|p_entry
-decl_stmt|;
-comment|/* Place in the list of all pmaps */
+name|LIST_ENTRY
+argument_list|(
+argument|pmap
+argument_list|)
+name|pm_list
+expr_stmt|;
+comment|/* List of all pmaps */
 block|}
 struct|;
 end_struct

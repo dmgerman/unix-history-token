@@ -417,24 +417,26 @@ value|PHYS_TO_PV_LIST_LOCK(VM_PAGE_TO_PHYS(m))
 end_define
 
 begin_comment
-comment|/* The list of all the pmaps */
+comment|/* The list of all the user pmaps */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|SLIST_HEAD
+name|LIST_HEAD
 argument_list|(
+name|pmaplist
 argument_list|,
-argument|pmap_list_entry
-argument_list|)
-name|pmap_list
-operator|=
-name|SLIST_HEAD_INITIALIZER
-argument_list|(
-name|pmap_list
+name|pmap
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pmaplist
+name|allpmaps
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -1510,11 +1512,6 @@ name|entry
 parameter_list|)
 block|{
 name|struct
-name|pmap_list_entry
-modifier|*
-name|p_entry
-decl_stmt|;
-name|struct
 name|pmap
 modifier|*
 name|user_pmap
@@ -1531,21 +1528,15 @@ operator|!=
 name|kernel_pmap
 condition|)
 return|return;
-name|SLIST_FOREACH
+name|LIST_FOREACH
 argument_list|(
-argument|p_entry
+argument|user_pmap
 argument_list|,
-argument|&pmap_list
+argument|&allpmaps
 argument_list|,
-argument|pmap_link
+argument|pm_list
 argument_list|)
 block|{
-name|user_pmap
-operator|=
-name|p_entry
-operator|->
-name|pmap
-expr_stmt|;
 name|l1
 operator|=
 operator|&
@@ -2223,6 +2214,12 @@ operator|&
 name|pvh_global_lock
 argument_list|,
 literal|"pmap pv global"
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|allpmaps
 argument_list|)
 expr_stmt|;
 comment|/* Assume the address we were loaded to is a valid physical address */
@@ -4588,11 +4585,6 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-name|struct
-name|pmap_list_entry
-modifier|*
-name|p_entry
-decl_stmt|;
 name|vm_paddr_t
 name|l1phys
 decl_stmt|;
@@ -4693,42 +4685,15 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|p_entry
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pmap_list_entry
-argument_list|)
-argument_list|,
-name|M_VMPMAP
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|p_entry
-operator|->
-name|pmap
-operator|=
-name|pmap
-expr_stmt|;
-name|pmap
-operator|->
-name|p_entry
-operator|=
-name|p_entry
-expr_stmt|;
-comment|/* Add to the list of all pmaps */
-name|SLIST_INSERT_HEAD
+comment|/* Add to the list of all user pmaps */
+name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|pmap_list
+name|allpmaps
 argument_list|,
-name|p_entry
+name|pmap
 argument_list|,
-name|pmap_link
+name|pm_list
 argument_list|)
 expr_stmt|;
 return|return
@@ -5352,6 +5317,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* Remove pmap from the allpmaps list */
+name|LIST_REMOVE
+argument_list|(
+name|pmap
+argument_list|,
+name|pm_list
+argument_list|)
+expr_stmt|;
 comment|/* Remove kernel pagetables */
 name|bzero
 argument_list|(
@@ -5360,21 +5333,6 @@ operator|->
 name|pm_l1
 argument_list|,
 name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-comment|/* Remove pmap from the all pmaps list */
-name|SLIST_REMOVE
-argument_list|(
-operator|&
-name|pmap_list
-argument_list|,
-name|pmap
-operator|->
-name|p_entry
-argument_list|,
-name|pmap_list_entry
-argument_list|,
-name|pmap_link
 argument_list|)
 expr_stmt|;
 block|}
