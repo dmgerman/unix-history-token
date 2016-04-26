@@ -2387,6 +2387,10 @@ name|sc_tx_stbc
 range|:
 literal|1
 decl_stmt|,
+name|sc_has_ldpc
+range|:
+literal|1
+decl_stmt|,
 name|sc_hasenforcetxop
 range|:
 literal|1
@@ -5276,6 +5280,28 @@ name|_ah
 parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_ANT_DIV_COMB, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasldpc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_LDPC, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasldpcwar
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_LDPCWAR, 0, NULL) == HAL_OK)
 end_define
 
 begin_comment
