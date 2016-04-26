@@ -6228,11 +6228,25 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_WLOCK_RECHECK_CLEANUP
+parameter_list|(
+name|inp
+parameter_list|,
+name|cleanup
+parameter_list|)
+value|do {			\ 	INP_WLOCK(inp);							\ 	if (inp->inp_flags& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		cleanup;						\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_WLOCK_RECHECK
 parameter_list|(
 name|inp
 parameter_list|)
-value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_flags& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
+value|INP_WLOCK_RECHECK_CLEANUP((inp),
+comment|/* noop */
+value|)
 end_define
 
 begin_function
@@ -6859,9 +6873,16 @@ name|error
 operator|)
 return|;
 block|}
-name|INP_WLOCK_RECHECK
+name|INP_WLOCK_RECHECK_CLEANUP
 argument_list|(
 name|inp
+argument_list|,
+name|free
+argument_list|(
+name|pbuf
+argument_list|,
+name|M_TEMP
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8403,6 +8424,12 @@ begin_undef
 undef|#
 directive|undef
 name|INP_WLOCK_RECHECK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|INP_WLOCK_RECHECK_CLEANUP
 end_undef
 
 begin_comment
