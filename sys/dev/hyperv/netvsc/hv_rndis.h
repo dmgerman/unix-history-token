@@ -3667,23 +3667,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netvsc_subchan_callback
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|hv_vmbus_channel
-modifier|*
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|hv_set_rppi_data
 parameter_list|(
