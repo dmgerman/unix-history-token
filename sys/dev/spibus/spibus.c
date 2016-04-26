@@ -518,7 +518,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_int
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
