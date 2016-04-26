@@ -880,21 +880,6 @@ name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
 expr_stmt|;
-if|if
-condition|(
-name|channel
-operator|->
-name|sc_creation_callback
-operator|!=
-name|NULL
-condition|)
-name|channel
-operator|->
-name|sc_creation_callback
-argument_list|(
-name|new_channel
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Bump up sub-channel count and notify anyone that is 			 * interested in this sub-channel, after this sub-channel 			 * is setup. 			 */
 name|mtx_lock
 argument_list|(

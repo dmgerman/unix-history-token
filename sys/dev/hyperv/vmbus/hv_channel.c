@@ -2616,12 +2616,6 @@ name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
 expr_stmt|;
-name|channel
-operator|->
-name|sc_creation_callback
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	 * set rxq to NULL to avoid more requests be scheduled 	 */
 name|channel
 operator|->

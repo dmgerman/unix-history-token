@@ -1837,21 +1837,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|hv_vmbus_sc_creation_callback
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 enum|enum
 block|{
 name|HV_CHANNEL_OFFER_STATE
@@ -2032,10 +2017,6 @@ name|uint32_t
 name|target_cpu
 decl_stmt|;
 comment|/* 	 * Support for multi-channels. 	 * The initial offer is considered the primary channel and this 	 * offer message will indicate if the host supports multi-channels. 	 * The guest is free to ask for multi-channels to be offerred and can 	 * open these multi-channels as a normal "primary" channel. However, 	 * all multi-channels will have the same type and instance guids as the 	 * primary channel. Requests sent on a given channel will result in a 	 * response on the same channel. 	 */
-comment|/* 	 * Multi-channel creation callback. This callback will be called in 	 * process context when a Multi-channel offer is received from the host. 	 * The guest can open the Multi-channel in the context of this callback. 	 */
-name|hv_vmbus_sc_creation_callback
-name|sc_creation_callback
-decl_stmt|;
 name|struct
 name|mtx
 name|sc_lock
