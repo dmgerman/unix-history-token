@@ -2849,6 +2849,9 @@ name|SYS_RES_MEMORY
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|maddr
 argument_list|,
 name|msize
