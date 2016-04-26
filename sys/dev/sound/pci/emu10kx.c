@@ -3622,7 +3622,7 @@ name|i
 operator|<
 name|nitems
 argument_list|(
-name|emu_cards
+name|emu_bad_cards
 argument_list|)
 condition|;
 name|i
