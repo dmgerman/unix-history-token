@@ -8715,7 +8715,42 @@ value|(((((((k>> 8) ^ k)>> 8) ^ k)>> 8) ^ k)& ((h) - 1))
 end_define
 
 begin_comment
-comment|/*  * Do actual deallocation of @lle.  * Called by LLE_FREE_LOCKED when number of references  * drops to zero.  */
+comment|/*  * Do actual deallocation of @lle.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|in6_lltable_destroy_lle_unlocked
+parameter_list|(
+name|struct
+name|llentry
+modifier|*
+name|lle
+parameter_list|)
+block|{
+name|LLE_LOCK_DESTROY
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+name|LLE_REQ_DESTROY
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lle
+argument_list|,
+name|M_LLTABLE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Called by LLE_FREE_LOCKED when number of references  * drops to zero.  */
 end_comment
 
 begin_function
@@ -8734,21 +8769,9 @@ argument_list|(
 name|lle
 argument_list|)
 expr_stmt|;
-name|LLE_LOCK_DESTROY
+name|in6_lltable_destroy_lle_unlocked
 argument_list|(
 name|lle
-argument_list|)
-expr_stmt|;
-name|LLE_REQ_DESTROY
-argument_list|(
-name|lle
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|lle
-argument_list|,
-name|M_LLTABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -9783,11 +9806,18 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|in6_lltable_destroy_lle_unlocked
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|lltable_set_entry_addr
 argument_list|(
 name|ifp
