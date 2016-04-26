@@ -12,19 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgen.h>
+file|<dialog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
+file|<dlg_keys.h>
 end_include
 
 begin_include
@@ -42,19 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libgeom.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dialog.h>
+file|<libutil.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dlg_keys.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -257,6 +257,9 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|progname
+decl_stmt|,
+modifier|*
 name|prompt
 decl_stmt|;
 name|struct
@@ -282,17 +285,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|progname
+operator|=
+name|getprogname
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
 argument_list|(
-name|basename
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|progname
 argument_list|,
 literal|"sade"
 argument_list|)
@@ -360,13 +362,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|basename
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|progname
 argument_list|,
 literal|"autopart"
 argument_list|)
@@ -420,13 +416,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|basename
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|progname
 argument_list|,
 literal|"scriptedpart"
 argument_list|)
