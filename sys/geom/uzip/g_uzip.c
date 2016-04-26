@@ -2632,7 +2632,7 @@ name|i
 index|]
 operator|.
 name|offset
-operator|>=
+operator|>
 name|pp
 operator|->
 name|mediasize
@@ -3951,6 +3951,22 @@ goto|goto
 name|e5
 goto|;
 block|}
+comment|/* 	 * "Fake" last+1 block, to make it easier for the TOC parser to 	 * iterate without making the last element a special case. 	 */
+name|sc
+operator|->
+name|toc
+index|[
+name|sc
+operator|->
+name|nblocks
+index|]
+operator|.
+name|offset
+operator|=
+name|pp
+operator|->
+name|mediasize
+expr_stmt|;
 comment|/* Massage TOC (table of contents), make sure it is sound */
 if|if
 condition|(
