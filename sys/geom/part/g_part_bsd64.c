@@ -2812,6 +2812,12 @@ operator|->
 name|gpt_entries
 operator|>
 name|MAXPARTITIONS64
+operator|||
+name|basetable
+operator|->
+name|gpt_entries
+operator|<
+literal|1
 condition|)
 goto|goto
 name|invalid_label
