@@ -891,7 +891,7 @@ name|bp
 parameter_list|,
 name|ei
 parameter_list|)
-value|((BLK_ENDS((sc), (ei)) - \     (bp)->bio_offset + (pp)->sectorsize - 1) / \     (pp)->sectorsize * (pp)->sectorsize)
+value|roundup(BLK_ENDS((sc), (ei)) - \     (bp)->bio_offset, (pp)->sectorsize)
 end_define
 
 begin_function
@@ -1015,23 +1015,18 @@ argument_list|)
 expr_stmt|;
 name|end_blk
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|ofs
 operator|+
 name|bp
 operator|->
 name|bio_resid
-operator|+
+argument_list|,
 name|sc
 operator|->
 name|blksz
-operator|-
-literal|1
-operator|)
-operator|/
-name|sc
-operator|->
-name|blksz
+argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(

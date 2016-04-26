@@ -1404,15 +1404,12 @@ block|}
 comment|/* Do the delay remainder, if any */
 name|sbt
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|sbt
-operator|+
+argument_list|,
 name|SBT_1US
-operator|-
-literal|1
-operator|)
-operator|/
-name|SBT_1US
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

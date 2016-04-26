@@ -2976,7 +2976,8 @@ name|pmp
 operator|->
 name|pm_rootdirsize
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|pmp
 operator|->
 name|pm_RootDirEnts
@@ -2986,13 +2987,9 @@ argument_list|(
 expr|struct
 name|direntry
 argument_list|)
-operator|+
+argument_list|,
 name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-operator|/
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
 comment|/* in blocks */
 name|pmp

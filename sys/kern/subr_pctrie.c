@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|PCTRIE_LIMIT
-value|(howmany((sizeof(uint64_t) * NBBY), PCTRIE_WIDTH) - 1)
+value|(howmany(sizeof(uint64_t) * NBBY, PCTRIE_WIDTH) - 1)
 end_define
 
 begin_comment

@@ -1184,19 +1184,16 @@ expr_stmt|;
 comment|/* make the seqid unique */
 name|tfrags
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|+
+argument_list|,
 name|ARC_MAX_DATA
-operator|-
-literal|1
-operator|)
-operator|/
-name|ARC_MAX_DATA
+argument_list|)
 expr_stmt|;
 name|ac
 operator|->

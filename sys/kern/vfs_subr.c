@@ -7270,15 +7270,12 @@ expr_stmt|;
 comment|/* 	 * Round up to the *next* lbn. 	 */
 name|trunclbn
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|length
-operator|+
+argument_list|,
 name|blksize
-operator|-
-literal|1
-operator|)
-operator|/
-name|blksize
+argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(

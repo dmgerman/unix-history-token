@@ -3715,21 +3715,16 @@ expr_stmt|;
 comment|/* Create and fill buffer. */
 name|sectors
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|meta
 operator|->
 name|config_size
-operator|+
+argument_list|,
 name|pp
 operator|->
 name|sectorsize
-operator|-
-literal|1
-operator|)
-operator|/
-name|pp
-operator|->
-name|sectorsize
+argument_list|)
 expr_stmt|;
 name|buf
 operator|=
