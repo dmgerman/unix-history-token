@@ -20285,6 +20285,15 @@ name|sc_dev
 argument_list|,
 literal|"  802.11 state %d\n"
 argument_list|,
+operator|(
+name|vap
+operator|==
+name|NULL
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
 name|vap
 operator|->
 name|iv_state
