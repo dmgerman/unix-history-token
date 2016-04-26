@@ -1988,7 +1988,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Synthetic Network Interface"
+literal|"Hyper-V Network Interface"
 argument_list|)
 expr_stmt|;
 if|if
