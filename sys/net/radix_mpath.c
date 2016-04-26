@@ -858,6 +858,14 @@ name|rt_weight
 condition|;
 name|weight
 operator|-=
+operator|(
+name|rt
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|0
+else|:
 name|rt
 operator|->
 name|rt_weight
