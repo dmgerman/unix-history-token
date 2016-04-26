@@ -86,7 +86,14 @@ begin_define
 define|#
 directive|define
 name|ECALL_MIE_SET
-value|0x10
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECALL_IO_IRQ_MASK
+value|0x0b
 end_define
 
 begin_define
@@ -528,6 +535,17 @@ directive|define
 name|CSR_IPI
 value|0x783
 end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_IO_IRQ
+value|0x7c0
+end_define
+
+begin_comment
+comment|/* lowRISC only? */
+end_comment
 
 begin_define
 define|#

@@ -166,6 +166,12 @@ name|IRQ_TIMER
 block|,
 name|IRQ_HTIF
 block|,
+name|IRQ_COP
+block|,
+comment|/* lowRISC only */
+name|IRQ_UART
+block|,
+comment|/* lowRISC only */
 name|NIRQS
 block|}
 enum|;
