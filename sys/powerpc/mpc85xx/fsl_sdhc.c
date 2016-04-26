@@ -1114,15 +1114,12 @@ expr_stmt|;
 comment|/* 	 * divisor = ceil(base_clock / clock) 	 * TODO: Reconsider symmetric rounding here instead of ceiling. 	 */
 name|divisor
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|base_clock
-operator|+
+argument_list|,
 name|clock
-operator|-
-literal|1
-operator|)
-operator|/
-name|clock
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
