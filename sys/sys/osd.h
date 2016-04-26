@@ -180,6 +180,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
+modifier|*
 name|osd_reserve
 parameter_list|(
 name|u_int
@@ -205,6 +206,7 @@ name|slot
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|rsv
 parameter_list|,
 name|void
@@ -219,6 +221,7 @@ name|void
 name|osd_free_reserved
 parameter_list|(
 name|void
+modifier|*
 modifier|*
 name|rsv
 parameter_list|)

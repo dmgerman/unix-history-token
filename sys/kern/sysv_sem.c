@@ -1457,6 +1457,7 @@ name|pr
 decl_stmt|;
 name|void
 modifier|*
+modifier|*
 name|rsv
 decl_stmt|;
 name|int
