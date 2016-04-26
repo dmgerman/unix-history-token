@@ -4617,7 +4617,6 @@ argument_list|)
 operator|-
 name|roundup
 argument_list|(
-operator|(
 name|ARG_MAX
 operator|-
 name|imgp
@@ -4625,7 +4624,6 @@ operator|->
 name|args
 operator|->
 name|stringspace
-operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(

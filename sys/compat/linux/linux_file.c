@@ -1384,7 +1384,7 @@ parameter_list|(
 name|namlen
 parameter_list|)
 define|\
-value|roundup((offsetof(struct l_dirent, d_name) + (namlen) + 2),		\     sizeof(l_ulong))
+value|roundup(offsetof(struct l_dirent, d_name) + (namlen) + 2, sizeof(l_ulong))
 end_define
 
 begin_define
@@ -1395,7 +1395,7 @@ parameter_list|(
 name|namlen
 parameter_list|)
 define|\
-value|roundup((offsetof(struct l_dirent64, d_name) + (namlen) + 1),	\     sizeof(uint64_t))
+value|roundup(offsetof(struct l_dirent64, d_name) + (namlen) + 1,		\     sizeof(uint64_t))
 end_define
 
 begin_define
