@@ -143,11 +143,19 @@ name|DEVMAP_MAX_VADDR
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__aarch64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -636,6 +644,11 @@ name|defined
 argument_list|(
 name|__aarch64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 name|pmap_kenter_device
 argument_list|(
 name|pd
@@ -932,9 +945,17 @@ operator|+
 name|offset
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 if|if
 condition|(
 name|early_boot
