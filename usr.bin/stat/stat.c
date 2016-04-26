@@ -4842,11 +4842,11 @@ argument_list|)
 argument_list|,
 literal|"%dld"
 argument_list|,
-name|MAX
+name|MIN
 argument_list|(
-literal|9
-argument_list|,
 name|prec
+argument_list|,
+literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
