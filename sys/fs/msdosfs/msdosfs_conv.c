@@ -4420,6 +4420,8 @@ name|np
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|mbnambuf_write
 argument_list|(
 name|nbp
@@ -4436,7 +4438,13 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|chksum
 return|;
@@ -4541,6 +4549,8 @@ name|np
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|mbnambuf_write
 argument_list|(
 name|nbp
@@ -4557,7 +4567,13 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|chksum
 return|;
@@ -4662,6 +4678,8 @@ name|np
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|mbnambuf_write
 argument_list|(
 name|nbp
@@ -4678,7 +4696,13 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|chksum
 return|;
@@ -4733,6 +4757,8 @@ name|np
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|mbnambuf_write
 argument_list|(
 name|nbp
@@ -4749,7 +4775,13 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|chksum
 return|;
@@ -6178,7 +6210,7 @@ comment|/*  * Fill out our concatenation buffer with the given substring, at the
 end_comment
 
 begin_function
-name|void
+name|int
 name|mbnambuf_write
 parameter_list|(
 name|struct
@@ -6236,7 +6268,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 comment|/* Will store this substring in a WIN_CHARS-aligned slot. */
 name|slot
@@ -6289,7 +6325,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+operator|(
+name|ENAMETOOLONG
+operator|)
+return|;
 block|}
 comment|/* Shift suffix upwards by the amount length exceeds WIN_CHARS. */
 if|if
@@ -6304,6 +6344,33 @@ name|nb_len
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|id
+operator|*
+name|WIN_CHARS
+operator|+
+name|count
+operator|+
+name|nbp
+operator|->
+name|nb_len
+operator|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|nbp
+operator|->
+name|nb_buf
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENAMETOOLONG
+operator|)
+return|;
 name|bcopy
 argument_list|(
 name|slot
@@ -6319,6 +6386,7 @@ operator|->
 name|nb_len
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Copy in the substring to its slot and update length so far. */
 name|bcopy
 argument_list|(
@@ -6341,6 +6409,11 @@ name|nb_last_id
 operator|=
 name|id
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
