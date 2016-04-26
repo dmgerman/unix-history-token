@@ -911,6 +911,7 @@ name|first
 parameter_list|,
 name|sbintime_t
 name|period
+name|__unused
 parameter_list|)
 block|{
 name|struct
