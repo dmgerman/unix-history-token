@@ -1126,21 +1126,16 @@ expr_stmt|;
 comment|/* Calculate number of pages to cache. */
 name|ncache
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|b
 operator|.
 name|cachesize
-operator|+
+argument_list|,
 name|t
 operator|->
 name|bt_psize
-operator|-
-literal|1
-operator|)
-operator|/
-name|t
-operator|->
-name|bt_psize
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The btree data structure requires that at least two keys can fit on 	 * a page, but other than that there's no fixed requirement.  The user 	 * specified a minimum number per page, and we translated that into the 	 * number of bytes a key/data pair can use before being placed on an 	 * overflow page.  This calculation includes the page header, the size 	 * of the index referencing the leaf item and the size of the leaf item 	 * structure.  Also, don't let the user specify a minkeypage such that 	 * a key/data pair won't fit even if both key and data are on overflow 	 * pages. 	 */
 name|t

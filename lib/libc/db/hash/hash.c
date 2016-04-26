@@ -865,23 +865,18 @@ expr_stmt|;
 comment|/* 		 * Figure out how many segments we need.  Max_Bucket is the 		 * maximum bucket number, so the number of buckets is 		 * max_bucket + 1. 		 */
 name|nsegs
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|hashp
 operator|->
 name|MAX_BUCKET
 operator|+
 literal|1
-operator|+
+argument_list|,
 name|hashp
 operator|->
 name|SGSIZE
-operator|-
-literal|1
-operator|)
-operator|/
-name|hashp
-operator|->
-name|SGSIZE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
