@@ -7871,17 +7871,14 @@ expr_stmt|;
 comment|/* avoid division by zero */
 name|plcp_length
 operator|=
-operator|(
+name|howmany
+argument_list|(
 literal|16
 operator|*
 name|len
-operator|+
+argument_list|,
 name|rate
-operator|-
-literal|1
-operator|)
-operator|/
-name|rate
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

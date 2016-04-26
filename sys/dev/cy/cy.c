@@ -5853,21 +5853,16 @@ block|}
 comment|/* 	 * Set receive time-out period, normally to max(one char time, 5 ms). 	 */
 name|itimeout
 operator|=
-operator|(
+name|howmany
+argument_list|(
 literal|1000
 operator|*
 name|bits
-operator|+
+argument_list|,
 name|t
 operator|->
 name|c_ispeed
-operator|-
-literal|1
-operator|)
-operator|/
-name|t
-operator|->
-name|c_ispeed
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

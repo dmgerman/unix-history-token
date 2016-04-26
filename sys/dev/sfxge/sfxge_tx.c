@@ -3924,7 +3924,7 @@ parameter_list|(
 name|_txq_entries
 parameter_list|)
 define|\
-value|((TSOH_COUNT(_txq_entries) + TSOH_PER_PAGE - 1) / TSOH_PER_PAGE)
+value|howmany(TSOH_COUNT(_txq_entries), TSOH_PER_PAGE)
 end_define
 
 begin_function

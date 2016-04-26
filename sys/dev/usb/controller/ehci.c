@@ -7739,21 +7739,14 @@ block|{
 comment|/* update data toggle */
 if|if
 condition|(
-operator|(
-operator|(
+name|howmany
+argument_list|(
 name|average
-operator|+
+argument_list|,
 name|temp
 operator|->
 name|max_frame_size
-operator|-
-literal|1
-operator|)
-operator|/
-name|temp
-operator|->
-name|max_frame_size
-operator|)
+argument_list|)
 operator|&
 literal|1
 condition|)

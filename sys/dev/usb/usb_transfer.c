@@ -871,17 +871,12 @@ directive|endif
 comment|/* 		 * Compute number of DMA chunks, rounded up 		 * to nearest one: 		 */
 name|n_dma_pc
 operator|=
-operator|(
-operator|(
+name|howmany
+argument_list|(
 name|count
-operator|+
+argument_list|,
 name|n_obj
-operator|-
-literal|1
-operator|)
-operator|/
-name|n_obj
-operator|)
+argument_list|)
 expr_stmt|;
 name|n_dma_pg
 operator|=

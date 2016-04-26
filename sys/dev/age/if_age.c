@@ -12984,17 +12984,12 @@ if|if
 condition|(
 name|nsegs
 operator|!=
-operator|(
+name|howmany
+argument_list|(
 name|pktlen
-operator|+
-operator|(
+argument_list|,
 name|AGE_RX_BUF_SIZE
-operator|-
-literal|1
-operator|)
-operator|)
-operator|/
-name|AGE_RX_BUF_SIZE
+argument_list|)
 condition|)
 break|break;
 comment|/* Received a frame. */

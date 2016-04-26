@@ -202,7 +202,7 @@ name|n
 parameter_list|,
 name|d
 parameter_list|)
-value|(((n) + (d) - 1) / (d))
+value|howmany(n, d)
 end_define
 
 begin_define

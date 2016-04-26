@@ -10354,19 +10354,14 @@ operator|/
 name|OHCI_PAGE_SIZE
 operator|)
 operator|+
-operator|(
-operator|(
+name|howmany
+argument_list|(
 name|xfer
 operator|->
 name|nframes
-operator|+
+argument_list|,
 name|OHCI_ITD_NOFFSET
-operator|-
-literal|1
-operator|)
-operator|/
-name|OHCI_ITD_NOFFSET
-operator|)
+argument_list|)
 operator|+
 literal|1
 comment|/* EXTRA */
