@@ -3453,6 +3453,18 @@ argument_list|,
 literal|"Enlightened ATA/IDE detected\n"
 argument_list|)
 expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|g_drv_props_table
+index|[
+name|DRIVER_BLKVSC
+index|]
+operator|.
+name|drv_desc
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|BUS_PROBE_DEFAULT
@@ -3483,6 +3495,18 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Enlightened SCSI device detected\n"
+argument_list|)
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|g_drv_props_table
+index|[
+name|DRIVER_STORVSC
+index|]
+operator|.
+name|drv_desc
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3636,18 +3660,6 @@ operator|->
 name|hs_dev
 operator|=
 name|hv_dev
-expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-name|g_drv_props_table
-index|[
-name|stor_type
-index|]
-operator|.
-name|drv_desc
-argument_list|)
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
