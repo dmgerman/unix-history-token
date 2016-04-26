@@ -321,12 +321,9 @@ begin_comment
 comment|/* Define to 1 if you have the `sbrk' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SBRK
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SBRK 1 */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `setpgid' function. */
