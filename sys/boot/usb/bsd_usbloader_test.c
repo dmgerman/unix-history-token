@@ -154,6 +154,23 @@ block|}
 end_function
 
 begin_function
+name|void
+name|delay
+parameter_list|(
+name|unsigned
+name|int
+name|delay
+parameter_list|)
+block|{
+name|usleep
+argument_list|(
+name|delay
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|pause
 parameter_list|(
