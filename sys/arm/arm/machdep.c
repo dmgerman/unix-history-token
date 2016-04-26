@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/efi.h>
 end_include
 
@@ -331,12 +337,6 @@ begin_include
 include|#
 directive|include
 file|<machine/db_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -2090,7 +2090,7 @@ block|{
 name|arm_physmem_print_tables
 argument_list|()
 expr_stmt|;
-name|arm_devmap_print_table
+name|devmap_print_table
 argument_list|()
 expr_stmt|;
 block|}
@@ -8072,7 +8072,7 @@ operator|=
 name|platform_devmap_init
 argument_list|()
 expr_stmt|;
-name|arm_devmap_bootstrap
+name|devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
@@ -8773,7 +8773,7 @@ operator|=
 name|platform_devmap_init
 argument_list|()
 expr_stmt|;
-name|arm_devmap_bootstrap
+name|devmap_bootstrap
 argument_list|(
 literal|0
 argument_list|,

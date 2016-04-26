@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/devmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/devmap.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -111,7 +111,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 name|at91_devmap
 index|[]
 decl_stmt|;
@@ -277,7 +277,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -308,8 +308,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|//	arm_devmap_add_entry(0xfff00000, 0x00100000); /* 1MB - uart, aic and timers*/
-name|arm_devmap_register_table
+comment|//	devmap_add_entry(0xfff00000, 0x00100000); /* 1MB - uart, aic and timers*/
+name|devmap_register_table
 argument_list|(
 name|at91_devmap
 argument_list|)

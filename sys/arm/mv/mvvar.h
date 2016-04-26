@@ -789,7 +789,7 @@ end_function_decl
 
 begin_struct_decl
 struct_decl|struct
-name|arm_devmap_entry
+name|devmap_entry
 struct_decl|;
 end_struct_decl
 
@@ -800,7 +800,7 @@ parameter_list|(
 name|phandle_t
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 parameter_list|,
 name|vm_offset_t
@@ -817,7 +817,7 @@ parameter_list|(
 name|phandle_t
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 parameter_list|,
 name|int

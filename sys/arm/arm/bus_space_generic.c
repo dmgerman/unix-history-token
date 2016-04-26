@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_function

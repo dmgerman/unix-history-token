@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/efi.h>
 end_include
 
@@ -249,12 +255,6 @@ begin_include
 include|#
 directive|include
 file|<machine/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -4184,7 +4184,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|arm_devmap_bootstrap
+name|devmap_bootstrap
 argument_list|(
 literal|0
 argument_list|,

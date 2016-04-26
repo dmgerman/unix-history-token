@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -283,7 +283,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -312,7 +312,7 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-name|arm_devmap_ptov
+name|devmap_ptov
 argument_list|(
 literal|0xc8100000
 argument_list|,
@@ -373,7 +373,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc1100000
 argument_list|,
@@ -381,7 +381,7 @@ literal|0x200000
 argument_list|)
 expr_stmt|;
 comment|/* cbus */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc4200000
 argument_list|,
@@ -389,7 +389,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* pl310 */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc4300000
 argument_list|,
@@ -397,7 +397,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* periph */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc8000000
 argument_list|,
@@ -405,7 +405,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* apbbus */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc8100000
 argument_list|,
@@ -413,7 +413,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* aobus */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xc9000000
 argument_list|,
@@ -421,7 +421,7 @@ literal|0x800000
 argument_list|)
 expr_stmt|;
 comment|/* ahbbus */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xd9000000
 argument_list|,
@@ -429,7 +429,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* ahb */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0xda000000
 argument_list|,

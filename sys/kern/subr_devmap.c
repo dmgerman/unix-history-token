@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Routines for mapping device memory.  *  * This is used on both arm and arm64.  */
+comment|/* Routines for mapping device memory. */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devmap.h>
 end_include
 
 begin_include
@@ -77,18 +83,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/armreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -96,7 +90,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|devmap_table
 decl_stmt|;
@@ -111,45 +105,8 @@ name|false
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__aarch64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAX_VADDR
-value|VM_MAX_KERNEL_ADDRESS
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MAX_VADDR
-value|ARM_VECTORS_HIGH
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * The allocated-kva (akva) devmap table and metadata.  Platforms can call  * arm_devmap_add_entry() to add static device mappings to this table using  * automatically allocated virtual addresses carved out of the top of kva space.  * Allocation begins immediately below the ARM_VECTORS_HIGH address.  */
+comment|/*  * The allocated-kva (akva) devmap table and metadata.  Platforms can call  * devmap_add_entry() to add static device mappings to this table using  * automatically allocated virtual addresses carved out of the top of kva space.  * Allocation begins immediately below the ARM_VECTORS_HIGH address.  */
 end_comment
 
 begin_define
@@ -162,7 +119,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 name|akva_devmap_entries
 index|[
 name|AKVA_DEVMAP_MAX_ENTRIES
@@ -182,7 +139,7 @@ specifier|static
 name|vm_offset_t
 name|akva_devmap_vaddr
 init|=
-name|MAX_VADDR
+name|DEVMAP_MAX_VADDR
 decl_stmt|;
 end_decl_stmt
 
@@ -229,7 +186,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -310,7 +267,7 @@ end_comment
 
 begin_function
 name|void
-name|arm_devmap_print_table
+name|devmap_print_table
 parameter_list|()
 block|{
 name|devmap_dump_table
@@ -327,12 +284,12 @@ end_comment
 
 begin_function
 name|vm_offset_t
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 parameter_list|()
 block|{
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -352,7 +309,7 @@ operator|)
 return|;
 name|lowaddr
 operator|=
-name|MAX_VADDR
+name|DEVMAP_MAX_VADDR
 expr_stmt|;
 for|for
 control|(
@@ -398,12 +355,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an entry to the internal "akva" static devmap table using the given  * physical address and size and a virtual address allocated from the top of  * kva.  This automatically registers the akva table on the first call, so all a  * platform has to do is call this routine to install as many mappings as it  * needs and when initarm() calls arm_devmap_bootstrap() it will pick up all the  * entries in the akva table automatically.  */
+comment|/*  * Add an entry to the internal "akva" static devmap table using the given  * physical address and size and a virtual address allocated from the top of  * kva.  This automatically registers the akva table on the first call, so all a  * platform has to do is call this routine to install as many mappings as it  * needs and when initarm() calls devmap_bootstrap() it will pick up all the  * entries in the akva table automatically.  */
 end_comment
 
 begin_function
 name|void
-name|arm_devmap_add_entry
+name|devmap_add_entry
 parameter_list|(
 name|vm_paddr_t
 name|pa
@@ -413,7 +370,7 @@ name|sz
 parameter_list|)
 block|{
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|m
 decl_stmt|;
@@ -423,7 +380,7 @@ name|devmap_bootstrap_done
 condition|)
 name|panic
 argument_list|(
-literal|"arm_devmap_add_entry() after arm_devmap_bootstrap()"
+literal|"devmap_add_entry() after devmap_bootstrap()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -447,7 +404,7 @@ name|akva_devmap_idx
 operator|==
 literal|0
 condition|)
-name|arm_devmap_register_table
+name|devmap_register_table
 argument_list|(
 name|akva_devmap_entries
 argument_list|)
@@ -530,16 +487,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Register the given table as the one to use in arm_devmap_bootstrap().  */
+comment|/*  * Register the given table as the one to use in devmap_bootstrap().  */
 end_comment
 
 begin_function
 name|void
-name|arm_devmap_register_table
+name|devmap_register_table
 parameter_list|(
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|table
 parameter_list|)
@@ -552,26 +509,26 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map all of the static regions in the devmap table, and remember the devmap  * table so the mapdev, ptov, and vtop functions can do lookups later.  *  * If a non-NULL table pointer is given it is used unconditionally, otherwise  * the previously-registered table is used.  This smooths transition from legacy  * code that fills in a local table then calls this function passing that table,  * and newer code that uses arm_devmap_register_table() in platform-specific  * code, then lets the common initarm() call this function with a NULL pointer.  */
+comment|/*  * Map all of the static regions in the devmap table, and remember the devmap  * table so the mapdev, ptov, and vtop functions can do lookups later.  *  * If a non-NULL table pointer is given it is used unconditionally, otherwise  * the previously-registered table is used.  This smooths transition from legacy  * code that fills in a local table then calls this function passing that table,  * and newer code that uses devmap_register_table() in platform-specific  * code, then lets the common initarm() call this function with a NULL pointer.  */
 end_comment
 
 begin_function
 name|void
-name|arm_devmap_bootstrap
+name|devmap_bootstrap
 parameter_list|(
 name|vm_offset_t
 name|l1pt
 parameter_list|,
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|table
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -707,7 +664,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|arm_devmap_ptov
+name|devmap_ptov
 parameter_list|(
 name|vm_paddr_t
 name|pa
@@ -718,7 +675,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -805,7 +762,7 @@ end_comment
 
 begin_function
 name|vm_paddr_t
-name|arm_devmap_vtop
+name|devmap_vtop
 parameter_list|(
 name|void
 modifier|*
@@ -817,7 +774,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -938,7 +895,7 @@ condition|(
 operator|(
 name|rva
 operator|=
-name|arm_devmap_ptov
+name|devmap_ptov
 argument_list|(
 name|pa
 argument_list|,
@@ -1076,7 +1033,7 @@ decl_stmt|;
 comment|/* Nothing to do if we find the mapping in the static table. */
 if|if
 condition|(
-name|arm_devmap_vtop
+name|devmap_vtop
 argument_list|(
 operator|(
 name|void

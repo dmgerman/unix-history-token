@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -140,7 +140,7 @@ name|void
 parameter_list|)
 block|{
 comment|/* CHIP ID */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x10000000
 argument_list|,
@@ -148,7 +148,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* UART */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x12C00000
 argument_list|,
@@ -156,7 +156,7 @@ literal|0x100000
 argument_list|)
 expr_stmt|;
 comment|/* DWMMC */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x12200000
 argument_list|,

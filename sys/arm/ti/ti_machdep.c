@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -149,7 +149,7 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x48000000
 argument_list|,
@@ -157,7 +157,7 @@ literal|0x01000000
 argument_list|)
 expr_stmt|;
 comment|/*16mb L4_PER devices */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x4A000000
 argument_list|,
@@ -196,7 +196,7 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x44C00000
 argument_list|,
@@ -204,7 +204,7 @@ literal|0x00400000
 argument_list|)
 expr_stmt|;
 comment|/* 4mb L4_WKUP devices*/
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x47400000
 argument_list|,
@@ -212,7 +212,7 @@ literal|0x00100000
 argument_list|)
 expr_stmt|;
 comment|/* 1mb USB            */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x47800000
 argument_list|,
@@ -220,7 +220,7 @@ literal|0x00100000
 argument_list|)
 expr_stmt|;
 comment|/* 1mb mmchs2         */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x48000000
 argument_list|,
@@ -228,7 +228,7 @@ literal|0x01000000
 argument_list|)
 expr_stmt|;
 comment|/*16mb L4_PER devices */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x49000000
 argument_list|,
@@ -236,7 +236,7 @@ literal|0x00100000
 argument_list|)
 expr_stmt|;
 comment|/* 1mb edma3          */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x49800000
 argument_list|,
@@ -244,7 +244,7 @@ literal|0x00300000
 argument_list|)
 expr_stmt|;
 comment|/* 3mb edma3          */
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 literal|0x4A000000
 argument_list|,

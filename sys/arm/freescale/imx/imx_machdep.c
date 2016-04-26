@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -216,7 +216,7 @@ condition|(
 operator|(
 name|pcr
 operator|=
-name|arm_devmap_ptov
+name|devmap_ptov
 argument_list|(
 name|wdcr_physaddr
 argument_list|,
@@ -273,7 +273,7 @@ condition|(
 operator|(
 name|psr
 operator|=
-name|arm_devmap_ptov
+name|devmap_ptov
 argument_list|(
 name|wdsr_phys
 argument_list|,

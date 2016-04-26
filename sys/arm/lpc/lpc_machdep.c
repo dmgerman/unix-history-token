@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -122,7 +122,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -162,7 +162,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * Add a single static device mapping.  * The values used were taken from the ranges property of the SoC node in the  * dts file when this code was converted to arm_devmap_add_entry().  */
+comment|/*  * Add a single static device mapping.  * The values used were taken from the ranges property of the SoC node in the  * dts file when this code was converted to devmap_add_entry().  */
 end_comment
 
 begin_function
@@ -172,7 +172,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 name|LPC_DEV_PHYS_BASE
 argument_list|,

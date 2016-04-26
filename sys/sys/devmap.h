@@ -6,14 +6,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_DEVMAP_H_
+name|_SYS_DEVMAP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_DEVMAP_H_
+name|_SYS_DEVMAP_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-servicable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This structure is used by MD code to describe static mappings of devices  * which are established as part of bringing up the MMU early in the boot.  */
@@ -21,7 +38,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|arm_devmap_entry
+name|devmap_entry
 block|{
 name|vm_offset_t
 name|pd_va
@@ -40,12 +57,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Return the lowest KVA address used in any entry in the registered devmap  * table.  This works with whatever table is registered, including the internal  * table used by arm_devmap_add_entry() if that routine was used. Platforms can  * implement platform_lastaddr() by calling this if static device mappings are  * their only use of high KVA space.  */
+comment|/*  * Return the lowest KVA address used in any entry in the registered devmap  * table.  This works with whatever table is registered, including the internal  * table used by devmap_add_entry() if that routine was used. Platforms can  * implement platform_lastaddr() by calling this if static device mappings are  * their only use of high KVA space.  */
 end_comment
 
 begin_function_decl
 name|vm_offset_t
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -58,7 +75,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|arm_devmap_add_entry
+name|devmap_add_entry
 parameter_list|(
 name|vm_paddr_t
 name|pa
@@ -75,11 +92,11 @@ end_comment
 
 begin_function_decl
 name|void
-name|arm_devmap_register_table
+name|devmap_register_table
 parameter_list|(
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|_table
 parameter_list|)
@@ -87,19 +104,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Establish mappings for all the entries in the table.  This is called  * automatically from the common initarm() in arm/machdep.c, and also from the  * custom initarm() routines in older code.  If the table pointer is NULL, this  * will use the table installed previously by arm_devmap_register_table().  */
+comment|/*  * Establish mappings for all the entries in the table.  This is called  * automatically from the common initarm() in arm/machdep.c, and also from the  * custom initarm() routines in older code.  If the table pointer is NULL, this  * will use the table installed previously by devmap_register_table().  */
 end_comment
 
 begin_function_decl
 name|void
-name|arm_devmap_bootstrap
+name|devmap_bootstrap
 parameter_list|(
 name|vm_offset_t
 name|_l1pt
 parameter_list|,
 specifier|const
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|_table
 parameter_list|)
@@ -120,7 +137,7 @@ end_define
 begin_function_decl
 name|void
 modifier|*
-name|arm_devmap_ptov
+name|devmap_ptov
 parameter_list|(
 name|vm_paddr_t
 name|_pa
@@ -133,7 +150,7 @@ end_function_decl
 
 begin_function_decl
 name|vm_paddr_t
-name|arm_devmap_vtop
+name|devmap_vtop
 parameter_list|(
 name|void
 modifier|*
@@ -151,7 +168,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|arm_devmap_print_table
+name|devmap_print_table
 parameter_list|(
 name|void
 parameter_list|)
@@ -162,6 +179,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SYS_DEVMAP_H_ */
+end_comment
 
 end_unit
 

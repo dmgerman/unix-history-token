@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -478,7 +478,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|arm_devmap_lastaddr
+name|devmap_lastaddr
 argument_list|()
 operator|)
 return|;
@@ -595,21 +595,21 @@ name|IMX6_AIPS2_SIZE
 init|=
 literal|0x00100000
 decl_stmt|;
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 name|IMX6_ARMMP_PHYS
 argument_list|,
 name|IMX6_ARMMP_SIZE
 argument_list|)
 expr_stmt|;
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 name|IMX6_AIPS1_PHYS
 argument_list|,
 name|IMX6_AIPS1_SIZE
 argument_list|)
 expr_stmt|;
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 name|IMX6_AIPS2_PHYS
 argument_list|,
@@ -751,7 +751,7 @@ condition|)
 block|{
 name|pcr
 operator|=
-name|arm_devmap_ptov
+name|devmap_ptov
 argument_list|(
 name|SCU_CONFIG_PHYSADDR
 argument_list|,

@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/devmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/devmap.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -1696,7 +1696,7 @@ name|phandle_t
 name|dt_node
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|fdt_devmap
 parameter_list|,

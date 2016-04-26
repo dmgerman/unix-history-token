@@ -105,7 +105,7 @@ comment|/* Static device mappings. */
 end_comment
 
 begin_comment
-unit|const struct arm_devmap_entry db88f5xxx_devmap[] = {
+unit|const struct devmap_entry db88f5xxx_devmap[] = {
 comment|/* 	 * Map the on-board devices VA == PA so that we can access them 	 * with the MMU on or off. 	 */
 end_comment
 

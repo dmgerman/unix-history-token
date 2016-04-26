@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<machine/machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -407,7 +407,7 @@ operator|&
 name|al_devmap_size
 argument_list|)
 expr_stmt|;
-name|arm_devmap_add_entry
+name|devmap_add_entry
 argument_list|(
 name|al_devmap_pa
 argument_list|,

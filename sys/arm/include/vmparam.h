@@ -515,6 +515,13 @@ directive|define
 name|SFBUF_MAP
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVMAP_MAX_VADDR
+value|ARM_VECTORS_HIGH
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -1045,7 +1045,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 name|fdt_devmap
 index|[
 name|FDT_DEVMAP_MAX
@@ -1069,7 +1069,7 @@ name|int
 name|platform_sram_devmap
 parameter_list|(
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|map
 parameter_list|)
@@ -1247,7 +1247,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|devmap
 parameter_list|,
@@ -1268,7 +1268,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|devmap
 parameter_list|,
@@ -1329,7 +1329,7 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-name|arm_devmap_register_table
+name|devmap_register_table
 argument_list|(
 operator|&
 name|fdt_devmap

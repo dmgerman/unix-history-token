@@ -1530,7 +1530,7 @@ modifier|*
 name|rev
 parameter_list|)
 block|{
-comment|/* 	 * Notice: system identifiers are available in the registers range of 	 * PCIE controller, so using this function is only allowed (and 	 * possible) after the internal registers range has been mapped in via 	 * arm_devmap_bootstrap(). 	 */
+comment|/* 	 * Notice: system identifiers are available in the registers range of 	 * PCIE controller, so using this function is only allowed (and 	 * possible) after the internal registers range has been mapped in via 	 * devmap_bootstrap(). 	 */
 operator|*
 name|dev
 operator|=

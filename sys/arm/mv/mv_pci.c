@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fdt.h>
 end_include
 
@@ -163,12 +169,6 @@ begin_include
 include|#
 directive|include
 file|"pcib_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/devmap.h>
 end_include
 
 begin_include
@@ -840,7 +840,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|arm_devmap_entry
+name|devmap_entry
 modifier|*
 name|devmap
 parameter_list|,

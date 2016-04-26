@@ -602,6 +602,13 @@ begin_comment
 comment|/* 64KB */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEVMAP_MAX_VADDR
+value|VM_MAX_KERNEL_ADDRESS
+end_define
+
 begin_endif
 endif|#
 directive|endif
