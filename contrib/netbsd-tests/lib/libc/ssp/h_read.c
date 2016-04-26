@@ -122,7 +122,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-empty_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
