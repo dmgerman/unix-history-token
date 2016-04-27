@@ -706,6 +706,11 @@ modifier|*
 name|mclink
 decl_stmt|;
 comment|/* per-AF_* multicast list */
+name|void
+modifier|*
+name|ioreg_ctx
+decl_stmt|;
+comment|/* IO registration context */
 name|SOCKET
 name|fd
 decl_stmt|;
@@ -1088,6 +1093,31 @@ define|#
 directive|define
 name|PEER_TEST_MASK
 value|(TEST10 | TEST11 | TEST12 | TEST13)
+end_define
+
+begin_comment
+comment|/*  * Unused flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEST14
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEST15
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEST16
+value|0x8000
 end_define
 
 begin_comment
@@ -1597,6 +1627,10 @@ name|u_long
 name|badauth
 decl_stmt|;
 comment|/* bad authentication (TEST5) */
+name|u_long
+name|badNAK
+decl_stmt|;
+comment|/* invalid crypto-NAK */
 name|u_long
 name|bogusorg
 decl_stmt|;
@@ -2649,6 +2683,11 @@ name|l_fp
 name|xmt
 decl_stmt|;
 comment|/* transmit time stamp */
+define|#
+directive|define
+name|MIN_V4_PKT_LEN
+value|(12 * sizeof(u_int32))
+comment|/* min header length */
 define|#
 directive|define
 name|LEN_PKT_NOMAC
