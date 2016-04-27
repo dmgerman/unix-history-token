@@ -276,6 +276,13 @@ argument_list|,
 name|ofw_pcibus_child_pnpinfo_str_method
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_rescan
+argument_list|,
+name|kobj_error_method
+argument_list|)
+block|,
 comment|/* PCI interface */
 name|DEVMETHOD
 argument_list|(

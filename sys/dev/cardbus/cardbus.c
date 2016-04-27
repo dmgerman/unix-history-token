@@ -1718,6 +1718,13 @@ argument_list|,
 name|cardbus_driver_added
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_rescan
+argument_list|,
+name|kobj_error_method
+argument_list|)
+block|,
 comment|/* Card Interface */
 name|DEVMETHOD
 argument_list|(

@@ -617,6 +617,13 @@ argument_list|,
 name|xlp_pci_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_rescan
+argument_list|,
+name|kobj_error_method
+argument_list|)
+block|,
 name|DEVMETHOD_END
 block|}
 decl_stmt|;
