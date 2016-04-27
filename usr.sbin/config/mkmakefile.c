@@ -410,7 +410,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|snprintf
@@ -441,7 +441,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -516,7 +516,7 @@ if|if
 condition|(
 name|ofp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -1580,7 +1580,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -1626,7 +1626,7 @@ if|if
 condition|(
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|next
@@ -1696,7 +1696,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -1782,7 +1782,7 @@ if|if
 condition|(
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2009,7 +2009,7 @@ if|if
 condition|(
 name|compilewith
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2071,7 +2071,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2120,7 +2120,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2169,7 +2169,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2218,7 +2218,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -2267,7 +2267,7 @@ name|EOF
 operator|||
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errout
 argument_list|(
@@ -3399,7 +3399,7 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3709,7 +3709,7 @@ if|if
 condition|(
 name|compilewith
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 specifier|const

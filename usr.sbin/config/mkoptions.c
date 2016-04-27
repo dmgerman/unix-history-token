@@ -770,7 +770,7 @@ if|if
 condition|(
 name|inf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|outf
@@ -786,7 +786,7 @@ if|if
 condition|(
 name|outf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -902,7 +902,7 @@ name|inf
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 name|inw
 operator|==
@@ -925,7 +925,7 @@ name|inf
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 name|inw
 operator|==
@@ -955,7 +955,7 @@ name|inf
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 name|cp
 operator|==
@@ -1328,7 +1328,7 @@ if|if
 condition|(
 name|outf
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -1805,7 +1805,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1834,7 +1834,7 @@ if|if
 condition|(
 name|wd
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 if|if
@@ -1904,7 +1904,7 @@ if|if
 condition|(
 name|val
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
