@@ -383,6 +383,13 @@ name|DEV_SET_DRIVER
 value|_IOW('D', 7, struct devreq)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEV_RESCAN
+value|_IOW('D', 9, struct devreq)
+end_define
+
 begin_comment
 comment|/* Flags for DEV_DETACH and DEV_DISABLE. */
 end_comment

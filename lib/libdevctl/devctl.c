@@ -483,5 +483,30 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|devctl_rescan
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|device
+parameter_list|)
+block|{
+return|return
+operator|(
+name|devctl_simple_request
+argument_list|(
+name|DEV_RESCAN
+argument_list|,
+name|device
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
