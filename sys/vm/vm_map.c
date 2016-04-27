@@ -1296,7 +1296,7 @@ name|WARN_SLEEPOK
 argument_list|,
 name|NULL
 argument_list|,
-literal|"vmspace_free() called with non-sleepable lock held"
+literal|"vmspace_free() called"
 argument_list|)
 expr_stmt|;
 if|if
