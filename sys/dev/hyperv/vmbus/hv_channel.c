@@ -445,6 +445,8 @@ argument_list|,
 literal|"channel"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -482,6 +484,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -511,6 +515,8 @@ argument_list|,
 literal|"sub"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -547,6 +553,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -622,6 +630,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|channel
 argument_list|,
@@ -650,6 +660,8 @@ argument_list|,
 literal|"in"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -672,6 +684,8 @@ argument_list|,
 literal|"out"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,

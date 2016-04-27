@@ -221,6 +221,8 @@ argument_list|,
 name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|rbi
 argument_list|,
