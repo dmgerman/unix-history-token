@@ -2611,7 +2611,6 @@ comment|/*  * Map a PXM to a VM domain.  *  * Returns the VM domain ID if found,
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_map_pxm_to_vm_domainid
 parameter_list|(
@@ -2622,7 +2621,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_get_domain
 parameter_list|(
@@ -2640,7 +2638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_parse_pxm
 parameter_list|(
