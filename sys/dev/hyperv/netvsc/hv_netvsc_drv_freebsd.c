@@ -4749,7 +4749,7 @@ name|rndis_mesg
 operator|->
 name|msg_len
 expr_stmt|;
-comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 * 	 * TODO: vRSS, chimney buffer should be per-channel. 	 */
+comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 */
 if|if
 condition|(
 name|packet
