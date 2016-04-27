@@ -502,6 +502,8 @@ operator|=
 name|facility_initialized
 index|[
 name|num
+operator|-
+literal|1
 index|]
 condition|?
 name|facility
@@ -542,6 +544,8 @@ operator|&&
 name|facility_initialized
 index|[
 name|num
+operator|-
+literal|1
 index|]
 condition|)
 name|facility
