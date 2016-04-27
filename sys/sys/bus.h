@@ -390,6 +390,13 @@ name|DEV_RESCAN
 value|_IOW('D', 9, struct devreq)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEV_DELETE
+value|_IOW('D', 10, struct devreq)
+end_define
+
 begin_comment
 comment|/* Flags for DEV_DETACH and DEV_DISABLE. */
 end_comment
@@ -415,6 +422,17 @@ end_define
 begin_comment
 comment|/* Detach existing driver. */
 end_comment
+
+begin_comment
+comment|/* Flags for DEV_DELETE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVF_FORCE_DELETE
+value|0x0000001
+end_define
 
 begin_ifdef
 ifdef|#
