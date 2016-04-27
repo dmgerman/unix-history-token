@@ -2351,7 +2351,7 @@ name|struct
 name|g_virstor_metadata
 name|md
 decl_stmt|;
-name|int
+name|u_int
 name|n
 decl_stmt|;
 if|if
@@ -4808,7 +4808,7 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
-name|int
+name|u_int
 name|n
 decl_stmt|;
 name|g_topology_assert
