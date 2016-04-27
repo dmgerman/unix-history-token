@@ -2530,8 +2530,11 @@ decl_stmt|;
 name|int
 name|hn_txdesc_avail
 decl_stmt|;
-name|int
+name|u_short
 name|hn_has_txeof
+decl_stmt|;
+name|u_short
+name|hn_txdone_cnt
 decl_stmt|;
 name|int
 name|hn_sched_tx
