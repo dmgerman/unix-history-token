@@ -1758,7 +1758,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_short
+name|size_t
 name|cache_secretsize
 decl_stmt|;
 end_decl_stmt

@@ -17,6 +17,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"isc/string.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|key
@@ -257,11 +263,15 @@ condition|(
 operator|!
 name|hash_len
 condition|)
+block|{
 name|authentic
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 else|else
+block|{
+comment|/* isc_tsmemcmp will be better when its easy to link 		 * with.  sntp is a 1-shot program, so snooping for 		 * timing attacks is Harder. 		 */
 name|authentic
 operator|=
 operator|!
@@ -269,7 +279,7 @@ name|memcmp
 argument_list|(
 name|digest
 argument_list|,
-name|pkt_ptr
+name|pkt_data
 operator|+
 name|pkt_size
 operator|+
@@ -278,6 +288,7 @@ argument_list|,
 name|hash_len
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|authentic
 return|;
