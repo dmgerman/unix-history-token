@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -335,7 +335,7 @@ name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus, GSBus or IPMI read. We must create a buffer to hold          * the data and then directly access the region handler.          *          * Note: SMBus and GSBus protocol value is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI read. We must create a buffer to          * hold the data and then directly access the region handler.          *          * Note: SMBus and GSBus protocol value is passed in upper 16-bits          * of Function          */
 if|if
 condition|(
 name|ObjDesc
@@ -407,7 +407,7 @@ operator|.
 name|AccessLength
 argument_list|)
 expr_stmt|;
-comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;      (Byte 0 of the data buffer)              *     Length;      (Byte 1 of the data buffer)              *     Data[x-1];   (Bytes 2-x of the arbitrary length data buffer)              */
+comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;    (Byte 0 of the data buffer)              *     Length;    (Byte 1 of the data buffer)              *     Data[x-1]: (Bytes 2-x of the arbitrary length data buffer)              */
 name|Length
 operator|+=
 literal|2
@@ -987,7 +987,7 @@ name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus, GSBus or IPMI write. We will bypass the entire field          * mechanism and handoff the buffer directly to the handler. For          * these address spaces, the buffer is bi-directional; on a write,          * return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE, ACPI_GSBUS_BUFFER_SIZE, or ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus and GSBus protocol type is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI write. We will bypass the entire          * field mechanism and handoff the buffer directly to the handler.          * For these address spaces, the buffer is bi-directional; on a          * write, return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE, ACPI_GSBUS_BUFFER_SIZE, or          * ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus and GSBus protocol type is passed in upper 16-bits          * of Function          */
 if|if
 condition|(
 name|SourceDesc
@@ -1004,7 +1004,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus/IPMI/GenericSerialBus write requires Buffer, found type %s"
+literal|"SMBus/IPMI/GenericSerialBus write requires "
+literal|"Buffer, found type %s"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -1090,7 +1091,7 @@ operator|.
 name|AccessLength
 argument_list|)
 expr_stmt|;
-comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;      (Byte 0 of the data buffer)              *     Length;      (Byte 1 of the data buffer)              *     Data[x-1];   (Bytes 2-x of the arbitrary length data buffer)              */
+comment|/*              * Add additional 2 bytes for the GenericSerialBus data buffer:              *              *     Status;    (Byte 0 of the data buffer)              *     Length;    (Byte 1 of the data buffer)              *     Data[x-1]: (Bytes 2-x of the arbitrary length data buffer)              */
 name|Length
 operator|+=
 literal|2
@@ -1134,7 +1135,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus/IPMI/GenericSerialBus write requires Buffer of length %u, found length %u"
+literal|"SMBus/IPMI/GenericSerialBus write requires "
+literal|"Buffer of length %u, found length %u"
 operator|,
 name|Length
 operator|,
@@ -1292,7 +1294,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"GPIO FieldWrite [FROM]: (%s:%X), Val %.8X  [TO]:  Pin %u Bits %u\n"
+literal|"GPIO FieldWrite [FROM]: (%s:%X), Val %.8X  [TO]: Pin %u Bits %u\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

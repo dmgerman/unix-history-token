@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -624,23 +624,257 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|_FUTURE_FEATURE
 comment|/*      * Begin incoming argument count analysis. Check for too few args      * and too many args.      */
-block|switch (AcpiNsGetType (Info->Node))     {     case ACPI_TYPE_METHOD:
+switch|switch
+condition|(
+name|AcpiNsGetType
+argument_list|(
+name|Info
+operator|->
+name|Node
+argument_list|)
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_METHOD
+case|:
 comment|/* Check incoming argument count against the method definition */
-block|if (Info->ObjDesc->Method.ParamCount> Info->ParamCount)         {             ACPI_ERROR ((AE_INFO,                 "Insufficient arguments (%u) - %u are required",                 Info->ParamCount,                 Info->ObjDesc->Method.ParamCount));              Status = AE_MISSING_ARGUMENTS;             goto Cleanup;         }          else if (Info->ObjDesc->Method.ParamCount< Info->ParamCount)         {             ACPI_WARNING ((AE_INFO,                 "Excess arguments (%u) - only %u are required",                 Info->ParamCount,                 Info->ObjDesc->Method.ParamCount));
+if|if
+condition|(
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|>
+name|Info
+operator|->
+name|ParamCount
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Insufficient arguments (%u) - %u are required"
+operator|,
+name|Info
+operator|->
+name|ParamCount
+operator|,
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_MISSING_ARGUMENTS
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|<
+name|Info
+operator|->
+name|ParamCount
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Excess arguments (%u) - only %u are required"
+operator|,
+name|Info
+operator|->
+name|ParamCount
+operator|,
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Just pass the required number of arguments */
-block|Info->ParamCount = Info->ObjDesc->Method.ParamCount;         }
+name|Info
+operator|->
+name|ParamCount
+operator|=
+name|Info
+operator|->
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+expr_stmt|;
+block|}
 comment|/*          * Any incoming external objects to be passed as arguments to the          * method must be converted to internal objects          */
-block|if (Info->ParamCount)         {
+if|if
+condition|(
+name|Info
+operator|->
+name|ParamCount
+condition|)
+block|{
 comment|/*              * Allocate a new parameter block for the internal objects              * Add 1 to count to allow for null terminated internal list              */
-block|Info->Parameters = ACPI_ALLOCATE_ZEROED (                 ((ACPI_SIZE) Info->ParamCount + 1) * sizeof (void *));             if (!Info->Parameters)             {                 Status = AE_NO_MEMORY;                 goto Cleanup;             }
+name|Info
+operator|->
+name|Parameters
+operator|=
+name|ACPI_ALLOCATE_ZEROED
+argument_list|(
+operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
+name|Info
+operator|->
+name|ParamCount
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|Parameters
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/* Convert each external object in the list to an internal object */
-block|for (i = 0; i< Info->ParamCount; i++)             {                 Status = AcpiUtCopyEobjectToIobject (&ExternalParams->Pointer[i],&Info->Parameters[i]);                 if (ACPI_FAILURE (Status))                 {                     goto Cleanup;                 }             }              Info->Parameters[Info->ParamCount] = NULL;         }         break;      default:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Info
+operator|->
+name|ParamCount
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|Status
+operator|=
+name|AcpiUtCopyEobjectToIobject
+argument_list|(
+operator|&
+name|ExternalParams
+operator|->
+name|Pointer
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+name|Info
+operator|->
+name|Parameters
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Cleanup
+goto|;
+block|}
+block|}
+name|Info
+operator|->
+name|Parameters
+index|[
+name|Info
+operator|->
+name|ParamCount
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+break|break;
+default|default:
 comment|/* Warn if arguments passed to an object that is not a method */
-block|if (Info->ParamCount)         {             ACPI_WARNING ((AE_INFO,                 "%u arguments were passed to a non-method ACPI object",                 Info->ParamCount));         }         break;     }
+if|if
+condition|(
+name|Info
+operator|->
+name|ParamCount
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"%u arguments were passed to a non-method ACPI object"
+operator|,
+name|Info
+operator|->
+name|ParamCount
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
 endif|#
 directive|endif
 comment|/* Now we can evaluate the object */
@@ -654,9 +888,14 @@ expr_stmt|;
 comment|/*      * If we are expecting a return value, and all went well above,      * copy the return value to an external object.      */
 if|if
 condition|(
+operator|!
 name|ReturnBuffer
 condition|)
 block|{
+goto|goto
+name|CleanupReturnObject
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -671,9 +910,10 @@ name|Length
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -686,7 +926,7 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
-comment|/*                  * If we received a NS Node as a return object, this means that                  * the object we are evaluating has nothing interesting to                  * return (such as a mutex, etc.)  We return an error because                  * these types are essentially unsupported by this interface.                  * We don't check up front because this makes it easier to add                  * support for various types at a later date if necessary.                  */
+comment|/*          * If we received a NS Node as a return object, this means that          * the object we are evaluating has nothing interesting to          * return (such as a mutex, etc.)  We return an error because          * these types are essentially unsupported by this interface.          * We don't check up front because this makes it easier to add          * support for various types at a later date if necessary.          */
 name|Status
 operator|=
 name|AE_TYPE
@@ -707,12 +947,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
+goto|goto
+name|CleanupReturnObject
+goto|;
+block|}
 comment|/* Dereference Index and RefOf references */
 name|AcpiNsResolveReferences
 argument_list|(
@@ -758,7 +1002,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*                          * Caller's buffer is too small or a new one can't                          * be allocated                          */
+comment|/*              * Caller's buffer is too small or a new one can't              * be allocated              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -795,9 +1039,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-block|}
-block|}
+name|CleanupReturnObject
+label|:
 if|if
 condition|(
 name|Info

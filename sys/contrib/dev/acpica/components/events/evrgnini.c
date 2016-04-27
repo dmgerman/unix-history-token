@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1111,24 +1111,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|MethodNode
-decl_stmt|;
-name|ACPI_NAME
-modifier|*
-name|RegNamePtr
-init|=
-operator|(
-name|ACPI_NAME
-operator|*
-operator|)
-name|METHOD_NAME__REG
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|RegionObj2
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|EvInitializeRegion
@@ -1165,25 +1147,14 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-name|RegionObj2
-operator|=
-name|AcpiNsGetSecondaryObject
-argument_list|(
 name|RegionObj
-argument_list|)
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_OBJECT_INITIALIZED
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|RegionObj2
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_EXIST
-argument_list|)
-expr_stmt|;
-block|}
 name|Node
 operator|=
 name|RegionObj
@@ -1202,77 +1173,7 @@ name|Region
 operator|.
 name|SpaceId
 expr_stmt|;
-comment|/* Setup defaults */
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Handler
-operator|=
-name|NULL
-expr_stmt|;
-name|RegionObj2
-operator|->
-name|Extra
-operator|.
-name|Method_REG
-operator|=
-name|NULL
-expr_stmt|;
-name|RegionObj
-operator|->
-name|Common
-operator|.
-name|Flags
-operator|&=
-operator|~
-operator|(
-name|AOPOBJ_SETUP_COMPLETE
-operator|)
-expr_stmt|;
-name|RegionObj
-operator|->
-name|Common
-operator|.
-name|Flags
-operator||=
-name|AOPOBJ_OBJECT_INITIALIZED
-expr_stmt|;
-comment|/* Find any "_REG" method associated with this region definition */
-name|Status
-operator|=
-name|AcpiNsSearchOneScope
-argument_list|(
-operator|*
-name|RegNamePtr
-argument_list|,
-name|Node
-argument_list|,
-name|ACPI_TYPE_METHOD
-argument_list|,
-operator|&
-name|MethodNode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/*          * The _REG method is optional and there can be only one per region          * definition. This will be executed when the handler is attached          * or removed          */
-name|RegionObj2
-operator|->
-name|Extra
-operator|.
-name|Method_REG
-operator|=
-name|MethodNode
-expr_stmt|;
-block|}
-comment|/*      * The following loop depends upon the root Node having no parent      * ie: AcpiGbl_RootNode->ParentEntry being set to NULL      */
+comment|/*      * The following loop depends upon the root Node having no parent      * ie: AcpiGbl_RootNode->Parent being set to NULL      */
 while|while
 condition|(
 name|Node
@@ -1306,27 +1207,9 @@ block|{
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
-name|HandlerObj
-operator|=
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|Handler
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_TYPE_PROCESSOR
 case|:
-name|HandlerObj
-operator|=
-name|ObjDesc
-operator|->
-name|Processor
-operator|.
-name|Handler
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
@@ -1334,7 +1217,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|ThermalZone
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
@@ -1370,21 +1253,18 @@ default|default:
 comment|/* Ignore other objects */
 break|break;
 block|}
-while|while
-condition|(
 name|HandlerObj
-condition|)
-block|{
-comment|/* Is this handler of the correct type? */
+operator|=
+name|AcpiEvFindRegionHandler
+argument_list|(
+name|SpaceId
+argument_list|,
+name|HandlerObj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|SpaceId
-operator|==
-name|SpaceId
 condition|)
 block|{
 comment|/* Found correct handler */
@@ -1414,7 +1294,7 @@ argument_list|,
 name|AcpiNsLocked
 argument_list|)
 expr_stmt|;
-comment|/*                      * Tell all users that this region is usable by                      * running the _REG method                      */
+comment|/*                  * Tell all users that this region is usable by                  * running the _REG method                  */
 if|if
 condition|(
 name|AcpiNsLocked
@@ -1482,16 +1362,6 @@ name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* Try next handler in the list */
-name|HandlerObj
-operator|=
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Next
 expr_stmt|;
 block|}
 block|}

@@ -794,7 +794,10 @@ literal|5
 expr_stmt|;
 break|break;
 case|case
-name|OSL_DEBUGGER_THREAD
+name|OSL_DEBUGGER_MAIN_THREAD
+case|:
+case|case
+name|OSL_DEBUGGER_EXEC_THREAD
 case|:
 name|pri
 operator|=

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -232,7 +232,7 @@ comment|/* Did the parse tree get successfully constructed? */
 if|if
 condition|(
 operator|!
-name|RootNode
+name|Gbl_ParseTreeRoot
 condition|)
 block|{
 comment|/*          * If there are no errors, then we have some sort of          * internal problem.          */
@@ -282,7 +282,11 @@ argument_list|()
 expr_stmt|;
 name|OpcGetIntegerWidth
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
+operator|->
+name|Asl
+operator|.
+name|Child
 argument_list|)
 expr_stmt|;
 name|UtEndEvent
@@ -307,13 +311,13 @@ argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
-name|ASL_WALK_VISIT_DOWNWARD
+name|ASL_WALK_VISIT_TWICE
 argument_list|,
-name|TrAmlTransformWalk
+name|TrAmlTransformWalkBegin
 argument_list|,
-name|NULL
+name|TrAmlTransformWalkEnd
 argument_list|,
 name|NULL
 argument_list|)
@@ -335,12 +339,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating AML opcodes\n\n"
+literal|"Generating AML opcodes\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -356,7 +360,7 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
-comment|/*      * Now that the input is parsed, we can open the AML output file.      * Note: by default, the name of this file comes from the table descriptor      * within the input file.      */
+comment|/*      * Now that the input is parsed, we can open the AML output file.      * Note: by default, the name of this file comes from the table      * descriptor within the input file.      */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -408,7 +412,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nInterpreting compile-time constant expressions\n\n"
+literal|"Interpreting compile-time constant expressions\n\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -418,13 +422,13 @@ condition|)
 block|{
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
-name|ASL_WALK_VISIT_DOWNWARD
-argument_list|,
-name|OpcAmlConstantWalk
+name|ASL_WALK_VISIT_UPWARD
 argument_list|,
 name|NULL
+argument_list|,
+name|OpcAmlConstantWalk
 argument_list|,
 name|NULL
 argument_list|)
@@ -457,12 +461,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nUpdating AML opcodes after constant folding\n\n"
+literal|"Updating AML opcodes after constant folding\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -490,12 +494,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating Package lengths\n\n"
+literal|"Generating Package lengths\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -563,11 +567,18 @@ argument_list|(
 literal|"Create ACPI Namespace"
 argument_list|)
 expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Creating ACPI Namespace\n\n"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|LdLoadNamespace
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|)
 expr_stmt|;
 name|UtEndEvent
@@ -593,6 +604,13 @@ operator|=
 name|UtBeginEvent
 argument_list|(
 literal|"Cross reference parse tree and Namespace"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Cross referencing namespace\n\n"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -621,6 +639,45 @@ argument_list|(
 name|AslGbl_NamespaceEvent
 argument_list|)
 expr_stmt|;
+comment|/* Resolve External Declarations */
+if|if
+condition|(
+name|Gbl_DoExternals
+condition|)
+block|{
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Resolve all Externals"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\nResolve Externals\n\n"
+argument_list|)
+expr_stmt|;
+name|TrWalkParseTree
+argument_list|(
+name|Gbl_ParseTreeRoot
+argument_list|,
+name|ASL_WALK_VISIT_TWICE
+argument_list|,
+name|ExAmlExternalWalkBegin
+argument_list|,
+name|ExAmlExternalWalkEnd
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Semantic analysis. This can happen only after the      * namespace has been loaded and cross-referenced.      *      * part one - check control methods      */
 name|Event
 operator|=
@@ -639,12 +696,24 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Method analysis\n\n"
+literal|"Semantic analysis - Method analysis\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_CrossReferenceOutput
+condition|)
+block|{
+name|OtPrintHeaders
+argument_list|(
+literal|"Part 1: Object Reference Map "
+literal|"(Object references from within each control method)"
+argument_list|)
+expr_stmt|;
+block|}
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_TWICE
 argument_list|,
@@ -655,6 +724,22 @@ argument_list|,
 operator|&
 name|AnalysisWalkInfo
 argument_list|)
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+comment|/* Generate the object cross-reference file if requested */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Generate cross-reference file"
+argument_list|)
+expr_stmt|;
+name|OtCreateXrefFile
+argument_list|()
 expr_stmt|;
 name|UtEndEvent
 argument_list|(
@@ -673,12 +758,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Method typing\n\n"
+literal|"Semantic analysis - Method typing\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -706,12 +791,17 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - Operand type checking\n\n"
+literal|"Semantic analysis - Operand type checking\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoTypechecking
+condition|)
+block|{
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -723,6 +813,7 @@ operator|&
 name|AnalysisWalkInfo
 argument_list|)
 expr_stmt|;
+block|}
 name|UtEndEvent
 argument_list|(
 name|Event
@@ -740,12 +831,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSemantic analysis - miscellaneous\n\n"
+literal|"Semantic analysis - miscellaneous\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
@@ -774,12 +865,12 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nGenerating Package lengths\n\n"
+literal|"Generating Package lengths\n\n"
 argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -792,7 +883,7 @@ argument_list|)
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_UPWARD
 argument_list|,
@@ -814,6 +905,13 @@ operator|=
 name|UtBeginEvent
 argument_list|(
 literal|"Generate AML code and write output files"
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"Writing AML byte code\n\n"
 argument_list|)
 expr_stmt|;
 name|CgGenerateAmlOutput
@@ -1280,10 +1378,10 @@ name|UINT32
 name|Delta
 decl_stmt|;
 name|UINT32
-name|USec
+name|MicroSeconds
 decl_stmt|;
 name|UINT32
-name|MSec
+name|MilliSeconds
 decl_stmt|;
 name|UINT32
 name|i
@@ -1347,13 +1445,13 @@ operator|->
 name|StartTime
 argument_list|)
 expr_stmt|;
-name|USec
+name|MicroSeconds
 operator|=
 name|Delta
 operator|/
 name|ACPI_100NSEC_PER_USEC
 expr_stmt|;
-name|MSec
+name|MilliSeconds
 operator|=
 name|Delta
 operator|/
@@ -1363,10 +1461,10 @@ comment|/* Round milliseconds up */
 if|if
 condition|(
 operator|(
-name|USec
+name|MicroSeconds
 operator|-
 operator|(
-name|MSec
+name|MilliSeconds
 operator|*
 name|ACPI_USEC_PER_MSEC
 operator|)
@@ -1375,7 +1473,7 @@ operator|>=
 literal|500
 condition|)
 block|{
-name|MSec
+name|MilliSeconds
 operator|++
 expr_stmt|;
 block|}
@@ -1385,9 +1483,9 @@ name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"%8u usec %8u msec - %s\n"
 argument_list|,
-name|USec
+name|MicroSeconds
 argument_list|,
-name|MSec
+name|MilliSeconds
 argument_list|,
 name|Event
 operator|->
@@ -1403,9 +1501,9 @@ name|printf
 argument_list|(
 literal|"%8u usec %8u msec - %s\n"
 argument_list|,
-name|USec
+name|MicroSeconds
 argument_list|,
-name|MSec
+name|MilliSeconds
 argument_list|,
 name|Event
 operator|->
@@ -1829,7 +1927,7 @@ name|Gbl_ParseOpCacheLast
 operator|=
 name|NULL
 expr_stmt|;
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|NULL
 expr_stmt|;

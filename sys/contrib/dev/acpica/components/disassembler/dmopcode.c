@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -71,6 +71,18 @@ begin_function_decl
 specifier|static
 name|void
 name|AcpiDmMatchKeyword
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|AcpiDmConvertToElseIf
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -476,7 +488,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 condition|)
 block|{
 return|return;
@@ -487,7 +499,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 expr_stmt|;
 comment|/* Predefined name must start with an underscore */
 name|NameString
@@ -802,7 +814,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 condition|)
 block|{
 return|return;
@@ -813,7 +825,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 expr_stmt|;
 comment|/*      * Op must be one of the Create* operators: CreateField, CreateBitField,      * CreateByteField, CreateWordField, CreateDwordField, CreateQwordField      */
 name|OpInfo
@@ -1369,10 +1381,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_MatchOps
 index|[
 operator|(
@@ -1386,7 +1394,6 @@ name|Value
 operator|.
 name|Integer
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1455,6 +1462,20 @@ literal|"<NULL OP PTR>"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_ELSEIF
+condition|)
+block|{
+return|return;
+comment|/* ElseIf macro was already emitted */
 block|}
 switch|switch
 condition|(
@@ -1889,7 +1910,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"/**** Is ResourceTemplate, but EndTag not at buffer end ****/ "
+literal|"/**** Is ResourceTemplate, "
+literal|"but EndTag not at buffer end ****/ "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2431,6 +2453,19 @@ name|Name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|AML_ELSE_OP
+case|:
+name|AcpiDmConvertToElseIf
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_EXTERNAL_OP
+case|:
+break|break;
 default|default:
 comment|/* Just get the opcode name and print it */
 name|AcpiOsPrintf
@@ -2501,6 +2536,222 @@ endif|#
 directive|endif
 break|break;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmConvertToElseIf  *  * PARAMETERS:  OriginalElseOp          - ELSE Object to be examined  *  * RETURN:      None. Emits either an "Else" or an "ElseIf" ASL operator.  *  * DESCRIPTION: Detect and convert an If..Else..If sequence to If..ElseIf  *  * EXAMPLE:  *  * This If..Else..If nested sequence:  *  *        If (Arg0 == 1)  *        {  *            Local0 = 4  *        }  *        Else  *        {  *            If (Arg0 == 2)  *            {  *                Local0 = 5  *            }  *        }  *  * Is converted to this simpler If..ElseIf sequence:  *  *        If (Arg0 == 1)  *        {  *            Local0 = 4  *        }  *        ElseIf (Arg0 == 2)  *        {  *            Local0 = 5  *        }  *  * NOTE: There is no actual ElseIf AML opcode. ElseIf is essentially an ASL  * macro that emits an Else opcode followed by an If opcode. This function  * reverses these AML sequences back to an ElseIf macro where possible. This  * can make the disassembled ASL code simpler and more like the original code.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiDmConvertToElseIf
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|OriginalElseOp
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|IfOp
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ElseOp
+decl_stmt|;
+comment|/*      * To be able to perform the conversion, two conditions must be satisfied:      * 1) The first child of the Else must be an If statement.      * 2) The If block can only be followed by an Else block and these must      *    be the only blocks under the original Else.      */
+name|IfOp
+operator|=
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Arg
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IfOp
+operator|||
+operator|(
+name|IfOp
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_IF_OP
+operator|)
+operator|||
+operator|(
+name|IfOp
+operator|->
+name|Asl
+operator|.
+name|Next
+operator|&&
+operator|(
+name|IfOp
+operator|->
+name|Asl
+operator|.
+name|Next
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_ELSE_OP
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* Not an Else..If sequence, cannot convert to ElseIf */
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|"Else"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Emit ElseIf, mark the IF as now an ELSEIF */
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|"ElseIf"
+argument_list|)
+expr_stmt|;
+name|IfOp
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_ELSEIF
+expr_stmt|;
+comment|/* The IF parent will now be the same as the original ELSE parent */
+name|IfOp
+operator|->
+name|Common
+operator|.
+name|Parent
+operator|=
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
+comment|/*      * Update the NEXT pointers to restructure the parse tree, essentially      * promoting an If..Else block up to the same level as the original      * Else.      *      * Check if the IF has a corresponding ELSE peer      */
+name|ElseOp
+operator|=
+name|IfOp
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+name|ElseOp
+operator|&&
+operator|(
+name|ElseOp
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_ELSE_OP
+operator|)
+condition|)
+block|{
+comment|/* If an ELSE matches the IF, promote it also */
+name|ElseOp
+operator|->
+name|Common
+operator|.
+name|Parent
+operator|=
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
+name|ElseOp
+operator|->
+name|Common
+operator|.
+name|Next
+operator|=
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Otherwise, set the IF NEXT to the original ELSE NEXT */
+name|IfOp
+operator|->
+name|Common
+operator|.
+name|Next
+operator|=
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+block|}
+comment|/* Detach the child IF block from the original ELSE */
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Arg
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Ignore the original ELSE from now on */
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_IGNORE
+expr_stmt|;
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|=
+name|ACPI_DASM_LNOT_PREFIX
+expr_stmt|;
+comment|/* Insert IF (now ELSEIF) as next peer of the original ELSE */
+name|OriginalElseOp
+operator|->
+name|Common
+operator|.
+name|Next
+operator|=
+name|IfOp
+expr_stmt|;
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -59,6 +59,34 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetParent  *  * PARAMETERS:  Op                  - To be set to new parent  *              ParentOp            - The parent  *  * RETURN:      None, sets Op parent directly  *  * DESCRIPTION: Change the parent of a parse op.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|TrSetParent
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|=
+name|ParentOp
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    TrGetNextNode  *  * PARAMETERS:  None  *  * RETURN:      New parse node. Aborts on allocation failure  *  * DESCRIPTION: Allocate a new parse node for the parse tree. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
@@ -257,7 +285,31 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node. Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation. Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetCurrentFilename  *  * PARAMETERS:  Op                  - An existing parse node  *  * RETURN:      None  *  * DESCRIPTION: Save the include file filename. Used for debug output only.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|TrSetCurrentFilename
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Filename
+operator|=
+name|Gbl_PreviousIncludeFilename
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrUpdateNode  *  * PARAMETERS:  ParseOpcode         - New opcode to be assigned to the node  *              Op                  - An existing parse node  *  * RETURN:      The updated node  *  * DESCRIPTION: Change the parse opcode assigned to a node. Usually used to  *              change an opcode to DEFAULT_ARG so that the node is ignored  *              during the code generation. Also used to set generic integers  *              to a specific size (8, 16, 32, or 64 bits)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -615,6 +667,14 @@ case|:
 name|FlagName
 operator|=
 literal|"NODE_METHOD_TYPED"
+expr_stmt|;
+break|break;
+case|case
+name|NODE_COULD_NOT_REDUCE
+case|:
+name|FlagName
+operator|=
+literal|"NODE_COULD_NOT_REDUCE"
 expr_stmt|;
 break|break;
 case|case
@@ -981,6 +1041,9 @@ name|PARSEOP_AND
 case|:
 case|case
 name|PARSEOP_DIVIDE
+case|:
+case|case
+name|PARSEOP_INDEX
 case|:
 case|case
 name|PARSEOP_MOD
@@ -1529,7 +1592,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateConstantLeafNode  Ln/Col %u/%u NewNode %p  Op %s  Value %8.8X%8.8X  \n"
+literal|"\nCreateConstantLeafNode  Ln/Col %u/%u NewNode %p  "
+literal|"Op %s  Value %8.8X%8.8X  \n"
 argument_list|,
 name|Op
 operator|->
@@ -1838,7 +1902,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateValuedLeafNode  Ln/Col %u/%u NewNode %p  Op %s  Value %8.8X%8.8X  "
+literal|"\nCreateValuedLeafNode  Ln/Col %u/%u NewNode %p  "
+literal|"Op %s  Value %8.8X%8.8X  "
 argument_list|,
 name|Op
 operator|->
@@ -2066,12 +2131,31 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_ASL_CODE
 case|:
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|Op
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_DEFAULT_ARG
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"ASLCODE (Tree Completed)->"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_DEFINITION_BLOCK
+case|:
 name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
@@ -2350,12 +2434,31 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_ASL_CODE
 case|:
-name|RootNode
+name|Gbl_ParseTreeRoot
 operator|=
 name|Op
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_DEFAULT_ARG
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"ASLCODE (Tree Completed)->"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_DEFINITION_BLOCK
+case|:
 name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
@@ -3109,7 +3212,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|RootNode
+name|Gbl_ParseTreeRoot
 condition|)
 block|{
 return|return

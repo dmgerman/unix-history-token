@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -81,58 +81,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|UINT8
-name|AcpiIsBigEndianMachine
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsBigEndianMachine  *  * PARAMETERS:  None  *  * RETURN:      TRUE if machine is big endian  *              FALSE if machine is little endian  *  * DESCRIPTION: Detect whether machine is little endian or big endian.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT8
-name|AcpiIsBigEndianMachine
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-union|union
-block|{
-name|UINT32
-name|Integer
-decl_stmt|;
-name|UINT8
-name|Bytes
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|Overlay
-init|=
-block|{
-literal|0xFF000000
-block|}
-union|;
-return|return
-operator|(
-name|Overlay
-operator|.
-name|Bytes
-index|[
-literal|0
-index|]
-operator|)
-return|;
-comment|/* Returns 0xFF (TRUE) for big endian */
-block|}
-end_function
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    Usage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display option help message.  *              Optional items in square brackets.  *  ******************************************************************************/
 end_comment
@@ -177,9 +125,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig>|ALL|*"
+literal|"-T<sig list>|ALL"
 argument_list|,
-literal|"Create table template file for ACPI<Sig>"
+literal|"Create ACPI table template/example files"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<count>"
+argument_list|,
+literal|"Emit DSDT and<count> SSDTs to same file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -372,6 +327,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ot"
+argument_list|,
+literal|"Disable typechecking"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-cr"
 argument_list|,
 literal|"Disable Resource Descriptor error checking"
@@ -455,6 +417,13 @@ argument_list|(
 literal|"-ls"
 argument_list|,
 literal|"Create combined source file (expanded includes) (*.src)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-lx"
+argument_list|,
+literal|"Create cross-reference file (*.xrf)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -628,7 +597,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-ot"
+literal|"-oc"
 argument_list|,
 literal|"Display compile times and statistics"
 argument_list|)
@@ -812,6 +781,19 @@ name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* Default integer width is 64 bits */
+name|AcpiGbl_IntegerBitWidth
+operator|=
+literal|64
+expr_stmt|;
+name|AcpiGbl_IntegerNybbleWidth
+operator|=
+literal|16
+expr_stmt|;
+name|AcpiGbl_IntegerByteWidth
+operator|=
+literal|8
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -919,7 +901,7 @@ decl_stmt|;
 comment|/*      * Big-endian machines are not currently supported. ACPI tables must      * be little-endian, and support for big-endian machines needs to      * be implemented.      */
 if|if
 condition|(
-name|AcpiIsBigEndianMachine
+name|UtIsBigEndianMachine
 argument_list|()
 condition|)
 block|{

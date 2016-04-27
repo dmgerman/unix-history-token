@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1125,6 +1125,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest10
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoHestNotify
 index|[]
 decl_stmt|;
@@ -1246,6 +1254,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoIort3c
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIort4
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1766,6 +1782,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoPcct1
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct2
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -3072,6 +3096,7 @@ parameter_list|(
 name|UINT8
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3086,6 +3111,7 @@ parameter_list|(
 name|UINT16
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3100,6 +3126,7 @@ parameter_list|(
 name|UINT32
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3114,6 +3141,7 @@ parameter_list|(
 name|UINT64
 name|Value
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3437,6 +3465,7 @@ begin_function_decl
 name|void
 name|AcpiDmVendorCommon
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -3733,7 +3762,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * acdisasm  */
+comment|/*  * dmtables  */
 end_comment
 
 begin_function_decl
@@ -3763,6 +3792,87 @@ directive|define
 name|ACPI_IS_DATA_TABLE
 value|1
 end_define
+
+begin_comment
+comment|/*  * adisasm  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdAmlDisassemble
+parameter_list|(
+name|BOOLEAN
+name|OutToFile
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|Prefix
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|OutFilename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdGetLocalTables
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdParseTable
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|,
+name|ACPI_OWNER_ID
+modifier|*
+name|OwnerId
+parameter_list|,
+name|BOOLEAN
+name|LoadTable
+parameter_list|,
+name|BOOLEAN
+name|External
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdDisplayTables
+parameter_list|(
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdDisplayStatistics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

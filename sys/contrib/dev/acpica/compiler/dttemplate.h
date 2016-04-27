@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -18,58 +18,6 @@ define|#
 directive|define
 name|__DTTEMPLATE_H
 end_define
-
-begin_comment
-comment|/* Special templates for the ASL/AML tables: DSDT, SSDT, and OSDT */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateDsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"dsdt.aml\", \"DSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateSsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"ssdt.aml\", \"SSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|TemplateOsdt
-index|[]
-init|=
-literal|"DefinitionBlock (\"osdt.aml\", \"OSDT\", 2, \"Intel\", \"Template\", 0x00000001)\n"
-literal|"{\n"
-literal|"    Method (MAIN, 0, NotSerialized)\n"
-literal|"    {\n"
-literal|"        Return (Zero)\n"
-literal|"    }\n"
-literal|"}\n\n"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Templates for ACPI data tables */
@@ -7277,7 +7225,7 @@ literal|0x52
 block|,
 literal|0x54
 block|,
-literal|0x0C
+literal|0x48
 block|,
 literal|0x01
 block|,
@@ -7285,10 +7233,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "IORT...." */
+comment|/* 00000000    "IORTH..." */
 literal|0x00
 block|,
-literal|0xBC
+literal|0x02
 block|,
 literal|0x49
 block|,
@@ -7337,15 +7285,15 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x10
+literal|0x12
 block|,
-literal|0x04
+literal|0x02
 block|,
-literal|0x15
+literal|0x16
 block|,
 literal|0x20
 block|,
-literal|0x04
+literal|0x05
 block|,
 literal|0x00
 block|,
@@ -7837,7 +7785,134 @@ block|,
 literal|0x00
 block|,
 literal|0x00
-comment|/* 00000108    "...."     */
+block|,
+literal|0x04
+block|,
+literal|0x3C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000108    ".....<.." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000110    "........" */
+literal|0x3C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000118    "<......." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000120    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000128    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000130    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000138    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+comment|/* 00000140    "........" */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -11548,9 +11623,9 @@ literal|0x43
 block|,
 literal|0x54
 block|,
-literal|0xAC
+literal|0x06
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -11559,7 +11634,7 @@ block|,
 comment|/* 00000000    "PCCT...." */
 literal|0x01
 block|,
-literal|0xCF
+literal|0xE3
 block|,
 literal|0x49
 block|,
@@ -11576,21 +11651,21 @@ block|,
 comment|/* 00000008    "..INTEL " */
 literal|0x54
 block|,
-literal|0x65
+literal|0x45
 block|,
-literal|0x6D
+literal|0x4D
 block|,
-literal|0x70
+literal|0x50
 block|,
-literal|0x6C
+literal|0x4C
 block|,
-literal|0x61
+literal|0x41
 block|,
-literal|0x74
+literal|0x54
 block|,
-literal|0x65
+literal|0x45
 block|,
-comment|/* 00000010    "Template" */
+comment|/* 00000010    "TEMPLATE" */
 literal|0x01
 block|,
 literal|0x00
@@ -11608,11 +11683,11 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x27
+literal|0x18
 block|,
-literal|0x06
+literal|0x03
 block|,
-literal|0x14
+literal|0x16
 block|,
 literal|0x20
 block|,
@@ -11624,7 +11699,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000020    "'.. ...." */
+comment|/* 00000020    "... ...." */
 literal|0x00
 block|,
 literal|0x00
@@ -11659,40 +11734,40 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000030    ".>......" */
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
-literal|0x00
+literal|0x11
 block|,
 comment|/* 00000038    "........" */
-literal|0x04
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-literal|0x00
+literal|0x22
 block|,
-comment|/* 00000040    "........" */
+comment|/* 00000040    """""""""" */
 literal|0x01
 block|,
 literal|0x32
@@ -11701,84 +11776,84 @@ literal|0x00
 block|,
 literal|0x03
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-comment|/* 00000048    ".2......" */
-literal|0x00
+comment|/* 00000048    ".2..3333" */
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x33
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-comment|/* 00000050    "........" */
-literal|0x00
+comment|/* 00000050    "3333DDDD" */
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0x00
+literal|0x44
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-comment|/* 00000058    "........" */
-literal|0xFF
+comment|/* 00000058    "DDDDUUUU" */
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0xFF
+literal|0x55
 block|,
-literal|0x01
+literal|0x66
 block|,
-literal|0x00
+literal|0x66
 block|,
-literal|0x00
+literal|0x66
 block|,
-literal|0x00
+literal|0x66
 block|,
-comment|/* 00000060    "........" */
-literal|0x01
+comment|/* 00000060    "UUUUffff" */
+literal|0x77
 block|,
-literal|0x00
+literal|0x77
 block|,
-literal|0x00
+literal|0x77
 block|,
-literal|0x00
+literal|0x77
 block|,
-literal|0x01
+literal|0x88
 block|,
-literal|0x00
+literal|0x88
 block|,
 literal|0x01
 block|,
 literal|0x3E
 block|,
-comment|/* 00000068    ".......>" */
-literal|0x00
+comment|/* 00000068    "wwww...>" */
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -11807,7 +11882,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x04
+literal|0x00
 block|,
 literal|0x00
 block|,
@@ -11833,56 +11908,90 @@ literal|0x00
 block|,
 literal|0x03
 block|,
-literal|0x00
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+comment|/* 00000088    "..DDDDDD" */
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+comment|/* 00000090    "DDDDDDDD" */
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+comment|/* 00000098    "DDUUUUUU" */
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x77
+block|,
+literal|0x77
+block|,
+comment|/* 000000A0    "UUffffww" */
+literal|0x77
+block|,
+literal|0x77
+block|,
+literal|0x88
+block|,
+literal|0x88
+block|,
+literal|0x02
+block|,
+literal|0x5A
+block|,
+literal|0x01
 block|,
 literal|0x00
 block|,
+comment|/* 000000A8    "ww...Z.." */
 literal|0x00
 block|,
 literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000088    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000090    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|,
-comment|/* 00000098    "........" */
-literal|0xFF
-block|,
-literal|0xFF
 block|,
 literal|0x01
 block|,
@@ -11892,19 +12001,176 @@ literal|0x00
 block|,
 literal|0x00
 block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000B0    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000B8    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
 literal|0x01
 block|,
-literal|0x00
-block|,
-comment|/* 000000A0    "........" */
-literal|0x00
+literal|0x32
 block|,
 literal|0x00
+block|,
+literal|0x03
+block|,
+comment|/* 000000C0    ".....2.." */
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+comment|/* 000000C8    "DDDDDDDD" */
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+comment|/* 000000D0    "DDDDDDDD" */
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+comment|/* 000000D8    "UUUUUUUU" */
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x66
+block|,
+literal|0x77
+block|,
+literal|0x77
+block|,
+literal|0x77
+block|,
+literal|0x77
+block|,
+comment|/* 000000E0    "ffffwwww" */
+literal|0x88
+block|,
+literal|0x88
 block|,
 literal|0x01
 block|,
+literal|0x32
+block|,
 literal|0x00
-comment|/* 000000A8    "...."     */
+block|,
+literal|0x03
+block|,
+literal|0x33
+block|,
+literal|0x33
+block|,
+comment|/* 000000E8    "...2..33" */
+literal|0x33
+block|,
+literal|0x33
+block|,
+literal|0x33
+block|,
+literal|0x33
+block|,
+literal|0x33
+block|,
+literal|0x33
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+comment|/* 000000F0    "333333DD" */
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x44
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+comment|/* 000000F8    "DDDDDDUU" */
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+block|,
+literal|0x55
+comment|/* 00000100    "UUUUUU"   */
 block|}
 decl_stmt|;
 end_decl_stmt

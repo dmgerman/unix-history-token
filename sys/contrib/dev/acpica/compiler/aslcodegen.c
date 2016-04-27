@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -138,13 +138,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|DbgPrint
-argument_list|(
-name|ASL_DEBUG_OUTPUT
-argument_list|,
-literal|"\nWriting AML\n\n"
-argument_list|)
-expr_stmt|;
 comment|/* Generate the AML output file */
 name|FlSeekFile
 argument_list|(
@@ -163,7 +156,7 @@ name|Gbl_ErrorLog
 expr_stmt|;
 name|TrWalkParseTree
 argument_list|(
-name|RootNode
+name|Gbl_ParseTreeRoot
 argument_list|,
 name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
@@ -178,12 +171,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
-argument_list|,
-literal|76
-argument_list|,
-literal|" "
+name|ASL_PARSE_TREE_HEADER2
 argument_list|)
 expr_stmt|;
 name|CgCloseTable
@@ -213,7 +201,25 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
-comment|/*      * Print header at level 0. Alignment assumes 32-bit pointers      */
+comment|/* Generate the AML for this node */
+name|CgWriteNode
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_DebugFlag
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Print header at level 0. Alignment assumes 32-bit pointers */
 if|if
 condition|(
 operator|!
@@ -224,106 +230,62 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"Final parse tree used for AML output:\n"
+literal|"\nFinal parse tree used for AML output:\n"
 argument_list|)
 expr_stmt|;
 name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
-argument_list|,
-literal|76
-argument_list|,
-literal|" "
+name|ASL_PARSE_TREE_HEADER2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Debug output */
-name|DbgPrint
-argument_list|(
-name|ASL_TREE_OUTPUT
-argument_list|,
-literal|"%5.5d [%2d]"
-argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|LogicalLineNumber
-argument_list|,
-name|Level
-argument_list|)
-expr_stmt|;
-name|UtPrintFormattedName
-argument_list|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-argument_list|,
-name|Level
-argument_list|)
-expr_stmt|;
-if|if
+comment|/* Dump ParseOp name and possible value */
+switch|switch
 condition|(
 name|Op
 operator|->
 name|Asl
 operator|.
 name|ParseOpcode
-operator|==
-name|PARSEOP_NAMESEG
-operator|||
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_NAMESTRING
-operator|||
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_METHODCALL
 condition|)
 block|{
-name|DbgPrint
+case|case
+name|PARSEOP_NAMESEG
+case|:
+case|case
+name|PARSEOP_NAMESTRING
+case|:
+case|case
+name|PARSEOP_METHODCALL
+case|:
+case|case
+name|PARSEOP_STRING_LITERAL
+case|:
+name|UtDumpStringOp
 argument_list|(
-name|ASL_TREE_OUTPUT
-argument_list|,
-literal|"%10.32s      "
-argument_list|,
 name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DbgPrint
-argument_list|(
-name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"                "
+name|Level
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|UtDumpBasicOp
+argument_list|(
+name|Op
+argument_list|,
+name|Level
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    "
-literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d   %02d   %02d   %02d\n"
+name|ASL_PARSE_TREE_DEBUG2
 argument_list|,
 comment|/* 1  */
 operator|(
@@ -477,12 +439,6 @@ operator|->
 name|Asl
 operator|.
 name|EndLogicalLine
-argument_list|)
-expr_stmt|;
-comment|/* Generate the AML for this node */
-name|CgWriteNode
-argument_list|(
-name|Op
 argument_list|)
 expr_stmt|;
 return|return
@@ -868,7 +824,7 @@ name|Len
 operator|>>=
 literal|4
 expr_stmt|;
-comment|/* Now we can write the remaining bytes - either 1, 2, or 3 bytes */
+comment|/*              * Now we can write the remaining bytes -              * either 1, 2, or 3 bytes              */
 for|for
 control|(
 name|i
@@ -1217,7 +1173,16 @@ name|TableHeader
 operator|.
 name|Length
 operator|=
-name|Gbl_TableLength
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+operator|+
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlSubtreeLength
 expr_stmt|;
 name|TableHeader
 operator|.
@@ -1225,6 +1190,23 @@ name|Checksum
 operator|=
 literal|0
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlOffset
+operator|=
+name|ftell
+argument_list|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
+argument_list|)
+expr_stmt|;
+comment|/* Write entire header and clear the table header global */
 name|CgLocalWriteAmlData
 argument_list|(
 name|Op
@@ -1238,41 +1220,96 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|TableHeader
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CgCloseTable  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Complete the ACPI table by calculating the checksum and  *              re-writing the header.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CgUpdateHeader  *  * PARAMETERS:  Op                  - Op for the Definition Block  *  * RETURN:      None.  *  * DESCRIPTION: Complete the ACPI table by calculating the checksum and  *              re-writing the header for the input definition block  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CgCloseTable
+name|CgUpdateHeader
 parameter_list|(
-name|void
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 block|{
 name|signed
 name|char
 name|Sum
 decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
 name|UINT8
 name|FileByte
 decl_stmt|;
-name|FlSeekFile
-argument_list|(
-name|ASL_FILE_AML_OUTPUT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+name|UINT8
+name|Checksum
+decl_stmt|;
+comment|/* Calculate the checksum over the entire definition block */
 name|Sum
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Calculate the checksum over the entire file */
-while|while
+name|Length
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+operator|+
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlSubtreeLength
+expr_stmt|;
+name|FlSeekFile
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlOffset
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Length
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
 condition|(
 name|FlReadFile
 argument_list|(
@@ -1283,10 +1320,17 @@ name|FileByte
 argument_list|,
 literal|1
 argument_list|)
-operator|==
+operator|!=
 name|AE_OK
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"EOF while reading checksum bytes\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|Sum
 operator|=
 call|(
@@ -1300,9 +1344,6 @@ name|FileByte
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Re-write the table header with the checksum */
-name|TableHeader
-operator|.
 name|Checksum
 operator|=
 call|(
@@ -1314,26 +1355,82 @@ operator|-
 name|Sum
 argument_list|)
 expr_stmt|;
+comment|/* Re-write the the checksum byte */
 name|FlSeekFile
 argument_list|(
 name|ASL_FILE_AML_OUTPUT
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|CgLocalWriteAmlData
-argument_list|(
-name|NULL
-argument_list|,
-operator|&
-name|TableHeader
-argument_list|,
-sizeof|sizeof
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlOffset
+operator|+
+name|ACPI_OFFSET
 argument_list|(
 name|ACPI_TABLE_HEADER
+argument_list|,
+name|Checksum
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|FlWriteFile
+argument_list|(
+name|ASL_FILE_AML_OUTPUT
+argument_list|,
+operator|&
+name|Checksum
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    CgCloseTable  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Complete the ACPI table by calculating the checksum and  *              re-writing each table header. This allows support for  *              multiple definition blocks in a single source file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|CgCloseTable
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+decl_stmt|;
+comment|/* Process all definition blocks */
+name|Op
+operator|=
+name|Gbl_ParseTreeRoot
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+while|while
+condition|(
+name|Op
+condition|)
+block|{
+name|CgUpdateHeader
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+name|Op
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1376,16 +1473,6 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|==
-name|PARSEOP_EXTERNAL
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
 name|PARSEOP_INCLUDE
 operator|)
 operator|||
@@ -1398,6 +1485,25 @@ name|ParseOpcode
 operator|==
 name|PARSEOP_INCLUDE_END
 operator|)
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_EXTERNAL
+operator|)
+operator|&&
+name|Gbl_DoExternals
+operator|==
+name|FALSE
 condition|)
 block|{
 return|return;
@@ -1537,7 +1643,7 @@ name|PARSEOP_DEFAULT_ARG
 case|:
 break|break;
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 name|CgWriteTableHeader
 argument_list|(

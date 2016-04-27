@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -52,10 +52,12 @@ specifier|static
 name|void
 name|AcpiRsOutString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Value
@@ -68,6 +70,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger8
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -83,6 +86,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger16
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -98,6 +102,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger32
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -113,6 +118,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger64
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -128,6 +134,7 @@ specifier|static
 name|void
 name|AcpiRsOutTitle
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -511,6 +518,7 @@ name|UINT8
 modifier|*
 name|PreviousTarget
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -630,10 +638,6 @@ name|AcpiRsOutString
 argument_list|(
 name|Name
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|Table
 operator|->
 name|Pointer
@@ -641,7 +645,6 @@ index|[
 operator|*
 name|Target
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -709,10 +712,6 @@ name|AcpiRsOutString
 argument_list|(
 name|Name
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|Table
 operator|->
 name|Pointer
@@ -723,7 +722,6 @@ operator|&
 literal|0x01
 index|]
 argument_list|)
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -732,10 +730,6 @@ case|:
 name|AcpiRsOutString
 argument_list|(
 name|Name
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
 argument_list|,
 name|Table
 operator|->
@@ -747,7 +741,6 @@ operator|&
 literal|0x03
 index|]
 argument_list|)
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -756,10 +749,6 @@ case|:
 name|AcpiRsOutString
 argument_list|(
 name|Name
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
 argument_list|,
 name|Table
 operator|->
@@ -770,7 +759,6 @@ name|Target
 operator|&
 literal|0x07
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1106,10 +1094,12 @@ specifier|static
 name|void
 name|AcpiRsOutString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Value
@@ -1150,6 +1140,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger8
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1175,6 +1166,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger16
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1200,6 +1192,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger32
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1225,6 +1218,7 @@ specifier|static
 name|void
 name|AcpiRsOutInteger64
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title
@@ -1253,6 +1247,7 @@ specifier|static
 name|void
 name|AcpiRsOutTitle
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Title

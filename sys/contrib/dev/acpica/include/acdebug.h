@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,7 @@ typedef|typedef
 struct|struct
 name|acpi_db_command_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -99,6 +100,7 @@ typedef|typedef
 struct|struct
 name|acpi_db_argument_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -153,23 +155,19 @@ begin_comment
 comment|/*  * dbxface - external debugger interfaces  */
 end_comment
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDbSingleStep
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|OpType
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_DBR_DEPENDENT_RETURN_OK
+argument_list|(
+argument|ACPI_STATUS AcpiDbSingleStep (     ACPI_WALK_STATE         *WalkState,     ACPI_PARSE_OBJECT       *Op,     UINT32                  OpType)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbSignalBreakPoint (     ACPI_WALK_STATE         *WalkState)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * dbcmds - debug commands and output routines  */
@@ -652,20 +650,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiDbDisplayResultObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbDisplayResultObject (     ACPI_OPERAND_OBJECT     *ObjDesc,     ACPI_WALK_STATE         *WalkState)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|ACPI_STATUS
@@ -725,20 +715,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiDbDisplayArgumentObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbDisplayArgumentObject (     ACPI_OPERAND_OBJECT     *ObjDesc,     ACPI_WALK_STATE         *WalkState)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * dbexec - debugger control method execution  */
@@ -874,19 +856,11 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiDbGetTableFromFile
+name|AcpiDbLoadTables
 parameter_list|(
-name|char
+name|ACPI_NEW_TABLE_DESC
 modifier|*
-name|Filename
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|Table
-parameter_list|,
-name|BOOLEAN
-name|MustBeAmlTable
+name|ListHead
 parameter_list|)
 function_decl|;
 end_function_decl

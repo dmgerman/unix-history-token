@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ name|ACPI_UINT32_MAX
 operator|)
 condition|)
 block|{
-comment|/*          * We are executing in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
+comment|/*          * We are executing in a 32-bit ACPI table. Truncate          * the value to 32 bits by zeroing out the upper 32-bit field          */
 name|ObjDesc
 operator|->
 name|Integer
@@ -498,7 +498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  CompressedId    - EISAID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISAID to string representation. Return  *              buffer must be large enough to hold the string. The string  *              returned is always exactly of length ACPI_EISAID_STRING_SIZE  *              (includes null terminator). The EISAID is always 32 bits.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  OutString       - Where to put the converted string (8 bytes)  *              CompressedId    - EISAID to be converted  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISAID to string representation. Return  *              buffer must be large enough to hold the string. The string  *              returned is always exactly of length ACPI_EISAID_STRING_SIZE  *              (includes null terminator). The EISAID is always 32 bits.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -532,7 +532,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Expected EISAID is larger than 32 bits: 0x%8.8X%8.8X, truncating"
+literal|"Expected EISAID is larger than 32 bits: "
+literal|"0x%8.8X%8.8X, truncating"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -695,7 +696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIntegerToString  *  * PARAMETERS:  OutString       - Where to put the converted string. At least  *                                21 bytes are needed to hold the largest  *                                possible 64-bit integer.  *              Value           - Value to be converted  *  * RETURN:      None, string  *  * DESCRIPTION: Convert a 64-bit integer to decimal string representation.  *              Assumes string buffer is large enough to hold the string. The  *              largest string is (ACPI_MAX64_DECIMAL_DIGITS + 1).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIntegerToString  *  * PARAMETERS:  OutString       - Where to put the converted string. At least  *                                21 bytes are needed to hold the largest  *                                possible 64-bit integer.  *              Value           - Value to be converted  *  * RETURN:      Converted string in OutString  *  * DESCRIPTION: Convert a 64-bit integer to decimal string representation.  *              Assumes string buffer is large enough to hold the string. The  *              largest string is (ACPI_MAX64_DECIMAL_DIGITS + 1).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -789,7 +790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciClsToString  *  * PARAMETERS:  OutString       - Where to put the converted string (7 bytes)  * PARAMETERS:  ClassCode       - PCI class code to be converted (3 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert 3-bytes PCI class code to string representation.  *              Return buffer must be large enough to hold the string. The  *              string returned is always exactly of length  *              ACPI_PCICLS_STRING_SIZE (includes null terminator).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciClsToString  *  * PARAMETERS:  OutString       - Where to put the converted string (7 bytes)  *              ClassCode       - PCI class code to be converted (3 bytes)  *  * RETURN:      Converted string in OutString  *  * DESCRIPTION: Convert 3-bytes PCI class code to string representation.  *              Return buffer must be large enough to hold the string. The  *              string returned is always exactly of length  *              ACPI_PCICLS_STRING_SIZE (includes null terminator).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -930,7 +931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSpaceId  *  * PARAMETERS:  SpaceId             - ID to be validated  *  * RETURN:      TRUE if valid/supported ID.  *  * DESCRIPTION: Validate an operation region SpaceID.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSpaceId  *  * PARAMETERS:  SpaceId             - ID to be validated  *  * RETURN:      TRUE if SpaceId is a valid/supported ID.  *  * DESCRIPTION: Validate an operation region SpaceID.  *  ******************************************************************************/
 end_comment
 
 begin_function

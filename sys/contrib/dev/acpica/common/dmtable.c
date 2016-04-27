@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -70,29 +70,6 @@ parameter_list|(
 name|char
 modifier|*
 name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Local Prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|AcpiDmCheckAscii
-parameter_list|(
-name|UINT8
-modifier|*
-name|Target
-parameter_list|,
-name|char
-modifier|*
-name|RepairedName
-parameter_list|,
-name|UINT32
-name|Count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -237,6 +214,8 @@ literal|"Get Command Status"
 block|,
 literal|"Set Error Type With Address"
 block|,
+literal|"Get Execute Timings"
+block|,
 literal|"Unknown Action"
 block|}
 decl_stmt|;
@@ -308,6 +287,8 @@ block|,
 literal|"Get Error Address Length"
 block|,
 literal|"Get Error Attributes"
+block|,
+literal|"Execute Timings"
 block|,
 literal|"Unknown Action"
 block|}
@@ -417,6 +398,8 @@ literal|"PCI Express/PCI-X Bridge AER"
 block|,
 literal|"Generic Hardware Error Source"
 block|,
+literal|"Generic Hardware Error Source V2"
+block|,
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -448,6 +431,18 @@ comment|/* ACPI 5.0 */
 literal|"MCE"
 block|,
 comment|/* ACPI 5.0 */
+literal|"GPIO"
+block|,
+comment|/* ACPI 6.0 */
+literal|"SEA"
+block|,
+comment|/* ACPI 6.1 */
+literal|"SEI"
+block|,
+comment|/* ACPI 6.1 */
+literal|"GSIV"
+block|,
+comment|/* ACPI 6.1 */
 literal|"Unknown Notify Type"
 comment|/* Reserved */
 block|}
@@ -568,6 +563,9 @@ comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
 literal|"HW-Reduced Comm Subspace"
 block|,
 comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE */
+literal|"HW-Reduced Comm Subspace Type2"
+block|,
+comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE_TYPE2 */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -3020,7 +3018,7 @@ comment|/* Fixed length ASCII name fields */
 case|case
 name|ACPI_DMT_SIG
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3075,7 +3073,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME4
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3095,7 +3093,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME6
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -3115,7 +3113,7 @@ break|break;
 case|case
 name|ACPI_DMT_NAME8
 case|:
-name|AcpiDmCheckAscii
+name|AcpiUtCheckAndRepairAscii
 argument_list|(
 name|Target
 argument_list|,
@@ -4200,92 +4198,6 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmCheckAscii  *  * PARAMETERS:  Name                - Ascii string  *              Count               - Number of characters to check  *  * RETURN:      None  *  * DESCRIPTION: Ensure that the requested number of characters are printable  *              Ascii characters. Sets non-printable and null chars to<space>.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|AcpiDmCheckAscii
-parameter_list|(
-name|UINT8
-modifier|*
-name|Name
-parameter_list|,
-name|char
-modifier|*
-name|RepairedName
-parameter_list|,
-name|UINT32
-name|Count
-parameter_list|)
-block|{
-name|UINT32
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|Count
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|RepairedName
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|char
-operator|)
-name|Name
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Name
-index|[
-name|i
-index|]
-condition|)
-block|{
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|isprint
-argument_list|(
-name|Name
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-block|{
-name|RepairedName
-index|[
-name|i
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 

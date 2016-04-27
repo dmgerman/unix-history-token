@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1085,7 +1085,8 @@ return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n// ACPI Warning: FADT revision %X does not match length: found %X expected %X\n"
+literal|"\n// ACPI Warning: FADT revision %X does not match length: "
+literal|"found %X expected %X\n"
 argument_list|,
 name|Revision
 argument_list|,
@@ -1590,7 +1591,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** ACPI table terminates in the middle of a data structure! (ASF! table)\n"
+literal|"**** ACPI table terminates in the middle of a "
+literal|"data structure! (ASF! table)\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4418,6 +4420,21 @@ name|ACPI_HEST_GENERIC
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_HEST_TYPE_GENERIC_ERROR_V2
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoHest10
+expr_stmt|;
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_HEST_GENERIC_V2
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Cannot continue on unknown type - no length */
 name|AcpiOsPrintf
@@ -4891,6 +4908,22 @@ name|IortNode
 argument_list|,
 name|NodeOffset
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_IORT_NODE_SMMU_V3
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoIort4
+expr_stmt|;
+name|Length
+operator|=
+name|IortNode
+operator|->
+name|Length
+operator|-
+name|NodeOffset
 expr_stmt|;
 break|break;
 default|default:
@@ -7993,6 +8026,14 @@ operator|=
 name|AcpiDmTableInfoPcct1
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE_TYPE2
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoPcct2
+expr_stmt|;
+break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
@@ -8731,7 +8772,7 @@ argument_list|(
 name|ACPI_TABLE_S3PT
 argument_list|)
 decl_stmt|;
-name|ACPI_S3PT_HEADER
+name|ACPI_FPDT_HEADER
 modifier|*
 name|SubTable
 decl_stmt|;
@@ -8782,7 +8823,7 @@ name|SubTable
 operator|=
 name|ACPI_ADD_PTR
 argument_list|(
-name|ACPI_S3PT_HEADER
+name|ACPI_FPDT_HEADER
 argument_list|,
 name|S3ptTable
 argument_list|,
@@ -8939,7 +8980,7 @@ name|SubTable
 operator|=
 name|ACPI_ADD_PTR
 argument_list|(
-name|ACPI_S3PT_HEADER
+name|ACPI_FPDT_HEADER
 argument_list|,
 name|SubTable
 argument_list|,

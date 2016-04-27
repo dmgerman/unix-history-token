@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -265,18 +265,23 @@ name|FileChar
 decl_stmt|;
 name|UINT8
 name|Type
+init|=
+name|ASL_INPUT_TYPE_ASCII_DATA
 decl_stmt|;
+comment|/* default */
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* Check for a valid binary ACPI table */
+comment|/* Check for 100% ASCII source file (comments are ignored) */
 name|Status
 operator|=
-name|FlCheckForAcpiTable
+name|FlIsFileAsciiSource
 argument_list|(
 name|Info
 operator|->
-name|Handle
+name|Filename
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -287,59 +292,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|Type
-operator|=
-name|ASL_INPUT_TYPE_ACPI_TABLE
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
-comment|/* Check for 100% ASCII source file (comments are ignored) */
-name|Status
-operator|=
-name|FlCheckForAscii
-argument_list|(
-name|Info
-operator|->
-name|Filename
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Invalid characters in input file - %s\n"
-argument_list|,
-name|Info
-operator|->
-name|Filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Gbl_IgnoreErrors
-condition|)
-block|{
-name|Type
-operator|=
-name|ASL_INPUT_TYPE_BINARY
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
-block|}
-comment|/*      * File is ASCII. Determine if this is an ASL file or an ACPI data      * table file.      */
+comment|/*          * File contains ASCII source code. Determine if this is an ASL          * file or an ACPI data table file.          */
 while|while
 condition|(
 name|fgets
@@ -405,10 +358,64 @@ name|Cleanup
 goto|;
 block|}
 block|}
-comment|/* Not an ASL source file, default to a data table source file */
+comment|/* Appears to be an ASCII data table source file */
 name|Type
 operator|=
 name|ASL_INPUT_TYPE_ASCII_DATA
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* We have some sort of binary table, check for valid ACPI table */
+name|fseek
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcValidateTableHeader
+argument_list|(
+name|Info
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Binary file appears to be a valid ACPI table, disassembling\n"
+argument_list|)
+expr_stmt|;
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|Type
+operator|=
+name|ASL_INPUT_TYPE_BINARY
 expr_stmt|;
 name|Cleanup
 label|:
@@ -501,7 +508,7 @@ block|}
 comment|/* Handle additional output files for disassembler */
 name|Gbl_FileType
 operator|=
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 expr_stmt|;
 name|Status
 operator|=
@@ -977,7 +984,7 @@ operator|)
 return|;
 comment|/*      * Binary ACPI table was auto-detected, disassemble it      */
 case|case
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 case|:
 comment|/* We have what appears to be an ACPI table, disassemble it */
 name|FlCloseFile

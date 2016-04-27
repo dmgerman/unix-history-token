@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -887,6 +887,10 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextOp
 decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NextOp2
+decl_stmt|;
 name|UINT32
 name|AmlOffset
 decl_stmt|;
@@ -1066,6 +1070,92 @@ name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_IF_OP
+condition|)
+block|{
+name|NextOp
+operator|=
+name|AcpiPsGetDepthNext
+argument_list|(
+name|NULL
+argument_list|,
+name|Op
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NextOp
+condition|)
+block|{
+name|NextOp
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_PARAMETER_LIST
+expr_stmt|;
+comment|/*              * A Zero predicate indicates the possibility of one or more              * External() opcodes within the If() block.              */
+if|if
+condition|(
+name|NextOp
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_ZERO_OP
+condition|)
+block|{
+name|NextOp2
+operator|=
+name|NextOp
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+if|if
+condition|(
+name|NextOp2
+operator|&&
+operator|(
+name|NextOp2
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_EXTERNAL_OP
+operator|)
+condition|)
+block|{
+comment|/* Ignore the If 0 block and all children */
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_IGNORE
+expr_stmt|;
+return|return
+operator|(
+name|AE_CTRL_DEPTH
+operator|)
+return|;
+block|}
+block|}
+block|}
+block|}
 comment|/* Level 0 is at the Definition Block level */
 if|if
 condition|(
@@ -1200,7 +1290,20 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_ELSEIF
 operator|)
 operator|)
 operator|&&
@@ -1215,7 +1318,7 @@ name|AML_INT_BYTELIST_OP
 operator|)
 condition|)
 block|{
-comment|/*              * This is a first-level element of a term list,              * indent a new line              */
+comment|/*          * This is a first-level element of a term list,          * indent a new line          */
 switch|switch
 condition|(
 name|Op
@@ -1228,7 +1331,7 @@ block|{
 case|case
 name|AML_NOOP_OP
 case|:
-comment|/*                  * Optionally just ignore this opcode. Some tables use                  * NoOp opcodes for "padding" out packages that the BIOS                  * changes dynamically. This can leave hundreds or                  * thousands of NoOp opcodes that if disassembled,                  * cannot be compiled because they are syntactically                  * incorrect.                  */
+comment|/*              * Optionally just ignore this opcode. Some tables use              * NoOp opcodes for "padding" out packages that the BIOS              * changes dynamically. This can leave hundreds or              * thousands of NoOp opcodes that if disassembled,              * cannot be compiled because they are syntactically              * incorrect.              */
 if|if
 condition|(
 name|AcpiGbl_IgnoreNoopOperator
@@ -1633,7 +1736,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1649,7 +1752,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -1680,7 +1783,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1696,7 +1799,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|NextOp
 operator|=
@@ -1712,7 +1815,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -1881,7 +1984,7 @@ argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
-comment|/*                  * Bank Value. This is a TermArg in the middle of the parameter                  * list, must handle it here.                  *                  * Disassemble the TermArg parse tree. ACPI_PARSEOP_PARAMLIST                  * eliminates newline in the output.                  */
+comment|/*                  * Bank Value. This is a TermArg in the middle of the parameter                  * list, must handle it here.                  *                  * Disassemble the TermArg parse tree. ACPI_PARSEOP_PARAMETER_LIST                  * eliminates newline in the output.                  */
 name|NextOp
 operator|=
 name|NextOp
@@ -1894,7 +1997,7 @@ name|Info
 operator|->
 name|Flags
 operator|=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 name|AcpiDmWalkParseTree
 argument_list|(
@@ -2079,7 +2182,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 return|return
 operator|(
@@ -2087,10 +2190,10 @@ name|AE_OK
 operator|)
 return|;
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_IF_OP
 case|:
 case|case
-name|AML_IF_OP
+name|AML_VAR_PACKAGE_OP
 case|:
 case|case
 name|AML_WHILE_OP
@@ -2116,7 +2219,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 block|}
 return|return
@@ -2148,7 +2251,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
 block|}
 return|return
@@ -2384,7 +2487,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 operator|&&
@@ -2408,7 +2511,7 @@ name|Info
 operator|->
 name|Flags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2610,7 +2713,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 operator|)
 operator|&&
@@ -2672,7 +2775,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2697,7 +2800,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 condition|)
 block|{
 if|if
@@ -2721,7 +2824,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 operator|)
 condition|)
 block|{
@@ -2731,7 +2834,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMLIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
+comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMETER_LIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
 name|ParentOp
 operator|=
 name|Op

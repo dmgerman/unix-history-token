@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1677,6 +1677,7 @@ condition|(
 name|NextExternal
 condition|)
 block|{
+comment|/* Check for duplicates */
 if|if
 condition|(
 operator|!
@@ -1690,49 +1691,19 @@ name|Path
 argument_list|)
 condition|)
 block|{
-comment|/* Duplicate method, check that the Value (ArgCount) is the same */
+comment|/*              * If this external came from an External() opcode, we are              * finished with this one. (No need to check any further).              */
 if|if
 condition|(
-operator|(
 name|NextExternal
 operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_METHOD
-operator|)
-operator|&&
-operator|(
-name|NextExternal
-operator|->
-name|Value
-operator|!=
-name|Value
-operator|)
-operator|&&
-operator|(
-name|Value
-operator|>
-literal|0
-operator|)
+name|Flags
+operator|&
+name|ACPI_EXT_ORIGIN_FROM_OPCODE
 condition|)
 block|{
-name|ACPI_ERROR
+name|return_ACPI_STATUS
 argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"External method arg count mismatch %s: Current %u, attempted %u"
-operator|,
-name|NextExternal
-operator|->
-name|Path
-operator|,
-name|NextExternal
-operator|->
-name|Value
-operator|,
-name|Value
-operator|)
+name|AE_ALREADY_EXISTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1740,11 +1711,19 @@ comment|/* Allow upgrade of type from ANY */
 elseif|else
 if|if
 condition|(
+operator|(
 name|NextExternal
 operator|->
 name|Type
 operator|==
 name|ACPI_TYPE_ANY
+operator|)
+operator|&&
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_ANY
+operator|)
 condition|)
 block|{
 name|NextExternal
@@ -1753,6 +1732,17 @@ name|Type
 operator|=
 name|Type
 expr_stmt|;
+block|}
+comment|/* Update the argument count as necessary */
+if|if
+condition|(
+name|Value
+operator|<
+name|NextExternal
+operator|->
+name|Value
+condition|)
+block|{
 name|NextExternal
 operator|->
 name|Value
@@ -1760,6 +1750,20 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/* Update flags. */
+name|NextExternal
+operator|->
+name|Flags
+operator||=
+name|Flags
+expr_stmt|;
+name|NextExternal
+operator|->
+name|Flags
+operator|&=
+operator|~
+name|ACPI_EXT_INTERNAL_PATH_ALLOCATED
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_ALREADY_EXISTS
@@ -2286,20 +2290,59 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Emit any unresolved method externals in a single text block */
-name|NextExternal
-operator|=
-name|AcpiGbl_ExternalList
+if|if
+condition|(
+name|Gbl_ExternalRefFilename
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    /*\n     * External declarations were imported from\n"
+literal|"     * a reference file -- %s\n     */\n\n"
+argument_list|,
+name|Gbl_ExternalRefFilename
+argument_list|)
 expr_stmt|;
+block|}
+comment|/*      * Walk and emit the list of externals found during the AML parsing      */
 while|while
 condition|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 condition|)
 block|{
 if|if
 condition|(
+operator|!
 operator|(
-name|NextExternal
+name|AcpiGbl_ExternalList
+operator|->
+name|Flags
+operator|&
+name|ACPI_EXT_EXTERNAL_EMITTED
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"    External (%s%s)"
+argument_list|,
+name|AcpiGbl_ExternalList
+operator|->
+name|Path
+argument_list|,
+name|AcpiDmGetObjectTypeName
+argument_list|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Check for "unresolved" method reference */
+if|if
+condition|(
+operator|(
+name|AcpiGbl_ExternalList
 operator|->
 name|Type
 operator|==
@@ -2309,7 +2352,7 @@ operator|&&
 operator|(
 operator|!
 operator|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Flags
 operator|&
@@ -2320,111 +2363,29 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    External (%s%s"
+literal|"    // Warning: Unknown method, "
+literal|"guessing %u arguments"
 argument_list|,
-name|NextExternal
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|NextExternal
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|")    // Warning: Unresolved method, "
-literal|"guessing %u arguments\n"
-argument_list|,
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Value
 argument_list|)
 expr_stmt|;
-name|NextExternal
-operator|->
-name|Flags
-operator||=
-name|ACPI_EXT_EXTERNAL_EMITTED
-expr_stmt|;
 block|}
-name|NextExternal
-operator|=
-name|NextExternal
-operator|->
-name|Next
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* Emit externals that were imported from a file */
+comment|/* Check for external from a external references file */
+elseif|else
 if|if
 condition|(
-name|Gbl_ExternalRefFilename
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    /*\n     * External declarations that were imported from\n"
-literal|"     * the reference file [%s]\n     */\n"
-argument_list|,
-name|Gbl_ExternalRefFilename
-argument_list|)
-expr_stmt|;
-name|NextExternal
-operator|=
 name|AcpiGbl_ExternalList
-expr_stmt|;
-while|while
-condition|(
-name|NextExternal
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|NextExternal
-operator|->
-name|Flags
-operator|&
-name|ACPI_EXT_EXTERNAL_EMITTED
-operator|)
-operator|&&
-operator|(
-name|NextExternal
 operator|->
 name|Flags
 operator|&
 name|ACPI_EXT_ORIGIN_FROM_FILE
-operator|)
 condition|)
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    External (%s%s"
-argument_list|,
-name|NextExternal
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|NextExternal
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Type
 operator|==
@@ -2433,76 +2394,23 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // %u Arguments\n"
+literal|"    // %u Arguments"
 argument_list|,
-name|NextExternal
+name|AcpiGbl_ExternalList
 operator|->
 name|Value
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"    // From external reference file"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* This is the normal external case */
 else|else
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|")\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|NextExternal
-operator|->
-name|Flags
-operator||=
-name|ACPI_EXT_EXTERNAL_EMITTED
-expr_stmt|;
-block|}
-name|NextExternal
-operator|=
-name|NextExternal
-operator|->
-name|Next
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Walk the list of externals found during the AML parsing      */
-while|while
-condition|(
-name|AcpiGbl_ExternalList
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Flags
-operator|&
-name|ACPI_EXT_EXTERNAL_EMITTED
-operator|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    External (%s%s"
-argument_list|,
-name|AcpiGbl_ExternalList
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Type
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* For methods, add a comment with the number of arguments */
 if|if
 condition|(
@@ -2515,7 +2423,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // %u Arguments\n"
+literal|"    // %u Arguments"
 argument_list|,
 name|AcpiGbl_ExternalList
 operator|->
@@ -2523,14 +2431,12 @@ name|Value
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Free this external info block and move on to next external */
 name|NextExternal
@@ -2597,6 +2503,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|char
+name|ExternalWarningPart1
+index|[
+literal|600
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ExternalWarningPart2
+index|[
+literal|400
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ExternalWarningPart3
+index|[
+literal|400
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ExternalWarningPart4
+index|[
+literal|200
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|AcpiDmUnresolvedWarning
@@ -2605,6 +2551,22 @@ name|UINT8
 name|Type
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|Format
+decl_stmt|;
+name|char
+name|Pad
+index|[]
+init|=
+literal|"     *"
+decl_stmt|;
+name|char
+name|NoPad
+index|[]
+init|=
+literal|""
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2613,6 +2575,153 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+name|AcpiGbl_NumExternalMethods
+operator|==
+name|AcpiGbl_ResolvedExternalMethods
+condition|)
+block|{
+return|return;
+block|}
+name|Format
+operator|=
+name|Type
+condition|?
+name|Pad
+else|:
+name|NoPad
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ExternalWarningPart1
+argument_list|,
+literal|"%s iASL Warning: There %s %u external control method%s found during\n"
+literal|"%s disassembly, but only %u %s resolved (%u unresolved). Additional\n"
+literal|"%s ACPI tables may be required to properly disassemble the code. This\n"
+literal|"%s resulting disassembler output file may not compile because the\n"
+literal|"%s disassembler did not know how many arguments to assign to the\n"
+literal|"%s unresolved methods. Note: SSDTs can be dynamically loaded at\n"
+literal|"%s runtime and may or may not be available via the host OS.\n"
+argument_list|,
+name|Format
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|!=
+literal|1
+condition|?
+literal|"were"
+else|:
+literal|"was"
+operator|)
+argument_list|,
+name|AcpiGbl_NumExternalMethods
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|!=
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+operator|)
+argument_list|,
+name|Format
+argument_list|,
+name|AcpiGbl_ResolvedExternalMethods
+argument_list|,
+operator|(
+name|AcpiGbl_ResolvedExternalMethods
+operator|!=
+literal|1
+condition|?
+literal|"were"
+else|:
+literal|"was"
+operator|)
+argument_list|,
+operator|(
+name|AcpiGbl_NumExternalMethods
+operator|-
+name|AcpiGbl_ResolvedExternalMethods
+operator|)
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ExternalWarningPart2
+argument_list|,
+literal|"%s To specify the tables needed to resolve external control method\n"
+literal|"%s references, the -e option can be used to specify the filenames.\n"
+literal|"%s Example iASL invocations:\n"
+literal|"%s     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml\n"
+literal|"%s     iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml\n"
+literal|"%s     iasl -e ssdt*.aml -d dsdt.aml\n"
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ExternalWarningPart3
+argument_list|,
+literal|"%s In addition, the -fe option can be used to specify a file containing\n"
+literal|"%s control method external declarations with the associated method\n"
+literal|"%s argument counts. Each line of the file must be of the form:\n"
+literal|"%s     External (<method pathname>, MethodObj,<argument count>)\n"
+literal|"%s Invocation:\n"
+literal|"%s     iasl -fe refs.txt -d dsdt.aml\n"
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ExternalWarningPart4
+argument_list|,
+literal|"%s The following methods were unresolved and many not compile properly\n"
+literal|"%s because the disassembler had to guess at the number of arguments\n"
+literal|"%s required for each:\n"
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Type
@@ -2627,87 +2736,30 @@ block|{
 comment|/* The -e option was not specified */
 name|AcpiOsPrintf
 argument_list|(
-literal|"    /*\n"
-literal|"     * iASL Warning: There were %u external control methods found during\n"
-literal|"     * disassembly, but additional ACPI tables to resolve these externals\n"
-literal|"     * were not specified. This resulting disassembler output file may not\n"
-literal|"     * compile because the disassembler did not know how many arguments\n"
-literal|"     * to assign to these methods. To specify the tables needed to resolve\n"
-literal|"     * external control method references, the -e option can be used to\n"
-literal|"     * specify the filenames. Note: SSDTs can be dynamically loaded at\n"
-literal|"     * runtime and may or may not be available via the host OS.\n"
-literal|"     * Example iASL invocations:\n"
-literal|"     *     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml\n"
-literal|"     *     iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml\n"
-literal|"     *     iasl -e ssdt*.aml -d dsdt.aml\n"
-literal|"     *\n"
-literal|"     * In addition, the -fe option can be used to specify a file containing\n"
-literal|"     * control method external declarations with the associated method\n"
-literal|"     * argument counts. Each line of the file must be of the form:\n"
-literal|"     *     External (<method pathname>, MethodObj,<argument count>)\n"
-literal|"     * Invocation:\n"
-literal|"     *     iasl -fe refs.txt -d dsdt.aml\n"
-literal|"     *\n"
-literal|"     * The following methods were unresolved and many not compile properly\n"
-literal|"     * because the disassembler had to guess at the number of arguments\n"
-literal|"     * required for each:\n"
-literal|"     */\n"
+literal|"    /*\n%s     *\n%s     *\n%s     *\n%s     */\n"
 argument_list|,
-name|AcpiGbl_NumExternalMethods
+name|ExternalWarningPart1
+argument_list|,
+name|ExternalWarningPart2
+argument_list|,
+name|ExternalWarningPart3
+argument_list|,
+name|ExternalWarningPart4
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|AcpiGbl_NumExternalMethods
-operator|!=
-name|AcpiGbl_ResolvedExternalMethods
-condition|)
+else|else
 block|{
 comment|/* The -e option was specified, but there are still some unresolved externals */
 name|AcpiOsPrintf
 argument_list|(
-literal|"    /*\n"
-literal|"     * iASL Warning: There were %u external control methods found during\n"
-literal|"     * disassembly, but only %u %s resolved (%u unresolved). Additional\n"
-literal|"     * ACPI tables may be required to properly disassemble the code. This\n"
-literal|"     * resulting disassembler output file may not compile because the\n"
-literal|"     * disassembler did not know how many arguments to assign to the\n"
-literal|"     * unresolved methods. Note: SSDTs can be dynamically loaded at\n"
-literal|"     * runtime and may or may not be available via the host OS.\n"
-literal|"     *\n"
-literal|"     * If necessary, the -fe option can be used to specify a file containing\n"
-literal|"     * control method external declarations with the associated method\n"
-literal|"     * argument counts. Each line of the file must be of the form:\n"
-literal|"     *     External (<method pathname>, MethodObj,<argument count>)\n"
-literal|"     * Invocation:\n"
-literal|"     *     iasl -fe refs.txt -d dsdt.aml\n"
-literal|"     *\n"
-literal|"     * The following methods were unresolved and many not compile properly\n"
-literal|"     * because the disassembler had to guess at the number of arguments\n"
-literal|"     * required for each:\n"
-literal|"     */\n"
+literal|"    /*\n%s     *\n%s     *\n%s     */\n"
 argument_list|,
-name|AcpiGbl_NumExternalMethods
+name|ExternalWarningPart1
 argument_list|,
-name|AcpiGbl_ResolvedExternalMethods
+name|ExternalWarningPart3
 argument_list|,
-operator|(
-name|AcpiGbl_ResolvedExternalMethods
-operator|>
-literal|1
-condition|?
-literal|"were"
-else|:
-literal|"was"
-operator|)
-argument_list|,
-operator|(
-name|AcpiGbl_NumExternalMethods
-operator|-
-name|AcpiGbl_ResolvedExternalMethods
-operator|)
+name|ExternalWarningPart4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2725,79 +2777,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n"
-literal|"iASL Warning: There were %u external control methods found during\n"
-literal|"disassembly, but additional ACPI tables to resolve these externals\n"
-literal|"were not specified. The resulting disassembler output file may not\n"
-literal|"compile because the disassembler did not know how many arguments\n"
-literal|"to assign to these methods. To specify the tables needed to resolve\n"
-literal|"external control method references, the -e option can be used to\n"
-literal|"specify the filenames. Note: SSDTs can be dynamically loaded at\n"
-literal|"runtime and may or may not be available via the host OS.\n"
-literal|"Example iASL invocations:\n"
-literal|"    iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml\n"
-literal|"    iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml\n"
-literal|"    iasl -e ssdt*.aml -d dsdt.aml\n"
-literal|"\n"
-literal|"In addition, the -fe option can be used to specify a file containing\n"
-literal|"control method external declarations with the associated method\n"
-literal|"argument counts. Each line of the file must be of the form:\n"
-literal|"    External (<method pathname>, MethodObj,<argument count>)\n"
-literal|"Invocation:\n"
-literal|"    iasl -fe refs.txt -d dsdt.aml\n"
+literal|"\n%s\n%s\n%s\n"
 argument_list|,
-name|AcpiGbl_NumExternalMethods
+name|ExternalWarningPart1
+argument_list|,
+name|ExternalWarningPart2
+argument_list|,
+name|ExternalWarningPart3
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|AcpiGbl_NumExternalMethods
-operator|!=
-name|AcpiGbl_ResolvedExternalMethods
-condition|)
+else|else
 block|{
 comment|/* The -e option was specified, but there are still some unresolved externals */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n"
-literal|"iASL Warning: There were %u external control methods found during\n"
-literal|"disassembly, but only %u %s resolved (%u unresolved). Additional\n"
-literal|"ACPI tables may be required to properly disassemble the code. The\n"
-literal|"resulting disassembler output file may not compile because the\n"
-literal|"disassembler did not know how many arguments to assign to the\n"
-literal|"unresolved methods. Note: SSDTs can be dynamically loaded at\n"
-literal|"runtime and may or may not be available via the host OS.\n"
-literal|"\n"
-literal|"If necessary, the -fe option can be used to specify a file containing\n"
-literal|"control method external declarations with the associated method\n"
-literal|"argument counts. Each line of the file must be of the form:\n"
-literal|"    External (<method pathname>, MethodObj,<argument count>)\n"
-literal|"Invocation:\n"
-literal|"    iasl -fe refs.txt -d dsdt.aml\n"
+literal|"\n%s\n%s\n"
 argument_list|,
-name|AcpiGbl_NumExternalMethods
+name|ExternalWarningPart1
 argument_list|,
-name|AcpiGbl_ResolvedExternalMethods
-argument_list|,
-operator|(
-name|AcpiGbl_ResolvedExternalMethods
-operator|>
-literal|1
-condition|?
-literal|"were"
-else|:
-literal|"was"
-operator|)
-argument_list|,
-operator|(
-name|AcpiGbl_NumExternalMethods
-operator|-
-name|AcpiGbl_ResolvedExternalMethods
-operator|)
+name|ExternalWarningPart3
 argument_list|)
 expr_stmt|;
 block|}

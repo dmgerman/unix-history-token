@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acevents.h>
 end_include
 
 begin_include
@@ -1612,7 +1618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  Name            - User entered NS node handle or name  *  * RETURN:      None  *  * DESCRIPTION: Display type of an arbitrary NS node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  ObjectArg       - User entered NS node handle  *  * RETURN:      None  *  * DESCRIPTION: Display type of an arbitrary NS node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1621,12 +1627,14 @@ name|AcpiDbDisplayObjectType
 parameter_list|(
 name|char
 modifier|*
-name|Name
+name|ObjectArg
 parameter_list|)
 block|{
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
+name|ACPI_SIZE
+name|Arg
+decl_stmt|;
+name|ACPI_HANDLE
+name|Handle
 decl_stmt|;
 name|ACPI_DEVICE_INFO
 modifier|*
@@ -1638,31 +1646,29 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|Node
+name|Arg
 operator|=
-name|AcpiDbConvertToNode
+name|strtoul
 argument_list|(
-name|Name
+name|ObjectArg
+argument_list|,
+name|NULL
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Node
-condition|)
-block|{
-return|return;
-block|}
+name|Handle
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Arg
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiGetObjectInfo
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_HANDLE
-argument_list|,
-name|Node
-argument_list|)
+name|Handle
 argument_list|,
 operator|&
 name|Info
@@ -1688,15 +1694,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|Info
-operator|->
-name|Valid
-operator|&
-name|ACPI_VALID_ADR
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"ADR: %8.8X%8.8X, STA: %8.8X, Flags: %X\n"
@@ -1717,16 +1714,6 @@ operator|->
 name|Flags
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|Info
-operator|->
-name|Valid
-operator|&
-name|ACPI_VALID_SXDS
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"S1D-%2.2X S2D-%2.2X S3D-%2.2X S4D-%2.2X\n"
@@ -1760,16 +1747,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|Info
-operator|->
-name|Valid
-operator|&
-name|ACPI_VALID_SXWS
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"S0W-%2.2X S1W-%2.2X S2W-%2.2X S3W-%2.2X S4W-%2.2X\n"
@@ -1810,7 +1787,6 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|Info
@@ -1848,27 +1824,6 @@ argument_list|,
 name|Info
 operator|->
 name|UniqueId
-operator|.
-name|String
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Info
-operator|->
-name|Valid
-operator|&
-name|ACPI_VALID_SUB
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"SUB: %s\n"
-argument_list|,
-name|Info
-operator|->
-name|SubsystemId
 operator|.
 name|String
 argument_list|)
@@ -1946,6 +1901,21 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/* Only display if single stepping */
 if|if
 condition|(
@@ -1992,6 +1962,21 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2668,14 +2653,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|HandlerObj
-operator|=
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|Handler
-expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PREDEFINED_PREFIX
@@ -2691,23 +2668,22 @@ argument_list|,
 name|SpaceId
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
 name|HandlerObj
-condition|)
-block|{
+operator|=
+name|AcpiEvFindRegionHandler
+argument_list|(
+name|SpaceId
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonNotify
+operator|.
+name|Handler
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_SpaceIdList
-index|[
-name|i
-index|]
-operator|==
 name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|SpaceId
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -2739,15 +2715,6 @@ goto|goto
 name|FoundHandler
 goto|;
 block|}
-name|HandlerObj
-operator|=
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Next
-expr_stmt|;
-block|}
 comment|/* There is no handler for this SpaceId */
 name|AcpiOsPrintf
 argument_list|(
@@ -2763,7 +2730,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
@@ -3078,9 +3045,11 @@ return|;
 block|}
 name|Pathname
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|Node
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3100,7 +3069,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;

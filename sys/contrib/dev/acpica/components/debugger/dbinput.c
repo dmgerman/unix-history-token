@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -24,6 +24,23 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -82,6 +99,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -109,6 +127,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -205,6 +224,8 @@ name|CMD_OWNER
 block|,
 name|CMD_PATHS
 block|,
+name|CMD_PREDEFINED
+block|,
 name|CMD_PREFIX
 block|,
 name|CMD_QUIT
@@ -257,8 +278,6 @@ block|,
 name|CMD_TERMINATE
 block|,
 name|CMD_THREADS
-block|,
-name|CMD_PREDEFINED
 block|,
 name|CMD_TEST
 block|,
@@ -510,6 +529,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"PREDEFINED"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"PREFIX"
 block|,
 literal|0
@@ -660,12 +685,6 @@ block|{
 literal|"THREADS"
 block|,
 literal|3
-block|}
-block|,
-block|{
-literal|"PREDEFINED"
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -1402,6 +1421,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -1554,6 +1574,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -2135,14 +2156,6 @@ name|Next
 expr_stmt|;
 block|}
 comment|/* Uppercase the actual command */
-if|if
-condition|(
-name|AcpiGbl_DbArgs
-index|[
-literal|0
-index|]
-condition|)
-block|{
 name|AcpiUtStrupr
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -2151,7 +2164,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|Count
 operator|=
 name|i
@@ -2231,12 +2243,17 @@ if|if
 condition|(
 name|strstr
 argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
 operator|.
 name|Name
+argument_list|)
 argument_list|,
 name|UserCommand
 argument_list|)
@@ -2307,7 +2324,7 @@ decl_stmt|;
 comment|/* If AcpiTerminate has been called, terminate this thread */
 if|if
 condition|(
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 return|return
@@ -3261,20 +3278,43 @@ break|break;
 case|case
 name|CMD_LOAD
 case|:
+block|{
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|ListHead
+init|=
+name|NULL
+decl_stmt|;
 name|Status
 operator|=
-name|AcpiDbGetTableFromFile
+name|AcGetAllTablesFromFile
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|NULL
+name|ACPI_GET_ALL_TABLES
 argument_list|,
-name|FALSE
+operator|&
+name|ListHead
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiDbLoadTables
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|CMD_OPEN
@@ -3301,6 +3341,10 @@ name|AcpiUtSubsystemShutdown
 argument_list|()
 expr_stmt|;
 comment|/*          * TBD: [Restructure] Need some way to re-initialize without          * re-creating the semaphores!          */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/*  AcpiInitialize (NULL);  */
 break|break;
 case|case
@@ -3400,7 +3444,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3477,6 +3521,9 @@ condition|(
 name|Status
 operator|!=
 name|AE_CTRL_TERMINATE
+operator|&&
+operator|!
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 name|AcpiGbl_MethodExecuting
@@ -3489,9 +3536,11 @@ name|FALSE
 expr_stmt|;
 name|MStatus
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3515,24 +3564,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|MStatus
-operator|=
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|MStatus
-argument_list|)
-condition|)
-block|{
-return|return;
 block|}
-block|}
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_function
 
@@ -3601,7 +3642,7 @@ comment|/* TBD: [Restructure] Need a separate command line buffer for step mode 
 while|while
 condition|(
 operator|!
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 comment|/* Force output to console until a command is entered */
@@ -3681,32 +3722,18 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/*              * Signal the debug thread that we have a command to execute,              * and wait for the command to complete.              */
-name|Status
-operator|=
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|Status
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3732,16 +3759,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* Shut down the debugger */
-name|AcpiTerminateDebugger
-argument_list|()
-expr_stmt|;
-comment|/*      * Only this thread (the original thread) should actually terminate the      * subsystem, because all the semaphores are deleted during termination      */
-name|Status
-operator|=
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|Status

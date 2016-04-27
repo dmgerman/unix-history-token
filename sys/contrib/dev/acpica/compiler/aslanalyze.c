@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -38,6 +38,29 @@ argument_list|(
 literal|"aslanalyze"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Local Prototypes */
+end_comment
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|ApDeviceSubtreeWalk
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AnIsInternalMethod  *  * PARAMETERS:  Op                  - Current op  *  * RETURN:      Boolean  *  * DESCRIPTION: Check for an internal control method.  *  ******************************************************************************/
@@ -366,7 +389,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* _HID Length is valid (7 or 8), now check the prefix (first 3 or 4 chars) */
+comment|/* _HID Length is valid (7 or 8), now check prefix (first 3 or 4 chars) */
 if|if
 condition|(
 name|Length
@@ -695,6 +718,15 @@ name|Asl
 operator|.
 name|Node
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+comment|/* No error message, this can happen and is OK */
+return|return;
+block|}
 comment|/* Examine the parent op of this method */
 name|OwningOp
 operator|=
@@ -918,7 +950,7 @@ case|case
 name|PARSEOP_METHOD
 case|:
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 case|case
 name|PARSEOP_ELSE
@@ -1270,6 +1302,181 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    ApFindNameInDeviceTree  *  * PARAMETERS:  Name                - Name to search for  *              Op                  - Current parse op  *  * RETURN:      TRUE if name found in the same scope as Op.  *  * DESCRIPTION: Determine if a name appears in the same scope as Op, as either  *              a Method() or a Name(). "Same scope" can mean under an If or  *              Else statement.  *  * NOTE: Detects _HID/_ADR in this type of construct (legal in ACPI 6.1+)  *  * Scope (\_SB.PCI0)  * {  *     Device (I2C0)  *     {  *         If (SMD0 != 4) {  *             Name (_HID, "INT3442")  *         } Else {  *             Name (_ADR, 0x400)  *         }  *     }  * }  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|ApFindNameInDeviceTree
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|TrWalkParseTree
+argument_list|(
+name|Op
+argument_list|,
+name|ASL_WALK_VISIT_DOWNWARD
+argument_list|,
+name|ApDeviceSubtreeWalk
+argument_list|,
+name|NULL
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_CTRL_TRUE
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+comment|/* Found a match */
+block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Callback function for interface above */
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|ApDeviceSubtreeWalk
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|Name
+init|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+name|Context
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+case|case
+name|PARSEOP_DEVICE
+case|:
+comment|/* Level 0 is the starting device, ignore it */
+if|if
+condition|(
+name|Level
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Ignore sub-devices */
+return|return
+operator|(
+name|AE_CTRL_DEPTH
+operator|)
+return|;
+block|}
+break|break;
+case|case
+name|PARSEOP_NAME
+case|:
+case|case
+name|PARSEOP_METHOD
+case|:
+comment|/* These are what we are looking for */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Name
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|NameSeg
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_CTRL_TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AE_CTRL_DEPTH
+operator|)
+return|;
+case|case
+name|PARSEOP_SCOPE
+case|:
+case|case
+name|PARSEOP_FIELD
+case|:
+case|case
+name|PARSEOP_OPERATIONREGION
+case|:
+comment|/*          * We want to ignore these, because either they can be large          * subtrees or open a scope to somewhere else.          */
+return|return
+operator|(
+name|AE_CTRL_DEPTH
+operator|)
+return|;
+default|default:
+break|break;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -573,11 +573,15 @@ name|ACPI_EINJ_SET_ERROR_TYPE_WITH_ADDRESS
 init|=
 literal|8
 block|,
-name|ACPI_EINJ_ACTION_RESERVED
+name|ACPI_EINJ_GET_EXECUTE_TIMINGS
 init|=
 literal|9
 block|,
-comment|/* 9 and greater are reserved */
+name|ACPI_EINJ_ACTION_RESERVED
+init|=
+literal|10
+block|,
+comment|/* 10 and greater are reserved */
 name|ACPI_EINJ_TRIGGER_ERROR
 init|=
 literal|0xFF
@@ -965,10 +969,14 @@ name|ACPI_ERST_GET_ERROR_ATTRIBUTES
 init|=
 literal|15
 block|,
-name|ACPI_ERST_ACTION_RESERVED
+name|ACPI_ERST_EXECUTE_TIMINGS
 init|=
 literal|16
-comment|/* 16 and greater are reserved */
+block|,
+name|ACPI_ERST_ACTION_RESERVED
+init|=
+literal|17
+comment|/* 17 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1218,10 +1226,14 @@ name|ACPI_HEST_TYPE_GENERIC_ERROR
 init|=
 literal|9
 block|,
-name|ACPI_HEST_TYPE_RESERVED
+name|ACPI_HEST_TYPE_GENERIC_ERROR_V2
 init|=
 literal|10
-comment|/* 10 and greater are reserved */
+block|,
+name|ACPI_HEST_TYPE_RESERVED
+init|=
+literal|11
+comment|/* 11 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1449,10 +1461,30 @@ init|=
 literal|6
 block|,
 comment|/* ACPI 5.0 */
-name|ACPI_HEST_NOTIFY_RESERVED
+name|ACPI_HEST_NOTIFY_GPIO
 init|=
 literal|7
-comment|/* 7 and greater are reserved */
+block|,
+comment|/* ACPI 6.0 */
+name|ACPI_HEST_NOTIFY_SEA
+init|=
+literal|8
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_SEI
+init|=
+literal|9
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_GSIV
+init|=
+literal|10
+block|,
+comment|/* ACPI 6.1 */
+name|ACPI_HEST_NOTIFY_RESERVED
+init|=
+literal|11
+comment|/* 11 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1748,6 +1780,59 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* 10: Generic Hardware Error Source, version 2 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_hest_generic_v2
+block|{
+name|ACPI_HEST_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|RelatedSourceId
+decl_stmt|;
+name|UINT8
+name|Reserved
+decl_stmt|;
+name|UINT8
+name|Enabled
+decl_stmt|;
+name|UINT32
+name|RecordsToPreallocate
+decl_stmt|;
+name|UINT32
+name|MaxSectionsPerRecord
+decl_stmt|;
+name|UINT32
+name|MaxRawDataLength
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ErrorStatusAddress
+decl_stmt|;
+name|ACPI_HEST_NOTIFY
+name|Notify
+decl_stmt|;
+name|UINT32
+name|ErrorBlockLength
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ReadAckRegister
+decl_stmt|;
+name|UINT64
+name|ReadAckPreserve
+decl_stmt|;
+name|UINT64
+name|ReadAckWrite
+decl_stmt|;
+block|}
+name|ACPI_HEST_GENERIC_V2
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Generic Error Status block */
 end_comment
 
@@ -1865,6 +1950,113 @@ block|}
 name|ACPI_HEST_GENERIC_DATA
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Extension for revision 0x0300 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_hest_generic_data_v300
+block|{
+name|UINT8
+name|SectionType
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT32
+name|ErrorSeverity
+decl_stmt|;
+name|UINT16
+name|Revision
+decl_stmt|;
+name|UINT8
+name|ValidationBits
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
+name|UINT32
+name|ErrorDataLength
+decl_stmt|;
+name|UINT8
+name|FruId
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT8
+name|FruText
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|UINT64
+name|TimeStamp
+decl_stmt|;
+block|}
+name|ACPI_HEST_GENERIC_DATA_V300
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for ErrorSeverity above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_RECOVERABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_FATAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_CORRECTED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_ERROR_NONE
+value|3
+end_define
+
+begin_comment
+comment|/* Flags for ValidationBits above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_FRU_ID
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_FRU_STRING
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_GEN_VALID_TIMESTAMP
+value|(1<<2)
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * MADT - Multiple APIC Description Table  *        Version 3  *  ******************************************************************************/
@@ -2834,7 +3026,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * NFIT - NVDIMM Interface Table (ACPI 6.0)  *        Version 1  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * NFIT - NVDIMM Interface Table (ACPI 6.0+)  *        Version 1  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3092,12 +3284,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_NFIT_MEM_ARMED
+name|ACPI_NFIT_MEM_NOT_ARMED
 value|(1<<3)
 end_define
 
 begin_comment
-comment|/* 03: Memory Device observed to be not armed */
+comment|/* 03: Memory Device is not armed */
 end_comment
 
 begin_define
@@ -3120,6 +3312,17 @@ end_define
 
 begin_comment
 comment|/* 05: SMART/health events enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_MAP_FAILED
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* 06: Mapping to SPA failed */
 end_comment
 
 begin_comment
@@ -3221,9 +3424,18 @@ name|UINT16
 name|SubsystemRevisionId
 decl_stmt|;
 name|UINT8
+name|ValidFields
+decl_stmt|;
+name|UINT8
+name|ManufacturingLocation
+decl_stmt|;
+name|UINT16
+name|ManufacturingDate
+decl_stmt|;
+name|UINT8
 name|Reserved
 index|[
-literal|6
+literal|2
 index|]
 decl_stmt|;
 comment|/* Reserved, must be zero */
@@ -3279,6 +3491,21 @@ end_define
 
 begin_comment
 comment|/* Block Data Windows implementation is buffered */
+end_comment
+
+begin_comment
+comment|/* ValidFields bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CONTROL_MFG_INFO_VALID
+value|(1)
+end_define
+
+begin_comment
+comment|/* Manufacturing fields are valid */
 end_comment
 
 begin_comment

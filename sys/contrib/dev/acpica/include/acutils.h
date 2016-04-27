@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -682,6 +682,52 @@ value|8
 end_define
 
 begin_comment
+comment|/*  * utascii - ASCII utilities  */
+end_comment
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiUtValidNameseg
+parameter_list|(
+name|char
+modifier|*
+name|Signature
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiUtValidNameChar
+parameter_list|(
+name|char
+name|Character
+parameter_list|,
+name|UINT32
+name|Position
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiUtCheckAndRepairAscii
+parameter_list|(
+name|UINT8
+modifier|*
+name|Name
+parameter_list|,
+name|char
+modifier|*
+name|RepairedName
+parameter_list|,
+name|UINT32
+name|Count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * utnonansi - Non-ANSI C library functions  */
 end_comment
 
@@ -733,12 +779,33 @@ parameter_list|,
 name|UINT32
 name|Base
 parameter_list|,
+name|UINT32
+name|MaxIntegerByteWidth
+parameter_list|,
 name|UINT64
 modifier|*
 name|RetInteger
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Values for MaxIntegerByteWidth above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX32_BYTE_WIDTH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX64_BYTE_WIDTH
+value|8
+end_define
 
 begin_comment
 comment|/*  * utglobal - Global data structures and procedures  */
@@ -768,6 +835,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetMutexName
@@ -799,6 +867,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetTypeName
@@ -810,6 +879,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetNodeName
@@ -822,6 +892,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetDescriptorName
@@ -847,6 +918,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetObjectTypeName
@@ -859,6 +931,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetRegionName
@@ -870,6 +943,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetEventName
@@ -1130,6 +1204,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|Pointer
@@ -1183,6 +1258,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|String
@@ -1288,6 +1364,34 @@ parameter_list|,
 name|UINT8
 modifier|*
 name|Ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiUtStrExit
+parameter_list|(
+name|UINT32
+name|LineNumber
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|FunctionName
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|ComponentId
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|String
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1480,6 +1584,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -1499,6 +1604,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtEvaluateNumericObject
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ObjectName
@@ -1554,37 +1660,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * utfileio - file operations  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtReadTableFromFile
-parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|Table
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * utids - device ID support  */
 end_comment
 
@@ -1607,22 +1682,6 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtExecute_UID
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|DeviceNode
-parameter_list|,
-name|ACPI_PNP_DEVICE_ID
-modifier|*
-modifier|*
-name|ReturnId
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtExecute_SUB
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -2365,6 +2424,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ObjHandle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|Path
@@ -2557,30 +2617,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|BOOLEAN
-name|AcpiUtValidAcpiName
-parameter_list|(
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiUtValidAcpiChar
-parameter_list|(
-name|char
-name|Character
-parameter_list|,
-name|UINT32
-name|Position
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|AcpiUtRepairName
 parameter_list|(
@@ -2637,6 +2673,27 @@ parameter_list|,
 name|char
 modifier|*
 name|Source
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiUtSafeStrncat
+parameter_list|(
+name|char
+modifier|*
+name|Dest
+parameter_list|,
+name|ACPI_SIZE
+name|DestSize
+parameter_list|,
+name|char
+modifier|*
+name|Source
+parameter_list|,
+name|ACPI_SIZE
+name|MaxTransferLength
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2835,6 +2892,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiUtCreateList
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ListName

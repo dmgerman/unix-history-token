@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -30,6 +30,29 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -172,198 +195,49 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acapps.h>
-end_include
-
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeLocalLoadTable  *  * PARAMETERS:  Table           - pointer to a buffer containing the entire  *                                table to be loaded  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to load a table from the caller's  *              buffer. The buffer must contain an entire ACPI Table including  *              a valid header. The header fields will be verified, and if it  *              is determined that the table is invalid, the call will fail.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|ACPI_STATUS
-name|AeLocalLoadTable
-parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|AeLocalLoadTable
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*    ACPI_TABLE_DESC         TableInfo; */
-block|if (!Table)     {         return_ACPI_STATUS (AE_BAD_PARAMETER);     }      TableInfo.Pointer = Table;     Status = AcpiTbRecognizeTable (&TableInfo, ACPI_TABLE_ALL);     if (ACPI_FAILURE (Status))     {         return_ACPI_STATUS (Status);     }
-comment|/* Install the new table into the local data structures */
-block|Status = AcpiTbInitTableDescriptor (&TableInfo);     if (ACPI_FAILURE (Status))     {         if (Status == AE_ALREADY_EXISTS)         {
-comment|/* Table already exists, no error */
-block|Status = AE_OK;         }
-comment|/* Free table allocated by AcpiTbGetTable */
-block|AcpiTbDeleteSingleTable (&TableInfo);         return_ACPI_STATUS (Status);     }
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|ACPI_NO_METHOD_EXECUTION
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ACPI_CONSTANT_EVAL_ONLY
-argument_list|)
-operator|)
-block|Status = AcpiNsLoadTable (TableInfo.InstalledDesc, AcpiGbl_RootNode);     if (ACPI_FAILURE (Status))     {
-comment|/* Uninstall table and free the buffer */
-block|AcpiTbDeleteTablesByType (ACPI_TABLE_ID_DSDT);         return_ACPI_STATUS (Status);     }
-endif|#
-directive|endif
-endif|#
-directive|endif
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetTableFromFile  *  * PARAMETERS:  Filename        - File where table is located  *              ReturnTable     - Where a pointer to the table is returned  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table from a file  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLoadTables  *  * PARAMETERS:  ListHead        - List of ACPI tables to load  *  * RETURN:      Status  *  * DESCRIPTION: Load ACPI tables from a previously constructed table list.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbGetTableFromFile
+name|AcpiDbLoadTables
 parameter_list|(
-name|char
+name|ACPI_NEW_TABLE_DESC
 modifier|*
-name|Filename
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|ReturnTable
-parameter_list|,
-name|BOOLEAN
-name|MustBeAmlFile
+name|ListHead
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|TableListHead
+decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
 decl_stmt|;
-name|BOOLEAN
-name|IsAmlTable
-init|=
-name|TRUE
-decl_stmt|;
-name|Status
+comment|/* Load all ACPI tables in the list */
+name|TableListHead
 operator|=
-name|AcpiUtReadTableFromFile
-argument_list|(
-name|Filename
-argument_list|,
-operator|&
-name|Table
-argument_list|)
+name|ListHead
 expr_stmt|;
-if|if
+while|while
 condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
+name|TableListHead
 condition|)
 block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|MustBeAmlFile
-condition|)
-block|{
-name|IsAmlTable
+name|Table
 operator|=
-name|AcpiUtIsAmlTable
-argument_list|(
-name|Table
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IsAmlTable
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|AE_OK
-operator|,
-literal|"Input for -e is not an AML table: "
-literal|"\"%4.4s\" (must be DSDT/SSDT)"
-operator|,
-name|Table
+name|TableListHead
 operator|->
-name|Signature
-operator|)
-argument_list|)
+name|Table
 expr_stmt|;
-return|return
-operator|(
-name|AE_TYPE
-operator|)
-return|;
-block|}
-block|}
-if|if
-condition|(
-name|IsAmlTable
-condition|)
-block|{
-comment|/* Attempt to recognize and install the table */
 name|Status
 operator|=
-name|AeLocalLoadTable
+name|AcpiLoadTable
 argument_list|(
 name|Table
 argument_list|)
@@ -412,13 +286,6 @@ name|Status
 operator|)
 return|;
 block|}
-name|AcpiTbPrintTableHeader
-argument_list|(
-literal|0
-argument_list|,
-name|Table
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -430,25 +297,13 @@ operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
-block|}
-name|AcpiGbl_AcpiHardwarePresent
+name|TableListHead
 operator|=
-name|FALSE
-expr_stmt|;
-if|if
-condition|(
-name|ReturnTable
-condition|)
-block|{
-operator|*
-name|ReturnTable
-operator|=
-name|Table
+name|TableListHead
+operator|->
+name|Next
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* ACPI_APPLICATION */
 return|return
 operator|(
 name|AE_OK

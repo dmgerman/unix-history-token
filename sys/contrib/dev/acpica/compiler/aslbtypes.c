@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -107,12 +107,12 @@ return|;
 case|case
 name|ARGI_DDBHANDLE
 case|:
-comment|/*          * DDBHandleObject := SuperName          * ACPI_BTYPE_REFERENCE: Index reference as parameter of Load/Unload          */
+comment|/*          * DDBHandleObject := SuperName          * ACPI_BTYPE_REFERENCE_OBJECT:          *      Index reference as parameter of Load/Unload          */
 return|return
 operator|(
 name|ACPI_BTYPE_DDB_HANDLE
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 comment|/* Interchangeable types */
@@ -167,12 +167,36 @@ name|ARGI_REFERENCE
 case|:
 return|return
 operator|(
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_NAMED_REFERENCE
 operator|)
 return|;
+comment|/* Name or Namestring */
 case|case
 name|ARGI_TARGETREF
 case|:
+comment|/*          * Target operand for most math and logic operators.          * Package objects not allowed as target.          */
+return|return
+operator|(
+name|ACPI_BTYPE_COMPUTE_DATA
+operator||
+name|ACPI_BTYPE_DEBUG_OBJECT
+operator||
+name|ACPI_BTYPE_REFERENCE_OBJECT
+operator|)
+return|;
+case|case
+name|ARGI_STORE_TARGET
+case|:
+comment|/* Special target for Store(), includes packages */
+return|return
+operator|(
+name|ACPI_BTYPE_DATA
+operator||
+name|ACPI_BTYPE_DEBUG_OBJECT
+operator||
+name|ACPI_BTYPE_REFERENCE_OBJECT
+operator|)
+return|;
 case|case
 name|ARGI_FIXED_TARGET
 case|:
@@ -197,7 +221,7 @@ name|ACPI_BTYPE_BUFFER
 operator||
 name|ACPI_BTYPE_PACKAGE
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 case|case
@@ -216,11 +240,12 @@ return|;
 case|case
 name|ARGI_REF_OR_STRING
 case|:
+comment|/* Used by DeRefOf operator only */
 return|return
 operator|(
 name|ACPI_BTYPE_STRING
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 case|case
@@ -239,19 +264,12 @@ return|;
 case|case
 name|ARGI_DATAREFOBJ
 case|:
+comment|/* Used by Store() only, as the source operand */
 return|return
 operator|(
-name|ACPI_BTYPE_INTEGER
+name|ACPI_BTYPE_DATA_REFERENCE
 operator||
-name|ACPI_BTYPE_STRING
-operator||
-name|ACPI_BTYPE_BUFFER
-operator||
-name|ACPI_BTYPE_PACKAGE
-operator||
-name|ACPI_BTYPE_REFERENCE
-operator||
-name|ACPI_BTYPE_DDB_HANDLE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 default|default:
@@ -426,7 +444,7 @@ name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 case|:
 return|return
 operator|(
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 default|default:
@@ -709,11 +727,122 @@ operator|!
 name|Node
 condition|)
 block|{
+comment|/* These are not expected to have a node at this time */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEWORDFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEDWORDFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEQWORDFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEBYTEFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEBITFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CREATEFIELD
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CONDREFOF
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|ACPI_UINT32_MAX
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"No attached Nsnode: [%s] at line %u name [%s], ignoring typecheck\n"
+literal|"No attached Nsnode: [%s] at line %u name [%s], "
+literal|"ignoring typecheck. Parent [%s]\n"
 argument_list|,
 name|Op
 operator|->
@@ -732,11 +861,23 @@ operator|->
 name|Asl
 operator|.
 name|ExternalName
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|ACPI_UINT32_MAX
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -767,11 +908,6 @@ literal|"could not map type"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Since it was a named reference, enable the          * reference bit also          */
-name|ThisNodeBtype
-operator||=
-name|ACPI_BTYPE_REFERENCE
-expr_stmt|;
 if|if
 condition|(
 name|Op

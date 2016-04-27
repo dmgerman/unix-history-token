@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 6.0"
+value|"Supports ACPI Specification Revision 6.1"
 end_define
 
 begin_comment
@@ -323,122 +323,6 @@ value|(UINT16) 0xDDDD
 end_define
 
 begin_comment
-comment|/* filename suffixes for output files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_PREPROC_USER
-value|"i  "
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_PREPROCESSOR
-value|"pre"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_AML_CODE
-value|"aml"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_MAP
-value|"map"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_LISTING
-value|"lst"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_HEX_DUMP
-value|"hex"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_DEBUG
-value|"txt"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_SOURCE
-value|"src"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_NAMESPACE
-value|"nsp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_ASM_SOURCE
-value|"asm"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_C_SOURCE
-value|"c"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_DISASSEMBLY
-value|"dsl"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_ASM_INCLUDE
-value|"inc"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_C_INCLUDE
-value|"h"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_ASL_CODE
-value|"asl"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_C_OFFSET
-value|"offset.h"
-end_define
-
-begin_comment
 comment|/* Types for input files */
 end_comment
 
@@ -452,7 +336,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_INPUT_TYPE_ACPI_TABLE
+name|ASL_INPUT_TYPE_BINARY_ACPI_TABLE
 value|1
 end_define
 
@@ -505,14 +389,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_WITHIN_COMMENT
-value|(ACPI_UINT32_MAX -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_BLANK_LINE
+name|ASL_IGNORE_LINE
 value|(ACPI_UINT32_MAX -1)
 end_define
 
@@ -653,6 +530,78 @@ name|ByteOffset
 parameter_list|)
 define|\
 value|RsCreateResourceField (Op, Name, ByteOffset, 0, 64);
+end_define
+
+begin_comment
+comment|/*  * Macros for debug output  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_MAX_LINE_LENGTH
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_SPACES_PER_INDENT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_FULL_LINE_LENGTH
+value|71
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_FULL_LINE
+value|"\n%71.71s"
+end_define
+
+begin_comment
+comment|/* Header/Trailer for original parse tree directly from the parser */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_HEADER1
+define|\
+value|"%*s Value P_Op Flags     Line#  End# LogL# EndL#\n", 65, " "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_DEBUG1
+define|\
+value|" %4.4X %8.8X %5d %5d %5d %5d"
+end_define
+
+begin_comment
+comment|/* Header/Trailer for processed parse tree used for AML generation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_HEADER2
+define|\
+value|"%*s NameString Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"\     "    Parent   Child    Next     Flags    AcTyp    Final Col"\     " Line#  End# LogL# EndL#\n", 60, " "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_PARSE_TREE_DEBUG2
+define|\
+value|" %08X %04X %04X %01X     %04X  %04X %05X  %05X   "\     "%08X %08X %08X %08X %08X %08X %04X  %02d  %5d %5d %5d %5d\n"
 end_define
 
 begin_endif

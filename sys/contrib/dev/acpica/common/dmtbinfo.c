@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -752,7 +752,7 @@ name|ACPI_FPDT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT_POINTER,f)
 end_define
 
 begin_define
@@ -762,7 +762,7 @@ name|ACPI_FPDT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_PTR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_POINTER,f)
 end_define
 
 begin_define
@@ -878,6 +878,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_HEST10_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_GENERIC_V2,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_HESTN_OFFSET
 parameter_list|(
 name|f
@@ -933,6 +943,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(UINT16) ACPI_OFFSET (ACPI_IORT_SMMU,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT4_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_IORT_SMMU_V3,f)
 end_define
 
 begin_define
@@ -1408,6 +1428,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_PCCT2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PCCT_HW_REDUCED_TYPE2,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_PMTT0_OFFSET
 parameter_list|(
 name|f
@@ -1462,7 +1492,7 @@ name|ACPI_S3PTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_S3PT_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_HEADER,f)
 end_define
 
 begin_define
@@ -1766,6 +1796,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_IORT4_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_IORT_SMMU_V3,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_IORTA_FLAG_OFFSET
 parameter_list|(
 name|f
@@ -2013,6 +2055,18 @@ parameter_list|,
 name|o
 parameter_list|)
 value|ACPI_FLAG_OFFSET (ACPI_PCCT_HW_REDUCED,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCCT2_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_PCCT_HW_REDUCED_TYPE2,f,o)
 end_define
 
 begin_define
@@ -7099,64 +7153,12 @@ block|,
 block|{
 name|ACPI_DMT_UINT64
 block|,
-name|ACPI_FPDT0_OFFSET
+name|ACPI_FPDT1_OFFSET
 argument_list|(
-name|ResetEnd
+name|Address
 argument_list|)
 block|,
-literal|"Reset End"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|LoadStart
-argument_list|)
-block|,
-literal|"Load Image Start"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|StartupStart
-argument_list|)
-block|,
-literal|"Start Image Start"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|ExitServicesEntry
-argument_list|)
-block|,
-literal|"Exit Services Entry"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT64
-block|,
-name|ACPI_FPDT0_OFFSET
-argument_list|(
-name|ExitServicesExit
-argument_list|)
-block|,
-literal|"Exit Services Exit"
+literal|"FPDT Boot Record Address"
 block|,
 literal|0
 block|}
@@ -7197,7 +7199,7 @@ argument_list|(
 name|Address
 argument_list|)
 block|,
-literal|"S3PT Address"
+literal|"S3PT Record Address"
 block|,
 literal|0
 block|}
@@ -7206,6 +7208,22 @@ name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Boot Performance Record, not supported at this time. */
+end_comment
+
+begin_endif
+unit|{ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ResetEnd),               "Reset End", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (LoadStart),              "Load Image Start", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (StartupStart),           "Start Image Start", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ExitServicesEntry),      "Exit Services Entry", 0},     {ACPI_DMT_UINT64,   ACPI_FPDT0_OFFSET (ExitServicesExit),       "Exit Services Exit", 0},
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * GTDT - Generic Timer Description Table  *  ******************************************************************************/
@@ -8686,6 +8704,179 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 10: Generic Hardware Error Source - Version 2 */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest10
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|RelatedSourceId
+argument_list|)
+block|,
+literal|"Related Source Id"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|Enabled
+argument_list|)
+block|,
+literal|"Enabled"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|RecordsToPreallocate
+argument_list|)
+block|,
+literal|"Records To Preallocate"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|MaxSectionsPerRecord
+argument_list|)
+block|,
+literal|"Max Sections Per Record"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|MaxRawDataLength
+argument_list|)
+block|,
+literal|"Max Raw Data Length"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|ErrorStatusAddress
+argument_list|)
+block|,
+literal|"Error Status Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_HESTNTFY
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|Notify
+argument_list|)
+block|,
+literal|"Notify"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|ErrorBlockLength
+argument_list|)
+block|,
+literal|"Error Status Block Length"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|ReadAckRegister
+argument_list|)
+block|,
+literal|"Read Ack Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|ReadAckPreserve
+argument_list|)
+block|,
+literal|"Read Ack Preserve"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_HEST10_OFFSET
+argument_list|(
+name|ReadAckWrite
+argument_list|)
+block|,
+literal|"Read Ack Write"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoHestNotify
@@ -9898,6 +10089,168 @@ block|,
 literal|"PMU Interrupt"
 block|,
 name|DT_OPTIONAL
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0x04: SMMUv3 */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIort4
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_IORT4_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"COHACC Override"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_IORT4_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"HTTU Override"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|VatosAddress
+argument_list|)
+block|,
+literal|"VATOS Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|Model
+argument_list|)
+block|,
+literal|"Model"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|EventGsiv
+argument_list|)
+block|,
+literal|"Event GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|PriGsiv
+argument_list|)
+block|,
+literal|"PRI GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|GerrGsiv
+argument_list|)
+block|,
+literal|"GERR GSIV"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT4_OFFSET
+argument_list|(
+name|SyncGsiv
+argument_list|)
+block|,
+literal|"Sync GSIV"
+block|,
+literal|0
 block|}
 block|,
 name|ACPI_DMT_TERMINATOR
@@ -13654,6 +14007,21 @@ literal|0
 block|}
 block|,
 block|{
+name|ACPI_DMT_FLAG6
+block|,
+name|ACPI_NFIT1_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Mapping failed"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT16
 block|,
 name|ACPI_NFIT1_OFFSET
@@ -13910,7 +14278,46 @@ literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT48
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ValidFields
+argument_list|)
+block|,
+literal|"Valid Fields"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ManufacturingLocation
+argument_list|)
+block|,
+literal|"Manufacturing Location"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_NFIT4_OFFSET
+argument_list|(
+name|ManufacturingDate
+argument_list|)
+block|,
+literal|"Manufacturing Date"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
 block|,
 name|ACPI_NFIT4_OFFSET
 argument_list|(
@@ -14664,6 +15071,233 @@ name|MinTurnaroundTime
 argument_list|)
 block|,
 literal|"Minimum Turnaround Time"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2: HW-reduced Communications Subspace Type 2 (ACPI 6.1) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|DoorbellInterrupt
+argument_list|)
+block|,
+literal|"Doorbell Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (Decoded Below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_PCCT2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_PCCT2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Address Length"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|DoorbellRegister
+argument_list|)
+block|,
+literal|"Doorbell Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|PreserveMask
+argument_list|)
+block|,
+literal|"Preserve Mask"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|WriteMask
+argument_list|)
+block|,
+literal|"Write Mask"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|Latency
+argument_list|)
+block|,
+literal|"Command Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|MaxAccessRate
+argument_list|)
+block|,
+literal|"Maximum Access Rate"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|MinTurnaroundTime
+argument_list|)
+block|,
+literal|"Minimum Turnaround Time"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|DoorbellAckRegister
+argument_list|)
+block|,
+literal|"Doorbell ACK Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|AckPreserveMask
+argument_list|)
+block|,
+literal|"ACK Preserve Mask"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT2_OFFSET
+argument_list|(
+name|AckWriteMask
+argument_list|)
+block|,
+literal|"ACK Write Mask"
 block|,
 literal|0
 block|}

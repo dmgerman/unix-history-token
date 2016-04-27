@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -183,40 +183,6 @@ end_endif
 begin_comment
 comment|/* !ACPI_REDUCED_HARDWARE */
 end_comment
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbTablesLoaded  *  * PARAMETERS:  None  *  * RETURN:      TRUE if required ACPI tables are loaded  *  * DESCRIPTION: Determine if the minimum required ACPI tables are present  *              (FADT, FACS, DSDT)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiTbTablesLoaded
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|>=
-literal|4
-condition|)
-block|{
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCheckDsdtHeader  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Quick compare to check validity of the DSDT. This will detect  *              if the DSDT has been replaced from outside the OS and/or if  *              the DSDT header has been corrupted.  *  ******************************************************************************/
@@ -401,8 +367,6 @@ expr_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Forced DSDT copy: length 0x%05X copied locally, original unmapped"
 operator|,
 name|NewTable
@@ -912,10 +876,12 @@ name|ACPI_SIG_FADT
 argument_list|)
 condition|)
 block|{
-name|AcpiTbParseFadt
-argument_list|(
+name|AcpiGbl_FadtIndex
+operator|=
 name|TableIndex
-argument_list|)
+expr_stmt|;
+name|AcpiTbParseFadt
+argument_list|()
 expr_stmt|;
 block|}
 name|NextTable
@@ -937,83 +903,6 @@ argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsValidSignature  *  * PARAMETERS:  Signature           - Sig string to be validated  *  * RETURN:      TRUE if signature is correct length and has valid characters  *  * DESCRIPTION: Validate an ACPI table signature.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiIsValidSignature
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-block|{
-name|UINT32
-name|i
-decl_stmt|;
-comment|/* Validate the signature length */
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|Signature
-argument_list|)
-operator|!=
-name|ACPI_NAME_SIZE
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-comment|/* Validate each character in the signature */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ACPI_NAME_SIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|AcpiUtValidAcpiChar
-argument_list|(
-name|Signature
-index|[
-name|i
-index|]
-argument_list|,
-name|i
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
 block|}
 end_function
 

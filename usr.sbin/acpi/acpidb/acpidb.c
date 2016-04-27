@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
@@ -1616,6 +1622,10 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|list
+decl_stmt|;
 name|u_int8_t
 modifier|*
 name|code
@@ -2184,13 +2194,18 @@ literal|1
 operator|)
 return|;
 block|}
-name|AcpiDbGetTableFromFile
+name|list
+operator|=
+name|NULL
+expr_stmt|;
+name|AcGetAllTablesFromFile
 argument_list|(
 name|filetmp
 argument_list|,
-name|NULL
-argument_list|,
 name|TRUE
+argument_list|,
+operator|&
+name|list
 argument_list|)
 expr_stmt|;
 name|AcpiInitializeDebugger

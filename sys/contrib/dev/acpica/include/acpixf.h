@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150818
+value|0x20160422
 end_define
 
 begin_include
@@ -403,6 +403,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Optionally support group module level code.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_GroupModuleLevelCode
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Optionally use 32-bit FADT addresses if and when there is a conflict  * (address mismatch) between the 32-bit and 64-bit versions of the  * address. Although ACPICA adheres to the ACPI specification which  * requires the use of the corresponding 64-bit address if it is non-zero,  * some machines have been found to have a corrupted non-zero 64-bit  * address. Default is FALSE, do not favor the 32-bit addresses.  */
 end_comment
 
@@ -636,6 +652,22 @@ argument_list|,
 name|AcpiDbgLayer
 argument_list|,
 name|ACPI_COMPONENT_DEFAULT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Optionally enable timer output with Debug Object output */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_DisplayDebugTimer
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -907,6 +939,74 @@ end_endif
 
 begin_comment
 comment|/* ACPI_APPLICATION */
+end_comment
+
+begin_comment
+comment|/*  * Debugger prototypes  *  * All interfaces used by debugger will be configured  * out of the ACPICA build unless the ACPI_DEBUGGER  * flag is defined.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|ACPI_EXTERNAL_RETURN_OK(Prototype)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|ACPI_EXTERNAL_RETURN_VOID(Prototype)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_OK);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBR_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return;}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DEBUGGER */
 end_comment
 
 begin_comment
@@ -1776,8 +1876,8 @@ begin_macro
 name|ACPI_MSG_DEPENDENT_RETURN_VOID
 argument_list|(
 argument|ACPI_PRINTF_LIKE(
-literal|3
-argument|) void ACPI_INTERNAL_VAR_XFACE AcpiInfo (     const char              *ModuleName,     UINT32                  LineNumber,     const char              *Format,     ...)
+literal|1
+argument|) void ACPI_INTERNAL_VAR_XFACE AcpiInfo (     const char              *Format,     ...)
 argument_list|)
 end_macro
 
@@ -1851,6 +1951,16 @@ name|void
 name|AcpiTerminateDebugger
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiSetDebuggerThreadId
+parameter_list|(
+name|ACPI_THREAD_ID
+name|ThreadId
 parameter_list|)
 function_decl|;
 end_function_decl
