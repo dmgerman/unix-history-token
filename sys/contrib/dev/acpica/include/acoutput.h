@@ -1835,6 +1835,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|return_STR
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
 name|return_VALUE
 parameter_list|(
 name|s
