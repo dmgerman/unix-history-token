@@ -20640,6 +20640,9 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|PCI_RES_BUS
 name|sc
 operator|=
 name|device_get_softc
@@ -20647,9 +20650,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PCI_RES_BUS
 name|error
 operator|=
 name|bus_release_resource
