@@ -5563,7 +5563,7 @@ end_function
 
 begin_function
 name|int
-name|pcib_attach
+name|pcib_attach_child
 parameter_list|(
 name|device_t
 name|dev
@@ -5574,14 +5574,6 @@ name|pcib_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|device_t
-name|child
-decl_stmt|;
-name|pcib_attach_common
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5596,10 +5588,19 @@ operator|->
 name|bus
 operator|.
 name|sec
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
+comment|/* no secondary bus; we should have fixed this */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|sc
+operator|->
 name|child
 operator|=
 name|device_add_child
@@ -5612,12 +5613,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|child
-operator|!=
-name|NULL
-condition|)
 return|return
 operator|(
 name|bus_generic_attach
@@ -5627,10 +5622,27 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* no secondary bus; we should have fixed this */
+end_function
+
+begin_function
+name|int
+name|pcib_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|pcib_attach_common
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|pcib_attach_child
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}

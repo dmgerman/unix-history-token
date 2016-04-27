@@ -434,8 +434,8 @@ block|}
 end_function
 
 begin_function
-name|int
-name|acpi_pcib_attach
+name|void
+name|acpi_pcib_fetch_prt
 parameter_list|(
 name|device_t
 name|dev
@@ -443,16 +443,10 @@ parameter_list|,
 name|ACPI_BUFFER
 modifier|*
 name|prt
-parameter_list|,
-name|int
-name|busno
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|status
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -520,39 +514,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Attach the PCI bus proper.      */
-if|if
-condition|(
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"pci"
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"couldn't attach pci bus\n"
-argument_list|)
-expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Now go scan the bus.      */
+comment|/*      * Ensure all the link devices are attached.      */
 name|prt_walk_table
 argument_list|(
 name|prt
@@ -560,18 +522,6 @@ argument_list|,
 name|prt_attach_devices
 argument_list|,
 name|dev
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|bus_generic_attach
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|error
 argument_list|)
 expr_stmt|;
 block|}

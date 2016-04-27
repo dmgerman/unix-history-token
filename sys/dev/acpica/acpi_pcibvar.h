@@ -57,8 +57,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|acpi_pcib_attach
+name|void
+name|acpi_pcib_fetch_prt
 parameter_list|(
 name|device_t
 name|bus
@@ -66,9 +66,6 @@ parameter_list|,
 name|ACPI_BUFFER
 modifier|*
 name|prt
-parameter_list|,
-name|int
-name|busno
 parameter_list|)
 function_decl|;
 end_function_decl
