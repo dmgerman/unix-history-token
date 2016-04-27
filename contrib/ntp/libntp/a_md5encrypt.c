@@ -54,6 +54,12 @@ begin_comment
 comment|/* provides OpenSSL digest API */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"isc/string.h"
+end_include
+
 begin_comment
 comment|/*  * MD5authencrypt - generate message digest  *  * Returns length of MAC including key ID and digest.  */
 end_comment
@@ -376,7 +382,7 @@ return|;
 block|}
 return|return
 operator|!
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,

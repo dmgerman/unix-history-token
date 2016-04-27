@@ -8359,9 +8359,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|pvl
 operator|==
 name|peervarlist
+operator|)
+operator|&&
+operator|(
+name|drefid
+operator|==
+name|REFID_IPV4
+operator|)
 condition|)
 block|{
 name|have_da_rid
@@ -8482,11 +8490,20 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|pvl
 operator|==
 name|apeervarlist
+operator|)
+operator|||
+operator|(
+name|pvl
+operator|==
+name|peervarlist
+operator|)
 condition|)
 block|{
+comment|/* no need to check drefid == REFID_HASH */
 name|have_da_rid
 operator|=
 name|TRUE
@@ -10129,6 +10146,23 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|drefid
+operator|==
+name|REFID_HASH
+condition|)
+block|{
+name|apeers
+argument_list|(
+name|pcmd
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|int
 name|af
 init|=
@@ -10172,6 +10206,7 @@ argument_list|,
 name|af
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -10930,7 +10965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * config_from_file - remotely configure an ntpd daemon using the  * specified configuration file  * SK: This function is a kludge at best and is full of bad design  * bugs:  * 1. ntpq uses UDP, which means that there is no guarantee of in-order,  *    error-free delivery.   * 2. The maximum length of a packet is constrained, and as a result, the  *    maximum length of a line in a configuration file is constrained.   *    Longer lines will lead to unpredictable results.  * 3. Since this function is sending a line at a time, we can't update  *    the control key through the configuration file (YUCK!!)  */
+comment|/*   * config_from_file - remotely configure an ntpd daemon using the  * specified configuration file  * SK: This function is a kludge at best and is full of bad design  * bugs:  * 1. ntpq uses UDP, which means that there is no guarantee of in-order,  *    error-free delivery.   * 2. The maximum length of a packet is constrained, and as a result, the  *    maximum length of a line in a configuration file is constrained.   *    Longer lines will lead to unpredictable results.  * 3. Since this function is sending a line at a time, we can't update  *    the control key through the configuration file (YUCK!!)  *  * Pearly: There are a few places where 'size_t' is cast to 'int' based  * on the assumption that 'int' can hold the size of the involved  * buffers without overflow.  */
 end_comment
 
 begin_function
@@ -10958,6 +10993,10 @@ specifier|const
 name|char
 modifier|*
 name|rdata
+decl_stmt|;
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|int
 name|res
@@ -11071,49 +11110,77 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Eliminate comments first. */
+name|cp
+operator|=
+name|strchr
+argument_list|(
+name|config_cmd
+argument_list|,
+literal|'#'
+argument_list|)
+expr_stmt|;
 name|config_len
 operator|=
+operator|(
+name|NULL
+operator|!=
+name|cp
+operator|)
+condition|?
+call|(
+name|size_t
+call|)
+argument_list|(
+name|cp
+operator|-
+name|config_cmd
+argument_list|)
+else|:
 name|strlen
 argument_list|(
 name|config_cmd
 argument_list|)
 expr_stmt|;
-comment|/* ensure even the last line has newline, if possible */
-if|if
+comment|/* [Bug 3015] make sure there's no trailing whitespace; 		 * the fix for [Bug 2853] on the server side forbids 		 * those. And don't transmit empty lines, as this would 		 * just be waste. 		 */
+while|while
 condition|(
 name|config_len
-operator|>
+operator|!=
 literal|0
 operator|&&
-name|config_len
-operator|+
-literal|2
-operator|<
-sizeof|sizeof
-argument_list|(
-name|config_cmd
-argument_list|)
-operator|&&
-literal|'\n'
-operator|!=
+operator|(
+name|u_char
+operator|)
 name|config_cmd
 index|[
 name|config_len
 operator|-
 literal|1
 index|]
+operator|<=
+literal|' '
 condition|)
+operator|--
+name|config_len
+expr_stmt|;
 name|config_cmd
 index|[
 name|config_len
-operator|++
 index|]
 operator|=
-literal|'\n'
+literal|'\0'
 expr_stmt|;
 operator|++
 name|i
 expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|==
+name|config_len
+condition|)
+continue|continue;
 name|retry_limit
 operator|=
 literal|2
@@ -11129,10 +11196,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|strlen
-argument_list|(
-name|config_cmd
-argument_list|)
+name|config_len
 argument_list|,
 name|config_cmd
 argument_list|,
@@ -11165,16 +11229,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Line No: %d query failed: %s"
+literal|"Line No: %d query failed: %.*s\n"
+literal|"Subsequent lines not sent.\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
+name|config_len
+argument_list|,
 name|config_cmd
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Subsequent lines not sent.\n"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -11184,45 +11249,31 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
+comment|/* Right-strip the result code string, then output the 		 * last line executed, with result code. */
+while|while
 condition|(
 name|rsize
-operator|>
+operator|!=
 literal|0
 operator|&&
-literal|'\n'
-operator|==
+operator|(
+name|u_char
+operator|)
 name|rdata
 index|[
 name|rsize
 operator|-
 literal|1
 index|]
+operator|<=
+literal|' '
 condition|)
-name|rsize
 operator|--
-expr_stmt|;
-if|if
-condition|(
 name|rsize
-operator|>
-literal|0
-operator|&&
-literal|'\r'
-operator|==
-name|rdata
-index|[
-name|rsize
-operator|-
-literal|1
-index|]
-condition|)
-name|rsize
-operator|--
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Line No: %d %.*s: %s"
+literal|"Line No: %d %.*s: %.*s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -11233,7 +11284,11 @@ name|rsize
 argument_list|,
 name|rdata
 argument_list|,
-comment|/* cast is wobbly */
+operator|(
+name|int
+operator|)
+name|config_len
+argument_list|,
 name|config_cmd
 argument_list|)
 expr_stmt|;
