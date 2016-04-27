@@ -966,7 +966,7 @@ name|csum
 modifier|*
 name|cgsum
 decl_stmt|;
-name|u_int
+name|uint32_t
 name|i
 decl_stmt|;
 comment|/* 	 * Recompute the fs summary info from correct cs summaries. 	 */
@@ -10965,7 +10965,7 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
 name|TAILQ_FOREACH
@@ -12303,7 +12303,7 @@ decl_stmt|;
 name|int
 name|readsize
 decl_stmt|;
-name|u_int
+name|int
 name|blocks
 decl_stmt|;
 name|int
