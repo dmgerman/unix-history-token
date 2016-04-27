@@ -2573,7 +2573,7 @@ operator|(
 name|TCP_LRO_CANNOT
 operator|)
 return|;
-comment|/* XXX-BZ We lose a AKC|PUSH flag concatinating multiple segments. */
+comment|/* XXX-BZ We lose a ACK|PUSH flag concatinating multiple segments. */
 comment|/* XXX-BZ Ideally we'd flush on PUSH? */
 comment|/* 	 * Check for timestamps. 	 * Since the only option we handle are timestamps, we only have to 	 * handle the simple case of aligned timestamps. 	 */
 name|l
