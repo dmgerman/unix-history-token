@@ -12312,7 +12312,7 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Read records until we exhaust the journal space.  If we find 	 * an invalid record we start searching for a valid segment header 	 * at the next block.  This is because we don't have a head/tail 	 * pointer and must recover the information indirectly.  At the gap 	 * between the head and tail we won't necessarily have a valid 	 * segment. 	 */
