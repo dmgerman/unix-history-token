@@ -621,7 +621,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_rescan
 argument_list|,
-name|kobj_error_method
+name|bus_null_rescan
 argument_list|)
 block|,
 name|DEVMETHOD_END

@@ -14994,6 +14994,26 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * @brief Helper function for implementing BUS_RESCAN().  *  * This null implementation of BUS_RESCAN() always fails to indicate  * the bus does not support rescanning.  */
+end_comment
+
+begin_function
+name|int
+name|bus_null_rescan
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Some convenience functions to make it easier for drivers to use the  * resource-management functions.  All these really do is hide the  * indirection through the parent's method table, making for slightly  * less-wordy code.  In the future, it might make sense for this code  * to maintain some sort of a list of resources allocated by each device.  */
 end_comment
 

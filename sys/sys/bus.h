@@ -1951,6 +1951,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bus_null_rescan
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Wrapper functions for the BUS_*_RESOURCE methods to make client code  * a little simpler.  */
 end_comment
