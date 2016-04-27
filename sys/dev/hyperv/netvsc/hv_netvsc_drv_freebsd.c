@@ -657,6 +657,8 @@ argument_list|,
 name|hn
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -9927,6 +9929,8 @@ argument_list|,
 literal|"rx"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -10137,6 +10141,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -10193,6 +10199,8 @@ argument_list|,
 name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10226,6 +10234,8 @@ argument_list|,
 name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10259,6 +10269,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10295,6 +10307,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10320,6 +10334,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10347,6 +10363,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10373,6 +10391,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10399,6 +10419,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10425,6 +10447,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10456,6 +10480,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10487,6 +10513,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10518,6 +10546,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10549,6 +10579,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -11478,6 +11510,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -11973,6 +12007,8 @@ argument_list|,
 literal|"tx"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -12028,6 +12064,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12059,6 +12097,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12090,6 +12130,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12121,6 +12163,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12152,6 +12196,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12232,6 +12278,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12257,6 +12305,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12288,6 +12338,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
