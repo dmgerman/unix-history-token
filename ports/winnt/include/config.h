@@ -2342,6 +2342,28 @@ comment|/* used in ntp_io.c */
 end_comment
 
 begin_comment
+comment|/* Bug 2978 mitigation -- unless defined elsewhere, do it here*/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DYNAMIC_INTERLEAVE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DYNAMIC_INTERLEAVE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Below this line are includes which must happen after the bulk of  * config.h is processed.  If you need to add another #include to this  * file the preferred location is near the top, above the similar  * line of hyphens.  * ---------------------------------------------------------------------  */
 end_comment
 

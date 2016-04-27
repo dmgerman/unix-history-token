@@ -394,6 +394,14 @@ modifier|*
 name|resp_read_ctx
 decl_stmt|;
 comment|/* child */
+else|#
+directive|else
+name|sem_ref
+name|responses_pending
+decl_stmt|;
+comment|/* signalling */
+endif|#
+directive|endif
 specifier|volatile
 name|u_int
 name|resp_ready_seen
@@ -404,14 +412,6 @@ name|u_int
 name|resp_ready_done
 decl_stmt|;
 comment|/* consumer/mainloop */
-else|#
-directive|else
-name|sem_ref
-name|responses_pending
-decl_stmt|;
-comment|/* signalling */
-endif|#
-directive|endif
 name|sema_type
 name|sem_table
 index|[
@@ -756,6 +756,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|void
+name|worker_global_lock
+parameter_list|(
+name|int
+name|inOrOut
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

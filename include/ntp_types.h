@@ -124,6 +124,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDBOOL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|int
+name|bool
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Can't use enum TRUE/FALSE because of above */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This is another naming conflict.  * On NetBSD for MAC the macro "mac" is defined as 1  * this is fun for us as a packet structure contains an  * optional "mac" member - severe confusion results 8-)  * As we hopefully do not have to rely on that macro we  * just undefine that.  */
 end_comment

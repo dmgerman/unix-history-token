@@ -702,6 +702,22 @@ name|DWORD
 name|dwCtrlCode
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|msg_tab
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|"explicit stop"
+block|,
+literal|"system shutdown"
+block|}
+decl_stmt|;
 switch|switch
 condition|(
 name|dwCtrlCode
@@ -725,14 +741,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SetEvent
+name|msyslog
 argument_list|(
-name|WaitableExitEventHandle
+name|LOG_INFO
+argument_list|,
+literal|"SCM requests stop (%s)"
+argument_list|,
+name|msg_tab
+index|[
+operator|!
+operator|!
+name|computer_shutting_down
+index|]
 argument_list|)
 expr_stmt|;
 name|UpdateSCM
 argument_list|(
 name|SERVICE_STOP_PENDING
+argument_list|)
+expr_stmt|;
+name|SetEvent
+argument_list|(
+name|WaitableExitEventHandle
 argument_list|)
 expr_stmt|;
 name|Sleep
@@ -741,8 +771,23 @@ literal|100
 argument_list|)
 expr_stmt|;
 comment|//##++
+break|break;
 block|}
-return|return;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"SCM requests stop (%s), but have no exit event!"
+argument_list|,
+name|msg_tab
+index|[
+operator|!
+operator|!
+name|computer_shutting_down
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|SERVICE_CONTROL_PAUSE
 case|:
@@ -753,13 +798,13 @@ case|case
 name|SERVICE_CONTROL_INTERROGATE
 case|:
 default|default:
-break|break;
-block|}
 name|UpdateSCM
 argument_list|(
 name|SERVICE_RUNNING
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.h)  *  *  It has been AutoGen-ed  January 20, 2016 at 04:18:42 AM by AutoGen 5.18.5  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This header file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.h)  *  *  It has been AutoGen-ed  April 26, 2016 at 08:29:10 PM by AutoGen 5.18.5  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This header file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_comment
@@ -111,29 +111,33 @@ name|INDEX_OPT_PEERS
 operator|=
 literal|8
 block|,
-name|INDEX_OPT_WIDE
+name|INDEX_OPT_REFID
 operator|=
 literal|9
 block|,
-name|INDEX_OPT_VERSION
+name|INDEX_OPT_WIDE
 operator|=
 literal|10
 block|,
-name|INDEX_OPT_HELP
+name|INDEX_OPT_VERSION
 operator|=
 literal|11
 block|,
-name|INDEX_OPT_MORE_HELP
+name|INDEX_OPT_HELP
 operator|=
 literal|12
 block|,
-name|INDEX_OPT_SAVE_OPTS
+name|INDEX_OPT_MORE_HELP
 operator|=
 literal|13
 block|,
-name|INDEX_OPT_LOAD_OPTS
+name|INDEX_OPT_SAVE_OPTS
 operator|=
 literal|14
+block|,
+name|INDEX_OPT_LOAD_OPTS
+operator|=
+literal|15
 block|}
 name|teOptIndex
 expr_stmt|;
@@ -147,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_CT
-value|15
+value|16
 end_define
 
 begin_comment
@@ -158,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|NTPQ_VERSION
-value|"4.2.8p6"
+value|"4.2.8p7"
 end_define
 
 begin_comment
@@ -169,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|NTPQ_FULL_VERSION
-value|"ntpq 4.2.8p6"
+value|"ntpq 4.2.8p7"
 end_define
 
 begin_comment
@@ -586,6 +590,29 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|REFID
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+warning|undefining REFID due to option name conflict
+end_warning
+
+begin_undef
+undef|#
+directive|undef
+name|REFID
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|WIDE
 end_ifdef
 
@@ -667,6 +694,12 @@ begin_undef
 undef|#
 directive|undef
 name|PEERS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|REFID
 end_undef
 
 begin_undef
@@ -756,6 +789,42 @@ define|#
 directive|define
 name|VALUE_OPT_PEERS
 value|'p'
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_OPT_REFID
+value|'r'
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|REFID_HASH
+block|,
+name|REFID_IPV4
+block|}
+name|te_Refid
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|OPT_REFID_VAL2STR
+parameter_list|(
+name|_v
+parameter_list|)
+value|optionKeywordName(&DESC(REFID), (_v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_VALUE_REFID
+value|(DESC(REFID).optArg.argEnum)
 end_define
 
 begin_define
