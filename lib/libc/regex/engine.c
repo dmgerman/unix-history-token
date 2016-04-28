@@ -785,7 +785,7 @@ name|char
 modifier|*
 name|endp
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|struct
@@ -6788,7 +6788,7 @@ name|m
 operator|->
 name|g
 decl_stmt|;
-name|int
+name|sopno
 name|i
 decl_stmt|;
 name|int
