@@ -492,7 +492,7 @@ block|,
 name|tomb_mbs
 block|}
 block|,
-comment|/* 	 * Becuase the 3-byte form of EUC-JP use the same leading byte, 	 * only 17 bits required to provide unique priorities.  (The low 	 * bit of that first byte is set.)  By setting this value low, 	 * we can get by with only 3 bytes in the strxfrm expansion. 	 */
+comment|/* 	 * Because the 3-byte form of EUC-JP use the same leading byte, 	 * only 17 bits required to provide unique priorities.  (The low 	 * bit of that first byte is set.)  By setting this value low, 	 * we can get by with only 3 bytes in the strxfrm expansion. 	 */
 block|{
 literal|"EUC-JP"
 block|,
