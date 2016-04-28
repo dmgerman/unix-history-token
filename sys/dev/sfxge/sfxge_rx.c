@@ -5232,7 +5232,7 @@ name|enp
 argument_list|,
 name|index
 argument_list|,
-name|index
+literal|0
 argument_list|,
 name|EFX_RXQ_TYPE_DEFAULT
 argument_list|,
