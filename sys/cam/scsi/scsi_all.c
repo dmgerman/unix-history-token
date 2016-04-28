@@ -24864,7 +24864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the SCSI sync parameter that corresponsd to  * the passed in period in 10ths of ns.  */
+comment|/*  * Return the SCSI sync parameter that corresponds to  * the passed in period in 10ths of ns.  */
 end_comment
 
 begin_function
@@ -26748,7 +26748,7 @@ name|error_str
 argument_list|,
 name|error_str_len
 argument_list|,
-literal|"%s: unsupoprted "
+literal|"%s: unsupported "
 literal|"protocol %d"
 argument_list|,
 name|__func__
