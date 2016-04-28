@@ -5088,6 +5088,8 @@ name|vxlso_sock
 argument_list|,
 name|vxlan_rcv_udp_packet
 argument_list|,
+name|NULL
+argument_list|,
 name|vso
 argument_list|)
 expr_stmt|;

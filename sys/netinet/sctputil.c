@@ -35427,6 +35427,8 @@ argument_list|,
 name|sctp_recv_udp_tunneled_packet
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -35570,6 +35572,8 @@ name|udp6_tun_socket
 argument_list|)
 argument_list|,
 name|sctp_recv_udp_tunneled_packet
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

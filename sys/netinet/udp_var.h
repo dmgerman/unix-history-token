@@ -132,7 +132,6 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
-name|off
 parameter_list|,
 name|struct
 name|inpcb
@@ -141,6 +140,29 @@ parameter_list|,
 specifier|const
 name|struct
 name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|udp_tun_icmp_t
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|,
 name|void
@@ -161,6 +183,10 @@ name|udp_tun_func_t
 name|u_tun_func
 decl_stmt|;
 comment|/* UDP kernel tunneling callback. */
+name|udp_tun_icmp_t
+name|u_icmp_func
+decl_stmt|;
+comment|/* UDP kernel tunneling icmp callback */
 name|u_int
 name|u_flags
 decl_stmt|;
@@ -832,6 +858,9 @@ name|so
 parameter_list|,
 name|udp_tun_func_t
 name|f
+parameter_list|,
+name|udp_tun_icmp_t
+name|i
 parameter_list|,
 name|void
 modifier|*
