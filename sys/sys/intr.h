@@ -28,6 +28,8 @@ block|{
 name|INTR_MAP_DATA_ACPI
 block|,
 name|INTR_MAP_DATA_FDT
+block|,
+name|INTR_MAP_DATA_GPIO
 block|, }
 enum|;
 end_enum
@@ -90,6 +92,23 @@ end_endif
 
 begin_struct
 struct|struct
+name|intr_map_data_gpio
+block|{
+name|u_int
+name|gpio_pin_num
+decl_stmt|;
+name|u_int
+name|gpio_pin_flags
+decl_stmt|;
+name|u_int
+name|gpio_intr_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|intr_map_data
 block|{
 name|enum
@@ -116,6 +135,10 @@ name|fdt
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|intr_map_data_gpio
+name|gpio
+decl_stmt|;
 block|}
 union|;
 block|}
@@ -585,6 +608,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|u_int
+name|intr_gpio_map_irq
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|pin_num
+parameter_list|,
+name|u_int
+name|pin_flags
+parameter_list|,
+name|u_int
+name|intr_mode
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

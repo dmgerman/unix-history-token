@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_INPUT
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_OUTPUT
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_OPENDRAIN
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_PUSHPULL
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_TRISTATE
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_PULLUP
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_PULLDOWN
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_INVIN
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_INVOUT
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -177,12 +177,89 @@ begin_define
 define|#
 directive|define
 name|GPIO_PIN_PULSATE
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
 comment|/* pulsate in hardware */
 end_comment
+
+begin_comment
+comment|/* GPIO interrupt capabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_NONE
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* no interrupt support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_LEVEL_LOW
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* level trigger, low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_LEVEL_HIGH
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* level trigger, high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_EDGE_RISING
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* edge trigger, rising */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_EDGE_FALLING
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* edge trigger, falling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_EDGE_BOTH
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* edge trigger, both */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_INTR_MASK
+value|(GPIO_INTR_LEVEL_LOW | GPIO_INTR_LEVEL_HIGH | \ 				GPIO_INTR_EDGE_RISING |			      \ 				GPIO_INTR_EDGE_FALLING | GPIO_INTR_EDGE_BOTH)
+end_define
 
 begin_struct
 struct|struct
