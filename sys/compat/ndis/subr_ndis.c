@@ -11624,7 +11624,7 @@ name|char
 modifier|*
 name|suf
 decl_stmt|;
-name|size_t
+name|u_int
 name|i
 decl_stmt|;
 name|fullsym
