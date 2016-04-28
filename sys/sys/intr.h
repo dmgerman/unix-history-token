@@ -21,6 +21,13 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|INTR_IRQ_INVALID
+value|0xFFFFFFFF
+end_define
+
 begin_enum
 enum|enum
 name|intr_map_data_type

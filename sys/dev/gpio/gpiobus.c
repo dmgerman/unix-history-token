@@ -482,7 +482,7 @@ if|if
 condition|(
 name|irqnum
 operator|==
-literal|0xFFFFFFFF
+name|INTR_IRQ_INVALID
 condition|)
 return|return
 operator|(

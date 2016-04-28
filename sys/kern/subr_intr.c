@@ -412,13 +412,6 @@ name|irq_next_free
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|IRQ_INVALID
-value|nitems(irq_sources)
-end_define
-
 begin_comment
 comment|/*  *  XXX - All stuff around struct intr_dev_data is considered as temporary  *  until better place for storing struct intr_map_data will be find.  *  *  For now, there are two global interrupt numbers spaces:  *<0, NIRQ)                      ... interrupts without config data  *                                     managed in irq_sources[]  *  IRQ_DDATA_BASE +<0, 2 * NIRQ) ... interrupts with config data  *                                     managed in intr_ddata_tab[]  *  *  Read intr_ddata_lookup() to see how these spaces are worked with.  *  Note that each interrupt number from second space duplicates some number  *  from first space at this moment. An interrupt number from first space can  *  be duplicated even multiple times in second space.  */
 end_comment
@@ -482,7 +475,10 @@ name|CTASSERT
 argument_list|(
 name|IRQ_DDATA_BASE
 operator|>
-name|IRQ_INVALID
+name|nitems
+argument_list|(
+name|irq_sources
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1558,7 +1554,7 @@ name|isrc
 operator|->
 name|isrc_irq
 operator|=
-name|IRQ_INVALID
+name|INTR_IRQ_INVALID
 expr_stmt|;
 comment|/* just to be safe */
 return|return
@@ -1664,7 +1660,7 @@ name|isrc
 operator|->
 name|isrc_irq
 operator|=
-name|IRQ_INVALID
+name|INTR_IRQ_INVALID
 expr_stmt|;
 comment|/* just to be safe */
 name|isrc
@@ -2245,7 +2241,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0xFFFFFFFF
+name|INTR_IRQ_INVALID
 operator|)
 return|;
 comment|/* no space left */
@@ -2366,7 +2362,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0xFFFFFFFF
+name|INTR_IRQ_INVALID
 operator|)
 return|;
 comment|/* no space left */
@@ -2486,7 +2482,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0xFFFFFFFF
+name|INTR_IRQ_INVALID
 operator|)
 return|;
 comment|/* no space left */
