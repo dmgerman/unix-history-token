@@ -9315,8 +9315,6 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
-block|,
 literal|0
 block|,
 literal|0
@@ -9337,8 +9335,6 @@ block|,
 name|tcp_do_segment_fastack
 block|,
 name|tcp_default_ctloutput
-block|,
-name|NULL
 block|,
 name|NULL
 block|,

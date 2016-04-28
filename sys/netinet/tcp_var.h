@@ -277,6 +277,10 @@ name|socket
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * If defining the optional tcp_timers, in the  * tfb_tcp_timer_stop call you must use the  * callout_async_drain() function with the  * tcp_timer_discard callback. You should check  * the return of callout_async_drain() and if 0  * increment tt_draincnt. Since the timer sub-system  * does not know your callbacks you must provide a  * stop_all function that loops through and calls  * tcp_timer_stop() with each of your defined timers.  */
+end_comment
+
 begin_struct
 struct|struct
 name|tcp_function_block
@@ -384,17 +388,6 @@ name|int
 function_decl|(
 modifier|*
 name|tfb_tcp_timer_stop_all
-function_decl|)
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tfb_tcp_timers_left
 function_decl|)
 parameter_list|(
 name|struct
