@@ -1020,7 +1020,7 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
