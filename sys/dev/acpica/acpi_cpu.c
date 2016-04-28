@@ -2239,6 +2239,17 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|&&
+name|device_get_driver
+argument_list|(
+name|devices
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+operator|&
+name|acpi_cpu_driver
 condition|)
 name|attached
 operator|=
