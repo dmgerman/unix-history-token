@@ -6162,7 +6162,7 @@ name|maxcontigdirs
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Limit number of dirs in one cg and reserve space for  	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 * 	 * We are trying to find a suitable cylinder group nearby 	 * our preferred cylinder group to place a new directory. 	 * We scan from our preferred cylinder group forward looking 	 * for a cylinder group that meets our criterion. If we get 	 * to the final cylinder group and do not find anything, 	 * we start scanning forwards from the beginning of the 	 * filesystem. While it might seem sensible to start scanning 	 * backwards or even to alternate looking forward and backward, 	 * this approach fails badly when the filesystem is nearly full. 	 * Specifically, we first search all the areas that have no space 	 * and finally try the one preceeding that. We repeat this on 	 * every request and in the case of the final block end up 	 * searching the entire filesystem. By jumping to the front 	 * of the filesystem, our future forward searches always look 	 * in new cylinder groups so finds every possible block after 	 * one pass over the filesystem. 	 */
+comment|/* 	 * Limit number of dirs in one cg and reserve space for  	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 * 	 * We are trying to find a suitable cylinder group nearby 	 * our preferred cylinder group to place a new directory. 	 * We scan from our preferred cylinder group forward looking 	 * for a cylinder group that meets our criterion. If we get 	 * to the final cylinder group and do not find anything, 	 * we start scanning forwards from the beginning of the 	 * filesystem. While it might seem sensible to start scanning 	 * backwards or even to alternate looking forward and backward, 	 * this approach fails badly when the filesystem is nearly full. 	 * Specifically, we first search all the areas that have no space 	 * and finally try the one preceding that. We repeat this on 	 * every request and in the case of the final block end up 	 * searching the entire filesystem. By jumping to the front 	 * of the filesystem, our future forward searches always look 	 * in new cylinder groups so finds every possible block after 	 * one pass over the filesystem. 	 */
 name|prefcg
 operator|=
 name|ino_to_cg
@@ -6649,7 +6649,7 @@ name|fs_frag
 operator|)
 return|;
 block|}
-comment|/* 	 * If we are at the beginning of a file, or we have already allocated 	 * the maximum number of blocks per cylinder group, or we do not 	 * have a block allocated immediately preceeding us, then we need 	 * to decide where to start allocating new blocks. 	 */
+comment|/* 	 * If we are at the beginning of a file, or we have already allocated 	 * the maximum number of blocks per cylinder group, or we do not 	 * have a block allocated immediately preceding us, then we need 	 * to decide where to start allocating new blocks. 	 */
 if|if
 condition|(
 name|indx
@@ -7114,7 +7114,7 @@ name|fs_frag
 operator|)
 return|;
 block|}
-comment|/* 	 * If we are at the beginning of a file, or we have already allocated 	 * the maximum number of blocks per cylinder group, or we do not 	 * have a block allocated immediately preceeding us, then we need 	 * to decide where to start allocating new blocks. 	 */
+comment|/* 	 * If we are at the beginning of a file, or we have already allocated 	 * the maximum number of blocks per cylinder group, or we do not 	 * have a block allocated immediately preceding us, then we need 	 * to decide where to start allocating new blocks. 	 */
 if|if
 condition|(
 name|indx

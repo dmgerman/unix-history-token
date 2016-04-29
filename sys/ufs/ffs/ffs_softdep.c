@@ -61614,7 +61614,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now clean up at least as many resources as we will need. 	 * 	 * When requested to clean up inodes, the number that are needed 	 * is set by the number of simultaneous writers (mnt_writeopcount) 	 * plus a bit of slop (2) in case some more writers show up while 	 * we are cleaning. 	 * 	 * When requested to free up space, the amount of space that 	 * we need is enough blocks to allocate a full-sized segment 	 * (fs_contigsumsize). The number of such segments that will 	 * be needed is set by the number of simultaneous writers 	 * (mnt_writeopcount) plus a bit of slop (2) in case some more 	 * writers show up while we are cleaning. 	 * 	 * Additionally, if we are unpriviledged and allocating space, 	 * we need to ensure that we clean up enough blocks to get the 	 * needed number of blocks over the threshhold of the minimum 	 * number of blocks required to be kept free by the filesystem 	 * (fs_minfree). 	 */
+comment|/* 	 * Now clean up at least as many resources as we will need. 	 * 	 * When requested to clean up inodes, the number that are needed 	 * is set by the number of simultaneous writers (mnt_writeopcount) 	 * plus a bit of slop (2) in case some more writers show up while 	 * we are cleaning. 	 * 	 * When requested to free up space, the amount of space that 	 * we need is enough blocks to allocate a full-sized segment 	 * (fs_contigsumsize). The number of such segments that will 	 * be needed is set by the number of simultaneous writers 	 * (mnt_writeopcount) plus a bit of slop (2) in case some more 	 * writers show up while we are cleaning. 	 * 	 * Additionally, if we are unpriviledged and allocating space, 	 * we need to ensure that we clean up enough blocks to get the 	 * needed number of blocks over the threshold of the minimum 	 * number of blocks required to be kept free by the filesystem 	 * (fs_minfree). 	 */
 if|if
 condition|(
 name|resource
@@ -64599,7 +64599,7 @@ argument_list|,
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Even if we sucessfully acquire bp here, we have dropped 		 * lock, which may violates our guarantee. 		 */
+comment|/* 		 * Even if we successfully acquire bp here, we have dropped 		 * lock, which may violates our guarantee. 		 */
 if|if
 condition|(
 name|error

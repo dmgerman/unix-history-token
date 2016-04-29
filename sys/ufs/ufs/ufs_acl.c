@@ -757,7 +757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read POSIX.1e ACL from an EA.  Return error if its not found  * or if any other error has occured.  */
+comment|/*  * Read POSIX.1e ACL from an EA.  Return error if its not found  * or if any other error has occurred.  */
 end_comment
 
 begin_function

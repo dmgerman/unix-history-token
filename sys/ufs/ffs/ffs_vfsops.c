@@ -3985,7 +3985,7 @@ operator|&=
 operator|~
 name|FS_INDEXDIRS
 expr_stmt|;
-comment|/* no support for directory indicies */
+comment|/* no support for directory indices */
 name|fs
 operator|->
 name|fs_flags
