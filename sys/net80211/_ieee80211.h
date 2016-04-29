@@ -142,6 +142,17 @@ name|IEEE80211_MODE_MAX
 value|(IEEE80211_MODE_QUARTER+1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MODE_BYTES
+value|2
+end_define
+
+begin_comment
+comment|/* howmany(IEEE80211_MODE_MAX, NBBY) */
+end_comment
+
 begin_comment
 comment|/*  * Operating mode.  Devices do not necessarily support  * all modes; they indicate which are supported in their  * capabilities.  */
 end_comment

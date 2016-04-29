@@ -2345,12 +2345,7 @@ decl_stmt|;
 name|uint8_t
 name|bands
 index|[
-name|howmany
-argument_list|(
-name|IEEE80211_MODE_MAX
-argument_list|,
-literal|8
-argument_list|)
+name|IEEE80211_MODE_BYTES
 index|]
 decl_stmt|;
 name|int
