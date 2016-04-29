@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpsnmpd-opts.c)  *  *  It has been AutoGen-ed  January 20, 2016 at 04:19:15 AM by AutoGen 5.18.5  *  From the definitions    ntpsnmpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpsnmpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpsnmpd program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpsnmpd-opts.c)  *  *  It has been AutoGen-ed  April 26, 2016 at 08:29:44 PM by AutoGen 5.18.5  *  From the definitions    ntpsnmpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpsnmpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpsnmpd program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -90,7 +90,7 @@ literal|1610
 index|]
 init|=
 comment|/*     0 */
-literal|"ntpsnmpd 4.2.8p6\n"
+literal|"ntpsnmpd 4.2.8p7\n"
 literal|"Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
@@ -155,7 +155,7 @@ literal|"no\0"
 comment|/*  1430 */
 literal|"NTPSNMPD\0"
 comment|/*  1439 */
-literal|"ntpsnmpd - NTP SNMP MIB agent - Ver. 4.2.8p6\n"
+literal|"ntpsnmpd - NTP SNMP MIB agent - Ver. 4.2.8p7\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n\0"
 comment|/*  1542 */
 literal|"$HOME\0"
@@ -168,7 +168,7 @@ literal|"http://bugs.ntp.org, bugs@ntp.org\0"
 comment|/*  1591 */
 literal|"\n\0"
 comment|/*  1593 */
-literal|"ntpsnmpd 4.2.8p6"
+literal|"ntpsnmpd 4.2.8p7"
 decl_stmt|;
 comment|/**  *  nofork option description:  */
 comment|/** Descriptive text for the nofork option */
@@ -1573,7 +1573,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpsnmpd 4.2.8p6\n\ Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntpsnmpd 4.2.8p7\n\ Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1671,7 +1671,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpsnmpd - NTP SNMP MIB agent - Ver. 4.2.8p6\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
+literal|"ntpsnmpd - NTP SNMP MIB agent - Ver. 4.2.8p7\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1689,7 +1689,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpsnmpd 4.2.8p6"
+literal|"ntpsnmpd 4.2.8p7"
 argument_list|)
 argument_list|)
 expr_stmt|;
