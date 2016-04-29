@@ -416,6 +416,15 @@ name|DEFAULT
 argument_list|(
 name|pu
 operator|->
+name|pru_aio_queue
+argument_list|,
+name|pru_aio_queue_notsupp
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
 name|pru_bind
 argument_list|,
 name|pru_bind_notsupp
