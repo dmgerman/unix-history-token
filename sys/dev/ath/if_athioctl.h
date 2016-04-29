@@ -532,9 +532,17 @@ name|ast_tx_nodeq_overflow
 decl_stmt|;
 comment|/* node sw queue overflow */
 name|u_int32_t
+name|ast_tx_ldpc
+decl_stmt|;
+comment|/* TX LDPC frame */
+name|u_int32_t
+name|ast_tx_stbc
+decl_stmt|;
+comment|/* TX STBC frame */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|12
+literal|10
 index|]
 decl_stmt|;
 block|}
