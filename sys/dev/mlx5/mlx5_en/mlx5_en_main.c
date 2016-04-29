@@ -12873,6 +12873,10 @@ literal|"Query module num failed, eeprom "
 literal|"reading is not supported\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|err_i2c
 goto|;
@@ -13001,6 +13005,10 @@ literal|"Query eeprom failed, eeprom "
 literal|"reading is not supported\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|err_i2c
 goto|;
@@ -13079,6 +13087,10 @@ argument_list|,
 literal|"Query eeprom failed, eeprom "
 literal|"reading is not supported\n"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|err_i2c
