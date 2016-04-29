@@ -966,7 +966,7 @@ name|csum
 modifier|*
 name|cgsum
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 comment|/* 	 * Recompute the fs summary info from correct cs summaries. 	 */
