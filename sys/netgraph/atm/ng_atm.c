@@ -5848,7 +5848,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* 	 * We are persistant - reinitialize 	 */
+comment|/* 	 * We are persistent - reinitialize. 	 */
 name|NG_NODE_REVIVE
 argument_list|(
 name|node

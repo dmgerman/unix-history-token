@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2005 Nuno Antunes<nuno.antunes@gmail.com>  * Copyri
 end_comment
 
 begin_comment
-comment|/*  * ng_car - An implementation of commited access rate for netgraph  *  * TODO:  *	- Sanitize input config values (impose some limits)  *	- Implement internal packet painting (possibly using mbuf tags)  *	- Implement color-aware mode  *	- Implement DSCP marking for IPv4  */
+comment|/*  * ng_car - An implementation of committed access rate for netgraph  *  * TODO:  *	- Sanitize input config values (impose some limits)  *	- Implement internal packet painting (possibly using mbuf tags)  *	- Implement color-aware mode  *	- Implement DSCP marking for IPv4  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Minimum RED threshhold for SHAPE mode */
+comment|/* Minimum RED threshold for SHAPE mode */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ comment|/* destination hook */
 name|int64_t
 name|tc
 decl_stmt|;
-comment|/* commited token bucket counter */
+comment|/* committed token bucket counter */
 name|int64_t
 name|te
 decl_stmt|;
@@ -1218,7 +1218,7 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-comment|/* Check commited token bucket. */
+comment|/* Check committed token bucket. */
 if|if
 condition|(
 name|hinfo
@@ -1262,7 +1262,7 @@ argument_list|(
 name|hinfo
 argument_list|)
 expr_stmt|;
-comment|/* Check commited token bucket again after refill. */
+comment|/* Check committed token bucket again after refill. */
 if|if
 condition|(
 name|hinfo
@@ -1441,7 +1441,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This packet is probaly red. */
+comment|/* This packet is probably red. */
 operator|++
 name|hinfo
 operator|->
@@ -2842,7 +2842,7 @@ block|{
 name|int64_t
 name|delta
 decl_stmt|;
-comment|/* Refill commited token bucket. */
+comment|/* Refill committed token bucket. */
 name|h
 operator|->
 name|tc
@@ -2936,7 +2936,7 @@ operator|==
 name|NG_CAR_DOUBLE_RATE
 condition|)
 block|{
-comment|/* Refill commited token bucket. */
+comment|/* Refill committed token bucket. */
 name|h
 operator|->
 name|tc
@@ -3028,7 +3028,7 @@ block|}
 else|else
 block|{
 comment|/* RED or SHAPE mode. */
-comment|/* Refill commited token bucket. */
+comment|/* Refill committed token bucket. */
 name|h
 operator|->
 name|tc

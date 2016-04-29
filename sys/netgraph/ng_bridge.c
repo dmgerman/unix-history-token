@@ -1156,7 +1156,7 @@ name|minStableAge
 operator|=
 name|DEFAULT_MIN_STABLE_AGE
 expr_stmt|;
-comment|/* 	 * This node has all kinds of stuff that could be screwed by SMP. 	 * Until it gets it's own internal protection, we go through in  	 * single file. This could hurt a machine bridging beteen two  	 * GB ethernets so it should be fixed.  	 * When it's fixed the process SHOULD NOT SLEEP, spinlocks please! 	 * (and atomic ops ) 	 */
+comment|/* 	 * This node has all kinds of stuff that could be screwed by SMP. 	 * Until it gets it's own internal protection, we go through in  	 * single file. This could hurt a machine bridging between two  	 * GB ethernets so it should be fixed.  	 * When it's fixed the process SHOULD NOT SLEEP, spinlocks please! 	 * (and atomic ops ) 	 */
 name|NG_NODE_FORCE_WRITER
 argument_list|(
 name|node

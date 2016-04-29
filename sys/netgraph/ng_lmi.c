@@ -1912,7 +1912,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* send an inquirey encoded appropriatly */
+comment|/* send an inquirey encoded appropriately */
 name|nglmi_inquire
 argument_list|(
 name|sc
@@ -2676,7 +2676,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Now check if there is a 'locking shift'. This is only seen in 	 * Annex D frames. don't bother checking, we already did that. Don't 	 * increment immediatly as it might not be there. */
+comment|/* Now check if there is a 'locking shift'. This is only seen in 	 * Annex D frames. don't bother checking, we already did that. Don't 	 * increment immediately as it might not be there. */
 if|if
 condition|(
 name|ANNEXD

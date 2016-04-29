@@ -1234,7 +1234,7 @@ comment|/* ng_l2cap_con_by_handle */
 end_comment
 
 begin_comment
-comment|/*  * Allocate new L2CAP channel descriptor on "con" conection with "psm".  * Will link the channel to the l2cap node  */
+comment|/*  * Allocate new L2CAP channel descriptor on "con" connection with "psm".  * Will link the channel to the l2cap node  */
 end_comment
 
 begin_function

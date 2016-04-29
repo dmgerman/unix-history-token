@@ -373,7 +373,7 @@ value|(((s)& MP_LONG_SEQ_HIBIT) ?		\ 				    ((s) | ~MP_LONG_SEQ_MASK)		\ 				  
 end_define
 
 begin_comment
-comment|/* Comparision of MP sequence numbers. Note: all sequence numbers    except priv->xseq are stored with the sign bit extended. */
+comment|/* Comparison of MP sequence numbers. Note: all sequence numbers    except priv->xseq are stored with the sign bit extended. */
 end_comment
 
 begin_define
@@ -612,7 +612,7 @@ index|[
 name|NG_PPP_MAX_LINKS
 index|]
 decl_stmt|;
-comment|/* indicies */
+comment|/* indices */
 name|uint16_t
 name|numActiveLinks
 decl_stmt|;
@@ -835,7 +835,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We use integer indicies to refer to the non-link hooks. */
+comment|/* We use integer indices to refer to the non-link hooks. */
 end_comment
 
 begin_struct
@@ -6777,7 +6777,7 @@ comment|/*  * Multilink layer  */
 end_comment
 
 begin_comment
-comment|/*  * Handle an incoming multi-link fragment  *  * The fragment reassembly algorithm is somewhat complex. This is mainly  * because we are required not to reorder the reconstructed packets, yet  * fragments are only guaranteed to arrive in order on a per-link basis.  * In other words, when we have a complete packet ready, but the previous  * packet is still incomplete, we have to decide between delivering the  * complete packet and throwing away the incomplete one, or waiting to  * see if the remainder of the incomplete one arrives, at which time we  * can deliver both packets, in order.  *  * This problem is exacerbated by "sequence number slew", which is when  * the sequence numbers coming in from different links are far apart from  * each other. In particular, certain unnamed equipment (*cough* Ascend)  * has been seen to generate sequence number slew of up to 10 on an ISDN  * 2B-channel MP link. There is nothing invalid about sequence number slew  * but it makes the reasssembly process have to work harder.  *  * However, the peer is required to transmit fragments in order on each  * link. That means if we define MSEQ as the minimum over all links of  * the highest sequence number received on that link, then we can always  * give up any hope of receiving a fragment with sequence number< MSEQ in  * the future (all of this using 'wraparound' sequence number space).  * Therefore we can always immediately throw away incomplete packets  * missing fragments with sequence numbers< MSEQ.  *  * Here is an overview of our algorithm:  *  *    o Received fragments are inserted into a queue, for which we  *	maintain these invariants between calls to this function:  *  *	- Fragments are ordered in the queue by sequence number  *	- If a complete packet is at the head of the queue, then  *	  the first fragment in the packet has seq#> MSEQ + 1  *	  (otherwise, we could deliver it immediately)  *	- If any fragments have seq#< MSEQ, then they are necessarily  *	  part of a packet whose missing seq#'s are all> MSEQ (otherwise,  *	  we can throw them away because they'll never be completed)  *	- The queue contains at most MP_MAX_QUEUE_LEN fragments  *  *    o We have a periodic timer that checks the queue for the first  *	complete packet that has been sitting in the queue "too long".  *	When one is detected, all previous (incomplete) fragments are  *	discarded, their missing fragments are declared lost and MSEQ  *	is increased.  *  *    o If we recieve a fragment with seq#< MSEQ, we throw it away  *	because we've already delcared it lost.  *  * This assumes linkNum != NG_PPP_BUNDLE_LINKNUM.  */
+comment|/*  * Handle an incoming multi-link fragment  *  * The fragment reassembly algorithm is somewhat complex. This is mainly  * because we are required not to reorder the reconstructed packets, yet  * fragments are only guaranteed to arrive in order on a per-link basis.  * In other words, when we have a complete packet ready, but the previous  * packet is still incomplete, we have to decide between delivering the  * complete packet and throwing away the incomplete one, or waiting to  * see if the remainder of the incomplete one arrives, at which time we  * can deliver both packets, in order.  *  * This problem is exacerbated by "sequence number slew", which is when  * the sequence numbers coming in from different links are far apart from  * each other. In particular, certain unnamed equipment (*cough* Ascend)  * has been seen to generate sequence number slew of up to 10 on an ISDN  * 2B-channel MP link. There is nothing invalid about sequence number slew  * but it makes the reasssembly process have to work harder.  *  * However, the peer is required to transmit fragments in order on each  * link. That means if we define MSEQ as the minimum over all links of  * the highest sequence number received on that link, then we can always  * give up any hope of receiving a fragment with sequence number< MSEQ in  * the future (all of this using 'wraparound' sequence number space).  * Therefore we can always immediately throw away incomplete packets  * missing fragments with sequence numbers< MSEQ.  *  * Here is an overview of our algorithm:  *  *    o Received fragments are inserted into a queue, for which we  *	maintain these invariants between calls to this function:  *  *	- Fragments are ordered in the queue by sequence number  *	- If a complete packet is at the head of the queue, then  *	  the first fragment in the packet has seq#> MSEQ + 1  *	  (otherwise, we could deliver it immediately)  *	- If any fragments have seq#< MSEQ, then they are necessarily  *	  part of a packet whose missing seq#'s are all> MSEQ (otherwise,  *	  we can throw them away because they'll never be completed)  *	- The queue contains at most MP_MAX_QUEUE_LEN fragments  *  *    o We have a periodic timer that checks the queue for the first  *	complete packet that has been sitting in the queue "too long".  *	When one is detected, all previous (incomplete) fragments are  *	discarded, their missing fragments are declared lost and MSEQ  *	is increased.  *  *    o If we receive a fragment with seq#< MSEQ, we throw it away  *	because we've already delcared it lost.  *  * This assumes linkNum != NG_PPP_BUNDLE_LINKNUM.  */
 end_comment
 
 begin_function

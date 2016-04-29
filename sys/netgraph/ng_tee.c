@@ -480,7 +480,7 @@ decl_stmt|;
 name|hi_p
 name|hinfo
 decl_stmt|;
-comment|/* Precalculate internal pathes. */
+comment|/* Precalculate internal paths. */
 if|if
 condition|(
 name|strcmp
@@ -1515,7 +1515,7 @@ name|hook
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Recalculate internal pathes. */
+comment|/* Recalculate internal paths. */
 if|if
 condition|(
 name|sc

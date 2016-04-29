@@ -1395,7 +1395,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/*  	 * Now we can remove command timeout, dequeue completed command 	 * and return command parameters. ng_hci_command_untimeout will 	 * drop NG_HCI_UNIT_COMMAND_PENDING flag. 	 * Note: if ng_hci_command_untimeout() fails (returns non-zero) 	 * then timeout aready happened and timeout message went info node 	 * queue. In this case we ignore command completion and pretend 	 * there is a timeout. 	 */
+comment|/*  	 * Now we can remove command timeout, dequeue completed command 	 * and return command parameters. ng_hci_command_untimeout will 	 * drop NG_HCI_UNIT_COMMAND_PENDING flag. 	 * Note: if ng_hci_command_untimeout() fails (returns non-zero) 	 * then timeout already happened and timeout message went info node 	 * queue. In this case we ignore command completion and pretend 	 * there is a timeout. 	 */
 if|if
 condition|(
 name|ng_hci_command_untimeout

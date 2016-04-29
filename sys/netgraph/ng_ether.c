@@ -3079,7 +3079,7 @@ operator|&
 name|NGF_REALLY_DIE
 condition|)
 block|{
-comment|/* 		 * WE came here because the ethernet card is being unloaded, 		 * so stop being persistant. 		 * Actually undo all the things we did on creation. 		 * Assume the ifp has already been freed. 		 */
+comment|/* 		 * WE came here because the ethernet card is being unloaded, 		 * so stop being persistent. 		 * Actually undo all the things we did on creation. 		 * Assume the ifp has already been freed. 		 */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node

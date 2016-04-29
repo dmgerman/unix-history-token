@@ -3399,7 +3399,7 @@ condition|)
 goto|goto
 name|bypass
 goto|;
-comment|/* 		 * Loop thru IPv6 extended headers to get upper 		 * layer header / frag. 		 */
+comment|/* 		 * Loop through IPv6 extended headers to get upper 		 * layer header / frag. 		 */
 for|for
 control|(
 init|;

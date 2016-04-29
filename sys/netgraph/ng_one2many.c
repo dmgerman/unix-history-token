@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2000 Whistle Communications, Inc.  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * ng_one2many(4) netgraph node type  *  * Packets received on the "one" hook are sent out each of the  * "many" hooks accoring to an algorithm. Packets received on any  * "many" hook are always delivered to the "one" hook.  */
+comment|/*  * ng_one2many(4) netgraph node type  *  * Packets received on the "one" hook are sent out each of the  * "many" hooks according to an algorithm. Packets received on any  * "many" hook are always delivered to the "one" hook.  */
 end_comment
 
 begin_include

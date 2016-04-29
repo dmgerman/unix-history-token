@@ -588,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the hook into queueing mode (for outgoing packets),  * so that we wont deliver mbuf thru the whole graph holding  * tty locks.  */
+comment|/*  * Set the hook into queueing mode (for outgoing packets),  * so that we wont deliver mbuf through the whole graph holding  * tty locks.  */
 end_comment
 
 begin_function

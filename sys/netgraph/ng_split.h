@@ -67,7 +67,7 @@ value|"in"
 end_define
 
 begin_comment
-comment|/* Input from inhook (recieving) */
+comment|/* Input from inhook (receiving) */
 end_comment
 
 begin_endif

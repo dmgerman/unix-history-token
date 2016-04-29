@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This node is used for high speed packet geneneration.  It queues  * all data recieved on its 'input' hook and when told to start via  * a control message it sends the packets out its 'output' hook.  In  * this way this node can be preloaded with a packet stream which it  * can then send continuously as fast as possible.  *  * Currently it just copies the mbufs as required.  It could do various  * tricks to try and avoid this.  Probably the best performance would  * be achieved by modifying the appropriate drivers to be told to  * self-re-enqueue packets (e.g. the if_bge driver could reuse the same  * transmit descriptors) under control of this node; perhaps via some  * flag in the mbuf or some such.  The node could peek at an appropriate  * ifnet flag to see if such support is available for the connected  * interface.  */
+comment|/*  * This node is used for high speed packet geneneration.  It queues  * all data received on its 'input' hook and when told to start via  * a control message it sends the packets out its 'output' hook.  In  * this way this node can be preloaded with a packet stream which it  * can then send continuously as fast as possible.  *  * Currently it just copies the mbufs as required.  It could do various  * tricks to try and avoid this.  Probably the best performance would  * be achieved by modifying the appropriate drivers to be told to  * self-re-enqueue packets (e.g. the if_bge driver could reuse the same  * transmit descriptors) under control of this node; perhaps via some  * flag in the mbuf or some such.  The node could peek at an appropriate  * ifnet flag to see if such support is available for the connected  * interface.  */
 end_comment
 
 begin_include

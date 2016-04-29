@@ -1383,7 +1383,7 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Shift the lowest bits into the address field untill we are done. 	 * First byte is MSBits of addr so work backwards. 	 */
+comment|/* 	 * Shift the lowest bits into the address field until we are done. 	 * First byte is MSBits of addr so work backwards. 	 */
 switch|switch
 condition|(
 name|alen

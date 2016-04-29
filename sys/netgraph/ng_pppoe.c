@@ -3224,7 +3224,7 @@ name|EEXIST
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * PPPOE_SERVICE advertisments are set up 			 * on sessions that are in PRIMED state. 			 */
+comment|/* 			 * PPPOE_SERVICE advertisements are set up 			 * on sessions that are in PRIMED state. 			 */
 if|if
 condition|(
 name|msg
@@ -7860,7 +7860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do local shutdown processing..  * If we are a persistant device, we might refuse to go away, and  * we'd only remove our links and reset ourself.  */
+comment|/*  * Do local shutdown processing..  * If we are a persistent device, we might refuse to go away, and  * we'd only remove our links and reset ourself.  */
 end_comment
 
 begin_function

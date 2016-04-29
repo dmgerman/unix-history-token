@@ -6503,7 +6503,7 @@ name|state
 operator|=
 name|NG_BTSOCKET_RFCOMM_SESSION_CONNECTED
 expr_stmt|;
-comment|/* 			 * Adjust MTU on incomming connection. Reserve 5 bytes: 			 * RFCOMM frame header, one extra byte for length and  			 * one extra byte for credits. 			 */
+comment|/* 			 * Adjust MTU on incoming connection. Reserve 5 bytes: 			 * RFCOMM frame header, one extra byte for length and  			 * one extra byte for credits. 			 */
 name|s
 operator|->
 name|mtu
@@ -12254,7 +12254,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-comment|/* PN request to non-existing dlci - incomming connection */
+comment|/* PN request to non-existing dlci - incoming connection */
 name|pcb
 operator|=
 name|ng_btsocket_rfcomm_connect_ind

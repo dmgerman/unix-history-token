@@ -6952,7 +6952,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* no return paramters*/
+comment|/* No return parameters. */
 end_comment
 
 begin_define
@@ -7011,7 +7011,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/*No command paramters*/
+comment|/* No command parameters. */
 end_comment
 
 begin_typedef
@@ -7560,7 +7560,7 @@ value|0x001f
 end_define
 
 begin_comment
-comment|/*No command paramter*/
+comment|/* No command parameter. */
 end_comment
 
 begin_typedef

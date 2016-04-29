@@ -1326,7 +1326,7 @@ operator|=
 operator|*
 name|sl0
 expr_stmt|;
-comment|/* Replace pointers with integer indicies */
+comment|/* Replace pointers with integer indices */
 if|if
 condition|(
 name|sl

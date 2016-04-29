@@ -86,7 +86,7 @@ comment|/* session data hook (format) */
 end_comment
 
 begin_comment
-comment|/* Set intial sequence numbers to not yet enabled node. */
+comment|/* Set initial sequence numbers to not yet enabled node. */
 end_comment
 
 begin_struct

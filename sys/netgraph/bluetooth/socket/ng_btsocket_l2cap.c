@@ -9436,7 +9436,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add the PCB to the list 	 *  	 * XXX FIXME VERY IMPORTANT! 	 * 	 * This is totally FUBAR. We could get here in two cases: 	 * 	 * 1) When user calls socket() 	 * 2) When we need to accept new incomming connection and call  	 *    sonewconn() 	 * 	 * In the first case we must acquire ng_btsocket_l2cap_sockets_mtx. 	 * In the second case we hold ng_btsocket_l2cap_sockets_mtx already. 	 * So we now need to distinguish between these cases. From reading 	 * /sys/kern/uipc_socket.c we can find out that sonewconn() calls 	 * pru_attach with proto == 0 and td == NULL. For now use this fact 	 * to figure out if we were called from socket() or from sonewconn(). 	 */
+comment|/* 	 * Add the PCB to the list 	 *  	 * XXX FIXME VERY IMPORTANT! 	 * 	 * This is totally FUBAR. We could get here in two cases: 	 * 	 * 1) When user calls socket() 	 * 2) When we need to accept new incoming connection and call  	 *    sonewconn() 	 * 	 * In the first case we must acquire ng_btsocket_l2cap_sockets_mtx. 	 * In the second case we hold ng_btsocket_l2cap_sockets_mtx already. 	 * So we now need to distinguish between these cases. From reading 	 * /sys/kern/uipc_socket.c we can find out that sonewconn() calls 	 * pru_attach with proto == 0 and td == NULL. For now use this fact 	 * to figure out if we were called from socket() or from sonewconn(). 	 */
 if|if
 condition|(
 name|td
@@ -11779,7 +11779,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* Check packet size agains outgoing (peer's incoming) MTU) */
+comment|/* Check packet size against outgoing (peer's incoming) MTU) */
 if|if
 condition|(
 name|m
@@ -12150,7 +12150,7 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we got here than we have successfuly creates new L2CAP  	 * data packet and now we can send it to the L2CAP layer 	 */
+comment|/* 	 * If we got here than we have successfully creates new L2CAP  	 * data packet and now we can send it to the L2CAP layer 	 */
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error

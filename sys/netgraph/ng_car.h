@@ -131,7 +131,7 @@ block|{
 name|u_int64_t
 name|cbs
 decl_stmt|;
-comment|/* Commited burst size (bytes) */
+comment|/* Committed burst size (bytes) */
 name|u_int64_t
 name|ebs
 decl_stmt|;
@@ -139,7 +139,7 @@ comment|/* Exceeded/Peak burst size (bytes) */
 name|u_int64_t
 name|cir
 decl_stmt|;
-comment|/* Commited information rate (bits/s) */
+comment|/* Committed information rate (bits/s) */
 name|u_int64_t
 name|pir
 decl_stmt|;

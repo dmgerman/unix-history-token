@@ -1495,7 +1495,7 @@ name|vlan_count
 operator|++
 expr_stmt|;
 block|}
-comment|/* Allocate memory for responce. */
+comment|/* Allocate memory for response. */
 name|NG_MKRESPONSE
 argument_list|(
 name|resp
@@ -1534,7 +1534,7 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
-comment|/* Pack data to responce. */
+comment|/* Pack data to response. */
 name|t
 operator|=
 operator|(
@@ -2347,7 +2347,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * VLAN filter: allways remove vlan tags and 			 * decapsulate packet. 			 */
+comment|/* 			 * VLAN filter: always remove vlan tags and 			 * decapsulate packet. 			 */
 name|dst_hook
 operator|=
 name|priv

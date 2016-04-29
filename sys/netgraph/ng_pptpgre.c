@@ -369,7 +369,7 @@ comment|/* 3 seconds */
 end_comment
 
 begin_comment
-comment|/* When we recieve a packet, we wait to see if there's an outgoing packet    we can piggy-back the ACK off of. These parameters determine the mimimum    and maxmimum length of time we're willing to wait in order to do that.    These have no effect unless "enableDelayedAck" is turned on. */
+comment|/* When we receive a packet, we wait to see if there's an outgoing packet    we can piggy-back the ACK off of. These parameters determine the mimimum    and maxmimum length of time we're willing to wait in order to do that.    These have no effect unless "enableDelayedAck" is turned on. */
 end_comment
 
 begin_define

@@ -3008,7 +3008,7 @@ name|node
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Well, blow me down if the node code hasn't declared 			 * that it doesn't want to die. 			 * Presumably it is a persistant node. 			 * If we REALLY want it to go away, 			 *  e.g. hardware going away, 			 * Our caller should set NGF_REALLY_DIE in nd_flags. 			 */
+comment|/* 			 * Well, blow me down if the node code hasn't declared 			 * that it doesn't want to die. 			 * Presumably it is a persistent node. 			 * If we REALLY want it to go away, 			 *  e.g. hardware going away, 			 * Our caller should set NGF_REALLY_DIE in nd_flags. 			 */
 name|node
 operator|->
 name|nd_flags
@@ -11522,7 +11522,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memory situations. 	 * Don't free it if it is so. 	 * I break them appart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
+comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memory situations. 	 * Don't free it if it is so. 	 * I break them apart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
 name|out
 label|:
 name|NG_RESPOND_MSG

@@ -487,7 +487,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This structure is used in NGM_NETFLOW_SHOW request/responce */
+comment|/* This structure is used in NGM_NETFLOW_SHOW request/response */
 end_comment
 
 begin_struct

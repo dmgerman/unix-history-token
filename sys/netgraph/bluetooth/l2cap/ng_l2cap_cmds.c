@@ -1217,7 +1217,7 @@ comment|/* ng_l2cap_con_fail */
 end_comment
 
 begin_comment
-comment|/*  * Process L2CAP command timeout. In general - notify upper layer and destroy  * channel. Do not pay much attension to return code, just do our best.  */
+comment|/*  * Process L2CAP command timeout. In general - notify upper layer and destroy  * channel. Do not pay much attention to return code, just do our best.  */
 end_comment
 
 begin_function

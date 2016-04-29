@@ -1401,7 +1401,7 @@ comment|/* Procotol/Service Multiplexor */
 name|u_int8_t
 name|ident
 decl_stmt|;
-comment|/* indentifier */
+comment|/* identifier */
 name|u_int8_t
 name|linktype
 decl_stmt|;
@@ -2670,7 +2670,7 @@ comment|/* destination (remote) channel ID */
 name|u_int16_t
 name|imtu
 decl_stmt|;
-comment|/* incomming MTU */
+comment|/* incoming MTU */
 name|u_int16_t
 name|omtu
 decl_stmt|;

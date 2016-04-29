@@ -816,7 +816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a netgraph control message.  * We actually recieve a queue item that has a pointer to the message.  * If we free the item, the message will be freed too, unless we remove  * it from the item using NGI_GET_MSG();  * The return address is also stored in the item, as an ng_ID_t,  * accessible as NGI_RETADDR(item);  * Check it is one we understand. If needed, send a response.  * We could save the address for an async action later, but don't here.  * Always free the message.  * The response should be in a malloc'd region that the caller can 'free'.  * The NG_MKRESPONSE macro does all this for us.  * A response is not required.  * Theoretically you could respond defferently to old message types if  * the cookie in the header didn't match what we consider to be current  * (so that old userland programs could continue to work).  */
+comment|/*  * Get a netgraph control message.  * We actually receive a queue item that has a pointer to the message.  * If we free the item, the message will be freed too, unless we remove  * it from the item using NGI_GET_MSG();  * The return address is also stored in the item, as an ng_ID_t,  * accessible as NGI_RETADDR(item);  * Check it is one we understand. If needed, send a response.  * We could save the address for an async action later, but don't here.  * Always free the message.  * The response should be in a malloc'd region that the caller can 'free'.  * The NG_MKRESPONSE macro does all this for us.  * A response is not required.  * Theoretically you could respond defferently to old message types if  * the cookie in the header didn't match what we consider to be current  * (so that old userland programs could continue to work).  */
 end_comment
 
 begin_function

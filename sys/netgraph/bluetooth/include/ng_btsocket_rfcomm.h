@@ -231,7 +231,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Incomming Call */
+comment|/* Incoming Call */
 end_comment
 
 begin_define
@@ -1117,7 +1117,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_RFCOMM_DLC_TIMEDOUT
 value|(1<< 2)
-comment|/* timeout happend */
+comment|/* timeout happened */
 define|#
 directive|define
 name|NG_BTSOCKET_RFCOMM_DLC_DETACHED

@@ -380,7 +380,7 @@ name|void
 modifier|*
 name|hk_private
 decl_stmt|;
-comment|/* node dependant ID for this hook */
+comment|/* node dependent ID for this hook */
 name|int
 name|hk_flags
 decl_stmt|;
@@ -2086,7 +2086,7 @@ name|void
 modifier|*
 name|nd_private
 decl_stmt|;
-comment|/* node type dependant node ID */
+comment|/* node type dependent node ID */
 name|ng_ID_t
 name|nd_ID
 decl_stmt|;
@@ -5572,7 +5572,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure of a node type  * If data is sent to the "rcvdata()" entrypoint then the system  * may decide to defer it until later by queing it with the normal netgraph  * input queuing system.  This is decidde by the HK_QUEUE flag being set in  * the flags word of the peer (receiving) hook. The dequeuing mechanism will  * ensure it is not requeued again.  * Note the input queueing system is to allow modules  * to 'release the stack' or to pass data across spl layers.  * The data will be redelivered as soon as the NETISR code runs  * which may be almost immediatly.  A node may also do it's own queueing  * for other reasons (e.g. device output queuing).  */
+comment|/*  * Structure of a node type  * If data is sent to the "rcvdata()" entrypoint then the system  * may decide to defer it until later by queing it with the normal netgraph  * input queuing system.  This is decidde by the HK_QUEUE flag being set in  * the flags word of the peer (receiving) hook. The dequeuing mechanism will  * ensure it is not requeued again.  * Note the input queueing system is to allow modules  * to 'release the stack' or to pass data across spl layers.  * The data will be redelivered as soon as the NETISR code runs  * which may be almost immediately.  A node may also do it's own queueing  * for other reasons (e.g. device output queuing).  */
 end_comment
 
 begin_struct

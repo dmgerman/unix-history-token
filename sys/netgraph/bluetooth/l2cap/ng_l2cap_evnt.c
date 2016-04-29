@@ -1565,7 +1565,7 @@ name|uint8_t
 name|ident
 parameter_list|)
 block|{
-comment|/*We do not implement paramter negotiasion for now*/
+comment|/* We do not implement parameter negotiation for now. */
 name|send_l2cap_param_urs
 argument_list|(
 name|con
@@ -4394,7 +4394,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Looks like we have successfuly disconnected channel, so notify  	 * upper layer. If command timeout already happened then ignore 	 * response. 	 */
+comment|/* 	 * Looks like we have successfully disconnected channel, so notify  	 * upper layer. If command timeout already happened then ignore 	 * response. 	 */
 if|if
 condition|(
 operator|(

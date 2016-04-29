@@ -5343,7 +5343,7 @@ operator||
 name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add the PCB to the list 	 * 	 * XXX FIXME VERY IMPORTANT! 	 * 	 * This is totally FUBAR. We could get here in two cases: 	 * 	 * 1) When user calls socket() 	 * 2) When we need to accept new incomming connection and call 	 *    sonewconn() 	 * 	 * In the first case we must aquire ng_btsocket_sco_sockets_mtx. 	 * In the second case we hold ng_btsocket_sco_sockets_mtx already. 	 * So we now need to distinguish between these cases. From reading 	 * /sys/kern/uipc_socket2.c we can find out that sonewconn() calls 	 * pru_attach with proto == 0 and td == NULL. For now use this fact 	 * to figure out if we were called from socket() or from sonewconn(). 	 */
+comment|/* 	 * Add the PCB to the list 	 * 	 * XXX FIXME VERY IMPORTANT! 	 * 	 * This is totally FUBAR. We could get here in two cases: 	 * 	 * 1) When user calls socket() 	 * 2) When we need to accept new incoming connection and call 	 *    sonewconn() 	 * 	 * In the first case we must acquire ng_btsocket_sco_sockets_mtx. 	 * In the second case we hold ng_btsocket_sco_sockets_mtx already. 	 * So we now need to distinguish between these cases. From reading 	 * /sys/kern/uipc_socket2.c we can find out that sonewconn() calls 	 * pru_attach with proto == 0 and td == NULL. For now use this fact 	 * to figure out if we were called from socket() or from sonewconn(). 	 */
 if|if
 condition|(
 name|td

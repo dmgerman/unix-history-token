@@ -8,7 +8,7 @@ comment|/*-  * Copyright 2001 The Aerospace Corporation.  All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * ng_gif_demux(4) netgraph node type  *  * Packets received on the "gif" hook have their type header removed  * and are passed to the appropriate hook protocol hook.  Packets  * recieved on a protocol hook have a type header added back and are  * passed out the gif hook. The currently supported protocol hooks are:  */
+comment|/*  * ng_gif_demux(4) netgraph node type  *  * Packets received on the "gif" hook have their type header removed  * and are passed to the appropriate hook protocol hook.  Packets  * received on a protocol hook have a type header added back and are  * passed out the gif hook. The currently supported protocol hooks are:  */
 end_comment
 
 begin_include
