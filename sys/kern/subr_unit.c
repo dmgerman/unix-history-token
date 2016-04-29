@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bitstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_unrhdr.h>
 end_include
 
@@ -26,6 +20,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/bitstring.h>
+end_include
 
 begin_include
 include|#
@@ -137,6 +137,36 @@ end_else
 begin_comment
 comment|/* ...USERLAND */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
 
 begin_include
 include|#
@@ -4141,8 +4171,25 @@ comment|/* USERLAND test driver */
 end_comment
 
 begin_comment
-comment|/*  * Simple stochastic test driver for the above functions  */
+comment|/*  * Simple stochastic test driver for the above functions.  The code resides  * here so that it can access static functions and structures.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VPRINTF
+parameter_list|(
+modifier|...
+parameter_list|)
+value|{if (verbose) printf(__VA_ARGS__);}
+end_define
 
 begin_function
 specifier|static
@@ -4412,7 +4459,7 @@ name|i
 index|]
 condition|)
 block|{
-name|printf
+name|VPRINTF
 argument_list|(
 literal|"F %u\n"
 argument_list|,
@@ -4462,7 +4509,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|VPRINTF
 argument_list|(
 literal|"A %d\n"
 argument_list|,
@@ -4516,7 +4563,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|VPRINTF
 argument_list|(
 literal|"F %u\n"
 argument_list|,
@@ -4547,7 +4594,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|VPRINTF
 argument_list|(
 literal|"A %d\n"
 argument_list|,
@@ -4558,16 +4605,29 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Number of unrs to test */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NN
-value|10000
-end_define
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s [-h] [-r REPETITIONS] [-v]\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -4575,20 +4635,35 @@ name|main
 parameter_list|(
 name|int
 name|argc
-name|__unused
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
 name|argv
-name|__unused
 parameter_list|)
 block|{
 name|struct
 name|unrhdr
 modifier|*
 name|uh
+decl_stmt|;
+name|char
+modifier|*
+name|a
+decl_stmt|;
+name|long
+name|count
+init|=
+literal|10000
+decl_stmt|;
+comment|/* Number of unrs to test */
+name|long
+name|reps
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|;
 name|u_int
 name|i
@@ -4599,12 +4674,99 @@ name|m
 decl_stmt|,
 name|j
 decl_stmt|;
-name|char
-name|a
-index|[
-name|NN
-index|]
-decl_stmt|;
+name|verbose
+operator|=
+name|false
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"hr:v"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|reps
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+operator|||
+name|errno
+operator|==
+name|EINVAL
+condition|)
+block|{
+name|usage
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+default|default:
+name|usage
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|setbuf
 argument_list|(
 name|stdout
@@ -4618,7 +4780,7 @@ name|new_unrhdr
 argument_list|(
 literal|0
 argument_list|,
-name|NN
+name|count
 operator|-
 literal|1
 argument_list|,
@@ -4630,23 +4792,36 @@ argument_list|(
 name|uh
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
 name|a
-argument_list|,
-literal|0
+operator|=
+name|calloc
+argument_list|(
+name|count
 argument_list|,
 sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|a
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
 name|srandomdev
 argument_list|()
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"sizeof(struct unr) %zu\n"
 argument_list|,
 sizeof|sizeof
@@ -4656,10 +4831,8 @@ name|unr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"sizeof(struct unrb) %zu\n"
 argument_list|,
 sizeof|sizeof
@@ -4669,10 +4842,8 @@ name|unrb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"sizeof(struct unrhdr) %zu\n"
 argument_list|,
 sizeof|sizeof
@@ -4682,10 +4853,8 @@ name|unrhdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"NBITS %d\n"
 argument_list|,
 name|NBITS
@@ -4703,9 +4872,9 @@ literal|0
 init|;
 name|m
 operator|<
-name|NN
+name|count
 operator|*
-literal|100
+name|reps
 condition|;
 name|m
 operator|++
@@ -4724,7 +4893,7 @@ operator|>>
 literal|1
 operator|)
 operator|%
-name|NN
+name|count
 expr_stmt|;
 if|#
 directive|if
@@ -4764,9 +4933,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
+name|verbose
 condition|)
-comment|/* XXX: change this for detailed debug printout */
 name|print_unrhdr
 argument_list|(
 name|uh
@@ -4788,7 +4956,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NN
+name|count
 condition|;
 name|i
 operator|++
@@ -4802,6 +4970,11 @@ name|i
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"C %u\n"
@@ -4809,16 +4982,17 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|print_unrhdr
+argument_list|(
+name|uh
+argument_list|)
+expr_stmt|;
+block|}
 name|free_unr
 argument_list|(
 name|uh
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|print_unrhdr
-argument_list|(
-name|uh
 argument_list|)
 expr_stmt|;
 block|}
@@ -4831,6 +5005,11 @@ expr_stmt|;
 name|delete_unrhdr
 argument_list|(
 name|uh
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|a
 argument_list|)
 expr_stmt|;
 return|return
