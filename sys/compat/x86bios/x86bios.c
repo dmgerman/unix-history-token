@@ -496,7 +496,7 @@ name|void
 modifier|*
 name|vaddr
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
