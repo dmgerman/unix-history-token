@@ -342,7 +342,7 @@ comment|/* entries left */
 name|int
 name|f_ecnt
 decl_stmt|;
-comment|/* entries left in the current reponse */
+comment|/* entries left in the current response */
 name|int
 name|f_eofs
 decl_stmt|;

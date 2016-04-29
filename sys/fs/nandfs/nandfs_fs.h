@@ -1163,7 +1163,7 @@ comment|/* minimum number of reserved 					   segments */
 end_comment
 
 begin_comment
-comment|/*  * Structure of DAT/inode file.  *  * A DAT file is devided into groups. The maximum number of groups is the  * number of block group descriptors that fit into one block; this descriptor  * only gives the number of free entries in the associated group.  *  * Each group has a block sized bitmap indicating if an entry is taken or  * empty. Each bit stands for a DAT entry.  *  * The inode file has exactly the same format only the entries are inode  * entries.  */
+comment|/*  * Structure of DAT/inode file.  *  * A DAT file is divided into groups. The maximum number of groups is the  * number of block group descriptors that fit into one block; this descriptor  * only gives the number of free entries in the associated group.  *  * Each group has a block sized bitmap indicating if an entry is taken or  * empty. Each bit stands for a DAT entry.  *  * The inode file has exactly the same format only the entries are inode  * entries.  */
 end_comment
 
 begin_struct

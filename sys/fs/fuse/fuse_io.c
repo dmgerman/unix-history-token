@@ -813,7 +813,7 @@ argument_list|,
 name|on
 argument_list|)
 expr_stmt|;
-comment|/* 	         * Obtain the buffer cache block.  Figure out the buffer size 	         * when we are at EOF.  If we are modifying the size of the 	         * buffer based on an EOF condition we need to hold 	         * nfs_rslock() through obtaining the buffer to prevent 	         * a potential writer-appender from messing with n_size. 	         * Otherwise we may accidently truncate the buffer and 	         * lose dirty data. 	         * 	         * Note that bcount is *not* DEV_BSIZE aligned. 	         */
+comment|/* 	         * Obtain the buffer cache block.  Figure out the buffer size 	         * when we are at EOF.  If we are modifying the size of the 	         * buffer based on an EOF condition we need to hold 	         * nfs_rslock() through obtaining the buffer to prevent 	         * a potential writer-appender from messing with n_size. 	         * Otherwise we may accidentally truncate the buffer and 	         * lose dirty data. 	         * 	         * Note that bcount is *not* DEV_BSIZE aligned. 	         */
 if|if
 condition|(
 operator|(
@@ -2266,7 +2266,7 @@ name|b_dirtyoff
 operator|)
 condition|)
 block|{
-comment|/* 	                 * Yes, we mean it. Write out everything to "storage" 	                 * immediatly, without hesitation. (Apart from other 	                 * reasons: the only way to know if a write is valid 	                 * if its actually written out.) 	                 */
+comment|/* 	                 * Yes, we mean it. Write out everything to "storage" 	                 * immediately, without hesitation. (Apart from other 	                 * reasons: the only way to know if a write is valid 	                 * if its actually written out.) 	                 */
 name|bwrite
 argument_list|(
 name|bp

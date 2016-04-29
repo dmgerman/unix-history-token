@@ -570,7 +570,7 @@ condition|(
 name|rest
 condition|)
 block|{
-comment|/* When last check start from beggining */
+comment|/* When last check start from beginning */
 if|if
 condition|(
 name|i

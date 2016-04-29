@@ -646,7 +646,7 @@ name|pmp
 operator|->
 name|pm_bpcluster
 expr_stmt|;
-comment|/* 	 * Rummage around in the fat cache, maybe we can avoid tromping 	 * thru every fat entry for the file. And, keep track of how far 	 * off the cache was from where we wanted to be. 	 */
+comment|/* 	 * Rummage around in the fat cache, maybe we can avoid tromping 	 * through every fat entry for the file. And, keep track of how far 	 * off the cache was from where we wanted to be. 	 */
 name|i
 operator|=
 literal|0

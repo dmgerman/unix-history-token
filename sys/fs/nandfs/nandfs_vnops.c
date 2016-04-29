@@ -6269,7 +6269,7 @@ name|ndirent
 operator|->
 name|rec_len
 expr_stmt|;
-comment|/* Remember the last entry we transfered */
+comment|/* Remember the last entry we transferred */
 name|transoffset
 operator|=
 name|diroffset
@@ -6280,7 +6280,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Pass on last transfered offset */
+comment|/* Pass on last transferred offset */
 name|uio
 operator|->
 name|uio_offset

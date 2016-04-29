@@ -3987,7 +3987,7 @@ operator|==
 name|fnode
 argument_list|)
 expr_stmt|;
-comment|/* If re-naming a directory to another preexisting directory 	 * ensure that the target directory is empty so that its 	 * removal causes no side effects. 	 * Kern_rename gurantees the destination to be a directory 	 * if the source is one. */
+comment|/* If re-naming a directory to another preexisting directory 	 * ensure that the target directory is empty so that its 	 * removal causes no side effects. 	 * Kern_rename guarantees the destination to be a directory 	 * if the source is one. */
 if|if
 condition|(
 name|tvp

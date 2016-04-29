@@ -766,7 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* inode managment */
+comment|/* Inode management. */
 end_comment
 
 begin_function_decl

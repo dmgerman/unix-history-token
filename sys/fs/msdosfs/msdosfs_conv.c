@@ -4988,7 +4988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine the number of bytes neccessary for Win95 names  */
+comment|/*  * Determine the number of bytes necessary for Win95 names  */
 end_comment
 
 begin_function

@@ -4107,7 +4107,7 @@ operator|!
 name|islastcn
 condition|)
 block|{
-comment|/* 				 * We have the attributes of the next item 				 * *now*, and it's a fact, and we do not 				 * have to do extra work for it (ie, beg the 				 * daemon), and it neither depends on such 				 * accidental things like attr caching. So 				 * the big idea: check credentials *now*, 				 * not at the beginning of the next call to 				 * lookup. 				 *  				 * The first item of the lookup chain (fs root) 				 * won't be checked then here, of course, as 				 * its never "the next". But go and see that 				 * the root is taken care about at the very 				 * beginning of this function. 				 *  				 * Now, given we want to do the access check 				 * this way, one might ask: so then why not 				 * do the access check just after fetching 				 * the inode and its attributes from the 				 * daemon? Why bother with producing the 				 * corresponding vnode at all if something 				 * is not OK? We know what's the deal as 				 * soon as we get those attrs... There is 				 * one bit of info though not given us by 				 * the daemon: whether his response is 				 * authorative or not... His response should 				 * be ignored if something is mounted over 				 * the dir in question. But that can be 				 * known only by having the vnode... 				 */
+comment|/* 				 * We have the attributes of the next item 				 * *now*, and it's a fact, and we do not 				 * have to do extra work for it (ie, beg the 				 * daemon), and it neither depends on such 				 * accidental things like attr caching. So 				 * the big idea: check credentials *now*, 				 * not at the beginning of the next call to 				 * lookup. 				 *  				 * The first item of the lookup chain (fs root) 				 * won't be checked then here, of course, as 				 * its never "the next". But go and see that 				 * the root is taken care about at the very 				 * beginning of this function. 				 *  				 * Now, given we want to do the access check 				 * this way, one might ask: so then why not 				 * do the access check just after fetching 				 * the inode and its attributes from the 				 * daemon? Why bother with producing the 				 * corresponding vnode at all if something 				 * is not OK? We know what's the deal as 				 * soon as we get those attrs... There is 				 * one bit of info though not given us by 				 * the daemon: whether his response is 				 * authoritative or not... His response should 				 * be ignored if something is mounted over 				 * the dir in question. But that can be 				 * known only by having the vnode... 				 */
 name|int
 name|tmpvtype
 init|=
@@ -7221,7 +7221,7 @@ operator|->
 name|v_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
+comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convenient and fast. 	 */
 name|bp
 operator|=
 name|getpbuf
@@ -7520,7 +7520,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Read operation was short.  If no error occured 			 * we may have hit a zero-fill section.   We simply 			 * leave valid set to 0. 			 */
+comment|/* 			 * Read operation was short.  If no error occurred 			 * we may have hit a zero-fill section.   We simply 			 * leave valid set to 0. 			 */
 empty_stmt|;
 block|}
 block|}
@@ -7787,7 +7787,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
+comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convenient and fast. 	 */
 name|bp
 operator|=
 name|getpbuf

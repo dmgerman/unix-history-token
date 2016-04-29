@@ -2702,7 +2702,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Read operation was short.  If no error occured 			 * we may have hit a zero-fill section.   We simply 			 * leave valid set to 0. 			 */
+comment|/* 			 * Read operation was short.  If no error occurred 			 * we may have hit a zero-fill section.   We simply 			 * leave valid set to 0. 			 */
 empty_stmt|;
 block|}
 block|}

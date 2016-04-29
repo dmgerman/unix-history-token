@@ -3396,7 +3396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a directory entry. At this point the file represented by the  * directory entry to be removed is still full length until noone has it  * open.  When the file no longer being used msdosfs_inactive() is called  * and will truncate the file to 0 length.  When the vnode containing the  * denode is needed for some other purpose by VFS it will call  * msdosfs_reclaim() which will remove the denode from the denode cache.  *  * pdep	directory where the entry is removed  * dep	file to be removed  */
+comment|/*  * Remove a directory entry. At this point the file represented by the  * directory entry to be removed is still full length until no one has it  * open.  When the file no longer being used msdosfs_inactive() is called  * and will truncate the file to 0 length.  When the vnode containing the  * denode is needed for some other purpose by VFS it will call  * msdosfs_reclaim() which will remove the denode from the denode cache.  *  * pdep	directory where the entry is removed  * dep	file to be removed  */
 end_comment
 
 begin_function
@@ -3598,7 +3598,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* 			 * We are a bit agressive here in that we delete any Win95 			 * entries preceding this entry, not just the ones we "own". 			 * Since these presumably aren't valid anyway, 			 * there should be no harm. 			 */
+comment|/* 			 * We are a bit aggressive here in that we delete any Win95 			 * entries preceding this entry, not just the ones we "own". 			 * Since these presumably aren't valid anyway, 			 * there should be no harm. 			 */
 name|offset
 operator|-=
 sizeof|sizeof

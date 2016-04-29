@@ -47,7 +47,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/***********************************************************************  * The following two typedef's are to remove compiler dependancies.  * byte needs to be unsigned 8-bit, and unicode_t needs to be  * unsigned 16-bit.  */
+comment|/***********************************************************************  * The following two typedef's are to remove compiler dependencies.  * byte needs to be unsigned 8-bit, and unicode_t needs to be  * unsigned 16-bit.  */
 end_comment
 
 begin_typedef
