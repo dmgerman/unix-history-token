@@ -346,7 +346,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* signal unsafe - may malloc */
+comment|/* signal unsafe - may malloc, never returs NULL */
 end_comment
 
 begin_function_decl
@@ -446,7 +446,7 @@ specifier|extern
 name|void
 name|purge_recv_buffers_for_fd
 parameter_list|(
-name|SOCKET
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

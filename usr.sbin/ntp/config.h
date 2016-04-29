@@ -935,6 +935,17 @@ value|60
 end_define
 
 begin_comment
+comment|/* support dynamic interleave? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DYNAMIC_INTERLEAVE
+value|0
+end_define
+
+begin_comment
 comment|/* number of args to el_init() */
 end_comment
 
@@ -943,6 +954,17 @@ define|#
 directive|define
 name|EL_INIT_ARGS
 value|4
+end_define
+
+begin_comment
+comment|/* Provide the explicit 127.0.0.0/8 martian filter? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_BUG3020_FIX
+value|1
 end_define
 
 begin_comment
@@ -2672,7 +2694,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<stdbool.h> header file. */
+comment|/* Define to 1 if stdbool.h conforms to C99. */
 end_comment
 
 begin_define
@@ -3869,6 +3891,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `_Bool'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE__BOOL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `_exit' function. */
 end_comment
 
@@ -4323,6 +4356,14 @@ comment|/* #undef MISSING_C99_STRUCT_INIT */
 end_comment
 
 begin_comment
+comment|/* having to fork the DNS worker early when doing chroot? */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_EARLY_FORK */
+end_comment
+
+begin_comment
 comment|/* Do we need HPUX adjtime() library support? */
 end_comment
 
@@ -4598,7 +4639,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p6"
+value|"ntp 4.2.8p7"
 end_define
 
 begin_comment
@@ -4631,7 +4672,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p6"
+value|"4.2.8p7"
 end_define
 
 begin_comment
@@ -4763,7 +4804,7 @@ comment|/* #undef SCO5_CLOCK */
 end_comment
 
 begin_comment
-comment|/* The size of `char*', as computed by sizeof. */
+comment|/* The size of `char *', as computed by sizeof. */
 end_comment
 
 begin_ifdef
@@ -5364,7 +5405,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p6"
+value|"4.2.8p7"
 end_define
 
 begin_comment
@@ -6023,14 +6064,14 @@ begin_define
 define|#
 directive|define
 name|MKREPRO_DATE
-value|"Jan 21 2016"
+value|"Apr 27 2016"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKREPRO_TIME
-value|"01:03:28"
+value|"05:53:49"
 end_define
 
 end_unit

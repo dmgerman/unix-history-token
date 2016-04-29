@@ -92,13 +92,6 @@ name|lfpfracdata
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
 begin_function_decl
 name|struct
 name|timeval

@@ -53,17 +53,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
-begin_comment
-comment|// typedef enum { FALSE, TRUE } boolean; -> can't use this because TRUE and FALSE are already defined
-end_comment
-
-begin_typedef
-typedef|typedef
 struct|struct
 block|{
 name|uint32_t
