@@ -1179,6 +1179,10 @@ name|int
 name|do_stbc
 decl_stmt|;
 comment|/* 	 * We only do LDPC if the rate is 11n, both we and the 	 * receiver support LDPC and it's enabled. 	 * 	 * It's a global flag, not a per-try flag, so we clear 	 * it if any of the rate entries aren't 11n. 	 */
+name|do_ldpc
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
