@@ -6478,7 +6478,7 @@ decl_stmt|;
 name|daddr_t
 name|lblkno
 decl_stmt|;
-comment|/* 		 * Align to iosize boundry, super-align to page boundry. 		 */
+comment|/* 		 * Align to iosize boundary, super-align to page boundary. 		 */
 if|if
 condition|(
 name|off
@@ -14143,7 +14143,7 @@ operator|=
 name|EACCES
 expr_stmt|;
 block|}
-comment|/* 	 * Personally, I've never seen any point in requiring a 	 * reserved port#, since only in the rare case where the 	 * clients are all boxes with secure system priviledges, 	 * does it provide any enhanced security, but... some people 	 * believe it to be useful and keep putting this code back in. 	 * (There is also some "security checker" out there that 	 *  complains if the nfs server doesn't enforce this.) 	 * However, note the following: 	 * RFC3530 (NFSv4) specifies that a reserved port# not be 	 *	required. 	 * RFC2623 recommends that, if a reserved port# is checked for, 	 *	that there be a way to turn that off--> ifdef'd. 	 */
+comment|/* 	 * Personally, I've never seen any point in requiring a 	 * reserved port#, since only in the rare case where the 	 * clients are all boxes with secure system privileges, 	 * does it provide any enhanced security, but... some people 	 * believe it to be useful and keep putting this code back in. 	 * (There is also some "security checker" out there that 	 *  complains if the nfs server doesn't enforce this.) 	 * However, note the following: 	 * RFC3530 (NFSv4) specifies that a reserved port# not be 	 *	required. 	 * RFC2623 recommends that, if a reserved port# is checked for, 	 *	that there be a way to turn that off--> ifdef'd. 	 */
 ifdef|#
 directive|ifdef
 name|NFS_REQRSVPORT
@@ -15329,7 +15329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Nfs server psuedo system call for the nfsd's  */
+comment|/*  * Nfs server pseudo system call for the nfsd's  */
 end_comment
 
 begin_comment

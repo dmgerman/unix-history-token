@@ -700,7 +700,7 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Create socket and set its recieve timeout. 	 */
+comment|/* 	 * Create socket and set its receive timeout. 	 */
 if|if
 condition|(
 operator|(

@@ -78,7 +78,7 @@ file|<fs/nfsclient/nfs_kdtrace.h>
 end_include
 
 begin_comment
-comment|/*  * dtnfscl is a DTrace provider that tracks the intent to perform RPCs  * in the NFS client, as well as acess to and maintenance of the access and  * attribute caches.  This is not quite the same as RPCs, because NFS may  * issue multiple RPC transactions in the event that authentication fails,  * there's a jukebox error, or none at all if the access or attribute cache  * hits.  However, it cleanly represents the logical layer between RPC  * transmission and vnode/vfs operations, providing access to state linking  * the two.  */
+comment|/*  * dtnfscl is a DTrace provider that tracks the intent to perform RPCs  * in the NFS client, as well as access to and maintenance of the access and  * attribute caches.  This is not quite the same as RPCs, because NFS may  * issue multiple RPC transactions in the event that authentication fails,  * there's a jukebox error, or none at all if the access or attribute cache  * hits.  However, it cleanly represents the logical layer between RPC  * transmission and vnode/vfs operations, providing access to state linking  * the two.  */
 end_comment
 
 begin_function_decl

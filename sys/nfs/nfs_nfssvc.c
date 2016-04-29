@@ -223,7 +223,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Nfs server psuedo system call for the nfsd's  */
+comment|/*  * Nfs server pseudo system call for the nfsd's  */
 end_comment
 
 begin_function

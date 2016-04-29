@@ -582,7 +582,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
+comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convenient and fast. 	 */
 name|bp
 operator|=
 name|getpbuf
@@ -876,7 +876,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Read operation was short.  If no error 			 * occured we may have hit a zero-fill 			 * section.  We leave valid set to 0, and page 			 * is freed by vm_page_readahead_finish() if 			 * its index is not equal to requested, or 			 * page is zeroed and set valid by 			 * vm_pager_get_pages() for requested page. 			 */
+comment|/* 			 * Read operation was short.  If no error 			 * occurred we may have hit a zero-fill 			 * section.  We leave valid set to 0, and page 			 * is freed by vm_page_readahead_finish() if 			 * its index is not equal to requested, or 			 * page is zeroed and set valid by 			 * vm_pager_get_pages() for requested page. 			 */
 empty_stmt|;
 block|}
 block|}
@@ -1269,7 +1269,7 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
+comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convenient and fast. 	 */
 name|bp
 operator|=
 name|getpbuf
@@ -5655,7 +5655,7 @@ operator||
 name|B_CLUSTEROK
 operator|)
 expr_stmt|;
-comment|/* 		 * Get the partial update on the progress made from 		 * uiomove, if an error occured. 		 */
+comment|/* 		 * Get the partial update on the progress made from 		 * uiomove, if an error occurred. 		 */
 if|if
 condition|(
 name|error
@@ -6836,7 +6836,7 @@ name|hz
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * We might have lost our iod while sleeping, 			 * so check and loop if nescessary. 			 */
+comment|/* 			 * We might have lost our iod while sleeping, 			 * so check and loop if necessary. 			 */
 goto|goto
 name|again
 goto|;

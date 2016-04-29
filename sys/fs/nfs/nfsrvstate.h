@@ -197,7 +197,7 @@ value|(&nfssessionhash[nfsrv_hashsessionid(f) % nfsrv_sessionhashsize])
 end_define
 
 begin_comment
-comment|/*  * Client server structure for V4. It is doubly linked into two lists.  * The first is a hash table based on the clientid and the second is a  * list of all clients maintained in LRU order.  * The actual size malloc'd is large enough to accomodate the id string.  */
+comment|/*  * Client server structure for V4. It is doubly linked into two lists.  * The first is a hash table based on the clientid and the second is a  * list of all clients maintained in LRU order.  * The actual size malloc'd is large enough to accommodate the id string.  */
 end_comment
 
 begin_struct

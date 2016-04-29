@@ -13024,7 +13024,7 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Fudge together a funny name. 	 * Changing the format of the funny name to accomodate more  	 * sillynames per directory. 	 * The name is now changed to .nfs.<ticks>.<pid>.4, where ticks is  	 * CPU ticks since boot. 	 */
+comment|/*  	 * Fudge together a funny name. 	 * Changing the format of the funny name to accommodate more  	 * sillynames per directory. 	 * The name is now changed to .nfs.<ticks>.<pid>.4, where ticks is  	 * CPU ticks since boot. 	 */
 name|pid
 operator|=
 name|cnp

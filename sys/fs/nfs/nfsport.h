@@ -4287,7 +4287,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Name used by getnewvnode() to describe filesystem, "nfs".  * For perfomance reasons it is useful to have the same string  * used in both places that call getnewvnode().  */
+comment|/*  * Name used by getnewvnode() to describe filesystem, "nfs".  * For performance reasons it is useful to have the same string  * used in both places that call getnewvnode().  */
 end_comment
 
 begin_decl_stmt

@@ -3679,7 +3679,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a refernce  * count on it.  * If the "cred" argument is NULL, a new clientid should not be created.  * If the "p" argument is NULL, a SetClientID/SetClientIDConfirm cannot  * be done.  * The start_renewthread argument tells nfscl_getcl() to start a renew  * thread if this creates a new clp.  * It always clpp with a reference count on it, unless returning an error.  */
+comment|/*  * Called to get a clientid structure. It will optionally lock the  * client data structures to do the SetClientId/SetClientId_confirm,  * but will release that lock and return the clientid with a reference  * count on it.  * If the "cred" argument is NULL, a new clientid should not be created.  * If the "p" argument is NULL, a SetClientID/SetClientIDConfirm cannot  * be done.  * The start_renewthread argument tells nfscl_getcl() to start a renew  * thread if this creates a new clp.  * It always clpp with a reference count on it, unless returning an error.  */
 end_comment
 
 begin_function

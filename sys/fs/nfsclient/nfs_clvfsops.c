@@ -6441,7 +6441,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "nfsreq". 		 */
+comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a transfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "nfsreq". 		 */
 if|if
 condition|(
 name|args

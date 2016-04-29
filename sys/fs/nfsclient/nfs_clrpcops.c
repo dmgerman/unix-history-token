@@ -10654,7 +10654,7 @@ name|tl
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Return the lowest committment level 				 * obtained by any of the RPCs. 				 */
+comment|/* 				 * Return the lowest commitment level 				 * obtained by any of the RPCs. 				 */
 if|if
 condition|(
 name|committed
@@ -17145,7 +17145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Readdir rpc.  * Always returns with either uio_resid unchanged, if you are at the  * end of the directory, or uio_resid == 0, with all DIRBLKSIZ chunks  * filled in.  * I felt this would allow caching of directory blocks more easily  * than returning a pertially filled block.  * Directory offset cookies:  * Oh my, what to do with them...  * I can think of three ways to deal with them:  * 1 - have the layer above these RPCs maintain a map between logical  *     directory byte offsets and the NFS directory offset cookies  * 2 - pass the opaque directory offset cookies up into userland  *     and let the libc functions deal with them, via the system call  * 3 - return them to userland in the "struct dirent", so future versions  *     of libc can use them and do whatever is necessary to amke things work  *     above these rpc calls, in the meantime  * For now, I do #3 by "hiding" the directory offset cookies after the  * d_name field in struct dirent. This is space inside d_reclen that  * will be ignored by anything that doesn't know about them.  * The directory offset cookies are filled in as the last 8 bytes of  * each directory entry, after d_name. Someday, the userland libc  * functions may be able to use these. In the meantime, it satisfies  * OpenBSD's requirements for cookies being returned.  * If expects the directory offset cookie for the read to be in uio_offset  * and returns the one for the next entry after this directory block in  * there, as well.  */
+comment|/*  * Readdir rpc.  * Always returns with either uio_resid unchanged, if you are at the  * end of the directory, or uio_resid == 0, with all DIRBLKSIZ chunks  * filled in.  * I felt this would allow caching of directory blocks more easily  * than returning a pertially filled block.  * Directory offset cookies:  * Oh my, what to do with them...  * I can think of three ways to deal with them:  * 1 - have the layer above these RPCs maintain a map between logical  *     directory byte offsets and the NFS directory offset cookies  * 2 - pass the opaque directory offset cookies up into userland  *     and let the libc functions deal with them, via the system call  * 3 - return them to userland in the "struct dirent", so future versions  *     of libc can use them and do whatever is necessary to make things work  *     above these rpc calls, in the meantime  * For now, I do #3 by "hiding" the directory offset cookies after the  * d_name field in struct dirent. This is space inside d_reclen that  * will be ignored by anything that doesn't know about them.  * The directory offset cookies are filled in as the last 8 bytes of  * each directory entry, after d_name. Someday, the userland libc  * functions may be able to use these. In the meantime, it satisfies  * OpenBSD's requirements for cookies being returned.  * If expects the directory offset cookie for the read to be in uio_offset  * and returns the one for the next entry after this directory block in  * there, as well.  */
 end_comment
 
 begin_function
@@ -18634,7 +18634,7 @@ name|tryformoredirs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* loop thru the dir entries, doctoring them to 4bsd form */
+comment|/* loop through the dir entries, doctoring them to 4bsd form */
 while|while
 condition|(
 name|more_dirs
@@ -21299,7 +21299,7 @@ name|tryformoredirs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* loop thru the dir entries, doctoring them to 4bsd form */
+comment|/* loop through the dir entries, doctoring them to 4bsd form */
 while|while
 condition|(
 name|more_dirs
@@ -37077,7 +37077,7 @@ name|tl
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return the lowest committment level 		 * obtained by any of the RPCs. 		 */
+comment|/* 		 * Return the lowest commitment level 		 * obtained by any of the RPCs. 		 */
 if|if
 condition|(
 name|committed
