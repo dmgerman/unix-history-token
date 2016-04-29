@@ -169,6 +169,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MLX4_NET_IP_ALIGN
+value|2
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEF_RX_RINGS
 value|16
 end_define
