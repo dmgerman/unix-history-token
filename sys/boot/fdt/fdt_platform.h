@@ -107,6 +107,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fdt_apply_overlays
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fdt_load_dtb_addr
 parameter_list|(
@@ -120,6 +129,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|fdt_load_dtb_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fdt_load_dtb_overlays
 parameter_list|(
 specifier|const
 name|char
