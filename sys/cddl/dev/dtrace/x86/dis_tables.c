@@ -9762,7 +9762,12 @@ argument_list|,
 name|RM_66r
 argument_list|)
 block|,
-name|INVALID
+name|TNSy
+argument_list|(
+literal|"invpcid"
+argument_list|,
+name|RM_66r
+argument_list|)
 block|,
 name|INVALID
 block|,
