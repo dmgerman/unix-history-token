@@ -451,7 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|mbnambuf_write
 parameter_list|(
 name|struct
