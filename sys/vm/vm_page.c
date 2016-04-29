@@ -4673,7 +4673,7 @@ block|{
 name|vm_page_t
 name|next
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
@@ -4732,7 +4732,7 @@ block|{
 name|vm_page_t
 name|prev
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
