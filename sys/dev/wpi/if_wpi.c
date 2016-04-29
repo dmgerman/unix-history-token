@@ -11211,11 +11211,6 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-decl_stmt|;
 name|uint32_t
 name|status
 init|=
@@ -11368,12 +11363,6 @@ operator|=
 name|ni
 operator|->
 name|ni_vap
-expr_stmt|;
-name|ic
-operator|=
-name|vap
-operator|->
-name|iv_ic
 expr_stmt|;
 comment|/* 	 * Update rate control statistics for the node. 	 */
 if|if
