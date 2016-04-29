@@ -68,6 +68,12 @@ directive|include
 file|"lib_strbuf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntpq-opts.h"
+end_include
+
 begin_comment
 comment|/*  * Maximum number of arguments  */
 end_comment
@@ -453,6 +459,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* use old rv behavior? --old-rv */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|te_Refid
+name|drefid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* How should we display a refid? */
 end_comment
 
 begin_decl_stmt

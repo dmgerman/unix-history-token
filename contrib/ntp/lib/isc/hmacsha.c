@@ -2930,7 +2930,7 @@ return|return
 operator|(
 name|ISC_TF
 argument_list|(
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,
@@ -2994,7 +2994,7 @@ return|return
 operator|(
 name|ISC_TF
 argument_list|(
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,
@@ -3058,7 +3058,7 @@ return|return
 operator|(
 name|ISC_TF
 argument_list|(
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,
@@ -3122,7 +3122,7 @@ return|return
 operator|(
 name|ISC_TF
 argument_list|(
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,
@@ -3186,7 +3186,7 @@ return|return
 operator|(
 name|ISC_TF
 argument_list|(
-name|memcmp
+name|isc_tsmemcmp
 argument_list|(
 name|digest
 argument_list|,

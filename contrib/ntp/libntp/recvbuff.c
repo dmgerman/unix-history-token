@@ -554,19 +554,8 @@ block|{
 if|if
 condition|(
 name|rb
-operator|==
-name|NULL
 condition|)
 block|{
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"freerecvbuff received NULL buffer"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|LOCK
 argument_list|()
 expr_stmt|;
@@ -609,6 +598,7 @@ expr_stmt|;
 name|UNLOCK
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -854,7 +844,7 @@ begin_function
 name|void
 name|purge_recv_buffers_for_fd
 parameter_list|(
-name|SOCKET
+name|int
 name|fd
 parameter_list|)
 block|{
@@ -897,6 +887,25 @@ name|rbufp
 operator|->
 name|link
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_IO_COMPLETION_PORT
+if|if
+condition|(
+name|rbufp
+operator|->
+name|dstadr
+operator|==
+name|NULL
+operator|&&
+name|rbufp
+operator|->
+name|fd
+operator|==
+name|fd
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|rbufp
@@ -905,6 +914,8 @@ name|fd
 operator|==
 name|fd
 condition|)
+endif|#
+directive|endif
 block|{
 name|UNLINK_MID_FIFO
 argument_list|(

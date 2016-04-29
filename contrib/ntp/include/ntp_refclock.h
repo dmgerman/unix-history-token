@@ -382,7 +382,12 @@ directive|ifdef
 name|HAVE_IO_COMPLETION_PORT
 name|void
 modifier|*
-name|device_context
+name|ioreg_ctx
+decl_stmt|;
+comment|/* IO registration context */
+name|void
+modifier|*
+name|device_ctx
 decl_stmt|;
 comment|/* device-related data for i/o subsystem */
 endif|#

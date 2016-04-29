@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.c)  *  *  It has been AutoGen-ed  January 20, 2016 at 04:18:42 AM by AutoGen 5.18.5  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpq-opts.c)  *  *  It has been AutoGen-ed  April 26, 2016 at 08:29:11 PM by AutoGen 5.18.5  *  From the definitions    ntpq-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpq author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpq program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -106,11 +106,11 @@ name|char
 specifier|const
 name|ntpq_opt_strs
 index|[
-literal|1925
+literal|1982
 index|]
 init|=
 comment|/*     0 */
-literal|"ntpq 4.2.8p6\n"
+literal|"ntpq 4.2.8p7\n"
 literal|"Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
@@ -183,50 +183,58 @@ literal|"PEERS\0"
 comment|/*  1436 */
 literal|"peers\0"
 comment|/*  1442 */
+literal|"Set default display type for S2+ refids\0"
+comment|/*  1482 */
+literal|"REFID\0"
+comment|/*  1488 */
+literal|"refid\0"
+comment|/*  1494 */
 literal|"Display the full 'remote' value\0"
-comment|/*  1474 */
+comment|/*  1526 */
 literal|"WIDE\0"
-comment|/*  1479 */
+comment|/*  1531 */
 literal|"wide\0"
-comment|/*  1484 */
+comment|/*  1536 */
 literal|"display extended usage information and exit\0"
-comment|/*  1528 */
+comment|/*  1580 */
 literal|"help\0"
-comment|/*  1533 */
+comment|/*  1585 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  1578 */
+comment|/*  1630 */
 literal|"more-help\0"
-comment|/*  1588 */
+comment|/*  1640 */
 literal|"output version information and exit\0"
-comment|/*  1624 */
+comment|/*  1676 */
 literal|"version\0"
-comment|/*  1632 */
+comment|/*  1684 */
 literal|"save the option state to a config file\0"
-comment|/*  1671 */
-literal|"save-opts\0"
-comment|/*  1681 */
-literal|"load options from a config file\0"
-comment|/*  1713 */
-literal|"LOAD_OPTS\0"
 comment|/*  1723 */
+literal|"save-opts\0"
+comment|/*  1733 */
+literal|"load options from a config file\0"
+comment|/*  1765 */
+literal|"LOAD_OPTS\0"
+comment|/*  1775 */
 literal|"no-load-opts\0"
-comment|/*  1736 */
+comment|/*  1788 */
 literal|"no\0"
-comment|/*  1739 */
+comment|/*  1791 */
 literal|"NTPQ\0"
-comment|/*  1744 */
-literal|"ntpq - standard NTP query program - Ver. 4.2.8p6\n"
+comment|/*  1796 */
+literal|"ntpq - standard NTP query program - Ver. 4.2.8p7\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n\0"
-comment|/*  1863 */
+comment|/*  1915 */
 literal|"$HOME\0"
-comment|/*  1869 */
+comment|/*  1921 */
 literal|".\0"
-comment|/*  1871 */
+comment|/*  1923 */
 literal|".ntprc\0"
-comment|/*  1878 */
+comment|/*  1930 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  1912 */
-literal|"ntpq 4.2.8p6"
+comment|/*  1964 */
+literal|"ntpq 4.2.8p7\0"
+comment|/*  1977 */
+literal|"hash"
 decl_stmt|;
 comment|/**  *  ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
 comment|/** Descriptive text for the ipv4 option */
@@ -471,22 +479,48 @@ define|#
 directive|define
 name|PEERS_FLAGS
 value|(OPTST_DISABLED)
+comment|/**  *  refid option description:  */
+comment|/** Descriptive text for the refid option */
+define|#
+directive|define
+name|REFID_DESC
+value|(ntpq_opt_strs+1442)
+comment|/** Upper-cased name for the refid option */
+define|#
+directive|define
+name|REFID_NAME
+value|(ntpq_opt_strs+1482)
+comment|/** Name string for the refid option */
+define|#
+directive|define
+name|REFID_name
+value|(ntpq_opt_strs+1488)
+comment|/** The compiled in default value for the refid option argument */
+define|#
+directive|define
+name|REFID_DFT_ARG
+value|((char const*)REFID_IPV4)
+comment|/** Compiled in flag settings for the refid option */
+define|#
+directive|define
+name|REFID_FLAGS
+value|(OPTST_DISABLED \         | OPTST_SET_ARGTYPE(OPARG_TYPE_ENUMERATION))
 comment|/**  *  wide option description:  */
 comment|/** Descriptive text for the wide option */
 define|#
 directive|define
 name|WIDE_DESC
-value|(ntpq_opt_strs+1442)
+value|(ntpq_opt_strs+1494)
 comment|/** Upper-cased name for the wide option */
 define|#
 directive|define
 name|WIDE_NAME
-value|(ntpq_opt_strs+1474)
+value|(ntpq_opt_strs+1526)
 comment|/** Name string for the wide option */
 define|#
 directive|define
 name|WIDE_name
-value|(ntpq_opt_strs+1479)
+value|(ntpq_opt_strs+1531)
 comment|/** Compiled in flag settings for the wide option */
 define|#
 directive|define
@@ -496,22 +530,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(ntpq_opt_strs+1484)
+value|(ntpq_opt_strs+1536)
 define|#
 directive|define
 name|HELP_name
-value|(ntpq_opt_strs+1528)
+value|(ntpq_opt_strs+1580)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(ntpq_opt_strs+1533)
+value|(ntpq_opt_strs+1585)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(ntpq_opt_strs+1578)
+value|(ntpq_opt_strs+1630)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -550,35 +584,35 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(ntpq_opt_strs+1588)
+value|(ntpq_opt_strs+1640)
 define|#
 directive|define
 name|VER_name
-value|(ntpq_opt_strs+1624)
+value|(ntpq_opt_strs+1676)
 define|#
 directive|define
 name|SAVE_OPTS_DESC
-value|(ntpq_opt_strs+1632)
+value|(ntpq_opt_strs+1684)
 define|#
 directive|define
 name|SAVE_OPTS_name
-value|(ntpq_opt_strs+1671)
-define|#
-directive|define
-name|LOAD_OPTS_DESC
-value|(ntpq_opt_strs+1681)
-define|#
-directive|define
-name|LOAD_OPTS_NAME
-value|(ntpq_opt_strs+1713)
-define|#
-directive|define
-name|NO_LOAD_OPTS_name
 value|(ntpq_opt_strs+1723)
 define|#
 directive|define
+name|LOAD_OPTS_DESC
+value|(ntpq_opt_strs+1733)
+define|#
+directive|define
+name|LOAD_OPTS_NAME
+value|(ntpq_opt_strs+1765)
+define|#
+directive|define
+name|NO_LOAD_OPTS_name
+value|(ntpq_opt_strs+1775)
+define|#
+directive|define
 name|LOAD_OPTS_pfx
-value|(ntpq_opt_strs+1736)
+value|(ntpq_opt_strs+1788)
 define|#
 directive|define
 name|LOAD_OPTS_name
@@ -613,6 +647,8 @@ decl_stmt|;
 specifier|static
 name|tOptProc
 name|doOptDebug_Level
+decl_stmt|,
+name|doOptRefid
 decl_stmt|,
 name|doUsageOpt
 decl_stmt|;
@@ -1138,10 +1174,65 @@ block|{
 comment|/* entry idx, value */
 literal|9
 block|,
-name|VALUE_OPT_WIDE
+name|VALUE_OPT_REFID
 block|,
 comment|/* equiv idx, value */
 literal|9
+block|,
+name|VALUE_OPT_REFID
+block|,
+comment|/* equivalenced to  */
+name|NO_EQUIVALENT
+block|,
+comment|/* min, max, act ct */
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+comment|/* opt state flags  */
+name|REFID_FLAGS
+block|,
+literal|0
+block|,
+comment|/* last opt argumnt */
+block|{
+name|REFID_DFT_ARG
+block|}
+block|,
+comment|/* arg list/cookie  */
+name|NULL
+block|,
+comment|/* must/cannot opts */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* option proc      */
+name|doOptRefid
+block|,
+comment|/* desc, NAME, name */
+name|REFID_DESC
+block|,
+name|REFID_NAME
+block|,
+name|REFID_name
+block|,
+comment|/* disablement strs */
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+comment|/* entry idx, value */
+literal|10
+block|,
+name|VALUE_OPT_WIDE
+block|,
+comment|/* equiv idx, value */
+literal|10
 block|,
 name|VALUE_OPT_WIDE
 block|,
@@ -1485,17 +1576,17 @@ comment|/** Reference to the upper cased version of ntpq. */
 define|#
 directive|define
 name|zPROGNAME
-value|(ntpq_opt_strs+1739)
+value|(ntpq_opt_strs+1791)
 comment|/** Reference to the title line for ntpq usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(ntpq_opt_strs+1744)
+value|(ntpq_opt_strs+1796)
 comment|/** ntpq configuration file name. */
 define|#
 directive|define
 name|zRcName
-value|(ntpq_opt_strs+1871)
+value|(ntpq_opt_strs+1923)
 comment|/** Directories to search for ntpq config files. */
 specifier|static
 name|char
@@ -1510,11 +1601,11 @@ init|=
 block|{
 name|ntpq_opt_strs
 operator|+
-literal|1863
+literal|1915
 block|,
 name|ntpq_opt_strs
 operator|+
-literal|1869
+literal|1921
 block|,
 name|NULL
 block|}
@@ -1523,7 +1614,7 @@ comment|/** The ntpq program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(ntpq_opt_strs+1878)
+value|(ntpq_opt_strs+1930)
 comment|/** Clarification/explanation of what ntpq does. */
 define|#
 directive|define
@@ -1538,7 +1629,7 @@ comment|/** The full version string for ntpq. */
 define|#
 directive|define
 name|zFullVersion
-value|(ntpq_opt_strs+1912)
+value|(ntpq_opt_strs+1964)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -1654,6 +1745,84 @@ operator|(
 name|void
 operator|)
 name|pOptions
+expr_stmt|;
+block|}
+comment|/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+comment|/**  * Code to handle the refid option.  * Set the default display format for S2+ refids.  * @param[in] pOptions the ntpq options data structure  * @param[in,out] pOptDesc the option descriptor for this option.  */
+specifier|static
+name|void
+name|doOptRefid
+parameter_list|(
+name|tOptions
+modifier|*
+name|pOptions
+parameter_list|,
+name|tOptDesc
+modifier|*
+name|pOptDesc
+parameter_list|)
+block|{
+comment|/* extracted from optmain.tlib near line 945 */
+specifier|static
+name|char
+specifier|const
+modifier|*
+specifier|const
+name|names
+index|[
+literal|2
+index|]
+init|=
+block|{
+name|ntpq_opt_strs
+operator|+
+literal|1977
+block|,
+name|ntpq_opt_strs
+operator|+
+literal|1044
+block|}
+decl_stmt|;
+if|if
+condition|(
+name|pOptions
+operator|<=
+name|OPTPROC_EMIT_LIMIT
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|optionEnumerationVal
+argument_list|(
+name|pOptions
+argument_list|,
+name|pOptDesc
+argument_list|,
+name|names
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+return|return;
+comment|/* protect AutoOpts client code from internal callbacks */
+block|}
+name|pOptDesc
+operator|->
+name|optArg
+operator|.
+name|argEnum
+operator|=
+name|optionEnumerationVal
+argument_list|(
+name|pOptions
+argument_list|,
+name|pOptDesc
+argument_list|,
+name|names
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* extracted from optmain.tlib near line 1250 */
@@ -1797,10 +1966,10 @@ name|NO_EQUIVALENT
 comment|/* index of default opt */
 block|}
 block|,
-literal|15
+literal|16
 comment|/* full option count */
 block|,
-literal|10
+literal|11
 comment|/* user option count */
 block|,
 name|ntpq_full_usage
@@ -2253,7 +2422,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq 4.2.8p6\n\ Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntpq 4.2.8p7\n\ Copyright (C) 1992-2016 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2360,6 +2529,15 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
+literal|"Set default display type for S2+ refids"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* referenced via ntpqOptions.pOptDesc->pzText */
+name|puts
+argument_list|(
+name|_
+argument_list|(
 literal|"Display the full 'remote' value"
 argument_list|)
 argument_list|)
@@ -2414,7 +2592,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq - standard NTP query program - Ver. 4.2.8p6\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
+literal|"ntpq - standard NTP query program - Ver. 4.2.8p7\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2423,7 +2601,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpq 4.2.8p6"
+literal|"ntpq 4.2.8p7"
 argument_list|)
 argument_list|)
 expr_stmt|;
