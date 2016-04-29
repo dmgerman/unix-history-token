@@ -194,7 +194,7 @@ name|struct
 name|dwc_bufmap
 name|txbuf_map
 index|[
-name|RX_DESC_COUNT
+name|TX_DESC_COUNT
 index|]
 decl_stmt|;
 name|uint32_t
