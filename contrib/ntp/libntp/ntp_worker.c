@@ -1014,7 +1014,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|idx
 decl_stmt|;
 name|blocking_child

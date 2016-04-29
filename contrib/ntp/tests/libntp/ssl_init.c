@@ -195,11 +195,11 @@ name|TEST_SHA1_DIGEST_LENGTH
 decl_stmt|;
 name|TEST_ASSERT_EQUAL
 argument_list|(
-name|NID_sha
+name|NID_sha1
 argument_list|,
 name|keytype_from_text
 argument_list|(
-literal|"SHA"
+literal|"SHA1"
 argument_list|,
 operator|&
 name|digestLength
@@ -262,11 +262,11 @@ directive|ifdef
 name|OPENSSL
 name|TEST_ASSERT_EQUAL_STRING
 argument_list|(
-literal|"SHA"
+literal|"SHA1"
 argument_list|,
 name|keytype_name
 argument_list|(
-name|NID_sha
+name|NID_sha1
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -366,13 +366,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
 begin_function_decl
 specifier|const
 name|bool
