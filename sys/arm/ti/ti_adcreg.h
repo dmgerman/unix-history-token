@@ -235,6 +235,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_CTRL_TSC_ENABLE
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_CTRL_TSC_4WIRE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_CTRL_TSC_5WIRE
+value|(2<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_CTRL_TSC_8WIRE
+value|(3<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_CTRL_STEP_WP
 value|(1<< 2)
 end_define
@@ -284,113 +312,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADC_STEPCFG1
-value|0x064
+name|ADC_TC_CHARGE_STEPCONFIG
+value|0x05C
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADC_STEPDLY1
-value|0x068
+name|ADC_TC_CHARGE_DELAY
+value|0x060
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADC_STEPCFG2
-value|0x06c
+name|ADC_STEPS
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADC_STEPDLY2
-value|0x070
+name|ADC_STEPCFG
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x064 + (8*((n)-1)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADC_STEPCFG3
-value|0x074
+name|ADC_STEPDLY
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x068 + (8*((n)-1)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADC_STEPDLY3
-value|0x078
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPCFG4
-value|0x07c
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPDLY4
-value|0x080
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPCFG5
-value|0x084
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPDLY5
-value|0x088
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPCFG6
-value|0x08c
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPDLY6
-value|0x090
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPCFG7
-value|0x094
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPDLY7
-value|0x098
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPCFG8
-value|0x09c
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADC_STEPDLY8
-value|0x0a0
+name|ADC_STEP_FIFO1
+value|(1<< 26)
 end_define
 
 begin_define
@@ -459,6 +423,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_STEP_INP
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)<< ADC_STEP_INP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_STEP_INM_MSK
 value|0x00078000
 end_define
@@ -468,6 +442,16 @@ define|#
 directive|define
 name|ADC_STEP_INM_SHIFT
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_INM
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)<< ADC_STEP_INM_SHIFT)
 end_define
 
 begin_define
@@ -529,6 +513,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_STEP_YPN_SW
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_YNN_SW
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_YPP_SW
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_XNN_SW
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_XPP_SW
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_STEP_AVG_MSK
 value|0x0000001c
 end_define
@@ -564,6 +583,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_STEP_MODE_HW_ONESHOT
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEP_MODE_HW_CONTINUOUS
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_STEP_SAMPLE_DELAY
 value|0xff000000
 end_define
@@ -592,8 +625,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_FIFO1COUNT
+value|0x0f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_FIFO1THRESHOLD
+value|0x0f4
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_FIFO0DATA
 value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_FIFO1DATA
+value|0x200
 end_define
 
 begin_define
