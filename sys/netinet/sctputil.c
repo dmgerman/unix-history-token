@@ -35770,13 +35770,13 @@ if|if
 condition|(
 operator|(
 name|type
-operator|=
+operator|==
 name|ICMP_UNREACH
 operator|)
 operator|&&
 operator|(
 name|code
-operator|=
+operator|==
 name|ICMP_UNREACH_PORT
 operator|)
 condition|)
