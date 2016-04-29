@@ -20195,11 +20195,16 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IWM_DEBUG
 name|iwm_nic_error
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Dump driver status (TX and RX rings) while we're here. */
 name|device_printf
 argument_list|(
