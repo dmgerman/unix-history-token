@@ -4813,11 +4813,7 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
 name|B_INVAL
-operator||
-name|B_PERSISTENT
-operator|)
 operator|)
 operator|==
 literal|0

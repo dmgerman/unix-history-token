@@ -495,12 +495,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_PERSISTENT
+name|B_00000100
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* Perm. ref'ed while EXT2FS mounted. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -638,12 +638,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_DIRTY
+name|B_00200000
 value|0x00200000
 end_define
 
 begin_comment
-comment|/* Needs writing later (in EXT2FS). */
+comment|/* Available flag. */
 end_comment
 
 begin_define
