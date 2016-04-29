@@ -1071,7 +1071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Encode/Decode the locksector address ("metadata") with key-material.  *  * Security objectives: Encode/Decode the metadata encrypted by key-material.  *  * A simple AES/128/CBC will do.  We take care to always store the metadata  * in the same endianess to make it MI.  *  * In the typical case the metadata is stored in encrypted format in sector  * zero on the media, but at the users discretion or if the piece of the  * device used (sector0...sectorN) does not contain sector zero, it can  * be stored in a filesystem or on a PostIt.  *  * The inability to easily locate the lock sectors makes an attack on a  * cold disk much less attractive, without unduly inconveniencing the  * legitimate user who can feasibly do a brute-force scan if the metadata  * was lost.  */
+comment|/*  * Encode/Decode the locksector address ("metadata") with key-material.  *  * Security objectives: Encode/Decode the metadata encrypted by key-material.  *  * A simple AES/128/CBC will do.  We take care to always store the metadata  * in the same endianness to make it MI.  *  * In the typical case the metadata is stored in encrypted format in sector  * zero on the media, but at the users discretion or if the piece of the  * device used (sector0...sectorN) does not contain sector zero, it can  * be stored in a filesystem or on a PostIt.  *  * The inability to easily locate the lock sectors makes an attack on a  * cold disk much less attractive, without unduly inconveniencing the  * legitimate user who can feasibly do a brute-force scan if the metadata  * was lost.  */
 end_comment
 
 begin_function

@@ -373,7 +373,7 @@ operator|->
 name|d_destroyed
 condition|)
 block|{
-comment|/* 		 * Allow decreasing access count even if disk is not 		 * avaliable anymore. 		 */
+comment|/* 		 * Allow decreasing access count even if disk is not 		 * available anymore. 		 */
 if|if
 condition|(
 name|r

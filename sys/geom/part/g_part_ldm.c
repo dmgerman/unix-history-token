@@ -6001,7 +6001,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * XXX: We use some knowlege about GEOM_PART_GPT internal 	 * structures, but it is easier than parse GPT by himself. 	 */
+comment|/* 	 * XXX: We use some knowledge about GEOM_PART_GPT internal 	 * structures, but it is easier than parse GPT by himself. 	 */
 name|g_topology_lock
 argument_list|()
 expr_stmt|;

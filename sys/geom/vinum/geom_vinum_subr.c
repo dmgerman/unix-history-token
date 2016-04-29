@@ -193,7 +193,7 @@ name|cptr
 operator|=
 name|aptr
 expr_stmt|;
-comment|/* Seperate input lines. */
+comment|/* Separate input lines. */
 while|while
 condition|(
 operator|*

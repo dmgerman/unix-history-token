@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Poul-Henning Kamp  * Copyright (c) 2002 Networ
 end_comment
 
 begin_comment
-comment|/*  * Functions to encode and decode struct disklabel and struct partition into  * a bytestream of little endianess and correct packing.  *  * NB!  This file must be usable both in kernel and userland.  */
+comment|/*  * Functions to encode and decode struct disklabel and struct partition into  * a bytestream of little endianness and correct packing.  *  * NB!  This file must be usable both in kernel and userland.  */
 end_comment
 
 begin_include

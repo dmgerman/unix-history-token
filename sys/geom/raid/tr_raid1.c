@@ -3827,7 +3827,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If it was a read, and bio_children is>1, then we just 		 * recovered the data from the second drive.  We should try to 		 * write that data to the first drive if sector remapping is 		 * enabled.  A write should put the data in a new place on the 		 * disk, remapping the bad sector.  Do we need to do that by 		 * queueing a request to the main worker thread?  It doesn't 		 * affect the return code of this current read, and can be 		 * done at our liesure.  However, to make the code simpler, it 		 * is done syncrhonously. 		 */
+comment|/* 		 * If it was a read, and bio_children is>1, then we just 		 * recovered the data from the second drive.  We should try to 		 * write that data to the first drive if sector remapping is 		 * enabled.  A write should put the data in a new place on the 		 * disk, remapping the bad sector.  Do we need to do that by 		 * queueing a request to the main worker thread?  It doesn't 		 * affect the return code of this current read, and can be 		 * done at our leisure.  However, to make the code simpler, it 		 * is done synchronously. 		 */
 name|G_RAID_LOGREQ
 argument_list|(
 literal|3
@@ -3898,7 +3898,7 @@ operator|&
 name|G_RAID_BIO_FLAG_LOCKED
 condition|)
 block|{
-comment|/* 		 * We're done with a recovery, mark the range as unlocked. 		 * For any write errors, we agressively fail the disk since 		 * there was both a READ and a WRITE error at this location. 		 * Both types of errors generally indicates the drive is on 		 * the verge of total failure anyway.  Better to stop trusting 		 * it now.  However, we need to reset error to 0 in that case 		 * because we're not failing the original I/O which succeeded. 		 */
+comment|/* 		 * We're done with a recovery, mark the range as unlocked. 		 * For any write errors, we aggressively fail the disk since 		 * there was both a READ and a WRITE error at this location. 		 * Both types of errors generally indicates the drive is on 		 * the verge of total failure anyway.  Better to stop trusting 		 * it now.  However, we need to reset error to 0 in that case 		 * because we're not failing the original I/O which succeeded. 		 */
 if|if
 condition|(
 name|bp

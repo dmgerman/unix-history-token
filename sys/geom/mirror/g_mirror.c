@@ -5376,7 +5376,7 @@ name|g_kerneldump
 modifier|*
 name|gkd
 decl_stmt|;
-comment|/* 	 * We configure dumping to the first component, because this component 	 * will be used for reading with 'prefer' balance algorithm. 	 * If the component with the higest priority is currently disconnected 	 * we will not be able to read the dump after the reboot if it will be 	 * connected and synchronized later. Can we do something better? 	 */
+comment|/* 	 * We configure dumping to the first component, because this component 	 * will be used for reading with 'prefer' balance algorithm. 	 * If the component with the highest priority is currently disconnected 	 * we will not be able to read the dump after the reboot if it will be 	 * connected and synchronized later. Can we do something better? 	 */
 name|sc
 operator|=
 name|bp
@@ -6464,7 +6464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle synchronization requests.  * Every synchronization request is two-steps process: first, READ request is  * send to active provider and then WRITE request (with read data) to the provider  * beeing synchronized. When WRITE is finished, new synchronization request is  * send.  */
+comment|/*  * Handle synchronization requests.  * Every synchronization request is two-steps process: first, READ request is  * send to active provider and then WRITE request (with read data) to the provider  * being synchronized. When WRITE is finished, new synchronization request is  * send.  */
 end_comment
 
 begin_function

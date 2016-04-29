@@ -865,7 +865,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * If uniform interleave is desired set all sizes to that of 	 * the smallest component.  This will guarentee that a single 	 * interleave table is generated. 	 * 	 * Lost space must be taken into account when calculating the 	 * overall size.  Half the space is lost when CCDF_MIRROR is 	 * specified. 	 */
+comment|/* 	 * If uniform interleave is desired set all sizes to that of 	 * the smallest component.  This will guarantee that a single 	 * interleave table is generated. 	 * 	 * Lost space must be taken into account when calculating the 	 * overall size.  Half the space is lost when CCDF_MIRROR is 	 * specified. 	 */
 if|if
 condition|(
 name|cs
@@ -928,7 +928,7 @@ operator|&
 name|CCDF_MIRROR
 condition|)
 block|{
-comment|/* 		 * Check to see if an even number of components 		 * have been specified.  The interleave must also 		 * be non-zero in order for us to be able to  		 * guarentee the topology. 		 */
+comment|/* 		 * Check to see if an even number of components 		 * have been specified.  The interleave must also 		 * be non-zero in order for us to be able to  		 * guarantee the topology. 		 */
 if|if
 condition|(
 name|cs

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 Poul-Henning Kamp  * All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/* Functions to encode or decode struct dos_partition into a bytestream  * of correct endianess and packing.  These functions do no validation  * or sanity checking, they only pack/unpack the fields correctly.  *  * NB!  This file must be usable both in kernel and userland.  */
+comment|/* Functions to encode or decode struct dos_partition into a bytestream  * of correct endianness and packing.  These functions do no validation  * or sanity checking, they only pack/unpack the fields correctly.  *  * NB!  This file must be usable both in kernel and userland.  */
 end_comment
 
 begin_include

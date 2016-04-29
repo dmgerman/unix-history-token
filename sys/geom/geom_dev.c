@@ -3283,7 +3283,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * XXX: This is not an ideal solution, but I belive it to 		 * XXX: deadlock safe, all things considered. 		 */
+comment|/* 		 * XXX: This is not an ideal solution, but I believe it to 		 * XXX: deadlock safely, all things considered. 		 */
 name|bp2
 operator|=
 name|g_clone_bio
@@ -3492,7 +3492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Request asynchronous device destruction to prevent any more requests  *   from coming in.  The provider is already marked with an error, so  *   anything which comes in in the interrim will be returned immediately.  */
+comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Request asynchronous device destruction to prevent any more requests  *   from coming in.  The provider is already marked with an error, so  *   anything which comes in the interim will be returned immediately.  */
 end_comment
 
 begin_function

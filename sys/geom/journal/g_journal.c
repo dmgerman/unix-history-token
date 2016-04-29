@@ -2883,7 +2883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Every journal record has a header and data following it.  * Functions below are used to decode the header before storing it to  * little endian and to encode it after reading to system endianess.  */
+comment|/*  * Every journal record has a header and data following it.  * Functions below are used to decode the header before storing it to  * little endian and to encode it after reading to system endianness.  */
 end_comment
 
 begin_function
@@ -3244,7 +3244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function reads metadata from a provider (via the given consumer), decodes  * it to system endianess and verifies its correctness.  */
+comment|/*  * Function reads metadata from a provider (via the given consumer), decodes  * it to system endianness and verifies its correctness.  */
 end_comment
 
 begin_function
@@ -9069,7 +9069,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * If the biggest record won't fit, look for a record header or 		 * journal header from the begining. 		 */
+comment|/* 		 * If the biggest record won't fit, look for a record header or 		 * journal header from the beginning. 		 */
 name|GJ_VALIDATE_OFFSET
 argument_list|(
 name|offset

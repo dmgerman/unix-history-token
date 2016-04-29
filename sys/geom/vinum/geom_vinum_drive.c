@@ -138,7 +138,7 @@ name|arch_64
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Set arch according to endianess. */
+comment|/* Set arch according to endianness. */
 if|if
 condition|(
 name|bigendian

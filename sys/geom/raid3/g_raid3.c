@@ -8358,7 +8358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle synchronization requests.  * Every synchronization request is two-steps process: first, READ request is  * send to active provider and then WRITE request (with read data) to the provider  * beeing synchronized. When WRITE is finished, new synchronization request is  * send.  */
+comment|/*  * Handle synchronization requests.  * Every synchronization request is two-steps process: first, READ request is  * send to active provider and then WRITE request (with read data) to the provider  * being synchronized. When WRITE is finished, new synchronization request is  * send.  */
 end_comment
 
 begin_function

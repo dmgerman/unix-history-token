@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 Jake Burkholder  * Copyright (c) 2003 Poul-Hen
 end_comment
 
 begin_comment
-comment|/* Functions to encode or decode struct sun_disklabel into a bytestream  * of correct endianess and packing.  *  * NB!  This file must be usable both in kernel and userland.  */
+comment|/* Functions to encode or decode struct sun_disklabel into a bytestream  * of correct endianness and packing.  *  * NB!  This file must be usable both in kernel and userland.  */
 end_comment
 
 begin_include

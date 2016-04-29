@@ -5660,7 +5660,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * We're done with a recovery, mark the range as unlocked. 		 * For any write errors, we agressively fail the disk since 		 * there was both a READ and a WRITE error at this location. 		 * Both types of errors generally indicates the drive is on 		 * the verge of total failure anyway.  Better to stop trusting 		 * it now.  However, we need to reset error to 0 in that case 		 * because we're not failing the original I/O which succeeded. 		 */
+comment|/* 		 * We're done with a recovery, mark the range as unlocked. 		 * For any write errors, we aggressively fail the disk since 		 * there was both a READ and a WRITE error at this location. 		 * Both types of errors generally indicates the drive is on 		 * the verge of total failure anyway.  Better to stop trusting 		 * it now.  However, we need to reset error to 0 in that case 		 * because we're not failing the original I/O which succeeded. 		 */
 comment|/* Restore what we were doing. */
 name|P2V
 argument_list|(

@@ -184,7 +184,7 @@ comment|/* the magic number */
 name|u_int32_t
 name|d_crc
 decl_stmt|;
-comment|/* crc32() d_magic thru last part */
+comment|/* crc32() d_magic through last part */
 name|u_int32_t
 name|d_align
 decl_stmt|;
