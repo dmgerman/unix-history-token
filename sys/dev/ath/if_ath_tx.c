@@ -17539,11 +17539,11 @@ name|hasba
 operator|)
 condition|)
 block|{
-name|DPRINTF
+name|device_printf
 argument_list|(
 name|sc
-argument_list|,
-name|ATH_DEBUG_SW_TX_AGGR
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: AR5416 bug: hasba=%d; txok=%d, isaggr=%d, "
 literal|"seq_st=%d\n"
