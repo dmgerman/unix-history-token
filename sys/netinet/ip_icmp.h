@@ -330,7 +330,7 @@ comment|/* This is the minimum length required by RFC 792. */
 end_comment
 
 begin_comment
-comment|/*  * ICMP_ADVLENPREF is the preferred number of bytes which should be contiguous.  * SCTP needs additional 12 bytes to be able to access the initiate tag  * in packets containing an INIT chunk.  */
+comment|/*  * ICMP_ADVLENPREF is the preferred number of bytes which should be contiguous.  * SCTP needs additional 12 bytes to be able to access the initiate tag  * in packets containing an INIT chunk. For also supporting SCTP/UDP,  * additional 8 bytes are needed.  */
 end_comment
 
 begin_define
@@ -340,7 +340,7 @@ name|ICMP_ADVLENPREF
 parameter_list|(
 name|p
 parameter_list|)
-value|(8 + ((p)->icmp_ip.ip_hl<< 2) + 8 + 12)
+value|(8 + ((p)->icmp_ip.ip_hl<< 2) + 8 + 8 + 12)
 end_define
 
 begin_comment
