@@ -6813,7 +6813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic error handler.  Peripheral drivers usually filter  * out the errors that they handle in a unique mannor, then  * call this function.  */
+comment|/*  * Generic error handler.  Peripheral drivers usually filter  * out the errors that they handle in a unique manner, then  * call this function.  */
 end_comment
 
 begin_function

@@ -938,7 +938,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Device capabilities page.  *  * This page defines characteristics of the elemenet types in the  * medium changer device.  *  * Note in the definitions below, the following abbreviations are  * used:  *		MT	Medium transport element (picker)  *		ST	Storage transport element (slot)  *		IE	Import/export element (portal)  *		DT	Data tranfer element (tape/disk drive)  */
+comment|/*  * Device capabilities page.  *  * This page defines characteristics of the element types in the  * medium changer device.  *  * Note in the definitions below, the following abbreviations are  * used:  *		MT	Medium transport element (picker)  *		ST	Storage transport element (slot)  *		IE	Import/export element (portal)  *		DT	Data transfer element (tape/disk drive)  */
 end_comment
 
 begin_struct

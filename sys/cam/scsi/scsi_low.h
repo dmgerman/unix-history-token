@@ -449,7 +449,7 @@ comment|/* saved scsi data pointer */
 name|int
 name|ccb_datalen
 decl_stmt|;
-comment|/* transfered data counter */
+comment|/* transferred data counter */
 comment|/***************************************** 	 * Msgout  	 *****************************************/
 name|u_int
 name|ccb_msgoutflag
@@ -495,7 +495,7 @@ define|#
 directive|define
 name|CCB_AUTOSENSE
 value|0x0400
-comment|/* do a sence after CA */
+comment|/* do a sense after CA */
 define|#
 directive|define
 name|CCB_URGENT

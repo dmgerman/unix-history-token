@@ -1336,7 +1336,7 @@ literal|255
 block|}
 block|,
 block|{
-comment|/* 		 * The Hitachi CJ series with J8A8 firmware apparantly has 		 * problems with tagged commands. 		 * PR: 23536 		 * Reported by: amagai@nue.org 		 */
+comment|/* 		 * The Hitachi CJ series with J8A8 firmware apparently has 		 * problems with tagged commands. 		 * PR: 23536 		 * Reported by: amagai@nue.org 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -10582,7 +10582,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Until we know better, opt for safty */
+comment|/* Until we know better, opt for safety */
 name|path
 operator|->
 name|device

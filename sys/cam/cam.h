@@ -144,7 +144,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The generation number is incremented everytime a new entry is entered into  * the queue giving round robin per priority level scheduling.  */
+comment|/*  * The generation number is incremented every time a new entry is entered into  * the queue giving round robin per priority level scheduling.  */
 end_comment
 
 begin_typedef
@@ -269,7 +269,7 @@ name|SF_QUIET_IR
 init|=
 literal|0x04
 block|,
-comment|/* Be quiet about Illegal Request reponses */
+comment|/* Be quiet about Illegal Request responses */
 name|SF_PRINT_ALWAYS
 init|=
 literal|0x08

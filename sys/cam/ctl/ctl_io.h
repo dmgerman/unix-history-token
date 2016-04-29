@@ -155,7 +155,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * WARNING:  Keep the data in/out/none flags where they are.  They're used  * in conjuction with ctl_cmd_flags.  See comment above ctl_cmd_flags  * definition in ctl_private.h.  */
+comment|/*  * WARNING:  Keep the data in/out/none flags where they are.  They're used  * in conjunction with ctl_cmd_flags.  See comment above ctl_cmd_flags  * definition in ctl_private.h.  */
 end_comment
 
 begin_typedef

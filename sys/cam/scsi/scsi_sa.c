@@ -12288,7 +12288,7 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-comment|/* 	 * This should determine if something has happend since the last 	 * open/mount that would invalidate the mount. We do *not* want 	 * to retry this command- we just want the status. But we only 	 * do this if we're mounted already- if we're not mounted, 	 * we don't care about the unit read state and can instead use 	 * this opportunity to attempt to reserve the tape unit. 	 */
+comment|/* 	 * This should determine if something has happened since the last 	 * open/mount that would invalidate the mount. We do *not* want 	 * to retry this command- we just want the status. But we only 	 * do this if we're mounted already- if we're not mounted, 	 * we don't care about the unit read state and can instead use 	 * this opportunity to attempt to reserve the tape unit. 	 */
 if|if
 condition|(
 name|softc

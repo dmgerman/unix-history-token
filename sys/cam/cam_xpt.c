@@ -3948,7 +3948,7 @@ name|CAM_BOOT_DELAY
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The xpt layer is, itself, the equivelent of a SIM. 	 * Allow 16 ccbs in the ccb pool for it.  This should 	 * give decent parallelism when we probe busses and 	 * perform other XPT functions. 	 */
+comment|/* 	 * The xpt layer is, itself, the equivalent of a SIM. 	 * Allow 16 ccbs in the ccb pool for it.  This should 	 * give decent parallelism when we probe busses and 	 * perform other XPT functions. 	 */
 name|devq
 operator|=
 name|cam_simq_alloc
@@ -4054,7 +4054,7 @@ operator|.
 name|xpt_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Looking at the XPT from the SIM layer, the XPT is 	 * the equivelent of a peripheral driver.  Allocate 	 * a peripheral driver entry for us. 	 */
+comment|/* 	 * Looking at the XPT from the SIM layer, the XPT is 	 * the equivalent of a peripheral driver.  Allocate 	 * a peripheral driver entry for us. 	 */
 if|if
 condition|(
 operator|(

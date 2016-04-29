@@ -11670,7 +11670,7 @@ name|softc
 operator|->
 name|delete_method
 decl_stmt|;
-comment|/* 		 * Typically there are two reasons for failure here 		 * 1. Delete method was detected as supported but isn't 		 * 2. Delete failed due to invalid params e.g. too big 		 * 		 * While we will attempt to choose an alternative delete method 		 * this may result in short deletes if the existing delete 		 * requests from geom are big for the new method choosen. 		 * 		 * This method assumes that the error which triggered this 		 * will not retry the io otherwise a panic will occur 		 */
+comment|/* 		 * Typically there are two reasons for failure here 		 * 1. Delete method was detected as supported but isn't 		 * 2. Delete failed due to invalid params e.g. too big 		 * 		 * While we will attempt to choose an alternative delete method 		 * this may result in short deletes if the existing delete 		 * requests from geom are big for the new method chosen. 		 * 		 * This method assumes that the error which triggered this 		 * will not retry the io otherwise a panic will occur 		 */
 name|dadeleteflag
 argument_list|(
 name|softc
@@ -13676,7 +13676,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Based on older SBC-3 spec revisions 			 * any of the UNMAP methods "may" be 			 * available via LBP given this flag so 			 * we flag all of them as availble and 			 * then remove those which further 			 * probes confirm aren't available 			 * later. 			 * 			 * We could also check readcap(16) p_type 			 * flag to exclude one or more invalid 			 * write same (X) types here 			 */
+comment|/* 			 * Based on older SBC-3 spec revisions 			 * any of the UNMAP methods "may" be 			 * available via LBP given this flag so 			 * we flag all of them as available and 			 * then remove those which further 			 * probes confirm aren't available 			 * later. 			 * 			 * We could also check readcap(16) p_type 			 * flag to exclude one or more invalid 			 * write same (X) types here 			 */
 name|dadeleteflag
 argument_list|(
 name|softc

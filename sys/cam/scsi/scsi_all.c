@@ -17533,7 +17533,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * The length of data actually returned may be different than the 	 * extra_len recorded in the sturcture. 	 */
+comment|/* 	 * The length of data actually returned may be different than the 	 * extra_len recorded in the structure. 	 */
 name|desc_len
 operator|=
 name|sense_len
@@ -39310,7 +39310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Compare two buffers of vpd device descriptors for a match.  *  * \param lhs      Pointer to first buffer of descriptors to compare.  * \param lhs_len  The length of the first buffer.  * \param rhs	   Pointer to second buffer of descriptors to compare.  * \param rhs_len  The length of the second buffer.  *  * \return  0 on a match, -1 otherwise.  *  * Treat rhs and lhs as arrays of vpd device id descriptors.  Walk lhs matching  * agains each element in rhs until all data are exhausted or we have found  * a match.  */
+comment|/**  * Compare two buffers of vpd device descriptors for a match.  *  * \param lhs      Pointer to first buffer of descriptors to compare.  * \param lhs_len  The length of the first buffer.  * \param rhs	   Pointer to second buffer of descriptors to compare.  * \param rhs_len  The length of the second buffer.  *  * \return  0 on a match, -1 otherwise.  *  * Treat rhs and lhs as arrays of vpd device id descriptors.  Walk lhs matching  * against each element in rhs until all data are exhausted or we have found  * a match.  */
 end_comment
 
 begin_function

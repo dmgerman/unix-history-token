@@ -736,7 +736,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*  * Backend Argument:  *  * namelen:	Length of the name field, including the terminating NUL.  *  * name:	Name of the paramter.  This must be NUL-terminated.  *  * flags:	Flags for the parameter, see above for values.  *  * vallen:	Length of the value in bytes.  *  * value:	Value to be set/fetched.  *  * kname:	For kernel use only.  *  * kvalue:	For kernel use only.  */
+comment|/*  * Backend Argument:  *  * namelen:	Length of the name field, including the terminating NUL.  *  * name:	Name of the parameter.  This must be NUL-terminated.  *  * flags:	Flags for the parameter, see above for values.  *  * vallen:	Length of the value in bytes.  *  * value:	Value to be set/fetched.  *  * kname:	For kernel use only.  *  * kvalue:	For kernel use only.  */
 end_comment
 
 begin_struct
@@ -930,7 +930,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * LUN list status:  *  * NONE:		No status.  *  * OK:			Request completed successfully.  *  * NEED_MORE_SPACE:	The allocated length of the entries field is too  * 			small for the available data.  *  * ERROR:		An error occured, look at the error string for a  *			description of the error.  */
+comment|/*  * LUN list status:  *  * NONE:		No status.  *  * OK:			Request completed successfully.  *  * NEED_MORE_SPACE:	The allocated length of the entries field is too  * 			small for the available data.  *  * ERROR:		An error occurred, look at the error string for a  *			description of the error.  */
 end_comment
 
 begin_typedef
@@ -1050,7 +1050,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * iSCSI status  *  * OK:			Request completed successfully.  *  * ERROR:		An error occured, look at the error string for a  *			description of the error.  *  * CTL_ISCSI_LIST_NEED_MORE_SPACE:  * 			User has to pass larger buffer for CTL_ISCSI_LIST ioctl.  */
+comment|/*  * iSCSI status  *  * OK:			Request completed successfully.  *  * ERROR:		An error occurred, look at the error string for a  *			description of the error.  *  * CTL_ISCSI_LIST_NEED_MORE_SPACE:  * 			User has to pass larger buffer for CTL_ISCSI_LIST ioctl.  */
 end_comment
 
 begin_typedef

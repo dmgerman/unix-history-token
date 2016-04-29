@@ -31906,7 +31906,7 @@ name|SMS_PAGE_CTRL_SAVED
 operator|>>
 literal|6
 case|:
-comment|/* 		 * We don't update the changable or default bits for this page. 		 */
+comment|/* 		 * We don't update the changeable or default bits for this page. 		 */
 break|break;
 case|case
 name|SMS_PAGE_CTRL_CURRENT
@@ -52873,7 +52873,7 @@ name|version
 operator|=
 name|SCSI_REV_SPC4
 expr_stmt|;
-comment|/* 	 * According to SAM-3, even if a device only supports a single 	 * level of LUN addressing, it should still set the HISUP bit: 	 * 	 * 4.9.1 Logical unit numbers overview 	 * 	 * All logical unit number formats described in this standard are 	 * hierarchical in structure even when only a single level in that 	 * hierarchy is used. The HISUP bit shall be set to one in the 	 * standard INQUIRY data (see SPC-2) when any logical unit number 	 * format described in this standard is used.  Non-hierarchical 	 * formats are outside the scope of this standard. 	 * 	 * Therefore we set the HiSup bit here. 	 * 	 * The reponse format is 2, per SPC-3. 	 */
+comment|/* 	 * According to SAM-3, even if a device only supports a single 	 * level of LUN addressing, it should still set the HISUP bit: 	 * 	 * 4.9.1 Logical unit numbers overview 	 * 	 * All logical unit number formats described in this standard are 	 * hierarchical in structure even when only a single level in that 	 * hierarchy is used. The HISUP bit shall be set to one in the 	 * standard INQUIRY data (see SPC-2) when any logical unit number 	 * format described in this standard is used.  Non-hierarchical 	 * formats are outside the scope of this standard. 	 * 	 * Therefore we set the HiSup bit here. 	 * 	 * The response format is 2, per SPC-3. 	 */
 name|inq_ptr
 operator|->
 name|response_format

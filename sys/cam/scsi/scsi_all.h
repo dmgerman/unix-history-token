@@ -11098,7 +11098,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Command-specific information depends on the command for which the  * reported condition occured.  *  * Note that any changes to the field names or positions in this structure,  * even reserved fields, should be accompanied by an examination of the  * code in ctl_set_sense() that uses them.  *  * Maximum descriptors allowed: 1 (as of SPC-4)  */
+comment|/*  * Command-specific information depends on the command for which the  * reported condition occurred.  *  * Note that any changes to the field names or positions in this structure,  * even reserved fields, should be accompanied by an examination of the  * code in ctl_set_sense() that uses them.  *  * Maximum descriptors allowed: 1 (as of SPC-4)  */
 end_comment
 
 begin_struct
@@ -11630,7 +11630,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Vendor-specific sense descriptor.  The desc_type field will be in the  * range bewteen MIN and MAX inclusive.  */
+comment|/*  * Vendor-specific sense descriptor.  The desc_type field will be in the  * range between MIN and MAX inclusive.  */
 end_comment
 
 begin_struct
