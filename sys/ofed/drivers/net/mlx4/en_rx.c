@@ -138,6 +138,8 @@ argument_list|(
 name|priv
 operator|->
 name|rx_mb_size
+operator|-
+name|MLX4_NET_IP_ALIGN
 argument_list|)
 expr_stmt|;
 name|rx_desc
@@ -319,11 +321,25 @@ return|;
 comment|/* setup correct length */
 name|mb
 operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|mb
+operator|->
 name|m_len
 operator|=
 name|ring
 operator|->
 name|rx_mb_size
+expr_stmt|;
+comment|/* make sure IP header gets aligned */
+name|m_adj
+argument_list|(
+name|mb
+argument_list|,
+name|MLX4_NET_IP_ALIGN
+argument_list|)
 expr_stmt|;
 comment|/* load spare mbuf into BUSDMA */
 name|err
@@ -481,11 +497,25 @@ goto|;
 comment|/* setup correct length */
 name|mb
 operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|mb
+operator|->
 name|m_len
 operator|=
 name|ring
 operator|->
 name|rx_mb_size
+expr_stmt|;
+comment|/* make sure IP header gets aligned */
+name|m_adj
+argument_list|(
+name|mb
+argument_list|,
+name|MLX4_NET_IP_ALIGN
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
@@ -1189,6 +1219,8 @@ operator|+
 name|VLAN_HLEN
 operator|+
 name|ETH_FCS_LEN
+operator|+
+name|MLX4_NET_IP_ALIGN
 decl_stmt|;
 if|if
 condition|(
