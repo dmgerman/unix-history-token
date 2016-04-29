@@ -527,7 +527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait on a condition variable.  This function differs from cv_wait by  * not aquiring the mutex after condition variable was signaled.  */
+comment|/*  * Wait on a condition variable.  This function differs from cv_wait by  * not acquiring the mutex after condition variable was signaled.  */
 end_comment
 
 begin_function

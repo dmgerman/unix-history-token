@@ -88,7 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Timestamps in msgbuf are useful when trying to diagnose when core dumps  * or other actions occured.  */
+comment|/*  * Timestamps in msgbuf are useful when trying to diagnose when core dumps  * or other actions occurred.  */
 end_comment
 
 begin_decl_stmt

@@ -5065,7 +5065,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine if there is a suitable alternate filename under the specified  * prefix for the specified path.  If the create flag is set, then the  * alternate prefix will be used so long as the parent directory exists.  * This is used by the various compatiblity ABIs so that Linux binaries prefer  * files under /compat/linux for example.  The chosen path (whether under  * the prefix or under /) is returned in a kernel malloc'd buffer pointed  * to by pathbuf.  The caller is responsible for free'ing the buffer from  * the M_TEMP bucket if one is returned.  */
+comment|/*  * Determine if there is a suitable alternate filename under the specified  * prefix for the specified path.  If the create flag is set, then the  * alternate prefix will be used so long as the parent directory exists.  * This is used by the various compatibility ABIs so that Linux binaries prefer  * files under /compat/linux for example.  The chosen path (whether under  * the prefix or under /) is returned in a kernel malloc'd buffer pointed  * to by pathbuf.  The caller is responsible for free'ing the buffer from  * the M_TEMP bucket if one is returned.  */
 end_comment
 
 begin_function

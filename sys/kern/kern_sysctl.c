@@ -1583,7 +1583,7 @@ directive|error
 literal|"OID_AUTO is expected to be a negative value"
 endif|#
 directive|endif
-comment|/* 	 * Any negative OID number qualifies as OID_AUTO. Valid OID 	 * numbers should always be positive. 	 * 	 * NOTE: DO NOT change the starting value here, change it in 	 *<sys/sysctl.h>, and make sure it is at least 256 to 	 * accomodate e.g. net.inet.raw as a static sysctl node. 	 */
+comment|/* 	 * Any negative OID number qualifies as OID_AUTO. Valid OID 	 * numbers should always be positive. 	 * 	 * NOTE: DO NOT change the starting value here, change it in 	 *<sys/sysctl.h>, and make sure it is at least 256 to 	 * accommodate e.g. net.inet.raw as a static sysctl node. 	 */
 if|if
 condition|(
 name|oid_number
@@ -2019,7 +2019,7 @@ name|error
 condition|)
 break|break;
 block|}
-comment|/* 	 * Restore deregistered entries, either from the end, 	 * or from the place where error occured. 	 * e contains the entry that was not unregistered 	 */
+comment|/* 	 * Restore deregistered entries, either from the end, 	 * or from the place where error occurred. 	 * e contains the entry that was not unregistered 	 */
 if|if
 condition|(
 name|error

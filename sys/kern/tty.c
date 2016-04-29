@@ -1630,7 +1630,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The process should only sleep, when: 		 * - This terminal is the controling terminal 		 * - Its process group is not the foreground process 		 *   group 		 * - The parent process isn't waiting for the child to 		 *   exit 		 * - the signal to send to the process isn't masked 		 */
+comment|/* 		 * The process should only sleep, when: 		 * - This terminal is the controlling terminal 		 * - Its process group is not the foreground process 		 *   group 		 * - The parent process isn't waiting for the child to 		 *   exit 		 * - the signal to send to the process isn't masked 		 */
 if|if
 condition|(
 operator|!

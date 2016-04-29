@@ -1632,7 +1632,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * We allow readers to aquire a lock even if a writer is blocked if 	 * the lock is recursive and the reader already holds the lock. 	 */
+comment|/* 	 * We allow readers to acquire a lock even if a writer is blocked if 	 * the lock is recursive and the reader already holds the lock. 	 */
 if|if
 condition|(
 operator|(

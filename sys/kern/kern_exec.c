@@ -1994,7 +1994,7 @@ name|exec_fail
 goto|;
 endif|#
 directive|endif
-comment|/* 	 * Translate the file name. namei() returns a vnode pointer 	 *	in ni_vp amoung other things. 	 * 	 * XXXAUDIT: It would be desirable to also audit the name of the 	 * interpreter if this is an interpreted binary. 	 */
+comment|/* 	 * Translate the file name. namei() returns a vnode pointer 	 *	in ni_vp among other things. 	 * 	 * XXXAUDIT: It would be desirable to also audit the name of the 	 * interpreter if this is an interpreted binary. 	 */
 if|if
 condition|(
 name|args

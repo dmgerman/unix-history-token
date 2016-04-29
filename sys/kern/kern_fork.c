@@ -3944,7 +3944,7 @@ name|mem_charged
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * The swap reservation failed. The accounting 			 * from the entries of the copied vm2 will be 			 * substracted in vmspace_free(), so force the 			 * reservation there. 			 */
+comment|/* 			 * The swap reservation failed. The accounting 			 * from the entries of the copied vm2 will be 			 * subtracted in vmspace_free(), so force the 			 * reservation there. 			 */
 name|swap_reserve_force
 argument_list|(
 name|mem_charged

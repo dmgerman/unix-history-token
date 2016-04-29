@@ -16559,7 +16559,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If we get here, assume that the device is permanant and really is  * present in the system.  Removable bus drivers are expected to intercept  * this call long before it gets here.  We return -1 so that drivers that  * really care can check vs -1 or some ERRNO returned higher in the food  * chain.  */
+comment|/*  * If we get here, assume that the device is permanent and really is  * present in the system.  Removable bus drivers are expected to intercept  * this call long before it gets here.  We return -1 so that drivers that  * really care can check vs -1 or some ERRNO returned higher in the food  * chain.  */
 end_comment
 
 begin_function

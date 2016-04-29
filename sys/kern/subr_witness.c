@@ -14135,7 +14135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Call this whenver the structure of the witness graph changes. */
+comment|/* Call this whenever the structure of the witness graph changes. */
 end_comment
 
 begin_function

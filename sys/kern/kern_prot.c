@@ -617,7 +617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get an arbitary pid's process group id */
+comment|/* Get an arbitrary pid's process group id */
 end_comment
 
 begin_ifndef
@@ -761,7 +761,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get an arbitary pid's session id.  */
+comment|/*  * Get an arbitrary pid's session id.  */
 end_comment
 
 begin_ifndef

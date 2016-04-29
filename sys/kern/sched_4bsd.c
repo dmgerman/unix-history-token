@@ -5626,7 +5626,7 @@ operator|=
 operator|&
 name|runq
 expr_stmt|;
-comment|/* 	 * If we are yielding (on the way out anyhow) or the thread 	 * being saved is US, then don't try be smart about preemption 	 * or kicking off another CPU as it won't help and may hinder. 	 * In the YIEDLING case, we are about to run whoever is being 	 * put in the queue anyhow, and in the OURSELF case, we are 	 * puting ourself on the run queue which also only happens 	 * when we are about to yield. 	 */
+comment|/* 	 * If we are yielding (on the way out anyhow) or the thread 	 * being saved is US, then don't try be smart about preemption 	 * or kicking off another CPU as it won't help and may hinder. 	 * In the YIEDLING case, we are about to run whoever is being 	 * put in the queue anyhow, and in the OURSELF case, we are 	 * putting ourself on the run queue which also only happens 	 * when we are about to yield. 	 */
 if|if
 condition|(
 operator|(

@@ -321,7 +321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if object of size 'size' fit to the current position and  * allocate new mbuf if not. Advance pointers and increase length of mbuf(s).  * Return pointer to the object placeholder or NULL if any error occured.  * Note: size should be<= MLEN   */
+comment|/*  * Check if object of size 'size' fit to the current position and  * allocate new mbuf if not. Advance pointers and increase length of mbuf(s).  * Return pointer to the object placeholder or NULL if any error occurred.  * Note: size should be<= MLEN   */
 end_comment
 
 begin_function

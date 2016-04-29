@@ -2857,7 +2857,7 @@ operator||=
 name|INTR_ISRCF_BOUND
 expr_stmt|;
 block|}
-comment|/* 	 * In NOCPU case, it's up to PIC to either leave ISRC on same CPU or 	 * re-balance it to another CPU or enable it on more CPUs. However, 	 * PIC is expected to change isrc_cpu appropriately to keep us well 	 * informed if the call is successfull. 	 */
+comment|/* 	 * In NOCPU case, it's up to PIC to either leave ISRC on same CPU or 	 * re-balance it to another CPU or enable it on more CPUs. However, 	 * PIC is expected to change isrc_cpu appropriately to keep us well 	 * informed if the call is successful. 	 */
 if|if
 condition|(
 name|irq_assign_cpu
@@ -4176,7 +4176,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INTR_SOLO
-comment|/* 	 * Standard handling is done thru MI interrupt framework. However, 	 * some interrupts could request solely own special handling. This 	 * non standard handling can be used for interrupt controllers without 	 * handler (filter only), so in case that interrupt controllers are 	 * chained, MI interrupt framework is called only in leaf controller. 	 * 	 * Note that root interrupt controller routine is served as well, 	 * however in intr_irq_handler(), i.e. main system dispatch routine. 	 */
+comment|/* 	 * Standard handling is done through MI interrupt framework. However, 	 * some interrupts could request solely own special handling. This 	 * non standard handling can be used for interrupt controllers without 	 * handler (filter only), so in case that interrupt controllers are 	 * chained, MI interrupt framework is called only in leaf controller. 	 * 	 * Note that root interrupt controller routine is served as well, 	 * however in intr_irq_handler(), i.e. main system dispatch routine. 	 */
 if|if
 condition|(
 name|flags

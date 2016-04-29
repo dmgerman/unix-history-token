@@ -2147,7 +2147,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If mount point is currenly being unmounted, sleep until the 	 * mount point fate is decided.  If thread doing the unmounting fails, 	 * it will clear MNTK_UNMOUNT flag before waking us up, indicating 	 * that this mount point has survived the unmount attempt and vfs_busy 	 * should retry.  Otherwise the unmounter thread will set MNTK_REFEXPIRE 	 * flag in addition to MNTK_UNMOUNT, indicating that mount point is 	 * about to be really destroyed.  vfs_busy needs to release its 	 * reference on the mount point in this case and return with ENOENT, 	 * telling the caller that mount mount it tried to busy is no longer 	 * valid. 	 */
+comment|/* 	 * If mount point is currently being unmounted, sleep until the 	 * mount point fate is decided.  If thread doing the unmounting fails, 	 * it will clear MNTK_UNMOUNT flag before waking us up, indicating 	 * that this mount point has survived the unmount attempt and vfs_busy 	 * should retry.  Otherwise the unmounter thread will set MNTK_REFEXPIRE 	 * flag in addition to MNTK_UNMOUNT, indicating that mount point is 	 * about to be really destroyed.  vfs_busy needs to release its 	 * reference on the mount point in this case and return with ENOENT, 	 * telling the caller that mount mount it tried to busy is no longer 	 * valid. 	 */
 while|while
 condition|(
 name|mp
@@ -3469,7 +3469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called when we have too many vnodes.  It attempts  * to free<count> vnodes and will potentially free vnodes that still  * have VM backing store (VM backing store is typically the cause  * of a vnode blowout so we want to do this).  Therefore, this operation  * is not considered cheap.  *  * A number of conditions may prevent a vnode from being reclaimed.  * the buffer cache may have references on the vnode, a directory  * vnode may still have references due to the namei cache representing  * underlying files, or the vnode may be in active use.   It is not  * desireable to reuse such vnodes.  These conditions may cause the  * number of vnodes to reach some minimum value regardless of what  * you set kern.maxvnodes to.  Do not set kern.maxvnodes too low.  */
+comment|/*  * This routine is called when we have too many vnodes.  It attempts  * to free<count> vnodes and will potentially free vnodes that still  * have VM backing store (VM backing store is typically the cause  * of a vnode blowout so we want to do this).  Therefore, this operation  * is not considered cheap.  *  * A number of conditions may prevent a vnode from being reclaimed.  * the buffer cache may have references on the vnode, a directory  * vnode may still have references due to the namei cache representing  * underlying files, or the vnode may be in active use.   It is not  * desirable to reuse such vnodes.  These conditions may cause the  * number of vnodes to reach some minimum value regardless of what  * you set kern.maxvnodes to.  Do not set kern.maxvnodes too low.  */
 end_comment
 
 begin_function
@@ -17529,7 +17529,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initalize per-vnode helper structure to hold poll-related state.  */
+comment|/*  * Initialize per-vnode helper structure to hold poll-related state.  */
 end_comment
 
 begin_function
@@ -19249,7 +19249,7 @@ name|DEBUG_VFS_LOCKS
 end_ifdef
 
 begin_comment
-comment|/*  * This only exists to supress warnings from unlocked specfs accesses.  It is  * no longer ok to have an unlocked VFS.  */
+comment|/*  * This only exists to suppress warnings from unlocked specfs accesses.  It is  * no longer ok to have an unlocked VFS.  */
 end_comment
 
 begin_define

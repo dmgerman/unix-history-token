@@ -2144,7 +2144,7 @@ name|RLIMIT_DATA
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* round size up to page boundry */
+comment|/* round size up to page boundary */
 name|size
 operator|=
 operator|(

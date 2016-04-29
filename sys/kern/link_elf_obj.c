@@ -6392,7 +6392,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 * Only clean SHN_FBSD_CACHED for successfull return.  If we 	 * modified symbol table for the object but found an 	 * unresolved symbol, there is no reason to roll back. 	 */
+comment|/* 	 * Only clean SHN_FBSD_CACHED for successful return.  If we 	 * modified symbol table for the object but found an 	 * unresolved symbol, there is no reason to roll back. 	 */
 name|elf_obj_cleanup_globals_cache
 argument_list|(
 name|ef

@@ -392,7 +392,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Implement packet mode. When packet mode is turned on, 		 * the first byte contains a bitmask of events that 		 * occured (start, stop, flush, window size, etc). 		 */
+comment|/* 		 * Implement packet mode. When packet mode is turned on, 		 * the first byte contains a bitmask of events that 		 * occurred (start, stop, flush, window size, etc). 		 */
 if|if
 condition|(
 name|psc

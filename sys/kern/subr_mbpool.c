@@ -1265,7 +1265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free all buffers that are marked as beeing on the card  */
+comment|/*  * Free all buffers that are marked as being on the card  */
 end_comment
 
 begin_function

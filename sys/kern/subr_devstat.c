@@ -1349,7 +1349,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX devstat_generation should really be "volatile" but that 	 * XXX freaks out the sysctl macro below.  The places where we 	 * XXX change it and inspect it are bracketed in the mutex which 	 * XXX guarantees us proper write barriers.  I don't belive the 	 * XXX compiler is allowed to optimize mygen away across calls 	 * XXX to other functions, so the following is belived to be safe. 	 */
+comment|/* 	 * XXX devstat_generation should really be "volatile" but that 	 * XXX freaks out the sysctl macro below.  The places where we 	 * XXX change it and inspect it are bracketed in the mutex which 	 * XXX guarantees us proper write barriers.  I don't believe the 	 * XXX compiler is allowed to optimize mygen away across calls 	 * XXX to other functions, so the following is belived to be safe. 	 */
 name|mygen
 operator|=
 name|devstat_generation

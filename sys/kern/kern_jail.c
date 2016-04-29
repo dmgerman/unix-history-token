@@ -19152,7 +19152,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Allow jailed root to set certian IPv4/6 (option) headers. 		 */
+comment|/* 		 * Allow jailed root to set certain IPv4/6 (option) headers. 		 */
 case|case
 name|PRIV_NETINET_SETHDROPTS
 case|:
@@ -20265,7 +20265,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Default parameters for jail(2) compatability.  For historical reasons,  * the sysctl names have varying similarity to the parameter names.  Prisons  * just see their own parameters, and can't change them.  */
+comment|/*  * Default parameters for jail(2) compatibility.  For historical reasons,  * the sysctl names have varying similarity to the parameter names.  Prisons  * just see their own parameters, and can't change them.  */
 end_comment
 
 begin_function

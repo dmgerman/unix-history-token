@@ -6600,7 +6600,7 @@ condition|)
 goto|goto
 name|done2
 goto|;
-comment|/* 	 * Initial pass thru sops to see what permissions are needed. 	 * Also perform any checks that don't need repeating on each 	 * attempt to satisfy the request vector. 	 */
+comment|/* 	 * Initial pass through sops to see what permissions are needed. 	 * Also perform any checks that don't need repeating on each 	 * attempt to satisfy the request vector. 	 */
 name|j
 operator|=
 literal|0

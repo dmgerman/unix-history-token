@@ -4171,7 +4171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
+comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistent instead.  */
 end_comment
 
 begin_ifdef
@@ -9444,7 +9444,7 @@ literal|0
 decl_stmt|,
 name|count
 decl_stmt|;
-comment|/* 	 * All files are dependant on /kernel. 	 */
+comment|/* 	 * All files are dependent on /kernel. 	 */
 name|sx_assert
 argument_list|(
 operator|&
