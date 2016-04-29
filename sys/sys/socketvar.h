@@ -1067,6 +1067,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|soaio_enqueue
+parameter_list|(
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|soaio_rcv
 parameter_list|(
 name|void

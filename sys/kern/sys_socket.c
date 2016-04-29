@@ -2573,7 +2573,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|soaio_enqueue
 parameter_list|(
