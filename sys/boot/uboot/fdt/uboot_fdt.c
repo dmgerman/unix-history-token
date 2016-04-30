@@ -548,7 +548,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Find the lenght of the interface id by 				 * taking in to account the first 3 and 				 * last 4 characters. 				 */
+comment|/* 				 * Find the length of the interface id by 				 * taking in to account the first 3 and 				 * last 4 characters. 				 */
 name|i
 operator|=
 name|strlen

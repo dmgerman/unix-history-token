@@ -72,7 +72,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * .KB_C_FN_DEFINITION_START  * int ReadCharFromEnvironment(char *)  *  This private function reads characters from the enviroment variables  * to service the command prompt during auto-boot or just to setup the  * default environment.  Returns positive value if valid character was  * set in the pointer.  Returns negative value to signal input stream  * terminated.  Returns 0 to indicate _wait_ condition.  * .KB_C_FN_DEFINITION_END  */
+comment|/*  * .KB_C_FN_DEFINITION_START  * int ReadCharFromEnvironment(char *)  *  This private function reads characters from the environment variables  * to service the command prompt during auto-boot or just to setup the  * default environment.  Returns positive value if valid character was  * set in the pointer.  Returns negative value to signal input stream  * terminated.  Returns 0 to indicate _wait_ condition.  * .KB_C_FN_DEFINITION_END  */
 end_comment
 
 begin_function

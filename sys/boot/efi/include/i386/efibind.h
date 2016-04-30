@@ -903,7 +903,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// When build similiar to FW, then link everything together as
+comment|// When build similar to FW, then link everything together as
 end_comment
 
 begin_comment

@@ -758,7 +758,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BugBug: Need to find out if this is portable accross compliers.
+comment|// BugBug: Need to find out if this is portable across compilers.
 end_comment
 
 begin_comment
@@ -841,7 +841,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// When build similiar to FW, then link everything together as
+comment|// When build similar to FW, then link everything together as
 end_comment
 
 begin_comment

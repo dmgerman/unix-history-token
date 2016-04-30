@@ -893,7 +893,7 @@ operator|~
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* FLUSH FIFO and reset Transmitter/Reciever */
+comment|/* FLUSH FIFO and reset Transmitter/Receiver */
 name|OWRITE
 argument_list|(
 name|sc
@@ -1362,7 +1362,7 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* SID recieve buffer must align 2^11 */
+comment|/* SID receive buffer must align 2^11 */
 define|#
 directive|define
 name|OHCI_SIDSIZE

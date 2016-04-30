@@ -337,7 +337,7 @@ value|2
 end_define
 
 begin_comment
-comment|// Init Successfull
+comment|// Init Successful
 end_comment
 
 begin_define
@@ -359,7 +359,7 @@ value|4
 end_define
 
 begin_comment
-comment|// Read Successfull
+comment|// Read Successful
 end_comment
 
 begin_define
@@ -381,7 +381,7 @@ value|6
 end_define
 
 begin_comment
-comment|// Write Successfull
+comment|// Write Successful
 end_comment
 
 begin_define
@@ -403,7 +403,7 @@ value|8
 end_define
 
 begin_comment
-comment|// Erase Successfull
+comment|// Erase Successful
 end_comment
 
 begin_define
@@ -425,7 +425,7 @@ value|10
 end_define
 
 begin_comment
-comment|// Card Selection Successfull
+comment|// Card Selection Successful
 end_comment
 
 begin_define

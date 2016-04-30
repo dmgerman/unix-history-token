@@ -2082,7 +2082,7 @@ goto|goto
 name|trymbr
 goto|;
 block|}
-comment|/*      * Probe all GPT partitions for the presense of ZFS pools. We      * return the spa_t for the first we find (if requested). This      * will have the effect of booting from the first pool on the      * disk.      *      * If no vdev is found, GELI decrypting the device and try again      */
+comment|/*      * Probe all GPT partitions for the presence of ZFS pools. We      * return the spa_t for the first we find (if requested). This      * will have the effect of booting from the first pool on the      * disk.      *      * If no vdev is found, GELI decrypting the device and try again      */
 name|entries_per_sec
 operator|=
 name|DEV_BSIZE

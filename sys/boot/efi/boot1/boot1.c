@@ -371,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * device_paths_match returns TRUE if the imgpath isn't NULL and all nodes  * in imgpath and devpath match up to their respect occurances of a media  * node, FALSE otherwise.  */
+comment|/*  * device_paths_match returns TRUE if the imgpath isn't NULL and all nodes  * in imgpath and devpath match up to their respective occurrences of a  * media node, FALSE otherwise.  */
 end_comment
 
 begin_function

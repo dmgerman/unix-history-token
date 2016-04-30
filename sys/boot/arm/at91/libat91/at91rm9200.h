@@ -2653,7 +2653,7 @@ comment|// *********************************************************************
 end_comment
 
 begin_comment
-comment|//              SOFTWARE API DEFINITION  FOR Power Management Controler
+comment|//              SOFTWARE API DEFINITION  FOR Power Management Controller
 end_comment
 
 begin_comment
@@ -3248,7 +3248,7 @@ comment|// *********************************************************************
 end_comment
 
 begin_comment
-comment|//              SOFTWARE API DEFINITION  FOR Clock Generator Controler
+comment|//              SOFTWARE API DEFINITION  FOR Clock Generator Controller
 end_comment
 
 begin_comment
@@ -3613,7 +3613,7 @@ comment|// *********************************************************************
 end_comment
 
 begin_comment
-comment|//              SOFTWARE API DEFINITION  FOR Parallel Input Output Controler
+comment|//              SOFTWARE API DEFINITION  FOR Parallel Input Output Controller
 end_comment
 
 begin_comment

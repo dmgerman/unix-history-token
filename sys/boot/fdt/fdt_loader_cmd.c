@@ -836,7 +836,7 @@ name|offs
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * The most efficent way to find a symbol would be to calculate a 	 * hash, find proper bucket and chain, and thus find a symbol. 	 * However, that would involve code duplication (e.g. for hash 	 * function). So we're using simpler and a bit slower way: we're 	 * iterating through symbols, searching for the one which name is 	 * 'equal' to 'fdt_static_dtb'. To speed up the process a little bit, 	 * we are eliminating symbols type of which is not STT_NOTYPE, or(and) 	 * those which binding attribute is not STB_GLOBAL. 	 */
+comment|/* 	 * The most efficient way to find a symbol would be to calculate a 	 * hash, find proper bucket and chain, and thus find a symbol. 	 * However, that would involve code duplication (e.g. for hash 	 * function). So we're using simpler and a bit slower way: we're 	 * iterating through symbols, searching for the one which name is 	 * 'equal' to 'fdt_static_dtb'. To speed up the process a little bit, 	 * we are eliminating symbols type of which is not STT_NOTYPE, or(and) 	 * those which binding attribute is not STB_GLOBAL. 	 */
 name|fdt_start
 operator|=
 literal|0
@@ -3104,7 +3104,7 @@ condition|(
 name|rsize
 condition|)
 block|{
-comment|/* Ensure endianess, and put cells into a buffer */
+comment|/* Ensure endianness, and put cells into a buffer */
 if|if
 condition|(
 name|addr_cells
@@ -3350,7 +3350,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Ensure endianess, and put cells into a buffer */
+comment|/* Ensure endianness, and put cells into a buffer */
 if|if
 condition|(
 name|addr_cells

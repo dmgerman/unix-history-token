@@ -40,7 +40,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Make sure we are useing the correct packing rules per EFI specification
+comment|// Make sure we are using the correct packing rules per EFI specification
 end_comment
 
 begin_comment

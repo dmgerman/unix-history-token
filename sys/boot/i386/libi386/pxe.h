@@ -678,7 +678,7 @@ decl_stmt|;
 name|MAC_ADDR
 name|StationAddress
 decl_stmt|;
-comment|/* Temp MAC addres to use */
+comment|/* Temp MAC address to use */
 block|}
 name|PACKED
 name|t_PXENV_UNDI_SET_STATION_ADDR
@@ -1071,7 +1071,7 @@ comment|/* Length of Frame */
 name|uint16_t
 name|FrameLength
 decl_stmt|;
-comment|/* Total length of reciever frame */
+comment|/* Total length of receiver frame */
 name|uint16_t
 name|FrameHeaderLength
 decl_stmt|;
@@ -1109,7 +1109,7 @@ define|#
 directive|define
 name|PXENV_UNDI_ISR_OUT_NOT_OUTS
 value|1
-comment|/* 	 * one of these will bre returnd for PXEND_UNDI_ISR_IN_PROCESS 	 * and PXENV_UNDI_ISR_IN_GET_NEXT 	 */
+comment|/* 	 * one of these will bre returned for PXEND_UNDI_ISR_IN_PROCESS 	 * and PXENV_UNDI_ISR_IN_GET_NEXT 	 */
 define|#
 directive|define
 name|PXENV_UNDI_ISR_OUT_DONE
