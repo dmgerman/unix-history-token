@@ -6540,13 +6540,12 @@ name|yoff
 operator|=
 name|y
 operator|-
-operator|(
+name|rounddown
+argument_list|(
 name|y
-operator|/
+argument_list|,
 name|line_width
-operator|)
-operator|*
-name|line_width
+argument_list|)
 expr_stmt|;
 name|ymax
 operator|=

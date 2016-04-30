@@ -20208,13 +20208,12 @@ name|dtim
 condition|)
 name|max
 operator|=
-operator|(
+name|rounddown
+argument_list|(
 name|max
-operator|/
+argument_list|,
 name|dtim
-operator|)
-operator|*
-name|dtim
+argument_list|)
 expr_stmt|;
 block|}
 else|else

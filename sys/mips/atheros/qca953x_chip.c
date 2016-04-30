@@ -1157,13 +1157,12 @@ name|reg
 operator|=
 name|QCA953X_GPIO_REG_OUT_FUNC0
 operator|+
-literal|4
-operator|*
-operator|(
+name|rounddown
+argument_list|(
 name|gpio
-operator|/
+argument_list|,
 literal|4
-operator|)
+argument_list|)
 expr_stmt|;
 name|s
 operator|=

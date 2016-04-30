@@ -2254,15 +2254,14 @@ literal|21000000
 condition|)
 return|return
 operator|(
-operator|(
+name|rounddown
+argument_list|(
 name|ckgr_val
 operator|+
 literal|250
-operator|)
-operator|/
+argument_list|,
 literal|500
-operator|*
-literal|500
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Try to find the standard frequency that match best. 	 */

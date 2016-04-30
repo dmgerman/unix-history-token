@@ -6584,17 +6584,14 @@ block|{
 comment|/* Check for alignment errors */
 name|bs
 operator|=
-operator|(
+name|rounddown
+argument_list|(
 name|bs
-operator|/
+argument_list|,
 name|sc
 operator|->
 name|sectorsize
-operator|)
-operator|*
-name|sc
-operator|->
-name|sectorsize
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9114,19 +9111,16 @@ name|me
 expr_stmt|;
 name|s_offset
 operator|=
-operator|(
+name|rounddown
+argument_list|(
 name|s_offset
-operator|/
+argument_list|,
 name|sc
 operator|->
 name|sectorsize
-operator|)
-operator|*
-name|sc
-operator|->
-name|sectorsize
+argument_list|)
 expr_stmt|;
-comment|/* data_me points to map entry sector 				 * in memory (analoguos to offset) */
+comment|/* data_me points to map entry sector 				 * in memory (analogous to offset) */
 name|data_me
 operator|=
 operator|&
@@ -9134,17 +9128,14 @@ name|sc
 operator|->
 name|map
 index|[
-operator|(
+name|rounddown
+argument_list|(
 name|chunk_index
-operator|/
+argument_list|,
 name|sc
 operator|->
 name|me_per_sector
-operator|)
-operator|*
-name|sc
-operator|->
-name|me_per_sector
+argument_list|)
 index|]
 expr_stmt|;
 comment|/* Commit sector with map entry to storage */

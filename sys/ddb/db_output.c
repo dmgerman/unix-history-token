@@ -156,8 +156,7 @@ name|NEXT_TAB
 parameter_list|(
 name|i
 parameter_list|)
-define|\
-value|((((i) + db_tab_stop_width) / db_tab_stop_width) * db_tab_stop_width)
+value|rounddown((i) + db_tab_stop_width, db_tab_stop_width)
 end_define
 
 begin_decl_stmt

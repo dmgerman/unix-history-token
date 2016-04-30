@@ -4759,11 +4759,12 @@ decl_stmt|;
 comment|/* Align coordinates with the 8-pxels grid. */
 name|x1
 operator|=
+name|rounddown
+argument_list|(
 name|x
-operator|/
+argument_list|,
 name|VT_VGA_PIXELS_BLOCK
-operator|*
-name|VT_VGA_PIXELS_BLOCK
+argument_list|)
 expr_stmt|;
 name|y1
 operator|=
