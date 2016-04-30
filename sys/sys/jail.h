@@ -856,17 +856,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PR_REMOVE
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* In process of being removed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PR_IP4
 value|0x02000000
 end_define
