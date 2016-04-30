@@ -2117,7 +2117,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* error occured during creation. */
+comment|/* error occurred during creation. */
 if|if
 condition|(
 name|qflag

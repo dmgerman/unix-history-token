@@ -296,7 +296,7 @@ value|do {				\ 	if ((v)< (len))					\ 		errx(EX_DATAERR, "Rule too long");		\ 	
 end_define
 
 begin_comment
-comment|/*  * Check if we have enough space in cmd buffer. Note that since  * first 8? u32 words are reserved by reserved header, full cmd  * buffer can't be used, so we need to protect from buffer overrun  * only. At the beginnig, cblen is less than actual buffer size by  * size of ipfw_insn_u32 instruction + 1 u32 work. This eliminates need  * for checking small instructions fitting in given range.  * We also (ab)use the fact that ipfw_insn is always the first field  * for any custom instruction.  */
+comment|/*  * Check if we have enough space in cmd buffer. Note that since  * first 8? u32 words are reserved by reserved header, full cmd  * buffer can't be used, so we need to protect from buffer overrun  * only. At the beginning, cblen is less than actual buffer size by  * size of ipfw_insn_u32 instruction + 1 u32 work. This eliminates need  * for checking small instructions fitting in given range.  * We also (ab)use the fact that ipfw_insn is always the first field  * for any custom instruction.  */
 end_comment
 
 begin_define
@@ -25117,7 +25117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Adds one or more rules to ipfw chain.  * Data layout:  * Request:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional *1)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) [ ip_fw_rule ip_fw_insn ] x N ] (*2) (*3)  * ]  * Reply:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) [ ip_fw_rule ip_fw_insn ] x N ]  * ]  *  * Rules in reply are modified to store their actual ruleset number.  *  * (*1) TLVs inside IPFW_TLV_TBL_LIST needs to be sorted ascending  * accoring to their idx field and there has to be no duplicates.  * (*2) Numbered rules inside IPFW_TLV_RULE_LIST needs to be sorted ascending.  * (*3) Each ip_fw structure needs to be aligned to u64 boundary.  */
+comment|/*  * Adds one or more rules to ipfw chain.  * Data layout:  * Request:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional *1)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) [ ip_fw_rule ip_fw_insn ] x N ] (*2) (*3)  * ]  * Reply:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) [ ip_fw_rule ip_fw_insn ] x N ]  * ]  *  * Rules in reply are modified to store their actual ruleset number.  *  * (*1) TLVs inside IPFW_TLV_TBL_LIST needs to be sorted ascending  * according to their idx field and there has to be no duplicates.  * (*2) Numbered rules inside IPFW_TLV_RULE_LIST needs to be sorted ascending.  * (*3) Each ip_fw structure needs to be aligned to u64 boundary.  */
 end_comment
 
 begin_function

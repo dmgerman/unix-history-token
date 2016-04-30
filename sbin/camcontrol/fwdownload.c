@@ -511,7 +511,7 @@ block|,
 name|FW_TIMEOUT_DEFAULT
 block|}
 block|,
-comment|/* 	 * We match any ATA device.  This is really just a placeholder, 	 * since we won't actually send a WRITE BUFFER with any of the 	 * listed parameters.  If a SATA device is behind a SAS controller, 	 * the SCSI to ATA translation code (at least for LSI) doesn't 	 * generaly translate a SCSI WRITE BUFFER into an ATA DOWNLOAD 	 * MICROCODE command.  So, we use the SCSI ATA PASS_THROUGH command 	 * to send the ATA DOWNLOAD MICROCODE command instead. 	 */
+comment|/* 	 * We match any ATA device.  This is really just a placeholder, 	 * since we won't actually send a WRITE BUFFER with any of the 	 * listed parameters.  If a SATA device is behind a SAS controller, 	 * the SCSI to ATA translation code (at least for LSI) doesn't 	 * generally translate a SCSI WRITE BUFFER into an ATA DOWNLOAD 	 * MICROCODE command.  So, we use the SCSI ATA PASS_THROUGH command 	 * to send the ATA DOWNLOAD MICROCODE command instead. 	 */
 block|{
 name|VENDOR_ATA
 block|,
