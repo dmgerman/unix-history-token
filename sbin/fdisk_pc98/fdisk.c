@@ -183,16 +183,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RoundCyl
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x) + cylsecs - 1) / cylsecs) * cylsecs)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_SEC_SIZE
 value|2048
 end_define
