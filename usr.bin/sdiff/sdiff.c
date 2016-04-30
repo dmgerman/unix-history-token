@@ -2587,10 +2587,6 @@ init|;
 name|i
 operator|<=
 name|MAX_CHECK
-operator|||
-name|ch
-operator|!=
-name|EOF
 condition|;
 name|i
 operator|++
@@ -2621,6 +2617,13 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ch
+operator|==
+name|EOF
+condition|)
+break|break;
 block|}
 name|rewind
 argument_list|(
