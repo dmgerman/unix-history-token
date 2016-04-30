@@ -3279,6 +3279,15 @@ name|err
 init|=
 name|NULL
 decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|iterpool
+init|=
+name|svn_pool_create
+argument_list|(
+name|scratch_pool
+argument_list|)
+decl_stmt|;
 comment|/* Find each unreferenced pristine in the DB and remove it. */
 name|SVN_ERR
 argument_list|(
@@ -3309,6 +3318,11 @@ name|svn_checksum_t
 modifier|*
 name|sha1_checksum
 decl_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_sqlite__step
@@ -3337,7 +3351,7 @@ name|stmt
 argument_list|,
 literal|0
 argument_list|,
-name|scratch_pool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3349,10 +3363,15 @@ name|wcroot
 argument_list|,
 name|sha1_checksum
 argument_list|,
-name|scratch_pool
+name|iterpool
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 return|return
 name|svn_error_trace
 argument_list|(

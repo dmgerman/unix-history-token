@@ -186,6 +186,23 @@ block|{
 comment|/* The only valid realm is user_realm (i.e. the repository's realm).          If the user gave us another realm, complain. */
 if|if
 condition|(
+name|realm_len
+operator|!=
+name|inlen
+operator|-
+operator|(
+name|pos
+operator|-
+name|in
+operator|+
+literal|1
+operator|)
+condition|)
+return|return
+name|SASL_BADPROT
+return|;
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|pos

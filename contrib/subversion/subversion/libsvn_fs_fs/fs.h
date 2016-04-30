@@ -838,11 +838,6 @@ typedef|typedef
 struct|struct
 name|transaction_t
 block|{
-comment|/* property list (const char * name, svn_string_t * value).      may be NULL if there are no properties.  */
-name|apr_hash_t
-modifier|*
-name|proplist
-decl_stmt|;
 comment|/* node revision id of the root node.  */
 specifier|const
 name|svn_fs_id_t
@@ -907,7 +902,7 @@ comment|/* Is this a representation (still) within a transaction? */
 name|svn_fs_fs__id_part_t
 name|txn_id
 decl_stmt|;
-comment|/* For rep-sharing, we need a way of uniquifying node-revs which share the      same representation (see svn_fs_fs__noderev_same_rep_key() ).  So, we      store the original txn of the node rev (not the rep!), along with some      intra-node uniqification content.       This is no longer used by the 1.9 code but we have to keep      reading and writing it for old formats to remain compatible with      1.8, and earlier, that require it.  We also read/write it in      format 7 even though it is not currently required by any code      that handles that format. */
+comment|/* For rep-sharing, we need a way of uniquifying node-revs which share the      same representation (see svn_fs_fs__noderev_same_rep_key() ).  So, we      store the original txn of the node rev (not the rep!), along with some      intra-node uniqification content. */
 struct|struct
 block|{
 comment|/* unique context, i.e. txn ID, in which the noderev (!) got created */

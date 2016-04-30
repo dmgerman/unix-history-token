@@ -123,10 +123,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_COMPRESSION
 value|"http-compression"
+comment|/** @deprecated Not used since 1.8. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_NEON_DEBUG_MASK
 value|"neon-debug-mask"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_AUTH_TYPES
@@ -147,18 +149,22 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_SSL_CLIENT_CERT_PASSWORD
 value|"ssl-client-cert-password"
+comment|/** @deprecated Not used since 1.8.  * @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_SSL_PKCS11_PROVIDER
 value|"ssl-pkcs11-provider"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_LIBRARY
 value|"http-library"
+comment|/** @since New in 1.1. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_PASSWORDS
 value|"store-passwords"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_PLAINTEXT_PASSWORDS
@@ -167,10 +173,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_AUTH_CREDS
 value|"store-auth-creds"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_SSL_CLIENT_CERT_PP
 value|"store-ssl-client-cert-pp"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_SSL_CLIENT_CERT_PP_PLAINTEXT
@@ -259,6 +267,7 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_DIFF3_HAS_PROGRAM_ARG
 value|"diff3-has-program-arg"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MERGE_TOOL_CMD
@@ -293,14 +302,17 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_ENABLE_MAGIC_FILE
 value|"enable-magic-file"
+comment|/** @since New in 1.2. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_NO_UNLOCK
 value|"no-unlock"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MIMETYPES_FILE
 value|"mime-types-file"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_PRESERVED_CF_EXTS
@@ -390,18 +402,22 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_HOOKS_ENV
 value|"hooks-env"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_SECTION_SASL
 value|"sasl"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_USE_SASL
 value|"use-sasl"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MIN_SSF
 value|"min-encryption"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MAX_SSF

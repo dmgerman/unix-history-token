@@ -130,7 +130,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* For more efficient copy operations, let's align all data items properly.  * Must be a power of 2.  */
+comment|/* For more efficient copy operations, let's align all data items properly.  * Since we can't portably align pointers, this is rather the item size  * granularity which ensures *relative* alignment within the cache - still  * giving us decent copy speeds on most machines.  *  * Must be a power of 2.  */
 end_comment
 
 begin_define
@@ -1116,20 +1116,6 @@ parameter_list|(
 name|value
 parameter_list|)
 value|(((value) + ITEM_ALIGNMENT-1)& -ITEM_ALIGNMENT)
-end_define
-
-begin_comment
-comment|/* Align POINTER value to the next ITEM_ALIGNMENT boundary.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALIGN_POINTER
-parameter_list|(
-name|pointer
-parameter_list|)
-value|((void*)ALIGN_VALUE((apr_size_t)(char*)(pointer)))
 end_define
 
 begin_comment
@@ -4738,74 +4724,6 @@ comment|/* This will never be reached. But if it was, "can't insert" was the    
 block|}
 end_function
 
-begin_comment
-comment|/* Mimic apr_pcalloc in APR_POOL_DEBUG mode, i.e. handle failed allocations  * (e.g. OOM) properly: Allocate at least SIZE bytes from POOL and zero  * the content of the allocated memory if ZERO has been set. Return NULL  * upon failed allocations.  *  * Also, satisfy our buffer alignment needs for performance reasons.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-modifier|*
-name|secure_aligned_alloc
-parameter_list|(
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|,
-name|apr_size_t
-name|size
-parameter_list|,
-name|svn_boolean_t
-name|zero
-parameter_list|)
-block|{
-name|void
-modifier|*
-name|memory
-init|=
-name|apr_palloc
-argument_list|(
-name|pool
-argument_list|,
-name|size
-operator|+
-name|ITEM_ALIGNMENT
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|memory
-operator|!=
-name|NULL
-condition|)
-block|{
-name|memory
-operator|=
-name|ALIGN_POINTER
-argument_list|(
-name|memory
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|zero
-condition|)
-name|memset
-argument_list|(
-name|memory
-argument_list|,
-literal|0
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|memory
-return|;
-block|}
-end_function
-
 begin_function
 name|svn_error_t
 modifier|*
@@ -5414,7 +5332,10 @@ name|l2
 operator|.
 name|size
 operator|=
+name|ALIGN_VALUE
+argument_list|(
 name|data_size
+argument_list|)
 operator|-
 name|c
 index|[
@@ -5443,6 +5364,7 @@ name|l2
 operator|.
 name|start_offset
 expr_stmt|;
+comment|/* This cast is safe because DATA_SIZE<= MAX_SEGMENT_SIZE. */
 name|c
 index|[
 name|seg
@@ -5450,16 +5372,17 @@ index|]
 operator|.
 name|data
 operator|=
-name|secure_aligned_alloc
+name|apr_palloc
 argument_list|(
 name|pool
 argument_list|,
 operator|(
 name|apr_size_t
 operator|)
+name|ALIGN_VALUE
+argument_list|(
 name|data_size
-argument_list|,
-name|FALSE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -6779,18 +6702,11 @@ expr_stmt|;
 operator|*
 name|buffer
 operator|=
-name|ALIGN_POINTER
-argument_list|(
 name|apr_palloc
 argument_list|(
 name|result_pool
 argument_list|,
 name|size
-operator|+
-name|ITEM_ALIGNMENT
-operator|-
-literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy

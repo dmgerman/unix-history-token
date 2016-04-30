@@ -3358,6 +3358,10 @@ block|{
 if|if
 condition|(
 name|knows_something
+operator|||
+name|desc
+operator|->
+name|is_binary
 condition|)
 operator|*
 name|next_option
@@ -4337,6 +4341,8 @@ name|svn_wc_conflict_choose_merged
 operator|&&
 operator|!
 name|knows_something
+operator|&&
+name|diff_allowed
 condition|)
 block|{
 name|SVN_ERR

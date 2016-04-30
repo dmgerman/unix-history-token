@@ -53,12 +53,9 @@ begin_comment
 comment|/* Define to 1 if you have the `bind_textdomain_codeset' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_BIND_TEXTDOMAIN_CODESET
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_BIND_TEXTDOMAIN_CODESET */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
@@ -380,7 +377,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"subversion 1.9.2"
+value|"subversion 1.9.4"
 end_define
 
 begin_comment
@@ -413,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.8.14"
+value|"1.9.4"
 end_define
 
 begin_comment

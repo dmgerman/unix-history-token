@@ -712,16 +712,16 @@ name|APR_EOL_STR
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ### git would first calculate if a git-delta original->latest would be          shorter than the zipped data. For now lets assume that it is not          and just dump the literal data */
+comment|/* ### git would first calculate if a git-delta latest->original would be          shorter than the zipped data. For now lets assume that it is not          and just dump the literal data */
 name|SVN_ERR
 argument_list|(
 name|write_literal
 argument_list|(
-name|original_full
+name|latest_full
 argument_list|,
 name|svn_stream_from_aprfile2
 argument_list|(
-name|original_apr
+name|latest_apr
 argument_list|,
 name|FALSE
 argument_list|,
@@ -753,16 +753,16 @@ name|APR_EOL_STR
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ### git would first calculate if a git-delta latest->original would be          shorter than the zipped data. For now lets assume that it is not          and just dump the literal data */
+comment|/* ### git would first calculate if a git-delta original->latest would be          shorter than the zipped data. For now lets assume that it is not          and just dump the literal data */
 name|SVN_ERR
 argument_list|(
 name|write_literal
 argument_list|(
-name|latest_full
+name|original_full
 argument_list|,
 name|svn_stream_from_aprfile2
 argument_list|(
-name|latest_apr
+name|original_apr
 argument_list|,
 name|FALSE
 argument_list|,

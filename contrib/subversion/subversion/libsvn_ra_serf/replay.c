@@ -3032,6 +3032,12 @@ name|rev_ctx
 expr_stmt|;
 name|handler
 operator|->
+name|body_type
+operator|=
+literal|"text/xml"
+expr_stmt|;
+name|handler
+operator|->
 name|done_delegate
 operator|=
 name|replay_done

@@ -4970,13 +4970,6 @@ decl_stmt|,
 modifier|*
 name|noderev2
 decl_stmt|;
-name|svn_fs_t
-modifier|*
-name|fs
-decl_stmt|;
-name|svn_boolean_t
-name|same
-decl_stmt|;
 comment|/* If we have no place to store our results, don't bother doing      anything. */
 if|if
 condition|(
@@ -4989,13 +4982,6 @@ condition|)
 return|return
 name|SVN_NO_ERROR
 return|;
-name|fs
-operator|=
-name|svn_fs_fs__dag_get_fs
-argument_list|(
-name|node1
-argument_list|)
-expr_stmt|;
 comment|/* The node revision skels for these two nodes. */
 name|SVN_ERR
 argument_list|(
@@ -5019,6 +5005,24 @@ name|node2
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strict
+condition|)
+block|{
+comment|/* In strict mode, compare text and property representations in the          svn_fs_contents_different() / svn_fs_props_different() manner.           See the "No-op changes no longer dumped by 'svnadmin dump' in 1.9"          discussion (http://svn.haxx.se/dev/archive-2015-09/0269.shtml) and          issue #4598 (https://issues.apache.org/jira/browse/SVN-4598). */
+name|svn_fs_t
+modifier|*
+name|fs
+init|=
+name|svn_fs_fs__dag_get_fs
+argument_list|(
+name|node1
+argument_list|)
+decl_stmt|;
+name|svn_boolean_t
+name|same
+decl_stmt|;
 comment|/* Compare property keys. */
 if|if
 condition|(
@@ -5039,8 +5043,6 @@ argument_list|,
 name|noderev1
 argument_list|,
 name|noderev2
-argument_list|,
-name|strict
 argument_list|,
 name|pool
 argument_list|)
@@ -5074,8 +5076,6 @@ name|noderev1
 argument_list|,
 name|noderev2
 argument_list|,
-name|strict
-argument_list|,
 name|pool
 argument_list|)
 argument_list|)
@@ -5085,6 +5085,55 @@ name|contents_changed
 operator|=
 operator|!
 name|same
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Otherwise, compare representation keys -- as in Subversion 1.8. */
+comment|/* Compare property keys. */
+if|if
+condition|(
+name|props_changed
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|props_changed
+operator|=
+operator|!
+name|svn_fs_fs__noderev_same_rep_key
+argument_list|(
+name|noderev1
+operator|->
+name|prop_rep
+argument_list|,
+name|noderev2
+operator|->
+name|prop_rep
+argument_list|)
+expr_stmt|;
+comment|/* Compare contents keys. */
+if|if
+condition|(
+name|contents_changed
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|contents_changed
+operator|=
+operator|!
+name|svn_fs_fs__noderev_same_rep_key
+argument_list|(
+name|noderev1
+operator|->
+name|data_rep
+argument_list|,
+name|noderev2
+operator|->
+name|data_rep
+argument_list|)
 expr_stmt|;
 block|}
 return|return

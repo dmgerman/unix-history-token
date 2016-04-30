@@ -6764,6 +6764,7 @@ name|contents_changed
 operator|=
 operator|(
 operator|!
+operator|(
 name|svn_fs_base__same_keys
 argument_list|(
 name|noderev1
@@ -6774,6 +6775,21 @@ name|noderev2
 operator|->
 name|data_key
 argument_list|)
+comment|/* Technically, these uniquifiers aren't used and "keys",              but keys are base-36 stringified numbers, so we'll take              this liberty. */
+operator|&&
+operator|(
+name|svn_fs_base__same_keys
+argument_list|(
+name|noderev1
+operator|->
+name|data_key_uniquifier
+argument_list|,
+name|noderev2
+operator|->
+name|data_key_uniquifier
+argument_list|)
+operator|)
+operator|)
 operator|)
 expr_stmt|;
 return|return

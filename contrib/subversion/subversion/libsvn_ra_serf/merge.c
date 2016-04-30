@@ -1042,9 +1042,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|merge_lock_token_list
+name|svn_ra_serf__merge_lock_token_list
 parameter_list|(
 name|apr_hash_t
 modifier|*
@@ -1483,7 +1482,7 @@ argument_list|,
 literal|"D:prop"
 argument_list|)
 expr_stmt|;
-name|merge_lock_token_list
+name|svn_ra_serf__merge_lock_token_list
 argument_list|(
 name|ctx
 operator|->
@@ -1683,6 +1682,12 @@ operator|->
 name|body_delegate_baton
 operator|=
 name|merge_ctx
+expr_stmt|;
+name|handler
+operator|->
+name|body_type
+operator|=
+literal|"text/xml"
 expr_stmt|;
 name|handler
 operator|->

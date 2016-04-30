@@ -4675,6 +4675,7 @@ literal|"PRAGMA foreign_keys=OFF;"
 comment|/* SQLITE_DEFAULT_FOREIGN_KEYS*/
 literal|"PRAGMA locking_mode = NORMAL;"
 comment|/* SQLITE_DEFAULT_LOCKING_MODE */
+comment|/* Testing shows TRUNCATE is faster than DELETE on Windows. */
 literal|"PRAGMA journal_mode = TRUNCATE;"
 argument_list|)
 argument_list|,

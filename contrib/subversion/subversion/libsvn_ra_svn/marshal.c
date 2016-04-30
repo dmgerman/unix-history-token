@@ -4644,6 +4644,9 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
+name|apr_size_t
+name|buflen
+decl_stmt|;
 comment|/* We can't store strings longer than the maximum size of apr_size_t,    * so check for wrapping */
 if|if
 condition|(
@@ -4664,18 +4667,22 @@ literal|"String length larger than maximum"
 argument_list|)
 argument_list|)
 return|;
-comment|/* Shorter strings can be copied directly from the read buffer. */
-if|if
-condition|(
-name|conn
-operator|->
-name|read_ptr
-operator|+
-name|len
-operator|<=
+name|buflen
+operator|=
 name|conn
 operator|->
 name|read_end
+operator|-
+name|conn
+operator|->
+name|read_ptr
+expr_stmt|;
+comment|/* Shorter strings can be copied directly from the read buffer. */
+if|if
+condition|(
+name|len
+operator|<=
+name|buflen
 condition|)
 block|{
 name|item

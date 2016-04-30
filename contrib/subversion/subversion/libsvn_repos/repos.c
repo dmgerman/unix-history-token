@@ -2408,15 +2408,25 @@ name|NL
 literal|"# authz-db = "
 name|SVN_REPOS__CONF_AUTHZ
 name|NL
-literal|"### The groups-db option controls the location of the groups file."
+literal|"### The groups-db option controls the location of the file with the"
 name|NL
-literal|"### Unless you specify a path starting with a /, the file's location is"
+literal|"### group definitions and allows maintaining groups separately from the"
 name|NL
-literal|"### relative to the directory containing this file.  The specified path"
+literal|"### authorization rules.  The groups-db file is of the same format as the"
 name|NL
-literal|"### may be a repository relative URL (^/) or an absolute file:// URL to a"
+literal|"### authz-db file and should contain a single [groups] section with the"
 name|NL
-literal|"### text file in a Subversion repository."
+literal|"### group definitions.  If the option is enabled, the authz-db file cannot"
+name|NL
+literal|"### contain a [groups] section.  Unless you specify a path starting with"
+name|NL
+literal|"### a /, the file's location is relative to the directory containing this"
+name|NL
+literal|"### file.  The specified path may be a repository relative URL (^/) or an"
+name|NL
+literal|"### absolute file:// URL to a text file in a Subversion repository."
+name|NL
+literal|"### This option is not being used by default."
 name|NL
 literal|"# groups-db = "
 name|SVN_REPOS__CONF_GROUPS

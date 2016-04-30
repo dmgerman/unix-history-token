@@ -1222,11 +1222,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|1024
-operator|*
-literal|1024
+literal|0
 argument_list|,
-comment|/* process-local transfers                                                    should be fast */
+comment|/* Disable zero-copy codepath, because                                         RA API users are unaware about the                                         zero-copy code path limitation (do                                         not access FSFS data structures                                         and, hence, caches).  See notes                                         to svn_repos_begin_report3() for                                         additional details. */
 name|result_pool
 argument_list|)
 argument_list|)

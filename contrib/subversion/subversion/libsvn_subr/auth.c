@@ -1253,9 +1253,16 @@ name|auth_baton
 operator|->
 name|creds_cache
 argument_list|,
+name|apr_pstrdup
+argument_list|(
+name|auth_baton
+operator|->
+name|pool
+argument_list|,
 name|state
 operator|->
 name|cache_key
+argument_list|)
 argument_list|,
 name|creds
 argument_list|)

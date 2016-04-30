@@ -3998,7 +3998,7 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_fs_props_different
+name|svn_fs_props_changed
 argument_list|(
 operator|&
 name|must_dump_props
@@ -4025,7 +4025,7 @@ name|svn_node_file
 condition|)
 name|SVN_ERR
 argument_list|(
-name|svn_fs_contents_different
+name|svn_fs_contents_changed
 argument_list|(
 operator|&
 name|must_dump_text
@@ -4497,7 +4497,7 @@ expr_stmt|;
 comment|/* Need to decide if the copied node had any extra textual or              property mods as well.  */
 name|SVN_ERR
 argument_list|(
-name|svn_fs_props_different
+name|svn_fs_props_changed
 argument_list|(
 operator|&
 name|must_dump_props
@@ -4534,7 +4534,7 @@ name|hex_digest
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_fs_contents_different
+name|svn_fs_contents_changed
 argument_list|(
 operator|&
 name|must_dump_text

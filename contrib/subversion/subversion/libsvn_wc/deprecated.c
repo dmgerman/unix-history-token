@@ -8315,7 +8315,7 @@ name|target
 argument_list|,
 name|depth
 argument_list|,
-name|use_git_diff_format
+name|ignore_ancestry
 argument_list|,
 name|use_text_base
 argument_list|,

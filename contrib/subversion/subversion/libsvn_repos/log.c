@@ -7566,6 +7566,7 @@ name|current
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|cur_rev
 argument_list|)
 argument_list|)

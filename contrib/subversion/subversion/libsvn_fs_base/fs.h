@@ -299,7 +299,7 @@ name|char
 modifier|*
 name|data_key
 decl_stmt|;
-comment|/* data representation instance identifier.  Sounds fancy, but is      really just a way to distinguish between "I use the same rep key      as another node because we share ancestry and haven't had our      text touched at all" and "I use the same rep key as another node      only because one or both of us decided to pick up a shared      representation after-the-fact."  May be NULL (if this node      revision isn't using a shared rep, or isn't the original      "assignee" of a shared rep).       This is no longer used by the 1.9 code but we have to keep      reading and writing it to remain compatible with 1.8, and      earlier, that require it. */
+comment|/* data representation instance identifier.  Sounds fancy, but is      really just a way to distinguish between "I use the same rep key      as another node because we share ancestry and haven't had our      text touched at all" and "I use the same rep key as another node      only because one or both of us decided to pick up a shared      representation after-the-fact."  May be NULL (if this node      revision isn't using a shared rep, or isn't the original      "assignee" of a shared rep). */
 specifier|const
 name|char
 modifier|*

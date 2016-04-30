@@ -10006,10 +10006,24 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Update the cache, if we are to use one. */
+comment|/* Update the cache, if we are to use one.    *    * Don't even attempt to serialize very large directories; it would cause    * an unnecessary memory allocation peak.  150 bytes/entry is about right.    */
 if|if
 condition|(
 name|cache
+operator|&&
+name|svn_cache__is_cachable
+argument_list|(
+name|cache
+argument_list|,
+literal|150
+operator|*
+operator|(
+operator|*
+name|entries_p
+operator|)
+operator|->
+name|nelts
+argument_list|)
 condition|)
 name|SVN_ERR
 argument_list|(

@@ -211,7 +211,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set *EQUAL to TRUE if the text representations in A and B within FS    have equal contents, else set it to FALSE.  If STRICT is not set, allow    for false negatives.    Use SCRATCH_POOL for temporary allocations. */
+comment|/* Return TRUE if the representation keys in A and B both point to the    same representation, else return FALSE. */
+end_comment
+
+begin_function_decl
+name|svn_boolean_t
+name|svn_fs_fs__noderev_same_rep_key
+parameter_list|(
+name|representation_t
+modifier|*
+name|a
+parameter_list|,
+name|representation_t
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set *EQUAL to TRUE if the text representations in A and B within FS    have equal contents, else set it to FALSE.    Use SCRATCH_POOL for temporary allocations. */
 end_comment
 
 begin_function_decl
@@ -235,9 +254,6 @@ name|node_revision_t
 modifier|*
 name|b
 parameter_list|,
-name|svn_boolean_t
-name|strict
-parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -246,7 +262,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set *EQUAL to TRUE if the property representations in A and B within FS    have equal contents, else set it to FALSE.  If STRICT is not set, allow    for false negatives.    Use SCRATCH_POOL for temporary allocations. */
+comment|/* Set *EQUAL to TRUE if the property representations in A and B within FS    have equal contents, else set it to FALSE.    Use SCRATCH_POOL for temporary allocations. */
 end_comment
 
 begin_function_decl
@@ -269,9 +285,6 @@ parameter_list|,
 name|node_revision_t
 modifier|*
 name|b
-parameter_list|,
-name|svn_boolean_t
-name|strict
 parameter_list|,
 name|apr_pool_t
 modifier|*

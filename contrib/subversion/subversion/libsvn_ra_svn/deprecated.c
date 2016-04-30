@@ -1000,9 +1000,9 @@ name|out_stream
 argument_list|,
 name|compression_level
 argument_list|,
-literal|0
+name|zero_copy_limit
 argument_list|,
-literal|0
+name|error_check_interval
 argument_list|,
 name|pool
 argument_list|)
