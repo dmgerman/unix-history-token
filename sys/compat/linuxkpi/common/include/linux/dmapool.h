@@ -104,7 +104,7 @@ expr_stmt|;
 name|align
 operator|--
 expr_stmt|;
-comment|/* 	 * XXX Eventually this could use a seperate allocf to honor boundary 	 * and physical address requirements of the device. 	 */
+comment|/* 	 * XXX Eventually this could use a separate allocf to honor boundary 	 * and physical address requirements of the device. 	 */
 name|pool
 operator|->
 name|pool_zone

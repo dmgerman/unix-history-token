@@ -225,7 +225,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Ancilliary data object information macros */
+comment|/* Ancillary data object information macros */
 end_comment
 
 begin_define

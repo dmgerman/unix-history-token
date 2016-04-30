@@ -784,7 +784,7 @@ argument_list|,
 name|M_RADIX
 argument_list|)
 expr_stmt|;
-comment|/* check if we should free the root node aswell */
+comment|/* Check if we should free the root node as well. */
 if|if
 condition|(
 name|root

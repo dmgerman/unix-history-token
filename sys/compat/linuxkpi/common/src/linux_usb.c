@@ -2551,7 +2551,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_control_msg  *  * The following function performs a control transfer sequence one any  * control, bulk or interrupt endpoint, specified by "uhe". A control  * transfer means that you transfer an 8-byte header first followed by  * a data-phase as indicated by the 8-byte header. The "timeout" is  * given in milliseconds.  *  * Return values:  *   0: Success  *< 0: Failure  *> 0: Acutal length  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_control_msg  *  * The following function performs a control transfer sequence one any  * control, bulk or interrupt endpoint, specified by "uhe". A control  * transfer means that you transfer an 8-byte header first followed by  * a data-phase as indicated by the 8-byte header. The "timeout" is  * given in milliseconds.  *  * Return values:  *   0: Success  *< 0: Failure  *> 0: Actual length  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function

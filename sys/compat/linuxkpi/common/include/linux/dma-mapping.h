@@ -576,7 +576,7 @@ return|return
 operator|-
 name|EIO
 return|;
-comment|/* XXX Currently we don't support a seperate coherent mask. */
+comment|/* XXX Currently we don't support a separate coherent mask. */
 return|return
 literal|0
 return|;
