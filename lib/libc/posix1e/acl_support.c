@@ -1260,7 +1260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert "old" type - ACL_TYPE_{ACCESS,DEFAULT}_OLD - into its "new"  * counterpart.  It's neccessary for the old (pre-NFSv4 ACLs) binaries  * to work with new libc and kernel.  Fixing 'type' for old binaries with  * old libc and new kernel is being done by kern/vfs_acl.c:type_unold().  */
+comment|/*  * Convert "old" type - ACL_TYPE_{ACCESS,DEFAULT}_OLD - into its "new"  * counterpart.  It's necessary for the old (pre-NFSv4 ACLs) binaries  * to work with new libc and kernel.  Fixing 'type' for old binaries with  * old libc and new kernel is being done by kern/vfs_acl.c:type_unold().  */
 end_comment
 
 begin_function

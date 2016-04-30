@@ -139,7 +139,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* supress the currency from output */
+comment|/* suppress the currency from output */
 end_comment
 
 begin_define
@@ -2319,7 +2319,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* reserve space for trailing '\0' */
-comment|/* skip spaces at beggining */
+comment|/* skip spaces at beginning */
 name|padded
 operator|=
 literal|0

@@ -184,7 +184,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Host lookup order if nsswitch.conf is broken or nonexistant */
+comment|/* Host lookup order if nsswitch.conf is broken or nonexistent */
 end_comment
 
 begin_decl_stmt

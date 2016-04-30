@@ -135,7 +135,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Once upon a time we had code to try to optimize this, but 	 * it turns out that you really can't make many assumptions 	 * safely.  You absolutely have to run this pass by pass, 	 * because some passes will be ignored for a given character, 	 * while others will not.  Simpler locales will benefit from 	 * having fewer passes, and most comparisions should resolve 	 * during the primary pass anyway. 	 * 	 * Note that we do one final extra pass at the end to pick 	 * up UNDEFINED elements.  There is special handling for them. 	 */
+comment|/* 	 * Once upon a time we had code to try to optimize this, but 	 * it turns out that you really can't make many assumptions 	 * safely.  You absolutely have to run this pass by pass, 	 * because some passes will be ignored for a given character, 	 * while others will not.  Simpler locales will benefit from 	 * having fewer passes, and most comparisons should resolve 	 * during the primary pass anyway. 	 * 	 * Note that we do one final extra pass at the end to pick 	 * up UNDEFINED elements.  There is special handling for them. 	 */
 for|for
 control|(
 name|pass

@@ -795,7 +795,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* 		 * TODO: 		 * Note that implementation dependent test for address 		 * configuration should be done everytime called 		 * (or apropriate interval), 		 * because addresses will be dynamically assigned or deleted. 		 */
+comment|/* 		 * TODO: 		 * Note that implementation dependent test for address 		 * configuration should be done every time called 		 * (or appropriate interval), 		 * because addresses will be dynamically assigned or deleted. 		 */
 name|_close
 argument_list|(
 name|s

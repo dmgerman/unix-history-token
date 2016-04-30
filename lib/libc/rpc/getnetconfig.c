@@ -1501,7 +1501,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*      * Noone needs these entries anymore, then frees them.      * Make sure all info in netconfig_info structure has been reinitialized.      */
+comment|/*      * No one needs these entries anymore, then frees them.      * Make sure all info in netconfig_info structure has been reinitialized.      */
 name|q
 operator|=
 name|ni

@@ -1552,7 +1552,7 @@ name|len
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Check for composites such as dipthongs that collate as a 	 * single element (aka chains or collating-elements). 	 */
+comment|/* 	 * Check for composites such as diphthongs that collate as a 	 * single element (aka chains or collating-elements). 	 */
 if|if
 condition|(
 operator|(

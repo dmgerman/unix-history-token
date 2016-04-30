@@ -76,7 +76,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*%  *	Check whether a name belongs to a domain.  *  * Inputs:  *\li	a - the domain whose ancestory is being verified  *\li	b - the potential ancestor we're checking against  *  * Return:  *\li	boolean - is a at or below b?  *  * Notes:  *\li	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *\li	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
+comment|/*%  *	Check whether a name belongs to a domain.  *  * Inputs:  *\li	a - the domain whose ancestry is being verified  *\li	b - the potential ancestor we're checking against  *  * Return:  *\li	boolean - is a at or below b?  *  * Notes:  *\li	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *\li	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
 end_comment
 
 begin_function

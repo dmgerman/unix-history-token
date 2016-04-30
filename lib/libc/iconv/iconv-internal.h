@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2013 Peter Wemm  * All rights reserved.  *  * Redis
 end_comment
 
 begin_comment
-comment|/*  * Interal prototypes for our back-end functions.  */
+comment|/*  * Internal prototypes for our back-end functions.  */
 end_comment
 
 begin_function_decl

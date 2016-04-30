@@ -114,7 +114,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * These are the functions that are actually used in the fpu emulation code to  * access the fp registers. They are usually not used more than once, so  * cacheing needs not be done here.  */
+comment|/*  * These are the functions that are actually used in the fpu emulation code to  * access the fp registers. They are usually not used more than once, so  * caching needs not be done here.  */
 end_comment
 
 begin_function

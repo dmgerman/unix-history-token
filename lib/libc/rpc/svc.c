@@ -203,7 +203,7 @@ value|(a> b ? a : b)
 end_define
 
 begin_comment
-comment|/*  * The services list  * Each entry represents a set of procedures (an rpc program).  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */
+comment|/*  * The services list  * Each entry represents a set of procedures (an rpc program).  * The dispatch routine takes request structs and runs the  * appropriate procedure.  */
 end_comment
 
 begin_struct

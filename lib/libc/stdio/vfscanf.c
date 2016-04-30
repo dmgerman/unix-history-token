@@ -3886,7 +3886,7 @@ return|;
 case|case
 literal|'-'
 case|:
-comment|/* 			 * A scanset of the form 			 *	[01+-] 			 * is defined as `the digit 0, the digit 1, 			 * the character +, the character -', but 			 * the effect of a scanset such as 			 *	[a-zA-Z0-9] 			 * is implementation defined.  The V7 Unix 			 * scanf treats `a-z' as `the letters a through 			 * z', but treats `a-a' as `the letter a, the 			 * character -, and the letter a'. 			 * 			 * For compatibility, the `-' is not considerd 			 * to define a range if the character following 			 * it is either a close bracket (required by ANSI) 			 * or is not numerically greater than the character 			 * we just stored in the table (c). 			 */
+comment|/* 			 * A scanset of the form 			 *	[01+-] 			 * is defined as `the digit 0, the digit 1, 			 * the character +, the character -', but 			 * the effect of a scanset such as 			 *	[a-zA-Z0-9] 			 * is implementation defined.  The V7 Unix 			 * scanf treats `a-z' as `the letters a through 			 * z', but treats `a-a' as `the letter a, the 			 * character -, and the letter a'. 			 * 			 * For compatibility, the `-' is not considered 			 * to define a range if the character following 			 * it is either a close bracket (required by ANSI) 			 * or is not numerically greater than the character 			 * we just stored in the table (c). 			 */
 name|n
 operator|=
 operator|*

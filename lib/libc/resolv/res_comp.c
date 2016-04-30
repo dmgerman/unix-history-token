@@ -132,7 +132,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*%  * Expand compressed domain name 'src' to full domain name.  *  * \li 'msg' is a pointer to the begining of the message,  * \li 'eom' points to the first location after the message,  * \li 'dst' is a pointer to a buffer of size 'dstsiz' for the result.  * \li Return size of compressed name or -1 if there was an error.  */
+comment|/*%  * Expand compressed domain name 'src' to full domain name.  *  * \li 'msg' is a pointer to the beginning of the message,  * \li 'eom' points to the first location after the message,  * \li 'dst' is a pointer to a buffer of size 'dstsiz' for the result.  * \li Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_function

@@ -1507,7 +1507,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* rpcent_check_ambiguity() is needed when one port+rpc is associated with  * more than one peice (these cases are usually marked as PROBLEM in  * /etc/peices. This functions is needed also when one peice+rpc is  * associated with several ports. We have to check all the rpcent structures  * to make sure that rpc really exists and correct */
+comment|/* rpcent_check_ambiguity() is needed when one port+rpc is associated with  * more than one piece (these cases are usually marked as PROBLEM in  * /etc/peices. This functions is needed also when one piece+rpc is  * associated with several ports. We have to check all the rpcent structures  * to make sure that rpc really exists and correct */
 end_comment
 
 begin_function

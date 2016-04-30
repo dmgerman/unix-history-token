@@ -362,7 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * safe_read reads data from connection and tries to do it in the very safe  * and stable way. It uses kevent to ensure, that the data are availabe for  * reading. If the amount of data to be read is too large, then they would  * be splitted.  */
+comment|/*  * safe_read reads data from connection and tries to do it in the very safe  * and stable way. It uses kevent to ensure, that the data are available for  * reading. If the amount of data to be read is too large, then they would  * be splitted.  */
 end_comment
 
 begin_function

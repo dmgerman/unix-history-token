@@ -424,7 +424,7 @@ name|ats_cur_entry
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Continue with the loop to remove all maching entries. */
+comment|/* Continue with the loop to remove all matching entries. */
 name|found
 operator|=
 literal|1

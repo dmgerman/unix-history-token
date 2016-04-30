@@ -31,7 +31,7 @@ name|SUNSECURITY
 end_undef
 
 begin_comment
-comment|/* verify gethostbyaddr() calls - WE DONT NEED IT  */
+comment|/* verify gethostbyaddr() calls - WE DON'T NEED IT  */
 end_comment
 
 begin_define

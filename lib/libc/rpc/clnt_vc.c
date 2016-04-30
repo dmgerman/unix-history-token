@@ -3144,7 +3144,7 @@ break|break;
 case|case
 name|CLGET_VERS
 case|:
-comment|/* 		 * This RELIES on the information that, in the call body, 		 * the version number field is the fifth field from the 		 * begining of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
+comment|/* 		 * This RELIES on the information that, in the call body, 		 * the version number field is the fifth field from the 		 * beginning of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
 name|ntohlp
 argument_list|(
 name|info
@@ -3185,7 +3185,7 @@ break|break;
 case|case
 name|CLGET_PROG
 case|:
-comment|/* 		 * This RELIES on the information that, in the call body, 		 * the program number field is the fourth field from the 		 * begining of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
+comment|/* 		 * This RELIES on the information that, in the call body, 		 * the program number field is the fourth field from the 		 * beginning of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
 name|ntohlp
 argument_list|(
 name|info

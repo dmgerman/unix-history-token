@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2009 Hudson River Trading LLC  * Written by: John H
 end_comment
 
 begin_comment
-comment|/*  * This file defines compatiblity symbol versions for old system calls.  It  * is included in all generated system call files.  */
+comment|/*  * This file defines compatibility symbol versions for old system calls.  It  * is included in all generated system call files.  */
 end_comment
 
 begin_ifndef

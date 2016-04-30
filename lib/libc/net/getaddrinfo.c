@@ -2492,7 +2492,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * RFC 3493: AI_ALL and AI_V4MAPPED are effective only against 	 * AF_INET6 query.  They need to be ignored if specified in other 	 * occassions. 	 */
+comment|/* 	 * RFC 3493: AI_ALL and AI_V4MAPPED are effective only against 	 * AF_INET6 query.  They need to be ignored if specified in other 	 * occasions. 	 */
 switch|switch
 condition|(
 name|pai

@@ -131,7 +131,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Network lookup order if nsswitch.conf is broken or nonexistant */
+comment|/* Network lookup order if nsswitch.conf is broken or nonexistent */
 end_comment
 
 begin_decl_stmt

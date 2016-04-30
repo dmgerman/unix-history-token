@@ -34,7 +34,7 @@ comment|/*  * svc_simple.c  * Simplified front end to rpc.  */
 end_comment
 
 begin_comment
-comment|/*  * This interface creates a virtual listener for all the services  * started thru rpc_reg(). It listens on the same endpoint for  * all the services and then executes the corresponding service  * for the given prognum and procnum.  */
+comment|/*  * This interface creates a virtual listener for all the services  * started through rpc_reg(). It listens on the same endpoint for  * all the services and then executes the corresponding service  * for the given prognum and procnum.  */
 end_comment
 
 begin_include
@@ -929,7 +929,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s cant find suitable transport for %s"
+literal|"%s can't find suitable transport for %s"
 argument_list|,
 name|rpc_reg_msg
 argument_list|,

@@ -1364,7 +1364,7 @@ argument_list|(
 name|xprt
 argument_list|)
 expr_stmt|;
-comment|/* truely deals with calls */
+comment|/* truly deals with calls */
 name|xprt
 operator|->
 name|xp_port

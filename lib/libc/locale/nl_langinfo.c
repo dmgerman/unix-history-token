@@ -759,7 +759,7 @@ operator|->
 name|noexpr
 expr_stmt|;
 break|break;
-comment|/* 	 * YESSTR and NOSTR items marked with LEGACY are available, but not 	 * recomended by SUSv2 to be used in portable applications since 	 * they're subject to remove in future specification editions. 	 */
+comment|/* 	 * YESSTR and NOSTR items marked with LEGACY are available, but not 	 * recommended by SUSv2 to be used in portable applications since 	 * they're subject to remove in future specification editions. 	 */
 case|case
 name|YESSTR
 case|:
