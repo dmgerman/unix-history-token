@@ -477,9 +477,6 @@ decl_stmt|;
 name|size_t
 name|regsz
 decl_stmt|;
-name|uint64_t
-name|pa
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -607,12 +604,6 @@ name|hdr
 operator|.
 name|dh_nregions
 argument_list|)
-expr_stmt|;
-name|pa
-operator|=
-name|hdr
-operator|.
-name|dh_tsb_pa
 expr_stmt|;
 name|regsz
 operator|=
