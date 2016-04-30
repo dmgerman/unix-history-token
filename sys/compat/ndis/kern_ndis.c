@@ -2976,7 +2976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create an NDIS packet from an mbuf chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analagous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
+comment|/*  * Create an NDIS packet from an mbuf chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analogous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
 end_comment
 
 begin_function

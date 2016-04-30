@@ -4236,7 +4236,7 @@ name|custom_extension
 modifier|*
 name|ce
 decl_stmt|;
-comment|/* 	 * Sanity check. Our dummy bus drivers don't have 	 * any driver extentions. 	 */
+comment|/* 	 * Sanity check. Our dummy bus drivers don't have 	 * any driver extensions. 	 */
 if|if
 condition|(
 name|drv

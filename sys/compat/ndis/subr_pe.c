@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This file contains routines for relocating and dynamically linking  * executable object code files in the Windows(r) PE (Portable Executable)  * format. In Windows, anything with a .EXE, .DLL or .SYS extention is  * considered an executable, and all such files have some structures in  * common. The PE format was apparently based largely on COFF but has  * mutated significantly over time. We are mainly concerned with .SYS files,  * so this module implements only enough routines to be able to parse the  * headers and sections of a .SYS object file and perform the necessary  * relocations and jump table patching to allow us to call into it  * (and to have it call back to us). Note that while this module  * can handle fixups for imported symbols, it knows nothing about  * exporting them.  */
+comment|/*  * This file contains routines for relocating and dynamically linking  * executable object code files in the Windows(r) PE (Portable Executable)  * format. In Windows, anything with a .EXE, .DLL or .SYS extension is  * considered an executable, and all such files have some structures in  * common. The PE format was apparently based largely on COFF but has  * mutated significantly over time. We are mainly concerned with .SYS files,  * so this module implements only enough routines to be able to parse the  * headers and sections of a .SYS object file and perform the necessary  * relocations and jump table patching to allow us to call into it  * (and to have it call back to us). Note that while this module  * can handle fixups for imported symbols, it knows nothing about  * exporting them.  */
 end_comment
 
 begin_include

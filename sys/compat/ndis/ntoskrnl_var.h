@@ -2101,7 +2101,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * In Windows, there are Physical Device Objects (PDOs) and  * Functional Device Objects (FDOs). Physical Device Objects are  * created and maintained by bus drivers. For example, the PCI  * bus driver might detect two PCI ethernet cards on a given  * bus. The PCI bus driver will then allocate two device_objects  * for its own internal bookeeping purposes. This is analagous  * to the device_t that the FreeBSD PCI code allocates and passes  * into each PCI driver's probe and attach routines.  *  * When an ethernet driver claims one of the ethernet cards  * on the bus, it will create its own device_object. This is  * the Functional Device Object. This object is analagous to the  * device-specific softc structure.  */
+comment|/*  * In Windows, there are Physical Device Objects (PDOs) and  * Functional Device Objects (FDOs). Physical Device Objects are  * created and maintained by bus drivers. For example, the PCI  * bus driver might detect two PCI ethernet cards on a given  * bus. The PCI bus driver will then allocate two device_objects  * for its own internal bookeeping purposes. This is analogous  * to the device_t that the FreeBSD PCI code allocates and passes  * into each PCI driver's probe and attach routines.  *  * When an ethernet driver claims one of the ethernet cards  * on the bus, it will create its own device_object. This is  * the Functional Device Object. This object is analogous to the  * device-specific softc structure.  */
 end_comment
 
 begin_struct
@@ -3539,7 +3539,7 @@ decl_stmt|;
 name|uint8_t
 name|isl_ctl
 decl_stmt|;
-comment|/* 	 * There's a big-ass union here in the actual Windows 	 * definition of the stucture, but it contains stuff 	 * that doesn't really apply to BSD, and defining it 	 * all properly would require duplicating over a dozen 	 * other structures that we'll never use. Since the 	 * io_stack_location structure is opaque to drivers 	 * anyway, I'm not going to bother with the extra crap. 	 */
+comment|/* 	 * There's a big-ass union here in the actual Windows 	 * definition of the structure, but it contains stuff 	 * that doesn't really apply to BSD, and defining it 	 * all properly would require duplicating over a dozen 	 * other structures that we'll never use. Since the 	 * io_stack_location structure is opaque to drivers 	 * anyway, I'm not going to bother with the extra crap. 	 */
 union|union
 block|{
 struct|struct

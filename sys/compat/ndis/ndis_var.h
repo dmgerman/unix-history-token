@@ -4486,7 +4486,7 @@ struct|;
 block|}
 name|ndis_data
 union|;
-comment|/* NDIS 5.0 extentions */
+comment|/* NDIS 5.0 extensions */
 name|uint8_t
 name|nr_ndis_rsvd
 index|[
@@ -5843,7 +5843,7 @@ name|void
 modifier|*
 name|nmc_transferdata_func
 decl_stmt|;
-comment|/* NDIS 4.0 extentions */
+comment|/* NDIS 4.0 extensions */
 name|void
 modifier|*
 name|nmc_return_packet_func
@@ -5881,7 +5881,7 @@ name|void
 modifier|*
 name|nmc_corequest_func
 decl_stmt|;
-comment|/* NDIS 5.1 extentions */
+comment|/* NDIS 5.1 extensions */
 name|void
 modifier|*
 name|nmc_canceltxpkts_handler
