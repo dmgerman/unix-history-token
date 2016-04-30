@@ -33,6 +33,20 @@ end_include
 
 begin_struct
 struct|struct
+name|platform_class
+block|{
+name|KOBJ_CLASS_FIELDS
+expr_stmt|;
+comment|/* How many times to loop to delay approximately 1us */
+name|int
+name|delay_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|platform_kobj
 block|{
 comment|/* 	 * A platform instance is a kernel object 	 */
@@ -40,9 +54,20 @@ name|KOBJ_FIELDS
 expr_stmt|;
 comment|/* Platform class, for access to class specific data */
 name|struct
-name|kobj_class
+name|platform_class
 modifier|*
 name|cls
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|platform_data
+block|{
+name|int
+name|delay_count
 decl_stmt|;
 block|}
 struct|;
@@ -60,7 +85,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|kobj_class
+name|platform_class
 name|platform_def_t
 typedef|;
 end_typedef
@@ -133,6 +158,55 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTIDELAY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FDT_PLATFORM_CTASSERT
+parameter_list|(
+name|delay
+parameter_list|)
+value|CTASSERT(delay> 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FDT_PLATFORM_CTASSERT
+parameter_list|(
+name|delay
+parameter_list|)
+value|CTASSERT(delay == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PLATFORM_DATA
+parameter_list|(
+name|NAME
+parameter_list|,
+name|delay
+parameter_list|)
+define|\
+value|static struct platform_data NAME ## _platc = {				\ 	.delay_count = delay;						\ };
+end_define
+
 begin_define
 define|#
 directive|define
@@ -147,9 +221,11 @@ parameter_list|,
 name|size
 parameter_list|,
 name|compatible
+parameter_list|,	\
+name|delay
 parameter_list|)
 define|\
-value|static fdt_platform_def_t VAR_NAME ## _fdt_platform = {			\ 	.name = NAME_STR,						\ 	.methods = fdt_platform_methods,				\ 	.fdt_compatible = compatible,					\ };									\ static kobj_class_t VAR_NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&VAR_NAME ## _fdt_platform, NULL };		\ static platform_def_t VAR_NAME ## _platform = {				\ 	NAME_STR,							\ 	NAME ## _methods,						\ 	size,								\ 	VAR_NAME ## _baseclasses,					\ };									\ DATA_SET(platform_set, VAR_NAME ## _platform)
+value|FDT_PLATFORM_CTASSERT(delay);						\ static fdt_platform_def_t VAR_NAME ## _fdt_platform = {			\ 	.name = NAME_STR,						\ 	.methods = fdt_platform_methods,				\ 	.fdt_compatible = compatible,					\ };									\ static kobj_class_t VAR_NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&VAR_NAME ## _fdt_platform, NULL };		\ static platform_def_t VAR_NAME ## _platform = {				\ 	NAME_STR,							\ 	NAME ## _methods,						\ 	size,								\ 	VAR_NAME ## _baseclasses,					\ 	delay,								\ };									\ DATA_SET(platform_set, VAR_NAME ## _platform)
 end_define
 
 begin_define
@@ -164,15 +240,28 @@ parameter_list|,
 name|size
 parameter_list|,
 name|compatible
+parameter_list|,
+name|delay
 parameter_list|)
 define|\
-value|FDT_PLATFORM_DEF2(NAME, NAME, NAME_STR, size, compatible)
+value|FDT_PLATFORM_DEF2(NAME, NAME, NAME_STR, size, compatible, delay)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|bool
+name|arm_tmr_timed_wait
+parameter_list|(
+name|platform_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

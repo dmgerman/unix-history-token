@@ -376,6 +376,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ti,omap4430"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -430,6 +432,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ti,am335x"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -385,6 +385,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"allwinner,sun4i-a10"
+argument_list|,
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -465,6 +467,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"allwinner,sun7i-a20"
+argument_list|,
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -545,6 +549,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"allwinner,sun6i-a31"
+argument_list|,
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -625,6 +631,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"allwinner,sun6i-a31s"
+argument_list|,
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt

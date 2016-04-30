@@ -417,6 +417,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"raspberrypi,model-b"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -475,6 +477,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"brcm,bcm2709"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -248,6 +248,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"fsl,imx53"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

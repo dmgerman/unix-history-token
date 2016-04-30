@@ -917,6 +917,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"fsl,imx6s"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -933,6 +935,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"fsl,imx6d"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -949,6 +953,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"fsl,imx6q"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
