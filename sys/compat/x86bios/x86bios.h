@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2009 Alex Keda<admin@lissyara.su>  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * x86 registers were borrowed from x86emu.h x86emu_regs.h  * for compatability.  */
+comment|/*  * x86 registers were borrowed from x86emu.h x86emu_regs.h  * for compatibility.  */
 end_comment
 
 begin_ifndef
