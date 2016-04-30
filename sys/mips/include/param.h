@@ -531,6 +531,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PDRSIZE
+value|(1ul<< PDRSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PDRMASK
 value|((1<< PDRSHIFT) - 1)
 end_define
@@ -579,6 +586,13 @@ end_define
 begin_comment
 comment|/* alias for SEG in 32 bit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRSIZE
+value|(1ul<< PDRSHIFT)
+end_define
 
 begin_define
 define|#
