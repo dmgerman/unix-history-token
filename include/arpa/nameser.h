@@ -317,7 +317,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*%  * Network name (compressed or not) type.  Equivilent to a pointer when used  * in a function prototype.  Can be const'd.  */
+comment|/*%  * Network name (compressed or not) type.  Equivalent to a pointer when used  * in a function prototype.  Can be const'd.  */
 end_comment
 
 begin_typedef
