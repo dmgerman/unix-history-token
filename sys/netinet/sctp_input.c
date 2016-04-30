@@ -13525,6 +13525,15 @@ name|to
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+operator|*
+name|stcb
+operator|)
+operator|->
+name|asoc
+operator|.
+name|port
+argument_list|,
 name|SCTP_DONOT_SETSCOPE
 argument_list|,
 name|SCTP_IN_COOKIE_PROC

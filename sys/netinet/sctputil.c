@@ -32437,6 +32437,12 @@ name|sa
 argument_list|,
 name|NULL
 argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|port
+argument_list|,
 name|SCTP_DONOT_SETSCOPE
 argument_list|,
 name|SCTP_ADDR_IS_CONFIRMED
@@ -32577,6 +32583,12 @@ argument_list|,
 name|sa
 argument_list|,
 name|NULL
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|port
 argument_list|,
 name|SCTP_DONOT_SETSCOPE
 argument_list|,

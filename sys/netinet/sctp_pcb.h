@@ -2059,6 +2059,8 @@ name|sctp_nets
 modifier|*
 modifier|*
 parameter_list|,
+name|uint16_t
+parameter_list|,
 name|int
 parameter_list|,
 name|int

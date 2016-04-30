@@ -1061,6 +1061,12 @@ argument_list|,
 operator|&
 name|net
 argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|port
+argument_list|,
 name|SCTP_DONOT_SETSCOPE
 argument_list|,
 name|SCTP_ADDR_DYNAMIC_ADDED
