@@ -134,18 +134,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|round
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a) + (b) - 1) / (b) * (b))
-end_define
-
 begin_comment
 comment|/*  * Things to handle interruptions.  */
 end_comment
@@ -3142,15 +3130,12 @@ literal|1
 expr_stmt|;
 name|lines
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|nentry
-operator|+
+argument_list|,
 name|columns
-operator|-
-literal|1
-operator|)
-operator|/
-name|columns
+argument_list|)
 expr_stmt|;
 for|for
 control|(
