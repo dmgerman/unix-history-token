@@ -2049,7 +2049,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* all tests succeded, it's a match */
+comment|/* all tests succeeded, it's a match */
 return|return
 operator|(
 literal|1
@@ -6379,7 +6379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The no_proxy environment variable specifies a set of domains for  * which the proxy should not be consulted; the contents is a comma-,  * or space-separated list of domain names.  A single asterisk will  * override all proxy variables and no transactions will be proxied  * (for compatability with lynx and curl, see the discussion at  *<http://curl.haxx.se/mail/archive_pre_oct_99/0009.html>).  */
+comment|/*  * The no_proxy environment variable specifies a set of domains for  * which the proxy should not be consulted; the contents is a comma-,  * or space-separated list of domain names.  A single asterisk will  * override all proxy variables and no transactions will be proxied  * (for compatibility with lynx and curl, see the discussion at  *<http://curl.haxx.se/mail/archive_pre_oct_99/0009.html>).  */
 end_comment
 
 begin_function

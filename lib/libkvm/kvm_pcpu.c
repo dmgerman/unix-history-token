@@ -1191,7 +1191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether the dpcpu module has been initialized sucessfully or not,  * initialize it if permitted.  */
+comment|/*  * Check whether the dpcpu module has been initialized successfully or not,  * initialize it if permitted.  */
 end_comment
 
 begin_function

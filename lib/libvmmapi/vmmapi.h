@@ -1246,7 +1246,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Translate the GLA range [gla,gla+len) into GPA segments in 'iov'.  * The 'iovcnt' should be big enough to accomodate all GPA segments.  *  * retval	fault		Interpretation  *   0		  0		Success  *   0		  1		An exception was injected into the guest  * EFAULT	 N/A		Error  */
+comment|/*  * Translate the GLA range [gla,gla+len) into GPA segments in 'iov'.  * The 'iovcnt' should be big enough to accommodate all GPA segments.  *  * retval	fault		Interpretation  *   0		  0		Success  *   0		  1		An exception was injected into the guest  * EFAULT	 N/A		Error  */
 end_comment
 
 begin_function_decl

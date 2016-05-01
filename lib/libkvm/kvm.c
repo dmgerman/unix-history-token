@@ -1129,7 +1129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The powerpc backend has a hack to strip a leading kerneldump  * header from the core before treating it as an ELF header.  *  * We can add that here if we can get a change to libelf to support  * an inital offset into the file.  Alternatively we could patch  * savecore to extract cores from a regular file instead.  */
+comment|/*  * The powerpc backend has a hack to strip a leading kerneldump  * header from the core before treating it as an ELF header.  *  * We can add that here if we can get a change to libelf to support  * an initial offset into the file.  Alternatively we could patch  * savecore to extract cores from a regular file instead.  */
 end_comment
 
 begin_function
@@ -4059,7 +4059,7 @@ modifier|*
 name|nl
 parameter_list|)
 block|{
-comment|/* 	 * If called via the public interface, permit intialization of 	 * further virtualized modules on demand. 	 */
+comment|/* 	 * If called via the public interface, permit initialization of 	 * further virtualized modules on demand. 	 */
 return|return
 operator|(
 name|_kvm_nlist

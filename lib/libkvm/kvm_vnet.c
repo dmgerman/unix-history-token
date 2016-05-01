@@ -354,7 +354,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * First, find the process for this pid.  If we are working on a 	 * dump, either locate the thread dumptid is refering to or proc0. 	 * Based on either, take the address of the ucred. 	 */
+comment|/* 	 * First, find the process for this pid.  If we are working on a 	 * dump, either locate the thread dumptid is referring to or proc0. 	 * Based on either, take the address of the ucred. 	 */
 name|credp
 operator|=
 literal|0
@@ -905,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether the vnet module has been initialized sucessfully  * or not, initialize it if permitted.  */
+comment|/*  * Check whether the vnet module has been initialized successfully  * or not, initialize it if permitted.  */
 end_comment
 
 begin_function

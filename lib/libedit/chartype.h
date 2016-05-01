@@ -1244,11 +1244,11 @@ name|NARROWCHAR
 end_ifndef
 
 begin_comment
-comment|/* Encode a characted into the destination buffer, provided there is sufficent  * buffer space available. Returns the number of bytes used up (zero if the  * character cannot be encoded, -1 if there was not enough space available). */
+comment|/* Encode a characted into the destination buffer, provided there is sufficient  * buffer space available. Returns the number of bytes used up (zero if the  * character cannot be encoded, -1 if there was not enough space available). */
 end_comment
 
 begin_comment
-comment|/* The maximum buffer size to hold the most unwieldly visual representation,  * in this case \U+nnnnn. */
+comment|/* The maximum buffer size to hold the most unwieldy visual representation,  * in this case \U+nnnnn. */
 end_comment
 
 begin_define

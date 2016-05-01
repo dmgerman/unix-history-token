@@ -2798,7 +2798,7 @@ operator|=
 operator|++
 name|n
 expr_stmt|;
-comment|/*          * find same begining and same end          */
+comment|/*          * find same beginning and same end          */
 name|osb
 operator|=
 name|ols

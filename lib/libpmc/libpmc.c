@@ -16874,7 +16874,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* ignore patch& minor numbers for the comparision */
+comment|/* ignore patch& minor numbers for the comparison */
 if|if
 condition|(
 operator|(

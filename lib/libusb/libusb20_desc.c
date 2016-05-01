@@ -533,7 +533,7 @@ operator|+
 name|niface
 operator|)
 expr_stmt|;
-comment|/* 	 * Make a copy of the config descriptor, so that the caller can free 	 * the inital config descriptor pointer! 	 */
+comment|/* 	 * Make a copy of the config descriptor, so that the caller can free 	 * the initial config descriptor pointer! 	 */
 name|memcpy
 argument_list|(
 operator|(

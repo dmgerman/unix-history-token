@@ -472,7 +472,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  		 * There is the a wierd mode of SPNEGO (in CIFS and 		 * SASL GSS-SPENGO where the first token is zero 		 * length and the acceptor returns a mech_list, lets 		 * hope that is what is happening now. 		 */
+comment|/*  		 * There is the a weird mode of SPNEGO (in CIFS and 		 * SASL GSS-SPENGO where the first token is zero 		 * length and the acceptor returns a mech_list, lets 		 * hope that is what is happening now. 		 */
 operator|*
 name|mech_oid
 operator|=
