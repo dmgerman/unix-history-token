@@ -1660,7 +1660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * POSIX insists that certain entries be present, even when not in the  * orginal charmap file.  */
+comment|/*  * POSIX insists that certain entries be present, even when not in the  * original charmap file.  */
 end_comment
 
 begin_function

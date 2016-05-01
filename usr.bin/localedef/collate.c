@@ -4592,7 +4592,7 @@ name|collate_chain_t
 modifier|*
 name|chain
 decl_stmt|;
-comment|/* 	 * We have to run throught a preliminary pass to identify all the 	 * weights that we use for each sorting level. 	 */
+comment|/* 	 * We have to run through a preliminary pass to identify all the 	 * weights that we use for each sorting level. 	 */
 for|for
 control|(
 name|i

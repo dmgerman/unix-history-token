@@ -980,7 +980,7 @@ block|{
 return|return;
 block|}
 block|}
-comment|/* 	 * NOTE: If date_fmt is not specified, then we'll default to 	 * using the %c for date.  This is reasonable for most 	 * locales, although for reasons that I don't understand 	 * Solaris historically has had a seperate format for date. 	 */
+comment|/* 	 * NOTE: If date_fmt is not specified, then we'll default to 	 * using the %c for date.  This is reasonable for most 	 * locales, although for reasons that I don't understand 	 * Solaris historically has had a separate format for date. 	 */
 if|if
 condition|(
 operator|(
