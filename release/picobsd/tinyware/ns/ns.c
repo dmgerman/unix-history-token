@@ -3983,7 +3983,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Option '-p' requires paramter.\n"
+literal|"Option '-p' requires parameter.\n"
 argument_list|)
 expr_stmt|;
 name|usage
