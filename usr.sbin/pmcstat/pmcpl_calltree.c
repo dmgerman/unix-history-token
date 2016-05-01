@@ -3720,7 +3720,7 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-comment|/* 	 * Child cost. 	 * TODO: attach child cost to the real position in the funtion. 	 * TODO: cfn=<fn> / call<ncall> addr(<fn>) / addr(call<fn>)<arccost> 	 */
+comment|/* 	 * Child cost. 	 * TODO: attach child cost to the real position in the function. 	 * TODO: cfn=<fn> / call<ncall> addr(<fn>) / addr(call<fn>)<arccost> 	 */
 for|for
 control|(
 name|i
