@@ -233,12 +233,7 @@ operator|.
 name|d_name
 operator|=
 literal|"fw"
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_MEM
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
