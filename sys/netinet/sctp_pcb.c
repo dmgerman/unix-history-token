@@ -17952,15 +17952,14 @@ operator|->
 name|mtu
 condition|)
 block|{
+name|sctp_pathmtu_adjustment
+argument_list|(
 name|stcb
-operator|->
-name|asoc
-operator|.
-name|smallest_mtu
-operator|=
+argument_list|,
 name|net
 operator|->
 name|mtu
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -18673,6 +18672,9 @@ name|vrf_id
 parameter_list|,
 name|uint16_t
 name|o_streams
+parameter_list|,
+name|uint16_t
+name|port
 parameter_list|,
 name|struct
 name|thread
@@ -19612,8 +19614,6 @@ name|firstaddr
 argument_list|,
 name|NULL
 argument_list|,
-name|asoc
-operator|->
 name|port
 argument_list|,
 name|SCTP_DO_SETSCOPE
@@ -27492,6 +27492,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|altsa
+parameter_list|,
+name|uint16_t
+name|port
 parameter_list|)
 block|{
 comment|/* 	 * grub through the INIT pulling addresses and loading them to the 	 * nets structure in the asoc. The from address in the mbuf should 	 * also be loaded (if it is not already). This routine can be called 	 * with either INIT or INIT-ACK's as long as the m points to the IP 	 * packet and the offset points to the beginning of the parameters. 	 */
@@ -27916,10 +27919,6 @@ name|sa
 argument_list|,
 name|NULL
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|port
 argument_list|,
 name|SCTP_DONOT_SETSCOPE
@@ -27966,10 +27965,6 @@ name|sa
 argument_list|,
 name|NULL
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|port
 argument_list|,
 name|SCTP_DONOT_SETSCOPE
@@ -28371,10 +28366,6 @@ name|sa
 argument_list|,
 name|NULL
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|port
 argument_list|,
 name|SCTP_DONOT_SETSCOPE
@@ -28798,10 +28789,6 @@ name|sa
 argument_list|,
 name|NULL
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|port
 argument_list|,
 name|SCTP_DONOT_SETSCOPE

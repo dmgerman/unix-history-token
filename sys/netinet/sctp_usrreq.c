@@ -6812,6 +6812,12 @@ name|sctp_ep
 operator|.
 name|pre_open_stream_count
 argument_list|,
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|port
+argument_list|,
 operator|(
 expr|struct
 name|thread
@@ -36035,6 +36041,12 @@ operator|->
 name|sctp_ep
 operator|.
 name|pre_open_stream_count
+argument_list|,
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|port
 argument_list|,
 name|p
 argument_list|)

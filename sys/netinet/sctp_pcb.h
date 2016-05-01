@@ -1936,6 +1936,8 @@ name|uint32_t
 parameter_list|,
 name|uint16_t
 parameter_list|,
+name|uint16_t
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2173,6 +2175,8 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
