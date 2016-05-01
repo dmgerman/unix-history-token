@@ -2568,12 +2568,6 @@ name|HASHFACTOR
 expr_stmt|;
 name|entry
 operator|=
-operator|(
-expr|struct
-name|entry
-operator|*
-operator|*
-operator|)
 name|calloc
 argument_list|(
 operator|(
@@ -2593,12 +2587,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-expr|struct
-name|entry
-operator|*
-operator|*
-operator|)
 name|NULL
 condition|)
 name|panic
