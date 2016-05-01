@@ -1159,8 +1159,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|blks
-operator|&&
+operator|=
 name|bc_read
 argument_list|(
 name|unit
@@ -1171,6 +1172,9 @@ name|blks
 argument_list|,
 name|buf
 argument_list|)
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|DEBUG
@@ -1183,6 +1187,35 @@ operator|(
 name|EIO
 operator|)
 return|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|size
+operator|/
+name|BIOSCD_SECSIZE
+operator|>
+name|blks
+condition|)
+block|{
+if|if
+condition|(
+name|rsize
+condition|)
+operator|*
+name|rsize
+operator|=
+name|blks
+operator|*
+name|BIOSCD_SECSIZE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -1222,8 +1255,32 @@ literal|1
 argument_list|,
 name|fragbuf
 argument_list|)
+operator|!=
+literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|blks
+condition|)
+block|{
+if|if
+condition|(
+name|rsize
+condition|)
+operator|*
+name|rsize
+operator|=
+name|blks
+operator|*
+name|BIOSCD_SECSIZE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|DEBUG
 argument_list|(
 literal|"frag read error"
@@ -1279,6 +1336,10 @@ directive|define
 name|CD_BOUNCEBUF
 value|8
 end_define
+
+begin_comment
+comment|/* return negative value for an error, otherwise blocks read */
+end_comment
 
 begin_function
 specifier|static
@@ -1616,6 +1677,11 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* fall back to 1 sector read */
+name|x
+operator|=
+literal|1
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1665,6 +1731,14 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* still an error? break off */
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|bbuf
@@ -1700,9 +1774,26 @@ name|x
 expr_stmt|;
 block|}
 comment|/*	hexdump(dest, (blks * BIOSCD_SECSIZE)); */
+if|if
+condition|(
+name|blks
+operator|-
+name|resid
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* read failed */
+return|return
+operator|(
+name|blks
+operator|-
+name|resid
 operator|)
 return|;
 block|}
