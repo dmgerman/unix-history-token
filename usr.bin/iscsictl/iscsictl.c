@@ -3738,7 +3738,7 @@ argument_list|,
 literal|"at most one of -A, -M, -R, or -L may be specified"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that we ignore unneccessary/inapplicable "-c" flag; so that 	 * people can do something like "alias ISCSICTL="iscsictl -c path" 	 * in shell scripts. 	 */
+comment|/* 	 * Note that we ignore unnecessary/inapplicable "-c" flag; so that 	 * people can do something like "alias ISCSICTL="iscsictl -c path" 	 * in shell scripts. 	 */
 if|if
 condition|(
 name|Aflag

@@ -3634,7 +3634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * map:  * map every character of s1 that is specified in from  * into s3 and replace in s. (source s1 remains untouched)  *  * This is derived from the a standard implementation of map(s,from,to)   * function of ICON language. Within mapvec, we replace every character   * of "from" with the corresponding character in "to".   * If "to" is shorter than "from", than the corresponding entries are null,   * which means that those characters dissapear altogether.   */
+comment|/*  * map:  * map every character of s1 that is specified in from  * into s3 and replace in s. (source s1 remains untouched)  *  * This is derived from the a standard implementation of map(s,from,to)   * function of ICON language. Within mapvec, we replace every character   * of "from" with the corresponding character in "to".   * If "to" is shorter than "from", than the corresponding entries are null,   * which means that those characters disappear altogether.   */
 end_comment
 
 begin_function

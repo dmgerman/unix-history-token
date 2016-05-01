@@ -2173,7 +2173,7 @@ name|def
 operator|->
 name|s_osdef
 expr_stmt|;
-comment|/* 	 * If we compair with a definition or declaration, we must perform 	 * the same checks for qualifiers in indirected types as in 	 * assignments. 	 */
+comment|/* 	 * If we compare with a definition or declaration, we must perform 	 * the same checks for qualifiers in indirected types as in 	 * assignments. 	 */
 name|asgn
 operator|=
 name|def

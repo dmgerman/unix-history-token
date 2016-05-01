@@ -2470,7 +2470,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 						 * man -w found formated 						 * page, need to pick up 						 * source page name. 						 */
+comment|/* 						 * man -w found formatted 						 * page, need to pick up 						 * source page name. 						 */
 name|cp2
 operator|=
 name|malloc

@@ -870,7 +870,7 @@ operator|!
 name|foreground
 condition|)
 block|{
-comment|/* Aquire a reaper */
+comment|/* Acquire a reaper */
 if|if
 condition|(
 name|procctl
