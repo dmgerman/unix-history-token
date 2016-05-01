@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgen.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -1321,10 +1315,7 @@ name|args
 argument_list|,
 literal|"-%s"
 argument_list|,
-name|basename
-argument_list|(
 name|shell
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1396,10 +1387,7 @@ name|execl
 argument_list|(
 name|shell
 argument_list|,
-name|basename
-argument_list|(
 name|shell
-argument_list|)
 argument_list|,
 operator|(
 name|char

@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgen.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<paths.h>
 end_include
 
@@ -1165,10 +1159,7 @@ name|execlp
 argument_list|(
 name|editor
 argument_list|,
-name|basename
-argument_list|(
 name|editor
-argument_list|)
 argument_list|,
 name|tempname
 argument_list|,

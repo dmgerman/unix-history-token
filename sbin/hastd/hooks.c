@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libgen.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<paths.h>
 end_include
 
@@ -1447,8 +1441,11 @@ index|[
 literal|0
 index|]
 operator|=
-name|basename
+name|__DECONST
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
