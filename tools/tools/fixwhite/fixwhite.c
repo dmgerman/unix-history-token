@@ -297,7 +297,7 @@ break|break;
 case|case
 literal|'\t'
 case|:
-comment|/* Convert preceeding spaces to tabs. */
+comment|/* Convert preceding spaces to tabs. */
 name|ncolumn
 operator|=
 operator|(

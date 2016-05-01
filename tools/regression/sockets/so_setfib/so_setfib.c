@@ -701,7 +701,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Initalize randomness. */
+comment|/* Initialize randomness. */
 name|srandomdev
 argument_list|()
 expr_stmt|;
