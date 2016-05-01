@@ -2708,7 +2708,6 @@ name|e
 operator|=
 name|howmany
 argument_list|(
-operator|(
 name|sb
 operator|->
 name|fs_old_cpg
@@ -2720,7 +2719,6 @@ operator|/
 name|sb
 operator|->
 name|fs_old_nspf
-operator|)
 argument_list|,
 name|CHAR_BIT
 argument_list|)

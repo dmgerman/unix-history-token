@@ -632,7 +632,7 @@ name|SIZE_TO_BLOCK
 parameter_list|(
 name|size
 parameter_list|)
-value|(((size) + (blocksize - 1)) / blocksize)
+value|howmany(size, blocksize)
 end_define
 
 begin_function
