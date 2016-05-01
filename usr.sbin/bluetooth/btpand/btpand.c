@@ -243,7 +243,7 @@ literal|"NAP"
 block|,
 name|SDP_SERVICE_CLASS_NAP
 block|,
-literal|"Network Acess Point"
+literal|"Network Access Point"
 block|}
 block|,
 block|{
