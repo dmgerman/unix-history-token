@@ -143,7 +143,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/*  * Special version of popen which avoids call to shell.  This ensures noone  * may create a pipe to a hidden program as a side effect of a list or dir  * command.  */
+comment|/*  * Special version of popen which avoids call to shell.  This ensures no one  * may create a pipe to a hidden program as a side effect of a list or dir  * command.  */
 end_comment
 
 begin_decl_stmt

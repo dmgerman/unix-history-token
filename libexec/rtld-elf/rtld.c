@@ -5135,7 +5135,7 @@ argument_list|(
 name|kw
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First, count the number of the keyword occurences, to 	 * preallocate the final string. 	 */
+comment|/* 	 * First, count the number of the keyword occurrences, to 	 * preallocate the final string. 	 */
 for|for
 control|(
 name|p

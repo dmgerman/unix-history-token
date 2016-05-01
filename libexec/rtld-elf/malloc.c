@@ -1249,7 +1249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a program attempts "storage compaction" as mentioned in the  * old malloc man page, it realloc's an already freed block.  Usually  * this is the last block it freed; occasionally it might be farther  * back.  We have to search all the free lists for the block in order  * to determine its bucket: 1st we make one pass thru the lists  * checking only the first block in each; if that fails we search  * ``realloc_srchlen'' blocks in each list for a match (the variable  * is extern so the caller can modify it).  If that fails we just copy  * however many bytes was given to realloc() and hope it's not huge.  */
+comment|/*  * When a program attempts "storage compaction" as mentioned in the  * old malloc man page, it realloc's an already freed block.  Usually  * this is the last block it freed; occasionally it might be farther  * back.  We have to search all the free lists for the block in order  * to determine its bucket: 1st we make one pass through the lists  * checking only the first block in each; if that fails we search  * ``realloc_srchlen'' blocks in each list for a match (the variable  * is extern so the caller can modify it).  If that fails we just copy  * however many bytes was given to realloc() and hope it's not huge.  */
 end_comment
 
 begin_decl_stmt
