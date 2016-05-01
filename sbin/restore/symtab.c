@@ -2779,6 +2779,14 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|command
