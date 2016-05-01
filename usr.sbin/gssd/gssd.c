@@ -216,7 +216,7 @@ expr_stmt|;
 name|uint64_t
 name|gr_id
 decl_stmt|;
-comment|/* indentifier exported to kernel */
+comment|/* identifier exported to kernel */
 name|void
 modifier|*
 name|gr_res

@@ -620,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read printer jobs sent by lpd and copy them to the spooling directory.  * Return the number of jobs successfully transfered.  */
+comment|/*  * Read printer jobs sent by lpd and copy them to the spooling directory.  * Return the number of jobs successfully transferred.  */
 end_comment
 
 begin_function
@@ -1717,7 +1717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all the files associated with the current job being transfered.  */
+comment|/*  * Remove all the files associated with the current job being transferred.  */
 end_comment
 
 begin_function

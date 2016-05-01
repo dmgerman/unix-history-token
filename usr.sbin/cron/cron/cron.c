@@ -973,7 +973,7 @@ name|entry
 modifier|*
 name|e
 decl_stmt|;
-comment|/* make 0-based values out of these so we can use them as indicies 	 */
+comment|/* make 0-based values out of these so we can use them as indices 	 */
 name|second
 operator|=
 operator|(
@@ -1343,7 +1343,7 @@ operator|&
 name|otztm
 argument_list|)
 expr_stmt|;
-comment|/* make 0-based values out of these so we can use them as indicies 			 */
+comment|/* make 0-based values out of these so we can use them as indices 			 */
 name|otzsecond
 operator|=
 operator|(

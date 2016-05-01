@@ -5508,7 +5508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* return a non-zero value if the received prefix is inconsitent with ours */
+comment|/* return a non-zero value if the received prefix is inconsistent with ours */
 end_comment
 
 begin_function

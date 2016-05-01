@@ -3013,7 +3013,7 @@ name|EINVAL
 condition|)
 name|error
 argument_list|(
-literal|"Incorrect controler number (%d)\n"
+literal|"Incorrect controller number (%d)\n"
 argument_list|,
 name|ctrls
 index|[

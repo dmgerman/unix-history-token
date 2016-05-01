@@ -14202,7 +14202,7 @@ comment|/* Nothing. */
 block|}
 else|else
 block|{
-comment|/* 		 * Unknown element; ignore it for forward compatiblity. 		 */
+comment|/* 		 * Unknown element; ignore it for forward compatibility. 		 */
 block|}
 name|free
 argument_list|(
