@@ -1163,13 +1163,13 @@ name|blocksperfile
 condition|)
 name|blocksperfile
 operator|=
+name|rounddown
+argument_list|(
 name|blocksperfile
-operator|/
+argument_list|,
 name|ntrec
-operator|*
-name|ntrec
+argument_list|)
 expr_stmt|;
-comment|/* round down */
 elseif|else
 if|if
 condition|(

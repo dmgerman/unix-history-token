@@ -4570,13 +4570,12 @@ expr_stmt|;
 comment|/* 	 * Walk through the records from the start of the block to be 	 * certain we hit a valid record and not some junk in the middle 	 * of a file name.  Stop when we reach or pass the expected offset. 	 */
 name|dpoff
 operator|=
-operator|(
+name|rounddown
+argument_list|(
 name|doff
-operator|/
+argument_list|,
 name|DIRBLKSIZ
-operator|)
-operator|*
-name|DIRBLKSIZ
+argument_list|)
 expr_stmt|;
 do|do
 block|{
