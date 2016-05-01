@@ -277,6 +277,16 @@ name|valid_tx_ant
 decl_stmt|,
 name|valid_rx_ant
 decl_stmt|;
+define|#
+directive|define
+name|IWM_NUM_CHANNELS
+value|39
+name|uint16_t
+name|nvm_ch_flags
+index|[
+name|IWM_NUM_CHANNELS
+index|]
+decl_stmt|;
 name|uint16_t
 name|nvm_version
 decl_stmt|;
