@@ -12146,7 +12146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in various bit for management frames, and leave them  * unfilled for data frames (firmware takes care of that).  * Return the selected TX rate.  */
+comment|/*  * Fill in the rate related information for a transmit command.  */
 end_comment
 
 begin_function
@@ -12317,16 +12317,10 @@ operator|.
 name|rate
 argument_list|)
 expr_stmt|;
-comment|/* XXX no rate_n_flags? */
-return|return
-operator|&
-name|iwm_rates
-index|[
-name|ridx
-index|]
-return|;
 block|}
-comment|/* 	 * For non-data, use the lowest supported rate for the given 	 * operational mode. 	 * 	 * Note: there may not be any rate control information available. 	 * This driver currently assumes if we're transmitting data 	 * frames, use the rate control table.  Grr. 	 * 	 * XXX TODO: use the configured rate for the traffic type! 	 */
+else|else
+block|{
+comment|/* 		 * For non-data, use the lowest supported rate for the given 		 * operational mode. 		 * 		 * Note: there may not be any rate control information available. 		 * This driver currently assumes if we're transmitting data 		 * frames, use the rate control table.  Grr. 		 * 		 * XXX TODO: use the configured rate for the traffic type! 		 * XXX TODO: this should be per-vap, not curmode; as we later 		 * on we'll want to handle off-channel stuff (eg TDLS). 		 */
 if|if
 condition|(
 name|ic
@@ -12336,7 +12330,7 @@ operator|==
 name|IEEE80211_MODE_11A
 condition|)
 block|{
-comment|/* 		 * XXX this assumes the mode is either 11a or not 11a; 		 * definitely won't work for 11n. 		 */
+comment|/* 			 * XXX this assumes the mode is either 11a or not 11a; 			 * definitely won't work for 11n. 			 */
 name|ridx
 operator|=
 name|IWM_RIDX_OFDM
@@ -12348,6 +12342,7 @@ name|ridx
 operator|=
 name|IWM_RIDX_CCK
 expr_stmt|;
+block|}
 block|}
 name|rinfo
 operator|=
@@ -12401,7 +12396,6 @@ name|rate_flags
 operator||=
 name|IWM_RATE_MCS_CCK_MSK
 expr_stmt|;
-comment|/* XXX hard-coded tx rate */
 name|tx
 operator|->
 name|rate_n_flags
