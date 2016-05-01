@@ -146,12 +146,8 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MODE_BYTES
-value|2
+value|howmany(IEEE80211_MODE_MAX, NBBY)
 end_define
-
-begin_comment
-comment|/* howmany(IEEE80211_MODE_MAX, NBBY) */
-end_comment
 
 begin_comment
 comment|/*  * Operating mode.  Devices do not necessarily support  * all modes; they indicate which are supported in their  * capabilities.  */
@@ -369,12 +365,8 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_BYTES
-value|32
+value|howmany(IEEE80211_CHAN_MAX, NBBY)
 end_define
-
-begin_comment
-comment|/* howmany(IEEE80211_CHAN_MAX, NBBY) */
-end_comment
 
 begin_define
 define|#
