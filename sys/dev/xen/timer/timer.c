@@ -230,17 +230,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETIME
-value|62
-end_define
-
-begin_comment
-comment|/* Xen "bad time" error */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|XENTIMER_QUALITY
 value|950
 end_define
@@ -877,12 +866,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
-decl_stmt|,
-name|i
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|xentimer_softc
@@ -982,21 +965,6 @@ literal|32
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * Retry any timer scheduling failures, where the hypervisor 	 * returns -ETIME.  Sometimes even a 100us timer period isn't large 	 * enough, but larger period instances are relatively uncommon. 	 * 	 * XXX Remove the panics once et_start() and its consumers are 	 *     equipped to deal with start failures. 	 */
-do|do
-block|{
-if|if
-condition|(
-operator|++
-name|i
-operator|==
-literal|60
-condition|)
-name|panic
-argument_list|(
-literal|"can't schedule timer"
-argument_list|)
-expr_stmt|;
 name|next_time
 operator|=
 name|xen_fetch_vcpu_time
@@ -1015,15 +983,6 @@ argument_list|,
 name|next_time
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|error
-operator|==
-operator|-
-name|ETIME
-condition|)
-do|;
 if|if
 condition|(
 name|error
