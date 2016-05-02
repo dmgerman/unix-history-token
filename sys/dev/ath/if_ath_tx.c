@@ -11638,7 +11638,7 @@ name|atid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we're not doing A-MPDU, be prepared to direct dispatch 	 * up to both limits if possible.  This particular corner 	 * case may end up with packet starvation between aggregate 	 * traffic and non-aggregate traffic: we wnat to ensure 	 * that non-aggregate stations get a few frames queued to the 	 * hardware before the aggregate station(s) get their chance. 	 * 	 * So if you only ever see a couple of frames direct dispatched 	 * to the hardware from a non-AMPDU client, check both here 	 * and in the software queue dispatcher to ensure that those 	 * non-AMPDU stations get a fair chance to transmit. 	 */
+comment|/* 	 * If we're not doing A-MPDU, be prepared to direct dispatch 	 * up to both limits if possible.  This particular corner 	 * case may end up with packet starvation between aggregate 	 * traffic and non-aggregate traffic: we want to ensure 	 * that non-aggregate stations get a few frames queued to the 	 * hardware before the aggregate station(s) get their chance. 	 * 	 * So if you only ever see a couple of frames direct dispatched 	 * to the hardware from a non-AMPDU client, check both here 	 * and in the software queue dispatcher to ensure that those 	 * non-AMPDU stations get a fair chance to transmit. 	 */
 comment|/* XXX TXQ locking */
 block|}
 elseif|else
@@ -14369,7 +14369,7 @@ name|addba_tx_pending
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX TODO: it may just be enough to walk the HWQs and mark 	 * frames for that node as non-aggregate; or mark the ath_node 	 * with something that indicates that aggregation is no longer 	 * occuring.  Then we can just toss the BAW complaints and 	 * do a complete hard reset of state here - no pause, no 	 * complete counter, etc. 	 */
+comment|/* 	 * XXX TODO: it may just be enough to walk the HWQs and mark 	 * frames for that node as non-aggregate; or mark the ath_node 	 * with something that indicates that aggregation is no longer 	 * occurring.  Then we can just toss the BAW complaints and 	 * do a complete hard reset of state here - no pause, no 	 * complete counter, etc. 	 */
 block|}
 end_function
 

@@ -4066,7 +4066,7 @@ name|AR_XmitDataTries0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * These fields are not used. Zero these to preserve compatability 	 * with existing drivers. 	 */
+comment|/* 	 * These fields are not used. Zero these to preserve compatibility 	 * with existing drivers. 	 */
 name|ts
 operator|->
 name|ts_virtcol

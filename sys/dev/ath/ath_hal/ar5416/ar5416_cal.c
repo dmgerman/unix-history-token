@@ -2916,7 +2916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the NF and check it against the noise floor threshhold  *  * Return 0 if the NF calibration hadn't finished, 0 if it was  * invalid, or> 0 for a valid NF reading.  */
+comment|/*  * Read the NF and check it against the noise floor threshold  *  * Return 0 if the NF calibration hadn't finished, 0 if it was  * invalid, or> 0 for a valid NF reading.  */
 end_comment
 
 begin_function

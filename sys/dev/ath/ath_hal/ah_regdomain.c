@@ -1989,7 +1989,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_REGDOMAIN
 argument_list|,
-literal|"%s: Unkonwn HAL mode 0x%x\n"
+literal|"%s: Unknown HAL mode 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,

@@ -1905,7 +1905,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* buffer write upto cacheline*/
+comment|/* buffer write up to cacheline*/
 end_comment
 
 begin_define
@@ -1927,7 +1927,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* read upto end of cacheline */
+comment|/* read up to end of cacheline */
 end_comment
 
 begin_define
@@ -1938,7 +1938,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* prefetch upto page boundary*/
+comment|/* prefetch up to page boundary*/
 end_comment
 
 begin_define
@@ -3511,7 +3511,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* no xmit upto tbtt+20 uS */
+comment|/* no xmit up to tbtt+20 uS */
 end_comment
 
 begin_define

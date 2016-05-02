@@ -412,7 +412,7 @@ comment|/* tid */
 name|int
 name|ac
 decl_stmt|;
-comment|/* which AC gets this trafic */
+comment|/* which AC gets this traffic */
 name|int
 name|hwq_depth
 decl_stmt|;

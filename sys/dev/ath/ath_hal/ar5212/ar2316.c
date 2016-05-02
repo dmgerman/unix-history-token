@@ -1751,14 +1751,14 @@ index|[
 name|MAX_NUM_PDGAINS_PER_CHANNEL
 index|]
 decl_stmt|;
-comment|/* to accomodate -ve power levels later on. */
+comment|/* to accommodate -ve power levels later on. */
 name|int16_t
 name|Pmax_t2
 index|[
 name|MAX_NUM_PDGAINS_PER_CHANNEL
 index|]
 decl_stmt|;
-comment|/* to accomodate -ve power levels later on */
+comment|/* to accommodate -ve power levels later on */
 name|uint16_t
 name|numVpd
 init|=

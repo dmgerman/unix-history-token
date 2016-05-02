@@ -79,7 +79,7 @@ condition|(
 name|setChip
 condition|)
 block|{
-comment|/* 		 * Be careful setting the AWAKE mode.  When we are called 		 * with the chip powered down the read returns 0xffffffff 		 * which when blindly written back with OS_REG_RMW_FIELD  		 * enables the MIB interrupt for the sleep performance 		 * counters.  This can result in an interrupt storm when 		 * ANI is in operation as noone knows to turn off the MIB 		 * interrupt cause. 		 */
+comment|/* 		 * Be careful setting the AWAKE mode.  When we are called 		 * with the chip powered down the read returns 0xffffffff 		 * which when blindly written back with OS_REG_RMW_FIELD  		 * enables the MIB interrupt for the sleep performance 		 * counters.  This can result in an interrupt storm when 		 * ANI is in operation as no one knows to turn off the MIB 		 * interrupt cause. 		 */
 name|scr
 operator|=
 name|OS_REG_READ

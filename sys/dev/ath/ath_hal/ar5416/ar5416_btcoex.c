@@ -404,7 +404,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-comment|/* TODO: TX RX seperate is not enabled. */
+comment|/* TODO: TX RX separate is not enabled. */
 switch|switch
 condition|(
 name|stompType

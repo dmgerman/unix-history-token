@@ -356,7 +356,7 @@ block|{  }
 end_function
 
 begin_comment
-comment|/*  * Process the radar events and determine whether a DFS event has occured.  *  * This is designed to run outside of the RX processing path.  * The RX path will call ath_dfs_tasklet_needed() to see whether  * the task/callback running this routine needs to be called.  */
+comment|/*  * Process the radar events and determine whether a DFS event has occurred.  *  * This is designed to run outside of the RX processing path.  * The RX path will call ath_dfs_tasklet_needed() to see whether  * the task/callback running this routine needs to be called.  */
 end_comment
 
 begin_function

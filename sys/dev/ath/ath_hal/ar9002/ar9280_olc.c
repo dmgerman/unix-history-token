@@ -1422,7 +1422,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX ath9k doesn't clear this for 5ghz mode if 		 * it were set in 2ghz mode before! 		 * The Merlin OLC temperature compensation code 		 * uses this to calculate the PDADC delta during 		 * calibration ; 0 here effectively stops the 		 * temperature compensation calibration from 		 * occuring. 		 */
+comment|/* 		 * XXX ath9k doesn't clear this for 5ghz mode if 		 * it were set in 2ghz mode before! 		 * The Merlin OLC temperature compensation code 		 * uses this to calculate the PDADC delta during 		 * calibration ; 0 here effectively stops the 		 * temperature compensation calibration from 		 * occurring. 		 */
 name|AH5416
 argument_list|(
 name|ah

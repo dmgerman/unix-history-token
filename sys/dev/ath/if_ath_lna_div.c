@@ -199,7 +199,7 @@ file|<dev/ath/if_ath_lna_div.h>
 end_include
 
 begin_comment
-comment|/* Linux compability macros */
+comment|/* Linux compatibility macros */
 end_comment
 
 begin_comment

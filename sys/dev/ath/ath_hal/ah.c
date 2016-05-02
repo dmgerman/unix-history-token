@@ -1573,7 +1573,7 @@ index|]
 operator|.
 name|rateKbps
 expr_stmt|;
-comment|/* 	 * index can be invalid duting dynamic Turbo transitions.  	 * XXX 	 */
+comment|/* 	 * index can be invalid during dynamic Turbo transitions.  	 * XXX 	 */
 if|if
 condition|(
 name|kbps

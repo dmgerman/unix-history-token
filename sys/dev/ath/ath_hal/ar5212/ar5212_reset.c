@@ -5717,7 +5717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the NF and check it against the noise floor threshhold  */
+comment|/*  * Read the NF and check it against the noise floor threshold  */
 end_comment
 
 begin_function

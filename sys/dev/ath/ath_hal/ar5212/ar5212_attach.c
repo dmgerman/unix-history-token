@@ -4180,7 +4180,7 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
-comment|/* NB: this is a guess, noone seems to know the answer */
+comment|/* NB: this is a guess, no one seems to know the answer */
 name|ahpriv
 operator|->
 name|ah_rxornIsFatal

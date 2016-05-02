@@ -218,7 +218,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * XXX eventually this should be some system level definition  * so modules will hvae probe/attach information like USB.  * But for now..  */
+comment|/*  * XXX eventually this should be some system level definition  * so modules will have probe/attach information like USB.  * But for now..  */
 end_comment
 
 begin_struct

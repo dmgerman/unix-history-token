@@ -1175,7 +1175,7 @@ init|=
 literal|0x00008000
 block|,
 comment|/* Allow all mcast/bcast frames */
-comment|/* 	 * Magic RX filter flags that aren't targetting hardware bits 	 * but instead the HAL sets individual bits - eg PHYERR will result 	 * in OFDM/CCK timing error frames being received. 	 */
+comment|/* 	 * Magic RX filter flags that aren't targeting hardware bits 	 * but instead the HAL sets individual bits - eg PHYERR will result 	 * in OFDM/CCK timing error frames being received. 	 */
 name|HAL_RX_FILTER_BSSID
 init|=
 literal|0x40000000
@@ -3688,7 +3688,7 @@ comment|/* 	 * slotted mode only. indicate the time in usec 	 * from the rising 
 name|u_int8_t
 name|bt_first_slot_time
 decl_stmt|;
-comment|/* 	 * slotted mode only. rx_clear and bt_ant decision 	 * will be held the entire time that BT_ACTIVE is asserted, 	 * otherwise the decision is made before every slot boundry. 	 */
+comment|/* 	 * slotted mode only. rx_clear and bt_ant decision 	 * will be held the entire time that BT_ACTIVE is asserted, 	 * otherwise the decision is made before every slot boundary. 	 */
 name|HAL_BOOL
 name|bt_hold_rxclear
 decl_stmt|;

@@ -494,7 +494,7 @@ operator|!=
 name|HAL_SPECTRAL_PARAM_NOVAL
 condition|)
 block|{
-comment|/* 			 * In Merlin, for continous scan, scan_count = 128. 			 * In case of Kiwi, this value should be 0 			 */
+comment|/* 			 * In Merlin, for continuous scan, scan_count = 128. 			 * In case of Kiwi, this value should be 0 			 */
 if|if
 condition|(
 name|ss

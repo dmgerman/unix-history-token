@@ -10464,7 +10464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab the reset lock, and wait around until noone else  * is trying to do anything with it.  *  * This is totally horrible but we can't hold this lock for  * long enough to do TX/RX or we end up with net80211/ip stack  * LORs and eventual deadlock.  *  * "dowait" signals whether to spin, waiting for the reset  * lock count to reach 0. This should (for now) only be used  * during the reset path, as the rest of the code may not  * be locking-reentrant enough to behave correctly.  *  * Another, cleaner way should be found to serialise all of  * these operations.  */
+comment|/*  * Grab the reset lock, and wait around until no one else  * is trying to do anything with it.  *  * This is totally horrible but we can't hold this lock for  * long enough to do TX/RX or we end up with net80211/ip stack  * LORs and eventual deadlock.  *  * "dowait" signals whether to spin, waiting for the reset  * lock count to reach 0. This should (for now) only be used  * during the reset path, as the rest of the code may not  * be locking-reentrant enough to behave correctly.  *  * Another, cleaner way should be found to serialise all of  * these operations.  */
 end_comment
 
 begin_define
@@ -10683,7 +10683,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Try to (stop any further TX/RX from occuring */
+comment|/* Try to (stop any further TX/RX from occurring */
 name|taskqueue_block
 argument_list|(
 name|sc
@@ -10775,7 +10775,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
+comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occurring. This needs to be 	 * done before the TX queue is drained. 	 */
 name|ath_draintxq
 argument_list|(
 name|sc
@@ -13661,7 +13661,7 @@ operator|.
 name|ast_bstuck
 operator|++
 expr_stmt|;
-comment|/* 	 * This assumes that there's no simultaneous channel mode change 	 * occuring. 	 */
+comment|/* 	 * This assumes that there's no simultaneous channel mode change 	 * occurring. 	 */
 name|ath_reset
 argument_list|(
 name|sc
@@ -18159,7 +18159,7 @@ name|bf
 operator|->
 name|bf_m
 decl_stmt|;
-comment|/* 	 * Make sure that we only sync/unload if there's an mbuf. 	 * If not (eg we cloned a buffer), the unload will have already 	 * occured. 	 */
+comment|/* 	 * Make sure that we only sync/unload if there's an mbuf. 	 * If not (eg we cloned a buffer), the unload will have already 	 * occurred. 	 */
 if|if
 condition|(
 name|bf
@@ -19608,7 +19608,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* (Try to) stop TX/RX from occuring */
+comment|/* (Try to) stop TX/RX from occurring */
 name|taskqueue_block
 argument_list|(
 name|sc
@@ -22366,7 +22366,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're reassociating, make sure that any paused queues 	 * get unpaused. 	 * 	 * Now, we may hvae frames in the hardware queue for this node. 	 * So if we are reassociating and there are frames in the queue, 	 * we need to go through the cleanup path to ensure that they're 	 * marked as non-aggregate. 	 */
+comment|/* 	 * If we're reassociating, make sure that any paused queues 	 * get unpaused. 	 * 	 * Now, we may have frames in the hardware queue for this node. 	 * So if we are reassociating and there are frames in the queue, 	 * we need to go through the cleanup path to ensure that they're 	 * marked as non-aggregate. 	 */
 if|if
 condition|(
 operator|!
@@ -23603,7 +23603,7 @@ name|sc_curmode
 operator|=
 name|mode
 expr_stmt|;
-comment|/* 	 * All protection frames are transmited at 2Mb/s for 	 * 11g, otherwise at 1Mb/s. 	 */
+comment|/* 	 * All protection frames are transmitted at 2Mb/s for 	 * 11g, otherwise at 1Mb/s. 	 */
 if|if
 condition|(
 name|mode
