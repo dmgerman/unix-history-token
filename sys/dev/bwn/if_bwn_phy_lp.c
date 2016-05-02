@@ -240,6 +240,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bwn/if_bwn_debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bwn/if_bwn_misc.h>
 end_include
 
@@ -4647,18 +4653,6 @@ literal|0x0000
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const uint16_t bwn_tab_noise_g1[] = BWN_TAB_NOISE_G1; static const uint16_t bwn_tab_noise_g2[] = BWN_TAB_NOISE_G2; static const uint16_t bwn_tab_noisescale_g1[] = BWN_TAB_NOISESCALE_G1; static const uint16_t bwn_tab_noisescale_g2[] = BWN_TAB_NOISESCALE_G2; static const uint16_t bwn_tab_noisescale_g3[] = BWN_TAB_NOISESCALE_G3; const uint8_t bwn_bitrev_table[256] = BWN_BITREV_TABLE;
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
