@@ -807,11 +807,12 @@ name|timeout_abs_ns
 operator|=
 name|next_time
 expr_stmt|;
+comment|/* Get an event anyway, even if the timeout is already expired */
 name|single
 operator|.
 name|flags
 operator|=
-name|VCPU_SSHOTTMR_future
+literal|0
 expr_stmt|;
 return|return
 operator|(
