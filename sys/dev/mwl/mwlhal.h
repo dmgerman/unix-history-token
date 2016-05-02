@@ -138,12 +138,6 @@ block|}
 enum|;
 end_enum
 
-begin_struct_decl
-struct_decl|struct
-name|device
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|mwl_hal
@@ -170,9 +164,7 @@ name|mwl_hal
 modifier|*
 name|mwl_hal_attach
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|,
 name|uint16_t
