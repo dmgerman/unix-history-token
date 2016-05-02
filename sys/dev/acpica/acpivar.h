@@ -2622,7 +2622,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_get_domain
+name|acpi_get_cpus
 parameter_list|(
 name|device_t
 name|dev
@@ -2630,19 +2630,29 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
-name|int
+name|enum
+name|cpu_sets
+name|op
+parameter_list|,
+name|size_t
+name|setsize
+parameter_list|,
+name|cpuset_t
 modifier|*
-name|domain
+name|cpuset
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_parse_pxm
+name|acpi_get_domain
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|child
 parameter_list|,
 name|int
 modifier|*

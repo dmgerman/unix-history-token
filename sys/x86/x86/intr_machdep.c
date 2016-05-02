@@ -2178,7 +2178,6 @@ comment|/*  * Support for balancing interrupt sources across CPUs.  For now we j
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|cpuset_t
 name|intr_cpus
 init|=

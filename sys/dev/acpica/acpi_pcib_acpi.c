@@ -640,6 +640,13 @@ argument_list|,
 name|bus_generic_teardown_intr
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_cpus
+argument_list|,
+name|acpi_pcib_get_cpus
+argument_list|)
+block|,
 comment|/* pcib interface */
 name|DEVMETHOD
 argument_list|(
