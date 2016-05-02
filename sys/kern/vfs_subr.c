@@ -20656,6 +20656,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|hint
+operator||=
+name|NOTE_EXTEND
+expr_stmt|;
 if|if
 condition|(
 name|a
