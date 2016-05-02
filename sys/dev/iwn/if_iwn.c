@@ -15085,6 +15085,15 @@ operator|=
 name|IWN_CALIB_STATE_INIT
 expr_stmt|;
 comment|/* Wait until we hear a beacon before we transmit */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_PASSIVE
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+condition|)
 name|sc
 operator|->
 name|sc_beacon_wait
@@ -15142,6 +15151,15 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Wait until we hear a beacon before we transmit */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_PASSIVE
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+condition|)
 name|sc
 operator|->
 name|sc_beacon_wait
