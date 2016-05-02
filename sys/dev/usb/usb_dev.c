@@ -876,7 +876,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_ref_device  *  * This function is used to atomically refer an USB device by its  * device location. If this function returns success the USB device  * will not dissappear until the USB device is unreferenced.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_ref_device  *  * This function is used to atomically refer an USB device by its  * device location. If this function returns success the USB device  * will not disappear until the USB device is unreferenced.  *  * Return values:  *  0: Success, refcount incremented on the given USB device.  *  Else: Failure.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function

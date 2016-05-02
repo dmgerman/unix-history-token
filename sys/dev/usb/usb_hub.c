@@ -7017,7 +7017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The USB Transaction Translator:  * ===============================  *  * When doing LOW- and FULL-speed USB transfers accross a HIGH-speed  * USB HUB, bandwidth must be allocated for ISOCHRONOUS and INTERRUPT  * USB transfers. To utilize bandwidth dynamically the "scatter and  * gather" principle must be applied. This means that bandwidth must  * be divided into equal parts of bandwidth. With regard to USB all  * data is transferred in smaller packets with length  * "wMaxPacketSize". The problem however is that "wMaxPacketSize" is  * not a constant!  *  * The bandwidth scheduler which I have implemented will simply pack  * the USB transfers back to back until there is no more space in the  * schedule. Out of the 8 microframes which the USB 2.0 standard  * provides, only 6 are available for non-HIGH-speed devices. I have  * reserved the first 4 microframes for ISOCHRONOUS transfers. The  * last 2 microframes I have reserved for INTERRUPT transfers. Without  * this division, it is very difficult to allocate and free bandwidth  * dynamically.  *  * NOTE about the Transaction Translator in USB HUBs:  *  * USB HUBs have a very simple Transaction Translator, that will  * simply pipeline all the SPLIT transactions. That means that the  * transactions will be executed in the order they are queued!  *  */
+comment|/*  * The USB Transaction Translator:  * ===============================  *  * When doing LOW- and FULL-speed USB transfers across a HIGH-speed  * USB HUB, bandwidth must be allocated for ISOCHRONOUS and INTERRUPT  * USB transfers. To utilize bandwidth dynamically the "scatter and  * gather" principle must be applied. This means that bandwidth must  * be divided into equal parts of bandwidth. With regard to USB all  * data is transferred in smaller packets with length  * "wMaxPacketSize". The problem however is that "wMaxPacketSize" is  * not a constant!  *  * The bandwidth scheduler which I have implemented will simply pack  * the USB transfers back to back until there is no more space in the  * schedule. Out of the 8 microframes which the USB 2.0 standard  * provides, only 6 are available for non-HIGH-speed devices. I have  * reserved the first 4 microframes for ISOCHRONOUS transfers. The  * last 2 microframes I have reserved for INTERRUPT transfers. Without  * this division, it is very difficult to allocate and free bandwidth  * dynamically.  *  * NOTE about the Transaction Translator in USB HUBs:  *  * USB HUBs have a very simple Transaction Translator, that will  * simply pipeline all the SPLIT transactions. That means that the  * transactions will be executed in the order they are queued!  *  */
 end_comment
 
 begin_comment
@@ -7169,7 +7169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_hs_bandwidth_adjust  *  * This function will update the bandwith usage for the microframe  * having index "slot" by "len" bytes. "len" can be negative.  If the  * "slot" argument is greater or equal to "USB_HS_MICRO_FRAMES_MAX"  * the "slot" argument will be replaced by the slot having least used  * bandwidth. The "mask" argument is used for multi-slot allocations.  *  * Returns:  *    The slot in which the bandwidth update was done: 0..7  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hs_bandwidth_adjust  *  * This function will update the bandwidth usage for the microframe  * having index "slot" by "len" bytes. "len" can be negative.  If the  * "slot" argument is greater or equal to "USB_HS_MICRO_FRAMES_MAX"  * the "slot" argument will be replaced by the slot having least used  * bandwidth. The "mask" argument is used for multi-slot allocations.  *  * Returns:  *    The slot in which the bandwidth update was done: 0..7  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8796,7 +8796,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Explore all USB busses in parallell. 	 */
+comment|/* 	 * Explore all USB busses in parallel. 	 */
 name|max
 operator|=
 name|devclass_get_maxunit

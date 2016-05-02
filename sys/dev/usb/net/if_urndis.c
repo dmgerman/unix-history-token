@@ -3504,7 +3504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NB: Querying a device has the requirment of using an input buffer the size  *     of the expected reply or larger, except for variably sized replies.  */
+comment|/*  * NB: Querying a device has the requirement of using an input buffer the size  *     of the expected reply or larger, except for variably sized replies.  */
 end_comment
 
 begin_function

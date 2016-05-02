@@ -6470,7 +6470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * There are numbers of functions need to be called in context thread.  * Rather than creating taskqueue event for each of those functions,  * here is all-for-one taskqueue callback function. This function  * gurantees deferred functions are executed in the same order they  * were enqueued.  * '& RUN_CMDQ_MASQ' is to loop cmdq[].  */
+comment|/*  * There are numbers of functions need to be called in context thread.  * Rather than creating taskqueue event for each of those functions,  * here is all-for-one taskqueue callback function. This function  * guarantees deferred functions are executed in the same order they  * were enqueued.  * '& RUN_CMDQ_MASQ' is to loop cmdq[].  */
 end_comment
 
 begin_function
@@ -19831,7 +19831,7 @@ operator|<<
 name|RT2860_TX_PID_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Unlike PCI based devices, we don't get any interrupt from 		 * USB devices, so we simulate FIFO-is-full interrupt here. 		 * Ralink recomends to drain FIFO stats every 100 ms, but 16 slots 		 * quickly get fulled. To prevent overflow, increment a counter on 		 * every FIFO stat request, so we know how many slots are left. 		 * We do this only in HOSTAP or multiple vap mode since FIFO stats 		 * are used only in those modes. 		 * We just drain stats. AMRR gets updated every 1 sec by 		 * run_ratectl_cb() via callout. 		 * Call it early. Otherwise overflow. 		 */
+comment|/* 		 * Unlike PCI based devices, we don't get any interrupt from 		 * USB devices, so we simulate FIFO-is-full interrupt here. 		 * Ralink recommends to drain FIFO stats every 100 ms, but 16 slots 		 * quickly get fulled. To prevent overflow, increment a counter on 		 * every FIFO stat request, so we know how many slots are left. 		 * We do this only in HOSTAP or multiple vap mode since FIFO stats 		 * are used only in those modes. 		 * We just drain stats. AMRR gets updated every 1 sec by 		 * run_ratectl_cb() via callout. 		 * Call it early. Otherwise overflow. 		 */
 if|if
 condition|(
 name|sc
@@ -28546,7 +28546,7 @@ operator|==
 name|IEEE80211_CHAN_ANYC
 condition|)
 return|return;
-comment|/* 	 * No need to call ieee80211_beacon_update(), run_update_beacon() 	 * is taking care of apropriate calls. 	 */
+comment|/* 	 * No need to call ieee80211_beacon_update(), run_update_beacon() 	 * is taking care of appropriate calls. 	 */
 if|if
 condition|(
 name|rvp

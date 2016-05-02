@@ -1870,7 +1870,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* reset USB paralell port */
+comment|/* reset USB parallel port */
 name|ulpt_reset
 argument_list|(
 name|sc

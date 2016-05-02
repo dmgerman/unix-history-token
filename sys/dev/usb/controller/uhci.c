@@ -9091,7 +9091,7 @@ literal|2
 block|,
 literal|0
 block|,
-comment|/* string indicies */
+comment|/* string indexes */
 literal|1
 comment|/* # of configurations */
 block|}

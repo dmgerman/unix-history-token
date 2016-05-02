@@ -1162,7 +1162,7 @@ block|{
 case|case
 name|UR_SET_INTERFACE
 case|:
-comment|/* 			 * We assume that the endpoints are the same 			 * accross the alternate settings. 			 * 			 * Reset the endpoints, because re-attaching 			 * only a part of the device is not possible. 			 */
+comment|/* 			 * We assume that the endpoints are the same 			 * across the alternate settings. 			 * 			 * Reset the endpoints, because re-attaching 			 * only a part of the device is not possible. 			 */
 name|error
 operator|=
 name|usb_check_alt_setting

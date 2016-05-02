@@ -12251,7 +12251,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* sucess */
+comment|/* success */
 comment|/* All other commands are not legal in RBC */
 default|default:
 name|DPRINTF

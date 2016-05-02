@@ -2994,7 +2994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do local shutdown processing..  * We are a persistant device, we refuse to go away, and  * only remove our links and reset ourself.  */
+comment|/*  * Do local shutdown processing..  * We are a persistent device, we refuse to go away, and  * only remove our links and reset ourself.  */
 end_comment
 
 begin_function

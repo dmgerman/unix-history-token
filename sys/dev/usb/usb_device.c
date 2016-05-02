@@ -877,7 +877,7 @@ name|ea_val
 operator|&=
 name|EA_MASK
 expr_stmt|;
-comment|/* 	 * Iterate accross all the USB endpoints searching for a match 	 * based on the endpoint address: 	 */
+comment|/* 	 * Iterate across all the USB endpoints searching for a match 	 * based on the endpoint address: 	 */
 for|for
 control|(
 init|;
@@ -1302,7 +1302,7 @@ name|UE_XFERTYPE
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Iterate accross all the USB endpoints searching for a match 	 * based on the endpoint address. Note that we are searching 	 * the endpoints from the beginning of the "udev->endpoints" array. 	 */
+comment|/* 	 * Iterate across all the USB endpoints searching for a match 	 * based on the endpoint address. Note that we are searching 	 * the endpoints from the beginning of the "udev->endpoints" array. 	 */
 for|for
 control|(
 init|;

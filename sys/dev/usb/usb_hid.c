@@ -2495,7 +2495,7 @@ operator|==
 name|k
 condition|)
 block|{
-comment|/* check for ID-byte presense */
+comment|/* check for ID-byte presence */
 if|if
 condition|(
 operator|(

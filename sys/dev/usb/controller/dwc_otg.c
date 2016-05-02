@@ -13838,7 +13838,7 @@ operator|)
 operator||
 name|HCCHAR_CHENA
 expr_stmt|;
-comment|/* 		 * We are not always able to meet the timing 		 * requirements of the USB interrupt endpoint's 		 * complete split token, when doing transfers going 		 * via a transaction translator. Use the CONTROL 		 * transfer type instead of the INTERRUPT transfer 		 * type in general, as a means to workaround 		 * that. This trick should work for both FULL and LOW 		 * speed USB traffic going through a TT. For non-TT 		 * traffic it works aswell. The reason for using 		 * CONTROL type instead of BULK is that some TTs might 		 * reject LOW speed BULK traffic. 		 */
+comment|/* 		 * We are not always able to meet the timing 		 * requirements of the USB interrupt endpoint's 		 * complete split token, when doing transfers going 		 * via a transaction translator. Use the CONTROL 		 * transfer type instead of the INTERRUPT transfer 		 * type in general, as a means to workaround 		 * that. This trick should work for both FULL and LOW 		 * speed USB traffic going through a TT. For non-TT 		 * traffic it works as well. The reason for using 		 * CONTROL type instead of BULK is that some TTs might 		 * reject LOW speed BULK traffic. 		 */
 if|if
 condition|(
 name|td

@@ -178,7 +178,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* RO structual parameters 1 */
+comment|/* RO structural parameters 1 */
 end_comment
 
 begin_define
@@ -219,7 +219,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* RO structual parameters 2 */
+comment|/* RO structural parameters 2 */
 end_comment
 
 begin_define
@@ -270,7 +270,7 @@ value|0x0C
 end_define
 
 begin_comment
-comment|/* RO structual parameters 3 */
+comment|/* RO structural parameters 3 */
 end_comment
 
 begin_define

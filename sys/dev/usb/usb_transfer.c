@@ -2350,7 +2350,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 	 * NOTE: we do not allow "max_packet_size" or "max_frame_size" 	 * to be equal to zero when setting up USB transfers, hence 	 * this leads to alot of extra code in the USB kernel. 	 */
+comment|/* 	 * NOTE: we do not allow "max_packet_size" or "max_frame_size" 	 * to be equal to zero when setting up USB transfers, hence 	 * this leads to a lot of extra code in the USB kernel. 	 */
 if|if
 condition|(
 operator|(
@@ -8791,7 +8791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_dma_delay_done_cb  *  * This function is called when the DMA delay has been exectuded, and  * will make sure that the callback is called to complete the USB  * transfer. This code path is ususally only used when there is an USB  * error like USB_ERR_CANCELLED.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dma_delay_done_cb  *  * This function is called when the DMA delay has been exectuded, and  * will make sure that the callback is called to complete the USB  * transfer. This code path is usually only used when there is an USB  * error like USB_ERR_CANCELLED.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function

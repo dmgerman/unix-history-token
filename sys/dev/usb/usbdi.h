@@ -876,7 +876,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
+comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectively:  */
 end_comment
 
 begin_if

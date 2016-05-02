@@ -590,7 +590,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * Bits set in the SERIAL STATE notifcation (first byte of data)  */
+comment|/*  * Bits set in the SERIAL STATE notification (first byte of data)  */
 end_comment
 
 begin_define

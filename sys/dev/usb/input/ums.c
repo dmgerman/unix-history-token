@@ -2836,7 +2836,7 @@ operator|->
 name|sc_iid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The Microsoft Wireless Notebook Optical Mouse seems to be in worse 	 * shape than the Wireless Intellimouse 2.0, as its X, Y, wheel, and 	 * all of its other button positions are all off. It also reports that 	 * it has two addional buttons and a tilt wheel. 	 */
+comment|/* 	 * The Microsoft Wireless Notebook Optical Mouse seems to be in worse 	 * shape than the Wireless Intellimouse 2.0, as its X, Y, wheel, and 	 * all of its other button positions are all off. It also reports that 	 * it has two additional buttons and a tilt wheel. 	 */
 if|if
 condition|(
 name|usb_test_quirk

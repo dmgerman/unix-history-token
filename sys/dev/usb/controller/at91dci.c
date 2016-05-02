@@ -5149,7 +5149,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NOTE: One would assume that a FIFO reset would release the 	 * FIFO banks aswell, but it doesn't! We have to do this 	 * manually! 	 */
+comment|/* 	 * NOTE: One would assume that a FIFO reset would release the 	 * FIFO banks as well, but it doesn't! We have to do this 	 * manually! 	 */
 comment|/* release FIFO banks, if any */
 for|for
 control|(

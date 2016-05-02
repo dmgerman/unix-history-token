@@ -5183,7 +5183,7 @@ name|dy
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Ignore unexpeted movment when typing */
+comment|/* Ignore unexpeted movement when typing */
 if|if
 condition|(
 name|ntouch

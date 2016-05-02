@@ -515,7 +515,7 @@ value|0x32
 end_define
 
 begin_comment
-comment|/* Bulk-In FIFO Stat for Port 						 * 1, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-In FIFO Stat for Port 						 * 1, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -526,7 +526,7 @@ value|0x33
 end_define
 
 begin_comment
-comment|/* Bulk-out FIFO Stat for Port 						 * 1, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-out FIFO Stat for Port 						 * 1, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -537,7 +537,7 @@ value|0x34
 end_define
 
 begin_comment
-comment|/* Bulk-In FIFO Stat for Port 						 * 2, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-In FIFO Stat for Port 						 * 2, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -548,7 +548,7 @@ value|0x35
 end_define
 
 begin_comment
-comment|/* Bulk-out FIFO Stat for Port 						 * 2, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-out FIFO Stat for Port 						 * 2, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -559,7 +559,7 @@ value|0x36
 end_define
 
 begin_comment
-comment|/* Bulk-In FIFO Stat for Port 						 * 3, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-In FIFO Stat for Port 						 * 3, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -570,7 +570,7 @@ value|0x37
 end_define
 
 begin_comment
-comment|/* Bulk-out FIFO Stat for Port 						 * 3, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-out FIFO Stat for Port 						 * 3, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -581,7 +581,7 @@ value|0x38
 end_define
 
 begin_comment
-comment|/* Bulk-In FIFO Stat for Port 						 * 4, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-In FIFO Stat for Port 						 * 4, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -592,7 +592,7 @@ value|0x39
 end_define
 
 begin_comment
-comment|/* Bulk-out FIFO Stat for Port 						 * 4, contains number of 						 * availiable bytes, R/Only */
+comment|/* Bulk-out FIFO Stat for Port 						 * 4, contains number of 						 * available bytes, R/Only */
 end_comment
 
 begin_define
@@ -658,7 +658,7 @@ value|0x3f
 end_define
 
 begin_comment
-comment|/* Low 8 bits of threshhold 						 * value for Bulk-Out for Port 						 * 1, R/W */
+comment|/* Low 8 bits of threshold 						 * value for Bulk-Out for Port 						 * 1, R/W */
 end_comment
 
 begin_define
@@ -669,7 +669,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* High 1 bit of threshhold 						 * value for Bulk-Out and 						 * enable flag for Port 1, R/W */
+comment|/* High 1 bit of threshold 						 * value for Bulk-Out and 						 * enable flag for Port 1, R/W */
 end_comment
 
 begin_define
@@ -680,7 +680,7 @@ value|0x41
 end_define
 
 begin_comment
-comment|/* Low 8 bits of threshhold 						 * value for Bulk-Out for Port 						 * 2, R/W */
+comment|/* Low 8 bits of threshold 						 * value for Bulk-Out for Port 						 * 2, R/W */
 end_comment
 
 begin_define
@@ -691,7 +691,7 @@ value|0x42
 end_define
 
 begin_comment
-comment|/* High 1 bit of threshhold 						 * value for Bulk-Out and 						 * enable flag for Port 2, R/W */
+comment|/* High 1 bit of threshold 						 * value for Bulk-Out and 						 * enable flag for Port 2, R/W */
 end_comment
 
 begin_define
@@ -702,7 +702,7 @@ value|0x43
 end_define
 
 begin_comment
-comment|/* Low 8 bits of threshhold 						 * value for Bulk-Out for Port 						 * 3, R/W */
+comment|/* Low 8 bits of threshold 						 * value for Bulk-Out for Port 						 * 3, R/W */
 end_comment
 
 begin_define
@@ -713,7 +713,7 @@ value|0x44
 end_define
 
 begin_comment
-comment|/* High 1 bit of threshhold 						 * value for Bulk-Out and 						 * enable flag for Port 3, R/W */
+comment|/* High 1 bit of threshold 						 * value for Bulk-Out and 						 * enable flag for Port 3, R/W */
 end_comment
 
 begin_define
@@ -724,7 +724,7 @@ value|0x45
 end_define
 
 begin_comment
-comment|/* Low 8 bits of threshhold 						 * value for Bulk-Out for Port 						 * 4, R/W */
+comment|/* Low 8 bits of threshold 						 * value for Bulk-Out for Port 						 * 4, R/W */
 end_comment
 
 begin_define
@@ -735,7 +735,7 @@ value|0x46
 end_define
 
 begin_comment
-comment|/* High 1 bit of threshhold 						 * value for Bulk-Out and 						 * enable flag for Port 4, R/W */
+comment|/* High 1 bit of threshold 						 * value for Bulk-Out and 						 * enable flag for Port 4, R/W */
 end_comment
 
 begin_comment

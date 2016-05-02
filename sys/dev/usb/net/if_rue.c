@@ -3031,7 +3031,7 @@ name|actlen
 operator|-=
 literal|4
 expr_stmt|;
-comment|/* check recieve packet was valid or not */
+comment|/* check receive packet was valid or not */
 name|status
 operator|=
 name|le16toh

@@ -2215,7 +2215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_match  *  * Return values:  *    0: The endpoint profile does not match the criterias  * Else: The endpoint profile matches the criterias  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_hw_ep_match  *  * Return values:  *    0: The endpoint profile does not match the criteria  * Else: The endpoint profile matches the criteria  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function

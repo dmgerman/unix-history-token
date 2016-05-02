@@ -22,7 +22,7 @@ comment|/*  * CATC USB-EL1210A USB to ethernet driver. Used in the CATC Netmate 
 end_comment
 
 begin_comment
-comment|/*  * The CATC USB-EL1210A provides USB ethernet support at 10Mbps. The  * RX filter uses a 512-bit multicast hash table, single perfect entry  * for the station address, and promiscuous mode. Unlike the ADMtek  * and KLSI chips, the CATC ASIC supports read and write combining  * mode where multiple packets can be transfered using a single bulk  * transaction, which helps performance a great deal.  */
+comment|/*  * The CATC USB-EL1210A provides USB ethernet support at 10Mbps. The  * RX filter uses a 512-bit multicast hash table, single perfect entry  * for the station address, and promiscuous mode. Unlike the ADMtek  * and KLSI chips, the CATC ASIC supports read and write combining  * mode where multiple packets can be transferred using a single bulk  * transaction, which helps performance a great deal.  */
 end_comment
 
 begin_include
