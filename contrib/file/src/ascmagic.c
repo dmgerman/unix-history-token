@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: ascmagic.c,v 1.92 2015/04/09 20:01:41 christos Exp $"
+literal|"@(#)$File: ascmagic.c,v 1.94 2016/03/31 17:51:12 christos Exp $"
 argument_list|)
 end_macro
 
@@ -604,7 +604,7 @@ operator|-
 name|utf8_buf
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -749,14 +749,16 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Beware, if the data has been truncated, the final CR could have 	   been followed by a LF.  If we have HOWMANY bytes, it indicates 	   that the data might have been truncated, probably even before 	   this function was called. */
+comment|/* Beware, if the data has been truncated, the final CR could have 	   been followed by a LF.  If we have ms->bytes_max bytes, it indicates 	   that the data might have been truncated, probably even before 	   this function was called. */
 if|if
 condition|(
 name|seen_cr
 operator|&&
 name|nbytes
 operator|<
-name|HOWMANY
+name|ms
+operator|->
+name|bytes_max
 condition|)
 name|n_cr
 operator|++

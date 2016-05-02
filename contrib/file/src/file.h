@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.172 2015/09/11 17:24:09 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.178 2016/03/31 17:51:12 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -537,13 +537,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HOWMANY
+name|FILE_BYTES_MAX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HOWMANY
+name|FILE_BYTES_MAX
 value|(1024 * 1024)
 end_define
 
@@ -971,8 +971,12 @@ name|FILE_CLEAR
 value|47
 define|#
 directive|define
-name|FILE_NAMES_SIZE
+name|FILE_DER
 value|48
+define|#
+directive|define
+name|FILE_NAMES_SIZE
+value|49
 comment|/* size of array to contain all names */
 define|#
 directive|define
@@ -1561,6 +1565,18 @@ parameter_list|)
 value|reinterpret_cast<T>(b)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CCAST
+parameter_list|(
+name|T
+parameter_list|,
+name|b
+parameter_list|)
+value|const_cast<T>(b)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1575,7 +1591,7 @@ name|T
 parameter_list|,
 name|b
 parameter_list|)
-value|(T)(b)
+value|((T)(b))
 end_define
 
 begin_define
@@ -1587,7 +1603,19 @@ name|T
 parameter_list|,
 name|b
 parameter_list|)
-value|(T)(b)
+value|((T)(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCAST
+parameter_list|(
+name|T
+parameter_list|,
+name|b
+parameter_list|)
+value|((T)(uintptr_t)(b))
 end_define
 
 begin_endif
@@ -1746,10 +1774,14 @@ decl_stmt|;
 name|uint16_t
 name|regex_max
 decl_stmt|;
+name|size_t
+name|bytes_max
+decl_stmt|;
+comment|/* number of bytes to read from file */
 define|#
 directive|define
 name|FILE_INDIR_MAX
-value|15
+value|50
 define|#
 directive|define
 name|FILE_NAME_MAX
@@ -2228,6 +2260,7 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|uint16_t
+modifier|*
 parameter_list|,
 name|uint16_t
 modifier|*
@@ -2717,6 +2750,12 @@ decl_stmt|;
 name|locale_t
 name|c_lc_ctype
 decl_stmt|;
+else|#
+directive|else
+name|char
+modifier|*
+name|old_lc_ctype
+decl_stmt|;
 endif|#
 directive|endif
 name|int
@@ -3002,6 +3041,32 @@ parameter_list|(
 name|char
 modifier|*
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_DPRINTF
+end_ifndef
+
+begin_function_decl
+name|int
+name|dprintf
+parameter_list|(
+name|int
 parameter_list|,
 specifier|const
 name|char
