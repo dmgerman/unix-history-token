@@ -2557,10 +2557,9 @@ name|f
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|;
-name|char
 name|ch
+decl_stmt|,
+name|i
 decl_stmt|;
 if|if
 condition|(
