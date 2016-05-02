@@ -3111,17 +3111,12 @@ block|}
 comment|/* 	 * Should be multiple of 4 for XDR. 	 */
 name|sendsz
 operator|=
-operator|(
-operator|(
+name|roundup
+argument_list|(
 name|sendsz
-operator|+
-literal|3
-operator|)
-operator|/
+argument_list|,
 literal|4
-operator|)
-operator|*
-literal|4
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
