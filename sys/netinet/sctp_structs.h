@@ -2943,7 +2943,7 @@ decl_stmt|;
 name|uint32_t
 name|tsn_last_delivered
 decl_stmt|;
-comment|/* 	 * For the pd-api we should re-write this a bit more efficent. We 	 * could have multiple sctp_queued_to_read's that we are building at 	 * once. Now we only do this when we get ready to deliver to the 	 * socket buffer. Note that we depend on the fact that the struct is 	 * "stuck" on the read queue until we finish all the pd-api. 	 */
+comment|/* 	 * For the pd-api we should re-write this a bit more efficient. We 	 * could have multiple sctp_queued_to_read's that we are building at 	 * once. Now we only do this when we get ready to deliver to the 	 * socket buffer. Note that we depend on the fact that the struct is 	 * "stuck" on the read queue until we finish all the pd-api. 	 */
 name|struct
 name|sctp_queued_to_read
 modifier|*

@@ -3212,7 +3212,7 @@ operator|!=
 name|r_net
 condition|)
 block|{
-comment|/* 				 * first one on the list is NOT the primary 				 * sctp_cmpaddr() is much more efficent if 				 * the primary is the first on the list, 				 * make it so. 				 */
+comment|/* 				 * first one on the list is NOT the primary 				 * sctp_cmpaddr() is much more efficient if 				 * the primary is the first on the list, 				 * make it so. 				 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5638,7 +5638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip past the param header and then we will find the chunk that caused the  * problem. There are two possiblities ASCONF or FWD-TSN other than that and  * our peer must be broken.  */
+comment|/*  * Skip past the param header and then we will find the chunk that caused the  * problem. There are two possibilities ASCONF or FWD-TSN other than that and  * our peer must be broken.  */
 end_comment
 
 begin_function
@@ -6398,7 +6398,7 @@ break|break;
 case|case
 name|SCTP_CAUSE_UNRESOLVABLE_ADDR
 case|:
-comment|/* 			 * Nothing we can do here, we don't do hostname 			 * addresses so if the peer does not like my IPv6 			 * (or IPv4 for that matter) it does not matter. If 			 * they don't support that type of address, they can 			 * NOT possibly get that packet type... i.e. with no 			 * IPv6 you can't recieve a IPv6 packet. so we can 			 * safely ignore this one. If we ever added support 			 * for HOSTNAME Addresses, then we would need to do 			 * something here. 			 */
+comment|/* 			 * Nothing we can do here, we don't do hostname 			 * addresses so if the peer does not like my IPv6 			 * (or IPv4 for that matter) it does not matter. If 			 * they don't support that type of address, they can 			 * NOT possibly get that packet type... i.e. with no 			 * IPv6 you can't receive a IPv6 packet. so we can 			 * safely ignore this one. If we ever added support 			 * for HOSTNAME Addresses, then we would need to do 			 * something here. 			 */
 break|break;
 case|case
 name|SCTP_CAUSE_UNRECOG_CHUNK
@@ -23074,7 +23074,7 @@ name|sat_network
 operator|)
 condition|)
 block|{
-comment|/* 		 * This is debateable but for sat networks it makes sense 		 * Note if a T3 timer has went off, we will prohibit any 		 * changes to cwnd until we exit the t3 loss recovery. 		 */
+comment|/* 		 * This is debatable but for sat networks it makes sense 		 * Note if a T3 timer has went off, we will prohibit any 		 * changes to cwnd until we exit the t3 loss recovery. 		 */
 name|stcb
 operator|->
 name|asoc

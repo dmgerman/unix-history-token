@@ -1293,7 +1293,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Theshold for rwnd updates, we have to read (sb_hiwat>>  * SCTP_RWND_HIWAT_SHIFT) before we will look to see if we need to send a  * window update sack. When we look, we compare the last rwnd we sent vs the  * current rwnd. It too must be greater than this value. Using 3 divdes the  * hiwat by 8, so for 200k rwnd we need to read 24k. For a 64k rwnd we need  * to read 8k. This seems about right.. I hope :-D.. we do set a  * min of a MTU on it so if the rwnd is real small we will insist  * on a full MTU of 1500 bytes.  */
+comment|/*  * Threshold for rwnd updates, we have to read (sb_hiwat>>  * SCTP_RWND_HIWAT_SHIFT) before we will look to see if we need to send a  * window update sack. When we look, we compare the last rwnd we sent vs the  * current rwnd. It too must be greater than this value. Using 3 divdes the  * hiwat by 8, so for 200k rwnd we need to read 24k. For a 64k rwnd we need  * to read 8k. This seems about right.. I hope :-D.. we do set a  * min of a MTU on it so if the rwnd is real small we will insist  * on a full MTU of 1500 bytes.  */
 end_comment
 
 begin_define
@@ -2287,7 +2287,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* size of the inital malloc on the mapping array */
+comment|/* size of the initial malloc on the mapping array */
 end_comment
 
 begin_define
@@ -2797,7 +2797,7 @@ comment|/* 10 min between raise attempts */
 end_comment
 
 begin_comment
-comment|/* How many streams I request initally by default */
+comment|/* How many streams I request initially by default */
 end_comment
 
 begin_define
@@ -4292,7 +4292,7 @@ value|-2
 end_define
 
 begin_comment
-comment|/*  * This value defines the number of vtag block time wait entry's per list  * element.  Each entry will take 2 4 byte ints (and of course the overhead  * of the next pointer as well). Using 15 as an example will yield * ((8 *  * 15) + 8) or 128 bytes of overhead for each timewait block that gets  * initialized. Increasing it to 31 would yeild 256 bytes per block.  */
+comment|/*  * This value defines the number of vtag block time wait entry's per list  * element.  Each entry will take 2 4 byte ints (and of course the overhead  * of the next pointer as well). Using 15 as an example will yield * ((8 *  * 15) + 8) or 128 bytes of overhead for each timewait block that gets  * initialized. Increasing it to 31 would yield 256 bytes per block.  */
 end_comment
 
 begin_define

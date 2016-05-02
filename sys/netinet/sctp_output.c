@@ -14757,7 +14757,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT2
 argument_list|,
-literal|"No prefered -- skipping to next\n"
+literal|"No preferred -- skipping to next\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -15206,7 +15206,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT2
 argument_list|,
-literal|"Its resticted\n"
+literal|"Its restricted\n"
 argument_list|)
 expr_stmt|;
 name|sifa
@@ -27371,7 +27371,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* New address added! no need to look futher. */
+comment|/* New address added! no need to look further. */
 return|return
 operator|(
 literal|1
@@ -28514,7 +28514,7 @@ name|sh
 operator|->
 name|src_port
 expr_stmt|;
-comment|/* 	 * If we wanted to honor cookie life extentions, we would add to 	 * stc.cookie_life. For now we should NOT honor any extension 	 */
+comment|/* 	 * If we wanted to honor cookie life extensions, we would add to 	 * stc.cookie_life. For now we should NOT honor any extension 	 */
 name|stc
 operator|.
 name|site_scope
@@ -31774,7 +31774,7 @@ block|}
 block|}
 comment|/* if chunk was present */
 block|}
-comment|/* if of sufficent priority */
+comment|/* if of sufficient priority */
 block|}
 comment|/* if chunk has enabled */
 block|}
@@ -33424,7 +33424,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * save off the end and update the end-chain postion 		 */
+comment|/* 		 * save off the end and update the end-chain position 		 */
 name|m
 operator|=
 name|appendchain
@@ -33467,7 +33467,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* save off the end and update the end-chain postion */
+comment|/* save off the end and update the end-chain position */
 name|m
 operator|=
 name|appendchain
@@ -34591,7 +34591,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-comment|/* 	 * Do a notify here? Kacheong suggests that the notify be done at 	 * the send time.. so you would push up a notification if any send 	 * failed. Don't know if this is feasable since the only failures we 	 * have is "memory" related and if you cannot get an mbuf to send 	 * the data you surely can't get an mbuf to send up to notify the 	 * user you can't send the data :-> 	 */
+comment|/* 	 * Do a notify here? Kacheong suggests that the notify be done at 	 * the send time.. so you would push up a notification if any send 	 * failed. Don't know if this is feasible since the only failures we 	 * have is "memory" related and if you cannot get an mbuf to send 	 * the data you surely can't get an mbuf to send up to notify the 	 * user you can't send the data :-> 	 */
 comment|/* now free everything */
 name|sctp_m_freem
 argument_list|(
@@ -37871,7 +37871,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * get last_mbuf and counts of mb useage This is ugly but hopefully 	 * its only one mbuf. 	 */
+comment|/* 	 * get last_mbuf and counts of mb usage This is ugly but hopefully 	 * its only one mbuf. 	 */
 if|if
 condition|(
 name|chk
@@ -47670,7 +47670,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Start a timer no matter if we suceed or fail */
+comment|/* Start a timer no matter if we succeed or fail */
 if|if
 condition|(
 name|chk
@@ -48926,7 +48926,7 @@ condition|(
 name|m
 condition|)
 block|{
-comment|/* 			 * No matter if we fail/or suceed we should start a 			 * timer. A failure is like a lost IP packet :-) 			 */
+comment|/* 			 * No matter if we fail/or succeed we should start a 			 * timer. A failure is like a lost IP packet :-) 			 */
 if|if
 condition|(
 operator|!

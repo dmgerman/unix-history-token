@@ -1073,7 +1073,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * BSD only has one VRF, if this changes we will need to hook in the 	 * right things here to get the id to pass to the address managment 	 * routine. 	 */
+comment|/* 	 * BSD only has one VRF, if this changes we will need to hook in the 	 * right things here to get the id to pass to the address management 	 * routine. 	 */
 if|if
 condition|(
 name|SCTP_BASE_VAR

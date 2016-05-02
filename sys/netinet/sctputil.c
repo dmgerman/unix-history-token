@@ -8992,7 +8992,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* record in stopped what t-o occured */
+comment|/* record in stopped what t-o occurred */
 name|tmr
 operator|->
 name|stopped_from

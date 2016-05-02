@@ -370,7 +370,7 @@ decl_stmt|;
 name|uint32_t
 name|refcount
 decl_stmt|;
-comment|/* number of folks refering to this */
+comment|/* number of folks referring to this */
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1004,7 +1004,7 @@ begin_struct
 struct|struct
 name|sctp_inpcb
 block|{
-comment|/*- 	 * put an inpcb in front of it all, kind of a waste but we need to 	 * for compatability with all the other stuff. 	 */
+comment|/*- 	 * put an inpcb in front of it all, kind of a waste but we need to 	 * for compatibility with all the other stuff. 	 */
 union|union
 block|{
 name|struct

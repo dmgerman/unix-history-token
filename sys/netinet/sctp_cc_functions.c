@@ -1163,7 +1163,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Loosing to other flows */
+comment|/* Losing to other flows */
 end_comment
 
 begin_define
@@ -3458,7 +3458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* RTCC Algoritm to limit growth of cwnd, return  * true if you want to NOT allow cwnd growth  */
+comment|/* RTCC Algorithm to limit growth of cwnd, return  * true if you want to NOT allow cwnd growth  */
 end_comment
 
 begin_function
@@ -6227,7 +6227,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Further tuning down required over the drastic 			 * orginal cut 			 */
+comment|/* 			 * Further tuning down required over the drastic 			 * original cut 			 */
 name|net
 operator|->
 name|ssthresh
@@ -7082,7 +7082,7 @@ name|int
 name|will_exit
 parameter_list|)
 block|{
-comment|/* Passing a zero argument in last disables the rtcc algoritm */
+comment|/* Passing a zero argument in last disables the rtcc algorithm */
 name|sctp_cwnd_update_after_sack_common
 argument_list|(
 name|stcb
@@ -7123,7 +7123,7 @@ name|int
 name|num_pkt_lost
 parameter_list|)
 block|{
-comment|/* Passing a zero argument in last disables the rtcc algoritm */
+comment|/* Passing a zero argument in last disables the rtcc algorithm */
 name|sctp_cwnd_update_after_ecn_echo_common
 argument_list|(
 name|stcb
@@ -7141,7 +7141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Here starts the RTCCVAR type CC invented by RRS which  * is a slight mod to RFC2581. We reuse a common routine or  * two since these algoritms are so close and need to  * remain the same.  */
+comment|/* Here starts the RTCCVAR type CC invented by RRS which  * is a slight mod to RFC2581. We reuse a common routine or  * two since these algorithms are so close and need to  * remain the same.  */
 end_comment
 
 begin_function
@@ -8415,7 +8415,7 @@ name|int
 name|will_exit
 parameter_list|)
 block|{
-comment|/* Passing a one argument at the last enables the rtcc algoritm */
+comment|/* Passing a one argument at the last enables the rtcc algorithm */
 name|sctp_cwnd_update_after_sack_common
 argument_list|(
 name|stcb

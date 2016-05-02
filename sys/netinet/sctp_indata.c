@@ -2289,7 +2289,7 @@ modifier|*
 name|need_reasm
 parameter_list|)
 block|{
-comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream useage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 *  	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and ssn 2 	 * with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 *  	 */
+comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream usage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 *  	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and ssn 2 	 * with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 *  	 */
 name|struct
 name|sctp_queued_to_read
 modifier|*
@@ -6305,7 +6305,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 				 * For IDATA we always check since we know 				 * that the first fragment is 0. For old 				 * DATA we have to receive the first before 				 * we knwo the first FSN (which is the TSN). 				 */
+comment|/* 				 * For IDATA we always check since we know 				 * that the first fragment is 0. For old 				 * DATA we have to receive the first before 				 * we know the first FSN (which is the TSN). 				 */
 if|if
 condition|(
 name|SCTP_TSN_GE
@@ -6407,7 +6407,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 				 * For IDATA we always check since we know 				 * that the first fragment is 0. For old 				 * DATA we have to receive the first before 				 * we knwo the first FSN (which is the TSN). 				 */
+comment|/* 				 * For IDATA we always check since we know 				 * that the first fragment is 0. For old 				 * DATA we have to receive the first before 				 * we know the first FSN (which is the TSN). 				 */
 if|if
 condition|(
 name|SCTP_TSN_GE
@@ -10902,7 +10902,7 @@ modifier|*
 name|stcb
 parameter_list|)
 block|{
-comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 *  	 * When you first glance at this you might think that all entries that 	 * make up the postion of the cum-ack would be in the nr-mapping 	 * array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
+comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 *  	 * When you first glance at this you might think that all entries that 	 * make up the position of the cum-ack would be in the nr-mapping 	 * array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -12365,7 +12365,7 @@ operator|*
 name|mm
 argument_list|)
 expr_stmt|;
-comment|/* sucess, back copy */
+comment|/* success, back copy */
 operator|*
 name|mm
 operator|=
@@ -17025,7 +17025,7 @@ name|resend
 init|=
 literal|0
 decl_stmt|,
-name|inbetween
+name|between
 init|=
 literal|0
 decl_stmt|,
@@ -22016,7 +22016,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"Warning flight size is postive and should be 0"
+literal|"Warning flight size is positive and should be 0"
 argument_list|)
 expr_stmt|;
 else|#

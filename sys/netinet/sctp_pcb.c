@@ -1230,7 +1230,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
 argument_list|,
-literal|"IFA has no IFN - can't mark unuseable\n"
+literal|"IFA has no IFN - can't mark unusable\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1441,7 +1441,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
 argument_list|,
-literal|"IFA has no IFN - can't mark unuseable\n"
+literal|"IFA has no IFN - can't mark unusable\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -25979,7 +25979,7 @@ name|void
 name|sctp_pcb_init
 parameter_list|()
 block|{
-comment|/* 	 * SCTP initialization for the PCB structures should be called by 	 * the sctp_init() funciton. 	 */
+comment|/* 	 * SCTP initialization for the PCB structures should be called by 	 * the sctp_init() function. 	 */
 name|int
 name|i
 decl_stmt|;

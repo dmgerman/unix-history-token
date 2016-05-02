@@ -5085,7 +5085,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * cleared theshold management now lets backoff the address& select 	 * an alternate 	 */
+comment|/* 	 * cleared threshold management now lets backoff the address& select 	 * an alternate 	 */
 name|stcb
 operator|->
 name|asoc
@@ -5303,7 +5303,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * cleared theshold management now lets backoff the address& select 	 * an alternate 	 */
+comment|/* 	 * cleared threshold management now lets backoff the address& select 	 * an alternate 	 */
 name|sctp_backoff_on_timeout
 argument_list|(
 name|stcb
@@ -6069,7 +6069,7 @@ name|sctp_nets
 modifier|*
 name|alt
 decl_stmt|;
-comment|/* first threshold managment */
+comment|/* first threshold management */
 if|if
 condition|(
 name|sctp_threshold_management
@@ -6173,7 +6173,7 @@ name|sctp_nets
 modifier|*
 name|alt
 decl_stmt|;
-comment|/* first threshold managment */
+comment|/* first threshold management */
 if|if
 condition|(
 name|sctp_threshold_management
