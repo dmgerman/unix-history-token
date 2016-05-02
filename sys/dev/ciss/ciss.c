@@ -2738,7 +2738,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*      * Initalize device sysctls.      */
+comment|/*      * Initialize device sysctls.      */
 name|ciss_init_sysctl
 argument_list|(
 name|sc
@@ -3239,7 +3239,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * XXX Big hammer, masks/unmasks all possible interrupts.  This should 	 * work on all hardware variants.  Need to add code to handle the 	 * "controller crashed" interupt bit that this unmasks. 	 */
+comment|/* 	 * XXX Big hammer, masks/unmasks all possible interrupts.  This should 	 * work on all hardware variants.  Need to add code to handle the 	 * "controller crashed" interrupt bit that this unmasks. 	 */
 name|sqmask
 operator|=
 operator|~
@@ -20598,7 +20598,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|"unkown"
+literal|"unknown"
 operator|)
 return|;
 block|}

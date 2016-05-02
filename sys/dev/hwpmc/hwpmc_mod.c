@@ -4628,7 +4628,7 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there are no PMCs targetting this process, we remove its 	 * descriptor from the target hash table and unset the P_HWPMC 	 * flag in the struct proc. 	 */
+comment|/* 	 * If there are no PMCs targeting this process, we remove its 	 * descriptor from the target hash table and unset the P_HWPMC 	 * flag in the struct proc. 	 */
 name|KASSERT
 argument_list|(
 name|pp
@@ -5068,7 +5068,7 @@ name|pmc_cpu_max
 argument_list|()
 argument_list|,
 operator|(
-literal|"[pmc,%d] wierd CPU id %d"
+literal|"[pmc,%d] weird CPU id %d"
 operator|,
 name|__LINE__
 operator|,
@@ -5579,7 +5579,7 @@ name|pmc_cpu_max
 argument_list|()
 argument_list|,
 operator|(
-literal|"[pmc,%d wierd CPU id %d"
+literal|"[pmc,%d weird CPU id %d"
 operator|,
 name|__LINE__
 operator|,
@@ -7598,7 +7598,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already recieved the event because 		 * they had system sampling PMCs active. 		 */
+comment|/* 		 * Log the exec event to all monitoring owners.  Skip 		 * owners who have already received the event because 		 * they had system sampling PMCs active. 		 */
 for|for
 control|(
 name|ri
@@ -7718,7 +7718,7 @@ literal|0
 condition|)
 comment|/* no change */
 break|break;
-comment|/* 		 * If the newly exec()'ed process has a different credential 		 * than before, allow it to be the target of a PMC only if 		 * the PMC's owner has sufficient priviledge. 		 */
+comment|/* 		 * If the newly exec()'ed process has a different credential 		 * than before, allow it to be the target of a PMC only if 		 * the PMC's owner has sufficient privilege. 		 */
 for|for
 control|(
 name|ri
@@ -16645,7 +16645,7 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since this code is invoked by the last thread in an exiting 	 * process, we would have context switched IN at some prior 	 * point.  However, with PREEMPTION, kernel mode context 	 * switches may happen any time, so we want to disable a 	 * context switch OUT till we get any PMCs targetting this 	 * process off the hardware. 	 * 	 * We also need to atomically remove this process' 	 * entry from our target process hash table, using 	 * PMC_FLAG_REMOVE. 	 */
+comment|/* 	 * Since this code is invoked by the last thread in an exiting 	 * process, we would have context switched IN at some prior 	 * point.  However, with PREEMPTION, kernel mode context 	 * switches may happen any time, so we want to disable a 	 * context switch OUT till we get any PMCs targeting this 	 * process off the hardware. 	 * 	 * We also need to atomically remove this process' 	 * entry from our target process hash table, using 	 * PMC_FLAG_REMOVE. 	 */
 name|PMCDBG3
 argument_list|(
 name|PRC
@@ -17070,7 +17070,7 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 comment|/* ok to be pre-empted now */
-comment|/* 		 * Unlink this process from the PMCs that are 		 * targetting it.  This will send a signal to 		 * all PMC owner's whose PMCs are orphaned. 		 * 		 * Log PMC value at exit time if requested. 		 */
+comment|/* 		 * Unlink this process from the PMCs that are 		 * targeting it.  This will send a signal to 		 * all PMC owner's whose PMCs are orphaned. 		 * 		 * Log PMC value at exit time if requested. 		 */
 for|for
 control|(
 name|ri

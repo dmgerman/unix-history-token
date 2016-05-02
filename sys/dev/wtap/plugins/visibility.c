@@ -1074,7 +1074,7 @@ break|break;
 default|default:
 name|DWTAP_PRINTF
 argument_list|(
-literal|"Unkown WTAP IOCTL\n"
+literal|"Unknown WTAP IOCTL\n"
 argument_list|)
 expr_stmt|;
 name|error

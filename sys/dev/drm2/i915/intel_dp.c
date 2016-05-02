@@ -8231,7 +8231,7 @@ name|channel_eq
 condition|)
 name|DRM_DEBUG_KMS
 argument_list|(
-literal|"Channel EQ done. DP Training successfull\n"
+literal|"Channel EQ done. DP Training successful\n"
 argument_list|)
 expr_stmt|;
 name|intel_dp_set_link_train

@@ -6071,7 +6071,7 @@ operator|!=
 name|page
 argument_list|,
 operator|(
-literal|"loosing %p %p"
+literal|"losing %p %p"
 operator|,
 operator|*
 name|mres
@@ -12442,7 +12442,7 @@ name|drm_mm_node
 modifier|*
 name|other
 decl_stmt|;
-comment|/* On non-LLC machines we have to be careful when putting differing 	 * types of snoopable memory together to avoid the prefetcher 	 * crossing memory domains and dieing. 	 */
+comment|/* On non-LLC machines we have to be careful when putting differing 	 * types of snoopable memory together to avoid the prefetcher 	 * crossing memory domains and dying. 	 */
 if|if
 condition|(
 name|HAS_LLC

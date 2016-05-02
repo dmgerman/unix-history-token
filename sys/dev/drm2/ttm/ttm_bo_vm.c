@@ -1014,7 +1014,7 @@ operator|!=
 name|m
 argument_list|,
 operator|(
-literal|"loosing %p %p"
+literal|"losing %p %p"
 operator|,
 operator|*
 name|mres
@@ -1122,7 +1122,7 @@ modifier|*
 name|color
 parameter_list|)
 block|{
-comment|/* 	 * On Linux, a reference to the buffer object is acquired here. 	 * The reason is that this function is not called when the 	 * mmap() is initialized, but only when a process forks for 	 * instance. Therefore on Linux, the reference on the bo is 	 * acquired either in ttm_bo_mmap() or ttm_bo_vm_open(). It's 	 * then released in ttm_bo_vm_close(). 	 * 	 * Here, this function is called during mmap() intialization. 	 * Thus, the reference acquired in ttm_bo_mmap_single() is 	 * sufficient. 	 */
+comment|/* 	 * On Linux, a reference to the buffer object is acquired here. 	 * The reason is that this function is not called when the 	 * mmap() is initialized, but only when a process forks for 	 * instance. Therefore on Linux, the reference on the bo is 	 * acquired either in ttm_bo_mmap() or ttm_bo_vm_open(). It's 	 * then released in ttm_bo_vm_close(). 	 * 	 * Here, this function is called during mmap() initialization. 	 * Thus, the reference acquired in ttm_bo_mmap_single() is 	 * sufficient. 	 */
 operator|*
 name|color
 operator|=

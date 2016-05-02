@@ -932,7 +932,7 @@ condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"failed to initalise framebuffer %d\n"
+literal|"failed to initialise framebuffer %d\n"
 argument_list|,
 name|ret
 argument_list|)

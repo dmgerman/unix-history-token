@@ -186,7 +186,7 @@ modifier|*
 name|properties
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This method will enable the user to retrieve information  *        specific to a SATA phy, such as: the recieved signature  *        FIS, if a port selector is present, etc.  *  * @param[in]  phy this parameter specifies the phy for which to  *             retrieve properties.  * @param[out] properties This parameter specifies the properties  *             structure into which to copy the requested information.  *  * @return This method returns an indication as to whether the SATA  *         phy properties were successfully retrieved.  * @retval SCI_SUCCESS This value is returned if the SATA properties  *         are successfully retrieved.  * @retval SCI_FAILURE This value is returned if the SATA properties  *         are not successfully retrieved (e.g. It's not a SATA Phy).  */
+comment|/**  * @brief This method will enable the user to retrieve information  *        specific to a SATA phy, such as: the received signature  *        FIS, if a port selector is present, etc.  *  * @param[in]  phy this parameter specifies the phy for which to  *             retrieve properties.  * @param[out] properties This parameter specifies the properties  *             structure into which to copy the requested information.  *  * @return This method returns an indication as to whether the SATA  *         phy properties were successfully retrieved.  * @retval SCI_SUCCESS This value is returned if the SATA properties  *         are successfully retrieved.  * @retval SCI_FAILURE This value is returned if the SATA properties  *         are not successfully retrieved (e.g. It's not a SATA Phy).  */
 name|SCI_STATUS
 name|scic_sata_phy_get_properties
 parameter_list|(
