@@ -1761,7 +1761,7 @@ expr_stmt|;
 operator|++
 name|ib
 expr_stmt|;
-comment|/* 		 * alignment boundry, stop here and switch directions.  Do 		 * not clear ib. 		 */
+comment|/* 		 * alignment boundary, stop here and switch directions.  Do 		 * not clear ib. 		 */
 if|if
 condition|(
 operator|(
@@ -1882,7 +1882,7 @@ operator|++
 name|is
 expr_stmt|;
 block|}
-comment|/* 	 * If we exhausted our forward scan, continue with the reverse scan 	 * when possible, even past a page boundry.  This catches boundry 	 * conditions. 	 */
+comment|/* 	 * If we exhausted our forward scan, continue with the reverse scan 	 * when possible, even past a page boundary.  This catches boundary 	 * conditions. 	 */
 if|if
 condition|(
 name|ib

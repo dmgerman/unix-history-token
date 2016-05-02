@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2005, 2009, 2013 Jeffrey Roberson<jeff@FreeBSD
 end_comment
 
 begin_comment
-comment|/*  * uma_core.c  Implementation of the Universal Memory allocator  *  * This allocator is intended to replace the multitude of similar object caches  * in the standard FreeBSD kernel.  The intent is to be flexible as well as  * effecient.  A primary design goal is to return unused memory to the rest of  * the system.  This will make the system as a whole more flexible due to the  * ability to move memory to subsystems which most need it instead of leaving  * pools of reserved memory unused.  *  * The basic ideas stem from similar slab/zone based allocators whose algorithms  * are well known.  *  */
+comment|/*  * uma_core.c  Implementation of the Universal Memory allocator  *  * This allocator is intended to replace the multitude of similar object caches  * in the standard FreeBSD kernel.  The intent is to be flexible as well as  * efficient.  A primary design goal is to return unused memory to the rest of  * the system.  This will make the system as a whole more flexible due to the  * ability to move memory to subsystems which most need it instead of leaving  * pools of reserved memory unused.  *  * The basic ideas stem from similar slab/zone based allocators whose algorithms  * are well known.  *  */
 end_comment
 
 begin_comment
@@ -2462,7 +2462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate and zero fill the next sized hash table from the appropriate  * backing store.  *  * Arguments:  *	hash  A new hash structure with the old hash size in uh_hashsize  *  * Returns:  *	1 on sucess and 0 on failure.  */
+comment|/*  * Allocate and zero fill the next sized hash table from the appropriate  * backing store.  *  * Arguments:  *	hash  A new hash structure with the old hash size in uh_hashsize  *  * Returns:  *	1 on success and 0 on failure.  */
 end_comment
 
 begin_function
@@ -9568,7 +9568,7 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now lets just fill a bucket and put it on the free list.  If that 	 * works we'll restart the allocation from the begining and it 	 * will use the just filled bucket. 	 */
+comment|/* 	 * Now lets just fill a bucket and put it on the free list.  If that 	 * works we'll restart the allocation from the beginning and it 	 * will use the just filled bucket. 	 */
 name|bucket
 operator|=
 name|zone_alloc_bucket

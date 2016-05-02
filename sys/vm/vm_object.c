@@ -7353,7 +7353,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If prev_object was charged, then this mapping, 		 * althought not charged now, may become writable 		 * later. Non-NULL cred in the object would prevent 		 * swap reservation during enabling of the write 		 * access, so reserve swap now. Failed reservation 		 * cause allocation of the separate object for the map 		 * entry, and swap reservation for this entry is 		 * managed in appropriate time. 		 */
+comment|/* 		 * If prev_object was charged, then this mapping, 		 * although not charged now, may become writable 		 * later. Non-NULL cred in the object would prevent 		 * swap reservation during enabling of the write 		 * access, so reserve swap now. Failed reservation 		 * cause allocation of the separate object for the map 		 * entry, and swap reservation for this entry is 		 * managed in appropriate time. 		 */
 if|if
 condition|(
 operator|!

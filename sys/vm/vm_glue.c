@@ -449,7 +449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  *  * WARNING!  This code calls vm_map_check_protection() which only checks  * the associated vm_map_entry range.  It does not determine whether the  * contents of the memory is actually readable or writable.  vmapbuf(),  * vm_fault_quick(), or copyin()/copout()/su*()/fu*() functions should be  * used in conjuction with this call.  */
+comment|/*  * MPSAFE  *  * WARNING!  This code calls vm_map_check_protection() which only checks  * the associated vm_map_entry range.  It does not determine whether the  * contents of the memory is actually readable or writable.  vmapbuf(),  * vm_fault_quick(), or copyin()/copout()/su*()/fu*() functions should be  * used in conjunction with this call.  */
 end_comment
 
 begin_function
@@ -2693,7 +2693,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called after process has been wait(2)'ed apon and is being reaped.  * The idea is to reclaim resources that we could not reclaim while  * the process was still executing.  */
+comment|/*  * Called after process has been wait(2)'ed upon and is being reaped.  * The idea is to reclaim resources that we could not reclaim while  * the process was still executing.  */
 end_comment
 
 begin_function

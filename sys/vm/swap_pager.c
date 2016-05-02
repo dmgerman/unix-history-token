@@ -3595,7 +3595,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Free left over swap blocks in source. 	 * 	 * We have to revert the type to OBJT_DEFAULT so we do not accidently 	 * double-remove the object from the swap queues. 	 */
+comment|/* 	 * Free left over swap blocks in source. 	 * 	 * We have to revert the type to OBJT_DEFAULT so we do not accidentally 	 * double-remove the object from the swap queues. 	 */
 if|if
 condition|(
 name|destroysource
@@ -9646,7 +9646,7 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Everytime you think you can improve the margin for 	 * footshooting, somebody depends on the ability to do so: 	 * savecore(8) wants to write to our swapdev so we cannot 	 * set an exclusive count :-( 	 */
+comment|/* 	 * XXX: Every time you think you can improve the margin for 	 * footshooting, somebody depends on the ability to do so: 	 * savecore(8) wants to write to our swapdev so we cannot 	 * set an exclusive count :-( 	 */
 name|error
 operator|=
 name|g_access

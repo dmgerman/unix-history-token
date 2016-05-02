@@ -188,7 +188,7 @@ name|struct
 name|md_page
 name|md
 decl_stmt|;
-comment|/* machine dependant stuff */
+comment|/* machine dependent stuff */
 name|u_int
 name|wire_count
 decl_stmt|;

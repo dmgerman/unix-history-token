@@ -1180,7 +1180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The following two functions may be defined by architecture specific code  * if they can provide more effecient allocation functions.  This is useful  * for using direct mapped addresses.  */
+comment|/*  * The following two functions may be defined by architecture specific code  * if they can provide more efficient allocation functions.  This is useful  * for using direct mapped addresses.  */
 end_comment
 
 begin_function_decl

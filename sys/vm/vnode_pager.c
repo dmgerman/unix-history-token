@@ -3526,7 +3526,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * A sparse file can be encountered only for a single page request, 	 * which may not be preceeded by call to vm_pager_haspage(). 	 */
+comment|/* 	 * A sparse file can be encountered only for a single page request, 	 * which may not be preceded by call to vm_pager_haspage(). 	 */
 if|if
 condition|(
 name|bp
@@ -5270,7 +5270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is now called from local media FS's to operate against their  * own vnodes if they fail to implement VOP_PUTPAGES.  *  * This is typically called indirectly via the pageout daemon and  * clustering has already typically occured, so in general we ask the  * underlying filesystem to write the data out asynchronously rather  * then delayed.  */
+comment|/*  * This is now called from local media FS's to operate against their  * own vnodes if they fail to implement VOP_PUTPAGES.  *  * This is typically called indirectly via the pageout daemon and  * clustering has already typically occurred, so in general we ask the  * underlying filesystem to write the data out asynchronously rather  * then delayed.  */
 end_comment
 
 begin_function
@@ -5450,7 +5450,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page-aligned write is larger then the actual file we 	 * have to invalidate pages occuring beyond the file EOF.  However, 	 * there is an edge case where a file may not be page-aligned where 	 * the last page is partially invalid.  In this case the filesystem 	 * may not properly clear the dirty bits for the entire page (which 	 * could be VM_PAGE_BITS_ALL due to the page having been mmap()d). 	 * With the page locked we are free to fix-up the dirty bits here. 	 * 	 * We do not under any circumstances truncate the valid bits, as 	 * this will screw up bogus page replacement. 	 */
+comment|/* 	 * If the page-aligned write is larger then the actual file we 	 * have to invalidate pages occurring beyond the file EOF.  However, 	 * there is an edge case where a file may not be page-aligned where 	 * the last page is partially invalid.  In this case the filesystem 	 * may not properly clear the dirty bits for the entire page (which 	 * could be VM_PAGE_BITS_ALL due to the page having been mmap()d). 	 * With the page locked we are free to fix-up the dirty bits here. 	 * 	 * We do not under any circumstances truncate the valid bits, as 	 * this will screw up bogus page replacement. 	 */
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
