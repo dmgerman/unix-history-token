@@ -956,7 +956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * FS&K - Reseed()  * This introduces new key material into the output generator.  * Additionaly it increments the output generator's counter  * variable C. When C> 0, the output generator is seeded and  * will deliver output.  * The entropy_data buffer passed is a very specific size; the  * product of RANDOM_FORTUNA_NPOOLS and RANDOM_KEYSIZE.  */
+comment|/*-  * FS&K - Reseed()  * This introduces new key material into the output generator.  * Additionally it increments the output generator's counter  * variable C. When C> 0, the output generator is seeded and  * will deliver output.  * The entropy_data buffer passed is a very specific size; the  * product of RANDOM_FORTUNA_NPOOLS and RANDOM_KEYSIZE.  */
 end_comment
 
 begin_function

@@ -369,7 +369,7 @@ comment|/* estimated bits of entropy per source */
 name|u_int
 name|ysp_thresh
 decl_stmt|;
-comment|/* pool reseed threshhold */
+comment|/* pool reseed threshold */
 name|struct
 name|randomdev_hash
 name|ysp_hash
@@ -1188,7 +1188,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If enough slow sources are over threshhold, then slow reseed 	 * else if any fast source over threshhold, then fast reseed. 	 */
+comment|/* 	 * If enough slow sources are over threshold, then slow reseed 	 * else if any fast source over threshold, then fast reseed. 	 */
 if|if
 condition|(
 name|overthreshhold
