@@ -10347,13 +10347,12 @@ name|sep
 operator|->
 name|se_maxchild
 operator|=
+name|MAX
+argument_list|(
 name|maxchild
-operator|>
+argument_list|,
 literal|0
-condition|?
-name|maxchild
-else|:
-literal|0
+argument_list|)
 expr_stmt|;
 else|else
 name|sep
