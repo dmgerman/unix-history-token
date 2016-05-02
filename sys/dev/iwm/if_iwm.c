@@ -8100,7 +8100,7 @@ name|IWM_NUM_2GHZ_CHANNELS
 operator|-
 literal|1
 argument_list|,
-literal|1
+name|IWM_NUM_2GHZ_CHANNELS
 argument_list|,
 name|bands
 argument_list|)
@@ -8147,8 +8147,6 @@ name|nitems
 argument_list|(
 name|iwm_nvm_channels
 argument_list|)
-operator|-
-name|IWM_NUM_2GHZ_CHANNELS
 argument_list|,
 name|bands
 argument_list|)
