@@ -1924,9 +1924,7 @@ specifier|static
 name|int
 name|mos_miibus_readreg
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|,
 name|int
