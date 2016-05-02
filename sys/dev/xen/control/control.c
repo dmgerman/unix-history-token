@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -447,6 +453,14 @@ name|suspend_cancelled
 decl_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
+name|power_suspend_early
+argument_list|)
+expr_stmt|;
+name|stop_all_proc
+argument_list|()
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
 name|power_suspend
 argument_list|)
 expr_stmt|;
@@ -533,12 +547,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -658,12 +666,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * FreeBSD really needs to add DEVICE_SUSPEND_CANCEL or 	 * similar. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|DEVICE_RESUME
 argument_list|(
 name|root_bus
@@ -673,6 +675,26 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Warm up timecounter again and reset system clock. 	 */
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
+argument_list|)
+expr_stmt|;
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
+argument_list|)
+expr_stmt|;
+name|inittodr
+argument_list|(
+name|time_second
 argument_list|)
 expr_stmt|;
 if|if
@@ -696,6 +718,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+name|resume_all_proc
+argument_list|()
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|power_resume
