@@ -236,8 +236,12 @@ begin_define
 define|#
 directive|define
 name|XENCLOCK_RESOLUTION
-value|10000000
+value|1000001
 end_define
+
+begin_comment
+comment|/* ATRTC resolution + 1 */
+end_comment
 
 begin_define
 define|#
@@ -1659,12 +1663,6 @@ block|}
 comment|/* Reset the last uptime value */
 name|pvclock_resume
 argument_list|()
-expr_stmt|;
-comment|/* Reset the RTC clock */
-name|inittodr
-argument_list|(
-name|time_second
-argument_list|)
 expr_stmt|;
 comment|/* Kick the timers on all CPUs */
 name|smp_rendezvous
