@@ -119,7 +119,7 @@ value|((struct isa_device *) device_get_ivars(dev))
 end_define
 
 begin_comment
-comment|/*  * These functions are architecture dependant.  */
+comment|/*  * These functions are architecture dependent.  */
 end_comment
 
 begin_function_decl

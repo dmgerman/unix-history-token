@@ -2297,7 +2297,7 @@ condition|(
 name|dev
 condition|)
 block|{
-comment|/* 					 * This is an optional device 					 * indentifier string. Skipt it 					 * for now. 					 */
+comment|/* 					 * This is an optional device 					 * identifier string. Skip it 					 * for now. 					 */
 continue|continue;
 block|}
 comment|/* else mandately card identifier string */

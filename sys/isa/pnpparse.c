@@ -2525,7 +2525,7 @@ argument_list|,
 literal|"end dependent\n"
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Back to the common part; clear it 				 * as its contents has already been copied 				 * to each dependant. 				 */
+comment|/* 				 * Back to the common part; clear it 				 * as its contents has already been copied 				 * to each dependent. 				 */
 name|config
 operator|=
 operator|&
