@@ -197,6 +197,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -234,12 +240,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/u8_textprep.h>
 end_include
 
 begin_include
@@ -628,12 +628,9 @@ name|illumos
 end_ifndef
 
 begin_decl_stmt
-specifier|static
-name|kmutex_t
-name|fasttrap_cpuc_pid_lock
-index|[
-name|MAXCPU
-index|]
+name|struct
+name|rmlock
+name|fasttrap_tp_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1610,6 +1607,9 @@ return|return;
 name|fasttrap_mod_gen
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|CPU_FOREACH
 argument_list|(
 argument|i
@@ -1634,6 +1634,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|rm_wlock
+argument_list|(
+operator|&
+name|fasttrap_tp_lock
+argument_list|)
+expr_stmt|;
+name|rm_wunlock
+argument_list|(
+operator|&
+name|fasttrap_tp_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10173,27 +10189,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|CPU_FOREACH
-argument_list|(
-argument|i
-argument_list|)
-block|{
-name|mutex_init
+name|rm_init
 argument_list|(
 operator|&
-name|fasttrap_cpuc_pid_lock
-index|[
-name|i
-index|]
+name|fasttrap_tp_lock
 argument_list|,
-literal|"fasttrap barrier"
-argument_list|,
-name|MUTEX_DEFAULT
-argument_list|,
-name|NULL
+literal|"fasttrap tracepoint"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * This event handler must run before kdtrace_thread_dtor() since it 	 * accesses the thread's struct kdtrace_thread. 	 */
 name|fasttrap_thread_dtor_tag
 operator|=
@@ -10727,21 +10730,12 @@ operator|&
 name|fasttrap_count_mtx
 argument_list|)
 expr_stmt|;
-name|CPU_FOREACH
-argument_list|(
-argument|i
-argument_list|)
-block|{
-name|mutex_destroy
+name|rm_destroy
 argument_list|(
 operator|&
-name|fasttrap_cpuc_pid_lock
-index|[
-name|i
-index|]
+name|fasttrap_tp_lock
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 return|return
