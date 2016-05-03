@@ -3201,7 +3201,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Auto-Negotiation Advertisment Register */
+comment|/* Auto-Negotiation Advertisement Register */
 end_comment
 
 begin_define

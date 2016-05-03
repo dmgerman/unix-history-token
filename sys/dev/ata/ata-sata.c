@@ -1667,7 +1667,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"error getting PM revison data\n"
+literal|"error getting PM revision data\n"
 argument_list|)
 expr_stmt|;
 return|return;

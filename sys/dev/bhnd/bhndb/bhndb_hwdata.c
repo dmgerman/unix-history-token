@@ -239,7 +239,7 @@ name|NONE
 argument_list|)
 argument_list|)
 block|,
-comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require effecient runtime access to 	 * the default device port, and if supported by the bus, an agent port. 	 */
+comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require efficient runtime access to 	 * the default device port, and if supported by the bus, an agent port. 	 */
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|INVALID
@@ -369,7 +369,7 @@ name|LOW
 argument_list|)
 argument_list|)
 block|,
-comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require effecient runtime access to 	 * the device port. 	 */
+comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require efficient runtime access to 	 * the device port. 	 */
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|INVALID

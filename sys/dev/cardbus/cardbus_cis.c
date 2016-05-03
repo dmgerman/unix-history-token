@@ -2205,7 +2205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the CIS data out of memroy.  We indirect through the bus space  * routines to ensure proper byte ordering conversions when necessary.  */
+comment|/*  * Read the CIS data out of memory.  We indirect through the bus space  * routines to ensure proper byte ordering conversions when necessary.  */
 end_comment
 
 begin_function

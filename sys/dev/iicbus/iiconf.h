@@ -259,7 +259,7 @@ value|0x0
 end_define
 
 begin_comment
-comment|/* no error occured */
+comment|/* no error occurred */
 end_comment
 
 begin_define

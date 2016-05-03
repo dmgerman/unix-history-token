@@ -3022,7 +3022,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-comment|/* No allocations failed, so now we can replace the orginal pagelist 	 * with the new one. 	 */
+comment|/* No allocations failed, so now we can replace the original pagelist 	 * with the new one. 	 */
 name|free
 argument_list|(
 name|dma

@@ -2547,13 +2547,13 @@ comment|//
 comment|// To calculate the offset for other functions use
 comment|//       BAR0 + FN# * SystemPageSize * 2
 comment|//
-comment|// The TCA is only accessable from FN#0 (Physical Function) and each
+comment|// The TCA is only accessible from FN#0 (Physical Function) and each
 comment|// is programmed by (BAR0 + SCU_SMU_TCA_OFFSET + (FN# * 0x04)) or
 comment|//    TCA0 for FN#0 is at BAR0 + 0x0400
 comment|//    TCA1 for FN#1 is at BAR0 + 0x0404
 comment|//    etc.
 comment|// ----------------------------------------------------------------------------
-comment|// Accessable to all FN#s
+comment|// Accessible to all FN#s
 define|#
 directive|define
 name|SCU_SMU_PCP_OFFSET
@@ -2606,7 +2606,7 @@ define|#
 directive|define
 name|SCU_SMU_CQC_OFFSET
 value|0x0048
-comment|// Accessable to FN#0 only
+comment|// Accessible to FN#0 only
 define|#
 directive|define
 name|SCU_SMU_RNCLBAR_OFFSET
@@ -2639,12 +2639,12 @@ define|#
 directive|define
 name|SCU_SMU_SMDW_OFFSET
 value|0x00A4
-comment|// Accessable to FN#0 only
+comment|// Accessible to FN#0 only
 define|#
 directive|define
 name|SCU_SMU_TCA_OFFSET
 value|0x0400
-comment|// Accessable to all FN#s
+comment|// Accessible to all FN#s
 define|#
 directive|define
 name|SCU_SMU_MT_MLAR0_OFFSET
@@ -2777,7 +2777,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|// Accessable to FN#0 only
+comment|// Accessible to FN#0 only
 comment|// 0x0080 RNCLBAR
 name|U32
 name|remote_node_context_lower
@@ -2873,7 +2873,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|// Accessable to FN#0 only
+comment|// Accessible to FN#0 only
 comment|// 0x0400 TCA
 name|U32
 name|task_context_assignment

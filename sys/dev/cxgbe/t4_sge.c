@@ -20600,7 +20600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fills up the freelist by allocating upto 'n' buffers.  Buffers that are  * recycled do not count towards this allocation budget.  *  * Returns non-zero to indicate that this freelist should be added to the list  * of starving freelists.  */
+comment|/*  * Fills up the freelist by allocating up to 'n' buffers.  Buffers that are  * recycled do not count towards this allocation budget.  *  * Returns non-zero to indicate that this freelist should be added to the list  * of starving freelists.  */
 end_comment
 
 begin_function
@@ -20668,7 +20668,7 @@ argument_list|(
 name|fl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We always stop at the begining of the hardware descriptor that's just 	 * before the one with the hw cidx.  This is to avoid hw pidx = hw cidx, 	 * which would mean an empty freelist to the chip. 	 */
+comment|/* 	 * We always stop at the beginning of the hardware descriptor that's just 	 * before the one with the hw cidx.  This is to avoid hw pidx = hw cidx, 	 * which would mean an empty freelist to the chip. 	 */
 name|max_pidx
 operator|=
 name|__predict_false

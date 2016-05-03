@@ -8211,7 +8211,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* Complete all successfull commands. */
+comment|/* Complete all successful commands. */
 name|ok
 operator|=
 name|ch

@@ -1033,7 +1033,7 @@ argument_list|,
 literal|0x0000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the control register to automatically release succesfully 	 * transmitted packets (making the best use out of our limited 	 * memory) and to enable the EPH interrupt on certain TX errors. 	 */
+comment|/* 	 * Set the control register to automatically release successfully 	 * transmitted packets (making the best use out of our limited 	 * memory) and to enable the EPH interrupt on certain TX errors. 	 */
 name|SMC_SELECT_BANK
 argument_list|(
 name|sc

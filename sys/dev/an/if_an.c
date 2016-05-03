@@ -1963,7 +1963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a auxilary memory resource with the given resource id.  */
+comment|/*  * Allocate a auxiliary memory resource with the given resource id.  */
 end_comment
 
 begin_function

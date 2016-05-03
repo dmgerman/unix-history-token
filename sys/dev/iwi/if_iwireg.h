@@ -1940,7 +1940,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* scan compeleted sucessfully */
+comment|/* scan compeleted successfully */
 end_comment
 
 begin_define

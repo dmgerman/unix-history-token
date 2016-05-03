@@ -1472,7 +1472,7 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* Xen related fields */
-comment|/** 	 * \brief The netif protocol abi in effect. 	 * 	 * There are situations where the back and front ends can 	 * have a different, native abi (e.g. intel x86_64 and 	 * 32bit x86 domains on the same machine).  The back-end 	 * always accomodates the front-end's native abi.  That 	 * value is pulled from the XenStore and recorded here. 	 */
+comment|/** 	 * \brief The netif protocol abi in effect. 	 * 	 * There are situations where the back and front ends can 	 * have a different, native abi (e.g. intel x86_64 and 	 * 32bit x86 domains on the same machine).  The back-end 	 * always accommodates the front-end's native abi.  That 	 * value is pulled from the XenStore and recorded here. 	 */
 name|int
 name|abi
 decl_stmt|;
@@ -4872,7 +4872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Detach from a net back device instance.  *  * \param dev  NewBus device object representing this Xen Net Back instance.  *  * \return  0 for success, errno codes for failure.  *  * \note A net back device may be detached at any time in its life-cycle,  *       including part way through the attach process.  For this reason,  *       initialization order and the intialization state checks in this  *       routine must be carefully coupled so that attach time failures  *       are gracefully handled.  */
+comment|/**  * Detach from a net back device instance.  *  * \param dev  NewBus device object representing this Xen Net Back instance.  *  * \return  0 for success, errno codes for failure.  *  * \note A net back device may be detached at any time in its life-cycle,  *       including part way through the attach process.  For this reason,  *       initialization order and the initialization state checks in this  *       routine must be carefully coupled so that attach time failures  *       are gracefully handled.  */
 end_comment
 
 begin_function

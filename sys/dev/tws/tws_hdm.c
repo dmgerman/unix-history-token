@@ -1659,7 +1659,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*           * Generaly we should not get here.          * If the fifo was empty we can't do any thing much           * retry later           */
+comment|/*           * Generally we should not get here.          * If the fifo was empty we can't do any thing much           * retry later           */
 return|return
 operator|(
 name|TWS_REQ_RET_PEND_NOMFA
@@ -2122,7 +2122,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* turn on responce and db interrupt only */
+comment|/* turn on response and db interrupt only */
 name|tws_write_reg
 argument_list|(
 name|sc

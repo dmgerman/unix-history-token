@@ -1229,7 +1229,7 @@ break|break;
 case|case
 name|AifEnDiskSetEvent
 case|:
-comment|/* A disk set event occured. */
+comment|/* A disk set event occurred. */
 name|device_printf
 argument_list|(
 name|sc

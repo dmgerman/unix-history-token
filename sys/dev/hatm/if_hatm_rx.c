@@ -817,7 +817,7 @@ operator|==
 name|ATMIO_AAL_5
 condition|)
 block|{
-comment|/* 		 * Need to remove padding and the trailer. The trailer 		 * may be split accross buffers according to 2.10.1.2 		 * Assume that mbufs sizes are even (buffer sizes and cell 		 * payload sizes are) and that there are no empty mbufs. 		 */
+comment|/* 		 * Need to remove padding and the trailer. The trailer 		 * may be split across buffers according to 2.10.1.2 		 * Assume that mbufs sizes are even (buffer sizes and cell 		 * payload sizes are) and that there are no empty mbufs. 		 */
 name|m
 operator|=
 name|vcc

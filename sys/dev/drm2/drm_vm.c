@@ -98,7 +98,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* d_mmap gets called twice, we can only reference file_priv during 	 * the first call.  We need to assume that if error is EBADF the 	 * call was succesful and the client is authenticated. 	 */
+comment|/* d_mmap gets called twice, we can only reference file_priv during 	 * the first call.  We need to assume that if error is EBADF the 	 * call was successful and the client is authenticated. 	 */
 name|error
 operator|=
 name|devfs_get_cdevpriv

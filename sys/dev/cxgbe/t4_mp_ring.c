@@ -1286,7 +1286,7 @@ name|ns
 operator|.
 name|pidx_head
 expr_stmt|;
-comment|/* 	 * Wait for other producers who got in ahead of us to enqueue their 	 * items, one producer at a time.  It is our turn when the ring's 	 * pidx_tail reaches the begining of our reservation (pidx_start). 	 */
+comment|/* 	 * Wait for other producers who got in ahead of us to enqueue their 	 * items, one producer at a time.  It is our turn when the ring's 	 * pidx_tail reaches the beginning of our reservation (pidx_start). 	 */
 while|while
 condition|(
 name|ns

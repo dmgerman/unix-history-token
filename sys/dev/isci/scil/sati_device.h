@@ -222,7 +222,7 @@ comment|/**     * This field indicates the additional sense code qualifier for a
 name|U8
 name|unit_attention_ascq
 decl_stmt|;
-comment|/**     * This field indicates the ATA standby timer value set throught the     * ATA IDLE and ATA Standby commands     */
+comment|/**     * This field indicates the ATA standby timer value set through the     * ATA IDLE and ATA Standby commands     */
 name|U8
 name|ata_standby_timer
 decl_stmt|;

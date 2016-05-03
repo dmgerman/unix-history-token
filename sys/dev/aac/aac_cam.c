@@ -2630,7 +2630,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * Some aac(4) adapters will always report that a direct 			 * access device is offline in response to a INQUIRY 			 * command that does not retreive vital product data. 			 * Force the qualifier to connected so that upper layers 			 * correctly recognize that a disk is present. 			 */
+comment|/* 			 * Some aac(4) adapters will always report that a direct 			 * access device is offline in response to a INQUIRY 			 * command that does not retrieve vital product data. 			 * Force the qualifier to connected so that upper layers 			 * correctly recognize that a disk is present. 			 */
 if|if
 condition|(
 operator|(
@@ -2804,7 +2804,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The SRB error codes just happen to match the CAM error 		 * codes.  How convienient! 		 */
+comment|/* 		 * The SRB error codes just happen to match the CAM error 		 * codes.  How convenient! 		 */
 name|ccb
 operator|->
 name|ccb_h

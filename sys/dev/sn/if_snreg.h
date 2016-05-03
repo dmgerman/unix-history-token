@@ -185,7 +185,7 @@ comment|/* Enable internal digital loopback */
 end_comment
 
 begin_comment
-comment|/* Status of the last transmitted frame and instantaneous status of  * the Ethernet Protocol Handler jumbled together.  In auto-release  * mode this information is simply discarded after each TX.  This info  * is copied to the status word of in-memory packets after transmit  * where relevent statuses can be checked.  */
+comment|/* Status of the last transmitted frame and instantaneous status of  * the Ethernet Protocol Handler jumbled together.  In auto-release  * mode this information is simply discarded after each TX.  This info  * is copied to the status word of in-memory packets after transmit  * where relevant statuses can be checked.  */
 end_comment
 
 begin_define
@@ -412,7 +412,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* IFF this is set, we can recieve packets */
+comment|/* IFF this is set, we can receive packets */
 end_comment
 
 begin_define

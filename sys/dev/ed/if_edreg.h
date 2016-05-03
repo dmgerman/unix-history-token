@@ -2382,7 +2382,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  *	Drq Timer Register. Determines number of bytes to be transfered during  *		a DMA burst.  */
+comment|/*  *	Drq Timer Register. Determines number of bytes to be transferred during  *		a DMA burst.  */
 end_comment
 
 begin_define

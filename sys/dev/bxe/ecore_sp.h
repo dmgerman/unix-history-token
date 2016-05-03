@@ -5721,7 +5721,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * ecore_config_mcast - Configure multicast MACs list.  *  * @cmd: command to execute: BNX2X_MCAST_CMD_X  *  * May configure a new list  * provided in p->mcast_list (ECORE_MCAST_CMD_ADD), clean up  * (ECORE_MCAST_CMD_DEL) or restore (ECORE_MCAST_CMD_RESTORE) a current  * configuration, continue to execute the pending commands  * (ECORE_MCAST_CMD_CONT).  *  * If previous command is still pending or if number of MACs to  * configure is more that maximum number of MACs in one command,  * the current command will be enqueued to the tail of the  * pending commands list.  *  * Return: 0 is operation was successfull and there are no pending completions,  *         negative if there were errors, positive if there are pending  *         completions.  */
+comment|/**  * ecore_config_mcast - Configure multicast MACs list.  *  * @cmd: command to execute: BNX2X_MCAST_CMD_X  *  * May configure a new list  * provided in p->mcast_list (ECORE_MCAST_CMD_ADD), clean up  * (ECORE_MCAST_CMD_DEL) or restore (ECORE_MCAST_CMD_RESTORE) a current  * configuration, continue to execute the pending commands  * (ECORE_MCAST_CMD_CONT).  *  * If previous command is still pending or if number of MACs to  * configure is more that maximum number of MACs in one command,  * the current command will be enqueued to the tail of the  * pending commands list.  *  * Return: 0 is operation was successful and there are no pending completions,  *         negative if there were errors, positive if there are pending  *         completions.  */
 end_comment
 
 begin_function_decl

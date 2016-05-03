@@ -653,7 +653,7 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-comment|/*      * Correctly set the bio to indicate a failed tranfer.      */
+comment|/*      * Correctly set the bio to indicate a failed transfer.      */
 name|bp
 operator|->
 name|bio_resid

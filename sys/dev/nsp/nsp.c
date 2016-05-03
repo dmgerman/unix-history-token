@@ -5010,7 +5010,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* XXX:IMPORTANT: 				 * To avoid timeout of pcmcia bus 				 * (not scsi bus!), we should check 				 * the scsi device sends us request 				 * signals, which means the scsi device 				 * is ready to recieve data without 				 * heavy delays.  				 */
+comment|/* XXX:IMPORTANT: 				 * To avoid timeout of pcmcia bus 				 * (not scsi bus!), we should check 				 * the scsi device sends us request 				 * signals, which means the scsi device 				 * is ready to receive data without 				 * heavy delays.  				 */
 if|if
 condition|(
 operator|(

@@ -199,7 +199,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/** * @struct SCI_SINGLE_LEVEL_LUN * * @brief this struct decribes the single level LUN structure *        as per the SAM 4. */
+comment|/** * @struct SCI_SINGLE_LEVEL_LUN * * @brief this struct describes the single level LUN structure *        as per the SAM 4. */
 end_comment
 
 begin_typedef
@@ -2121,7 +2121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will fill in the SCU Task Context for a SSP Task  *        request.  The following important settings are utilized:  *          -# priority == SCU_TASK_PRIORITY_HIGH.  This ensures that the  *             task request is issued ahead of other task destined for the  *             same Remote Node.  *          -# task_type == SCU_TASK_TYPE_IOREAD.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianess  *             is set so that the bytes are transmitted in the right order  *             for a task frame.  *  * @param[in] this_request This parameter specifies the task request object  *            being constructed.  *  * @return none  */
+comment|/**  * @brief This method will fill in the SCU Task Context for a SSP Task  *        request.  The following important settings are utilized:  *          -# priority == SCU_TASK_PRIORITY_HIGH.  This ensures that the  *             task request is issued ahead of other task destined for the  *             same Remote Node.  *          -# task_type == SCU_TASK_TYPE_IOREAD.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianness  *             is set so that the bytes are transmitted in the right order  *             for a task frame.  *  * @param[in] this_request This parameter specifies the task request object  *            being constructed.  *  * @return none  */
 end_comment
 
 begin_function
@@ -5313,7 +5313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method process TC (task context) completions for normal IO  *        request (i.e. Task/Abort Completions of type 0).  This method will  *        update the SCIC_SDS_IO_REQUEST_T::status field.  *  * @param[in] this_request This parameter specifies the request for which  *             a completion occurred.  * @param[in]  completion_code This parameter specifies the completion code  *             recieved from the SCU.  *  * @return none  */
+comment|/**  * @brief This method process TC (task context) completions for normal IO  *        request (i.e. Task/Abort Completions of type 0).  This method will  *        update the SCIC_SDS_IO_REQUEST_T::status field.  *  * @param[in] this_request This parameter specifies the request for which  *             a completion occurred.  * @param[in]  completion_code This parameter specifies the completion code  *             received from the SCU.  *  * @return none  */
 end_comment
 
 begin_function
@@ -6589,7 +6589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_STARTED state. If the io request object type is a  * SCSI Task request we must enter the started substate machine.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occuring.  This is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
+comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_STARTED state. If the io request object type is a  * SCSI Task request we must enter the started substate machine.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occurring.  This is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
 end_comment
 
 begin_function
@@ -6643,7 +6643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method implements the actions taken when exiting the  * SCI_BASE_REQUEST_STATE_STARTED state. For task requests the action will be  * to stop the started substate machine.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occuring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
+comment|/**  * This method implements the actions taken when exiting the  * SCI_BASE_REQUEST_STATE_STARTED state. For task requests the action will be  * to stop the started substate machine.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occurring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
 end_comment
 
 begin_function
@@ -6686,7 +6686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_COMPLETED state.  This state is entered when the  * SCIC_SDS_IO_REQUEST has completed.  The method will decode the request  * completion status and convert it to an SCI_STATUS to return in the  * completion callback function.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occuring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
+comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_COMPLETED state.  This state is entered when the  * SCIC_SDS_IO_REQUEST has completed.  The method will decode the request  * completion status and convert it to an SCI_STATUS to return in the  * completion callback function.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occurring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
 end_comment
 
 begin_function
@@ -6774,7 +6774,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_ABORTING state.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occuring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
+comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_ABORTING state.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occurring.  This object is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
 end_comment
 
 begin_function
@@ -6819,7 +6819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_FINAL state. The only action required is to put the  * state handlers in place.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occuring.  This is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
+comment|/**  * This method implements the actions taken when entering the  * SCI_BASE_REQUEST_STATE_FINAL state. The only action required is to put the  * state handlers in place.  *  * @param[in] object This parameter specifies the base object for which the  *       state transition is occurring.  This is cast into a  *       SCIC_SDS_IO_REQUEST object.  *  * @return none  */
 end_comment
 
 begin_function

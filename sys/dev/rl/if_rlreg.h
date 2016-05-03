@@ -3850,7 +3850,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* TX underrun occured */
+comment|/* TX underrun occurred */
 end_comment
 
 begin_define

@@ -4400,7 +4400,7 @@ condition|)
 goto|goto
 name|discard
 goto|;
-comment|/* Read the length from the psuedo header if required */
+comment|/* Read the length from the pseudo header if required */
 if|if
 condition|(
 name|rx_desc

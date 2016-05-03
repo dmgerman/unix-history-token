@@ -4375,7 +4375,7 @@ block|}
 block|}
 block|}
 comment|/* hyper z clear */
-comment|/* no docs available, based on reverse engeneering by Stephane Marchesin */
+comment|/* no docs available, based on reverse engineering by Stephane Marchesin */
 if|if
 condition|(
 operator|(
@@ -4834,7 +4834,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* first tile */
-comment|/* judging by the first tile offset needed, could possibly 					   directly address/clear 4x4 tiles instead of 8x2 * 4x4 					   macro tiles, though would still need clear mask for 					   right/bottom if truely 4x4 granularity is desired ? */
+comment|/* judging by the first tile offset needed, could possibly 					   directly address/clear 4x4 tiles instead of 8x2 * 4x4 					   macro tiles, though would still need clear mask for 					   right/bottom if truly 4x4 granularity is desired ? */
 name|OUT_RING
 argument_list|(
 name|tileoffset

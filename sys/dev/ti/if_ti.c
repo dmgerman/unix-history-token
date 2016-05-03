@@ -12614,7 +12614,7 @@ operator|->
 name|ti_copper
 condition|)
 block|{
-comment|/* 		 * Copper cards allow manual 10/100 mode selection, 		 * but not manual 1000baseTX mode selection. Why? 		 * Becuase currently there's no way to specify the 		 * master/slave setting through the firmware interface, 		 * so Alteon decided to just bag it and handle it 		 * via autonegotiation. 		 */
+comment|/* 		 * Copper cards allow manual 10/100 mode selection, 		 * but not manual 1000baseTX mode selection. Why? 		 * Because currently there's no way to specify the 		 * master/slave setting through the firmware interface, 		 * so Alteon decided to just bag it and handle it 		 * via autonegotiation. 		 */
 name|ifmedia_add
 argument_list|(
 operator|&
@@ -13669,7 +13669,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Frame reception handling. This is called if there's a frame  * on the receive return list.  *  * Note: we have to be able to handle three possibilities here:  * 1) the frame is from the mini receive ring (can only happen)  *    on Tigon 2 boards)  * 2) the frame is from the jumbo recieve ring  * 3) the frame is from the standard receive ring  */
+comment|/*  * Frame reception handling. This is called if there's a frame  * on the receive return list.  *  * Note: we have to be able to handle three possibilities here:  * 1) the frame is from the mini receive ring (can only happen)  *    on Tigon 2 boards)  * 2) the frame is from the jumbo receive ring  * 3) the frame is from the standard receive ring  */
 end_comment
 
 begin_function
@@ -15005,7 +15005,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Ack interrupt and stop others from occuring. */
+comment|/* Ack interrupt and stop others from occurring. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -16721,7 +16721,7 @@ name|flowctl
 operator|=
 name|TI_GLNK_RX_FLOWCTL_Y
 expr_stmt|;
-comment|/* 		 * Transmit flow control can also cause problems on the 		 * Tigon 2, apparantly with both the copper and fiber 		 * boards.  The symptom is that the interface will just 		 * hang.  This was reproduced with Alteon 180 switches. 		 */
+comment|/* 		 * Transmit flow control can also cause problems on the 		 * Tigon 2, apparently with both the copper and fiber 		 * boards.  The symptom is that the interface will just 		 * hang.  This was reproduced with Alteon 180 switches. 		 */
 if|#
 directive|if
 literal|0

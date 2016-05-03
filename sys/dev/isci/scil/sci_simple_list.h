@@ -526,7 +526,7 @@ name|list_count
 expr_stmt|;
 block|}
 comment|// Wipe the source list to make sure the list elements can not be accessed
-comment|// from two seperate lists at the same time.
+comment|// from two separate lists at the same time.
 name|sci_simple_list_init
 argument_list|(
 name|source_anchor
@@ -611,7 +611,7 @@ name|list_count
 expr_stmt|;
 block|}
 comment|// Wipe the source list to make sure the list elements can not be accessed
-comment|// from two seperate lists at the same time.
+comment|// from two separate lists at the same time.
 name|sci_simple_list_init
 argument_list|(
 name|source_anchor

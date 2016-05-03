@@ -1802,7 +1802,7 @@ name|pci_do_power_nodriver
 argument_list|,
 literal|0
 argument_list|,
-literal|"Place a function into D3 state when no driver attaches to it.  0 means\n\ disable.  1 means conservatively place devices into D3 state.  2 means\n\ agressively place devices into D3 state.  3 means put absolutely everything\n\ in D3 state."
+literal|"Place a function into D3 state when no driver attaches to it.  0 means\n\ disable.  1 means conservatively place devices into D3 state.  2 means\n\ aggressively place devices into D3 state.  3 means put absolutely everything\n\ in D3 state."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20571,7 +20571,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
+comment|/* 	 * Since there can be multiple independently numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
 name|domain
 operator|=
 name|pcib_get_domain
@@ -29160,7 +29160,7 @@ comment|/*FALLTHROUGH*/
 case|case
 literal|2
 case|:
-comment|/* Agressive about what to power down */
+comment|/* Aggressive about what to power down */
 if|if
 condition|(
 name|cls

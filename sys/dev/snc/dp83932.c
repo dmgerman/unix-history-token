@@ -1700,7 +1700,7 @@ argument_list|,
 name|CR_RST
 argument_list|)
 expr_stmt|;
-comment|/* DCR only accessable in reset mode! */
+comment|/* DCR only accessible in reset mode! */
 comment|/* config it */
 name|NIC_PUT
 argument_list|(
@@ -4829,7 +4829,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * give receive buffer area back to chip. 		 * 		 * If this was the last packet in the RRA, give the RRA to 		 * the chip again. 		 * If sonic read didnt copy it out then we would have to 		 * wait !! 		 * (dont bother add it back in again straight away) 		 * 		 * Really, we're doing v_rra[rramark] = v_rra[orra] but 		 * we have to use the macros because SONIC might be in 		 * 16 or 32 bit mode. 		 */
+comment|/* 		 * give receive buffer area back to chip. 		 * 		 * If this was the last packet in the RRA, give the RRA to 		 * the chip again. 		 * If sonic read didn't copy it out then we would have to 		 * wait !! 		 * (dont bother add it back in again straight away) 		 * 		 * Really, we're doing v_rra[rramark] = v_rra[orra] but 		 * we have to use the macros because SONIC might be in 		 * 16 or 32 bit mode. 		 */
 if|if
 condition|(
 name|status

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_os : This has all the Operating System dependant code,  *             probe/attach and open/close/ioctl/read/mmap  *             memory allocation  *             PCI bus interfacing  */
+comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_os : This has all the Operating System dependent code,  *             probe/attach and open/close/ioctl/read/mmap  *             memory allocation  *             PCI bus interfacing  */
 end_comment
 
 begin_include
@@ -1896,7 +1896,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Using 430 FX chipset compatibilty mode\n"
+literal|"Using 430 FX chipset compatibility mode\n"
 argument_list|)
 expr_stmt|;
 name|fun
@@ -1920,7 +1920,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Using SiS/VIA chipset compatibilty mode\n"
+literal|"Using SiS/VIA chipset compatibility mode\n"
 argument_list|)
 expr_stmt|;
 name|fun

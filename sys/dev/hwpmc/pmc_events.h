@@ -465,7 +465,7 @@ value|PMC_EV_TSC_TSC
 end_define
 
 begin_comment
-comment|/*  * Software events are dynamicaly defined.  */
+comment|/*  * Software events are dynamically defined.  */
 end_comment
 
 begin_define

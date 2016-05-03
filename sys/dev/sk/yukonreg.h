@@ -1019,7 +1019,7 @@ value|0x0084
 end_define
 
 begin_comment
-comment|/* PHY Addres Register (PAR) */
+comment|/* PHY Address Register (PAR) */
 end_comment
 
 begin_define

@@ -983,7 +983,7 @@ operator||
 name|S_TX_AVAIL
 argument_list|)
 expr_stmt|;
-comment|/*          * Attempt to get rid of any stray interrupts that occured during          * configuration.  On the i386 this isn't possible because one may          * already be queued.  However, a single stray interrupt is          * unimportant.          */
+comment|/*          * Attempt to get rid of any stray interrupts that occurred during          * configuration.  On the i386 this isn't possible because one may          * already be queued.  However, a single stray interrupt is          * unimportant.          */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -3201,7 +3201,7 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*          * XXX: Some cards seem to be in promiscous mode all the time.          * we need to make sure we only get our own stuff always.          * bleah!          */
+comment|/*          * XXX: Some cards seem to be in promiscuous mode all the time.          * we need to make sure we only get our own stuff always.          * bleah!          */
 if|if
 condition|(
 operator|!

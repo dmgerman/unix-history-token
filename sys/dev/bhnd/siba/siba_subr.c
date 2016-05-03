@@ -988,7 +988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Parse a SIBA_R0_ADMATCH* register.  *   * @param addrspace The address space index.  * @param am The address match register value to be parsed.  * @param[out] addr The parsed address.  * @param[out] size The parsed size.  *   * @retval 0 success  * @retval non-zero a parse error occured.  */
+comment|/**  * Parse a SIBA_R0_ADMATCH* register.  *   * @param addrspace The address space index.  * @param am The address match register value to be parsed.  * @param[out] addr The parsed address.  * @param[out] size The parsed size.  *   * @retval 0 success  * @retval non-zero a parse error occurred.  */
 end_comment
 
 begin_function

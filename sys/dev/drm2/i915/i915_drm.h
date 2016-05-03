@@ -2237,7 +2237,7 @@ comment|/** 	 * Handle of the buffer to set/get the caching level of. */
 name|__u32
 name|handle
 decl_stmt|;
-comment|/** 	 * Cacheing level to apply or return value 	 * 	 * bits0-15 are for generic caching control (i.e. the above defined 	 * values). bits16-31 are reserved for platform-specific variations 	 * (e.g. l3$ caching on gen7). */
+comment|/** 	 * Caching level to apply or return value 	 * 	 * bits0-15 are for generic caching control (i.e. the above defined 	 * values). bits16-31 are reserved for platform-specific variations 	 * (e.g. l3$ caching on gen7). */
 name|__u32
 name|caching
 decl_stmt|;

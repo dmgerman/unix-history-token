@@ -9914,7 +9914,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set pause frames paramters. 	 *  Rx stat FIFO hi-threshold : 2 or more packets 	 *  Rx stat FIFO lo-threshold : less than 2 packets 	 *  Rx data FIFO hi-threshold : 2K or more bytes 	 *  Rx data FIFO lo-threshold : less than 2K bytes 	 *  pause time : (512ns * 0xffff) -> 33.55ms 	 */
+comment|/* 	 * Set pause frames parameters. 	 *  Rx stat FIFO hi-threshold : 2 or more packets 	 *  Rx stat FIFO lo-threshold : less than 2 packets 	 *  Rx data FIFO hi-threshold : 2K or more bytes 	 *  Rx data FIFO lo-threshold : less than 2K bytes 	 *  pause time : (512ns * 0xffff) -> 33.55ms 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc

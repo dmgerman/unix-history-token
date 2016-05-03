@@ -2310,7 +2310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bug-for-bug compatibility with Linux!  * Some apps will send commands with inlen and outlen set to 0,  * even though they expect data to be transfered to them from the  * card.  Linux accidentally allows this by allocating a 4KB  * buffer for the transfer anyways, but it then throws it away  * without copying it back to the app.  *   * The amr(4) firmware relies on this feature.  In fact, it assumes  * the buffer is always a power of 2 up to a max of 64k.  There is  * also at least one case where it assumes a buffer less than 16k is  * greater than 16k.  However, forcing all buffers to a size of 32k  * causes stalls in the firmware.  Force each command smaller than  * 64k up to the next power of two except that commands between 8k  * and 16k are rounded up to 32k instead of 16k.  */
+comment|/*  * Bug-for-bug compatibility with Linux!  * Some apps will send commands with inlen and outlen set to 0,  * even though they expect data to be transferred to them from the  * card.  Linux accidentally allows this by allocating a 4KB  * buffer for the transfer anyways, but it then throws it away  * without copying it back to the app.  *   * The amr(4) firmware relies on this feature.  In fact, it assumes  * the buffer is always a power of 2 up to a max of 64k.  There is  * also at least one case where it assumes a buffer less than 16k is  * greater than 16k.  However, forcing all buffers to a size of 32k  * causes stalls in the firmware.  Force each command smaller than  * 64k up to the next power of two except that commands between 8k  * and 16k are rounded up to 32k instead of 16k.  */
 end_comment
 
 begin_function
@@ -8580,7 +8580,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-comment|/* 	 * Memroy resources are short, so free the slot and let this be tried 	 * later. 	 */
+comment|/* 	 * Memory resources are short, so free the slot and let this be tried 	 * later. 	 */
 name|amr_freeslot
 argument_list|(
 name|ac

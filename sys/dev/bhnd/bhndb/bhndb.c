@@ -5560,7 +5560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhndb(4) implementation of BHND_BUS_ACTIVATE_RESOURCE().  *  * For BHNDB_ADDRSPACE_NATIVE children, all resources may be assumed to  * be actived by the bridge.  *   * For BHNDB_ADDRSPACE_BRIDGED children, attempts to activate a static register  * window, a dynamic register window, or configures @p r as an indirect  * resource -- in that order.  */
+comment|/**  * Default bhndb(4) implementation of BHND_BUS_ACTIVATE_RESOURCE().  *  * For BHNDB_ADDRSPACE_NATIVE children, all resources may be assumed to  * be activated by the bridge.  *   * For BHNDB_ADDRSPACE_BRIDGED children, attempts to activate a static register  * window, a dynamic register window, or configures @p r as an indirect  * resource -- in that order.  */
 end_comment
 
 begin_function

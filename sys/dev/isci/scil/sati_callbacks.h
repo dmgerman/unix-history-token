@@ -152,7 +152,7 @@ name|SATI_TRANSPORT_SUPPORTS_SAS
 end_ifdef
 
 begin_comment
-comment|/**  * @brief This callback method retrieves the address of the user's SSP  *        response IU buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retreive the location of the response buffer to  *             be written.  *  * @return This method returns the address of the response data buffer.  */
+comment|/**  * @brief This callback method retrieves the address of the user's SSP  *        response IU buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retrieve the location of the response buffer to  *             be written.  *  * @return This method returns the address of the response data buffer.  */
 end_comment
 
 begin_function_decl
@@ -177,7 +177,7 @@ comment|// SATI_TRANSPORT_SUPPORTS_SAS
 end_comment
 
 begin_comment
-comment|/**  * @brief This callback method retrieves the address of the user's sense data  *        buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retreive the location of the sense buffer to  *             be written.  *  * @return This method returns the address of the sense data buffer.  */
+comment|/**  * @brief This callback method retrieves the address of the user's sense data  *        buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retrieve the location of the sense buffer to  *             be written.  *  * @return This method returns the address of the sense data buffer.  */
 end_comment
 
 begin_function_decl
@@ -193,7 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief This callback method retrieves the length of the user's sense data  *        buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retreive the location of the sense buffer to  *             be written.  *  * @return This method returns the length of the sense data buffer.  */
+comment|/**  * @brief This callback method retrieves the length of the user's sense data  *        buffer.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retrieve the location of the sense buffer to  *             be written.  *  * @return This method returns the length of the sense data buffer.  */
 end_comment
 
 begin_function_decl
@@ -251,7 +251,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief This method retrieves the ATA task file (register FIS) relating to  *        the device to host reponse values.  *  * @param[in] ata_io This parameter specifies the user's ATA IO request  *            from which to retrieve the d2h register FIS address.  *  * @return This method returns the address for the device to host register  *         FIS.  */
+comment|/**  * @brief This method retrieves the ATA task file (register FIS) relating to  *        the device to host response values.  *  * @param[in] ata_io This parameter specifies the user's ATA IO request  *            from which to retrieve the d2h register FIS address.  *  * @return This method returns the address for the device to host register  *         FIS.  */
 end_comment
 
 begin_function_decl
@@ -400,7 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief This method retrieves the SAS address for the device associated  *        with the supplied SCSI IO request.  This method assumes that the  *        associated device is contained in a SAS Domain.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retreive the SAS address of the device.  * @param[out] sas_address This parameter specifies the SAS address memory  *             to be contain the retrieved value.  *  * @return none  */
+comment|/**  * @brief This method retrieves the SAS address for the device associated  *        with the supplied SCSI IO request.  This method assumes that the  *        associated device is contained in a SAS Domain.  *  * @param[in]  scsi_io This parameter specifies the user's SCSI IO request  *             for which to retrieve the SAS address of the device.  * @param[out] sas_address This parameter specifies the SAS address memory  *             to be contain the retrieved value.  *  * @return none  */
 end_comment
 
 begin_function_decl

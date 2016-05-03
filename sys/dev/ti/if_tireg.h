@@ -435,7 +435,7 @@ value|0xb
 end_define
 
 begin_comment
-comment|/*  * Miscelaneous Local Control register.  */
+comment|/*  * Miscellaneous Local Control register.  */
 end_comment
 
 begin_define
@@ -1494,7 +1494,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* not yet implimented */
+comment|/* not yet implemented */
 end_comment
 
 begin_define
@@ -1568,7 +1568,7 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* not yet implimented */
+comment|/* not yet implemented */
 end_comment
 
 begin_define

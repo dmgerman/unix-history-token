@@ -2929,7 +2929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initalize mappings. On Savage4 and SavageIX the alignment  * and size of the aperture is not suitable for automatic MTRR setup  * in drm_addmap. Therefore we add them manually before the maps are  * initialized, and tear them down on last close.  */
+comment|/*  * Initialize mappings. On Savage4 and SavageIX the alignment  * and size of the aperture is not suitable for automatic MTRR setup  * in drm_addmap. Therefore we add them manually before the maps are  * initialized, and tear them down on last close.  */
 end_comment
 
 begin_function

@@ -3867,7 +3867,7 @@ argument_list|(
 literal|"fwip_as_input: m_getcl failed\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We must have a GASP header - leave the 		 * encapsulation sanity checks to the generic 		 * code. Remeber that we also have the firewire async 		 * stream header even though that isn't accounted for 		 * in mode.stream.len. 		 */
+comment|/* 		 * We must have a GASP header - leave the 		 * encapsulation sanity checks to the generic 		 * code. Remember that we also have the firewire async 		 * stream header even though that isn't accounted for 		 * in mode.stream.len. 		 */
 if|if
 condition|(
 name|sxfer

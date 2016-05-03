@@ -1388,7 +1388,7 @@ name|config
 operator|->
 name|no_snoop_bits
 expr_stmt|;
-comment|/* 	 * FIFO memory management strategy: 	 * 	 * TxDL splitted into three independent parts: 	 *	- set of TxD's 	 *	- TxD HAL private part 	 *	- upper layer private part 	 * 	 * Adaptative memory allocation used. i.e. Memory allocated on 	 * demand with the size which will fit into one memory block. 	 * One memory block may contain more than one TxDL. In simple case 	 * memory block size can be equal to CPU page size. On more 	 * sophisticated OS's memory block can be contigious across 	 * several pages. 	 * 	 * During "reserve" operations more memory can be allocated on demand 	 * for example due to FIFO full condition. 	 * 	 * Pool of memory memblocks never shrinks except __hal_fifo_close 	 * routine which will essentially stop channel and free the resources. 	 */
+comment|/* 	 * FIFO memory management strategy: 	 * 	 * TxDL splitted into three independent parts: 	 *	- set of TxD's 	 *	- TxD HAL private part 	 *	- upper layer private part 	 * 	 * Adaptative memory allocation used. i.e. Memory allocated on 	 * demand with the size which will fit into one memory block. 	 * One memory block may contain more than one TxDL. In simple case 	 * memory block size can be equal to CPU page size. On more 	 * sophisticated OS's memory block can be contiguous across 	 * several pages. 	 * 	 * During "reserve" operations more memory can be allocated on demand 	 * for example due to FIFO full condition. 	 * 	 * Pool of memory memblocks never shrinks except __hal_fifo_close 	 * routine which will essentially stop channel and free the resources. 	 */
 comment|/* TxDL common private size == TxDL private + ULD private */
 name|fifo
 operator|->
@@ -4243,7 +4243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_fifo_txdl_buffer_finalize - Prepares a descriptor that contains the  * single physically contiguous buffer.  *  * @vpath_handle: Virtual path handle.  * @txdlh: Descriptor handle.  * @frag_idx: Index of the data buffer in the Txdl list.  *  * This API in conjuction with vxge_hal_fifo_txdl_buffer_append() prepares  * a descriptor that consists of a single physically contiguous buffer  * which inturn contains the contents of one or more virtually contiguous  * buffers received from the upper layer.  *  * See Also: vxge_hal_fifo_txdl_buffer_append().  */
+comment|/*  * vxge_hal_fifo_txdl_buffer_finalize - Prepares a descriptor that contains the  * single physically contiguous buffer.  *  * @vpath_handle: Virtual path handle.  * @txdlh: Descriptor handle.  * @frag_idx: Index of the data buffer in the Txdl list.  *  * This API in conjunction with vxge_hal_fifo_txdl_buffer_append() prepares  * a descriptor that consists of a single physically contiguous buffer  * which inturn contains the contents of one or more virtually contiguous  * buffers received from the upper layer.  *  * See Also: vxge_hal_fifo_txdl_buffer_append().  */
 end_comment
 
 begin_function

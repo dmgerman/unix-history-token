@@ -7122,7 +7122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************** * Description: *	Will return the NIG ETS registers to init values.Except *	credit_upper_bound. *	That isn't used in this configuration (No WFQ is enabled) and will be *	configured acording to spec *. ******************************************************************************/
+comment|/****************************************************************************** * Description: *	Will return the NIG ETS registers to init values.Except *	credit_upper_bound. *	That isn't used in this configuration (No WFQ is enabled) and will be *	configured according to spec. *. ******************************************************************************/
 end_comment
 
 begin_function
@@ -7574,7 +7574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************** * Description: *	Will return the PBF ETS registers to init values.Except *	credit_upper_bound. *	That isn't used in this configuration (No WFQ is enabled) and will be *	configured acording to spec *. ******************************************************************************/
+comment|/****************************************************************************** * Description: *	Will return the PBF ETS registers to init values.Except *	credit_upper_bound. *	That isn't used in this configuration (No WFQ is enabled) and will be *	configured according to spec. *. ******************************************************************************/
 end_comment
 
 begin_function
@@ -7790,7 +7790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************** * Description: *	E3B0 disable will return basicly the values to init values. *. ******************************************************************************/
+comment|/****************************************************************************** * Description: *	E3B0 disable will return basically the values to init values. *. ******************************************************************************/
 end_comment
 
 begin_function
@@ -7859,7 +7859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************** * Description: *	Disable will return basicly the values to init values. * ******************************************************************************/
+comment|/****************************************************************************** * Description: *	Disable will return basically the values to init values. * ******************************************************************************/
 end_comment
 
 begin_function
@@ -18188,7 +18188,7 @@ operator|)
 operator|<<
 name|SHMEM_EEE_SUPPORTED_SHIFT
 expr_stmt|;
-comment|/* Propogate params' bits --> vars (for migration exposure) */
+comment|/* Propagate params' bits --> vars (for migration exposure) */
 if|if
 condition|(
 name|params
@@ -68041,7 +68041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns 0 if no change occured since last check; 1 otherwise. */
+comment|/* Returns 0 if no change occurred since last check; 1 otherwise. */
 end_comment
 
 begin_function

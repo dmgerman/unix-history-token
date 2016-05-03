@@ -1510,7 +1510,7 @@ name|len
 decl_stmt|,
 name|l
 decl_stmt|;
-comment|/* 	 * General problem here in case we need to sync ourselves to the 	 * beginning of a packet.  Length will only be set for the first 	 * read, and together with strb we can detect the begining (or 	 * skip to tlast). 	 */
+comment|/* 	 * General problem here in case we need to sync ourselves to the 	 * beginning of a packet.  Length will only be set for the first 	 * read, and together with strb we can detect the beginning (or 	 * skip to tlast). 	 */
 name|len
 operator|=
 name|NF10BMAC_READ

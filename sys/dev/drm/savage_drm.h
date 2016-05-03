@@ -42,7 +42,7 @@ name|__SAVAGE_SAREA_DEFINES__
 end_define
 
 begin_comment
-comment|/* 2 heaps (1 for card, 1 for agp), each divided into upto 128  * regions, subject to a minimum region size of (1<<16) == 64k.  *  * Clients may subdivide regions internally, but when sharing between  * clients, the region size is the minimum granularity.  */
+comment|/* 2 heaps (1 for card, 1 for agp), each divided into up to 128  * regions, subject to a minimum region size of (1<<16) == 64k.  *  * Clients may subdivide regions internally, but when sharing between  * clients, the region size is the minimum granularity.  */
 end_comment
 
 begin_define

@@ -358,7 +358,7 @@ literal|1
 operator|<<
 literal|6
 block|,
-comment|/* 				     * No new work until oustanding work 				     * completes. 				     */
+comment|/* 				     * No new work until outstanding work 				     * completes. 				     */
 name|XBDF_DISCARD
 init|=
 literal|1

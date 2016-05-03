@@ -3035,7 +3035,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Reponses queue. */
+comment|/* Responses queue. */
 name|memset
 argument_list|(
 name|ch
@@ -6334,7 +6334,7 @@ operator|->
 name|rspflg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Handle only successfull completions here. 		 * Errors will be handled by main intr handler. 		 */
+comment|/* 		 * Handle only successful completions here. 		 * Errors will be handled by main intr handler. 		 */
 if|#
 directive|if
 name|defined

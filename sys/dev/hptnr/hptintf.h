@@ -198,7 +198,7 @@ name|MAX_ARRAY_MEMBERS_V3
 value|64
 endif|#
 directive|endif
-comment|/* keep definition for source code compatiblity */
+comment|/* keep definition for source code compatibility */
 define|#
 directive|define
 name|MAX_ARRAY_MEMBERS
@@ -262,12 +262,12 @@ define|#
 directive|define
 name|ARRAY_FLAG_TRANSFORMING
 value|0x00000400
-comment|/* tranform in progress */
+comment|/* transform in progress */
 define|#
 directive|define
 name|ARRAY_FLAG_NEEDTRANSFORM
 value|0x00000800
-comment|/* array need tranform */
+comment|/* array need transform */
 define|#
 directive|define
 name|ARRAY_FLAG_NEEDINITIALIZING
@@ -5173,7 +5173,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* hpt_step_transform  *  move a block in a tranform progress.  *  This function is called by mid-layer, not GUI (which uses set_array_state instead).  * Version compatibility: v2.0.0.0 or later  * Parameters:  *  idArray - destination array ID  *            the source ID will be invalid when transform complete.  * Returns:  *  0 - Success  */
+comment|/* hpt_step_transform  *  move a block in a transform progress.  *  This function is called by mid-layer, not GUI (which uses set_array_state instead).  * Version compatibility: v2.0.0.0 or later  * Parameters:  *  idArray - destination array ID  *            the source ID will be invalid when transform complete.  * Returns:  *  0 - Success  */
 if|#
 directive|if
 name|HPT_INTERFACE_VERSION

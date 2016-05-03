@@ -489,7 +489,7 @@ argument_list|,
 name|CCR_RSTALL
 argument_list|)
 expr_stmt|;
-comment|/* Firmware revision code should clear imediately. */
+comment|/* Firmware revision code should clear immediately. */
 comment|/* Wait up to 10 msec for revision code to appear again. */
 for|for
 control|(

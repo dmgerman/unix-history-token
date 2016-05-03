@@ -3369,7 +3369,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* FCDI_EXTENDED_EVENT_PPS structuredef: Extended FCDI event to send PPS events  * to the MC. Note that this structure | is overlayed over a normal FCDI event  * such that bits 32-63 containing | event code, level, source etc remain the  * same. In this case the data | field of the header is defined to be the  * number of timestamps  */
+comment|/* FCDI_EXTENDED_EVENT_PPS structuredef: Extended FCDI event to send PPS events  * to the MC. Note that this structure | is overlaid over a normal FCDI event  * such that bits 32-63 containing | event code, level, source etc remain the  * same. In this case the data | field of the header is defined to be the  * number of timestamps  */
 end_comment
 
 begin_define
@@ -55968,7 +55968,7 @@ value|(0+12*(num))
 end_define
 
 begin_comment
-comment|/* Raw buffer table entries, layed out as BUFTBL_ENTRY. */
+comment|/* Raw buffer table entries, laid out as BUFTBL_ENTRY. */
 end_comment
 
 begin_define
@@ -64873,7 +64873,7 @@ comment|/* enum */
 end_comment
 
 begin_comment
-comment|/* enum: Allows to set the TX packets' source MAC address to any arbitrary MAC  * adress.  */
+comment|/* enum: Allows to set the TX packets' source MAC address to any arbitrary MAC  * address.  */
 end_comment
 
 begin_define

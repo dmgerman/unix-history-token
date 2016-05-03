@@ -2216,7 +2216,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/*  * The client has compute relocations refering to this buffer using the  * offset in the presumed_offset field. If that offset ends up matching  * where this buffer lands, the kernel is free to skip executing those  * relocations  */
+comment|/*  * The client has compute relocations referring to this buffer using the  * offset in the presumed_offset field. If that offset ends up matching  * where this buffer lands, the kernel is free to skip executing those  * relocations  */
 end_comment
 
 begin_define

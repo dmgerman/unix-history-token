@@ -7815,7 +7815,7 @@ operator|(
 name|EIO
 operator|)
 return|;
-comment|/* block until mouse activity occured */
+comment|/* block until mouse activity occurred */
 name|s
 operator|=
 name|spltty
@@ -14017,7 +14017,7 @@ condition|)
 goto|goto
 name|SYNAPTICS_END
 goto|;
-comment|/* Is a scrolling action occuring? */
+comment|/* Is a scrolling action occurring? */
 if|if
 condition|(
 operator|!
@@ -16158,7 +16158,7 @@ break|break;
 case|case
 name|MOUSE_MODEL_NETSCROLL
 case|:
-comment|/* 			 * three addtional bytes encode buttons and 			 * wheel events 			 */
+comment|/* 			 * three additional bytes encode buttons and 			 * wheel events 			 */
 name|ms
 operator|.
 name|button

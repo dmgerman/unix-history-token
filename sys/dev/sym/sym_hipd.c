@@ -16088,7 +16088,7 @@ argument_list|,
 name|dsa
 argument_list|)
 decl_stmt|;
-comment|/* 	 *  If we haven't been interrupted inside the SCRIPTS 	 *  critical pathes, we can safely restart the SCRIPTS 	 *  and trust the DSA value if it matches a CCB. 	 */
+comment|/* 	 *  If we haven't been interrupted inside the SCRIPTS 	 *  critical paths, we can safely restart the SCRIPTS 	 *  and trust the DSA value if it matches a CCB. 	 */
 if|if
 condition|(
 operator|(
@@ -20337,7 +20337,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 *  Otherwise, check for the LUN and TASK(s) 		 *  concerned by the cancelation. 		 *  If it is not ABORT_TAG then it is CLEAR_QUEUE 		 *  or an ABORT message :-) 		 */
+comment|/* 		 *  Otherwise, check for the LUN and TASK(s) 		 *  concerned by the cancellation. 		 *  If it is not ABORT_TAG then it is CLEAR_QUEUE 		 *  or an ABORT message :-) 		 */
 else|else
 block|{
 name|lun
@@ -23926,7 +23926,7 @@ block|}
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The device wants us to tranfer more data than 	 *  expected or in the wrong direction. 	 *  The number of extra bytes is in scratcha. 	 *  It is a data overrun condition. 	 */
+comment|/* 	 *  The device wants us to transfer more data than 	 *  expected or in the wrong direction. 	 *  The number of extra bytes is in scratcha. 	 *  It is a data overrun condition. 	 */
 case|case
 name|SIR_DATA_OVERRUN
 case|:

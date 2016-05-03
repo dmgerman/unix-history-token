@@ -148,7 +148,7 @@ literal|"DMA Error"
 block|,
 literal|"Image CRC Error"
 block|,
-literal|"Adapter Processer Error"
+literal|"Adapter Processor Error"
 block|}
 decl_stmt|;
 end_decl_stmt

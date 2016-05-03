@@ -2933,7 +2933,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 		  Allocate DMA memory mapping for MPI2 IOC Init descriptor, 		  we are taking it diffrent from what we have allocated for Request 		  and reply descriptors to avoid confusion later 		*/
+comment|/* 		  Allocate DMA memory mapping for MPI2 IOC Init descriptor, 		  we are taking it different from what we have allocated for Request 		  and reply descriptors to avoid confusion later 		*/
 name|tb_mem_size
 operator|=
 sizeof|sizeof
@@ -12765,7 +12765,7 @@ name|cm
 operator|->
 name|cm_sg
 expr_stmt|;
-comment|/* 	 * We need to check if we have the lock as this is async 	 * callback so even though our caller mfi_mapcmd asserts 	 * it has the lock, there is no garantee that hasn't been 	 * dropped if bus_dmamap_load returned prior to our 	 * completion. 	 */
+comment|/* 	 * We need to check if we have the lock as this is async 	 * callback so even though our caller mfi_mapcmd asserts 	 * it has the lock, there is no guarantee that hasn't been 	 * dropped if bus_dmamap_load returned prior to our 	 * completion. 	 */
 if|if
 condition|(
 operator|(

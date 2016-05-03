@@ -375,7 +375,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* make it beeing used */
+comment|/* make it being used */
 name|t
 operator|=
 name|SLIST_FIRST

@@ -15489,7 +15489,7 @@ argument_list|,
 name|XM_TXCMD_AUTOPAD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable the reception of all error frames. This is is 	 * a necessary evil due to the design of the XMAC. The 	 * XMAC's receive FIFO is only 8K in size, however jumbo 	 * frames can be up to 9000 bytes in length. When bad 	 * frame filtering is enabled, the XMAC's RX FIFO operates 	 * in 'store and forward' mode. For this to work, the 	 * entire frame has to fit into the FIFO, but that means 	 * that jumbo frames larger than 8192 bytes will be 	 * truncated. Disabling all bad frame filtering causes 	 * the RX FIFO to operate in streaming mode, in which 	 * case the XMAC will start transfering frames out of the 	 * RX FIFO as soon as the FIFO threshold is reached. 	 */
+comment|/* 	 * Enable the reception of all error frames. This is is 	 * a necessary evil due to the design of the XMAC. The 	 * XMAC's receive FIFO is only 8K in size, however jumbo 	 * frames can be up to 9000 bytes in length. When bad 	 * frame filtering is enabled, the XMAC's RX FIFO operates 	 * in 'store and forward' mode. For this to work, the 	 * entire frame has to fit into the FIFO, but that means 	 * that jumbo frames larger than 8192 bytes will be 	 * truncated. Disabling all bad frame filtering causes 	 * the RX FIFO to operate in streaming mode, in which 	 * case the XMAC will start transferring frames out of the 	 * RX FIFO as soon as the FIFO threshold is reached. 	 */
 if|if
 condition|(
 name|ifp

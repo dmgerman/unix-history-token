@@ -1571,7 +1571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mps_wd_config_pages - get info required to support WarpDrive.  This needs to  *    be called after discovery is complete to guarentee that IR info is there.  * @sc: per adapter object  *  * Return nothing.  */
+comment|/**  * mps_wd_config_pages - get info required to support WarpDrive.  This needs to  *    be called after discovery is complete to guarantee that IR info is there.  * @sc: per adapter object  *  * Return nothing.  */
 end_comment
 
 begin_function

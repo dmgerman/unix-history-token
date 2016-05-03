@@ -214,7 +214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will fill in the SCU Task Context for a Packet request  *        command phase in PACKET DMA DATA (IN/OUT) type. The following  *        important settings are utilized:  *  *          -# task_type == SCU_TASK_TYPE_PACKET_DMA.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianess  *             is set so that the bytes are transmitted in the right order  *             for a smp request frame.  *  * @param[in] this_request This parameter specifies the smp request object  *            being constructed.  * @param[in] task_context The task_context to be reconstruct for packet  *            request command phase.  * @return none  */
+comment|/**  * @brief This method will fill in the SCU Task Context for a Packet request  *        command phase in PACKET DMA DATA (IN/OUT) type. The following  *        important settings are utilized:  *  *          -# task_type == SCU_TASK_TYPE_PACKET_DMA.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianness  *             is set so that the bytes are transmitted in the right order  *             for a smp request frame.  *  * @param[in] this_request This parameter specifies the smp request object  *            being constructed.  * @param[in] task_context The task_context to be reconstruct for packet  *            request command phase.  * @return none  */
 end_comment
 
 begin_function
@@ -1116,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method processes the completions transport layer (TL) status  *        to determine if the PACKET command data FIS was sent successfully.  *        If successfully, then the state for the packet request  *        transits to COMPLETE state. If not successfuly, the request transits  *        to COMMAND_PHASE_AWAIT_D2H_FIS_SUBSTATE.  *  * @param[in] this_request This parameter specifies the request for which  *            the TC completion was received.  * @param[in] completion_code This parameter indicates the completion status  *            information for the TC.  *  * @return Indicate if the tc completion handler was successful.  * @retval SCI_SUCCESS currently this method always returns success.  */
+comment|/**  * @brief This method processes the completions transport layer (TL) status  *        to determine if the PACKET command data FIS was sent successfully.  *        If successfully, then the state for the packet request  *        transits to COMPLETE state. If not successfully, the request transits  *        to COMMAND_PHASE_AWAIT_D2H_FIS_SUBSTATE.  *  * @param[in] this_request This parameter specifies the request for which  *            the TC completion was received.  * @param[in] completion_code This parameter indicates the completion status  *            information for the TC.  *  * @return Indicate if the tc completion handler was successful.  * @retval SCI_SUCCESS currently this method always returns success.  */
 end_comment
 
 begin_function

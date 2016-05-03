@@ -1916,7 +1916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_scsiio_timeout:	Callback function for IO timed out  * input:					mpt command context  *  * This function will execute after timeout value provided by ccb header from  * CAM layer, if timer expires. Driver will run timer for all DCDM and LDIO  * comming from CAM layer. This function is callback function for IO timeout  * and it runs in no-sleep context. Set do_timedout_reset in Adapter context  * so that it will execute OCR/Kill adpter from ocr_thread context.  */
+comment|/*  * mrsas_scsiio_timeout:	Callback function for IO timed out  * input:					mpt command context  *  * This function will execute after timeout value provided by ccb header from  * CAM layer, if timer expires. Driver will run timer for all DCDM and LDIO  * coming from CAM layer. This function is callback function for IO timeout  * and it runs in no-sleep context. Set do_timedout_reset in Adapter context  * so that it will execute OCR/Kill adpter from ocr_thread context.  */
 end_comment
 
 begin_function

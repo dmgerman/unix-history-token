@@ -2429,7 +2429,7 @@ name|int
 name|interval
 parameter_list|)
 block|{
-comment|/* for now just use DELAY, the timer/sleep subsytems are not there yet */
+comment|/* for now just use DELAY, the timer/sleep subsystems are not there yet */
 if|if
 condition|(
 literal|1

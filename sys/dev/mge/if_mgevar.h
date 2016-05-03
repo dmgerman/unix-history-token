@@ -1822,7 +1822,7 @@ value|(2<< 1)
 end_define
 
 begin_comment
-comment|/* Max frame lenght error */
+comment|/* Max frame length error */
 end_comment
 
 begin_define

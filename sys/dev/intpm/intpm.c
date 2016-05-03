@@ -2323,7 +2323,7 @@ name|isbusy
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Re-enable supressed interrupt from slave part. */
+comment|/* Re-enable suppressed interrupt from slave part. */
 name|bus_write_1
 argument_list|(
 name|sc

@@ -914,7 +914,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * From the CS8900A datasheet, section 3.5.2: 	 * "Before issuing any command to the EEPROM, the host must wait 	 * for the SIBUSY bit (Register 16, SelfST, bit 8) to clear.  After 	 * each command has been issued, the host must wait again for SIBUSY 	 * to clear." 	 * 	 * Before we issue the command, we should be !busy, so that will 	 * be fast.  The datasheet suggests that clock out from the part 	 * per word will be on the order of 25us, which is consistant with 	 * the 1MHz serial clock and 16bits...  We should never hit 100, 	 * let alone 15,000 here.  The original code did an unconditional 	 * 30ms DELAY here.  Bad Kharma.  cs_readreg takes ~2us. 	 */
+comment|/* 	 * From the CS8900A datasheet, section 3.5.2: 	 * "Before issuing any command to the EEPROM, the host must wait 	 * for the SIBUSY bit (Register 16, SelfST, bit 8) to clear.  After 	 * each command has been issued, the host must wait again for SIBUSY 	 * to clear." 	 * 	 * Before we issue the command, we should be !busy, so that will 	 * be fast.  The datasheet suggests that clock out from the part 	 * per word will be on the order of 25us, which is consistent with 	 * the 1MHz serial clock and 16bits...  We should never hit 100, 	 * let alone 15,000 here.  The original code did an unconditional 	 * 30ms DELAY here.  Bad Kharma.  cs_readreg takes ~2us. 	 */
 for|for
 control|(
 name|i

@@ -6564,7 +6564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interupt handler  */
+comment|/*  * Interrupt handler  */
 end_comment
 
 begin_function

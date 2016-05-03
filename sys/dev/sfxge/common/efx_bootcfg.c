@@ -165,7 +165,7 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* Start parsing tags immediatly after the checksum */
+comment|/* Start parsing tags immediately after the checksum */
 for|for
 control|(
 name|offset

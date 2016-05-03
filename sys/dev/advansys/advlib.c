@@ -9848,7 +9848,7 @@ argument_list|,
 name|ADV_MCODE_START_ADDR
 argument_list|)
 expr_stmt|;
-comment|/* Tell the XPT layer that a bus reset occured */
+comment|/* Tell the XPT layer that a bus reset occurred */
 if|if
 condition|(
 name|adv

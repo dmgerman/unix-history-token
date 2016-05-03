@@ -13937,7 +13937,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* Persistant node */
+comment|/* Persistent node */
 endif|#
 directive|endif
 return|return

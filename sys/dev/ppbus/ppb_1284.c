@@ -265,7 +265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_1284_set_state()  *  * Change IEEE1284 state if no error occured  */
+comment|/*  * ppb_1284_set_state()  *  * Change IEEE1284 state if no error occurred  */
 end_comment
 
 begin_function
@@ -289,7 +289,7 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
-comment|/* call ppb_1284_reset_error() if you absolutly want to change 	 * the state from PPB_ERROR to another */
+comment|/* call ppb_1284_reset_error() if you absolutely want to change 	 * the state from PPB_ERROR to another */
 name|mtx_assert
 argument_list|(
 name|ppb
@@ -562,7 +562,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_peripheral_negociate()  *  * Negociate the peripheral side  */
+comment|/*  * ppb_peripheral_negociate()  *  * Negotiate the peripheral side  */
 end_comment
 
 begin_function
@@ -802,7 +802,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* negociation succeeds */
+comment|/* negotiation succeeds */
 block|}
 block|}
 else|else
@@ -2361,7 +2361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_1284_negociate()  *  * IEEE1284 negociation phase  *  * Normal nibble mode or request device id mode (see ppb_1284.h)  *  * After negociation, nFAULT is low if data is available  */
+comment|/*  * ppb_1284_negociate()  *  * IEEE1284 negotiation phase  *  * Normal nibble mode or request device id mode (see ppb_1284.h)  *  * After negotiation, nFAULT is low if data is available  */
 end_comment
 
 begin_function
@@ -2444,7 +2444,7 @@ argument_list|,
 name|PPB_COMPATIBLE
 argument_list|)
 expr_stmt|;
-comment|/* reset error to catch the actual negociation error */
+comment|/* reset error to catch the actual negotiation error */
 name|ppb_1284_reset_error
 argument_list|(
 name|bus
@@ -2486,7 +2486,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* enter negociation phase */
+comment|/* enter negotiation phase */
 name|ppb_1284_set_state
 argument_list|(
 name|bus
@@ -2853,7 +2853,7 @@ break|break;
 case|case
 name|PPB_ECP
 case|:
-comment|/* negociation ok, now setup the communication */
+comment|/* negotiation ok, now setup the communication */
 name|ppb_1284_set_state
 argument_list|(
 name|bus
@@ -3046,7 +3046,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* do not reset error here to keep the error that 	 * may occured before the ppb_1284_terminate() call */
+comment|/* do not reset error here to keep the error that 	 * may occurred before the ppb_1284_terminate() call */
 name|ppb_1284_set_state
 argument_list|(
 name|bus

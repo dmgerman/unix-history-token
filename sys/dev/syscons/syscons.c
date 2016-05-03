@@ -19161,7 +19161,7 @@ condition|(
 name|cold
 condition|)
 block|{
-comment|/* 		     * While devices are being probed, the screen saver need 		     * to be invoked explictly. XXX 		     */
+comment|/* 		     * While devices are being probed, the screen saver need 		     * to be invoked explicitly. XXX 		     */
 if|if
 condition|(
 name|sc

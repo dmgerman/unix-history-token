@@ -407,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_IO_REQUEST_STARTED_TASK_MGMT_SUBSTATE_AWAIT_TC_COMPLETION  *        sub-state.  This includes setting the IO request state handlers  *        for this sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occuring.  *  * @return none.  */
+comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_IO_REQUEST_STARTED_TASK_MGMT_SUBSTATE_AWAIT_TC_COMPLETION  *        sub-state.  This includes setting the IO request state handlers  *        for this sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occurring.  *  * @return none.  */
 end_comment
 
 begin_function
@@ -443,7 +443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_IO_REQUEST_STARTED_SUBSTATE_AWAIT_TC_RESPONSE sub-state.  *        This includes setting the IO request state handlers for this  *        sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occuring.  *  * @return none.  */
+comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_IO_REQUEST_STARTED_SUBSTATE_AWAIT_TC_RESPONSE sub-state.  *        This includes setting the IO request state handlers for this  *        sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occurring.  *  * @return none.  */
 end_comment
 
 begin_function

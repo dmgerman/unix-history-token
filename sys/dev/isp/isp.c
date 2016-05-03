@@ -33048,7 +33048,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 			 * We've had problems with data corruption occuring on 			 * commands that complete (with no apparent error) after 			 * we receive a LIP. This has been observed mostly on 			 * Local Loop topologies. To be safe, let's just mark 			 * all active initiator commands as dead. 			 */
+comment|/* 			 * We've had problems with data corruption occurring on 			 * commands that complete (with no apparent error) after 			 * we receive a LIP. This has been observed mostly on 			 * Local Loop topologies. To be safe, let's just mark 			 * all active initiator commands as dead. 			 */
 if|if
 condition|(
 name|topo
@@ -35950,7 +35950,7 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If QFULL or some other status byte is set, then this 		 * isn't an error, per se. 		 * 		 * Unfortunately, some QLogic f/w writers have, in 		 * some cases, ommitted to *set* status to QFULL. 		 */
+comment|/* 		 * If QFULL or some other status byte is set, then this 		 * isn't an error, per se. 		 * 		 * Unfortunately, some QLogic f/w writers have, in 		 * some cases, omitted to *set* status to QFULL. 		 */
 if|#
 directive|if
 literal|0

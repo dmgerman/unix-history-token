@@ -2781,7 +2781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Check for a bad link condition that may have occured.  * The indication is that the RFC / LFC registers may be incrementing  * continually.  A full adapter reset is required to recover.  *  * hw - Struct containing variables accessed by hw code  *  * Called by any function that needs to check the link status of the adapter.  *****************************************************************************/
+comment|/******************************************************************************  * Check for a bad link condition that may have occurred.  * The indication is that the RFC / LFC registers may be incrementing  * continually.  A full adapter reset is required to recover.  *  * hw - Struct containing variables accessed by hw code  *  * Called by any function that needs to check the link status of the adapter.  *****************************************************************************/
 end_comment
 
 begin_function

@@ -873,7 +873,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/* starting from here on, data is preserved accross an open */
+comment|/* starting from here on, data is preserved across an open */
 name|uint32_t
 name|flags
 decl_stmt|;

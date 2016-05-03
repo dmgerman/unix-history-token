@@ -960,7 +960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Writes a 16 bit word to a given offset in the EEPROM.  *  * hw - Struct containing variables accessed by shared code  * reg - offset within the EEPROM to be written to  * data - 16 bit word to be writen to the EEPROM  *  * If ixgb_update_eeprom_checksum is not called after this function, the  * EEPROM will most likely contain an invalid checksum.  *  *****************************************************************************/
+comment|/******************************************************************************  * Writes a 16 bit word to a given offset in the EEPROM.  *  * hw - Struct containing variables accessed by shared code  * reg - offset within the EEPROM to be written to  * data - 16 bit word to be written to the EEPROM  *  * If ixgb_update_eeprom_checksum is not called after this function, the  * EEPROM will most likely contain an invalid checksum.  *  *****************************************************************************/
 end_comment
 
 begin_function

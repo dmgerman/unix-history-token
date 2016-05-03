@@ -421,7 +421,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Adapter structure contains the hardware independant information of the  * pci function.  */
+comment|/*  * Adapter structure contains the hardware independent information of the  * pci function.  */
 end_comment
 
 begin_struct

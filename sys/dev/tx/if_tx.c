@@ -4028,7 +4028,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Successfuly received frame */
+comment|/* Successfully received frame */
 name|if_inc_counter
 argument_list|(
 name|ifp
@@ -4554,7 +4554,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"PCI fatal errors occured: %s%s%s%s\n"
+literal|"PCI fatal errors occurred: %s%s%s%s\n"
 argument_list|,
 operator|(
 name|status

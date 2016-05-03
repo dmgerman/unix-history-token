@@ -160,7 +160,7 @@ index|[
 name|ACPI_CMBAT_MAXSTRLEN
 index|]
 decl_stmt|;
-comment|/* OEM infomation */
+comment|/* OEM information */
 block|}
 struct|;
 end_struct

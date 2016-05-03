@@ -5137,7 +5137,7 @@ operator|&
 operator|~
 name|sstatus
 expr_stmt|;
-comment|/* Complete all successfull commands. */
+comment|/* Complete all successful commands. */
 for|for
 control|(
 name|i

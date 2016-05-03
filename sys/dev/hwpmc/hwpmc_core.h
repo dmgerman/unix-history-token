@@ -349,7 +349,7 @@ value|0x38F
 end_define
 
 begin_comment
-comment|/*  * IA_GLOBAL_CTRL is layed out in the following way.  *   * Bit Position    Use  * 63-35           Reserved (do not touch)  * 34              IAF Counter 2 Enable  * 33              IAF Counter 1 Enable  * 32              IAF Counter 0 Enable  * 31-0            Depends on programmable counters  */
+comment|/*  * IA_GLOBAL_CTRL is laid out in the following way.  *   * Bit Position    Use  * 63-35           Reserved (do not touch)  * 34              IAF Counter 2 Enable  * 33              IAF Counter 1 Enable  * 32              IAF Counter 0 Enable  * 31-0            Depends on programmable counters  */
 end_comment
 
 begin_comment

@@ -4395,7 +4395,7 @@ name|so
 operator|!=
 name|NULL
 condition|)
-comment|/* optional because noone cares about IP TOS */
+comment|/* optional because no one cares about IP TOS */
 name|opt0l
 operator||=
 name|V_TOS

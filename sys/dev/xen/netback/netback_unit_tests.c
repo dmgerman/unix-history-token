@@ -140,7 +140,7 @@ name|testcase_t
 modifier|*
 name|test
 decl_stmt|;
-comment|/** Cleans up test data whether or not the setup suceeded*/
+comment|/** Cleans up test data whether or not the setup succeeded */
 name|teardown_t
 modifier|*
 name|teardown

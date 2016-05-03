@@ -5264,7 +5264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * This is the enter method for the SCI_BASE_REMOTE_DEVICE_STATE_INITIAL it  * immediatly transitions the remote device object to the stopped state.  *  * @param[in] object This is the SCI_BASE_OBJECT that is cast into a  *            SCIC_SDS_REMOTE_DEVICE.  *  * @return none  */
+comment|/**  * This is the enter method for the SCI_BASE_REMOTE_DEVICE_STATE_INITIAL it  * immediately transitions the remote device object to the stopped state.  *  * @param[in] object This is the SCI_BASE_OBJECT that is cast into a  *            SCIC_SDS_REMOTE_DEVICE.  *  * @return none  */
 end_comment
 
 begin_function

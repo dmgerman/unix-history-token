@@ -709,7 +709,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	   | if still in full phase, this probably means 	   | that something went realy bad. 	   | it could be a result from 'shutdown', in which case 	   | we will ignore it (so buffers can be flushed). 	   | the problem is that there is no way of differentiating 	   | between a shutdown procedure and 'iscontrol' dying. 	   */
+comment|/* 	   | if still in full phase, this probably means 	   | that something went really bad. 	   | it could be a result from 'shutdown', in which case 	   | we will ignore it (so buffers can be flushed). 	   | the problem is that there is no way of differentiating 	   | between a shutdown procedure and 'iscontrol' dying. 	   */
 if|if
 condition|(
 name|sp

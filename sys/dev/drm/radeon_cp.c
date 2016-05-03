@@ -1280,7 +1280,7 @@ operator|)
 operator|&
 literal|0x3ffff
 decl_stmt|;
-comment|/* R6xx/R7xx must be aligned to a 4MB boundry */
+comment|/* R6xx/R7xx must be aligned to a 4MB boundary */
 if|if
 condition|(
 operator|(

@@ -22334,7 +22334,7 @@ name|MWL_DIAGAPI
 end_ifdef
 
 begin_comment
-comment|/*  * Diagnostic interface to the HAL.  This is used by various  * tools to do things like retrieve register contents for  * debugging.  The mechanism is intentionally opaque so that  * it can change frequently w/o concern for compatiblity.  */
+comment|/*  * Diagnostic interface to the HAL.  This is used by various  * tools to do things like retrieve register contents for  * debugging.  The mechanism is intentionally opaque so that  * it can change frequently w/o concern for compatibility.  */
 end_comment
 
 begin_function

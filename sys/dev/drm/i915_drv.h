@@ -757,7 +757,7 @@ comment|/** 		 * Flag if the X Server, and thus DRM, is not currently in 		 * co
 name|int
 name|suspended
 decl_stmt|;
-comment|/** 		 * Flag if the hardware appears to be wedged. 		 * 		 * This is set when attempts to idle the device timeout. 		 * It prevents command submission from occuring and makes 		 * every pending request fail 		 */
+comment|/** 		 * Flag if the hardware appears to be wedged. 		 * 		 * This is set when attempts to idle the device timeout. 		 * It prevents command submission from occurring and makes 		 * every pending request fail 		 */
 name|int
 name|wedged
 decl_stmt|;

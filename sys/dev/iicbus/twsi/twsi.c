@@ -495,7 +495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timeout given in us  * returns  *   0 on sucessfull mask change  *   non-zero on timeout  */
+comment|/*  * timeout given in us  * returns  *   0 on successful mask change  *   non-zero on timeout  */
 end_comment
 
 begin_function

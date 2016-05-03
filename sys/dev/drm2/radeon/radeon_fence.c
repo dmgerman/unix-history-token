@@ -2116,7 +2116,7 @@ operator|==
 name|RADEON_FENCE_SIGNALED_SEQ
 condition|)
 block|{
-comment|/* something was allready signaled */
+comment|/* something was already signaled */
 return|return
 literal|0
 return|;
@@ -2214,7 +2214,7 @@ name|ring
 index|]
 condition|)
 block|{
-comment|/* nothing to wait for, last_seq is 		   already the last emited fence */
+comment|/* nothing to wait for, last_seq is 		   already the last emitted fence */
 return|return
 operator|-
 name|ENOENT

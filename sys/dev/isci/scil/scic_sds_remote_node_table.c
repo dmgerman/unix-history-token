@@ -241,7 +241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method will set the group index bit entry in the specified gropu index  * table.  *  * @param[in out] remote_node_table This the remote node table in which to set  *       the selector.  * @param[in] group_table_index This is the remote node selector in which the  *       change will be made.  * @param[in] group_index This is the bit position in the table to be  *       modified.  *  * @return none  */
+comment|/**  * This method will set the group index bit entry in the specified group index  * table.  *  * @param[in out] remote_node_table This the remote node table in which to set  *       the selector.  * @param[in] group_table_index This is the remote node selector in which the  *       change will be made.  * @param[in] group_index This is the bit position in the table to be  *       modified.  *  * @return none  */
 end_comment
 
 begin_function

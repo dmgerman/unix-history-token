@@ -4842,7 +4842,7 @@ expr_stmt|;
 name|int
 name|init_level
 decl_stmt|;
-comment|/* 	 * Every object on a unit can have a receiver, if it treats 	 * us as a target.  We do that so that separate and independant 	 * clients can consume received buffers. 	 */
+comment|/* 	 * Every object on a unit can have a receiver, if it treats 	 * us as a target.  We do that so that separate and independent 	 * clients can consume received buffers. 	 */
 define|#
 directive|define
 name|DPT_RW_BUFFER_SIZE
@@ -5299,7 +5299,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * This function substracts one timval structure from another,  * Returning the result in usec.  * It assumes that less than 4 billion usecs passed form start to end.  * If times are sensless, ~0 is returned.  */
+comment|/*  * This function subtracts one timval structure from another,  * Returning the result in usec.  * It assumes that less than 4 billion usecs passed form start to end.  * If times are sensless, ~0 is returned.  */
 end_comment
 
 begin_function

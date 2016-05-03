@@ -419,7 +419,7 @@ name|struct
 name|hv_util_sc
 name|util_sc
 decl_stmt|;
-comment|/* Unless specified the pending mutex should be 	 * used to alter the values of the following paramters: 	 * 1. req_in_progress 	 * 2. req_timed_out 	 */
+comment|/* Unless specified the pending mutex should be 	 * used to alter the values of the following parameters: 	 * 1. req_in_progress 	 * 2. req_timed_out 	 */
 name|struct
 name|mtx
 name|pending_mutex
@@ -3492,7 +3492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hv_kvp_daemon write invokes this function  * acts as a recieve from daemon  */
+comment|/*  * hv_kvp_daemon write invokes this function  * acts as a receive from daemon  */
 end_comment
 
 begin_function

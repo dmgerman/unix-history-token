@@ -3247,7 +3247,7 @@ comment|/** GEM sequence number associated with this request. */
 name|uint32_t
 name|seqno
 decl_stmt|;
-comment|/** Postion in the ringbuffer of the end of the request */
+comment|/** Position in the ringbuffer of the end of the request */
 name|u32
 name|tail
 decl_stmt|;

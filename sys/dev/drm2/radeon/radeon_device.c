@@ -1964,7 +1964,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * radeon_dummy_page_init - init dummy page used by the driver  *  * @rdev: radeon_device pointer  *  * Allocate the dummy page used by the driver (all asics).  * This dummy page is used by the driver as a filler for gart entries  * when pages are taken out of the GART  * Returns 0 on sucess, -ENOMEM on failure.  */
+comment|/**  * radeon_dummy_page_init - init dummy page used by the driver  *  * @rdev: radeon_device pointer  *  * Allocate the dummy page used by the driver (all asics).  * This dummy page is used by the driver as a filler for gart entries  * when pages are taken out of the GART  * Returns 0 on success, -ENOMEM on failure.  */
 end_comment
 
 begin_function
@@ -2479,7 +2479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * radeon_atombios_init - init the driver info and callbacks for atombios  *  * @rdev: radeon_device pointer  *  * Initializes the driver info and register access callbacks for the  * ATOM interpreter (r4xx+).  * Returns 0 on sucess, -ENOMEM on failure.  * Called at driver startup.  */
+comment|/**  * radeon_atombios_init - init the driver info and callbacks for atombios  *  * @rdev: radeon_device pointer  *  * Initializes the driver info and register access callbacks for the  * ATOM interpreter (r4xx+).  * Returns 0 on success, -ENOMEM on failure.  * Called at driver startup.  */
 end_comment
 
 begin_function
@@ -2734,7 +2734,7 @@ comment|/*  * COMBIOS is the bios format prior to ATOM. It provides  * command t
 end_comment
 
 begin_comment
-comment|/**  * radeon_combios_init - init the driver info for combios  *  * @rdev: radeon_device pointer  *  * Initializes the driver info for combios (r1xx-r3xx).  * Returns 0 on sucess.  * Called at driver startup.  */
+comment|/**  * radeon_combios_init - init the driver info for combios  *  * @rdev: radeon_device pointer  *  * Initializes the driver info for combios (r1xx-r3xx).  * Returns 0 on success.  * Called at driver startup.  */
 end_comment
 
 begin_function

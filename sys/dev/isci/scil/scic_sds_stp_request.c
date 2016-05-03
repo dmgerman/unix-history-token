@@ -796,7 +796,7 @@ expr_stmt|;
 block|}
 comment|// Copy the physical address for the command buffer to the SCU Task Context
 comment|// We must offset the command buffer by 4 bytes because the first 4 bytes are
-comment|// transfered in the body of the TC
+comment|// transferred in the body of the TC
 name|scic_cb_io_request_get_physical_address
 argument_list|(
 name|scic_sds_request_get_controller
@@ -920,7 +920,7 @@ argument_list|,
 name|task_context
 argument_list|)
 expr_stmt|;
-comment|// Copy over the number of bytes to be transfered
+comment|// Copy over the number of bytes to be transferred
 name|task_context
 operator|->
 name|transfer_length_bytes
@@ -3353,7 +3353,7 @@ block|}
 block|}
 else|else
 block|{
-comment|// We are transfering the whole frame so copy
+comment|// We are transferring the whole frame so copy
 name|status
 operator|=
 name|scic_sds_stp_request_pio_data_in_copy_data_buffer
@@ -4455,7 +4455,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|//this will happen if the all data is written at the first time after the pio setup fis is recieved
+comment|//this will happen if the all data is written at the first time after the pio setup fis is received
 name|all_frames_transferred
 operator|=
 name|TRUE

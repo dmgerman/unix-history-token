@@ -391,7 +391,7 @@ elseif|else
 endif|#
 directive|endif
 comment|/* AUDIOMUX_DISCOVER */
-comment|/* check for existance of audio MUXes */
+comment|/* check for existence of audio MUXes */
 if|if
 condition|(
 operator|!
@@ -1190,7 +1190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup the dbx chip  * XXX FIXME: alot of work to be done here, this merely unmutes it.  */
+comment|/*  * setup the dbx chip  * XXX FIXME: a lot of work to be done here, this merely unmutes it.  */
 end_comment
 
 begin_function
@@ -1775,7 +1775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Configure the MSP chip to Auto-detect the audio format.  * For the MSP3430G, we use fast autodetect mode  * For the MSP3410/3415 there are two schemes for this  *  a) Fast autodetection - the chip is put into autodetect mode, and the function  *     returns immediatly. This works in most cases and is the Default Mode.  *  b) Slow mode. The function sets the MSP3410/3415 chip, then waits for feedback from   *     the chip and re-programs it if needed.  */
+comment|/* Configure the MSP chip to Auto-detect the audio format.  * For the MSP3430G, we use fast autodetect mode  * For the MSP3410/3415 there are two schemes for this  *  a) Fast autodetection - the chip is put into autodetect mode, and the function  *     returns immediately. This works in most cases and is the Default Mode.  *  b) Slow mode. The function sets the MSP3410/3415 chip, then waits for feedback from   *     the chip and re-programs it if needed.  */
 end_comment
 
 begin_function
@@ -2348,7 +2348,7 @@ literal|0x0020
 argument_list|)
 expr_stmt|;
 comment|/* Loudspeaker set stereo*/
-comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode b, stereo basewidth enlargment only         */
+comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode b, stereo basewidth enlargement only         */
 name|msp_dpl_write
 argument_list|(
 name|bktr
@@ -2440,7 +2440,7 @@ literal|0x0030
 argument_list|)
 expr_stmt|;
 comment|/* Loudspeaker */
-comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode a, stereo basewidth enlargment           and pseudo stereo effect with automatic high-pass filter         */
+comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode a, stereo basewidth enlargement           and pseudo stereo effect with automatic high-pass filter         */
 name|msp_dpl_write
 argument_list|(
 name|bktr

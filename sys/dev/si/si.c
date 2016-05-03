@@ -2413,7 +2413,7 @@ name|uart_type
 operator|=
 literal|1000
 expr_stmt|;
-comment|/* arbitary,> uchar_max */
+comment|/* arbitrary,> uchar_max */
 for|for
 control|(
 init|;

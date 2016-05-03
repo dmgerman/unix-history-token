@@ -8742,7 +8742,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* mark the end of statistics initializiation */
+comment|/* mark the end of statistics initialization */
 name|sc
 operator|->
 name|stats_init

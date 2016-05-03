@@ -1067,7 +1067,7 @@ operator|)
 condition|)
 block|{
 comment|// print error message  ...
-comment|/* XXX: what error is appropiate? */
+comment|/* XXX: what error is appropriate? */
 break|break;
 block|}
 else|else

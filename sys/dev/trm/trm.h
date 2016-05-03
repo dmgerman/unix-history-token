@@ -3834,7 +3834,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* (it sould define at NAC )                                            Parity check enable		*/
+comment|/* (it should define at NAC )                                            Parity check enable		*/
 end_comment
 
 begin_comment

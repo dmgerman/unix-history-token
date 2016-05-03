@@ -180,7 +180,7 @@ modifier|*
 name|cell
 parameter_list|)
 block|{
-comment|/* clock-frequency is a FreeBSD-only extention. */
+comment|/* clock-frequency is a FreeBSD-only extension. */
 if|if
 condition|(
 operator|(

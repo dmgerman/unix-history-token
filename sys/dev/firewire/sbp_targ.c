@@ -4823,7 +4823,7 @@ operator|->
 name|refcount
 operator|++
 expr_stmt|;
-comment|/*  * Set endianess here so we don't have   * to deal with is later  */
+comment|/*  * Set endianness here so we don't have   * to deal with is later  */
 for|for
 control|(
 name|i

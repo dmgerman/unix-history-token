@@ -286,7 +286,7 @@ value|(0x0003E003)
 end_define
 
 begin_comment
-comment|/* Error occured while attempting to upload the entire flash */
+comment|/* Error occurred while attempting to upload the entire flash */
 end_comment
 
 begin_define
@@ -297,7 +297,7 @@ value|(0x0003E004)
 end_define
 
 begin_comment
-comment|/* Error occured while attempting to upload single flash region */
+comment|/* Error occurred while attempting to upload single flash region */
 end_comment
 
 begin_define
@@ -308,7 +308,7 @@ value|(0x0003E005)
 end_define
 
 begin_comment
-comment|/* Problem occured while DMAing FW to host memory */
+comment|/* Problem occurred while DMAing FW to host memory */
 end_comment
 
 begin_define
@@ -1167,7 +1167,7 @@ value|(0x00200010)
 end_define
 
 begin_comment
-comment|/* Error occured on SMP Read */
+comment|/* Error occurred on SMP Read */
 end_comment
 
 begin_define
@@ -1178,7 +1178,7 @@ value|(0x00200020)
 end_define
 
 begin_comment
-comment|/* Error occured on SMP Write */
+comment|/* Error occurred on SMP Write */
 end_comment
 
 begin_define
@@ -1376,7 +1376,7 @@ value|(0x00200106)
 end_define
 
 begin_comment
-comment|/* SEP stopped while transfering data */
+comment|/* SEP stopped while transferring data */
 end_comment
 
 begin_define
@@ -1387,7 +1387,7 @@ value|(0x00200107)
 end_define
 
 begin_comment
-comment|/* SEP stopped while transfering sense data */
+comment|/* SEP stopped while transferring sense data */
 end_comment
 
 begin_define

@@ -2327,7 +2327,7 @@ comment|/* handle a command from userspace */
 case|case
 name|TWEIO_COMMAND
 case|:
-comment|/* 	 * if there's a data buffer, allocate and copy it in. 	 * Must be in multipled of 512 bytes. 	 */
+comment|/* 	 * if there's a data buffer, allocate and copy it in. 	 * Must be in multiplied of 512 bytes. 	 */
 name|tr_length
 operator|=
 name|roundup2

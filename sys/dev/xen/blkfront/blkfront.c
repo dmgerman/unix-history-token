@@ -2469,7 +2469,7 @@ condition|(
 name|mtd
 condition|)
 block|{
-comment|/* Recieved request completions, update queue. */
+comment|/* Received request completions, update queue. */
 name|xbd_int
 argument_list|(
 name|sc
@@ -5157,7 +5157,7 @@ name|xbd_ring_pages
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Protocol negotiation. 	 * 	 * \note xs_gather() returns on the first encountered error, so 	 *       we must use independant calls in order to guarantee 	 *       we don't miss information in a sparsly populated back-end 	 *       tree. 	 * 	 * \note xs_scanf() does not update variables for unmatched 	 *	 fields. 	 */
+comment|/* 	 * Protocol negotiation. 	 * 	 * \note xs_gather() returns on the first encountered error, so 	 *       we must use independent calls in order to guarantee 	 *       we don't miss information in a sparsly populated back-end 	 *       tree. 	 * 	 * \note xs_scanf() does not update variables for unmatched 	 *	 fields. 	 */
 name|otherend_path
 operator|=
 name|xenbus_get_otherend_path

@@ -10221,7 +10221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Post a slowpath command.  *  * A slowpath command is used to propogate a configuration change through  * the controller in a controlled manner, allowing each STORM processor and  * other H/W blocks to phase in the change.  The commands sent on the  * slowpath are referred to as ramrods.  Depending on the ramrod used the  * completion of the ramrod will occur in different ways.  Here's a  * breakdown of ramrods and how they complete:  *  * RAMROD_CMD_ID_ETH_PORT_SETUP  *   Used to setup the leading connection on a port.  Completes on the  *   Receive Completion Queue (RCQ) of that port (typically fp[0]).  *  * RAMROD_CMD_ID_ETH_CLIENT_SETUP  *   Used to setup an additional connection on a port.  Completes on the  *   RCQ of the multi-queue/RSS connection being initialized.  *  * RAMROD_CMD_ID_ETH_STAT_QUERY  *   Used to force the storm processors to update the statistics database  *   in host memory.  This ramrod is send on the leading connection CID and  *   completes as an index increment of the CSTORM on the default status  *   block.  *  * RAMROD_CMD_ID_ETH_UPDATE  *   Used to update the state of the leading connection, usually to udpate  *   the RSS indirection table.  Completes on the RCQ of the leading  *   connection. (Not currently used under FreeBSD until OS support becomes  *   available.)  *  * RAMROD_CMD_ID_ETH_HALT  *   Used when tearing down a connection prior to driver unload.  Completes  *   on the RCQ of the multi-queue/RSS connection being torn down.  Don't  *   use this on the leading connection.  *  * RAMROD_CMD_ID_ETH_SET_MAC  *   Sets the Unicast/Broadcast/Multicast used by the port.  Completes on  *   the RCQ of the leading connection.  *  * RAMROD_CMD_ID_ETH_CFC_DEL  *   Used when tearing down a conneciton prior to driver unload.  Completes  *   on the RCQ of the leading connection (since the current connection  *   has been completely removed from controller memory).  *  * RAMROD_CMD_ID_ETH_PORT_DEL  *   Used to tear down the leading connection prior to driver unload,  *   typically fp[0].  Completes as an index increment of the CSTORM on the  *   default status block.  *  * RAMROD_CMD_ID_ETH_FORWARD_SETUP  *   Used for connection offload.  Completes on the RCQ of the multi-queue  *   RSS connection that is being offloaded.  (Not currently used under  *   FreeBSD.)  *  * There can only be one command pending per function.  *  * Returns:  *   0 = Success, !0 = Failure.  */
+comment|/*  * Post a slowpath command.  *  * A slowpath command is used to propagate a configuration change through  * the controller in a controlled manner, allowing each STORM processor and  * other H/W blocks to phase in the change.  The commands sent on the  * slowpath are referred to as ramrods.  Depending on the ramrod used the  * completion of the ramrod will occur in different ways.  Here's a  * breakdown of ramrods and how they complete:  *  * RAMROD_CMD_ID_ETH_PORT_SETUP  *   Used to setup the leading connection on a port.  Completes on the  *   Receive Completion Queue (RCQ) of that port (typically fp[0]).  *  * RAMROD_CMD_ID_ETH_CLIENT_SETUP  *   Used to setup an additional connection on a port.  Completes on the  *   RCQ of the multi-queue/RSS connection being initialized.  *  * RAMROD_CMD_ID_ETH_STAT_QUERY  *   Used to force the storm processors to update the statistics database  *   in host memory.  This ramrod is send on the leading connection CID and  *   completes as an index increment of the CSTORM on the default status  *   block.  *  * RAMROD_CMD_ID_ETH_UPDATE  *   Used to update the state of the leading connection, usually to udpate  *   the RSS indirection table.  Completes on the RCQ of the leading  *   connection. (Not currently used under FreeBSD until OS support becomes  *   available.)  *  * RAMROD_CMD_ID_ETH_HALT  *   Used when tearing down a connection prior to driver unload.  Completes  *   on the RCQ of the multi-queue/RSS connection being torn down.  Don't  *   use this on the leading connection.  *  * RAMROD_CMD_ID_ETH_SET_MAC  *   Sets the Unicast/Broadcast/Multicast used by the port.  Completes on  *   the RCQ of the leading connection.  *  * RAMROD_CMD_ID_ETH_CFC_DEL  *   Used when tearing down a conneciton prior to driver unload.  Completes  *   on the RCQ of the leading connection (since the current connection  *   has been completely removed from controller memory).  *  * RAMROD_CMD_ID_ETH_PORT_DEL  *   Used to tear down the leading connection prior to driver unload,  *   typically fp[0].  Completes as an index increment of the CSTORM on the  *   default status block.  *  * RAMROD_CMD_ID_ETH_FORWARD_SETUP  *   Used for connection offload.  Completes on the RCQ of the multi-queue  *   RSS connection that is being offloaded.  (Not currently used under  *   FreeBSD.)  *  * There can only be one command pending per function.  *  * Returns:  *   0 = Success, !0 = Failure.  */
 end_comment
 
 begin_comment
@@ -18696,7 +18696,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*      * Nothing to do during unload if previous bxe_nic_load()      * did not completed succesfully - all resourses are released.      */
+comment|/*      * Nothing to do during unload if previous bxe_nic_load()      * did not completed successfully - all resourses are released.      */
 if|if
 condition|(
 operator|(
@@ -20644,7 +20644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Checks to ensure the 13 bd sliding window is>= MSS for TSO.  * Check that (13 total bds - 3 bds) = 10 bd window>= MSS.  * The window: 3 bds are = 1 for headers BD + 2 for parse BD and last BD  * The headers comes in a seperate bd in FreeBSD so 13-3=10.  * Returns: 0 if OK to send, 1 if packet needs further defragmentation  */
+comment|/*  * Checks to ensure the 13 bd sliding window is>= MSS for TSO.  * Check that (13 total bds - 3 bds) = 10 bd window>= MSS.  * The window: 3 bds are = 1 for headers BD + 2 for parse BD and last BD  * The headers comes in a separate bd in FreeBSD so 13-3=10.  * Returns: 0 if OK to send, 1 if packet needs further defragmentation  */
 end_comment
 
 begin_function
@@ -35375,7 +35375,7 @@ argument_list|,
 name|PXP2_REG_PXP2_INT_STS_0
 argument_list|)
 expr_stmt|;
-comment|/*              * If the olny PXP2_EOP_ERROR_BIT is set in              * STS0 and STS1 - clear it              *              * probably we lose additional attentions between              * STS0 and STS_CLR0, in this case user will not              * be notified about them              */
+comment|/*              * If the only PXP2_EOP_ERROR_BIT is set in              * STS0 and STS1 - clear it              *              * probably we lose additional attentions between              * STS0 and STS_CLR0, in this case user will not              * be notified about them              */
 if|if
 condition|(
 name|val0
@@ -47567,7 +47567,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Prevent incomming interrupts in IGU */
+comment|/* Prevent incoming interrupts in IGU */
 name|val
 operator|=
 name|REG_RD

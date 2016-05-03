@@ -1483,7 +1483,7 @@ value|96
 end_define
 
 begin_comment
-comment|/* Legacy names for SISO PA paramters */
+comment|/* Legacy names for SISO PA parameters */
 end_comment
 
 begin_define

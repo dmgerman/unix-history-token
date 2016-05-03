@@ -981,7 +981,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *	Name:	hptmv_free_channel  *  *	Description:	free allocated queues for the given channel  *  *	Parameters:    	pMvSataAdapter - pointer to the RR18xx controler this   * 					channel connected to.   *			channelNum - channel number.   *       ******************************************************************************/
+comment|/*******************************************************************************  *	Name:	hptmv_free_channel  *  *	Description:	free allocated queues for the given channel  *  *	Parameters:    	pMvSataAdapter - pointer to the RR18xx controller this   * 					channel connected to.   *			channelNum - channel number.   *       ******************************************************************************/
 end_comment
 
 begin_function
@@ -1656,7 +1656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *	Name: hptmv_parse_identify_results  *  *	Description:	this functions parses the identify command results, checks  *					that the connected deives can be accesed by RR18xx EDMA,  *					and updates the channel stucture accordingly.  *  *	Parameters:     pMvSataChannel, pointer to the channel data structure.  *  *	Returns:       	=0 ->success,< 0 ->failure.  *  ******************************************************************************/
+comment|/******************************************************************************  *	Name: hptmv_parse_identify_results  *  *	Description:	this functions parses the identify command results, checks  *					that the connected deives can be accesed by RR18xx EDMA,  *					and updates the channel structure accordingly.  *  *	Parameters:     pMvSataChannel, pointer to the channel data structure.  *  *	Returns:       	=0 ->success,< 0 ->failure.  *  ******************************************************************************/
 end_comment
 
 begin_function

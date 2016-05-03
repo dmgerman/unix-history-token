@@ -3827,7 +3827,7 @@ case|:
 case|case
 name|ACPI_IBM_METHOD_MUTE
 case|:
-comment|/* EC is required here, which was aready checked before */
+comment|/* EC is required here, which was already checked before */
 return|return
 operator|(
 name|TRUE

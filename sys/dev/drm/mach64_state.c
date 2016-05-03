@@ -3252,7 +3252,7 @@ operator|-
 name|EAGAIN
 return|;
 block|}
-comment|/* Copy the blit data from userspace. 	 *  	 * XXX: This is overkill. The most efficient solution would be having  	 * two sets of buffers (one set private for vertex data, the other set  	 * client-writable for blits). However that would bring more complexity  	 * and would break backward compatability. The solution currently  	 * implemented is keeping all buffers private, allowing to secure the 	 * driver, without increasing complexity at the expense of some speed  	 * transfering data. 	 */
+comment|/* Copy the blit data from userspace. 	 *  	 * XXX: This is overkill. The most efficient solution would be having  	 * two sets of buffers (one set private for vertex data, the other set  	 * client-writable for blits). However that would bring more complexity  	 * and would break backward compatibility. The solution currently  	 * implemented is keeping all buffers private, allowing to secure the 	 * driver, without increasing complexity at the expense of some speed  	 * transferring data. 	 */
 name|verify_ret
 operator|=
 name|copy_from_user_blit

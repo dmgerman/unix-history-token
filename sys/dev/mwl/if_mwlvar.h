@@ -217,7 +217,7 @@ value|3839
 end_define
 
 begin_comment
-comment|/* max tx agregation size */
+comment|/* max tx aggregation size */
 end_comment
 
 begin_endif

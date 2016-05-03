@@ -14,7 +14,7 @@ file|<dev/vxge/vxgehal/vxgehal.h>
 end_include
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_about - Retrieve about info.  * @devh: HAL device handle.  * @about_info: Filled in by HAL. See vxge_hal_mgmt_about_info_t {}.  * @size: Pointer to buffer containing the Size of the @buffer_info.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_mgmt_about_info_t) and returns required size in this field  *  * Retrieve information such as PCI device and vendor IDs, board  * revision number, HAL version number, etc.  *  * Returns: VXGE_HAL_OK - success;  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about_info_t {}.  */
+comment|/*  * vxge_hal_mgmt_about - Retrieve about info.  * @devh: HAL device handle.  * @about_info: Filled in by HAL. See vxge_hal_mgmt_about_info_t {}.  * @size: Pointer to buffer containing the Size of the @buffer_info.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_mgmt_about_info_t) and returns required size in this field  *  * Retrieve information such as PCI device and vendor IDs, board  * revision number, HAL version number, etc.  *  * Returns: VXGE_HAL_OK - success;  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about_info_t {}.  */
 end_comment
 
 begin_function
@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_pci_config - Retrieve PCI configuration.  * @devh: HAL device handle.  * @buffer: Buffer to return pci config.  * @size: Pointer to buffer containing the Size of the @buffer.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_pci_config_t) and returns required size in this field  *  * Get PCI configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  */
+comment|/*  * vxge_hal_mgmt_pci_config - Retrieve PCI configuration.  * @devh: HAL device handle.  * @buffer: Buffer to return pci config.  * @size: Pointer to buffer containing the Size of the @buffer.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_pci_config_t) and returns required size in this field  *  * Get PCI configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  */
 end_comment
 
 begin_function
@@ -3910,7 +3910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_driver_config - Retrieve driver configuration.  * @drv_config: Device configuration, see vxge_hal_driver_config_t {}.  * @size: Pointer to buffer containing the Size of the @drv_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_driver_config_t) and returns required size in this field  *  * Get driver configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_DRIVER_NOT_INITIALIZED - HAL is not initialized.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version is not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_driver_config_t {}, vxge_hal_mgmt_device_config().  */
+comment|/*  * vxge_hal_mgmt_driver_config - Retrieve driver configuration.  * @drv_config: Device configuration, see vxge_hal_driver_config_t {}.  * @size: Pointer to buffer containing the Size of the @drv_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_driver_config_t) and returns required size in this field  *  * Get driver configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_DRIVER_NOT_INITIALIZED - HAL is not initialized.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version is not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_driver_config_t {}, vxge_hal_mgmt_device_config().  */
 end_comment
 
 begin_function
@@ -4077,7 +4077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_device_config - Retrieve device configuration.  * @devh: HAL device handle.  * @dev_config: Device configuration, see vxge_hal_device_config_t {}.  * @size: Pointer to buffer containing the Size of the @dev_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_device_config_t) and returns required size in this field  *  * Get device configuration. Permits to retrieve at run-time configuration  * values that were used to initialize and configure the device.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_device_config_t {}, vxge_hal_mgmt_driver_config().  */
+comment|/*  * vxge_hal_mgmt_device_config - Retrieve device configuration.  * @devh: HAL device handle.  * @dev_config: Device configuration, see vxge_hal_device_config_t {}.  * @size: Pointer to buffer containing the Size of the @dev_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_device_config_t) and returns required size in this field  *  * Get device configuration. Permits to retrieve at run-time configuration  * values that were used to initialize and configure the device.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_device_config_t {}, vxge_hal_mgmt_driver_config().  */
 end_comment
 
 begin_function

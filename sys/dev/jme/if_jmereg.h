@@ -5202,7 +5202,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Aggresive power mode control. */
+comment|/* Aggressive power mode control. */
 end_comment
 
 begin_define

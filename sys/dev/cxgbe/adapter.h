@@ -2263,7 +2263,7 @@ name|tx_wrs_copied
 decl_stmt|;
 comment|/* # of WRs queued and copied to desc ring. */
 comment|/* stats for not-that-common events */
-comment|/* 	 * Scratch space for work requests that wrap around after reaching the 	 * status page, and some infomation about the last WR that used it. 	 */
+comment|/* 	 * Scratch space for work requests that wrap around after reaching the 	 * status page, and some information about the last WR that used it. 	 */
 name|uint16_t
 name|ss_pidx
 decl_stmt|;

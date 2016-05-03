@@ -1273,7 +1273,7 @@ condition|)
 goto|goto
 name|invalid1
 goto|;
-comment|/* All future versions of the structure must be backwards compatable */
+comment|/* All future versions of the structure must be backwards compatible */
 name|EFX_STATIC_ASSERT
 argument_list|(
 name|SIENA_MC_DYNAMIC_CONFIG_VERSION

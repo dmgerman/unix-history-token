@@ -5037,7 +5037,7 @@ goto|;
 break|break;
 block|}
 comment|/* end switch(card) */
-comment|/* At this point, a goto checkDBX has not occured */
+comment|/* At this point, a goto checkDBX has not occurred */
 comment|/* We have not been able to select a Tuner */
 comment|/* Some cards make use of the tuner address to */
 comment|/* identify the make/model of tuner */

@@ -204,7 +204,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* keep definition for source code compatiblity */
+comment|/* keep definition for source code compatibility */
 end_comment
 
 begin_define

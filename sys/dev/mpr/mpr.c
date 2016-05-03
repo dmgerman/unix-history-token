@@ -12215,7 +12215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The MPT driver had a verbose interface for config pages.  In this driver,  * reduce it to much simplier terms, similar to the Linux driver.  */
+comment|/*  * The MPT driver had a verbose interface for config pages.  In this driver,  * reduce it to much simpler terms, similar to the Linux driver.  */
 end_comment
 
 begin_function

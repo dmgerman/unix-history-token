@@ -1344,7 +1344,7 @@ name|iov_len
 operator|&
 literal|03
 condition|)
-comment|// the specs say it must be int alligned
+comment|// the specs say it must be int aligned
 name|iv
 operator|->
 name|iov_len

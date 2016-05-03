@@ -185,7 +185,7 @@ decl_stmt|;
 name|u_int
 name|nstids_free_head
 decl_stmt|;
-comment|/* # of available stids at the begining */
+comment|/* # of available stids at the beginning */
 name|struct
 name|stid_head
 name|stids

@@ -479,7 +479,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Addres bit 7 (unused)                  */
+comment|/* Address bit 7 (unused)                  */
 end_comment
 
 begin_comment

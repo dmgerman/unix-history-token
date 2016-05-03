@@ -496,7 +496,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* One of DPE,APE,PMA,PTA happend */
+comment|/* One of DPE,APE,PMA,PTA happened */
 end_comment
 
 begin_define

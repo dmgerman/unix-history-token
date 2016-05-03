@@ -63,7 +63,7 @@ modifier|*
 name|cookie
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This callback method asks the user to destory the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
+comment|/**  * @brief This callback method asks the user to destroy the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
 name|void
 name|scif_cb_timer_destroy
 parameter_list|(
@@ -250,7 +250,7 @@ name|SCI_TASK_STATUS
 name|completion_status
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transfered as part of this request.  *  * @param[in] scif_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transfered for this IO request.  */
+comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transferred as part of this request.  *  * @param[in] scif_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transferred for this IO request.  */
 name|U32
 name|scif_cb_io_request_get_transfer_length
 parameter_list|(

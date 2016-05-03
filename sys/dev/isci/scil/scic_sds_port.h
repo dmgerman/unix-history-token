@@ -169,7 +169,7 @@ name|SCU_PORT_PE_CONFIGURATION_REGISTER_T
 modifier|*
 name|port_pe_configuration_register
 decl_stmt|;
-comment|/**     * This field is the VIIT register space for ths port object.     */
+comment|/**     * This field is the VIIT register space for this port object.     */
 name|SCU_VIIT_ENTRY_T
 modifier|*
 name|viit_registers

@@ -2629,7 +2629,7 @@ argument_list|,
 name|crc
 argument_list|)
 expr_stmt|;
-comment|/* 		 * if CRC is right but framelen incorrect then transmitter 		 * error was occured... drop entire packet 		 */
+comment|/* 		 * if CRC is right but framelen incorrect then transmitter 		 * error was occurred... drop entire packet 		 */
 block|}
 elseif|else
 if|if

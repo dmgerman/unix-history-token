@@ -27,7 +27,7 @@ name|FW_SUCCESS
 init|=
 literal|0
 block|,
-comment|/* completed sucessfully */
+comment|/* completed successfully */
 name|FW_EPERM
 init|=
 literal|1
@@ -40130,7 +40130,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	this register is available as 32-bit of persistent storage (accross  *	PL_RST based chip-reset) for boot drivers (i.e. firmware and driver  *	will not write it)  */
+comment|/*  *	this register is available as 32-bit of persistent storage (across  *	PL_RST based chip-reset) for boot drivers (i.e. firmware and driver  *	will not write it)  */
 end_comment
 
 begin_comment

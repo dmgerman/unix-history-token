@@ -250,7 +250,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* acess register */
+comment|/* access register */
 end_comment
 
 begin_define
@@ -4239,7 +4239,7 @@ name|b
 operator|=
 name|b0
 expr_stmt|;
-comment|/* 		 * Wait for data ready.  This interrupt only occures 		 * when both TPM_STS_VALID and TPM_STS_DATA_AVAIL are asserted. 		 * Thus we don't have to bother with TPM_STS_VALID 		 * separately and can just return. 		 * 		 * This only holds for interrupts!  When using polling 		 * both flags have to be waited for, see below. 		 */
+comment|/* 		 * Wait for data ready.  This interrupt only occurs 		 * when both TPM_STS_VALID and TPM_STS_DATA_AVAIL are asserted. 		 * Thus we don't have to bother with TPM_STS_VALID 		 * separately and can just return. 		 * 		 * This only holds for interrupts!  When using polling 		 * both flags have to be waited for, see below. 		 */
 if|if
 condition|(
 operator|(

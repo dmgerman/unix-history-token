@@ -1711,7 +1711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_io_queue_grow - Dynamically increases the size of the queue.  * @queueh: Queue handle.  *  * This function is called in the case of no slot avaialble in the queue  * to accomodate the newly received event.  * Note that queue cannot grow beyond the max size specified for the  * queue.  *  * Returns VXGE_QUEUE_OK: On success.  * VXGE_QUEUE_OUT_OF_MEMORY : No memory is available.  */
+comment|/*  * vxge_io_queue_grow - Dynamically increases the size of the queue.  * @queueh: Queue handle.  *  * This function is called in the case of no slot avaialble in the queue  * to accommodate the newly received event.  * Note that queue cannot grow beyond the max size specified for the  * queue.  *  * Returns VXGE_QUEUE_OK: On success.  * VXGE_QUEUE_OUT_OF_MEMORY : No memory is available.  */
 end_comment
 
 begin_function
@@ -2219,7 +2219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_queue_consume - Dequeue an item from the specified queue.  * @queueh: Queue handle.  * @data_max_size: Maximum expected size of the item.  * @item: Memory area into which the item is _copied_ upon return  *	from the function.  *  * Dequeue an item from the queue. The caller is required to provide  * enough space for the item.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accomodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
+comment|/*  * vxge_queue_consume - Dequeue an item from the specified queue.  * @queueh: Queue handle.  * @data_max_size: Maximum expected size of the item.  * @item: Memory area into which the item is _copied_ upon return  *	from the function.  *  * Dequeue an item from the queue. The caller is required to provide  * enough space for the item.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accommodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
 end_comment
 
 begin_function

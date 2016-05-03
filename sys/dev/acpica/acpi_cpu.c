@@ -3088,7 +3088,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * CPU devices are not truely detached and remain referenced,      * so their resources are not freed.      */
+comment|/*      * CPU devices are not truly detached and remain referenced,      * so their resources are not freed.      */
 name|return_VALUE
 argument_list|(
 literal|0

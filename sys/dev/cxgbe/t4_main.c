@@ -22532,7 +22532,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"global RSS config (0x%x) cannot be accomodated.\n"
+literal|"global RSS config (0x%x) cannot be accommodated.\n"
 argument_list|,
 name|hashconfig
 argument_list|)
@@ -28743,7 +28743,7 @@ name|desc
 parameter_list|)
 define|\
 value|SYSCTL_ADD_UQUAD(ctx, children, OID_AUTO, #name, CTLFLAG_RD, \&pi->stats.name, desc)
-comment|/* We get these from port_stats and they may be stale by upto 1s */
+comment|/* We get these from port_stats and they may be stale by up to 1s */
 name|SYSCTL_ADD_T4_PORTSTAT
 argument_list|(
 name|rx_ovflow0

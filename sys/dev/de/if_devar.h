@@ -2789,7 +2789,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This driver supports a maximum of 32 tulip boards.  * This should be enough for the forseeable future.  */
+comment|/*  * This driver supports a maximum of 32 tulip boards.  * This should be enough for the foreseeable future.  */
 end_comment
 
 begin_define

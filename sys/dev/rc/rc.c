@@ -6310,7 +6310,7 @@ name|chipid
 operator|=
 name|RC_FAKEID
 expr_stmt|;
-comment|/* First, reset board to inital state */
+comment|/* First, reset board to initial state */
 name|rc_hwreset
 argument_list|(
 name|sc

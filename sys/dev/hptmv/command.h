@@ -300,7 +300,7 @@ name|PCommand
 name|pCmd
 parameter_list|)
 function_decl|;
-comment|/* pointer to origional command */
+comment|/* pointer to original command */
 name|void
 modifier|*
 name|pOrgCommand

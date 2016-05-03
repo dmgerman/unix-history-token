@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2013-2014 Qlogic Corporation  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * File: qls_hw.c  * Author : David C Somayajulu, Qlogic Corporation, Aliso Viejo, CA 92656.  * Content: Contains Hardware dependant functions  */
+comment|/*  * File: qls_hw.c  * Author : David C Somayajulu, Qlogic Corporation, Aliso Viejo, CA 92656.  * Content: Contains Hardware dependent functions  */
 end_comment
 
 begin_include
@@ -1663,7 +1663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Name: qls_set_mac_rcv_mode  * Function: Enable/Disable AllMulticast and Promiscous Modes.  */
+comment|/*  * Name: qls_set_mac_rcv_mode  * Function: Enable/Disable AllMulticast and Promiscuous Modes.  */
 end_comment
 
 begin_function

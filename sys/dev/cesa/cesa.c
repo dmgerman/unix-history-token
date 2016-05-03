@@ -1282,7 +1282,7 @@ argument_list|,
 name|sdesc
 argument_list|)
 expr_stmt|;
-comment|/* Unload DMA memory asociated with request */
+comment|/* Unload DMA memory associated with request */
 if|if
 condition|(
 name|cr
@@ -3539,7 +3539,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* 			 * Fill in current packet with data. Break if there is 			 * no more data in current DMA segment or an error 			 * occured. 			 */
+comment|/* 			 * Fill in current packet with data. Break if there is 			 * no more data in current DMA segment or an error 			 * occurred. 			 */
 name|size
 operator|=
 name|cesa_fill_packet
@@ -6291,7 +6291,7 @@ operator|->
 name|sc_res
 argument_list|)
 expr_stmt|;
-comment|/* Destory mutexes */
+comment|/* Destroy mutexes */
 name|mtx_destroy
 argument_list|(
 operator|&

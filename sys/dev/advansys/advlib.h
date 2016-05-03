@@ -931,7 +931,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/*  * XXX I don't understand the relevence of the naming  * convention change here.  What does CIW stand for?  * Perhaps this is to differentiate read and write  * values?  */
+comment|/*  * XXX I don't understand the relevance of the naming  * convention change here.  What does CIW stand for?  * Perhaps this is to differentiate read and write  * values?  */
 end_comment
 
 begin_define
@@ -2621,7 +2621,7 @@ comment|/* LUN - taken from our xs */
 name|u_int32_t
 name|data_addr
 decl_stmt|;
-comment|/* 						 * physical addres of first 						 * (possibly only) segment 						 * to transfer. 						 */
+comment|/* 						 * physical address of first 						 * (possibly only) segment 						 * to transfer. 						 */
 name|u_int32_t
 name|data_cnt
 decl_stmt|;
@@ -3248,7 +3248,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Intialization */
+comment|/* Initialization */
 end_comment
 
 begin_function_decl

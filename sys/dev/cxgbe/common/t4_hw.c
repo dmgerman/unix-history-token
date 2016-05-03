@@ -10555,7 +10555,7 @@ return|return
 name|ret
 return|;
 block|}
-comment|/* 	 * Grab the returned data, swizzle it into our endianess and 	 * return success. 	 */
+comment|/* 	 * Grab the returned data, swizzle it into our endianness and 	 * return success. 	 */
 name|t4_os_pci_read_cfg4
 argument_list|(
 name|adapter
@@ -34287,7 +34287,7 @@ argument_list|,
 name|F_FRAGMENTATION
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If TP_INGRESS_CONFIG.VNID == 0, then TP_VLAN_PRI_MAP.VNIC_ID 	 * represents the presense of an Outer VLAN instead of a VNIC ID. 	 */
+comment|/* 	 * If TP_INGRESS_CONFIG.VNID == 0, then TP_VLAN_PRI_MAP.VNIC_ID 	 * represents the presence of an Outer VLAN instead of a VNIC ID. 	 */
 if|if
 condition|(
 operator|(
@@ -40209,7 +40209,7 @@ name|unsigned
 name|int
 name|ticks
 decl_stmt|;
-comment|/* 	 * The watchdog command expects a timeout in units of 10ms so we need 	 * to convert it here (via rounding) and force a minimum of one 10ms 	 * "tick" if the timeout is non-zero but the convertion results in 0 	 * ticks. 	 */
+comment|/* 	 * The watchdog command expects a timeout in units of 10ms so we need 	 * to convert it here (via rounding) and force a minimum of one 10ms 	 * "tick" if the timeout is non-zero but the conversion results in 0 	 * ticks. 	 */
 name|ticks
 operator|=
 operator|(

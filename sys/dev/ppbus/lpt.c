@@ -270,7 +270,7 @@ define|#
 directive|define
 name|LP_POS_INIT
 value|0x04
-comment|/* if we are a postive init signal */
+comment|/* if we are a positive init signal */
 define|#
 directive|define
 name|LP_POS_ACK

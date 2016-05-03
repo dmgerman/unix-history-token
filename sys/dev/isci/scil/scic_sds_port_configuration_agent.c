@@ -2044,7 +2044,7 @@ block|}
 block|}
 comment|// Check to see if the start timer operations should instead map to an
 comment|// add phy operation.  This is caused because we have been waiting to
-comment|// add a phy to a port but could not becuase the automatic port
+comment|// add a phy to a port but could not because the automatic port
 comment|// configuration engine had a choice of possible ports for the phy.
 comment|// Since we have gone through a timeout we are going to restrict the
 comment|// choice to the smallest possible port.
@@ -2220,7 +2220,7 @@ else|else
 block|{
 comment|//the phy is already the part of the port
 comment|//if the PORT'S state is resetting then the link up is from port hard reset
-comment|//in this case, we need to tell the port that link up is recieved
+comment|//in this case, we need to tell the port that link up is received
 if|if
 condition|(
 name|SCI_BASE_PORT_STATE_RESETTING

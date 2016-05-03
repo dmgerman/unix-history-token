@@ -1162,7 +1162,7 @@ name|board_id
 operator|.
 name|board_type
 expr_stmt|;
-comment|/* 	 * The Buslogic cards have an id of either 0x41 or 0x42.  So 	 * if those come up in the probe, we test the geometry register 	 * of the board.  Adaptec boards that are this old will not have 	 * this register, and return 0xff, while buslogic cards will return 	 * something different. 	 * 	 * It appears that for reasons unknow, for the for the 	 * aha-1542B cards, we need to wait a little bit before trying 	 * to read the geometry register.  I picked 10ms since we have 	 * reports that a for loop to 1000 did the trick, and this 	 * errs on the side of conservatism.  Besides, no one will 	 * notice a 10mS delay here, even the 1542B card users :-) 	 * 	 * Some compatible cards return 0 here.  Some cards also 	 * seem to return 0x7f. 	 * 	 * XXX I'm not sure how this will impact other cloned cards 	 * 	 * This really should be replaced with the esetup command, since 	 * that appears to be more reliable.  This becomes more and more 	 * true over time as we discover more cards that don't read the 	 * geometry register consistantly. 	 */
+comment|/* 	 * The Buslogic cards have an id of either 0x41 or 0x42.  So 	 * if those come up in the probe, we test the geometry register 	 * of the board.  Adaptec boards that are this old will not have 	 * this register, and return 0xff, while buslogic cards will return 	 * something different. 	 * 	 * It appears that for reasons unknow, for the for the 	 * aha-1542B cards, we need to wait a little bit before trying 	 * to read the geometry register.  I picked 10ms since we have 	 * reports that a for loop to 1000 did the trick, and this 	 * errs on the side of conservatism.  Besides, no one will 	 * notice a 10mS delay here, even the 1542B card users :-) 	 * 	 * Some compatible cards return 0 here.  Some cards also 	 * seem to return 0x7f. 	 * 	 * XXX I'm not sure how this will impact other cloned cards 	 * 	 * This really should be replaced with the esetup command, since 	 * that appears to be more reliable.  This becomes more and more 	 * true over time as we discover more cards that don't read the 	 * geometry register consistently. 	 */
 if|if
 condition|(
 name|aha
@@ -5294,7 +5294,7 @@ decl_stmt|;
 name|cam_status
 name|error
 decl_stmt|;
-comment|/* Notify all clients that a BDR occured */
+comment|/* Notify all clients that a BDR occurred */
 name|error
 operator|=
 name|xpt_create_path
@@ -5513,7 +5513,7 @@ case|:
 case|case
 name|AMBI_ERROR
 case|:
-comment|/* An error occured */
+comment|/* An error occurred */
 if|if
 condition|(
 name|accb
@@ -7838,7 +7838,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * In order to simplify the recovery process, we ask the XPT 	 * layer to halt the queue of new transactions and we traverse 	 * the list of pending CCBs and remove their timeouts. This 	 * means that the driver attempts to clear only one error 	 * condition at a time.  In general, timeouts that occur 	 * close together are related anyway, so there is no benefit 	 * in attempting to handle errors in parrallel.  Timeouts will 	 * be reinstated when the recovery process ends. 	 */
+comment|/* 	 * In order to simplify the recovery process, we ask the XPT 	 * layer to halt the queue of new transactions and we traverse 	 * the list of pending CCBs and remove their timeouts. This 	 * means that the driver attempts to clear only one error 	 * condition at a time.  In general, timeouts that occur 	 * close together are related anyway, so there is no benefit 	 * in attempting to handle errors in parallel.  Timeouts will 	 * be reinstated when the recovery process ends. 	 */
 if|if
 condition|(
 operator|(

@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This callback method asks the user to destory the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
+comment|/**  * @brief This callback method asks the user to destroy the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
 end_comment
 
 begin_function

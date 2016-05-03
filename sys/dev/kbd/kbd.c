@@ -1317,7 +1317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* find a funciton table by the driver name */
+comment|/* find a function table by the driver name */
 end_comment
 
 begin_function

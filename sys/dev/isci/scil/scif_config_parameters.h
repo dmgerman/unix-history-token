@@ -70,7 +70,7 @@ comment|/**     * This field indicates the type of reset to be applied to all re
 name|SCI_SAS_TASK_MGMT_FUNCTION_T
 name|reset_type
 decl_stmt|;
-comment|/**     * This field indicates the os/user recommends ignoring fua in translation     * for perfromance reasons.     */
+comment|/**     * This field indicates the os/user recommends ignoring fua in translation     * for performance reasons.     */
 name|BOOL
 name|ignore_fua
 decl_stmt|;

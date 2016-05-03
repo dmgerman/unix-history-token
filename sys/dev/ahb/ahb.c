@@ -4139,7 +4139,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"Unsupported initiator selection AEN occured\n"
+literal|"Unsupported initiator selection AEN occurred\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5796,7 +5796,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * In order to simplify the recovery process, we ask the XPT 	 * layer to halt the queue of new transactions and we traverse 	 * the list of pending CCBs and remove their timeouts. This 	 * means that the driver attempts to clear only one error 	 * condition at a time.  In general, timeouts that occur 	 * close together are related anyway, so there is no benefit 	 * in attempting to handle errors in parrallel.  Timeouts will 	 * be reinstated when the recovery process ends. 	 */
+comment|/* 	 * In order to simplify the recovery process, we ask the XPT 	 * layer to halt the queue of new transactions and we traverse 	 * the list of pending CCBs and remove their timeouts. This 	 * means that the driver attempts to clear only one error 	 * condition at a time.  In general, timeouts that occur 	 * close together are related anyway, so there is no benefit 	 * in attempting to handle errors in parallel.  Timeouts will 	 * be reinstated when the recovery process ends. 	 */
 if|if
 condition|(
 operator|(

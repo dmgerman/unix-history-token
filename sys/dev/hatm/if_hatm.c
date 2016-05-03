@@ -2804,7 +2804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 4.6 Set Host Endianess  */
+comment|/*  * 4.6 Set Host Endianness  */
 end_comment
 
 begin_function

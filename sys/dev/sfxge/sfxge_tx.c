@@ -883,7 +883,7 @@ modifier|*
 name|mbuf
 parameter_list|)
 block|{
-comment|/* Absense of TCP checksum flags does not mean that it is non-TCP 	 * but it should be true if user wants to achieve high throughput. 	 */
+comment|/* Absence of TCP checksum flags does not mean that it is non-TCP 	 * but it should be true if user wants to achieve high throughput. 	 */
 return|return
 operator|(
 operator|!

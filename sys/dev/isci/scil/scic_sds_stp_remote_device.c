@@ -968,7 +968,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Since we didnt expect to get here start the device again.
+comment|// Since we didn't expect to get here start the device again.
 name|status
 operator|=
 name|scic_sds_remote_device_resume

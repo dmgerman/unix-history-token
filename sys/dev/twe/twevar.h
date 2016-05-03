@@ -410,7 +410,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Interface betwen driver core and platform-dependant code.  */
+comment|/*  * Interface between driver core and platform-dependant code.  */
 end_comment
 
 begin_function_decl

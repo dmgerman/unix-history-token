@@ -3114,7 +3114,7 @@ argument_list|,
 literal|0x00005500
 argument_list|)
 expr_stmt|;
-comment|// For C0 the AFE BIAS Controll is unchanged
+comment|// For C0 the AFE BIAS Control is unchanged
 name|scic_cb_stall_execution
 argument_list|(
 name|AFE_REGISTER_WRITE_DELAY
@@ -6998,7 +6998,7 @@ argument_list|)
 operator|,
 name|SCIC_LOG_OBJECT_COMPLETION_QUEUE
 operator|,
-literal|"completion queue begining get : 0x%08x\n"
+literal|"completion queue beginning get : 0x%08x\n"
 operator|,
 name|this_controller
 operator|->
@@ -7321,7 +7321,7 @@ argument_list|)
 operator|,
 name|SCIC_LOG_OBJECT_COMPLETION_QUEUE
 operator|,
-literal|"completion queue begining get : 0x%08x\n"
+literal|"completion queue beginning get : 0x%08x\n"
 operator|,
 name|this_controller
 operator|->

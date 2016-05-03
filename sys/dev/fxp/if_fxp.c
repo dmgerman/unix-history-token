@@ -6562,7 +6562,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * From NetBSD:  *  * Figure out EEPROM size.  *  * 559's can have either 64-word or 256-word EEPROMs, the 558  * datasheet only talks about 64-word EEPROMs, and the 557 datasheet  * talks about the existance of 16 to 256 word EEPROMs.  *  * The only known sizes are 64 and 256, where the 256 version is used  * by CardBus cards to store CIS information.  *  * The address is shifted in msb-to-lsb, and after the last  * address-bit the EEPROM is supposed to output a `dummy zero' bit,  * after which follows the actual data. We try to detect this zero, by  * probing the data-out bit in the EEPROM control register just after  * having shifted in a bit. If the bit is zero, we assume we've  * shifted enough address bits. The data-out should be tri-state,  * before this, which should translate to a logical one.  */
+comment|/*  * From NetBSD:  *  * Figure out EEPROM size.  *  * 559's can have either 64-word or 256-word EEPROMs, the 558  * datasheet only talks about 64-word EEPROMs, and the 557 datasheet  * talks about the existence of 16 to 256 word EEPROMs.  *  * The only known sizes are 64 and 256, where the 256 version is used  * by CardBus cards to store CIS information.  *  * The address is shifted in msb-to-lsb, and after the last  * address-bit the EEPROM is supposed to output a `dummy zero' bit,  * after which follows the actual data. We try to detect this zero, by  * probing the data-out bit in the EEPROM control register just after  * having shifted in a bit. If the bit is zero, we assume we've  * shifted enough address bits. The data-out should be tri-state,  * before this, which should translate to a logical one.  */
 end_comment
 
 begin_function
@@ -10413,7 +10413,7 @@ name|rx_overrun_errors
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If any transmit underruns occured, bump up the transmit 		 * threshold by another 512 bytes (64 * 8). 		 */
+comment|/* 		 * If any transmit underruns occurred, bump up the transmit 		 * threshold by another 512 bytes (64 * 8). 		 */
 if|if
 condition|(
 name|sp
@@ -10517,7 +10517,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we haven't received any packets in FXP_MAC_RX_IDLE seconds, 	 * then assume the receiver has locked up and attempt to clear 	 * the condition by reprogramming the multicast filter. This is 	 * a work-around for a bug in the 82557 where the receiver locks 	 * up if it gets certain types of garbage in the syncronization 	 * bits prior to the packet header. This bug is supposed to only 	 * occur in 10Mbps mode, but has been seen to occur in 100Mbps 	 * mode as well (perhaps due to a 10/100 speed transition). 	 */
+comment|/* 	 * If we haven't received any packets in FXP_MAC_RX_IDLE seconds, 	 * then assume the receiver has locked up and attempt to clear 	 * the condition by reprogramming the multicast filter. This is 	 * a work-around for a bug in the 82557 where the receiver locks 	 * up if it gets certain types of garbage in the synchronization 	 * bits prior to the packet header. This bug is supposed to only 	 * occur in 10Mbps mode, but has been seen to occur in 100Mbps 	 * mode as well (perhaps due to a 10/100 speed transition). 	 */
 if|if
 condition|(
 name|sc

@@ -544,7 +544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The FIFO does an endian convertion, so we must not do it as well. */
+comment|/* The FIFO does an endian conversion, so we must not do it as well. */
 end_comment
 
 begin_comment
@@ -611,11 +611,11 @@ value|a_onchip_fifo_mem_core_read((sc)->atse_rxc_mem_res,		\ 	    A_ONCHIP_FIFO_
 end_define
 
 begin_comment
-comment|/* The FIFO does an endian convertion, so we must not do it as well. */
+comment|/* The FIFO does an endian conversion, so we must not do it as well. */
 end_comment
 
 begin_comment
-comment|/* XXX-BZ in fact we shoudl do a htobe32 so le would be fine as well? */
+comment|/* XXX-BZ in fact we should do a htobe32 so le would be fine as well? */
 end_comment
 
 begin_define

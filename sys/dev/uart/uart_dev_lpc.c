@@ -3648,7 +3648,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * XXX there are some issues related to hardware flow control and 	 * it's likely that uart(4) is the cause. This basicly needs more 	 * investigation, but we avoid using for hardware flow control 	 * until then. 	 */
+comment|/* 	 * XXX there are some issues related to hardware flow control and 	 * it's likely that uart(4) is the cause. This basically needs more 	 * investigation, but we avoid using for hardware flow control 	 * until then. 	 */
 comment|/* 16650s or higher have automatic flow control. */
 block|if (sc->sc_rxfifosz> 16) { 		sc->sc_hwiflow = 1; 		sc->sc_hwoflow = 1; 	}
 endif|#
@@ -4171,7 +4171,7 @@ name|sc
 operator|->
 name|sc_bas
 decl_stmt|;
-comment|/* 	 * turn off all interrupts to enter polling mode. Leave the 	 * saved mask alone. We'll restore whatever it was in ungrab. 	 * All pending interupt signals are reset when IER is set to 0. 	 */
+comment|/* 	 * turn off all interrupts to enter polling mode. Leave the 	 * saved mask alone. We'll restore whatever it was in ungrab. 	 * All pending interrupt signals are reset when IER is set to 0. 	 */
 name|uart_lock
 argument_list|(
 name|sc

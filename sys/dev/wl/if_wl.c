@@ -5318,7 +5318,7 @@ operator||=
 name|MOD_PROM
 expr_stmt|;
 block|}
-comment|/* 	 * force a complete reset if the recieve multicast/ 	 * promiscuous mode changes so that these take  	 * effect immediately. 	 * 	 */
+comment|/* 	 * force a complete reset if the receive multicast/ 	 * promiscuous mode changes so that these take  	 * effect immediately. 	 * 	 */
 if|if
 condition|(
 name|sc
@@ -6262,7 +6262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wlintr:  *  *	This function is the interrupt handler for the WaveLAN  *	board.  This routine will be called whenever either a packet  *	is received, or a packet has successfully been transfered and  *	the unit is ready to transmit another packet.  *  * input	: board number that interrupted  * output	: either a packet is received, or a packet is transfered  *  */
+comment|/*  * wlintr:  *  *	This function is the interrupt handler for the WaveLAN  *	board.  This routine will be called whenever either a packet  *	is received, or a packet has successfully been transferred and  *	the unit is ready to transmit another packet.  *  * input	: board number that interrupted  * output	: either a packet is received, or a packet is transferred  *  */
 end_comment
 
 begin_function
@@ -6340,7 +6340,7 @@ operator|&
 name|HASR_MMC_INTR
 condition|)
 block|{
-comment|/* handle interrupt from the modem management controler */
+comment|/* handle interrupt from the modem management controller */
 comment|/* This will clear the interrupt condition */
 operator|(
 name|void

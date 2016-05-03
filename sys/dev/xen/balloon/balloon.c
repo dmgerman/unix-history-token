@@ -1444,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * \brief Probe for the existance of the Xen Balloon device  *  * \param dev  NewBus device_t for this Xen control instance.  *  * \return  Always returns 0 indicating success.  */
+comment|/**  * \brief Probe for the existence of the Xen Balloon device  *  * \param dev  NewBus device_t for this Xen control instance.  *  * \return  Always returns 0 indicating success.  */
 end_comment
 
 begin_function

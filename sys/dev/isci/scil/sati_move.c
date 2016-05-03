@@ -228,7 +228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will translate the SCSI transfer count from the  *        supplied sector_count parameter into the ATA register FIS.  *        The translation is specific to 10,12, 16 byte CDBs.  *        This method also sets protocol and command fields.  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command()  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transfered.  * @param[in] write_opcode This parameter specifies the value to be written  *            to the ATA command register for a write (data out) operation.  * @param[in] read_opcode This parameter specifies the value to be written  *            to the ATA command register for a read (data in) operation.  *  * @return Please reference sati_move_set_sector_count() for information  *         on return codes from this method.  */
+comment|/**  * @brief This method will translate the SCSI transfer count from the  *        supplied sector_count parameter into the ATA register FIS.  *        The translation is specific to 10,12, 16 byte CDBs.  *        This method also sets protocol and command fields.  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command()  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transferred.  * @param[in] write_opcode This parameter specifies the value to be written  *            to the ATA command register for a write (data out) operation.  * @param[in] read_opcode This parameter specifies the value to be written  *            to the ATA command register for a read (data in) operation.  *  * @return Please reference sati_move_set_sector_count() for information  *         on return codes from this method.  */
 end_comment
 
 begin_function
@@ -392,7 +392,7 @@ comment|//**********************************************************************
 end_comment
 
 begin_comment
-comment|/**  * @brief This method will process a 32-bit sector into the appropriate fields  *        in a register FIS.  This method works for both 8-bit and 16-bit sector  *        counts.  *        This is used for translation of 10, 12, and 16-byte SCSI CDBs.  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command().  *  * @note This method should only be called for CDB sizes of 10-bytes or larger.  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transfered.  * @param[in] is_fpdma_command This parameter indicates if the supplied  *            ata_io is a first party DMA request (NCQ).  *  * @return none  */
+comment|/**  * @brief This method will process a 32-bit sector into the appropriate fields  *        in a register FIS.  This method works for both 8-bit and 16-bit sector  *        counts.  *        This is used for translation of 10, 12, and 16-byte SCSI CDBs.  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command().  *  * @note This method should only be called for CDB sizes of 10-bytes or larger.  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transferred.  * @param[in] is_fpdma_command This parameter indicates if the supplied  *            ata_io is a first party DMA request (NCQ).  *  * @return none  */
 end_comment
 
 begin_function
@@ -1154,7 +1154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method provides the common translation functionality for  *        the larger command descriptor blocks (10, 12, 16-byte CDBs).  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command().  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transfered.  * @param[in] device_head This parameter specifies the contents to be  *            written to the device head register.  *  * @return Indicate if the command translation succeeded.  * @retval SATI_FAILURE This value is returned if neither NCQ or DMA is  *         supported by the target device.  * @see sati_move_set_sector_count() for additional return codes.  */
+comment|/**  * @brief This method provides the common translation functionality for  *        the larger command descriptor blocks (10, 12, 16-byte CDBs).  *        For more information on the parameters passed to this method,  *        please reference sati_translate_command().  *  * @param[in] sector_count This parameter specifies the number of sectors  *            to be transferred.  * @param[in] device_head This parameter specifies the contents to be  *            written to the device head register.  *  * @return Indicate if the command translation succeeded.  * @retval SATI_FAILURE This value is returned if neither NCQ or DMA is  *         supported by the target device.  * @see sati_move_set_sector_count() for additional return codes.  */
 end_comment
 
 begin_function

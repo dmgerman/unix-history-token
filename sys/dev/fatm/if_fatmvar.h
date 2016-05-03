@@ -266,7 +266,7 @@ comment|/* call on command completion */
 name|int
 name|error
 decl_stmt|;
-comment|/* set if error occured */
+comment|/* set if error occurred */
 block|}
 struct|;
 end_struct

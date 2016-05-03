@@ -18359,7 +18359,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * PCI Express Error occured which is not described in PEX 		 * spec. 		 * This error is also mapped either to Master Abort( 		 * Y2_IS_MST_ERR) or Target Abort (Y2_IS_IRQ_STAT) bit and 		 * can only be cleared there.                  */
+comment|/* 		 * PCI Express Error occurred which is not described in PEX 		 * spec. 		 * This error is also mapped either to Master Abort( 		 * Y2_IS_MST_ERR) or Target Abort (Y2_IS_IRQ_STAT) bit and 		 * can only be cleared there.                  */
 name|device_printf
 argument_list|(
 name|sc

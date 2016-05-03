@@ -16,7 +16,7 @@ name|_SATI_TRANSLATOR_SEQUENCE_H_
 end_define
 
 begin_comment
-comment|/**  * @file  * @brief This file contains all of the defintions for the SATI translator  *        sequence.  A translator sequence is simply a defintion for the  *        various sequences of commands that occur in this translator.  */
+comment|/**  * @file  * @brief This file contains all of the defintions for the SATI translator  *        sequence.  A translator sequence is simply a definition for the  *        various sequences of commands that occur in this translator.  */
 end_comment
 
 begin_include
@@ -464,7 +464,7 @@ comment|/**     * This field is utilized for sequences requiring data translatio
 name|U32
 name|allocation_length
 decl_stmt|;
-comment|/**     * This field specifies the amount of data that will actually be     * transfered across the wire for this ATA request.     */
+comment|/**     * This field specifies the amount of data that will actually be     * transferred across the wire for this ATA request.     */
 name|U32
 name|ata_transfer_length
 decl_stmt|;

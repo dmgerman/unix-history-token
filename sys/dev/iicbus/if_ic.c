@@ -1218,7 +1218,7 @@ break|break;
 case|case
 name|INTR_STOP
 case|:
-comment|/* if any error occured during transfert, 		 * drop the packet */
+comment|/* if any error occurred during transfert, 		 * drop the packet */
 name|sc
 operator|->
 name|ic_flags

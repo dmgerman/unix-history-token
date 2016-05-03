@@ -27117,7 +27117,7 @@ comment|/* Drivers connection ID (only 16 bits are used) */
 decl_stmt|;
 name|uint32_t
 name|completion_status
-comment|/* 0=command completed succesfuly, 1=command failed */
+comment|/* 0=command completed successfully, 1=command failed */
 decl_stmt|;
 name|uint32_t
 name|fcoe_conn_context_id
@@ -31348,7 +31348,7 @@ comment|/* Drivers connection ID (only 16 bits are used) */
 decl_stmt|;
 name|uint32_t
 name|completion_status
-comment|/* 0=command completed succesfuly, 1=command failed */
+comment|/* 0=command completed successfully, 1=command failed */
 decl_stmt|;
 name|uint32_t
 name|iscsi_conn_context_id
@@ -34250,7 +34250,7 @@ endif|#
 directive|endif
 name|uint32_t
 name|rightmost_received_seq
-comment|/* The maximum sequence ever recieved - used for The New Patent */
+comment|/* The maximum sequence ever received - used for The New Patent */
 decl_stmt|;
 block|}
 struct|;
@@ -38931,7 +38931,7 @@ comment|/* the function mode */
 decl_stmt|;
 name|uint8_t
 name|allow_npar_tx_switching
-comment|/* If set, inter-pf tx switching is allowed in Switch Independant function mode. (E2/E3 Only) */
+comment|/* If set, inter-pf tx switching is allowed in Switch Independent function mode. (E2/E3 Only) */
 decl_stmt|;
 name|uint16_t
 name|sd_vlan_tag
@@ -39000,7 +39000,7 @@ comment|/* Ethertype to match in the case of sd_accept_mf_clss_fail_match_ethtyp
 decl_stmt|;
 name|uint16_t
 name|sd_vlan_eth_type
-comment|/* Value of ether-type to use in the case of switch dependant multi-function mode. Setting this to 0 uses the default value of 0x8100 */
+comment|/* Value of ether-type to use in the case of switch dependent multi-function mode. Setting this to 0 uses the default value of 0x8100 */
 decl_stmt|;
 name|uint8_t
 name|sd_vlan_force_pri_flg
@@ -39149,7 +39149,7 @@ comment|/* New value of Outer Vlan in case of switch depended multi-function mod
 decl_stmt|;
 name|uint16_t
 name|sd_vlan_eth_type
-comment|/* New value of ether-type in the case of switch dependant multi-function mode. Setting this to 0 restores the default value of 0x8100 */
+comment|/* New value of ether-type in the case of switch dependent multi-function mode. Setting this to 0 restores the default value of 0x8100 */
 decl_stmt|;
 name|uint16_t
 name|reserved0
@@ -41277,7 +41277,7 @@ define|#
 directive|define
 name|__USTORM_TOE_PREFETCHED_BD_START
 value|(0x1<<0)
-comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+comment|/* BitField flagsbd command flags	this bd is the beginning of an application buffer */
 define|#
 directive|define
 name|__USTORM_TOE_PREFETCHED_BD_START_SHIFT
@@ -41339,7 +41339,7 @@ define|#
 directive|define
 name|__USTORM_TOE_PREFETCHED_BD_START
 value|(0x1<<0)
-comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+comment|/* BitField flagsbd command flags	this bd is the beginning of an application buffer */
 define|#
 directive|define
 name|__USTORM_TOE_PREFETCHED_BD_START_SHIFT
@@ -41453,7 +41453,7 @@ comment|/* Offset in bits of the cupid of this connection on the 64Bits fetched 
 decl_stmt|;
 name|uint16_t
 name|indirection_ram_offset
-comment|/* address offset in internal memory  from the begining of the table  consisting the cpu id of this connection (Only 12 bits are used) */
+comment|/* address offset in internal memory  from the beginning of the table  consisting the cpu id of this connection (Only 12 bits are used) */
 decl_stmt|;
 elif|#
 directive|elif
@@ -41463,7 +41463,7 @@ name|__LITTLE_ENDIAN
 argument_list|)
 name|uint16_t
 name|indirection_ram_offset
-comment|/* address offset in internal memory  from the begining of the table  consisting the cpu id of this connection (Only 12 bits are used) */
+comment|/* address offset in internal memory  from the beginning of the table  consisting the cpu id of this connection (Only 12 bits are used) */
 decl_stmt|;
 name|uint8_t
 name|__indirection_shift
@@ -41569,11 +41569,11 @@ comment|/* the last rq_available_bytes producer that was read from host - used t
 decl_stmt|;
 name|uint32_t
 name|prev_rcv_win_right_edge
-comment|/* siquence of the last bytes that can be recieved - used to know how many bytes were added */
+comment|/* siquence of the last bytes that can be received - used to know how many bytes were added */
 decl_stmt|;
 name|uint32_t
 name|rcv_nxt
-comment|/* Receive sequence: next expected - of the right most recieved packet */
+comment|/* Receive sequence: next expected - of the right most received packet */
 decl_stmt|;
 name|struct
 name|ustorm_toe_prefetched_isle_bd
@@ -42139,7 +42139,7 @@ define|#
 directive|define
 name|TOE_RX_BD_START
 value|(0x1<<0)
-comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+comment|/* BitField flagsbd command flags	this bd is the beginning of an application buffer */
 define|#
 directive|define
 name|TOE_RX_BD_START_SHIFT
@@ -42201,7 +42201,7 @@ define|#
 directive|define
 name|TOE_RX_BD_START
 value|(0x1<<0)
-comment|/* BitField flagsbd command flags	this bd is the begining of an application buffer */
+comment|/* BitField flagsbd command flags	this bd is the beginning of an application buffer */
 define|#
 directive|define
 name|TOE_RX_BD_START_SHIFT
@@ -42426,7 +42426,7 @@ name|toe_rx_db_data
 block|{
 name|uint32_t
 name|rcv_win_right_edge
-comment|/* siquence of the last bytes that can be recieved */
+comment|/* siquence of the last bytes that can be received */
 decl_stmt|;
 name|uint32_t
 name|bytes_prod

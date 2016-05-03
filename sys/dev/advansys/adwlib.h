@@ -2239,7 +2239,7 @@ name|ADW_DT
 init|=
 literal|0x0004
 block|,
-comment|/* Supports Double Transistion REQ/ACK*/
+comment|/* Supports Double Transition REQ/ACK */
 name|ADW_WIDE
 init|=
 literal|0x0008
@@ -3495,7 +3495,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/* Intialization */
+comment|/* Initialization */
 end_comment
 
 begin_function_decl

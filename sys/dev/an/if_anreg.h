@@ -1217,7 +1217,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* async xmit completed succesfully */
+comment|/* async xmit completed successfully */
 end_comment
 
 begin_define

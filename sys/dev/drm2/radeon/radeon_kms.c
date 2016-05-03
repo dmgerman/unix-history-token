@@ -2350,7 +2350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * radeon_get_vblank_timestamp_kms - get vblank timestamp  *  * @dev: drm dev pointer  * @crtc: crtc to get the timestamp for  * @max_error: max error  * @vblank_time: time value  * @flags: flags passed to the driver  *  * Gets the timestamp on the requested crtc based on the  * scanout position.  (all asics).  * Returns postive status flags on success, negative error on failure.  */
+comment|/**  * radeon_get_vblank_timestamp_kms - get vblank timestamp  *  * @dev: drm dev pointer  * @crtc: crtc to get the timestamp for  * @max_error: max error  * @vblank_time: time value  * @flags: flags passed to the driver  *  * Gets the timestamp on the requested crtc based on the  * scanout position.  (all asics).  * Returns positive status flags on success, negative error on failure.  */
 end_comment
 
 begin_function

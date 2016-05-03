@@ -6428,7 +6428,7 @@ name|db
 init|=
 literal|0
 decl_stmt|;
-comment|/* maskoff db intrs untill all the aens are fetched */
+comment|/* maskoff db intrs until all the aens are fetched */
 comment|/* tws_disable_db_intr(sc); */
 name|tws_fetch_aen
 argument_list|(

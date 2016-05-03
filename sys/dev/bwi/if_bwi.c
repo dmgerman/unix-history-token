@@ -18461,7 +18461,7 @@ name|hdr
 operator|->
 name|rxh_tsf
 expr_stmt|;
-comment|/* No endian convertion */
+comment|/* No endian conversion */
 name|sc
 operator|->
 name|sc_rx_th

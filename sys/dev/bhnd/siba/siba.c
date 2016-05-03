@@ -1625,7 +1625,7 @@ name|di
 operator|->
 name|core_id
 expr_stmt|;
-comment|/* Region numbers must be assigned in order, but our siba address 	 * space IDs may be sparsely allocated; thus, we track 	 * the region index seperately. */
+comment|/* Region numbers must be assigned in order, but our siba address 	 * space IDs may be sparsely allocated; thus, we track 	 * the region index separately. */
 name|region_num
 operator|=
 literal|0

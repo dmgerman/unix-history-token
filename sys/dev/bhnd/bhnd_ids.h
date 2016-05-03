@@ -3398,7 +3398,7 @@ value|(8 | 6)
 end_define
 
 begin_comment
-comment|/* 4314 Developement package id */
+comment|/* 4314 Development package id */
 end_comment
 
 begin_define
@@ -3453,7 +3453,7 @@ value|(0x1)
 end_define
 
 begin_comment
-comment|/* FCBGA PC/Embeded/Media PCIE/SDIO */
+comment|/* FCBGA PC/Embedded/Media PCIE/SDIO */
 end_comment
 
 begin_define
@@ -5421,7 +5421,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* acphy, Seperate paparam for 20/40/80 */
+comment|/* acphy, Separate paparam for 20/40/80 */
 end_comment
 
 begin_define
@@ -5432,7 +5432,7 @@ value|0x7
 end_define
 
 begin_comment
-comment|/* acphy, Seperate paparam for 20/40/80 shift bit */
+comment|/* acphy, Separate paparam for 20/40/80 shift bit */
 end_comment
 
 begin_define

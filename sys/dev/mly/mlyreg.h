@@ -558,7 +558,7 @@ name|host_port_mapped
 range|:
 literal|1
 decl_stmt|;
-comment|/* this system drive visibile to host on this controller/port combination */
+comment|/* this system drive visible to host on this controller/port combination */
 name|u_int8_t
 name|tid_valid
 range|:
@@ -4444,7 +4444,7 @@ value|(1<<4)
 end_define
 
 begin_comment
-comment|/*  * PG6: 5.4.4 Doorbell 1  *  * Note that the documentation claims that these bits are set when the  * status queue(s) are empty, wheras the Linux driver and experience   * suggest they are set when there is status available.  */
+comment|/*  * PG6: 5.4.4 Doorbell 1  *  * Note that the documentation claims that these bits are set when the  * status queue(s) are empty, whereas the Linux driver and experience   * suggest they are set when there is status available.  */
 end_comment
 
 begin_define

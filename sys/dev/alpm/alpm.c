@@ -835,7 +835,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unkown"
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 break|break;

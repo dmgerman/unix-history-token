@@ -1051,7 +1051,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannnot create transfer DMA map\n"
+literal|"cannot create transfer DMA map\n"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -34499,7 +34499,7 @@ comment|/* memory space which allows the driver to enable particular functionali
 end_comment
 
 begin_comment
-comment|/* within the firmware or read specfic information about the running        */
+comment|/* within the firmware or read specific information about the running        */
 end_comment
 
 begin_comment
@@ -34813,7 +34813,7 @@ value|((x)& USABLE_RX_BD_PER_PAGE)
 end_define
 
 begin_comment
-comment|/*  * To accomodate jumbo frames, the page chain should  * be 4 times larger than the receive chain.  */
+comment|/*  * To accommodate jumbo frames, the page chain should  * be 4 times larger than the receive chain.  */
 end_comment
 
 begin_define

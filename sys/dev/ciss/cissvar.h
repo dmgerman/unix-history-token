@@ -56,7 +56,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/*  * Interrupt reduction can be controlled by tuning the interrupt  * coalesce delay and count paramters.  The delay (in microseconds)  * defers delivery of interrupts to increase the chance of there being  * more than one completed command ready when the interrupt is  * delivered.  The count expedites the delivery of the interrupt when  * the given number of commands are ready.  *  * If the delay is set to 0, interrupts are delivered immediately.  */
+comment|/*  * Interrupt reduction can be controlled by tuning the interrupt  * coalesce delay and count parameters.  The delay (in microseconds)  * defers delivery of interrupts to increase the chance of there being  * more than one completed command ready when the interrupt is  * delivered.  The count expedites the delivery of the interrupt when  * the given number of commands are ready.  *  * If the delay is set to 0, interrupts are delivered immediately.  */
 end_comment
 
 begin_define

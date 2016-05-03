@@ -150,7 +150,7 @@ file|"ntb_hw.h"
 end_include
 
 begin_comment
-comment|/*  * The Non-Transparent Bridge (NTB) is a device on some Intel processors that  * allows you to connect two systems using a PCI-e link.  *  * This module contains the hardware abstraction layer for the NTB. It allows  * you to send and recieve interrupts, map the memory windows and send and  * receive messages in the scratch-pad registers.  *  * NOTE: Much of the code in this module is shared with Linux. Any patches may  * be picked up and redistributed in Linux with a dual GPL/BSD license.  */
+comment|/*  * The Non-Transparent Bridge (NTB) is a device on some Intel processors that  * allows you to connect two systems using a PCI-e link.  *  * This module contains the hardware abstraction layer for the NTB. It allows  * you to send and receive interrupts, map the memory windows and send and  * receive messages in the scratch-pad registers.  *  * NOTE: Much of the code in this module is shared with Linux. Any patches may  * be picked up and redistributed in Linux with a dual GPL/BSD license.  */
 end_comment
 
 begin_define
@@ -15048,7 +15048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ntb_get_peer_db_addr() - Return the address of the remote doorbell register,  * as well as the size of the register (via *sz_out).  *  * This function allows a caller using I/OAT DMA to chain the remote doorbell  * ring to its memory window write.  *  * Note that writing the peer doorbell via a memory window will *not* generate  * an interrupt on the remote host; that must be done seperately.  */
+comment|/*  * ntb_get_peer_db_addr() - Return the address of the remote doorbell register,  * as well as the size of the register (via *sz_out).  *  * This function allows a caller using I/OAT DMA to chain the remote doorbell  * ring to its memory window write.  *  * Note that writing the peer doorbell via a memory window will *not* generate  * an interrupt on the remote host; that must be done separately.  */
 end_comment
 
 begin_function

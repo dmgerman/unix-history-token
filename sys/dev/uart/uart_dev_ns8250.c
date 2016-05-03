@@ -2419,7 +2419,7 @@ decl_stmt|;
 name|uint8_t
 name|msr
 decl_stmt|;
-comment|/* 	 * The delta bits are reputed to be broken on some hardware, so use 	 * software delta detection by default.  Use the hardware delta bits 	 * when capturing PPS pulses which are too narrow for software detection 	 * to see the edges.  Hardware delta for RI doesn't work like the 	 * others, so always use software for it.  Other threads may be changing 	 * other (non-MSR) bits in sc_hwsig, so loop until it can succesfully 	 * update without other changes happening.  Note that the SIGCHGxx() 	 * macros carefully preserve the delta bits when we have to loop several 	 * times and a signal transitions between iterations. 	 */
+comment|/* 	 * The delta bits are reputed to be broken on some hardware, so use 	 * software delta detection by default.  Use the hardware delta bits 	 * when capturing PPS pulses which are too narrow for software detection 	 * to see the edges.  Hardware delta for RI doesn't work like the 	 * others, so always use software for it.  Other threads may be changing 	 * other (non-MSR) bits in sc_hwsig, so loop until it can successfully 	 * update without other changes happening.  Note that the SIGCHGxx() 	 * macros carefully preserve the delta bits when we have to loop several 	 * times and a signal transitions between iterations. 	 */
 do|do
 block|{
 name|old
@@ -3918,7 +3918,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * XXX there are some issues related to hardware flow control and 	 * it's likely that uart(4) is the cause. This basicly needs more 	 * investigation, but we avoid using for hardware flow control 	 * until then. 	 */
+comment|/* 	 * XXX there are some issues related to hardware flow control and 	 * it's likely that uart(4) is the cause. This basically needs more 	 * investigation, but we avoid using for hardware flow control 	 * until then. 	 */
 comment|/* 16650s or higher have automatic flow control. */
 block|if (sc->sc_rxfifosz> 16) { 		sc->sc_hwiflow = 1; 		sc->sc_hwoflow = 1; 	}
 endif|#
@@ -4488,7 +4488,7 @@ decl_stmt|;
 name|u_char
 name|ier
 decl_stmt|;
-comment|/* 	 * turn off all interrupts to enter polling mode. Leave the 	 * saved mask alone. We'll restore whatever it was in ungrab. 	 * All pending interupt signals are reset when IER is set to 0. 	 */
+comment|/* 	 * turn off all interrupts to enter polling mode. Leave the 	 * saved mask alone. We'll restore whatever it was in ungrab. 	 * All pending interrupt signals are reset when IER is set to 0. 	 */
 name|uart_lock
 argument_list|(
 name|sc

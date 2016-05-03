@@ -4,7 +4,7 @@ comment|/*-  *       Copyright (c) 2000-04 ICP vortex GmbH  *       Copyright (c
 end_comment
 
 begin_comment
-comment|/*  * iir.c: SCSI dependant code for the Intel Integrated RAID Controller driver  *  * Written by: Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions: Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              Mike Smith;             Some driver source code.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.c 1.5 2004/03/30 10:17:53 achim Exp $"  */
+comment|/*  * iir.c: SCSI dependent code for the Intel Integrated RAID Controller driver  *  * Written by: Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions: Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              Mike Smith;             Some driver source code.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.c 1.5 2004/03/30 10:17:53 achim Exp $"  */
 end_comment
 
 begin_include

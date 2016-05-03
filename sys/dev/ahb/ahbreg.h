@@ -192,7 +192,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* give up bus immediatly */
+comment|/* give up bus immediately */
 end_comment
 
 begin_define

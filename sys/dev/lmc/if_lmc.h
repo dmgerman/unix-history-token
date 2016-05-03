@@ -1147,7 +1147,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Framer Interupt enable          */
+comment|/* Framer Interrupt enable          */
 end_comment
 
 begin_comment
@@ -1188,7 +1188,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Framer Interupt enable          */
+comment|/* Framer Interrupt enable          */
 end_comment
 
 begin_comment

@@ -3839,7 +3839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_fifo_txdl_interrupt_type_set - Set the interrupt type for the txdl  * @txdlh: Descriptor handle.  * @interrupt_type: utiliz based interupt or List interrupt  *  * vxge_hal_fifo_txdl_interrupt_type_set is used to set the interrupt type for  * each xmit txdl dynamically  */
+comment|/*  * vxge_hal_fifo_txdl_interrupt_type_set - Set the interrupt type for the txdl  * @txdlh: Descriptor handle.  * @interrupt_type: utiliz based interrupt or List interrupt  *  * vxge_hal_fifo_txdl_interrupt_type_set is used to set the interrupt type for  * each xmit txdl dynamically  */
 end_comment
 
 begin_function
@@ -4095,7 +4095,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_fifo_txdl_buffer_finalize - Prepares a descriptor that contains the  * single physically contiguous buffer.  *  * @vpath_handle: Virtual path handle.  * @txdlh: Descriptor handle.  * @frag_idx: Index of the data buffer in the Txdl list.  *  * This API in conjuction with vxge_hal_fifo_txdl_buffer_append() prepares  * a descriptor that consists of a single physically contiguous buffer  * which inturn contains the contents of one or more virtually contiguous  * buffers received from the upper layer.  *  * See Also: vxge_hal_fifo_txdl_buffer_append().  */
+comment|/*  * vxge_hal_fifo_txdl_buffer_finalize - Prepares a descriptor that contains the  * single physically contiguous buffer.  *  * @vpath_handle: Virtual path handle.  * @txdlh: Descriptor handle.  * @frag_idx: Index of the data buffer in the Txdl list.  *  * This API in conjunction with vxge_hal_fifo_txdl_buffer_append() prepares  * a descriptor that consists of a single physically contiguous buffer  * which inturn contains the contents of one or more virtually contiguous  * buffers received from the upper layer.  *  * See Also: vxge_hal_fifo_txdl_buffer_append().  */
 end_comment
 
 begin_function_decl
@@ -6036,7 +6036,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_device_trace_read - Read trace buffer contents.  * @devh: HAL device handle.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * upto the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
+comment|/*  * vxge_hal_device_trace_read - Read trace buffer contents.  * @devh: HAL device handle.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * up to the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
 end_comment
 
 begin_function_decl
@@ -7821,7 +7821,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_vpath_rts_rth_key_set - Configure 40byte secret for hash calc.  *  * @vpath_handle: Virtual Path ahandle.  * @KeySize: Number of 64-bit words  * @Key: upto 40-byte array of 64-bit values  * This function configures the 40-byte secret which is used for hash  * calculation.  *  * See also: vxge_hal_vpath_rts_rth_clr(), vxge_hal_vpath_rts_rth_set().  */
+comment|/*  * vxge_hal_vpath_rts_rth_key_set - Configure 40byte secret for hash calc.  *  * @vpath_handle: Virtual Path ahandle.  * @KeySize: Number of 64-bit words  * @Key: up to 40-byte array of 64-bit values  * This function configures the 40-byte secret which is used for hash  * calculation.  *  * See also: vxge_hal_vpath_rts_rth_clr(), vxge_hal_vpath_rts_rth_set().  */
 end_comment
 
 begin_function_decl
@@ -8407,7 +8407,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_vpath_poll_rx - Poll Rx	od Virtual Path	for completed  *			 descriptors and process the same.  * @vpath_handle: Virtual Path ahandle.  * @got_rx: Buffer to return the flag set if receive interrupt is occured  *  * The function	polls the Rx for the completed	descriptors and	calls  * the upper-layer driver (ULD)	via supplied completion	callback.  *  * Returns: VXGE_HAL_OK, if the polling is completed successful.  * VXGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: vxge_hal_vpath_poll_tx()  */
+comment|/*  * vxge_hal_vpath_poll_rx - Poll Rx	od Virtual Path	for completed  *			 descriptors and process the same.  * @vpath_handle: Virtual Path ahandle.  * @got_rx: Buffer to return the flag set if receive interrupt is occurred  *  * The function	polls the Rx for the completed	descriptors and	calls  * the upper-layer driver (ULD)	via supplied completion	callback.  *  * Returns: VXGE_HAL_OK, if the polling is completed successful.  * VXGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: vxge_hal_vpath_poll_tx()  */
 end_comment
 
 begin_function_decl
@@ -8425,7 +8425,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_vpath_poll_tx - Poll Tx	for completed descriptors and process  *			 the same.  * @vpath_handle: Virtual Path ahandle.  * @got_tx: Buffer to return the flag set if transmit interrupt is occured  *  * The function	polls the Tx for the completed	descriptors and	calls  * the upper-layer driver (ULD)	via supplied completion callback.  *  * Returns: VXGE_HAL_OK, if the polling is completed successful.  * VXGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: vxge_hal_vpath_poll_rx().  */
+comment|/*  * vxge_hal_vpath_poll_tx - Poll Tx	for completed descriptors and process  *			 the same.  * @vpath_handle: Virtual Path ahandle.  * @got_tx: Buffer to return the flag set if transmit interrupt is occurred  *  * The function	polls the Tx for the completed	descriptors and	calls  * the upper-layer driver (ULD)	via supplied completion callback.  *  * Returns: VXGE_HAL_OK, if the polling is completed successful.  * VXGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: vxge_hal_vpath_poll_rx().  */
 end_comment
 
 begin_function_decl

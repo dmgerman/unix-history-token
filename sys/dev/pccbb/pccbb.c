@@ -2804,7 +2804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Restore the damage that cbb_o2micro_power_hack does to EXCA_INTR so  * we don't have an interrupt storm on power on.  This has the efect of  * disabling card status change interrupts for the duration of poweron.  */
+comment|/*  * Restore the damage that cbb_o2micro_power_hack does to EXCA_INTR so  * we don't have an interrupt storm on power on.  This has the effect of  * disabling card status change interrupts for the duration of poweron.  */
 end_comment
 
 begin_function

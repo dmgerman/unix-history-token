@@ -236,7 +236,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The pool structure. There are usually six pools:  *  - generic (not restricted to DMA32):  *      - write combined, uncached, cached.  *  - dma32 (up to 2^32 - so up 4GB):  *      - write combined, uncached, cached.  * for each 'struct device'. The 'cached' is for pages that are actively used.  * The other ones can be shrunk by the shrinker API if neccessary.  * @pools: The 'struct device->dma_pools' link.  * @type: Type of the pool  * @lock: Protects the inuse_list and free_list from concurrnet access. Must be  * used with irqsave/irqrestore variants because pool allocator maybe called  * from delayed work.  * @inuse_list: Pool of pages that are in use. The order is very important and  *   it is in the order that the TTM pages that are put back are in.  * @free_list: Pool of pages that are free to be used. No order requirements.  * @dev: The device that is associated with these pools.  * @size: Size used during DMA allocation.  * @npages_free: Count of available pages for re-use.  * @npages_in_use: Count of pages that are in use.  * @nfrees: Stats when pool is shrinking.  * @nrefills: Stats when the pool is grown.  * @gfp_flags: Flags to pass for alloc_page.  * @name: Name of the pool.  * @dev_name: Name derieved from dev - similar to how dev_info works.  *   Used during shutdown as the dev_info during release is unavailable.  */
+comment|/*  * The pool structure. There are usually six pools:  *  - generic (not restricted to DMA32):  *      - write combined, uncached, cached.  *  - dma32 (up to 2^32 - so up 4GB):  *      - write combined, uncached, cached.  * for each 'struct device'. The 'cached' is for pages that are actively used.  * The other ones can be shrunk by the shrinker API if necessary.  * @pools: The 'struct device->dma_pools' link.  * @type: Type of the pool  * @lock: Protects the inuse_list and free_list from concurrnet access. Must be  * used with irqsave/irqrestore variants because pool allocator maybe called  * from delayed work.  * @inuse_list: Pool of pages that are in use. The order is very important and  *   it is in the order that the TTM pages that are put back are in.  * @free_list: Pool of pages that are free to be used. No order requirements.  * @dev: The device that is associated with these pools.  * @size: Size used during DMA allocation.  * @npages_free: Count of available pages for re-use.  * @npages_in_use: Count of pages that are in use.  * @nfrees: Stats when pool is shrinking.  * @nrefills: Stats when the pool is grown.  * @gfp_flags: Flags to pass for alloc_page.  * @name: Name of the pool.  * @dev_name: Name derieved from dev - similar to how dev_info works.  *   Used during shutdown as the dev_info during release is unavailable.  */
 end_comment
 
 begin_struct
@@ -3181,7 +3181,7 @@ operator|*
 name|irq_flags
 argument_list|)
 expr_stmt|;
-comment|/* Returns how many more are neccessary to fulfill the 		 * request. */
+comment|/* Returns how many more are necessary to fulfill the 		 * request. */
 name|r
 operator|=
 name|ttm_dma_pool_alloc_new_pages

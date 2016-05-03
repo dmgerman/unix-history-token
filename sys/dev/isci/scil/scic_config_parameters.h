@@ -243,7 +243,7 @@ name|U8
 name|oem_parameters_version
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This method allows the user to retreive the OEM  *        parameters utilized by the controller.  *  * @param[in]  controller This parameter specifies the controller on which  *             to set the user parameters.  * @param[out] oem_parameters This parameter specifies the OEM parameters  *             object in which to write the core's OEM parameters.  *  * @return none  */
+comment|/**  * @brief This method allows the user to retrieve the OEM  *        parameters utilized by the controller.  *  * @param[in]  controller This parameter specifies the controller on which  *             to set the user parameters.  * @param[out] oem_parameters This parameter specifies the OEM parameters  *             object in which to write the core's OEM parameters.  *  * @return none  */
 name|void
 name|scic_oem_parameters_get
 parameter_list|(

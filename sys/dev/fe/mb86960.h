@@ -12,7 +12,7 @@ comment|/*  * Notes on register naming:  *  * Fujitsu documents for MB86960A/MB8
 end_comment
 
 begin_comment
-comment|/* Data Link Control Registrs, on invaliant port addresses.  */
+comment|/* Data Link Control Registers, on invaliant port addresses.  */
 end_comment
 
 begin_define

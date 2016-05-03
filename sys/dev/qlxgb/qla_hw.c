@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2011-2012 Qlogic Corporation  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * File: qla_hw.c  * Author : David C Somayajulu, Qlogic Corporation, Aliso Viejo, CA 92656.  * Content: Contains Hardware dependant functions  */
+comment|/*  * File: qla_hw.c  * Author : David C Somayajulu, Qlogic Corporation, Aliso Viejo, CA 92656.  * Content: Contains Hardware dependent functions  */
 end_comment
 
 begin_include
@@ -1743,7 +1743,7 @@ name|rx_cntxt_rsp_paddr
 operator|+
 name|size
 expr_stmt|;
-comment|/* 	 * Initialize the Transmit Context Request so that we don't need to 	 * do it everytime we need to create a context 	 */
+comment|/* 	 * Initialize the Transmit Context Request so that we don't need to 	 * do it every time we need to create a context 	 */
 name|tx_cntxt_req
 operator|=
 name|hw
@@ -3210,7 +3210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Name: qla_set_mac_rcv_mode  * Function: Enable/Disable AllMulticast and Promiscous Modes.  */
+comment|/*  * Name: qla_set_mac_rcv_mode  * Function: Enable/Disable AllMulticast and Promiscuous Modes.  */
 end_comment
 
 begin_function

@@ -3271,7 +3271,7 @@ name|sc
 argument_list|,
 name|MPS_INIT
 argument_list|,
-literal|"%s: successfull count(%d), timeout(%d)\n"
+literal|"%s: successful count(%d), timeout(%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8782,7 +8782,7 @@ argument_list|,
 name|baddr
 argument_list|)
 expr_stmt|;
-comment|/* LSI-TODO. See Linux Code. Need Gracefull exit*/
+comment|/* LSI-TODO. See Linux Code. Need Graceful exit*/
 name|panic
 argument_list|(
 literal|"Reply address out of range"
@@ -10133,7 +10133,7 @@ name|NextChainOffset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* TODO Looks like bug in Setting sgc->Flags.  	 *	sgc->Flags = ( MPI2_SGE_FLAGS_CHAIN_ELEMENT | MPI2_SGE_FLAGS_64_BIT_ADDRESSING | 	 *	            MPI2_SGE_FLAGS_SYSTEM_ADDRESS)<< MPI2_SGE_FLAGS_SHIFT 	 *	This is fine.. because we are not using simple element. In case of  	 *	MPI2_SGE_CHAIN32, we have seperate Length and Flags feild.  	 */
+comment|/* TODO Looks like bug in Setting sgc->Flags.  	 *	sgc->Flags = ( MPI2_SGE_FLAGS_CHAIN_ELEMENT | MPI2_SGE_FLAGS_64_BIT_ADDRESSING | 	 *	            MPI2_SGE_FLAGS_SYSTEM_ADDRESS)<< MPI2_SGE_FLAGS_SHIFT 	 *	This is fine.. because we are not using simple element. In case of  	 *	MPI2_SGE_CHAIN32, we have separate Length and Flags feild.  	 */
 name|sgc
 operator|->
 name|Flags
@@ -11655,7 +11655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The MPT driver had a verbose interface for config pages.  In this driver,  * reduce it to much simplier terms, similar to the Linux driver.  */
+comment|/*  * The MPT driver had a verbose interface for config pages.  In this driver,  * reduce it to much simpler terms, similar to the Linux driver.  */
 end_comment
 
 begin_function

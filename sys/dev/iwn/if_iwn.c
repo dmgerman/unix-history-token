@@ -27245,7 +27245,7 @@ name|plcp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The mimo field is an index into the table which 		 * indicates the first index where it and subsequent entries 		 * will not be using MIMO. 		 * 		 * Since we're filling linkq from 0..15 and we're filling 		 * from the higest MCS rates to the lowest rates, if we 		 * _are_ doing a dual-stream rate, set mimo to idx+1 (ie, 		 * the next entry.)  That way if the next entry is a non-MIMO 		 * entry, we're already pointing at it. 		 */
+comment|/* 		 * The mimo field is an index into the table which 		 * indicates the first index where it and subsequent entries 		 * will not be using MIMO. 		 * 		 * Since we're filling linkq from 0..15 and we're filling 		 * from the highest MCS rates to the lowest rates, if we 		 * _are_ doing a dual-stream rate, set mimo to idx+1 (ie, 		 * the next entry.)  That way if the next entry is a non-MIMO 		 * entry, we're already pointing at it. 		 */
 if|if
 condition|(
 operator|(

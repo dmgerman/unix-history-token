@@ -2963,7 +2963,7 @@ name|t3_wr
 modifier|*
 name|queue
 decl_stmt|;
-comment|/* DMA accessable memory */
+comment|/* DMA accessible memory */
 name|bus_addr_t
 name|dma_addr
 decl_stmt|;

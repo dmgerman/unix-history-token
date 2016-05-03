@@ -174,7 +174,7 @@ define|#
 directive|define
 name|SCU_TASK_ABORTED
 value|1
-comment|//direction bit defintion
+comment|//direction bit definition
 comment|/**  * @name SATA_DIRECTION  */
 comment|/*@{*/
 define|#
@@ -686,7 +686,7 @@ define|#
 directive|define
 name|SCU_SGL_ELEMENT_PAIR_B
 value|1
-comment|/**  * @struct SCU_SGL_ELEMENT_PAIR  *  * @brief This structure is the SCU hardware definition of a pair of SGL  *        elements.  *  * The SCU hardware always works on SGL pairs.  They are refered to in the DS  * specification as SGL A and SGL B.  Each SGL pair is followed by the address  * of the next pair.  */
+comment|/**  * @struct SCU_SGL_ELEMENT_PAIR  *  * @brief This structure is the SCU hardware definition of a pair of SGL  *        elements.  *  * The SCU hardware always works on SGL pairs.  They are referred to in the DS  * specification as SGL A and SGL B.  Each SGL pair is followed by the address  * of the next pair.  */
 typedef|typedef
 struct|struct
 name|SCU_SGL_ELEMENT_PAIR
@@ -894,7 +894,7 @@ name|strict_ordering
 range|:
 literal|1
 decl_stmt|;
-comment|/**     * This field indicates the type of endianess to be utilized for the     * frame.  command, task, and response frames utilized control_frame     * set to 1.     */
+comment|/**     * This field indicates the type of endianness to be utilized for the     * frame.  command, task, and response frames utilized control_frame     * set to 1.     */
 name|U32
 name|control_frame
 range|:
@@ -990,7 +990,7 @@ range|:
 literal|16
 decl_stmt|;
 comment|// OFFSET 0x14
-comment|/**     * This filed is set to the number of bytes to be transfered in the request.     */
+comment|/**     * This filed is set to the number of bytes to be transferred in the request.     */
 name|U32
 name|transfer_length_bytes
 range|:
@@ -1004,7 +1004,7 @@ range|:
 literal|8
 decl_stmt|;
 comment|// OFFSET 0x18-0x2C
-comment|/**     * This union provides for the protocol specif part of the SCU Task Context.     */
+comment|/**     * This union provides for the protocol specific part of the SCU Task Context.     */
 name|union
 name|PROTOCOL_CONTEXT
 name|type

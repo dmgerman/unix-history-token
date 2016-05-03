@@ -4276,7 +4276,7 @@ decl_stmt|;
 name|size_t
 name|modified_segment_size
 decl_stmt|;
-comment|/* 	 * Read the segment from NVRAM into the segment_data buffer and validate 	 * it, returning if it does not validate. This is not a failure unless 	 * this is the first segment in a partition. In this case the caller 	 * must propogate the error. 	 */
+comment|/* 	 * Read the segment from NVRAM into the segment_data buffer and validate 	 * it, returning if it does not validate. This is not a failure unless 	 * this is the first segment in a partition. In this case the caller 	 * must propagate the error. 	 */
 name|status
 operator|=
 name|ef10_nvram_read_tlv_segment

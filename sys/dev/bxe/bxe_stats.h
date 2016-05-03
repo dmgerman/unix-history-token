@@ -654,7 +654,7 @@ decl_stmt|;
 name|uint32_t
 name|mbuf_alloc_tpa
 decl_stmt|;
-comment|/* num. of times tx queue full occured */
+comment|/* num. of times tx queue full occurred */
 name|uint32_t
 name|tx_queue_full_return
 decl_stmt|;
@@ -930,7 +930,7 @@ decl_stmt|;
 name|uint32_t
 name|mbuf_alloc_tpa
 decl_stmt|;
-comment|/* num. of times tx queue full occured */
+comment|/* num. of times tx queue full occurred */
 name|uint32_t
 name|tx_queue_full_return
 decl_stmt|;

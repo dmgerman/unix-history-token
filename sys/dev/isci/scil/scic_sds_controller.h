@@ -228,7 +228,7 @@ argument_list|,
 name|SCI_MAX_IO_REQUESTS
 argument_list|)
 expr_stmt|;
-comment|/**     * This filed is the SCIC_POWER_CONTROL data used to controll when direct     * attached devices can consume power.     */
+comment|/**     * This filed is the SCIC_POWER_CONTROL data used to control when direct     * attached devices can consume power.     */
 name|SCIC_POWER_CONTROL_T
 name|power_control
 decl_stmt|;
@@ -318,7 +318,7 @@ comment|/**     * This field is the index of the next phy start.  It is initiali
 name|U32
 name|next_phy_to_start
 decl_stmt|;
-comment|/**     * This field controlls the invalid link up notifications to the SCI_USER.  If     * an invalid_link_up notification is reported a bit for the PHY index is set     * so further notifications are not made.  Once the PHY object reports link up     * and is made part of a port then this bit for the PHY index is cleared.     */
+comment|/**     * This field controls the invalid link up notifications to the SCI_USER.  If     * an invalid_link_up notification is reported a bit for the PHY index is set     * so further notifications are not made.  Once the PHY object reports link up     * and is made part of a port then this bit for the PHY index is cleared.     */
 name|U8
 name|invalid_phy_mask
 decl_stmt|;

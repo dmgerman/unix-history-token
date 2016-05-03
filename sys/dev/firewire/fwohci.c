@@ -3058,7 +3058,7 @@ name|OHCI_CNTL_DMA_RUN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* FLUSH FIFO and reset Transmitter/Reciever */
+comment|/* FLUSH FIFO and reset Transmitter/Receiver */
 name|OWRITE
 argument_list|(
 name|sc
@@ -4329,7 +4329,7 @@ literal|0
 block|bzero(&sc->fc.config_rom[0], CROMSIZE); 	sc->fc.config_rom[1] = 0x31333934; 	sc->fc.config_rom[2] = 0xf000a002; 	sc->fc.config_rom[3] = OREAD(sc, OHCI_EUID_HI); 	sc->fc.config_rom[4] = OREAD(sc, OHCI_EUID_LO); 	sc->fc.config_rom[5] = 0; 	sc->fc.config_rom[0] = (4<< 24) | (5<< 16);  	sc->fc.config_rom[0] |= fw_crc16(&sc->fc.config_rom[1], 5*4);
 endif|#
 directive|endif
-comment|/* SID recieve buffer must align 2^11 */
+comment|/* SID receive buffer must align 2^11 */
 define|#
 directive|define
 name|OHCI_SIDSIZE
@@ -5880,7 +5880,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Specify bound timer of asy. responce */
+comment|/* Specify bound timer of asy. response */
 if|if
 condition|(
 operator|&
@@ -10840,7 +10840,7 @@ literal|0
 comment|/* Let dcons(4) be accessed */
 comment|/* Stop interrupt */
 block|OWRITE(sc, FWOHCI_INTMASKCLR, 			OHCI_INT_EN | OHCI_INT_ERR | OHCI_INT_PHY_SID 			| OHCI_INT_PHY_INT 			| OHCI_INT_DMA_ATRQ | OHCI_INT_DMA_ATRS 			| OHCI_INT_DMA_PRRQ | OHCI_INT_DMA_PRRS 			| OHCI_INT_DMA_ARRQ | OHCI_INT_DMA_ARRS 			| OHCI_INT_PHY_BUS_R);
-comment|/* FLUSH FIFO and reset Transmitter/Reciever */
+comment|/* FLUSH FIFO and reset Transmitter/Receiver */
 block|OWRITE(sc, OHCI_HCCCTL, OHCI_HCC_RESET);
 endif|#
 directive|endif
@@ -13491,7 +13491,7 @@ block|{
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"fwohci_rbuf_update: this shouldn't happend\n"
+literal|"fwohci_rbuf_update: this shouldn't happened\n"
 argument_list|)
 expr_stmt|;
 block|}

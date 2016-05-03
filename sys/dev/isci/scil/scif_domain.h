@@ -49,7 +49,7 @@ name|SCI_DOMAIN_HANDLE_T
 name|domain
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This method will find and retreive the device associated with the  *        supplied SAS address if such a device exists.  *  * @param[in]  domain This parameter specifies the framework domain object  *             on which to discover devices.  * @param[in]  sas_address This parameter specifies the SAS address of the  *             object to locate in this domain.  *  * @return Indicate if the device was successfully found in the domain.  * @retval SCI_INVALID_HANDLE This value is returned if the device is not  *         found in the domain.  * @retval All other values indicate a valid remote device being found.  */
+comment|/**  * @brief This method will find and retrieve the device associated with the  *        supplied SAS address if such a device exists.  *  * @param[in]  domain This parameter specifies the framework domain object  *             on which to discover devices.  * @param[in]  sas_address This parameter specifies the SAS address of the  *             object to locate in this domain.  *  * @return Indicate if the device was successfully found in the domain.  * @retval SCI_INVALID_HANDLE This value is returned if the device is not  *         found in the domain.  * @retval All other values indicate a valid remote device being found.  */
 name|SCI_REMOTE_DEVICE_HANDLE_T
 name|scif_domain_get_device_by_sas_address
 parameter_list|(

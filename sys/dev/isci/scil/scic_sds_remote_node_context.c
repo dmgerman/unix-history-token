@@ -712,7 +712,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** * This method will setup the remote node context object so it will * transistion to its final state. * * @param[in] this_rnc * @param[in] the_callback * @param[in] callback_parameter * * @return none */
+comment|/** * This method will setup the remote node context object so it will * transition to its final state. * * @param[in] this_rnc * @param[in] the_callback * @param[in] callback_parameter * * @return none */
 end_comment
 
 begin_function

@@ -511,7 +511,7 @@ name|uint16_t
 name|dport
 decl_stmt|;
 comment|/* destination port */
-comment|/* 	 * A combination of these (upto 36 bits) is available.  TP_VLAN_PRI_MAP 	 * is used to select the global mode and all filters are limited to the 	 * set of fields allowed by the global mode. 	 */
+comment|/* 	 * A combination of these (up to 36 bits) is available.  TP_VLAN_PRI_MAP 	 * is used to select the global mode and all filters are limited to the 	 * set of fields allowed by the global mode. 	 */
 name|uint16_t
 name|vnic
 decl_stmt|;

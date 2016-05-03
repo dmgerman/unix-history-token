@@ -209,7 +209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach to the pccard, and call bus independant attach and  * resource allocation routines.  */
+comment|/*  * Attach to the pccard, and call bus independent attach and  * resource allocation routines.  */
 end_comment
 
 begin_function

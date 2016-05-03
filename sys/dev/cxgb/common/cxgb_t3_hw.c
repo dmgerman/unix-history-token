@@ -2863,7 +2863,7 @@ value|0xc00
 end_define
 
 begin_comment
-comment|/**  *	t3_seeprom_read - read a VPD EEPROM location  *	@adapter: adapter to read  *	@addr: EEPROM address  *	@data: where to store the read data  *  *	Read a 32-bit word from a location in VPD EEPROM using the card's PCI  *	VPD ROM capability.  A zero is written to the flag bit when the  *	addres is written to the control register.  The hardware device will  *	set the flag to 1 when 4 bytes have been read into the data register.  */
+comment|/**  *	t3_seeprom_read - read a VPD EEPROM location  *	@adapter: adapter to read  *	@addr: EEPROM address  *	@data: where to store the read data  *  *	Read a 32-bit word from a location in VPD EEPROM using the card's PCI  *	VPD ROM capability.  A zero is written to the flag bit when the  *	address is written to the control register.  The hardware device will  *	set the flag to 1 when 4 bytes have been read into the data register.  */
 end_comment
 
 begin_function
@@ -4659,7 +4659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t3_read_flash - read words from serial flash  *	@adapter: the adapter  *	@addr: the start address for the read  *	@nwords: how many 32-bit words to read  *	@data: where to store the read data  *	@byte_oriented: whether to store data as bytes or as words  *  *	Read the specified number of 32-bit words from the serial flash.  *	If @byte_oriented is set the read data is stored as a byte array  *	(i.e., big-endian), otherwise as 32-bit words in the platform's  *	natural endianess.  */
+comment|/**  *	t3_read_flash - read words from serial flash  *	@adapter: the adapter  *	@addr: the start address for the read  *	@nwords: how many 32-bit words to read  *	@data: where to store the read data  *	@byte_oriented: whether to store data as bytes or as words  *  *	Read the specified number of 32-bit words from the serial flash.  *	If @byte_oriented is set the read data is stored as a byte array  *	(i.e., big-endian), otherwise as 32-bit words in the platform's  *	natural endianness.  */
 end_comment
 
 begin_function
@@ -4815,7 +4815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t3_write_flash - write up to a page of data to the serial flash  *	@adapter: the adapter  *	@addr: the start address to write  *	@n: length of data to write  *	@data: the data to write  *	@byte_oriented: whether to store data as bytes or as words  *  *	Writes up to a page of data (256 bytes) to the serial flash starting  *	at the given address.  *	If @byte_oriented is set the write data is stored as a 32-bit  *	big-endian array, otherwise in the processor's native endianess.  *  */
+comment|/**  *	t3_write_flash - write up to a page of data to the serial flash  *	@adapter: the adapter  *	@addr: the start address to write  *	@n: length of data to write  *	@data: the data to write  *	@byte_oriented: whether to store data as bytes or as words  *  *	Writes up to a page of data (256 bytes) to the serial flash starting  *	at the given address.  *	If @byte_oriented is set the write data is stored as a 32-bit  *	big-endian array, otherwise in the processor's native endianness.  *  */
 end_comment
 
 begin_function
@@ -7849,7 +7849,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *	t3_handle_intr_status - table driven interrupt handler  *	@adapter: the adapter that generated the interrupt  *	@reg: the interrupt status register to process  *	@mask: a mask to apply to the interrupt status  *	@acts: table of interrupt actions  *	@stats: statistics counters tracking interrupt occurrences  *  *	A table driven interrupt handler that applies a set of masks to an  *	interrupt status word and performs the corresponding actions if the  *	interrupts described by the mask have occured.  The actions include  *	optionally printing a warning or alert message, and optionally  *	incrementing a stat counter.  The table is terminated by an entry  *	specifying mask 0.  Returns the number of fatal interrupt conditions.  */
+comment|/**  *	t3_handle_intr_status - table driven interrupt handler  *	@adapter: the adapter that generated the interrupt  *	@reg: the interrupt status register to process  *	@mask: a mask to apply to the interrupt status  *	@acts: table of interrupt actions  *	@stats: statistics counters tracking interrupt occurrences  *  *	A table driven interrupt handler that applies a set of masks to an  *	interrupt status word and performs the corresponding actions if the  *	interrupts described by the mask have occurred.  The actions include  *	optionally printing a warning or alert message, and optionally  *	incrementing a stat counter.  The table is terminated by an entry  *	specifying mask 0.  Returns the number of fatal interrupt conditions.  */
 end_comment
 
 begin_function
@@ -15657,7 +15657,7 @@ name|mtus
 index|[]
 parameter_list|)
 block|{
-comment|/* 	 * See draft-mathis-plpmtud-00.txt for the values.  The min is 88 so 	 * it can accomodate max size TCP/IP headers when SACK and timestamps 	 * are enabled and still have at least 8 bytes of payload. 	 */
+comment|/* 	 * See draft-mathis-plpmtud-00.txt for the values.  The min is 88 so 	 * it can accommodate max size TCP/IP headers when SACK and timestamps 	 * are enabled and still have at least 8 bytes of payload. 	 */
 name|mtus
 index|[
 literal|0

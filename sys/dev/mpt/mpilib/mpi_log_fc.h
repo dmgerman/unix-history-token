@@ -29,12 +29,12 @@ name|MPI_IOCLOGINFO_FC_INIT_ERROR_BAD_START_OF_FRAME
 init|=
 literal|0x20000002
 block|,
-comment|/* Bad Rx Frame, bad start of frame primative */
+comment|/* Bad Rx Frame, bad start of frame primitive */
 name|MPI_IOCLOGINFO_FC_INIT_ERROR_BAD_END_OF_FRAME
 init|=
 literal|0x20000003
 block|,
-comment|/* Bad Rx Frame, bad end of frame primative */
+comment|/* Bad Rx Frame, bad end of frame primitive */
 name|MPI_IOCLOGINFO_FC_INIT_ERROR_OVER_RUN
 init|=
 literal|0x20000004

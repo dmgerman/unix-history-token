@@ -522,7 +522,7 @@ name|vx_irq
 operator|=
 name|irq
 expr_stmt|;
-comment|/* Now the registers are availible through the lower ioport */
+comment|/* Now the registers are available through the lower ioport */
 if|if
 condition|(
 name|vx_attach

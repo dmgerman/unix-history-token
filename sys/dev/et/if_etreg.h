@@ -179,7 +179,7 @@ value|250
 end_define
 
 begin_comment
-comment|/* XXX infered from default */
+comment|/* XXX inferred from default */
 end_comment
 
 begin_define

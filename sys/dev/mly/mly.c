@@ -8719,7 +8719,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Attach the physical and virtual SCSI busses to CAM.  *  * Physical bus numbering starts from 0, virtual bus numbering from one greater  * than the highest physical bus.  Physical busses are only registered if  * the kernel environment variable "hw.mly.register_physical_channels" is set.  *  * When we refer to a "bus", we are referring to the bus number registered with  * the SIM, wheras a "channel" is a channel number given to the adapter.  In order  * to keep things simple, we map these 1:1, so "bus" and "channel" may be used  * interchangeably.  */
+comment|/********************************************************************************  * Attach the physical and virtual SCSI busses to CAM.  *  * Physical bus numbering starts from 0, virtual bus numbering from one greater  * than the highest physical bus.  Physical busses are only registered if  * the kernel environment variable "hw.mly.register_physical_channels" is set.  *  * When we refer to a "bus", we are referring to the bus number registered with  * the SIM, whereas a "channel" is a channel number given to the adapter.  In order  * to keep things simple, we map these 1:1, so "bus" and "channel" may be used  * interchangeably.  */
 end_comment
 
 begin_function

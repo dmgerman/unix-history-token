@@ -892,7 +892,7 @@ comment|/* non-CBR reserve */
 name|u_int
 name|bwrem
 decl_stmt|;
-comment|/* remaining bandwith */
+comment|/* remaining bandwidth */
 comment|/* sysctl support */
 name|struct
 name|sysctl_ctx_list

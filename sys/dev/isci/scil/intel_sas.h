@@ -970,7 +970,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * @struct SMP_REQUEST_PHY_CONTROL  * @brief  This structure defines the contents of an SMP Phy Controler  *         request.  *         @note For specific information on each of these  *               individual fields please reference the SAS specification.  */
+comment|/**  * @struct SMP_REQUEST_PHY_CONTROL  * @brief  This structure defines the contents of an SMP Phy Controller  *         request.  *         @note For specific information on each of these  *               individual fields please reference the SAS specification.  */
 end_comment
 
 begin_typedef

@@ -2127,7 +2127,7 @@ comment|/*  * Copyright (c) 2001 Dachb0den Labs.  *      David Hulton<h1kari@dac
 end_comment
 
 begin_comment
-comment|/*  * standard hermes recieve frame used by wavelan/prism2 cards  */
+comment|/*  * standard hermes receive frame used by wavelan/prism2 cards  */
 end_comment
 
 begin_struct

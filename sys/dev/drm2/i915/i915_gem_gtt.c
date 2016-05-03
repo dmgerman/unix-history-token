@@ -2595,7 +2595,7 @@ name|dev
 operator|->
 name|dev_private
 decl_stmt|;
-comment|/* Substract the guard page ... */
+comment|/* Subtract the guard page ... */
 name|drm_mm_init
 argument_list|(
 operator|&

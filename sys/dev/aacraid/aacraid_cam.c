@@ -6478,7 +6478,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The SRB error codes just happen to match the CAM error 		 * codes.  How convienient! 		 */
+comment|/* 		 * The SRB error codes just happen to match the CAM error 		 * codes.  How convenient! 		 */
 name|ccb
 operator|->
 name|ccb_h

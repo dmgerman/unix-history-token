@@ -119,7 +119,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_about - Retrieve about info.  * @devh: HAL device handle.  * @about_info: Filled in by HAL. See vxge_hal_mgmt_about_info_t {}.  * @size: Pointer to buffer containing the Size of the @buffer_info.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_mgmt_about_info_t) and returns required size in this field  *  * Retrieve information such as PCI device and vendor IDs, board  * revision number, HAL version number, etc.  *  * Returns: VXGE_HAL_OK - success;  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about_info_t {}.  */
+comment|/*  * vxge_hal_mgmt_about - Retrieve about info.  * @devh: HAL device handle.  * @about_info: Filled in by HAL. See vxge_hal_mgmt_about_info_t {}.  * @size: Pointer to buffer containing the Size of the @buffer_info.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_mgmt_about_info_t) and returns required size in this field  *  * Retrieve information such as PCI device and vendor IDs, board  * revision number, HAL version number, etc.  *  * Returns: VXGE_HAL_OK - success;  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about_info_t {}.  */
 end_comment
 
 begin_function_decl
@@ -141,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_pci_config - Retrieve PCI configuration.  * @devh: HAL device handle.  * @buffer: Buffer for PCI configuration space.  * @size: Pointer to buffer containing the Size of the @buffer.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_pci_config_t) and returns required size in this field  *  * Get PCI configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  */
+comment|/*  * vxge_hal_mgmt_pci_config - Retrieve PCI configuration.  * @devh: HAL device handle.  * @buffer: Buffer for PCI configuration space.  * @size: Pointer to buffer containing the Size of the @buffer.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_pci_config_t) and returns required size in this field  *  * Get PCI configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  */
 end_comment
 
 begin_function_decl
@@ -163,7 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * struct vxge_hal_mgmt_pm_cap_t - Power Management Capabilities  * @pm_cap_ver: Version  * @pm_cap_pme_clock: PME clock required  * @pm_cap_aux_power: Auxilliary power support  * @pm_cap_dsi: Device specific initialization  * @pm_cap_aux_current: auxiliary current requirements  * @pm_cap_cap_d0: D1 power state support  * @pm_cap_cap_d1: D2 power state support  * @pm_cap_pme_d0: PME# can be asserted from D3hot  * @pm_cap_pme_d1: PME# can be asserted from D3hot  * @pm_cap_pme_d2: PME# can be asserted from D3hot  * @pm_cap_pme_d3_hot: PME# can be asserted from D3hot  * @pm_cap_pme_d3_cold: PME# can be asserted from D3cold  * @pm_ctrl_state: Current power state (D0 to D3)  * @pm_ctrl_no_soft_reset: Devices transitioning from D3hot to D0  * @pm_ctrl_pme_enable: PME pin enable  * @pm_ctrl_pme_data_sel: Data select  * @pm_ctrl_pme_data_scale: Data scale  * @pm_ctrl_pme_status: PME pin status  * @pm_ppb_ext_b2_b3: Stop clock when in D3hot  * @pm_ppb_ext_ecc_en: Bus power/clock control enable  * @pm_data_reg: state dependent data requested by pm_ctrl_pme_data_sel  *  * Power Management Capabilities structure  */
+comment|/*  * struct vxge_hal_mgmt_pm_cap_t - Power Management Capabilities  * @pm_cap_ver: Version  * @pm_cap_pme_clock: PME clock required  * @pm_cap_aux_power: Auxiliary power support  * @pm_cap_dsi: Device specific initialization  * @pm_cap_aux_current: auxiliary current requirements  * @pm_cap_cap_d0: D1 power state support  * @pm_cap_cap_d1: D2 power state support  * @pm_cap_pme_d0: PME# can be asserted from D3hot  * @pm_cap_pme_d1: PME# can be asserted from D3hot  * @pm_cap_pme_d2: PME# can be asserted from D3hot  * @pm_cap_pme_d3_hot: PME# can be asserted from D3hot  * @pm_cap_pme_d3_cold: PME# can be asserted from D3cold  * @pm_ctrl_state: Current power state (D0 to D3)  * @pm_ctrl_no_soft_reset: Devices transitioning from D3hot to D0  * @pm_ctrl_pme_enable: PME pin enable  * @pm_ctrl_pme_data_sel: Data select  * @pm_ctrl_pme_data_scale: Data scale  * @pm_ctrl_pme_status: PME pin status  * @pm_ppb_ext_b2_b3: Stop clock when in D3hot  * @pm_ppb_ext_ecc_en: Bus power/clock control enable  * @pm_data_reg: state dependent data requested by pm_ctrl_pme_data_sel  *  * Power Management Capabilities structure  */
 end_comment
 
 begin_typedef
@@ -669,7 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_driver_config - Retrieve driver configuration.  * @drv_config: Device configuration, see vxge_hal_driver_config_t {}.  * @size: Pointer to buffer containing the Size of the @drv_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_driver_config_t) and returns required size in this field  *  * Get driver configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_DRIVER_NOT_INITIALIZED - HAL is not initialized.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version is not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_driver_config_t {}, vxge_hal_mgmt_device_config().  */
+comment|/*  * vxge_hal_mgmt_driver_config - Retrieve driver configuration.  * @drv_config: Device configuration, see vxge_hal_driver_config_t {}.  * @size: Pointer to buffer containing the Size of the @drv_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_driver_config_t) and returns required size in this field  *  * Get driver configuration. Permits to retrieve at run-time configuration  * values that were used to configure the device at load-time.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_DRIVER_NOT_INITIALIZED - HAL is not initialized.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version is not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_driver_config_t {}, vxge_hal_mgmt_device_config().  */
 end_comment
 
 begin_function_decl
@@ -697,7 +697,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_trace_read - Read trace buffer contents.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @offset: Offset in the internal trace buffer to read data.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * upto the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
+comment|/*  * vxge_hal_mgmt_trace_read - Read trace buffer contents.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @offset: Offset in the internal trace buffer to read data.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * up to the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
 end_comment
 
 begin_function_decl
@@ -728,7 +728,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * vxge_hal_mgmt_device_config - Retrieve device configuration.  * @devh: HAL device handle.  * @dev_config: Device configuration, see vxge_hal_device_config_t {}.  * @size: Pointer to buffer containing the Size of the @dev_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_device_config_t) and returns required size in this field  *  * Get device configuration. Permits to retrieve at run-time configuration  * values that were used to initialize and configure the device.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_device_config_t {}, vxge_hal_mgmt_driver_config().  */
+comment|/*  * vxge_hal_mgmt_device_config - Retrieve device configuration.  * @devh: HAL device handle.  * @dev_config: Device configuration, see vxge_hal_device_config_t {}.  * @size: Pointer to buffer containing the Size of the @dev_config.  * HAL will return an error if the size is smaller than  * sizeof(vxge_hal_device_config_t) and returns required size in this field  *  * Get device configuration. Permits to retrieve at run-time configuration  * values that were used to initialize and configure the device.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_ERR_OUT_OF_SPACE - If the buffer is not sufficient  *  * See also: vxge_hal_device_config_t {}, vxge_hal_mgmt_driver_config().  */
 end_comment
 
 begin_function_decl

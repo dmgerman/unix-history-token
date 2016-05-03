@@ -383,7 +383,7 @@ comment|/* per-instance lock */
 name|bus_dma_tag_t
 name|sc_dmat
 decl_stmt|;
-comment|/* parent DMA tag decriptor */
+comment|/* parent DMA tag descriptor */
 name|struct
 name|resource
 modifier|*

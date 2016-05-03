@@ -2867,7 +2867,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* XXXRIK: This function should be for comleteness, but for now I 	 * don't use it. So I just start to write and didn't finished it yet. 	 * It and it is VERY BUGGY!!! Do not use it. If you realy 	 * need it ask me to fix it or rewrite it by your self. 	 * Note: most buggy part of it in ce_on_config_stop! 	 */
+comment|/* XXXRIK: This function should be for comleteness, but for now I 	 * don't use it. So I just start to write and didn't finished it yet. 	 * It and it is VERY BUGGY!!! Do not use it. If you really 	 * need it ask me to fix it or rewrite it by your self. 	 * Note: most buggy part of it in ce_on_config_stop! 	 */
 if|if
 condition|(
 operator|!

@@ -58,7 +58,7 @@ name|udma
 decl_stmt|;
 struct|struct
 block|{
-comment|/**           * Total transfer for the entire PIO request recorded at request constuction           * time.           *           * @todo Should we just decrement this value for each byte of data transitted           *       or received to elemenate the current_transfer_bytes field?           */
+comment|/**           * Total transfer for the entire PIO request recorded at request construction           * time.           *           * @todo Should we just decrement this value for each byte of data transitted           *       or received to elemenate the current_transfer_bytes field?           */
 name|U32
 name|total_transfer_bytes
 decl_stmt|;

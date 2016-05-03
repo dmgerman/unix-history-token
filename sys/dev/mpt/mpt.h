@@ -730,7 +730,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/********************************** Endianess *********************************/
+comment|/********************************* Endianness *********************************/
 end_comment
 
 begin_define
@@ -2357,11 +2357,11 @@ comment|/* DMA tag for buffers */
 name|bus_dma_tag_t
 name|request_dmat
 decl_stmt|;
-comment|/* DMA tag for request memroy */
+comment|/* DMA tag for request memory */
 name|bus_dmamap_t
 name|request_dmap
 decl_stmt|;
-comment|/* DMA map for request memroy */
+comment|/* DMA map for request memory */
 name|uint8_t
 modifier|*
 name|request

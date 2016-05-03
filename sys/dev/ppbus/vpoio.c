@@ -1555,7 +1555,7 @@ name|vpo
 argument_list|)
 condition|)
 block|{
-comment|/* The interface must be at least PS/2 or NIBBLE capable. 		 * There is no way to know if the ZIP will work with 		 * PS/2 mode since PS/2 and SPP both use the same connect 		 * sequence. One must supress PS/2 with boot flags if 		 * PS/2 mode fails (see ppc(4)). 		 */
+comment|/* The interface must be at least PS/2 or NIBBLE capable. 		 * There is no way to know if the ZIP will work with 		 * PS/2 mode since PS/2 and SPP both use the same connect 		 * sequence. One must suppress PS/2 with boot flags if 		 * PS/2 mode fails (see ppc(4)). 		 */
 if|if
 condition|(
 name|ppb_set_mode

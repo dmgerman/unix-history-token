@@ -764,7 +764,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/* Store upto 2048 bytes per line */
+comment|/* Store up to 2048 bytes per line */
 end_comment
 
 begin_define
@@ -2881,7 +2881,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BKTR_NEW_MSP34XX_DRIVER
-comment|/* setup the kenrel thread */
+comment|/* setup the kernel thread */
 name|err
 operator|=
 name|msp_attach
@@ -8094,7 +8094,7 @@ literal|0
 condition|)
 block|{
 comment|/*****************************/
-comment|/* *** OS Dependant code *** */
+comment|/* *** OS Dependent code *** */
 comment|/*****************************/
 if|#
 directive|if
@@ -10849,7 +10849,7 @@ comment|/* On the original bt848 boards, */
 comment|/*   Tuner is MUX0, RCA is MUX1, S-Video is MUX2 */
 comment|/* On the Hauppauge bt878 boards, */
 comment|/*   Tuner is MUX0, RCA is MUX3 */
-comment|/* Unfortunatly Meteor driver codes DEV_RCA as DEV_0, so we */
+comment|/* Unfortunately Meteor driver codes DEV_RCA as DEV_0, so we */
 comment|/* stick with this system in our Meteor Emulation */
 switch|switch
 condition|(

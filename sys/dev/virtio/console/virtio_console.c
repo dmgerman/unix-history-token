@@ -5148,7 +5148,7 @@ modifier|*
 name|port
 parameter_list|)
 block|{
-comment|/* 	 * NOTE: The out virtqueue is always polled, so its interupt 	 * kept disabled. 	 */
+comment|/* 	 * NOTE: The out virtqueue is always polled, so its interrupt 	 * kept disabled. 	 */
 name|virtqueue_enable_intr
 argument_list|(
 name|port

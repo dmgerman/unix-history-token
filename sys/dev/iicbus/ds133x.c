@@ -589,7 +589,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Now Check for DS1337. Bit 5 in control register of this chip will be 	 * allways read as 0. In DS1339 changing of this bit is safe until 	 * chip is powered up. 	 */
+comment|/* 	 * Now Check for DS1337. Bit 5 in control register of this chip will be 	 * always read as 0. In DS1339 changing of this bit is safe until 	 * chip is powered up. 	 */
 if|if
 condition|(
 operator|(

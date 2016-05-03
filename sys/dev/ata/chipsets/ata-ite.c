@@ -456,7 +456,7 @@ name|setmode
 operator|=
 name|ata_ite_821x_setmode
 expr_stmt|;
-comment|/* No timing restrictions initally. */
+comment|/* No timing restrictions initially. */
 name|ctlr
 operator|->
 name|chipset_data

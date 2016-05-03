@@ -2519,7 +2519,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* we definately need to flush */
+comment|/* we definitely need to flush */
 name|radeon_fence_unref
 argument_list|(
 operator|&

@@ -6067,7 +6067,7 @@ name|vga_init_done
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/*       * Locate display adapters.       * The AT architecture supports upto two adapters. `syscons' allows      * the following combinations of adapters:       *     1) MDA + CGA      *     2) MDA + EGA/VGA color       *     3) CGA + EGA/VGA mono      * Note that `syscons' doesn't bother with MCGA as it is only      * avaiable for low end PS/2 models which has 80286 or earlier CPUs,      * thus, they are not running FreeBSD!      * When there are two adapaters in the system, one becomes `primary'      * and the other `secondary'. The EGA adapter has a set of DIP       * switches on board for this information and the EGA BIOS copies       * it in the BIOS data area BIOSDATA_VIDEOSWITCH (40:88).       * The VGA BIOS has more sophisticated mechanism and has this       * information in BIOSDATA_DCCINDEX (40:8a), but it also maintains       * compatibility with the EGA BIOS by updating BIOSDATA_VIDEOSWITCH.      */
+comment|/*       * Locate display adapters.       * The AT architecture supports up to two adapters. `syscons' allows      * the following combinations of adapters:       *     1) MDA + CGA      *     2) MDA + EGA/VGA color       *     3) CGA + EGA/VGA mono      * Note that `syscons' doesn't bother with MCGA as it is only      * avaiable for low end PS/2 models which has 80286 or earlier CPUs,      * thus, they are not running FreeBSD!      * When there are two adapaters in the system, one becomes `primary'      * and the other `secondary'. The EGA adapter has a set of DIP       * switches on board for this information and the EGA BIOS copies       * it in the BIOS data area BIOSDATA_VIDEOSWITCH (40:88).       * The VGA BIOS has more sophisticated mechanism and has this       * information in BIOSDATA_DCCINDEX (40:8a), but it also maintains       * compatibility with the EGA BIOS by updating BIOSDATA_VIDEOSWITCH.      */
 comment|/*       * Check rtc and BIOS data area.      * XXX: we don't use BIOSDATA_EQUIPMENT, since it is not a dead      * copy of RTC_EQUIPMENT.  Bits 4 and 5 of ETC_EQUIPMENT are      * zeros for EGA and VGA.  However, the EGA/VGA BIOS sets      * these bits in BIOSDATA_EQUIPMENT according to the monitor      * type detected.      */
 ifndef|#
 directive|ifndef
@@ -6876,7 +6876,7 @@ case|case
 name|COMP_DIFFERENT
 case|:
 default|default:
-comment|/* 		     * Don't use the paramter table in BIOS. It doesn't 		     * look familiar to us. Video mode switching is allowed 		     * only if the new mode is the same as or based on 		     * the initial mode.  		     */
+comment|/* 		     * Don't use the parameter table in BIOS. It doesn't 		     * look familiar to us. Video mode switching is allowed 		     * only if the new mode is the same as or based on 		     * the initial mode.  		     */
 name|video_mode_ptr
 operator|=
 name|NULL

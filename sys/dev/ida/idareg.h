@@ -1331,7 +1331,7 @@ define|#
 directive|define
 name|YMPDF_DRIVE_WCE_CHNG
 value|0x80
-comment|/* WCE changable */
+comment|/* WCE changeable */
 name|u_int8_t
 name|reserved
 decl_stmt|;

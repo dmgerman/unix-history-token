@@ -4057,7 +4057,7 @@ argument_list|,
 name|MGMT_EN_ALL
 argument_list|)
 expr_stmt|;
-comment|/* Disable Remote Managment */
+comment|/* Disable Remote Management */
 name|e6000sw_writereg
 argument_list|(
 name|sc

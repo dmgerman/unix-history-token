@@ -393,7 +393,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Probe is only successfull for the specified base io */
+comment|/* Probe is only successful for the specified base io */
 if|if
 condition|(
 name|port

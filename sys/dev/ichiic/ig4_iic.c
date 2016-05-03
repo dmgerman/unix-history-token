@@ -2249,7 +2249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Quick command.  i.e. START + cmd + R/W + STOP and no data.  It is  * unclear to me how I could implement this with the intel i2c controller  * because the controler sends STARTs and STOPs automatically with data.  */
+comment|/*  * Quick command.  i.e. START + cmd + R/W + STOP and no data.  It is  * unclear to me how I could implement this with the intel i2c controller  * because the controller sends STARTs and STOPs automatically with data.  */
 end_comment
 
 begin_function

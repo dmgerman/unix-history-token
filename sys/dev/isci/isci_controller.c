@@ -1603,7 +1603,7 @@ operator|&
 name|max_segment_size
 argument_list|)
 expr_stmt|;
-comment|/* Create DMA tag for our I/O requests.  Then we can create DMA maps based off 	 *  of this tag and store them in each of our ISCI_IO_REQUEST objects.  This 	 *  will enable better performance than creating the DMA maps everytime we get 	 *  an I/O. 	 */
+comment|/* Create DMA tag for our I/O requests.  Then we can create DMA maps based off 	 *  of this tag and store them in each of our ISCI_IO_REQUEST objects.  This 	 *  will enable better performance than creating the DMA maps every time we get 	 *  an I/O. 	 */
 name|status
 operator|=
 name|bus_dma_tag_create

@@ -591,7 +591,7 @@ operator|.
 name|count
 condition|)
 block|{
-comment|// Skip the first word in the frame since this is a controll word used
+comment|// Skip the first word in the frame since this is a control word used
 comment|// by the hardware.
 operator|*
 name|frame_header

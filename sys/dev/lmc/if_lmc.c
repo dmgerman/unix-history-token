@@ -6195,7 +6195,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX HANG */
 comment|/* Restore previous state of the FEAC transmitter. */
-comment|/* If it was sending a continous FEAC, it will resume. */
+comment|/* If it was sending a continuous FEAC, it will resume. */
 name|write_framer
 argument_list|(
 name|sc

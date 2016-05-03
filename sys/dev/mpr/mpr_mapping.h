@@ -16,7 +16,7 @@ name|_MPR_MAPPING_H
 end_define
 
 begin_comment
-comment|/**  * struct _map_phy_change - PHY entries recieved in Topology change list  * @physical_id: SAS address of the device attached with the associate PHY  * @device_info: bitfield provides detailed info about the device  * @dev_handle: device handle for the device pointed by this entry  * @slot: slot ID  * @is_processed: Flag to indicate whether this entry is processed or not  * @is_SATA_SSD: 1 if this is a SATA device AND an SSD, 0 otherwise  */
+comment|/**  * struct _map_phy_change - PHY entries received in Topology change list  * @physical_id: SAS address of the device attached with the associate PHY  * @device_info: bitfield provides detailed info about the device  * @dev_handle: device handle for the device pointed by this entry  * @slot: slot ID  * @is_processed: Flag to indicate whether this entry is processed or not  * @is_SATA_SSD: 1 if this is a SATA device AND an SSD, 0 otherwise  */
 end_comment
 
 begin_struct

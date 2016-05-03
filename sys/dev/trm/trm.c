@@ -4850,7 +4850,7 @@ argument_list|(
 name|pACB
 argument_list|)
 expr_stmt|;
-comment|/* Tell the XPT layer that a bus reset occured    */
+comment|/* Tell the XPT layer that a bus reset occurred    */
 if|if
 condition|(
 name|pACB
@@ -7917,7 +7917,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*     	   * Parsing incomming extented messages  	   */
+comment|/*     	   * Parsing incoming extented messages  	   */
 operator|*
 name|pSRB
 operator|->

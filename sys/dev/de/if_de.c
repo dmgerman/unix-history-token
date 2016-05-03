@@ -2174,7 +2174,7 @@ name|TULIP_CMD_FULLDUPLEX
 expr_stmt|;
 block|}
 block|}
-comment|/*      * We could set probe_timeout to 0 but setting to 3000 puts this      * in one central place and the only matters is tulip_link is      * followed by a tulip_timeout.  Therefore setting it should not      * result in aberrant behavour.      */
+comment|/*      * We could set probe_timeout to 0 but setting to 3000 puts this      * in one central place and the only matters is tulip_link is      * followed by a tulip_timeout.  Therefore setting it should not      * result in aberrant behaviour.      */
 name|sc
 operator|->
 name|tulip_probe_timeout

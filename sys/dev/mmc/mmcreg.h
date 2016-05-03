@@ -1852,7 +1852,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Older versions of the MMC standard had a variable sector size.  However,  * I've been able to find no old MMC or SD cards that have a non 512  * byte sector size anywhere, so we assume that such cards are very rare  * and only note their existance in passing here...  */
+comment|/*  * Older versions of the MMC standard had a variable sector size.  However,  * I've been able to find no old MMC or SD cards that have a non 512  * byte sector size anywhere, so we assume that such cards are very rare  * and only note their existence in passing here...  */
 end_comment
 
 begin_define

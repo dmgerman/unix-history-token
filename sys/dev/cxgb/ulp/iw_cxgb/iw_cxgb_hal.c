@@ -3598,7 +3598,7 @@ name|wr_len
 decl_stmt|,
 name|utx_len
 decl_stmt|;
-comment|/* lenght in 8 byte flit */
+comment|/* length in 8 byte flit */
 name|enum
 name|t3_wr_flags
 name|flag

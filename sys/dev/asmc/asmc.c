@@ -2938,7 +2938,7 @@ condition|)
 goto|goto
 name|nosms
 goto|;
-comment|/* 	 * We are ready to recieve interrupts from the SMS. 	 */
+comment|/* 	 * We are ready to receive interrupts from the SMS. 	 */
 name|buf
 index|[
 literal|0

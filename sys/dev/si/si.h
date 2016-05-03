@@ -140,7 +140,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	The 'next' pointer& with 0x7fff + SI base addres give  *	the address of the next module block if fitted. (else 0)  *	Note that next points to the TX buffer so 0x60 must be  *	subtracted to find the true base.  */
+comment|/*  *	The 'next' pointer& with 0x7fff + SI base address give  *	the address of the next module block if fitted. (else 0)  *	Note that next points to the TX buffer so 0x60 must be  *	subtracted to find the true base.  */
 end_comment
 
 begin_define

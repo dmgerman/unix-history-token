@@ -10813,7 +10813,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* already probed succesfully */
+comment|/* already probed successfully */
 block|}
 block|}
 block|}

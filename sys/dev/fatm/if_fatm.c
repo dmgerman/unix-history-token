@@ -8515,7 +8515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get device statistics. This must be called with the softc locked.  * We use a preallocated buffer, so we need to protect this buffer.  * We do this by using a condition variable and a flag. If the flag is set  * the buffer is in use by one thread (one thread is executing a GETSTAT  * card command). In this case all other threads that are trying to get  * statistics block on that condition variable. When the thread finishes  * using the buffer it resets the flag and signals the condition variable. This  * will wakeup the next thread that is waiting for the buffer. If the interface  * is stopped the stopping function will broadcast the cv. All threads will  * find that the interface has been stopped and return.  *  * Aquiring of the buffer is done by the fatm_getstat() function. The freeing  * must be done by the caller when he has finished using the buffer.  */
+comment|/*  * Get device statistics. This must be called with the softc locked.  * We use a preallocated buffer, so we need to protect this buffer.  * We do this by using a condition variable and a flag. If the flag is set  * the buffer is in use by one thread (one thread is executing a GETSTAT  * card command). In this case all other threads that are trying to get  * statistics block on that condition variable. When the thread finishes  * using the buffer it resets the flag and signals the condition variable. This  * will wakeup the next thread that is waiting for the buffer. If the interface  * is stopped the stopping function will broadcast the cv. All threads will  * find that the interface has been stopped and return.  *  * Acquiring of the buffer is done by the fatm_getstat() function. The freeing  * must be done by the caller when he has finished using the buffer.  */
 end_comment
 
 begin_function
@@ -10641,11 +10641,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VCC managment  *  * This may seem complicated. The reason for this is, that we need an  * asynchronuous open/close for the NATM VCCs because our ioctl handler  * is called with the radix node head of the routing table locked. Therefor  * we cannot sleep there and wait for the open/close to succeed. For this  * reason we just initiate the operation from the ioctl.  */
+comment|/*  * VCC management  *  * This may seem complicated. The reason for this is, that we need an  * asynchronuous open/close for the NATM VCCs because our ioctl handler  * is called with the radix node head of the routing table locked. Therefor  * we cannot sleep there and wait for the open/close to succeed. For this  * reason we just initiate the operation from the ioctl.  */
 end_comment
 
 begin_comment
-comment|/*  * Command the card to open/close a VC.  * Return the queue entry for waiting if we are succesful.  */
+comment|/*  * Command the card to open/close a VC.  * Return the queue entry for waiting if we are successful.  */
 end_comment
 
 begin_function
@@ -14784,7 +14784,7 @@ operator|->
 name|memres
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Convert endianess of slave access 	 */
+comment|/* 	 * Convert endianness of slave access 	 */
 name|cfg
 operator|=
 name|pci_read_config

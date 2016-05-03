@@ -1247,7 +1247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a start completion notification and  *        such a notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the completion notification has occured.  * @param[in]  completion_status This parameter specifies the status  *             of the completion operation.  *  * @return none.  */
+comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a start completion notification and  *        such a notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the completion notification has occurred.  * @param[in]  completion_status This parameter specifies the status  *             of the completion operation.  *  * @return none.  */
 end_comment
 
 begin_function
@@ -1292,7 +1292,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a stop completion notification and  *        such a notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the completion notification has occured.  * @param[in]  completion_status This parameter specifies the status  *             of the completion operation.  *  * @return none.  */
+comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a stop completion notification and  *        such a notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the completion notification has occurred.  * @param[in]  completion_status This parameter specifies the status  *             of the completion operation.  *  * @return none.  */
 end_comment
 
 begin_function
@@ -1337,7 +1337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a ready notification and such a  *        notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the notification has occured.  *  * @return none.  */
+comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a ready notification and such a  *        notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the notification has occurred.  *  * @return none.  */
 end_comment
 
 begin_function
@@ -1379,7 +1379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a not ready notification and such a  *        notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the notification has occured.  *  * @return none.  */
+comment|/**  * @brief This method provides default handling (i.e. returns an error);  *        for when the core issues a not ready notification and such a  *        notification isn't supported.  *  * @param[in]  remote_device This parameter specifies the remote device object  *             for which the notification has occurred.  *  * @return none.  */
 end_comment
 
 begin_function

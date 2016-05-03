@@ -727,7 +727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will fill in the SCU Task Context for a SMP request. The  *        following important settings are utilized:  *  *          -# task_type == SCU_TASK_TYPE_SMP.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianess  *             is set so that the bytes are transmitted in the right order  *             for a smp request frame.  *  * @param[in] this_request This parameter specifies the smp request object  *            being constructed.  *  * @return none  */
+comment|/**  * @brief This method will fill in the SCU Task Context for a SMP request. The  *        following important settings are utilized:  *  *          -# task_type == SCU_TASK_TYPE_SMP.  This simply indicates  *             that a normal request type (i.e. non-raw frame) is being  *             utilized to perform task management.  *          -# control_frame == 1.  This ensures that the proper endianness  *             is set so that the bytes are transmitted in the right order  *             for a smp request frame.  *  * @param[in] this_request This parameter specifies the smp request object  *            being constructed.  *  * @return none  */
 end_comment
 
 begin_function
@@ -1842,7 +1842,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_SMP_REQUEST_STARTED_SUBSTATE_AWAIT_TC_RESPONSE sub-state.  *        This includes setting the IO request state handlers for this  *        sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occuring.  *  * @return none.  */
+comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_SMP_REQUEST_STARTED_SUBSTATE_AWAIT_TC_RESPONSE sub-state.  *        This includes setting the IO request state handlers for this  *        sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occurring.  *  * @return none.  */
 end_comment
 
 begin_function
@@ -1878,7 +1878,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_SMP_REQUEST_STARTED_SUBSTATE_AWAIT_TC_COMPLETION  *        sub-state.  This includes setting the SMP request state handlers for  *        this sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occuring.  *  * @return none.  */
+comment|/**  * @brief This method performs the actions required when entering the  *        SCIC_SDS_SMP_REQUEST_STARTED_SUBSTATE_AWAIT_TC_COMPLETION  *        sub-state.  This includes setting the SMP request state handlers for  *        this sub-state.  *  * @param[in]  object This parameter specifies the request object for which  *             the sub-state change is occurring.  *  * @return none.  */
 end_comment
 
 begin_function

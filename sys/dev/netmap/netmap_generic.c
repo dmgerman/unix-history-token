@@ -1348,7 +1348,7 @@ operator|.
 name|tx_pool
 condition|)
 block|{
-comment|/* Disable netmap mode. We enter here only if the previous 		   generic_netmap_register(na, 1) was successfull. 		   If it was not, na->tx_rings[0].tx_pool was set to NULL by the 		   error handling code below. */
+comment|/* Disable netmap mode. We enter here only if the previous 		   generic_netmap_register(na, 1) was successful. 		   If it was not, na->tx_rings[0].tx_pool was set to NULL by the 		   error handling code below. */
 name|rtnl_lock
 argument_list|()
 expr_stmt|;

@@ -214,7 +214,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/*In some case, TPM existance is found only in TPCA header*/
+comment|/*In some case, TPM existence is found only in TPCA header*/
 block|DEVMETHOD(device_identify,	tpm_acpi_identify),
 endif|#
 directive|endif

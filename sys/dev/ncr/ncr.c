@@ -1752,7 +1752,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be at the choosen offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
+comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be at the chosen offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
 end_comment
 
 begin_comment
@@ -4337,7 +4337,7 @@ block|,  }
 comment|/*-------------------------< NO_DATA>--------------------*/
 block|,
 block|{
-comment|/* 	**	The target wants to tranfer too much data 	**	or in the wrong direction. 	**      Remember that in extended error. 	*/
+comment|/* 	**	The target wants to transfer too much data 	**	or in the wrong direction. 	**      Remember that in extended error. 	*/
 name|SCR_LOAD_REG
 argument_list|(
 name|scratcha
@@ -10685,7 +10685,7 @@ else|:
 literal|"normal"
 argument_list|)
 expr_stmt|;
-comment|/* 	**	Print some complementary information that can be helpfull. 	*/
+comment|/* 	**	Print some complementary information that can be helpful. 	*/
 if|if
 condition|(
 name|bootverbose
@@ -18657,7 +18657,7 @@ operator|)
 operator|&
 literal|0x7f
 expr_stmt|;
-comment|/* 	**	The data in the dma fifo has not been transfered to 	**	the target -> add the amount to the rest 	**	and clear the data. 	**	Check the sstat2 register in case of wide transfer. 	*/
+comment|/* 	**	The data in the dma fifo has not been transferred to 	**	the target -> add the amount to the rest 	**	and clear the data. 	**	Check the sstat2 register in case of wide transfer. 	*/
 if|if
 condition|(
 operator|!
@@ -20053,7 +20053,7 @@ name|SCR_INT
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look at byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simple tag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and fall back to standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set our parameters, and send back  **	this answer to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and fall back to default **	settings. ** **	When we set the values, we adjust them in all nccbs belonging  **	to this target, in the controller's register, and in the "phys" **	field of the controller's struct ncb. ** **	Possible cases:		   hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	   NEG FAIL  noop   defa.  -      dispatch ** **	Target tries to negotiate: **	-> incoming message	   --- SYNC  sdtr   set    SDTR   - **	-> incoming message	   --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
+comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successful inquire command. We look at byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simple tag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immediately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and fall back to standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set our parameters, and send back  **	this answer to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and fall back to default **	settings. ** **	When we set the values, we adjust them in all nccbs belonging  **	to this target, in the controller's register, and in the "phys" **	field of the controller's struct ncb. ** **	Possible cases:		   hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	   NEG FAIL  noop   defa.  -      dispatch ** **	Target tries to negotiate: **	-> incoming message	   --- SYNC  sdtr   set    SDTR   - **	-> incoming message	   --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
 case|case
 name|SIR_NEGO_FAILED
 case|:
@@ -21236,7 +21236,7 @@ name|STD
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*========================================================== ** ** **	Aquire a control block ** ** **========================================================== */
+comment|/*========================================================== ** ** **	Acquire a control block ** ** **========================================================== */
 specifier|static
 name|nccb_p
 name|ncr_get_nccb

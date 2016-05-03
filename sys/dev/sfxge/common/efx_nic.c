@@ -1218,7 +1218,7 @@ operator|)
 operator|&
 name|__efx_nic_medford_ops
 expr_stmt|;
-comment|/* 		 * FW_ASSISTED_TSO ommitted as Medford only supports firmware 		 * assisted TSO version 2, not the v1 scheme used on Huntington. 		 */
+comment|/* 		 * FW_ASSISTED_TSO omitted as Medford only supports firmware 		 * assisted TSO version 2, not the v1 scheme used on Huntington. 		 */
 name|enp
 operator|->
 name|en_features

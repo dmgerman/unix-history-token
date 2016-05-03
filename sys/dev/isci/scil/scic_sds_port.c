@@ -1312,7 +1312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method returns the amount of memory requred for a port  *        object.  *  * @return U32  */
+comment|/**  * @brief This method returns the amount of memory required for a port  *        object.  *  * @return U32  */
 end_comment
 
 begin_function
@@ -6732,7 +6732,7 @@ comment|//**********************************************************************
 end_comment
 
 begin_comment
-comment|/**  * This method will casue the port to reset.  *  * @param[in] port This is the SCI_BASE_PORT object which is cast into a  *       SCIC_SDS_PORT object.  * @param[in] timeout This is the timeout for the reset request to complete.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS  */
+comment|/**  * This method will cause the port to reset.  *  * @param[in] port This is the SCI_BASE_PORT object which is cast into a  *       SCIC_SDS_PORT object.  * @param[in] timeout This is the timeout for the reset request to complete.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS  */
 end_comment
 
 begin_function

@@ -131,7 +131,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * struct vxge_queue_t - Protected dynamic queue of variable-size items.  * @start_ptr: Points to the start of the queue.  * @end_ptr: Points to the end of the queue.  * @head_ptr: Points to the head of the queue. It gets changed during queue  *	   produce/consume operations.  * @tail_ptr: Points to the tail of the queue. It gets changed during queue  *	   produce/consume operations.  * @lock: Lock for queue operations(syncronization purpose).  * @pages_initial:Number of pages to be initially allocated at the time  *		 of queue creation.  * @pages_max: Max number of pages that can be allocated in the queue.  * @pages_current: Number of pages currently allocated  * @list_head: Points to the list of queue elements that are produced, but yet  *		to be consumed.  * @hldev: HAL device handle  * @pdev: PCI device handle  * @irqh: PCI device IRQ handle.  * @queued_func: Optional callback function to be called each time a new  * item is added to the queue.  * @queued_data: Arguments to the callback function.  * @has_critical_event: Non-zero, if the queue contains a critical event,  * see vxge_hal_event_e {}.  * Protected dynamically growing queue. The queue is used to support multiple  * producer/consumer type scenarios. The queue is a strict FIFO: first come  * first served.  * Queue users may "produce" (see vxge_queue_produce()) and "consume"  * (see vxge_queue_consume()) items (a.k.a. events) variable sizes.  * See also: vxge_queue_item_t {}.  */
+comment|/*  * struct vxge_queue_t - Protected dynamic queue of variable-size items.  * @start_ptr: Points to the start of the queue.  * @end_ptr: Points to the end of the queue.  * @head_ptr: Points to the head of the queue. It gets changed during queue  *	   produce/consume operations.  * @tail_ptr: Points to the tail of the queue. It gets changed during queue  *	   produce/consume operations.  * @lock: Lock for queue operations(synchronization purpose).  * @pages_initial:Number of pages to be initially allocated at the time  *		 of queue creation.  * @pages_max: Max number of pages that can be allocated in the queue.  * @pages_current: Number of pages currently allocated  * @list_head: Points to the list of queue elements that are produced, but yet  *		to be consumed.  * @hldev: HAL device handle  * @pdev: PCI device handle  * @irqh: PCI device IRQ handle.  * @queued_func: Optional callback function to be called each time a new  * item is added to the queue.  * @queued_data: Arguments to the callback function.  * @has_critical_event: Non-zero, if the queue contains a critical event,  * see vxge_hal_event_e {}.  * Protected dynamically growing queue. The queue is used to support multiple  * producer/consumer type scenarios. The queue is a strict FIFO: first come  * first served.  * Queue users may "produce" (see vxge_queue_produce()) and "consume"  * (see vxge_queue_consume()) items (a.k.a. events) variable sizes.  * See also: vxge_queue_item_t {}.  */
 end_comment
 
 begin_typedef
@@ -288,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_queue_produce_context - Enqueue context.  * @queueh: Queue handle.  * @event_type: Event type. One of the enumerated event types  *		 that both consumer and producer "understand".  *		 For an example, please refer to vxge_hal_event_e.  * @context: Opaque (void *) "context", for instance event producer object.  *  * Enqueue Context.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accomodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
+comment|/*  * vxge_queue_produce_context - Enqueue context.  * @queueh: Queue handle.  * @event_type: Event type. One of the enumerated event types  *		 that both consumer and producer "understand".  *		 For an example, please refer to vxge_hal_event_e.  * @context: Opaque (void *) "context", for instance event producer object.  *  * Enqueue Context.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accommodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
 end_comment
 
 begin_function
@@ -331,7 +331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_queue_consume - Dequeue an item from the specified queue.  * @queueh: Queue handle.  * @data_max_size: Maximum expected size of the item.  * @item: Memory area into which the item is _copied_ upon return  *	from the function.  *  * Dequeue an item from the queue. The caller is required to provide  * enough space for the item.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accomodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
+comment|/*  * vxge_queue_consume - Dequeue an item from the specified queue.  * @queueh: Queue handle.  * @data_max_size: Maximum expected size of the item.  * @item: Memory area into which the item is _copied_ upon return  *	from the function.  *  * Dequeue an item from the queue. The caller is required to provide  * enough space for the item.  *  * Returns: VXGE_QUEUE_OK - success.  * VXGE_QUEUE_IS_EMPTY - Queue is empty.  * VXGE_QUEUE_NOT_ENOUGH_SPACE - Requested item size(@data_max_size)  * is too small to accommodate an item from the queue.  *  * See also: vxge_queue_item_t {}, vxge_queue_produce().  */
 end_comment
 
 begin_function_decl
@@ -366,7 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_io_queue_grow - Dynamically increases the size of the queue.  * @queueh: Queue handle.  *  * This function is called in the case of no slot avaialble in the queue  * to accomodate the newly received event.  * Note that queue cannot grow beyond the max size specified for the  * queue.  *  * Returns VXGE_QUEUE_OK: On success.  * VXGE_QUEUE_OUT_OF_MEMORY : No memory is available.  */
+comment|/*  * vxge_io_queue_grow - Dynamically increases the size of the queue.  * @queueh: Queue handle.  *  * This function is called in the case of no slot avaialble in the queue  * to accommodate the newly received event.  * Note that queue cannot grow beyond the max size specified for the  * queue.  *  * Returns VXGE_QUEUE_OK: On success.  * VXGE_QUEUE_OUT_OF_MEMORY : No memory is available.  */
 end_comment
 
 begin_function_decl

@@ -412,7 +412,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If the video card has aleady been initialized, test 		 * this decoder immediately. 		 */
+comment|/* 		 * If the video card has already been initialized, test 		 * this decoder immediately. 		 */
 name|error
 operator|=
 name|splash_test

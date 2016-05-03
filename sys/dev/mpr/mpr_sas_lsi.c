@@ -2985,7 +2985,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* TODO Check proper endianess */
+comment|/* TODO Check proper endianness */
 name|sas_address
 operator|=
 name|config_page

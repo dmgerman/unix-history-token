@@ -2384,7 +2384,7 @@ argument_list|(
 name|MDR
 argument_list|)
 expr_stmt|;
-comment|/* Even if timeout occured, we should perform steps below */
+comment|/* Even if timeout occurred, we should perform steps below */
 name|LBC_WRITE
 argument_list|(
 name|LTESR

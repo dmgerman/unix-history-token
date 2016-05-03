@@ -12294,7 +12294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vxge_hal_device_trace_read - Read trace buffer contents.  * @devh: HAL device handle.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * upto the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
+comment|/*  * vxge_hal_device_trace_read - Read trace buffer contents.  * @devh: HAL device handle.  * @buffer: Buffer to store the trace buffer contents.  * @buf_size: Size of the buffer.  * @read_length: Size of the valid data in the buffer.  *  * Read  HAL trace buffer contents starting from the offset  * up to the size of the buffer or till EOF is reached.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_EOF_TRACE_BUF - No more data in the trace buffer.  *  */
 end_comment
 
 begin_function

@@ -3040,7 +3040,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* v1.3 - obsoletes drm_radeon_vertex2  *      - allows arbitarily large cliprect list  *      - allows updating of tcl packet, vector and scalar state  *      - allows memory-efficient description of state updates  *      - allows state to be emitted without a primitive  *           (for clears, ctx switches)  *      - allows more than one dma buffer to be referenced per ioctl  *      - supports tcl driver  *      - may be extended in future versions with new cmd types, packets  */
+comment|/* v1.3 - obsoletes drm_radeon_vertex2  *      - allows arbitrarily large cliprect list  *      - allows updating of tcl packet, vector and scalar state  *      - allows memory-efficient description of state updates  *      - allows state to be emitted without a primitive  *           (for clears, ctx switches)  *      - allows more than one dma buffer to be referenced per ioctl  *      - supports tcl driver  *      - may be extended in future versions with new cmd types, packets  */
 end_comment
 
 begin_typedef

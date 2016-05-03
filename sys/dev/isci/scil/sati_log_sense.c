@@ -1120,7 +1120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will construct the SCSI self test log page from  *        the Extended SMART self-test log response recieved from the  *        ATA device. The response is from a ATA_Read_Log_EXT command  *        issued by SATI.  *  * @return n/a  *  */
+comment|/**  * @brief This method will construct the SCSI self test log page from  *        the Extended SMART self-test log response received from the  *        ATA device. The response is from a ATA_Read_Log_EXT command  *        issued by SATI.  *  * @return n/a  *  */
 end_comment
 
 begin_function
@@ -1208,7 +1208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** * @brief This method will construct the SCSI self test log page from *        the SMART self-test log response recieved from the ATA device. *        The response is from a ATA_SMART_Read_Log command issued by SATI. * * @return n/a * */
+comment|/** * @brief This method will construct the SCSI self test log page from *        the SMART self-test log response received from the ATA device. *        The response is from a ATA_SMART_Read_Log command issued by SATI. * * @return n/a * */
 end_comment
 
 begin_function
@@ -1466,7 +1466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** * @brief This method will construct the SCSI information exception log page from *        the ATA SMART response recieved from the ATA device. The response is *         from a ATA SMART return status command issued by SATI. * * @return n/a * */
+comment|/** * @brief This method will construct the SCSI information exception log page from *        the ATA SMART response received from the ATA device. The response is *         from a ATA SMART return status command issued by SATI. * * @return n/a * */
 end_comment
 
 begin_function

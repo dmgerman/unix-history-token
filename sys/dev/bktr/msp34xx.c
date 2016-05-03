@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997-2001 Gerd Knorr<kraxel@bytesex.org>  * All rig
 end_comment
 
 begin_comment
-comment|/*  * programming the msp34* sound processor family  *  * (c) 1997-2001 Gerd Knorr<kraxel@bytesex.org>  *  * what works and what doesn't:  *  *  AM-Mono  *      Support for Hauppauge cards added (decoding handled by tuner) added by  *      Frederic Crozat<fcrozat@mail.dotcom.fr>  *  *  FM-Mono  *      should work. The stereo modes are backward compatible to FM-mono,  *      therefore FM-Mono should be allways available.  *  *  FM-Stereo (B/G, used in germany)  *      should work, with autodetect  *  *  FM-Stereo (satellite)  *      should work, no autodetect (i.e. default is mono, but you can  *      switch to stereo -- untested)  *  *  NICAM (B/G, L , used in UK, Scandinavia, Spain and France)  *      should work, with autodetect. Support for NICAM was added by  *      Pekka Pietikainen<pp@netppl.fi>  *  *  * TODO:  *   - better SAT support  *  *  * 980623  Thomas Sailer (sailer@ife.ee.ethz.ch)  *         using soundcore instead of OSS  *  *  * The FreeBSD modifications by Alexander Langer<alex@FreeBSD.org>  * are in the public domain.  Please contact me (Alex) and not Gerd for  * any problems you encounter under FreeBSD.  *   * FreeBSD TODO:   * - mutex handling (currently not mp-safe)  * - the various options here as loader tunables or compile time or whatever  * - how does the new dolby flag work with the current dpl_* stuff?  *   Maybe it's just enough to set the dolby flag to 1 and it works.  *   As I don't have a dolby card myself, I can't test it, though.  */
+comment|/*  * programming the msp34* sound processor family  *  * (c) 1997-2001 Gerd Knorr<kraxel@bytesex.org>  *  * what works and what doesn't:  *  *  AM-Mono  *      Support for Hauppauge cards added (decoding handled by tuner) added by  *      Frederic Crozat<fcrozat@mail.dotcom.fr>  *  *  FM-Mono  *      should work. The stereo modes are backward compatible to FM-mono,  *      therefore FM-Mono should be always available.  *  *  FM-Stereo (B/G, used in germany)  *      should work, with autodetect  *  *  FM-Stereo (satellite)  *      should work, no autodetect (i.e. default is mono, but you can  *      switch to stereo -- untested)  *  *  NICAM (B/G, L , used in UK, Scandinavia, Spain and France)  *      should work, with autodetect. Support for NICAM was added by  *      Pekka Pietikainen<pp@netppl.fi>  *  *  * TODO:  *   - better SAT support  *  *  * 980623  Thomas Sailer (sailer@ife.ee.ethz.ch)  *         using soundcore instead of OSS  *  *  * The FreeBSD modifications by Alexander Langer<alex@FreeBSD.org>  * are in the public domain.  Please contact me (Alex) and not Gerd for  * any problems you encounter under FreeBSD.  *   * FreeBSD TODO:   * - mutex handling (currently not mp-safe)  * - the various options here as loader tunables or compile time or whatever  * - how does the new dolby flag work with the current dpl_* stuff?  *   Maybe it's just enough to set the dolby flag to 1 and it works.  *   As I don't have a dolby card myself, I can't test it, though.  */
 end_comment
 
 begin_include
@@ -754,7 +754,7 @@ block|,
 literal|0x3000
 block|}
 block|,
-comment|/* Terrestial FM-mono + FM-stereo */
+comment|/* Terrestrial FM-mono + FM-stereo */
 block|{
 block|{
 literal|3

@@ -4404,7 +4404,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* turn assocation led on */
+comment|/* turn association led on */
 name|rt2560_update_led
 argument_list|(
 name|sc
@@ -5926,7 +5926,7 @@ name|rssi
 decl_stmt|,
 name|nf
 decl_stmt|;
-comment|/* retrieve last decriptor index processed by cipher engine */
+comment|/* retrieve last descriptor index processed by cipher engine */
 name|hw
 operator|=
 name|RAL_READ

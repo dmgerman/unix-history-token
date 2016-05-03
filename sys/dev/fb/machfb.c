@@ -6947,7 +6947,7 @@ name|fail_vmemmap
 goto|;
 block|}
 block|}
-comment|/* 	 * Test whether the aperture is byte swapped or not, set 	 * va_window and va_window_size as appropriate.  Note that 	 * the aperture could be mapped either big or little endian 	 * independently of the endianess of the host so this has 	 * to be a runtime test. 	 */
+comment|/* 	 * Test whether the aperture is byte swapped or not, set 	 * va_window and va_window_size as appropriate.  Note that 	 * the aperture could be mapped either big or little endian 	 * independently of the endianness of the host so this has 	 * to be a runtime test. 	 */
 name|p32
 operator|=
 operator|(

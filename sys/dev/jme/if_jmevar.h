@@ -34,7 +34,7 @@ file|<sys/taskqueue.h>
 end_include
 
 begin_comment
-comment|/*  * JMC250 supports upto 1024 descriptors and the number of  * descriptors should be multiple of 16.  */
+comment|/*  * JMC250 supports up to 1024 descriptors and the number of  * descriptors should be multiple of 16.  */
 end_comment
 
 begin_define

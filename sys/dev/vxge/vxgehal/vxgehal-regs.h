@@ -750,7 +750,7 @@ define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_AUX_POWER
 value|0x0010
-comment|/* Auxilliary power support */
+comment|/* Auxiliary power support */
 define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_DSI
@@ -878,7 +878,7 @@ define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_AUX_POWER
 value|0x0010
-comment|/* Auxilliary power support */
+comment|/* Auxiliary power support */
 define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_DSI
@@ -1004,7 +1004,7 @@ define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_AUX_POWER
 value|0x0010
-comment|/* Auxilliary power support */
+comment|/* Auxiliary power support */
 define|#
 directive|define
 name|VXGE_HAL_PCI_PM_CAP_DSI

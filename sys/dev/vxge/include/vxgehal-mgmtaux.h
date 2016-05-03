@@ -21,7 +21,7 @@ end_define
 
 begin_function_decl
 name|__EXTERN_BEGIN_DECLS
-comment|/*  * vxge_hal_aux_about_read - Retrieve and format about info.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Retrieve about info (using vxge_hal_mgmt_about()) and sprintf it  * into the provided @retbuf.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about(), vxge_hal_aux_device_dump().  */
+comment|/*  * vxge_hal_aux_about_read - Retrieve and format about info.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Retrieve about info (using vxge_hal_mgmt_about()) and sprintf it  * into the provided @retbuf.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  * VXGE_HAL_FAIL - Failed to retrieve the information.  *  * See also: vxge_hal_mgmt_about(), vxge_hal_aux_device_dump().  */
 name|vxge_hal_status_e
 name|vxge_hal_aux_about_read
 parameter_list|(
@@ -43,7 +43,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_aux_driver_config_read - Read Driver configuration.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Read driver configuration,  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  *  * See also: vxge_hal_aux_device_config_read().  */
+comment|/*  * vxge_hal_aux_driver_config_read - Read Driver configuration.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Read driver configuration,  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  *  * See also: vxge_hal_aux_device_config_read().  */
 end_comment
 
 begin_function_decl
@@ -65,7 +65,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_aux_pci_config_read - Retrieve and format PCI Configuration  * info.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Retrieve about info (using vxge_hal_mgmt_pci_config()) and sprintf it  * into the provided @retbuf.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  *  * See also: vxge_hal_mgmt_pci_config(), vxge_hal_aux_device_dump().  */
+comment|/*  * vxge_hal_aux_pci_config_read - Retrieve and format PCI Configuration  * info.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Retrieve about info (using vxge_hal_mgmt_pci_config()) and sprintf it  * into the provided @retbuf.  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  *  * See also: vxge_hal_mgmt_pci_config(), vxge_hal_aux_device_dump().  */
 end_comment
 
 begin_function_decl
@@ -90,7 +90,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vxge_hal_aux_device_config_read - Read device configuration.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Read device configuration,  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not maching.  *  * See also: vxge_hal_aux_driver_config_read().  */
+comment|/*  * vxge_hal_aux_device_config_read - Read device configuration.  * @devh: HAL device handle.  * @bufsize: Buffer size.  * @retbuf: Buffer pointer.  * @retsize: Size of the result. Cannot be greater than @bufsize.  *  * Read device configuration,  *  * Returns: VXGE_HAL_OK - success.  * VXGE_HAL_ERR_INVALID_DEVICE - Device is not valid.  * VXGE_HAL_ERR_VERSION_CONFLICT - Version it not matching.  *  * See also: vxge_hal_aux_driver_config_read().  */
 end_comment
 
 begin_function_decl

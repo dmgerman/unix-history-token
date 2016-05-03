@@ -619,7 +619,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* LRO packet has been successfuly queued */
+comment|/* LRO packet has been successfully queued */
 block|}
 else|else
 block|{

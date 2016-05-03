@@ -215,7 +215,7 @@ goto|goto
 name|fail4
 goto|;
 block|}
-comment|/* All future versions of the structure must be backwards compatable */
+comment|/* All future versions of the structure must be backwards compatible */
 name|EFX_STATIC_ASSERT
 argument_list|(
 name|SIENA_MC_STATIC_CONFIG_VERSION

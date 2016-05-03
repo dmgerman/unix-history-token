@@ -4808,7 +4808,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Supress unwanted interrupts */
+comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
 operator|!

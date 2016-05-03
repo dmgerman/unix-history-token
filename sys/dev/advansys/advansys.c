@@ -3119,7 +3119,7 @@ name|ccb_hdr
 modifier|*
 name|ccb_h
 decl_stmt|;
-comment|/* 		 * In order to simplify the recovery process, we ask the XPT 		 * layer to halt the queue of new transactions and we traverse 		 * the list of pending CCBs and remove their timeouts. This 		 * means that the driver attempts to clear only one error 		 * condition at a time.  In general, timeouts that occur 		 * close together are related anyway, so there is no benefit 		 * in attempting to handle errors in parrallel.  Timeouts will 		 * be reinstated when the recovery process ends. 		 */
+comment|/* 		 * In order to simplify the recovery process, we ask the XPT 		 * layer to halt the queue of new transactions and we traverse 		 * the list of pending CCBs and remove their timeouts. This 		 * means that the driver attempts to clear only one error 		 * condition at a time.  In general, timeouts that occur 		 * close together are related anyway, so there is no benefit 		 * in attempting to handle errors in parallel.  Timeouts will 		 * be reinstated when the recovery process ends. 		 */
 name|adv_set_state
 argument_list|(
 name|adv
@@ -5435,7 +5435,7 @@ case|:
 case|case
 name|QHSTA_M_BAD_QUEUE_FULL_OR_BUSY
 case|:
-comment|/* 			 * Assume that if we were a tagged transaction 			 * the target reported queue full.  Otherwise, 			 * report busy.  The firmware really should just 			 * pass the original status back up to us even 			 * if it thinks the target was in error for 			 * returning this status as no other transactions 			 * from this initiator are in effect, but this 			 * ignores multi-initiator setups and there is 			 * evidence that the firmware gets its per-device 			 * transaction counts screwed up occassionally. 			 */
+comment|/* 			 * Assume that if we were a tagged transaction 			 * the target reported queue full.  Otherwise, 			 * report busy.  The firmware really should just 			 * pass the original status back up to us even 			 * if it thinks the target was in error for 			 * returning this status as no other transactions 			 * from this initiator are in effect, but this 			 * ignores multi-initiator setups and there is 			 * evidence that the firmware gets its per-device 			 * transaction counts screwed up occasionally. 			 */
 name|ccb
 operator|->
 name|ccb_h

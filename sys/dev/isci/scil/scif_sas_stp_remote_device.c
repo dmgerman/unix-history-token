@@ -408,7 +408,7 @@ argument_list|(
 name|pending_request_element
 argument_list|)
 expr_stmt|;
-comment|// The current element may be deleted from the list becasue of
+comment|// The current element may be deleted from the list because of
 comment|// IO completion so advance to the next element early
 name|pending_request_element
 operator|=

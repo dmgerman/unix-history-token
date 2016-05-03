@@ -9473,7 +9473,7 @@ value|(1<<4)
 end_define
 
 begin_comment
-comment|/* Bit  4:	Remote Fault Condition Occured */
+comment|/* Bit  4:	Remote Fault Condition Occurred */
 end_comment
 
 begin_define
@@ -13229,7 +13229,7 @@ value|BIT_9
 end_define
 
 begin_comment
-comment|/* Excessive Collisions Occured */
+comment|/* Excessive Collisions Occurred */
 end_comment
 
 begin_define
@@ -13240,7 +13240,7 @@ value|BIT_8
 end_define
 
 begin_comment
-comment|/* Late Collisions Occured */
+comment|/* Late Collisions Occurred */
 end_comment
 
 begin_define

@@ -1248,7 +1248,7 @@ value|0x00200000L
 end_define
 
 begin_comment
-comment|/* (RW)  Store and Foward (21140) */
+comment|/* (RW)  Store and Forward (21140) */
 end_comment
 
 begin_define

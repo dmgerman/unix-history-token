@@ -2656,7 +2656,7 @@ block|,
 comment|/* Some cluster event */
 name|AifEnDiskSetEvent
 block|,
-comment|/* A disk set event occured. */
+comment|/* A disk set event occurred. */
 name|AifEnContainerScsiEvent
 block|,
 comment|/* a container event with no. and scsi id */

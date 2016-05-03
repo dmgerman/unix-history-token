@@ -1074,7 +1074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * \brief Probe for the existance of the Xenstore device  *  * \param dev  NewBus device_t for this instance.  *  * \return  Always returns 0 indicating success.  */
+comment|/**  * \brief Probe for the existence of the Xenstore device  *  * \param dev  NewBus device_t for this instance.  *  * \return  Always returns 0 indicating success.  */
 end_comment
 
 begin_function

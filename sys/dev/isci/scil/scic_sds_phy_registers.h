@@ -353,7 +353,7 @@ name|value
 parameter_list|)
 define|\
 value|scu_link_layer_register_write(phy, phy_capabilities, value)
-comment|/// This macro reads the Recieved PHY Capacity register
+comment|/// This macro reads the Received PHY Capacity register
 define|#
 directive|define
 name|SCU_SAS_RECPHYCAP_READ

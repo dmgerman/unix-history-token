@@ -2467,7 +2467,7 @@ comment|/* Our READ LOG active */
 name|int
 name|fatalerr
 decl_stmt|;
-comment|/* Fatal error happend */
+comment|/* Fatal error happened */
 name|int
 name|resetting
 decl_stmt|;
@@ -2562,7 +2562,7 @@ name|resource
 modifier|*
 name|r_memr
 decl_stmt|;
-comment|/* Recieve buffer */
+comment|/* Receive buffer */
 name|struct
 name|cam_sim
 modifier|*

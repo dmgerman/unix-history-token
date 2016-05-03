@@ -137,7 +137,7 @@ comment|/* vadress of TX descriptors */
 name|uint32_t
 name|tsec_tx_raddr
 decl_stmt|;
-comment|/* real adress of TX descriptors */
+comment|/* real address of TX descriptors */
 name|bus_dma_tag_t
 name|tsec_rx_dtag
 decl_stmt|;
@@ -155,7 +155,7 @@ comment|/* vadress of RX descriptors */
 name|uint32_t
 name|tsec_rx_raddr
 decl_stmt|;
-comment|/* real adress of RX descriptors */
+comment|/* real address of RX descriptors */
 name|bus_dma_tag_t
 name|tsec_tx_mtag
 decl_stmt|;
@@ -179,7 +179,7 @@ decl_stmt|;
 name|uint32_t
 name|paddr
 decl_stmt|;
-comment|/* DMA addres of buffer */
+comment|/* DMA address of buffer */
 block|}
 name|rx_data
 index|[

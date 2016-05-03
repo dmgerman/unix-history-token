@@ -678,7 +678,7 @@ value|mtx_assert(&(sc)->sc_lock, MA_OWNED)
 end_define
 
 begin_comment
-comment|/*  * Accessing SONIC data structures and registers as 32 bit values  * makes code endianess independent.  The SONIC is however always in  * bigendian mode so it is necessary to ensure that data structures shared  * between the CPU and the SONIC are always in bigendian order.  */
+comment|/*  * Accessing SONIC data structures and registers as 32 bit values  * makes code endianness independent.  The SONIC is however always in  * bigendian mode so it is necessary to ensure that data structures shared  * between the CPU and the SONIC are always in bigendian order.  */
 end_comment
 
 begin_comment

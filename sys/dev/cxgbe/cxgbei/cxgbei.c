@@ -1063,7 +1063,7 @@ literal|0
 decl_stmt|,
 name|cnt
 decl_stmt|;
-comment|/* 	 * on T4, if we use a mix of IMMD and DSGL with ULP_MEM_WRITE, 	 * the order would not be garanteed, so we will stick with IMMD 	 */
+comment|/* 	 * on T4, if we use a mix of IMMD and DSGL with ULP_MEM_WRITE, 	 * the order would not be guaranteed, so we will stick with IMMD 	 */
 name|gl
 operator|->
 name|tid

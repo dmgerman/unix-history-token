@@ -79,7 +79,7 @@ name|SCI_CONTROLLER_HANDLE_T
 name|controller
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This method is called by the SCI user to process completions  *        generated as a result of a previously handled interrupt.  This  *        method will result in the completion of IO requests and handling  *        of other controller generated events.  This method should be  *        called some time after the interrupt handler.  *  * @note  Most, if not all, of the user callback APIs are invoked from within  *        this API.  As a result, the user should be cognizent of the operating  *        level at which they invoke this API.  *  */
+comment|/**  * @brief This method is called by the SCI user to process completions  *        generated as a result of a previously handled interrupt.  This  *        method will result in the completion of IO requests and handling  *        of other controller generated events.  This method should be  *        called some time after the interrupt handler.  *  * @note  Most, if not all, of the user callback APIs are invoked from within  *        this API.  As a result, the user should be cognizant of the operating  *        level at which they invoke this API.  *  */
 typedef|typedef
 name|void
 function_decl|(

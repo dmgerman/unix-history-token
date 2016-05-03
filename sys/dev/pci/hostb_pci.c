@@ -81,7 +81,7 @@ condition|(
 name|id
 condition|)
 block|{
-comment|/* VIA VT82C596 Power Managment Function */
+comment|/* VIA VT82C596 Power Management Function */
 case|case
 literal|0x30501106
 case|:

@@ -5185,7 +5185,7 @@ name|M_MRSAS
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Free version buffer memroy 	 */
+comment|/* 	 * Free version buffer memory 	 */
 if|if
 condition|(
 name|sc
@@ -12527,7 +12527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_reset_ctrl:	Core function to OCR/Kill adapter.  * input:				Adapter Context.  *  * This function will run from thread context so that it can sleep. 1. Do not  * handle OCR if FW is in HW critical error. 2. Wait for outstanding command  * to complete for 180 seconds. 3. If #2 does not find any outstanding  * command Controller is in working state, so skip OCR. Otherwise, do  * OCR/kill Adapter based on flag disableOnlineCtrlReset. 4. Start of the  * OCR, return all SCSI command back to CAM layer which has ccb_ptr. 5. Post  * OCR, Re-fire Managment command and move Controller to Operation state.  */
+comment|/*  * mrsas_reset_ctrl:	Core function to OCR/Kill adapter.  * input:				Adapter Context.  *  * This function will run from thread context so that it can sleep. 1. Do not  * handle OCR if FW is in HW critical error. 2. Wait for outstanding command  * to complete for 180 seconds. 3. If #2 does not find any outstanding  * command Controller is in working state, so skip OCR. Otherwise, do  * OCR/kill Adapter based on flag disableOnlineCtrlReset. 4. Start of the  * OCR, return all SCSI command back to CAM layer which has ccb_ptr. 5. Post  * OCR, Re-fire Management command and move Controller to Operation state.  */
 end_comment
 
 begin_function

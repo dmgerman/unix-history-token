@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	Assisted by Mike Neuffer in the early low level DPT code  *		Thanx to Mark Salyzyn of DPT for his assistance.  *		Special thanx to Justin Gibbs for invaluable help in  *		making this driver look and work like a FreeBSD component.  *		Last but not least, many thanx to UCB and the FreeBSD  *		team for creating and maintaining such a wonderful O/S.  *  * TODO:     * Add ISA probe code.  *	     * Add driver-level RAID-0. This will allow interoperability with  *	       NiceTry, M$-Doze, Win-Dog, Slowlaris, etc., in recognizing RAID  *	       arrays that span controllers (Wow!).  */
+comment|/*  * dpt_scsi.c: SCSI dependent code for the DPT driver  *  * credits:	Assisted by Mike Neuffer in the early low level DPT code  *		Thanx to Mark Salyzyn of DPT for his assistance.  *		Special thanx to Justin Gibbs for invaluable help in  *		making this driver look and work like a FreeBSD component.  *		Last but not least, many thanx to UCB and the FreeBSD  *		team for creating and maintaining such a wonderful O/S.  *  * TODO:     * Add ISA probe code.  *	     * Add driver-level RAID-0. This will allow interoperability with  *	       NiceTry, M$-Doze, Win-Dog, Slowlaris, etc., in recognizing RAID  *	       arrays that span controllers (Wow!).  */
 end_comment
 
 begin_define
@@ -233,7 +233,7 @@ value|bus_write_1((dpt)->io_res, (dpt)->io_offset + port, value)
 end_define
 
 begin_comment
-comment|/*  * These will have to be setup by parameters passed at boot/load time. For  * perfromance reasons, we make them constants for the time being.  */
+comment|/*  * These will have to be setup by parameters passed at boot/load time. For  * performance reasons, we make them constants for the time being.  */
 end_comment
 
 begin_define
@@ -2765,7 +2765,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Default setting, for best perfromance.. 	 * This is what virtually all cards default to.. 	 */
+comment|/* 	 * Default setting, for best performance.. 	 * This is what virtually all cards default to.. 	 */
 name|dpt
 operator|->
 name|cache_type
@@ -8597,7 +8597,7 @@ comment|/* Should be ignored */
 end_comment
 
 begin_comment
-comment|/* Lock up the submitted queue.  We are very persistant here */
+comment|/* Lock up the submitted queue.  We are very persistent here */
 end_comment
 
 begin_comment

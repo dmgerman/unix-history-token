@@ -3514,7 +3514,7 @@ operator|==
 name|AD_DEVICEID_STARFIRE
 condition|)
 block|{
-comment|/* unkown subdevice */
+comment|/* unknown subdevice */
 name|device_set_desc
 argument_list|(
 name|dev
@@ -7451,7 +7451,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The starfire is programmed to use 'normal' mode for packet reception,  * which means we use the consumer/producer model for both the buffer  * descriptor queue and the completion descriptor queue. The only problem  * with this is that it involves a lot of register accesses: we have to  * read the RX completion consumer and producer indexes and the RX buffer  * producer index, plus the RX completion consumer and RX buffer producer  * indexes have to be updated. It would have been easier if Adaptec had  * put each index in a separate register, especially given that the damn  * NIC has a 512K register space.  *  * In spite of all the lovely features that Adaptec crammed into the 6915,  * it is marred by one truly stupid design flaw, which is that receive  * buffer addresses must be aligned on a longword boundary. This forces  * the packet payload to be unaligned, which is suboptimal on the x86 and  * completely unuseable on the Alpha. Our only recourse is to copy received  * packets into properly aligned buffers before handing them off.  */
+comment|/*  * The starfire is programmed to use 'normal' mode for packet reception,  * which means we use the consumer/producer model for both the buffer  * descriptor queue and the completion descriptor queue. The only problem  * with this is that it involves a lot of register accesses: we have to  * read the RX completion consumer and producer indexes and the RX buffer  * producer index, plus the RX completion consumer and RX buffer producer  * indexes have to be updated. It would have been easier if Adaptec had  * put each index in a separate register, especially given that the damn  * NIC has a 512K register space.  *  * In spite of all the lovely features that Adaptec crammed into the 6915,  * it is marred by one truly stupid design flaw, which is that receive  * buffer addresses must be aligned on a longword boundary. This forces  * the packet payload to be unaligned, which is suboptimal on the x86 and  * completely unusable on the Alpha. Our only recourse is to copy received  * packets into properly aligned buffers before handing them off.  */
 end_comment
 
 begin_function

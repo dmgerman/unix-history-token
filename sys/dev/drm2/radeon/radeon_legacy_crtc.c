@@ -295,7 +295,7 @@ name|CHIP_RS200
 operator|)
 condition|)
 block|{
-comment|/* This is to workaround the asic bug for RMX, some versions 		   of BIOS dosen't have this register initialized correctly. */
+comment|/* This is to workaround the asic bug for RMX, some versions 		   of BIOS doesn't have this register initialized correctly. */
 name|crtc_more_cntl
 operator||=
 name|RADEON_CRTC_H_CUTOFF_ACTIVE_EN

@@ -1016,7 +1016,7 @@ comment|/** 	 * \brief Cached value of the front-end's domain id. 	 *  	 * This 
 name|domid_t
 name|otherend_id
 decl_stmt|;
-comment|/** 	 * \brief The blkif protocol abi in effect. 	 * 	 * There are situations where the back and front ends can 	 * have a different, native abi (e.g. intel x86_64 and 	 * 32bit x86 domains on the same machine).  The back-end 	 * always accomodates the front-end's native abi.  That 	 * value is pulled from the XenStore and recorded here. 	 */
+comment|/** 	 * \brief The blkif protocol abi in effect. 	 * 	 * There are situations where the back and front ends can 	 * have a different, native abi (e.g. intel x86_64 and 	 * 32bit x86 domains on the same machine).  The back-end 	 * always accommodates the front-end's native abi.  That 	 * value is pulled from the XenStore and recorded here. 	 */
 name|int
 name|abi
 decl_stmt|;
@@ -1173,15 +1173,15 @@ comment|/** Number of requests we completed with an error status*/
 name|uint64_t
 name|reqs_completed_with_error
 decl_stmt|;
-comment|/** How many forced dispatches (i.e. without coalescing) have happend */
+comment|/** How many forced dispatches (i.e. without coalescing) have happened */
 name|uint64_t
 name|forced_dispatch
 decl_stmt|;
-comment|/** How many normal dispatches have happend */
+comment|/** How many normal dispatches have happened */
 name|uint64_t
 name|normal_dispatch
 decl_stmt|;
-comment|/** How many total dispatches have happend */
+comment|/** How many total dispatches have happened */
 name|uint64_t
 name|total_dispatch
 decl_stmt|;
@@ -4949,7 +4949,7 @@ block|{
 comment|/* 				 * Resource shortage has been recorded. 				 * We'll be scheduled to run once a request 				 * object frees up due to a completion. 				 */
 break|break;
 block|}
-comment|/* 			 * Signify that	we can overwrite this request with 			 * a response by incrementing our consumer index. 			 * The response won't be generated until after 			 * we've already consumed all necessary data out 			 * of the version of the request in the ring buffer 			 * (for native mode).  We must update the consumer 			 * index  before issueing back-end I/O so there is 			 * no possibility that it will complete and a 			 * response be generated before we make room in  			 * the queue for that response. 			 */
+comment|/* 			 * Signify that	we can overwrite this request with 			 * a response by incrementing our consumer index. 			 * The response won't be generated until after 			 * we've already consumed all necessary data out 			 * of the version of the request in the ring buffer 			 * (for native mode).  We must update the consumer 			 * index  before issuing back-end I/O so there is 			 * no possibility that it will complete and a 			 * response be generated before we make room in  			 * the queue for that response. 			 */
 name|xbb
 operator|->
 name|rings
@@ -9334,7 +9334,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * These fields are initialized to legacy protocol defaults 	 * so we only need to fail if reading the updated value succeeds 	 * and the new value is outside of its allowed range. 	 * 	 * \note xs_gather() returns on the first encountered error, so 	 *       we must use independant calls in order to guarantee 	 *       we don't miss information in a sparsly populated front-end 	 *       tree. 	 * 	 * \note xs_scanf() does not update variables for unmatched 	 *       fields. 	 */
+comment|/* 	 * These fields are initialized to legacy protocol defaults 	 * so we only need to fail if reading the updated value succeeds 	 * and the new value is outside of its allowed range. 	 * 	 * \note xs_gather() returns on the first encountered error, so 	 *       we must use independent calls in order to guarantee 	 *       we don't miss information in a sparsly populated front-end 	 *       tree. 	 * 	 * \note xs_scanf() does not update variables for unmatched 	 *       fields. 	 */
 name|ring_page_order
 operator|=
 literal|0
@@ -11957,7 +11957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Detach from a block back device instance.  *  * \param dev  NewBus device object representing this Xen Block Back instance.  *  * \return  0 for success, errno codes for failure.  *   * \note A block back device may be detached at any time in its life-cycle,  *       including part way through the attach process.  For this reason,  *       initialization order and the intialization state checks in this  *       routine must be carefully coupled so that attach time failures  *       are gracefully handled.  */
+comment|/**  * Detach from a block back device instance.  *  * \param dev  NewBus device object representing this Xen Block Back instance.  *  * \return  0 for success, errno codes for failure.  *   * \note A block back device may be detached at any time in its life-cycle,  *       including part way through the attach process.  For this reason,  *       initialization order and the initialization state checks in this  *       routine must be carefully coupled so that attach time failures  *       are gracefully handled.  */
 end_comment
 
 begin_function

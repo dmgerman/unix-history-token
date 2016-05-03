@@ -8469,7 +8469,7 @@ name|dfwdev
 operator|->
 name|status
 expr_stmt|;
-comment|/* 		 * Pre-1394a-2000 didn't have link_spd in 		 * the Bus Info block, so try and use the 		 * speed map value. 		 * 1394a-2000 compliant devices only use 		 * the Bus Info Block link spd value, so 		 * ignore the speed map alltogether. SWB 		 */
+comment|/* 		 * Pre-1394a-2000 didn't have link_spd in 		 * the Bus Info block, so try and use the 		 * speed map value. 		 * 1394a-2000 compliant devices only use 		 * the Bus Info Block link spd value, so 		 * ignore the speed map altogether. SWB 		 */
 if|if
 condition|(
 name|binfo

@@ -3841,7 +3841,7 @@ comment|/* Our READ LOG active */
 name|int
 name|fatalerr
 decl_stmt|;
-comment|/* Fatal error happend */
+comment|/* Fatal error happened */
 name|int
 name|lastslot
 decl_stmt|;

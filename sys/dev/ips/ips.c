@@ -379,7 +379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* is locking needed? what locking guarentees are there on removal? */
+comment|/* is locking needed? what locking guarantees are there on removal? */
 end_comment
 
 begin_function

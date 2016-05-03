@@ -1703,7 +1703,7 @@ argument_list|(
 name|element
 argument_list|)
 expr_stmt|;
-comment|// The current element may be deleted from the list becasue of
+comment|// The current element may be deleted from the list because of
 comment|// IO completion so advance to the next element early
 name|element
 operator|=
@@ -3199,7 +3199,7 @@ argument_list|(
 name|element
 argument_list|)
 expr_stmt|;
-comment|// The current element may be deleted from the list becasue of
+comment|// The current element may be deleted from the list because of
 comment|// IO completion so advance to the next element early
 name|element
 operator|=
@@ -3505,7 +3505,7 @@ name|fw_domain
 operator|)
 argument_list|)
 expr_stmt|;
-comment|//search throught domain's device list to find the first sata device on spinup_hold
+comment|//search through domain's device list to find the first sata device on spinup_hold
 name|current_element
 operator|=
 name|sci_abstract_list_get_front

@@ -57,7 +57,7 @@ modifier|*
 name|cookie
 parameter_list|)
 function_decl|;
-comment|/**  * @brief This callback method asks the user to destory the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
+comment|/**  * @brief This callback method asks the user to destroy the supplied timer.  *  * @param[in]  controller This parameter specifies the controller with  *             which this timer is to associated.  * @param[in]  timer This parameter specifies the timer to be destroyed.  *  * @return none  */
 name|void
 name|scic_cb_timer_destroy
 parameter_list|(
@@ -176,7 +176,7 @@ function_decl|;
 ifndef|#
 directive|ifndef
 name|SCI_GET_PHYSICAL_ADDRESS_OPTIMIZATION_ENABLED
-comment|/**  * @brief This callback method asks the user to provide the physical  *        address for the supplied virtual address when building an  *        io request object.  *  * @param[in] controller This parameter is the core controller object  *            handle.  * @param[in] io_request This parameter is the io request object handle  *            for which the physical address is being requested.  * @param[in] virtual_address This paramter is the virtual address which  *            is to be returned as a physical address.  * @param[out] physical_address The physical address for the supplied virtual  *        address.  *  * @return None.  */
+comment|/**  * @brief This callback method asks the user to provide the physical  *        address for the supplied virtual address when building an  *        io request object.  *  * @param[in] controller This parameter is the core controller object  *            handle.  * @param[in] io_request This parameter is the io request object handle  *            for which the physical address is being requested.  * @param[in] virtual_address This parameter is the virtual address which  *            is to be returned as a physical address.  * @param[out] physical_address The physical address for the supplied virtual  *        address.  *  * @return None.  */
 name|void
 name|scic_cb_io_request_get_physical_address
 parameter_list|(
@@ -198,7 +198,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|// SCI_GET_PHYSICAL_ADDRESS_OPTIMIZATION_ENABLED
-comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transfered as part of this request.  *  * @param[in] scic_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transfered for this IO request.  */
+comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transferred as part of this request.  *  * @param[in] scic_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transferred for this IO request.  */
 name|U32
 name|scic_cb_io_request_get_transfer_length
 parameter_list|(
@@ -755,7 +755,7 @@ name|defined
 argument_list|(
 name|DISABLE_ATAPI
 argument_list|)
-comment|/**  * @brief This user callback gets from stp packet io's user request  *           the CDB address.  * @param[in] scic_user_io_request  *  * @return The cdb adress.  */
+comment|/**  * @brief This user callback gets from stp packet io's user request  *           the CDB address.  * @param[in] scic_user_io_request  *  * @return The cdb address.  */
 name|void
 modifier|*
 name|scic_cb_stp_packet_io_request_get_cdb_address

@@ -289,7 +289,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* System dependant typedefs */
+comment|/* System dependent typedefs */
 end_comment
 
 begin_typedef

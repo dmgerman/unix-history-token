@@ -10933,7 +10933,7 @@ name|BCE_NVM_COMMAND_WR
 operator||
 name|BCE_NVM_COMMAND_DOIT
 expr_stmt|;
-comment|/* 	 * Clear the DONE bit separately, set the NVRAM adress to erase, 	 * and issue the erase command. 	 */
+comment|/* 	 * Clear the DONE bit separately, set the NVRAM address to erase, 	 * and issue the erase command. 	 */
 name|REG_WR
 argument_list|(
 name|sc
@@ -34363,7 +34363,7 @@ goto|goto
 name|bce_intr_exit
 goto|;
 block|}
-comment|/* Ack the interrupt and stop others from occuring. */
+comment|/* Ack the interrupt and stop others from occurring. */
 name|REG_WR
 argument_list|(
 name|sc

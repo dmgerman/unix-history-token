@@ -868,7 +868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bus independant device attachment routine.  Creates the  * character device node.  */
+comment|/*  * Bus independent device attachment routine.  Creates the  * character device node.  */
 end_comment
 
 begin_function
@@ -960,7 +960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bus independant device detachment routine.  Makes sure all  * allocated resources are freed, callouts disabled and waiting  * processes unblocked.  */
+comment|/*  * Bus independent device detachment routine.  Makes sure all  * allocated resources are freed, callouts disabled and waiting  * processes unblocked.  */
 end_comment
 
 begin_function

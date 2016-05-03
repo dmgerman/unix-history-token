@@ -1829,7 +1829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Bootstrap the driver for AGP DMA.  *  * \todo  * Investigate whether there is any benifit to storing the WARP microcode in  * AGP memory.  If not, the microcode may as well always be put in PCI  * memory.  *  * \todo  * This routine needs to set dma_bs->agp_mode to the mode actually configured  * in the hardware.  Looking just at the Linux AGP driver code, I don't see  * an easy way to determine this.  *  * \sa mga_do_dma_bootstrap, mga_do_pci_dma_bootstrap  */
+comment|/**  * Bootstrap the driver for AGP DMA.  *  * \todo  * Investigate whether there is any benefit to storing the WARP microcode in  * AGP memory.  If not, the microcode may as well always be put in PCI  * memory.  *  * \todo  * This routine needs to set dma_bs->agp_mode to the mode actually configured  * in the hardware.  Looking just at the Linux AGP driver code, I don't see  * an easy way to determine this.  *  * \sa mga_do_dma_bootstrap, mga_do_pci_dma_bootstrap  */
 end_comment
 
 begin_function

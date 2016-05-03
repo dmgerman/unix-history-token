@@ -283,7 +283,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Definitions for the AMI Series 48 controler */
+comment|/* Definitions for the AMI Series 48 controller */
 end_comment
 
 begin_define

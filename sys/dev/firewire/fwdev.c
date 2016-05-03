@@ -1784,7 +1784,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* no data avaliable */
+comment|/* no data available */
 if|if
 condition|(
 name|slept

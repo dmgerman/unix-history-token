@@ -4453,7 +4453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will construct a Write Uncorrectable ATA command that  *        will write one sector with a psuedo or flagged error. The type of  *        error is specified by the feature value.  *  * @return N/A  *  */
+comment|/**  * @brief This method will construct a Write Uncorrectable ATA command that  *        will write one sector with a pseudo or flagged error. The type of  *        error is specified by the feature value.  *  * @return N/A  *  */
 end_comment
 
 begin_function

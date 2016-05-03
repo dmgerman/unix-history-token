@@ -1096,7 +1096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This callback method asks the user to provide the physical  *        address for the supplied virtual address when building an  *        io request object.  *  * @param[in] controller This parameter is the core controller object  *            handle.  * @param[in] io_request This parameter is the io request object handle  *            for which the physical address is being requested.  * @param[in] virtual_address This paramter is the virtual address which  *            is to be returned as a physical address.  * @param[out] physical_address The physical address for the supplied virtual  *             address.  *  * @return None.  */
+comment|/**  * @brief This callback method asks the user to provide the physical  *        address for the supplied virtual address when building an  *        io request object.  *  * @param[in] controller This parameter is the core controller object  *            handle.  * @param[in] io_request This parameter is the io request object handle  *            for which the physical address is being requested.  * @param[in] virtual_address This parameter is the virtual address which  *            is to be returned as a physical address.  * @param[out] physical_address The physical address for the supplied virtual  *             address.  *  * @return None.  */
 end_comment
 
 begin_function
@@ -1537,7 +1537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transfered as part of this request.  *  * @param[in] scif_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transfered for this IO request.  */
+comment|/**  * @brief This callback method asks the user to provide the number of  *        bytes to be transferred as part of this request.  *  * @param[in] scif_user_io_request This parameter points to the user's  *            IO request object.  It is a cookie that allows the user to  *            provide the necessary information for this callback.  *  * @return This method returns the number of payload data bytes to be  *         transferred for this IO request.  */
 end_comment
 
 begin_function

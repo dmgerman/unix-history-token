@@ -897,7 +897,7 @@ name|CAM_CMD_TIMEOUT
 expr_stmt|;
 return|return;
 block|}
-comment|/* if a timeout occured, no sense */
+comment|/* if a timeout occurred, no sense */
 if|if
 condition|(
 name|vpo

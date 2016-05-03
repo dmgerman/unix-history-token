@@ -17811,7 +17811,7 @@ operator|->
 name|pipe
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There seems to be a race in PCH platform hw (at least on some 	 * outputs) where an enabled pipe still completes any pageflip right 	 * away (as if the pipe is off) instead of waiting for vblank. As soon 	 * as the first vblank happend, everything works as expected. Hence just 	 * wait for one vblank before returning to avoid strange things 	 * happening. 	 */
+comment|/* 	 * There seems to be a race in PCH platform hw (at least on some 	 * outputs) where an enabled pipe still completes any pageflip right 	 * away (as if the pipe is off) instead of waiting for vblank. As soon 	 * as the first vblank happened, everything works as expected. Hence just 	 * wait for one vblank before returning to avoid strange things 	 * happening. 	 */
 name|intel_wait_for_vblank
 argument_list|(
 name|dev
@@ -18095,7 +18095,7 @@ argument_list|(
 name|encoder
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There seems to be a race in PCH platform hw (at least on some 	 * outputs) where an enabled pipe still completes any pageflip right 	 * away (as if the pipe is off) instead of waiting for vblank. As soon 	 * as the first vblank happend, everything works as expected. Hence just 	 * wait for one vblank before returning to avoid strange things 	 * happening. 	 */
+comment|/* 	 * There seems to be a race in PCH platform hw (at least on some 	 * outputs) where an enabled pipe still completes any pageflip right 	 * away (as if the pipe is off) instead of waiting for vblank. As soon 	 * as the first vblank happened, everything works as expected. Hence just 	 * wait for one vblank before returning to avoid strange things 	 * happening. 	 */
 name|intel_wait_for_vblank
 argument_list|(
 name|dev

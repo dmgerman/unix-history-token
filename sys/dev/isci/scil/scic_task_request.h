@@ -45,7 +45,7 @@ name|defined
 argument_list|(
 name|DISABLE_TASK_MANAGEMENT
 argument_list|)
-comment|/**  * @brief This method simply returns the size required to build an SCI  *        based task managment request object.  *  * @return Return the size of the SCIC task request object.  */
+comment|/**  * @brief This method simply returns the size required to build an SCI  *        based task management request object.  *  * @return Return the size of the SCIC task request object.  */
 name|U32
 name|scic_task_request_get_object_size
 parameter_list|(
