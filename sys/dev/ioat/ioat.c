@@ -155,6 +155,24 @@ directive|include
 file|"ioat_internal.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUS_SPACE_MAXADDR_40BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_MAXADDR_40BIT
+value|0xFFFFFFFFFFULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2453,7 +2471,7 @@ literal|0x40
 argument_list|,
 literal|0x0
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_40BIT
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
