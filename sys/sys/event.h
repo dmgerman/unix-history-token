@@ -565,6 +565,50 @@ begin_comment
 comment|/* vnode access was revoked */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE_OPEN
+value|0x0080
+end_define
+
+begin_comment
+comment|/* vnode was opened */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_CLOSE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* file closed, fd did not 						   allowed write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_CLOSE_WRITE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* file closed, fd did allowed 						   write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_READ
+value|0x0400
+end_define
+
+begin_comment
+comment|/* file was read */
+end_comment
+
 begin_comment
 comment|/*  * data/hint flags for EVFILT_PROC and EVFILT_PROCDESC, shared with userspace  */
 end_comment
