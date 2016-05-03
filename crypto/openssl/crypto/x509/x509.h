@@ -7325,6 +7325,10 @@ name|X509_R_METHOD_NOT_SUPPORTED
 value|124
 define|#
 directive|define
+name|X509_R_NAME_TOO_LONG
+value|134
+define|#
+directive|define
 name|X509_R_NEWER_CRL_NOT_NEWER
 value|132
 define|#

@@ -20,6 +20,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|OPENSSL_NO_COMP
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|COMP is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 

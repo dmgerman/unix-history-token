@@ -73,6 +73,12 @@ directive|include
 file|"modes_lcl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"constant_time_locl.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3937,6 +3943,15 @@ expr_stmt|;
 name|maxpad
 operator|&=
 literal|255
+expr_stmt|;
+name|ret
+operator|&=
+name|constant_time_ge
+argument_list|(
+name|maxpad
+argument_list|,
+name|pad
+argument_list|)
 expr_stmt|;
 name|inp_len
 operator|=

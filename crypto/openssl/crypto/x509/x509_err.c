@@ -661,6 +661,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509_R_NAME_TOO_LONG
+argument_list|)
+block|,
+literal|"name too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509_R_NEWER_CRL_NOT_NEWER
 argument_list|)
 block|,

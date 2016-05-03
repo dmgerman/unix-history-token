@@ -1662,6 +1662,13 @@ condition|(
 name|objstr
 operator|==
 name|NULL
+operator|||
+name|EVP_CIPHER_iv_length
+argument_list|(
+name|enc
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|PEMerr
