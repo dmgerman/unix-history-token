@@ -254,13 +254,6 @@ argument_list|,
 name|acpi_pcib_read_ivar
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_get_cpus
-argument_list|,
-name|acpi_pcib_get_cpus
-argument_list|)
-block|,
 comment|/* pcib interface */
 name|DEVMETHOD
 argument_list|(

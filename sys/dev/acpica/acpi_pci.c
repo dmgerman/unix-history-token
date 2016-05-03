@@ -423,13 +423,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_get_cpus
-argument_list|,
-name|acpi_get_cpus
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_get_dma_tag
 argument_list|,
 name|acpi_pci_get_dma_tag
