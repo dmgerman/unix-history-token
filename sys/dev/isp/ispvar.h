@@ -2268,7 +2268,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CFG_PORT_PREF
-value|0x0c
+value|0x0e
 end_define
 
 begin_comment
@@ -2278,8 +2278,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_CFG_LPORT
+name|ISP_CFG_PORT_DEF
 value|0x00
+end_define
+
+begin_comment
+comment|/* prefer connection type from NVRAM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_LPORT_ONLY
+value|0x02
+end_define
+
+begin_comment
+comment|/* insist on {N/F}L-Port connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_NPORT_ONLY
+value|0x04
+end_define
+
+begin_comment
+comment|/* insist on {N/F}-Port connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_LPORT
+value|0x06
 end_define
 
 begin_comment
@@ -2290,33 +2323,11 @@ begin_define
 define|#
 directive|define
 name|ISP_CFG_NPORT
-value|0x04
-end_define
-
-begin_comment
-comment|/* prefer {N/F}-Port connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_CFG_NPORT_ONLY
 value|0x08
 end_define
 
 begin_comment
-comment|/* insist on {N/F}-Port connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_CFG_LPORT_ONLY
-value|0x0c
-end_define
-
-begin_comment
-comment|/* insist on {N/F}L-Port connection */
+comment|/* prefer {N/F}-Port connection */
 end_comment
 
 begin_define
