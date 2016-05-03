@@ -1640,6 +1640,10 @@ decl_stmt|;
 name|uint16_t
 name|isp_fabric_params
 decl_stmt|;
+name|uint16_t
+name|isp_login_hdl
+decl_stmt|;
+comment|/* Logging in handle */
 name|uint8_t
 name|isp_retry_delay
 decl_stmt|;
