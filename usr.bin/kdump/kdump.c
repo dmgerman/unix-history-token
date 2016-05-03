@@ -3716,6 +3716,9 @@ case|:
 case|case
 name|SYS_lchmod
 case|:
+case|case
+name|SYS_fchmodat
+case|:
 name|print_number
 argument_list|(
 name|ip
