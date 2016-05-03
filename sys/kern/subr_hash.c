@@ -414,13 +414,13 @@ value|nitems(primes)
 end_define
 
 begin_comment
-comment|/*  * General routine to allocate a prime number sized hash table.  */
+comment|/*  * General routine to allocate a prime number sized hash table with control of  * memory flags.  */
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|phashinit
+name|phashinit_flags
 parameter_list|(
 name|int
 name|elements
@@ -433,6 +433,9 @@ parameter_list|,
 name|u_long
 modifier|*
 name|nentries
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|long
@@ -449,6 +452,8 @@ name|hashtbl
 expr_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|m_flags
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -460,6 +465,28 @@ operator|(
 literal|"%s: bad elements"
 operator|,
 name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Exactly one of HASH_WAITOK and HASH_NOWAIT must be set. */
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|HASH_WAITOK
+operator|)
+operator|^
+operator|(
+name|flags
+operator|&
+name|HASH_NOWAIT
+operator|)
+argument_list|,
+operator|(
+literal|"Bad flags (0x%x) passed to phashinit_flags"
+operator|,
+name|flags
 operator|)
 argument_list|)
 expr_stmt|;
@@ -509,6 +536,18 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+name|m_flags
+operator|=
+operator|(
+name|flags
+operator|&
+name|HASH_NOWAIT
+operator|)
+condition|?
+name|M_NOWAIT
+else|:
+name|M_WAITOK
+expr_stmt|;
 name|hashtbl
 operator|=
 name|malloc
@@ -526,9 +565,20 @@ argument_list|)
 argument_list|,
 name|type
 argument_list|,
-name|M_WAITOK
+name|m_flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hashtbl
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -559,6 +609,45 @@ expr_stmt|;
 return|return
 operator|(
 name|hashtbl
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allocate and initialize a prime number sized hash table with default flag:  * may sleep.  */
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|phashinit
+parameter_list|(
+name|int
+name|elements
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
+name|type
+parameter_list|,
+name|u_long
+modifier|*
+name|nentries
+parameter_list|)
+block|{
+return|return
+operator|(
+name|phashinit_flags
+argument_list|(
+name|elements
+argument_list|,
+name|type
+argument_list|,
+name|nentries
+argument_list|,
+name|HASH_WAITOK
+argument_list|)
 operator|)
 return|;
 block|}
