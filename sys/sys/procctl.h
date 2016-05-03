@@ -311,7 +311,7 @@ comment|/* in  - subtree, if REAPER_KILL_SUBTREE */
 name|u_int
 name|rk_killed
 decl_stmt|;
-comment|/* out - count of processes sucessfully 				   killed */
+comment|/* out - count of processes successfully 				   killed */
 name|pid_t
 name|rk_fpid
 decl_stmt|;

@@ -1263,7 +1263,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/*  * Old format.  Has variable hidden padding due to alignment.  * This is a compatability hack for pre-build 7.1 packages.  */
+comment|/*  * Old format.  Has variable hidden padding due to alignment.  * This is a compatibility hack for pre-build 7.1 packages.  */
 end_comment
 
 begin_if

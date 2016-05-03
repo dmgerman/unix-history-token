@@ -403,7 +403,7 @@ comment|/* Normal priority level. */
 name|u_char
 name|pri_native
 decl_stmt|;
-comment|/* Priority before propogation. */
+comment|/* Priority before propagation. */
 name|u_char
 name|pri_user
 decl_stmt|;

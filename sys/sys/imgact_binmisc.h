@@ -74,7 +74,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Max space for optional interpreter command- 				   line argruments seperated by white space */
+comment|/* Max space for optional interpreter command- 				   line argruments separated by white space */
 end_comment
 
 begin_define

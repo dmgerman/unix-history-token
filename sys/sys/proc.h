@@ -1758,7 +1758,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Lock aquisition - deadlock treatment. */
+comment|/* Lock acquisition - deadlock treatment. */
 end_comment
 
 begin_define

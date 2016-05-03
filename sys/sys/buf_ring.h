@@ -343,7 +343,7 @@ index|]
 operator|=
 name|buf
 expr_stmt|;
-comment|/* 	 * If there are other enqueues in progress 	 * that preceeded us, we need to wait for them 	 * to complete  	 */
+comment|/* 	 * If there are other enqueues in progress 	 * that preceded us, we need to wait for them 	 * to complete  	 */
 while|while
 condition|(
 name|br
@@ -483,7 +483,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If there are other dequeues in progress 	 * that preceeded us, we need to wait for them 	 * to complete  	 */
+comment|/* 	 * If there are other dequeues in progress 	 * that preceded us, we need to wait for them 	 * to complete  	 */
 while|while
 condition|(
 name|br

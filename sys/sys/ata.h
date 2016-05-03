@@ -1684,7 +1684,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Set trim bit in auxilary */
+comment|/* Set trim bit in auxiliary */
 end_comment
 
 begin_define
@@ -1717,7 +1717,7 @@ value|0x65
 end_define
 
 begin_comment
-comment|/* recieve DMA NCQ */
+comment|/* receive DMA NCQ */
 end_comment
 
 begin_define

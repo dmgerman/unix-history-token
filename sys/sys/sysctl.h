@@ -2218,7 +2218,7 @@ value|({									\ 	uint64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE)
 end_define
 
 begin_comment
-comment|/* Oid for a CPU dependant variable */
+comment|/* Oid for a CPU dependent variable */
 end_comment
 
 begin_define
@@ -2609,7 +2609,7 @@ value|({									\ 	uma_zone_t __ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE
 end_define
 
 begin_comment
-comment|/*  * A macro to generate a read-only sysctl to indicate the presense of optional  * kernel features.  */
+comment|/*  * A macro to generate a read-only sysctl to indicate the presence of optional  * kernel features.  */
 end_comment
 
 begin_define

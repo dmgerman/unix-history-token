@@ -54,7 +54,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure used to pass infomation from the loader to the  * stack fixup routine.  */
+comment|/*  * Structure used to pass information from the loader to the  * stack fixup routine.  */
 end_comment
 
 begin_typedef

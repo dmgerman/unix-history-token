@@ -565,7 +565,7 @@ comment|/* Big endian unsigned 24-bit */
 end_comment
 
 begin_comment
-comment|/* Machine dependant AFMT_* definitions. */
+comment|/* Machine dependent AFMT_* definitions. */
 end_comment
 
 begin_if
@@ -5457,7 +5457,7 @@ value|SEQ_CONTROL(dev, voice, CTL_PAN, (pos+128) / 2)
 end_define
 
 begin_comment
-comment|/*  * Timing and syncronization macros  */
+comment|/*  * Timing and synchronization macros  */
 end_comment
 
 begin_define

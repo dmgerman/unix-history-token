@@ -508,7 +508,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* leap second has occured */
+comment|/* leap second has occurred */
 end_comment
 
 begin_define
