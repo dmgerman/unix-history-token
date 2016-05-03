@@ -2958,7 +2958,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4086,7 +4085,6 @@ argument_list|)
 operator|->
 name|sin6_addr
 expr_stmt|;
-comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety. 			 */
 name|dr
 operator|=
 name|defrouter_lookup
@@ -5182,7 +5180,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

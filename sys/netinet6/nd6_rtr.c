@@ -2481,7 +2481,6 @@ name|installed
 operator|=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3167,7 +3166,6 @@ name|selected_dr
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3266,6 +3264,9 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
+name|int
+name|oldpref
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3302,21 +3303,19 @@ argument_list|(
 name|dr
 argument_list|)
 expr_stmt|;
-name|dr
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
+operator|)
+return|;
 block|}
-else|else
-block|{
-name|int
 name|oldpref
-init|=
+operator|=
 name|rtpref
 argument_list|(
 name|dr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* override */
 name|dr
 operator|->
@@ -3343,7 +3342,7 @@ name|new
 operator|->
 name|expire
 expr_stmt|;
-comment|/* 			 * If the preference does not change, there's no need 			 * to sort the entries. Also make sure the selected 			 * router is still installed in the kernel. 			 */
+comment|/* 		 * If the preference does not change, there's no need 		 * to sort the entries. Also make sure the selected 		 * router is still installed in the kernel. 		 */
 if|if
 condition|(
 name|dr
@@ -3362,7 +3361,7 @@ operator|(
 name|dr
 operator|)
 return|;
-comment|/* 			 * preferred router may be changed, so relocate 			 * this router. 			 * XXX: calling TAILQ_REMOVE directly is a bad manner. 			 * However, since defrtrlist_del() has many side 			 * effects, we intentionally do so here. 			 * defrouter_select() below will handle routing 			 * changes later. 			 */
+comment|/* 		 * The preferred router may have changed, so relocate this 		 * router. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3381,12 +3380,6 @@ goto|goto
 name|insert
 goto|;
 block|}
-return|return
-operator|(
-name|dr
-operator|)
-return|;
-block|}
 comment|/* entry does not exist */
 if|if
 condition|(
@@ -3403,11 +3396,6 @@ operator|)
 return|;
 name|n
 operator|=
-operator|(
-expr|struct
-name|nd_defrouter
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3419,6 +3407,8 @@ argument_list|,
 name|M_IP6NDP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3432,9 +3422,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
+name|memcpy
 argument_list|(
 name|n
+argument_list|,
+name|new
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3442,12 +3434,6 @@ operator|*
 name|n
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|*
-name|n
-operator|=
-operator|*
-name|new
 expr_stmt|;
 name|insert
 label|:
@@ -3584,11 +3570,6 @@ name|new
 decl_stmt|;
 name|new
 operator|=
-operator|(
-expr|struct
-name|nd_pfxrouter
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3600,6 +3581,8 @@ argument_list|,
 name|M_IP6NDP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3609,17 +3592,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|bzero
-argument_list|(
-name|new
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|new
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|new
 operator|->
 name|router
@@ -3793,11 +3765,6 @@ index|]
 decl_stmt|;
 name|new
 operator|=
-operator|(
-expr|struct
-name|nd_prefix
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3809,6 +3776,8 @@ argument_list|,
 name|M_IP6NDP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3822,17 +3791,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|new
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|new
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|new
 operator|->
 name|ndpr_ifp
