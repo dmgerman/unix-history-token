@@ -437,6 +437,7 @@ name|digest
 operator|->
 name|ctx_size
 condition|)
+block|{
 name|OPENSSL_free
 argument_list|(
 name|ctx
@@ -444,6 +445,13 @@ operator|->
 name|md_data
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|md_data
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|ctx
 operator|->
 name|digest

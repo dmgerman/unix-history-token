@@ -1131,8 +1131,15 @@ name|SSL_FIPS
 value|0x00000100L
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSL_NOT_DEFAULT
+value|0x00000200L
+end_define
+
 begin_comment
-comment|/* we have used 000001ff - 23 bits left to go */
+comment|/* we have used 000003ff - 22 bits left to go */
 end_comment
 
 begin_comment
@@ -1812,6 +1819,21 @@ name|int
 name|references
 decl_stmt|;
 comment|/*>1 only if SSL_copy_session_id is used */
+comment|/* non-optimal, but here due to compatibility */
+name|unsigned
+name|char
+modifier|*
+name|alpn_proposed
+decl_stmt|;
+comment|/* server */
+name|unsigned
+name|int
+name|alpn_proposed_len
+decl_stmt|;
+name|int
+name|alpn_sent
+decl_stmt|;
+comment|/* client */
 block|}
 name|CERT
 typedef|;

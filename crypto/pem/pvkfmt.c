@@ -369,6 +369,28 @@ name|PVK_SALTLEN
 value|0x10
 end_define
 
+begin_comment
+comment|/* Maximum length in PVK header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVK_MAX_KEYLEN
+value|102400
+end_define
+
+begin_comment
+comment|/* Maximum salt length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVK_MAX_SALTLEN
+value|10240
+end_define
+
 begin_function_decl
 specifier|static
 name|EVP_PKEY
@@ -3343,6 +3365,21 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pkeylen
+operator|>
+name|PVK_MAX_KEYLEN
+operator|||
+operator|*
+name|psaltlen
+operator|>
+name|PVK_MAX_SALTLEN
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|is_encrypted
