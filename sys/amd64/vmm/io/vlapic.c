@@ -3444,7 +3444,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * In the "Flat Model" the MDA is interpreted as an 8-bit wide 		 * bitmask. This model is only avilable in the xAPIC mode. 		 */
+comment|/* 		 * In the "Flat Model" the MDA is interpreted as an 8-bit wide 		 * bitmask. This model is only available in the xAPIC mode. 		 */
 name|mda_flat_ldest
 operator|=
 name|dest

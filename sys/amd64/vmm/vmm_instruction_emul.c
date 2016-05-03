@@ -4980,7 +4980,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * In protected or compability mode the 'B' flag in the 		 * stack-segment descriptor determines the size of the 		 * stack pointer. 		 */
+comment|/* 		 * In protected or compatibility mode the 'B' flag in the 		 * stack-segment descriptor determines the size of the 		 * stack pointer. 		 */
 name|error
 operator|=
 name|vm_get_seg_desc

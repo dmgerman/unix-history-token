@@ -1620,7 +1620,7 @@ index|[
 literal|0x968
 index|]
 decl_stmt|;
-comment|/* Reserved upto end of VMCB */
+comment|/* Reserved up to end of VMCB */
 block|}
 name|__attribute__
 argument_list|(

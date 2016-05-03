@@ -169,7 +169,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cannot accomodate vmm stat type \"%s\"!\n"
+literal|"Cannot accommodate vmm stat type \"%s\"!\n"
 argument_list|,
 name|vst
 operator|->

@@ -1911,7 +1911,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute the size of the mapping that we can accomodate. 	 * 	 * This is based on three factors: 	 * - supported super page size 	 * - alignment of the region starting at 'gpa' and 'hpa' 	 * - length of the region 'len' 	 */
+comment|/* 	 * Compute the size of the mapping that we can accommodate. 	 * 	 * This is based on three factors: 	 * - supported super page size 	 * - alignment of the region starting at 'gpa' and 'hpa' 	 * - length of the region 'len' 	 */
 name|spshift
 operator|=
 literal|48
