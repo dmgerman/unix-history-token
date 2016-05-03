@@ -6375,7 +6375,7 @@ argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * SND_SEQ: 	 * 	 * Take the four bytes of the sequence number least 	 * significant first (most signficant first for ARCFOUR) 	 * followed by four bytes of direction marker (zero for 	 * initiator and 0xff for acceptor). Encrypt that data using 	 * the SGN_CKSUM as IV. 	 */
+comment|/* 	 * SND_SEQ: 	 * 	 * Take the four bytes of the sequence number least 	 * significant first (most significant first for ARCFOUR) 	 * followed by four bytes of direction marker (zero for 	 * initiator and 0xff for acceptor). Encrypt that data using 	 * the SGN_CKSUM as IV. 	 */
 name|seq
 operator|=
 name|atomic_fetchadd_32
