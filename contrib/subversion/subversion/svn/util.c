@@ -1239,6 +1239,8 @@ literal|"PR:"
 block|,
 literal|"Submitted by:"
 block|,
+literal|"Reported by:"
+block|,
 literal|"Reviewed by:"
 block|,
 literal|"Approved by:"
@@ -1648,6 +1650,14 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
+literal|"Reported by:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
 literal|"Reviewed by:\t"
 name|APR_EOL_STR
 argument_list|)
@@ -1842,7 +1852,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> PR:                       If a GNATS PR is affected by the change."
+literal|"> PR:                       If and which Problem Report is related."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1854,6 +1864,17 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"> Submitted by:             If someone else sent in the change."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Reported by:              If someone else reported the issue."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
