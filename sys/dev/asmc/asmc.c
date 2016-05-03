@@ -1004,6 +1004,24 @@ name|ASMC_MBP4_TEMPDESCS
 block|}
 block|,
 block|{
+literal|"MacBookPro5,1"
+block|,
+literal|"Apple SMC MacBook Pro Core 2 Duo (2008/2009)"
+block|,
+name|ASMC_SMS_FUNCS
+block|,
+name|ASMC_FAN_FUNCS
+block|,
+name|ASMC_LIGHT_FUNCS
+block|,
+name|ASMC_MBP5_TEMPS
+block|,
+name|ASMC_MBP5_TEMPNAMES
+block|,
+name|ASMC_MBP5_TEMPDESCS
+block|}
+block|,
+block|{
 literal|"MacBookPro8,2"
 block|,
 literal|"Apple SMC MacBook Pro (early 2011)"
