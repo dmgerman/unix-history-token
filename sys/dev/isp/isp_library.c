@@ -2763,6 +2763,12 @@ return|return
 literal|"Have Link"
 return|;
 case|case
+name|LOOP_HAVE_ADDR
+case|:
+return|return
+literal|"Have Address"
+return|;
+case|case
 name|LOOP_TESTING_LINK
 case|:
 return|return
@@ -2835,7 +2841,7 @@ name|fcp
 operator|->
 name|isp_loopstate
 operator|<
-name|LOOP_LTEST_DONE
+name|LOOP_HAVE_ADDR
 condition|)
 block|{
 return|return
@@ -19639,7 +19645,7 @@ name|fcp
 operator|->
 name|isp_loopstate
 operator|<
-name|LOOP_LTEST_DONE
+name|LOOP_HAVE_ADDR
 condition|)
 block|{
 continue|continue;
