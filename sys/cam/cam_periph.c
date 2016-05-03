@@ -7958,6 +7958,16 @@ operator|->
 name|serial_num_len
 argument_list|)
 expr_stmt|;
+name|xpt_free_ccb
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+name|cgd
+argument_list|)
+expr_stmt|;
 block|}
 name|sbuf_printf
 argument_list|(
