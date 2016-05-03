@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* This file creates publically callable functions to perform various  * simple arithmetic on memory which is atomic in the presence of  * interrupts and multiple processors.  */
+comment|/* This file creates publicly callable functions to perform various  * simple arithmetic on memory which is atomic in the presence of  * interrupts and multiple processors.  */
 end_comment
 
 begin_include

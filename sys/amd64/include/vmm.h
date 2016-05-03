@@ -2114,7 +2114,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * retval	is_fault	Intepretation  *   0		   0		Success  *   0		   1		An exception was injected into the guest  * EFAULT	  N/A		Unrecoverable error  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
+comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * retval	is_fault	Interpretation  *   0		   0		Success  *   0		   1		An exception was injected into the guest  * EFAULT	  N/A		Unrecoverable error  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
 end_comment
 
 begin_function_decl
