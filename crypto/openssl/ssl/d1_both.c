@@ -6921,6 +6921,16 @@ argument_list|(
 name|write_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buffer
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|bp
 operator|=
 name|buffer

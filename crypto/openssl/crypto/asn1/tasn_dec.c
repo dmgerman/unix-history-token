@@ -4125,13 +4125,7 @@ case|case
 name|V_ASN1_INTEGER
 case|:
 case|case
-name|V_ASN1_NEG_INTEGER
-case|:
-case|case
 name|V_ASN1_ENUMERATED
-case|:
-case|case
-name|V_ASN1_NEG_ENUMERATED
 case|:
 name|tint
 operator|=

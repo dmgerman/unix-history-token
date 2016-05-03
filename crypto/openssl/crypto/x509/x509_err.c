@@ -607,6 +607,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509_R_NAME_TOO_LONG
+argument_list|)
+block|,
+literal|"name too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509_R_NO_CERT_SET_FOR_US_TO_VERIFY
 argument_list|)
 block|,

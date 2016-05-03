@@ -8811,6 +8811,10 @@ goto|goto
 name|err
 goto|;
 block|}
+name|xn
+operator|=
+name|NULL
+expr_stmt|;
 name|p
 operator|+=
 name|l
@@ -8910,6 +8914,11 @@ name|SSL_ST_ERR
 expr_stmt|;
 name|done
 label|:
+name|X509_NAME_free
+argument_list|(
+name|xn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ca_sk

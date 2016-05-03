@@ -60,6 +60,17 @@ argument|STACK_OF_X509_NAME_ENTRY
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*  * Maximum length of X509_NAME: much larger than anything we should  * ever see in practice.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|X509_NAME_MAX
+value|(1024 * 1024)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -711,6 +722,24 @@ name|X509_NAME_ENTRY
 modifier|*
 name|entry
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|X509_NAME_MAX
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_X509_NAME_EX_D2I
+argument_list|,
+name|ASN1_R_TOO_LONG
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|q
 operator|=
 name|p

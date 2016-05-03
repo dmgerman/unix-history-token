@@ -217,6 +217,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -315,6 +317,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -387,6 +391,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -423,6 +429,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -493,6 +501,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -530,6 +540,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -601,6 +613,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -638,6 +652,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -709,6 +725,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -745,6 +763,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -814,6 +834,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -850,6 +872,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -919,6 +943,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -952,6 +978,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
@@ -986,6 +1014,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1022,6 +1052,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -1055,6 +1087,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -1107,6 +1141,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -1238,6 +1274,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
@@ -1367,6 +1405,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1403,6 +1443,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1439,6 +1481,8 @@ name|SSL_SHA1
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1475,6 +1519,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1511,6 +1557,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1547,6 +1595,8 @@ name|SSL_MD5
 block|,
 name|SSL_SSLV3
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP40
@@ -1749,6 +1799,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -1948,6 +2000,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -2343,6 +2397,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -2367,9 +2423,9 @@ if|#
 directive|if
 literal|0
 comment|/* Cipher 60 */
-block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC4,      SSL_MD5,      SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC4,      SSL_MD5,      SSL_TLSV1,      SSL_NOT_DEFAULT | SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
 comment|/* Cipher 61 */
-block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC2,      SSL_MD5,      SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      SSL_kRSA,      SSL_aRSA,      SSL_RC2,      SSL_MD5,      SSL_TLSV1,      SSL_NOT_DEFAULT | SSL_EXPORT | SSL_EXP56,      SSL_HANDSHAKE_MAC_DEFAULT | TLS1_PRF,      56,      128,      },
 endif|#
 directive|endif
 comment|/* Cipher 62 */
@@ -2393,6 +2449,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP56
@@ -2429,6 +2487,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP56
@@ -2465,6 +2525,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP56
@@ -2501,6 +2563,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_EXPORT
 operator||
 name|SSL_EXP56
@@ -2735,6 +2799,8 @@ name|SSL_SHA256
 block|,
 name|SSL_TLSV1_2
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -2768,6 +2834,8 @@ name|SSL_SHA256
 block|,
 name|SSL_TLSV1_2
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -3087,6 +3155,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -3418,6 +3488,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
@@ -3783,6 +3855,8 @@ name|SSL_AEAD
 block|,
 name|SSL_TLSV1_2
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -3816,6 +3890,8 @@ name|SSL_AEAD
 block|,
 name|SSL_TLSV1_2
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -4537,6 +4613,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
@@ -4568,6 +4646,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -4601,6 +4681,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
@@ -4634,6 +4716,8 @@ name|SSL_SHA1
 block|,
 name|SSL_TLSV1
 block|,
+name|SSL_NOT_DEFAULT
+operator||
 name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH

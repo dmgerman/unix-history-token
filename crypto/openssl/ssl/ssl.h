@@ -644,7 +644,7 @@ comment|/*  * The following cipher list is used by default. It also is substitut
 define|#
 directive|define
 name|SSL_DEFAULT_CIPHER_LIST
-value|"ALL:!EXPORT:!aNULL:!eNULL:!SSLv2"
+value|"ALL:!EXPORT:!LOW:!aNULL:!eNULL:!SSLv2"
 comment|/*  * As of OpenSSL 1.0.0, ssl_create_cipher_list() in ssl/ssl_ciph.c always  * starts with a reasonable order, and all we have to do for DEFAULT is  * throwing out anonymous and unencrypted ciphersuites! (The latter are not  * actually enabled by ALL, but "ALL:RSA" would enable some of them.)  */
 comment|/* Used in SSL_set_shutdown()/SSL_get_shutdown(); */
 define|#
@@ -7584,7 +7584,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_SSL2
+name|OPENSSL_NO_SSL2_METHOD
 specifier|const
 name|SSL_METHOD
 modifier|*

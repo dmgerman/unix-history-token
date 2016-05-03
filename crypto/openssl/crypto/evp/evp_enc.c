@@ -1442,11 +1442,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|i
-operator|+
-name|inl
-operator|<
 name|bl
+operator|-
+name|i
+operator|>
+name|inl
 condition|)
 block|{
 name|memcpy
