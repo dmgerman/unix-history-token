@@ -252,6 +252,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_SRPTLP
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x9d70)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_SRPT
+value|HDA_MODEL_CONSTRUCT(INTEL, 0xa170)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define
