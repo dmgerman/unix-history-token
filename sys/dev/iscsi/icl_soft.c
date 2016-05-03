@@ -3060,7 +3060,7 @@ block|{
 comment|//ICL_DEBUG("terminating");
 break|break;
 block|}
-comment|/* 		 * Set the low watermark, to be checked by 		 * soreadable() in icl_soupcall_receive() 		 * to avoid unneccessary wakeups until there 		 * is enough data received to read the PDU. 		 */
+comment|/* 		 * Set the low watermark, to be checked by 		 * soreadable() in icl_soupcall_receive() 		 * to avoid unnecessary wakeups until there 		 * is enough data received to read the PDU. 		 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -3616,7 +3616,7 @@ operator|<
 name|size
 condition|)
 block|{
-comment|/* 			 * Set the low watermark, to be checked by 			 * sowriteable() in icl_soupcall_send() 			 * to avoid unneccessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
+comment|/* 			 * Set the low watermark, to be checked by 			 * sowriteable() in icl_soupcall_send() 			 * to avoid unnecessary wakeups until there 			 * is enough space for the PDU to fit. 			 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
