@@ -1565,7 +1565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Defragmenter. Returns mbuf if last packet found, else  * NULL. frees imcoming mbuf as necessary.  */
+comment|/*  * Defragmenter. Returns mbuf if last packet found, else  * NULL. frees incoming mbuf as necessary.  */
 end_comment
 
 begin_expr_stmt

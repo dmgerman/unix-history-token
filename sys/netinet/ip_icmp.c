@@ -1119,7 +1119,7 @@ condition|)
 goto|goto
 name|freeit
 goto|;
-comment|/* 	 * Calculate length to quote from original packet and 	 * prevent the ICMP mbuf from overflowing. 	 * Unfortunatly this is non-trivial since ip_forward() 	 * sends us truncated packets. 	 */
+comment|/* 	 * Calculate length to quote from original packet and 	 * prevent the ICMP mbuf from overflowing. 	 * Unfortunately this is non-trivial since ip_forward() 	 * sends us truncated packets. 	 */
 name|nlen
 operator|=
 name|m_length

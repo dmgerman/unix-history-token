@@ -1710,7 +1710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * Performes generic cleanup routines and frees lle.  *  * Called for non-linked entries, with callouts and  * other AF-specific cleanups performed.  *  * @lle must be passed WLOCK'ed  *  * Returns the number of held packets, if any, that were dropped.  */
+comment|/*  *  * Performs generic cleanup routines and frees lle.  *  * Called for non-linked entries, with callouts and  * other AF-specific cleanups performed.  *  * @lle must be passed WLOCK'ed  *  * Returns the number of held packets, if any, that were dropped.  */
 end_comment
 
 begin_function

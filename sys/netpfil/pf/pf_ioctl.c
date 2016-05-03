@@ -19585,7 +19585,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* status does not use malloced mem so no need to cleanup */
-comment|/* fingerprints and interfaces have thier own cleanup code */
+comment|/* fingerprints and interfaces have their own cleanup code */
 block|}
 do|while
 condition|(

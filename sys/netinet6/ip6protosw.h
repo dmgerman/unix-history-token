@@ -78,7 +78,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * argument type for the last arg of pr_ctlinput().  * should be consulted only with AF_INET6 family.  *  * IPv6 ICMP IPv6 [exthdrs] finalhdr payload  * ^    ^    ^              ^  * |    |    ip6c_ip6       ip6c_off  * |    ip6c_icmp6  * ip6c_m  *  * ip6c_finaldst usually points to ip6c_ip6->ip6_dst.  if the original  * (internal) packet carries a routing header, it may point the final  * dstination address in the routing header.  *  * ip6c_src: ip6c_ip6->ip6_src + scope info + flowlabel in ip6c_ip6  *	(beware of flowlabel, if you try to compare it against others)  * ip6c_dst: ip6c_finaldst + scope info  */
+comment|/*  * argument type for the last arg of pr_ctlinput().  * should be consulted only with AF_INET6 family.  *  * IPv6 ICMP IPv6 [exthdrs] finalhdr payload  * ^    ^    ^              ^  * |    |    ip6c_ip6       ip6c_off  * |    ip6c_icmp6  * ip6c_m  *  * ip6c_finaldst usually points to ip6c_ip6->ip6_dst.  if the original  * (internal) packet carries a routing header, it may point the final  * destination address in the routing header.  *  * ip6c_src: ip6c_ip6->ip6_src + scope info + flowlabel in ip6c_ip6  *	(beware of flowlabel, if you try to compare it against others)  * ip6c_dst: ip6c_finaldst + scope info  */
 end_comment
 
 begin_struct

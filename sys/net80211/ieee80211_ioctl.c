@@ -17417,7 +17417,7 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
-comment|/* 		 * XXX Handle this directly so we can supress if_init calls. 		 * XXX This should be done in ether_ioctl but for the moment 		 * XXX there are too many other parts of the system that 		 * XXX set IFF_UP and so supress if_init being called when 		 * XXX it should be. 		 */
+comment|/* 		 * XXX Handle this directly so we can suppress if_init calls. 		 * XXX This should be done in ether_ioctl but for the moment 		 * XXX there are too many other parts of the system that 		 * XXX set IFF_UP and so suppress if_init being called when 		 * XXX it should be. 		 */
 name|ifa
 operator|=
 operator|(

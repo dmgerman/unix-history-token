@@ -5687,7 +5687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called to generate a message from the routing  * socket indicating that a redirect has occured, a routing lookup  * has failed, or that a protocol has detected timeouts to a particular  * destination.  */
+comment|/*  * This routine is called to generate a message from the routing  * socket indicating that a redirect has occurred, a routing lookup  * has failed, or that a protocol has detected timeouts to a particular  * destination.  */
 end_comment
 
 begin_function

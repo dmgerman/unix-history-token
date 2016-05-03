@@ -789,7 +789,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Keep compability with old definitions */
+comment|/* Keep compatibility with old definitions */
 end_comment
 
 begin_define

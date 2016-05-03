@@ -10620,7 +10620,7 @@ operator|.
 name|is_ampdu_bar_tx_fail
 operator|++
 expr_stmt|;
-comment|/* 		 * If (at least) the last BAR TX timeout was due to 		 * an ieee80211_send_bar() failures, then we need 		 * to make sure we notify the driver that a BAR 		 * TX did occur and fail.  This gives the driver 		 * a chance to undo any queue pause that may 		 * have occured. 		 */
+comment|/* 		 * If (at least) the last BAR TX timeout was due to 		 * an ieee80211_send_bar() failures, then we need 		 * to make sure we notify the driver that a BAR 		 * TX did occur and fail.  This gives the driver 		 * a chance to undo any queue pause that may 		 * have occurred. 		 */
 name|ic
 operator|->
 name|ic_bar_response

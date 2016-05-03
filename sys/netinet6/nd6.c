@@ -2226,7 +2226,7 @@ comment|/* RFC 6106 */
 comment|/* 			 * Silently ignore options we know and do not care about 			 * in the kernel. 			 */
 break|break;
 default|default:
-comment|/* 			 * Unknown options must be silently ignored, 			 * to accomodate future extension to the protocol. 			 */
+comment|/* 			 * Unknown options must be silently ignored, 			 * to accommodate future extension to the protocol. 			 */
 name|nd6log
 argument_list|(
 operator|(
@@ -5986,7 +5986,7 @@ break|break;
 case|case
 name|SIOCSIFINFO_IN6
 case|:
-comment|/* 		 * used to change host variables from userland. 		 * intented for a use on router to reflect RA configurations. 		 */
+comment|/* 		 * used to change host variables from userland. 		 * intended for a use on router to reflect RA configurations. 		 */
 comment|/* 0 means 'unspecified' */
 if|if
 condition|(

@@ -23914,7 +23914,7 @@ name|seqlo
 operator|-
 name|ack
 expr_stmt|;
-comment|/* 	 * Need to demodulate the sequence numbers in any TCP SACK options 	 * (Selective ACK). We could optionally validate the SACK values 	 * against the current ACK window, either forwards or backwards, but 	 * I'm not confident that SACK has been implemented properly 	 * everywhere. It wouldn't surprise me if several stacks accidently 	 * SACK too far backwards of previously ACKed data. There really aren't 	 * any security implications of bad SACKing unless the target stack 	 * doesn't validate the option length correctly. Someone trying to 	 * spoof into a TCP connection won't bother blindly sending SACK 	 * options anyway. 	 */
+comment|/* 	 * Need to demodulate the sequence numbers in any TCP SACK options 	 * (Selective ACK). We could optionally validate the SACK values 	 * against the current ACK window, either forwards or backwards, but 	 * I'm not confident that SACK has been implemented properly 	 * everywhere. It wouldn't surprise me if several stacks accidentally 	 * SACK too far backwards of previously ACKed data. There really aren't 	 * any security implications of bad SACKing unless the target stack 	 * doesn't validate the option length correctly. Someone trying to 	 * spoof into a TCP connection won't bother blindly sending SACK 	 * options anyway. 	 */
 if|if
 condition|(
 name|dst

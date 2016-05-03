@@ -1198,7 +1198,7 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-comment|/*  	 * Indoor/Outdoor portion of country string: 	 *     'I' indoor only 	 *     'O' outdoor only 	 *     ' ' all enviroments 	 */
+comment|/*  	 * Indoor/Outdoor portion of country string: 	 *     'I' indoor only 	 *     'O' outdoor only 	 *     ' ' all environments 	 */
 name|ie
 operator|->
 name|cc

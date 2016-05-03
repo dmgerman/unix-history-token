@@ -2219,7 +2219,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALTQ
-comment|/* Support ALTQ via the clasic if_start() path. */
+comment|/* Support ALTQ via the classic if_start() path. */
 name|IF_LOCK
 argument_list|(
 operator|&

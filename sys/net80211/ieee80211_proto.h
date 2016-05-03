@@ -1733,7 +1733,7 @@ define|#
 directive|define
 name|WME_F_AGGRMODE
 value|0x00000001
-comment|/* STATUS: WME agressive mode */
+comment|/* STATUS: WME aggressive mode */
 name|u_int
 name|wme_hipri_traffic
 decl_stmt|;
@@ -1741,11 +1741,11 @@ comment|/* VI/VO frames in beacon interval */
 name|u_int
 name|wme_hipri_switch_thresh
 decl_stmt|;
-comment|/* agressive mode switch thresh */
+comment|/* aggressive mode switch thresh */
 name|u_int
 name|wme_hipri_switch_hysteresis
 decl_stmt|;
-comment|/* agressive mode switch hysteresis */
+comment|/* aggressive mode switch hysteresis */
 name|struct
 name|wmeParams
 name|wme_params

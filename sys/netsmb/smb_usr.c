@@ -721,7 +721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Connect to the resource specified by smbioc_ossn structure.  * It may either find an existing connection or try to establish a new one.  * If no errors occured smb_vc returned locked and referenced.  */
+comment|/*  * Connect to the resource specified by smbioc_ossn structure.  * It may either find an existing connection or try to establish a new one.  * If no errors occurred smb_vc returned locked and referenced.  */
 end_comment
 
 begin_function

@@ -9081,7 +9081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Main handler for configuration. We are guaranteed to be called  * with an oid which is at least a dn_id.  * - the first object is the command (config, delete, flush, ...)  * - config_link must be issued after the corresponding config_sched  * - parameters (DN_TXT) for an object must preceed the object  *   processed on a config_sched.  */
+comment|/*  * Main handler for configuration. We are guaranteed to be called  * with an oid which is at least a dn_id.  * - the first object is the command (config, delete, flush, ...)  * - config_link must be issued after the corresponding config_sched  * - parameters (DN_TXT) for an object must precede the object  *   processed on a config_sched.  */
 end_comment
 
 begin_function

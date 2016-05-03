@@ -1535,7 +1535,7 @@ operator|(
 name|sack_changed
 operator|)
 return|;
-comment|/* 	 * Sort the SACK blocks so we can update the scoreboard with just one 	 * pass. The overhead of sorting upto 4+1 elements is less than 	 * making upto 4+1 passes over the scoreboard. 	 */
+comment|/* 	 * Sort the SACK blocks so we can update the scoreboard with just one 	 * pass. The overhead of sorting up to 4+1 elements is less than 	 * making up to 4+1 passes over the scoreboard. 	 */
 for|for
 control|(
 name|i

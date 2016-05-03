@@ -1473,7 +1473,7 @@ name|ccv
 operator|->
 name|cc_data
 expr_stmt|;
-comment|/* 	 * TCPTV_SRTTBASE is the initialised value of each connection's SRTT, so 	 * we only calc beta if the connection's SRTT has been changed from its 	 * inital value. beta is bounded to ensure it is always between 	 * HTCP_MINBETA and HTCP_MAXBETA. 	 */
+comment|/* 	 * TCPTV_SRTTBASE is the initialised value of each connection's SRTT, so 	 * we only calc beta if the connection's SRTT has been changed from its 	 * initial value. beta is bounded to ensure it is always between 	 * HTCP_MINBETA and HTCP_MAXBETA. 	 */
 if|if
 condition|(
 name|V_htcp_adaptive_backoff

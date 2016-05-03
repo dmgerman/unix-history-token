@@ -5932,7 +5932,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Calculate agressive mode switching threshold based 		 * on beacon interval.  This doesn't need locking since 		 * we're only called before entering the RUN state at 		 * which point we start sending beacon frames. 		 */
+comment|/* 		 * Calculate aggressive mode switching threshold based 		 * on beacon interval.  This doesn't need locking since 		 * we're only called before entering the RUN state at 		 * which point we start sending beacon frames. 		 */
 name|wme
 operator|->
 name|wme_hipri_switch_thresh
@@ -6417,7 +6417,7 @@ name|mode
 operator|=
 name|IEEE80211_MODE_AUTO
 expr_stmt|;
-comment|/* 	 * This implements agressive mode as found in certain 	 * vendors' AP's.  When there is significant high 	 * priority (VI/VO) traffic in the BSS throttle back BE 	 * traffic by using conservative parameters.  Otherwise 	 * BE uses agressive params to optimize performance of 	 * legacy/non-QoS traffic. 	 */
+comment|/* 	 * This implements aggressive mode as found in certain 	 * vendors' AP's.  When there is significant high 	 * priority (VI/VO) traffic in the BSS throttle back BE 	 * traffic by using conservative parameters.  Otherwise 	 * BE uses aggressive params to optimize performance of 	 * legacy/non-QoS traffic. 	 */
 comment|/* Hostap? Only if aggressive mode is enabled */
 if|if
 condition|(

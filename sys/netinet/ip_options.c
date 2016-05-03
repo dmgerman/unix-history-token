@@ -3519,7 +3519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for the presence of the IP Router Alert option [RFC2113]  * in the header of an IPv4 datagram.  *  * This call is not intended for use from the forwarding path; it is here  * so that protocol domains may check for the presence of the option.  * Given how FreeBSD's IPv4 stack is currently structured, the Router Alert  * option does not have much relevance to the implementation, though this  * may change in future.  * Router alert options SHOULD be passed if running in IPSTEALTH mode and  * we are not the endpoint.  * Length checks on individual options should already have been peformed  * by ip_dooptions() therefore they are folded under INVARIANTS here.  *  * Return zero if not present or options are invalid, non-zero if present.  */
+comment|/*  * Check for the presence of the IP Router Alert option [RFC2113]  * in the header of an IPv4 datagram.  *  * This call is not intended for use from the forwarding path; it is here  * so that protocol domains may check for the presence of the option.  * Given how FreeBSD's IPv4 stack is currently structured, the Router Alert  * option does not have much relevance to the implementation, though this  * may change in future.  * Router alert options SHOULD be passed if running in IPSTEALTH mode and  * we are not the endpoint.  * Length checks on individual options should already have been performed  * by ip_dooptions() therefore they are folded under INVARIANTS here.  *  * Return zero if not present or options are invalid, non-zero if present.  */
 end_comment
 
 begin_function

@@ -879,7 +879,7 @@ name|bytes_total
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * When alpha is set to 0 in the beggining, DCTCP sender transfers as 	 * much data as possible until the value converges which may expand the 	 * queueing delay at the switch. When alpha is set to 1, queueing delay 	 * is kept small. 	 * Throughput-sensitive applications should have alpha = 0 	 * Latency-sensitive applications should have alpha = 1 	 * 	 * Note: DCTCP draft suggests initial alpha to be 1 but we've decided to 	 * keep it 0 as default. 	 */
+comment|/* 	 * When alpha is set to 0 in the beginning, DCTCP sender transfers as 	 * much data as possible until the value converges which may expand the 	 * queueing delay at the switch. When alpha is set to 1, queueing delay 	 * is kept small. 	 * Throughput-sensitive applications should have alpha = 0 	 * Latency-sensitive applications should have alpha = 1 	 * 	 * Note: DCTCP draft suggests initial alpha to be 1 but we've decided to 	 * keep it 0 as default. 	 */
 name|dctcp_data
 operator|->
 name|alpha

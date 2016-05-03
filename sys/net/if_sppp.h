@@ -243,7 +243,7 @@ comment|/* bump this when adding cp's! */
 end_comment
 
 begin_comment
-comment|/*  * Don't change the order of this.  Ordering the phases this way allows  * for a comparision of ``pp_phase>= PHASE_AUTHENTICATE'' in order to  * know whether LCP is up.  */
+comment|/*  * Don't change the order of this.  Ordering the phases this way allows  * for a comparison of ``pp_phase>= PHASE_AUTHENTICATE'' in order to  * know whether LCP is up.  */
 end_comment
 
 begin_enum

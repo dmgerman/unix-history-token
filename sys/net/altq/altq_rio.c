@@ -329,7 +329,7 @@ value|60
 end_define
 
 begin_comment
-comment|/* default max queue lenght */
+comment|/* default max queue length */
 end_comment
 
 begin_define

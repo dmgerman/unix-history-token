@@ -1027,7 +1027,7 @@ operator|->
 name|snd_una
 argument_list|)
 operator|&&
-comment|/* inital SYN|ACK sent */
+comment|/* initial SYN|ACK sent */
 operator|(
 name|tp
 operator|->
@@ -1865,7 +1865,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Automatic sizing of send socket buffer.  Often the send buffer 	 * size is not optimally adjusted to the actual network conditions 	 * at hand (delay bandwidth product).  Setting the buffer size too 	 * small limits throughput on links with high bandwidth and high 	 * delay (eg. trans-continental/oceanic links).  Setting the 	 * buffer size too big consumes too much real kernel memory, 	 * especially with many connections on busy servers. 	 * 	 * The criteria to step up the send buffer one notch are: 	 *  1. receive window of remote host is larger than send buffer 	 *     (with a fudge factor of 5/4th); 	 *  2. send buffer is filled to 7/8th with data (so we actually 	 *     have data to make use of it); 	 *  3. send buffer fill has not hit maximal automatic size; 	 *  4. our send window (slow start and cogestion controlled) is 	 *     larger than sent but unacknowledged data in send buffer. 	 * 	 * The remote host receive window scaling factor may limit the 	 * growing of the send buffer before it reaches its allowed 	 * maximum. 	 * 	 * It scales directly with slow start or congestion window 	 * and does at most one step per received ACK.  This fast 	 * scaling has the drawback of growing the send buffer beyond 	 * what is strictly necessary to make full use of a given 	 * delay*bandwith product.  However testing has shown this not 	 * to be much of an problem.  At worst we are trading wasting 	 * of available bandwith (the non-use of it) for wasting some 	 * socket buffer memory. 	 * 	 * TODO: Shrink send buffer during idle periods together 	 * with congestion window.  Requires another timer.  Has to 	 * wait for upcoming tcp timer rewrite. 	 * 	 * XXXGL: should there be used sbused() or sbavail()? 	 */
+comment|/* 	 * Automatic sizing of send socket buffer.  Often the send buffer 	 * size is not optimally adjusted to the actual network conditions 	 * at hand (delay bandwidth product).  Setting the buffer size too 	 * small limits throughput on links with high bandwidth and high 	 * delay (eg. trans-continental/oceanic links).  Setting the 	 * buffer size too big consumes too much real kernel memory, 	 * especially with many connections on busy servers. 	 * 	 * The criteria to step up the send buffer one notch are: 	 *  1. receive window of remote host is larger than send buffer 	 *     (with a fudge factor of 5/4th); 	 *  2. send buffer is filled to 7/8th with data (so we actually 	 *     have data to make use of it); 	 *  3. send buffer fill has not hit maximal automatic size; 	 *  4. our send window (slow start and cogestion controlled) is 	 *     larger than sent but unacknowledged data in send buffer. 	 * 	 * The remote host receive window scaling factor may limit the 	 * growing of the send buffer before it reaches its allowed 	 * maximum. 	 * 	 * It scales directly with slow start or congestion window 	 * and does at most one step per received ACK.  This fast 	 * scaling has the drawback of growing the send buffer beyond 	 * what is strictly necessary to make full use of a given 	 * delay*bandwidth product.  However testing has shown this not 	 * to be much of an problem.  At worst we are trading wasting 	 * of available bandwidth (the non-use of it) for wasting some 	 * socket buffer memory. 	 * 	 * TODO: Shrink send buffer during idle periods together 	 * with congestion window.  Requires another timer.  Has to 	 * wait for upcoming tcp timer rewrite. 	 * 	 * XXXGL: should there be used sbused() or sbavail()? 	 */
 if|if
 condition|(
 name|V_tcp_do_autosndbuf
@@ -6306,7 +6306,7 @@ argument_list|(
 literal|"tcp_setpersist: retransmit pending"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start/restart persistance timer. 	 */
+comment|/* 	 * Start/restart persistence timer. 	 */
 name|TCPT_RANGESET
 argument_list|(
 name|tt

@@ -2713,7 +2713,7 @@ name|tp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output, if possible. 	 */
+comment|/* 	 * Persistence timer into zero window. 	 * Force a byte to be output, if possible. 	 */
 name|TCPSTAT_INC
 argument_list|(
 name|tcps_persisttimeo

@@ -3184,7 +3184,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* XXX scan state can change! Re-validate scan state! */
-comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
+comment|/* 	 * Since a cancellation may have occurred during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
 if|if
 condition|(
 name|scandone
@@ -3372,7 +3372,7 @@ name|ss_next
 operator|=
 literal|0
 expr_stmt|;
-comment|/* reset to begining */
+comment|/* reset to beginning */
 if|if
 condition|(
 name|ss
@@ -3469,7 +3469,7 @@ operator|->
 name|ss_scanend
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since a cancellation may have occured during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
+comment|/* 	 * Since a cancellation may have occurred during one of the 	 * driver calls (whilst unlocked), update scandone. 	 */
 if|if
 condition|(
 name|scandone

@@ -1911,7 +1911,7 @@ return|;
 name|IF_CLONERS_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Set our internal output buffer size.  We could end up not 	 * reporting a cloner that is added between the unlock and lock 	 * below, but that's not a major problem.  Not caping our 	 * allocation to the number of cloners actually in the system 	 * could be because that would let arbitrary users cause us to 	 * allocate abritrary amounts of kernel memory. 	 */
+comment|/* 	 * Set our internal output buffer size.  We could end up not 	 * reporting a cloner that is added between the unlock and lock 	 * below, but that's not a major problem.  Not caping our 	 * allocation to the number of cloners actually in the system 	 * could be because that would let arbitrary users cause us to 	 * allocate arbitrary amounts of kernel memory. 	 */
 name|buf_count
 operator|=
 operator|(

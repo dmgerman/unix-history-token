@@ -6202,7 +6202,7 @@ name|metrics
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Update the ssthresh always when the conditions below 		 * are satisfied. This gives us better new start value 		 * for the congestion avoidance for new connections. 		 * ssthresh is only set if packet loss occured on a session. 		 * 		 * XXXRW: 'so' may be NULL here, and/or socket buffer may be 		 * being torn down.  Ideally this code would not use 'so'. 		 */
+comment|/* 		 * Update the ssthresh always when the conditions below 		 * are satisfied. This gives us better new start value 		 * for the congestion avoidance for new connections. 		 * ssthresh is only set if packet loss occurred on a session. 		 * 		 * XXXRW: 'so' may be NULL here, and/or socket buffer may be 		 * being torn down.  Ideally this code would not use 'so'. 		 */
 name|ssthresh
 operator|=
 name|tp

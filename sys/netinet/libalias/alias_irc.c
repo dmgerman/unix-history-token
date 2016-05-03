@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Alias_irc.c intercepts packages contain IRC CTCP commands, and 	changes DCC commands to export a port on the aliasing host instead 	of an aliased host.      For this routine to work, the DCC command must fit entirely into a     single TCP packet.  This will usually happen, but is not     guaranteed.  	 The interception is likely to change the length of the packet. 	 The handling of this is copied more-or-less verbatim from 	 ftp_alias.c  	 Initial version: Eivind Eklund<perhaps@yes.no> (ee) 97-01-29  	 Version 2.1:  May, 1997 (cjm) 	     Very minor changes to conform with 	     local/global/function naming conventions 	     withing the packet alising module. */
+comment|/* Alias_irc.c intercepts packages contain IRC CTCP commands, and 	changes DCC commands to export a port on the aliasing host instead 	of an aliased host.      For this routine to work, the DCC command must fit entirely into a     single TCP packet.  This will usually happen, but is not     guaranteed.  	 The interception is likely to change the length of the packet. 	 The handling of this is copied more-or-less verbatim from 	 ftp_alias.c  	 Initial version: Eivind Eklund<perhaps@yes.no> (ee) 97-01-29  	 Version 2.1:  May, 1997 (cjm) 	     Very minor changes to conform with 	     local/global/function naming conventions 	     within the packet alising module. */
 end_comment
 
 begin_comment
@@ -1964,7 +1964,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Notes: 	[Note 1] 	The initial search will most often fail; it could be replaced with a 32-bit specific search. 	Such a search would be done for 32-bit unsigned value V: 	V ^= 0x01010101;				  (Search is for null bytes) 	if( ((V-0x01010101)^V)& 0x80808080 ) {      (found a null bytes which was a 01 byte) 	}    To assert that the processor is 32-bits, do    extern int ircdccar[32];        (32 bits)    extern int ircdccar[CHAR_BIT*sizeof(unsigned int)];    which will generate a type-error on all but 32-bit machines.  	[Note 2] This routine really ought to be replaced with one that 	creates a transparent proxy on the aliasing host, to allow arbitary 	changes in the TCP stream.  This should not be too difficult given 	this base;  I (ee) will try to do this some time later. 	*/
+comment|/* Notes: 	[Note 1] 	The initial search will most often fail; it could be replaced with a 32-bit specific search. 	Such a search would be done for 32-bit unsigned value V: 	V ^= 0x01010101;				  (Search is for null bytes) 	if( ((V-0x01010101)^V)& 0x80808080 ) {      (found a null bytes which was a 01 byte) 	}    To assert that the processor is 32-bits, do    extern int ircdccar[32];        (32 bits)    extern int ircdccar[CHAR_BIT*sizeof(unsigned int)];    which will generate a type-error on all but 32-bit machines.  	[Note 2] This routine really ought to be replaced with one that 	creates a transparent proxy on the aliasing host, to allow arbitrary 	changes in the TCP stream.  This should not be too difficult given 	this base;  I (ee) will try to do this some time later. 	*/
 end_comment
 
 end_unit

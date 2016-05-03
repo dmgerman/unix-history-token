@@ -3664,7 +3664,7 @@ name|struct
 name|dn_id
 name|oid
 decl_stmt|;
-comment|/* Lenght of data, used to found ipfw version... */
+comment|/* Length of data, used to found ipfw version... */
 name|int
 name|len
 init|=

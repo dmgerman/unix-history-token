@@ -3228,7 +3228,7 @@ operator|=
 name|nf
 expr_stmt|;
 block|}
-comment|/* 			 * Same here - the channel width change should 			 * be applied to the specific peer node, not 			 * to the ic.  Ie, the interface configuration 			 * should stay in its current channel width; 			 * but it should change the rate control and 			 * any queued frames for the given node only. 			 * 			 * Since there's no (current) way to inform 			 * the driver that a channel width change has 			 * occured for a single node, just stub this 			 * out. 			 */
+comment|/* 			 * Same here - the channel width change should 			 * be applied to the specific peer node, not 			 * to the ic.  Ie, the interface configuration 			 * should stay in its current channel width; 			 * but it should change the rate control and 			 * any queued frames for the given node only. 			 * 			 * Since there's no (current) way to inform 			 * the driver that a channel width change has 			 * occurred for a single node, just stub this 			 * out. 			 */
 if|#
 directive|if
 literal|0

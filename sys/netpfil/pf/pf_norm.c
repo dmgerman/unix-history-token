@@ -188,7 +188,7 @@ decl_stmt|;
 name|uint16_t
 name|fe_hdrlen
 decl_stmt|;
-comment|/* ipv4 header lenght with ip options 					   ipv6, extension, fragment header */
+comment|/* ipv4 header length with ip options 					   ipv6, extension, fragment header */
 name|uint16_t
 name|fe_extoff
 decl_stmt|;

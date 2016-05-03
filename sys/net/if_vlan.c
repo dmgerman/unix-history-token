@@ -3227,7 +3227,7 @@ name|ifp
 operator|)
 return|;
 block|}
-comment|/*  * VLAN support can be loaded as a module.  The only place in the  * system that's intimately aware of this is ether_input.  We hook  * into this code through vlan_input_p which is defined there and  * set here.  Noone else in the system should be aware of this so  * we use an explicit reference here.  */
+comment|/*  * VLAN support can be loaded as a module.  The only place in the  * system that's intimately aware of this is ether_input.  We hook  * into this code through vlan_input_p which is defined there and  * set here.  No one else in the system should be aware of this so  * we use an explicit reference here.  */
 specifier|extern
 name|void
 function_decl|(
@@ -3937,7 +3937,7 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* 00:00:00:00:00:00 */
-comment|/* 	 * There are 3 (ugh) ways to specify the cloned device: 	 * o pass a parameter block with the clone request. 	 * o specify parameters in the text of the clone device name 	 * o specify no parameters and get an unattached device that 	 *   must be configured separately. 	 * The first technique is preferred; the latter two are 	 * supported for backwards compatibilty. 	 * 	 * XXXRW: Note historic use of the word "tag" here.  New ioctls may be 	 * called for. 	 */
+comment|/* 	 * There are 3 (ugh) ways to specify the cloned device: 	 * o pass a parameter block with the clone request. 	 * o specify parameters in the text of the clone device name 	 * o specify no parameters and get an unattached device that 	 *   must be configured separately. 	 * The first technique is preferred; the latter two are 	 * supported for backwards compatibility. 	 * 	 * XXXRW: Note historic use of the word "tag" here.  New ioctls may be 	 * called for. 	 */
 if|if
 condition|(
 name|params

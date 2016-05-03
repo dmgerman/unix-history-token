@@ -6018,7 +6018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * WPA/802.11i assocation request processing.  */
+comment|/*  * WPA/802.11i association request processing.  */
 end_comment
 
 begin_function

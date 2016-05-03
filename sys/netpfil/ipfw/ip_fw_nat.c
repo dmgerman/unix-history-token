@@ -4251,7 +4251,7 @@ name|len
 operator|+
 literal|128
 expr_stmt|;
-comment|/* 	 * Allocate 2x buffer to store converted structures. 	 * new redir_cfg has shrinked, so we're sure that 	 * new buffer size is enough. 	 */
+comment|/* 	 * Allocate 2x buffer to store converted structures. 	 * new redir_cfg has shrunk, so we're sure that 	 * new buffer size is enough. 	 */
 name|buf
 operator|=
 name|malloc

@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1999, 2000 Jason L. Wright (jason@thought.net)  * Al
 end_comment
 
 begin_comment
-comment|/*  * Network interface bridge support.  *  * TODO:  *  *	- Currently only supports Ethernet-like interfaces (Ethernet,  *	  802.11, VLANs on Ethernet, etc.)  Figure out a nice way  *	  to bridge other types of interfaces (FDDI-FDDI, and maybe  *	  consider heterogenous bridges).  */
+comment|/*  * Network interface bridge support.  *  * TODO:  *  *	- Currently only supports Ethernet-like interfaces (Ethernet,  *	  802.11, VLANs on Ethernet, etc.)  Figure out a nice way  *	  to bridge other types of interfaces (FDDI-FDDI, and maybe  *	  consider heterogeneous bridges).  */
 end_comment
 
 begin_include

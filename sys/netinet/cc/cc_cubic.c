@@ -482,7 +482,7 @@ name|cubic_data
 operator|->
 name|t_last_cong
 expr_stmt|;
-comment|/* 			 * The mean RTT is used to best reflect the equations in 			 * the I-D. Using min_rtt in the tf_cwnd calculation 			 * causes w_tf to grow much faster than it should if the 			 * RTT is dominated by network buffering rather than 			 * propogation delay. 			 */
+comment|/* 			 * The mean RTT is used to best reflect the equations in 			 * the I-D. Using min_rtt in the tf_cwnd calculation 			 * causes w_tf to grow much faster than it should if the 			 * RTT is dominated by network buffering rather than 			 * propagation delay. 			 */
 name|w_tf
 operator|=
 name|tf_cwnd

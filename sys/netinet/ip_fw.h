@@ -2893,7 +2893,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Entry was succesfully added	*/
+comment|/* Entry was successfully added	*/
 end_comment
 
 begin_define
@@ -2904,7 +2904,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Entry was succesfully updated*/
+comment|/* Entry was successfully updated*/
 end_comment
 
 begin_define
@@ -2915,7 +2915,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Entry was succesfully deleted*/
+comment|/* Entry was successfully deleted*/
 end_comment
 
 begin_define

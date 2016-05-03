@@ -2351,7 +2351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * default router list proccessing sub routines  */
+comment|/*  * default router list processing sub routines  */
 end_comment
 
 begin_function

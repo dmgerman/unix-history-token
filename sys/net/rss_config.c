@@ -562,7 +562,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * RSS hash->CPU table, which maps hashed packet headers to particular CPUs.  * Drivers may supplement this table with a seperate CPU<->queue table when  * programming devices.  */
+comment|/*  * RSS hash->CPU table, which maps hashed packet headers to particular CPUs.  * Drivers may supplement this table with a separate CPU<->queue table when  * programming devices.  */
 end_comment
 
 begin_struct

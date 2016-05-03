@@ -9719,7 +9719,7 @@ operator|->
 name|sc_primary
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If tmp_tp is null, we've recieved a packet when all 		 * our links are down. Weird, but process it anyways. 		 */
+comment|/* 		 * If tmp_tp is null, we've received a packet when all 		 * our links are down. Weird, but process it anyways. 		 */
 if|if
 condition|(
 operator|(

@@ -15419,7 +15419,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * In theory, we should only conf-rej an 			 * option that is shorter than RFC 1618 			 * requires (i.e.< 4), and should conf-nak 			 * anything else that is not VJ.  However, 			 * since our algorithm always uses the 			 * original option to NAK it with new values, 			 * things would become more complicated.  In 			 * pratice, the only commonly implemented IP 			 * compression option is VJ anyway, so the 			 * difference is negligible. 			 */
+comment|/* 			 * In theory, we should only conf-rej an 			 * option that is shorter than RFC 1618 			 * requires (i.e.< 4), and should conf-nak 			 * anything else that is not VJ.  However, 			 * since our algorithm always uses the 			 * original option to NAK it with new values, 			 * things would become more complicated.  In 			 * practice, the only commonly implemented IP 			 * compression option is VJ anyway, so the 			 * difference is negligible. 			 */
 if|if
 condition|(
 name|len
@@ -21523,7 +21523,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"re-challenging supressed\n"
+literal|"re-challenging suppressed\n"
 argument_list|)
 expr_stmt|;
 block|}

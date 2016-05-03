@@ -288,7 +288,7 @@ value|inc_flags
 end_define
 
 begin_comment
-comment|/* temp compatability */
+comment|/* temp compatibility */
 end_comment
 
 begin_define

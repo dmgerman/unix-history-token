@@ -5438,7 +5438,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * mesh ttl of 1 means we are the last one receving it, 	 * according to amendment we decrement and then check if 	 * 0, if so we dont forward. 	 */
+comment|/* 	 * mesh ttl of 1 means we are the last one receiving it, 	 * according to amendment we decrement and then check if 	 * 0, if so we dont forward. 	 */
 if|if
 condition|(
 name|mc

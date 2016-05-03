@@ -665,7 +665,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The following if statment will be true if 	 * we are doing the win_up_in_fp<and> 	 * - We have more new data (SEQ_LT(tp->snd_wl1, th->th_seq))<or> 	 * - No more new data, but we have an ack for new data 	 *   (tp->snd_wl1 == th->th_seq&& SEQ_LT(tp->snd_wl2, th->th_ack)) 	 * - No more new data, the same ack point but the window grew 	 *   (tp->snd_wl1 == th->th_seq&& tp->snd_wl2 == th->th_ack&& twin> tp->snd_wnd) 	 */
+comment|/* 	 * The following if statement will be true if 	 * we are doing the win_up_in_fp<and> 	 * - We have more new data (SEQ_LT(tp->snd_wl1, th->th_seq))<or> 	 * - No more new data, but we have an ack for new data 	 *   (tp->snd_wl1 == th->th_seq&& SEQ_LT(tp->snd_wl2, th->th_ack)) 	 * - No more new data, the same ack point but the window grew 	 *   (tp->snd_wl1 == th->th_seq&& tp->snd_wl2 == th->th_ack&& twin> tp->snd_wnd) 	 */
 if|if
 condition|(
 operator|(
@@ -3916,7 +3916,7 @@ argument_list|(
 name|tcps_rcvdupack
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change and FIN isn't set), 				 * the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
+comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change and FIN isn't set), 				 * the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 * 				 * When using TCP ECN, notify the peer that 				 * we reduced the cwnd. 				 */
 if|if
 condition|(
 operator|!

@@ -2883,7 +2883,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Dispatch to the appropriate IPsec transform logic.  The 	 * packet will be returned for transmission after crypto 	 * processing, etc. are completed. 	 * 	 * NB: m& sav are ``passed to caller'' who's reponsible for 	 *     for reclaiming their resources. 	 */
+comment|/* 	 * Dispatch to the appropriate IPsec transform logic.  The 	 * packet will be returned for transmission after crypto 	 * processing, etc. are completed. 	 * 	 * NB: m& sav are ``passed to caller'' who's responsible for 	 *     for reclaiming their resources. 	 */
 switch|switch
 condition|(
 name|dst

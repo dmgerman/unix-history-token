@@ -1672,7 +1672,7 @@ value|key_allocsp_default(__FILE__, __LINE__)
 end_define
 
 begin_comment
-comment|/*  * For OUTBOUND packet having a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occured.  *	others:	a pointer to SP  *  * NOTE: IPv6 mapped adddress concern is implemented here.  */
+comment|/*  * For OUTBOUND packet having a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occurred.  *	others:	a pointer to SP  *  * NOTE: IPv6 mapped adddress concern is implemented here.  */
 end_comment
 
 begin_function
@@ -1775,7 +1775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For OUTBOUND packet having a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occured.  *	others:	a pointer to SP  *  * NOTE: IPv6 mapped adddress concern is implemented here.  */
+comment|/*  * For OUTBOUND packet having a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occurred.  *	others:	a pointer to SP  *  * NOTE: IPv6 mapped adddress concern is implemented here.  */
 end_comment
 
 begin_function
@@ -2221,7 +2221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For FORWADING packet or OUTBOUND without a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	positive: a pointer to the entry for security policy leaf matched.  *	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occured.  */
+comment|/*  * For FORWADING packet or OUTBOUND without a socket. Searching SPD for packet,  * and return a pointer to SP.  * OUT:	positive: a pointer to the entry for security policy leaf matched.  *	NULL:	no apropreate SP found, the following value is set to error.  *		0	: bypass  *		EACCES	: discard packet.  *		ENOENT	: ipsec_acquire() in progress, maybe.  *		others	: error occurred.  */
 end_comment
 
 begin_function

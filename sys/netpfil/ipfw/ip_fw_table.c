@@ -1352,7 +1352,7 @@ operator|(
 name|ESRCH
 operator|)
 return|;
-comment|/* Compability mode: create new table for old clients */
+comment|/* Compatibility mode: create new table for old clients */
 if|if
 condition|(
 operator|(
@@ -3752,7 +3752,7 @@ operator|=
 operator|&
 name|v
 expr_stmt|;
-comment|/* Old requests compability */
+comment|/* Old requests compatibility */
 name|tei
 operator|.
 name|flags
@@ -5108,7 +5108,7 @@ decl_stmt|;
 name|uint8_t
 name|tflags
 decl_stmt|;
-comment|/* 	 * Stage 1: save table algoritm. 	 * Reference found table to ensure it won't disappear. 	 */
+comment|/* 	 * Stage 1: save table algorithm. 	 * Reference found table to ensure it won't disappear. 	 */
 name|IPFW_UH_WLOCK
 argument_list|(
 name|ch
@@ -11236,7 +11236,7 @@ comment|/*  * Table algorithms  */
 end_comment
 
 begin_comment
-comment|/*  * Finds algoritm by index, table type or supplied name.  *  * Returns pointer to algo or NULL.  */
+comment|/*  * Finds algorithm by index, table type or supplied name.  *  * Returns pointer to algo or NULL.  */
 end_comment
 
 begin_function
@@ -13859,7 +13859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move all tables which are reference by rules in @rr to set @new_set.  * Makes sure that all relevant tables are referenced ONLLY by given rules.  *  * Retuns 0 on success,  */
+comment|/*  * Move all tables which are reference by rules in @rr to set @new_set.  * Makes sure that all relevant tables are referenced ONLLY by given rules.  *  * Returns 0 on success,  */
 end_comment
 
 begin_function

@@ -367,7 +367,7 @@ value|60
 end_define
 
 begin_comment
-comment|/* default max queue lenght */
+comment|/* default max queue length */
 end_comment
 
 begin_define
@@ -397,7 +397,7 @@ name|ALTQ_FLOWVALVE
 end_ifdef
 
 begin_comment
-comment|/*  * flow-valve is an extention to protect red from unresponsive flows  * and to promote end-to-end congestion control.  * flow-valve observes the average drop rates of the flows that have  * experienced packet drops in the recent past.  * when the average drop rate exceeds the threshold, the flow is  * blocked by the flow-valve.  the trapped flow should back off  * exponentially to escape from the flow-valve.  */
+comment|/*  * flow-valve is an extension to protect red from unresponsive flows  * and to promote end-to-end congestion control.  * flow-valve observes the average drop rates of the flows that have  * experienced packet drops in the recent past.  * when the average drop rate exceeds the threshold, the flow is  * blocked by the flow-valve.  the trapped flow should back off  * exponentially to escape from the flow-valve.  */
 end_comment
 
 begin_ifdef

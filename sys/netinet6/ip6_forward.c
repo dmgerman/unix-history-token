@@ -864,7 +864,7 @@ operator|->
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* Release SP if an error occured */
+comment|/* Release SP if an error occurred */
 if|if
 condition|(
 name|error

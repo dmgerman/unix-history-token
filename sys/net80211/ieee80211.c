@@ -8693,7 +8693,7 @@ block|,
 name|IFM_IEEE80211_OFDM27
 block|}
 block|,
-comment|/* NB: OFDM72 doesn't realy exist so we don't handle it */
+comment|/* NB: OFDM72 doesn't really exist so we don't handle it */
 block|}
 decl_stmt|;
 specifier|static

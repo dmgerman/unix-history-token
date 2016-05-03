@@ -4745,7 +4745,7 @@ decl_stmt|,
 modifier|*
 name|d
 decl_stmt|;
-comment|/* initilize */
+comment|/* initialize */
 name|candidate
 operator|=
 name|NULL
@@ -5270,7 +5270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * allocating a usable SA entry for a *INBOUND* packet.  * Must call key_freesav() later.  * OUT: positive:	pointer to a usable sav (i.e. MATURE or DYING state).  *	NULL:		not found, or error occured.  *  * In the comparison, no source address is used--for RFC2401 conformance.  * To quote, from section 4.1:  *	A security association is uniquely identified by a triple consisting  *	of a Security Parameter Index (SPI), an IP Destination Address, and a  *	security protocol (AH or ESP) identifier.  * Note that, however, we do need to keep source address in IPsec SA.  * IKE specification and PF_KEY specification do assume that we  * keep source address in IPsec SA.  We see a tricky situation here.  */
+comment|/*  * allocating a usable SA entry for a *INBOUND* packet.  * Must call key_freesav() later.  * OUT: positive:	pointer to a usable sav (i.e. MATURE or DYING state).  *	NULL:		not found, or error occurred.  *  * In the comparison, no source address is used--for RFC2401 conformance.  * To quote, from section 4.1:  *	A security association is uniquely identified by a triple consisting  *	of a Security Parameter Index (SPI), an IP Destination Address, and a  *	security protocol (AH or ESP) identifier.  * Note that, however, we do need to keep source address in IPsec SA.  * IKE specification and PF_KEY specification do assume that we  * keep source address in IPsec SA.  We see a tricky situation here.  */
 end_comment
 
 begin_function
@@ -11258,7 +11258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_X_SPDACQUIRE processing.  * Acquire policy and SA(s) for a *OUTBOUND* packet.  * send  *<base, policy(*)>  * to KMD, and expect to receive  *<base> with SADB_X_SPDACQUIRE if error occured,  * or  *<base, policy>  * with SADB_X_SPDUPDATE from KMD by PF_KEY.  * policy(*) is without policy requests.  *  *    0     : succeed  *    others: error number  */
+comment|/*  * SADB_X_SPDACQUIRE processing.  * Acquire policy and SA(s) for a *OUTBOUND* packet.  * send  *<base, policy(*)>  * to KMD, and expect to receive  *<base> with SADB_X_SPDACQUIRE if error occurred,  * or  *<base, policy>  * with SADB_X_SPDUPDATE from KMD by PF_KEY.  * policy(*) is without policy requests.  *  *    0     : succeed  *    others: error number  */
 end_comment
 
 begin_function
@@ -29422,7 +29422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_ACQUIRE processing called by key_checkrequest() and key_acquire2().  * send  *<base, SA, address(SD), (address(P)), x_policy,  *       (identity(SD),) (sensitivity,) proposal>  * to KMD, and expect to receive  *<base> with SADB_ACQUIRE if error occured,  * or  *<base, src address, dst address, (SPI range)> with SADB_GETSPI  * from KMD by PF_KEY.  *  * XXX x_policy is outside of RFC2367 (KAME extension).  * XXX sensitivity is not supported.  * XXX for ipcomp, RFC2367 does not define how to fill in proposal.  * see comment for key_getcomb_ipcomp().  *  * OUT:  *    0     : succeed  *    others: error number  */
+comment|/*  * SADB_ACQUIRE processing called by key_checkrequest() and key_acquire2().  * send  *<base, SA, address(SD), (address(P)), x_policy,  *       (identity(SD),) (sensitivity,) proposal>  * to KMD, and expect to receive  *<base> with SADB_ACQUIRE if error occurred,  * or  *<base, src address, dst address, (SPI range)> with SADB_GETSPI  * from KMD by PF_KEY.  *  * XXX x_policy is outside of RFC2367 (KAME extension).  * XXX sensitivity is not supported.  * XXX for ipcomp, RFC2367 does not define how to fill in proposal.  * see comment for key_getcomb_ipcomp().  *  * OUT:  *    0     : succeed  *    others: error number  */
 end_comment
 
 begin_function
@@ -30717,7 +30717,7 @@ literal|"null msg"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Error message from KMd. 	 * We assume that if error was occured in IKEd, the length of PFKEY 	 * message is equal to the size of sadb_msg structure. 	 * We do not raise error even if error occured in this function. 	 */
+comment|/* 	 * Error message from KMd. 	 * We assume that if error was occurred in IKEd, the length of PFKEY 	 * message is equal to the size of sadb_msg structure. 	 * We do not raise error even if error occurred in this function. 	 */
 if|if
 condition|(
 name|mhp

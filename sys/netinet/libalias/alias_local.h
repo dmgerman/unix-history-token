@@ -1617,7 +1617,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Tcp specfic routines */
+comment|/* Tcp specific routines */
 end_comment
 
 begin_comment

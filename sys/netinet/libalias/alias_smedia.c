@@ -2232,7 +2232,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * When aliasing a server, check for the 200 reply 		 * Accomodate varying number of blanks between 200& OK 		 */
+comment|/* 		 * When aliasing a server, check for the 200 reply 		 * Accommodate varying number of blanks between 200& OK 		 */
 if|if
 condition|(
 name|dlen

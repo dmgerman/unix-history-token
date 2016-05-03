@@ -12928,7 +12928,7 @@ name|ieee80211_state
 operator|)
 name|arg
 decl_stmt|;
-comment|/* 	 * Frame transmit completed; arrange timer callback.  If 	 * transmit was successfuly we wait for response.  Otherwise 	 * we arrange an immediate callback instead of doing the 	 * callback directly since we don't know what state the driver 	 * is in (e.g. what locks it is holding).  This work should 	 * not be too time-critical and not happen too often so the 	 * added overhead is acceptable. 	 * 	 * XXX what happens if !acked but response shows up before callback? 	 */
+comment|/* 	 * Frame transmit completed; arrange timer callback.  If 	 * transmit was successfully we wait for response.  Otherwise 	 * we arrange an immediate callback instead of doing the 	 * callback directly since we don't know what state the driver 	 * is in (e.g. what locks it is holding).  This work should 	 * not be too time-critical and not happen too often so the 	 * added overhead is acceptable. 	 * 	 * XXX what happens if !acked but response shows up before callback? 	 */
 if|if
 condition|(
 name|vap
@@ -14518,7 +14518,7 @@ name|ic
 operator|->
 name|ic_wme
 decl_stmt|;
-comment|/* 		 * Check for agressive mode change.  When there is 		 * significant high priority traffic in the BSS 		 * throttle back BE traffic by using conservative 		 * parameters.  Otherwise BE uses agressive params 		 * to optimize performance of legacy/non-QoS traffic. 		 */
+comment|/* 		 * Check for aggressive mode change.  When there is 		 * significant high priority traffic in the BSS 		 * throttle back BE traffic by using conservative 		 * parameters.  Otherwise BE uses aggressive params 		 * to optimize performance of legacy/non-QoS traffic. 		 */
 if|if
 condition|(
 name|wme

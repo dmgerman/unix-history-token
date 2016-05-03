@@ -4308,7 +4308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a recieved IGMPv3 group-specific or group-and-source-specific  * query.  * Return<0 if any error occured. Currently this is ignored.  */
+comment|/*  * Process a received IGMPv3 group-specific or group-and-source-specific  * query.  * Return<0 if any error occurred. Currently this is ignored.  */
 end_comment
 
 begin_function

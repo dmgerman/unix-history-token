@@ -4090,7 +4090,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* hlen>0 means we have an IP pkt */
-comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset|ip6f_mf == 0 means there is no Fragment Header 	 *	or there is a single packet fragement (fragement header added 	 *	without needed).  We will treat a single packet fragment as if 	 *	there was no fragment header (or log/block depending on the 	 *	V_fw_permit_single_frag6 sysctl setting). 	 */
+comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset|ip6f_mf == 0 means there is no Fragment Header 	 *	or there is a single packet fragment (fragment header added 	 *	without needed).  We will treat a single packet fragment as if 	 *	there was no fragment header (or log/block depending on the 	 *	V_fw_permit_single_frag6 sysctl setting). 	 */
 name|u_short
 name|offset
 init|=
@@ -8776,7 +8776,7 @@ expr_stmt|;
 else|else
 break|break;
 comment|/* 				 * XXXRW: so_user_cookie should almost 				 * certainly be inp_user_cookie? 				 */
-comment|/* For incomming packet, lookup up the  				inpcb using the src/dest ip/port tuple */
+comment|/* For incoming packet, lookup up the  				inpcb using the src/dest ip/port tuple */
 if|if
 condition|(
 name|inp

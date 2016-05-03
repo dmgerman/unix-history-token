@@ -1978,7 +1978,7 @@ name|value
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Ensure value is always 0 in the beginnig */
+comment|/* Ensure value is always 0 in the beginning */
 name|mask_table_value
 argument_list|(
 name|ptei
@@ -2448,7 +2448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compability function used to import data from old  * IP_FW_TABLE_ADD / IP_FW_TABLE_XADD opcodes.  */
+comment|/*  * Compatibility function used to import data from old  * IP_FW_TABLE_ADD / IP_FW_TABLE_XADD opcodes.  */
 end_comment
 
 begin_function

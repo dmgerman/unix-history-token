@@ -122,7 +122,7 @@ specifier|const
 name|long
 name|ru_out
 decl_stmt|;
-comment|/* Time after wich will be reseeded */
+comment|/* Time after which will be reseeded */
 specifier|const
 name|u_int32_t
 name|ru_max
@@ -197,7 +197,7 @@ block|,
 comment|/* resulting bits */
 literal|180
 block|,
-comment|/* Time after wich will be reseeded */
+comment|/* Time after which will be reseeded */
 literal|1000000000
 block|,
 comment|/* Uniq cycle, avoid blackjack prediction */
@@ -240,7 +240,7 @@ block|,
 comment|/* resulting bits */
 literal|180
 block|,
-comment|/* Time after wich will be reseeded */
+comment|/* Time after which will be reseeded */
 literal|200000
 block|,
 comment|/* Uniq cycle, avoid blackjack prediction */

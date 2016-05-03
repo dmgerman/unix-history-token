@@ -4100,7 +4100,7 @@ name|bs_root_port
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* check if any recieved info supersedes us */
+comment|/* check if any received info supersedes us */
 name|LIST_FOREACH
 argument_list|(
 argument|bp

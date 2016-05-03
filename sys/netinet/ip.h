@@ -607,7 +607,7 @@ value|134
 end_define
 
 begin_comment
-comment|/* commerical security */
+comment|/* commercial security */
 end_comment
 
 begin_define

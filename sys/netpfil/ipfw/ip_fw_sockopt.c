@@ -10615,7 +10615,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 		 * Compability stuff for old clients: 		 * prepare to automaitcally create non-existing objects. 		 */
+comment|/* 		 * Compatibility stuff for old clients: 		 * prepare to automaitcally create non-existing objects. 		 */
 if|if
 condition|(
 name|unresolved
@@ -11010,7 +11010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Adds one or more rules to ipfw @chain.  * Data layout (version 0)(current):  * Request:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional *1)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) ip_fw x N ] (*2) (*3)  * ]  * Reply:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) ip_fw x N ]  * ]  *  * Rules in reply are modified to store their actual ruleset number.  *  * (*1) TLVs inside IPFW_TLV_TBL_LIST needs to be sorted ascending  * accoring to their idx field and there has to be no duplicates.  * (*2) Numbered rules inside IPFW_TLV_RULE_LIST needs to be sorted ascending.  * (*3) Each ip_fw structure needs to be aligned to u64 boundary.  *  * Returns 0 on success.  */
+comment|/*  * Adds one or more rules to ipfw @chain.  * Data layout (version 0)(current):  * Request:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional *1)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) ip_fw x N ] (*2) (*3)  * ]  * Reply:  * [  *   ip_fw3_opheader  *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST) ip_fw x N ]  * ]  *  * Rules in reply are modified to store their actual ruleset number.  *  * (*1) TLVs inside IPFW_TLV_TBL_LIST needs to be sorted ascending  * according to their idx field and there has to be no duplicates.  * (*2) Numbered rules inside IPFW_TLV_RULE_LIST needs to be sorted ascending.  * (*3) Each ip_fw structure needs to be aligned to u64 boundary.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -14288,7 +14288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ensures that @sd buffer has contigious @neeeded number of  * bytes.  *  * Returns pointer to requested space or NULL.  */
+comment|/*  * Ensures that @sd buffer has contiguous @neeeded number of  * bytes.  *  * Returns pointer to requested space or NULL.  */
 end_comment
 
 begin_function
@@ -14376,7 +14376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Requests @needed contigious bytes from @sd buffer.  * Function is used to notify subsystem that we are  * interesed in first @needed bytes (request header)  * and the rest buffer can be safely zeroed.  *  * Returns pointer to requested space or NULL.  */
+comment|/*  * Requests @needed contiguous bytes from @sd buffer.  * Function is used to notify subsystem that we are  * interesed in first @needed bytes (request header)  * and the rest buffer can be safely zeroed.  *  * Returns pointer to requested space or NULL.  */
 end_comment
 
 begin_function
@@ -14732,7 +14732,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Determine opcode type/buffer size: 		 * allocate sliding-window buf for data export or 		 * contigious buffer for special ops. 		 */
+comment|/* 		 * Determine opcode type/buffer size: 		 * allocate sliding-window buf for data export or 		 * contiguous buffer for special ops. 		 */
 if|if
 condition|(
 operator|(

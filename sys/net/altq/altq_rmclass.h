@@ -382,7 +382,7 @@ comment|/* # pkts queued downstream */
 name|int
 name|efficient_
 decl_stmt|;
-comment|/* Link Efficency bit */
+comment|/* Link Efficiency bit */
 name|int
 name|wrr_
 decl_stmt|;
