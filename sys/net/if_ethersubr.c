@@ -2082,25 +2082,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Process a received Ethernet packet; the packet is in the  * mbuf chain m with the ethernet header at the front.  */
 end_comment
