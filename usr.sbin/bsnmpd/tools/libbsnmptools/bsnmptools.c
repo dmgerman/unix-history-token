@@ -5151,11 +5151,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|free
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
 block|}
 name|asn_append_oid
 argument_list|(
