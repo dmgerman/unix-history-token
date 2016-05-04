@@ -1786,7 +1786,7 @@ operator|.
 name|et_min_period
 operator|=
 operator|(
-literal|0x00000002LLU
+literal|0x00000010LLU
 operator|<<
 literal|32
 operator|)
