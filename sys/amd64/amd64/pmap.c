@@ -20117,6 +20117,7 @@ name|free
 argument_list|)
 condition|)
 block|{
+comment|/* 				 * Although "va" is not mapped, paging- 				 * structure caches could nonetheless have 				 * entries that refer to the freed page table 				 * pages.  Invalidate those entries. 				 */
 name|pmap_invalidate_page
 argument_list|(
 name|pmap
@@ -20861,6 +20862,7 @@ name|free
 argument_list|)
 condition|)
 block|{
+comment|/* 				 * Although "va" is not mapped, paging- 				 * structure caches could nonetheless have 				 * entries that refer to the freed page table 				 * pages.  Invalidate those entries. 				 */
 name|pmap_invalidate_page
 argument_list|(
 name|pmap
@@ -22591,6 +22593,7 @@ name|free
 argument_list|)
 condition|)
 block|{
+comment|/* 						 * Although "addr" is not 						 * mapped, paging-structure 						 * caches could nonetheless 						 * have entries that refer to 						 * the freed page table pages. 						 * Invalidate those entries. 						 */
 name|pmap_invalidate_page
 argument_list|(
 name|dst_pmap
@@ -23707,7 +23710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *                                                                                  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
+comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
 end_comment
 
 begin_function
