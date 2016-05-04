@@ -70,10 +70,7 @@ name|device_add_child
 argument_list|(
 name|parent
 argument_list|,
-name|devclass_get_name
-argument_list|(
-name|bhndb_devclass
-argument_list|)
+literal|"bhndb"
 argument_list|,
 name|unit
 argument_list|)

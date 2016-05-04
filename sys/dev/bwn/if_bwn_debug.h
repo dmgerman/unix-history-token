@@ -15,6 +15,12 @@ directive|define
 name|__IF_BWN_DEBUG_H__
 end_define
 
+begin_define
+define|#
+directive|define
+name|BWN_DEBUG
+end_define
+
 begin_enum
 enum|enum
 block|{

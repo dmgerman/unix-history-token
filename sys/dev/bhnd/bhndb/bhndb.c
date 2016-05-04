@@ -1885,10 +1885,7 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
-name|devclass_get_name
-argument_list|(
-name|bhnd_devclass
-argument_list|)
+literal|"bhnd"
 argument_list|,
 operator|-
 literal|1
