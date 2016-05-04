@@ -29800,6 +29800,23 @@ argument_list|,
 name|BWN_XMITSTAT_1
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: stat0=0x%08x, stat1=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|stat0
+argument_list|,
+name|stat1
+argument_list|)
+expr_stmt|;
 name|stat
 operator|.
 name|cookie
@@ -32915,23 +32932,14 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
+comment|/* Just count full frame retries for now */
+name|retrycnt
+operator|=
 name|status
 operator|->
-name|ack
-operator|==
-literal|0
-condition|)
-name|retrycnt
-operator|=
+name|framecnt
+operator|-
 literal|1
-expr_stmt|;
-else|else
-name|retrycnt
-operator|=
-literal|0
 expr_stmt|;
 name|ieee80211_ratectl_tx_complete
 argument_list|(
@@ -33172,23 +33180,14 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Do any tx complete callback.  Note this must 		 * be done before releasing the node reference. 		 */
-comment|/* XXX */
-if|if
-condition|(
+comment|/* Just count full frame retries for now */
+name|retrycnt
+operator|=
 name|status
 operator|->
-name|ack
-operator|==
-literal|0
-condition|)
-name|retrycnt
-operator|=
+name|framecnt
+operator|-
 literal|1
-expr_stmt|;
-else|else
-name|retrycnt
-operator|=
-literal|0
 expr_stmt|;
 name|ieee80211_ratectl_tx_complete
 argument_list|(
