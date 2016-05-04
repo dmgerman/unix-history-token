@@ -139,6 +139,7 @@ modifier|*
 name|fmt
 parameter_list|,
 name|va_list
+modifier|*
 name|ap
 parameter_list|)
 block|{
@@ -215,7 +216,7 @@ parameter_list|(
 name|ARG
 parameter_list|)
 define|\
-value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? \ 					'b' : letter), \ 					(void *)((long)(ARG)), width, \ 					field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
+value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? \ 					'b' : letter), \ 					(void *)((long)(ARG)), width, \ 					field_name); \ 			else \ 				*(va_arg(*ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
 name|u_char
 name|bits
 init|=
@@ -706,6 +707,7 @@ name|dest
 operator|=
 name|va_arg
 argument_list|(
+operator|*
 name|ap
 argument_list|,
 name|char
@@ -843,6 +845,7 @@ literal|0
 else|:
 name|va_arg
 argument_list|(
+operator|*
 name|ap
 argument_list|,
 name|int
@@ -1756,6 +1759,7 @@ modifier|*
 name|fmt
 parameter_list|,
 name|va_list
+modifier|*
 name|ap
 parameter_list|)
 block|{
@@ -1876,6 +1880,7 @@ argument_list|)
 else|:
 name|va_arg
 argument_list|(
+operator|*
 name|ap
 argument_list|,
 name|int
@@ -2229,6 +2234,9 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -2236,8 +2244,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 name|do_buff_decode
 argument_list|(
 name|csio
@@ -2257,8 +2265,18 @@ literal|0
 argument_list|,
 name|fmt
 argument_list|,
+operator|&
 name|ap
 argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}
@@ -2303,9 +2321,6 @@ modifier|*
 name|puthook
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 comment|/* 	 * We need some way to output things; we can't do it without 	 * the arg_put function. 	 */
 if|if
 condition|(
@@ -2319,17 +2334,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|&
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|do_buff_decode
@@ -2351,7 +2355,7 @@ name|puthook
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -2380,6 +2384,9 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -2387,8 +2394,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 name|do_buff_decode
 argument_list|(
 name|buff
@@ -2401,8 +2408,18 @@ literal|0
 argument_list|,
 name|fmt
 argument_list|,
+operator|&
 name|ap
 argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}
@@ -2449,9 +2466,6 @@ modifier|*
 name|puthook
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 comment|/* 	 * We need some way to output things; we can't do it without 	 * the arg_put function. 	 */
 if|if
 condition|(
@@ -2465,17 +2479,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|&
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|do_buff_decode
@@ -2490,7 +2493,7 @@ name|puthook
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -2596,6 +2599,7 @@ name|NULL
 argument_list|,
 name|cmd_spec
 argument_list|,
+operator|&
 name|ap
 argument_list|)
 operator|)
@@ -2603,11 +2607,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-name|retval
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 name|cam_fill_csio
 argument_list|(
 name|csio
@@ -2642,6 +2644,13 @@ condition|?
 name|timeout
 else|:
 literal|5000
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 return|return
@@ -2702,9 +2711,6 @@ modifier|*
 name|gethook
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 name|size_t
 name|cmdlen
 decl_stmt|;
@@ -2735,17 +2741,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|&
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 name|csio
@@ -2781,7 +2776,7 @@ name|gethook
 argument_list|,
 name|cmd_spec
 argument_list|,
-name|ap
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -2857,6 +2852,9 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 if|if
 condition|(
 name|csio
@@ -2875,8 +2873,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 name|do_encode
 argument_list|(
 name|csio
@@ -2895,8 +2893,18 @@ literal|0
 argument_list|,
 name|fmt
 argument_list|,
+operator|&
 name|ap
 argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}
@@ -2938,9 +2946,6 @@ modifier|*
 name|gethook
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 comment|/* 	 * We need something to encode, but we can't get it without the 	 * arg_get function. 	 */
 if|if
 condition|(
@@ -2954,17 +2959,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|&
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|do_encode
@@ -2981,7 +2975,7 @@ name|gethook
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -3022,9 +3016,6 @@ modifier|*
 name|gethook
 parameter_list|)
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 comment|/* 	 * We need something to encode, but we can't get it without the 	 * arg_get function. 	 */
 if|if
 condition|(
@@ -3038,17 +3029,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|&
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|do_encode
@@ -3069,7 +3049,7 @@ name|gethook
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|NULL
 argument_list|)
 operator|)
 return|;
