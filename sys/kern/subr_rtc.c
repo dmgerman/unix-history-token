@@ -170,7 +170,7 @@ block|{
 if|if
 condition|(
 name|clock_res
-operator|>
+operator|<=
 name|res
 condition|)
 block|{
