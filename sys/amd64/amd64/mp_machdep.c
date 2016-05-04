@@ -2931,7 +2931,7 @@ name|pc
 argument_list|)
 expr_stmt|;
 comment|/* XXX User value while we're in the kernel */
-name|intel_fix_cpuid
+name|fix_cpuid
 argument_list|()
 expr_stmt|;
 name|lidt
