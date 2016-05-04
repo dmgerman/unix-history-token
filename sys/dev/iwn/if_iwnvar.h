@@ -1019,10 +1019,6 @@ comment|/* PCIe Capabilities. */
 comment|/* Tasks used by the driver */
 name|struct
 name|task
-name|sc_reinit_task
-decl_stmt|;
-name|struct
-name|task
 name|sc_radioon_task
 decl_stmt|;
 name|struct
