@@ -165,9 +165,7 @@ name|ncr53c9x_softc
 name|sc_ncr53c9x
 decl_stmt|;
 comment|/* glue to MI code */
-name|struct
-name|device
-modifier|*
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
