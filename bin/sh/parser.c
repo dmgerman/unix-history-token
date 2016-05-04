@@ -9425,8 +9425,6 @@ operator|(
 name|ps
 index|[
 name|i
-operator|+
-literal|1
 index|]
 operator|!=
 literal|'\0'
@@ -9436,8 +9434,6 @@ operator|(
 name|ps
 index|[
 name|i
-operator|+
-literal|1
 index|]
 operator|!=
 name|trim
@@ -9445,6 +9441,9 @@ operator|)
 condition|)
 name|i
 operator|++
+expr_stmt|;
+operator|--
+name|i
 expr_stmt|;
 break|break;
 comment|/* 				 * Working directory. 				 * 				 * \W specifies just the final component, 				 * \w specifies the entire path. 				 */
@@ -9466,6 +9465,11 @@ condition|(
 name|pwd
 operator|==
 name|NULL
+operator|||
+operator|*
+name|pwd
+operator|==
+literal|'\0'
 condition|)
 name|pwd
 operator|=
