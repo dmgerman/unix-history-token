@@ -1380,6 +1380,8 @@ operator|<
 name|boot
 operator|->
 name|NumClusters
+operator|-
+name|CLUST_FIRST
 condition|)
 block|{
 name|pfatal
