@@ -825,6 +825,13 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|vfs_freeopts
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|)
+expr_stmt|;
 name|vfs_mount_destroy
 argument_list|(
 name|mp
