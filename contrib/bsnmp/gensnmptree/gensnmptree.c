@@ -2966,13 +2966,6 @@ argument_list|(
 literal|"need string in ENUM/BITS"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|e
-operator|!=
-name|NULL
-condition|)
-block|{
 name|e
 operator|->
 name|name
@@ -2992,7 +2985,6 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
