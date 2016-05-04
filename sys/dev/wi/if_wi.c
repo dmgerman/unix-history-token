@@ -1930,7 +1930,7 @@ argument_list|(
 literal|0x1fff
 argument_list|)
 expr_stmt|;
-comment|/* assume 1-11 */
+comment|/* assume 1-13 */
 name|KASSERT
 argument_list|(
 name|val
