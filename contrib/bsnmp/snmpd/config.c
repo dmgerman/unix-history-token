@@ -5076,6 +5076,12 @@ operator|=
 name|length
 expr_stmt|;
 block|}
+else|else
+name|free
+argument_list|(
+name|string
+argument_list|)
+expr_stmt|;
 block|}
 name|token
 operator|=
