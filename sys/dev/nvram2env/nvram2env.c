@@ -490,10 +490,7 @@ name|sc
 operator|->
 name|addr
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
 name|ivar
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
