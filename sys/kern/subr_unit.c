@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -25,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/bitstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -429,7 +429,7 @@ comment|/* USERLAND */
 end_comment
 
 begin_comment
-comment|/*  * This is our basic building block.  *  * It can be used in three different ways depending on the value of the ptr  * element:  *     If ptr is NULL, it represents a run of free items.  *     If ptr points to the unrhdr it represents a run of allocated items.  *     Otherwise it points to an bitstring of allocated items.  *  * For runs the len field is the length of the run.  * For bitmaps the len field represents the number of allocated items.  *  * The bitmap is the same size as struct unr to optimize memory management.  */
+comment|/*  * This is our basic building block.  *  * It can be used in three different ways depending on the value of the ptr  * element:  *     If ptr is NULL, it represents a run of free items.  *     If ptr points to the unrhdr it represents a run of allocated items.  *     Otherwise it points to a bitstring of allocated items.  *  * For runs the len field is the length of the run.  * For bitmaps the len field represents the number of allocated items.  *  * The bitmap is the same size as struct unr to optimize memory management.  */
 end_comment
 
 begin_struct
@@ -457,9 +457,6 @@ begin_struct
 struct|struct
 name|unrb
 block|{
-name|u_char
-name|busy
-decl_stmt|;
 name|bitstr_t
 name|map
 index|[
@@ -468,8 +465,11 @@ argument_list|(
 expr|struct
 name|unr
 argument_list|)
-operator|-
-literal|1
+operator|/
+sizeof|sizeof
+argument_list|(
+name|bitstr_t
+argument_list|)
 index|]
 decl_stmt|;
 block|}
@@ -479,31 +479,124 @@ end_struct
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|unr
 argument_list|)
-operator|==
+operator|%
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|unrb
+name|bitstr_t
 argument_list|)
+operator|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Number of bits in the bitmap */
+comment|/* Number of bits we can store in the bitmap */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NBITS
-value|((int)sizeof(((struct unrb *)NULL)->map) * 8)
+value|(8 * sizeof(((struct unrb*)NULL)->map))
 end_define
+
+begin_comment
+comment|/* Is the unrb empty in at least the first len bits? */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|ub_empty
+parameter_list|(
+name|struct
+name|unrb
+modifier|*
+name|ub
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|int
+name|first_set
+decl_stmt|;
+name|bit_ffs
+argument_list|(
+name|ub
+operator|->
+name|map
+argument_list|,
+name|len
+argument_list|,
+operator|&
+name|first_set
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|first_set
+operator|==
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Is the unrb full?  That is, is the number of set elements equal to len? */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|ub_full
+parameter_list|(
+name|struct
+name|unrb
+modifier|*
+name|ub
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|int
+name|first_clear
+decl_stmt|;
+name|bit_ffc
+argument_list|(
+name|ub
+operator|->
+name|map
+argument_list|,
+name|len
+argument_list|,
+operator|&
+name|first_clear
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|first_clear
+operator|==
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
 begin_if
 if|#
@@ -609,7 +702,7 @@ operator|<=
 name|NBITS
 argument_list|,
 operator|(
-literal|"UNR inconsistency: len %u max %d (line %d)\n"
+literal|"UNR inconsistency: len %u max %zd (line %d)\n"
 operator|,
 name|up
 operator|->
@@ -656,27 +749,6 @@ argument_list|)
 condition|)
 name|w
 operator|++
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|w
-operator|==
-name|ub
-operator|->
-name|busy
-argument_list|,
-operator|(
-literal|"UNR inconsistency: busy %u found %u (line %d)\n"
-operator|,
-name|ub
-operator|->
-name|busy
-operator|,
-name|w
-operator|,
-name|line
-operator|)
-argument_list|)
 expr_stmt|;
 name|y
 operator|+=
@@ -759,9 +831,11 @@ name|struct
 name|unrhdr
 modifier|*
 name|uh
+name|__unused
 parameter_list|,
 name|int
 name|line
+name|__unused
 parameter_list|)
 block|{  }
 end_function
@@ -1537,17 +1611,23 @@ operator|*
 operator|)
 name|us
 expr_stmt|;
+name|bit_nclear
+argument_list|(
 name|ub
 operator|->
-name|busy
-operator|=
+name|map
+argument_list|,
 literal|0
+argument_list|,
+name|NBITS
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|l
 condition|)
-block|{
 name|bit_nset
 argument_list|(
 name|ub
@@ -1559,27 +1639,6 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|+=
-name|a
-expr_stmt|;
-block|}
-else|else
-block|{
-name|bit_nclear
-argument_list|(
-name|ub
-operator|->
-name|map
-argument_list|,
-literal|0
-argument_list|,
-name|a
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1599,7 +1658,6 @@ name|ptr
 operator|==
 name|NULL
 condition|)
-block|{
 name|bit_nclear
 argument_list|(
 name|ub
@@ -1617,9 +1675,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|bit_nset
 argument_list|(
 name|ub
@@ -1637,15 +1693,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|+=
-name|uf
-operator|->
-name|len
-expr_stmt|;
-block|}
 name|uf
 operator|->
 name|ptr
@@ -1701,7 +1748,6 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 name|bit_set
 argument_list|(
 name|ub
@@ -1711,14 +1757,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|++
-expr_stmt|;
-block|}
 else|else
-block|{
 name|bit_clear
 argument_list|(
 name|ub
@@ -1728,7 +1767,6 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|uf
 operator|->
@@ -1894,14 +1932,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|+=
-name|uf
-operator|->
-name|len
-expr_stmt|;
 name|us
 operator|->
 name|len
@@ -1970,7 +2000,6 @@ argument_list|,
 name|l
 argument_list|)
 condition|)
-block|{
 name|bit_set
 argument_list|(
 name|ub
@@ -1982,14 +2011,7 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|++
-expr_stmt|;
-block|}
 else|else
-block|{
 name|bit_clear
 argument_list|(
 name|ub
@@ -2001,7 +2023,6 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -2083,13 +2104,14 @@ name|ptr
 expr_stmt|;
 if|if
 condition|(
+name|ub_full
+argument_list|(
 name|ub
-operator|->
-name|busy
-operator|==
+argument_list|,
 name|up
 operator|->
 name|len
+argument_list|)
 condition|)
 block|{
 name|delete_unr
@@ -2111,11 +2133,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ub_empty
+argument_list|(
 name|ub
+argument_list|,
+name|up
 operator|->
-name|busy
-operator|==
-literal|0
+name|len
+argument_list|)
 condition|)
 block|{
 name|delete_unr
@@ -2605,21 +2630,6 @@ name|up
 operator|->
 name|ptr
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ub
-operator|->
-name|busy
-operator|<
-name|up
-operator|->
-name|len
-argument_list|,
-operator|(
-literal|"UNR bitmap confusion"
-operator|)
-argument_list|)
-expr_stmt|;
 name|bit_ffc
 argument_list|(
 name|ub
@@ -2654,11 +2664,6 @@ name|map
 argument_list|,
 name|y
 argument_list|)
-expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|++
 expr_stmt|;
 name|x
 operator|+=
@@ -3142,11 +3147,6 @@ name|map
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|++
 expr_stmt|;
 goto|goto
 name|done
@@ -3757,11 +3757,6 @@ operator|->
 name|busy
 operator|--
 expr_stmt|;
-name|ub
-operator|->
-name|busy
-operator|--
-expr_stmt|;
 name|collapse_unr
 argument_list|(
 name|uh
@@ -4263,11 +4258,7 @@ name|ptr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bitmap(%d) ["
-argument_list|,
-name|ub
-operator|->
-name|busy
+literal|"bitmap ["
 argument_list|)
 expr_stmt|;
 for|for
@@ -4855,7 +4846,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"NBITS %d\n"
+literal|"NBITS %lu\n"
 argument_list|,
 name|NBITS
 argument_list|)

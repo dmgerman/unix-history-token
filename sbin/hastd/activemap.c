@@ -695,11 +695,6 @@ name|amp
 operator|->
 name|am_mapsize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|bitstr_t
-argument_list|)
-operator|*
 name|bitstr_size
 argument_list|(
 name|amp
@@ -2424,11 +2419,6 @@ literal|1
 expr_stmt|;
 name|mapsize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|bitstr_t
-argument_list|)
-operator|*
 name|bitstr_size
 argument_list|(
 name|nextents

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bitstring.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/select.h>
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
 end_include
 
 begin_include

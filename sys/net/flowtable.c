@@ -3578,22 +3578,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * used by the bit_alloc macro  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|calloc
-parameter_list|(
-name|count
-parameter_list|,
-name|size
-parameter_list|)
-value|malloc((count)*(size), M_FTABLE, M_WAITOK | M_ZERO)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -3708,6 +3692,10 @@ argument_list|(
 name|ft
 operator|->
 name|ft_size
+argument_list|,
+name|M_FTABLE
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -3720,16 +3708,14 @@ argument_list|(
 name|ft
 operator|->
 name|ft_size
+argument_list|,
+name|M_FTABLE
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|calloc
-end_undef
 
 begin_function
 specifier|static

@@ -1659,10 +1659,10 @@ name|int
 name|nr_pages
 parameter_list|)
 block|{
-name|intptr_t
+name|int
 name|first_clear
 decl_stmt|;
-name|intptr_t
+name|int
 name|num_clear
 decl_stmt|;
 name|uint8_t
@@ -1815,6 +1815,9 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
+operator|(
+name|intptr_t
+operator|)
 name|first_clear
 operator|*
 name|PAGE_SIZE
@@ -8985,22 +8988,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Needed to make bit_alloc() macro work */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|calloc
-parameter_list|(
-name|count
-parameter_list|,
-name|size
-parameter_list|)
-value|malloc((count)*(size), M_XENBLOCKBACK,	\ 				   M_NOWAIT|M_ZERO);
-end_define
-
-begin_comment
 comment|/**  * Size KVA and pseudo-physical address allocations based on negotiated  * values for the size and number of I/O requests, and the size of our  * communication ring.  *  * \param xbb  Per-instance xbb configuration structure.  *  * These address spaces are used to dynamically map pages in the  * front-end's domain into our own.  */
 end_comment
 
@@ -9064,6 +9051,10 @@ argument_list|(
 name|xbb
 operator|->
 name|reqlist_kva_pages
+argument_list|,
+name|M_XENBLOCKBACK
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
