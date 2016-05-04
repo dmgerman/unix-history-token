@@ -605,13 +605,13 @@ name|uint32_t
 name|ic_cryptocaps
 decl_stmt|;
 comment|/* crypto capabilities */
+comment|/* set of mode capabilities */
 name|uint8_t
 name|ic_modecaps
 index|[
-literal|2
+name|IEEE80211_MODE_BYTES
 index|]
 decl_stmt|;
-comment|/* set of mode capabilities */
 name|uint8_t
 name|ic_promisc
 decl_stmt|;
