@@ -2772,13 +2772,7 @@ case|case
 name|V_ASN1_INTEGER
 case|:
 case|case
-name|V_ASN1_NEG_INTEGER
-case|:
-case|case
 name|V_ASN1_ENUMERATED
-case|:
-case|case
-name|V_ASN1_NEG_ENUMERATED
 case|:
 comment|/*          * These are all have the same content format as ASN1_INTEGER          */
 return|return
