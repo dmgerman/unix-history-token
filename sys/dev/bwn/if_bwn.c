@@ -35437,6 +35437,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return a fallback rate for the given rate.  *  * Note: Don't fall back from OFDM to CCK.  */
+end_comment
+
 begin_function
 specifier|static
 name|uint8_t
@@ -35451,6 +35455,7 @@ condition|(
 name|bitrate
 condition|)
 block|{
+comment|/* CCK */
 case|case
 name|BWN_CCK_RATE_1MB
 case|:
@@ -35483,12 +35488,13 @@ operator|(
 name|BWN_CCK_RATE_5MB
 operator|)
 return|;
+comment|/* OFDM */
 case|case
 name|BWN_OFDM_RATE_6MB
 case|:
 return|return
 operator|(
-name|BWN_CCK_RATE_5MB
+name|BWN_OFDM_RATE_6MB
 operator|)
 return|;
 case|case
