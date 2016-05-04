@@ -171,9 +171,7 @@ name|void
 modifier|*
 name|fdc_intr
 decl_stmt|;
-name|struct
-name|device
-modifier|*
+name|device_t
 name|fdc_dev
 decl_stmt|;
 name|struct
