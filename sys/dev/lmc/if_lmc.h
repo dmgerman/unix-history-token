@@ -7438,9 +7438,7 @@ name|callout
 name|callout
 decl_stmt|;
 comment|/* watchdog needs this                  */
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 comment|/* base device pointer                     */
