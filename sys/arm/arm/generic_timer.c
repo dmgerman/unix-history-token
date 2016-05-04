@@ -396,6 +396,8 @@ block|,
 literal|2
 block|,
 name|RF_ACTIVE
+operator||
+name|RF_OPTIONAL
 block|}
 block|,
 comment|/* Virt */
@@ -1649,10 +1651,24 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* __aarch64__ */
+comment|/* If we do not have a virtual timer use the physical. */
 name|sc
 operator|->
 name|physical
 operator|=
+operator|(
+name|sc
+operator|->
+name|res
+index|[
+literal|2
+index|]
+operator|==
+name|NULL
+operator|)
+condition|?
+name|true
+else|:
 name|false
 expr_stmt|;
 endif|#
@@ -1676,6 +1692,19 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* If we do not have the interrupt, skip it. */
+if|if
+condition|(
+name|sc
+operator|->
+name|res
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|error
 operator|=
 name|bus_setup_intr
