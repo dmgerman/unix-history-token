@@ -13407,8 +13407,8 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|usm_user
+operator|*
+name|uuser
 argument_list|)
 argument_list|)
 expr_stmt|;
