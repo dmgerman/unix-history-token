@@ -232,16 +232,16 @@ name|XENTIMER_MIN_PERIOD_IN_NSEC
 value|100*NSEC_IN_USEC
 end_define
 
+begin_comment
+comment|/*  * The real resolution of the PV clock is 1ns, but the highest  * resolution that FreeBSD supports is 1us, so just use that.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|XENCLOCK_RESOLUTION
-value|1000001
+value|1
 end_define
-
-begin_comment
-comment|/* ATRTC resolution + 1 */
-end_comment
 
 begin_define
 define|#
