@@ -12840,6 +12840,29 @@ argument_list|,
 name|IEEE80211_HTCAP_MPDUDENSITY
 argument_list|)
 expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+literal|"%s: advertised rxmax=%d, density=%d, vap rxmax=%d, density=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rxmax
+argument_list|,
+name|density
+argument_list|,
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+argument_list|,
+name|vap
+operator|->
+name|iv_ampdu_density
+argument_list|)
+expr_stmt|;
 comment|/* Cap at VAP rxmax */
 if|if
 condition|(
