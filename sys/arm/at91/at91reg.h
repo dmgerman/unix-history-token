@@ -48,11 +48,11 @@ value|0xf0000000
 end_define
 
 begin_comment
-comment|/* A few things that we count on being the same  * throught the whole family of SOCs */
+comment|/* A few things that we count on being the same  * throughout the whole family of SOCs */
 end_comment
 
 begin_comment
-comment|/* SYSC System Controler */
+comment|/* SYSC System Controller */
 end_comment
 
 begin_comment

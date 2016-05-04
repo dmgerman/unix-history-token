@@ -2235,7 +2235,7 @@ name|imageId
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If download was successful, store image Id in list of 	 * currently loaded images. If a critical error occured 	 * during download, record that the NPE has an invalid image 	 */
+comment|/* 	 * If download was successful, store image Id in list of 	 * currently loaded images. If a critical error occurred 	 * during download, record that the NPE has an invalid image 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3789,7 +3789,7 @@ name|IX_NPEDL_MASK_STAT_IFNE
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Step execution of the NPE intruction to read inFIFO using 		 * the Debug Executing Context stack. 		 */
+comment|/* 		 * Step execution of the NPE instruction to read inFIFO using 		 * the Debug Executing Context stack. 		 */
 name|error
 operator|=
 name|npe_cpu_step
@@ -5433,7 +5433,7 @@ operator|<<
 name|IX_NPEDL_DISPLACE_IMMED_INSTR_COPROC_DATA
 operator|)
 expr_stmt|;
-comment|/* step execution of NPE intruction using Debug ECS */
+comment|/* step execution of NPE instruction using Debug ECS */
 name|error
 operator|=
 name|npe_cpu_step

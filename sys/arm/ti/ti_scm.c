@@ -267,7 +267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_scm_attach - attaches the timer to the simplebus  *	@dev: new device  *  *	Reserves memory and interrupt resources, stores the softc structure  *	globally and registers both the timecount and eventtimer objects.  *  *	RETURNS  *	Zero on sucess or ENXIO if an error occuried.  */
+comment|/**  *	ti_scm_attach - attaches the timer to the simplebus  *	@dev: new device  *  *	Reserves memory and interrupt resources, stores the softc structure  *	globally and registers both the timecount and eventtimer objects.  *  *	RETURNS  *	Zero on success or ENXIO if an error occuried.  */
 end_comment
 
 begin_function

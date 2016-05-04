@@ -1212,7 +1212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_pinmux_attach - attaches the pinmux to the simplebus  *	@dev: new device  *  *	RETURNS  *	Zero on sucess or ENXIO if an error occuried.  */
+comment|/**  *	ti_pinmux_attach - attaches the pinmux to the simplebus  *	@dev: new device  *  *	RETURNS  *	Zero on success or ENXIO if an error occuried.  */
 end_comment
 
 begin_function

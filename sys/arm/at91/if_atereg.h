@@ -20,7 +20,7 @@ name|ARM_AT91_IF_ATEREG_H
 end_define
 
 begin_comment
-comment|/* deines begining ETHB_ are EMACB (newer SAM9 hardware) versions only */
+comment|/* Defines beginning ETHB_ are EMACB (newer SAM9 hardware) versions only. */
 end_comment
 
 begin_define
@@ -1412,7 +1412,7 @@ define|#
 directive|define
 name|ETH_MAC_UNK
 value|(1U<< 27)
-comment|/* Unkown source address RFU */
+comment|/* Unknown source address RFU */
 define|#
 directive|define
 name|ETH_MAC_EXT

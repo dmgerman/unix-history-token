@@ -1358,7 +1358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	arm_tmr_attach - attaches the timer to the simplebus  *	@dev: new device  *  *	Reserves memory and interrupt resources, stores the softc structure  *	globally and registers both the timecount and eventtimer objects.  *  *	RETURNS  *	Zero on sucess or ENXIO if an error occuried.  */
+comment|/**  *	arm_tmr_attach - attaches the timer to the simplebus  *	@dev: new device  *  *	Reserves memory and interrupt resources, stores the softc structure  *	globally and registers both the timecount and eventtimer objects.  *  *	RETURNS  *	Zero on success or ENXIO if an error occuried.  */
 end_comment
 
 begin_function
@@ -1690,7 +1690,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Handle a change in clock frequency.  The mpcore timer runs at half the CPU  * frequency.  When the CPU frequency changes due to power-saving or thermal  * managment, the platform-specific code that causes the frequency change calls  * this routine to inform the clock driver, and we in turn inform the event  * timer system, which actually updates the value in et->frequency for us and  * reschedules the current event(s) in a way that's atomic with respect to  * start/stop/intr code that may be running on various CPUs at the time of the  * call.  *  * This routine can also be called by a platform's early init code.  If the  * value passed is ARM_TMR_FREQUENCY_VARIES, that will cause the attach() code  * to register as an eventtimer, but not a timecounter.  If the value passed in  * is any other non-zero value it is used as the fixed frequency for the timer.  */
+comment|/*  * Handle a change in clock frequency.  The mpcore timer runs at half the CPU  * frequency.  When the CPU frequency changes due to power-saving or thermal  * management, the platform-specific code that causes the frequency change calls  * this routine to inform the clock driver, and we in turn inform the event  * timer system, which actually updates the value in et->frequency for us and  * reschedules the current event(s) in a way that's atomic with respect to  * start/stop/intr code that may be running on various CPUs at the time of the  * call.  *  * This routine can also be called by a platform's early init code.  If the  * value passed is ARM_TMR_FREQUENCY_VARIES, that will cause the attach() code  * to register as an eventtimer, but not a timecounter.  If the value passed in  * is any other non-zero value it is used as the fixed frequency for the timer.  */
 end_comment
 
 begin_function

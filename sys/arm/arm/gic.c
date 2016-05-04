@@ -6185,7 +6185,7 @@ argument_list|,
 name|GICC_IAR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Immediatly EOIR the SGIs, because doing so requires the other 	 * bits (ie CPU number), not just the IRQ number, and we do not 	 * have this information later. 	 */
+comment|/* 	 * Immediately EOIR the SGIs, because doing so requires the other 	 * bits (ie CPU number), not just the IRQ number, and we do not 	 * have this information later. 	 */
 if|if
 condition|(
 operator|(

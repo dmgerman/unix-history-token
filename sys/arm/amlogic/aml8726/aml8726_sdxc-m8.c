@@ -1886,7 +1886,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If the original command executed successfuly, then 		 * the hardware will also have automatically executed 		 * a stop command so don't bother with the one supplied 		 * with the original request. 		 */
+comment|/* 		 * If the original command executed successfully, then 		 * the hardware will also have automatically executed 		 * a stop command so don't bother with the one supplied 		 * with the original request. 		 */
 if|if
 condition|(
 name|mmc_error

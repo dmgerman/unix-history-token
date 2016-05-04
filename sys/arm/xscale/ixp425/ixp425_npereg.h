@@ -330,7 +330,7 @@ comment|/* Message FIFO */
 end_comment
 
 begin_comment
-comment|/*  * Reset value for Mailbox (MBST) register  * NOTE that if used, it should be complemented with an NPE intruction  * to clear the Mailbox at the NPE side as well  */
+comment|/*  * Reset value for Mailbox (MBST) register  * NOTE that if used, it should be complemented with an NPE instruction  * to clear the Mailbox at the NPE side as well  */
 end_comment
 
 begin_define

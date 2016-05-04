@@ -3208,7 +3208,7 @@ condition|)
 goto|goto
 name|errout
 goto|;
-comment|/* Initilize descriptors; mark all empty */
+comment|/* Initialize descriptors; mark all empty */
 for|for
 control|(
 name|i
@@ -4702,7 +4702,7 @@ operator|->
 name|is_emacb
 condition|)
 block|{
-comment|/* 				 * Simulate SAM9 FIRST/LAST bits for RM9200. 				 * RM9200 EMAC has only on Rx buffer per packet. 				 * But sometime we are handed a zero lenght packet. 				 */
+comment|/* 				 * Simulate SAM9 FIRST/LAST bits for RM9200. 				 * RM9200 EMAC has only on Rx buffer per packet. 				 * But sometime we are handed a zero length packet. 				 */
 if|if
 condition|(
 operator|(
@@ -5026,7 +5026,7 @@ comment|/* Reset status */
 comment|/* Now we process the buffers that make up the packet */
 do|do
 block|{
-comment|/* Last buffer may just be 1-4 bytes of FCS so remain 				 * may be zero for last decriptor.  */
+comment|/* Last buffer may just be 1-4 bytes of FCS so remain 				 * may be zero for last descriptor.  */
 if|if
 condition|(
 name|remain
@@ -5064,7 +5064,7 @@ operator|->
 name|rx_buf_size
 argument_list|)
 expr_stmt|;
-comment|/* XXX Performance robbing copy. Could 						 * recieve directly to mbufs if not an 						 * RM9200. And even then we could likely 						 * copy just the protocol headers. XXX  */
+comment|/* XXX Performance robbing copy. Could 						 * receive directly to mbufs if not an 						 * RM9200. And even then we could likely 						 * copy just the protocol headers. XXX  */
 name|m_append
 argument_list|(
 name|mb
@@ -7273,7 +7273,7 @@ decl_stmt|;
 name|int
 name|val
 decl_stmt|;
-comment|/* 	 * XXX if we implement agressive power savings, then we need 	 * XXX to make sure that the clock to the emac is on here 	 */
+comment|/* 	 * XXX if we implement aggressive power savings, then we need 	 * XXX to make sure that the clock to the emac is on here 	 */
 name|sc
 operator|=
 name|device_get_softc
@@ -7359,7 +7359,7 @@ name|ate_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* 	 * XXX if we implement agressive power savings, then we need 	 * XXX to make sure that the clock to the emac is on here 	 */
+comment|/* 	 * XXX if we implement aggressive power savings, then we need 	 * XXX to make sure that the clock to the emac is on here 	 */
 name|sc
 operator|=
 name|device_get_softc

@@ -4447,7 +4447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	omap4_clk_hsusbhost_set_source - sets the source clocks  *	@clkdev: pointer to the clock device structure.  *	@clksrc: the clock source ID for the given clock.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if sucessful otherwise a negative error code on failure.  */
+comment|/**  *	omap4_clk_hsusbhost_set_source - sets the source clocks  *	@clkdev: pointer to the clock device structure.  *	@clksrc: the clock source ID for the given clock.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if successful otherwise a negative error code on failure.  */
 end_comment
 
 begin_function

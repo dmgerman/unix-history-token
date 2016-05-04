@@ -5163,7 +5163,7 @@ name|MODE_BPP
 operator|/
 literal|8
 expr_stmt|;
-comment|/* init channel paramters */
+comment|/* init channel parameters */
 name|CH_PARAM_RESET
 argument_list|(
 operator|&

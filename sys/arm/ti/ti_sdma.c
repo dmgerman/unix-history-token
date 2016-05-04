@@ -1321,7 +1321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_disable_channel_irq - disables IRQ's on the given channel  *	@ch: the channel to disable IRQ's on  *  *	Disable interupt generation for the given channel.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_disable_channel_irq - disables IRQ's on the given channel  *	@ch: the channel to disable IRQ's on  *  *	Disable interrupt generation for the given channel.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -1763,7 +1763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_start_xfer - starts a DMA transfer  *	@ch: the channel number to set the endianess of  *	@src_paddr: the source phsyical address  *	@dst_paddr: the destination phsyical address  *	@frmcnt: the number of frames per block  *	@elmcnt: the number of elements in a frame, an element is either an 8, 16  *           or 32-bit value as defined by ti_sdma_set_xfer_burst()  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_start_xfer - starts a DMA transfer  *	@ch: the channel number to set the endianness of  *	@src_paddr: the source phsyical address  *	@dst_paddr: the destination phsyical address  *	@frmcnt: the number of frames per block  *	@elmcnt: the number of elements in a frame, an element is either an 8, 16  *           or 32-bit value as defined by ti_sdma_set_xfer_burst()  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -2066,7 +2066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_start_xfer_packet - starts a packet DMA transfer  *	@ch: the channel number to use for the transfer  *	@src_paddr: the source physical address  *	@dst_paddr: the destination physical address  *	@frmcnt: the number of frames to transfer  *	@elmcnt: the number of elements in a frame, an element is either an 8, 16  *           or 32-bit value as defined by ti_sdma_set_xfer_burst()  *	@pktsize: the number of elements in each transfer packet  *  *	The @frmcnt and @elmcnt define the overall number of bytes to transfer,  *	typically @frmcnt is 1 and @elmcnt contains the total number of elements.  *	@pktsize is the size of each individual packet, there might be multiple  *	packets per transfer.  i.e. for the following with element size of 32-bits  *  *		frmcnt = 1, elmcnt = 512, pktsize = 128  *  *	       Total transfer bytes = 1 * 512 = 512 elements or 2048 bytes  *	       Packets transfered   = 128 / 512 = 4  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_start_xfer_packet - starts a packet DMA transfer  *	@ch: the channel number to use for the transfer  *	@src_paddr: the source physical address  *	@dst_paddr: the destination physical address  *	@frmcnt: the number of frames to transfer  *	@elmcnt: the number of elements in a frame, an element is either an 8, 16  *           or 32-bit value as defined by ti_sdma_set_xfer_burst()  *	@pktsize: the number of elements in each transfer packet  *  *	The @frmcnt and @elmcnt define the overall number of bytes to transfer,  *	typically @frmcnt is 1 and @elmcnt contains the total number of elements.  *	@pktsize is the size of each individual packet, there might be multiple  *	packets per transfer.  i.e. for the following with element size of 32-bits  *  *		frmcnt = 1, elmcnt = 512, pktsize = 128  *  *	       Total transfer bytes = 1 * 512 = 512 elements or 2048 bytes  *	       Packets transferred   = 128 / 512 = 4  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -2392,7 +2392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_stop_xfer - stops any currently active transfers  *	@ch: the channel number to set the endianess of  *  *	This function call is effectively a NOP if no transaction is in progress.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_stop_xfer - stops any currently active transfers  *	@ch: the channel number to set the endianness of  *  *	This function call is effectively a NOP if no transaction is in progress.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -2556,7 +2556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_set_xfer_endianess - sets the endianess of subsequent transfers  *	@ch: the channel number to set the endianess of  *	@src: the source endianess (either DMA_ENDIAN_LITTLE or DMA_ENDIAN_BIG)  *	@dst: the destination endianess (either DMA_ENDIAN_LITTLE or DMA_ENDIAN_BIG)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_set_xfer_endianess - sets the endianness of subsequent transfers  *	@ch: the channel number to set the endianness of  *	@src: the source endianness (either DMA_ENDIAN_LITTLE or DMA_ENDIAN_BIG)  *	@dst: the destination endianness (either DMA_ENDIAN_LITTLE or DMA_ENDIAN_BIG)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -2709,7 +2709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_set_xfer_burst - sets the source and destination element size  *	@ch: the channel number to set the burst settings of  *	@src: the source endianess (either DMA_BURST_NONE, DMA_BURST_16, DMA_BURST_32  *	      or DMA_BURST_64)  *	@dst: the destination endianess (either DMA_BURST_NONE, DMA_BURST_16,  *	      DMA_BURST_32 or DMA_BURST_64)  *  *	This function sets the size of the elements for all subsequent transfers.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_set_xfer_burst - sets the source and destination element size  *	@ch: the channel number to set the burst settings of  *	@src: the source endianness (either DMA_BURST_NONE, DMA_BURST_16, DMA_BURST_32  *	      or DMA_BURST_64)  *	@dst: the destination endianness (either DMA_BURST_NONE, DMA_BURST_16,  *	      DMA_BURST_32 or DMA_BURST_64)  *  *	This function sets the size of the elements for all subsequent transfers.  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -2862,7 +2862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_set_xfer_data_type - driver attach function  *	@ch: the channel number to set the endianess of  *	@type: the xfer data type (either DMA_DATA_8BITS_SCALAR, DMA_DATA_16BITS_SCALAR  *	       or DMA_DATA_32BITS_SCALAR)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_set_xfer_data_type - driver attach function  *	@ch: the channel number to set the endianness of  *	@type: the xfer data type (either DMA_DATA_8BITS_SCALAR, DMA_DATA_16BITS_SCALAR  *	       or DMA_DATA_32BITS_SCALAR)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function
@@ -3316,7 +3316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_sdma_set_addr_mode - driver attach function  *	@ch: the channel number to set the endianess of  *	@rd_mode: the xfer source addressing mode (either DMA_ADDR_CONSTANT,  *	          DMA_ADDR_POST_INCREMENT, DMA_ADDR_SINGLE_INDEX or  *	          DMA_ADDR_DOUBLE_INDEX)  *	@wr_mode: the xfer destination addressing mode (either DMA_ADDR_CONSTANT,  *	          DMA_ADDR_POST_INCREMENT, DMA_ADDR_SINGLE_INDEX or  *	          DMA_ADDR_DOUBLE_INDEX)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
+comment|/**  *	ti_sdma_set_addr_mode - driver attach function  *	@ch: the channel number to set the endianness of  *	@rd_mode: the xfer source addressing mode (either DMA_ADDR_CONSTANT,  *	          DMA_ADDR_POST_INCREMENT, DMA_ADDR_SINGLE_INDEX or  *	          DMA_ADDR_DOUBLE_INDEX)  *	@wr_mode: the xfer destination addressing mode (either DMA_ADDR_CONSTANT,  *	          DMA_ADDR_POST_INCREMENT, DMA_ADDR_SINGLE_INDEX or  *	          DMA_ADDR_DOUBLE_INDEX)  *  *  *	LOCKING:  *	DMA registers protected by internal mutex  *  *	RETURNS:  *	EH_HANDLED or EH_NOT_HANDLED  */
 end_comment
 
 begin_function

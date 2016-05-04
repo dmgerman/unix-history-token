@@ -682,7 +682,7 @@ argument_list|(
 name|clk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fudge MAX pll in frequence down below 3.0 MHz to ensure 	 * PMC alogrithm choose the divisor that causes the input clock 	 * to be near the optimal 2 MHz per datasheet.  We know 	 * we are going to be using this for the USB clock at 96 MHz. 	 * Causes no extra frequency deviation for all recomended crystal 	 * values.  See Note 1, table 40-16 SAM9260 doc. 	 */
+comment|/* 	 * Fudge MAX pll in frequence down below 3.0 MHz to ensure 	 * PMC alogrithm choose the divisor that causes the input clock 	 * to be near the optimal 2 MHz per datasheet.  We know 	 * we are going to be using this for the USB clock at 96 MHz. 	 * Causes no extra frequency deviation for all recommended crystal 	 * values.  See Note 1, table 40-16 SAM9260 doc. 	 */
 name|clk
 operator|=
 name|at91_pmc_clock_ref

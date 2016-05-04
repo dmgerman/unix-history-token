@@ -30,7 +30,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * Timeouts are in milliseconds  *  * Read and write are per section 4.6.2 of the:  *  *   SD Specifications Part 1  *   Physicaly Layer Simplified Specification  *   Version 4.10  */
+comment|/*  * Timeouts are in milliseconds  *  * Read and write are per section 4.6.2 of the:  *  *   SD Specifications Part 1  *   Physical Layer Simplified Specification  *   Version 4.10  */
 end_comment
 
 begin_define

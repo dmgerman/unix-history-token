@@ -932,7 +932,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start and transmission bits are per section 4.7.2 of the: 	 * 	 *   SD Specifications Part 1 	 *   Physicaly Layer Simplified Specification 	 *   Version 4.10 	 */
+comment|/* 	 * Start and transmission bits are per section 4.7.2 of the: 	 * 	 *   SD Specifications Part 1 	 *   Physical Layer Simplified Specification 	 *   Version 4.10 	 */
 name|cmdr
 operator|=
 name|AML_MMC_CMD_START_BIT

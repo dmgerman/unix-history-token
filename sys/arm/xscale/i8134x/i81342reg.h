@@ -1039,7 +1039,7 @@ value|0x0068
 end_define
 
 begin_comment
-comment|/* Expansion ROM Translater Value Register */
+comment|/* Expansion ROM Translator Value Register */
 end_comment
 
 begin_define

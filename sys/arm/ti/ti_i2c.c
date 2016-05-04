@@ -772,7 +772,7 @@ operator|&
 name|I2C_STAT_RDR
 condition|)
 block|{
-comment|/* 			 * Receive draining interrupt - last data received. 			 * The set FIFO threshold wont be reached to trigger 			 * RRDY. 			 */
+comment|/* 			 * Receive draining interrupt - last data received. 			 * The set FIFO threshold won't be reached to trigger 			 * RRDY. 			 */
 name|ti_i2c_dbg
 argument_list|(
 name|sc
@@ -911,7 +911,7 @@ operator|&
 name|I2C_STAT_XDR
 condition|)
 block|{
-comment|/* 			 * Transmit draining interrupt - FIFO level is below 			 * the set threshold and the amount of data still to 			 * be transferred wont reach the set FIFO threshold. 			 */
+comment|/* 			 * Transmit draining interrupt - FIFO level is below 			 * the set threshold and the amount of data still to 			 * be transferred won't reach the set FIFO threshold. 			 */
 name|ti_i2c_dbg
 argument_list|(
 name|sc

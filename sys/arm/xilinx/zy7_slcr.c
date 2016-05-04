@@ -632,7 +632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* After PL configuration, enable level shifters and deassert top-level  * PL resets.  Called from zy7_devcfg.c.  Optionally, the level shifters  * can be left disabled but that's rare of an FPGA application. That option  * is controled by a sysctl in the devcfg driver.  */
+comment|/* After PL configuration, enable level shifters and deassert top-level  * PL resets.  Called from zy7_devcfg.c.  Optionally, the level shifters  * can be left disabled but that's rare of an FPGA application. That option  * is controlled by a sysctl in the devcfg driver.  */
 end_comment
 
 begin_function

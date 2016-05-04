@@ -3425,7 +3425,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cant create mtx\n"
+literal|"Can't create mtx\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3542,7 +3542,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* 	 * Maximum possible DMA buffer. 	 * Will be used partialy to match 24 bit word. 	 */
+comment|/* 	 * Maximum possible DMA buffer. 	 * Will be used partially to match 24 bit word. 	 */
 name|sc
 operator|->
 name|dma_size

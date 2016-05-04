@@ -3653,7 +3653,7 @@ name|vchi_handle
 operator|=
 name|VCHIQ_SERVICE_HANDLE_INVALID
 expr_stmt|;
-comment|/*  	 * We need interrupts enabled for VCHI to work properly, 	 * so delay intialization until it happens 	 */
+comment|/*  	 * We need interrupts enabled for VCHI to work properly, 	 * so delay initialization until it happens. 	 */
 name|sc
 operator|->
 name|intr_hook

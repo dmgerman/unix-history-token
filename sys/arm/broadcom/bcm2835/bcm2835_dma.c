@@ -1249,7 +1249,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  		 * Least alignment for busdma-allocated stuff is cache  		 * line size, so just make sure nothing stupid happend 		 * and we got properly aligned address 		 */
+comment|/*  		 * Least alignment for busdma-allocated stuff is cache  		 * line size, so just make sure nothing stupid happened 		 * and we got properly aligned address 		 */
 if|if
 condition|(
 operator|(
@@ -2322,7 +2322,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Start DMA transaction  *     ch - channel number  *     src, dst - source and destination address in  *         ARM physical memory address space.   *     len - amount of bytes to be transfered  *	    * Returns 0 on success, -1 otherwise  */
+comment|/*  * Start DMA transaction  *     ch - channel number  *     src, dst - source and destination address in  *         ARM physical memory address space.   *     len - amount of bytes to be transferred  *	    * Returns 0 on success, -1 otherwise  */
 end_comment
 
 begin_function

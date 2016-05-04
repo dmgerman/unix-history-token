@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2010  *	Ben Gray<ben.r.gray@gmail.com>.  * All right
 end_comment
 
 begin_comment
-comment|/**  * Power, Reset and Clock Managment Module  *  * This is a very simple driver wrapper around the PRCM set of registers in  * the OMAP3 chip. It allows you to turn on and off things like the functional  * and interface clocks to the various on-chip modules.  *  */
+comment|/**  * Power, Reset and Clock Management Module  *  * This is a very simple driver wrapper around the PRCM set of registers in  * the OMAP3 chip. It allows you to turn on and off things like the functional  * and interface clocks to the various on-chip modules.  *  */
 end_comment
 
 begin_include

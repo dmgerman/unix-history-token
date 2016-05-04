@@ -778,7 +778,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"cant find gpio_dev\n"
+literal|"can't find gpio_dev\n"
 argument_list|)
 expr_stmt|;
 return|return

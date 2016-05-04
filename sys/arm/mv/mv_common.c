@@ -6382,7 +6382,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 	 * Upper 16 bits in BAR register is interpreted as BAR size 	 * (in 64 kB units) plus 64kB, so substract 0x10000 	 * form value passed to register to get correct value. 	 */
+comment|/* 	 * Upper 16 bits in BAR register is interpreted as BAR size 	 * (in 64 kB units) plus 64kB, so subtract 0x10000 	 * form value passed to register to get correct value. 	 */
 name|size
 operator|-=
 literal|0x10000

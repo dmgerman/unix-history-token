@@ -2553,7 +2553,7 @@ operator|->
 name|sc_dev
 argument_list|)
 expr_stmt|;
-comment|/* Get physical addres of register space */
+comment|/* Get physical address of register space */
 name|error
 operator|=
 name|fdt_get_range

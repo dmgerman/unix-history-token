@@ -8264,7 +8264,7 @@ operator|)
 operator|%
 name|ECE_MAX_TX_BUFFERS
 expr_stmt|;
-comment|/* 	 * After all descriptors are set, we set the flags to start the 	 * sending proces. 	 */
+comment|/* 	 * After all descriptors are set, we set the flags to start the 	 * sending process. 	 */
 for|for
 control|(
 name|seg

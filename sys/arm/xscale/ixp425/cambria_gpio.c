@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2010, Andrew Thompson<thompsa@FreeBSD.org>  * All r
 end_comment
 
 begin_comment
-comment|/*  * GPIO driver for Gateworks Cambria  *  * Note:  * The Cambria PLD does not set the i2c ack bit after each write, if we used the  * regular iicbus interface it would abort the xfer after the address byte  * times out and not write our latch. To get around this we grab the iicbus and  * then do our own bit banging. This is a comprimise to changing all the iicbb  * device methods to allow a flag to be passed down and is similir to how Linux  * does it.  *  */
+comment|/*  * GPIO driver for Gateworks Cambria  *  * Note:  * The Cambria PLD does not set the i2c ack bit after each write, if we used the  * regular iicbus interface it would abort the xfer after the address byte  * times out and not write our latch. To get around this we grab the iicbus and  * then do our own bit banging. This is a compromise to changing all the iicbb  * device methods to allow a flag to be passed down and is similir to how Linux  * does it.  *  */
 end_comment
 
 begin_include

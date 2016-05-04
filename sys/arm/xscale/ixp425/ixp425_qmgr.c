@@ -1654,7 +1654,7 @@ return|return
 name|ENOSPC
 return|;
 block|}
-comment|/* 		 * No overflow occured : someone is draining the queue 		 * and the current counter needs to be 		 * updated from the current number of entries in the queue 		 */
+comment|/* 		 * No overflow occurred : someone is draining the queue 		 * and the current counter needs to be 		 * updated from the current number of entries in the queue 		 */
 comment|/* calculate number of words in q */
 name|qPtrs
 operator|=

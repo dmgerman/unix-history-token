@@ -2390,7 +2390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	The fundamental initalization of PMAP stuff.  *  *  Some things already happened in locore.S and some things could happen  *  before pmap_bootstrap_prepare() is called, so let's recall what is done:  *  1. Caches are disabled.  *  2. We are running on virtual addresses already with 'boot_pt1'  *     as L1 page table.  *  3. So far, all virtual addresses can be converted to physical ones and  *     vice versa by the following macros:  *       KERNEL_P2V(pa) .... physical to virtual ones,  *       KERNEL_V2P(va) .... virtual to physical ones.  *  *  What is done herein:  *  1. The 'boot_pt1' is replaced by real kernel L1 page table 'kern_pt1'.  *  2. PT2MAP magic is brought to live.  *  3. Basic preboot functions for page allocations and mappings can be used.  *  4. Everything is prepared for L1 cache enabling.  *  *  Variations:  *  1. To use second TTB register, so kernel and users page tables will be  *     separated. This way process forking - pmap_pinit() - could be faster,  *     it saves physical pages and KVA per a process, and it's simple change.  *     However, it will lead, due to hardware matter, to the following:  *     (a) 2G space for kernel and 2G space for users.  *     (b) 1G space for kernel in low addresses and 3G for users above it.  *     A question is: Is the case (b) really an option? Note that case (b)  *     does save neither physical memory and KVA.  */
+comment|/*  *	The fundamental initialization of PMAP stuff.  *  *  Some things already happened in locore.S and some things could happen  *  before pmap_bootstrap_prepare() is called, so let's recall what is done:  *  1. Caches are disabled.  *  2. We are running on virtual addresses already with 'boot_pt1'  *     as L1 page table.  *  3. So far, all virtual addresses can be converted to physical ones and  *     vice versa by the following macros:  *       KERNEL_P2V(pa) .... physical to virtual ones,  *       KERNEL_V2P(va) .... virtual to physical ones.  *  *  What is done herein:  *  1. The 'boot_pt1' is replaced by real kernel L1 page table 'kern_pt1'.  *  2. PT2MAP magic is brought to live.  *  3. Basic preboot functions for page allocations and mappings can be used.  *  4. Everything is prepared for L1 cache enabling.  *  *  Variations:  *  1. To use second TTB register, so kernel and users page tables will be  *     separated. This way process forking - pmap_pinit() - could be faster,  *     it saves physical pages and KVA per a process, and it's simple change.  *     However, it will lead, due to hardware matter, to the following:  *     (a) 2G space for kernel and 2G space for users.  *     (b) 1G space for kernel in low addresses and 3G for users above it.  *     A question is: Is the case (b) really an option? Note that case (b)  *     does save neither physical memory and KVA.  */
 end_comment
 
 begin_function
@@ -4123,7 +4123,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that in very short time in initarm(), we are going to 	 * initialize phys_avail[] array and no futher page allocation 	 * can happen after that until vm subsystem will be initialized. 	 */
+comment|/* 	 * Note that in very short time in initarm(), we are going to 	 * initialize phys_avail[] array and no further page allocation 	 * can happen after that until vm subsystem will be initialized. 	 */
 name|kernel_vm_end_new
 operator|=
 name|kernel_vm_end

@@ -1137,7 +1137,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error: cant reconfigure bas\n"
+literal|"Error: can't reconfigure bas\n"
 argument_list|)
 expr_stmt|;
 return|return;
