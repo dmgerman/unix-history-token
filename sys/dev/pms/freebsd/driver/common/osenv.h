@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/***************************************************************************  Version Control Information:   $RCSfile: osenv.h,v $ $Revision: 114125 $  Note:  This file defines the working enviornment of the system.  All        defines listed in this file could also be compiler flags.        I am listing all the defines (even if used as a compiler flag)        so that they can be seen and documented. ***************************************************************************/
+comment|/***************************************************************************  Version Control Information:   $RCSfile: osenv.h,v $ $Revision: 114125 $  Note:  This file defines the working environment of the system.  All        defines listed in this file could also be compiler flags.        I am listing all the defines (even if used as a compiler flag)        so that they can be seen and documented. ***************************************************************************/
 end_comment
 
 begin_ifndef
@@ -26,7 +26,7 @@ file|<dev/pms/freebsd/driver/common/osstring.h>
 end_include
 
 begin_comment
-comment|/*  ** Define the protocols to compile with.  Currently, these defines are ** only for this header file and are used further down to define the protocol ** specific enviornment: ** **      #define AG_PROTOCOL_ISCSI **      #define AG_PROTOCOL_FC */
+comment|/*  ** Define the protocols to compile with.  Currently, these defines are ** only for this header file and are used further down to define the protocol ** specific environment: ** **      #define AG_PROTOCOL_ISCSI **      #define AG_PROTOCOL_FC */
 end_comment
 
 begin_comment
@@ -118,11 +118,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*************************************************************************** iSCSI enviornment - The following is used for compiling the iSCSI                      protocol. **************************************************************************/
+comment|/*************************************************************************** iSCSI environment - The following is used for compiling the iSCSI                      protocol. **************************************************************************/
 end_comment
 
 begin_comment
-comment|/* ** Define the existance of an external bus swapper using on of the ** following:  ** **      #define AG_SWAPPING_BUS **      #define AG_NON_SWAPPING_BUS ** */
+comment|/* ** Define the existence of an external bus swapper using on of the ** following:  ** **      #define AG_SWAPPING_BUS **      #define AG_NON_SWAPPING_BUS ** */
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ comment|/* #define AG_CACHED_MSG_SYSTEM */
 end_comment
 
 begin_comment
-comment|/*************************************************************************** FC enviornment - The following is used for compiling the FC protocol. **************************************************************************/
+comment|/*************************************************************************** FC environment - The following is used for compiling the FC protocol. **************************************************************************/
 end_comment
 
 begin_comment

@@ -2134,7 +2134,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* ** Optional Adjustable Parameters Structures. ** Not using pointer stucture for easy read and access tree structure. ** In the future if more layer of key tree involved, it might be a good ** idea to change the structure and program.  */
+comment|/* ** Optional Adjustable Parameters Structures. ** Not using pointer structure for easy read and access tree structure. ** In the future if more layer of key tree involved, it might be a good ** idea to change the structure and program.  */
 end_comment
 
 begin_typedef
@@ -2976,7 +2976,7 @@ name|LINK_NODE
 name|Head
 name|__cacheline_aligned
 decl_stmt|;
-comment|// allways one link to speed up insert&rm
+comment|// always one link to speed up insert&rm
 block|}
 name|LINK_LIST
 operator|,

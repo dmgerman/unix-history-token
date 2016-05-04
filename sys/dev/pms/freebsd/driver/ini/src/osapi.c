@@ -546,7 +546,7 @@ comment|/* IO has been completed. */
 block|{
 name|AGTIAPI_PRINTK
 argument_list|(
-literal|"tiIntrEventTypeTaskManagement: TM failed becasue IO has been completed! pTMccb %p flag %x \n"
+literal|"tiIntrEventTypeTaskManagement: TM failed because IO has been completed! pTMccb %p flag %x \n"
 argument_list|,
 name|pccb
 argument_list|,
@@ -1528,7 +1528,7 @@ name|tiSMPInfoLen
 expr_stmt|;
 name|agtiapi_hexdump
 argument_list|(
-literal|"ostiInitiatorSMPCompleted: Responce Payload in CAM"
+literal|"ostiInitiatorSMPCompleted: Response Payload in CAM"
 argument_list|,
 operator|(
 name|bit8

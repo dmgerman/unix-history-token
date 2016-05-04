@@ -15052,7 +15052,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* TODO: add indirect handling */
-comment|/* set the flag correctly based on Indiret SMP request and responce */
+comment|/* set the flag correctly based on Indiret SMP request and response */
 name|AGTIAPI_PRINTK
 argument_list|(
 literal|"agtiapi_PrepareSMPSGListCB: send ccb pccb->devHandle %p, "
@@ -23053,7 +23053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************** agtiapi_ReleaseCCBs()  Purpose:   Free all allocated CCB memories for the Host Adapter. Parameters:   struct agtiapi_softc *pCard (IN)  Pointer to HBA data stucture Return: Note: ******************************************************************************/
+comment|/****************************************************************************** agtiapi_ReleaseCCBs()  Purpose:   Free all allocated CCB memories for the Host Adapter. Parameters:   struct agtiapi_softc *pCard (IN)  Pointer to HBA data structure Return: Note: ******************************************************************************/
 end_comment
 
 begin_function
