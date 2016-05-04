@@ -1350,6 +1350,10 @@ literal|" "
 else|:
 literal|""
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 name|i
