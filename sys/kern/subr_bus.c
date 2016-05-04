@@ -18537,9 +18537,7 @@ specifier|static
 name|bool
 name|driver_exists
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 name|bus
 parameter_list|,
 specifier|const

@@ -161,9 +161,7 @@ modifier|*
 name|r_virtual
 decl_stmt|;
 comment|/* virtual address of this resource */
-name|struct
-name|device
-modifier|*
+name|device_t
 name|r_dev
 decl_stmt|;
 comment|/* device which has allocated this resource */
@@ -2041,9 +2039,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -3210,9 +3206,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -4180,9 +4174,7 @@ name|resource
 modifier|*
 name|r
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
@@ -4198,9 +4190,7 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|device
-modifier|*
+name|device_t
 name|rman_get_device
 parameter_list|(
 name|struct
