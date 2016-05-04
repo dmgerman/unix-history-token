@@ -28354,6 +28354,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_IOV
 if|if
 condition|(
 name|dinfo
@@ -28371,6 +28374,8 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -29138,6 +29143,9 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_IOV
 if|if
 condition|(
 name|dinfo
@@ -29155,6 +29163,8 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * don't set the state for display devices, base peripherals and 	 * memory devices since bad things happen when they are powered down. 	 * We should (a) have drivers that can easily detach and (b) use 	 * generic drivers for these devices so that some device actually 	 * attaches.  We need to make sure that when we implement (a) we don't 	 * power the device down on a reattach. 	 */
 name|cls
 operator|=
