@@ -1641,7 +1641,7 @@ operator|)
 operator||
 name|SBUS_BURST_DEF
 expr_stmt|;
-comment|/* initalise the IOMMU */
+comment|/* initialise the IOMMU */
 comment|/* punch in our copies */
 name|sc
 operator|->

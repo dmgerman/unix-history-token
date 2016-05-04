@@ -1660,7 +1660,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Check if we need to upgrade from PIL_ITHREAD to PIL_FILTER. 		 * Given that apart from the on-board SCCs and UARTs shared 		 * interrupts are rather uncommon on sparc64 this sould be 		 * pretty rare in practice. 		 */
+comment|/* 		 * Check if we need to upgrade from PIL_ITHREAD to PIL_FILTER. 		 * Given that apart from the on-board SCCs and UARTs shared 		 * interrupts are rather uncommon on sparc64 this should be 		 * pretty rare in practice. 		 */
 name|filter
 operator|=
 literal|0
