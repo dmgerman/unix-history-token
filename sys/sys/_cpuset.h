@@ -64,20 +64,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|_NCPUBITS
-value|_BITSET_BITS
-end_define
-
-begin_define
-define|#
-directive|define
-name|_NCPUWORDS
-value|__bitset_words(CPU_SETSIZE)
-end_define
-
 begin_expr_stmt
 name|BITSET_DEFINE
 argument_list|(
@@ -95,20 +81,6 @@ name|_cpuset
 name|cpuset_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|CPUSET_FSET
-value|BITSET_FSET(_NCPUWORDS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPUSET_T_INITIALIZER
-value|BITSET_T_INITIALIZER
-end_define
 
 begin_endif
 endif|#

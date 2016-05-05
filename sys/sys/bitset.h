@@ -18,6 +18,32 @@ end_define
 begin_define
 define|#
 directive|define
+name|__bitset_mask
+parameter_list|(
+name|_s
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(1L<< ((__bitset_words((_s)) == 1) ?				\ 	    (__size_t)(n) : ((n) % _BITSET_BITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__bitset_word
+parameter_list|(
+name|_s
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|((__bitset_words((_s)) == 1) ? 0 : ((n) / _BITSET_BITS))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_CLR
 parameter_list|(
 name|_s
@@ -353,6 +379,28 @@ parameter_list|,
 name|p
 parameter_list|)
 value|__extension__ ({				\ 	__size_t __i;							\ 	int __count;							\ 									\ 	__count = 0;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		__count += __bitcountl((p)->__bits[__i]);		\ 	__count;							\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITSET_T_INITIALIZER
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|{ .__bits = { x } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITSET_FSET
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|[ 0 ... ((n) - 1) ] = (-1L)
 end_define
 
 begin_endif

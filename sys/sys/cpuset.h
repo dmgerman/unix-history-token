@@ -27,6 +27,26 @@ directive|include
 file|<sys/bitset.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_NCPUBITS
+value|_BITSET_BITS
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NCPUWORDS
+value|__bitset_words(CPU_SETSIZE)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -296,6 +316,20 @@ parameter_list|(
 name|p
 parameter_list|)
 value|BIT_COUNT(CPU_SETSIZE, p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUSET_FSET
+value|BITSET_FSET(_NCPUWORDS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUSET_T_INITIALIZER
+value|BITSET_T_INITIALIZER
 end_define
 
 begin_comment

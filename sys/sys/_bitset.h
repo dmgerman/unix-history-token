@@ -23,7 +23,19 @@ begin_define
 define|#
 directive|define
 name|_BITSET_BITS
-value|(sizeof(long) * NBBY)
+value|(sizeof(long) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__howmany
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x) + ((y) - 1)) / (y))
 end_define
 
 begin_define
@@ -33,33 +45,7 @@ name|__bitset_words
 parameter_list|(
 name|_s
 parameter_list|)
-value|(howmany(_s, _BITSET_BITS))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__bitset_mask
-parameter_list|(
-name|_s
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|(1L<< ((__bitset_words((_s)) == 1) ?				\ 	    (__size_t)(n) : ((n) % _BITSET_BITS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__bitset_word
-parameter_list|(
-name|_s
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|((__bitset_words((_s)) == 1) ? 0 : ((n) / _BITSET_BITS))
+value|(__howmany(_s, _BITSET_BITS))
 end_define
 
 begin_define
@@ -73,28 +59,6 @@ name|_s
 parameter_list|)
 define|\
 value|struct t {								\         long    __bits[__bitset_words((_s))];				\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITSET_T_INITIALIZER
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|{ .__bits = { x } }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITSET_FSET
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|[ 0 ... ((n) - 1) ] = (-1L)
 end_define
 
 begin_endif
