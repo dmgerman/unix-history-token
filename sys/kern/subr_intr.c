@@ -3866,12 +3866,6 @@ condition|(
 name|pic
 operator|==
 name|NULL
-operator|||
-name|pic
-operator|->
-name|pic_dev
-operator|==
-name|NULL
 condition|)
 return|return
 operator|(
