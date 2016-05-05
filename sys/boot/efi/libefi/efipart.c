@@ -237,19 +237,7 @@ begin_comment
 comment|/*  * info structure to support bcache  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXPDDEV
-value|31
-end_define
-
-begin_comment
-comment|/* see MAXDEV in libi386.h */
-end_comment
-
 begin_struct
-specifier|static
 struct|struct
 name|pdinfo
 block|{
@@ -267,12 +255,17 @@ name|pd_bcache
 decl_stmt|;
 comment|/* buffer cache data */
 block|}
-name|pdinfo
-index|[
-name|MAXPDDEV
-index|]
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pdinfo
+modifier|*
+name|pdinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -481,6 +474,30 @@ name|EFI_HANDLE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pdinfo
+operator|=
+name|malloc
+argument_list|(
+name|nin
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pdinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pdinfo
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 for|for
 control|(
 name|n
