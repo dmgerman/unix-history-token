@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_pci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1587,6 +1593,19 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_HP
+comment|/* Control Field: PCI Express Native Hot Plug */
+name|cap_set
+index|[
+literal|2
+index|]
+operator||=
+literal|0x1
+expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|=
 name|acpi_EvaluateOSC
