@@ -545,6 +545,21 @@ operator|(
 name|NULL
 operator|)
 return|;
+default|default:
+name|printf
+argument_list|(
+literal|"%s: unknown port_type (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|port_type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 block|}
 end_function
