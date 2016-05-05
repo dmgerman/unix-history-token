@@ -1204,6 +1204,12 @@ operator|(
 name|BHND_PROBE_DEFAULT
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+name|BHND_PROBE_DEFAULT
+operator|)
+return|;
 block|}
 block|}
 end_function
