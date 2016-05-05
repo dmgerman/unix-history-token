@@ -11437,12 +11437,12 @@ case|:
 case|case
 name|MPI2_IOCSTATUS_SCSI_EXT_TERMINATED
 case|:
-comment|/* 		 * Since these are generally external (i.e. hopefully 		 * transient transport-related) errors, retry these without 		 * decrementing the retry count. 		 */
+comment|/* 		 * These can sometimes be transient transport-related 		 * errors, and sometimes persistent drive-related errors. 		 * We used to retry these without decrementing the retry 		 * count by returning CAM_REQUEUE_REQ.  Unfortunately, if 		 * we hit a persistent drive problem that returns one of 		 * these error codes, we would retry indefinitely.  So, 		 * return CAM_REQ_CMP_ERROR so that we decrement the retry 		 * count and avoid infinite retries.  We're taking the 		 * potential risk of flagging false failures in the event 		 * of a topology-related error (e.g. a SAS expander problem 		 * causes a command addressed to a drive to fail), but 		 * avoiding getting into an infinite retry loop. 		 */
 name|mprsas_set_ccbstatus
 argument_list|(
 name|ccb
 argument_list|,
-name|CAM_REQUEUE_REQ
+name|CAM_REQ_CMP_ERR
 argument_list|)
 expr_stmt|;
 name|mprsas_log_command
