@@ -904,7 +904,7 @@ name|in6_addr
 name|rtaddr
 decl_stmt|;
 name|u_char
-name|flags
+name|raflags
 decl_stmt|;
 comment|/* flags on RA message */
 name|u_short
@@ -2266,17 +2266,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|prelist_del
-parameter_list|(
-name|struct
-name|nd_prefix
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
