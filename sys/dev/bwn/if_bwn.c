@@ -32263,7 +32263,7 @@ name|bwn_mac
 modifier|*
 name|mac
 parameter_list|,
-name|int8_t
+name|uint8_t
 name|in_rssi
 parameter_list|,
 name|int
