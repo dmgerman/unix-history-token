@@ -395,6 +395,12 @@ name|wrapper_ports
 operator|)
 return|;
 break|break;
+default|default:
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 block|}
 end_function
