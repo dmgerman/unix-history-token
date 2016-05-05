@@ -87,7 +87,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-comment|/* 						   * Pathname of the device  						   * given by the user. This 						   * may be null if the 						   * user states the device 						   * name and unit number 						   * separately. 						   */
+comment|/* 						   * Pathname of the device 						   * given by the user. This 						   * may be null if the 						   * user states the device 						   * name and unit number 						   * separately. 						   */
 name|char
 name|given_dev_name
 index|[
@@ -109,7 +109,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/*  						  * Name of the device,  						  * e.g. 'pass'  						  */
+comment|/* 						  * Name of the device, 						  * e.g. 'pass' 						  */
 name|u_int32_t
 name|dev_unit_num
 decl_stmt|;
