@@ -3177,6 +3177,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ipfw_obj_ntlv
+modifier|*
+name|ipfw_find_name_tlv_type
+parameter_list|(
+name|void
+modifier|*
+name|tlvs
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|uint16_t
+name|uidx
+parameter_list|,
+name|uint32_t
+name|etlv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ipfw_init_obj_rewriter
 parameter_list|(

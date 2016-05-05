@@ -17787,10 +17787,9 @@ comment|/*  * Find named object by @uid.  * Check @tlvs for valid data inside.  
 end_comment
 
 begin_function
-specifier|static
 name|ipfw_obj_ntlv
 modifier|*
-name|find_name_tlv_type
+name|ipfw_find_name_tlv_type
 parameter_list|(
 name|void
 modifier|*
@@ -17994,7 +17993,7 @@ operator|)
 return|;
 name|ntlv
 operator|=
-name|find_name_tlv_type
+name|ipfw_find_name_tlv_type
 argument_list|(
 name|ti
 operator|->
