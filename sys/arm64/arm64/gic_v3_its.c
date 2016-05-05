@@ -3501,7 +3501,7 @@ name|int
 name|fclr
 decl_stmt|;
 comment|/* First cleared bit */
-name|uint8_t
+name|bitstr_t
 modifier|*
 name|bitmap
 decl_stmt|;
@@ -3552,10 +3552,6 @@ argument_list|)
 expr_stmt|;
 name|bitmap
 operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|sc
 operator|->
 name|its_lpi_bitmap
@@ -3746,20 +3742,6 @@ name|start
 decl_stmt|,
 name|end
 decl_stmt|;
-name|uint8_t
-modifier|*
-name|bitmap
-decl_stmt|;
-name|bitmap
-operator|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|sc
-operator|->
-name|its_lpi_bitmap
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3808,7 +3790,9 @@ expr_stmt|;
 comment|/* Finally free this chunk */
 name|bit_nclear
 argument_list|(
-name|bitmap
+name|sc
+operator|->
+name|its_lpi_bitmap
 argument_list|,
 name|start
 argument_list|,

@@ -744,8 +744,7 @@ name|struct
 name|its_dev_list
 name|its_dev_list
 decl_stmt|;
-name|unsigned
-name|long
+name|bitstr_t
 modifier|*
 name|its_lpi_bitmap
 decl_stmt|;
