@@ -2952,6 +2952,19 @@ end_struct
 
 begin_enum
 enum|enum
+name|bwn_fw_hdr_format
+block|{
+name|BWN_FW_HDR_598
+block|,
+name|BWN_FW_HDR_410
+block|,
+name|BWN_FW_HDR_351
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
 name|bwn_fwtype
 block|{
 name|BWN_FWTYPE_DEFAULT
@@ -3020,6 +3033,10 @@ decl_stmt|;
 name|struct
 name|bwn_fwfile
 name|initvals_band
+decl_stmt|;
+name|enum
+name|bwn_fw_hdr_format
+name|fw_hdr_format
 decl_stmt|;
 name|uint16_t
 name|rev
