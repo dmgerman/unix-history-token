@@ -3875,6 +3875,13 @@ name|int
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 operator|(
 name|uintptr_t
 operator|)
@@ -3883,7 +3890,7 @@ operator|+
 name|oidp
 operator|->
 name|oid_arg2
-operator|)
+argument_list|)
 expr_stmt|;
 name|temp
 operator|=
@@ -4004,6 +4011,13 @@ name|int
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 operator|(
 name|uintptr_t
 operator|)
@@ -4012,7 +4026,7 @@ operator|+
 name|oidp
 operator|->
 name|oid_arg2
-operator|)
+argument_list|)
 expr_stmt|;
 name|val
 operator|=
