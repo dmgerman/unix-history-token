@@ -1113,6 +1113,10 @@ operator|(
 literal|"agent"
 operator|)
 return|;
+default|default:
+return|return
+literal|"unknown"
+return|;
 block|}
 block|}
 end_function
