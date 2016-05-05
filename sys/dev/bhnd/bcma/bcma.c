@@ -942,6 +942,23 @@ operator|->
 name|num_wrapper_ports
 operator|)
 return|;
+default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: unknown type (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 end_function
