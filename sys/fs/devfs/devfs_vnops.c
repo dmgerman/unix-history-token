@@ -6913,7 +6913,7 @@ name|devfs_dirent
 modifier|*
 name|de
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|KASSERT
