@@ -3032,6 +3032,8 @@ if|if
 condition|(
 name|rw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|class
@@ -3048,6 +3050,8 @@ literal|1
 operator|&&
 name|rw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|unit
@@ -3059,6 +3063,8 @@ if|if
 condition|(
 name|rw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|port_type
@@ -3070,6 +3076,8 @@ if|if
 condition|(
 name|rw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|port
@@ -3081,6 +3089,8 @@ if|if
 condition|(
 name|rw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|region
@@ -3231,6 +3241,8 @@ argument_list|)
 operator|!=
 name|regw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|class
@@ -3250,6 +3262,8 @@ argument_list|)
 operator|!=
 name|regw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|unit
@@ -3269,18 +3283,24 @@ name|dev
 argument_list|,
 name|regw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|port_type
 argument_list|,
 name|regw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|port
 argument_list|,
 name|regw
 operator|->
+name|d
+operator|.
 name|core
 operator|.
 name|region

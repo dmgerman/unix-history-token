@@ -1058,6 +1058,8 @@ name|parent
 argument_list|,
 name|rw
 operator|->
+name|d
+operator|.
 name|dyn
 operator|.
 name|cfg_offset
@@ -1164,6 +1166,8 @@ name|parent
 argument_list|,
 name|rw
 operator|->
+name|d
+operator|.
 name|dyn
 operator|.
 name|cfg_offset

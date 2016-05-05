@@ -218,11 +218,16 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_CONTROL
+block|}
 block|,
 operator|.
 name|res
@@ -313,11 +318,16 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_CONTROL
+block|, 			}
 block|,
 operator|.
 name|res
@@ -349,6 +359,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V1_BAR0_CCREGS_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1051,11 +1063,16 @@ operator|=
 name|BHNDB_PCI_V0_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V0_BAR0_WIN0_CONTROL
+block|}
 block|,
 operator|.
 name|res
@@ -1117,6 +1134,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V0_BAR0_PCIREG_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1237,11 +1256,16 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_CONTROL
+block|}
 block|,
 operator|.
 name|res
@@ -1304,6 +1328,8 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_PCIREG_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|core
 operator|=
 block|{
@@ -1363,6 +1389,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V1_BAR0_CCREGS_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1483,11 +1511,16 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V1_BAR0_WIN0_CONTROL
+block|}
 block|,
 operator|.
 name|res
@@ -1550,6 +1583,8 @@ operator|=
 name|BHNDB_PCI_V1_BAR0_PCIREG_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|core
 operator|=
 block|{
@@ -1609,6 +1644,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V1_BAR0_CCREGS_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1729,11 +1766,16 @@ operator|=
 name|BHNDB_PCI_V2_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V2_BAR0_WIN0_CONTROL
+block|, 			}
 block|,
 operator|.
 name|res
@@ -1766,11 +1808,16 @@ operator|=
 name|BHNDB_PCI_V2_BAR0_WIN1_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V2_BAR0_WIN1_CONTROL
+block|, 			}
 block|,
 operator|.
 name|res
@@ -1802,6 +1849,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V2_BAR0_PCIREG_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1862,6 +1911,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V2_BAR0_CCREGS_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -1982,11 +2033,16 @@ operator|=
 name|BHNDB_PCI_V3_BAR0_WIN0_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V3_BAR0_WIN0_CONTROL
+block|, 			}
 block|,
 operator|.
 name|res
@@ -2019,11 +2075,16 @@ operator|=
 name|BHNDB_PCI_V3_BAR0_WIN1_SIZE
 block|,
 operator|.
+name|d
+operator|.
 name|dyn
+operator|=
+block|{
 operator|.
 name|cfg_offset
 operator|=
 name|BHNDB_PCI_V3_BAR0_WIN1_CONTROL
+block|, 			}
 block|,
 operator|.
 name|res
@@ -2055,6 +2116,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V3_BAR0_PCIREG_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=
@@ -2115,6 +2178,8 @@ name|win_size
 operator|=
 name|BHNDB_PCI_V3_BAR0_CCREGS_SIZE
 block|,
+operator|.
+name|d
 operator|.
 name|core
 operator|=

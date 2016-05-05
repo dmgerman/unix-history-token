@@ -198,6 +198,7 @@ block|}
 name|dyn
 struct|;
 block|}
+name|d
 union|;
 block|}
 struct|;
