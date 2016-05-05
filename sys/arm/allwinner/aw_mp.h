@@ -45,6 +45,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|a83t_mp_start_ap
+parameter_list|(
+name|platform_t
+name|plat
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

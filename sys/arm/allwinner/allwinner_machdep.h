@@ -60,6 +60,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALLWINNERSOC_A83T
+value|0x83000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALLWINNERSOC_SUN4I
 value|0x40000000
 end_define
@@ -83,6 +90,13 @@ define|#
 directive|define
 name|ALLWINNERSOC_SUN7I
 value|0x70000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLWINNERSOC_SUN8I
+value|0x80000000
 end_define
 
 begin_function_decl

@@ -396,6 +396,16 @@ name|a10_ehci_conf
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-a83t-ehci"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|a31_ehci_conf
+block|}
+block|,
+block|{
 name|NULL
 block|,
 operator|(

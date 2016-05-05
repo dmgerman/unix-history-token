@@ -215,6 +215,33 @@ literal|"Allwinner APB2 Clock Gates"
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-a83t-bus-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner Bus Clock Gates"
+block|}
+block|,
+block|{
+literal|"allwinner,sun8i-a83t-apb0-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner APB0 Clock Gates"
+block|}
+block|,
+block|{
+literal|"allwinner,sun9i-a80-apbs-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner APBS Clock Gates"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
