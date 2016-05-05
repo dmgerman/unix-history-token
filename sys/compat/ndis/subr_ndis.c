@@ -4450,7 +4450,7 @@ name|ndis_miniport_block
 modifier|*
 name|block
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 name|char
@@ -4572,7 +4572,7 @@ name|ndis_miniport_block
 modifier|*
 name|block
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 name|char
@@ -10548,7 +10548,7 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 if|if
@@ -10690,7 +10690,7 @@ name|char
 modifier|*
 name|src
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 if|if
@@ -11618,7 +11618,7 @@ name|char
 modifier|*
 name|suf
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|fullsym
