@@ -4848,6 +4848,10 @@ name|printf
 argument_list|(
 literal|"NBITS %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|NBITS
 argument_list|)
 expr_stmt|;
