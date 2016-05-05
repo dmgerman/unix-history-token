@@ -353,7 +353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Take a device name or path passed in by the user, and attempt to figure  * out the device name and unit number.  Some possible device name formats are:  * /dev/foo0  * foo0  * nfoo0  *   * Some peripheral drivers create separate device nodes with 'n' prefix for  * non-rewind operations.  Currently only sa(4) tape driver has this feature.  * We extract pure peripheral name as device name for this special case.  *  * Input parameters:  device name/path, length of devname string  * Output:            device name, unit number  * Return values:     returns 0 for success, -1 for failure  */
+comment|/*  * Take a device name or path passed in by the user, and attempt to figure  * out the device name and unit number.  Some possible device name formats are:  * /dev/foo0  * foo0  * nfoo0  *  * Some peripheral drivers create separate device nodes with 'n' prefix for  * non-rewind operations.  Currently only sa(4) tape driver has this feature.  * We extract pure peripheral name as device name for this special case.  *  * Input parameters:  device name/path, length of devname string  * Output:            device name, unit number  * Return values:     returns 0 for success, -1 for failure  */
 end_comment
 
 begin_function
@@ -668,7 +668,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * At this point, if the last character of the string isn't a 	 * number, we know the user either didn't give us a device number,  	 * or he gave us a device name/number format we don't recognize. 	 */
+comment|/* 	 * At this point, if the last character of the string isn't a 	 * number, we know the user either didn't give us a device number, 	 * or he gave us a device name/number format we don't recognize. 	 */
 if|if
 condition|(
 operator|!
@@ -1785,7 +1785,7 @@ name|unit_number
 operator|=
 name|unit
 expr_stmt|;
-comment|/* 	 * Attempt to get the passthrough device.  This ioctl will fail if  	 * the device name is null, if the device doesn't exist, or if the 	 * passthrough driver isn't in the kernel. 	 */
+comment|/* 	 * Attempt to get the passthrough device.  This ioctl will fail if 	 * the device name is null, if the device doesn't exist, or if the 	 * passthrough driver isn't in the kernel. 	 */
 if|if
 condition|(
 name|ioctl
