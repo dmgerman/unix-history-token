@@ -3031,6 +3031,12 @@ return|;
 block|}
 empty_stmt|;
 block|}
+comment|/* Quieten gcc */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
