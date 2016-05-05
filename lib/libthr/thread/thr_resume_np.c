@@ -276,7 +276,11 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|THR_FLAGS_NEED_SUSPEND
+operator||
+name|THR_FLAGS_SUSPENDED
+operator|)
 expr_stmt|;
 name|thread
 operator|->
