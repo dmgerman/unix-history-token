@@ -317,7 +317,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Driver supports 3 diffrent device methods to manage traffic steering:  *	-device managed - High level API for ib and eth flow steering. FW is  *			  managing flow steering tables.  *	- B0 steering mode - Common low level API for ib and (if supported) eth.  *	- A0 steering mode - Limited low level API for eth. In case of IB,  *			     B0 mode is in use.  */
+comment|/* Driver supports 3 different device methods to manage traffic steering:  *	-device managed - High level API for ib and eth flow steering. FW is  *			  managing flow steering tables.  *	- B0 steering mode - Common low level API for ib and (if supported) eth.  *	- A0 steering mode - Limited low level API for eth. In case of IB,  *			     B0 mode is in use.  */
 end_comment
 
 begin_enum
