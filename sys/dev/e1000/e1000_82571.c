@@ -1788,7 +1788,7 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
-comment|/* Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY acess. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
+comment|/* Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY access. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
 switch|switch
 condition|(
 name|hw

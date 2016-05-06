@@ -997,7 +997,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Header split: this causes the hardware to DMA  * the header into a seperate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.  */
+comment|/*  * Header split: this causes the hardware to DMA  * the header into a separate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.  */
 end_comment
 
 begin_decl_stmt
@@ -4688,7 +4688,7 @@ name|hung
 expr_stmt|;
 block|}
 block|}
-comment|/* Only truely watchdog if all queues show hung */
+comment|/* Only truly watchdog if all queues show hung */
 if|if
 condition|(
 name|hung
@@ -8374,7 +8374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** The VF stats registers never have a truely virgin ** starting point, so this routine tries to make an ** artificial one, marking ground zero on attach as ** it were. */
+comment|/* ** The VF stats registers never have a truly virgin ** starting point, so this routine tries to make an ** artificial one, marking ground zero on attach as ** it were. */
 end_comment
 
 begin_function

@@ -11291,7 +11291,7 @@ name|tx_fifo_head
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * These parameters control the automatic generation (Tx) and 	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has 	 *   drained a bit. Here we use an arbitary value of 1500 which will 	 *   restart after one full frame is pulled from the buffer. There 	 *   could be several smaller frames in the buffer and if so they will 	 *   not trigger the XON until their total number reduces the buffer 	 *   by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
+comment|/* 	 * These parameters control the automatic generation (Tx) and 	 * response (Rx) to Ethernet PAUSE frames. 	 * - High water mark should allow for at least two frames to be 	 *   received after sending an XOFF. 	 * - Low water mark works best when it is very near the high water mark. 	 *   This allows the receiver to restart by sending XON when it has 	 *   drained a bit. Here we use an arbitrary value of 1500 which will 	 *   restart after one full frame is pulled from the buffer. There 	 *   could be several smaller frames in the buffer and if so they will 	 *   not trigger the XON until their total number reduces the buffer 	 *   by 1500. 	 * - The pause time is fairly large at 1000 x 512ns = 512 usec. 	 */
 name|rx_buffer_size
 operator|=
 operator|(
@@ -17853,7 +17853,7 @@ name|__NO_STRICT_ALIGNMENT
 end_ifndef
 
 begin_comment
-comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.  * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achived only when jumbo frame is  * not used at all on architectures with strict alignment.  */
+comment|/*  * When jumbo frames are enabled we should realign entire payload on  * architecures with strict alignment. This is serious design mistake of 8254x  * as it nullifies DMA operations. 8254x just allows RX buffer size to be  * 2048/4096/8192/16384. What we really want is 2048 - ETHER_ALIGN to align its  * payload. On architecures without strict alignment restrictions 8254x still  * performs unaligned memory access which would reduce the performance too.  * To avoid copying over an entire frame to align, we allocate a new mbuf and  * copy ethernet header to the new mbuf. The new mbuf is prepended into the  * existing mbuf chain.  *  * Be aware, best performance of the 8254x is achieved only when jumbo frame is  * not used at all on architectures with strict alignment.  */
 end_comment
 
 begin_function

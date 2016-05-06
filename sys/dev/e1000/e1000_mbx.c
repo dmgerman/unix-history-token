@@ -85,7 +85,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_mbx - Reads a message from the mailbox  *  @hw: pointer to the HW structure  *  @msg: The message buffer  *  @size: Length of buffer  *  @mbx_id: id of mailbox to read  *  *  returns SUCCESS if it successfuly read message from buffer  **/
+comment|/**  *  e1000_read_mbx - Reads a message from the mailbox  *  @hw: pointer to the HW structure  *  @msg: The message buffer  *  @size: Length of buffer  *  @mbx_id: id of mailbox to read  *  *  returns SUCCESS if it successfully read message from buffer  **/
 end_comment
 
 begin_function
@@ -1492,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_mbx_vf - Reads a message from the inbox intended for vf  *  @hw: pointer to the HW structure  *  @msg: The message buffer  *  @size: Length of buffer  *  @mbx_id: id of mailbox to read  *  *  returns SUCCESS if it successfuly read message from buffer  **/
+comment|/**  *  e1000_read_mbx_vf - Reads a message from the inbox intended for vf  *  @hw: pointer to the HW structure  *  @msg: The message buffer  *  @size: Length of buffer  *  @mbx_id: id of mailbox to read  *  *  returns SUCCESS if it successfully read message from buffer  **/
 end_comment
 
 begin_function

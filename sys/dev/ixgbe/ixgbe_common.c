@@ -13324,7 +13324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_insert_mac_addr_generic - Find a RAR for this mac address  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @vmdq: VMDq pool to assign  *  *  Puts an ethernet address into a receive address register, or  *  finds the rar that it is aleady in; adds to the pool list  **/
+comment|/**  *  ixgbe_insert_mac_addr_generic - Find a RAR for this mac address  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @vmdq: VMDq pool to assign  *  *  Puts an ethernet address into a receive address register, or  *  finds the rar that it is already in; adds to the pool list  **/
 end_comment
 
 begin_function
