@@ -6697,7 +6697,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-comment|/* XXX: where is the label for the firewall really comming from? */
+comment|/* XXX: where is the label for the firewall really coming from? */
 name|lomac_set_single
 argument_list|(
 name|dest

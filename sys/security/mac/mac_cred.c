@@ -449,7 +449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a new process is created, its label must be initialized.  Generally,  * this involves inheritence from the parent process, modulo possible deltas.  * This function allows that processing to take place.  */
+comment|/*  * When a new process is created, its label must be initialized.  Generally,  * this involves inheritance from the parent process, modulo possible deltas.  * This function allows that processing to take place.  */
 end_comment
 
 begin_function

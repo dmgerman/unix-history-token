@@ -121,7 +121,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Equivilent to any 					 * MAC_BIBA_TYPE_LABEL. */
+comment|/* Equivalent to any 					 * MAC_BIBA_TYPE_LABEL. */
 end_comment
 
 begin_comment

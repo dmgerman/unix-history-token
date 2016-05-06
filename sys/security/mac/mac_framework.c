@@ -1234,7 +1234,7 @@ argument_list|,
 name|mpc_list
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Per-policy initialization.  Currently, this takes place under the 	 * exclusive lock, so policies must not sleep in their init method. 	 * In the future, we may want to separate "init" from "start", with 	 * "init" occuring without the lock held.  Likewise, on tear-down, 	 * breaking out "stop" from "destroy". 	 */
+comment|/* 	 * Per-policy initialization.  Currently, this takes place under the 	 * exclusive lock, so policies must not sleep in their init method. 	 * In the future, we may want to separate "init" from "start", with 	 * "init" occurring without the lock held.  Likewise, on tear-down, 	 * breaking out "stop" from "destroy". 	 */
 if|if
 condition|(
 name|mpc
