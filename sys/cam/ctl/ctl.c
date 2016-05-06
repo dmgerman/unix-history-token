@@ -14579,6 +14579,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|tmpptr
+argument_list|,
+name|M_CTL
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bailout
 goto|;
