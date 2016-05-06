@@ -131,6 +131,12 @@ directive|include
 file|<geom/uzip/g_uzip_wrkthr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_geom.h"
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -3137,11 +3143,11 @@ name|sc
 decl_stmt|;
 enum|enum
 block|{
-name|GEOM_UZIP
+name|G_UZIP
 init|=
 literal|1
 block|,
-name|GEOM_ULZMA
+name|G_ULZMA
 block|}
 name|type
 enum|;
@@ -3358,7 +3364,7 @@ name|CLOOP_COMP_LZMA_DDP
 case|:
 name|type
 operator|=
-name|GEOM_ULZMA
+name|G_ULZMA
 expr_stmt|;
 if|if
 condition|(
@@ -3411,7 +3417,7 @@ name|CLOOP_COMP_LIBZ_DDP
 case|:
 name|type
 operator|=
-name|GEOM_UZIP
+name|G_UZIP
 expr_stmt|;
 if|if
 condition|(
@@ -4068,7 +4074,7 @@ if|if
 condition|(
 name|type
 operator|==
-name|GEOM_UZIP
+name|G_UZIP
 condition|)
 block|{
 name|sc
