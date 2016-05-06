@@ -889,7 +889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***** Key Schedual *****/
+comment|/***** Key Schedule *****/
 end_comment
 
 begin_function

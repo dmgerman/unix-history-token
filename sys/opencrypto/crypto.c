@@ -3312,7 +3312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispatch an assymetric crypto request.  */
+comment|/*  * Dispatch an asymmetric crypto request.  */
 end_comment
 
 begin_function

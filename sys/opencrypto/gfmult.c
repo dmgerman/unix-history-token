@@ -68,7 +68,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* calulate v * 2 */
+comment|/* calculate v * 2 */
 end_comment
 
 begin_function
