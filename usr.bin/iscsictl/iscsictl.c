@@ -3335,6 +3335,10 @@ name|aflag
 init|=
 literal|0
 decl_stmt|,
+name|rflag
+init|=
+literal|0
+decl_stmt|,
 name|vflag
 init|=
 literal|0
@@ -3445,7 +3449,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AMRLac:d:i:n:p:t:u:s:vw:"
+literal|"AMRLac:d:i:n:p:rt:u:s:vw:"
 argument_list|)
 operator|)
 operator|!=
@@ -3595,6 +3599,14 @@ case|:
 name|portal
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3831,6 +3843,19 @@ argument_list|,
 literal|"-a and -d and mutually exclusive"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-a and -r and mutually exclusive"
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3903,6 +3928,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-n and -d and mutually exclusive"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-n and -r and mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4167,6 +4205,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-r cannot be used with -M"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|vflag
 operator|!=
 literal|0
@@ -4358,6 +4409,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-r cannot be used with -R"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|vflag
 operator|!=
 literal|0
@@ -4469,6 +4533,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-L and -d and mutually exclusive"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-L and -r and mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4821,6 +4898,18 @@ operator|=
 name|portal
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|targ
+operator|->
+name|t_protocol
+operator|=
+name|PROTOCOL_ISER
+expr_stmt|;
 name|targ
 operator|->
 name|t_user
