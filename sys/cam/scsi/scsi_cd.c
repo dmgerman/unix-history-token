@@ -5278,7 +5278,7 @@ name|int
 name|page_num
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
