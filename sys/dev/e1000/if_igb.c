@@ -3656,11 +3656,21 @@ operator|)
 return|;
 name|err_late
 label|:
+if|if
+condition|(
 name|igb_detach
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+comment|/* igb_detach() already did the cleanup */
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|igb_free_transmit_structures
 argument_list|(
 name|adapter
