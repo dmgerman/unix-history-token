@@ -11736,7 +11736,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Read the list of authorized channels (20MHz ones only). */
+comment|/* Read the list of authorized channels (20MHz& 40MHz). */
 for|for
 control|(
 name|i
@@ -12338,7 +12338,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Read the list of authorized channels (20MHz ones only). */
+comment|/* Read the list of authorized channels (20MHz& 40MHz). */
 for|for
 control|(
 name|i
