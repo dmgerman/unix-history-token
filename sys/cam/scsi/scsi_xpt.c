@@ -1665,19 +1665,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|scsi_quirk_table_size
-init|=
-name|nitems
-argument_list|(
-name|scsi_quirk_table
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|cam_status
@@ -10229,7 +10216,10 @@ operator|=
 operator|&
 name|scsi_quirk_table
 index|[
-name|scsi_quirk_table_size
+name|nitems
+argument_list|(
+name|scsi_quirk_table
+argument_list|)
 operator|-
 literal|1
 index|]
