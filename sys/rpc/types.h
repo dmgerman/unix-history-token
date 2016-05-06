@@ -276,7 +276,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The format of the addres and options arguments of the XTI t_bind call.  * Only provided for compatibility, it should not be used.  */
+comment|/*  * The format of the address and options arguments of the XTI t_bind call.  * Only provided for compatibility, it should not be used.  */
 end_comment
 
 begin_struct

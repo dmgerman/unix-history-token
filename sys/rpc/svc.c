@@ -2082,7 +2082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Variant of xprt_inactive() for use only when sure that port is  * assigned to thread. For example, withing receive handlers.  */
+comment|/*  * Variant of xprt_inactive() for use only when sure that port is  * assigned to thread. For example, within receive handlers.  */
 end_comment
 
 begin_function

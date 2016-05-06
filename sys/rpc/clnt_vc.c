@@ -2459,7 +2459,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* end successful completion */
-comment|/* 		 * If unsuccesful AND error is an authentication error 		 * then refresh credentials and try again, else break 		 */
+comment|/* 		 * If unsuccessful AND error is an authentication error 		 * then refresh credentials and try again, else break 		 */
 elseif|else
 if|if
 condition|(
@@ -3031,7 +3031,7 @@ break|break;
 case|case
 name|CLGET_VERS
 case|:
-comment|/* 		 * This RELIES on the information that, in the call body, 		 * the version number field is the fifth field from the 		 * begining of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
+comment|/* 		 * This RELIES on the information that, in the call body, 		 * the version number field is the fifth field from the 		 * beginning of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
 operator|*
 operator|(
 name|uint32_t
@@ -3098,7 +3098,7 @@ break|break;
 case|case
 name|CLGET_PROG
 case|:
-comment|/* 		 * This RELIES on the information that, in the call body, 		 * the program number field is the fourth field from the 		 * begining of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
+comment|/* 		 * This RELIES on the information that, in the call body, 		 * the program number field is the fourth field from the 		 * beginning of the RPC header. MUST be changed if the 		 * call_struct is changed 		 */
 operator|*
 operator|(
 name|uint32_t

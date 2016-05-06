@@ -791,7 +791,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * The services list  * Each entry represents a set of procedures (an rpc program).  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */
+comment|/*  * The services list  * Each entry represents a set of procedures (an rpc program).  * The dispatch routine takes request structs and runs the  * appropriate procedure.  */
 end_comment
 
 begin_struct
@@ -843,7 +843,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The services connection loss list  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */
+comment|/*  * The services connection loss list  * The dispatch routine takes request structs and runs the  * appropriate procedure.  */
 end_comment
 
 begin_struct

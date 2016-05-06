@@ -1914,7 +1914,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* end successful completion */
-comment|/* 		 * If unsuccesful AND error is an authentication error 		 * then refresh credentials and try again, else break 		 */
+comment|/* 		 * If unsuccessful AND error is an authentication error 		 * then refresh credentials and try again, else break 		 */
 elseif|else
 if|if
 condition|(
