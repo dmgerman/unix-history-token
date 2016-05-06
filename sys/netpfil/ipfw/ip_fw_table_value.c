@@ -598,7 +598,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|update_tvalue
 parameter_list|(
 name|struct
@@ -689,6 +689,11 @@ operator|.
 name|kidx
 index|]
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2860,7 +2865,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dump_tvalue
 parameter_list|(
 name|struct
@@ -2945,7 +2950,11 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 block|}
 name|memcpy
 argument_list|(
@@ -2972,6 +2981,11 @@ name|no
 operator|.
 name|kidx
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -3277,7 +3291,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|destroy_value
 parameter_list|(
 name|struct
@@ -3302,6 +3316,11 @@ argument_list|,
 name|M_IPFW
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

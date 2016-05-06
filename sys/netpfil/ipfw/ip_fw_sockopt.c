@@ -13106,7 +13106,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|export_objhash_ntlv_internal
 parameter_list|(
 name|struct
@@ -13165,7 +13165,11 @@ name|ntlv
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|ipfw_export_obj_ntlv
 argument_list|(
 name|no
@@ -13173,6 +13177,11 @@ argument_list|,
 name|ntlv
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -18487,7 +18496,7 @@ comment|/*  * Runs @func for each found named object.  * It is safe to delete ob
 end_comment
 
 begin_function
-name|void
+name|int
 name|ipfw_objhash_foreach
 parameter_list|(
 name|struct
@@ -18514,6 +18523,8 @@ name|no_tmp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
 decl_stmt|;
 for|for
 control|(
@@ -18541,6 +18552,9 @@ argument|nn_next
 argument_list|,
 argument|no_tmp
 argument_list|)
+block|{
+name|ret
+operator|=
 name|f
 argument_list|(
 name|ni
@@ -18550,7 +18564,24 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

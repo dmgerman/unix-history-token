@@ -9464,7 +9464,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|destroy_ifidx_locked
 parameter_list|(
 name|struct
@@ -9817,7 +9817,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|foreach_ifidx
 parameter_list|(
 name|struct
@@ -10597,7 +10597,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|destroy_ifidx_locked
 parameter_list|(
 name|struct
@@ -10670,6 +10670,11 @@ argument_list|,
 name|M_IPFW_TBL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -12604,7 +12609,7 @@ end_struct
 
 begin_function
 specifier|static
-name|void
+name|int
 name|foreach_ifidx
 parameter_list|(
 name|struct
@@ -12661,6 +12666,11 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

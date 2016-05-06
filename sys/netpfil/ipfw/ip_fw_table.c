@@ -9014,7 +9014,7 @@ end_struct
 
 begin_function
 specifier|static
-name|void
+name|int
 name|export_table_internal
 parameter_list|(
 name|struct
@@ -9096,6 +9096,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -13447,7 +13452,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|swap_table_set
 parameter_list|(
 name|struct
@@ -13519,7 +13524,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|tc
@@ -13528,7 +13537,11 @@ name|ochanged
 operator|!=
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|tc
 operator|->
 name|ochanged
@@ -13576,6 +13589,11 @@ argument_list|,
 name|no
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -13585,7 +13603,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|clean_table_set_data
 parameter_list|(
 name|struct
@@ -13637,6 +13655,11 @@ name|ochanged
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -14414,7 +14437,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|destroy_table_locked
 parameter_list|(
 name|struct
@@ -14487,6 +14510,11 @@ operator|)
 name|no
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

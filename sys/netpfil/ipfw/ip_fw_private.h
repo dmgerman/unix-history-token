@@ -2752,7 +2752,7 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 name|objhash_cb_t
 function_decl|)
@@ -3065,7 +3065,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ipfw_objhash_foreach
 parameter_list|(
 name|struct
