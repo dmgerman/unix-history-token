@@ -403,6 +403,25 @@ define|\
 value|[ 0 ... ((n) - 1) ] = (-1L)
 end_define
 
+begin_comment
+comment|/*  * Dynamically allocate a bitset.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITSET_ALLOC
+parameter_list|(
+name|_s
+parameter_list|,
+name|mt
+parameter_list|,
+name|mf
+parameter_list|)
+define|\
+value|malloc(__bitset_words(_s) * sizeof(long), mt, (mf))
+end_define
+
 begin_endif
 endif|#
 directive|endif

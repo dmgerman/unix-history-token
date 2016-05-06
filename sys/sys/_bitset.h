@@ -61,6 +61,20 @@ define|\
 value|struct t {								\         long    __bits[__bitset_words((_s))];				\ }
 end_define
 
+begin_comment
+comment|/*  * Helper to declare a bitset without it's size being a constant.  *  * Sadly we cannot declare a bitset struct with '__bits[]', because it's  * the only member of the struct and the compiler complains.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITSET_DEFINE_VAR
+parameter_list|(
+name|t
+parameter_list|)
+value|BITSET_DEFINE(t, 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif
