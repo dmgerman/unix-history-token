@@ -608,7 +608,7 @@ name|MODULE_PARM_DESC
 argument_list|(
 name|fast_drop
 argument_list|,
-literal|"Enable fast packet drop when no recieve WQEs are posted"
+literal|"Enable fast packet drop when no receive WQEs are posted"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -13821,7 +13821,7 @@ name|u32
 name|idx
 parameter_list|)
 block|{
-comment|/* check if native or slave and deletes acordingly */
+comment|/* check if native or slave and deletes accordingly */
 name|struct
 name|mlx4_priv
 modifier|*

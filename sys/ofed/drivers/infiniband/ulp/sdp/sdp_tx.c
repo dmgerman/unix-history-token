@@ -1563,7 +1563,7 @@ name|socket
 argument_list|,
 name|NULL
 argument_list|,
-literal|"finished tx proccessing. inflight = %d"
+literal|"finished tx processing. inflight = %d"
 argument_list|,
 name|inflight
 argument_list|)

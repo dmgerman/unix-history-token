@@ -1021,7 +1021,7 @@ name|sg
 argument_list|)
 expr_stmt|;
 comment|/* Find the bits that are different between 			    the physical address and the virtual 			    address for the start of the MR. 			*/
-comment|/* umem_get aligned the start_va to a page 			   boundry. Therefore, we need to align the 			   start va to the same boundry */
+comment|/* umem_get aligned the start_va to a page 			   boundary. Therefore, we need to align the 			   start va to the same boundary */
 comment|/* misalignment_bits is needed to handle the 			   case of a single memory region. In this 			   case, the rest of the logic will not reduce 			   the block size.  If we use a block size 			   which is bigger than the alignment of the 			   misalignment bits, we might use the virtual 			   page number instead of the physical page 			   number, resulting in access to the wrong 			   data. */
 name|misalignment_bits
 operator|=

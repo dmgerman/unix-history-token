@@ -464,7 +464,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  *Virtual HCR structures.  * mlx4_vhcr is the sw representation, in machine endianess  *  * mlx4_vhcr_cmd is the formalized structure, the one that is passed  * to FW to go through communication channel.  * It is big endian, and has the same structure as the physical HCR  * used by command interface  */
+comment|/*  *Virtual HCR structures.  * mlx4_vhcr is the sw representation, in machine endianness  *  * mlx4_vhcr_cmd is the formalized structure, the one that is passed  * to FW to go through communication channel.  * It is big endian, and has the same structure as the physical HCR  * used by command interface  */
 end_comment
 
 begin_struct

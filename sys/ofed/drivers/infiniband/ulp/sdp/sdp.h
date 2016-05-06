@@ -329,7 +329,7 @@ value|\ }
 end_define
 
 begin_comment
-comment|/* Interval between sucessive polls in the Tx routine when polling is used    instead of interrupts (in per-core Tx rings) - should be power of 2 */
+comment|/* Interval between successive polls in the Tx routine when polling is used    instead of interrupts (in per-core Tx rings) - should be power of 2 */
 end_comment
 
 begin_define
@@ -1797,11 +1797,11 @@ comment|/* SDP slow start */
 name|int
 name|recv_request_head
 decl_stmt|;
-comment|/* mark the rx_head when the resize request 				   was recieved */
+comment|/* mark the rx_head when the resize request 				   was received */
 name|int
 name|recv_request
 decl_stmt|;
-comment|/* XXX flag if request to resize was recieved */
+comment|/* XXX flag if request to resize was received */
 name|unsigned
 name|long
 name|tx_packets

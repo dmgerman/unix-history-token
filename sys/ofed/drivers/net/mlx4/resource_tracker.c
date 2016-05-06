@@ -15566,7 +15566,7 @@ condition|)
 return|return
 name|err
 return|;
-comment|/* Call the SW implementation of write_mtt: 	 * - Prepare a dummy mtt struct 	 * - Translate inbox contents to simple addresses in host endianess */
+comment|/* Call the SW implementation of write_mtt: 	 * - Prepare a dummy mtt struct 	 * - Translate inbox contents to simple addresses in host endianness */
 name|mtt
 operator|.
 name|offset

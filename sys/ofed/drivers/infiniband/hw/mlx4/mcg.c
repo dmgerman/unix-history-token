@@ -3696,7 +3696,7 @@ operator|==
 name|IB_MGMT_METHOD_GET_RESP
 condition|)
 block|{
-comment|/* successfull join */
+comment|/* successful join */
 if|if
 condition|(
 operator|!

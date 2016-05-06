@@ -10603,7 +10603,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to retreive required operation: %d\n"
+literal|"Failed to retrieve required operation: %d\n"
 argument_list|,
 name|err
 argument_list|)

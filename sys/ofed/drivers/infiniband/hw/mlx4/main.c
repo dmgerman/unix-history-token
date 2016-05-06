@@ -4395,7 +4395,7 @@ operator|<
 name|MLX4_IB_MMAP_GET_CONTIGUOUS_PAGES
 condition|)
 block|{
-comment|/* compatability handling for commands 0& 1*/
+comment|/* compatibility handling for commands 0& 1*/
 if|if
 condition|(
 name|vma

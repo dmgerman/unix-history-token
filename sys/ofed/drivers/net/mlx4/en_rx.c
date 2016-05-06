@@ -2773,7 +2773,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For cpu arch with cache line of 64B the performance is better when cqe size==64B  * To enlarge cqe size from 32B to 64B --> 32B of garbage (i.e. 0xccccccc)  * was added in the beginning of each cqe (the real data is in the corresponding 32B).  * The following calc ensures that when factor==1, it means we are alligned to 64B  * and we get the real cqe data*/
+comment|/* For cpu arch with cache line of 64B the performance is better when cqe size==64B  * To enlarge cqe size from 32B to 64B --> 32B of garbage (i.e. 0xccccccc)  * was added in the beginning of each cqe (the real data is in the corresponding 32B).  * The following calc ensures that when factor==1, it means we are aligned to 64B  * and we get the real cqe data*/
 end_comment
 
 begin_define
