@@ -78,7 +78,7 @@ name|uint32_t
 name|tgi_mask
 decl_stmt|;
 name|uint32_t
-name|tgi_cfgreg
+name|tgi_mode
 decl_stmt|;
 block|}
 struct|;
