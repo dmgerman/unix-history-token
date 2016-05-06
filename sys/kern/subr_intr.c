@@ -2044,7 +2044,7 @@ name|idd_data
 operator|->
 name|size
 operator|=
-name|size
+name|extsize
 expr_stmt|;
 return|return
 operator|(
