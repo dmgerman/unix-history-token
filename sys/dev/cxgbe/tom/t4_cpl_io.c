@@ -1558,6 +1558,13 @@ name|struct
 name|flowc_tx_params
 name|ftxp
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -1823,6 +1830,9 @@ name|soisconnected
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -7868,6 +7878,13 @@ operator|)
 return|;
 block|}
 comment|/* receive buffer autosize */
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sb
@@ -8282,6 +8299,9 @@ name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

@@ -7088,6 +7088,13 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|mtu_idx
 operator|=
 name|find_best_mtu_idx
@@ -7406,6 +7413,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* ok to assert, we have a ref on the inp */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If we replied during syncache_add (synqe->wr has been consumed), 	 * good.  Otherwise, set it to 0 so that further syncache_respond 	 * attempts by the kernel will be ignored. 	 */
 if|if
 condition|(
