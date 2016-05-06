@@ -314,7 +314,7 @@ name|sgl_limits
 modifier|*
 name|lim
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 endif|#
@@ -917,7 +917,7 @@ name|dbl_limits
 modifier|*
 name|lim
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 endif|#
