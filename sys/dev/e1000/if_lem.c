@@ -7917,13 +7917,13 @@ return|;
 block|}
 if|if
 condition|(
-name|nsegs
-operator|>
-operator|(
 name|adapter
 operator|->
 name|num_tx_desc_avail
-operator|-
+operator|<
+operator|(
+name|nsegs
+operator|+
 literal|2
 operator|)
 condition|)

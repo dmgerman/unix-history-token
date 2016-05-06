@@ -10131,13 +10131,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nsegs
-operator|>
-operator|(
 name|txr
 operator|->
 name|tx_avail
-operator|-
+operator|<
+operator|(
+name|nsegs
+operator|+
 name|EM_MAX_SCATTER
 operator|)
 condition|)
