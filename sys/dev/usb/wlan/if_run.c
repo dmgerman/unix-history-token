@@ -30302,7 +30302,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|uint8_t
@@ -30990,7 +30990,7 @@ name|rf
 decl_stmt|,
 name|target
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|run_rt3070_rf_read
@@ -31928,7 +31928,7 @@ decl_stmt|;
 name|uint8_t
 name|rf
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* Disable the GPIO bits 4 and 7 for LNA PE control. */
@@ -32175,7 +32175,7 @@ decl_stmt|;
 name|uint8_t
 name|rf
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* Toggle RF R2 to initiate calibration. */

@@ -12760,6 +12760,7 @@ name|uint32_t
 name|rate
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -12817,6 +12818,7 @@ name|uint32_t
 name|rate
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -15821,6 +15823,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -17908,6 +17911,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -19825,6 +19829,7 @@ name|sc
 operator|->
 name|sc_ic
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
