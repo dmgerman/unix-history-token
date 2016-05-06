@@ -5033,7 +5033,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
-name|int
+name|u_int
 name|sense_quirk_table_size
 init|=
 name|nitems
@@ -15686,7 +15686,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
-name|int
+name|u_int
 name|asc_table_size
 init|=
 name|nitems
@@ -21641,7 +21641,7 @@ modifier|*
 name|header
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for
@@ -24777,10 +24777,10 @@ name|u_int
 name|period_factor
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|int
+name|u_int
 name|num_syncrates
 decl_stmt|;
 comment|/* 	 * It's a bug if period is zero, but if it is anyway, don't 	 * die with a divide fault- instead return something which 	 * 'approximates' async 	 */
@@ -24875,10 +24875,10 @@ name|u_int
 name|period
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|int
+name|u_int
 name|num_syncrates
 decl_stmt|;
 if|if
@@ -29187,10 +29187,11 @@ decl_stmt|;
 name|scsi_nv_status
 name|status
 decl_stmt|;
+name|u_int
+name|num_proto_entries
+decl_stmt|;
 name|int
 name|retval
-decl_stmt|,
-name|num_proto_entries
 decl_stmt|,
 name|table_entry
 decl_stmt|;
