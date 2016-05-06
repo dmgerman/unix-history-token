@@ -77,10 +77,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_comment
-comment|//#include<machine/pmap.h>
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -631,7 +627,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|//SPI_SET_BITS(sc, MTK_SPICTL, HIZSMOSI | CS_HIGH);
 if|if
 condition|(
 name|sc
@@ -670,7 +665,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|//        printf("%s\n", __func__);
 name|mtk_spi_wait
 argument_list|(
 name|sc
@@ -700,7 +694,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|//        printf("%s\n", __func__);
 name|mtk_spi_wait
 argument_list|(
 name|sc
@@ -764,7 +757,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|//printf("busy\n");
 return|return
 operator|(
 literal|1

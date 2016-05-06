@@ -77,10 +77,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_comment
-comment|//#include<machine/pmap.h>
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -672,7 +668,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|//        printf("%s\n", __func__);
 name|mtk_spi_wait
 argument_list|(
 name|sc
@@ -704,7 +699,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|//        printf("%s\n", __func__);
 name|mtk_spi_wait
 argument_list|(
 name|sc
@@ -841,7 +835,6 @@ argument_list|,
 name|START_WRITE
 argument_list|)
 expr_stmt|;
-comment|//printf("%s(W:%d)\n", __func__, *data);
 block|}
 else|else
 block|{
@@ -879,7 +872,6 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
-comment|//printf("%s(R:%d)\n", __func__, *data);
 block|}
 return|return
 operator|(
