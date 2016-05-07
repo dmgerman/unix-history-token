@@ -7460,6 +7460,15 @@ name|nd_flag
 operator||=
 name|ND_SAVEREPLY
 expr_stmt|;
+comment|/* 		 * For now, newnfsstats.srvrpccnt[] doesn't have entries 		 * for the NFSv4.1 operations. 		 */
+if|if
+condition|(
+name|nd
+operator|->
+name|nd_procnum
+operator|<
+name|NFSV4OP_NOPS
+condition|)
 name|NFSINCRGLOBAL
 argument_list|(
 name|newnfsstats
