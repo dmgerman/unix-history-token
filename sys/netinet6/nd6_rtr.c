@@ -4332,17 +4332,6 @@ name|ndpr_lastupdate
 operator|=
 name|time_uptime
 expr_stmt|;
-if|if
-condition|(
-name|newp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|newp
-operator|=
-name|new
-expr_stmt|;
 comment|/* initialization */
 name|LIST_INIT
 argument_list|(
@@ -4457,6 +4446,8 @@ block|}
 if|if
 condition|(
 name|dr
+operator|!=
+name|NULL
 condition|)
 name|pfxrtr_add
 argument_list|(
@@ -4465,8 +4456,21 @@ argument_list|,
 name|dr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|newp
+operator|=
+name|new
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4967,10 +4971,6 @@ condition|(
 name|error
 operator|!=
 literal|0
-operator|||
-name|pr
-operator|==
-name|NULL
 condition|)
 block|{
 name|nd6log
@@ -4979,8 +4979,7 @@ operator|(
 name|LOG_NOTICE
 operator|,
 literal|"prelist_update: "
-literal|"nd6_prelist_add failed for %s/%d on %s "
-literal|"errno=%d, returnpr=%p\n"
+literal|"nd6_prelist_add failed for %s/%d on %s errno=%d\n"
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -5006,8 +5005,6 @@ name|ndpr_ifp
 argument_list|)
 operator|,
 name|error
-operator|,
-name|pr
 operator|)
 argument_list|)
 expr_stmt|;

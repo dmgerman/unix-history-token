@@ -2677,44 +2677,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|pr
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|carp_attached
-condition|)
-call|(
-modifier|*
-name|carp_detach_p
-call|)
-argument_list|(
-operator|&
-name|ia
-operator|->
-name|ia_ifa
-argument_list|)
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"nd6_prelist_add succeeded but "
-literal|"no prefix\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 block|}
 comment|/* relate the address to the prefix */
 if|if
