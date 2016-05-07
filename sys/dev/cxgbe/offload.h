@@ -401,12 +401,6 @@ name|int
 name|ddp
 decl_stmt|;
 name|int
-name|indsz
-decl_stmt|;
-name|int
-name|ddp_thres
-decl_stmt|;
-name|int
 name|rx_coalesce
 decl_stmt|;
 name|int
