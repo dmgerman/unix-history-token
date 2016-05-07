@@ -1190,15 +1190,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MODULE_DEPEND
+name|MODULE_VERSION
 argument_list|(
 name|svr4elf
-argument_list|,
-name|streams
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|,
 literal|1
 argument_list|)
