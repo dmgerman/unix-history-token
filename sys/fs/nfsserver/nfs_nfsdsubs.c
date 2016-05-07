@@ -2669,6 +2669,8 @@ name|NFSERR_RESOURCE
 block|,
 name|NFSERR_SERVERFAULT
 block|,
+name|NFSERR_WRONGSEC
+block|,
 literal|0
 block|, }
 decl_stmt|;
