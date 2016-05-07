@@ -4687,11 +4687,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|newprefix
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|auth
 decl_stmt|;
 name|struct
@@ -4927,17 +4922,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|nd_prefix
-modifier|*
-name|newpr
-init|=
-name|NULL
-decl_stmt|;
-name|newprefix
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|new
@@ -4975,7 +4959,7 @@ argument_list|,
 name|dr
 argument_list|,
 operator|&
-name|newpr
+name|pr
 argument_list|)
 expr_stmt|;
 if|if
@@ -4984,7 +4968,7 @@ name|error
 operator|!=
 literal|0
 operator|||
-name|newpr
+name|pr
 operator|==
 name|NULL
 condition|)
@@ -5023,7 +5007,7 @@ argument_list|)
 operator|,
 name|error
 operator|,
-name|newpr
+name|pr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5035,20 +5019,20 @@ block|}
 comment|/* 		 * XXX: from the ND point of view, we can ignore a prefix 		 * with the on-link bit being zero.  However, we need a 		 * prefix structure for references from autoconfigured 		 * addresses.  Thus, we explicitly make sure that the prefix 		 * itself expires now. 		 */
 if|if
 condition|(
-name|newpr
+name|pr
 operator|->
 name|ndpr_raf_onlink
 operator|==
 literal|0
 condition|)
 block|{
-name|newpr
+name|pr
 operator|->
 name|ndpr_vltime
 operator|=
 literal|0
 expr_stmt|;
-name|newpr
+name|pr
 operator|->
 name|ndpr_pltime
 operator|=
@@ -5056,14 +5040,10 @@ literal|0
 expr_stmt|;
 name|in6_init_prefix_ltimes
 argument_list|(
-name|newpr
+name|pr
 argument_list|)
 expr_stmt|;
 block|}
-name|pr
-operator|=
-name|newpr
-expr_stmt|;
 block|}
 comment|/* 	 * Address autoconfiguration based on Section 5.5.3 of RFC 2462. 	 * Note that pr must be non NULL at this point. 	 */
 comment|/* 5.5.3 (a). Ignore the prefix without the A bit set. */
