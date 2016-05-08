@@ -210,12 +210,35 @@ name|BCM_GPIO_PINS_PER_BANK
 value|32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTRNG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BCM_GPIO_DEFAULT_CAPS
+value|(GPIO_PIN_INPUT | GPIO_PIN_OUTPUT |	\     GPIO_PIN_PULLUP | GPIO_PIN_PULLDOWN | GPIO_INTR_LEVEL_LOW |		\     GPIO_INTR_LEVEL_HIGH | GPIO_INTR_EDGE_RISING |			\     GPIO_INTR_EDGE_FALLING | GPIO_INTR_EDGE_BOTH)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|BCM_GPIO_DEFAULT_CAPS
 value|(GPIO_PIN_INPUT | GPIO_PIN_OUTPUT |	\     GPIO_PIN_PULLUP | GPIO_PIN_PULLDOWN)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
