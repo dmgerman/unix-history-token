@@ -564,6 +564,206 @@ value|{					\ 		.vendor = BHND_MFGID_INVALID,	\ 		.device = BHND_COREID_INVALID,
 end_define
 
 begin_comment
+comment|/** A chipset match descriptor. */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_chip_match
+block|{
+comment|/** Select fields to be matched */
+name|uint8_t
+name|match_id
+range|:
+literal|1
+decl_stmt|,
+name|match_rev
+range|:
+literal|1
+decl_stmt|,
+name|match_pkg
+range|:
+literal|1
+decl_stmt|,
+name|match_flags_unused
+range|:
+literal|5
+decl_stmt|;
+name|uint16_t
+name|chip_id
+decl_stmt|;
+comment|/**< required chip id */
+name|struct
+name|bhnd_hwrev_match
+name|chip_rev
+decl_stmt|;
+comment|/**< matching chip revisions */
+name|uint8_t
+name|chip_pkg
+decl_stmt|;
+comment|/**< required package */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_MATCH_ANY
+define|\
+value|{ .match_id = 0, .match_rev = 0, .match_pkg = 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_MATCH_IS_ANY
+parameter_list|(
+name|_m
+parameter_list|)
+define|\
+value|((_m)->match_id == 0&& (_m)->match_rev == 0&& (_m)->match_pkg == 0)
+end_define
+
+begin_comment
+comment|/** Set the required chip ID within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_ID
+parameter_list|(
+name|_cid
+parameter_list|)
+define|\
+value|.match_id = 1, .chip_id = BHND_CHIPID_BCM ## _cid
+end_define
+
+begin_comment
+comment|/** Set the required revision range within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_REV
+parameter_list|(
+name|_rev
+parameter_list|)
+define|\
+value|.match_rev = 1, .chip_rev = BHND_ ## _rev
+end_define
+
+begin_comment
+comment|/** Set the required package ID within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_PKG
+parameter_list|(
+name|_pkg
+parameter_list|)
+define|\
+value|.match_pkg = 1, .chip_pkg = BHND_PKGID_BCM ## _pkg
+end_define
+
+begin_comment
+comment|/** Set the required chip and package ID within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_IP
+parameter_list|(
+name|_cid
+parameter_list|,
+name|_pkg
+parameter_list|)
+define|\
+value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg)
+end_define
+
+begin_comment
+comment|/** Set the required chip ID, package ID, and revision within a bhnd_chip_match  *  instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_IPR
+parameter_list|(
+name|_cid
+parameter_list|,
+name|_pkg
+parameter_list|,
+name|_rev
+parameter_list|)
+define|\
+value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg), BHND_CHIP_REV(_rev)
+end_define
+
+begin_comment
+comment|/** Set the required chip ID and revision within a bhnd_chip_match  *  instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_IR
+parameter_list|(
+name|_cid
+parameter_list|,
+name|_rev
+parameter_list|)
+define|\
+value|BHND_CHIP_ID(_cid), BHND_CHIP_REV(_rev)
+end_define
+
+begin_comment
+comment|/**  * Chipset quirk table descriptor.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_chip_quirk
+block|{
+specifier|const
+name|struct
+name|bhnd_chip_match
+name|chip
+decl_stmt|;
+comment|/**< chip match descriptor */
+name|uint32_t
+name|quirks
+decl_stmt|;
+comment|/**< quirk flags */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_QUIRK_END
+value|{ BHND_CHIP_MATCH_ANY, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_QUIRK_IS_END
+parameter_list|(
+name|_q
+parameter_list|)
+define|\
+value|(BHND_CHIP_MATCH_IS_ANY(&(_q)->chip)&& (_q)->quirks == 0)
+end_define
+
+begin_comment
 comment|/**  * Device quirk table descriptor.  */
 end_comment
 
@@ -879,6 +1079,25 @@ end_function_decl
 
 begin_function_decl
 name|bool
+name|bhnd_chip_matches
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|chipid
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_chip_match
+modifier|*
+name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
 name|bhnd_hwrev_matches
 parameter_list|(
 name|uint16_t
@@ -889,6 +1108,22 @@ name|struct
 name|bhnd_hwrev_match
 modifier|*
 name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_chip_quirks
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_chip_quirk
+modifier|*
+name|table
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1303,6 +1538,43 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Return the BHND chip identification info for the bhnd bus.  *  * @param dev A bhnd bus child device.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|bhnd_get_chipid
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_CHIPID
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/**  * Allocate a resource from a device's parent bhnd(4) bus.  *   * @param dev The device requesting resource ownership.  * @param type The type of resource to allocate. This may be any type supported  * by the standard bus APIs.  * @param rid The bus-specific handle identifying the resource being allocated.  * @param start The start address of the resource.  * @param end The end address of the resource.  * @param count The size of the resource.  * @param flags The flags for the resource to be allocated. These may be any  * values supported by the standard bus APIs.  *   * To request the resource's default addresses, pass @p start and  * @p end values of @c 0 and @c ~0, respectively, and  * a @p count of @c 1.  *   * @retval NULL The resource could not be allocated.  * @retval resource The allocated resource.  */
