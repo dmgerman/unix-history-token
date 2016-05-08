@@ -23,9 +23,6 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|BHND_NVRAM_SRC_CIS
-block|,
-comment|/**< Default CIS source; this may 				  *  apply, for example, to PCMCIA cards 				  *  vending Broadcom NVRAM data via 				  *  their standard CIS table. */
 name|BHND_NVRAM_SRC_OTP
 block|,
 comment|/**< On-chip one-time-programmable 				  *  memory. */
@@ -35,12 +32,27 @@ comment|/**< External flash device accessible 				  *  via on-chip flash core, s
 name|BHND_NVRAM_SRC_SPROM
 block|,
 comment|/**< External serial EEPROM. */
-name|BHND_NVRAM_SRC_NONE
-comment|/**< No NVRAM source is directly 				  *  attached. This is used on devices 				  *  attached via PCI(e) to BHND SoCs, 				  *  where to avoid unnecessary flash 				  *  hardware, NVRAM configuration for 				  *  individual devices is provided by 				  *  hardware attached to the SoC 				  *  itself. 				  */
+name|BHND_NVRAM_SRC_UNKNOWN
+comment|/**< No NVRAM source is directly 				  *  attached. 				  * 				  *  This will be returned by ChipCommon 				  *  revisions (rev<= 31) used in early 				  *  chipsets that vend SPROM/OTP via the 				  *  native host bridge interface. 				  * 				  *  For example, PCMCIA cards may vend 				  *  Broadcom NVRAM data via their standard CIS 				  *  table, and earlier PCI(e) devices map 				  *  SPROM statically into PCI BARs, and the 				  *  control registers into PCI config space. 				   				  *  This will also be returned on later 				  *  devices that are attached via PCI(e) to 				  *  BHND SoCs, but do not include an attached 				  *  SPROM, or programmed OTP. On such SoCs, 				  *  NVRAM configuration for individual devices 				  *  is provided by a common platform NVRAM 				  *  device. 				  */
 block|}
 name|bhnd_nvram_src_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/**  * Evaluates to true if the given NVRAM data source is accessible via  * ChipCommon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_NVRAM_SRC_CC
+parameter_list|(
+name|_src
+parameter_list|)
+define|\
+value|((_src) == BHND_NVRAM_SRC_OTP || (_src) == BHND_NVRAM_SRC_SPROM)
+end_define
 
 begin_endif
 endif|#

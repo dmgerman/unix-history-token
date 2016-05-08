@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/nvram/bhnd_spromvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"chipc.h"
 end_include
 
@@ -62,45 +68,14 @@ name|CHIPC_QUIRK_NONE
 init|=
 literal|0
 block|,
-comment|/** 	 * The device always provides an external SROM. 	 */
-name|CHIPC_QUIRK_ALWAYS_HAS_SPROM
+comment|/** 	 * ChipCommon-controlled SPROM/OTP is supported, along with the 	 * CHIPC_CAP_SPROM capability flag. 	 */
+name|CHIPC_QUIRK_SUPPORTS_SPROM
 init|=
 operator|(
 literal|1
 operator|<<
 literal|1
 operator|)
-block|,
-comment|/** 	 * SROM availability must be determined through chip-specific 	 * ChipStatus flags. 	 */
-name|CHIPC_QUIRK_SPROM_CHECK_CHIPST
-init|=
-operator|(
-literal|1
-operator|<<
-literal|3
-operator|)
-block|,
-comment|/** 	 * Use the rev22 chipstatus register format when determining SPROM 	 * availability. 	 */
-name|CHIPC_QUIRK_SPROM_CHECK_CST_R22
-init|=
-operator|(
-literal|1
-operator|<<
-literal|4
-operator|)
-operator||
-name|CHIPC_QUIRK_SPROM_CHECK_CHIPST
-block|,
-comment|/** 	 * Use the rev23 chipstatus register format when determining SPROM 	 * availability. 	 */
-name|CHIPC_QUIRK_SPROM_CHECK_CST_R23
-init|=
-operator|(
-literal|1
-operator|<<
-literal|5
-operator|)
-operator||
-name|CHIPC_QUIRK_SPROM_CHECK_CHIPST
 block|,
 comment|/** 	 * External NAND NVRAM is supported, along with the CHIPC_CAP_NFLASH 	 * capability flag. 	 */
 name|CHIPC_QUIRK_SUPPORTS_NFLASH
@@ -108,9 +83,62 @@ init|=
 operator|(
 literal|1
 operator|<<
+literal|2
+operator|)
+block|,
+comment|/** 	 * The SPROM is attached via muxed pins. The pins must be switched 	 * to allow reading/writing. 	 */
+name|CHIPC_QUIRK_MUX_SPROM
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+comment|/** 	 * Access to the SPROM uses pins shared with the 802.11a external PA. 	 *  	 * On modules using these 4331 packages, the CCTRL4331_EXTPA_EN flag 	 * must be cleared to allow SPROM access. 	 */
+name|CHIPC_QUIRK_4331_EXTPA_MUX_SPROM
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+operator||
+name|CHIPC_QUIRK_MUX_SPROM
+block|,
+comment|/** 	 * Access to the SPROM uses pins shared with the 802.11a external PA. 	 *  	 * On modules using these 4331 chip packages, the external PA is 	 * attached via GPIO 2, 5, and sprom_dout pins. 	 *  	 * When enabling and disabling EXTPA to allow SPROM access, the 	 * CCTRL4331_EXTPA_ON_GPIO2_5 flag must also be set or cleared, 	 * respectively. 	 */
+name|CHIPC_QUIRK_4331_GPIO2_5_MUX_SPROM
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+operator||
+name|CHIPC_QUIRK_4331_EXTPA_MUX_SPROM
+block|,
+comment|/** 	 * Access to the SPROM uses pins shared with two 802.11a external PAs. 	 *  	 * When enabling and disabling EXTPA, the CCTRL4331_EXTPA_EN2 must also 	 * be cleared to allow SPROM access. 	 */
+name|CHIPC_QUIRK_4331_EXTPA2_MUX_SPROM
+init|=
+operator|(
+literal|1
+operator|<<
 literal|6
 operator|)
-block|, }
+operator||
+name|CHIPC_QUIRK_4331_EXTPA_MUX_SPROM
+block|,
+comment|/** 	 * SPROM pins are muxed with the FEM control lines on this 4360-family 	 * device. The muxed pins must be switched to allow reading/writing 	 * the SPROM. 	 */
+name|CHIPC_QUIRK_4360_FEM_MUX_SPROM
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+operator||
+name|CHIPC_QUIRK_MUX_SPROM
+block|}
 enum|;
 end_enum
 
@@ -159,9 +187,76 @@ name|uint32_t
 name|cst
 decl_stmt|;
 comment|/**< CHIPC_CST* status register flags */
+name|bhnd_nvram_src_t
+name|nvram_src
+decl_stmt|;
+comment|/**< NVRAM source */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/**< state mutex. */
+name|struct
+name|bhnd_sprom
+name|sprom
+decl_stmt|;
+comment|/**< OTP/SPROM shadow, if any */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CHIPC_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|mtx_init(&(sc)->mtx, device_get_nameunit((sc)->dev), \ 	    "BHND chipc driver lock", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|,
+name|what
+parameter_list|)
+value|mtx_assert(&(sc)->mtx, what)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_destroy(&(sc)->mtx)
+end_define
 
 begin_endif
 endif|#

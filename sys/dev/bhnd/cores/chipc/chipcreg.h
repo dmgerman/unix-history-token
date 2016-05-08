@@ -70,132 +70,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_OTPST
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CHIPCTRL
+value|0x28
+end_define
+
+begin_comment
+comment|/**< chip control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_CHIPST
 value|0x2c
 end_define
 
-begin_define
-define|#
-directive|define
-name|CHIPC_EROMPTR
-value|0xfc
-end_define
-
 begin_comment
-comment|/**< 32-bit EROM base address 						  *  on BCMA devices */
+comment|/**< chip status */
 end_comment
-
-begin_comment
-comment|/** chipid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID
-value|0x0
-end_define
-
-begin_comment
-comment|/**< identification register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_CHIP_MASK
-value|0x0000FFFF
-end_define
-
-begin_comment
-comment|/**< chip id */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_CHIP_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_REV_MASK
-value|0x000F0000
-end_define
-
-begin_comment
-comment|/**< chip revision */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_REV_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_PKG_MASK
-value|0x00F00000
-end_define
-
-begin_comment
-comment|/**< physical package ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_PKG_SHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_NUMCORE_MASK
-value|0x0F000000
-end_define
-
-begin_comment
-comment|/**< number of cores on chip (rev>= 4) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_NUMCORE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_BUS_MASK
-value|0xF0000000
-end_define
-
-begin_comment
-comment|/**< chip/interconnect type (BHND_CHIPTYPE_*) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_ID_BUS_SHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHIPC_OTPST
-value|0x10
-end_define
 
 begin_define
 define|#
@@ -340,6 +239,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_EROMPTR
+value|0xfc
+end_define
+
+begin_comment
+comment|/**< 32-bit EROM base address 						  *  on BCMA devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_SPROM_CTRL
 value|0x190
 end_define
@@ -470,6 +380,111 @@ end_define
 begin_comment
 comment|/* SPROM/OTP address space */
 end_comment
+
+begin_comment
+comment|/** chipid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID
+value|0x0
+end_define
+
+begin_comment
+comment|/**< identification register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_CHIP_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/**< chip id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_CHIP_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_REV_MASK
+value|0x000F0000
+end_define
+
+begin_comment
+comment|/**< chip revision */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_REV_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_PKG_MASK
+value|0x00F00000
+end_define
+
+begin_comment
+comment|/**< physical package ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_PKG_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_NUMCORE_MASK
+value|0x0F000000
+end_define
+
+begin_comment
+comment|/**< number of cores on chip (rev>= 4) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_NUMCORE_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_BUS_MASK
+value|0xF0000000
+end_define
+
+begin_comment
+comment|/**< chip/interconnect type (BHND_CHIPTYPE_*) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ID_BUS_SHIFT
+value|28
+end_define
 
 begin_comment
 comment|/* capabilities */
@@ -7853,6 +7868,17 @@ end_define
 
 begin_comment
 comment|/* pcie_pipe_pllpowerdown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CCTRL4331_EXTPA_EN2
+value|(1<<12)
+end_define
+
+begin_comment
+comment|/* 0 ext pa2 disable, 1 ext pa2 enabled */
 end_comment
 
 begin_define

@@ -2459,6 +2459,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BHND_CHIPID_BCM43462
+value|0xA9C6
+end_define
+
+begin_comment
+comment|/* 43462 chipcommon chipid */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BHND_CHIPID_BCM4325
 value|0x4325
 end_define
@@ -2641,6 +2652,17 @@ end_define
 
 begin_comment
 comment|/* 4360 chipcommon chipid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIPID_BCM43602
+value|0xaa52
+end_define
+
+begin_comment
+comment|/* 43602 chipcommon chipid */
 end_comment
 
 begin_define

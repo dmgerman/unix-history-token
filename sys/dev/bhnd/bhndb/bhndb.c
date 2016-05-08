@@ -90,6 +90,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/nvram/bhnd_nvram.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bhnd_chipc_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bhnd_nvram_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhndbvar.h"
 end_include
 
@@ -2130,6 +2148,11 @@ block|}
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|BHNDB_DEBUG
+argument_list|(
+name|PRIO
+argument_list|)
 condition|)
 name|device_printf
 argument_list|(
@@ -4724,7 +4747,7 @@ operator|->
 name|dev
 argument_list|,
 literal|"dynamic window initialization "
-literal|"for 0x%llx-0x%llx failed\n"
+literal|"for 0x%llx-0x%llx failed: %d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -4743,6 +4766,8 @@ operator|+
 name|r_size
 operator|-
 literal|1
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -6265,6 +6290,96 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Default bhndb(4) implementation of BHND_BUS_GET_NVRAM_VAR().  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bhndb_get_nvram_var
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|size
+parameter_list|)
+block|{
+name|device_t
+name|nvram
+decl_stmt|;
+comment|/* Look for a directly-attached NVRAM child */
+name|nvram
+operator|=
+name|device_find_child
+argument_list|(
+name|dev
+argument_list|,
+name|devclass_get_name
+argument_list|(
+name|bhnd_nvram_devclass
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nvram
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|BHND_NVRAM_GETVAR
+argument_list|(
+name|nvram
+argument_list|,
+name|name
+argument_list|,
+name|buf
+argument_list|,
+name|size
+argument_list|)
+operator|)
+return|;
+comment|/* Otherwise, delegate to our parent */
+return|return
+operator|(
+name|BHND_BUS_GET_NVRAM_VAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|child
+argument_list|,
+name|name
+argument_list|,
+name|buf
+argument_list|,
+name|size
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * BHND_BUS_(READ|WRITE_* implementations  */
 end_comment
 
@@ -6991,6 +7106,13 @@ argument_list|(
 name|bhnd_bus_deactivate_resource
 argument_list|,
 name|bhndb_deactivate_bhnd_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_get_nvram_var
+argument_list|,
+name|bhndb_get_nvram_var
 argument_list|)
 block|,
 name|DEVMETHOD

@@ -690,12 +690,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHNDB_PCI_SPROM_SZ_MSK
+name|BHNDB_PCI_SPROM_SZ_MASK
+value|0x03
+end_define
+
+begin_comment
+comment|/**< sprom size mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHNDB_PCI_SPROM_SZ_1KB
+value|0x00
+end_define
+
+begin_comment
+comment|/**< 1KB sprom size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHNDB_PCI_SPROM_SZ_4KB
+value|0x01
+end_define
+
+begin_comment
+comment|/**< 4KB sprom size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHNDB_PCI_SPROM_SZ_16KB
 value|0x02
 end_define
 
 begin_comment
-comment|/* SPROM Size Mask */
+comment|/**< 16KB sprom size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHNDB_PCI_SPROM_SZ_RESERVED
+value|0x03
+end_define
+
+begin_comment
+comment|/**< unsupported sprom size */
 end_comment
 
 begin_define
@@ -706,7 +750,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* SPROM Locked */
+comment|/**< sprom locked */
 end_comment
 
 begin_define
@@ -717,7 +761,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* indicating a blank SPROM */
+comment|/**< sprom blank */
 end_comment
 
 begin_define
@@ -728,7 +772,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* SPROM write enable */
+comment|/**< sprom write enable */
 end_comment
 
 begin_define
@@ -739,7 +783,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* external bootrom write enable */
+comment|/**< external bootrom write enable */
 end_comment
 
 begin_define
@@ -750,7 +794,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Enable indirect backplane access */
+comment|/**< enable indirect backplane access (BHNDB_PCI_BACKPLANE_*) */
 end_comment
 
 begin_define
@@ -761,7 +805,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* device OTP In use */
+comment|/**< device OTP in use */
 end_comment
 
 begin_comment

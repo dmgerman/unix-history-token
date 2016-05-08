@@ -81,6 +81,10 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/**< bridge device */
+name|device_t
+name|parent
+decl_stmt|;
+comment|/**< parent PCI device */
 name|bhnd_devclass_t
 name|pci_devclass
 decl_stmt|;

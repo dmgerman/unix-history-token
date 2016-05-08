@@ -72,6 +72,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"nvram/bhnd_nvram.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bhnd_chipc_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bhnd_nvram_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd.h"
 end_include
 
@@ -79,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"bhndvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bhnd_nvram_if.h"
 end_include
 
 begin_expr_stmt
@@ -1308,27 +1320,23 @@ name|device_find_child
 argument_list|(
 name|dev
 argument_list|,
-name|devclass_get_name
-argument_list|(
-name|bhnd_nvram_devclass
-argument_list|)
+literal|"bhnd_nvram"
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|nvram
-operator|==
+operator|!=
 name|NULL
 condition|)
 return|return
 operator|(
-name|NULL
+name|nvram
 operator|)
 return|;
-comment|/* Further checks require a bhnd(4) bus */
+comment|/* Remaining checks are only applicable when searching a bhnd(4) 	 * bus. */
 if|if
 condition|(
 name|device_get_devclass
@@ -1343,7 +1351,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Look for a ChipCommon-attached OTP device */
+comment|/* Look for a ChipCommon device */
 if|if
 condition|(
 operator|(
@@ -1363,23 +1371,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Recursively search the ChipCommon device */
-if|if
-condition|(
-operator|(
-name|nvram
+name|bhnd_nvram_src_t
+name|src
+decl_stmt|;
+comment|/* Query the NVRAM source and determine whether it's 		 * accessible via the ChipCommon device */
+name|src
 operator|=
-name|find_nvram_child
+name|BHND_CHIPC_NVRAM_SRC
 argument_list|(
 name|chipc
 argument_list|)
-operator|)
-operator|!=
-name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|BHND_NVRAM_SRC_CC
+argument_list|(
+name|src
+argument_list|)
 condition|)
 return|return
 operator|(
-name|nvram
+name|chipc
 operator|)
 return|;
 block|}
@@ -1393,13 +1405,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhnd(4) bus driver implementation of BHND_BUS_READ_NVRAM_VAR().  *   * This implementation searches @p dev for a valid NVRAM device. If no NVRAM  * child device is found on @p dev, the request is delegated to the  * BHND_BUS_READ_NVRAM_VAR() method on the parent  * of @p dev.  */
+comment|/**  * Default bhnd(4) bus driver implementation of BHND_BUS_GET_NVRAM_VAR().  *   * This implementation searches @p dev for a usable NVRAM child device:  * - The first child device implementing the bhnd_nvram devclass is  *   returned, otherwise  * - If @p dev is a bhnd(4) bus, a ChipCommon core that advertises an  *   attached NVRAM source.  *   * If no usable child device is found on @p dev, the request is delegated to  * the BHND_BUS_GET_NVRAM_VAR() method on the parent of @p dev.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|bhnd_generic_read_nvram_var
+name|bhnd_generic_get_nvram_var
 parameter_list|(
 name|device_t
 name|dev
@@ -1440,7 +1452,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|BHND_BUS_READ_NVRAM_VAR
+name|BHND_BUS_GET_NVRAM_VAR
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -2368,9 +2380,9 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bhnd_bus_read_nvram_var
+name|bhnd_bus_get_nvram_var
 argument_list|,
-name|bhnd_generic_read_nvram_var
+name|bhnd_generic_get_nvram_var
 argument_list|)
 block|,
 name|DEVMETHOD
