@@ -351,10 +351,6 @@ name|d_name
 operator|=
 literal|"fw"
 block|,
-operator|.
-name|d_flags
-operator|=
-name|D_MEM
 else|#
 directive|else
 define|#

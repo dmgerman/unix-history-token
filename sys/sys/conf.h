@@ -650,6 +650,10 @@ name|D_MEM
 value|0x0008
 end_define
 
+begin_comment
+comment|/* /dev/(k)mem */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
