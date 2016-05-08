@@ -1099,7 +1099,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_gpio_pin_getcaps - Gets the capabilties of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@caps: pointer to a value that upon return will contain the capabilities  *  *	Currently all pins have the same capability, notably:  *	  - GPIO_PIN_INPUT  *	  - GPIO_PIN_OUTPUT  *	  - GPIO_PIN_PULLUP  *	  - GPIO_PIN_PULLDOWN  *  *	LOCKING:  *	No locking required, returns static data.  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
+comment|/**  *	ti_gpio_pin_getcaps - Gets the capabilities of a given pin  *	@dev: gpio device handle  *	@pin: the number of the pin  *	@caps: pointer to a value that upon return will contain the capabilities  *  *	Currently all pins have the same capability, notably:  *	  - GPIO_PIN_INPUT  *	  - GPIO_PIN_OUTPUT  *	  - GPIO_PIN_PULLUP  *	  - GPIO_PIN_PULLDOWN  *	  - GPIO_INTR_LEVEL_LOW  *	  - GPIO_INTR_LEVEL_HIGH  *	  - GPIO_INTR_EDGE_RISING  *	  - GPIO_INTR_EDGE_FALLING  *	  - GPIO_INTR_EDGE_BOTH  *  *	LOCKING:  *	No locking required, returns static data.  *  *	RETURNS:  *	Returns 0 on success otherwise an error code  */
 end_comment
 
 begin_function
@@ -1146,6 +1146,34 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INTRNG
+operator|*
+name|caps
+operator|=
+operator|(
+name|GPIO_PIN_INPUT
+operator||
+name|GPIO_PIN_OUTPUT
+operator||
+name|GPIO_PIN_PULLUP
+operator||
+name|GPIO_PIN_PULLDOWN
+operator||
+name|GPIO_INTR_LEVEL_LOW
+operator||
+name|GPIO_INTR_LEVEL_HIGH
+operator||
+name|GPIO_INTR_EDGE_RISING
+operator||
+name|GPIO_INTR_EDGE_FALLING
+operator||
+name|GPIO_INTR_EDGE_BOTH
+operator|)
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|caps
 operator|=
@@ -1159,6 +1187,8 @@ operator||
 name|GPIO_PIN_PULLDOWN
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
