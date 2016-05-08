@@ -10470,7 +10470,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* closefp() drops the FILEDESC lock. */
+name|FILEDESC_UNLOCK_ASSERT
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
