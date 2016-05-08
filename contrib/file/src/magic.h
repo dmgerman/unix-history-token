@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_VERSION
-value|525
+value|524
 end_define
 
 begin_comment
@@ -545,10 +545,6 @@ define|#
 directive|define
 name|MAGIC_PARAM_REGEX_MAX
 value|5
-define|#
-directive|define
-name|MAGIC_PARAM_BYTES_MAX
-value|6
 name|int
 name|magic_setparam
 parameter_list|(

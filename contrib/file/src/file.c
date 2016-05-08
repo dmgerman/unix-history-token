@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.170 2016/03/31 17:51:12 christos Exp $"
+literal|"@(#)$File: file.c,v 1.167 2015/09/11 17:24:09 christos Exp $"
 argument_list|)
 end_macro
 
@@ -361,8 +361,6 @@ name|longname
 parameter_list|,
 name|opt
 parameter_list|,
-name|def
-parameter_list|,
 name|doc
 parameter_list|)
 define|\
@@ -374,8 +372,6 @@ parameter_list|(
 name|longname
 parameter_list|,
 name|opt
-parameter_list|,
-name|def
 parameter_list|,
 name|doc
 parameter_list|,
@@ -565,14 +561,6 @@ name|MAGIC_PARAM_REGEX_MAX
 block|,
 literal|0
 block|}
-block|,
-block|{
-literal|"bytes"
-block|,
-name|MAGIC_PARAM_BYTES_MAX
-block|,
-literal|0
-block|}
 block|, }
 struct|;
 end_struct
@@ -588,13 +576,6 @@ end_decl_stmt
 begin_comment
 comment|/* used throughout 		*/
 end_comment
-
-begin_decl_stmt
-name|private
-name|int
-name|posixly
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -623,8 +604,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -847,18 +826,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|S_IFLNK
-name|posixly
-operator|=
+name|flags
+operator||=
 name|getenv
 argument_list|(
 literal|"POSIXLY_CORRECT"
 argument_list|)
-operator|!=
-name|NULL
-expr_stmt|;
-name|flags
-operator||=
-name|posixly
 condition|?
 name|MAGIC_SYMLINK
 else|:
@@ -937,7 +910,8 @@ case|case
 literal|'0'
 case|:
 name|nulsep
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2237,16 +2211,6 @@ specifier|const
 name|char
 modifier|*
 name|type
-decl_stmt|,
-name|c
-init|=
-name|nulsep
-operator|>
-literal|1
-condition|?
-literal|'\0'
-else|:
-literal|'\n'
 decl_stmt|;
 name|int
 name|std_in
@@ -2298,13 +2262,6 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nulsep
-operator|<
-literal|2
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2344,7 +2301,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|type
 operator|=
 name|magic_file
@@ -2370,14 +2326,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"ERROR: %s%c"
+literal|"ERROR: %s\n"
 argument_list|,
 name|magic_error
 argument_list|(
 name|ms
 argument_list|)
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 return|return
@@ -2391,11 +2345,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%c"
+literal|"%s\n"
 argument_list|,
 name|type
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 return|return
@@ -2620,70 +2572,12 @@ end_function
 begin_function
 name|private
 name|void
-name|defprint
-parameter_list|(
-name|int
-name|def
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|def
-condition|)
-return|return;
-if|if
-condition|(
-operator|(
-operator|(
-name|def
-operator|&
-literal|1
-operator|)
-operator|&&
-name|posixly
-operator|)
-operator|||
-operator|(
-operator|(
-name|def
-operator|&
-literal|2
-operator|)
-operator|&&
-operator|!
-name|posixly
-operator|)
-condition|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|" (default)"
-argument_list|)
-expr_stmt|;
-name|fputc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|private
-name|void
 name|docprint
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|opts
-parameter_list|,
-name|int
-name|def
 parameter_list|)
 block|{
 name|size_t
@@ -2722,11 +2616,6 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|opts
-argument_list|)
-expr_stmt|;
-name|defprint
-argument_list|(
-name|def
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2899,12 +2788,10 @@ name|longname
 parameter_list|,
 name|opt
 parameter_list|,
-name|def
-parameter_list|,
 name|doc
 parameter_list|)
 define|\
-value|fprintf(stdout, "  -%c, --" longname, shortname), \ 	docprint(doc, def);
+value|fprintf(stdout, "  -%c, --" longname, shortname), \ 	docprint(doc);
 define|#
 directive|define
 name|OPT_LONGONLY
@@ -2913,14 +2800,12 @@ name|longname
 parameter_list|,
 name|opt
 parameter_list|,
-name|def
-parameter_list|,
 name|doc
 parameter_list|,
 name|id
 parameter_list|)
 define|\
-value|fprintf(stdout, "      --" longname),	\ 	docprint(doc, def);
+value|fprintf(stdout, "      --" longname),	\ 	docprint(doc);
 include|#
 directive|include
 file|"file_opts.h"
