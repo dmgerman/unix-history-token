@@ -1599,6 +1599,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|fd
+operator|==
+name|STDIN_FILENO
+operator|||
 name|name
 operator|==
 name|NULL
