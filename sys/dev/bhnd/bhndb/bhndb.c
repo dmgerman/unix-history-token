@@ -2030,7 +2030,7 @@ name|hostb
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Fetch the full set of attached devices */
+comment|/* Fetch the full set of bhnd-attached cores */
 if|if
 condition|(
 operator|(
@@ -2056,42 +2056,15 @@ name|error
 operator|)
 return|;
 comment|/* Find our host bridge device */
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|ndevs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|bhnd_is_hostb_device
-argument_list|(
-name|devs
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-block|{
 name|hostb
 operator|=
-name|devs
-index|[
-name|i
-index|]
+name|BHNDB_FIND_HOSTB_DEVICE
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
 expr_stmt|;
-break|break;
-block|}
-block|}
 if|if
 condition|(
 name|hostb
@@ -3366,13 +3339,16 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|!
-name|BHND_BUS_IS_HOSTB_DEVICE
+name|BHNDB_FIND_HOSTB_DEVICE
 argument_list|(
 name|dev
 argument_list|,
-name|child
+name|sc
+operator|->
+name|bus_dev
 argument_list|)
+operator|!=
+name|child
 operator|)
 return|;
 comment|/* Otherwise, assume the core is populated */
@@ -3385,7 +3361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ascending core index comparison used by bhndb_is_hostb_device() */
+comment|/* ascending core index comparison used by bhndb_find_hostb_device() */
 end_comment
 
 begin_function
@@ -3466,13 +3442,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhndb(4) implementation of BHND_BUS_IS_HOSTB_DEVICE().  *   * This function uses a heuristic valid on all known PCI/PCIe/PCMCIA-bridged  * bhnd(4) devices to determine the hostb core:  *   * - The core must have a Broadcom vendor ID.  * - The core devclass must match the bridge type.  * - The core must be the first device on the bus with the bridged device  *   class.  *   * @param sc The bridge device state.  * @param cores The table of bridge-enumerated cores.  * @param num_cores The length of @p cores.  * @param core The core to check.  */
+comment|/**  * Default bhndb(4) implementation of BHND_BUS_FIND_HOSTB_DEVICE().  *   * This function uses a heuristic valid on all known PCI/PCIe/PCMCIA-bridged  * bhnd(4) devices to determine the hostb core:  *   * - The core must have a Broadcom vendor ID.  * - The core devclass must match the bridge type.  * - The core must be the first device on the bus with the bridged device  *   class.  *   * @param dev The bhndb device  * @param child The requesting bhnd bus.  */
 end_comment
 
 begin_function
 specifier|static
-name|bool
-name|bhndb_is_hostb_device
+name|device_t
+name|bhndb_find_hostb_device
 parameter_list|(
 name|device_t
 name|dev
@@ -3508,31 +3484,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Requestor must be attached to the bhnd bus */
-if|if
-condition|(
-name|device_get_parent
-argument_list|(
-name|child
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|bus_dev
-condition|)
-return|return
-operator|(
-name|BHND_BUS_IS_HOSTB_DEVICE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|child
-argument_list|)
-operator|)
-return|;
 comment|/* Determine required device class and set up a match descriptor. */
 name|md
 operator|=
@@ -3573,23 +3524,6 @@ operator|=
 literal|0
 block|}
 expr_stmt|;
-comment|/* Pre-screen the device before searching over the full device list. */
-if|if
-condition|(
-operator|!
-name|bhnd_device_matches
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|md
-argument_list|)
-condition|)
-return|return
-operator|(
-name|false
-operator|)
-return|;
 comment|/* Must be the absolute first matching device on the bus. */
 if|if
 condition|(
@@ -3598,9 +3532,7 @@ name|error
 operator|=
 name|device_get_children
 argument_list|(
-name|sc
-operator|->
-name|bus_dev
+name|child
 argument_list|,
 operator|&
 name|devlist
@@ -3631,7 +3563,7 @@ argument_list|,
 name|compare_core_index
 argument_list|)
 expr_stmt|;
-comment|/* Find the actual hostb device */
+comment|/* Find the hostb device */
 name|hostb_dev
 operator|=
 name|NULL
@@ -3685,8 +3617,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|child
-operator|==
 name|hostb_dev
 operator|)
 return|;
@@ -7009,6 +6939,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bhndb_find_hostb_device
+argument_list|,
+name|bhndb_find_hostb_device
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bhndb_suspend_resource
 argument_list|,
 name|bhndb_suspend_resource
@@ -7027,13 +6964,6 @@ argument_list|(
 name|bhnd_bus_is_hw_disabled
 argument_list|,
 name|bhndb_is_hw_disabled
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bhnd_bus_is_hostb_device
-argument_list|,
-name|bhndb_is_hostb_device
 argument_list|)
 block|,
 name|DEVMETHOD

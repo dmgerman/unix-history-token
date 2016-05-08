@@ -505,6 +505,10 @@ name|bhnd_softc
 name|bhnd_sc
 decl_stmt|;
 comment|/**< bhnd state */
+name|device_t
+name|hostb_dev
+decl_stmt|;
+comment|/**< host bridge core, or NULL */
 block|}
 struct|;
 end_struct

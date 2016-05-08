@@ -143,6 +143,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|bcma_softc
+modifier|*
+name|sc
+decl_stmt|;
 specifier|const
 name|struct
 name|bhnd_chipid
@@ -160,6 +165,14 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* Map the EROM resource and enumerate our children. */
 name|cid
 operator|=
 name|BHNDB_GET_CHIPID
@@ -172,7 +185,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Map the EROM resource and enumerate our children. */
 name|rid
 operator|=
 literal|0
@@ -279,6 +291,21 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* Ask our parent bridge to find the corresponding bridge core */
+name|sc
+operator|->
+name|hostb_dev
+operator|=
+name|BHNDB_FIND_HOSTB_DEVICE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Call our superclass' implementation */
 return|return
 operator|(

@@ -1068,19 +1068,6 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|bhnd_bus_generic_is_hostb_device
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
 name|bhnd_bus_generic_is_hw_disabled
 parameter_list|(
 name|device_t
@@ -1263,14 +1250,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Return true if @p dev is serving as a host bridge for its parent bhnd  * bus.  *  * @param dev A bhnd bus child device.  */
+comment|/**  * Return the active host bridge core for the bhnd bus, if any, or NULL if  * not found.  *  * @param dev A bhnd bus device.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
-name|bool
-name|bhnd_is_hostb_device
+name|device_t
+name|bhnd_find_hostb_device
 parameter_list|(
 name|device_t
 name|dev
@@ -1278,13 +1265,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|BHND_BUS_IS_HOSTB_DEVICE
+name|BHND_BUS_FIND_HOSTB_DEVICE
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|)
 operator|)

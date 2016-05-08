@@ -782,6 +782,36 @@ end_function
 
 begin_function
 specifier|static
+name|device_t
+name|siba_find_hostb_device
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|siba_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* This is set (or not) by the concrete siba driver subclass. */
+return|return
+operator|(
+name|sc
+operator|->
+name|hostb_dev
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|siba_reset_core
 parameter_list|(
@@ -2539,6 +2569,13 @@ name|siba_get_resource_list
 argument_list|)
 block|,
 comment|/* BHND interface */
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_find_hostb_device
+argument_list|,
+name|siba_find_hostb_device
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|bhnd_bus_reset_core
