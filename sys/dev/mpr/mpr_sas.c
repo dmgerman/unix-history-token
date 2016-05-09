@@ -1673,6 +1673,11 @@ modifier|*
 name|tm
 parameter_list|)
 block|{
+name|int
+name|target_id
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
@@ -1704,6 +1709,14 @@ operator|&=
 operator|~
 name|MPRSAS_TARGET_INRESET
 expr_stmt|;
+name|target_id
+operator|=
+name|tm
+operator|->
+name|cm_targ
+operator|->
+name|tid
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1720,11 +1733,7 @@ name|MPR_INFO
 argument_list|,
 literal|"Unfreezing devq for target ID %d\n"
 argument_list|,
-name|tm
-operator|->
-name|cm_targ
-operator|->
-name|tid
+name|target_id
 argument_list|)
 expr_stmt|;
 name|xpt_release_devq
