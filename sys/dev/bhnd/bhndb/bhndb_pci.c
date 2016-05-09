@@ -197,7 +197,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|size_t
+name|bus_size_t
 name|bhndb_pci_sprom_size
 parameter_list|(
 name|struct
@@ -546,8 +546,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"found SPROM (%zu bytes)\n"
+literal|"found SPROM (%u bytes)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|nv_sz
 argument_list|)
 expr_stmt|;
