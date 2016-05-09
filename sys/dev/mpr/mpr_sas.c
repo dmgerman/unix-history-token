@@ -4730,12 +4730,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|sassc
-operator|->
-name|flags
-operator||=
-name|MPRSAS_SHUTDOWN
-expr_stmt|;
 name|mpr_unlock
 argument_list|(
 name|sc
