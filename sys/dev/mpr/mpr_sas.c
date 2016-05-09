@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
 end_comment
 
 begin_include
@@ -5369,7 +5369,8 @@ name|sc
 argument_list|,
 name|MPR_XINFO
 argument_list|,
-literal|"mprsas_action XPT_RESET_DEV\n"
+literal|"mprsas_action "
+literal|"XPT_RESET_DEV\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_action_resetdev
@@ -5397,7 +5398,8 @@ name|sc
 argument_list|,
 name|MPR_XINFO
 argument_list|,
-literal|"mprsas_action faking success for abort or reset\n"
+literal|"mprsas_action faking success "
+literal|"for abort or reset\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_set_ccbstatus
@@ -5663,8 +5665,7 @@ name|cm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"completing cm %p state %x ccb %p for diag "
-literal|"reset\n"
+literal|"completing cm %p state %x ccb %p for diag reset\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -6050,7 +6051,8 @@ name|MPR_INFO
 operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"task mgmt %p timed out\n"
+literal|"task mgmt %p timed "
+literal|"out\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -6189,7 +6191,8 @@ name|tm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm %p\n"
+literal|"NULL reset reply for tm "
+literal|"%p\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -6516,7 +6519,8 @@ name|tm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm %p\n"
+literal|"NULL reset reply for tm "
+literal|"%p\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -7785,8 +7789,8 @@ name|cm
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"command timeout cm %p ccb %p "
-literal|"target %u, handle(0x%04x)\n"
+literal|"command timeout cm %p ccb %p target "
+literal|"%u, handle(0x%04x)\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -7942,7 +7946,8 @@ name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"timedout cm %p failed to allocate a tm\n"
+literal|"timedout cm %p failed to "
+literal|"allocate a tm\n"
 argument_list|,
 name|cm
 argument_list|)
@@ -12121,8 +12126,8 @@ name|sc
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"%s: multiple request or response buffer segments "
-literal|"not supported for SMP\n"
+literal|"%s: multiple request or "
+literal|"response buffer segments not supported for SMP\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -13415,7 +13420,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in XPT_RESET_DEV\n"
+literal|"Target %d out of "
+literal|"bounds in XPT_RESET_DEV\n"
 operator|,
 name|ccb
 operator|->
@@ -13451,7 +13457,8 @@ name|sc
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"command alloc failure in mprsas_action_resetdev\n"
+literal|"command alloc failure in "
+literal|"mprsas_action_resetdev\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_set_ccbstatus
@@ -14599,7 +14606,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in mprsas_check_eedp\n"
+literal|"Target %d out of bounds in "
+literal|"mprsas_check_eedp\n"
 operator|,
 name|targetid
 operator|)
@@ -14624,7 +14632,7 @@ operator|==
 literal|0x0
 condition|)
 return|return;
-comment|/* 	 * Determine if the device is EEDP capable. 	 * 	 * If this flag is set in the inquiry data, the device supports 	 * protection information, and must support the 16 byte read capacity 	 * command, otherwise continue without sending read cap 16 	 */
+comment|/* 	 * Determine if the device is EEDP capable. 	 * 	 * If this flag is set in the inquiry data, the device supports 	 * protection information, and must support the 16 byte read capacity 	 * command, otherwise continue without sending read cap 16. 	 */
 if|if
 condition|(
 operator|(
@@ -14691,7 +14699,7 @@ argument_list|,
 name|MPR_ERROR
 argument_list|,
 literal|"Unable to create path for EEDP "
-literal|"support\n"
+literal|"support.\n"
 argument_list|)
 expr_stmt|;
 name|xpt_free_ccb
@@ -15173,7 +15181,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in mprsas_read_cap_done\n"
+literal|"Target %d out "
+literal|"of bounds in mprsas_read_cap_done\n"
 operator|,
 name|done_ccb
 operator|->
