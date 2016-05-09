@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2015 Avago Technologies  *  *  *           Name:  mpi2.h  *          Title:  MPI Message independent structures and definitions  *                  including System Interface Register Set and  *                  scatter/gather formats.  *  Creation Date:  June 21, 2006  *  *  mpi2.h Version:  02.00.33  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Bumped MPI2_HEADER_VERSION_UNIT.  *  06-26-07  02.00.02  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-31-07  02.00.03  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved ReplyPostHostIndex register to offset 0x6C of the  *                      MPI2_SYSTEM_INTERFACE_REGS and modified the define for  *                      MPI2_REPLY_POST_HOST_INDEX_OFFSET.  *                      Added union of request descriptors.  *                      Added union of reply descriptors.  *  10-31-07  02.00.04  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_VERSION_02_00.  *                      Fixed the size of the FunctionDependent5 field in the  *                      MPI2_DEFAULT_REPLY structure.  *  12-18-07  02.00.05  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Removed the MPI-defined Fault Codes and extended the  *                      product specific codes up to 0xEFFF.  *                      Added a sixth key value for the WriteSequence register  *                      and changed the flush value to 0x0.  *                      Added message function codes for Diagnostic Buffer Post  *                      and Diagnsotic Release.  *                      New IOCStatus define: MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED  *                      Moved MPI2_VERSION_UNION from mpi2_ioc.h.  *  02-29-08  02.00.06  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-03-08  02.00.07  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-21-08  02.00.08  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added #defines for marking a reply descriptor as unused.  *  06-27-08  02.00.09  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-02-08  02.00.10  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved LUN field defines from mpi2_init.h.  *  01-19-09  02.00.11  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-06-09  02.00.12  Bumped MPI2_HEADER_VERSION_UNIT.  *                      In all request and reply descriptors, replaced VF_ID  *                      field with MSIxIndex field.  *                      Removed DevHandle field from  *                      MPI2_SCSI_IO_SUCCESS_REPLY_DESCRIPTOR and made those  *                      bytes reserved.  *                      Added RAID Accelerator functionality.  *  07-30-09  02.00.13  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-28-09  02.00.14  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MSI-x index mask and shift for Reply Post Host  *                      Index register.  *                      Added function code for Host Based Discovery Action.  *  02-10-10  02.00.15  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_FUNCTION_PWR_MGMT_CONTROL.  *                      Added defines for product-specific range of message  *                      function codes, 0xF0 to 0xFF.  *  05-12-10  02.00.16  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added alternative defines for the SGE Direction bit.  *  08-11-10  02.00.17  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-10-10  02.00.18  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI2_IEEE_SGE_FLAGS_SYSTEMPLBCPI_ADDR define.  *  02-23-11  02.00.19  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI2_FUNCTION_SEND_HOST_MESSAGE.  *  03-09-11  02.00.20  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-25-11  02.00.21  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-24-11  02.00.22  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-18-11  02.00.23  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Incorporating additions for MPI v2.5.  *  02-06-12  02.00.24  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-29-12  02.00.25  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added Hard Reset delay timings.  *  07-10-12  02.00.26  Bumped MPI2_HEADER_VERSION_UNIT.  *  07-26-12  02.00.27  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-27-12  02.00.28  Bumped MPI2_HEADER_VERSION_UNIT.  *  12-20-12  02.00.29  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI25_SUP_REPLY_POST_HOST_INDEX_OFFSET.  *  04-09-13  02.00.30  Bumped MPI2_HEADER_VERSION_UNIT.  *  04-17-13  02.00.31  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-19-13  02.00.32  Bumped MPI2_HEADER_VERSION_UNIT.  *  12-05-13  02.00.33  Bumped MPI2_HEADER_VERSION_UNIT.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2.h  *          Title:  MPI Message independent structures and definitions  *                  including System Interface Register Set and  *                  scatter/gather formats.  *  Creation Date:  June 21, 2006  *  *  mpi2.h Version:  02.00.42  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Bumped MPI2_HEADER_VERSION_UNIT.  *  06-26-07  02.00.02  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-31-07  02.00.03  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved ReplyPostHostIndex register to offset 0x6C of the  *                      MPI2_SYSTEM_INTERFACE_REGS and modified the define for  *                      MPI2_REPLY_POST_HOST_INDEX_OFFSET.  *                      Added union of request descriptors.  *                      Added union of reply descriptors.  *  10-31-07  02.00.04  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_VERSION_02_00.  *                      Fixed the size of the FunctionDependent5 field in the  *                      MPI2_DEFAULT_REPLY structure.  *  12-18-07  02.00.05  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Removed the MPI-defined Fault Codes and extended the  *                      product specific codes up to 0xEFFF.  *                      Added a sixth key value for the WriteSequence register  *                      and changed the flush value to 0x0.  *                      Added message function codes for Diagnostic Buffer Post  *                      and Diagnsotic Release.  *                      New IOCStatus define: MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED  *                      Moved MPI2_VERSION_UNION from mpi2_ioc.h.  *  02-29-08  02.00.06  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-03-08  02.00.07  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-21-08  02.00.08  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added #defines for marking a reply descriptor as unused.  *  06-27-08  02.00.09  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-02-08  02.00.10  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved LUN field defines from mpi2_init.h.  *  01-19-09  02.00.11  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-06-09  02.00.12  Bumped MPI2_HEADER_VERSION_UNIT.  *                      In all request and reply descriptors, replaced VF_ID  *                      field with MSIxIndex field.  *                      Removed DevHandle field from  *                      MPI2_SCSI_IO_SUCCESS_REPLY_DESCRIPTOR and made those  *                      bytes reserved.  *                      Added RAID Accelerator functionality.  *  07-30-09  02.00.13  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-28-09  02.00.14  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MSI-x index mask and shift for Reply Post Host  *                      Index register.  *                      Added function code for Host Based Discovery Action.  *  02-10-10  02.00.15  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_FUNCTION_PWR_MGMT_CONTROL.  *                      Added defines for product-specific range of message  *                      function codes, 0xF0 to 0xFF.  *  05-12-10  02.00.16  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added alternative defines for the SGE Direction bit.  *  08-11-10  02.00.17  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-10-10  02.00.18  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI2_IEEE_SGE_FLAGS_SYSTEMPLBCPI_ADDR define.  *  02-23-11  02.00.19  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI2_FUNCTION_SEND_HOST_MESSAGE.  *  03-09-11  02.00.20  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-25-11  02.00.21  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-24-11  02.00.22  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-18-11  02.00.23  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Incorporating additions for MPI v2.5.  *  02-06-12  02.00.24  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-29-12  02.00.25  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added Hard Reset delay timings.  *  07-10-12  02.00.26  Bumped MPI2_HEADER_VERSION_UNIT.  *  07-26-12  02.00.27  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-27-12  02.00.28  Bumped MPI2_HEADER_VERSION_UNIT.  *  12-20-12  02.00.29  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI25_SUP_REPLY_POST_HOST_INDEX_OFFSET.  *  04-09-13  02.00.30  Bumped MPI2_HEADER_VERSION_UNIT.  *  04-17-13  02.00.31  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-19-13  02.00.32  Bumped MPI2_HEADER_VERSION_UNIT.  *  12-05-13  02.00.33  Bumped MPI2_HEADER_VERSION_UNIT.  *  01-08-14  02.00.34  Bumped MPI2_HEADER_VERSION_UNIT.  *  06-13-14  02.00.35  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-18-14  02.00.36  Updated copyright information.  *                      Bumped MPI2_HEADER_VERSION_UNIT.  *  03-16-15  02.00.37  Updated for MPI v2.6.  *                      Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added Scratchpad registers to  *                      MPI2_SYSTEM_INTERFACE_REGS.  *                      Added MPI2_DIAG_SBR_RELOAD.  *                      Added MPI2_IOCSTATUS_INSUFFICIENT_POWER.  *  03-19-15  02.00.38  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-25-15  02.00.39  Bumped MPI2_HEADER_VERSION_UNIT  *  08-25-15  02.00.40  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added V7 HostDiagnostic register defines  *  12-15-15  02.00.41  Bumped MPI_HEADER_VERSION_UNIT  *  01-01-16  02.00.42  Bumped MPI_HEADER_VERSION_UNIT  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,31 @@ value|(0x0205)
 end_define
 
 begin_comment
+comment|/* minor version for MPI v2.6 compatible products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_VERSION_MINOR
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_VERSION
+value|((MPI2_VERSION_MAJOR<< MPI2_VERSION_MAJOR_SHIFT) |   \                                       MPI26_VERSION_MINOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_VERSION_02_06
+value|(0x0206)
+end_define
+
+begin_comment
 comment|/* Unit and Dev versioning for this MPI header set */
 end_comment
 
@@ -120,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|MPI2_HEADER_VERSION_UNIT
-value|(0x21)
+value|(0x2A)
 end_define
 
 begin_define
@@ -331,10 +356,17 @@ comment|/* 0x7C */
 name|U32
 name|Reserved6
 index|[
-literal|16
+literal|12
 index|]
 decl_stmt|;
 comment|/* 0x80 */
+name|U32
+name|Scratchpad
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 0xB0 */
 name|U32
 name|RequestDescriptorPostLow
 decl_stmt|;
@@ -526,6 +558,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_DIAG_SBR_RELOAD
+value|(0x00002000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_DIAG_BOOT_DEVICE_SELECT_MASK
 value|(0x00001800)
 end_define
@@ -542,6 +581,38 @@ define|#
 directive|define
 name|MPI2_DIAG_BOOT_DEVICE_SELECT_HCDW
 value|(0x00000800)
+end_define
+
+begin_comment
+comment|/* Defines for V7A/V7R HostDiagnostic Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_DIAG_BOOT_DEVICE_SELECT_FLASH64
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_DIAG_BOOT_DEVICE_SELECT_HCDW64
+value|(0x00000800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_DIAG_BOOT_DEVICE_SELECT_FLASH32
+value|(0x00001000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_DIAG_BOOT_DEVICE_SELECT_HCDW32
+value|(0x00001800)
 end_define
 
 begin_define
@@ -843,7 +914,39 @@ value|(0x0000007C)
 end_define
 
 begin_comment
-comment|/*  * Offsets for the Request Queue  */
+comment|/*  * Offsets for the Scratchpad registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCRATCHPAD0_OFFSET
+value|(0x000000B0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCRATCHPAD1_OFFSET
+value|(0x000000B4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCRATCHPAD2_OFFSET
+value|(0x000000B8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCRATCHPAD3_OFFSET
+value|(0x000000BC)
+end_define
+
+begin_comment
+comment|/*  * Offsets for the Request Descriptor Post Queue  */
 end_comment
 
 begin_define
@@ -943,8 +1046,19 @@ begin_define
 define|#
 directive|define
 name|MPI2_REQ_DESCRIPT_FLAGS_TYPE_MASK
-value|(0x0E)
+value|(0x1E)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_REQ_DESCRIPT_FLAGS_TYPE_RSHIFT
+value|(1)
+end_define
+
+begin_comment
+comment|/* use carefully; values below are pre-shifted left */
+end_comment
 
 begin_define
 define|#
@@ -1224,6 +1338,10 @@ name|MPI2_POINTER
 name|pMpi2RequestDescriptorUnion_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* for the RequestFlags field, use the same defines as MPI2_DEFAULT_REQUEST_DESCRIPTOR */
+end_comment
 
 begin_comment
 comment|/* Reply Descriptors */
@@ -1862,6 +1980,25 @@ begin_comment
 comment|/* SAS IO Unit Control */
 end_comment
 
+begin_comment
+comment|/* for MPI v2.5 and earlier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_FUNCTION_IO_UNIT_CONTROL
+value|(0x1B)
+end_define
+
+begin_comment
+comment|/* IO Unit Control */
+end_comment
+
+begin_comment
+comment|/* for MPI v2.6 and later */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2089,6 +2226,17 @@ directive|define
 name|MPI2_IOCSTATUS_OP_STATE_NOT_SUPPORTED
 value|(0x0009)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOCSTATUS_INSUFFICIENT_POWER
+value|(0x000A)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
 
 begin_comment
 comment|/**************************************************************************** *  Config IOCStatus values ****************************************************************************/
@@ -3688,7 +3836,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* MPI25_IEEE_SGE_CHAIN64 is for MPI v2.5 products only */
+comment|/* MPI25_IEEE_SGE_CHAIN64 is for MPI v2.5 and later */
 end_comment
 
 begin_typedef
@@ -3844,6 +3992,24 @@ value|(0x80)
 end_define
 
 begin_comment
+comment|/* Next Segment Format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_IEEE_SGE_FLAGS_NSF_MASK
+value|(0x1C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_IEEE_SGE_FLAGS_NSF_MPI_IEEE
+value|(0x00)
+end_define
+
+begin_comment
 comment|/* Data Location Address Space */
 end_comment
 
@@ -3862,7 +4028,7 @@ value|(0x00)
 end_define
 
 begin_comment
-comment|/* for MPI v2.0, use in IEEE Simple Element only; for MPI v2.5, use in IEEE Simple or Chain element */
+comment|/* for MPI v2.0, use in IEEE Simple Element only; for MPI v2.5 and later, use in IEEE Simple or Chain element */
 end_comment
 
 begin_define
@@ -3914,6 +4080,17 @@ end_define
 
 begin_comment
 comment|/* typo in name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_IEEE_SGE_FLAGS_IOCCTL_ADDR
+value|(0x02)
+end_define
+
+begin_comment
+comment|/* for MPI v2.6 only */
 end_comment
 
 begin_comment
@@ -4122,12 +4299,31 @@ name|MPI2_SGLFLAGS_IOCPLB_ADDRESS_SPACE
 value|(0x08)
 end_define
 
+begin_comment
+comment|/* only for MPI v2.5 and earlier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_SGLFLAGS_IOCPLB_ADDRESS_SPACE
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* only for MPI v2.6 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MPI2_SGLFLAGS_IOCPLBNTA_ADDRESS_SPACE
 value|(0x0C)
 end_define
+
+begin_comment
+comment|/* only for MPI v2.5 and earlier */
+end_comment
 
 begin_comment
 comment|/* values for SGL Type subfield */

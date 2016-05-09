@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2015 Avago Technologies  *  *  *           Name:  mpi2_init.h  *          Title:  MPI SCSI initiator mode messages and structures  *  Creation Date:  June 23, 2006  *  *  mpi2_init.h Version:  02.00.15  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  10-31-07  02.00.01  Fixed name for pMpi2SCSITaskManagementRequest_t.  *  12-18-07  02.00.02  Modified Task Management Target Reset Method defines.  *  02-29-08  02.00.03  Added Query Task Set and Query Unit Attention.  *  03-03-08  02.00.04  Fixed name of struct _MPI2_SCSI_TASK_MANAGE_REPLY.  *  05-21-08  02.00.05  Fixed typo in name of Mpi2SepRequest_t.  *  10-02-08  02.00.06  Removed Untagged and No Disconnect values from SCSI IO  *                      Control field Task Attribute flags.  *                      Moved LUN field defines to mpi2.h because they are  *                      common to many structures.  *  05-06-09  02.00.07  Changed task management type of Query Unit Attention to  *                      Query Asynchronous Event.  *                      Defined two new bits in the SlotStatus field of the SCSI  *                      Enclosure Processor Request and Reply.  *  10-28-09  02.00.08  Added defines for decoding the ResponseInfo bytes for  *                      both SCSI IO Error Reply and SCSI Task Management Reply.  *                      Added ResponseInfo field to MPI2_SCSI_TASK_MANAGE_REPLY.  *                      Added MPI2_SCSITASKMGMT_RSP_TM_OVERLAPPED_TAG define.  *  02-10-10  02.00.09  Removed unused structure that had "#if 0" around it.  *  05-12-10  02.00.10  Added optional vendor-unique region to SCSI IO Request.  *  11-10-10  02.00.11  Added MPI2_SCSIIO_NUM_SGLOFFSETS define.  *  11-18-11  02.00.12  Incorporating additions for MPI v2.5.  *  02-06-12  02.00.13  Added alternate defines for Task Priority / Command  *                      Priority to match SAM-4.  *                      Added EEDPErrorOffset to MPI2_SCSI_IO_REPLY.  *  07-10-12  02.00.14  Added MPI2_SCSIIO_CONTROL_SHIFT_DATADIRECTION.  *  04-09-13  02.00.15  Added SCSIStatusQualifier field to MPI2_SCSI_IO_REPLY,  *                      replacing the Reserved4 field.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_init.h  *          Title:  MPI SCSI initiator mode messages and structures  *  Creation Date:  June 23, 2006  *  *  mpi2_init.h Version:  02.00.20  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  10-31-07  02.00.01  Fixed name for pMpi2SCSITaskManagementRequest_t.  *  12-18-07  02.00.02  Modified Task Management Target Reset Method defines.  *  02-29-08  02.00.03  Added Query Task Set and Query Unit Attention.  *  03-03-08  02.00.04  Fixed name of struct _MPI2_SCSI_TASK_MANAGE_REPLY.  *  05-21-08  02.00.05  Fixed typo in name of Mpi2SepRequest_t.  *  10-02-08  02.00.06  Removed Untagged and No Disconnect values from SCSI IO  *                      Control field Task Attribute flags.  *                      Moved LUN field defines to mpi2.h becasue they are  *                      common to many structures.  *  05-06-09  02.00.07  Changed task management type of Query Unit Attention to  *                      Query Asynchronous Event.  *                      Defined two new bits in the SlotStatus field of the SCSI  *                      Enclosure Processor Request and Reply.  *  10-28-09  02.00.08  Added defines for decoding the ResponseInfo bytes for  *                      both SCSI IO Error Reply and SCSI Task Management Reply.  *                      Added ResponseInfo field to MPI2_SCSI_TASK_MANAGE_REPLY.  *                      Added MPI2_SCSITASKMGMT_RSP_TM_OVERLAPPED_TAG define.  *  02-10-10  02.00.09  Removed unused structure that had "#if 0" around it.  *  05-12-10  02.00.10  Added optional vendor-unique region to SCSI IO Request.  *  11-10-10  02.00.11  Added MPI2_SCSIIO_NUM_SGLOFFSETS define.  *  11-18-11  02.00.12  Incorporating additions for MPI v2.5.  *  02-06-12  02.00.13  Added alternate defines for Task Priority / Command  *                      Priority to match SAM-4.  *                      Added EEDPErrorOffset to MPI2_SCSI_IO_REPLY.  *  07-10-12  02.00.14  Added MPI2_SCSIIO_CONTROL_SHIFT_DATADIRECTION.  *  04-09-13  02.00.15  Added SCSIStatusQualifier field to MPI2_SCSI_IO_REPLY,  *                      replacing the Reserved4 field.  *  11-18-14  02.00.16  Updated copyright information.  *  03-16-15  02.00.17  Updated for MPI v2.6.  *                      Added MPI26_SCSIIO_IOFLAGS_ESCAPE_PASSTHROUGH.  *                      Added MPI2_SEP_REQ_SLOTSTATUS_DEV_OFF and  *                      MPI2_SEP_REPLY_SLOTSTATUS_DEV_OFF.  *  08-26-15  02.00.18  Added SCSITASKMGMT_MSGFLAGS for Target Reset.  *  12-18-15  02.00.19  Added EEDPObservedValue added to SCSI IO Reply message.  *  01-04-16  02.00.20  Modified EEDP reported values in SCSI IO Reply message.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -292,12 +292,31 @@ name|MPI2_SCSIIO_MSGFLAGS_IOCPLB_SENSE_ADDR
 value|(0x08)
 end_define
 
+begin_comment
+comment|/* for MPI v2.5 and earlier only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MPI2_SCSIIO_MSGFLAGS_IOCPLBNTA_SENSE_ADDR
 value|(0x0C)
 end_define
+
+begin_comment
+comment|/* for MPI v2.5 and earlier only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCSIIO_MSGFLAGS_IOCCTL_SENSE_ADDR
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* for MPI v2.6 only */
+end_comment
 
 begin_comment
 comment|/* SCSI IO SGLFlags bits */
@@ -805,7 +824,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* MPI v2.5 SCSI IO Request Message */
+comment|/* MPI v2.5/2.6 SCSI IO Request Message */
 end_comment
 
 begin_typedef
@@ -1132,6 +1151,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI26_SCSIIO_IOFLAGS_ESCAPE_PASSTHROUGH
+value|(0x2000)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPI25_SCSIIO_IOFLAGS_LARGE_CDB
 value|(0x1000)
 end_define
@@ -1142,6 +1172,17 @@ directive|define
 name|MPI25_SCSIIO_IOFLAGS_BIDIRECTIONAL
 value|(0x0800)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCSIIO_IOFLAGS_PORT_REQUEST
+value|(0x0400)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later; IOC use only */
+end_comment
 
 begin_define
 define|#
@@ -1315,11 +1356,22 @@ name|U32
 name|EEDPErrorOffset
 decl_stmt|;
 comment|/* 0x28 */
-comment|/* MPI 2.5 only; Reserved in MPI 2.0 */
-name|U32
-name|Reserved6
+comment|/* MPI 2.5+ only; Reserved in MPI 2.0 */
+name|U16
+name|EEDPObservedAppTag
 decl_stmt|;
 comment|/* 0x2C */
+comment|/* MPI 2.5+ only; Reserved in MPI 2.0 */
+name|U16
+name|EEDPObservedGuard
+decl_stmt|;
+comment|/* 0x2E */
+comment|/* MPI 2.5+ only; Reserved in MPI 2.0 */
+name|U32
+name|EEDPObservedRefTag
+decl_stmt|;
+comment|/* 0x30 */
+comment|/* MPI 2.5+ only; Reserved in MPI 2.0 */
 block|}
 name|MPI2_SCSI_IO_REPLY
 operator|,
@@ -1332,6 +1384,31 @@ name|MPI2_POINTER
 name|pMpi2SCSIIOReply_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* SCSI IO Reply MsgFlags bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCSIIO_REPLY_MSGFLAGS_REFTAG_OBSERVED_VALID
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCSIIO_REPLY_MSGFLAGS_GUARD_OBSERVED_VALID
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_SCSIIO_REPLY_MSGFLAGS_APPTAG_OBSERVED_VALID
+value|(0x04)
+end_define
 
 begin_comment
 comment|/* SCSI IO Reply SCSIStatus values (SAM-4 status codes) */
@@ -1669,6 +1746,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_SCSITASKMGMT_MSGFLAGS_DO_NOT_SEND_TASK_IU
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_SCSITASKMGMT_MSGFLAGS_NEXUS_RESET_SRST
 value|(0x08)
 end_define
@@ -1678,13 +1762,6 @@ define|#
 directive|define
 name|MPI2_SCSITASKMGMT_MSGFLAGS_SAS_HARD_LINK_RESET
 value|(0x10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPI2_SCSITASKMGMT_MSGFLAGS_DO_NOT_SEND_TASK_IU
-value|(0x01)
 end_define
 
 begin_comment
@@ -2022,6 +2099,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI2_SEP_REQ_SLOTSTATUS_DEV_OFF
+value|(0x00080000)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and newer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPI2_SEP_REQ_SLOTSTATUS_REQUEST_REMOVE
 value|(0x00040000)
 end_define
@@ -2188,6 +2276,17 @@ end_typedef
 
 begin_comment
 comment|/* SlotStatus defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SEP_REPLY_SLOTSTATUS_DEV_OFF
+value|(0x00080000)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and newer */
 end_comment
 
 begin_define
