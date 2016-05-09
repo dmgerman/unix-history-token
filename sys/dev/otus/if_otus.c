@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_otus.c,v 1.46 2015/03/14 03:38:49 jsg Exp $	*/
+comment|/*	$OpenBSD: if_otus.c,v 1.49 2015/11/24 13:33:18 mpi Exp $	*/
 end_comment
 
 begin_comment
@@ -161,12 +161,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_include
