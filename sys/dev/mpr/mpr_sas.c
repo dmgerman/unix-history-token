@@ -2323,9 +2323,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -2339,9 +2346,12 @@ argument_list|,
 literal|"IOCStatus = 0x%x while resetting "
 literal|"device 0x%x\n"
 argument_list|,
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
 argument_list|,
 name|handle
 argument_list|)
@@ -2363,9 +2373,12 @@ name|MPR_XINFO
 argument_list|,
 literal|"Reset aborted %u commands\n"
 argument_list|,
+name|le32toh
+argument_list|(
 name|reply
 operator|->
 name|TerminationCount
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mpr_free_reply
@@ -2402,9 +2415,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3170,12 +3190,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3578,12 +3602,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)

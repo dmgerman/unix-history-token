@@ -8875,12 +8875,16 @@ name|reply
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|rel_rep
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED
 condition|)
