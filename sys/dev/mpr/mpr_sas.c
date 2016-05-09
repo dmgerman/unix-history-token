@@ -3855,6 +3855,13 @@ argument_list|,
 name|MPI2_EVENT_TEMP_THRESHOLD
 argument_list|)
 expr_stmt|;
+name|setbit
+argument_list|(
+name|events
+argument_list|,
+name|MPI2_EVENT_ACTIVE_CABLE_EXCEPTION
+argument_list|)
+expr_stmt|;
 name|mpr_register_events
 argument_list|(
 name|sc
@@ -9668,6 +9675,14 @@ case|:
 name|desc_ioc_state
 operator|=
 literal|"eedp app tag error"
+expr_stmt|;
+break|break;
+case|case
+name|MPI2_IOCSTATUS_INSUFFICIENT_POWER
+case|:
+name|desc_ioc_state
+operator|=
+literal|"insufficient power"
 expr_stmt|;
 break|break;
 default|default:

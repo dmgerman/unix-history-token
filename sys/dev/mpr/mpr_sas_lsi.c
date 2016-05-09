@@ -2608,6 +2608,52 @@ block|}
 break|break;
 block|}
 case|case
+name|MPI2_EVENT_ACTIVE_CABLE_EXCEPTION
+case|:
+block|{
+name|pMpi26EventDataActiveCableExcept_t
+name|ace_event_data
+decl_stmt|;
+name|ace_event_data
+operator|=
+operator|(
+name|pMpi26EventDataActiveCableExcept_t
+operator|)
+name|fw_event
+operator|->
+name|event_data
+expr_stmt|;
+if|if
+condition|(
+name|ace_event_data
+operator|->
+name|ReasonCode
+operator|==
+name|MPI26_EVENT_ACTIVE_CABLE_INSUFFICIENT_POWER
+condition|)
+block|{
+name|mpr_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"Currently an active cable with "
+literal|"ReceptacleID %d cannot be powered and device "
+literal|"connected to this active cable will not be seen. "
+literal|"This active cable requires %d mW of power.\n"
+argument_list|,
+name|ace_event_data
+operator|->
+name|ReceptacleID
+argument_list|,
+name|ace_event_data
+operator|->
+name|ActiveCablePowerRequirement
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+case|case
 name|MPI2_EVENT_SAS_DEVICE_STATUS_CHANGE
 case|:
 case|case
