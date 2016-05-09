@@ -1207,17 +1207,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
 name|EFSYS_OPT_FALCON
-operator|||
-name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PCIE_TUNE requires FALCON or SIENA"
+literal|"PCIE_TUNE requires FALCON"
 end_error
 
 begin_endif
