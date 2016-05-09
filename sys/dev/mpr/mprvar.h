@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPR_DRIVER_VERSION
-value|"09.255.01.00-fbsd"
+value|"13.00.00.00-fbsd"
 end_define
 
 begin_define
