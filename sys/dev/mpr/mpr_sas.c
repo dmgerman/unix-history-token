@@ -2350,7 +2350,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_FAULT
+name|MPR_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting "
 literal|"device 0x%x\n"
@@ -2365,14 +2365,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mpr_dprint
 argument_list|(
@@ -3157,14 +3149,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -3217,7 +3201,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_FAULT
+name|MPR_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting "
 literal|"device 0x%x\n"
@@ -3232,14 +3216,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mpr_dprint
 argument_list|(
