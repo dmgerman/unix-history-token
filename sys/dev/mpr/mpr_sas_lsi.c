@@ -5737,6 +5737,13 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|done_ccb
+operator|==
+name|NULL
+condition|)
+return|return;
 name|sassc
 operator|=
 operator|(
@@ -5779,13 +5786,6 @@ argument_list|,
 name|path_str
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|done_ccb
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * Nothing more to do except free the CCB and path.  If the command 	 * timed out, an abort reset, then target reset will be issued during 	 * the SCSI Command process. 	 */
 name|xpt_free_path
 argument_list|(
