@@ -9732,26 +9732,6 @@ expr_stmt|;
 comment|/* 	 * Check if exact channel is in the calibration table; 	 * everything below is to deal with channels that we 	 * want to include but that are not explicitly listed. 	 */
 if|if
 condition|(
-name|flags
-operator|&
-name|IEEE80211_CHAN_HT40
-condition|)
-block|{
-comment|/* NB: we use an HT40 channel center that matches HT20 */
-name|flags
-operator|=
-operator|(
-name|flags
-operator|&
-operator|~
-name|IEEE80211_CHAN_HT40
-operator|)
-operator||
-name|IEEE80211_CHAN_HT20
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|chanlookup
 argument_list|(
 name|avail
