@@ -405,6 +405,24 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|cpuset_t
+name|intr_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|struct
