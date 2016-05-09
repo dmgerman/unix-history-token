@@ -8307,7 +8307,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_LOG
 argument_list|,
 literal|"log_info(0x%08x): originator(%s), "
 literal|"code(0x%02x), sub_code(0x%04x)\n"
