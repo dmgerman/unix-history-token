@@ -4231,7 +4231,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Nuke neighbor cache/prefix/default router management table, right before  * ifp goes away.  */
+comment|/*  * Remove prefix and default router list entries corresponding to ifp. Neighbor  * cache entries are freed in in6_domifdetach().  */
 end_comment
 
 begin_function
@@ -4407,7 +4407,6 @@ name|ndpr_refcnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Previously, pr->ndpr_addr is removed as well, 			 * but I strongly believe we don't have to do it. 			 * nd6_purge() is only called from in6_ifdetach(), 			 * which removes all the associated interface addresses 			 * by itself. 			 * (jinmei@kame.net 20010129) 			 */
 name|prelist_remove
 argument_list|(
 name|pr
@@ -4446,7 +4445,6 @@ name|defrouter_select
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* XXXXX 	 * We do not nuke the neighbor cache entries here any more 	 * because the neighbor cache is kept in if_afdata[AF_INET6]. 	 * nd6_purge() is invoked by in6_ifdetach() which is called 	 * from if_detach() where everything gets purged. So let 	 * in6_domifdetach() do the actual L2 table purging work. 	 */
 block|}
 end_function
 
