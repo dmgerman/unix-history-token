@@ -12877,6 +12877,29 @@ goto|goto
 name|err_i2c
 goto|;
 block|}
+comment|/* Check if module is present before doing an access */
+if|if
+condition|(
+name|mlx5_query_module_status
+argument_list|(
+name|priv
+operator|->
+name|mdev
+argument_list|,
+name|module_num
+argument_list|)
+operator|!=
+name|MLX5_MODULE_STATUS_PLUGGED
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|err_i2c
+goto|;
+block|}
 comment|/* 		 * Currently 0XA0 and 0xA2 are the only addresses permitted. 		 * The internal conversion is as follows: 		 */
 if|if
 condition|(
