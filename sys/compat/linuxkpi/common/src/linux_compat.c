@@ -3367,7 +3367,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|revents
 operator|)
 return|;
 block|}
