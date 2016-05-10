@@ -720,7 +720,10 @@ begin_define
 define|#
 directive|define
 name|cpu_to_be32
-value|htobe32
+parameter_list|(
+name|x
+parameter_list|)
+value|htobe32(x)
 end_define
 
 begin_comment
