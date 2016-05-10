@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2016 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -67,91 +67,130 @@ begin_define
 define|#
 directive|define
 name|cpu_to_le64
-value|htole64
+parameter_list|(
+name|x
+parameter_list|)
+value|htole64(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|le64_to_cpu
-value|le64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|le64toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cpu_to_le32
-value|htole32
+parameter_list|(
+name|x
+parameter_list|)
+value|htole32(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|le32_to_cpu
-value|le32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|le32toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cpu_to_le16
-value|htole16
+parameter_list|(
+name|x
+parameter_list|)
+value|htole16(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|le16_to_cpu
-value|le16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|le16toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cpu_to_be64
-value|htobe64
+parameter_list|(
+name|x
+parameter_list|)
+value|htobe64(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|be64_to_cpu
-value|be64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|be64toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cpu_to_be32
-value|htobe32
+parameter_list|(
+name|x
+parameter_list|)
+value|htobe32(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|be32_to_cpu
-value|be32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|be32toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cpu_to_be16
-value|htobe16
+parameter_list|(
+name|x
+parameter_list|)
+value|htobe16(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|be16_to_cpu
-value|be16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|be16toh(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|__be16_to_cpu
-value|be16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|be16toh(x)
 end_define
 
 begin_define
@@ -398,21 +437,30 @@ begin_define
 define|#
 directive|define
 name|swab16
-value|bswap16
+parameter_list|(
+name|x
+parameter_list|)
+value|bswap16(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|swab32
-value|bswap32
+parameter_list|(
+name|x
+parameter_list|)
+value|bswap32(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|swab64
-value|bswap64
+parameter_list|(
+name|x
+parameter_list|)
+value|bswap64(x)
 end_define
 
 begin_function
