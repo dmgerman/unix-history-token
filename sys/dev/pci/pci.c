@@ -24858,7 +24858,17 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"pci%d:%d:%d:%d"
+literal|"slot=%d function=%d dbsf=pci%d:%d:%d:%d"
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|child
+argument_list|)
+argument_list|,
+name|pci_get_function
+argument_list|(
+name|child
+argument_list|)
 argument_list|,
 name|pci_get_domain
 argument_list|(
