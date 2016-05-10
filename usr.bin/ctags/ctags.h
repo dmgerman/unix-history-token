@@ -376,7 +376,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)

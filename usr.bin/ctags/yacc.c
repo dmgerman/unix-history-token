@@ -292,7 +292,7 @@ name|sp
 operator|=
 name|EOS
 expr_stmt|;
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 comment|/* may change before ':' */

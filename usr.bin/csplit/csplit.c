@@ -137,7 +137,7 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)
@@ -932,7 +932,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|getline
+name|get_line
 argument_list|()
 operator|)
 operator|!=
@@ -1241,7 +1241,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)
@@ -1335,7 +1335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Conceptually rewind the input (as obtained by getline()) back `n' lines. */
+comment|/* Conceptually rewind the input (as obtained by get_line()) back `n' lines. */
 end_comment
 
 begin_function
@@ -1625,7 +1625,7 @@ argument_list|,
 name|currfile
 argument_list|)
 expr_stmt|;
-comment|/* 	 * getline() will read from here. Next call will truncate to 	 * truncofs in this file. 	 */
+comment|/* 	 * get_line() will read from here. Next call will truncate to 	 * truncofs in this file. 	 */
 name|overfile
 operator|=
 name|ofp
@@ -1875,7 +1875,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|getline
+name|get_line
 argument_list|()
 operator|)
 operator|!=
@@ -1994,7 +1994,7 @@ operator|&&
 operator|(
 name|p
 operator|=
-name|getline
+name|get_line
 argument_list|()
 operator|)
 operator|!=
@@ -2192,7 +2192,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|getline
+name|get_line
 argument_list|()
 operator|)
 operator|==

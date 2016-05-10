@@ -364,7 +364,7 @@ name|cp
 operator|=
 name|savedc
 expr_stmt|;
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 name|pfnote

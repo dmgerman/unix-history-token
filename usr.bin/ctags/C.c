@@ -356,7 +356,7 @@ operator|=
 name|EOS
 expr_stmt|;
 comment|/* 				 * grab the line immediately, we may 				 * already be wrong, for example, 				 *	foo\n 				 *	(arg1, 				 */
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 name|curline
@@ -402,7 +402,7 @@ name|t_def
 operator|=
 name|NO
 expr_stmt|;
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 if|if
@@ -590,7 +590,7 @@ operator|)
 condition|)
 block|{
 comment|/* 						 * get line immediately; 						 * may change before '{' 						 */
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 if|if
@@ -1123,7 +1123,7 @@ literal|'('
 condition|)
 block|{
 comment|/* only want macros */
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 name|pfnote

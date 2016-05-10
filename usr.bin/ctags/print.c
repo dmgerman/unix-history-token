@@ -65,12 +65,12 @@ file|"ctags.h"
 end_include
 
 begin_comment
-comment|/*  * getline --  *	get the line the token of interest occurred on,  *	prepare it for printing.  */
+comment|/*  * get_line --  *	get the line the token of interest occurred on,  *	prepare it for printing.  */
 end_comment
 
 begin_function
 name|void
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)

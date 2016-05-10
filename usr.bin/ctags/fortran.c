@@ -441,7 +441,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* possible trunc */
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 comment|/* process line for ex(1) */

@@ -232,7 +232,7 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|FILE
 modifier|*
@@ -314,7 +314,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* errors from getline */
+comment|/* errors from get_line */
 end_comment
 
 begin_define
@@ -334,7 +334,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|int
-name|getline_error
+name|get_line_error
 decl_stmt|;
 end_decl_stmt
 
@@ -2758,7 +2758,7 @@ condition|(
 operator|(
 name|str
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)
@@ -2804,7 +2804,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getline_error
+name|get_line_error
 condition|)
 block|{
 name|paxwarn
@@ -3085,7 +3085,7 @@ condition|(
 operator|(
 name|str
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)
@@ -3127,7 +3127,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getline_error
+name|get_line_error
 condition|)
 block|{
 name|paxwarn
@@ -3735,7 +3735,7 @@ condition|(
 operator|(
 name|str
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)
@@ -3759,7 +3759,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getline_error
+name|get_line_error
 condition|)
 block|{
 name|paxwarn
@@ -4111,7 +4111,7 @@ condition|(
 operator|(
 name|str
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|stdin
 argument_list|)
@@ -4130,7 +4130,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|getline_error
+name|get_line_error
 condition|)
 block|{
 name|paxwarn
@@ -4975,7 +4975,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|FILE
 modifier|*
@@ -5008,7 +5008,7 @@ operator|!
 name|name
 condition|)
 block|{
-name|getline_error
+name|get_line_error
 operator|=
 name|ferror
 argument_list|(
@@ -5052,7 +5052,7 @@ operator|!
 name|temp
 condition|)
 block|{
-name|getline_error
+name|get_line_error
 operator|=
 name|GETLINE_OUT_OF_MEM
 expr_stmt|;
