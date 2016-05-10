@@ -32,23 +32,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MON_NULL
-end_if
-
-begin_include
-include|#
-directive|include
-file|"nullmon.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_MON_MCDI
 end_if
 
@@ -169,41 +152,6 @@ end_endif
 begin_comment
 comment|/* EFSYS_OPT_NAMES */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MON_NULL
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_mon_ops_t
-name|__efx_mon_null_ops
-init|=
-block|{
-name|nullmon_reset
-block|,
-comment|/* emo_reset */
-name|nullmon_reconfigure
-block|,
-comment|/* emo_reconfigure */
-if|#
-directive|if
-name|EFSYS_OPT_MON_STATS
-name|nullmon_stats_update
-comment|/* emo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MON_STATS */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -349,20 +297,6 @@ operator|->
 name|em_type
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_MON_NULL
-case|case
-name|EFX_MON_NULL
-case|:
-name|emop
-operator|=
-operator|&
-name|__efx_mon_null_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_MON_MCDI
