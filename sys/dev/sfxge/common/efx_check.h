@@ -37,22 +37,6 @@ directive|error
 literal|"FALCON is obsolete and is not supported."
 end_error
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* FIXME: remove this after Falcon support has been removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_TXC43128
-value|(0)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1256,42 +1240,22 @@ begin_comment
 comment|/* EFSYS_OPT_PHY_STATS */
 end_comment
 
-begin_comment
-comment|/* Support TXC43128 PHY (SFE4003 NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_TXC43128
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_TXC43128 requires FALCON"
+literal|"PHY_TXC43128 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_TXC43128 */
-end_comment
 
 begin_comment
 comment|/* Support EVQ/RXQ/TXQ statistics */
