@@ -281,7 +281,7 @@ name|cpu_to_le64s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint64_t *)x) = cpu_to_le64p((x)) } while (0)
+value|do { *((uint64_t *)(x)) = cpu_to_le64p((x)); } while (0)
 end_define
 
 begin_define
@@ -291,7 +291,7 @@ name|le64_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint64_t *)x) = le64_to_cpup((x)) } while (0)
+value|do { *((uint64_t *)(x)) = le64_to_cpup((x)); } while (0)
 end_define
 
 begin_define
@@ -301,7 +301,7 @@ name|cpu_to_le32s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint32_t *)x) = cpu_to_le32p((x)) } while (0)
+value|do { *((uint32_t *)(x)) = cpu_to_le32p((x)); } while (0)
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ name|le32_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint32_t *)x) = le32_to_cpup((x)) } while (0)
+value|do { *((uint32_t *)(x)) = le32_to_cpup((x)); } while (0)
 end_define
 
 begin_define
@@ -321,7 +321,7 @@ name|cpu_to_le16s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint16_t *)x) = cpu_to_le16p((x)) } while (0)
+value|do { *((uint16_t *)(x)) = cpu_to_le16p((x)); } while (0)
 end_define
 
 begin_define
@@ -331,7 +331,7 @@ name|le16_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint16_t *)x) = le16_to_cpup((x)) } while (0)
+value|do { *((uint16_t *)(x)) = le16_to_cpup((x)); } while (0)
 end_define
 
 begin_define
@@ -341,7 +341,7 @@ name|cpu_to_be64s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint64_t *)x) = cpu_to_be64p((x)) } while (0)
+value|do { *((uint64_t *)(x)) = cpu_to_be64p((x)); } while (0)
 end_define
 
 begin_define
@@ -351,7 +351,7 @@ name|be64_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint64_t *)x) = be64_to_cpup((x)) } while (0)
+value|do { *((uint64_t *)(x)) = be64_to_cpup((x)); } while (0)
 end_define
 
 begin_define
@@ -361,7 +361,7 @@ name|cpu_to_be32s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint32_t *)x) = cpu_to_be32p((x)) } while (0)
+value|do { *((uint32_t *)(x)) = cpu_to_be32p((x)); } while (0)
 end_define
 
 begin_define
@@ -371,7 +371,7 @@ name|be32_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint32_t *)x) = be32_to_cpup((x)) } while (0)
+value|do { *((uint32_t *)(x)) = be32_to_cpup((x)); } while (0)
 end_define
 
 begin_define
@@ -381,7 +381,7 @@ name|cpu_to_be16s
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint16_t *)x) = cpu_to_be16p((x)) } while (0)
+value|do { *((uint16_t *)(x)) = cpu_to_be16p((x)); } while (0)
 end_define
 
 begin_define
@@ -391,7 +391,7 @@ name|be16_to_cpus
 parameter_list|(
 name|x
 parameter_list|)
-value|do { *((uint16_t *)x) = be16_to_cpup((x)) } while (0)
+value|do { *((uint16_t *)(x)) = be16_to_cpup((x)); } while (0)
 end_define
 
 begin_define
