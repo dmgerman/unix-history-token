@@ -1902,7 +1902,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (0)
+value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		break;							\ 	}								\ } while (0)
 end_define
 
 begin_define
