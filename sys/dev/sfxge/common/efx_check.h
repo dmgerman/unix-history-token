@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_PHY_QT2022C2
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_PHY_QT2025C
 value|(0)
 end_define
@@ -1179,42 +1172,22 @@ begin_comment
 comment|/* EFSYS_OPT_PHY_PROPS */
 end_comment
 
-begin_comment
-comment|/* Support QT2022C2 PHY */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_QT2022C2
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_QT2022C2 requires FALCON"
+literal|"PHY_QT2022C2 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_QT2022C2 */
-end_comment
 
 begin_comment
 comment|/* Support QT2025C PHY (Wakefield NIC) */
