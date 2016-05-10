@@ -6676,6 +6676,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Send SYN|ACK to the peer.  Either in response to the peer's SYN,  * i.e. m0 != NULL, or upon 3WHS ACK timeout, i.e. m0 == NULL.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -7651,6 +7655,7 @@ argument_list|,
 name|th_sum
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we have peer's SYN and it has a flowid, then let's assign it to 	 * our SYN|ACK.  ip6_output() and ip_output() will not assign flowid 	 * to SYN|ACK due to lack of inp here. 	 */
 if|if
 condition|(
 name|m0
