@@ -620,24 +620,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|am
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fwdma_malloc_multiseg: malloc failed\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|am
 operator|->
 name|ssize

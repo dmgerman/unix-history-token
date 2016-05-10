@@ -7628,20 +7628,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|db_tr
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fwohci_db_init: malloc(1) failed\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 define|#
 directive|define
 name|DB_SIZE

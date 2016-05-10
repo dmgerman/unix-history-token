@@ -1636,22 +1636,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xferq
-operator|->
-name|bulkxfer
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"if_fwe: malloc failed\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|STAILQ_INIT
 argument_list|(
 operator|&
