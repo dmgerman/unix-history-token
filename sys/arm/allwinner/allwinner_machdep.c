@@ -465,7 +465,7 @@ name|PLATFORMMETHOD
 argument_list|(
 name|platform_mp_start_ap
 argument_list|,
-name|a20_mp_start_ap
+name|aw_mp_start_ap
 argument_list|)
 block|,
 name|PLATFORMMETHOD
@@ -547,7 +547,7 @@ name|PLATFORMMETHOD
 argument_list|(
 name|platform_mp_start_ap
 argument_list|,
-name|a31_mp_start_ap
+name|aw_mp_start_ap
 argument_list|)
 block|,
 name|PLATFORMMETHOD
@@ -629,7 +629,7 @@ name|PLATFORMMETHOD
 argument_list|(
 name|platform_mp_start_ap
 argument_list|,
-name|a31_mp_start_ap
+name|aw_mp_start_ap
 argument_list|)
 block|,
 name|PLATFORMMETHOD

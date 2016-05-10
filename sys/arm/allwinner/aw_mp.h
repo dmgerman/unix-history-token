@@ -27,17 +27,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|a20_mp_start_ap
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|a31_mp_start_ap
+name|aw_mp_start_ap
 parameter_list|(
 name|platform_t
 name|plat
