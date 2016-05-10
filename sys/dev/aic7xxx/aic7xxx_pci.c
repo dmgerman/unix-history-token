@@ -2955,7 +2955,7 @@ name|bus_resume
 operator|=
 name|ahc_pci_resume
 expr_stmt|;
-comment|/* Remeber how the card was setup in case there is no SEEPROM */
+comment|/* Remember how the card was setup in case there is no SEEPROM */
 if|if
 condition|(
 operator|(
@@ -3292,7 +3292,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * We cannot perform ULTRA speeds without the presense 	 * of the external precision resistor. 	 */
+comment|/* 	 * We cannot perform ULTRA speeds without the presence 	 * of the external precision resistor. 	 */
 if|if
 condition|(
 operator|(
@@ -3824,7 +3824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test for the presense of external sram in an  * "unshared" configuration.  */
+comment|/*  * Test for the presence of external sram in an  * "unshared" configuration.  */
 end_comment
 
 begin_function

@@ -329,7 +329,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Valid SCSIRATE values.  (p. 3-17)  * Provides a mapping of tranfer periods in ns to the proper value to  * stick in the scsixfer reg.  */
+comment|/*  * Valid SCSIRATE values.  (p. 3-17)  * Provides a mapping of transfer periods in ns to the proper value to  * stick in the scsixfer reg.  */
 end_comment
 
 begin_decl_stmt
@@ -3119,7 +3119,7 @@ case|case
 name|HOST_MSG_LOOP
 case|:
 block|{
-comment|/* 		 * The sequencer has encountered a message phase 		 * that requires host assistance for completion. 		 * While handling the message phase(s), we will be 		 * notified by the sequencer after each byte is 		 * transfered so we can track bus phase changes. 		 * 		 * If this is the first time we've seen a HOST_MSG_LOOP 		 * interrupt, initialize the state of the host message 		 * loop. 		 */
+comment|/* 		 * The sequencer has encountered a message phase 		 * that requires host assistance for completion. 		 * While handling the message phase(s), we will be 		 * notified by the sequencer after each byte is 		 * transferred so we can track bus phase changes. 		 * 		 * If this is the first time we've seen a HOST_MSG_LOOP 		 * interrupt, initialize the state of the host message 		 * loop. 		 */
 if|if
 condition|(
 name|ahc
@@ -4100,7 +4100,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"for saftey"
+literal|"for safety"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5204,7 +5204,7 @@ operator||
 name|CLRSCSIPERR
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Although the driver does not care about the 		 * 'Selection in Progress' status bit, the busy 		 * LED does.  SELINGO is only cleared by a sucessfull 		 * selection, so we must manually clear it to insure 		 * the LED turns off just incase no future successful 		 * selections occur (e.g. no devices on the bus). 		 */
+comment|/* 		 * Although the driver does not care about the 		 * 'Selection in Progress' status bit, the busy 		 * LED does.  SELINGO is only cleared by a successful 		 * selection, so we must manually clear it to insure 		 * the LED turns off just incase no future successful 		 * selections occur (e.g. no devices on the bus). 		 */
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -6063,7 +6063,7 @@ operator|!=
 name|P_BUSFREE
 condition|)
 block|{
-comment|/* 				 * Renegotiate with this device at the 				 * next oportunity just in case this busfree 				 * is due to a negotiation mismatch with the 				 * device. 				 */
+comment|/* 				 * Renegotiate with this device at the 				 * next opportunity just in case this busfree 				 * is due to a negotiation mismatch with the 				 * device. 				 */
 name|ahc_force_renegotiation
 argument_list|(
 name|ahc
@@ -8131,7 +8131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the bitmask of targets for which the controller should  * negotiate with at the next convenient oportunity.  This currently  * means the next time we send the initial identify messages for  * a new transaction.  */
+comment|/*  * Update the bitmask of targets for which the controller should  * negotiate with at the next convenient opportunity.  This currently  * means the next time we send the initial identify messages for  * a new transaction.  */
 end_comment
 
 begin_function
@@ -15477,7 +15477,7 @@ operator|->
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Requeue all tagged commands for this target 		 * currently in our posession so they can be 		 * converted to untagged commands. 		 */
+comment|/* 		 * Requeue all tagged commands for this target 		 * currently in our possession so they can be 		 * converted to untagged commands. 		 */
 name|ahc_search_qinfifo
 argument_list|(
 name|ahc
@@ -17711,7 +17711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  If "reinit" is  * non-zero, this reset occured after initial configuration  * and the caller requests that the chip be fully reinitialized  * to a runable state.  Chip interrupts are *not* enabled after  * a reinitialization.  The caller must enable interrupts via  * ahc_intr_enable().  */
+comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  If "reinit" is  * non-zero, this reset occurred after initial configuration  * and the caller requests that the chip be fully reinitialized  * to a runable state.  Chip interrupts are *not* enabled after  * a reinitialization.  The caller must enable interrupts via  * ahc_intr_enable().  */
 end_comment
 
 begin_function
@@ -18989,7 +18989,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that we were successfull 	 */
+comment|/* 	 * Note that we were successful 	 */
 return|return
 operator|(
 literal|0
@@ -28728,7 +28728,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Accepted this patch.  Advance to the next 			 * one and wait for our intruction pointer to 			 * hit this point. 			 */
+comment|/* Accepted this patch.  Advance to the next 			 * one and wait for our instruction pointer to 			 * hit this point. 			 */
 name|cur_patch
 operator|++
 expr_stmt|;
@@ -31997,7 +31997,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Go "immediatly" to the bus reset */
+comment|/* Go "immediately" to the bus reset */
 comment|/* This shouldn't happen */
 name|ahc_set_recoveryscb
 argument_list|(

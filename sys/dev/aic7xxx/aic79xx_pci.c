@@ -1730,7 +1730,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * Next create a situation where write combining 	 * or read prefetching could be initiated by the 	 * CPU or host bridge.  Our device does not support 	 * either, so look for data corruption and/or flaged 	 * PCI errors.  First pause without causing another 	 * chip reset. 	 */
+comment|/* 	 * Next create a situation where write combining 	 * or read prefetching could be initiated by the 	 * CPU or host bridge.  Our device does not support 	 * either, so look for data corruption and/or flagged 	 * PCI errors.  First pause without causing another 	 * chip reset. 	 */
 name|hcntrl
 operator|&=
 operator|~
@@ -4329,7 +4329,7 @@ name|AHD_PACED_NEGTABLE_BUG
 operator||
 name|AHD_FAINT_LED_BUG
 expr_stmt|;
-comment|/* 		 * IO Cell paramter setup. 		 */
+comment|/* 		 * IO Cell parameter setup. 		 */
 name|AHD_SET_PRECOMP
 argument_list|(
 name|ahd
@@ -4405,7 +4405,7 @@ name|AHD_ABORT_LQI_BUG
 operator||
 name|AHD_BUSFREEREV_BUG
 expr_stmt|;
-comment|/* 		 * IO Cell paramter setup. 		 */
+comment|/* 		 * IO Cell parameter setup. 		 */
 name|AHD_SET_PRECOMP
 argument_list|(
 name|ahd

@@ -2116,7 +2116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************** Miscelaneous Support Functions ***********************/
+comment|/********************** Miscellaneous Support Functions ***********************/
 end_comment
 
 begin_function_decl
@@ -2871,7 +2871,7 @@ name|u_int
 name|value
 parameter_list|)
 block|{
-comment|/* 	 * Write low byte first to accomodate registers 	 * such as PRGMCNT where the order maters. 	 */
+comment|/* 	 * Write low byte first to accommodate registers 	 * such as PRGMCNT where the order maters. 	 */
 name|ahd_outb
 argument_list|(
 name|ahd
