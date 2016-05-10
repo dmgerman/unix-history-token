@@ -67,7 +67,7 @@ parameter_list|,
 name|WMSG
 parameter_list|)
 define|\
-value|({									\ 	int end, ret;							\ 									\ 	end = ticks + (MS) * hz / 1000;					\ 	ret = 0;							\ 									\ 	while (!(COND)) {						\ 		if (time_after(ticks, end)) {				\ 			ret = -ETIMEDOUT;				\ 			break;						\ 		}							\ 		if (W)							\ 			pause((WMSG), 1);				\ 		else							\ 			DELAY(1000);					\ 	}								\ 									\ 	ret;								\ })
+value|({									\ 	int end, ret;							\ 									\ 	end = ticks + (MS) * hz / 1000;					\ 	ret = 0;							\ 									\ 	while (!(COND)) {						\ 		if (time_after(ticks, end)) {				\ 			ret = -ETIMEDOUT;				\ 			break;						\ 		}							\ 		if (W)							\ 			pause((WMSG), 1);				\ 		else							\ 			DELAY(1000);					\ 		if (cold)						\ 			end -= howmany(hz, 1000);			\ 	}								\ 									\ 	ret;								\ })
 end_define
 
 begin_define
@@ -83,7 +83,7 @@ name|W
 parameter_list|,
 name|WMSG
 parameter_list|)
-value|({ \ 	int timeout__ = ticks + (MS) * hz / 1000;			\ 	int ret__ = 0;							\ 	while (!(COND)) {						\ 		if (time_after(ticks, timeout__)) {			\ 			ret__ = -ETIMEDOUT;				\ 			break;						\ 		}							\ 		if (W) {						\ 			pause((WMSG), 1);				\ 		} else {						\ 			DELAY(1000);					\ 		}							\ 	}								\ 	ret__;								\ })
+value|({ \ 	int timeout__ = ticks + (MS) * hz / 1000;			\ 	int ret__ = 0;							\ 	while (!(COND)) {						\ 		if (time_after(ticks, timeout__)) {			\ 			ret__ = -ETIMEDOUT;				\ 			break;						\ 		}							\ 		if (W) {						\ 			pause((WMSG), 1);				\ 		} else {						\ 			DELAY(1000);					\ 		}							\ 		if (cold)						\ 			timeout__ -= howmany(hz, 1000);			\ 	}								\ 	ret__;								\ })
 end_define
 
 begin_define
