@@ -751,6 +751,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ioremap_wt
+parameter_list|(
+name|addr
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|_ioremap_attr((addr), (size), VM_MEMATTR_WRITE_THROUGH)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ioremap
 parameter_list|(
 name|addr
@@ -1021,7 +1034,7 @@ operator|&&
 operator|(
 name|addr
 operator|=
-name|ioremap_nocache
+name|ioremap_wt
 argument_list|(
 name|offset
 argument_list|,
