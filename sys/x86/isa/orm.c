@@ -264,6 +264,16 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"orm"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return;
 name|child
 operator|=
 name|BUS_ADD_CHILD
