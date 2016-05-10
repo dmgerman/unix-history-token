@@ -1125,7 +1125,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|FILE
 modifier|*
@@ -1347,7 +1347,7 @@ condition|(
 operator|(
 name|lp
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fd
 argument_list|)
