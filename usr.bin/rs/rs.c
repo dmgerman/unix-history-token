@@ -422,7 +422,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)
@@ -645,7 +645,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 if|if
@@ -667,7 +667,7 @@ name|EOF
 condition|)
 return|return;
 block|}
-name|getline
+name|get_line
 argument_list|()
 expr_stmt|;
 if|if
@@ -921,7 +921,7 @@ block|}
 block|}
 do|while
 condition|(
-name|getline
+name|get_line
 argument_list|()
 operator|!=
 name|EOF
@@ -1739,7 +1739,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|void
 parameter_list|)
