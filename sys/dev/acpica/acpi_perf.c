@@ -1191,17 +1191,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|px_states
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* 	 * Each state is a package of {CoreFreq, Power, TransitionLatency, 	 * BusMasterLatency, ControlVal, StatusVal}, sorted from highest 	 * performance to lowest. 	 */
 name|count
 operator|=

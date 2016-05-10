@@ -934,17 +934,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ctxt
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"unable to allocate memory"
-argument_list|)
-expr_stmt|;
 name|ctxt
 operator|->
 name|flags
