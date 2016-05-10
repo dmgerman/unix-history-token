@@ -180,7 +180,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|getline
+name|zgetline
 parameter_list|(
 name|FILE
 modifier|*
@@ -874,7 +874,7 @@ operator|&&
 operator|(
 name|line
 operator|=
-name|getline
+name|zgetline
 argument_list|(
 name|oldfd
 argument_list|,
