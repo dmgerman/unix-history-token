@@ -2443,11 +2443,11 @@ name|job_dfcnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *		R -- laser dpi "resolution" 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		o -- "file name" postscript file, according to 	 *		     the RFC.  Here it is treated like an 'f'. 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 *              Z -- "locale" for pr 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
+comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *		R -- laser dpi "resolution" 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		o -- "file name" postscript file, according to 	 *		     the RFC.  Here it is treated like an 'f'. 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 *              Z -- "locale" for pr 	 * 	 *      get_line reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -3085,7 +3085,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -4900,7 +4900,7 @@ name|OK
 expr_stmt|;
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -5173,7 +5173,7 @@ condition|(
 operator|(
 name|i
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -5315,7 +5315,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)

@@ -256,7 +256,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|int
 parameter_list|,
@@ -3667,7 +3667,7 @@ begin_function
 specifier|static
 name|int
 comment|/* # of characters up to \r,\n or \0 */
-name|getline
+name|get_line
 parameter_list|(
 name|int
 name|fd
@@ -3859,7 +3859,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|s
 argument_list|,

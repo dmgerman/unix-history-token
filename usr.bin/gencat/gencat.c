@@ -225,7 +225,7 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|int
 parameter_list|)
@@ -876,7 +876,7 @@ block|}
 specifier|static
 name|char
 modifier|*
-name|getline
+name|get_line
 parameter_list|(
 name|int
 name|fd
@@ -1412,7 +1412,7 @@ literal|'\0'
 case|:
 name|cptr
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fd
 argument_list|)
@@ -1684,7 +1684,7 @@ condition|(
 operator|(
 name|cptr
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|fd
 argument_list|)

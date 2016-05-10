@@ -13410,7 +13410,7 @@ name|tmpline
 expr_stmt|;
 name|ret
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|cp
 argument_list|,

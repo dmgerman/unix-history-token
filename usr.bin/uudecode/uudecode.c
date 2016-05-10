@@ -1309,7 +1309,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|char
 modifier|*
@@ -1508,7 +1508,7 @@ control|)
 block|{
 switch|switch
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|buf
 argument_list|,
@@ -1920,7 +1920,7 @@ block|}
 block|}
 switch|switch
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|buf
 argument_list|,
@@ -2029,7 +2029,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|inbuf
 operator|+

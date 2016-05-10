@@ -122,7 +122,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|char
 modifier|*
