@@ -1633,8 +1633,6 @@ decl_stmt|;
 if|#
 directive|if
 name|EFSYS_OPT_PHY_TXC43128
-operator|||
-name|EFSYS_OPT_PHY_QT2025C
 union|union
 block|{
 struct|struct
@@ -1645,15 +1643,6 @@ name|bug10934_count
 decl_stmt|;
 block|}
 name|ep_txc43128
-struct|;
-struct|struct
-block|{
-name|unsigned
-name|int
-name|bug17190_count
-decl_stmt|;
-block|}
-name|ep_qt2025c
 struct|;
 block|}
 union|;
