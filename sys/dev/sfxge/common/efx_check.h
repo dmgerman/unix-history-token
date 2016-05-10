@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_MON_LM87
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_MON_MAX6647
 value|(0)
 end_define
@@ -707,42 +700,22 @@ begin_comment
 comment|/* EFSYS_OPT_MCDI_PROXY_AUTH */
 end_comment
 
-begin_comment
-comment|/* Support LM87 monitor */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MON_LM87
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MON_LM87 requires FALCON"
+literal|"MON_LM87 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_LM87 */
-end_comment
 
 begin_comment
 comment|/* Support MAX6647 monitor */

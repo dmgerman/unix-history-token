@@ -49,23 +49,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MON_LM87
-end_if
-
-begin_include
-include|#
-directive|include
-file|"lm87.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_MON_MAX6647
 end_if
 
@@ -226,41 +209,6 @@ if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
 name|nullmon_stats_update
-comment|/* emo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MON_STATS */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MON_LM87
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_mon_ops_t
-name|__efx_mon_lm87_ops
-init|=
-block|{
-name|lm87_reset
-block|,
-comment|/* emo_reset */
-name|lm87_reconfigure
-block|,
-comment|/* emo_reconfigure */
-if|#
-directive|if
-name|EFSYS_OPT_MON_STATS
-name|lm87_stats_update
 comment|/* emo_stats_update */
 endif|#
 directive|endif
@@ -463,20 +411,6 @@ name|emop
 operator|=
 operator|&
 name|__efx_mon_null_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-name|EFSYS_OPT_MON_LM87
-case|case
-name|EFX_MON_LM87
-case|:
-name|emop
-operator|=
-operator|&
-name|__efx_mon_lm87_ops
 expr_stmt|;
 break|break;
 endif|#
