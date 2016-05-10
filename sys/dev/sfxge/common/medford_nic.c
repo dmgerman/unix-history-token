@@ -29,23 +29,11 @@ directive|include
 file|"efx_impl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"mcdi_mon.h"
-end_include
-
 begin_if
 if|#
 directive|if
 name|EFSYS_OPT_MEDFORD
 end_if
-
-begin_include
-include|#
-directive|include
-file|"ef10_tlv_layout.h"
-end_include
 
 begin_function
 specifier|static
