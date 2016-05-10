@@ -32,23 +32,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_PHY_NULL
-end_if
-
-begin_include
-include|#
-directive|include
-file|"nullphy.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_PHY_QT2022C2
 end_if
 
@@ -130,99 +113,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_PHY_NULL
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_phy_ops_t
-name|__efx_phy_null_ops
-init|=
-block|{
-name|NULL
-block|,
-comment|/* epo_power */
-name|nullphy_reset
-block|,
-comment|/* epo_reset */
-name|nullphy_reconfigure
-block|,
-comment|/* epo_reconfigure */
-name|nullphy_verify
-block|,
-comment|/* epo_verify */
-name|NULL
-block|,
-comment|/* epo_uplink_check */
-name|nullphy_downlink_check
-block|,
-comment|/* epo_downlink_check */
-name|nullphy_oui_get
-block|,
-comment|/* epo_oui_get */
-if|#
-directive|if
-name|EFSYS_OPT_PHY_STATS
-name|nullphy_stats_update
-block|,
-comment|/* epo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PHY_STATS */
-if|#
-directive|if
-name|EFSYS_OPT_PHY_PROPS
-if|#
-directive|if
-name|EFSYS_OPT_NAMES
-name|nullphy_prop_name
-block|,
-comment|/* epo_prop_name */
-endif|#
-directive|endif
-name|nullphy_prop_get
-block|,
-comment|/* epo_prop_get */
-name|nullphy_prop_set
-block|,
-comment|/* epo_prop_set */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PHY_PROPS */
-if|#
-directive|if
-name|EFSYS_OPT_BIST
-name|NULL
-block|,
-comment|/* epo_bist_enable_offline */
-name|NULL
-block|,
-comment|/* epo_bist_start */
-name|NULL
-block|,
-comment|/* epo_bist_poll */
-name|NULL
-block|,
-comment|/* epo_bist_stop */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_BIST */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_NULL */
-end_comment
 
 begin_if
 if|#
