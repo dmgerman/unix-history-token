@@ -226,7 +226,7 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|void
-name|dprintf
+name|dbg_printf
 parameter_list|(
 name|char
 modifier|*
@@ -307,7 +307,7 @@ end_ifdef
 begin_function
 specifier|static
 name|void
-name|dprintf
+name|dbg_printf
 parameter_list|(
 name|char
 modifier|*
@@ -357,7 +357,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|dprintf
+name|dbg_printf
 parameter_list|(
 name|msg
 parameter_list|,
@@ -1685,7 +1685,7 @@ operator|>=
 name|ep
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"size (%d) too big\n"
 argument_list|,
@@ -1720,7 +1720,7 @@ operator|!
 name|toobig
 operator|++
 condition|)
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"Too many addresses (%d)\n"
 argument_list|,
@@ -1779,7 +1779,7 @@ return|;
 block|}
 break|break;
 default|default:
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"Impossible condition (type=%d)\n"
 argument_list|,
@@ -2443,7 +2443,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"res_nsearch failed (%d)\n"
 argument_list|,
@@ -2483,7 +2483,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"static buffer is too small (%d)\n"
 argument_list|,
@@ -3102,7 +3102,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"res_nquery failed (%d)\n"
 argument_list|,
@@ -3139,7 +3139,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|"static buffer is too small (%d)\n"
 argument_list|,
