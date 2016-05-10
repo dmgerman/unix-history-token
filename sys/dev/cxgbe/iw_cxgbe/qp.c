@@ -137,6 +137,12 @@ name|rss_header
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|cpl_set_tcb_rpl
+struct_decl|;
+end_struct_decl
+
 begin_include
 include|#
 directive|include
