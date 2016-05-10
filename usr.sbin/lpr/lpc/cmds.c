@@ -1251,7 +1251,7 @@ block|}
 comment|/* If the lock file is empty, then there is no daemon to kill */
 if|if
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)
@@ -4947,7 +4947,7 @@ condition|)
 continue|continue;
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)

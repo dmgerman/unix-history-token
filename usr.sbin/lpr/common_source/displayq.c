@@ -1926,7 +1926,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -2101,7 +2101,7 @@ block|}
 name|copycnt
 operator|++
 expr_stmt|;
-comment|/* 			 * deliberately 'continue' to another getline(), so 			 * all format-spec lines for this datafile are read 			 * in and counted before calling show() 			 */
+comment|/* 			 * deliberately 'continue' to another get_line(), so 			 * all format-spec lines for this datafile are read 			 * in and counted before calling show() 			 */
 continue|continue;
 case|case
 literal|'N'

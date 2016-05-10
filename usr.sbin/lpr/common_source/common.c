@@ -202,12 +202,12 @@ value|isdigit((u_char)(Anychar))
 end_define
 
 begin_comment
-comment|/*  * Getline reads a line from the control file cfp, removes tabs, converts  *  new-line to null and leaves it in line.  * Returns 0 at EOF or the number of characters read.  */
+comment|/*  * get_line reads a line from the control file cfp, removes tabs, converts  *  new-line to null and leaves it in line.  * Returns 0 at EOF or the number of characters read.  */
 end_comment
 
 begin_function
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|FILE
 modifier|*

@@ -658,7 +658,7 @@ name|PRIV_END
 if|if
 condition|(
 operator|!
-name|getline
+name|get_line
 argument_list|(
 name|fp
 argument_list|)
@@ -854,7 +854,7 @@ expr_stmt|;
 name|PRIV_END
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
@@ -1089,7 +1089,7 @@ return|;
 name|PRIV_END
 while|while
 condition|(
-name|getline
+name|get_line
 argument_list|(
 name|cfp
 argument_list|)
