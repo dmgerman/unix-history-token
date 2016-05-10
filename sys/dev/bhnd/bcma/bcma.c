@@ -282,7 +282,9 @@ name|dinfo
 operator|->
 name|rid_agent
 operator|=
-literal|0
+name|i
+operator|+
+literal|1
 expr_stmt|;
 name|dinfo
 operator|->
