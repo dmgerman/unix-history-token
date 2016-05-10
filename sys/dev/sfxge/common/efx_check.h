@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_NVRAM_FALCON_BOOTROM
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_NVRAM_SFT9001
 value|(0)
 end_define
@@ -969,60 +962,22 @@ begin_comment
 comment|/* EFSYS_OPT_NVRAM */
 end_comment
 
-begin_comment
-comment|/* Support Falcon bootrom */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_NVRAM_FALCON_BOOTROM
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_NVRAM
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"NVRAM_FALCON_BOOTROM requires NVRAM"
+literal|"NVRAM_FALCON_BOOTROM is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"NVRAM_FALCON_BOOTROM requires FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_NVRAM_FALCON_BOOTROM */
-end_comment
 
 begin_comment
 comment|/* Support NVRAM config for SFT9001 */
