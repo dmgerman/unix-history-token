@@ -32,23 +32,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-end_if
-
-begin_include
-include|#
-directive|include
-file|"falcon_xmac.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -73,81 +56,6 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_mac_ops_t
-name|__efx_falcon_xmac_ops
-init|=
-block|{
-name|falcon_xmac_reset
-block|,
-comment|/* emo_reset */
-name|falcon_mac_poll
-block|,
-comment|/* emo_poll */
-name|falcon_mac_up
-block|,
-comment|/* emo_up */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_addr_set */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_pdu_set */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_reconfigure */
-name|falconsiena_mac_multicast_list_set
-block|,
-comment|/* emo_multicast_list_set */
-name|NULL
-block|,
-comment|/* emo_filter_set_default_rxq */
-name|NULL
-block|,
-comment|/* emo_filter_default_rxq_clear */
-if|#
-directive|if
-name|EFSYS_OPT_LOOPBACK
-name|falcon_mac_loopback_set
-block|,
-comment|/* emo_loopback_set */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_LOOPBACK */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_STATS
-name|falcon_mac_stats_upload
-block|,
-comment|/* emo_stats_upload */
-name|NULL
-block|,
-comment|/* emo_stats_periodic */
-name|falcon_xmac_stats_update
-comment|/* emo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MAC_STATS */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MAC_FALCON_XMAC */
 end_comment
 
 begin_if
@@ -317,18 +225,8 @@ comment|/* [EFX_MAC_FALCON_GMAC] */
 name|NULL
 block|,
 comment|/* [EFX_MAC_FALCON_XMAC] */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-operator|&
-name|__efx_falcon_xmac_ops
-block|,
-else|#
-directive|else
 name|NULL
 block|,
-endif|#
-directive|endif
 comment|/* [EFX_MAC_SIENA] */
 if|#
 directive|if
