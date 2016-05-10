@@ -161,7 +161,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|dprintf
+name|dbg_printf
 parameter_list|(
 name|int
 name|debug
@@ -417,7 +417,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -445,7 +445,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -522,7 +522,7 @@ operator|!=
 name|DOF_MAG_MAG3
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|0
 argument_list|,
@@ -669,7 +669,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -709,7 +709,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -745,7 +745,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -756,7 +756,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -857,7 +857,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -887,7 +887,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
@@ -897,7 +897,7 @@ name|gen
 argument_list|)
 expr_stmt|;
 else|else
-name|dprintf
+name|dbg_printf
 argument_list|(
 literal|1
 argument_list|,
