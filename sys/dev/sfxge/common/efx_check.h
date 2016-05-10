@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_PHY_SFT9001
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_PHY_SFX7101
 value|(0)
 end_define
@@ -1199,42 +1192,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Support SFT9001 PHY (Starbolt NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_SFT9001
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_SFT9001 requires FALCON"
+literal|"PHY_SFT9001 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_SFT9001 */
-end_comment
 
 begin_comment
 comment|/* Support SFX7101 PHY (SFE4001 NIC) */

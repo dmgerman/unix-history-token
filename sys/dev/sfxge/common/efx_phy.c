@@ -66,23 +66,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_PHY_SFT9001
-end_if
-
-begin_include
-include|#
-directive|include
-file|"sft9001.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_PHY_SFX7101
 end_if
 
@@ -264,99 +247,6 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_PHY_TXC43128 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_PHY_SFT9001
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_phy_ops_t
-name|__efx_phy_sft9001_ops
-init|=
-block|{
-name|NULL
-block|,
-comment|/* epo_power */
-name|sft9001_reset
-block|,
-comment|/* epo_reset */
-name|sft9001_reconfigure
-block|,
-comment|/* epo_reconfigure */
-name|sft9001_verify
-block|,
-comment|/* epo_verify */
-name|sft9001_uplink_check
-block|,
-comment|/* epo_uplink_check */
-name|sft9001_downlink_check
-block|,
-comment|/* epo_downlink_check */
-name|sft9001_oui_get
-block|,
-comment|/* epo_oui_get */
-if|#
-directive|if
-name|EFSYS_OPT_PHY_STATS
-name|sft9001_stats_update
-block|,
-comment|/* epo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PHY_STATS */
-if|#
-directive|if
-name|EFSYS_OPT_PHY_PROPS
-if|#
-directive|if
-name|EFSYS_OPT_NAMES
-name|sft9001_prop_name
-block|,
-comment|/* epo_prop_name */
-endif|#
-directive|endif
-name|sft9001_prop_get
-block|,
-comment|/* epo_prop_get */
-name|sft9001_prop_set
-block|,
-comment|/* epo_prop_set */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PHY_PROPS */
-if|#
-directive|if
-name|EFSYS_OPT_BIST
-name|NULL
-block|,
-comment|/* epo_bist_enable_offline */
-name|sft9001_bist_start
-block|,
-comment|/* epo_bist_start */
-name|sft9001_bist_poll
-block|,
-comment|/* epo_bist_poll */
-name|sft9001_bist_stop
-block|,
-comment|/* epo_bist_stop */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_BIST */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_SFT9001 */
 end_comment
 
 begin_if
