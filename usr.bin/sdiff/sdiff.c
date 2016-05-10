@@ -2212,6 +2212,12 @@ argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|diffpipe
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|diffpipe
