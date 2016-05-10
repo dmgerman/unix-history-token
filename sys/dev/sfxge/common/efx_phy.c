@@ -49,23 +49,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-end_if
-
-begin_include
-include|#
-directive|include
-file|"falcon_gmac.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_PHY_NULL
 end_if
 
