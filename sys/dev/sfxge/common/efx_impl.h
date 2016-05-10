@@ -221,12 +221,8 @@ name|EFX_MOD_FILTER
 value|0x00001000
 define|#
 directive|define
-name|EFX_MOD_PKTFILTER
-value|0x00002000
-define|#
-directive|define
 name|EFX_MOD_LIC
-value|0x00004000
+value|0x00002000
 define|#
 directive|define
 name|EFX_RESET_MAC
