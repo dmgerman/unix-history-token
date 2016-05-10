@@ -500,7 +500,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|char
 modifier|*
@@ -1427,7 +1427,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|s
 operator|->
@@ -1912,7 +1912,7 @@ end_function
 
 begin_function
 name|int
-name|getline
+name|get_line
 parameter_list|(
 name|char
 modifier|*
@@ -5902,7 +5902,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|getline
+name|get_line
 argument_list|(
 name|s
 operator|->
