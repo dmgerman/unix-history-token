@@ -172,6 +172,12 @@ directive|include
 file|<vm/vm_domain.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VM_NUMA_ALLOC
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -182,9 +188,6 @@ name|int
 name|skip_domain
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|VM_NUMA_ALLOC
 name|struct
 name|thread
 modifier|*
@@ -243,17 +246,13 @@ operator|->
 name|td_dom_rr_idx
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This implements a very simple set of VM domain memory allocation  * policies and iterators.  */
