@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_MON_MAX6647
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_MON_NULL
 value|(0)
 end_define
@@ -717,42 +710,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Support MAX6647 monitor */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MON_MAX6647
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MON_MAX6647 requires FALCON"
+literal|"MON_MAX6647 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_MAX6647 */
-end_comment
 
 begin_comment
 comment|/* Support null monitor */
