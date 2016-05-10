@@ -66,8 +66,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -91,7 +89,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -2972,139 +2970,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-switch|switch
-condition|(
-name|epp
-operator|->
-name|ep_link_mode
-condition|)
-block|{
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-case|case
-name|EFX_LINK_100HDX
-case|:
-case|case
-name|EFX_LINK_100FDX
-case|:
-case|case
-name|EFX_LINK_1000HDX
-case|:
-case|case
-name|EFX_LINK_1000FDX
-case|:
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-goto|goto
-name|chosen
-goto|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON_GMAC */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-case|case
-name|EFX_LINK_10000FDX
-case|:
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-goto|goto
-name|chosen
-goto|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON_XMAC */
-default|default:
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-operator|&&
-name|EFSYS_OPT_MAC_FALCON_XMAC
-comment|/* Only initialise a MAC supported by the PHY */
-if|if
-condition|(
-name|epp
-operator|->
-name|ep_phy_cap_mask
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_1000FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_1000HDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_100FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_100HDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_10FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_10FDX
-operator|)
-operator|)
-condition|)
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-else|else
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-elif|#
-directive|elif
-name|EFSYS_OPT_MAC_FALCON_GMAC
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-else|#
-directive|else
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-endif|#
-directive|endif
-goto|goto
-name|chosen
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 name|chosen
 label|:
 name|EFSYS_ASSERT
@@ -3222,8 +3087,6 @@ end_function
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -3536,7 +3399,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 end_unit

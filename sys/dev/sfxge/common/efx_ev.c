@@ -100,8 +100,6 @@ end_define
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -305,61 +303,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_ev_ops_t
-name|__efx_ev_falcon_ops
-init|=
-block|{
-name|falconsiena_ev_init
-block|,
-comment|/* eevo_init */
-name|falconsiena_ev_fini
-block|,
-comment|/* eevo_fini */
-name|falconsiena_ev_qcreate
-block|,
-comment|/* eevo_qcreate */
-name|falconsiena_ev_qdestroy
-block|,
-comment|/* eevo_qdestroy */
-name|falconsiena_ev_qprime
-block|,
-comment|/* eevo_qprime */
-name|falconsiena_ev_qpost
-block|,
-comment|/* eevo_qpost */
-name|falconsiena_ev_qmoderate
-block|,
-comment|/* eevo_qmoderate */
-if|#
-directive|if
-name|EFSYS_OPT_QSTATS
-name|falconsiena_ev_qstats_update
-block|,
-comment|/* eevo_qstats_update */
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -536,25 +480,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|eevop
-operator|=
-operator|(
-name|efx_ev_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_ev_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
@@ -1745,8 +1670,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -5556,7 +5479,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -5734,8 +5657,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -5928,7 +5849,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 end_unit

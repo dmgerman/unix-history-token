@@ -49,13 +49,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_FALCON
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE
 value|(0)
 end_define
@@ -215,11 +208,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -229,7 +219,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"CHECK_REG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"CHECK_REG requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -260,17 +250,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"INTR_FATAL requires FALCON or SIENA"
+literal|"INTR_FATAL requires SIENA"
 end_error
 
 begin_endif
@@ -302,11 +288,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -316,7 +299,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"DIAG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"DIAG requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -348,11 +331,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -362,7 +342,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"EV_PREFETCH requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"EV_PREFETCH requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -431,11 +411,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -445,7 +422,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"FILTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"FILTER requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -514,11 +491,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -528,7 +502,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"LOOPBACK requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"LOOPBACK requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -634,11 +608,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -648,7 +619,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"MAC_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"MAC_STATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -993,11 +964,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1007,7 +975,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"MON_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"MON_STATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1135,11 +1103,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1149,7 +1114,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"NVRAM requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"NVRAM requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1383,17 +1348,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_FLAGS requires FALCON or SIENA"
+literal|"PHY_FLAGS requires SIENA"
 end_error
 
 begin_endif
@@ -1424,17 +1385,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_LED_CONTROL requires FALCON or SIENA"
+literal|"PHY_LED_CONTROL requires SIENA"
 end_error
 
 begin_endif
@@ -1523,17 +1480,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_PROPS requires FALCON or SIENA"
+literal|"PHY_PROPS requires SIENA"
 end_error
 
 begin_endif
@@ -1712,17 +1665,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_STATS requires FALCON or SIENA"
+literal|"PHY_STATS requires SIENA"
 end_error
 
 begin_endif
@@ -1791,11 +1740,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1805,7 +1751,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"QSTATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"QSTATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1862,11 +1808,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1876,7 +1819,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"RX_SCALE requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"RX_SCALE requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1908,11 +1851,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1922,7 +1862,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"RX_SCATTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"RX_SCATTER requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1975,11 +1915,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1989,7 +1926,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"VPD requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"VPD requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -2083,11 +2020,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -2097,7 +2031,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"BIST requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"BIST requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif

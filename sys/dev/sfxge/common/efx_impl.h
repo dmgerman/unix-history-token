@@ -70,27 +70,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_include
-include|#
-directive|include
-file|"falcon_impl.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
-end_comment
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -2240,8 +2219,6 @@ name|efx_filter_s
 block|{
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 name|falconsiena_filter_t
 modifier|*
@@ -2249,7 +2226,7 @@ name|ef_falconsiena_filter
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
@@ -3265,55 +3242,6 @@ endif|#
 directive|endif
 union|union
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-struct|struct
-block|{
-name|falcon_spi_dev_t
-name|enu_fsd
-index|[
-name|FALCON_SPI_NTYPES
-index|]
-decl_stmt|;
-name|falcon_i2c_t
-name|enu_fip
-decl_stmt|;
-name|boolean_t
-name|enu_i2c_locked
-decl_stmt|;
-if|#
-directive|if
-name|EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE
-specifier|const
-name|uint8_t
-modifier|*
-name|enu_forced_cfg
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE */
-name|uint8_t
-name|enu_mon_devid
-decl_stmt|;
-name|uint16_t
-name|enu_board_rev
-decl_stmt|;
-name|boolean_t
-name|enu_internal_sram
-decl_stmt|;
-name|uint8_t
-name|enu_sram_num_bank
-decl_stmt|;
-name|uint8_t
-name|enu_sram_bank_size
-decl_stmt|;
-block|}
-name|falcon
-struct|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA

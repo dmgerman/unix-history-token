@@ -72,8 +72,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -385,94 +383,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_tx_ops_t
-name|__efx_tx_falcon_ops
-init|=
-block|{
-name|falconsiena_tx_init
-block|,
-comment|/* etxo_init */
-name|falconsiena_tx_fini
-block|,
-comment|/* etxo_fini */
-name|falconsiena_tx_qcreate
-block|,
-comment|/* etxo_qcreate */
-name|falconsiena_tx_qdestroy
-block|,
-comment|/* etxo_qdestroy */
-name|falconsiena_tx_qpost
-block|,
-comment|/* etxo_qpost */
-name|falconsiena_tx_qpush
-block|,
-comment|/* etxo_qpush */
-name|falconsiena_tx_qpace
-block|,
-comment|/* etxo_qpace */
-name|falconsiena_tx_qflush
-block|,
-comment|/* etxo_qflush */
-name|falconsiena_tx_qenable
-block|,
-comment|/* etxo_qenable */
-name|NULL
-block|,
-comment|/* etxo_qpio_enable */
-name|NULL
-block|,
-comment|/* etxo_qpio_disable */
-name|NULL
-block|,
-comment|/* etxo_qpio_write */
-name|NULL
-block|,
-comment|/* etxo_qpio_post */
-name|falconsiena_tx_qdesc_post
-block|,
-comment|/* etxo_qdesc_post */
-name|falconsiena_tx_qdesc_dma_create
-block|,
-comment|/* etxo_qdesc_dma_create */
-name|NULL
-block|,
-comment|/* etxo_qdesc_tso_create */
-name|NULL
-block|,
-comment|/* etxo_qdesc_tso2_create */
-name|NULL
-block|,
-comment|/* etxo_qdesc_vlantci_create */
-if|#
-directive|if
-name|EFSYS_OPT_QSTATS
-name|falconsiena_tx_qstats_update
-block|,
-comment|/* etxo_qstats_update */
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -820,25 +731,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|etxop
-operator|=
-operator|(
-name|efx_tx_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_tx_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
@@ -2776,8 +2668,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -4274,7 +4164,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -4386,8 +4276,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -4549,7 +4437,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 end_unit
