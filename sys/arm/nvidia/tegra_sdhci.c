@@ -1348,6 +1348,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+name|node
+argument_list|,
 literal|"cd-gpios"
 argument_list|,
 operator|&
@@ -1362,6 +1364,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+name|node
+argument_list|,
 literal|"power-gpios"
 argument_list|,
 operator|&
@@ -1375,6 +1379,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+name|node
 argument_list|,
 literal|"wp-gpios"
 argument_list|,

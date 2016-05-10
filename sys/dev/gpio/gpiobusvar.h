@@ -449,6 +449,9 @@ parameter_list|(
 name|device_t
 name|consumer
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -467,6 +470,9 @@ parameter_list|(
 name|device_t
 name|consumer
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|int
 name|idx
 parameter_list|,
@@ -483,6 +489,9 @@ name|gpio_pin_get_by_ofw_property
 parameter_list|(
 name|device_t
 name|consumer
+parameter_list|,
+name|phandle_t
+name|node
 parameter_list|,
 name|char
 modifier|*
