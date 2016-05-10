@@ -4919,7 +4919,7 @@ goto|goto
 name|fail2
 goto|;
 block|}
-comment|/* 	 * WORKAROUND_BUG26807 controls firmware support for chained multicast 	 * filters, and can only be enabled or disabled when the hardware filter 	 * table is empty. 	 * 	 * Firmware will reset (FLR) functions which have inserted filters in 	 * the hardware filter table when the workaround is enabled/disabled. 	 * Functions without any hardware filters are not reset. 	 * 	 * Re-check if the workaround is enabled after adding unicast hardware 	 * filters. This ensures that encp->enc_workaround_bug26807 matches the 	 * firmware state, and that later changes to enable/disable the 	 * workaround will result in this function seeing a reset (FLR). 	 * 	 * FIXME: On Medford mulicast chaining should always be on. 	 */
+comment|/* 	 * WORKAROUND_BUG26807 controls firmware support for chained multicast 	 * filters, and can only be enabled or disabled when the hardware filter 	 * table is empty. 	 * 	 * Firmware will reset (FLR) functions which have inserted filters in 	 * the hardware filter table when the workaround is enabled/disabled. 	 * Functions without any hardware filters are not reset. 	 * 	 * Re-check if the workaround is enabled after adding unicast hardware 	 * filters. This ensures that encp->enc_workaround_bug26807 matches the 	 * firmware state, and that later changes to enable/disable the 	 * workaround will result in this function seeing a reset (FLR). 	 * 	 * FIXME: On Medford multicast chaining should always be on. 	 */
 if|if
 condition|(
 operator|(
