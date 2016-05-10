@@ -1726,7 +1726,7 @@ end_comment
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|efx_nvram_tlv_validate
+name|ef10_nvram_buffer_validate
 argument_list|(
 name|__in
 name|efx_nic_t

@@ -3588,11 +3588,10 @@ literal|4
 index|]
 argument_list|)
 decl_stmt|;
-comment|/* Validate contents of TLV formatted partition */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|efx_nvram_tlv_validate
+name|efx_nvram_validate
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -3600,8 +3599,8 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|uint32_t
-name|partn
+name|efx_nvram_type_t
+name|type
 argument_list|,
 name|__in_bcount
 argument_list|(
