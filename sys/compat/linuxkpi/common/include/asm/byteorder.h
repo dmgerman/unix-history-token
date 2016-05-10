@@ -161,7 +161,7 @@ name|cpu_to_le64p
 parameter_list|(
 name|x
 parameter_list|)
-value|htole64(*((uint64_t *)x))
+value|htole64(*((const uint64_t *)(x)))
 end_define
 
 begin_define
@@ -171,7 +171,7 @@ name|le64_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|le64toh(*((uint64_t *)x))
+value|le64toh(*((const uint64_t *)(x)))
 end_define
 
 begin_define
@@ -181,7 +181,7 @@ name|cpu_to_le32p
 parameter_list|(
 name|x
 parameter_list|)
-value|htole32(*((uint32_t *)x))
+value|htole32(*((const uint32_t *)(x)))
 end_define
 
 begin_define
@@ -191,7 +191,7 @@ name|le32_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|le32toh(*((uint32_t *)x))
+value|le32toh(*((const uint32_t *)(x)))
 end_define
 
 begin_define
@@ -201,7 +201,7 @@ name|cpu_to_le16p
 parameter_list|(
 name|x
 parameter_list|)
-value|htole16(*((uint16_t *)x))
+value|htole16(*((const uint16_t *)(x)))
 end_define
 
 begin_define
@@ -211,7 +211,7 @@ name|le16_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|le16toh(*((uint16_t *)x))
+value|le16toh(*((const uint16_t *)(x)))
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ name|cpu_to_be64p
 parameter_list|(
 name|x
 parameter_list|)
-value|htobe64(*((uint64_t *)x))
+value|htobe64(*((const uint64_t *)(x)))
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ name|be64_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|be64toh(*((uint64_t *)x))
+value|be64toh(*((const uint64_t *)(x)))
 end_define
 
 begin_define
@@ -241,7 +241,7 @@ name|cpu_to_be32p
 parameter_list|(
 name|x
 parameter_list|)
-value|htobe32(*((uint32_t *)x))
+value|htobe32(*((const uint32_t *)(x)))
 end_define
 
 begin_define
@@ -251,7 +251,7 @@ name|be32_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|be32toh(*((uint32_t *)x))
+value|be32toh(*((const uint32_t *)(x)))
 end_define
 
 begin_define
@@ -261,7 +261,7 @@ name|cpu_to_be16p
 parameter_list|(
 name|x
 parameter_list|)
-value|htobe16(*((uint16_t *)x))
+value|htobe16(*((const uint16_t *)(x)))
 end_define
 
 begin_define
@@ -271,7 +271,7 @@ name|be16_to_cpup
 parameter_list|(
 name|x
 parameter_list|)
-value|be16toh(*((uint16_t *)x))
+value|be16toh(*((const uint16_t *)(x)))
 end_define
 
 begin_define
