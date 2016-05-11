@@ -390,9 +390,8 @@ name|ACPI_SRAT_CPU_ENABLED
 operator|)
 condition|)
 break|break;
-name|KASSERT
-argument_list|(
-operator|!
+if|if
+condition|(
 name|cpus
 index|[
 name|cpu
@@ -401,16 +400,28 @@ name|ApicId
 index|]
 operator|.
 name|enabled
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SRAT: Duplicate local APIC ID %u\n"
 argument_list|,
-operator|(
-literal|"Duplicate local APIC ID %u"
-operator|,
 name|cpu
 operator|->
 name|ApicId
-operator|)
 argument_list|)
 expr_stmt|;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|ENXIO
+expr_stmt|;
+break|break;
+block|}
 name|cpus
 index|[
 name|cpu
