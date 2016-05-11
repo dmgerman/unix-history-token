@@ -283,6 +283,22 @@ decl_stmt|;
 block|}
 name|spa_taskqs_t
 typedef|;
+typedef|typedef
+enum|enum
+name|spa_all_vdev_zap_action
+block|{
+name|AVZ_ACTION_NONE
+init|=
+literal|0
+block|,
+name|AVZ_ACTION_DESTROY
+block|,
+comment|/* Destroy all per-vdev ZAPs and the AVZ. */
+name|AVZ_ACTION_REBUILD
+comment|/* Populate the new AVZ, see spa_avz_rebuild */
+block|}
+name|spa_avz_action_t
+typedef|;
 struct|struct
 name|spa
 block|{
@@ -846,6 +862,14 @@ name|uint64_t
 name|spa_deadman_synctime
 decl_stmt|;
 comment|/* deadman expiration timer */
+name|uint64_t
+name|spa_all_vdev_zaps
+decl_stmt|;
+comment|/* ZAP of per-vd ZAP obj #s */
+name|spa_avz_action_t
+name|spa_avz_action
+decl_stmt|;
+comment|/* destroy/rebuild AVZ? */
 comment|/* 	 * spa_iokstat_lock protects spa_iokstat and 	 * spa_queue_stats[]. 	 */
 name|kmutex_t
 name|spa_iokstat_lock

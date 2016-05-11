@@ -513,6 +513,9 @@ name|boolean_t
 name|vdev_ishole
 decl_stmt|;
 comment|/* is a hole in the namespace 	*/
+name|uint64_t
+name|vdev_top_zap
+decl_stmt|;
 comment|/* 	 * Leaf vdev state. 	 */
 name|range_tree_t
 modifier|*
@@ -661,6 +664,9 @@ name|vdev_aux_t
 name|vdev_label_aux
 decl_stmt|;
 comment|/* on-disk aux state		*/
+name|uint64_t
+name|vdev_leaf_zap
+decl_stmt|;
 comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest of the fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock
