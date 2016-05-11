@@ -7225,7 +7225,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" from %s to %s? [Yes/No] "
+literal|" from %s to %s? [yes/no] "
 argument_list|,
 name|oldsizebuf
 argument_list|,
@@ -7258,13 +7258,13 @@ name|strcasecmp
 argument_list|(
 name|reply
 argument_list|,
-literal|"Yes\n"
+literal|"yes\n"
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nNothing done\n"
+literal|"Response other than \"yes\"; aborting\n"
 argument_list|)
 expr_stmt|;
 name|exit
