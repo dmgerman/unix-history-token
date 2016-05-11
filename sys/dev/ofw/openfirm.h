@@ -396,6 +396,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|OF_prop_free
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|OF_nextprop
 parameter_list|(

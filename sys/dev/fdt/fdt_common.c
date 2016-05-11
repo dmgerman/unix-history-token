@@ -1530,11 +1530,9 @@ name|ena
 operator|=
 literal|1
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|stat
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return
@@ -2380,11 +2378,9 @@ literal|0
 expr_stmt|;
 name|out
 label|:
-name|free
+name|OF_prop_free
 argument_list|(
 name|regptr
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return

@@ -1889,6 +1889,29 @@ block|}
 end_function
 
 begin_comment
+comment|/* Free buffer allocated by OF_getencprop_alloc or OF_getprop_alloc */
+end_comment
+
+begin_function
+name|void
+name|OF_prop_free
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Get the next property of a package. */
 end_comment
 
