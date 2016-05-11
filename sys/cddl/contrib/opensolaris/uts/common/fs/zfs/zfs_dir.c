@@ -2552,7 +2552,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Free up all the data in the file. 	 */
+else|else
+block|{
+comment|/* 		 * Free up all the data in the file.  We don't do this for 		 * XATTR directories because we need truncate and remove to be 		 * in the same tx, like in zfs_znode_delete(). Otherwise, if 		 * we crash here we'll end up with an inconsistent truncated 		 * zap object in the delete queue.  Note a truncated file is 		 * harmless since it only contains user data. 		 */
 name|error
 operator|=
 name|dmu_free_long_range
@@ -2573,7 +2575,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * Not enough space.  Leave the file in the unlinked set. 		 */
+comment|/* 			 * Not enough space.  Leave the file in the unlinked 			 * set. 			 */
 name|zfs_znode_dmu_fini
 argument_list|(
 name|zp
@@ -2585,6 +2587,7 @@ name|zp
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * If the file has extended attributes, we're going to unlink 	 * the xattr dir. 	 */
 name|error
