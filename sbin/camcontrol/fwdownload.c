@@ -1757,6 +1757,10 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+name|ccb
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|bailout
 goto|;
@@ -2085,6 +2089,12 @@ literal|0
 expr_stmt|;
 name|bailout
 label|:
+if|if
+condition|(
+name|ccb
+operator|!=
+name|NULL
+condition|)
 name|cam_freeccb
 argument_list|(
 name|ccb
