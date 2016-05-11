@@ -235,10 +235,6 @@ name|EFX_MAC_INVALID
 init|=
 literal|0
 block|,
-name|EFX_MAC_FALCON_GMAC
-block|,
-name|EFX_MAC_FALCON_XMAC
-block|,
 name|EFX_MAC_SIENA
 block|,
 name|EFX_MAC_HUNTINGTON
