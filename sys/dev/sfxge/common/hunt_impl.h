@@ -1853,28 +1853,6 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_BIST */
-comment|/* SRAM */
-if|#
-directive|if
-name|EFSYS_OPT_DIAG
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|ef10_sram_test
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|,
-name|__in
-name|efx_sram_pattern_fn_t
-name|func
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_DIAG */
 comment|/* TX */
 specifier|extern
 name|__checkReturn

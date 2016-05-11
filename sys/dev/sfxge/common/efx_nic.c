@@ -557,9 +557,6 @@ comment|/* eno_get_bar_region */
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|siena_sram_test
-block|,
-comment|/* eno_sram_test */
 name|siena_nic_register_test
 block|,
 comment|/* eno_register_test */
@@ -621,9 +618,6 @@ comment|/* eno_get_bar_region */
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|ef10_sram_test
-block|,
-comment|/* eno_sram_test */
 name|ef10_nic_register_test
 block|,
 comment|/* eno_register_test */
@@ -685,9 +679,6 @@ comment|/* eno_get_bar_region */
 if|#
 directive|if
 name|EFSYS_OPT_DIAG
-name|ef10_sram_test
-block|,
-comment|/* eno_sram_test */
 name|ef10_nic_register_test
 block|,
 comment|/* eno_register_test */
