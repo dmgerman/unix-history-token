@@ -1430,7 +1430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Anothe variant of nfs_nget(). This one is only used by reopen. It  * takes almost the same args as nfs_nget(), but only succeeds if an entry  * exists in the cache. (Since files should already be "open" with a  * vnode ref cnt on the node when reopen calls this, it should always  * succeed.)  * Also, don't get a vnode lock, since it may already be locked by some  * other process that is handling it. This is ok, since all other threads  * on the client are blocked by the nfsc_lock being exclusively held by the  * caller of this function.  */
+comment|/*  * Another variant of nfs_nget(). This one is only used by reopen. It  * takes almost the same args as nfs_nget(), but only succeeds if an entry  * exists in the cache. (Since files should already be "open" with a  * vnode ref cnt on the node when reopen calls this, it should always  * succeed.)  * Also, don't get a vnode lock, since it may already be locked by some  * other process that is handling it. This is ok, since all other threads  * on the client are blocked by the nfsc_lock being exclusively held by the  * caller of this function.  */
 end_comment
 
 begin_function
@@ -1603,7 +1603,7 @@ operator|==
 name|EBUSY
 condition|)
 block|{
-comment|/* 		 * The LK_EXCLOTHER lock type tells nfs_lock1() to not try 		 * and lock the vnode, but just get a v_usecount on it. 		 * LK_NOWAIT is set so that when vget() returns ENOENT, 		 * vfs_hash_get() fails instead of looping. 		 * If this succeeds, it is safe so long as a vflush() with 		 * FORCECLOSE has not been done. Since the Renew thread is 		 * stopped and the MNTK_UNMOUNTF flag is set before doing 		 * a vflush() with FORCECLOSE, we should be ok here. 		 */
+comment|/* 		 * It is safe so long as a vflush() with 		 * FORCECLOSE has not been done. Since the Renew thread is 		 * stopped and the MNTK_UNMOUNTF flag is set before doing 		 * a vflush() with FORCECLOSE, we should be ok here. 		 */
 if|if
 condition|(
 operator|(
@@ -1619,19 +1619,12 @@ operator|=
 name|EINTR
 expr_stmt|;
 else|else
-name|error
-operator|=
-name|vfs_hash_get
+block|{
+name|vfs_hash_ref
 argument_list|(
 name|mntp
 argument_list|,
 name|hash
-argument_list|,
-operator|(
-name|LK_EXCLOTHER
-operator||
-name|LK_NOWAIT
-operator|)
 argument_list|,
 name|td
 argument_list|,
@@ -1643,6 +1636,50 @@ argument_list|,
 name|nfhp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nvp
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|nvp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+name|vrele
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 block|}
 name|FREE
 argument_list|(
