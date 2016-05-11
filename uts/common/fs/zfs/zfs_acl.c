@@ -6308,7 +6308,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Limit permissions to be no greater than 			 * group permissions. 			 * The "aclinherit" and "aclmode" properties 			 * affect policy for create and chmod(2), 			 * respectively. 			 */
+comment|/* 			 * Limit permissions granted by ACEs to be no greater 			 * than permissions of the requested group mode. 			 * Applies when the "aclmode" property is set to 			 * "groupmask". 			 */
 if|if
 condition|(
 operator|(
@@ -8044,9 +8044,9 @@ argument_list|,
 operator|(
 name|zfsvfs
 operator|->
-name|z_acl_inherit
+name|z_acl_mode
 operator|==
-name|ZFS_ACL_RESTRICTED
+name|ZFS_ACL_GROUPMASK
 operator|)
 argument_list|,
 name|acl_ids
