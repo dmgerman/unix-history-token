@@ -424,6 +424,12 @@ name|defined
 argument_list|(
 name|__BORLANDC__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
 end_if
 
 begin_define
@@ -466,6 +472,16 @@ name|stref
 parameter_list|)
 value|__la_stat(path,stref)
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -518,6 +534,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -531,6 +552,16 @@ directive|define
 name|write
 value|__la_write
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -1192,12 +1223,23 @@ name|S_IWGRP
 value|_S_IWGRP
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IRGRP
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|S_IRGRP
 value|_S_IRGRP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1226,6 +1268,11 @@ directive|define
 name|S_IROTH
 value|_S_IROTH
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

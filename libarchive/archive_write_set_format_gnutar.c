@@ -4029,10 +4029,10 @@ argument_list|,
 name|GNUTAR_mode_size
 argument_list|)
 expr_stmt|;
-comment|/* TODO: How does GNU tar handle large UIDs? */
+comment|/* GNU tar supports base-256 here, so should never overflow. */
 if|if
 condition|(
-name|format_octal
+name|format_number
 argument_list|(
 name|archive_entry_uid
 argument_list|(
@@ -4044,6 +4044,8 @@ operator|+
 name|GNUTAR_uid_offset
 argument_list|,
 name|GNUTAR_uid_size
+argument_list|,
+name|GNUTAR_uid_max_size
 argument_list|)
 condition|)
 block|{
@@ -4072,10 +4074,10 @@ operator|=
 name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
-comment|/* TODO: How does GNU tar handle large GIDs? */
+comment|/* GNU tar supports base-256 here, so should never overflow. */
 if|if
 condition|(
-name|format_octal
+name|format_number
 argument_list|(
 name|archive_entry_gid
 argument_list|(
@@ -4087,6 +4089,8 @@ operator|+
 name|GNUTAR_gid_offset
 argument_list|,
 name|GNUTAR_gid_size
+argument_list|,
+name|GNUTAR_gid_max_size
 argument_list|)
 condition|)
 block|{

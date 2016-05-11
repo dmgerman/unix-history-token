@@ -190,7 +190,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s -o %s< filelist>%s/archive 2>%s/pack.err"
+literal|"%s -R 1000:1000 -o %s< filelist>%s/archive 2>%s/pack.err"
 argument_list|,
 name|testprog
 argument_list|,

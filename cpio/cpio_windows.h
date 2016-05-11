@@ -19,6 +19,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<windows.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<io.h>
 end_include
 
@@ -68,11 +74,22 @@ parameter_list|)
 value|NULL
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifdef
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
 
 begin_define
 define|#
@@ -80,6 +97,15 @@ directive|define
 name|snprintf
 value|sprintf_s
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// _MSC_VER< 1900
+end_comment
 
 begin_define
 define|#

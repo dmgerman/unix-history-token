@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -294,6 +300,19 @@ name|__BORLANDC__
 argument_list|)
 end_if
 
+begin_undef
+undef|#
+directive|undef
+name|chdir
+end_undef
+
+begin_define
+define|#
+directive|define
+name|chdir
+value|_chdir
+end_define
+
 begin_define
 define|#
 directive|define
@@ -315,11 +334,18 @@ begin_comment
 comment|/* Visual Studio */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifdef
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
 
 begin_define
 define|#
@@ -586,6 +612,25 @@ name|l
 parameter_list|)
 define|\
 value|assertion_equal_mem(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (l), #l, NULL)
+end_define
+
+begin_comment
+comment|/* Assert that memory is full of a specified byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertMemoryFilledWith
+parameter_list|(
+name|v1
+parameter_list|,
+name|l
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|assertion_memory_filled_with(__FILE__, __LINE__, (v1), #v1, (l), #l, (b), #b, NULL)
 end_define
 
 begin_comment
@@ -1159,6 +1204,42 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|assertion_memory_filled_with
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
 parameter_list|,
 specifier|const
 name|char
@@ -1896,6 +1977,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return true if this platform can run the "lz4" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canLz4
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return true if this platform can run the "lzip" program. */
 end_comment
 
@@ -2002,12 +2096,48 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Dump block of bytes to a file. */
+end_comment
+
+begin_function_decl
+name|void
+name|dumpfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Extracts named reference file to the current directory. */
 end_comment
 
 begin_function_decl
 name|void
 name|extract_reference_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Copies named reference file to the current directory. */
+end_comment
+
+begin_function_decl
+name|void
+name|copy_reference_file
 parameter_list|(
 specifier|const
 name|char
@@ -2037,6 +2167,7 @@ comment|/* Path to working directory for current test */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -2072,6 +2203,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -2094,6 +2226,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -2116,6 +2249,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,

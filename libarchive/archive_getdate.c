@@ -66,22 +66,18 @@ directive|include
 file|<time.h>
 end_include
 
-begin_comment
-comment|/* This file defines a single public function. */
-end_comment
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_BUILD
+value|1
+end_define
 
-begin_function_decl
-name|time_t
-name|__archive_get_date
-parameter_list|(
-name|time_t
-name|now
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"archive_getdate.h"
+end_include
 
 begin_comment
 comment|/* Basic time units. */
@@ -2180,7 +2176,7 @@ name|gds
 operator|->
 name|tokenp
 index|[
-literal|1
+literal|0
 index|]
 operator|.
 name|value
@@ -2189,7 +2185,7 @@ name|gds
 operator|->
 name|tokenp
 index|[
-literal|2
+literal|1
 index|]
 operator|.
 name|value
@@ -2198,7 +2194,7 @@ name|gds
 operator|->
 name|tokenp
 operator|+=
-literal|3
+literal|2
 expr_stmt|;
 return|return
 literal|1
@@ -2448,10 +2444,11 @@ index|]
 operator|.
 name|value
 expr_stmt|;
-operator|++
 name|gds
 operator|->
 name|tokenp
+operator|+=
+literal|1
 expr_stmt|;
 return|return
 literal|1
@@ -5373,6 +5370,7 @@ specifier|static
 name|int
 name|nexttoken
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5482,6 +5480,7 @@ block|}
 comment|/* Try the next token in the word table first. */
 comment|/* This allows us to match "2nd", for example. */
 block|{
+specifier|const
 name|char
 modifier|*
 name|src
@@ -5936,6 +5935,7 @@ parameter_list|(
 name|time_t
 name|now
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6574,6 +6574,14 @@ block|{
 name|time_t
 name|d
 decl_stmt|;
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -6598,6 +6606,8 @@ name|d
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 operator|*
 name|argv
 argument_list|)

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * This file is in the public domain.  Use it as you see fit.  */
+end_comment
+
+begin_comment
 comment|/*  * "untar" is an extremely simple tar extractor:  *  * A single C source file, so it should be easy to compile  *    and run on any system with a C compiler.  *  * Extremely portable standard C.  The only non-ANSI function  *    used is mkdir().  *  * Reads basic ustar tar archives.  *  * Does not require libarchive or any other special library.  *  * To compile: cc -o untar untar.c  *  * Usage:  untar<archive>  *  * In particular, this program should be sufficient to extract the  * distribution for libarchive, allowing people to bootstrap  * libarchive on systems that do not already have a tar program.  *  * To unpack libarchive-x.y.z.tar.gz:  *    * gunzip libarchive-x.y.z.tar.gz  *    * untar libarchive-x.y.z.tar  *  * Written by Tim Kientzle, March 2009.  *  * Released into the public domain.  */
 end_comment
 
@@ -343,7 +347,7 @@ name|fopen
 argument_list|(
 name|pathname
 argument_list|,
-literal|"w+"
+literal|"wb+"
 argument_list|)
 expr_stmt|;
 if|if
@@ -395,7 +399,7 @@ name|fopen
 argument_list|(
 name|pathname
 argument_list|,
-literal|"w+"
+literal|"wb+"
 argument_list|)
 expr_stmt|;
 block|}
@@ -902,7 +906,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if

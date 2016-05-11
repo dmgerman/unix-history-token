@@ -1195,6 +1195,14 @@ operator|)
 name|a
 expr_stmt|;
 comment|/* UNUSED */
+if|if
+condition|(
+name|mine
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
 name|close
 argument_list|(
 name|mine

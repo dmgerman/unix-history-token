@@ -4012,9 +4012,19 @@ name|len
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nl
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|uudecode
+operator|->
+name|state
+operator|!=
+name|ST_UUEND
+operator|)
 condition|)
 block|{
 comment|/* 			 * Save remaining data which does not contain 			 * NL('\n','\r'). 			 */
@@ -4085,6 +4095,10 @@ goto|goto
 name|read_more
 goto|;
 block|}
+name|used
+operator|+=
+name|len
+expr_stmt|;
 break|break;
 block|}
 switch|switch

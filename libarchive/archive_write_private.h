@@ -9,11 +9,22 @@ directive|ifndef
 name|__LIBARCHIVE_BUILD
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LIBARCHIVE_TEST
+end_ifndef
+
 begin_error
 error|#
 directive|error
 error|This header is only to be used internally to libarchive.
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -445,6 +456,19 @@ name|archive_write
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* 	 * Encryption passphrase. 	 */
+name|char
+modifier|*
+name|passphrase
+decl_stmt|;
+name|archive_passphrase_callback
+modifier|*
+name|passphrase_callback
+decl_stmt|;
+name|void
+modifier|*
+name|passphrase_client_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -496,7 +520,10 @@ name|archive_write_program_data
 modifier|*
 name|__archive_write_program_allocate
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|program_name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -563,6 +590,24 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get a encryption passphrase.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|__archive_write_get_passphrase
+parameter_list|(
+name|struct
+name|archive_write
+modifier|*
+name|a
 parameter_list|)
 function_decl|;
 end_function_decl

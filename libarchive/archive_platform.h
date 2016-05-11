@@ -139,7 +139,7 @@ comment|/*  * The config files define a lot of feature macros.  The following  *
 end_comment
 
 begin_comment
-comment|/* Get a real definition for __FBSDID if we can */
+comment|/* Get a real definition for __FBSDID or __RCSID if we can */
 end_comment
 
 begin_if
@@ -160,7 +160,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If not, define it so as to avoid dangling semicolons. */
+comment|/* If not, define them so as to avoid dangling semicolons. */
 end_comment
 
 begin_ifndef
@@ -173,6 +173,27 @@ begin_define
 define|#
 directive|define
 name|__FBSDID
+parameter_list|(
+name|a
+parameter_list|)
+value|struct _undefined_hack
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RCSID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RCSID
 parameter_list|(
 name|a
 parameter_list|)
@@ -397,6 +418,44 @@ begin_if
 if|#
 directive|if
 operator|!
+name|HAVE_DECL_INT32_MAX
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|((int32_t)(UINT32_MAX>> 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_INT32_MIN
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT32_MIN
+value|((int32_t)(~INT32_MAX))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|HAVE_DECL_UINT64_MAX
 end_if
 
@@ -443,6 +502,63 @@ define|#
 directive|define
 name|INT64_MIN
 value|((int64_t)(~INT64_MAX))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_UINTMAX_MAX
+end_if
+
+begin_define
+define|#
+directive|define
+name|UINTMAX_MAX
+value|(~(uintmax_t)0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_INTMAX_MAX
+end_if
+
+begin_define
+define|#
+directive|define
+name|INTMAX_MAX
+value|((intmax_t)(UINTMAX_MAX>> 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_INTMAX_MIN
+end_if
+
+begin_define
+define|#
+directive|define
+name|INTMAX_MIN
+value|((intmax_t)(~INTMAX_MAX))
 end_define
 
 begin_endif

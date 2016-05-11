@@ -76,7 +76,7 @@ decl_stmt|;
 name|SECURITY_ATTRIBUTES
 name|secAtts
 decl_stmt|;
-name|STARTUPINFO
+name|STARTUPINFOA
 name|staInfo
 decl_stmt|;
 name|PROCESS_INFORMATION

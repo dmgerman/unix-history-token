@@ -13,14 +13,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -652,6 +644,16 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|archive_write_close
+argument_list|(
+name|ext
+argument_list|)
+expr_stmt|;
+name|archive_write_free
+argument_list|(
+name|ext
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -689,7 +691,7 @@ name|size
 decl_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|3000000
 name|int64_t

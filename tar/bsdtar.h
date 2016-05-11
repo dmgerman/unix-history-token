@@ -119,6 +119,12 @@ modifier|*
 name|uname
 decl_stmt|;
 comment|/* --uname */
+specifier|const
+name|char
+modifier|*
+name|passphrase
+decl_stmt|;
+comment|/* --passphrase */
 name|char
 name|mode
 decl_stmt|;
@@ -145,6 +151,10 @@ modifier|*
 name|option_options
 decl_stmt|;
 comment|/* --options */
+name|char
+name|option_ignore_zeros
+decl_stmt|;
+comment|/* --ignore-zeros */
 name|char
 name|option_interactive
 decl_stmt|;
@@ -308,6 +318,11 @@ modifier|*
 name|substitution
 decl_stmt|;
 comment|/* for subst.c */
+name|char
+modifier|*
+name|ppbuff
+decl_stmt|;
+comment|/* for util.c */
 block|}
 struct|;
 end_struct
@@ -327,6 +342,8 @@ name|OPTION_CHECK_LINKS
 block|,
 name|OPTION_CHROOT
 block|,
+name|OPTION_CLEAR_NOCHANGE_FFLAGS
+block|,
 name|OPTION_DISABLE_COPYFILE
 block|,
 name|OPTION_EXCLUDE
@@ -343,11 +360,15 @@ name|OPTION_HELP
 block|,
 name|OPTION_HFS_COMPRESSION
 block|,
+name|OPTION_IGNORE_ZEROS
+block|,
 name|OPTION_INCLUDE
 block|,
 name|OPTION_KEEP_NEWER_FILES
 block|,
 name|OPTION_LRZIP
+block|,
+name|OPTION_LZ4
 block|,
 name|OPTION_LZIP
 block|,
@@ -371,6 +392,8 @@ name|OPTION_NO_SAME_OWNER
 block|,
 name|OPTION_NO_SAME_PERMISSIONS
 block|,
+name|OPTION_NO_XATTR
+block|,
 name|OPTION_NULL
 block|,
 name|OPTION_NUMERIC_OWNER
@@ -386,6 +409,8 @@ block|,
 name|OPTION_ONE_FILE_SYSTEM
 block|,
 name|OPTION_OPTIONS
+block|,
+name|OPTION_PASSPHRASE
 block|,
 name|OPTION_POSIX
 block|,
@@ -791,6 +816,50 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|passphrase_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|passphrase_free
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|list_item_verbose
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;

@@ -379,6 +379,9 @@ name|NULL
 condition|)
 comment|/* XXX Error XXX */
 return|return;
+if|if
+condition|(
+operator|(
 name|xp
 operator|->
 name|name
@@ -387,7 +390,12 @@ name|strdup
 argument_list|(
 name|name
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+comment|/* XXX Error XXX */
+return|return;
 if|if
 condition|(
 operator|(

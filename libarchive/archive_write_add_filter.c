@@ -127,6 +127,12 @@ name|archive_write_add_filter_lrzip
 block|}
 block|,
 block|{
+name|ARCHIVE_FILTER_LZ4
+block|,
+name|archive_write_add_filter_lz4
+block|}
+block|,
+block|{
 name|ARCHIVE_FILTER_LZIP
 block|,
 name|archive_write_add_filter_lzip

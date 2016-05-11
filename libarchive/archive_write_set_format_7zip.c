@@ -7478,6 +7478,22 @@ name|a
 operator|->
 name|format_data
 decl_stmt|;
+comment|/* Close the temporary file. */
+if|if
+condition|(
+name|zip
+operator|->
+name|temp_fd
+operator|>=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|zip
+operator|->
+name|temp_fd
+argument_list|)
+expr_stmt|;
 name|file_free_register
 argument_list|(
 name|zip

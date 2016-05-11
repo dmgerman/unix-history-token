@@ -435,7 +435,9 @@ operator|->
 name|pdata
 operator|=
 name|__archive_write_program_allocate
-argument_list|()
+argument_list|(
+literal|"bzip2"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

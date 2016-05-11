@@ -1309,7 +1309,7 @@ operator|==
 name|O_RDONLY
 condition|)
 block|{
-comment|/* 		 * When we open a directory, _open function returns  		 * "Permission denied" error. 		 */
+comment|/* 		 * When we open a directory, _open function returns 		 * "Permission denied" error. 		 */
 name|attr
 operator|=
 name|GetFileAttributesA
@@ -2801,7 +2801,7 @@ name|path
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|FILE_SHARE_READ
 argument_list|,
 name|NULL
 argument_list|,

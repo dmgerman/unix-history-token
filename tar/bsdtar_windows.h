@@ -28,6 +28,18 @@ directive|include
 file|<windows.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,6 +65,12 @@ name|geteuid
 parameter_list|()
 value|0
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__WATCOMC__
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -184,6 +202,11 @@ name|a
 parameter_list|)
 value|(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
