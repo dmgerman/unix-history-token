@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -161,91 +161,118 @@ define|#
 directive|define
 name|DEF_OTHER_OBJ
 value|(ACL_DEFAULT | OTHER_OBJ)
-comment|/*  * The following are defined for ace_t.  */
+comment|/*  * The following are defined for ace_t.  *  * Note, these are intentionally the same as the Windows  * "File Access Rights Constants" you can find on MSDN.  * (See also: "Standard Access Rights" on MSDN).  *  * The equivalent Windows names for these are just like  * those show below, with FILE_ in place of ACE_, except  * as noted below.  Also note that Windows uses a special  * privilege: BYPASS_TRAVERSE_CHECKING, normally granted  * to everyone, that causes the absence of ACE_TRAVERSE  * to be ignored.  */
 define|#
 directive|define
 name|ACE_READ_DATA
 value|0x00000001
+comment|/* file: read data */
 define|#
 directive|define
 name|ACE_LIST_DIRECTORY
 value|0x00000001
+comment|/* dir: list files */
 define|#
 directive|define
 name|ACE_WRITE_DATA
 value|0x00000002
+comment|/* file: write data */
 define|#
 directive|define
 name|ACE_ADD_FILE
 value|0x00000002
+comment|/* dir: create file */
 define|#
 directive|define
 name|ACE_APPEND_DATA
 value|0x00000004
+comment|/* file: append data */
 define|#
 directive|define
 name|ACE_ADD_SUBDIRECTORY
 value|0x00000004
+comment|/* dir: create subdir */
 define|#
 directive|define
 name|ACE_READ_NAMED_ATTRS
 value|0x00000008
+comment|/* FILE_READ_EA */
 define|#
 directive|define
 name|ACE_WRITE_NAMED_ATTRS
 value|0x00000010
+comment|/* FILE_WRITE_EA */
 define|#
 directive|define
 name|ACE_EXECUTE
 value|0x00000020
+comment|/* file: execute */
+define|#
+directive|define
+name|ACE_TRAVERSE
+value|0x00000020
+comment|/* dir: lookup name */
 define|#
 directive|define
 name|ACE_DELETE_CHILD
 value|0x00000040
+comment|/* dir: unlink child */
 define|#
 directive|define
 name|ACE_READ_ATTRIBUTES
 value|0x00000080
+comment|/* (all) stat, etc. */
 define|#
 directive|define
 name|ACE_WRITE_ATTRIBUTES
 value|0x00000100
+comment|/* (all) utimes, etc. */
 define|#
 directive|define
 name|ACE_DELETE
 value|0x00010000
+comment|/* (all) unlink self */
 define|#
 directive|define
 name|ACE_READ_ACL
 value|0x00020000
+comment|/* (all) getsecattr */
 define|#
 directive|define
 name|ACE_WRITE_ACL
 value|0x00040000
+comment|/* (all) setsecattr */
 define|#
 directive|define
 name|ACE_WRITE_OWNER
 value|0x00080000
+comment|/* (all) chown */
 define|#
 directive|define
 name|ACE_SYNCHRONIZE
 value|0x00100000
+comment|/* (all) see MSDN */
+comment|/*  * Some of the following are the same as Windows uses. (but NOT ALL!)  * See the "ACE_HEADER" structure description on MSDN for details.  * Comments show relations to the MSDN names.  */
 define|#
 directive|define
 name|ACE_FILE_INHERIT_ACE
 value|0x0001
+comment|/* = OBJECT_INHERIT_ACE */
 define|#
 directive|define
 name|ACE_DIRECTORY_INHERIT_ACE
 value|0x0002
+comment|/* = CONTAINER_INHERIT_ACE */
 define|#
 directive|define
 name|ACE_NO_PROPAGATE_INHERIT_ACE
 value|0x0004
+comment|/* = NO_PROPAGATE_INHERIT_ACE */
 define|#
 directive|define
 name|ACE_INHERIT_ONLY_ACE
 value|0x0008
+comment|/* = INHERIT_ONLY_ACE */
 define|#
 directive|define
 name|ACE_SUCCESSFUL_ACCESS_ACE_FLAG
@@ -262,6 +289,7 @@ define|#
 directive|define
 name|ACE_INHERITED_ACE
 value|0x0080
+comment|/* INHERITED_ACE, 0x10 on NT */
 define|#
 directive|define
 name|ACE_OWNER
@@ -274,6 +302,7 @@ define|#
 directive|define
 name|ACE_EVERYONE
 value|0x4000
+comment|/* These four are the same as Windows, but with an ACE_ prefix added. */
 define|#
 directive|define
 name|ACE_ACCESS_ALLOWED_ACE_TYPE
@@ -309,7 +338,7 @@ value|(ACL_AUTO_INHERIT|ACL_PROTECTED| \     ACL_DEFAULTED)
 ifdef|#
 directive|ifdef
 name|_KERNEL
-comment|/*  * These are only applicable in a CIFS context.  */
+comment|/*  * These are only applicable in a CIFS context.  * Here again, same as Windows, but with an ACE_ prefix added.  */
 define|#
 directive|define
 name|ACE_ACCESS_ALLOWED_COMPOUND_ACE_TYPE
