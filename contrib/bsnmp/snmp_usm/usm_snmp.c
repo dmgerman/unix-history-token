@@ -1999,7 +1999,7 @@ name|scratch
 operator|->
 name|ptr1
 argument_list|,
-name|SNMP_AUTH_KEY_SIZ
+name|SNMP_PRIV_KEY_SIZ
 argument_list|)
 expr_stmt|;
 name|free
