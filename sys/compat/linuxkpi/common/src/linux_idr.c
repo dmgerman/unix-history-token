@@ -2926,6 +2926,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* NOTE: It is not allowed to modify the IDR tree while it is being iterated */
+end_comment
+
 begin_function
 name|int
 name|idr_for_each
@@ -2958,19 +2962,8 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|idp
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
+return|return
+operator|(
 name|idr_for_each_layer
 argument_list|(
 name|idp
@@ -2987,18 +2980,6 @@ name|f
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|idp
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|err
 operator|)
 return|;
 block|}
