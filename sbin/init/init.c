@@ -3602,7 +3602,7 @@ expr_stmt|;
 name|runshutdown
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Make sure nobody can interfere with our scheme. 	 */
+comment|/* 	 * Make sure nobody can interfere with our scheme. 	 * Ignore ESRCH, which can apparently happen when 	 * there are no processes to kill. 	 */
 name|error
 operator|=
 name|kill
@@ -3618,6 +3618,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 block|{
 name|emergency
