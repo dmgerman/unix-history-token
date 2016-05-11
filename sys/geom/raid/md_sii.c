@@ -7687,7 +7687,7 @@ name|sii_raid_conf
 modifier|*
 name|meta
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|sc

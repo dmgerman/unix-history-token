@@ -5792,7 +5792,7 @@ name|sstart
 decl_stmt|,
 name|send
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if

@@ -461,7 +461,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|ap
@@ -925,7 +925,7 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|sbuf_delete
@@ -1341,7 +1341,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|struct
@@ -1562,7 +1562,7 @@ modifier|*
 name|len
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|void
@@ -1674,7 +1674,7 @@ modifier|*
 name|param
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|char
