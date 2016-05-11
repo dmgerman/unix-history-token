@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_comment
@@ -5243,7 +5243,7 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|VERIFY
+name|VERIFY0
 argument_list|(
 name|zap_add
 argument_list|(
@@ -5265,8 +5265,6 @@ name|new_obj
 argument_list|,
 name|tx
 argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

@@ -1568,6 +1568,18 @@ directive|define
 name|ZPOOL_CONFIG_FEATURE_STATS
 value|"feature_stats"
 comment|/* not stored on disk */
+define|#
+directive|define
+name|ZPOOL_CONFIG_VDEV_TOP_ZAP
+value|"com.delphix:vdev_zap_top"
+define|#
+directive|define
+name|ZPOOL_CONFIG_VDEV_LEAF_ZAP
+value|"com.delphix:vdev_zap_leaf"
+define|#
+directive|define
+name|ZPOOL_CONFIG_HAS_PER_VDEV_ZAPS
+value|"com.delphix:has_per_vdev_zaps"
 comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
 define|#
 directive|define
