@@ -2654,24 +2654,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ivar
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Failed to allocate ivar\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|resource_list_init
 argument_list|(
 operator|&
