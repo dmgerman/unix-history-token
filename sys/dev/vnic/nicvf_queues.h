@@ -1221,6 +1221,10 @@ name|taskqueue
 modifier|*
 name|cmp_taskq
 decl_stmt|;
+name|u_int
+name|cmp_cpuid
+decl_stmt|;
+comment|/* CPU to which bind the CQ task */
 name|void
 modifier|*
 name|desc
