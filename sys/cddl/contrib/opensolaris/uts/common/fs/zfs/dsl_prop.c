@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2015, Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -98,10 +98,8 @@ specifier|static
 name|int
 name|dodefault
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|propname
+name|zfs_prop_t
+name|prop
 parameter_list|,
 name|int
 name|intsz
@@ -114,20 +112,10 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-name|zfs_prop_t
-name|prop
-decl_stmt|;
 comment|/* 	 * The setonce properties are read-only, BUT they still 	 * have a default value that can be used as the initial 	 * value. 	 */
 if|if
 condition|(
-operator|(
 name|prop
-operator|=
-name|zfs_name_to_prop
-argument_list|(
-name|propname
-argument_list|)
-operator|)
 operator|==
 name|ZPROP_INVAL
 operator|||
@@ -576,7 +564,7 @@ name|err
 operator|=
 name|dodefault
 argument_list|(
-name|propname
+name|prop
 argument_list|,
 name|intsz
 argument_list|,
@@ -2731,7 +2719,10 @@ operator|=
 operator|(
 name|dodefault
 argument_list|(
+name|zfs_name_to_prop
+argument_list|(
 name|propname
+argument_list|)
 argument_list|,
 literal|8
 argument_list|,
@@ -5481,7 +5472,7 @@ if|if
 condition|(
 name|dodefault
 argument_list|(
-name|propname
+name|prop
 argument_list|,
 literal|8
 argument_list|,
