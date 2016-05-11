@@ -930,6 +930,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -938,6 +945,12 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* Necessary evil to compensate for files that don't end with a newline */
 if|if
 condition|(
