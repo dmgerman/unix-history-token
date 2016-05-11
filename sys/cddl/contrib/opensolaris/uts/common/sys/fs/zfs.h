@@ -2114,6 +2114,22 @@ define|#
 directive|define
 name|ZFS_DEV
 value|"/dev/" ZFS_DEV_NAME
+define|#
+directive|define
+name|ZFS_DISK_ROOT
+value|"/dev/dsk"
+define|#
+directive|define
+name|ZFS_DISK_ROOTD
+value|ZFS_DISK_ROOT "/"
+define|#
+directive|define
+name|ZFS_RDISK_ROOT
+value|"/dev/rdsk"
+define|#
+directive|define
+name|ZFS_RDISK_ROOTD
+value|ZFS_RDISK_ROOT "/"
 comment|/* general zvol path */
 define|#
 directive|define

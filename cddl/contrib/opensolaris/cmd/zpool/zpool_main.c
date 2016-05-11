@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -2846,7 +2846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zpool labelclear<vdev>  *  * Verifies that the vdev is not active and zeros out the label information  * on the device.  */
+comment|/*  * zpool labelclear [-f]<vdev>  *  *	-f	Force clearing the label for the vdevs which are members of  *		the exported or foreign pools.  *  * Verifies that the vdev is not active and zeros out the label information  * on the device.  */
 end_comment
 
 begin_function
@@ -2863,23 +2863,33 @@ name|argv
 parameter_list|)
 block|{
 name|char
-modifier|*
 name|vdev
-decl_stmt|,
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
 modifier|*
 name|name
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|stat
+name|st
 decl_stmt|;
 name|int
 name|c
 decl_stmt|,
 name|fd
-init|=
-operator|-
-literal|1
 decl_stmt|,
 name|ret
 init|=
 literal|0
+decl_stmt|;
+name|nvlist_t
+modifier|*
+name|config
 decl_stmt|;
 name|pool_state_t
 name|state
@@ -2975,7 +2985,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"missing vdev device name\n"
+literal|"missing vdev name\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2985,13 +2995,198 @@ name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"too many arguments\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Check if we were given absolute path and use it as is. 	 * Otherwise if the provided vdev name doesn't point to a file, 	 * try prepending dsk path and appending s0. 	 */
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
 name|vdev
-operator|=
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|vdev
+argument_list|)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vdev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+operator|&&
+name|stat
+argument_list|(
+name|vdev
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|vdev
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|vdev
+argument_list|)
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+ifdef|#
+directive|ifdef
+name|illumos
+name|ZFS_DISK_ROOT
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'s'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+operator|(
+name|s
+operator|+
+literal|1
+operator|)
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|strlcat
+argument_list|(
+name|vdev
+argument_list|,
+literal|"s0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|vdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+literal|"/dev"
+operator|,
+name|argv
+index|[
+literal|0
+index|]
+block|)
+empty_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|stat
+argument_list|(
+name|vdev
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"failed to find device %s, try specifying absolute "
+literal|"path instead\n"
+argument_list|)
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -3017,7 +3212,53 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"Unable to open %s\n"
+literal|"failed to open %s: %s\n"
+argument_list|)
+argument_list|,
+name|vdev
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|zpool_read_label
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|config
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"failed to read label from %s\n"
 argument_list|)
 argument_list|,
 name|vdev
@@ -3025,16 +3266,23 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|B_FALSE
+literal|1
 operator|)
 return|;
 block|}
-name|name
-operator|=
-name|NULL
+end_if
+
+begin_expr_stmt
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+end_expr_stmt
+
+begin_expr_stmt
+name|ret
+operator|=
 name|zpool_in_use
 argument_list|(
 name|g_zfs
@@ -3050,17 +3298,17 @@ argument_list|,
 operator|&
 name|inuse
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|force
-condition|)
-goto|goto
-name|wipe_label
-goto|;
 operator|(
 name|void
 operator|)
@@ -3070,8 +3318,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"Unable to determine pool state for %s\n"
-literal|"Use -f to force the clearing any label data\n"
+literal|"failed to check state for %s\n"
 argument_list|)
 argument_list|,
 name|vdev
@@ -3083,11 +3330,20 @@ literal|1
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
+operator|!
 name|inuse
 condition|)
-block|{
+goto|goto
+name|wipe_label
+goto|;
+end_if
+
+begin_switch
 switch|switch
 condition|(
 name|state
@@ -3112,11 +3368,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"labelclear operation failed.\n"
-literal|"\tVdev %s is a member (%s), of pool \"%s\".\n"
-literal|"\tTo remove label information from this device, export or destroy\n"
-literal|"\tthe pool, or remove %s from the configuration of this pool\n"
-literal|"\tand retry the labelclear operation\n"
+literal|"%s is a member (%s) of pool \"%s\"\n"
 argument_list|)
 argument_list|,
 name|vdev
@@ -3127,8 +3379,6 @@ name|state
 argument_list|)
 argument_list|,
 name|name
-argument_list|,
-name|vdev
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3155,17 +3405,13 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"labelclear operation failed.\n"
-literal|"\tVdev %s is a member of the exported pool \"%s\".\n"
-literal|"\tUse \"zpool labelclear -f %s\" to force the removal of label\n"
-literal|"\tinformation.\n"
+literal|"use '-f' to override the following error:\n"
+literal|"%s is a member of exported pool \"%s\"\n"
 argument_list|)
 argument_list|,
 name|vdev
 argument_list|,
 name|name
-argument_list|,
-name|vdev
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3192,18 +3438,13 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"labelclear operation failed.\n"
-literal|"\tVdev %s is a member of the pool \"%s\".\n"
-literal|"\tThis pool is unknown to this system, but may be active on\n"
-literal|"\tanother system. Use \'zpool labelclear -f %s\' to force the\n"
-literal|"\tremoval of label information.\n"
+literal|"use '-f' to override the following error:\n"
+literal|"%s is a member of potentially active pool \"%s\"\n"
 argument_list|)
 argument_list|,
 name|vdev
 argument_list|,
 name|name
-argument_list|,
-name|vdev
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3216,18 +3457,35 @@ goto|;
 case|case
 name|POOL_STATE_DESTROYED
 case|:
-comment|/* inuse should never be set for a destoryed pool... */
+comment|/* inuse should never be set for a destroyed pool */
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
-block|}
+end_switch
+
+begin_label
 name|wipe_label
 label|:
-if|if
-condition|(
+end_label
+
+begin_expr_stmt
+name|ret
+operator|=
 name|zpool_clear_label
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -3241,59 +3499,63 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"Label clear failed on vdev %s\n"
+literal|"failed to clear label for %s\n"
 argument_list|)
 argument_list|,
 name|vdev
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
 block|}
+end_if
+
+begin_label
 name|errout
 label|:
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
+end_label
+
+begin_expr_stmt
 name|free
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|ret
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * zpool create [-fnd] [-o property=value] ...  *		[-O file-system-property=value] ...  *		[-R root] [-m mountpoint]<pool><dev> ...  *  *	-f	Force creation, even if devices appear in use  *	-n	Do not create the pool, but display the resulting layout if it  *		were to be created.  *      -R	Create a pool under an alternate root  *      -m	Set default mountpoint for the root dataset.  By default it's  *		'/<pool>'  *	-o	Set property=value.  *	-d	Don't automatically enable all supported pool features  *		(individual features can be enabled with -o).  *	-O	Set fsproperty=value in the pool's root file system  *  * Creates the named pool according to the given vdev specification.  The  * bulk of the vdev processing is done in get_vdev_spec() in zpool_vdev.c.  Once  * we get the nvlist back from get_vdev_spec(), we either print out the contents  * (if '-n' was specified), or pass it to libzfs to do the creation.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|zpool_do_create
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
+argument_list|(
+argument|int argc
+argument_list|,
+argument|char **argv
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|boolean_t
 name|force
@@ -4589,7 +4851,7 @@ literal|2
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * zpool destroy<pool>  *  * 	-f	Forcefully unmount any datasets  *  * Destroy the given pool.  Automatically unmounts any datasets in the pool.  */
