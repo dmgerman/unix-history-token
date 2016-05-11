@@ -386,20 +386,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_dp
-index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-index|]
-operator|.
-name|dp_regs_mapped
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* Acquire portal's CE_PA and CI_PA */
 name|rle
