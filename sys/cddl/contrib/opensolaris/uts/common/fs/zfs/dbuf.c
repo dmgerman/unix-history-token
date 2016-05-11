@@ -4700,6 +4700,19 @@ decl_stmt|;
 name|avl_index_t
 name|where
 decl_stmt|;
+name|boolean_t
+name|freespill
+init|=
+operator|(
+name|start_blkid
+operator|==
+name|DMU_SPILL_BLKID
+operator|||
+name|end_blkid
+operator|==
+name|DMU_SPILL_BLKID
+operator|)
+decl_stmt|;
 if|if
 condition|(
 name|end_blkid
@@ -4708,11 +4721,8 @@ name|dn
 operator|->
 name|dn_maxblkid
 operator|&&
-operator|(
-name|end_blkid
-operator|!=
-name|DMU_SPILL_BLKID
-operator|)
+operator|!
+name|freespill
 condition|)
 name|end_blkid
 operator|=
@@ -4764,6 +4774,9 @@ operator|>=
 name|dn
 operator|->
 name|dn_unlisted_l0_blkid
+operator|&&
+operator|!
+name|freespill
 condition|)
 block|{
 comment|/* There can't be any dbufs in this range; no need to search. */
