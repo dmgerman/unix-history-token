@@ -638,14 +638,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* Send an IPI_BITMAP in case there are pending bitmap IPIs. */
-name|lapic_ipi_vectored
-argument_list|(
-name|IPI_BITMAP_VECTOR
-argument_list|,
-name|APIC_IPI_DEST_ALL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -660,6 +652,14 @@ comment|/* 		 * Now that event channels have been initialized, 		 * resume CPUs.
 name|resume_cpus
 argument_list|(
 name|cpu_suspend_map
+argument_list|)
+expr_stmt|;
+comment|/* Send an IPI_BITMAP in case there are pending bitmap IPIs. */
+name|lapic_ipi_vectored
+argument_list|(
+name|IPI_BITMAP_VECTOR
+argument_list|,
+name|APIC_IPI_DEST_ALL
 argument_list|)
 expr_stmt|;
 block|}
