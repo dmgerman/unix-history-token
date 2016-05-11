@@ -314,7 +314,7 @@ name|PCI_VENDOR_BROADCOM
 block|,
 literal|0x4328
 block|,
-literal|"Unknown"
+literal|"Broadcom BCM4321 802.11a/b/g Wireless"
 block|}
 block|,
 block|{
