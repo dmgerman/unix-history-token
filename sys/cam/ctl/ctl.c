@@ -5779,7 +5779,7 @@ name|union
 name|ctl_ha_msg
 name|msg
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -8344,7 +8344,7 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|uint32_t
@@ -33775,7 +33775,7 @@ case|case
 name|SMS_ALL_PAGES_PAGE
 case|:
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|page_len
@@ -33959,7 +33959,7 @@ break|break;
 block|}
 default|default:
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|page_len
@@ -65211,7 +65211,7 @@ name|ctl_io
 modifier|*
 name|io
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 name|io
@@ -65475,7 +65475,7 @@ literal|0
 block|char str[256]; 	char path_str[64]; 	struct sbuf sb;
 endif|#
 directive|endif
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 for|for
@@ -66271,7 +66271,7 @@ block|{
 name|int
 name|retval
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 comment|/* 	 * This will send an error to the other controller in the case of a 	 * failure. 	 */

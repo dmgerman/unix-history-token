@@ -5852,7 +5852,7 @@ block|{
 name|dev_match_ret
 name|retval
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|retval
@@ -6175,7 +6175,7 @@ block|{
 name|dev_match_ret
 name|retval
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|retval
@@ -6618,7 +6618,7 @@ block|{
 name|dev_match_ret
 name|retval
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* 	 * If we aren't given something to match against, that's an error. 	 */
