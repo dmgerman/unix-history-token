@@ -121,12 +121,29 @@ name|u_longlong_t
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF64_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_OFF64_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|off_t
 name|off64_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
