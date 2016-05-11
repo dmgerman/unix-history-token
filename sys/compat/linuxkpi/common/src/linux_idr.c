@@ -286,6 +286,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|idr
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
