@@ -685,6 +685,74 @@ begin_comment
 comment|/* 320 bit key */
 end_comment
 
+begin_struct
+struct|struct
+name|nicvf_rss_info
+block|{
+name|boolean_t
+name|enable
+decl_stmt|;
+define|#
+directive|define
+name|RSS_L2_EXTENDED_HASH_ENA
+value|(1UL<< 0)
+define|#
+directive|define
+name|RSS_IP_HASH_ENA
+value|(1UL<< 1)
+define|#
+directive|define
+name|RSS_TCP_HASH_ENA
+value|(1UL<< 2)
+define|#
+directive|define
+name|RSS_TCP_SYN_DIS
+value|(1UL<< 3)
+define|#
+directive|define
+name|RSS_UDP_HASH_ENA
+value|(1UL<< 4)
+define|#
+directive|define
+name|RSS_L4_EXTENDED_HASH_ENA
+value|(1UL<< 5)
+define|#
+directive|define
+name|RSS_ROCE_ENA
+value|(1UL<< 6)
+define|#
+directive|define
+name|RSS_L3_BI_DIRECTION_ENA
+value|(1UL<< 7)
+define|#
+directive|define
+name|RSS_L4_BI_DIRECTION_ENA
+value|(1UL<< 8)
+name|uint64_t
+name|cfg
+decl_stmt|;
+name|uint8_t
+name|hash_bits
+decl_stmt|;
+name|uint16_t
+name|rss_size
+decl_stmt|;
+name|uint8_t
+name|ind_tbl
+index|[
+name|NIC_MAX_RSS_IDR_TBL_SIZE
+index|]
+decl_stmt|;
+name|uint64_t
+name|key
+index|[
+name|RSS_HASH_KEY_SIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 name|rx_stats_reg_offset
@@ -1022,6 +1090,10 @@ name|bool
 name|loopback_supported
 range|:
 literal|1
+decl_stmt|;
+name|struct
+name|nicvf_rss_info
+name|rss_info
 decl_stmt|;
 name|uint16_t
 name|mtu

@@ -7641,12 +7641,11 @@ name|rbdr_cnt
 operator|=
 name|RBDR_CNT
 expr_stmt|;
-comment|/* With no RSS we stay with single RQ */
 name|qs
 operator|->
 name|rq_cnt
 operator|=
-literal|1
+name|RCV_QUEUE_CNT
 expr_stmt|;
 name|qs
 operator|->
