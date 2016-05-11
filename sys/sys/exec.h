@@ -49,24 +49,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Address of ps_strings structure (in user space).  * Prefer the kern.ps_strings or kern.proc.ps_strings sysctls to this constant.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_STRINGS
-value|(USRSTACK - sizeof(struct ps_strings))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPARE_USRSPACE
-value|4096
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|image_params
@@ -114,6 +96,24 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_comment
+comment|/*  * Address of ps_strings structure (in user space).  * Prefer the kern.ps_strings or kern.proc.ps_strings sysctls to this constant.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_STRINGS
+value|(USRSTACK - sizeof(struct ps_strings))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPARE_USRSPACE
+value|4096
+end_define
 
 begin_function_decl
 name|int
