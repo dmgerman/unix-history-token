@@ -925,7 +925,7 @@ end_function
 
 begin_function
 name|int
-name|ida_init
+name|ida_setup
 parameter_list|(
 name|struct
 name|ida_softc

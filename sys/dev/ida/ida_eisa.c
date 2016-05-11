@@ -1429,7 +1429,7 @@ return|;
 block|}
 name|error
 operator|=
-name|ida_init
+name|ida_setup
 argument_list|(
 name|ida
 argument_list|)
