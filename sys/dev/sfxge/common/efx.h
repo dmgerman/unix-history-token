@@ -1381,7 +1381,7 @@ define|#
 directive|define
 name|EFX_MON_MASK_ELEMENT_SIZE
 value|32
-comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock c09b13f732431f23 */
+comment|/* START MKCONFIG GENERATED MonitorHeaderStatsBlock 5d4ee5185e419abe */
 typedef|typedef
 enum|enum
 name|efx_mon_stat_e
@@ -1535,6 +1535,10 @@ block|,
 name|EFX_MON_STAT_PHY1_VCC
 block|,
 name|EFX_MON_STAT_CONTROLLER_TDIODE_TEMP
+block|,
+name|EFX_MON_STAT_BOARD_FRONT_TEMP
+block|,
+name|EFX_MON_STAT_BOARD_BACK_TEMP
 block|,
 name|EFX_MON_NSTATS
 block|}

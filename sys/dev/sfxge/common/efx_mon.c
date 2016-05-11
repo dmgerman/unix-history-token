@@ -477,7 +477,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 01ee3ea01f23a0c4 */
+comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 31f437eafb0b0437 */
 end_comment
 
 begin_decl_stmt
@@ -638,6 +638,10 @@ block|,
 literal|"phy1_vcc"
 block|,
 literal|"controller_tdiode_temp"
+block|,
+literal|"board_front_temp"
+block|,
+literal|"board_back_temp"
 block|, }
 decl_stmt|;
 end_decl_stmt

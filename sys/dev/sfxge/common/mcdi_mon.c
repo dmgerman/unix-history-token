@@ -779,6 +779,22 @@ name|CONTROLLER_TDIODE_TEMP
 argument_list|)
 block|,
 comment|/* 0x4e CONTROLLER_TDIODE_TEMP */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|BOARD_FRONT_TEMP
+argument_list|)
+block|,
+comment|/* 0x4f BOARD_FRONT_TEMP */
+name|STAT
+argument_list|(
+name|Px
+argument_list|,
+name|BOARD_BACK_TEMP
+argument_list|)
+block|,
+comment|/* 0x50 BOARD_BACK_TEMP */
 block|}
 struct|;
 end_struct
