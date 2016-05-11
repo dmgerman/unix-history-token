@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -1065,7 +1071,15 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-comment|/* Nothing to do here - busdma bounce buffers are not implemented. */
+if|if
+condition|(
+name|busdma_swi_pending
+operator|!=
+literal|0
+condition|)
+name|busdma_swi
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
