@@ -1615,18 +1615,6 @@ name|uint32_t
 name|ep_phy_cap_mask
 decl_stmt|;
 name|boolean_t
-name|ep_mac_poll_needed
-decl_stmt|;
-comment|/* falcon only */
-name|boolean_t
-name|ep_mac_up
-decl_stmt|;
-comment|/* falcon only */
-name|uint32_t
-name|ep_fwver
-decl_stmt|;
-comment|/* falcon only */
-name|boolean_t
 name|ep_mac_drain
 decl_stmt|;
 name|boolean_t
