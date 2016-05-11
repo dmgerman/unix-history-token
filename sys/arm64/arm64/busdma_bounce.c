@@ -3742,7 +3742,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* Wait for any memory access to complete */
+name|dsb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * XXX ARM64TODO: 	 * This bus_dma implementation requires IO-Coherent architecutre. 	 * If IO-Coherency is not guaranteed, cache operations have to be 	 * added to this function. 	 */
 name|CTR4
 argument_list|(
@@ -3866,6 +3874,12 @@ operator|->
 name|total_bounced
 operator|++
 expr_stmt|;
+comment|/* 		 * Wait for the bcopy to complete before any DMA operations. 		 */
+name|dsb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3878,6 +3892,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * Wait for any DMA operations to complete before the bcopy. 		 */
+name|dsb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|bpage
