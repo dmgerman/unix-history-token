@@ -1024,22 +1024,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|pcib_get_id
+name|uint16_t
+name|pcib_get_rid
 parameter_list|(
 name|device_t
 name|pcib
 parameter_list|,
 name|device_t
 name|dev
-parameter_list|,
-name|enum
-name|pci_id_type
-name|type
-parameter_list|,
-name|uintptr_t
-modifier|*
-name|id
 parameter_list|)
 function_decl|;
 end_function_decl
