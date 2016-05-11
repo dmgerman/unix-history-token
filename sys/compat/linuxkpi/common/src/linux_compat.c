@@ -2296,6 +2296,7 @@ name|file
 operator|->
 name|f_flag
 expr_stmt|;
+comment|/* XXX no support for I/O vectors currently */
 if|if
 condition|(
 name|uio
@@ -2304,17 +2305,11 @@ name|uio_iovcnt
 operator|!=
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"linux_dev_read: uio %p iovcnt %d"
-argument_list|,
-name|uio
-argument_list|,
-name|uio
-operator|->
-name|uio_iovcnt
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|filp
@@ -2509,6 +2504,7 @@ name|file
 operator|->
 name|f_flag
 expr_stmt|;
+comment|/* XXX no support for I/O vectors currently */
 if|if
 condition|(
 name|uio
@@ -2517,17 +2513,11 @@ name|uio_iovcnt
 operator|!=
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"linux_dev_write: uio %p iovcnt %d"
-argument_list|,
-name|uio
-argument_list|,
-name|uio
-operator|->
-name|uio_iovcnt
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|filp
@@ -3168,6 +3158,7 @@ name|file
 operator|->
 name|f_flag
 expr_stmt|;
+comment|/* XXX no support for I/O vectors currently */
 if|if
 condition|(
 name|uio
@@ -3176,17 +3167,11 @@ name|uio_iovcnt
 operator|!=
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"linux_file_read: uio %p iovcnt %d"
-argument_list|,
-name|uio
-argument_list|,
-name|uio
-operator|->
-name|uio_iovcnt
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|filp
