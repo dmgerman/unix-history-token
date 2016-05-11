@@ -24126,6 +24126,10 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+name|ccb
+operator|=
+name|NULL
+expr_stmt|;
 name|retval
 operator|=
 operator|-
