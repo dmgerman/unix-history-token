@@ -3698,6 +3698,8 @@ operator|->
 name|db_blkid
 argument_list|,
 literal|1
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3789,6 +3791,8 @@ operator|->
 name|db_blkid
 argument_list|,
 literal|1
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3854,6 +3858,8 @@ operator|->
 name|db_blkid
 argument_list|,
 literal|1
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
