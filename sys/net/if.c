@@ -483,6 +483,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Log promiscuous mode change events */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|log_promisc_mode_change
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|log_promisc_mode_change
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|log_promisc_mode_change
+argument_list|,
+literal|1
+argument_list|,
+literal|"log promiscuous mode change events"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Interface description */
 end_comment
 
@@ -10523,6 +10557,10 @@ operator|&=
 operator|~
 name|IFF_PROMISC
 expr_stmt|;
+if|if
+condition|(
+name|log_promisc_mode_change
+condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -10534,6 +10572,7 @@ operator|->
 name|if_xname
 argument_list|,
 operator|(
+operator|(
 name|new_flags
 operator|&
 name|IFF_PPROMISC
@@ -10542,6 +10581,7 @@ condition|?
 literal|"enabled"
 else|:
 literal|"disabled"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12747,6 +12787,8 @@ operator|)
 operator|&
 name|IFF_PROMISC
 operator|)
+operator|&&
+name|log_promisc_mode_change
 condition|)
 name|log
 argument_list|(
