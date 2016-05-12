@@ -409,6 +409,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_rx_ops_t
 name|__efx_rx_siena_ops
 init|=
@@ -488,6 +489,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_rx_ops_t
 name|__efx_rx_ef10_ops
 init|=
@@ -568,6 +570,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -649,10 +652,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|erxop
 operator|=
-operator|(
-name|efx_rx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_rx_siena_ops
 expr_stmt|;
@@ -668,10 +667,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|erxop
 operator|=
-operator|(
-name|efx_rx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_rx_ef10_ops
 expr_stmt|;
@@ -687,10 +682,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|erxop
 operator|=
-operator|(
-name|efx_rx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_rx_ef10_ops
 expr_stmt|;
@@ -810,6 +801,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -907,6 +899,7 @@ name|int
 name|buf_size
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1198,6 +1191,7 @@ name|boolean_t
 name|insert
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1327,6 +1321,7 @@ name|size_t
 name|n
 argument_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1445,6 +1440,7 @@ name|size_t
 name|n
 argument_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1578,6 +1574,7 @@ name|erp
 operator|->
 name|er_enp
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1646,6 +1643,7 @@ name|erp
 operator|->
 name|er_enp
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1698,6 +1696,7 @@ name|erp
 operator|->
 name|er_enp
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1780,6 +1779,7 @@ name|erp
 operator|->
 name|er_enp
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -1858,6 +1858,7 @@ modifier|*
 name|erpp
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -2064,6 +2065,7 @@ name|erp
 operator|->
 name|er_enp
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -2114,6 +2116,7 @@ modifier|*
 name|lengthp
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop
@@ -2165,6 +2168,7 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|erxop

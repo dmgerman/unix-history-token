@@ -37,6 +37,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_phy_ops_t
 name|__efx_phy_siena_ops
 init|=
@@ -132,6 +133,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_phy_ops_t
 name|__efx_phy_ef10_ops
 init|=
@@ -251,6 +253,7 @@ operator|->
 name|en_nic_cfg
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -301,10 +304,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|epop
 operator|=
-operator|(
-name|efx_phy_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_phy_siena_ops
 expr_stmt|;
@@ -320,10 +319,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|epop
 operator|=
-operator|(
-name|efx_phy_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_phy_ef10_ops
 expr_stmt|;
@@ -339,10 +334,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|epop
 operator|=
-operator|(
-name|efx_phy_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_phy_ef10_ops
 expr_stmt|;
@@ -423,6 +414,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -509,6 +501,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -794,6 +787,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1037,6 +1031,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1502,6 +1497,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1598,6 +1594,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1688,6 +1685,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1768,6 +1766,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1852,6 +1851,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1966,6 +1966,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -2140,6 +2141,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -2301,6 +2303,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop

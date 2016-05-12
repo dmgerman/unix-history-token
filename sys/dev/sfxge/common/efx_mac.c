@@ -66,6 +66,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_mac_ops_t
 name|__efx_siena_mac_ops
 init|=
@@ -143,6 +144,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_mac_ops_t
 name|__efx_ef10_mac_ops
 init|=
@@ -236,6 +238,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -413,6 +416,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -628,6 +632,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -813,6 +818,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -994,6 +1000,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -1102,6 +1109,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -1110,6 +1118,7 @@ name|epp
 operator|->
 name|ep_emop
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -1518,6 +1527,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -1801,6 +1811,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -1911,6 +1922,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -2242,6 +2254,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -2368,6 +2381,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -2520,6 +2534,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -2631,6 +2646,7 @@ name|type
 init|=
 name|EFX_MAC_INVALID
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -2996,6 +3012,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop

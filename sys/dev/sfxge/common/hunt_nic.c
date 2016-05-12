@@ -5310,6 +5310,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop

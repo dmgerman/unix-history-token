@@ -314,6 +314,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_ev_ops_t
 name|__efx_ev_siena_ops
 init|=
@@ -370,6 +371,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_ev_ops_t
 name|__efx_ev_ef10_ops
 init|=
@@ -427,6 +429,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -488,10 +491,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|eevop
 operator|=
-operator|(
-name|efx_ev_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_ev_siena_ops
 expr_stmt|;
@@ -507,10 +506,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|eevop
 operator|=
-operator|(
-name|efx_ev_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_ev_ef10_ops
 expr_stmt|;
@@ -526,10 +521,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|eevop
 operator|=
-operator|(
-name|efx_ev_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_ev_ef10_ops
 expr_stmt|;
@@ -646,6 +637,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -780,6 +772,7 @@ modifier|*
 name|eepp
 parameter_list|)
 block|{
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -1006,6 +999,7 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -1088,6 +1082,7 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -1461,6 +1456,7 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -1529,6 +1525,7 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop
@@ -1627,6 +1624,7 @@ name|eep
 operator|->
 name|ee_enp
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|eevop

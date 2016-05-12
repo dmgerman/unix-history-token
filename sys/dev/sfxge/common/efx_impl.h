@@ -1624,10 +1624,12 @@ name|ep_current_bist
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|ep_emop
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|ep_epop
@@ -1691,6 +1693,7 @@ block|{
 name|efx_mon_type_t
 name|em_type
 decl_stmt|;
+specifier|const
 name|efx_mon_ops_t
 modifier|*
 name|em_emop
@@ -1819,6 +1822,7 @@ typedef|typedef
 struct|struct
 name|efx_intr_s
 block|{
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|ei_eiop
@@ -2296,6 +2300,7 @@ typedef|typedef
 struct|struct
 name|efx_mcdi_s
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|em_emcop
@@ -3079,18 +3084,22 @@ decl_stmt|;
 name|uint32_t
 name|en_tx_qcount
 decl_stmt|;
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|en_enop
 decl_stmt|;
+specifier|const
 name|efx_ev_ops_t
 modifier|*
 name|en_eevop
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|en_etxop
 decl_stmt|;
+specifier|const
 name|efx_rx_ops_t
 modifier|*
 name|en_erxop
@@ -3101,6 +3110,7 @@ name|EFSYS_OPT_FILTER
 name|efx_filter_t
 name|en_filter
 decl_stmt|;
+specifier|const
 name|efx_filter_ops_t
 modifier|*
 name|en_efop
@@ -3123,6 +3133,7 @@ name|EFSYS_OPT_NVRAM
 name|efx_nvram_type_t
 name|en_nvram_locked
 decl_stmt|;
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|en_envop
@@ -3133,6 +3144,7 @@ comment|/* EFSYS_OPT_NVRAM */
 if|#
 directive|if
 name|EFSYS_OPT_VPD
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|en_evpdop
@@ -3161,6 +3173,7 @@ decl_stmt|;
 if|#
 directive|if
 name|EFSYS_OPT_LICENSING
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|en_elop

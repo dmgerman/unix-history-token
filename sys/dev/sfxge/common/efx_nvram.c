@@ -43,6 +43,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_nvram_ops_t
 name|__efx_nvram_siena_ops
 init|=
@@ -109,6 +110,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_nvram_ops_t
 name|__efx_nvram_ef10_ops
 init|=
@@ -176,6 +178,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -232,10 +235,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|envop
 operator|=
-operator|(
-name|efx_nvram_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nvram_siena_ops
 expr_stmt|;
@@ -251,10 +250,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|envop
 operator|=
-operator|(
-name|efx_nvram_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nvram_ef10_ops
 expr_stmt|;
@@ -270,10 +265,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|envop
 operator|=
-operator|(
-name|efx_nvram_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nvram_ef10_ops
 expr_stmt|;
@@ -348,6 +339,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -452,6 +444,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -608,6 +601,7 @@ literal|4
 index|]
 argument_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -762,6 +756,7 @@ modifier|*
 name|chunk_sizep
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -940,6 +935,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -1100,6 +1096,7 @@ name|efx_nvram_type_t
 name|type
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -1315,6 +1312,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -1474,6 +1472,7 @@ name|efx_nvram_type_t
 name|type
 parameter_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -1595,6 +1594,7 @@ literal|4
 index|]
 argument_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop
@@ -1769,6 +1769,7 @@ name|size_t
 name|partn_size
 argument_list|)
 block|{
+specifier|const
 name|efx_nvram_ops_t
 modifier|*
 name|envop

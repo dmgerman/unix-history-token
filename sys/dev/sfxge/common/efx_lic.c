@@ -76,6 +76,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_lic_ops_t
 name|__efx_lic_v1_ops
 init|=
@@ -169,6 +170,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_lic_ops_t
 name|__efx_lic_v2_ops
 init|=
@@ -300,6 +302,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_lic_ops_t
 name|__efx_lic_v3_ops
 init|=
@@ -2374,6 +2377,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop
@@ -2430,10 +2434,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|elop
 operator|=
-operator|(
-name|efx_lic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_lic_v1_ops
 expr_stmt|;
@@ -2449,10 +2449,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|elop
 operator|=
-operator|(
-name|efx_lic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_lic_v2_ops
 expr_stmt|;
@@ -2468,10 +2464,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|elop
 operator|=
-operator|(
-name|efx_lic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_lic_v3_ops
 expr_stmt|;
@@ -2539,6 +2531,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop
@@ -2607,6 +2600,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop
@@ -2698,6 +2692,7 @@ modifier|*
 name|eksp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop
@@ -2795,6 +2790,7 @@ modifier|*
 name|licensedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop
@@ -2928,6 +2924,7 @@ modifier|*
 name|bufferp
 parameter_list|)
 block|{
+specifier|const
 name|efx_lic_ops_t
 modifier|*
 name|elop

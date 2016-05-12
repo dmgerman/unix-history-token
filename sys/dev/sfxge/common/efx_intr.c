@@ -219,6 +219,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_intr_ops_t
 name|__efx_intr_siena_ops
 init|=
@@ -273,6 +274,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_intr_ops_t
 name|__efx_intr_ef10_ops
 init|=
@@ -348,6 +350,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -433,10 +436,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|eiop
 operator|=
-operator|(
-name|efx_intr_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_intr_siena_ops
 expr_stmt|;
@@ -452,10 +451,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|eiop
 operator|=
-operator|(
-name|efx_intr_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_intr_ef10_ops
 expr_stmt|;
@@ -471,10 +466,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|eiop
 operator|=
-operator|(
-name|efx_intr_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_intr_ef10_ops
 expr_stmt|;
@@ -583,6 +574,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -662,6 +654,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -723,6 +716,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -784,6 +778,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -851,6 +846,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -927,6 +923,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -1002,6 +999,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop
@@ -1067,6 +1065,7 @@ operator|->
 name|en_intr
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_intr_ops_t
 modifier|*
 name|eiop

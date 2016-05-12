@@ -141,6 +141,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_vpd_ops_t
 name|__efx_vpd_siena_ops
 init|=
@@ -198,6 +199,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_vpd_ops_t
 name|__efx_vpd_ef10_ops
 init|=
@@ -256,6 +258,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -312,10 +315,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|evpdop
 operator|=
-operator|(
-name|efx_vpd_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_vpd_siena_ops
 expr_stmt|;
@@ -331,10 +330,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|evpdop
 operator|=
-operator|(
-name|efx_vpd_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_vpd_ef10_ops
 expr_stmt|;
@@ -350,10 +345,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|evpdop
 operator|=
-operator|(
-name|efx_vpd_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_vpd_ef10_ops
 expr_stmt|;
@@ -462,6 +453,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -561,6 +553,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -662,6 +655,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -763,6 +757,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -893,6 +888,7 @@ operator|*
 name|evvp
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -1001,6 +997,7 @@ operator|*
 name|evvp
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -1115,6 +1112,7 @@ operator|*
 name|contp
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -1220,6 +1218,7 @@ name|size_t
 name|size
 argument_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop
@@ -3985,6 +3984,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_vpd_ops_t
 modifier|*
 name|evpdop

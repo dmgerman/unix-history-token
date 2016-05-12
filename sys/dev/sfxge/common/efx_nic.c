@@ -529,6 +529,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_nic_ops_t
 name|__efx_nic_siena_ops
 init|=
@@ -590,6 +591,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_nic_ops_t
 name|__efx_nic_hunt_ops
 init|=
@@ -651,6 +653,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_nic_ops_t
 name|__efx_nic_medford_ops
 init|=
@@ -809,10 +812,6 @@ name|enp
 operator|->
 name|en_enop
 operator|=
-operator|(
-name|efx_nic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nic_siena_ops
 expr_stmt|;
@@ -852,10 +851,6 @@ name|enp
 operator|->
 name|en_enop
 operator|=
-operator|(
-name|efx_nic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nic_hunt_ops
 expr_stmt|;
@@ -896,10 +891,6 @@ name|enp
 operator|->
 name|en_enop
 operator|=
-operator|(
-name|efx_nic_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_nic_medford_ops
 expr_stmt|;
@@ -1025,6 +1016,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1172,6 +1164,7 @@ modifier|*
 name|edlp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1284,6 +1277,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1430,6 +1424,7 @@ modifier|*
 name|txq_countp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1596,6 +1591,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1711,6 +1707,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -1823,6 +1820,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -2055,6 +2053,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop
@@ -2246,6 +2245,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_nic_ops_t
 modifier|*
 name|enop

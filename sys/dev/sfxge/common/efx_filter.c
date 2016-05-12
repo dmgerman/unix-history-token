@@ -165,6 +165,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_filter_ops_t
 name|__efx_filter_siena_ops
 init|=
@@ -213,6 +214,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_filter_ops_t
 name|__efx_filter_ef10_ops
 init|=
@@ -267,6 +269,7 @@ modifier|*
 name|spec
 parameter_list|)
 block|{
+specifier|const
 name|efx_filter_ops_t
 modifier|*
 name|efop
@@ -339,6 +342,7 @@ modifier|*
 name|spec
 parameter_list|)
 block|{
+specifier|const
 name|efx_filter_ops_t
 modifier|*
 name|efop
@@ -486,6 +490,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_filter_ops_t
 modifier|*
 name|efop
@@ -553,10 +558,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|efop
 operator|=
-operator|(
-name|efx_filter_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_filter_siena_ops
 expr_stmt|;
@@ -572,10 +573,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|efop
 operator|=
-operator|(
-name|efx_filter_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_filter_ef10_ops
 expr_stmt|;
@@ -591,10 +588,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|efop
 operator|=
-operator|(
-name|efx_filter_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_filter_ef10_ops
 expr_stmt|;
