@@ -668,7 +668,7 @@ name|char
 modifier|*
 name|source
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
