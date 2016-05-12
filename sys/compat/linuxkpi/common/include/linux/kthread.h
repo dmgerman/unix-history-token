@@ -239,7 +239,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|({									\ 	struct task_struct *_task;					\ 									\ 	_task = linux_kthread_create((fn), (data));			\ 	if (kthread_add(linux_kthread_fn, _task, NULL,&_task->task_thread,	\ 	    0, 0, fmt, ## __VA_ARGS__)) {				\ 		kfree(_task);						\ 		_task = NULL;						\ 	} else								\ 		task_struct_set(_task->task_thread, _task);		\ 	_task;								\ })
+value|({									\ 	struct task_struct *_task;					\ 									\ 	_task = linux_kthread_create((fn), (data));			\ 	if (kthread_add(linux_kthread_fn, _task, NULL,&_task->task_thread,	\ 	    0, 0, fmt, ## __VA_ARGS__)) {				\ 		kfree(_task);						\ 		_task = NULL;						\ 	}								\ 	_task;								\ })
 end_define
 
 begin_define
