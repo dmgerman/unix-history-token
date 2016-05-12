@@ -159,15 +159,15 @@ end_define
 begin_enum
 enum|enum
 block|{
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 init|=
 literal|0x01
 block|,
-name|BUS_DMA_MIN_ALLOC_COMP
+name|BF_MIN_ALLOC_COMP
 init|=
 literal|0x02
 block|,
-name|BUS_DMA_KMEM_ALLOC
+name|BF_KMEM_ALLOC
 init|=
 literal|0x04
 block|, }
@@ -816,7 +816,7 @@ name|parent
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -827,7 +827,7 @@ name|newtag
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 expr_stmt|;
 if|if
 condition|(
@@ -857,7 +857,7 @@ name|newtag
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 expr_stmt|;
 if|if
 condition|(
@@ -867,7 +867,7 @@ name|newtag
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -969,7 +969,7 @@ name|newtag
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_MIN_ALLOC_COMP
+name|BF_MIN_ALLOC_COMP
 expr_stmt|;
 block|}
 else|else
@@ -1380,7 +1380,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 condition|)
 block|{
 comment|/* Must bounce */
@@ -1478,7 +1478,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_MIN_ALLOC_COMP
+name|BF_MIN_ALLOC_COMP
 operator|)
 operator|==
 literal|0
@@ -1558,7 +1558,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_MIN_ALLOC_COMP
+name|BF_MIN_ALLOC_COMP
 operator|)
 operator|==
 literal|0
@@ -1575,7 +1575,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_MIN_ALLOC_COMP
+name|BF_MIN_ALLOC_COMP
 expr_stmt|;
 block|}
 block|}
@@ -2109,7 +2109,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_KMEM_ALLOC
+name|BF_KMEM_ALLOC
 expr_stmt|;
 block|}
 else|else
@@ -2170,7 +2170,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator||=
-name|BUS_DMA_KMEM_ALLOC
+name|BF_KMEM_ALLOC
 expr_stmt|;
 block|}
 if|if
@@ -2292,7 +2292,7 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-comment|/* 	 * Check the map came from bounce_bus_dmamem_alloc, so the map 	 * should be NULL and the BUS_DMA_KMEM_ALLOC flag cleared if malloc() 	 * was used and set if kmem_alloc_contig() was used. 	 */
+comment|/* 	 * Check the map came from bounce_bus_dmamem_alloc, so the map 	 * should be NULL and the BF_KMEM_ALLOC flag cleared if malloc() 	 * was used and set if kmem_alloc_contig() was used. 	 */
 if|if
 condition|(
 operator|(
@@ -2317,7 +2317,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_KMEM_ALLOC
+name|BF_KMEM_ALLOC
 operator|)
 operator|==
 literal|0
@@ -3150,7 +3150,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -3232,7 +3232,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -3407,7 +3407,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
@@ -3541,7 +3541,7 @@ name|dmat
 operator|->
 name|bounce_flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BF_COULD_BOUNCE
 operator|)
 operator|!=
 literal|0
