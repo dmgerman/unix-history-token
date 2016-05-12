@@ -139,7 +139,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|__off_t
+name|__off64_t
 name|off64_t
 typedef|;
 end_typedef

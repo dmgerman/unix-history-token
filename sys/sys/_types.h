@@ -193,6 +193,17 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|__int64_t
+name|__off64_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* file offset (alias) */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__int32_t
 name|__pid_t
 typedef|;
