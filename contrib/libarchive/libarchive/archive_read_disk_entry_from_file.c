@@ -1254,6 +1254,14 @@ operator|&
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|a
+operator|->
+name|suppress_xattr
+condition|)
+block|{
 name|r1
 operator|=
 name|setup_xattrs
@@ -1276,6 +1284,7 @@ name|r
 operator|=
 name|r1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -1924,19 +1933,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_POSIX_ACL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|ACL_TYPE_NFS4
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -2023,6 +2024,9 @@ argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 comment|/* Try NFS4 ACL first. */
 if|if
 condition|(
@@ -2155,6 +2159,8 @@ name|ARCHIVE_OK
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* Retrieve access ACL from file. */
 if|if
 condition|(
@@ -2344,6 +2350,9 @@ block|,
 name|ACL_READ
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 block|{
 name|ARCHIVE_ENTRY_ACL_READ_DATA
 block|,
@@ -2439,9 +2448,17 @@ name|ARCHIVE_ENTRY_ACL_SYNCHRONIZE
 block|,
 name|ACL_SYNCHRONIZE
 block|}
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
+end_ifdef
 
 begin_struct
 specifier|static
@@ -2485,6 +2502,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -2510,12 +2532,22 @@ block|{
 name|acl_tag_t
 name|acl_tag
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 name|acl_entry_type_t
 name|acl_type
 decl_stmt|;
 name|acl_flagset_t
 name|acl_flagset
 decl_stmt|;
+name|int
+name|brand
+decl_stmt|,
+name|r
+decl_stmt|;
+endif|#
+directive|endif
 name|acl_entry_t
 name|acl_entry
 decl_stmt|;
@@ -2523,11 +2555,7 @@ name|acl_permset_t
 name|acl_permset
 decl_stmt|;
 name|int
-name|brand
-decl_stmt|,
 name|i
-decl_stmt|,
-name|r
 decl_stmt|,
 name|entry_acl_type
 decl_stmt|;
@@ -2545,6 +2573,9 @@ name|char
 modifier|*
 name|ae_name
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 comment|// FreeBSD "brands" ACLs as POSIX.1e or NFSv4
 comment|// Make sure the "brand" on this ACL is consistent
 comment|// with the default_entry_acl_type bits provided.
@@ -2607,6 +2638,8 @@ name|ARCHIVE_FAILED
 return|;
 break|break;
 block|}
+endif|#
+directive|endif
 name|s
 operator|=
 name|acl_get_entry
@@ -2754,6 +2787,9 @@ operator|=
 name|ARCHIVE_ENTRY_ACL_OTHER
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 case|case
 name|ACL_EVERYONE
 case|:
@@ -2762,6 +2798,8 @@ operator|=
 name|ARCHIVE_ENTRY_ACL_EVERYONE
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* Skip types that libarchive can't support. */
 name|s
@@ -2785,6 +2823,9 @@ name|entry_acl_type
 operator|=
 name|default_entry_acl_type
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 name|r
 operator|=
 name|acl_get_entry_type_np
@@ -2904,6 +2945,8 @@ operator|.
 name|archive_inherit
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|acl_get_permset
 argument_list|(
 name|acl_entry
@@ -4998,6 +5041,8 @@ name|int
 name|count
 decl_stmt|,
 name|do_fiemap
+decl_stmt|,
+name|iters
 decl_stmt|;
 name|int
 name|exit_sts
@@ -5225,8 +5270,13 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|iters
+operator|=
+literal|0
 init|;
 condition|;
+operator|++
+name|iters
 control|)
 block|{
 name|int
@@ -5266,7 +5316,27 @@ name|fm_mapped_extents
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|iters
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Fully sparse file; insert a zero-length "data" entry */
+name|archive_entry_sparse_add_entry
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
+block|}
 name|fe
 operator|=
 name|fm
@@ -5492,6 +5562,11 @@ name|int
 name|exit_sts
 init|=
 name|ARCHIVE_OK
+decl_stmt|;
+name|int
+name|check_fully_sparse
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -5805,8 +5880,26 @@ name|errno
 operator|==
 name|ENXIO
 condition|)
-break|break;
+block|{
 comment|/* no more hole */
+if|if
+condition|(
+name|archive_entry_sparse_count
+argument_list|(
+name|entry
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Potentially a fully-sparse file. */
+name|check_fully_sparse
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break;
+block|}
 name|archive_set_error
 argument_list|(
 operator|&
@@ -5929,6 +6022,50 @@ name|off_s
 operator|=
 name|off_e
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|check_fully_sparse
+condition|)
+block|{
+if|if
+condition|(
+name|lseek
+argument_list|(
+operator|*
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_HOLE
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|lseek
+argument_list|(
+operator|*
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+operator|==
+name|size
+condition|)
+block|{
+comment|/* Fully sparse file; insert a zero-length "data" entry */
+name|archive_entry_sparse_add_entry
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|exit_setup_sparse
 label|:

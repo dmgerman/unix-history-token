@@ -2312,7 +2312,7 @@ if|#
 directive|if
 name|LZMA_VERSION
 operator|<
-literal|50000030
+literal|50010000
 name|free
 argument_list|(
 name|filters
@@ -2440,6 +2440,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|f
+operator|==
+name|NULL
+operator|||
 name|avail_in
 operator|<
 name|tail

@@ -101,6 +101,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ARC4RANDOM_BUF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_EXTATTR_GET_FILE
 value|1
 end_define
@@ -204,6 +211,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_OPENSSL_SHA512_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PKCS5_PBKDF2_HMAC_SHA1
 value|1
 end_define
 
@@ -388,6 +402,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_DECL_INT32_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_INT32_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DECL_INT64_MAX
 value|1
 end_define
@@ -396,6 +424,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_INT64_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_INTMAX_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_INTMAX_MIN
 value|1
 end_define
 
@@ -431,6 +473,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_UINT64_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_UINTMAX_MAX
 value|1
 end_define
 
@@ -857,6 +906,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_PTHREAD_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_PWD_H
 value|1
 end_define
@@ -879,6 +935,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_READLINKAT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_READPASSPHRASE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_READPASSPHRASE_H
 value|1
 end_define
 
@@ -1327,6 +1397,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_WMEMCPY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WMEMMOVE
 value|1
 end_define
 

@@ -326,7 +326,7 @@ value|(256 * 1024)
 end_define
 
 begin_comment
-comment|/* Block infomation is composed of uncompressed size(4 bytes),  * compressed size(4 bytes) and the checksum of uncompressed data(4 bytes)  * in this lzop writer. */
+comment|/* Block information is composed of uncompressed size(4 bytes),  * compressed size(4 bytes) and the checksum of uncompressed data(4 bytes)  * in this lzop writer. */
 end_comment
 
 begin_define
@@ -701,7 +701,9 @@ operator|->
 name|pdata
 operator|=
 name|__archive_write_program_allocate
-argument_list|()
+argument_list|(
+literal|"lzop"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

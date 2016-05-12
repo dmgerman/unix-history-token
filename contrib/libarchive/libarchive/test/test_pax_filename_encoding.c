@@ -812,13 +812,14 @@ begin_comment
 comment|/*  * Verify that KOI8-R filenames are correctly translated to Unicode and UTF-8.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_KOI8R
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_KOI8R
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1008,19 +1009,20 @@ literal|15
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Verify that CP1251 filenames are correctly translated to Unicode and UTF-8.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_CP1251
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_CP1251
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1219,19 +1221,20 @@ literal|15
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Verify that EUC-JP filenames are correctly translated to Unicode and UTF-8.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_EUCJP
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_EUCJP
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1422,19 +1425,20 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Verify that CP932/SJIS filenames are correctly translated to Unicode and UTF-8.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_CP932
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_CP932
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1634,19 +1638,20 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Verify that KOI8-R filenames are not translated to Unicode and UTF-8  * when using hdrcharset=BINARY option.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_KOI8R_BINARY
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_KOI8R_BINARY
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1816,19 +1821,20 @@ literal|12
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Pax format writer only accepts both BINARY and UTF-8.  * If other character-set name is specified, you will get ARCHIVE_FAILED.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|test_pax_filename_encoding_KOI8R_CP1251
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_pax_filename_encoding_KOI8R_CP1251
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|archive
@@ -1893,7 +1899,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_macro
 name|DEFINE_TEST
@@ -1911,24 +1917,6 @@ name|test_pax_filename_encoding_2
 argument_list|()
 expr_stmt|;
 name|test_pax_filename_encoding_3
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_KOI8R
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_CP1251
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_EUCJP
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_CP932
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_KOI8R_BINARY
-argument_list|()
-expr_stmt|;
-name|test_pax_filename_encoding_KOI8R_CP1251
 argument_list|()
 expr_stmt|;
 block|}

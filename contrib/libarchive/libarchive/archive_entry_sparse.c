@@ -136,10 +136,10 @@ return|return;
 if|if
 condition|(
 name|offset
-operator|+
+operator|>
+name|INT64_MAX
+operator|-
 name|length
-operator|<
-literal|0
 operator|||
 name|offset
 operator|+

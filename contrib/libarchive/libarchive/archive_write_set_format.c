@@ -127,6 +127,12 @@ name|archive_write_set_format_mtree
 block|}
 block|,
 block|{
+name|ARCHIVE_FORMAT_RAW
+block|,
+name|archive_write_set_format_raw
+block|}
+block|,
+block|{
 name|ARCHIVE_FORMAT_SHAR
 block|,
 name|archive_write_set_format_shar
@@ -172,6 +178,12 @@ block|{
 name|ARCHIVE_FORMAT_TAR_USTAR
 block|,
 name|archive_write_set_format_ustar
+block|}
+block|,
+block|{
+name|ARCHIVE_FORMAT_WARC
+block|,
+name|archive_write_set_format_warc
 block|}
 block|,
 block|{

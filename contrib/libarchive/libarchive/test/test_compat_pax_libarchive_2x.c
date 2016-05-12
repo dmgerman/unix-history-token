@@ -427,11 +427,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We cannot correctly read the filename. */
+comment|// This test used to look for WARN here coming from a
+comment|// character-conversion failure.  But: Newer iconv tables are
+comment|// more tolerant so we can't always detect the conversion
+comment|// failures.
 name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-name|ARCHIVE_WARN
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_next_header
 argument_list|(
@@ -468,11 +472,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We cannot correctly read the filename. */
+comment|// Same here:  The test is still valid (it sill verifies that
+comment|// the converted pathname is different), but we can no longer
+comment|// rely on WARN here.
 name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-name|ARCHIVE_WARN
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_next_header
 argument_list|(

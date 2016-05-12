@@ -15,6 +15,21 @@ directive|define
 name|ARCHIVE_H_INCLUDED
 end_define
 
+begin_comment
+comment|/*  * The version number is expressed as a single integer that makes it  * easy to compare versions at build time: for version a.b.c, the  * version number is printf("%d%03d%03d",a,b,c).  For example, if you  * know your application requires version 2.12.108 or later, you can  * assert that ARCHIVE_VERSION_NUMBER>= 2012108.  */
+end_comment
+
+begin_comment
+comment|/* Note: Compiler will complain if this does not match archive_entry.h! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_VERSION_NUMBER
+value|3002000
+end_define
+
 begin_include
 include|#
 directive|include
@@ -39,6 +54,16 @@ end_include
 
 begin_comment
 comment|/* For FILE * */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_comment
+comment|/* For time_t */
 end_comment
 
 begin_comment
@@ -96,6 +121,12 @@ name|defined
 argument_list|(
 name|_SCO_DS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
 end_elif
 
 begin_include
@@ -110,12 +141,48 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Get appropriate definitions of standard POSIX-style types. */
+comment|/* Get appropriate definitions of 64-bit integer */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LA_INT64_T_DEFINED
+argument_list|)
+end_if
+
 begin_comment
-comment|/* These should match the types used in 'struct stat' */
+comment|/* Older code relied on the __LA_INT64_T macro; after 4.0 we'll switch to the typedef exclusively. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_INT64_T
+value|la_int64_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__LA_INT64_T_DEFINED
+end_define
 
 begin_if
 if|#
@@ -130,68 +197,20 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__LA_INT64_T
-value|__int64
-end_define
-
-begin_if
-if|#
-directive|if
+operator|&&
+operator|!
 name|defined
 argument_list|(
-name|_SSIZE_T_DEFINED
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_SSIZE_T_
+name|__WATCOMC__
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|__LA_SSIZE_T
-value|ssize_t
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN64
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|__LA_SSIZE_T
-value|__int64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__LA_SSIZE_T
-value|long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+name|__int64
+name|la_int64_t
+typedef|;
+end_typedef
 
 begin_else
 else|#
@@ -215,25 +234,79 @@ name|defined
 argument_list|(
 name|_SCO_DS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|__LA_INT64_T
-value|long long
-end_define
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|la_int64_t
+typedef|;
+end_typedef
 
 begin_else
 else|#
 directive|else
 end_else
 
+begin_typedef
+typedef|typedef
+name|int64_t
+name|la_int64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The la_ssize_t should match the type used in 'struct stat' */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LA_SSIZE_T_DEFINED
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Older code relied on the __LA_SSIZE_T macro; after 4.0 we'll switch to the typedef exclusively. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+end_if
+
 begin_define
 define|#
 directive|define
-name|__LA_INT64_T
-value|int64_t
+name|__LA_SSIZE_T
+value|la_ssize_t
 end_define
 
 begin_endif
@@ -244,9 +317,131 @@ end_endif
 begin_define
 define|#
 directive|define
-name|__LA_SSIZE_T
-value|ssize_t
+name|__LA_SSIZE_T_DEFINED
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SSIZE_T_DEFINED
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SSIZE_T_
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|ssize_t
+name|la_ssize_t
+typedef|;
+end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_elif
+
+begin_typedef
+typedef|typedef
+name|__int64
+name|la_ssize_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|long
+name|la_ssize_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* ssize_t */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ssize_t
+name|la_ssize_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Large file support for Android */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ANDROID__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"android_lf.h"
+end_include
 
 begin_endif
 endif|#
@@ -489,12 +684,6 @@ block|{
 endif|#
 directive|endif
 comment|/*  * The version number is provided as both a macro and a function.  * The macro identifies the installed header; the function identifies  * the library version (which may not be the same if you're using a  * dynamically-linked version of the library).  Of course, if the  * header and library are very different, you should expect some  * strangeness.  Don't do that.  */
-comment|/*  * The version number is expressed as a single integer that makes it  * easy to compare versions at build time: for version a.b.c, the  * version number is printf("%d%03d%03d",a,b,c).  For example, if you  * know your application requires version 2.12.108 or later, you can  * assert that ARCHIVE_VERSION_NUMBER>= 2012108.  */
-comment|/* Note: Compiler will complain if this does not match archive_entry.h! */
-define|#
-directive|define
-name|ARCHIVE_VERSION_NUMBER
-value|3001002
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -505,13 +694,64 @@ function_decl|;
 comment|/*  * Textual name/version of the library, useful for version displays.  */
 define|#
 directive|define
+name|ARCHIVE_VERSION_ONLY_STRING
+value|"3.2.0"
+define|#
+directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 3.1.2"
+value|"libarchive " ARCHIVE_VERSION_ONLY_STRING
 name|__LA_DECL
 specifier|const
 name|char
 modifier|*
 name|archive_version_string
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/*  * Detailed textual name/version of the library and its dependencies.  * This has the form:  *    "libarchive x.y.z zlib/a.b.c liblzma/d.e.f ... etc ..."  * the list of libraries described here will vary depending on how  * libarchive was compiled.  */
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_version_details
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/*  * Returns NULL if libarchive was compiled without the associated library.  * Otherwise, returns the version number that libarchive was compiled  * against.  */
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_zlib_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_liblzma_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_bzlib_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_liblz4_version
 parameter_list|(
 name|void
 parameter_list|)
@@ -566,7 +806,7 @@ comment|/* #define	ARCHIVE_ERRNO_MISC */
 comment|/*  * Callbacks are invoked to automatically read/skip/write/open/close the  * archive. You can provide your own for complex tasks (like breaking  * archives across multiple tapes) or use standard ones built into the  * library.  */
 comment|/* Returns pointer and size of next block of data from archive. */
 typedef|typedef
-name|__LA_SSIZE_T
+name|la_ssize_t
 name|archive_read_callback
 parameter_list|(
 name|struct
@@ -586,7 +826,7 @@ parameter_list|)
 function_decl|;
 comment|/* Skips at most request bytes from archive and returns the skipped amount.  * This may skip fewer bytes than requested; it may even skip zero bytes.  * If you do skip fewer bytes than requested, libarchive will invoke your  * read callback and discard data as necessary to make up the full skip.  */
 typedef|typedef
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_skip_callback
 parameter_list|(
 name|struct
@@ -597,13 +837,13 @@ name|void
 modifier|*
 name|_client_data
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 name|request
 parameter_list|)
 function_decl|;
 comment|/* Seeks to specified location in the file and returns the position.  * Whence values are SEEK_SET, SEEK_CUR, SEEK_END from stdio.h.  * Return ARCHIVE_FATAL if the seek fails for any reason.  */
 typedef|typedef
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_seek_callback
 parameter_list|(
 name|struct
@@ -614,7 +854,7 @@ name|void
 modifier|*
 name|_client_data
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 name|offset
 parameter_list|,
 name|int
@@ -623,7 +863,7 @@ parameter_list|)
 function_decl|;
 comment|/* Returns size actually written, zero on EOF, -1 on error. */
 typedef|typedef
-name|__LA_SSIZE_T
+name|la_ssize_t
 name|archive_write_callback
 parameter_list|(
 name|struct
@@ -687,6 +927,22 @@ modifier|*
 name|_client_data2
 parameter_list|)
 function_decl|;
+comment|/*  * Returns a passphrase used for encryption or decryption, NULL on nothing  * to do and give it up.  */
+typedef|typedef
+specifier|const
+name|char
+modifier|*
+name|archive_passphrase_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|_client_data
+parameter_list|)
+function_decl|;
 comment|/*  * Codes to identify various stream filters.  */
 define|#
 directive|define
@@ -740,6 +996,10 @@ define|#
 directive|define
 name|ARCHIVE_FILTER_GRZIP
 value|12
+define|#
+directive|define
+name|ARCHIVE_FILTER_LZ4
+value|13
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
@@ -912,6 +1172,35 @@ define|#
 directive|define
 name|ARCHIVE_FORMAT_7ZIP
 value|0xE0000
+define|#
+directive|define
+name|ARCHIVE_FORMAT_WARC
+value|0xF0000
+comment|/*  * Codes returned by archive_read_format_capabilities().  *  * This list can be extended with values between 0 and 0xffff.  * The original purpose of this list was to let different archive  * format readers expose their general capabilities in terms of  * encryption.  */
+define|#
+directive|define
+name|ARCHIVE_READ_FORMAT_CAPS_NONE
+value|(0)
+comment|/* no special capabilities */
+define|#
+directive|define
+name|ARCHIVE_READ_FORMAT_CAPS_ENCRYPT_DATA
+value|(1<<0)
+comment|/* reader can detect encrypted data */
+define|#
+directive|define
+name|ARCHIVE_READ_FORMAT_CAPS_ENCRYPT_METADATA
+value|(1<<1)
+comment|/* reader can detect encryptable metadata (pathname, mtime, etc.) */
+comment|/*  * Codes returned by archive_read_has_encrypted_entries().  *  * In case the archive does not support encryption detection at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned. If the reader  * for some other reason (e.g. not enough bytes read) cannot say if  * there are encrypted entries, ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW  * is returned.  */
+define|#
+directive|define
+name|ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED
+value|-2
+define|#
+directive|define
+name|ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW
+value|-1
 comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
 name|__LA_DECL
 name|struct
@@ -1114,6 +1403,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_read_support_filter_lrzip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_filter_lz4
 parameter_list|(
 name|struct
 name|archive
@@ -1348,7 +1646,7 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
-name|archive_read_support_format_xar
+name|archive_read_support_format_warc
 parameter_list|(
 name|struct
 name|archive
@@ -1357,7 +1655,37 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_read_support_format_xar
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* archive_read_support_format_zip() enables both streamable and seekable  * zip readers. */
+name|__LA_DECL
+name|int
 name|archive_read_support_format_zip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Reads Zip archives as stream from beginning to end.  Doesn't  * correctly handle SFX ZIP files or ZIP archives that have been modified  * in-place. */
+name|__LA_DECL
+name|int
+name|archive_read_support_format_zip_streamable
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Reads starting from central directory; requires seekable input. */
+name|__LA_DECL
+name|int
+name|archive_read_support_format_zip_seekable
 parameter_list|(
 name|struct
 name|archive
@@ -1706,6 +2034,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -1724,6 +2053,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -1797,8 +2127,28 @@ parameter_list|)
 function_decl|;
 comment|/*  * Retrieve the byte offset in UNCOMPRESSED data where last-read  * header started.  */
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_read_header_position
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * Returns 1 if the archive contains at least one encrypted entry.  * If the archive format not support encryption at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned.  * If for any other reason (e.g. not enough data read so far)  * we cannot say whether there are encrypted entries, then  * ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW is returned.  * In general, this function will return values below zero when the  * reader is uncertain or totally uncapable of encryption support.  * When this function returns 0 you can be sure that the reader  * supports encryption detection but no encrypted entries have  * been found yet.  *  * NOTE: If the metadata/header of an archive is also encrypted, you  * cannot rely on the number of encrypted entries. That is why this  * function does not return the number of encrypted entries but#  * just shows that there are some.  */
+name|__LA_DECL
+name|int
+name|archive_read_has_encrypted_entries
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * Returns a bitmask of capabilities that are supported by the archive format reader.  * If the reader has no special capabilities, ARCHIVE_READ_FORMAT_CAPS_NONE is returned.  */
+name|__LA_DECL
+name|int
+name|archive_read_format_capabilities
 parameter_list|(
 name|struct
 name|archive
@@ -1807,7 +2157,7 @@ parameter_list|)
 function_decl|;
 comment|/* Read data from the body of an entry.  Similar to read(2). */
 name|__LA_DECL
-name|__LA_SSIZE_T
+name|la_ssize_t
 name|archive_read_data
 parameter_list|(
 name|struct
@@ -1822,14 +2172,14 @@ parameter_list|)
 function_decl|;
 comment|/* Seek within the body of an entry.  Similar to lseek(2). */
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_seek_data
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1854,7 +2204,7 @@ name|size_t
 modifier|*
 name|size
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 modifier|*
 name|offset
 parameter_list|)
@@ -1976,6 +2326,36 @@ modifier|*
 name|opts
 parameter_list|)
 function_decl|;
+comment|/*  * Add a decryption passphrase.  */
+name|__LA_DECL
+name|int
+name|archive_read_add_passphrase
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_set_passphrase_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|client_data
+parameter_list|,
+name|archive_passphrase_callback
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*-  * Convenience function to recreate the current entry (whose header  * has just been read) on disk.  *  * This does quite a bit more than just copy data to disk. It also:  *  - Creates intermediate directories as required.  *  - Manages directory permissions:  non-writable directories will  *    be initially created with write permission enabled; when the  *    archive is closed, dir permissions are edited to the values specified  *    in the archive.  *  - Checks hardlinks:  hardlinks will not be extracted unless the  *    linked-to file was also extracted within the same session. (TODO)  */
 comment|/* The "flags" argument selects optional behavior, 'OR' the flags you want. */
 comment|/* Default: Do not try to set owner/group. */
@@ -2062,6 +2442,16 @@ define|#
 directive|define
 name|ARCHIVE_EXTRACT_HFS_COMPRESSION_FORCED
 value|(0x8000)
+comment|/* Default: Do not reject entries with absolute paths */
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
+value|(0x10000)
+comment|/* Default: Do not clear no-change flags when unlinking object */
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_CLEAR_NOCHANGE_FFLAGS
+value|(0x20000)
 name|__LA_DECL
 name|int
 name|archive_read_extract
@@ -2128,9 +2518,9 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 comment|/* Close the file and release most resources. */
@@ -2234,9 +2624,9 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 if|#
@@ -2406,6 +2796,15 @@ function_decl|;
 name|__LA_DECL
 name|int
 name|archive_write_add_filter_lrzip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_add_filter_lz4
 parameter_list|(
 name|struct
 name|archive
@@ -2610,6 +3009,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_write_set_format_raw
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_write_set_format_shar
 parameter_list|(
 name|struct
@@ -2646,6 +3054,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_write_set_format_warc
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_write_set_format_xar
 parameter_list|(
 name|struct
@@ -2660,6 +3077,41 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_set_format_filter_by_ext
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_set_format_filter_by_ext_def
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|def_ext
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -2805,7 +3257,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_SSIZE_T
+name|la_ssize_t
 name|archive_write_data
 parameter_list|(
 name|struct
@@ -2821,7 +3273,7 @@ parameter_list|)
 function_decl|;
 comment|/* This interface is currently only available for archive_write_disk handles.  */
 name|__LA_DECL
-name|__LA_SSIZE_T
+name|la_ssize_t
 name|archive_write_data_block
 parameter_list|(
 name|struct
@@ -2834,7 +3286,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -2988,6 +3440,38 @@ modifier|*
 name|opts
 parameter_list|)
 function_decl|;
+comment|/*  * Set a encryption passphrase.  */
+name|__LA_DECL
+name|int
+name|archive_write_set_passphrase
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_set_passphrase_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|client_data
+parameter_list|,
+name|archive_passphrase_callback
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_free to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct
@@ -3007,9 +3491,9 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 comment|/* Set flags to control how the next item gets created.  * This accepts a bitmask of ARCHIVE_EXTRACT_XXX flags defined above. */
@@ -3049,7 +3533,7 @@ name|void
 modifier|*
 comment|/* private_data */
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 function_decl|(
 modifier|*
 function_decl|)
@@ -3061,7 +3545,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -3087,7 +3571,7 @@ name|void
 modifier|*
 comment|/* private_data */
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 function_decl|(
 modifier|*
 function_decl|)
@@ -3099,7 +3583,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -3114,7 +3598,7 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_write_disk_gid
 parameter_list|(
 name|struct
@@ -3125,11 +3609,11 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_write_disk_uid
 parameter_list|(
 name|struct
@@ -3140,7 +3624,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 comment|/*  * ARCHIVE_READ_DISK API  *  * This is still evolving and somewhat experimental.  */
@@ -3218,7 +3702,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -3231,7 +3715,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 comment|/* "Standard" implementation uses getpwuid_r, getgrgid_r and caches the  * results for performance. */
@@ -3268,7 +3752,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -3305,7 +3789,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -3418,11 +3902,16 @@ define|#
 directive|define
 name|ARCHIVE_READDISK_MAC_COPYFILE
 value|(0x0004)
-comment|/* Default: Do not traverse mount points. */
+comment|/* Default: Traverse mount points. */
 define|#
 directive|define
 name|ARCHIVE_READDISK_NO_TRAVERSE_MOUNTS
 value|(0x0008)
+comment|/* Default: Xattrs are read from disk. */
+define|#
+directive|define
+name|ARCHIVE_READDISK_NO_XATTR
+value|(0x0010)
 name|__LA_DECL
 name|int
 name|archive_read_disk_set_behavior
@@ -3503,6 +3992,16 @@ modifier|*
 name|_client_data
 parameter_list|)
 function_decl|;
+comment|/* Simplified cleanup interface;  * This calls archive_read_free() or archive_write_free() as needed. */
+name|__LA_DECL
+name|int
+name|archive_free
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*  * Accessor functions to read/set various information in  * the struct archive object:  */
 comment|/* Number of filters in the current filter pipeline. */
 comment|/* Filter #0 is the one closest to the format, -1 is a synonym for the  * last filter, which is always the pseudo-filter that wraps the  * client callbacks. */
@@ -3516,7 +4015,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_filter_bytes
 parameter_list|(
 name|struct
@@ -3558,7 +4057,7 @@ literal|4000000
 comment|/* These don't properly handle multiple filters, so are deprecated and  * will eventually be removed. */
 comment|/* As of libarchive 3.0, this is an alias for archive_filter_bytes(a, -1); */
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_position_compressed
 argument_list|(
 expr|struct
@@ -3569,7 +4068,7 @@ name|__LA_DEPRECATED
 decl_stmt|;
 comment|/* As of libarchive 3.0, this is an alias for archive_filter_bytes(a, 0); */
 name|__LA_DECL
-name|__LA_INT64_T
+name|la_int64_t
 name|archive_position_uncompressed
 argument_list|(
 expr|struct
@@ -4240,7 +4739,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4254,7 +4753,7 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
-name|__LA_INT64_T
+name|la_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4323,6 +4822,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Utility functions */
+end_comment
+
+begin_comment
+comment|/* Convenience function to sort a NULL terminated list of strings */
+end_comment
+
+begin_function_decl
+name|__LA_DECL
+name|int
+name|archive_utility_string_sort
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4344,18 +4863,6 @@ undef|#
 directive|undef
 name|__LA_DECL
 end_undef
-
-begin_comment
-comment|/* These need to remain defined because they're used in the  * callback type definitions.  XXX Fix this.  This is ugly. XXX */
-end_comment
-
-begin_comment
-comment|/* #undef __LA_INT64_T */
-end_comment
-
-begin_comment
-comment|/* #undef __LA_SSIZE_T */
-end_comment
 
 begin_endif
 endif|#

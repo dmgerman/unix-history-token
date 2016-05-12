@@ -43,7 +43,7 @@ condition|(
 operator|*
 name|p
 operator|>=
-literal|0
+literal|'0'
 operator|&&
 operator|*
 name|p

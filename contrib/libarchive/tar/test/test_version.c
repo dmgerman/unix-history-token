@@ -362,6 +362,44 @@ condition|)
 operator|++
 name|q
 expr_stmt|;
+comment|/* Skip arbitrary third-party version numbers. */
+while|while
+condition|(
+name|s
+operator|>
+literal|0
+operator|&&
+operator|(
+operator|*
+name|q
+operator|==
+literal|' '
+operator|||
+operator|*
+name|q
+operator|==
+literal|'/'
+operator|||
+operator|*
+name|q
+operator|==
+literal|'.'
+operator|||
+name|isalnum
+argument_list|(
+operator|*
+name|q
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|++
+name|q
+expr_stmt|;
+operator|--
+name|s
+expr_stmt|;
+block|}
 comment|/* All terminated by end-of-line. */
 name|assert
 argument_list|(

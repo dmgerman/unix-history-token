@@ -259,15 +259,11 @@ argument_list|(
 literal|"%s -cf test4.tar in/d1/foo in/d1/bar"
 argument_list|,
 name|testprog
-argument_list|,
-name|testprog
 argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
 literal|"%s -xf test4.tar -s /foo/bar/ -s }bar}baz} -C test4"
-argument_list|,
-name|testprog
 argument_list|,
 name|testprog
 argument_list|)
@@ -1038,6 +1034,80 @@ literal|"test13a/in/d1/hardlink2"
 argument_list|)
 expr_stmt|;
 comment|/* TODO: See above; expand this test to verify renames at creation. */
+comment|/* 	 * Test 14: Global substitutions when extracting archive. 	 */
+comment|/* Global substitution. */
+name|assertMakeDir
+argument_list|(
+literal|"test14"
+argument_list|,
+literal|0755
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -cf test14.tar in/d1/foo in/d1/bar"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test14.tar -s /o/z/g -s /bar/baz/ -C test14"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertFileContents
+argument_list|(
+literal|"foo"
+argument_list|,
+literal|3
+argument_list|,
+literal|"test14/in/d1/fzz"
+argument_list|)
+expr_stmt|;
+name|assertFileContents
+argument_list|(
+literal|"bar"
+argument_list|,
+literal|3
+argument_list|,
+literal|"test14/in/d1/baz"
+argument_list|)
+expr_stmt|;
+comment|/* Singular substitution. */
+name|systemf
+argument_list|(
+literal|"%s -cf test14.tar in/d1/foo in/d1/bar"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test14.tar -s /o/z/ -s /bar/baz/ -C test14"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertFileContents
+argument_list|(
+literal|"foo"
+argument_list|,
+literal|3
+argument_list|,
+literal|"test14/in/d1/fzo"
+argument_list|)
+expr_stmt|;
+name|assertFileContents
+argument_list|(
+literal|"bar"
+argument_list|,
+literal|3
+argument_list|,
+literal|"test14/in/d1/baz"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

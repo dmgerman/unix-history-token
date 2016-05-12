@@ -43,16 +43,19 @@ begin_struct
 struct|struct
 name|read_memory_data
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|start
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -175,6 +178,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -200,6 +204,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -241,6 +246,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -282,6 +288,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -320,6 +327,7 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buff
@@ -399,6 +407,7 @@ operator|->
 name|p
 operator|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*

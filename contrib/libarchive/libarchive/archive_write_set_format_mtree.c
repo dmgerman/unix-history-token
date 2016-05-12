@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"archive_crypto_private.h"
+file|"archive_digest_private.h"
 end_include
 
 begin_include
@@ -402,6 +402,15 @@ decl_stmt|;
 name|dev_t
 name|rdevminor
 decl_stmt|;
+name|dev_t
+name|devmajor
+decl_stmt|;
+name|dev_t
+name|devminor
+decl_stmt|;
+name|int64_t
+name|ino
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -681,6 +690,16 @@ directive|define
 name|F_SHA512
 value|0x02000000
 comment|/* SHA-512 digest */
+define|#
+directive|define
+name|F_INO
+value|0x04000000
+comment|/* inode number */
+define|#
+directive|define
+name|F_RESDEV
+value|0x08000000
+comment|/* device ID on which the 						 * entry resides */
 comment|/* Options */
 name|int
 name|dironly
@@ -4167,7 +4186,13 @@ name|ac
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|last
+operator|!=
+name|NULL
+condition|)
 block|{
 name|ac
 operator|=
@@ -5364,6 +5389,33 @@ argument_list|)
 expr_stmt|;
 name|me
 operator|->
+name|devmajor
+operator|=
+name|archive_entry_devmajor
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|me
+operator|->
+name|devminor
+operator|=
+name|archive_entry_devminor
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|me
+operator|->
+name|ino
+operator|=
+name|archive_entry_ino
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|me
+operator|->
 name|size
 operator|=
 name|archive_entry_size
@@ -5736,7 +5788,7 @@ name|output_global_set
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Disalbed. */
+comment|/* Disabled. */
 block|}
 name|mtree
 operator|->
@@ -6344,6 +6396,63 @@ operator|->
 name|uid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|keys
+operator|&
+name|F_INO
+operator|)
+operator|!=
+literal|0
+condition|)
+name|archive_string_sprintf
+argument_list|(
+name|str
+argument_list|,
+literal|" inode=%jd"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|me
+operator|->
+name|ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|keys
+operator|&
+name|F_RESDEV
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|archive_string_sprintf
+argument_list|(
+name|str
+argument_list|,
+literal|" resdevice=native,%ju,%ju"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|me
+operator|->
+name|devmajor
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|me
+operator|->
+name|devminor
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|me
@@ -6977,7 +7086,7 @@ operator|->
 name|output_global_set
 condition|)
 block|{
-comment|/* 			 * Collect attribute infomation to know which value 			 * is frequently used among the children. 			 */
+comment|/* 			 * Collect attribute information to know which value 			 * is frequently used among the children. 			 */
 name|attr_counter_set_reset
 argument_list|(
 name|mtree
@@ -7071,7 +7180,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Whenever output_global_set is enabled 			 * output global value(/set keywords) 			 * even if the directory entry is not allowd 			 * to be written because the global values 			 * can be used for the children. */
+comment|/* Whenever output_global_set is enabled 			 * output global value(/set keywords) 			 * even if the directory entry is not allowed 			 * to be written because the global values 			 * can be used for the children. */
 if|if
 condition|(
 name|mtree
@@ -7872,6 +7981,24 @@ name|ARCHIVE_OK
 operator|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|key
+argument_list|,
+literal|"inode"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|keybit
+operator|=
+name|F_INO
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'l'
@@ -7957,6 +8084,24 @@ break|break;
 case|case
 literal|'r'
 case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|key
+argument_list|,
+literal|"resdevice"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|keybit
+operator|=
+name|F_RESDEV
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -10867,7 +11012,7 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* Make a basename from dirname and slash */
+comment|/* Make a basename from file->parentdir.s and slash */
 operator|*
 name|slash
 operator|=
@@ -10881,7 +11026,11 @@ name|length
 operator|=
 name|slash
 operator|-
-name|dirname
+name|file
+operator|->
+name|parentdir
+operator|.
+name|s
 expr_stmt|;
 name|archive_strcpy
 argument_list|(
@@ -12748,6 +12897,30 @@ operator|=
 name|file
 operator|->
 name|rdevminor
+expr_stmt|;
+name|np
+operator|->
+name|devmajor
+operator|=
+name|file
+operator|->
+name|devmajor
+expr_stmt|;
+name|np
+operator|->
+name|devminor
+operator|=
+name|file
+operator|->
+name|devminor
+expr_stmt|;
+name|np
+operator|->
+name|ino
+operator|=
+name|file
+operator|->
+name|ino
 expr_stmt|;
 return|return
 operator|(

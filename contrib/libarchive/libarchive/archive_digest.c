@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"archive_crypto_private.h"
+file|"archive_digest_private.h"
 end_include
 
 begin_comment
@@ -4868,14 +4868,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NOTE: Crypto functions are set based on availability and by the following  * order of preference.  * 1. libc  * 2. libc2  * 3. libc3  * 4. libSystem  * 5. Nettle  * 6. OpenSSL  * 7. libmd  * 8. Windows API  */
+comment|/* NOTE: Message Digest functions are set based on availability and by the  * following order of preference.  * 1. libc  * 2. libc2  * 3. libc3  * 4. libSystem  * 5. Nettle  * 6. OpenSSL  * 7. libmd  * 8. Windows API  */
 end_comment
 
 begin_decl_stmt
 specifier|const
 name|struct
-name|archive_crypto
-name|__archive_crypto
+name|archive_digest
+name|__archive_digest
 init|=
 block|{
 comment|/* MD5 */
@@ -5523,7 +5523,6 @@ name|__archive_nettle_sha512update
 block|,
 operator|&
 name|__archive_nettle_sha512final
-block|,
 elif|#
 directive|elif
 name|defined

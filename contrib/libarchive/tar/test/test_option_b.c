@@ -17,6 +17,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|USTAR_OPT
+value|" --format=ustar"
+end_define
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -26,6 +33,10 @@ end_macro
 
 begin_block
 block|{
+name|char
+modifier|*
+name|testprog_ustar
+decl_stmt|;
 name|assertMakeFile
 argument_list|(
 literal|"file1"
@@ -52,6 +63,37 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|testprog_ustar
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|testprog
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|USTAR_OPT
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|testprog_ustar
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|testprog_ustar
+argument_list|,
+name|USTAR_OPT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Bsdtar does not pad if the output is going directly to a disk file. 	 */
 name|assertEqualInt
 argument_list|(
@@ -61,7 +103,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf archive1.tar file1>test1.out 2>test1.err"
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -97,7 +139,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf - file1 2>test2.err | cat>archive2.tar "
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -126,7 +168,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf - -b 20 file1 2>test3.err | cat>archive3.tar "
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -150,7 +192,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf - -b 10 file1 2>test4.err | cat>archive4.tar "
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -174,7 +216,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf - -b 1 file1 2>test5.err | cat>archive5.tar "
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -198,7 +240,7 @@ name|systemf
 argument_list|(
 literal|"%s -cf - -b 8192 file1 2>test6.err | cat>archive6.tar "
 argument_list|,
-name|testprog
+name|testprog_ustar
 argument_list|)
 argument_list|)
 expr_stmt|;

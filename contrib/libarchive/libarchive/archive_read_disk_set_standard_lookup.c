@@ -317,7 +317,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Installs functions that use getpwuid()/getgrgid()---along with  * a simple cache to accelerate such lookups---into the archive_read_disk  * object.  This is in a separate file because getpwuid()/getgrgid()  * can pull in a LOT of library code (including NIS/LDAP functions, which  * pull in DNS resolveers, etc).  This can easily top 500kB, which makes  * it inappropriate for some space-constrained applications.  *  * Applications that are size-sensitive may want to just use the  * real default functions (defined in archive_read_disk.c) that just  * use the uid/gid without the lookup.  Or define your own custom functions  * if you prefer.  */
+comment|/*  * Installs functions that use getpwuid()/getgrgid()---along with  * a simple cache to accelerate such lookups---into the archive_read_disk  * object.  This is in a separate file because getpwuid()/getgrgid()  * can pull in a LOT of library code (including NIS/LDAP functions, which  * pull in DNS resolvers, etc).  This can easily top 500kB, which makes  * it inappropriate for some space-constrained applications.  *  * Applications that are size-sensitive may want to just use the  * real default functions (defined in archive_read_disk.c) that just  * use the uid/gid without the lookup.  Or define your own custom functions  * if you prefer.  */
 end_comment
 
 begin_function

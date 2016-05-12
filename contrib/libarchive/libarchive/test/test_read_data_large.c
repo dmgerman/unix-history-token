@@ -56,6 +56,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buff1
 index|[
@@ -65,6 +66,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buff2
 index|[
@@ -74,6 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buff3
 index|[

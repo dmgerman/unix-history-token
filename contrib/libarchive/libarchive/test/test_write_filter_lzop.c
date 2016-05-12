@@ -71,6 +71,8 @@ decl_stmt|,
 name|use_prog
 init|=
 literal|0
+decl_stmt|,
+name|filecount
 decl_stmt|;
 name|assert
 argument_list|(
@@ -177,7 +179,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write a 100 files and read them all back. 	 */
+name|filecount
+operator|=
+literal|10
+expr_stmt|;
+comment|/* 	 * Write a filecount files and read them all back. 	 */
 name|assert
 argument_list|(
 operator|(
@@ -325,7 +331,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++
@@ -477,7 +483,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++
@@ -736,7 +742,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++
@@ -950,7 +956,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++
@@ -1131,7 +1137,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++
@@ -1335,7 +1341,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+name|filecount
 condition|;
 name|i
 operator|++

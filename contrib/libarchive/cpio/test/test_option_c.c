@@ -197,8 +197,7 @@ decl_stmt|;
 name|int
 name|uid
 init|=
-operator|-
-literal|1
+literal|1000
 decl_stmt|;
 name|int
 name|dev
@@ -206,6 +205,8 @@ decl_stmt|,
 name|ino
 decl_stmt|,
 name|gid
+init|=
+literal|1000
 decl_stmt|;
 name|time_t
 name|t
@@ -227,20 +228,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Create an assortment of files. 	 * TODO: Extend this to cover more filetypes. 	 */
 name|filelist
 operator|=
@@ -324,7 +311,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s -oc<filelist>basic.out 2>basic.err"
+literal|"%s -R 1000:1000 -oc<filelist>basic.out 2>basic.err"
 argument_list|,
 name|testprog
 argument_list|)

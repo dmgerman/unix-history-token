@@ -724,7 +724,7 @@ block|,
 name|BOOT_CATALOG
 block|,
 name|BOOT_IMAGE
-block|, 	}
+block|}
 name|boot
 enum|;
 comment|/* 	 * Used for a zisofs. 	 */
@@ -1777,7 +1777,6 @@ name|DIR_REC_PARENT
 block|,
 comment|/* Stored as Parent Directory.	*/
 name|DIR_REC_NORMAL
-block|,
 comment|/* Stored as Child.		*/
 block|}
 enum|;
@@ -1798,7 +1797,7 @@ block|,
 name|VDC_UCS2
 block|,
 name|VDC_UCS2_DIRECT
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -1895,7 +1894,7 @@ block|{
 name|A_CHAR
 block|,
 name|D_CHAR
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -13108,6 +13107,32 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 			 * Note: testing isoent->extr_rec_list.last == NULL 			 * here is really unneeded since it has been already 			 * initialized at isoent_new function but Clang Static 			 * Analyzer claims that it is dereference of null 			 * pointer. 			 */
+if|if
+condition|(
+name|isoent
+operator|->
+name|extr_rec_list
+operator|.
+name|last
+operator|==
+name|NULL
+condition|)
+name|isoent
+operator|->
+name|extr_rec_list
+operator|.
+name|last
+operator|=
+operator|&
+operator|(
+name|isoent
+operator|->
+name|extr_rec_list
+operator|.
+name|first
+operator|)
+expr_stmt|;
 operator|*
 name|isoent
 operator|->
@@ -19127,7 +19152,7 @@ block|,
 name|KEY_INT
 block|,
 name|KEY_HEX
-block|, }
+block|}
 enum|;
 end_enum
 
