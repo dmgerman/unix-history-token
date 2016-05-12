@@ -74,7 +74,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.6"
+literal|"1.2.7-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -1234,11 +1234,12 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|INIT_DEBUGOUT
-argument_list|(
-literal|"ixlv_probe: begin"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|INIT_DEBUGOUT("ixlv_probe: begin");
+endif|#
+directive|endif
 name|pci_vendor_id
 operator|=
 name|pci_get_vendor
@@ -1639,7 +1640,6 @@ argument_list|,
 literal|"PF API version verified"
 argument_list|)
 expr_stmt|;
-comment|/* TODO: Figure out why MDD events occur when this reset is removed. */
 comment|/* Need API version before sending reset message */
 name|error
 operator|=
@@ -1748,7 +1748,6 @@ operator|->
 name|vf_offload_flags
 argument_list|)
 expr_stmt|;
-comment|// TODO: Move this into ixlv_vf_config?
 comment|/* got VF config message back from PF, now we can parse it */
 for|for
 control|(
@@ -3155,7 +3154,7 @@ name|IOCTL_DBG_IF2
 argument_list|(
 name|ifp
 argument_list|,
-literal|"mtu: %lu -> %d"
+literal|"mtu: %u -> %d"
 argument_list|,
 name|ifp
 operator|->
@@ -4698,7 +4697,8 @@ name|INIT_DBG_DEV
 argument_list|(
 name|dev
 argument_list|,
-literal|"Initialized Admin Queue, attempt %d"
+literal|"Initialized Admin Queue; starting"
+literal|" send_api_ver attempt %d"
 argument_list|,
 name|i
 operator|+
@@ -5159,6 +5159,15 @@ goto|goto
 name|retry_config
 goto|;
 block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: ixlv_get_vf_config() timed out waiting for a response\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
