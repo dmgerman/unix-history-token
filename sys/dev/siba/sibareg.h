@@ -369,6 +369,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIBA_CC_PMUCTL_PLL_UPD
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIBA_CC_PMUCTL_ILP
 value|0xffff0000
 end_define
@@ -452,6 +459,20 @@ define|#
 directive|define
 name|SIBA_CC_PMU_UPDNTM
 value|0x0628
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_CC_CHIPCTL_ADDR
+value|0x0650
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_CC_CHIPCTL_DATA
+value|0x0654
 end_define
 
 begin_define
@@ -569,6 +590,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIBA_CC_PMU1_PLL1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIBA_CC_PMU1_PLL2
 value|2
 end_define
@@ -599,6 +627,13 @@ define|#
 directive|define
 name|SIBA_CC_PMU1_PLL3_NDIVFRAC
 value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_CC_PMU1_PLL4
+value|4
 end_define
 
 begin_define
