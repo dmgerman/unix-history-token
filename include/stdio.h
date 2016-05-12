@@ -2342,10 +2342,8 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|ssize_t
-function_decl|(
+name|__ssize_t
 name|cookie_read_function_t
-function_decl|)
 parameter_list|(
 name|void
 modifier|*
@@ -2360,10 +2358,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|ssize_t
-function_decl|(
+name|__ssize_t
 name|cookie_write_function_t
-function_decl|)
 parameter_list|(
 name|void
 modifier|*
@@ -2380,9 +2376,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-function_decl|(
 name|cookie_seek_function_t
-function_decl|)
 parameter_list|(
 name|void
 modifier|*
@@ -2398,9 +2392,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-function_decl|(
 name|cookie_close_function_t
-function_decl|)
 parameter_list|(
 name|void
 modifier|*
