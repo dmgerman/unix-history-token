@@ -666,6 +666,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|gpiobus_release_pin
+parameter_list|(
+name|device_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|driver_t
