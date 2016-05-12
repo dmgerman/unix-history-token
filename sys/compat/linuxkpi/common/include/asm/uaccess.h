@@ -43,7 +43,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|copyout
+name|linux_copyout
 argument_list|(
 name|from
 argument_list|,
@@ -85,7 +85,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|copyin
+name|linux_copyin
 argument_list|(
 name|from
 argument_list|,

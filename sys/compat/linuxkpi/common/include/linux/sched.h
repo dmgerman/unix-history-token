@@ -153,6 +153,13 @@ name|char
 modifier|*
 name|comm
 decl_stmt|;
+name|void
+modifier|*
+name|bsd_ioctl_data
+decl_stmt|;
+name|unsigned
+name|bsd_ioctl_len
+decl_stmt|;
 block|}
 struct|;
 end_struct

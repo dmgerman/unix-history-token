@@ -30,7 +30,7 @@ name|_x
 parameter_list|,
 name|_p
 parameter_list|)
-value|({				\ 	int __err;					\ 	__typeof(*(_p)) __x;				\ 	__err = -copyin((_p),&(__x), sizeof(*(_p)));	\ 	(_x) = __x;					\ 	__err;						\ })
+value|({					\ 	int __err;						\ 	__typeof(*(_p)) __x;					\ 	__err = linux_copyin((_p),&(__x), sizeof(*(_p)));	\ 	(_x) = __x;						\ 	__err;							\ })
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ name|_x
 parameter_list|,
 name|_p
 parameter_list|)
-value|({			\ 	__typeof(*(_p)) __x = (_x);		\ 	-copyout(&(__x), (_p), sizeof(*(_p)));	\ })
+value|({				\ 	__typeof(*(_p)) __x = (_x);			\ 	linux_copyout(&(__x), (_p), sizeof(*(_p)));	\ })
 end_define
 
 begin_define
@@ -54,7 +54,7 @@ name|_x
 parameter_list|,
 name|_p
 parameter_list|)
-value|-copyin((_p),&(_x), sizeof(*(_p)))
+value|linux_copyin((_p),&(_x), sizeof(*(_p)))
 end_define
 
 begin_define
@@ -66,8 +66,48 @@ name|_x
 parameter_list|,
 name|_p
 parameter_list|)
-value|-copyout(&(_x), (_p), sizeof(*(_p)))
+value|linux_copyout(&(_x), (_p), sizeof(*(_p)))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|linux_copyin
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|uaddr
+parameter_list|,
+name|void
+modifier|*
+name|kaddr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|linux_copyout
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|kaddr
+parameter_list|,
+name|void
+modifier|*
+name|uaddr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * NOTE: The returned value from pagefault_disable() must be stored  * and passed to pagefault_enable(). Else possible recursion on the  * state can be lost.  */
