@@ -2885,6 +2885,34 @@ name|SIBA_SPROM8_OFDM5GHPO
 value|0x114e
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIBA_SPROM8_CDDPO
+value|0x0192
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_SPROM8_STBCPO
+value|0x0194
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_SPROM8_BW40PO
+value|0x0196
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_SPROM8_BWDUPPO
+value|0x0198
+end_define
+
 begin_comment
 comment|/* There are 4 blocks with power info sharing the same layout */
 end_comment
