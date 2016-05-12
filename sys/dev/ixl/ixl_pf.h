@@ -54,6 +54,13 @@ name|VF_FLAG_MAC_ANTI_SPOOF
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXL_PF_STATE_EMPR_RESETTING
+value|(1<< 0)
+end_define
+
 begin_struct
 struct|struct
 name|ixl_vf
@@ -132,6 +139,9 @@ name|msix
 decl_stmt|;
 name|int
 name|if_flags
+decl_stmt|;
+name|int
+name|state
 decl_stmt|;
 name|struct
 name|mtx

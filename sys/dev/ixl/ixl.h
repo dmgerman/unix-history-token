@@ -883,13 +883,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXL_TX_BUF_SZ
-value|((u32) 1514)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXL_AQ_BUF_SZ
 value|((u32) 4096)
 end_define

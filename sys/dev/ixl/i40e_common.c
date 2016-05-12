@@ -11247,6 +11247,19 @@ condition|)
 return|return
 name|status
 return|;
+if|if
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|link_info
+operator|.
+name|link_info
+operator|&
+name|I40E_AQ_MEDIA_AVAILABLE
+condition|)
+block|{
 name|status
 operator|=
 name|i40e_aq_get_phy_capabilities
@@ -11297,6 +11310,7 @@ name|module_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|status
 return|;

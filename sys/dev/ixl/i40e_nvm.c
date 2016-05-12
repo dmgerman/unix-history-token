@@ -708,13 +708,58 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * i40e_read_nvm_word - Reads Shadow RAM  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF)  * @data: word read from the Shadow RAM  *  * Reads one 16 bit word from the Shadow RAM using the GLNVM_SRCTL register.  **/
+comment|/**  * i40e_read_nvm_word - Reads nvm word and acquire lock if necessary  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF)  * @data: word read from the Shadow RAM  *  * Reads one 16 bit word from the Shadow RAM using the GLNVM_SRCTL register.  **/
 end_comment
 
 begin_function
 name|enum
 name|i40e_status_code
 name|i40e_read_nvm_word
+parameter_list|(
+name|struct
+name|i40e_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|offset
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|enum
+name|i40e_status_code
+name|ret_code
+init|=
+name|I40E_SUCCESS
+decl_stmt|;
+name|ret_code
+operator|=
+name|i40e_read_nvm_word_srctl
+argument_list|(
+name|hw
+argument_list|,
+name|offset
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_code
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * __i40e_read_nvm_word - Reads nvm word, assumes caller does the locking  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF)  * @data: word read from the Shadow RAM  *  * Reads one 16 bit word from the Shadow RAM using the GLNVM_SRCTL register.  **/
+end_comment
+
+begin_function
+name|enum
+name|i40e_status_code
+name|__i40e_read_nvm_word
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -1002,7 +1047,58 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * i40e_read_nvm_buffer - Reads Shadow RAM buffer  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF).  * @words: (in) number of words to read; (out) number of words actually read  * @data: words read from the Shadow RAM  *  * Reads 16 bit words (data buffer) from the SR using the i40e_read_nvm_srrd()  * method. The buffer read is preceded by the NVM ownership take  * and followed by the release.  **/
+comment|/**  * __i40e_read_nvm_buffer - Reads nvm buffer, caller must acquire lock  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF).  * @words: (in) number of words to read; (out) number of words actually read  * @data: words read from the Shadow RAM  *  * Reads 16 bit words (data buffer) from the SR using the i40e_read_nvm_srrd()  * method. The buffer read is preceded by the NVM ownership take  * and followed by the release.  **/
+end_comment
+
+begin_function
+name|enum
+name|i40e_status_code
+name|__i40e_read_nvm_buffer
+parameter_list|(
+name|struct
+name|i40e_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|offset
+parameter_list|,
+name|u16
+modifier|*
+name|words
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|enum
+name|i40e_status_code
+name|ret_code
+init|=
+name|I40E_SUCCESS
+decl_stmt|;
+name|ret_code
+operator|=
+name|i40e_read_nvm_buffer_srctl
+argument_list|(
+name|hw
+argument_list|,
+name|offset
+argument_list|,
+name|words
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_code
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * i40e_read_nvm_buffer - Reads Shadow RAM buffer and acuire lock if necessary  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to read (0x000000 - 0x001FFF).  * @words: (in) number of words to read; (out) number of words actually read  * @data: words read from the Shadow RAM  *  * Reads 16 bit words (data buffer) from the SR using the i40e_read_nvm_srrd()  * method. The buffer read is preceded by the NVM ownership take  * and followed by the release.  **/
 end_comment
 
 begin_function
@@ -1719,13 +1815,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * i40e_write_nvm_word - Writes Shadow RAM word  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to write  * @data: word to write to the Shadow RAM  *  * Writes a 16 bit word to the SR using the i40e_write_nvm_aq() method.  * NVM ownership have to be acquired and released (on ARQ completion event  * reception) by caller. To commit SR to NVM update checksum function  * should be called.  **/
+comment|/**  * __i40e_write_nvm_word - Writes Shadow RAM word  * @hw: pointer to the HW structure  * @offset: offset of the Shadow RAM word to write  * @data: word to write to the Shadow RAM  *  * Writes a 16 bit word to the SR using the i40e_write_nvm_aq() method.  * NVM ownership have to be acquired and released (on ARQ completion event  * reception) by caller. To commit SR to NVM update checksum function  * should be called.  **/
 end_comment
 
 begin_function
 name|enum
 name|i40e_status_code
-name|i40e_write_nvm_word
+name|__i40e_write_nvm_word
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -1787,13 +1883,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * i40e_write_nvm_buffer - Writes Shadow RAM buffer  * @hw: pointer to the HW structure  * @module_pointer: module pointer location in words from the NVM beginning  * @offset: offset of the Shadow RAM buffer to write  * @words: number of words to write  * @data: words to write to the Shadow RAM  *  * Writes a 16 bit words buffer to the Shadow RAM using the admin command.  * NVM ownership must be acquired before calling this function and released  * on ARQ completion event reception by caller. To commit SR to NVM update  * checksum function should be called.  **/
+comment|/**  * __i40e_write_nvm_buffer - Writes Shadow RAM buffer  * @hw: pointer to the HW structure  * @module_pointer: module pointer location in words from the NVM beginning  * @offset: offset of the Shadow RAM buffer to write  * @words: number of words to write  * @data: words to write to the Shadow RAM  *  * Writes a 16 bit words buffer to the Shadow RAM using the admin command.  * NVM ownership must be acquired before calling this function and released  * on ARQ completion event reception by caller. To commit SR to NVM update  * checksum function should be called.  **/
 end_comment
 
 begin_function
 name|enum
 name|i40e_status_code
-name|i40e_write_nvm_buffer
+name|__i40e_write_nvm_buffer
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -1985,7 +2081,7 @@ expr_stmt|;
 comment|/* read pointer to VPD area */
 name|ret_code
 operator|=
-name|i40e_read_nvm_word
+name|__i40e_read_nvm_word
 argument_list|(
 name|hw
 argument_list|,
@@ -2013,7 +2109,7 @@ block|}
 comment|/* read pointer to PCIe Alt Auto-load module */
 name|ret_code
 operator|=
-name|i40e_read_nvm_word
+name|__i40e_read_nvm_word
 argument_list|(
 name|hw
 argument_list|,
@@ -2076,7 +2172,7 @@ name|I40E_SR_SECTOR_SIZE_IN_WORDS
 decl_stmt|;
 name|ret_code
 operator|=
-name|i40e_read_nvm_buffer
+name|__i40e_read_nvm_buffer
 argument_list|(
 name|hw
 argument_list|,
@@ -2331,6 +2427,29 @@ argument_list|(
 literal|"i40e_validate_nvm_checksum"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|flags
+operator|&
+name|I40E_HW_FLAG_AQ_SRCTL_ACCESS_ENABLE
+condition|)
+name|ret_code
+operator|=
+name|i40e_acquire_nvm
+argument_list|(
+name|hw
+argument_list|,
+name|I40E_RESOURCE_READ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ret_code
+condition|)
+block|{
 name|ret_code
 operator|=
 name|i40e_calc_nvm_checksum
@@ -2343,6 +2462,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hw
+operator|->
+name|flags
+operator|&
+name|I40E_HW_FLAG_AQ_SRCTL_ACCESS_ENABLE
+condition|)
+name|i40e_release_nvm
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ret_code
 operator|!=
 name|I40E_SUCCESS
@@ -2350,7 +2482,13 @@ condition|)
 goto|goto
 name|i40e_validate_nvm_checksum_exit
 goto|;
-comment|/* Do not use i40e_read_nvm_word() because we do not want to take 	 * the synchronization semaphores twice here. 	 */
+block|}
+else|else
+block|{
+goto|goto
+name|i40e_validate_nvm_checksum_exit
+goto|;
+block|}
 name|i40e_read_nvm_word
 argument_list|(
 name|hw
@@ -2784,7 +2922,7 @@ name|hw
 argument_list|,
 name|I40E_DEBUG_NVM
 argument_list|,
-literal|"%s state %d nvm_release_on_hold %d\n"
+literal|"%s state %d nvm_release_on_hold %d cmd 0x%08x config 0x%08x offset 0x%08x data_size 0x%08x\n"
 argument_list|,
 name|i40e_nvm_update_state_str
 index|[
@@ -2800,6 +2938,22 @@ operator|->
 name|aq
 operator|.
 name|nvm_release_on_done
+argument_list|,
+name|cmd
+operator|->
+name|command
+argument_list|,
+name|cmd
+operator|->
+name|config
+argument_list|,
+name|cmd
+operator|->
+name|offset
+argument_list|,
+name|cmd
+operator|->
+name|data_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -3824,6 +3978,7 @@ break|break;
 case|case
 name|I40E_NVMUPD_CSUM_CON
 case|:
+comment|/* Assumes the caller has acquired the nvm */
 name|status
 operator|=
 name|i40e_update_nvm_checksum
@@ -3879,6 +4034,7 @@ break|break;
 case|case
 name|I40E_NVMUPD_CSUM_LCB
 case|:
+comment|/* Assumes the caller has acquired the nvm */
 name|status
 operator|=
 name|i40e_update_nvm_checksum
