@@ -937,12 +937,6 @@ name|cpio
 operator|->
 name|extract_flags
 operator||=
-name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
-expr_stmt|;
-name|cpio
-operator|->
-name|extract_flags
-operator||=
 name|ARCHIVE_EXTRACT_PERM
 expr_stmt|;
 name|cpio
@@ -1357,13 +1351,6 @@ name|extract_flags
 operator|&=
 operator|~
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
-expr_stmt|;
-name|cpio
-operator|->
-name|extract_flags
-operator|&=
-operator|~
-name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
 expr_stmt|;
 break|break;
 case|case
