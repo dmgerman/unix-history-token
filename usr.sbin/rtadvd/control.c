@@ -172,7 +172,7 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|n
 decl_stmt|;
 name|struct
@@ -369,6 +369,9 @@ if|if
 condition|(
 name|n
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -476,11 +479,12 @@ name|cm_len
 operator|>
 sizeof|sizeof
 argument_list|(
+operator|*
 name|cm
 argument_list|)
 condition|)
 block|{
-name|int
+name|size_t
 name|msglen
 init|=
 name|cm
@@ -497,7 +501,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> ctrl msg has payload (len=%d)"
+literal|"<%s> ctrl msg has payload (len=%zu)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -614,6 +618,9 @@ if|if
 condition|(
 name|n
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|msglen
 condition|)
 block|{
