@@ -130,16 +130,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|ASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|if(!(x)) panic("IXL: x")
-end_define
-
-begin_define
-define|#
-directive|define
 name|i40e_usec_delay
 parameter_list|(
 name|x
@@ -904,6 +894,21 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|i40e_virt_mem
+block|{
+name|void
+modifier|*
+name|va
+decl_stmt|;
+name|u32
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct_decl
 struct_decl|struct
 name|i40e_hw
@@ -942,6 +947,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* ** i40e_debug - OS dependent version of shared code debug printing */
+end_comment
+
+begin_enum_decl
+enum_decl|enum
+name|i40e_debug_mask
+enum_decl|;
+end_enum_decl
+
 begin_define
 define|#
 directive|define
@@ -963,11 +978,13 @@ specifier|extern
 name|void
 name|i40e_debug_d
 parameter_list|(
-name|void
+name|struct
+name|i40e_hw
 modifier|*
 name|hw
 parameter_list|,
-name|u32
+name|enum
+name|i40e_debug_mask
 name|mask
 parameter_list|,
 name|char
@@ -979,23 +996,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|i40e_virt_mem
-block|{
-name|void
-modifier|*
-name|va
-decl_stmt|;
-name|u32
-name|size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/* ** This hardware supports either 16 or 32 byte rx descriptors ** we default here to the larger size. */
+comment|/* ** This hardware supports either 16 or 32 byte rx descriptors; ** the driver only uses the 32 byte kind. */
 end_comment
 
 begin_define

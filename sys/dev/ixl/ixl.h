@@ -734,7 +734,7 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * Ring Descriptors Valid Range: 32-4096 Default Value: 1024 This value is the  * number of tx/rx descriptors allocated by the driver. Increasing this  * value allows the driver to queue more operations. Each descriptor is 16  * or 32 bytes (configurable in FVL)  */
+comment|/*  * Ring Descriptors Valid Range: 32-4096 Default Value: 1024 This value is the  * number of tx/rx descriptors allocated by the driver. Increasing this  * value allows the driver to queue more operations.  *  * Tx descriptors are always 16 bytes, but Rx descriptors can be 32 bytes.  * The driver currently always uses 32 byte Rx descriptors.  */
 end_comment
 
 begin_define
@@ -958,7 +958,7 @@ begin_define
 define|#
 directive|define
 name|IXL_MAX_FRAME
-value|0x2600
+value|9728
 end_define
 
 begin_define

@@ -598,18 +598,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** i40e_debug_d - OS dependent version of shared code debug printing */
+comment|/*  * Helper function for debug statement printing  */
 end_comment
 
 begin_function
 name|void
 name|i40e_debug_d
 parameter_list|(
-name|void
+name|struct
+name|i40e_hw
 modifier|*
 name|hw
 parameter_list|,
-name|u32
+name|enum
+name|i40e_debug_mask
 name|mask
 parameter_list|,
 name|char
@@ -619,12 +621,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-literal|512
-index|]
-decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
@@ -654,14 +650,20 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vsnprintf
+name|device_printf
 argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+operator|(
+operator|(
+expr|struct
+name|i40e_osdep
+operator|*
+operator|)
+name|hw
+operator|->
+name|back
+operator|)
+operator|->
+name|dev
 argument_list|,
 name|fmt
 argument_list|,
@@ -671,14 +673,6 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|args
-argument_list|)
-expr_stmt|;
-comment|/* the debug string is already formatted with a newline */
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 block|}
