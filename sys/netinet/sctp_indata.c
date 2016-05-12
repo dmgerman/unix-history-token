@@ -12926,15 +12926,8 @@ case|:
 case|case
 name|SCTP_ASCONF
 case|:
-comment|/* 				 * Now, what do we do with KNOWN chunks that 				 * are NOT in the right place? 				 *  				 * For now, I do nothing but ignore them. We 				 * may later want to add sysctl stuff to 				 * switch out and do either an ABORT() or 				 * possibly process them. 				 */
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_data_order
-argument_list|)
-condition|)
 block|{
+comment|/* 					 * Now, what do we do with KNOWN 					 * chunks that are NOT in the right 					 * place? 					 *  					 * For now, I do nothing but ignore 					 * them. We may later want to add 					 * sysctl stuff to switch out and do 					 * either an ABORT() or possibly 					 * process them. 					 */
 name|struct
 name|mbuf
 modifier|*
@@ -12988,7 +12981,6 @@ literal|2
 operator|)
 return|;
 block|}
-break|break;
 default|default:
 comment|/* unknown chunk type, use bit rules */
 if|if
@@ -17504,6 +17496,9 @@ name|rto_ok
 init|=
 literal|1
 decl_stmt|;
+name|uint32_t
+name|send_s
+decl_stmt|;
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -17788,17 +17783,6 @@ block|}
 block|}
 if|if
 condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_sacks
-argument_list|)
-condition|)
-block|{
-name|uint32_t
-name|send_s
-decl_stmt|;
-if|if
-condition|(
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
@@ -17919,7 +17903,6 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 name|asoc
 operator|->
@@ -20561,14 +20544,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_sacks
-argument_list|)
-condition|)
-block|{
 comment|/* reality check */
 if|if
 condition|(
@@ -20641,7 +20616,7 @@ index|[
 name|SCTP_DIAG_INFO_LEN
 index|]
 decl_stmt|;
-comment|/* 			 * no way, we have not even sent this TSN out yet. 			 * Peer is hopelessly messed up with us. 			 */
+comment|/* 		 * no way, we have not even sent this TSN out yet. Peer is 		 * hopelessly messed up with us. 		 */
 name|SCTP_PRINTF
 argument_list|(
 literal|"NEW cum_ack:%x send_s:%x is smaller or equal\n"
@@ -20733,7 +20708,6 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 comment|/**********************/
 comment|/* 1) check the range */
@@ -21565,15 +21539,7 @@ name|wake_him
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_sacks
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * validate the biggest_tsn_acked in the gap acks if 			 * strict adherence is wanted. 			 */
+comment|/* 		 * validate the biggest_tsn_acked in the gap acks if strict 		 * adherence is wanted. 		 */
 if|if
 condition|(
 name|SCTP_TSN_GE
@@ -21584,7 +21550,7 @@ name|send_s
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * peer is either confused or we are under 				 * attack. We must abort. 				 */
+comment|/* 			 * peer is either confused or we are under attack. 			 * We must abort. 			 */
 name|SCTP_PRINTF
 argument_list|(
 literal|"Hopeless peer! biggest_tsn_acked:%x largest seq:%x\n"
@@ -21597,7 +21563,6 @@ expr_stmt|;
 goto|goto
 name|hopeless_peer
 goto|;
-block|}
 block|}
 block|}
 comment|/*******************************************/

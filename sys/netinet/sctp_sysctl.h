@@ -82,9 +82,6 @@ name|uint32_t
 name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
-name|sctp_strict_sacks
-decl_stmt|;
-name|uint32_t
 name|sctp_peer_chunk_oh
 decl_stmt|;
 name|uint32_t
@@ -191,9 +188,6 @@ name|sctp_hb_maxburst
 decl_stmt|;
 name|uint32_t
 name|sctp_abort_if_one_2_one_hits_limit
-decl_stmt|;
-name|uint32_t
-name|sctp_strict_data_order
 decl_stmt|;
 name|uint32_t
 name|sctp_min_residual
@@ -665,38 +659,6 @@ define|#
 directive|define
 name|SCTPCTL_PKTDROP_ENABLE_DEFAULT
 value|0
-end_define
-
-begin_comment
-comment|/* strict_sacks: Enable SCTP Strict SACK checking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_SACKS_DESC
-value|"Enable SCTP Strict SACK checking"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_SACKS_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_SACKS_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_SACKS_DEFAULT
-value|1
 end_define
 
 begin_comment
@@ -1912,38 +1874,6 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ABORT_AT_LIMIT_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* strict_data_order: Enforce strict data ordering, abort if control inside data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_DATA_ORDER_DESC
-value|"Enforce strict data ordering, abort if control inside data"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_DATA_ORDER_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_DATA_ORDER_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_DATA_ORDER_DEFAULT
 value|0
 end_define
 
