@@ -74,7 +74,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.10-k"
+literal|"1.2.11-k"
 decl_stmt|;
 end_decl_stmt
 

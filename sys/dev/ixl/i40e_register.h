@@ -16055,6 +16055,73 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_GL_PRS_FVBM
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x00269760 + ((_i) * 4))
+end_define
+
+begin_comment
+comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_MAX_INDEX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_FV_BYTE_INDX_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_FV_BYTE_INDX_MASK
+value|I40E_MASK(0x7F, I40E_GL_PRS_FVBM_FV_BYTE_INDX_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_RULE_BUS_INDX_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_RULE_BUS_INDX_MASK
+value|I40E_MASK(0x3F, I40E_GL_PRS_FVBM_RULE_BUS_INDX_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_MSK_ENA_SHIFT
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_PRS_FVBM_MSK_ENA_MASK
+value|I40E_MASK(0x1, I40E_GL_PRS_FVBM_MSK_ENA_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_GLRPB_DPSS
 value|0x000AC828
 end_define
@@ -17452,6 +17519,88 @@ define|#
 directive|define
 name|I40E_PRTQF_FD_FLXINSET_INSET_MASK
 value|I40E_MASK(0xFF, I40E_PRTQF_FD_FLXINSET_INSET_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET
+parameter_list|(
+name|_i
+parameter_list|,
+name|_j
+parameter_list|)
+value|(0x00250000 + ((_i) * 64 + (_j) * 32))
+end_define
+
+begin_comment
+comment|/* _i=0...63, _j=0...1 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_MAX_INDEX
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_INSET_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_INSET_MASK
+value|I40E_MASK(0xFFFFFFFF, I40E_PRTQF_FD_INSET_INSET_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET
+parameter_list|(
+name|_i
+parameter_list|,
+name|_j
+parameter_list|)
+value|(0x00250000 + ((_i) * 64 + (_j) * 32))
+end_define
+
+begin_comment
+comment|/* _i=0...63, _j=0...1 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_MAX_INDEX
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_INSET_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTQF_FD_INSET_INSET_MASK
+value|I40E_MASK(0xFFFFFFFF, I40E_PRTQF_FD_INSET_INSET_SHIFT)
 end_define
 
 begin_define

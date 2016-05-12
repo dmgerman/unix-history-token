@@ -522,6 +522,14 @@ name|i40e_aqc_opc_set_switch_config
 init|=
 literal|0x0205
 block|,
+name|i40e_aqc_opc_rx_ctl_reg_read
+init|=
+literal|0x0206
+block|,
+name|i40e_aqc_opc_rx_ctl_reg_write
+init|=
+literal|0x0207
+block|,
 name|i40e_aqc_opc_add_vsi
 init|=
 literal|0x0210
@@ -2450,6 +2458,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Read Receive control registers  (direct 0x0206)  * Write Receive control registers (direct 0x0207)  *     used for accessing Rx control registers that can be  *     slow and need special handling when under high Rx load  */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_aqc_rx_ctl_reg_read_write
+block|{
+name|__le32
+name|reserved1
+decl_stmt|;
+name|__le32
+name|address
+decl_stmt|;
+name|__le32
+name|reserved2
+decl_stmt|;
+name|__le32
+name|value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_CMD_LENGTH
+argument_list|(
+name|i40e_aqc_rx_ctl_reg_read_write
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Add VSI (indirect 0x0210)  *    this indirect command uses struct i40e_aqc_vsi_properties_data  *    as the indirect buffer (128 bytes)  *  * Update VSI (indirect 0x211)  *     uses the same data structure as Add VSI  *  * Get VSI (indirect 0x0212)  *     uses the same completion and data structure as Add VSI  */
 end_comment
 
@@ -2922,7 +2962,7 @@ comment|/* outer up section */
 name|__le32
 name|outer_up_table
 decl_stmt|;
-comment|/* same structure and defines as ingress table */
+comment|/* same structure and defines as ingress tbl */
 name|u8
 name|cmd_reserved
 index|[
@@ -6543,6 +6583,7 @@ begin_define
 define|#
 directive|define
 name|I40E_AQ_ANVM_FEATURE_OR_IMMEDIATE_MASK
+define|\
 value|(1<< I40E_AQ_ANVM_FEATURE_OR_IMMEDIATE_SHIFT)
 end_define
 
@@ -7607,6 +7648,7 @@ value|0
 define|#
 directive|define
 name|I40E_AQC_START_SPECIFIC_AGENT_MASK
+define|\
 value|(1<< I40E_AQC_START_SPECIFIC_AGENT_SHIFT)
 name|u8
 name|command

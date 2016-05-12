@@ -74,7 +74,7 @@ name|char
 name|ixl_driver_version
 index|[]
 init|=
-literal|"1.4.24-k"
+literal|"1.4.27-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -3119,7 +3119,47 @@ goto|goto
 name|err_mac_hmc
 goto|;
 block|}
-comment|/* Disable LLDP from the firmware */
+comment|/* Disable LLDP from the firmware for certain NVM versions */
+if|if
+condition|(
+operator|(
+operator|(
+name|pf
+operator|->
+name|hw
+operator|.
+name|aq
+operator|.
+name|fw_maj_ver
+operator|==
+literal|4
+operator|)
+operator|&&
+operator|(
+name|pf
+operator|->
+name|hw
+operator|.
+name|aq
+operator|.
+name|fw_min_ver
+operator|<
+literal|3
+operator|)
+operator|)
+operator|||
+operator|(
+name|pf
+operator|->
+name|hw
+operator|.
+name|aq
+operator|.
+name|fw_maj_ver
+operator|<
+literal|4
+operator|)
+condition|)
 name|i40e_aq_stop_lldp
 argument_list|(
 name|hw
@@ -11676,9 +11716,10 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* First queue type is RX / 0 */
 name|wr32
 argument_list|(
 name|hw
@@ -11748,11 +11789,7 @@ name|I40E_QINT_TQCTL_MSIX_INDX_SHIFT
 operator|)
 operator||
 operator|(
-operator|(
-name|i
-operator|+
-literal|1
-operator|)
+name|IXL_QUEUE_EOL
 operator|<<
 name|I40E_QINT_TQCTL_NEXTQ_INDX_SHIFT
 operator|)
@@ -11761,26 +11798,6 @@ operator|(
 name|I40E_QUEUE_TYPE_RX
 operator|<<
 name|I40E_QINT_TQCTL_NEXTQ_TYPE_SHIFT
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-operator|(
-name|vsi
-operator|->
-name|num_queues
-operator|-
-literal|1
-operator|)
-condition|)
-name|reg
-operator||=
-operator|(
-name|IXL_QUEUE_EOL
-operator|<<
-name|I40E_QINT_TQCTL_NEXTQ_INDX_SHIFT
 operator|)
 expr_stmt|;
 name|wr32
@@ -18712,7 +18729,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|wr32
+name|i40e_write_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -18965,7 +18982,7 @@ operator|=
 operator|(
 name|u64
 operator|)
-name|rd32
+name|i40e_read_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -18979,7 +18996,7 @@ operator|(
 operator|(
 name|u64
 operator|)
-name|rd32
+name|i40e_read_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -18996,7 +19013,7 @@ name|hena
 operator||=
 name|set_hena
 expr_stmt|;
-name|wr32
+name|i40e_write_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -19011,7 +19028,7 @@ operator|)
 name|hena
 argument_list|)
 expr_stmt|;
-name|wr32
+name|i40e_write_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -29745,7 +29762,7 @@ name|I40E_VSILAN_QTABLE_QINDEX_1_SHIFT
 expr_stmt|;
 name|qtable
 operator|=
-name|rd32
+name|i40e_read_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -29776,7 +29793,7 @@ name|val
 operator|<<
 name|shift
 expr_stmt|;
-name|wr32
+name|i40e_write_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
@@ -29832,7 +29849,7 @@ operator|->
 name|hw
 expr_stmt|;
 comment|/* 	 * Contiguous mappings aren't actually supported by the hardware, 	 * so we have to use non-contiguous mappings. 	 */
-name|wr32
+name|i40e_write_rx_ctl
 argument_list|(
 name|hw
 argument_list|,
