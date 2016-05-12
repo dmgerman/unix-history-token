@@ -2388,7 +2388,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/*       * Check if KLD already loaded      */
+comment|/*      * Check if KLD already loaded      */
 name|fp
 operator|=
 name|file_findfile

@@ -557,7 +557,7 @@ condition|(
 name|seenbs
 condition|)
 block|{
-comment|/*          * The final character was a '\'. Put it in as a single backslash.          */
+comment|/* 	 * The final character was a '\'. Put it in as a single backslash. 	 */
 name|new_str
 index|[
 name|i
