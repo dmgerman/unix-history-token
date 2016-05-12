@@ -2867,8 +2867,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"fchdir"
 argument_list|)
 expr_stmt|;
