@@ -218,36 +218,6 @@ define|\
 value|((_vap)->iv_aid_bitmap[IEEE80211_AID(b) / 32]& (1<< (IEEE80211_AID(b) % 32)))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IEEE80211_DEBUG_REFCNT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|REFCNT_LOC
-value|"%s (%s:%u) %p<%s> refcnt %d\n", __func__, func, line
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|REFCNT_LOC
-value|"%s %p<%s> refcnt %d\n", __func__
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int

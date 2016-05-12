@@ -4546,36 +4546,6 @@ parameter_list|)
 value|((n) * 4)
 end_define
 
-begin_define
-define|#
-directive|define
-name|HT_RC_2_MCS
-parameter_list|(
-name|_rc
-parameter_list|)
-value|((_rc)& 0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HT_RC_2_STREAMS
-parameter_list|(
-name|_rc
-parameter_list|)
-value|((((_rc)& 0x78)>> 3) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_HT_RATE
-parameter_list|(
-name|_rc
-parameter_list|)
-value|( (_rc)& IEEE80211_RATE_MCS)
-end_define
-
 begin_comment
 comment|/*  * Calculate the transmit duration of an 11n frame.  */
 end_comment
@@ -4729,24 +4699,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|IS_HT_RATE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|HT_RC_2_STREAMS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|HT_RC_2_MCS
-end_undef
 
 begin_undef
 undef|#

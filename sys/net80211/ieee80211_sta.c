@@ -3917,9 +3917,6 @@ name|uint8_t
 modifier|*
 name|challenge
 decl_stmt|;
-name|int
-name|estatus
-decl_stmt|;
 comment|/* 	 * NB: this can happen as we allow pre-shared key 	 * authentication to be enabled w/o wep being turned 	 * on so that configuration of these can be done 	 * in any order.  It may be better to enforce the 	 * ordering in which case this check would just be 	 * for sanity/consistency. 	 */
 if|if
 condition|(
@@ -3950,10 +3947,6 @@ literal|"%s"
 argument_list|,
 literal|" PRIVACY is disabled"
 argument_list|)
-expr_stmt|;
-name|estatus
-operator|=
-name|IEEE80211_STATUS_ALG
 expr_stmt|;
 goto|goto
 name|bad
@@ -4002,10 +3995,6 @@ name|is_rx_bad_auth
 operator|++
 expr_stmt|;
 comment|/* XXX maybe a unique error? */
-name|estatus
-operator|=
-name|IEEE80211_STATUS_ALG
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -4083,10 +4072,6 @@ operator|.
 name|is_rx_bad_auth
 operator|++
 expr_stmt|;
-name|estatus
-operator|=
-name|IEEE80211_STATUS_CHALLENGE
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -4154,10 +4139,6 @@ operator|.
 name|is_rx_bad_auth
 operator|++
 expr_stmt|;
-name|estatus
-operator|=
-name|IEEE80211_STATUS_CHALLENGE
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -4198,10 +4179,6 @@ name|iv_stats
 operator|.
 name|is_rx_bad_auth
 operator|++
-expr_stmt|;
-name|estatus
-operator|=
-name|IEEE80211_STATUS_CHALLENGE
 expr_stmt|;
 goto|goto
 name|bad
@@ -5204,13 +5181,6 @@ name|int
 name|nf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|ISPROBE
-parameter_list|(
-name|_st
-parameter_list|)
-value|((_st) == IEEE80211_FC0_SUBTYPE_PROBE_RESP)
 define|#
 directive|define
 name|ISREASSOC
@@ -7627,9 +7597,6 @@ block|}
 undef|#
 directive|undef
 name|ISREASSOC
-undef|#
-directive|undef
-name|ISPROBE
 block|}
 end_function
 

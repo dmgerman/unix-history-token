@@ -1395,11 +1395,6 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-decl_stmt|;
 name|enum
 name|ieee80211_state
 name|ostate
@@ -1467,13 +1462,6 @@ name|vap
 argument_list|)
 expr_stmt|;
 comment|/* background scan */
-name|ni
-operator|=
-name|vap
-operator|->
-name|iv_bss
-expr_stmt|;
-comment|/* NB: no reference held */
 name|error
 operator|=
 literal|0

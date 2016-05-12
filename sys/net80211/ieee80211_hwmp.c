@@ -705,18 +705,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HWMP_SEQ_GEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((int32_t)((a)-(b))>= 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|HWMP_SEQ_MAX
 parameter_list|(
 name|a
@@ -7992,16 +7980,6 @@ parameter_list|)
 value|perr->perr_dests[n].dest_ext_addr
 end_define
 
-begin_define
-define|#
-directive|define
-name|PERR_DRCODE
-parameter_list|(
-name|n
-parameter_list|)
-value|perr->perr_dests[n].dest_rcode
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -8540,12 +8518,6 @@ begin_undef
 undef|#
 directive|undef
 name|PERR_DEXTADDR
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|PERR_DRCODE
 end_undef
 
 begin_function
@@ -9089,11 +9061,6 @@ name|struct
 name|ieee80211_meshrann_ie
 name|prann
 decl_stmt|;
-name|uint32_t
-name|metric
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|IEEE80211_ADDR_EQ
@@ -9235,21 +9202,6 @@ operator|->
 name|rann_interval
 expr_stmt|;
 comment|/* XXX: mtx lock? */
-name|metric
-operator|=
-name|rann
-operator|->
-name|rann_metric
-operator|+
-name|ms
-operator|->
-name|ms_pmetric
-operator|->
-name|mpm_metric
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rt

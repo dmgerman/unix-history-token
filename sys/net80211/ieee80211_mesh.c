@@ -7335,13 +7335,6 @@ parameter_list|(
 name|mc
 parameter_list|)
 value|((const struct ieee80211_meshcntl_ae01 *)mc)
-define|#
-directive|define
-name|MC10
-parameter_list|(
-name|mc
-parameter_list|)
-value|((const struct ieee80211_meshcntl_ae10 *)mc)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -8845,9 +8838,6 @@ name|HAS_SEQ
 undef|#
 directive|undef
 name|MC01
-undef|#
-directive|undef
-name|MC10
 block|}
 end_function
 
@@ -9486,10 +9476,6 @@ decl_stmt|,
 modifier|*
 name|xrates
 decl_stmt|;
-name|uint8_t
-modifier|*
-name|sfrm
-decl_stmt|;
 if|if
 condition|(
 name|vap
@@ -9574,10 +9560,6 @@ operator|=
 name|xrates
 operator|=
 name|NULL
-expr_stmt|;
-name|sfrm
-operator|=
-name|frm
 expr_stmt|;
 while|while
 condition|(
@@ -10083,9 +10065,6 @@ name|meshid
 decl_stmt|,
 modifier|*
 name|meshconf
-decl_stmt|,
-modifier|*
-name|meshpeer
 decl_stmt|;
 name|uint8_t
 name|sendclose
@@ -10096,8 +10075,6 @@ comment|/* 1 = MPM frame rejected, close will be sent */
 name|meshid
 operator|=
 name|meshconf
-operator|=
-name|meshpeer
 operator|=
 name|NULL
 expr_stmt|;
@@ -10147,10 +10124,6 @@ break|break;
 case|case
 name|IEEE80211_ELEMID_MESHPEER
 case|:
-name|meshpeer
-operator|=
-name|frm
-expr_stmt|;
 name|mpie
 operator|=
 operator|(
@@ -12562,11 +12535,6 @@ name|struct
 name|ieee80211_bpf_params
 name|params
 decl_stmt|;
-name|struct
-name|ieee80211_frame
-modifier|*
-name|wh
-decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -12657,17 +12625,6 @@ block|}
 name|IEEE80211_TX_LOCK
 argument_list|(
 name|ic
-argument_list|)
-expr_stmt|;
-name|wh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ieee80211_frame
-operator|*
 argument_list|)
 expr_stmt|;
 name|ieee80211_send_setup

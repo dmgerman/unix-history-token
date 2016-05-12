@@ -2904,9 +2904,6 @@ name|frm
 decl_stmt|,
 modifier|*
 name|efrm
-decl_stmt|,
-modifier|*
-name|sfrm
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -3323,10 +3320,6 @@ operator|=
 name|xrates
 operator|=
 name|NULL
-expr_stmt|;
-name|sfrm
-operator|=
-name|frm
 expr_stmt|;
 while|while
 condition|(
