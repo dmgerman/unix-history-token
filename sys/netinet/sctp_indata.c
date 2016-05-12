@@ -12514,6 +12514,8 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
+literal|"%s"
+argument_list|,
 literal|"I-DATA chunk received when DATA was negotiated"
 argument_list|)
 expr_stmt|;
@@ -12591,6 +12593,8 @@ sizeof|sizeof
 argument_list|(
 name|msg
 argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 literal|"DATA chunk received when I-DATA was negotiated"
 argument_list|)
