@@ -585,7 +585,7 @@ begin_define
 define|#
 directive|define
 name|I40E_FW_API_VERSION_MINOR_X710
-value|0x0004
+value|0x0005
 end_define
 
 begin_comment

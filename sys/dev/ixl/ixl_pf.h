@@ -238,30 +238,35 @@ define|#
 directive|define
 name|IXL_DEFAULT_PHY_INT_MASK
 define|\
-value|(I40E_AQ_EVENT_LINK_UPDOWN | I40E_AQ_EVENT_MODULE_QUAL_FAIL)
+value|((~(I40E_AQ_EVENT_LINK_UPDOWN | I40E_AQ_EVENT_MODULE_QUAL_FAIL \       | I40E_AQ_EVENT_MEDIA_NA))& 0x3FF)
+end_define
+
+begin_comment
+comment|/* Sysctl help messages; displayed with "sysctl -d" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXL_SYSCTL_HELP_SET_ADVERTISE
+define|\
+value|"\nControl advertised link speed.\n"	\ "Flags:\n"				\ "\t0x1 - advertise 100M\n"		\ "\t0x2 - advertise 1G\n"		\ "\t0x4 - advertise 10G\n"		\ "\t0x8 - advertise 20G\n\n"		\ "Operation not supported on 40G devices."
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXL_SET_ADVERTISE_HELP
+name|IXL_SYSCTL_HELP_FC
 define|\
-value|"Control link advertise speed:\n"	\ "\tFlags:\n"				\ "\t\t0x1 - advertise 100 Mb\n"		\ "\t\t0x2 - advertise 1G\n"		\ "\t\t0x4 - advertise 10G\n"		\ "\t\t0x8 - advertise 20G\n\n"		\ "\tDoes not work on 40G devices."
+value|"\nSet flow control mode using the values below.\n" 	\ "\t0 - off\n" 						\ "\t1 - rx pause\n" 					\ "\t2 - tx pause\n"					\ "\t3 - tx and rx pause"
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_VC_DEBUG
-parameter_list|(
-name|pf
-parameter_list|,
-name|level
-parameter_list|,
-modifier|...
-parameter_list|)
+name|IXL_SYSCTL_HELP_LINK_STATUS
 define|\
-value|do { \ 		if ((pf)->vc_debug_lvl>= (level)) \ 			device_printf((pf)->dev, __VA_ARGS__); \ 	} while (0)
+value|"\nExecutes a \"Get Link Status\" command on the Admin Queue, and displays" \ " the response."			\  #define	I40E_VC_DEBUG(pf, level, ...) \ 	do { \ 		if ((pf)->vc_debug_lvl>= (level)) \ 			device_printf((pf)->dev, __VA_ARGS__); \ 	} while (0)
 end_define
 
 begin_define

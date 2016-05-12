@@ -74,7 +74,7 @@ name|char
 name|ixl_driver_version
 index|[]
 init|=
-literal|"1.4.12-k"
+literal|"1.4.13-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -5491,7 +5491,8 @@ expr_stmt|;
 return|return;
 block|}
 else|else
-block|{
+block|{ 		}
+block|}
 name|ixl_add_filter
 argument_list|(
 name|vsi
@@ -5505,8 +5506,6 @@ argument_list|,
 name|IXL_VLAN_ANY
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 comment|/* Set the various hardware offload abilities */
 name|ifp
 operator|->
@@ -5702,40 +5701,6 @@ argument_list|(
 name|vsi
 argument_list|)
 expr_stmt|;
-comment|/* Set MTU in hardware*/
-name|int
-name|aq_error
-init|=
-name|i40e_aq_set_mac_config
-argument_list|(
-name|hw
-argument_list|,
-name|vsi
-operator|->
-name|max_frame_size
-argument_list|,
-name|TRUE
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|aq_error
-condition|)
-name|device_printf
-argument_list|(
-name|vsi
-operator|->
-name|dev
-argument_list|,
-literal|"aq_set_mac_config in init error, code %d\n"
-argument_list|,
-name|aq_error
-argument_list|)
-expr_stmt|;
 comment|/* And now turn on interrupts */
 name|ixl_enable_intr
 argument_list|(
@@ -5791,10 +5756,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|// XXX: super experimental stuff
-end_comment
 
 begin_function
 specifier|static
@@ -8734,7 +8695,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Timer routine  *  *  This routine checks for link status,updates statistics,  *  and runs the watchdog check.  *  **********************************************************************/
+comment|/*********************************************************************  *  Timer routine  *  *  This routine checks for link status,updates statistics,  *  and runs the watchdog check.  *  *  Only runs when the driver is configured UP and RUNNING.  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -23991,7 +23952,7 @@ name|ixl_set_flowcntl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Flow Control"
+name|IXL_SYSCTL_HELP_FC
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -24025,7 +23986,7 @@ name|ixl_set_advertise
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Advertised Speed"
+name|IXL_SYSCTL_HELP_SET_ADVERTISE
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -24249,7 +24210,7 @@ argument_list|,
 literal|"Debug Information"
 argument_list|)
 expr_stmt|;
-comment|/* Debug shared-code message level */
+comment|/* Shared-code debug message level */
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -24283,37 +24244,6 @@ argument_list|,
 literal|"Debug Message Level"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|device_get_sysctl_ctx
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|device_get_sysctl_tree
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"vc_debug_level"
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|pf
-operator|->
-name|vc_debug_lvl
-argument_list|,
-literal|0
-argument_list|,
-literal|"PF/VF Virtual Channel debug level"
-argument_list|)
-expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -24345,7 +24275,7 @@ name|ixl_sysctl_link_status
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"Current Link Status"
+name|IXL_SYSCTL_HELP_LINK_STATUS
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -24484,6 +24414,42 @@ argument_list|,
 literal|"HW Switch Configuration"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_IOV
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"vc_debug_level"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pf
+operator|->
+name|vc_debug_lvl
+argument_list|,
+literal|0
+argument_list|,
+literal|"PF/VF Virtual Channel debug level"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -26192,7 +26158,9 @@ literal|"PHY Type : %#04x\n"
 literal|"Speed    : %#04x\n"
 literal|"Link info: %#04x\n"
 literal|"AN info  : %#04x\n"
-literal|"Ext info : %#04x"
+literal|"Ext info : %#04x\n"
+literal|"Max Frame: %d\n"
+literal|"Pacing   : %#04x"
 argument_list|,
 name|link_status
 operator|.
@@ -26213,6 +26181,14 @@ argument_list|,
 name|link_status
 operator|.
 name|ext_info
+argument_list|,
+name|link_status
+operator|.
+name|max_frame_size
+argument_list|,
+name|link_status
+operator|.
+name|pacing
 argument_list|)
 expr_stmt|;
 return|return
@@ -27863,6 +27839,7 @@ name|sec_flags
 operator||=
 name|I40E_AQ_VSI_SEC_FLAG_ENABLE_MAC_CHK
 expr_stmt|;
+comment|/* TODO: If a port VLAN is set, then this needs to be changed */
 name|vsi_ctx
 operator|.
 name|info
