@@ -74,7 +74,7 @@ name|char
 name|ixlv_driver_version
 index|[]
 init|=
-literal|"1.2.7-k"
+literal|"1.2.10-k"
 decl_stmt|;
 end_decl_stmt
 
@@ -3154,8 +3154,11 @@ name|IOCTL_DBG_IF2
 argument_list|(
 name|ifp
 argument_list|,
-literal|"mtu: %u -> %d"
+literal|"mtu: %lu -> %d"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ifp
 operator|->
 name|if_mtu
@@ -4423,12 +4426,12 @@ operator|&&
 operator|++
 name|retries
 operator|<
-literal|100
+name|IXLV_AQ_MAX_ERR
 condition|)
 block|{
 name|i40e_msec_delay
 argument_list|(
-literal|10
+literal|25
 argument_list|)
 expr_stmt|;
 block|}
@@ -4444,7 +4447,7 @@ name|vsi
 operator|->
 name|ifp
 argument_list|,
-literal|"Init failed to complete in alloted time!\n"
+literal|"Init failed to complete in allotted time!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11679,6 +11682,7 @@ literal|32
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|// TODO: Fix -- only 3,7,11,15 are filled out, instead of all 16 registers
 comment|/* Populate the LUT with max no. of queues in round robin fashion */
 for|for
 control|(

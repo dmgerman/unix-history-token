@@ -586,6 +586,16 @@ modifier|*
 name|lock
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mtx_initialized
+argument_list|(
+operator|&
+name|lock
+operator|->
+name|mutex
+argument_list|)
+condition|)
 name|mtx_destroy
 argument_list|(
 operator|&

@@ -1184,14 +1184,12 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|m_collapse
+name|m_defrag
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
-argument_list|,
-name|maxsegs
 argument_list|)
 expr_stmt|;
 if|if
@@ -1706,11 +1704,6 @@ operator|->
 name|tail
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|ixl_flush
-argument_list|(
-name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Mark outstanding work */
@@ -3394,6 +3387,15 @@ operator|->
 name|th_off
 operator|<<
 literal|2
+expr_stmt|;
+comment|/* 		 * The corresponding flag is set by the stack in the IPv4 		 * TSO case, but not in IPv6 (at least in FreeBSD 10.2). 		 * So, set it here because the rest of the flow requires it. 		 */
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator||=
+name|CSUM_TCP_IPV6
 expr_stmt|;
 break|break;
 endif|#
@@ -7149,7 +7151,7 @@ condition|)
 block|{
 name|rxr
 operator|->
-name|discarded
+name|desc_errs
 operator|++
 expr_stmt|;
 name|ixl_rx_discard

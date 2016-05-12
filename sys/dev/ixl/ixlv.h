@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|IXLV_AQ_MAX_ERR
-value|100
+value|200
 end_define
 
 begin_define

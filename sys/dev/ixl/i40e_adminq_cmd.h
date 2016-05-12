@@ -3673,6 +3673,10 @@ define|#
 directive|define
 name|I40E_AQC_SET_VSI_PROMISC_VLAN
 value|0x10
+define|#
+directive|define
+name|I40E_AQC_SET_VSI_PROMISC_TX
+value|0x8000
 name|__le16
 name|seid
 decl_stmt|;
