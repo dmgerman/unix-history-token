@@ -1150,6 +1150,7 @@ end_comment
 
 begin_function
 name|void
+name|__dead2
 name|crash
 parameter_list|(
 name|void
