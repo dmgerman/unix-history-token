@@ -579,7 +579,7 @@ name|offset
 parameter_list|,
 name|sc
 parameter_list|)
-value|do {				\ 	if ((offset) + GJ_RECORD_MAX_SIZE(sc)>= (sc)->sc_jend) {	\ 		(offset) = (sc)->sc_jstart;				\ 		GJ_DEBUG(2, "Starting from the begining (%s).",		\ 		    (sc)->sc_name);					\ 	}								\ } while (0)
+value|do {				\ 	if ((offset) + GJ_RECORD_MAX_SIZE(sc)>= (sc)->sc_jend) {	\ 		(offset) = (sc)->sc_jstart;				\ 		GJ_DEBUG(2, "Starting from the beginning (%s).",		\ 		    (sc)->sc_name);					\ 	}								\ } while (0)
 end_define
 
 begin_struct

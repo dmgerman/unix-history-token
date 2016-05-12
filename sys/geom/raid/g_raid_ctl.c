@@ -487,7 +487,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No format recieved."
+literal|"No format received."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -765,7 +765,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No array name recieved."
+literal|"No array name received."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -972,7 +972,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No array name recieved."
+literal|"No array name received."
 argument_list|)
 expr_stmt|;
 return|return;
