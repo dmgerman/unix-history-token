@@ -226,6 +226,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXL_DEFAULT_PHY_INT_MASK
+define|\
+value|(I40E_AQ_EVENT_LINK_UPDOWN | I40E_AQ_EVENT_MODULE_QUAL_FAIL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXL_SET_ADVERTISE_HELP
 define|\
 value|"Control link advertise speed:\n"	\ "\tFlags:\n"				\ "\t\t0x1 - advertise 100 Mb\n"		\ "\t\t0x2 - advertise 1G\n"		\ "\t\t0x4 - advertise 10G\n"		\ "\t\t0x8 - advertise 20G\n\n"		\ "\tDoes not work on 40G devices."

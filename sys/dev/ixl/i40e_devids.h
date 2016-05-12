@@ -51,13 +51,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_DEV_ID_KX_A
-value|0x157F
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_DEV_ID_KX_B
 value|0x1580
 end_define

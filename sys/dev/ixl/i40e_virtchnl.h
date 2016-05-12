@@ -285,6 +285,13 @@ name|I40E_VIRTCHNL_VF_OFFLOAD_RX_POLLING
 value|0x00020000
 end_define
 
+begin_define
+define|#
+directive|define
+name|I40E_VIRTCHNL_VF_OFFLOAD_RSS_PCTYPE_V2
+value|0x00040000
+end_define
+
 begin_struct
 struct|struct
 name|i40e_virtchnl_vf_resource

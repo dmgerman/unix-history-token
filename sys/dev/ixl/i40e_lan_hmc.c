@@ -3608,6 +3608,10 @@ literal|8
 expr_stmt|;
 name|mask
 operator|=
+call|(
+name|u8
+call|)
+argument_list|(
 name|BIT
 argument_list|(
 name|ce_info
@@ -3616,6 +3620,7 @@ name|width
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 name|src_byte
 operator|=
@@ -4255,6 +4260,10 @@ literal|8
 expr_stmt|;
 name|mask
 operator|=
+call|(
+name|u8
+call|)
+argument_list|(
 name|BIT
 argument_list|(
 name|ce_info
@@ -4263,6 +4272,7 @@ name|width
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 comment|/* shift to correct alignment */
 name|mask

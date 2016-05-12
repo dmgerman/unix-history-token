@@ -879,15 +879,6 @@ name|i40e_aqc_opc_del_udp_tunnel
 init|=
 literal|0x0B01
 block|,
-comment|/* Proxy commands */
-name|i40e_aqc_opc_set_proxy_config
-init|=
-literal|0x0104
-block|,
-name|i40e_aqc_opc_set_ns_proxy_table_entry
-init|=
-literal|0x0105
-block|,
 comment|/* Async Events */
 name|i40e_aqc_opc_event_lan_overflow
 init|=
@@ -1322,6 +1313,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_AQ_CAP_ID_WOL_AND_PROXY
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_AQ_CAP_ID_SRIOV
 value|0x0012
 end_define
@@ -1457,6 +1455,13 @@ define|#
 directive|define
 name|I40E_AQ_CAP_ID_MDIO
 value|0x0063
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_AQ_CAP_ID_WSR_PROT
+value|0x0064
 end_define
 
 begin_define
