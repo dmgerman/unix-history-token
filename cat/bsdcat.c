@@ -94,6 +94,7 @@ value|(20*512)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|archive
 modifier|*
@@ -102,6 +103,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|archive_entry
 modifier|*
@@ -110,6 +112,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|bsdcat_current_path
@@ -117,6 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|exit_status
 init|=
@@ -192,7 +197,9 @@ end_function
 begin_function
 name|void
 name|bsdcat_next
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|a
 operator|=
@@ -249,6 +256,7 @@ begin_function
 name|void
 name|bsdcat_read_to_stdout
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename

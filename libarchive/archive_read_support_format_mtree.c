@@ -7165,6 +7165,7 @@ modifier|*
 modifier|*
 name|sp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|sep

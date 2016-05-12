@@ -139,6 +139,7 @@ begin_function_decl
 name|void
 name|bsdcat_read_to_stdout
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename

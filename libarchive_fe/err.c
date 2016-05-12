@@ -106,6 +106,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
