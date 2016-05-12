@@ -799,17 +799,6 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * This parameter controls the maximum no of times the driver will loop in  * the isr. Minimum Value = 1  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_LOOP
-value|10
-end_define
-
-begin_comment
 comment|/*  * This is the max watchdog interval, ie. the time that can  * pass between any two TX clean operations, such only happening  * when the TX hardware is functioning.  */
 end_comment
 

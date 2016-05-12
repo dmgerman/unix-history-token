@@ -3609,6 +3609,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|i40e_add_filter_to_drop_tx_flow_control_frames
+parameter_list|(
+name|struct
+name|i40e_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+name|vsi_seid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

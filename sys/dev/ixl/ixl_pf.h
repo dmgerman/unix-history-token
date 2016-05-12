@@ -211,6 +211,18 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Defines used for NVM update ioctls.  * This value is used in the Solaris tool, too.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_NVM_ACCESS
+define|\
+value|(((((((('E'<< 4) + '1')<< 4) + 'K')<< 4) + 'G')<< 4) | 5)
+end_define
+
 begin_define
 define|#
 directive|define

@@ -2141,6 +2141,13 @@ name|i40e_dcbx_config
 name|desired_dcbx_config
 decl_stmt|;
 comment|/* CEE Desired Cfg */
+define|#
+directive|define
+name|I40E_HW_FLAG_AQ_SRCTL_ACCESS_ENABLE
+value|BIT_ULL(0)
+name|u64
+name|flags
+decl_stmt|;
 comment|/* debug mask */
 name|u32
 name|debug_mask

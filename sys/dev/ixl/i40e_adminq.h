@@ -287,6 +287,172 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * i40e_aq_rc_to_posix - convert errors to user-land codes  * aq_ret: AdminQ handler error code can override aq_rc  * aq_rc: AdminQ firmware error code to convert  **/
+end_comment
+
+begin_function
+specifier|static
+name|INLINE
+name|int
+name|i40e_aq_rc_to_posix
+parameter_list|(
+name|int
+name|aq_ret
+parameter_list|,
+name|int
+name|aq_rc
+parameter_list|)
+block|{
+name|int
+name|aq_to_posix
+index|[]
+init|=
+block|{
+literal|0
+block|,
+comment|/* I40E_AQ_RC_OK */
+operator|-
+name|EPERM
+block|,
+comment|/* I40E_AQ_RC_EPERM */
+operator|-
+name|ENOENT
+block|,
+comment|/* I40E_AQ_RC_ENOENT */
+operator|-
+name|ESRCH
+block|,
+comment|/* I40E_AQ_RC_ESRCH */
+operator|-
+name|EINTR
+block|,
+comment|/* I40E_AQ_RC_EINTR */
+operator|-
+name|EIO
+block|,
+comment|/* I40E_AQ_RC_EIO */
+operator|-
+name|ENXIO
+block|,
+comment|/* I40E_AQ_RC_ENXIO */
+operator|-
+name|E2BIG
+block|,
+comment|/* I40E_AQ_RC_E2BIG */
+operator|-
+name|EAGAIN
+block|,
+comment|/* I40E_AQ_RC_EAGAIN */
+operator|-
+name|ENOMEM
+block|,
+comment|/* I40E_AQ_RC_ENOMEM */
+operator|-
+name|EACCES
+block|,
+comment|/* I40E_AQ_RC_EACCES */
+operator|-
+name|EFAULT
+block|,
+comment|/* I40E_AQ_RC_EFAULT */
+operator|-
+name|EBUSY
+block|,
+comment|/* I40E_AQ_RC_EBUSY */
+operator|-
+name|EEXIST
+block|,
+comment|/* I40E_AQ_RC_EEXIST */
+operator|-
+name|EINVAL
+block|,
+comment|/* I40E_AQ_RC_EINVAL */
+operator|-
+name|ENOTTY
+block|,
+comment|/* I40E_AQ_RC_ENOTTY */
+operator|-
+name|ENOSPC
+block|,
+comment|/* I40E_AQ_RC_ENOSPC */
+operator|-
+name|ENOSYS
+block|,
+comment|/* I40E_AQ_RC_ENOSYS */
+operator|-
+name|ERANGE
+block|,
+comment|/* I40E_AQ_RC_ERANGE */
+operator|-
+name|EPIPE
+block|,
+comment|/* I40E_AQ_RC_EFLUSHED */
+operator|-
+name|ESPIPE
+block|,
+comment|/* I40E_AQ_RC_BAD_ADDR */
+operator|-
+name|EROFS
+block|,
+comment|/* I40E_AQ_RC_EMODE */
+operator|-
+name|EFBIG
+block|,
+comment|/* I40E_AQ_RC_EFBIG */
+block|}
+decl_stmt|;
+comment|/* aq_rc is invalid if AQ timed out */
+if|if
+condition|(
+name|aq_ret
+operator|==
+name|I40E_ERR_ADMIN_QUEUE_TIMEOUT
+condition|)
+return|return
+operator|-
+name|EAGAIN
+return|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
+name|u32
+operator|)
+name|aq_rc
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|aq_to_posix
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|(
+name|aq_to_posix
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|)
+condition|)
+return|return
+operator|-
+name|ERANGE
+return|;
+return|return
+name|aq_to_posix
+index|[
+name|aq_rc
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* general information */
 end_comment
 

@@ -7364,6 +7364,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|i40e_aqc_lldp_set_local_mib_resp
+block|{
+define|#
+directive|define
+name|SET_LOCAL_MIB_RESP_EVENT_TRIGGERED_MASK
+value|0x01
+name|u8
+name|status
+decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|15
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|I40E_CHECK_STRUCT_LEN
+argument_list|(
+literal|0x10
+argument_list|,
+name|i40e_aqc_lldp_set_local_mib_resp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*	Stop/Start LLDP Agent (direct 0x0A09)  *	Used for stopping/starting specific LLDP agent. e.g. DCBx  */
 end_comment
@@ -8121,6 +8152,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _I40E_ADMINQ_CMD_H_ */
+end_comment
 
 end_unit
 
