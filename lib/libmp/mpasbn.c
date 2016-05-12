@@ -1209,6 +1209,8 @@ operator|=
 name|malloc
 argument_list|(
 name|linelen
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1224,7 +1226,7 @@ literal|"min"
 operator|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|memcpy
 argument_list|(
 name|nline
 argument_list|,
