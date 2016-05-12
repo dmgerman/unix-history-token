@@ -1475,53 +1475,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Setup the lock for PCI attachment since it skips the an_probe  * function.  We need to setup the lock in an_probe since some  * operations need the lock.  So we might as well create the  * lock in the probe.  */
-end_comment
-
-begin_function
-name|int
-name|an_pci_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|an_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|an_mtx
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|MTX_NETWORK_LOCK
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * We probe for an Aironet 4500/4800 card by attempting to  * read the default SSID list. On reset, the first entry in  * the SSID list will contain the name "tsunami." If we don't  * find this, then there's no card present.  */
 end_comment
 
