@@ -581,6 +581,13 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|I40E_FW_API_VERSION_MINOR_X710
+value|0x0004
+end_define
+
 begin_comment
 comment|/* These are structs for managing the hardware information and the operations.  * The structures of function pointers are filled out at init time when we  * know for sure exactly which hardware we're working with.  This gives us the  * flexibility of using the same main driver code but adapting to slightly  * different hardware needs as new parts are developed.  For this architecture,  * the Firmware and AdminQ are intended to insulate the driver from most of the  * future changes, but these structures will also do part of the job.  */
 end_comment
@@ -4177,7 +4184,7 @@ begin_define
 define|#
 directive|define
 name|I40E_TXD_FLTR_QW0_DEST_VSI_MASK
-value|BIT_ULL(I40E_TXD_FLTR_QW0_DEST_VSI_SHIFT)
+value|(0x1FFUL<< \ 					 I40E_TXD_FLTR_QW0_DEST_VSI_SHIFT)
 end_define
 
 begin_define

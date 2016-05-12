@@ -879,6 +879,15 @@ name|i40e_aqc_opc_del_udp_tunnel
 init|=
 literal|0x0B01
 block|,
+comment|/* Proxy commands */
+name|i40e_aqc_opc_set_proxy_config
+init|=
+literal|0x0104
+block|,
+name|i40e_aqc_opc_set_ns_proxy_table_entry
+init|=
+literal|0x0105
+block|,
 comment|/* Async Events */
 name|i40e_aqc_opc_event_lan_overflow
 init|=
