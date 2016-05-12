@@ -14552,6 +14552,7 @@ name|mapping_flags
 operator||=
 name|I40E_AQ_VSI_QUE_MAP_CONTIG
 expr_stmt|;
+comment|/* In contig mode, que_mapping[0] is first queue index used by this VSI */
 name|ctxt
 operator|.
 name|info
@@ -14563,7 +14564,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This VSI is assigned 64 queues (we may not use all of them) */
+comment|/* 	 * This VSI will only use traffic class 0; start traffic class 0's 	 * queue allocation at queue 0, and assign it 64 (2^6) queues (though 	 * the driver may not use all of them). 	 */
 name|ctxt
 operator|.
 name|info
@@ -14573,7 +14574,25 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0x0c00
+operator|(
+operator|(
+literal|0
+operator|<<
+name|I40E_AQ_VSI_TC_QUE_OFFSET_SHIFT
+operator|)
+operator|&
+name|I40E_AQ_VSI_TC_QUE_OFFSET_MASK
+operator|)
+operator||
+operator|(
+operator|(
+literal|6
+operator|<<
+name|I40E_AQ_VSI_TC_QUE_NUMBER_SHIFT
+operator|)
+operator|&
+name|I40E_AQ_VSI_TC_QUE_NUMBER_MASK
+operator|)
 expr_stmt|;
 comment|/* Set VLAN receive stripping mode */
 name|ctxt
