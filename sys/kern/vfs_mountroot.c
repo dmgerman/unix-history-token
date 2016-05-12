@@ -1480,13 +1480,11 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|&&
-name|bootverbose
 condition|)
 name|printf
 argument_list|(
 literal|"mountroot: unable to remount previous root "
-literal|"under /.mount or /mnt (error %d).\n"
+literal|"under /.mount or /mnt (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1629,13 +1627,11 @@ block|}
 if|if
 condition|(
 name|error
-operator|&&
-name|bootverbose
 condition|)
 name|printf
 argument_list|(
 literal|"mountroot: unable to remount devfs under /dev "
-literal|"(error %d).\n"
+literal|"(error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1679,8 +1675,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|&&
-name|bootverbose
 condition|)
 name|printf
 argument_list|(
