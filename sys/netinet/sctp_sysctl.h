@@ -2264,7 +2264,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_SACK_IMMEDIATELY_ENABLE_DEFAULT
-value|SCTPCTL_SACK_IMMEDIATELY_ENABLE_MIN
+value|SCTPCTL_SACK_IMMEDIATELY_ENABLE_MAX
 end_define
 
 begin_comment
