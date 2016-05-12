@@ -9097,7 +9097,7 @@ argument_list|,
 operator|&
 name|val
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|val
@@ -9149,7 +9149,7 @@ argument_list|,
 operator|&
 name|val
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|val
