@@ -319,12 +319,6 @@ directive|include
 file|<sys/iov_schema.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/pci/pci_iov.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -2190,6 +2184,10 @@ name|struct
 name|ifmedia
 name|media
 decl_stmt|;
+name|enum
+name|i40e_vsi_type
+name|type
+decl_stmt|;
 name|u64
 name|que_mask
 decl_stmt|;
@@ -2235,6 +2233,12 @@ name|downlink_seid
 decl_stmt|;
 name|u16
 name|max_frame_size
+decl_stmt|;
+name|u16
+name|rss_table_size
+decl_stmt|;
+name|u16
+name|rss_size
 decl_stmt|;
 comment|/* MAC/VLAN Filter list */
 name|struct

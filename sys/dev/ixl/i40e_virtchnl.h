@@ -267,6 +267,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_VIRTCHNL_VF_OFFLOAD_WB_ON_ITR
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_VIRTCHNL_VF_OFFLOAD_VLAN
 value|0x00010000
 end_define

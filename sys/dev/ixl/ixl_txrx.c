@@ -1184,12 +1184,14 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|maxsegs
 argument_list|)
 expr_stmt|;
 if|if
@@ -1704,6 +1706,11 @@ operator|->
 name|tail
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+name|ixl_flush
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Mark outstanding work */

@@ -37,22 +37,11 @@ directive|include
 file|"i40e_hmc.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|I40E_NO_TYPE_HEADER
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|"i40e_type.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * i40e_add_sd_table_entry - Adds a segment descriptor to the table  * @hw: pointer to our hw struct  * @hmc_info: pointer to the HMC configuration information struct  * @sd_index: segment descriptor index to manipulate  * @type: what type of segment descriptor we're manipulating  * @direct_mode_sz: size to alloc in direct mode  **/

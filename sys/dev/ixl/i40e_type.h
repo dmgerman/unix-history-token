@@ -599,15 +599,6 @@ name|I40E_MAC_XL710
 block|,
 name|I40E_MAC_VF
 block|,
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-name|I40E_MAC_X722
-block|,
-name|I40E_MAC_X722_VF
-block|,
-endif|#
-directive|endif
 name|I40E_MAC_GENERIC
 block|, }
 enum|;
@@ -1074,8 +1065,7 @@ name|i40e_media_type
 name|media_type
 decl_stmt|;
 comment|/* all the phy types the NVM is capable of */
-name|enum
-name|i40e_aq_capabilities_phy_type
+name|u32
 name|phy_types
 decl_stmt|;
 block|}
@@ -1970,6 +1960,13 @@ define|#
 directive|define
 name|I40E_DCBX_MODE_IEEE
 value|0x2
+name|u8
+name|app_mode
+decl_stmt|;
+define|#
+directive|define
+name|I40E_DCBX_APPS_NON_WILLING
+value|0x1
 name|u32
 name|numapps
 decl_stmt|;
@@ -2163,30 +2160,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-return|return
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|I40E_MAC_VF
-operator|||
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|I40E_MAC_X722_VF
-operator|)
-return|;
-else|#
-directive|else
 return|return
 name|hw
 operator|->
@@ -2196,8 +2169,6 @@ name|type
 operator|==
 name|I40E_MAC_VF
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2499,21 +2470,10 @@ name|I40E_RX_DESC_STATUS_TSYNVALID_SHIFT
 init|=
 literal|7
 block|,
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-name|I40E_RX_DESC_STATUS_EXT_UDP_0_SHIFT
-init|=
-literal|8
-block|,
-else|#
-directive|else
 name|I40E_RX_DESC_STATUS_RESERVED1_SHIFT
 init|=
 literal|8
 block|,
-endif|#
-directive|endif
 name|I40E_RX_DESC_STATUS_UMBCAST_SHIFT
 init|=
 literal|9
@@ -2541,21 +2501,10 @@ init|=
 literal|16
 block|,
 comment|/* 2 BITS */
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-name|I40E_RX_DESC_STATUS_INT_UDP_0_SHIFT
-init|=
-literal|18
-block|,
-else|#
-directive|else
 name|I40E_RX_DESC_STATUS_UDP_0_SHIFT
 init|=
 literal|18
 block|,
-endif|#
-directive|endif
 name|I40E_RX_DESC_STATUS_LAST
 comment|/* this entry must be last!!! */
 block|}
@@ -3978,31 +3927,6 @@ name|I40E_TXD_CTX_QW0_DECTTL_MASK
 value|(0xFULL<< \ 					 I40E_TXD_CTX_QW0_DECTTL_SHIFT)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|I40E_TXD_CTX_QW0_L4T_CS_SHIFT
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_TXD_CTX_QW0_L4T_CS_MASK
-value|BIT_ULL(I40E_TXD_CTX_QW0_L4T_CS_SHIFT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|i40e_nop_desc
@@ -4136,39 +4060,12 @@ begin_enum
 enum|enum
 name|i40e_filter_pctype
 block|{
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-comment|/* Note: Values 0-28 are reserved for future use. 	 * Value 29, 30, 32 are not supported on XL710 and X710. 	 */
-name|I40E_FILTER_PCTYPE_NONF_UNICAST_IPV4_UDP
-init|=
-literal|29
-block|,
-name|I40E_FILTER_PCTYPE_NONF_MULTICAST_IPV4_UDP
-init|=
-literal|30
-block|,
-else|#
-directive|else
 comment|/* Note: Values 0-30 are reserved for future use */
-endif|#
-directive|endif
 name|I40E_FILTER_PCTYPE_NONF_IPV4_UDP
 init|=
 literal|31
 block|,
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-name|I40E_FILTER_PCTYPE_NONF_IPV4_TCP_SYN_NO_ACK
-init|=
-literal|32
-block|,
-else|#
-directive|else
 comment|/* Note: Value 32 is reserved for future use */
-endif|#
-directive|endif
 name|I40E_FILTER_PCTYPE_NONF_IPV4_TCP
 init|=
 literal|33
@@ -4185,36 +4082,11 @@ name|I40E_FILTER_PCTYPE_FRAG_IPV4
 init|=
 literal|36
 block|,
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-comment|/* Note: Values 37-38 are reserved for future use. 	 * Value 39, 40, 42 are not supported on XL710 and X710. 	 */
-name|I40E_FILTER_PCTYPE_NONF_UNICAST_IPV6_UDP
-init|=
-literal|39
-block|,
-name|I40E_FILTER_PCTYPE_NONF_MULTICAST_IPV6_UDP
-init|=
-literal|40
-block|,
-else|#
-directive|else
 comment|/* Note: Values 37-40 are reserved for future use */
-endif|#
-directive|endif
 name|I40E_FILTER_PCTYPE_NONF_IPV6_UDP
 init|=
 literal|41
 block|,
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-name|I40E_FILTER_PCTYPE_NONF_IPV6_TCP_SYN_NO_ACK
-init|=
-literal|42
-block|,
-endif|#
-directive|endif
 name|I40E_FILTER_PCTYPE_NONF_IPV6_TCP
 init|=
 literal|43
@@ -4406,31 +4278,6 @@ directive|define
 name|I40E_TXD_FLTR_QW1_FD_STATUS_MASK
 value|(0x3ULL<< \ 					  I40E_TXD_FLTR_QW1_FD_STATUS_SHIFT)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|X722_SUPPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|I40E_TXD_FLTR_QW1_ATR_SHIFT
-value|(0xEULL + \ 					 I40E_TXD_FLTR_QW1_CMD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_TXD_FLTR_QW1_ATR_MASK
-value|BIT_ULL(I40E_TXD_FLTR_QW1_ATR_SHIFT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
