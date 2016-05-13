@@ -1970,7 +1970,7 @@ name|qf
 operator|=
 name|qf
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|qup
 operator|->
