@@ -394,8 +394,6 @@ name|OID_AUTO
 argument_list|,
 name|erratum383
 argument_list|,
-name|CTLFLAG_RD
-operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
