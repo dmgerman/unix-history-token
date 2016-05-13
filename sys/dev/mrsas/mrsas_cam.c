@@ -2026,7 +2026,7 @@ name|sc
 operator|->
 name|do_timedout_reset
 operator|=
-literal|1
+name|SCSIIO_TIMEOUT_OCR
 expr_stmt|;
 if|if
 condition|(

@@ -8749,6 +8749,25 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|MEGASAS_OCR_REASON
+block|{
+name|FW_FAULT_OCR
+init|=
+literal|0
+block|,
+name|SCSIIO_TIMEOUT_OCR
+init|=
+literal|1
+block|,
+name|MFI_DCMD_TIMEOUT_OCR
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
 begin_comment
 comment|/* Controller management info added to support Linux Emulator */
 end_comment
