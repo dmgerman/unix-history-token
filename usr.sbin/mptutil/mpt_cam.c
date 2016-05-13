@@ -1305,11 +1305,6 @@ name|EIO
 operator|)
 return|;
 block|}
-name|cam_freeccb
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
 comment|/* 	 * A last block of 2^32-1 means that the true capacity is over 2TB, 	 * and we need to issue the long READ CAPACITY to get the real 	 * capacity.  Otherwise, we're all set. 	 */
 if|if
 condition|(
@@ -1332,6 +1327,11 @@ argument_list|(
 name|rcap
 operator|.
 name|addr
+argument_list|)
+expr_stmt|;
+name|cam_freeccb
+argument_list|(
+name|ccb
 argument_list|)
 expr_stmt|;
 return|return
