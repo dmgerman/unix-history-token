@@ -1358,10 +1358,16 @@ goto|;
 block|}
 block|}
 else|else
+block|{
 name|bufsize
 operator|=
 literal|0
 expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|i2c_opt
