@@ -1357,6 +1357,11 @@ name|err1
 goto|;
 block|}
 block|}
+else|else
+name|bufsize
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|i2c_opt
