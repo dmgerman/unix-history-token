@@ -166,6 +166,16 @@ name|UFS_EXTATTR
 end_ifdef
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ufs_extattr
+argument_list|,
+literal|"ufs extended attribute support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
