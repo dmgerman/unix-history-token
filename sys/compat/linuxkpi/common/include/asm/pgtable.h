@@ -15,12 +15,11 @@ directive|define
 name|_ASM_PGTABLE_H_
 end_define
 
-begin_typedef
-typedef|typedef
-name|int
-name|pgprot_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<linux/page.h>
+end_include
 
 begin_endif
 endif|#
