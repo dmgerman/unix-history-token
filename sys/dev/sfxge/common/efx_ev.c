@@ -107,7 +107,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_init
+name|siena_ev_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -120,7 +120,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_ev_fini
+name|siena_ev_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -134,7 +134,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qcreate
+name|siena_ev_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -170,7 +170,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_ev_qdestroy
+name|siena_ev_qdestroy
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -184,7 +184,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qprime
+name|siena_ev_qprime
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -202,7 +202,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_ev_qpoll
+name|siena_ev_qpoll
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -232,7 +232,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_ev_qpost
+name|siena_ev_qpost
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -250,7 +250,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qmoderate
+name|siena_ev_qmoderate
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -274,7 +274,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_ev_qstats_update
+name|siena_ev_qstats_update
 argument_list|(
 name|__in
 name|efx_evq_t
@@ -319,31 +319,31 @@ name|efx_ev_ops_t
 name|__efx_ev_siena_ops
 init|=
 block|{
-name|falconsiena_ev_init
+name|siena_ev_init
 block|,
 comment|/* eevo_init */
-name|falconsiena_ev_fini
+name|siena_ev_fini
 block|,
 comment|/* eevo_fini */
-name|falconsiena_ev_qcreate
+name|siena_ev_qcreate
 block|,
 comment|/* eevo_qcreate */
-name|falconsiena_ev_qdestroy
+name|siena_ev_qdestroy
 block|,
 comment|/* eevo_qdestroy */
-name|falconsiena_ev_qprime
+name|siena_ev_qprime
 block|,
 comment|/* eevo_qprime */
-name|falconsiena_ev_qpost
+name|siena_ev_qpost
 block|,
 comment|/* eevo_qpost */
-name|falconsiena_ev_qmoderate
+name|siena_ev_qmoderate
 block|,
 comment|/* eevo_qmoderate */
 if|#
 directive|if
 name|EFSYS_OPT_QSTATS
-name|falconsiena_ev_qstats_update
+name|siena_ev_qstats_update
 block|,
 comment|/* eevo_qstats_update */
 endif|#
@@ -1420,7 +1420,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|falconsiena_ev_qpoll
+name|siena_ev_qpoll
 argument_list|(
 name|eep
 argument_list|,
@@ -1675,7 +1675,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_init
+name|siena_ev_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1728,7 +1728,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_rx_not_ok
+name|siena_ev_rx_not_ok
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2114,7 +2114,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_rx
+name|siena_ev_rx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2475,7 +2475,7 @@ condition|)
 block|{
 name|ignore
 operator|=
-name|falconsiena_ev_rx_not_ok
+name|siena_ev_rx_not_ok
 argument_list|(
 name|eep
 argument_list|,
@@ -2721,7 +2721,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_tx
+name|siena_ev_tx
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -2970,7 +2970,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_global
+name|siena_ev_global
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -3017,7 +3017,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_driver
+name|siena_ev_driver
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -3489,7 +3489,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_drv_gen
+name|siena_ev_drv_gen
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -3614,7 +3614,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_ev_mcdi
+name|siena_ev_mcdi
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -4040,7 +4040,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qprime
+name|siena_ev_qprime
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -4118,7 +4118,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|falconsiena_ev_qpoll
+name|siena_ev_qpoll
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -4724,7 +4724,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_ev_qpost
+name|siena_ev_qpost
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -4812,7 +4812,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qmoderate
+name|siena_ev_qmoderate
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -4991,7 +4991,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_ev_qcreate
+name|siena_ev_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5199,31 +5199,31 @@ name|eep
 operator|->
 name|ee_rx
 operator|=
-name|falconsiena_ev_rx
+name|siena_ev_rx
 expr_stmt|;
 name|eep
 operator|->
 name|ee_tx
 operator|=
-name|falconsiena_ev_tx
+name|siena_ev_tx
 expr_stmt|;
 name|eep
 operator|->
 name|ee_driver
 operator|=
-name|falconsiena_ev_driver
+name|siena_ev_driver
 expr_stmt|;
 name|eep
 operator|->
 name|ee_global
 operator|=
-name|falconsiena_ev_global
+name|siena_ev_global
 expr_stmt|;
 name|eep
 operator|->
 name|ee_drv_gen
 operator|=
-name|falconsiena_ev_drv_gen
+name|siena_ev_drv_gen
 expr_stmt|;
 if|#
 directive|if
@@ -5232,7 +5232,7 @@ name|eep
 operator|->
 name|ee_mcdi
 operator|=
-name|falconsiena_ev_mcdi
+name|siena_ev_mcdi
 expr_stmt|;
 endif|#
 directive|endif
@@ -5538,7 +5538,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_ev_qstats_update
+name|siena_ev_qstats_update
 argument_list|(
 name|__in
 name|efx_evq_t
@@ -5619,7 +5619,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|falconsiena_ev_qdestroy
+name|siena_ev_qdestroy
 parameter_list|(
 name|__in
 name|efx_evq_t
@@ -5687,7 +5687,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_ev_fini
+name|siena_ev_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
