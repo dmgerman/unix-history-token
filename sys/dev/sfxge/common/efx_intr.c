@@ -39,7 +39,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_intr_init
+name|siena_intr_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -61,7 +61,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_enable
+name|siena_intr_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -74,7 +74,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_disable
+name|siena_intr_disable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -87,7 +87,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_disable_unlocked
+name|siena_intr_disable_unlocked
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -101,7 +101,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_intr_trigger
+name|siena_intr_trigger
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -119,7 +119,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_fini
+name|siena_intr_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -132,7 +132,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_status_line
+name|siena_intr_status_line
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -155,7 +155,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_status_message
+name|siena_intr_status_message
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -178,7 +178,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_intr_fatal
+name|siena_intr_fatal
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -192,7 +192,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_intr_check_fatal
+name|siena_intr_check_fatal
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -224,31 +224,31 @@ name|efx_intr_ops_t
 name|__efx_intr_siena_ops
 init|=
 block|{
-name|falconsiena_intr_init
+name|siena_intr_init
 block|,
 comment|/* eio_init */
-name|falconsiena_intr_enable
+name|siena_intr_enable
 block|,
 comment|/* eio_enable */
-name|falconsiena_intr_disable
+name|siena_intr_disable
 block|,
 comment|/* eio_disable */
-name|falconsiena_intr_disable_unlocked
+name|siena_intr_disable_unlocked
 block|,
 comment|/* eio_disable_unlocked */
-name|falconsiena_intr_trigger
+name|siena_intr_trigger
 block|,
 comment|/* eio_trigger */
-name|falconsiena_intr_status_line
+name|siena_intr_status_line
 block|,
 comment|/* eio_status_line */
-name|falconsiena_intr_status_message
+name|siena_intr_status_message
 block|,
 comment|/* eio_status_message */
-name|falconsiena_intr_fatal
+name|siena_intr_fatal
 block|,
 comment|/* eio_fatal */
-name|falconsiena_intr_fini
+name|siena_intr_fini
 block|,
 comment|/* eio_fini */
 block|}
@@ -1128,7 +1128,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_intr_init
+name|siena_intr_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1304,7 +1304,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_enable
+name|siena_intr_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1372,7 +1372,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_disable
+name|siena_intr_disable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1423,7 +1423,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_disable_unlocked
+name|siena_intr_disable_unlocked
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1478,7 +1478,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_intr_trigger
+name|siena_intr_trigger
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1689,7 +1689,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_intr_check_fatal
+name|siena_intr_check_fatal
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1784,7 +1784,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_status_line
+name|siena_intr_status_line
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1887,7 +1887,7 @@ condition|)
 operator|*
 name|fatalp
 operator|=
-name|falconsiena_intr_check_fatal
+name|siena_intr_check_fatal
 argument_list|(
 name|enp
 argument_list|)
@@ -1904,7 +1904,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_status_message
+name|siena_intr_status_message
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -1966,7 +1966,7 @@ condition|)
 operator|*
 name|fatalp
 operator|=
-name|falconsiena_intr_check_fatal
+name|siena_intr_check_fatal
 argument_list|(
 name|enp
 argument_list|)
@@ -1983,7 +1983,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_fatal
+name|siena_intr_fatal
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2344,7 +2344,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_intr_fini
+name|siena_intr_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
