@@ -3037,6 +3037,9 @@ decl_stmt|;
 name|uint32_t
 name|eft_mulcst_filter_count
 decl_stmt|;
+name|boolean_t
+name|eft_using_all_mulcst
+decl_stmt|;
 block|}
 name|ef10_filter_table_t
 typedef|;
