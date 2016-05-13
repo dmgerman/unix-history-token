@@ -1854,9 +1854,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cmd
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|usage
 argument_list|(
