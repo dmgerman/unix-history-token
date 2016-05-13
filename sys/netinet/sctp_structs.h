@@ -1222,10 +1222,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * The first part of this structure MUST be the entire sinfo structure. Maybe  * I should have made it a sub structure... we can circle back later and do  * that if we want.  */
-end_comment
-
 begin_struct
 struct|struct
 name|sctp_queued_to_read
