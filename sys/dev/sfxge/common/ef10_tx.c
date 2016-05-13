@@ -33,6 +33,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_if
@@ -2270,7 +2272,7 @@ end_function
 
 begin_function
 name|void
-name|hunt_tx_qdesc_tso_create
+name|ef10_tx_qdesc_tso_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -2768,7 +2770,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 end_unit

@@ -2169,7 +2169,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|hunt_tx_qdesc_tso_create
+name|ef10_tx_qdesc_tso_create
 parameter_list|(
 name|__in
 name|efx_txq_t

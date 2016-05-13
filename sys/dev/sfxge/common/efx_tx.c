@@ -532,7 +532,7 @@ comment|/* etxo_qdesc_post */
 name|ef10_tx_qdesc_dma_create
 block|,
 comment|/* etxo_qdesc_dma_create */
-name|hunt_tx_qdesc_tso_create
+name|ef10_tx_qdesc_tso_create
 block|,
 comment|/* etxo_qdesc_tso_create */
 name|ef10_tx_qdesc_tso2_create
