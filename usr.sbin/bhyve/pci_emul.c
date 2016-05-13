@@ -9729,6 +9729,10 @@ condition|(
 name|baridx
 operator|>
 literal|2
+operator|||
+name|baridx
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
@@ -10055,6 +10059,10 @@ condition|(
 name|baridx
 operator|>
 literal|2
+operator|||
+name|baridx
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
