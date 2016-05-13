@@ -18,7 +18,7 @@ define|#
 directive|define
 name|not_reached
 parameter_list|()
-value|do {						\ 	if (config_debug) {						\ 		malloc_write("<jemalloc>: Unreachable code reached\n");	\ 		abort();						\ 	}								\ } while (0)
+value|do {						\ 	if (config_debug) {						\ 		malloc_write("<jemalloc>: Unreachable code reached\n");	\ 		abort();						\ 	}								\ 	unreachable();							\ } while (0)
 end_define
 
 begin_define
@@ -1556,7 +1556,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|size_t
 name|malloc_vsnprintf
 parameter_list|(
 name|char
@@ -1575,9 +1575,6 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
@@ -1698,6 +1695,13 @@ name|char
 name|len
 init|=
 literal|'?'
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|size_t
+name|slen
 decl_stmt|;
 name|f
 operator|++
@@ -2087,13 +2091,6 @@ operator|*
 name|f
 condition|)
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|size_t
-name|slen
-decl_stmt|;
 case|case
 literal|'%'
 case|:
@@ -2589,20 +2586,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|assert
-argument_list|(
-name|i
-operator|<
-name|INT_MAX
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-operator|(
-name|int
-operator|)
-name|i
-expr_stmt|;
 undef|#
 directive|undef
 name|APPEND_C
@@ -2617,7 +2600,7 @@ directive|undef
 name|GET_ARG_NUMERIC
 return|return
 operator|(
-name|ret
+name|i
 operator|)
 return|;
 block|}
@@ -2633,7 +2616,7 @@ argument_list|)
 end_macro
 
 begin_function
-name|int
+name|size_t
 name|malloc_snprintf
 parameter_list|(
 name|char
@@ -2651,7 +2634,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|ret
 decl_stmt|;
 name|va_list

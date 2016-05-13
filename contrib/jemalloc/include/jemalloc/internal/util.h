@@ -224,6 +224,24 @@ value|4096
 end_define
 
 begin_comment
+comment|/* Junk fill patterns. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_ALLOC_JUNK
+value|((uint8_t)0xa5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_FREE_JUNK
+value|((uint8_t)0x5a)
+end_define
+
+begin_comment
 comment|/*  * Wrap a cpp argument that contains commas such that it isn't broken up into  * multiple arguments.  */
 end_comment
 
@@ -382,6 +400,7 @@ define|#
 directive|define
 name|unreachable
 parameter_list|()
+value|abort()
 end_define
 
 begin_endif
@@ -419,6 +438,7 @@ define|#
 directive|define
 name|unreachable
 parameter_list|()
+value|abort()
 end_define
 
 begin_endif
@@ -540,7 +560,7 @@ comment|/*  * malloc_vsnprintf() supports a subset of snprintf(3) that avoids fl
 end_comment
 
 begin_function_decl
-name|int
+name|size_t
 name|malloc_vsnprintf
 parameter_list|(
 name|char
@@ -562,7 +582,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|malloc_snprintf
 parameter_list|(
 name|char

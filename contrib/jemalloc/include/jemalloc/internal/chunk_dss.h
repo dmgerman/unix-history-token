@@ -99,7 +99,9 @@ begin_function_decl
 name|dss_prec_t
 name|chunk_dss_prec_get
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,6 +110,10 @@ begin_function_decl
 name|bool
 name|chunk_dss_prec_set
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|dss_prec_t
 name|dss_prec
 parameter_list|)
@@ -119,6 +125,10 @@ name|void
 modifier|*
 name|chunk_alloc_dss
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|arena_t
 modifier|*
 name|arena
@@ -148,6 +158,10 @@ begin_function_decl
 name|bool
 name|chunk_in_dss
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|void
 modifier|*
 name|chunk
@@ -168,7 +182,9 @@ begin_function_decl
 name|void
 name|chunk_dss_prefork
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -177,7 +193,9 @@ begin_function_decl
 name|void
 name|chunk_dss_postfork_parent
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -186,7 +204,9 @@ begin_function_decl
 name|void
 name|chunk_dss_postfork_child
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl

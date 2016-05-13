@@ -211,9 +211,9 @@ begin_function_decl
 name|bool
 name|ckh_new
 parameter_list|(
-name|tsd_t
+name|tsdn_t
 modifier|*
-name|tsd
+name|tsdn
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -237,9 +237,9 @@ begin_function_decl
 name|void
 name|ckh_delete
 parameter_list|(
-name|tsd_t
+name|tsdn_t
 modifier|*
-name|tsd
+name|tsdn
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -288,9 +288,9 @@ begin_function_decl
 name|bool
 name|ckh_insert
 parameter_list|(
-name|tsd_t
+name|tsdn_t
 modifier|*
-name|tsd
+name|tsdn
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -313,9 +313,9 @@ begin_function_decl
 name|bool
 name|ckh_remove
 parameter_list|(
-name|tsd_t
+name|tsdn_t
 modifier|*
-name|tsd
+name|tsdn
 parameter_list|,
 name|ckh_t
 modifier|*

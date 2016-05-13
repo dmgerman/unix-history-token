@@ -430,6 +430,20 @@ comment|/* #undef JEMALLOC_ZONE_VERSION */
 end_comment
 
 begin_comment
+comment|/*  * Methods for determining whether the OS overcommits.  * JEMALLOC_PROC_SYS_VM_OVERCOMMIT_MEMORY: Linux's  *                                         /proc/sys/vm.overcommit_memory file.  * JEMALLOC_SYSCTL_VM_OVERCOMMIT: FreeBSD's vm.overcommit sysctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_SYSCTL_VM_OVERCOMMIT
+end_define
+
+begin_comment
+comment|/* #undef JEMALLOC_PROC_SYS_VM_OVERCOMMIT_MEMORY */
+end_comment
+
+begin_comment
 comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_DONTNEED) : On Linux, this immediately discards pages,  *                                 such that new pages will be demand-zeroed if  *                                 the address region is later touched.  *   madvise(..., MADV_FREE) : On FreeBSD and Darwin, this marks pages as being  *                             unused, such that they will be discarded rather  *                             than swapped out.  */
 end_comment
 

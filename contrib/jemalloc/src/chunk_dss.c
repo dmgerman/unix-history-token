@@ -142,7 +142,9 @@ begin_function
 name|dss_prec_t
 name|chunk_dss_prec_get
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 block|{
 name|dss_prec_t
@@ -160,6 +162,8 @@ operator|)
 return|;
 name|malloc_mutex_lock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -170,6 +174,8 @@ name|dss_prec_default
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -186,6 +192,10 @@ begin_function
 name|bool
 name|chunk_dss_prec_set
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|dss_prec_t
 name|dss_prec
 parameter_list|)
@@ -204,6 +214,8 @@ operator|)
 return|;
 name|malloc_mutex_lock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -214,6 +226,8 @@ name|dss_prec
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -231,6 +245,10 @@ name|void
 modifier|*
 name|chunk_alloc_dss
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|arena_t
 modifier|*
 name|arena
@@ -306,6 +324,8 @@ operator|)
 return|;
 name|malloc_mutex_lock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -474,6 +494,8 @@ block|{
 comment|/* Wrap-around. */
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -513,6 +535,8 @@ name|dss_next
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -531,6 +555,8 @@ name|CHUNK_HOOKS_INITIALIZER
 decl_stmt|;
 name|chunk_dalloc_wrapper
 argument_list|(
+name|tsdn
+argument_list|,
 name|arena
 argument_list|,
 operator|&
@@ -539,6 +565,8 @@ argument_list|,
 name|cpad
 argument_list|,
 name|cpad_size
+argument_list|,
+name|false
 argument_list|,
 name|true
 argument_list|)
@@ -605,6 +633,8 @@ do|;
 block|}
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -621,6 +651,10 @@ begin_function
 name|bool
 name|chunk_in_dss
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|void
 modifier|*
 name|chunk
@@ -636,6 +670,8 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -673,6 +709,8 @@ name|false
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -703,6 +741,10 @@ name|malloc_mutex_init
 argument_list|(
 operator|&
 name|dss_mtx
+argument_list|,
+literal|"dss"
+argument_list|,
+name|WITNESS_RANK_DSS
 argument_list|)
 condition|)
 return|return
@@ -737,7 +779,9 @@ begin_function
 name|void
 name|chunk_dss_prefork
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 block|{
 if|if
@@ -746,6 +790,8 @@ name|have_dss
 condition|)
 name|malloc_mutex_prefork
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -757,7 +803,9 @@ begin_function
 name|void
 name|chunk_dss_postfork_parent
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 block|{
 if|if
@@ -766,6 +814,8 @@ name|have_dss
 condition|)
 name|malloc_mutex_postfork_parent
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)
@@ -777,7 +827,9 @@ begin_function
 name|void
 name|chunk_dss_postfork_child
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 block|{
 if|if
@@ -786,6 +838,8 @@ name|have_dss
 condition|)
 name|malloc_mutex_postfork_child
 argument_list|(
+name|tsdn
+argument_list|,
 operator|&
 name|dss_mtx
 argument_list|)

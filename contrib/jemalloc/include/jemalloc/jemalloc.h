@@ -183,7 +183,7 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"4.1.0-1-g994da4232621dd1210fcf39bdf0d6454cefda473"
+value|"4.2.0-1-gdc7ff6306d7a15b53479e2fb8e5546404b82e6fc"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
@@ -191,7 +191,7 @@ value|4
 define|#
 directive|define
 name|JEMALLOC_VERSION_MINOR
-value|1
+value|2
 define|#
 directive|define
 name|JEMALLOC_VERSION_BUGFIX
@@ -203,7 +203,7 @@ value|1
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"994da4232621dd1210fcf39bdf0d6454cefda473"
+value|"dc7ff6306d7a15b53479e2fb8e5546404b82e6fc"
 define|#
 directive|define
 name|MALLOCX_LG_ALIGN
@@ -222,7 +222,7 @@ name|MALLOCX_ALIGN
 parameter_list|(
 name|a
 parameter_list|)
-value|((int)(ffs(a)-1))
+value|((int)(ffs((int)(a))-1))
 else|#
 directive|else
 define|#
@@ -232,7 +232,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((int)(((a)< (size_t)INT_MAX) ? ffs((int)(a))-1 :		\        ffs((int)((a)>>32))+31))
+value|((int)(((size_t)(a)< (size_t)INT_MAX) ? ffs((int)(a))-1 :	\        ffs((int)(((size_t)(a))>>32))+31))
 endif|#
 directive|endif
 define|#
@@ -258,7 +258,7 @@ name|MALLOCX_ARENA
 parameter_list|(
 name|a
 parameter_list|)
-value|((int)(((a)+1)<< 20))
+value|((((int)(a))+1)<< 20)
 if|#
 directive|if
 name|defined

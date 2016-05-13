@@ -84,7 +84,7 @@ value|(BITMAP_GROUP_NBITS-1)
 end_define
 
 begin_comment
-comment|/*  * Do some analysis on how big the bitmap is before we use a tree.  For a brute  * force linear search, if we would have to call ffsl more than 2^3 times, use a  * tree instead.  */
+comment|/*  * Do some analysis on how big the bitmap is before we use a tree.  For a brute  * force linear search, if we would have to call ffs_lu() more than 2^3 times,  * use a tree instead.  */
 end_comment
 
 begin_if
@@ -1166,15 +1166,15 @@ block|}
 name|bit
 operator|=
 operator|(
-name|bit
-operator|-
-literal|1
+name|i
+operator|<<
+name|LG_BITMAP_GROUP_NBITS
 operator|)
 operator|+
 operator|(
-name|i
-operator|<<
-literal|6
+name|bit
+operator|-
+literal|1
 operator|)
 expr_stmt|;
 endif|#

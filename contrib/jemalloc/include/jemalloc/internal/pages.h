@@ -58,6 +58,10 @@ name|addr
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|bool
+modifier|*
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -93,6 +97,10 @@ name|leadsize
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|bool
+modifier|*
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -135,6 +143,15 @@ name|addr
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pages_boot
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

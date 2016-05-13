@@ -52,6 +52,10 @@ name|void
 modifier|*
 name|base_alloc
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|size_t
 name|size
 parameter_list|)
@@ -62,6 +66,10 @@ begin_function_decl
 name|void
 name|base_stats_get
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|size_t
 modifier|*
 name|allocated
@@ -90,7 +98,9 @@ begin_function_decl
 name|void
 name|base_prefork
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -99,7 +109,9 @@ begin_function_decl
 name|void
 name|base_postfork_parent
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,7 +120,9 @@ begin_function_decl
 name|void
 name|base_postfork_child
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl

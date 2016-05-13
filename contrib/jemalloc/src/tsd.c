@@ -358,12 +358,17 @@ block|}
 end_function
 
 begin_function
-name|bool
+name|tsd_t
+modifier|*
 name|malloc_tsd_boot0
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|tsd_t
+modifier|*
+name|tsd
+decl_stmt|;
 name|ncleanups
 operator|=
 literal|0
@@ -375,21 +380,25 @@ argument_list|()
 condition|)
 return|return
 operator|(
-name|true
+name|NULL
 operator|)
 return|;
+name|tsd
+operator|=
+name|tsd_fetch
+argument_list|()
+expr_stmt|;
 operator|*
 name|tsd_arenas_tdata_bypassp_get
 argument_list|(
-name|tsd_fetch
-argument_list|()
+name|tsd
 argument_list|)
 operator|=
 name|true
 expr_stmt|;
 return|return
 operator|(
-name|false
+name|tsd
 operator|)
 return|;
 block|}
@@ -647,6 +656,8 @@ decl_stmt|;
 comment|/* Check whether this thread has already inserted into the list. */
 name|malloc_mutex_lock
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|head
 operator|->
@@ -673,6 +684,8 @@ condition|)
 block|{
 name|malloc_mutex_unlock
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|head
 operator|->
@@ -716,6 +729,8 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|head
 operator|->
@@ -745,6 +760,8 @@ parameter_list|)
 block|{
 name|malloc_mutex_lock
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|head
 operator|->
@@ -765,6 +782,8 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|head
 operator|->

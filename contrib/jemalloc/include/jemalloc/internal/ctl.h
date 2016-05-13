@@ -107,6 +107,9 @@ modifier|*
 name|ctl
 function_decl|)
 parameter_list|(
+name|tsd_t
+modifier|*
+parameter_list|,
 specifier|const
 name|size_t
 modifier|*
@@ -145,6 +148,9 @@ modifier|*
 name|index
 function_decl|)
 parameter_list|(
+name|tsdn_t
+modifier|*
+parameter_list|,
 specifier|const
 name|size_t
 modifier|*
@@ -241,6 +247,9 @@ decl_stmt|;
 name|size_t
 name|mapped
 decl_stmt|;
+name|size_t
+name|retained
+decl_stmt|;
 name|unsigned
 name|narenas
 decl_stmt|;
@@ -276,6 +285,10 @@ begin_function_decl
 name|int
 name|ctl_byname
 parameter_list|(
+name|tsd_t
+modifier|*
+name|tsd
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -303,6 +316,10 @@ begin_function_decl
 name|int
 name|ctl_nametomib
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -323,6 +340,10 @@ begin_function_decl
 name|int
 name|ctl_bymib
 parameter_list|(
+name|tsd_t
+modifier|*
+name|tsd
+parameter_list|,
 specifier|const
 name|size_t
 modifier|*
@@ -362,7 +383,9 @@ begin_function_decl
 name|void
 name|ctl_prefork
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +394,9 @@ begin_function_decl
 name|void
 name|ctl_postfork_parent
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -380,7 +405,9 @@ begin_function_decl
 name|void
 name|ctl_postfork_child
 parameter_list|(
-name|void
+name|tsdn_t
+modifier|*
+name|tsdn
 parameter_list|)
 function_decl|;
 end_function_decl

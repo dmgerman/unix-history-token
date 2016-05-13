@@ -1398,6 +1398,8 @@ decl_stmt|,
 name|pdirty
 decl_stmt|,
 name|mapped
+decl_stmt|,
+name|retained
 decl_stmt|;
 name|size_t
 name|metadata_mapped
@@ -1987,6 +1989,29 @@ argument_list|)
 expr_stmt|;
 name|CTL_M2_GET
 argument_list|(
+literal|"stats.arenas.0.retained"
+argument_list|,
+name|i
+argument_list|,
+operator|&
+name|retained
+argument_list|,
+name|size_t
+argument_list|)
+expr_stmt|;
+name|malloc_cprintf
+argument_list|(
+name|write_cb
+argument_list|,
+name|cbopaque
+argument_list|,
+literal|"retained:                %12zu\n"
+argument_list|,
+name|retained
+argument_list|)
+expr_stmt|;
+name|CTL_M2_GET
+argument_list|(
 literal|"stats.arenas.0.metadata.mapped"
 argument_list|,
 name|i
@@ -2445,7 +2470,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|if (je_mallctl("opt."#n,&uv,&usz, NULL, 0) == 0) {	\ 			malloc_cprintf(write_cb, cbopaque,		\ 			"  opt."#n": %zu\n", sv);			\ 		}
+value|if (je_mallctl("opt."#n,&uv,&usz, NULL, 0) == 0) {	\ 			malloc_cprintf(write_cb, cbopaque,		\ 			"  opt."#n": %u\n", uv);			\ 		}
 define|#
 directive|define
 name|OPT_WRITE_SIZE_T
@@ -3009,6 +3034,8 @@ decl_stmt|,
 name|resident
 decl_stmt|,
 name|mapped
+decl_stmt|,
+name|retained
 decl_stmt|;
 name|CTL_GET
 argument_list|(
@@ -3071,6 +3098,16 @@ argument_list|,
 name|size_t
 argument_list|)
 expr_stmt|;
+name|CTL_GET
+argument_list|(
+literal|"stats.retained"
+argument_list|,
+operator|&
+name|retained
+argument_list|,
+name|size_t
+argument_list|)
+expr_stmt|;
 name|malloc_cprintf
 argument_list|(
 name|write_cb
@@ -3078,7 +3115,7 @@ argument_list|,
 name|cbopaque
 argument_list|,
 literal|"Allocated: %zu, active: %zu, metadata: %zu,"
-literal|" resident: %zu, mapped: %zu\n"
+literal|" resident: %zu, mapped: %zu, retained: %zu\n"
 argument_list|,
 name|allocated
 argument_list|,
@@ -3089,6 +3126,8 @@ argument_list|,
 name|resident
 argument_list|,
 name|mapped
+argument_list|,
+name|retained
 argument_list|)
 expr_stmt|;
 name|malloc_cprintf

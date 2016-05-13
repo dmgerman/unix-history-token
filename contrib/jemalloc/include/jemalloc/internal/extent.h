@@ -94,7 +94,7 @@ argument|extent_node_t
 argument_list|)
 name|szad_link
 expr_stmt|;
-comment|/* Linkage for arena's huge and node_cache lists. */
+comment|/* Linkage for arena's achunks, huge, and node_cache lists. */
 name|ql_elm
 argument_list|(
 argument|extent_node_t

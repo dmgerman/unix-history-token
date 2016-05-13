@@ -413,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|nstime_update
-value|JEMALLOC_N(nstime_update_impl)
+value|JEMALLOC_N(n_nstime_update)
 end_define
 
 begin_endif
@@ -631,7 +631,7 @@ name|nstime_update
 init|=
 name|JEMALLOC_N
 argument_list|(
-name|nstime_update_impl
+name|n_nstime_update
 argument_list|)
 decl_stmt|;
 end_decl_stmt
