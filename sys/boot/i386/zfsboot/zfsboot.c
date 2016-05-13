@@ -1827,11 +1827,16 @@ name|entries_per_sec
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOADER_GELI_SUPPORT
 name|daddr_t
 name|slba
 decl_stmt|,
 name|elba
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|dos_partition
 modifier|*
