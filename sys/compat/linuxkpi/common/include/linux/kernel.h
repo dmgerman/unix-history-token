@@ -189,6 +189,170 @@ end_define
 begin_define
 define|#
 directive|define
+name|U8_MAX
+value|((u8)~0U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S8_MAX
+value|((s8)(U8_MAX>> 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|S8_MIN
+value|((s8)(-S8_MAX - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|U16_MAX
+value|((u16)~0U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S16_MAX
+value|((s16)(U16_MAX>> 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|S16_MIN
+value|((s16)(-S16_MAX - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|U32_MAX
+value|((u32)~0U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S32_MAX
+value|((s32)(U32_MAX>> 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|S32_MIN
+value|((s32)(-S32_MAX - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|U64_MAX
+value|((u64)~0ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S64_MAX
+value|((s64)(U64_MAX>> 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|S64_MIN
+value|((s64)(-S64_MAX - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|S8_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|U8_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## U
+end_define
+
+begin_define
+define|#
+directive|define
+name|S16_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|U16_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## U
+end_define
+
+begin_define
+define|#
+directive|define
+name|S32_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|U32_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## U
+end_define
+
+begin_define
+define|#
+directive|define
+name|S64_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## LL
+end_define
+
+begin_define
+define|#
+directive|define
+name|U64_C
+parameter_list|(
+name|x
+parameter_list|)
+value|x ## ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUILD_BUG_ON
 parameter_list|(
 name|x
@@ -201,7 +365,7 @@ define|#
 directive|define
 name|BUG
 parameter_list|()
-value|panic("BUG")
+value|panic("BUG at %s:%d", __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -209,16 +373,39 @@ define|#
 directive|define
 name|BUG_ON
 parameter_list|(
-name|condition
+name|cond
 parameter_list|)
-value|do { if (condition) BUG(); } while(0)
+value|do {				\ 	if (cond) {						\ 		panic("BUG ON %s failed at %s:%d",		\ 		    __stringify(cond), __FILE__, __LINE__);	\ 	}							\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WARN_ON
-value|BUG_ON
+parameter_list|(
+name|cond
+parameter_list|)
+value|({					\       bool __ret = (cond);					\       if (__ret) {						\ 		printf("WARNING %s failed at %s:%d\n",		\ 		    __stringify(cond), __FILE__, __LINE__);	\       }								\       unlikely(__ret);						\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|WARN_ON_SMP
+parameter_list|(
+name|cond
+parameter_list|)
+value|WARN_ON(cond)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WARN_ON_ONCE
+parameter_list|(
+name|cond
+parameter_list|)
+value|({					\       static bool __warn_on_once;				\       bool __ret = (cond);					\       if (__ret&& !__warn_on_once) {				\ 		__warn_on_once = 1;				\ 		printf("WARNING %s failed at %s:%d\n",		\ 		    __stringify(cond), __FILE__, __LINE__);	\       }								\       unlikely(__ret);						\ })
 end_define
 
 begin_undef
@@ -424,7 +611,7 @@ name|level
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {		\ 	static bool __log_once;			\ 						\ 	if (!__log_once) {			\ 		__log_once = true;		\ 		log(level, __VA_ARGS__);	\ 	}					\ } while (0)
+value|do {		\ 	static bool __log_once;			\ 						\ 	if (unlikely(!__log_once)) {		\ 		__log_once = true;		\ 		log(level, __VA_ARGS__);	\ 	}					\ } while (0)
 end_define
 
 begin_define
@@ -496,7 +683,24 @@ begin_define
 define|#
 directive|define
 name|pr_warn
-value|pr_warning
+parameter_list|(
+modifier|...
+parameter_list|)
+define|\
+value|pr_warning(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pr_warn_once
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|log_once(LOG_WARNING, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -564,10 +768,32 @@ name|WARN
 parameter_list|(
 name|condition
 parameter_list|,
-name|format
 modifier|...
 parameter_list|)
-value|({                                   \         int __ret_warn_on = !!(condition);                              \         if (unlikely(__ret_warn_on))                                    \                 pr_warning(format);                                     \         unlikely(__ret_warn_on);                                        \ })
+value|({			\         bool __ret_warn_on = (condition);	\         if (unlikely(__ret_warn_on))		\                 pr_warning(__VA_ARGS__);	\         unlikely(__ret_warn_on);		\ })
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WARN_ONCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WARN_ONCE
+parameter_list|(
+name|condition
+parameter_list|,
+modifier|...
+parameter_list|)
+value|({		\         bool __ret_warn_on = (condition);	\         if (unlikely(__ret_warn_on))		\                 pr_warn_once(__VA_ARGS__);	\         unlikely(__ret_warn_on);		\ })
 end_define
 
 begin_endif
@@ -721,11 +947,11 @@ name|min_t
 parameter_list|(
 name|type
 parameter_list|,
-name|_x
+name|x
 parameter_list|,
-name|_y
+name|y
 parameter_list|)
-value|((type)(_x)< (type)(_y) ? (type)(_x) : (type)(_y))
+value|({			\ 	type __min1 = (x);			\ 	type __min2 = (y);			\ 	__min1< __min2 ? __min1 : __min2; })
 end_define
 
 begin_define
@@ -735,11 +961,11 @@ name|max_t
 parameter_list|(
 name|type
 parameter_list|,
-name|_x
+name|x
 parameter_list|,
-name|_y
+name|y
 parameter_list|)
-value|((type)(_x)> (type)(_y) ? (type)(_x) : (type)(_y))
+value|({			\ 	type __max1 = (x);			\ 	type __max2 = (y);			\ 	__max1> __max2 ? __max1 : __max2; })
 end_define
 
 begin_define
@@ -770,6 +996,20 @@ parameter_list|,
 name|hi
 parameter_list|)
 value|min( max(x,lo), hi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clamp_val
+parameter_list|(
+name|val
+parameter_list|,
+name|lo
+parameter_list|,
+name|hi
+parameter_list|)
+value|clamp_t(typeof(val), val, lo, hi)
 end_define
 
 begin_comment
@@ -836,6 +1076,13 @@ parameter_list|()
 value|mp_ncpus
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_has_clflush
+value|(1)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -875,6 +1122,18 @@ parameter_list|,
 name|divisor
 parameter_list|)
 value|(((x) + ((divisor) / 2)) / (divisor))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIV_ROUND_CLOSEST_ULL
+parameter_list|(
+name|x
+parameter_list|,
+name|divisor
+parameter_list|)
+value|({		\ 	__typeof(divisor) __d = (divisor);		\ 	unsigned long long __ret = (x) + (__d) / 2;	\ 	__ret /= __d;					\ 	__ret;						\ })
 end_define
 
 begin_function

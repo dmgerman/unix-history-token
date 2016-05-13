@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2015 Mellanox Technologies, Ltd.  * Copyright (c) 2015 FranÃ§ois Tigeot  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2016 Mellanox Technologies, Ltd.  * Copyright (c) 2015 FranÃ§ois Tigeot  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -155,6 +155,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|__deprecated
+end_define
+
+begin_define
+define|#
+directive|define
 name|__init
 end_define
 
@@ -174,6 +180,12 @@ begin_define
 define|#
 directive|define
 name|__exit
+end_define
+
+begin_define
+define|#
+directive|define
+name|__rcu
 end_define
 
 begin_define
@@ -204,6 +216,13 @@ define|#
 directive|define
 name|__always_inline
 value|inline
+end_define
+
+begin_define
+define|#
+directive|define
+name|____cacheline_aligned
+value|__aligned(CACHE_LINE_SIZE)
 end_define
 
 begin_define
@@ -290,6 +309,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|___PASTE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|a##b
+end_define
+
+begin_define
+define|#
+directive|define
+name|__PASTE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|___PASTE(a,b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACCESS_ONCE
 parameter_list|(
 name|x
@@ -317,6 +360,28 @@ parameter_list|(
 name|x
 parameter_list|)
 value|({			\ 	__typeof(x) __var;		\ 	barrier();			\ 	__var = ACCESS_ONCE(x);		\ 	barrier();			\ 	__var;				\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|lockless_dereference
+parameter_list|(
+name|p
+parameter_list|)
+value|READ_ONCE(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_AT
+parameter_list|(
+name|T
+parameter_list|,
+name|X
+parameter_list|)
+value|((T)(X))
 end_define
 
 begin_endif
