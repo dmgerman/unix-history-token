@@ -9416,6 +9416,15 @@ name|cdev
 modifier|*
 name|mrsas_cdev
 decl_stmt|;
+name|struct
+name|intr_config_hook
+name|mrsas_ich
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|mrsas_linux_emulator_cdev
+decl_stmt|;
 name|uint16_t
 name|device_id
 decl_stmt|;
