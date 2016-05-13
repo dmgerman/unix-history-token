@@ -637,7 +637,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Calculating GELI Decryption Key disk%dp%d @ %lu"
+literal|"Calculating GELI Decryption Key disk%dp%d @ %d"
 literal|" iterations...\n"
 argument_list|,
 name|dskp
