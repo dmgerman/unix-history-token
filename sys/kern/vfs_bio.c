@@ -1376,7 +1376,7 @@ name|getnewbufrestarts
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of times getnewbuf has had to restart a buffer aquisition"
+literal|"Number of times getnewbuf has had to restart a buffer acquisition"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3173,7 +3173,7 @@ name|biotmap_sz
 operator|/
 name|MAXPHYS
 expr_stmt|;
-comment|/* 		 * Artifically limit to 1024 simultaneous in-flight I/Os 		 * using the transient mapping. 		 */
+comment|/* 		 * Artificially limit to 1024 simultaneous in-flight I/Os 		 * using the transient mapping. 		 */
 if|if
 condition|(
 name|bio_transient_maxcnt
@@ -12439,7 +12439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a bwrite() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successfull read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and BIO_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
+comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a bwrite() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successful read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and BIO_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
 end_comment
 
 begin_function
@@ -12875,7 +12875,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the size is inconsistant in the VMIO case, we can resize 		 * the buffer.  This might lead to B_CACHE getting set or 		 * cleared.  If the size has not changed, B_CACHE remains 		 * unchanged from its previous state. 		 */
+comment|/* 		 * If the size is inconsistent in the VMIO case, we can resize 		 * the buffer.  This might lead to B_CACHE getting set or 		 * cleared.  If the size has not changed, B_CACHE remains 		 * unchanged from its previous state. 		 */
 if|if
 condition|(
 name|bp
@@ -13407,7 +13407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This code constitutes the buffer memory from either anonymous system  * memory (in the case of non-VMIO operations) or from an associated  * VM object (in the case of VMIO operations).  This code is able to  * resize a buffer up or down.  *  * Note that this code is tricky, and has many complications to resolve  * deadlock or inconsistant data situations.  Tread lightly!!!   * There are B_CACHE and B_DELWRI interactions that must be dealt with by   * the caller.  Calling this code willy nilly can result in the loss of data.  *  * allocbuf() only adjusts B_CACHE for VMIO buffers.  getblk() deals with  * B_CACHE for the non-VMIO case.  */
+comment|/*  * This code constitutes the buffer memory from either anonymous system  * memory (in the case of non-VMIO operations) or from an associated  * VM object (in the case of VMIO operations).  This code is able to  * resize a buffer up or down.  *  * Note that this code is tricky, and has many complications to resolve  * deadlock or inconsistent data situations.  Tread lightly!!!   * There are B_CACHE and B_DELWRI interactions that must be dealt with by   * the caller.  Calling this code willy nilly can result in the loss of data.  *  * allocbuf() only adjusts B_CACHE for VMIO buffers.  getblk() deals with  * B_CACHE for the non-VMIO case.  */
 end_comment
 
 begin_function
@@ -15179,7 +15179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bufdone:  *  *	Finish I/O on a buffer, optionally calling a completion function.  *	This is usually called from an interrupt so process blocking is  *	not allowed.  *  *	biodone is also responsible for setting B_CACHE in a B_VMIO bp.  *	In a non-VMIO bp, B_CACHE will be set on the next getblk()   *	assuming B_INVAL is clear.  *  *	For the VMIO case, we set B_CACHE if the op was a read and no  *	read error occured, or if the op was a write.  B_CACHE is never  *	set if the buffer is invalid or otherwise uncacheable.  *  *	biodone does not mess with B_INVAL, allowing the I/O routine or the  *	initiator to leave B_INVAL set to brelse the buffer out of existance  *	in the biodone routine.  */
+comment|/*  *	bufdone:  *  *	Finish I/O on a buffer, optionally calling a completion function.  *	This is usually called from an interrupt so process blocking is  *	not allowed.  *  *	biodone is also responsible for setting B_CACHE in a B_VMIO bp.  *	In a non-VMIO bp, B_CACHE will be set on the next getblk()   *	assuming B_INVAL is clear.  *  *	For the VMIO case, we set B_CACHE if the op was a read and no  *	read error occurred, or if the op was a write.  B_CACHE is never  *	set if the buffer is invalid or otherwise uncacheable.  *  *	biodone does not mess with B_INVAL, allowing the I/O routine or the  *	initiator to leave B_INVAL set to brelse the buffer out of existence  *	in the biodone routine.  */
 end_comment
 
 begin_function
@@ -15478,7 +15478,7 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Set B_CACHE if the op was a normal read and no error 		 * occured.  B_CACHE is set for writes in the b*write() 		 * routines. 		 */
+comment|/* 		 * Set B_CACHE if the op was a normal read and no error 		 * occurred.  B_CACHE is set for writes in the b*write() 		 * routines. 		 */
 name|iosize
 operator|=
 name|bp
@@ -15870,7 +15870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistant.  */
+comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistent.  */
 end_comment
 
 begin_function
@@ -16174,7 +16174,7 @@ name|soff
 decl_stmt|,
 name|eoff
 decl_stmt|;
-comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundry or cross the end of the buffer.  The end of the 	 * buffer, in this case, is our file EOF, not the allocation size 	 * of the buffer. 	 */
+comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundary or cross the end of the buffer.  The end of the 	 * buffer, in this case, is our file EOF, not the allocation size 	 * of the buffer. 	 */
 name|soff
 operator|=
 name|off
@@ -16406,7 +16406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being exclusive busy.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being exclusive busy.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistent.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistent state  * and should be ignored.  */
 end_comment
 
 begin_function

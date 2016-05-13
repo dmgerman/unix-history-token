@@ -461,7 +461,7 @@ name|entries
 argument_list|,
 operator|(
 literal|"camq_resize: "
-literal|"New queue size can't accomodate queued entries (%d< %d)."
+literal|"New queue size can't accommodate queued entries (%d< %d)."
 operator|,
 name|new_size
 operator|,
