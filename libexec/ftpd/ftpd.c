@@ -8093,6 +8093,12 @@ function_decl|;
 name|time_t
 name|start
 decl_stmt|;
+name|char
+name|line
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|cmd
@@ -8122,12 +8128,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-name|line
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -8144,7 +8144,7 @@ name|cmd
 argument_list|,
 name|name
 argument_list|)
-operator|,
+expr_stmt|;
 name|name
 operator|=
 name|line
