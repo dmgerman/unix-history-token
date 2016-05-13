@@ -39,7 +39,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_init
+name|siena_rx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -52,7 +52,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_rx_fini
+name|siena_rx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -72,7 +72,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scatter_enable
+name|siena_rx_scatter_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -106,7 +106,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_mode_set
+name|siena_rx_scale_mode_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -132,7 +132,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_key_set
+name|siena_rx_scale_key_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -158,7 +158,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_tbl_set
+name|siena_rx_scale_tbl_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -185,7 +185,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|uint32_t
-name|falconsiena_rx_prefix_hash
+name|siena_rx_prefix_hash
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -217,7 +217,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_prefix_pktlen
+name|siena_rx_prefix_pktlen
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -240,7 +240,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_rx_qpost
+name|siena_rx_qpost
 argument_list|(
 name|__in
 name|efx_rxq_t
@@ -280,7 +280,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_rx_qpush
+name|siena_rx_qpush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -305,7 +305,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_qflush
+name|siena_rx_qflush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -318,7 +318,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_rx_qenable
+name|siena_rx_qenable
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -332,7 +332,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_qcreate
+name|siena_rx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -382,7 +382,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_rx_qdestroy
+name|siena_rx_qdestroy
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -414,16 +414,16 @@ name|efx_rx_ops_t
 name|__efx_rx_siena_ops
 init|=
 block|{
-name|falconsiena_rx_init
+name|siena_rx_init
 block|,
 comment|/* erxo_init */
-name|falconsiena_rx_fini
+name|siena_rx_fini
 block|,
 comment|/* erxo_fini */
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCATTER
-name|falconsiena_rx_scatter_enable
+name|siena_rx_scatter_enable
 block|,
 comment|/* erxo_scatter_enable */
 endif|#
@@ -431,39 +431,39 @@ directive|endif
 if|#
 directive|if
 name|EFSYS_OPT_RX_SCALE
-name|falconsiena_rx_scale_mode_set
+name|siena_rx_scale_mode_set
 block|,
 comment|/* erxo_scale_mode_set */
-name|falconsiena_rx_scale_key_set
+name|siena_rx_scale_key_set
 block|,
 comment|/* erxo_scale_key_set */
-name|falconsiena_rx_scale_tbl_set
+name|siena_rx_scale_tbl_set
 block|,
 comment|/* erxo_scale_tbl_set */
-name|falconsiena_rx_prefix_hash
+name|siena_rx_prefix_hash
 block|,
 comment|/* erxo_prefix_hash */
 endif|#
 directive|endif
-name|falconsiena_rx_prefix_pktlen
+name|siena_rx_prefix_pktlen
 block|,
 comment|/* erxo_prefix_pktlen */
-name|falconsiena_rx_qpost
+name|siena_rx_qpost
 block|,
 comment|/* erxo_qpost */
-name|falconsiena_rx_qpush
+name|siena_rx_qpush
 block|,
 comment|/* erxo_qpush */
-name|falconsiena_rx_qflush
+name|siena_rx_qflush
 block|,
 comment|/* erxo_qflush */
-name|falconsiena_rx_qenable
+name|siena_rx_qenable
 block|,
 comment|/* erxo_qenable */
-name|falconsiena_rx_qcreate
+name|siena_rx_qcreate
 block|,
 comment|/* erxo_qcreate */
-name|falconsiena_rx_qdestroy
+name|siena_rx_qdestroy
 block|,
 comment|/* erxo_qdestroy */
 block|}
@@ -2224,7 +2224,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_init
+name|siena_rx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2388,7 +2388,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scatter_enable
+name|siena_rx_scatter_enable
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2628,7 +2628,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_mode_set
+name|siena_rx_scale_mode_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2788,7 +2788,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_key_set
+name|siena_rx_scale_key_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -3384,7 +3384,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_scale_tbl_set
+name|siena_rx_scale_tbl_set
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -3650,7 +3650,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|uint32_t
-name|falconsiena_rx_prefix_hash
+name|siena_rx_prefix_hash
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3758,7 +3758,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_prefix_pktlen
+name|siena_rx_prefix_pktlen
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3793,7 +3793,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_rx_qpost
+name|siena_rx_qpost
 argument_list|(
 name|__in
 name|efx_rxq_t
@@ -3993,7 +3993,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|falconsiena_rx_qpush
+name|siena_rx_qpush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -4123,7 +4123,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_qflush
+name|siena_rx_qflush
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -4186,7 +4186,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_rx_qenable
+name|siena_rx_qenable
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -4282,7 +4282,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_rx_qcreate
+name|siena_rx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4662,7 +4662,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_rx_qdestroy
+name|siena_rx_qdestroy
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -4738,7 +4738,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_rx_fini
+name|siena_rx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
