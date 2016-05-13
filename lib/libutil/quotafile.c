@@ -540,7 +540,7 @@ name|quotatype
 operator|=
 name|quotatype
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|qf
 operator|->
