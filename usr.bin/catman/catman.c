@@ -1876,6 +1876,15 @@ condition|(
 operator|!
 name|pretend
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|cat
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|link
@@ -1886,10 +1895,6 @@ name|cat
 argument_list|)
 operator|<
 literal|0
-operator|&&
-name|errno
-operator|!=
-name|EEXIST
 condition|)
 name|warn
 argument_list|(
@@ -1900,6 +1905,7 @@ argument_list|,
 name|cat
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 name|insert_hashtable
