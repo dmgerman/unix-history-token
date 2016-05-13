@@ -35369,6 +35369,8 @@ name|AC_LOST_DEVICE
 argument_list|,
 name|sym_async
 argument_list|,
+name|np
+operator|->
 name|sim
 argument_list|,
 name|path
