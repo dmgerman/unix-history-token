@@ -964,6 +964,11 @@ argument_list|,
 literal|"cannot read KPML4phys"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|PML4
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
