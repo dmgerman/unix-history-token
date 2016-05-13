@@ -177,13 +177,18 @@ name|EBUSY
 operator|)
 return|;
 comment|/* Generate device name and create PTY. */
-name|strcpy
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
 name|devtoname
 argument_list|(
 name|dev
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
