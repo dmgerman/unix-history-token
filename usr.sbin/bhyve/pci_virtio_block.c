@@ -744,9 +744,6 @@ name|writeop
 decl_stmt|,
 name|type
 decl_stmt|;
-name|off_t
-name|offset
-decl_stmt|;
 name|struct
 name|iovec
 name|iov
@@ -1021,7 +1018,11 @@ name|i
 operator|-
 literal|1
 operator|,
-name|offset
+name|io
+operator|->
+name|io_req
+operator|.
+name|br_offset
 operator|)
 argument_list|)
 expr_stmt|;
