@@ -5211,6 +5211,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|KEY_FREESP
+argument_list|(
+operator|&
+name|dst
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
