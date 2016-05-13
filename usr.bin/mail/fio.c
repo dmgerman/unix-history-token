@@ -1726,7 +1726,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|savestr
+argument_list|(
 name|name
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1746,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+name|NULL
 operator|)
 return|;
 block|}
