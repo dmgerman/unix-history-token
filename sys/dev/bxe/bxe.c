@@ -10870,11 +10870,6 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|bxe_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|bxe_device_type
 modifier|*
 name|t
@@ -10893,19 +10888,6 @@ decl_stmt|,
 name|vid
 decl_stmt|;
 comment|/* Find our device structure */
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|t
 operator|=
 name|bxe_devs
@@ -10937,26 +10919,6 @@ operator|=
 name|pci_get_subdevice
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|BLOGD
-argument_list|(
-name|sc
-argument_list|,
-name|DBG_LOAD
-argument_list|,
-literal|"%s(); VID = 0x%04X, DID = 0x%04X, SVID = 0x%04X, "
-literal|"SDID = 0x%04X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|vid
-argument_list|,
-name|did
-argument_list|,
-name|svid
-argument_list|,
-name|sdid
 argument_list|)
 expr_stmt|;
 comment|/* Look through the list of known devices for a match. */
