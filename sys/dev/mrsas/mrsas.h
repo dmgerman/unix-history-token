@@ -581,11 +581,17 @@ name|u_int8_t
 name|spanArm
 decl_stmt|;
 name|u_int8_t
-name|resvd2
-index|[
-literal|3
-index|]
+name|priority
 decl_stmt|;
+comment|/* 0x1D MR_PRIORITY_RANGE */
+name|u_int8_t
+name|numSGEExt
+decl_stmt|;
+comment|/* 0x1E 1M IO support */
+name|u_int8_t
+name|resvd2
+decl_stmt|;
+comment|/* 0x1F */
 block|}
 name|RAID_CONTEXT
 typedef|;
@@ -4627,7 +4633,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MRSAS_MAX_SZ_CHAIN_FRAME
+name|MEGASAS_CHAIN_FRAME_SZ_MIN
 value|1024
 end_define
 
@@ -4987,22 +4993,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|MRSAS_MAX_SGL
-value|70
-end_define
-
-begin_define
-define|#
-directive|define
-name|MRSAS_MAX_IO_SIZE
-value|(256 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MRSAS_INTERNAL_CMDS
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEGASAS_MAX_CHAIN_SIZE_UNITS_MASK
+value|0x400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEGASAS_MAX_CHAIN_SIZE_MASK
+value|0x3E0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEGASAS_256K_IO
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEGASAS_1MB_IO
+value|(MEGASAS_256K_IO * 4)
 end_define
 
 begin_comment
@@ -7411,9 +7431,19 @@ range|:
 literal|1
 decl_stmt|;
 name|u_int32_t
+name|support_ext_queue_depth
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|support_ext_io_size
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
 name|reserved
 range|:
-literal|25
+literal|23
 decl_stmt|;
 block|}
 name|mfi_capabilities
@@ -9601,6 +9631,9 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|mask_interrupts
+decl_stmt|;
+name|uint16_t
+name|max_chain_frame_sz
 decl_stmt|;
 name|struct
 name|mrsas_mpt_cmd
