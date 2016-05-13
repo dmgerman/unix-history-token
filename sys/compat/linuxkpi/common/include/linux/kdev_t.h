@@ -47,6 +47,36 @@ parameter_list|)
 value|makedev((ma), (mi))
 end_define
 
+begin_function
+specifier|static
+specifier|inline
+name|uint16_t
+name|old_encode_dev
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|MAJOR
+argument_list|(
+name|dev
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+name|MINOR
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
