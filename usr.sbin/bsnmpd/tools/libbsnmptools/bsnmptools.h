@@ -853,6 +853,13 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|_bsnmptools_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|struct
 name|asn_oid
