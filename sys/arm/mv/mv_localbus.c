@@ -1004,11 +1004,9 @@ literal|0
 expr_stmt|;
 name|out
 label|:
-name|free
+name|OF_prop_free
 argument_list|(
 name|reg
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return

@@ -673,11 +673,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|cfgtuples
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return
