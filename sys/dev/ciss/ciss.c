@@ -6978,7 +6978,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|sc
 operator|->
 name|ciss_max_logical_bus
@@ -9733,7 +9733,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|sc
 operator|->
 name|ciss_max_logical_bus
