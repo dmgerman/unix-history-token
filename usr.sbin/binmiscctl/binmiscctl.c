@@ -417,7 +417,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|__dead2
 name|usage
 parameter_list|(
 specifier|const
