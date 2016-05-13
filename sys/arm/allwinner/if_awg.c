@@ -4860,11 +4860,9 @@ name|tx_parent_name
 operator|=
 literal|"mii_phy_tx"
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|phy_type
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 comment|/* Get the TX clock */
@@ -5207,11 +5205,9 @@ operator|)
 return|;
 name|fail
 label|:
-name|free
+name|OF_prop_free
 argument_list|(
 name|phy_type
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 if|if
