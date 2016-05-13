@@ -79,7 +79,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_init
+name|siena_tx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -92,7 +92,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_tx_fini
+name|siena_tx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -106,7 +106,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qcreate
+name|siena_tx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -162,7 +162,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_tx_qdestroy
+name|siena_tx_qdestroy
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -176,7 +176,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qpost
+name|siena_tx_qpost
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -213,7 +213,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_tx_qpush
+name|siena_tx_qpush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -237,7 +237,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qpace
+name|siena_tx_qpace
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -256,7 +256,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qflush
+name|siena_tx_qflush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -269,7 +269,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_tx_qenable
+name|siena_tx_qenable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -282,7 +282,7 @@ end_function_decl
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qdesc_post
+name|siena_tx_qdesc_post
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -318,7 +318,7 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|falconsiena_tx_qdesc_dma_create
+name|siena_tx_qdesc_dma_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -354,7 +354,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_tx_qstats_update
+name|siena_tx_qstats_update
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -399,31 +399,31 @@ name|efx_tx_ops_t
 name|__efx_tx_siena_ops
 init|=
 block|{
-name|falconsiena_tx_init
+name|siena_tx_init
 block|,
 comment|/* etxo_init */
-name|falconsiena_tx_fini
+name|siena_tx_fini
 block|,
 comment|/* etxo_fini */
-name|falconsiena_tx_qcreate
+name|siena_tx_qcreate
 block|,
 comment|/* etxo_qcreate */
-name|falconsiena_tx_qdestroy
+name|siena_tx_qdestroy
 block|,
 comment|/* etxo_qdestroy */
-name|falconsiena_tx_qpost
+name|siena_tx_qpost
 block|,
 comment|/* etxo_qpost */
-name|falconsiena_tx_qpush
+name|siena_tx_qpush
 block|,
 comment|/* etxo_qpush */
-name|falconsiena_tx_qpace
+name|siena_tx_qpace
 block|,
 comment|/* etxo_qpace */
-name|falconsiena_tx_qflush
+name|siena_tx_qflush
 block|,
 comment|/* etxo_qflush */
-name|falconsiena_tx_qenable
+name|siena_tx_qenable
 block|,
 comment|/* etxo_qenable */
 name|NULL
@@ -438,10 +438,10 @@ comment|/* etxo_qpio_write */
 name|NULL
 block|,
 comment|/* etxo_qpio_post */
-name|falconsiena_tx_qdesc_post
+name|siena_tx_qdesc_post
 block|,
 comment|/* etxo_qdesc_post */
-name|falconsiena_tx_qdesc_dma_create
+name|siena_tx_qdesc_dma_create
 block|,
 comment|/* etxo_qdesc_dma_create */
 name|NULL
@@ -456,7 +456,7 @@ comment|/* etxo_qdesc_vlantci_create */
 if|#
 directive|if
 name|EFSYS_OPT_QSTATS
-name|falconsiena_tx_qstats_update
+name|siena_tx_qstats_update
 block|,
 comment|/* etxo_qstats_update */
 endif|#
@@ -2685,7 +2685,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_init
+name|siena_tx_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2851,7 +2851,7 @@ begin_decl_stmt
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qpost
+name|siena_tx_qpost
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -3034,7 +3034,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|falconsiena_tx_qpush
+name|siena_tx_qpush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -3164,7 +3164,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qpace
+name|siena_tx_qpace
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -3329,7 +3329,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qflush
+name|siena_tx_qflush
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -3399,7 +3399,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_tx_qenable
+name|siena_tx_qenable
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -3509,7 +3509,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qcreate
+name|siena_tx_qcreate
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3867,7 +3867,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_tx_qdesc_post
+name|siena_tx_qdesc_post
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -4058,7 +4058,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|falconsiena_tx_qdesc_dma_create
+name|siena_tx_qdesc_dma_create
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -4298,7 +4298,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_tx_qstats_update
+name|siena_tx_qstats_update
 argument_list|(
 name|__in
 name|efx_txq_t
@@ -4379,7 +4379,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|falconsiena_tx_qdestroy
+name|siena_tx_qdestroy
 parameter_list|(
 name|__in
 name|efx_txq_t
@@ -4426,7 +4426,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_tx_fini
+name|siena_tx_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
