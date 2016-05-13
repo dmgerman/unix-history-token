@@ -46,6 +46,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALLWINNERSOC_H3
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALLWINNERSOC_A31
 value|0x31000000
 end_define

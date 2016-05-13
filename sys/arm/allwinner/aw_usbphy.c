@@ -139,6 +139,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-h3-usb-phy"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

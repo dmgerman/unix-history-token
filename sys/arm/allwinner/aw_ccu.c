@@ -236,6 +236,12 @@ name|CLOCK_SYSCTRL
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-h3"
+block|,
+name|CLOCK_CCU
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
