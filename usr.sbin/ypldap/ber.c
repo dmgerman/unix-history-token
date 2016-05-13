@@ -3714,6 +3714,10 @@ literal|')'
 case|:
 if|if
 condition|(
+name|level
+operator|<
+literal|0
+operator|||
 name|parent
 index|[
 name|level
