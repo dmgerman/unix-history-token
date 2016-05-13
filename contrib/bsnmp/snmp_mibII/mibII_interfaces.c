@@ -1574,7 +1574,7 @@ break|break;
 block|}
 return|return
 operator|(
-name|SNMP_ERR_NOERROR
+name|ret
 operator|)
 return|;
 block|}
