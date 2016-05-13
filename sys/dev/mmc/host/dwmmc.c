@@ -3444,6 +3444,19 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|desc_tag
+argument_list|,
+name|sc
+operator|->
+name|desc_map
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -3654,6 +3667,20 @@ condition|)
 name|panic
 argument_list|(
 literal|"dmamap_load failed\n"
+argument_list|)
+expr_stmt|;
+comment|/* Ensure the device can see the desc */
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|desc_tag
+argument_list|,
+name|sc
+operator|->
+name|desc_map
+argument_list|,
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 if|if
