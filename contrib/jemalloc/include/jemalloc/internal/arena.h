@@ -3016,6 +3016,32 @@ name|size_t
 name|pageind
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* Work around gcc bug. */
+name|arena_chunk_t
+modifier|*
+name|mchunk
+init|=
+operator|(
+name|arena_chunk_t
+operator|*
+operator|)
+name|chunk
+decl_stmt|;
+return|return
+operator|(
+name|arena_miscelm_get_mutable
+argument_list|(
+name|mchunk
+argument_list|,
+name|pageind
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|arena_miscelm_get_mutable
@@ -3030,6 +3056,8 @@ name|pageind
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3329,6 +3357,32 @@ name|size_t
 name|pageind
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* Work around gcc bug. */
+name|arena_chunk_t
+modifier|*
+name|mchunk
+init|=
+operator|(
+name|arena_chunk_t
+operator|*
+operator|)
+name|chunk
+decl_stmt|;
+return|return
+operator|(
+name|arena_mapbitsp_get_mutable
+argument_list|(
+name|mchunk
+argument_list|,
+name|pageind
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|arena_mapbitsp_get_mutable
@@ -3343,6 +3397,8 @@ name|pageind
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
