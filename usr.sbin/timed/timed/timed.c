@@ -942,7 +942,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* choose a unique seed for random number generation */
+name|sequence
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
+comment|/* initial seq number */
 operator|(
 name|void
 operator|)
@@ -954,23 +959,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|srandom
-argument_list|(
-name|ntime
-operator|.
-name|tv_sec
-operator|+
-name|ntime
-operator|.
-name|tv_usec
-argument_list|)
-expr_stmt|;
-name|sequence
-operator|=
-name|random
-argument_list|()
-expr_stmt|;
-comment|/* initial seq number */
 comment|/* rounds kernel variable time to multiple of 5 ms. */
 name|ntime
 operator|.
