@@ -2342,6 +2342,7 @@ name|struct
 name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -2618,6 +2619,7 @@ name|struct
 name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -2894,6 +2896,7 @@ name|struct
 name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -3096,6 +3099,7 @@ name|struct
 name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
+name|__unused
 parameter_list|,
 name|char
 modifier|*
