@@ -622,7 +622,7 @@ name|ff
 operator||=
 name|RFSIGSHARE
 expr_stmt|;
-comment|/* 	 * XXX: In Linux, sharing of fs info (chroot/cwd/umask) 	 * and open files is independant.  In FreeBSD, its in one 	 * structure but in reality it does not cause any problems 	 * because both of these flags are usually set together. 	 */
+comment|/* 	 * XXX: In Linux, sharing of fs info (chroot/cwd/umask) 	 * and open files is independent.  In FreeBSD, its in one 	 * structure but in reality it does not cause any problems 	 * because both of these flags are usually set together. 	 */
 if|if
 condition|(
 operator|!

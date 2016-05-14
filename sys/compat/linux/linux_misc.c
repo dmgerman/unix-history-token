@@ -834,7 +834,7 @@ name|args
 operator|->
 name|secs
 expr_stmt|;
-comment|/* 	 * Linux alarm() is always successfull. Limit secs to INT32_MAX / 2 	 * to match kern_setitimer()'s limit to avoid error from it. 	 * 	 * XXX. Linux limit secs to INT_MAX on 32 and does not limit on 64-bit 	 * platforms. 	 */
+comment|/* 	 * Linux alarm() is always successful. Limit secs to INT32_MAX / 2 	 * to match kern_setitimer()'s limit to avoid error from it. 	 * 	 * XXX. Linux limit secs to INT_MAX on 32 and does not limit on 64-bit 	 * platforms. 	 */
 if|if
 condition|(
 name|secs
