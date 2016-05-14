@@ -5838,9 +5838,13 @@ comment|/* WME/WMM supported */
 operator||
 name|IEEE80211_C_WPA
 comment|/* capable of WPA1+WPA2 */
-operator||
-name|IEEE80211_C_BGSCAN
+if|#
+directive|if
+literal|0
+expr|| IEEE80211_C_BGSCAN
 comment|/* capable of bg scanning */
+endif|#
+directive|endif
 operator||
 name|IEEE80211_C_TXPMGT
 comment|/* capable of txpow mgt */
