@@ -252,6 +252,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bwn/if_bwn_util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/bwn/if_bwn_phy_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bwn/if_bwn_phy_g.h>
 end_include
 
@@ -8740,15 +8752,13 @@ name|bwn_reset_core
 argument_list|(
 name|mac
 argument_list|,
+operator|!
+operator|!
 operator|(
 name|high
 operator|&
 name|BWN_TGSHIGH_HAVE_2GHZ
 operator|)
-condition|?
-name|BWN_TGSLOW_SUPPORT_G
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -9298,10 +9308,6 @@ argument_list|(
 name|mac
 argument_list|,
 name|have_bg
-condition|?
-name|BWN_TGSLOW_SUPPORT_G
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -9425,6 +9431,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reset - SIBA.  *  * XXX TODO: implement BCMA version!  */
+end_comment
+
 begin_function
 name|void
 name|bwn_reset_core
@@ -9434,8 +9444,8 @@ name|bwn_mac
 modifier|*
 name|mac
 parameter_list|,
-name|uint32_t
-name|flags
+name|int
+name|g_mode
 parameter_list|)
 block|{
 name|struct
@@ -9452,6 +9462,24 @@ name|low
 decl_stmt|,
 name|ctl
 decl_stmt|;
+name|uint32_t
+name|flags
+init|=
+literal|0
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: g_mode=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|g_mode
+argument_list|)
+expr_stmt|;
 name|flags
 operator||=
 operator|(
@@ -9459,6 +9487,29 @@ name|BWN_TGSLOW_PHYCLOCK_ENABLE
 operator||
 name|BWN_TGSLOW_PHYRESET
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|g_mode
+condition|)
+name|flags
+operator||=
+name|BWN_TGSLOW_SUPPORT_G
+expr_stmt|;
+comment|/* XXX N-PHY only; and hard-code to 20MHz for now */
+if|if
+condition|(
+name|mac
+operator|->
+name|mac_phy
+operator|.
+name|type
+operator|==
+name|BWN_PHYTYPE_N
+condition|)
+name|flags
+operator||=
+name|BWN_TGSLOW_PHY_BANDWIDTH_20MHZ
 expr_stmt|;
 name|siba_dev_up
 argument_list|(
@@ -9474,6 +9525,7 @@ argument_list|(
 literal|2000
 argument_list|)
 expr_stmt|;
+comment|/* Take PHY out of reset */
 name|low
 operator|=
 operator|(
@@ -9580,9 +9632,7 @@ name|BWN_MACCTL_GMODE
 expr_stmt|;
 if|if
 condition|(
-name|flags
-operator|&
-name|BWN_TGSLOW_SUPPORT_G
+name|g_mode
 condition|)
 name|ctl
 operator||=
@@ -9652,15 +9702,13 @@ name|phy
 operator|->
 name|gmode
 operator|=
+operator|!
+operator|!
 operator|(
 name|tgshigh
 operator|&
 name|BWN_TGSHIGH_HAVE_2GHZ
 operator|)
-condition|?
-literal|1
-else|:
-literal|0
 expr_stmt|;
 name|phy
 operator|->
@@ -13194,10 +13242,6 @@ operator|->
 name|mac_phy
 operator|.
 name|gmode
-condition|?
-name|BWN_TGSLOW_SUPPORT_G
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|mac
@@ -14516,26 +14560,15 @@ argument_list|,
 literal|0x0000dc00
 argument_list|)
 expr_stmt|;
-name|siba_write_4
+name|bwn_mac_phy_clock_set
 argument_list|(
-name|sc
-operator|->
-name|sc_dev
+name|mac
 argument_list|,
-name|SIBA_TGSLOW
-argument_list|,
-name|siba_read_4
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-name|SIBA_TGSLOW
-argument_list|)
-operator||
-literal|0x00100000
+name|true
 argument_list|)
 expr_stmt|;
+comment|/* SIBA powerup */
+comment|/* XXX TODO: BCMA powerup */
 name|BWN_WRITE_2
 argument_list|(
 name|mac
@@ -27064,6 +27097,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * SSB PHY reset.  *  * XXX TODO: BCMA PHY reset.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -27139,8 +27176,6 @@ operator|&
 operator|~
 name|SIBA_TGSLOW_FGC
 operator|)
-operator||
-name|BWN_TGSLOW_PHYRESET
 argument_list|)
 expr_stmt|;
 name|DELAY

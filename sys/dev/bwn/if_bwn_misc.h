@@ -192,6 +192,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* This is only for SIBA core */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -201,7 +205,8 @@ name|struct
 name|bwn_mac
 modifier|*
 parameter_list|,
-name|uint32_t
+name|int
+name|g_mode
 parameter_list|)
 function_decl|;
 end_function_decl

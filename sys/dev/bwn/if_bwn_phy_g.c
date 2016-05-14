@@ -2707,7 +2707,7 @@ name|bwn_reset_core
 argument_list|(
 name|mac
 argument_list|,
-name|BWN_TGSLOW_SUPPORT_G
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
