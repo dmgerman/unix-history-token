@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.93 2016/03/31 17:51:12 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.96 2016/04/20 00:00:26 christos Exp $"
 argument_list|)
 end_macro
 
@@ -982,6 +982,10 @@ modifier|*
 name|pb
 decl_stmt|;
 name|int
+name|urv
+decl_stmt|,
+name|prv
+decl_stmt|,
 name|rv
 init|=
 literal|0
@@ -1145,7 +1149,7 @@ name|nsz
 operator|=
 name|nbytes
 expr_stmt|;
-name|rv
+name|urv
 operator|=
 name|uncompressbuf
 argument_list|(
@@ -1170,7 +1174,7 @@ name|DPRINTF
 argument_list|(
 literal|"uncompressbuf = %d, %s, %zu\n"
 argument_list|,
-name|rv
+name|urv
 argument_list|,
 operator|(
 name|char
@@ -1183,7 +1187,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|rv
+name|urv
 condition|)
 block|{
 case|case
@@ -1201,11 +1205,11 @@ name|MAGIC_COMPRESS
 expr_stmt|;
 if|if
 condition|(
-name|rv
+name|urv
 operator|==
 name|ERRDATA
 condition|)
-name|rv
+name|prv
 operator|=
 name|file_printf
 argument_list|(
@@ -1222,7 +1226,7 @@ name|newbuf
 argument_list|)
 expr_stmt|;
 else|else
-name|rv
+name|prv
 operator|=
 name|file_buffer
 argument_list|(
@@ -1240,7 +1244,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rv
+name|prv
 operator|==
 operator|-
 literal|1
@@ -1248,12 +1252,9 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|DPRINTF
-argument_list|(
-literal|"rv = %d\n"
-argument_list|,
 name|rv
-argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1320,6 +1321,7 @@ condition|)
 goto|goto
 name|error
 goto|;
+comment|/* 			 * XXX: If file_buffer fails here, we overwrite 			 * the compressed text. FIXME. 			 */
 if|if
 condition|(
 name|file_buffer
@@ -1406,29 +1408,35 @@ condition|)
 goto|goto
 name|error
 goto|;
-goto|goto
-name|out
-goto|;
+comment|/*FALLTHROUGH*/
 case|case
 name|NODATA
 case|:
-goto|goto
-name|out
-goto|;
+break|break;
 default|default:
 name|abort
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
+name|error
+label|:
+name|rv
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|out
 label|:
+name|DPRINTF
+argument_list|(
+literal|"rv = %d\n"
+argument_list|,
 name|rv
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
-name|error
-label|:
 ifdef|#
 directive|ifdef
 name|HAVE_SIGNAL_H

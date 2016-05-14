@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_VERSION
-value|525
+value|526
 end_define
 
 begin_comment

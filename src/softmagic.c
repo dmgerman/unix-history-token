@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.230 2016/04/18 15:10:34 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.231 2016/04/21 15:23:31 christos Exp $"
 argument_list|)
 end_macro
 
