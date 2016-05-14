@@ -267,15 +267,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|input
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|inputs
 operator|=
 name|LIST_HEAD_INITIALIZER
@@ -286,6 +284,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|input
 modifier|*
@@ -296,6 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|pbchar
 init|=
@@ -1043,6 +1043,7 @@ struct|;
 end_struct
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 comment|/* Current OID type, regarding table membership. */
@@ -1062,6 +1063,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|asn_oid
 name|current_oid
@@ -1069,6 +1071,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|nexttok
 index|[
@@ -1078,6 +1081,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|val
 decl_stmt|;
@@ -1088,6 +1092,7 @@ comment|/* integer values */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|all_cond
 decl_stmt|;
@@ -1098,6 +1103,7 @@ comment|/* all conditions are true */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|saved_token
 init|=
