@@ -1325,12 +1325,6 @@ name|EFX_MON_INVALID
 init|=
 literal|0
 block|,
-name|EFX_MON_NULL
-block|,
-name|EFX_MON_LM87
-block|,
-name|EFX_MON_MAX6647
-block|,
 name|EFX_MON_SFC90X0
 block|,
 name|EFX_MON_SFC91X0

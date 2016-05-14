@@ -63,12 +63,6 @@ init|=
 block|{
 literal|""
 block|,
-literal|"nullmon"
-block|,
-literal|"lm87"
-block|,
-literal|"max6647"
-block|,
 literal|"sfx90x0"
 block|,
 literal|"sfx91x0"
