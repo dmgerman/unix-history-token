@@ -544,6 +544,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 struct|struct
 name|snmp_text_conv
 block|{
@@ -847,10 +848,6 @@ decl_stmt|;
 if|if
 condition|(
 name|tc
-operator|<
-literal|0
-operator|||
-name|tc
 operator|>
 name|SNMP_UNKNOWN
 condition|)
@@ -988,10 +985,6 @@ block|{
 if|if
 condition|(
 name|tc
-operator|<
-literal|0
-operator|||
-name|tc
 operator|>
 name|SNMP_UNKNOWN
 condition|)
@@ -1037,10 +1030,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|tc
-operator|<
-literal|0
-operator|||
 name|tc
 operator|>
 name|SNMP_UNKNOWN
@@ -4821,9 +4810,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|ptr
-decl_stmt|,
-modifier|*
 name|endptr
 decl_stmt|;
 name|int32_t
@@ -4840,10 +4826,6 @@ index|[
 name|SNMP_BRIDGEID_OCTETS
 index|]
 decl_stmt|;
-name|ptr
-operator|=
-name|string
-expr_stmt|;
 comment|/* Read the priority. */
 name|saved_errno
 operator|=
@@ -5436,9 +5418,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|ptr
-decl_stmt|,
-modifier|*
 name|endptr
 decl_stmt|;
 name|int
@@ -5453,10 +5432,6 @@ index|[
 name|SNMP_BPORT_OCTETS
 index|]
 decl_stmt|;
-name|ptr
-operator|=
-name|string
-expr_stmt|;
 comment|/* Read the priority. */
 name|saved_errno
 operator|=
@@ -5825,11 +5800,13 @@ parameter_list|(
 name|char
 modifier|*
 name|str
+name|__unused
 parameter_list|,
 name|struct
 name|asn_oid
 modifier|*
 name|oid
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -5849,10 +5826,12 @@ name|struct
 name|snmp_value
 modifier|*
 name|value
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|string
+name|__unused
 parameter_list|)
 block|{
 return|return
