@@ -1638,34 +1638,6 @@ name|enp
 parameter_list|)
 function_decl|;
 comment|/* PHY */
-define|#
-directive|define
-name|PMA_PMD_MMD
-value|1
-define|#
-directive|define
-name|PCS_MMD
-value|3
-define|#
-directive|define
-name|PHY_XS_MMD
-value|4
-define|#
-directive|define
-name|DTE_XS_MMD
-value|5
-define|#
-directive|define
-name|AN_MMD
-value|7
-define|#
-directive|define
-name|CL22EXT_MMD
-value|29
-define|#
-directive|define
-name|MAXMMD
-value|((1<< 5) - 1)
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
