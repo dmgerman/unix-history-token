@@ -1057,11 +1057,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|free
+name|OF_prop_free
 argument_list|(
 name|name
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 block|}
