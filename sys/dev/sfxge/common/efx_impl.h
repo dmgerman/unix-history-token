@@ -1532,16 +1532,6 @@ typedef|typedef
 struct|struct
 name|efx_mon_ops_s
 block|{
-name|efx_rc_t
-function_decl|(
-modifier|*
-name|emo_reconfigure
-function_decl|)
-parameter_list|(
-name|efx_nic_t
-modifier|*
-parameter_list|)
-function_decl|;
 if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
