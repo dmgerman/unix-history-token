@@ -2156,10 +2156,11 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|size_t
+name|count
+decl_stmt|;
 name|int32_t
 name|alen
-decl_stmt|,
-name|count
 decl_stmt|,
 name|i
 decl_stmt|,
