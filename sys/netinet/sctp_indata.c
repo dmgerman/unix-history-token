@@ -2679,7 +2679,7 @@ literal|1
 argument_list|,
 name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
-name|SCTP_SO_NOT_LOCKED
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -2847,7 +2847,7 @@ literal|1
 argument_list|,
 name|SCTP_READ_LOCK_NOT_HELD
 argument_list|,
-name|SCTP_SO_NOT_LOCKED
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 continue|continue;
