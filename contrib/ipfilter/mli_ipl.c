@@ -349,8 +349,6 @@ specifier|static
 name|int
 modifier|*
 name|ipff_addr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -366,8 +364,6 @@ specifier|static
 name|__psunsigned_t
 modifier|*
 name|ipfk_addr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -489,8 +485,6 @@ specifier|static
 name|nif_t
 modifier|*
 name|nif_head
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
