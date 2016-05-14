@@ -4067,6 +4067,17 @@ name|BROADCOM
 argument_list|,
 literal|80211
 argument_list|,
+literal|12
+argument_list|,
+literal|"Revision 12"
+argument_list|)
+block|,
+name|SIBA_DEV
+argument_list|(
+name|BROADCOM
+argument_list|,
+literal|80211
+argument_list|,
 literal|13
 argument_list|,
 literal|"Revision 13"
