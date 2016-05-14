@@ -2011,138 +2011,132 @@ directive|if
 name|EFSYS_OPT_FILTER
 typedef|typedef
 struct|struct
-name|falconsiena_filter_spec_s
+name|siena_filter_spec_s
 block|{
 name|uint8_t
-name|fsfs_type
+name|sfs_type
 decl_stmt|;
 name|uint32_t
-name|fsfs_flags
+name|sfs_flags
 decl_stmt|;
 name|uint32_t
-name|fsfs_dmaq_id
+name|sfs_dmaq_id
 decl_stmt|;
 name|uint32_t
-name|fsfs_dword
+name|sfs_dword
 index|[
 literal|3
 index|]
 decl_stmt|;
 block|}
-name|falconsiena_filter_spec_t
+name|siena_filter_spec_t
 typedef|;
 typedef|typedef
 enum|enum
-name|falconsiena_filter_type_e
+name|siena_filter_type_e
 block|{
-name|EFX_FS_FILTER_RX_TCP_FULL
-block|,
-comment|/* TCP/IPv4 4-tuple {dIP,dTCP,sIP,sTCP} */
-name|EFX_FS_FILTER_RX_TCP_WILD
-block|,
-comment|/* TCP/IPv4 dest    {dIP,dTCP,  -,   -} */
-name|EFX_FS_FILTER_RX_UDP_FULL
-block|,
-comment|/* UDP/IPv4 4-tuple {dIP,dUDP,sIP,sUDP} */
-name|EFX_FS_FILTER_RX_UDP_WILD
-block|,
-comment|/* UDP/IPv4 dest    {dIP,dUDP,  -,   -} */
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
-name|EFX_FS_FILTER_RX_MAC_FULL
-block|,
-comment|/* Ethernet {dMAC,VLAN} */
-name|EFX_FS_FILTER_RX_MAC_WILD
-block|,
-comment|/* Ethernet {dMAC,   -} */
-name|EFX_FS_FILTER_TX_TCP_FULL
+name|EFX_SIENA_FILTER_RX_TCP_FULL
 block|,
 comment|/* TCP/IPv4 {dIP,dTCP,sIP,sTCP} */
-name|EFX_FS_FILTER_TX_TCP_WILD
+name|EFX_SIENA_FILTER_RX_TCP_WILD
+block|,
+comment|/* TCP/IPv4 {dIP,dTCP,  -,   -} */
+name|EFX_SIENA_FILTER_RX_UDP_FULL
+block|,
+comment|/* UDP/IPv4 {dIP,dUDP,sIP,sUDP} */
+name|EFX_SIENA_FILTER_RX_UDP_WILD
+block|,
+comment|/* UDP/IPv4 {dIP,dUDP,  -,   -} */
+name|EFX_SIENA_FILTER_RX_MAC_FULL
+block|,
+comment|/* Ethernet {dMAC,VLAN} */
+name|EFX_SIENA_FILTER_RX_MAC_WILD
+block|,
+comment|/* Ethernet {dMAC,   -} */
+name|EFX_SIENA_FILTER_TX_TCP_FULL
+block|,
+comment|/* TCP/IPv4 {dIP,dTCP,sIP,sTCP} */
+name|EFX_SIENA_FILTER_TX_TCP_WILD
 block|,
 comment|/* TCP/IPv4 {  -,   -,sIP,sTCP} */
-name|EFX_FS_FILTER_TX_UDP_FULL
+name|EFX_SIENA_FILTER_TX_UDP_FULL
 block|,
 comment|/* UDP/IPv4 {dIP,dTCP,sIP,sTCP} */
-name|EFX_FS_FILTER_TX_UDP_WILD
+name|EFX_SIENA_FILTER_TX_UDP_WILD
 block|,
-comment|/* UDP/IPv4 source (host, port) */
-name|EFX_FS_FILTER_TX_MAC_FULL
+comment|/* UDP/IPv4 {  -,   -,sIP,sUDP} */
+name|EFX_SIENA_FILTER_TX_MAC_FULL
 block|,
-comment|/* Ethernet source (MAC address, VLAN ID) */
-name|EFX_FS_FILTER_TX_MAC_WILD
+comment|/* Ethernet {sMAC,VLAN} */
+name|EFX_SIENA_FILTER_TX_MAC_WILD
 block|,
-comment|/* Ethernet source (MAC address) */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
-name|EFX_FS_FILTER_NTYPES
+comment|/* Ethernet {sMAC,   -} */
+name|EFX_SIENA_FILTER_NTYPES
 block|}
-name|falconsiena_filter_type_t
+name|siena_filter_type_t
 typedef|;
 typedef|typedef
 enum|enum
-name|falconsiena_filter_tbl_id_e
+name|siena_filter_tbl_id_e
 block|{
-name|EFX_FS_FILTER_TBL_RX_IP
+name|EFX_SIENA_FILTER_TBL_RX_IP
 init|=
 literal|0
 block|,
-name|EFX_FS_FILTER_TBL_RX_MAC
+name|EFX_SIENA_FILTER_TBL_RX_MAC
 block|,
-name|EFX_FS_FILTER_TBL_TX_IP
+name|EFX_SIENA_FILTER_TBL_TX_IP
 block|,
-name|EFX_FS_FILTER_TBL_TX_MAC
+name|EFX_SIENA_FILTER_TBL_TX_MAC
 block|,
-name|EFX_FS_FILTER_NTBLS
+name|EFX_SIENA_FILTER_NTBLS
 block|}
-name|falconsiena_filter_tbl_id_t
+name|siena_filter_tbl_id_t
 typedef|;
 typedef|typedef
 struct|struct
-name|falconsiena_filter_tbl_s
+name|siena_filter_tbl_s
 block|{
 name|int
-name|fsft_size
+name|sft_size
 decl_stmt|;
 comment|/* number of entries */
 name|int
-name|fsft_used
+name|sft_used
 decl_stmt|;
 comment|/* active count */
 name|uint32_t
 modifier|*
-name|fsft_bitmap
+name|sft_bitmap
 decl_stmt|;
 comment|/* active bitmap */
-name|falconsiena_filter_spec_t
+name|siena_filter_spec_t
 modifier|*
-name|fsft_spec
+name|sft_spec
 decl_stmt|;
 comment|/* array of saved specs */
 block|}
-name|falconsiena_filter_tbl_t
+name|siena_filter_tbl_t
 typedef|;
 typedef|typedef
 struct|struct
-name|falconsiena_filter_s
+name|siena_filter_s
 block|{
-name|falconsiena_filter_tbl_t
-name|fsf_tbl
+name|siena_filter_tbl_t
+name|sf_tbl
 index|[
-name|EFX_FS_FILTER_NTBLS
+name|EFX_SIENA_FILTER_NTBLS
 index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|fsf_depth
+name|sf_depth
 index|[
-name|EFX_FS_FILTER_NTYPES
+name|EFX_SIENA_FILTER_NTYPES
 index|]
 decl_stmt|;
 block|}
-name|falconsiena_filter_t
+name|siena_filter_t
 typedef|;
 typedef|typedef
 struct|struct
@@ -2151,9 +2145,9 @@ block|{
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
-name|falconsiena_filter_t
+name|siena_filter_t
 modifier|*
-name|ef_falconsiena_filter
+name|ef_siena_filter
 decl_stmt|;
 endif|#
 directive|endif
@@ -2183,7 +2177,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|falconsiena_filter_tbl_id_t
+name|siena_filter_tbl_id_t
 name|tbl
 parameter_list|)
 function_decl|;
