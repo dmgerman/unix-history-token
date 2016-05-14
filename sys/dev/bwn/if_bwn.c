@@ -34352,7 +34352,7 @@ name|unsigned
 name|long
 name|now
 decl_stmt|;
-name|int
+name|bwn_txpwr_result_t
 name|result
 decl_stmt|;
 name|BWN_GETTIME
