@@ -215,6 +215,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-a83t-i2c"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
