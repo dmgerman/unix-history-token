@@ -41,7 +41,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: magic.c,v 1.97 2016/03/31 17:51:12 christos Exp $"
+literal|"@(#)$File: magic.c,v 1.99 2016/05/03 16:09:38 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2445,6 +2445,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
 name|pos
 operator|!=
 operator|(
@@ -2477,6 +2485,7 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+block|}
 name|out
 label|:
 return|return

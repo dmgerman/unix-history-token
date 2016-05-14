@@ -28,7 +28,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: der.c,v 1.4 2016/03/21 23:04:40 christos Exp $"
+literal|"@(#)$File: der.c,v 1.6 2016/04/21 14:26:03 christos Exp $"
 argument_list|)
 end_macro
 
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -114,6 +108,17 @@ directive|include
 file|"der.h"
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -154,6 +159,12 @@ name|DER_CLASS_PRIVATE
 value|3
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_DER
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -164,6 +175,11 @@ init|=
 literal|"UACP"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -179,6 +195,12 @@ name|DER_TYPE_CONSTRUCTED
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_DER
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -189,6 +211,11 @@ init|=
 literal|"PC"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

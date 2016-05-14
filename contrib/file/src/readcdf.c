@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readcdf.c,v 1.56 2016/03/03 22:20:03 christos Exp $"
+literal|"@(#)$File: readcdf.c,v 1.57 2016/05/03 16:08:49 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2039,7 +2039,6 @@ argument_list|(
 operator|&
 name|h
 argument_list|,
-operator|&
 name|scn
 argument_list|)
 expr_stmt|;
