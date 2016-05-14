@@ -676,10 +676,6 @@ name|EFSYS_OPT_PHY_STATS
 value|1
 define|#
 directive|define
-name|EFSYS_OPT_PHY_PROPS
-value|0
-define|#
-directive|define
 name|EFSYS_OPT_BIST
 value|1
 define|#

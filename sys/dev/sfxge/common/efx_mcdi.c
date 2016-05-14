@@ -5801,18 +5801,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_PHY_LED_CONTROL */
-if|#
-directive|if
-name|EFSYS_OPT_PHY_PROPS
-name|encp
-operator|->
-name|enc_phy_nprops
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PHY_PROPS */
 comment|/* Get the media type of the fixed port, if recognised. */
 name|EFX_STATIC_ASSERT
 argument_list|(
