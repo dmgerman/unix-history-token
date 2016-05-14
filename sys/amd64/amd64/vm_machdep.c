@@ -940,6 +940,16 @@ name|PSL_KERNEL
 operator||
 name|PSL_I
 expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_invl_gen
+operator|.
+name|gen
+operator|=
+literal|0
+expr_stmt|;
 comment|/* As an i386, do not copy io permission bitmap. */
 name|pcb2
 operator|->

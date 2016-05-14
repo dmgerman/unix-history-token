@@ -18,8 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/segments.h>
 end_include
+
+begin_comment
+comment|/*  * List of locks  *	k - only accessed by curthread  *	pp - pmap.c:invl_gen_mtx  */
+end_comment
 
 begin_struct
 struct|struct
@@ -31,6 +41,25 @@ decl_stmt|;
 name|int
 name|ldt_refcnt
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pmap_invl_gen
+block|{
+name|u_long
+name|gen
+decl_stmt|;
+comment|/* (k) */
+name|LIST_ENTRY
+argument_list|(
+argument|pmap_invl_gen
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* (pp) */
 block|}
 struct|;
 end_struct
@@ -55,6 +84,10 @@ name|register_t
 name|md_spurflt_addr
 decl_stmt|;
 comment|/* (k) Spurious page fault address. */
+name|struct
+name|pmap_invl_gen
+name|md_invl_gen
+decl_stmt|;
 block|}
 struct|;
 end_struct
