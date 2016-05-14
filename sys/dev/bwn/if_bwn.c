@@ -40809,6 +40809,14 @@ operator|.
 name|type
 operator|==
 name|BWN_PHYTYPE_LP
+operator|||
+name|mac
+operator|->
+name|mac_phy
+operator|.
+name|type
+operator|==
+name|BWN_PHYTYPE_N
 condition|)
 block|{
 if|if
@@ -40859,6 +40867,21 @@ condition|)
 name|prev
 operator|=
 literal|1
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called; cur=%d, prev=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|cur
+argument_list|,
+name|prev
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
