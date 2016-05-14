@@ -3757,7 +3757,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|bwn_txpwr_result_t
 name|bwn_phy_g_recalc_txpwr
 parameter_list|(
 name|struct
