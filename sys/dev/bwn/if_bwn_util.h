@@ -118,6 +118,47 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Q52 format - used in PHY routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT_TO_Q52
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q52_TO_INT
+parameter_list|(
+name|q52
+parameter_list|)
+value|((q52)>> 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q52_FMT
+value|"%u.%u"
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q52_ARG
+parameter_list|(
+name|q52
+parameter_list|)
+value|Q52_TO_INT(q52), ((((q52)& 0x3) * 100) / 4)
+end_define
+
 begin_function_decl
 specifier|extern
 name|unsigned
