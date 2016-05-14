@@ -37143,6 +37143,7 @@ name|uint16_t
 name|time
 parameter_list|)
 block|{
+comment|/* XXX should exit if 5GHz band .. */
 if|if
 condition|(
 name|mac
@@ -37165,17 +37166,13 @@ operator|+
 name|time
 argument_list|)
 expr_stmt|;
-name|bwn_shm_write_2
-argument_list|(
-name|mac
-argument_list|,
-name|BWN_SHARED
-argument_list|,
-literal|0x0010
-argument_list|,
-name|time
-argument_list|)
-expr_stmt|;
+comment|/* Disabled in Linux b43, can adversely effect performance */
+if|#
+directive|if
+literal|0
+block|bwn_shm_write_2(mac, BWN_SHARED, 0x0010, time);
+endif|#
+directive|endif
 block|}
 end_function
 
