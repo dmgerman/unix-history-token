@@ -4978,6 +4978,8 @@ name|char
 name|string
 index|[
 name|MAXSTR
+operator|+
+literal|1
 index|]
 decl_stmt|,
 modifier|*
@@ -5107,13 +5109,6 @@ name|i
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-name|string
-index|[
-name|i
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
