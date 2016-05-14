@@ -2155,6 +2155,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|rc
 operator|<
 name|resp
