@@ -3313,11 +3313,6 @@ name|EFX_EVQ_MAGIC
 value|0x08081997
 define|#
 directive|define
-name|EFX_EVQ_FALCON_TIMER_QUANTUM_NS
-value|4968
-comment|/* 621 cycles */
-define|#
-directive|define
 name|EFX_EVQ_SIENA_TIMER_QUANTUM_NS
 value|6144
 comment|/* 768 cycles */
