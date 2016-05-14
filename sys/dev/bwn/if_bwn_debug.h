@@ -109,6 +109,18 @@ init|=
 literal|0x00010000
 block|,
 comment|/* RF */
+name|BWN_DEBUG_XMIT_POWER
+init|=
+literal|0x00020000
+block|,
+name|BWN_DEBUG_PHY
+init|=
+literal|0x00040000
+block|,
+name|BWN_DEBUG_EEPROM
+init|=
+literal|0x00080000
+block|,
 name|BWN_DEBUG_FATAL
 init|=
 literal|0x80000000
@@ -176,6 +188,42 @@ end_endif
 begin_comment
 comment|/* BWN_DEBUG */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_ERRPRINTF
+parameter_list|(
+name|sc
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 		printf(__VA_ARGS__);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_DBGPRINTF
+parameter_list|(
+name|sc
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 		printf(__VA_ARGS__);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_WARNPRINTF
+parameter_list|(
+name|sc
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 		printf(__VA_ARGS__);		\ } while (0)
+end_define
 
 begin_endif
 endif|#
