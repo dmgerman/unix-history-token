@@ -1071,7 +1071,7 @@ if|if
 condition|(
 name|srvp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx
@@ -1150,7 +1150,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx
@@ -1571,7 +1571,7 @@ if|if
 condition|(
 name|srvp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx
@@ -1846,7 +1846,7 @@ if|if
 condition|(
 name|srvp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx

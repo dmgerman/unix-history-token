@@ -134,7 +134,7 @@ name|FILE
 modifier|*
 name|fd
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -449,7 +449,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 name|c
@@ -486,7 +486,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -610,7 +610,7 @@ literal|0
 expr_stmt|;
 name|found
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -846,7 +846,7 @@ operator|*
 name|argp
 operator|++
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function

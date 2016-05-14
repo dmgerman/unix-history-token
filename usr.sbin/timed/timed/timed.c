@@ -236,7 +236,7 @@ name|netinfo
 modifier|*
 name|nettab
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ block|}
 modifier|*
 name|nets
 init|=
-literal|0
+name|NULL
 struct|;
 end_struct
 
@@ -666,7 +666,7 @@ if|if
 condition|(
 name|goodgroup
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -699,13 +699,13 @@ expr_stmt|;
 comment|/* If we care about which machine is the master, then we must 	 *	be willing to be a master 	 */
 if|if
 condition|(
-literal|0
-operator|!=
 name|goodgroup
-operator|||
-literal|0
 operator|!=
+name|NULL
+operator|||
 name|goodhosts
+operator|!=
+name|NULL
 condition|)
 name|Mflag
 operator|=
@@ -778,7 +778,7 @@ if|if
 condition|(
 name|goodhosts
 operator|!=
-literal|0
+name|NULL
 condition|)
 comment|/* trust ourself */
 name|add_good_host
@@ -801,7 +801,7 @@ if|if
 condition|(
 name|srvp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -1041,7 +1041,7 @@ if|if
 condition|(
 name|nentp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|nt
@@ -1079,7 +1079,7 @@ if|if
 condition|(
 name|nentp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|nt
@@ -1827,7 +1827,7 @@ if|if
 condition|(
 name|slavenet
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|slavenet
 operator|->
@@ -2306,7 +2306,7 @@ if|if
 condition|(
 name|answer
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|!
 name|good_host_name
@@ -2337,14 +2337,14 @@ name|NOMASTER
 expr_stmt|;
 name|answer
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|answer
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Various conditions can cause conflict: races between 		 * two just started timedaemons when no master is 		 * present, or timedaemons started during an election. 		 * A conservative approach is taken.  Give up and became a 		 * slave, postponing election of a master until first 		 * timer expires. 		 */
@@ -2376,7 +2376,7 @@ if|if
 condition|(
 name|answer
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2439,7 +2439,7 @@ if|if
 condition|(
 name|answer
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2502,7 +2502,7 @@ if|if
 condition|(
 name|answer
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3060,7 +3060,7 @@ if|if
 condition|(
 name|slavenet
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|slavenet
 operator|->
@@ -3081,7 +3081,7 @@ if|if
 condition|(
 name|ntp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|ntp
 operator|->
@@ -3098,7 +3098,7 @@ name|nettab
 init|;
 name|ntp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ntp
 operator|=
@@ -3267,7 +3267,7 @@ condition|(
 operator|*
 name|netlist
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -3432,9 +3432,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|hentp
+operator|==
+name|NULL
 operator|&&
 name|perm
 condition|)
@@ -3516,7 +3516,7 @@ if|if
 condition|(
 name|goodgroup
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 name|Mflag
@@ -3555,14 +3555,14 @@ name|goodhosts
 expr_stmt|;
 while|while
 condition|(
-literal|0
-operator|!=
 operator|(
 name|ghp
 operator|=
 operator|*
 name|ghpp
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3582,10 +3582,6 @@ name|next
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ghp
 argument_list|)
 expr_stmt|;
@@ -3696,9 +3692,9 @@ condition|)
 block|{
 if|if
 condition|(
-literal|0
-operator|!=
 name|mach
+operator|!=
+name|NULL
 condition|)
 name|add_good_host
 argument_list|(
@@ -3830,8 +3826,6 @@ comment|/* found him, so say so */
 block|}
 do|while
 condition|(
-literal|0
-operator|!=
 operator|(
 name|ghp
 operator|=
@@ -3839,6 +3833,8 @@ name|ghp
 operator|->
 name|next
 operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 if|if

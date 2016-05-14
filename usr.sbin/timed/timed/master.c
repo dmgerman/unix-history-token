@@ -778,7 +778,7 @@ if|if
 condition|(
 name|htp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|syslog
@@ -2145,7 +2145,7 @@ if|if
 condition|(
 name|answer
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* We client does not respond, then we have 			 * just wasted lots of time on it. 			 */
@@ -2586,7 +2586,7 @@ if|if
 condition|(
 name|ret
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3165,13 +3165,13 @@ name|lasthfree
 operator|->
 name|h_fwd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|lasthfree
 operator|->
 name|l_fwd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|slvcount
 operator|--
@@ -3783,7 +3783,7 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 ifdef|#

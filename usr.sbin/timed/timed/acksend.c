@@ -276,7 +276,7 @@ expr_stmt|;
 comment|/* 5 packets in 6.4 seconds */
 name|answer
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 do|do
 block|{
@@ -360,7 +360,7 @@ if|if
 condition|(
 name|answer
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

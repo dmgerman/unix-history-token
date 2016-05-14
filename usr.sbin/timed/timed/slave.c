@@ -260,7 +260,7 @@ name|utx
 decl_stmt|;
 name|old_slavenet
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|seq
 operator|=
@@ -1586,9 +1586,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|htp
+operator|==
+name|NULL
 condition|)
 block|{
 name|syslog
@@ -2488,7 +2488,7 @@ name|nettab
 init|;
 name|ntp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ntp
 operator|=

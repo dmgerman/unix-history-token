@@ -265,7 +265,7 @@ name|head
 operator|->
 name|p
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|length
@@ -282,7 +282,7 @@ name|p
 init|;
 name|ptr
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ptr
 operator|=
