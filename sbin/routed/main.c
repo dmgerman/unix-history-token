@@ -3261,7 +3261,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|rip_mcast_on
 argument_list|(
@@ -3341,7 +3341,7 @@ argument_list|)
 expr_stmt|;
 name|rip_sock_mcast
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* Do not advertise anything until we have heard something 		 */
 if|if
@@ -3401,7 +3401,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|!
 operator|(
@@ -3471,7 +3471,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 name|logbad
 argument_list|(
@@ -3729,7 +3729,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3873,7 +3873,7 @@ condition|)
 block|{
 name|ms
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -3919,7 +3919,7 @@ name|tv_sec
 condition|)
 name|ms
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -3942,7 +3942,7 @@ if|if
 condition|(
 name|ms
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|ms
@@ -4009,7 +4009,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|va_start

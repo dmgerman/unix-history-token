@@ -593,7 +593,7 @@ name|serrno
 expr_stmt|;
 name|ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|-
@@ -689,7 +689,7 @@ operator|&&
 operator|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -714,7 +714,7 @@ name|msg
 argument_list|,
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|?
 name|ifp
 operator|->
@@ -724,7 +724,7 @@ literal|""
 argument_list|,
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|?
 literal|", "
 else|:
@@ -792,14 +792,14 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
 return|;
 name|res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ap
 operator|=
@@ -874,7 +874,7 @@ if|if
 condition|(
 name|res
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|u_long
@@ -901,7 +901,7 @@ if|if
 condition|(
 name|res
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|u_long
@@ -990,7 +990,7 @@ if|if
 condition|(
 name|ap
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|na
@@ -1332,7 +1332,7 @@ name|ws
 operator|.
 name|a
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ws
 operator|.
@@ -1397,7 +1397,7 @@ name|ws
 operator|.
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|if_sick
 argument_list|(
@@ -2288,7 +2288,7 @@ name|ws
 operator|.
 name|ifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|!
 operator|(
@@ -2637,7 +2637,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|ws
@@ -2770,7 +2770,7 @@ operator|=
 name|ifp
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ws
@@ -2944,7 +2944,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -2971,7 +2971,7 @@ operator|&&
 operator|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -3017,7 +3017,7 @@ name|ws
 operator|.
 name|a
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ws
 operator|.
@@ -3031,7 +3031,7 @@ name|ws
 operator|.
 name|a
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|clr_ws_buf
 argument_list|(
@@ -3071,8 +3071,6 @@ condition|)
 block|{
 if|if
 condition|(
-literal|0
-operator|==
 operator|(
 name|rt
 operator|=
@@ -3083,6 +3081,8 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|==
+name|NULL
 operator|||
 name|rt
 operator|->

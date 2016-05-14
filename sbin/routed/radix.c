@@ -685,7 +685,7 @@ name|rn_off
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -804,7 +804,7 @@ if|if
 condition|(
 name|cp3
 operator|==
-literal|0
+name|NULL
 condition|)
 name|cp3
 operator|=
@@ -2246,7 +2246,7 @@ literal|0
 condition|)
 name|x
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2600,7 +2600,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|log
@@ -2733,7 +2733,7 @@ decl_stmt|,
 modifier|*
 name|x
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|tt
@@ -2797,7 +2797,7 @@ name|rn_off
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3279,7 +3279,7 @@ expr_stmt|;
 operator|*
 name|mp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|on2
@@ -3602,7 +3602,7 @@ if|if
 condition|(
 name|tt
 operator|==
-literal|0
+name|NULL
 operator|||
 name|Bcmp
 argument_list|(
@@ -3647,7 +3647,7 @@ name|head_off
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3678,7 +3678,7 @@ operator|->
 name|rn_dupedkey
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3704,7 +3704,7 @@ operator|->
 name|rn_mklist
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|on1
@@ -3884,7 +3884,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|log

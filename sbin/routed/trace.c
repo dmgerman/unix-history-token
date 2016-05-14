@@ -544,7 +544,7 @@ return|return
 operator|(
 name|sa
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|"?"
@@ -714,7 +714,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lastlog
@@ -785,7 +785,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|zap_stdio
 condition|)
@@ -803,7 +803,7 @@ argument_list|)
 expr_stmt|;
 name|ftrace
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|fd
 operator|=
@@ -894,7 +894,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fflush
@@ -945,7 +945,7 @@ if|if
 condition|(
 name|ftrace
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lastlog
@@ -1222,7 +1222,7 @@ if|if
 condition|(
 name|filename
 operator|==
-literal|0
+name|NULL
 operator|||
 name|filename
 index|[
@@ -1234,13 +1234,13 @@ condition|)
 block|{
 name|filename
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1269,7 +1269,7 @@ else|else
 block|{
 name|fn
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1394,7 +1394,7 @@ if|if
 condition|(
 name|fn
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|n_ftrace
@@ -1410,7 +1410,7 @@ if|if
 condition|(
 name|n_ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|msglog
@@ -1517,7 +1517,7 @@ literal|0
 operator|||
 name|filename
 operator|==
-literal|0
+name|NULL
 condition|)
 name|new_tracelevel
 operator|++
@@ -1535,7 +1535,7 @@ else|:
 operator|(
 name|filename
 operator|!=
-literal|0
+name|NULL
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1615,7 +1615,7 @@ name|tracelevel
 operator|&&
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2468,7 +2468,7 @@ name|tbl
 operator|->
 name|bits_name
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2698,7 +2698,7 @@ name|rts
 operator|->
 name|rts_ifp
 operator|==
-literal|0
+name|NULL
 condition|?
 literal|"if?"
 else|:
@@ -2875,7 +2875,7 @@ name|TRACEACTIONS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -3102,7 +3102,7 @@ name|TRACEACTIONS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if
@@ -3522,7 +3522,7 @@ if|if
 condition|(
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -3588,7 +3588,7 @@ name|TRACEACTIONS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -3654,7 +3654,7 @@ name|TRACEPACKETS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -3721,7 +3721,7 @@ if|if
 condition|(
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if
@@ -3992,7 +3992,7 @@ if|if
 condition|(
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -4318,7 +4318,7 @@ if|if
 condition|(
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -4422,7 +4422,7 @@ name|TRACEPACKETS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog

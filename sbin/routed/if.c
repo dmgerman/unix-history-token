@@ -439,7 +439,7 @@ operator|*
 name|hifp
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|(
 operator|*
@@ -493,7 +493,7 @@ operator|*
 name|hifp
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|(
 operator|*
@@ -555,7 +555,7 @@ condition|(
 operator|*
 name|hifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|hifp
 operator|=
@@ -585,7 +585,7 @@ operator|*
 name|hifp
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|(
 operator|*
@@ -637,7 +637,7 @@ decl_stmt|,
 modifier|*
 name|possible
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|remote
 operator|=
@@ -841,7 +841,7 @@ argument_list|)
 init|;
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ifp
 operator|=
@@ -1001,7 +1001,7 @@ literal|0
 decl_stmt|;
 name|maybe
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -1073,7 +1073,7 @@ operator|&&
 operator|(
 name|maybe
 operator|==
-literal|0
+name|NULL
 operator|||
 name|ifp
 operator|->
@@ -1094,7 +1094,7 @@ if|if
 condition|(
 name|maybe
 operator|!=
-literal|0
+name|NULL
 operator|||
 name|once
 operator|||
@@ -1217,7 +1217,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ifp
 operator|->
@@ -1312,7 +1312,7 @@ name|r1nets
 init|;
 name|r1p
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|r1p
 operator|=
@@ -1670,7 +1670,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|rt
 operator|->
@@ -2060,7 +2060,7 @@ name|ifp
 condition|)
 name|rip_sock_mcast
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4185,7 +4185,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|ifp
@@ -4294,7 +4294,7 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -4302,7 +4302,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* The primary representative of an alias worries 			 * about how things are working. 			 */
@@ -4805,7 +4805,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Ignore duplicates of itself, caused by having 			 * IP aliases on the same network. 			 */
@@ -5307,7 +5307,7 @@ literal|0
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|foundloopback
 operator|)
@@ -5330,7 +5330,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -5355,7 +5355,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -5402,7 +5402,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|loop_rts
@@ -5610,7 +5610,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|rt
 operator|->
@@ -5626,14 +5626,14 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -5762,7 +5762,7 @@ name|intnets
 init|;
 name|intnetp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|intnetp
 operator|=
@@ -5788,7 +5788,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|!
 operator|(
@@ -5816,21 +5816,21 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|loop_rts
 operator|.
 name|rts_ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|loop_rts
 operator|.
@@ -5921,7 +5921,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 literal|0
 operator|==
@@ -5960,14 +5960,14 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|new
@@ -6044,7 +6044,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|rt
@@ -6249,7 +6249,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -6305,7 +6305,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -6343,7 +6343,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

@@ -148,7 +148,7 @@ name|parms
 init|;
 name|parmp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|parmp
 operator|=
@@ -708,7 +708,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if
@@ -901,7 +901,7 @@ if|if
 condition|(
 name|cp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|msglog
 argument_list|(
@@ -1323,7 +1323,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|msglog
@@ -1866,7 +1866,7 @@ if|if
 condition|(
 name|delimp
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|delimp
@@ -2420,7 +2420,7 @@ name|val
 expr_stmt|;
 if|if
 condition|(
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|p
@@ -2468,7 +2468,7 @@ name|val
 expr_stmt|;
 if|if
 condition|(
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|p
@@ -2671,7 +2671,7 @@ decl_stmt|,
 modifier|*
 name|val0
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|tgt
@@ -4441,7 +4441,7 @@ operator|*
 name|parmpp
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|parmpp
 operator|=
@@ -4869,7 +4869,7 @@ decl_stmt|;
 comment|/* Detect and separate "1.2.3.4/24" 	 */
 if|if
 condition|(
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|mname
@@ -4947,7 +4947,7 @@ if|if
 condition|(
 name|np
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|in

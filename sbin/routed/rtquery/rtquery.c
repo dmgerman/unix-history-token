@@ -918,7 +918,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
@@ -1715,7 +1715,7 @@ condition|(
 operator|*
 name|argv
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2093,7 +2093,7 @@ block|}
 comment|/* ask the first (valid) host */
 name|seen
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -2112,7 +2112,7 @@ condition|(
 operator|*
 name|argv
 operator|==
-literal|0
+name|NULL
 condition|)
 name|exit
 argument_list|(
@@ -2246,7 +2246,7 @@ name|seen
 init|;
 name|sp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|sp
 operator|=
@@ -2275,7 +2275,7 @@ if|if
 condition|(
 name|sp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|sp
@@ -2293,7 +2293,7 @@ if|if
 condition|(
 name|sp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
@@ -2372,16 +2372,16 @@ condition|(
 operator|*
 name|argv
 operator|!=
-literal|0
+name|NULL
 operator|&&
-literal|0
-operator|>
 name|out
 argument_list|(
 operator|*
 name|argv
 operator|++
 argument_list|)
+operator|<
+literal|0
 condition|)
 name|answered
 operator|++
@@ -2553,7 +2553,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|herror
@@ -3003,7 +3003,7 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -3466,7 +3466,7 @@ if|if
 condition|(
 name|np
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|name
 operator|=
@@ -3538,7 +3538,7 @@ if|if
 condition|(
 name|hp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|name
 operator|=
@@ -3975,7 +3975,7 @@ name|nflag
 condition|)
 name|hp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 else|else
 name|hp
@@ -4007,7 +4007,7 @@ argument_list|,
 operator|(
 name|hp
 operator|!=
-literal|0
+name|NULL
 operator|)
 condition|?
 name|hp
@@ -4187,7 +4187,7 @@ decl_stmt|;
 comment|/* Detect and separate "1.2.3.4/24" 	 */
 if|if
 condition|(
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|mname
@@ -4265,7 +4265,7 @@ if|if
 condition|(
 name|nentp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|in
@@ -4313,7 +4313,7 @@ if|if
 condition|(
 name|mname
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|mask
@@ -4695,7 +4695,7 @@ if|if
 condition|(
 name|delimp
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|delimp

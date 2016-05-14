@@ -351,7 +351,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|aifp
@@ -369,7 +369,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|msglim
@@ -449,7 +449,7 @@ block|{
 comment|/* If it came via the wrong interface, do not 				 * trust it. 				 */
 name|aifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -472,7 +472,7 @@ if|if
 condition|(
 name|sifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|sifp
 operator|=
@@ -604,7 +604,7 @@ name|tgate
 modifier|*
 name|tg
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|tgate_net
@@ -621,7 +621,7 @@ if|if
 condition|(
 name|aifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|aifp
@@ -658,7 +658,7 @@ if|if
 condition|(
 name|sifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_pkt
@@ -825,7 +825,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|aifp
 operator|=
@@ -934,7 +934,7 @@ operator|||
 operator|(
 name|aifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|IS_RIP_OUT_OFF
 argument_list|(
@@ -1030,7 +1030,7 @@ operator|&&
 operator|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|aifp
@@ -1062,7 +1062,7 @@ if|if
 condition|(
 name|ap
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ap
 operator|->
@@ -1093,7 +1093,7 @@ argument_list|)
 condition|)
 name|ap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1108,7 +1108,7 @@ name|RIPv1
 expr_stmt|;
 name|ap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|clr_ws_buf
@@ -1214,7 +1214,7 @@ name|rip_vers
 argument_list|,
 name|ap
 operator|!=
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -1231,7 +1231,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_pkt
@@ -1322,7 +1322,7 @@ name|int_d_metric
 expr_stmt|;
 if|if
 condition|(
-literal|0
+name|NULL
 operator|!=
 operator|(
 name|rt
@@ -1408,7 +1408,7 @@ name|RIPv1
 argument_list|,
 name|ap
 operator|!=
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1595,7 +1595,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* we do not have the answer */
@@ -1712,7 +1712,7 @@ if|if
 condition|(
 name|aifp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|on_net
 argument_list|(
@@ -1791,7 +1791,7 @@ if|if
 condition|(
 name|ap
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ap
 operator|->
@@ -1937,7 +1937,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|msglog
@@ -2172,7 +2172,7 @@ if|if
 condition|(
 name|aifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|msglim
@@ -2343,7 +2343,7 @@ if|if
 condition|(
 name|tg
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_pkt
@@ -2900,7 +2900,7 @@ name|mask
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -3173,7 +3173,7 @@ if|if
 condition|(
 name|ifp1
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 operator|!
@@ -3210,7 +3210,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Ignore unknown routes being poisoned. 		 */
@@ -3232,8 +3232,6 @@ name|n_nhop
 operator|!=
 literal|0
 operator|&&
-literal|0
-operator|!=
 name|ifwithaddr
 argument_list|(
 name|n
@@ -3244,6 +3242,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return;
 comment|/* If something has not gone crazy and tried to fill 		 * our memory, accept the new route. 		 */
@@ -3494,7 +3494,7 @@ name|n_nhop
 operator|!=
 literal|0
 operator|&&
-literal|0
+name|NULL
 operator|!=
 name|ifwithaddr
 argument_list|(

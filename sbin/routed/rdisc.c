@@ -389,7 +389,7 @@ name|TRACEPACKETS
 operator|||
 name|ftrace
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|lastlog
@@ -1260,7 +1260,7 @@ if|if
 condition|(
 name|cur_drp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|rdisc_sort
 argument_list|()
@@ -1770,7 +1770,7 @@ decl_stmt|;
 comment|/* Find the best discovered route. 	 */
 name|new_drp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -1862,7 +1862,7 @@ if|if
 condition|(
 name|new_drp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 operator|!
@@ -1979,7 +1979,7 @@ if|if
 condition|(
 name|new_drp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_act
@@ -1995,7 +1995,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|rt
@@ -2063,7 +2063,7 @@ if|if
 condition|(
 name|cur_drp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_act
@@ -2182,7 +2182,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|rtchange
@@ -2338,7 +2338,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|trace_pkt
@@ -2408,7 +2408,7 @@ for|for
 control|(
 name|new_drp
 operator|=
-literal|0
+name|NULL
 operator|,
 name|drp
 operator|=
@@ -2470,7 +2470,7 @@ if|if
 condition|(
 name|new_drp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* look for an entry worse than the new one to 			 * reuse. 			 */
@@ -2603,7 +2603,7 @@ if|if
 condition|(
 name|new_drp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|new_drp
@@ -3002,7 +3002,7 @@ argument_list|)
 expr_stmt|;
 name|rdisc_sock_mcast
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return;
 block|}
@@ -3080,7 +3080,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -3097,7 +3097,7 @@ literal|"sendto(%s%s%s): %s"
 argument_list|,
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|?
 name|ifp
 operator|->
@@ -3107,7 +3107,7 @@ literal|""
 argument_list|,
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|?
 literal|", "
 else|:
@@ -3130,7 +3130,7 @@ if|if
 condition|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|if_sick
 argument_list|(
@@ -3895,7 +3895,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|trace_pkt
 argument_list|(
@@ -4187,7 +4187,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|msglim
 argument_list|(
@@ -4272,7 +4272,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 if|if

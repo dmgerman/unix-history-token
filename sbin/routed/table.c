@@ -279,7 +279,7 @@ define|#
 directive|define
 name|CHECK_AG
 parameter_list|()
-value|{int acnt = 0; struct ag_info *cag;		\ 	for (cag = ag_avail; cag != 0; cag = cag->ag_fine)	\ 		acnt++;						\ 	for (cag = ag_corsest; cag != 0; cag = cag->ag_fine)	\ 		acnt++;						\ 	if (acnt != NUM_AG_SLOTS) {				\ 		(void)fflush(stderr);				\ 		abort();					\ 	}							\ }
+value|{int acnt = 0; struct ag_info *cag;		\ 	for (cag = ag_avail; cag != NULL; cag = cag->ag_fine)	\ 		acnt++;						\ 	for (cag = ag_corsest; cag != NULL; cag = cag->ag_fine)	\ 		acnt++;						\ 	if (acnt != NUM_AG_SLOTS) {				\ 		(void)fflush(stderr);				\ 		abort();					\ 	}							\ }
 end_define
 
 begin_else
@@ -354,7 +354,7 @@ if|if
 condition|(
 name|ag_cors
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag_cors
 operator|->
@@ -504,7 +504,7 @@ name|ag
 operator|->
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ag_corsest
 operator|=
@@ -529,7 +529,7 @@ name|ag
 operator|->
 name|ag_fine
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ag_finest
 operator|=
@@ -611,7 +611,7 @@ name|ag_finest
 init|;
 name|ag
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -683,7 +683,7 @@ if|if
 condition|(
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* failed, so output it and look for 				 * another route to work on 				 */
@@ -1015,7 +1015,7 @@ block|}
 comment|/* Search for the right slot in the aggregation table. 	 */
 name|ag_cors
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ag
 operator|=
@@ -1025,7 +1025,7 @@ while|while
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1042,7 +1042,7 @@ if|if
 condition|(
 name|ag_cors
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -1210,7 +1210,7 @@ while|while
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -1745,7 +1745,7 @@ if|if
 condition|(
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ag
@@ -1770,7 +1770,7 @@ if|if
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -1795,7 +1795,7 @@ if|if
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -1822,7 +1822,7 @@ operator|=
 operator|(
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|?
 name|ag_corsest
@@ -1847,7 +1847,7 @@ if|if
 condition|(
 name|ag
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|ag_cors
 operator|!=
@@ -1860,7 +1860,7 @@ if|if
 condition|(
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|!=
@@ -1873,7 +1873,7 @@ if|if
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag
 operator|->
@@ -1888,7 +1888,7 @@ if|if
 condition|(
 name|ag_cors
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|ag_cors
 operator|->
@@ -1979,7 +1979,7 @@ if|if
 condition|(
 name|ag
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|ag
 operator|->
@@ -2002,7 +2002,7 @@ if|if
 condition|(
 name|ag_cors
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ag_corsest
 operator|=
@@ -2896,7 +2896,7 @@ operator|*
 name|pk
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|pk
 operator|=
@@ -2926,7 +2926,7 @@ if|if
 condition|(
 name|ppk
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|ppk
@@ -2978,7 +2978,7 @@ if|if
 condition|(
 name|k
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 name|k
@@ -3123,7 +3123,7 @@ operator|=
 operator|(
 name|ifp
 operator|!=
-literal|0
+name|NULL
 operator|)
 condition|?
 name|ifp
@@ -3165,7 +3165,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3688,7 +3688,7 @@ expr_stmt|;
 else|else
 name|ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3697,7 +3697,7 @@ operator|&&
 operator|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|!
 operator|(
@@ -3862,7 +3862,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|msglog
 argument_list|(
@@ -4026,7 +4026,7 @@ if|if
 condition|(
 name|sdl
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -4072,7 +4072,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -4208,7 +4208,7 @@ index|]
 init|;
 name|k
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|k
 operator|=
@@ -4628,7 +4628,7 @@ index|]
 init|;
 name|k
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|k
 operator|=
@@ -4939,7 +4939,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|trace_act
 argument_list|(
@@ -5012,7 +5012,7 @@ name|CHECK_BAD_INTERVAL
 operator|||
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 operator|(
@@ -5685,7 +5685,7 @@ if|if
 condition|(
 name|k
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -6311,7 +6311,7 @@ operator|*
 name|pk
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|;
 control|)
 block|{
@@ -6597,7 +6597,7 @@ if|if
 condition|(
 name|k
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|gate
@@ -6667,7 +6667,7 @@ if|if
 condition|(
 name|rt
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|rt
@@ -6733,7 +6733,7 @@ index|]
 init|;
 name|k
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|k
 operator|=
@@ -7826,7 +7826,7 @@ if|if
 condition|(
 name|rts
 operator|==
-literal|0
+name|NULL
 condition|)
 name|rts
 operator|=
@@ -7972,7 +7972,7 @@ if|if
 condition|(
 name|k
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|k
@@ -8195,7 +8195,7 @@ name|state
 decl_stmt|;
 name|ifp1
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|state
 operator|=
@@ -8323,7 +8323,7 @@ name|intnets
 init|;
 name|intnetp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|intnetp
 operator|=
@@ -8367,7 +8367,7 @@ if|if
 condition|(
 name|ifp1
 operator|!=
-literal|0
+name|NULL
 operator|||
 operator|(
 name|state
@@ -8505,7 +8505,7 @@ name|rts
 operator|->
 name|rts_ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|rts
