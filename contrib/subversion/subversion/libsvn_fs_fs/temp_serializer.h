@@ -89,7 +89,85 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * #svn_txdelta_window_t is not sufficient for caching the data it  * represents because data read process needs auxilliary information.  */
+comment|/**  * Adds position information to the the raw window data in WINDOW.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* the (unprocessed) txdelta window byte sequence cached / to be cached */
+name|svn_string_t
+name|window
+decl_stmt|;
+comment|/* the offset within the representation right after reading the window */
+name|apr_off_t
+name|end_offset
+decl_stmt|;
+block|}
+name|svn_fs_fs__raw_cached_window_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**  * Implements #svn_cache__serialize_func_t for  * #svn_fs_fs__raw_cached_window_t.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__serialize_raw_window
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|buffer
+parameter_list|,
+name|apr_size_t
+modifier|*
+name|buffer_size
+parameter_list|,
+name|void
+modifier|*
+name|item
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Implements #svn_cache__deserialize_func_t for  * #svn_fs_fs__raw_cached_window_t.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__deserialize_raw_window
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|item
+parameter_list|,
+name|void
+modifier|*
+name|buffer
+parameter_list|,
+name|apr_size_t
+name|buffer_size
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * #svn_txdelta_window_t is not sufficient for caching the data it  * represents because data read process needs auxiliary information.  */
 end_comment
 
 begin_typedef
@@ -396,7 +474,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Implements #svn_cache__serialize_func_t for a directory contents hash  */
+comment|/**  * Implements #svn_cache__serialize_func_t for a directory contents array  */
 end_comment
 
 begin_function_decl
@@ -425,7 +503,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Implements #svn_cache__deserialize_func_t for a directory contents hash  */
+comment|/**  * Implements #svn_cache__deserialize_func_t for a directory contents array  */
 end_comment
 
 begin_function_decl
@@ -564,6 +642,63 @@ parameter_list|,
 name|void
 modifier|*
 name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Implements #svn_cache__serialize_func_t for a #svn_fs_fs__rep_header_t.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__serialize_rep_header
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|data
+parameter_list|,
+name|apr_size_t
+modifier|*
+name|data_len
+parameter_list|,
+name|void
+modifier|*
+name|in
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Implements #svn_cache__deserialize_func_t for a #svn_fs_fs__rep_header_t.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__deserialize_rep_header
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|out
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|apr_size_t
+name|data_len
 parameter_list|,
 name|apr_pool_t
 modifier|*

@@ -17,12 +17,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"svn_types.h"
 end_include
 
@@ -78,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|"client.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_sorts_private.h"
 end_include
 
 begin_include
@@ -159,19 +159,9 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|qsort
+name|svn_sort__array
 argument_list|(
 name|array
-operator|->
-name|elts
-argument_list|,
-name|array
-operator|->
-name|nelts
-argument_list|,
-name|array
-operator|->
-name|elt_size
 argument_list|,
 name|svn_sort_compare_paths
 argument_list|)
@@ -266,6 +256,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|conflicts_remain
+operator|&&
+operator|!
+operator|*
 name|conflicts_remain
 condition|)
 block|{

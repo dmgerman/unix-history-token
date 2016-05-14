@@ -29,28 +29,18 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/* These functions implement some of the calls in the FS loader    library's fs vtables. */
+comment|/* See svn_fs_lock(), svn_fs_lock_many(). */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__lock
 parameter_list|(
-name|svn_lock_t
-modifier|*
-modifier|*
-name|lock
-parameter_list|,
 name|svn_fs_t
 modifier|*
 name|fs
 parameter_list|,
-specifier|const
-name|char
+name|apr_hash_t
 modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|token
+name|targets
 parameter_list|,
 specifier|const
 name|char
@@ -63,17 +53,26 @@ parameter_list|,
 name|apr_time_t
 name|expiration_date
 parameter_list|,
-name|svn_revnum_t
-name|current_rev
-parameter_list|,
 name|svn_boolean_t
 name|steal_lock
 parameter_list|,
+name|svn_fs_lock_callback_t
+name|lock_callback
+parameter_list|,
+name|void
+modifier|*
+name|lock_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* See svn_fs_generate_lock_token(). */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__generate_lock_token
@@ -93,6 +92,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* See svn_fs_unlock(), svn_fs_unlock_many(). */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__unlock
@@ -101,24 +101,30 @@ name|svn_fs_t
 modifier|*
 name|fs
 parameter_list|,
-specifier|const
-name|char
+name|apr_hash_t
 modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|token
+name|targets
 parameter_list|,
 name|svn_boolean_t
 name|break_lock
 parameter_list|,
+name|svn_fs_lock_callback_t
+name|lock_callback
+parameter_list|,
+name|void
+modifier|*
+name|lock_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* See svn_fs_get_lock(). */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__get_lock
@@ -142,6 +148,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* See svn_fs_get_locks2(). */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__get_locks

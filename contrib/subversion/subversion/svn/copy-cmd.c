@@ -569,13 +569,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* URL -> URL, meaning that no notification is needed. */
-name|ctx
-operator|->
-name|notify_func2
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* URL -> URL */
 block|}
 if|if
 condition|(
@@ -649,7 +643,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|svn_client_copy6
+name|svn_client_copy7
 argument_list|(
 name|sources
 argument_list|,
@@ -665,6 +659,16 @@ name|opt_state
 operator|->
 name|ignore_externals
 argument_list|,
+name|FALSE
+comment|/* metadata_only */
+argument_list|,
+name|opt_state
+operator|->
+name|pin_externals
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* pin all externals */
 name|opt_state
 operator|->
 name|revprop_table

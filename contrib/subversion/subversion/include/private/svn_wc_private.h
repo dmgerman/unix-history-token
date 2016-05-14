@@ -155,13 +155,6 @@ name|svn_opt_revision_t
 modifier|*
 name|recorded_rev
 parameter_list|,
-name|svn_wc_conflict_resolver_func2_t
-name|conflict_func
-parameter_list|,
-name|void
-modifier|*
-name|conflict_baton
-parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
 parameter_list|,
@@ -649,7 +642,8 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/*  * Convert from svn_wc_status3_t to svn_wc_status2_t.  * Allocate the result in RESULT_POOL.  */
+comment|/*  * Convert from svn_wc_status3_t to svn_wc_status2_t.  * Allocate the result in RESULT_POOL.  *  * Deprecated because svn_wc_status2_t is deprecated and the only  * calls are from other deprecated functions.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_wc__status2_from_3
@@ -682,7 +676,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *children to a new array of the immediate children of the working  * node at @a dir_abspath.  The elements of @a *children are (const char *)  * absolute paths.  *  * Include children that are scheduled for deletion.  Iff @a show_hidden  * is true, also include children that are 'excluded' or 'server-excluded' or  * 'not-present'.  *  * Return every path that refers to a child of the working node at  * @a dir_abspath.  Do not include a path just because it was a child of a  * deleted directory that existed at @a dir_abspath if that directory is now  * sheduled to be replaced by the working node at @a dir_abspath.  *  * Allocate @a *children in @a result_pool.  Use @a wc_ctx to access the  * working copy, and @a scratch_pool for all temporary allocations.  */
+comment|/**  * Set @a *children to a new array of the immediate children of the working  * node at @a dir_abspath.  The elements of @a *children are (const char *)  * absolute paths.  *  * Include children that are scheduled for deletion, but not those that  * are excluded, server-excluded or not-present.  *  * Return every path that refers to a child of the working node at  * @a dir_abspath.  Do not include a path just because it was a child of a  * deleted directory that existed at @a dir_abspath if that directory is now  * sheduled to be replaced by the working node at @a dir_abspath.  *  * Allocate @a *children in @a result_pool.  Use @a wc_ctx to access the  * working copy, and @a scratch_pool for all temporary allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__node_get_children_of_working_node
@@ -702,9 +696,6 @@ name|char
 modifier|*
 name|dir_abspath
 parameter_list|,
-name|svn_boolean_t
-name|show_hidden
-parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
@@ -714,10 +705,10 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Like svn_wc__node_get_children_of_working_node(), except also include any  * path that was a child of a deleted directory that existed at  * @a dir_abspath, even if that directory is now scheduled to be replaced by  * the working node at @a dir_abspath.  */
+comment|/**  * Gets the immediate 'not-present' children of a node.  *  * #### Needed during 'svn cp WC URL' to handle mixed revision cases  */
 name|svn_error_t
 modifier|*
-name|svn_wc__node_get_children
+name|svn_wc__node_get_not_present_children
 parameter_list|(
 specifier|const
 name|apr_array_header_t
@@ -733,9 +724,6 @@ specifier|const
 name|char
 modifier|*
 name|dir_abspath
-parameter_list|,
-name|svn_boolean_t
-name|show_hidden
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -785,29 +773,6 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/**  * Get the depth of @a local_abspath using @a wc_ctx.  If @a local_abspath is  * not in the working copy, return @c SVN_ERR_WC_PATH_NOT_FOUND.  */
-name|svn_error_t
-modifier|*
-name|svn_wc__node_get_depth
-parameter_list|(
-name|svn_depth_t
-modifier|*
-name|depth
-parameter_list|,
-name|svn_wc_context_t
-modifier|*
-name|wc_ctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -880,7 +845,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Retrieves the origin of the node as it is known in the repository. For  * a copied node this retrieves where the node is copied from, for an added  * node this returns NULL/INVALID outputs, and for any other node this  * retrieves the repository location.  *  * All output arguments may be NULL.  *  * If @a is_copy is not NULL, sets @a *is_copy to TRUE if the origin is a copy  * of the original node.  *  * If not NULL, sets @a revision, @a repos_relpath, @a repos_root_url and  * @a repos_uuid to the original (if a copy) or their current values.  *  * If @a copy_root_abspath is not NULL, and @a *is_copy indicates that the  * node was copied, set @a *copy_root_abspath to the local absolute path of  * the root of the copied subtree containing the node. If the copied node is  * a root by itself, @a *copy_root_abspath will match @a local_abspath (but  * won't necessarily point to the same string in memory).  *  * If @a scan_deleted is TRUE, determine the origin of the deleted node. If  * @a scan_deleted is FALSE, return NULL, SVN_INVALID_REVNUM or FALSE for  * deleted nodes.  *  * Allocate the result in @a result_pool. Perform temporary allocations in  * @a scratch_pool */
+comment|/**  * Retrieves the origin of the node as it is known in the repository. For  * a copied node this retrieves where the node is copied from, for an added  * node this returns NULL/INVALID outputs, and for any other node this  * retrieves the repository location.  *  * All output arguments may be NULL.  *  * If @a is_copy is not NULL, sets @a *is_copy to TRUE if the origin is a copy  * of the original node.  *  * If not NULL, sets @a revision, @a repos_relpath, @a repos_root_url and  * @a repos_uuid to the original (if a copy) or their current values.  *  * If not NULL, set @a depth, to the recorded depth on @a local_abspath.  *  * If @a copy_root_abspath is not NULL, and @a *is_copy indicates that the  * node was copied, set @a *copy_root_abspath to the local absolute path of  * the root of the copied subtree containing the node. If the copied node is  * a root by itself, @a *copy_root_abspath will match @a local_abspath (but  * won't necessarily point to the same string in memory).  *  * If @a scan_deleted is TRUE, determine the origin of the deleted node. If  * @a scan_deleted is FALSE, return NULL, SVN_INVALID_REVNUM or FALSE for  * deleted nodes.  *  * Allocate the result in @a result_pool. Perform temporary allocations in  * @a scratch_pool */
 name|svn_error_t
 modifier|*
 name|svn_wc__node_get_origin
@@ -911,6 +876,10 @@ modifier|*
 modifier|*
 name|repos_uuid
 parameter_list|,
+name|svn_depth_t
+modifier|*
+name|depth
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -928,58 +897,6 @@ name|local_abspath
 parameter_list|,
 name|svn_boolean_t
 name|scan_deleted
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|result_pool
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/**  * Set @a *is_deleted to TRUE if @a local_abspath is deleted, using  * @a wc_ctx.  If @a local_abspath is not in the working copy, return  * @c SVN_ERR_WC_PATH_NOT_FOUND.  Use @a scratch_pool for all temporary  * allocations.  */
-name|svn_error_t
-modifier|*
-name|svn_wc__node_is_status_deleted
-parameter_list|(
-name|svn_boolean_t
-modifier|*
-name|is_deleted
-parameter_list|,
-name|svn_wc_context_t
-modifier|*
-name|wc_ctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/**  * Set @a *deleted_ancestor_abspath to the root of the delete operation  * that deleted @a local_abspath. If @a local_abspath itself was deleted  * and has no deleted ancestor, @a *deleted_ancestor_abspath will equal  * @a local_abspath. If @a local_abspath was not deleted,  * set @a *deleted_ancestor_abspath to @c NULL.  *  * A node is considered 'deleted' if it is deleted or moved-away, and is  * not replaced.  *  * @a *deleted_ancestor_abspath is allocated in @a result_pool.  * Use @a scratch_pool for all temporary allocations.  */
-name|svn_error_t
-modifier|*
-name|svn_wc__node_get_deleted_ancestor
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|deleted_ancestor_abspath
-parameter_list|,
-name|svn_wc_context_t
-modifier|*
-name|wc_ctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1118,9 +1035,6 @@ name|local_abspath
 parameter_list|,
 name|svn_boolean_t
 name|ignore_enoent
-parameter_list|,
-name|svn_boolean_t
-name|show_hidden
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1295,33 +1209,6 @@ name|scratch_pool
 parameter_list|)
 define|\
 value|do {                                                                        \     svn_error_t *svn_wc__err1, *svn_wc__err2;                                 \     const char *svn_wc__lock_root_abspath;                                    \     SVN_ERR(svn_wc__acquire_write_lock(&svn_wc__lock_root_abspath, wc_ctx,    \                                        local_abspath, lock_anchor,            \                                        scratch_pool, scratch_pool));          \     svn_wc__err1 = (expr);                                                    \     svn_wc__err2 = svn_wc__release_write_lock(                                \                      wc_ctx, svn_wc__lock_root_abspath, scratch_pool);        \     SVN_ERR(svn_error_compose_create(svn_wc__err1, svn_wc__err2));            \   } while (0)
-comment|/**  * Calculates the schedule and copied status of a node as that would  * have been stored in an svn_wc_entry_t instance.  *  * If not @c NULL, @a schedule and @a copied are set to their calculated  * values.  */
-name|svn_error_t
-modifier|*
-name|svn_wc__node_get_schedule
-parameter_list|(
-name|svn_wc_schedule_t
-modifier|*
-name|schedule
-parameter_list|,
-name|svn_boolean_t
-modifier|*
-name|copied
-parameter_list|,
-name|svn_wc_context_t
-modifier|*
-name|wc_ctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
 comment|/** A callback invoked by svn_wc__prop_list_recursive().  * It is equivalent to svn_proplist_receiver_t declared in svn_client.h,  * but kept private within the svn_wc__ namespace because it is used within  * the bowels of libsvn_wc which don't include svn_client.h.  *  * @since New in 1.7. */
 typedef|typedef
 name|svn_error_t
@@ -1652,7 +1539,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Indicate in @a *is_modified whether the working copy has local  * modifications, using context @a wc_ctx.  * Use @a scratch_pool for temporary allocations.  *  * This function provides a subset of the functionality of  * svn_wc_revision_status2() and is more efficient if the caller  * doesn't need all information returned by svn_wc_revision_status2(). */
+comment|/* Indicate in @a *is_modified whether the working copy has local  * modifications, using context @a wc_ctx.  *  * If IGNORE_UNVERSIONED, unversioned paths inside the tree rooted by  * LOCAL_ABSPATH are not seen as a change, otherwise they are.  * (svn:ignored paths are always ignored)  *  * Use @a scratch_pool for temporary allocations. */
 name|svn_error_t
 modifier|*
 name|svn_wc__has_local_mods
@@ -1669,6 +1556,9 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
+parameter_list|,
+name|svn_boolean_t
+name|ignore_unversioned
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -2256,7 +2146,78 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *editor and @a *edit_baton to an editor that generates  * #svn_wc_status3_t structures and sends them through @a status_func /  * @a status_baton.  @a anchor_abspath is a working copy directory  * directory which will be used as the root of our editor.  If @a  * target_basename is not "", it represents a node in the @a anchor_abspath  * which is the subject of the editor drive (otherwise, the @a  * anchor_abspath is the subject).  *  * If @a set_locks_baton is non-@c NULL, it will be set to a baton that can  * be used in a call to the svn_wc_status_set_repos_locks() function.  *  * Callers drive this editor to describe working copy out-of-dateness  * with respect to the repository.  If this information is not  * available or not desired, callers should simply call the  * close_edit() function of the @a editor vtable.  *  * If the editor driver calls @a editor's set_target_revision() vtable  * function, then when the edit drive is completed, @a *edit_revision  * will contain the revision delivered via that interface.  *  * Assuming the target is a directory, then:  *  *   - If @a get_all is FALSE, then only locally-modified entries will be  *     returned.  If TRUE, then all entries will be returned.  *  *   - If @a depth is #svn_depth_empty, a status structure will  *     be returned for the target only; if #svn_depth_files, for the  *     target and its immediate file children; if  *     #svn_depth_immediates, for the target and its immediate  *     children; if #svn_depth_infinity, for the target and  *     everything underneath it, fully recursively.  *  *     If @a depth is #svn_depth_unknown, take depths from the  *     working copy and behave as above in each directory's case.  *  *     If the given @a depth is incompatible with the depth found in a  *     working copy directory, the found depth always governs.  *  * If @a no_ignore is set, statuses that would typically be ignored  * will instead be reported.  *  * @a ignore_patterns is an array of file patterns matching  * unversioned files to ignore for the purposes of status reporting,  * or @c NULL if the default set of ignorable file patterns should be used.  *  * If @a cancel_func is non-NULL, call it with @a cancel_baton while building  * the @a statushash to determine if the client has canceled the operation.  *  * If @a depth_as_sticky is set handle @a depth like when depth_is_sticky is  * passed for updating. This will show excluded nodes show up as added in the  * repository.  *  * If @a server_performs_filtering is TRUE, assume that the server handles  * the ambient depth filtering, so this doesn't have to be handled in the  * editor.  *  * Allocate the editor itself in @a result_pool, and use @a scratch_pool  * for temporary allocations. The editor will do its temporary allocations  * in a subpool of @a result_pool.  *  * @since New in 1.8.  */
+typedef|typedef
+enum|enum
+name|svn_wc__external_description_format_t
+block|{
+comment|/* LOCALPATH [-r PEG] URL */
+name|svn_wc__external_description_format_1
+init|=
+literal|0
+block|,
+comment|/* [-r REV] URL[@PEG] LOCALPATH, introduced in Subversion 1.5 */
+name|svn_wc__external_description_format_2
+block|}
+name|svn_wc__external_description_format_t
+typedef|;
+comment|/* Additional information about what the external's parser has parsed. */
+typedef|typedef
+struct|struct
+name|svn_wc__externals_parser_info_t
+block|{
+comment|/* The syntax format used by the external description. */
+name|svn_wc__external_description_format_t
+name|format
+decl_stmt|;
+comment|/* The string used for defining the operative revision, i.e.      "-rN", "-rHEAD", or "-r{DATE}".      NULL if revision was not given. */
+specifier|const
+name|char
+modifier|*
+name|rev_str
+decl_stmt|;
+comment|/* The string used for defining the peg revision (equals rev_str in      format 1, is "@N", or "@HEAD" or "@{DATE}" in format 2).      NULL if peg revision was not given. */
+specifier|const
+name|char
+modifier|*
+name|peg_rev_str
+decl_stmt|;
+block|}
+name|svn_wc__externals_parser_info_t
+typedef|;
+comment|/* Like svn_wc_parse_externals_description3() but returns an additional array  * with elements of type svn_wc__externals_parser_info_t in @a *parser_infos_p.  * @a parser_infos_p may be NULL if not required by the caller.  */
+name|svn_error_t
+modifier|*
+name|svn_wc__parse_externals_description
+parameter_list|(
+name|apr_array_header_t
+modifier|*
+modifier|*
+name|externals_p
+parameter_list|,
+name|apr_array_header_t
+modifier|*
+modifier|*
+name|parser_infos_p
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|defining_directory
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|svn_boolean_t
+name|canonicalize_url
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Set @a *editor and @a *edit_baton to an editor that generates  * #svn_wc_status3_t structures and sends them through @a status_func /  * @a status_baton.  @a anchor_abspath is a working copy directory  * directory which will be used as the root of our editor.  If @a  * target_basename is not "", it represents a node in the @a anchor_abspath  * which is the subject of the editor drive (otherwise, the @a  * anchor_abspath is the subject).  *  * If @a set_locks_baton is non-@c NULL, it will be set to a baton that can  * be used in a call to the svn_wc_status_set_repos_locks() function.  *  * Callers drive this editor to describe working copy out-of-dateness  * with respect to the repository.  If this information is not  * available or not desired, callers should simply call the  * close_edit() function of the @a editor vtable.  *  * If the editor driver calls @a editor's set_target_revision() vtable  * function, then when the edit drive is completed, @a *edit_revision  * will contain the revision delivered via that interface.  *  * Assuming the target is a directory, then:  *  *   - If @a get_all is @c FALSE, then only locally-modified entries will be  *     returned.  If @c TRUE, then all entries will be returned.  *  *   - If @a depth is #svn_depth_empty, a status structure will  *     be returned for the target only; if #svn_depth_files, for the  *     target and its immediate file children; if  *     #svn_depth_immediates, for the target and its immediate  *     children; if #svn_depth_infinity, for the target and  *     everything underneath it, fully recursively.  *  *     If @a depth is #svn_depth_unknown, take depths from the  *     working copy and behave as above in each directory's case.  *  *     If the given @a depth is incompatible with the depth found in a  *     working copy directory, the found depth always governs.  *  * If @a check_working_copy is not set, do not scan the working copy  * for local modifications, taking only the BASE tree into account.  *  * If @a no_ignore is set, statuses that would typically be ignored  * will instead be reported.  *  * @a ignore_patterns is an array of file patterns matching  * unversioned files to ignore for the purposes of status reporting,  * or @c NULL if the default set of ignorable file patterns should be used.  *  * If @a cancel_func is non-NULL, call it with @a cancel_baton while building  * the @a statushash to determine if the client has canceled the operation.  *  * If @a depth_as_sticky is set handle @a depth like when depth_is_sticky is  * passed for updating. This will show excluded nodes show up as added in the  * repository.  *  * If @a server_performs_filtering is TRUE, assume that the server handles  * the ambient depth filtering, so this doesn't have to be handled in the  * editor.  *  * Allocate the editor itself in @a result_pool, and use @a scratch_pool  * for temporary allocations. The editor will do its temporary allocations  * in a subpool of @a result_pool.  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__get_status_editor
@@ -2300,6 +2261,9 @@ name|depth
 parameter_list|,
 name|svn_boolean_t
 name|get_all
+parameter_list|,
+name|svn_boolean_t
+name|check_working_copy
 parameter_list|,
 name|svn_boolean_t
 name|no_ignore
@@ -2563,7 +2527,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Return an @a editor/@a edit_baton for diffing a working copy against the  * repository. The editor is allocated in @a result_pool; temporary  * calculations are performed in @a scratch_pool.  *  * This editor supports diffing either the actual files and properties in the  * working copy (when @a use_text_base is #FALSE), or the current pristine  * information (when @a use_text_base is #TRUE) against the editor driver.  *  * @a anchor_abspath/@a target represent the base of the hierarchy to be  * compared. The diff callback paths will be relative to this path.  *  * Diffs will be reported as valid relpaths, with @a anchor_abspath being  * the root ("").  *  * @a callbacks/@a callback_baton is the callback table to use.  *  * If @a depth is #svn_depth_empty, just diff exactly @a target or  * @a anchor_path if @a target is empty.  If #svn_depth_files then do the same  * and for top-level file entries as well (if any).  If  * #svn_depth_immediates, do the same as #svn_depth_files but also diff  * top-level subdirectories at #svn_depth_empty.  If #svn_depth_infinity,  * then diff fully recursively. If @a depth is #svn_depth_unknown, then...  *  *   ### ... then the @a server_performs_filtering option is meaningful.  *   ### But what does this depth mean exactly? Something about 'ambient'  *   ### depth? How does it compare with depth 'infinity'?  *  * @a ignore_ancestry determines whether paths that have discontinuous node  * ancestry are treated as delete/add or as simple modifications.  If  * @a ignore_ancestry is @c FALSE, then any discontinuous node ancestry will  * result in the diff given as a full delete followed by an add.  *  * @a show_copies_as_adds determines whether paths added with history will  * appear as a diff against their copy source, or whether such paths will  * appear as if they were newly added in their entirety.  *  * If @a use_git_diff_format is TRUE, copied paths will be treated as added  * if they weren't modified after being copied. This allows the callbacks  * to generate appropriate --git diff headers for such files.  *  * Normally, the difference from repository->working_copy is shown.  * If @a reverse_order is TRUE, then show working_copy->repository diffs.  *  * If @a cancel_func is non-NULL, it will be used along with @a cancel_baton  * to periodically check if the client has canceled the operation.  *  * @a changelist_filter is an array of<tt>const char *</tt> changelist  * names, used as a restrictive filter on items whose differences are  * reported; that is, don't generate diffs about any item unless  * it's a member of one of those changelists.  If @a changelist_filter is  * empty (or altogether @c NULL), no changelist filtering occurs.  *  * If @a server_performs_filtering is TRUE, assume that the server handles  * the ambient depth filtering, so this doesn't have to be handled in the  * editor.  *  *  * A diagram illustrating how this function is used.  *  *   Steps 1 and 2 create the chain; step 3 drives it.  *  *   1.                    svn_wc__get_diff_editor(diff_cbs)  *                                       |           ^  *   2.         svn_ra_do_diff3(editor)  |           |  *                    |           ^      |           |  *                    v           |      v           |  *           +----------+       +----------+       +----------+  *           |          |       |          |       |          |  *      +--> | reporter | ----> |  editor  | ----> | diff_cbs | ----> text  *      |    |          |       |          |       |          |       out  *      |    +----------+       +----------+       +----------+  *      |  *   3. svn_wc_crawl_revisions5(WC,reporter)  *  *  * @since New in 1.8.  */
+comment|/**  * Return an @a editor/@a edit_baton for diffing a working copy against the  * repository. The editor is allocated in @a result_pool; temporary  * calculations are performed in @a scratch_pool.  *  * This editor supports diffing either the actual files and properties in the  * working copy (when @a use_text_base is #FALSE), or the current pristine  * information (when @a use_text_base is #TRUE) against the editor driver.  *  * @a anchor_abspath/@a target represent the base of the hierarchy to be  * compared. The diff callback paths will be relative to this path.  *  * Diffs will be reported as valid relpaths, with @a anchor_abspath being  * the root ("").  *  * @a diff_processor will retrieve the diff report.  *  * If @a depth is #svn_depth_empty, just diff exactly @a target or  * @a anchor_path if @a target is empty.  If #svn_depth_files then do the same  * and for top-level file entries as well (if any).  If  * #svn_depth_immediates, do the same as #svn_depth_files but also diff  * top-level subdirectories at #svn_depth_empty.  If #svn_depth_infinity,  * then diff fully recursively. If @a depth is #svn_depth_unknown, then...  *  *   ### ... then the @a server_performs_filtering option is meaningful.  *   ### But what does this depth mean exactly? Something about 'ambient'  *   ### depth? How does it compare with depth 'infinity'?  *  * @a ignore_ancestry determines whether paths that have discontinuous node  * ancestry are treated as delete/add or as simple modifications.  If  * @a ignore_ancestry is @c FALSE, then any discontinuous node ancestry will  * result in the diff given as a full delete followed by an add.  *  * @a show_copies_as_adds determines whether paths added with history will  * appear as a diff against their copy source, or whether such paths will  * appear as if they were newly added in their entirety.  *  * If @a use_git_diff_format is TRUE, copied paths will be treated as added  * if they weren't modified after being copied. This allows the callbacks  * to generate appropriate --git diff headers for such files.  *  * Normally, the difference from repository->working_copy is shown. If  * @a reverse_order is TRUE, then we want to show working_copy->repository  * diffs. Most of the reversal is done by the caller; here we just swap the  * order of reporting a replacement so that the local addition is reported  * before the remote delete. (The caller's diff processor can then transform  * adds into deletes and deletes into adds, but it can't reorder the output.)  *  * If @a cancel_func is non-NULL, it will be used along with @a cancel_baton  * to periodically check if the client has canceled the operation.  *  * @a changelist_filter is an array of<tt>const char *</tt> changelist  * names, used as a restrictive filter on items whose differences are  * reported; that is, don't generate diffs about any item unless  * it's a member of one of those changelists.  If @a changelist_filter is  * empty (or altogether @c NULL), no changelist filtering occurs.  *  * If @a server_performs_filtering is TRUE, assume that the server handles  * the ambient depth filtering, so this doesn't have to be handled in the  * editor.  *  *  * A diagram illustrating how this function is used.  *  *   Steps 1 and 2 create the chain; step 3 drives it.  *  *   1.                    svn_wc__get_diff_editor(diff_cbs)  *                                       |           ^  *   2.         svn_ra_do_diff3(editor)  |           |  *                    |           ^      |           |  *                    v           |      v           |  *           +----------+       +----------+       +----------+  *           |          |       |          |       |          |  *      +--> | reporter | ----> |  editor  | ----> | diff_cbs | ----> text  *      |    |          |       |          |       |          |       out  *      |    +----------+       +----------+       +----------+  *      |  *   3. svn_wc_crawl_revisions5(WC,reporter)  *  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__get_diff_editor
@@ -2600,12 +2564,6 @@ name|svn_boolean_t
 name|ignore_ancestry
 parameter_list|,
 name|svn_boolean_t
-name|show_copies_as_adds
-parameter_list|,
-name|svn_boolean_t
-name|use_git_diff_format
-parameter_list|,
-name|svn_boolean_t
 name|use_text_base
 parameter_list|,
 name|svn_boolean_t
@@ -2620,13 +2578,9 @@ modifier|*
 name|changelist_filter
 parameter_list|,
 specifier|const
-name|svn_wc_diff_callbacks4_t
+name|svn_diff_tree_processor_t
 modifier|*
-name|callbacks
-parameter_list|,
-name|void
-modifier|*
-name|callback_baton
+name|diff_processor
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -2922,6 +2876,62 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* The implemementation of svn_wc_diff6(), but reporting to a diff processor  *  * If ROOT_RELPATH is not NULL, set *ROOT_RELPATH to the target of the diff  * within the diff namespace. ("" or a single path component).  *  * If ROOT_IS_FILE is NOT NULL set it  * the first processor call. (The anchor is LOCAL_ABSPATH or an ancestor of it)  */
+name|svn_error_t
+modifier|*
+name|svn_wc__diff7
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|root_relpath
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|root_is_dir
+parameter_list|,
+name|svn_wc_context_t
+modifier|*
+name|wc_ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|local_abspath
+parameter_list|,
+name|svn_depth_t
+name|depth
+parameter_list|,
+name|svn_boolean_t
+name|ignore_ancestry
+parameter_list|,
+specifier|const
+name|apr_array_header_t
+modifier|*
+name|changelist_filter
+parameter_list|,
+specifier|const
+name|svn_diff_tree_processor_t
+modifier|*
+name|diff_processor
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*

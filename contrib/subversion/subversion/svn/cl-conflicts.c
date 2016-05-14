@@ -222,6 +222,9 @@ name|kind
 parameter_list|,
 name|svn_wc_conflict_reason_t
 name|reason
+parameter_list|,
+name|svn_wc_operation_t
+name|operation
 parameter_list|)
 block|{
 switch|switch
@@ -231,6 +234,9 @@ condition|)
 block|{
 case|case
 name|svn_node_file
+case|:
+case|case
+name|svn_node_symlink
 case|:
 switch|switch
 condition|(
@@ -267,6 +273,19 @@ return|;
 case|case
 name|svn_wc_conflict_reason_missing
 case|:
+if|if
+condition|(
+name|operation
+operator|==
+name|svn_wc_operation_merge
+condition|)
+return|return
+name|_
+argument_list|(
+literal|"local file missing or deleted or moved away"
+argument_list|)
+return|;
+else|else
 return|return
 name|_
 argument_list|(
@@ -358,6 +377,19 @@ return|;
 case|case
 name|svn_wc_conflict_reason_missing
 case|:
+if|if
+condition|(
+name|operation
+operator|==
+name|svn_wc_operation_merge
+condition|)
+return|return
+name|_
+argument_list|(
+literal|"local dir missing or deleted or moved away"
+argument_list|)
+return|;
+else|else
 return|return
 name|_
 argument_list|(
@@ -412,14 +444,111 @@ return|;
 block|}
 break|break;
 case|case
-name|svn_node_symlink
-case|:
-case|case
 name|svn_node_none
 case|:
 case|case
 name|svn_node_unknown
 case|:
+switch|switch
+condition|(
+name|reason
+condition|)
+block|{
+case|case
+name|svn_wc_conflict_reason_edited
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local edit"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_obstructed
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local obstruction"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_deleted
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local delete"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_missing
+case|:
+if|if
+condition|(
+name|operation
+operator|==
+name|svn_wc_operation_merge
+condition|)
+return|return
+name|_
+argument_list|(
+literal|"local missing or deleted or moved away"
+argument_list|)
+return|;
+else|else
+return|return
+name|_
+argument_list|(
+literal|"local missing"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_unversioned
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local unversioned"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_added
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local add"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_replaced
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local replace"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_moved_away
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local moved away"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_reason_moved_here
+case|:
+return|return
+name|_
+argument_list|(
+literal|"local moved here"
+argument_list|)
+return|;
+block|}
 break|break;
 block|}
 return|return
@@ -454,6 +583,9 @@ block|{
 case|case
 name|svn_node_file
 case|:
+case|case
+name|svn_node_symlink
+case|:
 switch|switch
 condition|(
 name|action
@@ -483,7 +615,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"incoming file delete"
+literal|"incoming file delete or move"
 argument_list|)
 return|;
 case|case
@@ -492,7 +624,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"incoming file replace"
+literal|"incoming replace with file"
 argument_list|)
 return|;
 block|}
@@ -529,7 +661,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"incoming dir delete"
+literal|"incoming dir delete or move"
 argument_list|)
 return|;
 case|case
@@ -538,20 +670,59 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"incoming dir replace"
+literal|"incoming replace with dir"
 argument_list|)
 return|;
 block|}
 break|break;
-case|case
-name|svn_node_symlink
-case|:
 case|case
 name|svn_node_none
 case|:
 case|case
 name|svn_node_unknown
 case|:
+switch|switch
+condition|(
+name|action
+condition|)
+block|{
+case|case
+name|svn_wc_conflict_action_edit
+case|:
+return|return
+name|_
+argument_list|(
+literal|"incoming edit"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_action_add
+case|:
+return|return
+name|_
+argument_list|(
+literal|"incoming add"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_action_delete
+case|:
+return|return
+name|_
+argument_list|(
+literal|"incoming delete or move"
+argument_list|)
+return|;
+case|case
+name|svn_wc_conflict_action_replace
+case|:
+return|return
+name|_
+argument_list|(
+literal|"incoming replace"
+argument_list|)
+return|;
+block|}
 break|break;
 block|}
 return|return
@@ -946,6 +1117,10 @@ argument_list|,
 name|conflict
 operator|->
 name|reason
+argument_list|,
+name|conflict
+operator|->
+name|operation
 argument_list|)
 expr_stmt|;
 name|action
@@ -1049,6 +1224,83 @@ name|operation
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|svn_error_t
+modifier|*
+name|svn_cl__get_human_readable_action_description
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|desc
+parameter_list|,
+name|svn_wc_conflict_action_t
+name|action
+parameter_list|,
+name|svn_wc_operation_t
+name|operation
+parameter_list|,
+name|svn_node_kind_t
+name|kind
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|action_s
+decl_stmt|,
+modifier|*
+name|operation_s
+decl_stmt|;
+name|action_s
+operator|=
+name|incoming_action_str
+argument_list|(
+name|kind
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
+name|operation_s
+operator|=
+name|operation_str
+argument_list|(
+name|operation
+argument_list|)
+expr_stmt|;
+name|SVN_ERR_ASSERT
+argument_list|(
+name|operation_s
+argument_list|)
+expr_stmt|;
+operator|*
+name|desc
+operator|=
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+name|_
+argument_list|(
+literal|"%s %s"
+argument_list|)
+argument_list|,
+name|action_s
+argument_list|,
+name|operation_s
+argument_list|)
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;

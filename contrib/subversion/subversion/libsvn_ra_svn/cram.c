@@ -613,11 +613,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|svn_error_trace
+argument_list|(
 name|svn_ra_svn__flush
 argument_list|(
 name|conn
 argument_list|,
 name|pool
+argument_list|)
 argument_list|)
 return|;
 block|}

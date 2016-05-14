@@ -65,7 +65,7 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/*** Filesystem schema versions ***/
-comment|/* The format number of this filesystem.  This is independent of the    repository format number, and independent of any other FS back    ends.  See the SVN_FS_BASE__MIN_*_FORMAT defines to get a sense of    what changes and features were added in which versions of this    back-end's format.  */
+comment|/* The format number of this filesystem.  This is independent of the    repository format number, and independent of any other FS back    ends.  See the SVN_FS_BASE__MIN_*_FORMAT defines to get a sense of    what changes and features were added in which versions of this    back-end's format.     Note: If you bump this, please update the switch statement in          base_create() as well.  */
 define|#
 directive|define
 name|SVN_FS_BASE__FORMAT_NUMBER

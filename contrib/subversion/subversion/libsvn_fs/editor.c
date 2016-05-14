@@ -119,17 +119,7 @@ name|relpath
 parameter_list|,
 name|pool
 parameter_list|)
-value|apr_pstrcat(pool, "/", relpath, NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNUSED
-parameter_list|(
-name|x
-parameter_list|)
-value|((void)(x))
+value|apr_pstrcat(pool, "/", relpath, SVN_VA_NULL)
 end_define
 
 begin_function
@@ -257,7 +247,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -267,7 +257,7 @@ name|svn_string_t
 modifier|*
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -575,7 +565,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Uncommitted nodes (eg. a descendent of a copy/move/rotate destination)      have no (committed) revision number. Let the caller go ahead and      modify these nodes.       Note: strictly speaking, they might be performing an "illegal" edit      in certain cases, but let's just assume they're Good Little Boys.       If CREATED_REV is invalid, that means it's already mutable in the      txn, which means it has already passed this out-of-dateness check.      (Usually, this happens when looking at a parent directory of an      already-modified node)  */
+comment|/* Uncommitted nodes (eg. a descendant of a copy/move destination)      have no (committed) revision number. Let the caller go ahead and      modify these nodes.       Note: strictly speaking, they might be performing an "illegal" edit      in certain cases, but let's just assume they're Good Little Boys.       If CREATED_REV is invalid, that means it's already mutable in the      txn, which means it has already passed this out-of-dateness check.      (Usually, this happens when looking at a parent directory of an      already-modified node)  */
 if|if
 condition|(
 operator|!
@@ -588,7 +578,7 @@ return|return
 name|SVN_NO_ERROR
 return|;
 comment|/* If the node is immutable (has a revision), then the caller should      have supplied a valid revision number [that they expect to change].      The checks further below will determine the out-of-dateness of the      specified revision.  */
-comment|/* ### ugh. descendents of copy/move/rotate destinations carry along      ### their original immutable state and (thus) a valid CREATED_REV.      ### but they are logically uncommitted, so the caller will pass      ### SVN_INVALID_REVNUM. (technically, the caller could provide      ### ORIGINAL_REV, but that is semantically incorrect for the Ev2      ### API).      ###      ### for now, we will assume the caller knows what they are doing      ### and an invalid revision implies such a descendent. in the      ### future, we could examine the ancestor chain looking for a      ### copy/move/rotate-here node and allow the modification (and the      ### converse: if no such ancestor, the caller must specify the      ### correct/intended revision to modify).   */
+comment|/* ### ugh. descendants of copy/move destinations carry along      ### their original immutable state and (thus) a valid CREATED_REV.      ### but they are logically uncommitted, so the caller will pass      ### SVN_INVALID_REVNUM. (technically, the caller could provide      ### ORIGINAL_REV, but that is semantically incorrect for the Ev2      ### API).      ###      ### for now, we will assume the caller knows what they are doing      ### and an invalid revision implies such a descendant. in the      ### future, we could examine the ancestor chain looking for a      ### copy/move-here node and allow the modification (and the      ### converse: if no such ancestor, the caller must specify the      ### correct/intended revision to modify).   */
 if|#
 directive|if
 literal|1
@@ -663,36 +653,13 @@ name|created_rev
 condition|)
 block|{
 comment|/* We asked to change a node that is *newer* than what we found          in the transaction. Given that the transaction was based off          of 'youngest', then either:          - the caller asked to modify a future node          - the caller has committed more revisions since this txn          was constructed, and is asking to modify a node in one          of those new revisions.          In either case, the node may not have changed in those new          revisions; use the node's ID to determine this case.  */
-specifier|const
-name|svn_fs_id_t
-modifier|*
-name|txn_noderev_id
-decl_stmt|;
 name|svn_fs_root_t
 modifier|*
 name|rev_root
 decl_stmt|;
-specifier|const
-name|svn_fs_id_t
-modifier|*
-name|new_noderev_id
+name|svn_fs_node_relation_t
+name|relation
 decl_stmt|;
-comment|/* The ID of the node that we would be modifying in the txn  */
-name|SVN_ERR
-argument_list|(
-name|svn_fs_node_id
-argument_list|(
-operator|&
-name|txn_noderev_id
-argument_list|,
-name|txn_root
-argument_list|,
-name|fspath
-argument_list|,
-name|scratch_pool
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Get the ID from the future/new revision.  */
 name|SVN_ERR
 argument_list|(
@@ -714,10 +681,14 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_fs_node_id
+name|svn_fs_node_relation
 argument_list|(
 operator|&
-name|new_noderev_id
+name|relation
+argument_list|,
+name|txn_root
+argument_list|,
+name|fspath
 argument_list|,
 name|rev_root
 argument_list|,
@@ -735,14 +706,9 @@ expr_stmt|;
 comment|/* Has the target node changed in the future?  */
 if|if
 condition|(
-name|svn_fs_compare_ids
-argument_list|(
-name|txn_noderev_id
-argument_list|,
-name|new_noderev_id
-argument_list|)
+name|relation
 operator|!=
-literal|0
+name|svn_fs_node_unchanged
 condition|)
 block|{
 comment|/* Restarting the commit will base the txn on the future/new              revision, allowing the modification at REVISION.  */
@@ -828,7 +794,7 @@ return|return
 name|SVN_NO_ERROR
 return|;
 comment|/* ### I'm not sure if this works perfectly. We might have an ancestor      ### that was modified as a result of a change on a cousin. We might      ### misinterpret that as a *-here node which brought along this      ### child. Need to write a test to verify. We may also be able to      ### test the ancestor to determine if it has been *-here in this      ### txn, or just a simple modification.  */
-comment|/* Are any of the parents copied/moved/rotated-here?  */
+comment|/* Are any of the parents copied/moved-here?  */
 for|for
 control|(
 name|cur_fspath
@@ -1555,10 +1521,6 @@ parameter_list|,
 name|svn_revnum_t
 name|revision
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
 specifier|const
 name|svn_checksum_t
 modifier|*
@@ -1567,6 +1529,10 @@ parameter_list|,
 name|svn_stream_t
 modifier|*
 name|contents
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|props
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1710,14 +1676,14 @@ parameter_list|,
 name|svn_revnum_t
 name|revision
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|target
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|props
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1731,7 +1697,7 @@ name|eb
 init|=
 name|baton
 decl_stmt|;
-name|UNUSED
+name|SVN_UNUSED
 argument_list|(
 name|eb
 argument_list|)
@@ -2227,53 +2193,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* This implements svn_editor_cb_rotate_t */
-end_comment
-
-begin_function
-specifier|static
-name|svn_error_t
-modifier|*
-name|rotate_cb
-parameter_list|(
-name|void
-modifier|*
-name|baton
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|relpaths
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|revisions
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-block|{
-name|struct
-name|edit_baton
-modifier|*
-name|eb
-init|=
-name|baton
-decl_stmt|;
-name|UNUSED
-argument_list|(
-name|eb
-argument_list|)
-expr_stmt|;
-name|SVN__NOT_IMPLEMENTED
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* This implements svn_editor_cb_complete_t */
 end_comment
 
@@ -2479,8 +2398,6 @@ block|,
 name|copy_cb
 block|,
 name|move_cb
-block|,
-name|rotate_cb
 block|,
 name|complete_cb
 block|,
@@ -2925,7 +2842,7 @@ argument_list|,
 name|inner_conflict_path
 argument_list|)
 expr_stmt|;
-comment|/* Return sucess. The caller should inspect CONFLICT_PATH to              determine this particular case.  */
+comment|/* Return success. The caller should inspect CONFLICT_PATH to              determine this particular case.  */
 name|svn_error_clear
 argument_list|(
 name|err

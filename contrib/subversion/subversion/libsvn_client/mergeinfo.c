@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_client_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_opt_private.h"
 end_include
 
@@ -108,25 +114,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_wc_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"private/svn_ra_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"private/svn_fspath.h"
+file|"private/svn_sorts_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"private/svn_client_private.h"
+file|"private/svn_wc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_fspath.h"
 end_include
 
 begin_include
@@ -838,9 +844,6 @@ argument_list|,
 name|TRUE
 comment|/* ignore_enoent */
 argument_list|,
-name|FALSE
-comment|/* show_hidden */
-argument_list|,
 name|scratch_pool
 argument_list|,
 name|scratch_pool
@@ -1078,8 +1081,7 @@ argument_list|,
 name|local_abspath
 argument_list|,
 name|TRUE
-argument_list|,
-name|FALSE
+comment|/* ignore_enoent */
 argument_list|,
 name|scratch_pool
 argument_list|,
@@ -1251,7 +1253,7 @@ argument_list|(
 operator|*
 name|mergeinfo
 argument_list|,
-name|result_pool
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 block|}
@@ -1493,7 +1495,7 @@ name|char
 modifier|*
 name|node_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1502,7 +1504,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1681,7 +1683,7 @@ comment|/* We asked only for the REL_PATH's mergeinfo, not any of its          d
 operator|*
 name|target_mergeinfo
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
@@ -2035,7 +2037,7 @@ comment|/* We asked only for the TARGET_WCPATH's mergeinfo, not any of its      
 operator|*
 name|target_mergeinfo
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
@@ -2173,6 +2175,8 @@ name|repos_relpath
 argument_list|,
 operator|&
 name|repos_root
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3077,14 +3081,6 @@ name|mergeinfo
 init|=
 name|NULL
 decl_stmt|;
-name|svn_boolean_t
-name|inherited
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|walk_path
-decl_stmt|;
 name|svn_error_t
 modifier|*
 name|err
@@ -3097,17 +3093,15 @@ argument_list|(
 operator|&
 name|target_mergeinfo
 argument_list|,
-operator|&
-name|inherited
+name|NULL
 argument_list|,
-name|svn_mergeinfo_inherited
+name|svn_mergeinfo_explicit
 argument_list|,
 name|target_abspath
 argument_list|,
-name|limit_abspath
+name|NULL
 argument_list|,
-operator|&
-name|walk_path
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|,
@@ -3155,8 +3149,6 @@ block|}
 comment|/* If TARGET_WCPATH has no explicit mergeinfo, there's nothing to          elide, we're done. */
 if|if
 condition|(
-name|inherited
-operator|||
 name|target_mergeinfo
 operator|==
 name|NULL
@@ -3180,8 +3172,7 @@ name|target_abspath
 argument_list|,
 name|limit_abspath
 argument_list|,
-operator|&
-name|walk_path
+name|NULL
 argument_list|,
 name|FALSE
 argument_list|,
@@ -4400,7 +4391,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -4409,7 +4400,7 @@ name|svn_log_changed_path2_t
 modifier|*
 name|change
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -4665,7 +4656,7 @@ name|char
 modifier|*
 name|mergeinfo_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi2
 argument_list|)
@@ -4674,7 +4665,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi2
 argument_list|)
@@ -5273,7 +5264,7 @@ name|char
 modifier|*
 name|key
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -5282,7 +5273,7 @@ name|void
 modifier|*
 name|val
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -6484,7 +6475,7 @@ block|{
 name|svn_mergeinfo_t
 name|subtree_mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi_catalog
 argument_list|)
@@ -6512,7 +6503,7 @@ name|char
 modifier|*
 name|subtree_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi_catalog
 argument_list|)
@@ -6894,7 +6885,7 @@ name|svn_rangelist_t
 modifier|*
 name|subtree_merged_rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7139,7 +7130,6 @@ argument_list|,
 name|scratch_pool
 argument_list|)
 decl_stmt|;
-empty_stmt|;
 for|for
 control|(
 name|hi
@@ -7166,7 +7156,7 @@ name|char
 modifier|*
 name|key
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7175,7 +7165,7 @@ name|svn_rangelist_t
 modifier|*
 name|subtree_merged_rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7475,6 +7465,19 @@ name|apr_hash_index_t
 modifier|*
 name|hi
 decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|session_pool
+init|=
+name|svn_pool_create
+argument_list|(
+name|pool
+argument_list|)
+decl_stmt|;
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+decl_stmt|;
 name|list
 operator|=
 name|apr_array_make
@@ -7492,7 +7495,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* In our ideal algorithm, the list of recommendations should be      ordered by:          1. The most recent existing merge source.         2. The copyfrom source (which will also be listed as a merge            source if the copy was made with a 1.5+ client and server).         3. All other merge sources, most recent to least recent.       However, determining the order of application of merge sources      requires a new RA API.  Until such an API is available, our      algorithm will be:          1. The copyfrom source.         2. All remaining merge sources (unordered).   */
-comment|/* ### TODO: Share ra_session batons to improve efficiency? */
+name|SVN_ERR
+argument_list|(
+name|svn_client__ra_session_from_path2
+argument_list|(
+operator|&
+name|ra_session
+argument_list|,
+name|NULL
+argument_list|,
+name|path_or_url
+argument_list|,
+name|NULL
+argument_list|,
+name|peg_revision
+argument_list|,
+name|peg_revision
+argument_list|,
+name|ctx
+argument_list|,
+name|session_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|get_mergeinfo
@@ -7513,11 +7538,11 @@ name|FALSE
 argument_list|,
 name|ctx
 argument_list|,
-name|NULL
+name|ra_session
 argument_list|,
-name|pool
+name|session_pool
 argument_list|,
-name|pool
+name|session_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7534,11 +7559,11 @@ block|{
 comment|/* We asked only for the PATH_OR_URL's mergeinfo, not any of its          descendants.  So if there is anything in the catalog it is the          mergeinfo for PATH_OR_URL. */
 name|mergeinfo
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
-name|pool
+name|session_pool
 argument_list|,
 name|mergeinfo_cat
 argument_list|)
@@ -7552,6 +7577,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* ### Should we only add the last source or all copy sources back to          the origin? */
 name|SVN_ERR
 argument_list|(
 name|svn_client__get_copy_source
@@ -7566,11 +7592,13 @@ name|path_or_url
 argument_list|,
 name|peg_revision
 argument_list|,
+name|ra_session
+argument_list|,
 name|ctx
 argument_list|,
-name|pool
+name|session_pool
 argument_list|,
-name|pool
+name|session_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7609,7 +7637,7 @@ name|hi
 operator|=
 name|apr_hash_first
 argument_list|(
-name|pool
+name|session_pool
 argument_list|,
 name|mergeinfo
 argument_list|)
@@ -7629,7 +7657,7 @@ name|char
 modifier|*
 name|rel_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7672,6 +7700,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|session_pool
+argument_list|)
+expr_stmt|;
 operator|*
 name|suggestions
 operator|=

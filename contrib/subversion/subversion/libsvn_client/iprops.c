@@ -547,7 +547,7 @@ name|char
 modifier|*
 name|child_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -557,7 +557,7 @@ name|char
 modifier|*
 name|child_repos_relpath
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -787,6 +787,11 @@ name|svn_error_t
 modifier|*
 name|err
 decl_stmt|;
+operator|*
+name|wcroot_iprops
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -123,10 +123,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_COMPRESSION
 value|"http-compression"
+comment|/** @deprecated Not used since 1.8. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_NEON_DEBUG_MASK
 value|"neon-debug-mask"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_AUTH_TYPES
@@ -147,18 +149,22 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_SSL_CLIENT_CERT_PASSWORD
 value|"ssl-client-cert-password"
+comment|/** @deprecated Not used since 1.8.  * @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_SSL_PKCS11_PROVIDER
 value|"ssl-pkcs11-provider"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_LIBRARY
 value|"http-library"
+comment|/** @since New in 1.1. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_PASSWORDS
 value|"store-passwords"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_PLAINTEXT_PASSWORDS
@@ -167,10 +173,12 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_AUTH_CREDS
 value|"store-auth-creds"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_SSL_CLIENT_CERT_PP
 value|"store-ssl-client-cert-pp"
+comment|/** @since New in 1.6. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_STORE_SSL_CLIENT_CERT_PP_PLAINTEXT
@@ -190,6 +198,21 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_HTTP_MAX_CONNECTIONS
 value|"http-max-connections"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_HTTP_CHUNKED_REQUESTS
+value|"http-chunked-requests"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_SERF_LOG_COMPONENTS
+value|"serf-log-components"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_SERF_LOG_LEVEL
+value|"serf-log-level"
 define|#
 directive|define
 name|SVN_CONFIG_CATEGORY_CONFIG
@@ -244,6 +267,7 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_DIFF3_HAS_PROGRAM_ARG
 value|"diff3-has-program-arg"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MERGE_TOOL_CMD
@@ -273,14 +297,22 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_ENABLE_AUTO_PROPS
 value|"enable-auto-props"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_ENABLE_MAGIC_FILE
+value|"enable-magic-file"
+comment|/** @since New in 1.2. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_NO_UNLOCK
 value|"no-unlock"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MIMETYPES_FILE
 value|"mime-types-file"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_PRESERVED_CF_EXTS
@@ -295,6 +327,11 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_MEMORY_CACHE_SIZE
 value|"memory-cache-size"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_DIFF_IGNORE_CONTENT_TYPE
+value|"diff-ignore-content-type"
 define|#
 directive|define
 name|SVN_CONFIG_SECTION_TUNNELS
@@ -318,6 +355,11 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_SQLITE_EXCLUSIVE_CLIENTS
 value|"exclusive-locking-clients"
+comment|/** @since New in 1.9. */
+define|#
+directive|define
+name|SVN_CONFIG_OPTION_SQLITE_BUSY_TIMEOUT
+value|"busy-timeout"
 comment|/** @} */
 comment|/** @name Repository conf directory configuration files strings  * Strings for the names of sections and options in the  * repository conf directory configuration files.  * @{  */
 comment|/* For repository svnserve.conf files */
@@ -360,18 +402,22 @@ define|#
 directive|define
 name|SVN_CONFIG_OPTION_HOOKS_ENV
 value|"hooks-env"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_SECTION_SASL
 value|"sasl"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_USE_SASL
 value|"use-sasl"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MIN_SSF
 value|"min-encryption"
+comment|/** @since New in 1.5. */
 define|#
 directive|define
 name|SVN_CONFIG_OPTION_MAX_SSF
@@ -397,7 +443,7 @@ define|#
 directive|define
 name|SVN_CONFIG__DEFAULT_GLOBAL_IGNORES_LINE_2
 define|\
-value|"*.rej *~ #*# .#* .*.swp .DS_Store"
+value|"*.rej *~ #*# .#* .*.swp .DS_Store [Tt]humbs.db"
 endif|#
 directive|endif
 define|#
@@ -1154,11 +1200,43 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/** Accessing cached authentication data in the user config area.  *  * @defgroup cached_authentication_data Cached authentication data  * @{  */
-comment|/** A hash-key pointing to a realmstring.  Every file containing  * authentication data should have this key.  */
+comment|/**  * Attributes of authentication credentials.  *  * The values of these keys are C strings.  *  * @note Some of these hash keys were also used in versions< 1.9 but were  *       not part of the public API (except #SVN_CONFIG_REALMSTRING_KEY which  *       has been present since 1.0).  *  * @defgroup cached_authentication_data_attributes Cached authentication data attributes  * @{  */
+comment|/** A hash-key pointing to a realmstring.  This attribute is mandatory.  *  * @since New in 1.0.  */
 define|#
 directive|define
 name|SVN_CONFIG_REALMSTRING_KEY
 value|"svn:realmstring"
+comment|/** A hash-key for usernames.  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_USERNAME_KEY
+value|"username"
+comment|/** A hash-key for passwords.  * The password may be in plaintext or encrypted form, depending on  * the authentication provider.  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_PASSWORD_KEY
+value|"password"
+comment|/** A hash-key for passphrases,  * such as SSL client ceritifcate passphrases. The passphrase may be in  * plaintext or encrypted form, depending on the authentication provider.  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_PASSPHRASE_KEY
+value|"passphrase"
+comment|/** A hash-key for the type of a password or passphrase.  The type  * indicates which provider owns the credential.  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_PASSTYPE_KEY
+value|"passtype"
+comment|/** A hash-key for SSL certificates.   The value is the base64-encoded DER form  * certificate.  * @since New in 1.9.  * @note The value is not human readable.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_ASCII_CERT_KEY
+value|"ascii_cert"
+comment|/** A hash-key for recorded SSL certificate verification  * failures.  Failures encoded as an ASCII integer containing any of the  * SVN_AUTH_SSL_* SSL server certificate failure bits defined in svn_auth.h.  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_CONFIG_AUTHN_FAILURES_KEY
+value|"failures"
+comment|/** @} */
 comment|/** Use @a cred_kind and @a realmstring to locate a file within the  * ~/.subversion/auth/ area.  If the file exists, initialize @a *hash  * and load the file contents into the hash, using @a pool.  If the  * file doesn't exist, set @a *hash to NULL.  *  * If @a config_dir is not NULL it specifies a directory from which to  * read the config overriding all other sources.  *  * Besides containing the original credential fields, the hash will  * also contain @c SVN_CONFIG_REALMSTRING_KEY.  The caller can examine  * this value as a sanity-check that the correct file was loaded.  *  * The hashtable will contain<tt>const char *</tt> keys and  *<tt>svn_string_t *</tt> values.  */
 name|svn_error_t
 modifier|*
@@ -1218,7 +1296,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Callback for svn_config_walk_auth_data().  *  * Called for each credential walked by that function (and able to be  * fully purged) to allow perusal and selective removal of credentials.  *  * @a cred_kind and @a realmstring specify the key of the credential.  * @a hash contains the hash data associated with the record.  *  * Before returning set @a *delete_cred to TRUE to remove the credential from  * the cache; leave @a *delete_cred unchanged or set it to FALSE to keep the  * credential.  *  * Implementations may return #SVN_ERR_CEASE_INVOCATION to indicate  * that the callback should not be called again.  Note that when that  * error is returned, the value of @a delete_cred will still be  * honored and action taken if necessary.  (For other returned errors,  * @a delete_cred is ignored by svn_config_walk_auth_data().)  *  * @since New in 1.8.  */
+comment|/** Callback for svn_config_walk_auth_data().  *  * Called for each credential walked by that function (and able to be  * fully purged) to allow perusal and selective removal of credentials.  *  * @a cred_kind and @a realmstring specify the key of the credential.  * @a hash contains the hash data associated with the record. @a walk_baton  * is the baton passed to svn_config_walk_auth_data().  *  * Before returning set @a *delete_cred to TRUE to remove the credential from  * the cache; leave @a *delete_cred unchanged or set it to FALSE to keep the  * credential.  *  * Implementations may return #SVN_ERR_CEASE_INVOCATION to indicate  * that the callback should not be called again.  Note that when that  * error is returned, the value of @a delete_cred will still be  * honored and action taken if necessary.  (For other returned errors,  * @a delete_cred is ignored by svn_config_walk_auth_data().)  *  * @since New in 1.8.  */
 typedef|typedef
 name|svn_error_t
 modifier|*
@@ -1233,7 +1311,7 @@ name|delete_cred
 parameter_list|,
 name|void
 modifier|*
-name|cleanup_baton
+name|walk_baton
 parameter_list|,
 specifier|const
 name|char
@@ -1254,7 +1332,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/** Call @a walk_func with @a walk_baton and information describing  * each credential cached within the Subversion auth store located  * under @a config_dir.  If the callback sets its delete_cred return  * flag, delete the associated credential.  *  * If @a config_dir is not NULL, it must point to an alternative  * config directory location. If it is NULL, the default location  * is used.  *  * @note @a config_dir may only be NULL in 1.8.2 and later.  *  * @note Removing credentials from the config-based disk store will  * not purge them from any open svn_auth_baton_t instance.  Consider  * using svn_auth_forget_credentials() -- from the @a cleanup_func,  * even -- for this purpose.  *  * @note Removing credentials from the config-based disk store will  * not also remove any related credentials from third-party password  * stores.  (Implementations of @a walk_func which delete credentials  * may wish to consult the "passtype" element of @a hash, if any, to  * see if a third-party store -- such as "gnome-keyring" or "kwallet"  * is being used to hold the most sensitive portion of the credentials  * for this @a cred_kind and @a realmstring.)  *  * @see svn_auth_forget_credentials()  *  * @since New in 1.8.  */
+comment|/** Call @a walk_func with @a walk_baton and information describing  * each credential cached within the Subversion auth store located  * under @a config_dir.  If the callback sets its delete_cred return  * flag, delete the associated credential.  *  * If @a config_dir is not NULL, it must point to an alternative  * config directory location. If it is NULL, the default location  * is used.  *  * @note @a config_dir may only be NULL in 1.8.2 and later.  *  * @note Removing credentials from the config-based disk store will  * not purge them from any open svn_auth_baton_t instance.  Consider  * using svn_auth_forget_credentials() -- from the @a walk_func,  * even -- for this purpose.  *  * @note Removing credentials from the config-based disk store will  * not also remove any related credentials from third-party password  * stores.  (Implementations of @a walk_func which delete credentials  * may wish to consult the "passtype" element of @a hash, if any, to  * see if a third-party store -- such as "gnome-keyring" or "kwallet"  * is being used to hold the most sensitive portion of the credentials  * for this @a cred_kind and @a realmstring.)  *  * @see svn_auth_forget_credentials()  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_config_walk_auth_data
@@ -1312,6 +1390,7 @@ modifier|*
 modifier|*
 name|cfgp
 parameter_list|,
+specifier|const
 name|svn_config_t
 modifier|*
 name|src

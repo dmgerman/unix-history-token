@@ -46,6 +46,18 @@ file|"svn_repos.h"
 include|#
 directive|include
 file|"svn_ra_svn.h"
+include|#
+directive|include
+file|"private/svn_atomic.h"
+include|#
+directive|include
+file|"private/svn_mutex.h"
+include|#
+directive|include
+file|"private/svn_repos_private.h"
+include|#
+directive|include
+file|"private/svn_subr_private.h"
 enum|enum
 name|username_case_type
 block|{
@@ -56,9 +68,27 @@ block|,
 name|CASE_ASIS
 block|}
 enum|;
+enum|enum
+name|authn_type
+block|{
+name|UNAUTHENTICATED
+block|,
+name|AUTHENTICATED
+block|}
+enum|;
+enum|enum
+name|access_type
+block|{
+name|NO_ACCESS
+block|,
+name|READ_ACCESS
+block|,
+name|WRITE_ACCESS
+block|}
+enum|;
 typedef|typedef
 struct|struct
-name|server_baton_t
+name|repository_t
 block|{
 name|svn_repos_t
 modifier|*
@@ -70,6 +100,12 @@ modifier|*
 name|repos_name
 decl_stmt|;
 comment|/* URI-encoded name of repository (not for authz) */
+specifier|const
+name|char
+modifier|*
+name|repos_root
+decl_stmt|;
+comment|/* Repository root directory */
 name|svn_fs_t
 modifier|*
 name|fs
@@ -81,11 +117,6 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/* Base directory for config files */
-name|svn_config_t
-modifier|*
-name|cfg
-decl_stmt|;
-comment|/* Parsed repository svnserve.conf */
 name|svn_config_t
 modifier|*
 name|pwdb
@@ -114,27 +145,74 @@ modifier|*
 name|repos_url
 decl_stmt|;
 comment|/* URL to base of repository */
+specifier|const
+name|char
+modifier|*
+name|hooks_env
+decl_stmt|;
+comment|/* Path to the hooks environment file or NULL */
+specifier|const
+name|char
+modifier|*
+name|uuid
+decl_stmt|;
+comment|/* Repository ID */
+name|apr_array_header_t
+modifier|*
+name|capabilities
+decl_stmt|;
+comment|/* Client capabilities (SVN_RA_CAPABILITY_*) */
 name|svn_stringbuf_t
 modifier|*
 name|fs_path
 decl_stmt|;
 comment|/* Decoded base in-repos path (w/ leading slash) */
-name|apr_hash_t
-modifier|*
-name|fs_config
+name|enum
+name|username_case_type
+name|username_case
 decl_stmt|;
-comment|/* Additional FS configuration parameters */
+comment|/* Case-normalize the username? */
+name|svn_boolean_t
+name|use_sasl
+decl_stmt|;
+comment|/* Use Cyrus SASL for authentication;                               always false if SVN_HAVE_SASL not defined */
+name|unsigned
+name|min_ssf
+decl_stmt|;
+comment|/* min-encryption SASL parameter */
+name|unsigned
+name|max_ssf
+decl_stmt|;
+comment|/* max-encryption SASL parameter */
+name|enum
+name|access_type
+name|auth_access
+decl_stmt|;
+comment|/* access granted to authenticated users */
+name|enum
+name|access_type
+name|anon_access
+decl_stmt|;
+comment|/* access granted to annonymous users */
+block|}
+name|repository_t
+typedef|;
+typedef|typedef
+struct|struct
+name|client_info_t
+block|{
 specifier|const
 name|char
 modifier|*
 name|user
 decl_stmt|;
 comment|/* Authenticated username of the user */
-name|enum
-name|username_case_type
-name|username_case
+specifier|const
+name|char
+modifier|*
+name|remote_host
 decl_stmt|;
-comment|/* Case-normalize the username? */
+comment|/* IP of the client that contacted the server */
 specifier|const
 name|char
 modifier|*
@@ -151,19 +229,33 @@ modifier|*
 name|tunnel_user
 decl_stmt|;
 comment|/* Allow EXTERNAL to authenticate as this */
+block|}
+name|client_info_t
+typedef|;
+typedef|typedef
+struct|struct
+name|server_baton_t
+block|{
+name|repository_t
+modifier|*
+name|repository
+decl_stmt|;
+comment|/* repository-specific data to use */
+name|client_info_t
+modifier|*
+name|client_info
+decl_stmt|;
+comment|/* client-specific data to use */
+name|struct
+name|logger_t
+modifier|*
+name|logger
+decl_stmt|;
+comment|/* Log file data structure.                               May be NULL even if log_file is not. */
 name|svn_boolean_t
 name|read_only
 decl_stmt|;
 comment|/* Disallow write access (global flag) */
-name|svn_boolean_t
-name|use_sasl
-decl_stmt|;
-comment|/* Use Cyrus SASL for authentication;                               always false if SVN_HAVE_SASL not defined */
-name|apr_file_t
-modifier|*
-name|log_file
-decl_stmt|;
-comment|/* Log filehandle. */
 name|svn_boolean_t
 name|vhost
 decl_stmt|;
@@ -175,37 +267,6 @@ decl_stmt|;
 block|}
 name|server_baton_t
 typedef|;
-enum|enum
-name|authn_type
-block|{
-name|UNAUTHENTICATED
-block|,
-name|AUTHENTICATED
-block|}
-enum|;
-enum|enum
-name|access_type
-block|{
-name|NO_ACCESS
-block|,
-name|READ_ACCESS
-block|,
-name|WRITE_ACCESS
-block|}
-enum|;
-name|enum
-name|access_type
-name|get_access
-parameter_list|(
-name|server_baton_t
-modifier|*
-name|b
-parameter_list|,
-name|enum
-name|authn_type
-name|auth
-parameter_list|)
-function_decl|;
 typedef|typedef
 struct|struct
 name|serve_params_t
@@ -241,27 +302,31 @@ name|svn_config_t
 modifier|*
 name|cfg
 decl_stmt|;
-comment|/* A filehandle open for writing logs to; possibly NULL. */
-name|apr_file_t
+comment|/* logging data structure; possibly NULL. */
+name|struct
+name|logger_t
 modifier|*
-name|log_file
+name|logger
+decl_stmt|;
+comment|/* all configurations should be opened through this factory */
+name|svn_repos__config_pool_t
+modifier|*
+name|config_pool
+decl_stmt|;
+comment|/* all authz data should be opened through this factory */
+name|svn_repos__authz_pool_t
+modifier|*
+name|authz_pool
+decl_stmt|;
+comment|/* The FS configuration to be applied to all repositories.      It mainly contains things like cache settings. */
+name|apr_hash_t
+modifier|*
+name|fs_config
 decl_stmt|;
 comment|/* Username case normalization style. */
 name|enum
 name|username_case_type
 name|username_case
-decl_stmt|;
-comment|/* Enable text delta caching for all FSFS repositories. */
-name|svn_boolean_t
-name|cache_txdeltas
-decl_stmt|;
-comment|/* Enable full-text caching for all FSFS repositories. */
-name|svn_boolean_t
-name|cache_fulltexts
-decl_stmt|;
-comment|/* Enable revprop caching for all FSFS repositories. */
-name|svn_boolean_t
-name|cache_revprops
 decl_stmt|;
 comment|/* Size of the in-memory cache (used by FSFS only). */
 name|apr_uint64_t
@@ -286,6 +351,61 @@ decl_stmt|;
 block|}
 name|serve_params_t
 typedef|;
+comment|/* This structure contains all data that describes a client / server    connection.  Their lifetime is separated from the thread-local    serving pools. */
+typedef|typedef
+struct|struct
+name|connection_t
+block|{
+comment|/* socket return by accept() */
+name|apr_socket_t
+modifier|*
+name|usock
+decl_stmt|;
+comment|/* server-global parameters */
+name|serve_params_t
+modifier|*
+name|params
+decl_stmt|;
+comment|/* connection-specific objects */
+name|server_baton_t
+modifier|*
+name|baton
+decl_stmt|;
+comment|/* buffered connection object used by the marshaller */
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+decl_stmt|;
+comment|/* memory pool for objects with connection lifetime */
+name|apr_pool_t
+modifier|*
+name|pool
+decl_stmt|;
+comment|/* Number of threads using the pool.      The pool passed to apr_thread_create can only be released when both          A: the call to apr_thread_create has returned to the calling thread         B: the new thread has started running and reached apr_thread_start_t       So we set the atomic counter to 2 then both the calling thread and      the new thread decrease it and when it reaches 0 the pool can be      released.  */
+name|svn_atomic_t
+name|ref_count
+decl_stmt|;
+block|}
+name|connection_t
+typedef|;
+comment|/* Return a client_info_t structure allocated in POOL and initialize it  * with data from CONN. */
+name|client_info_t
+modifier|*
+name|get_client_info
+parameter_list|(
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|serve_params_t
+modifier|*
+name|params
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/* Serve the connection CONN according to the parameters PARAMS. */
 name|svn_error_t
 modifier|*
@@ -304,41 +424,28 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Load the password database for the listening server based on the    entries in the SERVER struct.     SERVER and CONN must not be NULL. The real errors will be logged with    SERVER and CONN but return generic errors to the client. */
+comment|/* Serve the connection CONNECTION for as long as IS_BUSY does not    return TRUE.  If IS_BUSY is NULL, serve the connection until it    either gets terminated or there is an error.  If TERMINATE_P is    not NULL, set *TERMINATE_P to TRUE if the connection got    terminated.     For the first call, CONNECTION->CONN may be NULL in which case we    will create an ra_svn connection object.  Subsequent calls will    check for an open repository and automatically re-open the repo    in pool if necessary.  */
 name|svn_error_t
 modifier|*
-name|load_pwdb_config
+name|serve_interruptable
 parameter_list|(
-name|server_baton_t
+name|svn_boolean_t
 modifier|*
-name|server
+name|terminate_p
 parameter_list|,
-name|svn_ra_svn_conn_t
+name|connection_t
 modifier|*
-name|conn
+name|connection
 parameter_list|,
-name|apr_pool_t
+name|svn_boolean_t
+function_decl|(
 modifier|*
-name|pool
+name|is_busy
+function_decl|)
+parameter_list|(
+name|connection_t
+modifier|*
 parameter_list|)
-function_decl|;
-comment|/* Load the authz database for the listening server based on the    entries in the SERVER struct.     SERVER and CONN must not be NULL. The real errors will be logged with    SERVER and CONN but return generic errors to the client. */
-name|svn_error_t
-modifier|*
-name|load_authz_config
-parameter_list|(
-name|server_baton_t
-modifier|*
-name|server
-parameter_list|,
-name|svn_ra_svn_conn_t
-modifier|*
-name|conn
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|repos_root
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -395,38 +502,6 @@ name|source
 parameter_list|,
 name|apr_size_t
 name|buflen
-parameter_list|)
-function_decl|;
-comment|/* Log ERR to LOG_FILE if LOG_FILE is not NULL.  Include REMOTE_HOST,    USER, and REPOS in the log if they are not NULL.  Allocate temporary    char buffers in POOL (which caller can then clear or dispose of). */
-name|void
-name|log_error
-parameter_list|(
-name|svn_error_t
-modifier|*
-name|err
-parameter_list|,
-name|apr_file_t
-modifier|*
-name|log_file
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|remote_host
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|user
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|repos
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
 parameter_list|)
 function_decl|;
 ifdef|#

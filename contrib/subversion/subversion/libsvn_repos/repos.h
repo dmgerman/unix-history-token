@@ -604,6 +604,20 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* Walk the configuration in AUTHZ looking for any errors. */
+name|svn_error_t
+modifier|*
+name|svn_repos__authz_validate
+parameter_list|(
+name|svn_authz_t
+modifier|*
+name|authz
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/*** Utility Functions ***/
 comment|/* Set *CHANGED_P to TRUE if ROOT1/PATH1 and ROOT2/PATH2 have    different contents, FALSE if they have the same contents.    Use POOL for temporary allocation. */
 name|svn_error_t

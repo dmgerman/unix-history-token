@@ -1122,11 +1122,7 @@ name|path
 argument_list|,
 literal|"/"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|lookup_len

@@ -250,6 +250,10 @@ decl_stmt|;
 name|svn_boolean_t
 name|is_tunneled
 decl_stmt|;
+name|svn_auth_baton_t
+modifier|*
+name|auth_baton
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -274,6 +278,11 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|tunnel_name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 modifier|*
 name|tunnel_argv
 decl_stmt|;
@@ -285,6 +294,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|callbacks_baton
+decl_stmt|;
+name|apr_hash_t
+modifier|*
+name|config
 decl_stmt|;
 name|apr_off_t
 name|bytes_read
@@ -316,16 +329,17 @@ name|baton
 parameter_list|)
 function_decl|;
 comment|/* Return true if there is input waiting on conn. */
-name|svn_boolean_t
-name|svn_ra_svn__input_waiting
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__data_available
 parameter_list|(
 name|svn_ra_svn_conn_t
 modifier|*
 name|conn
 parameter_list|,
-name|apr_pool_t
+name|svn_boolean_t
 modifier|*
-name|pool
+name|data_available
 parameter_list|)
 function_decl|;
 comment|/* CRAM-MD5 client implementation. */
@@ -397,18 +411,18 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Returns a stream that reads from IN_FILE and writes to OUT_FILE.  */
+comment|/* Returns a stream that reads from IN_STREAM and writes to OUT_STREAM,    creating a timeout callback for OUT_STREAM if possible  */
 name|svn_ra_svn__stream_t
 modifier|*
-name|svn_ra_svn__stream_from_files
+name|svn_ra_svn__stream_from_streams
 parameter_list|(
-name|apr_file_t
+name|svn_stream_t
 modifier|*
-name|in_file
+name|in_stream
 parameter_list|,
-name|apr_file_t
+name|svn_stream_t
 modifier|*
-name|out_file
+name|out_stream
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -420,25 +434,24 @@ name|svn_ra_svn__stream_t
 modifier|*
 name|svn_ra_svn__stream_create
 parameter_list|(
+name|svn_stream_t
+modifier|*
+name|in_stream
+parameter_list|,
+name|svn_stream_t
+modifier|*
+name|out_stream
+parameter_list|,
 name|void
 modifier|*
-name|baton
-parameter_list|,
-name|svn_read_fn_t
-name|read_cb
-parameter_list|,
-name|svn_write_fn_t
-name|write_cb
+name|timeout_baton
 parameter_list|,
 name|ra_svn_timeout_fn_t
 name|timeout_cb
 parameter_list|,
-name|ra_svn_pending_fn_t
-name|pending_cb
-parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
 parameter_list|)
 function_decl|;
 comment|/* Write *LEN bytes from DATA to STREAM, returning the number of bytes  * written in *LEN.  */
@@ -511,12 +524,17 @@ name|interval
 parameter_list|)
 function_decl|;
 comment|/* Return whether or not there is data pending on STREAM. */
-name|svn_boolean_t
-name|svn_ra_svn__stream_pending
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__stream_data_available
 parameter_list|(
 name|svn_ra_svn__stream_t
 modifier|*
 name|stream
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|data_available
 parameter_list|)
 function_decl|;
 comment|/* Respond to an auth request and perform authentication.  Use the Cyrus  * SASL library for mechanism negotiation and for creating authentication  * tokens. */

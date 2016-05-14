@@ -422,7 +422,7 @@ condition|)
 return|return
 name|svn_error_create
 argument_list|(
-name|SVN_ERR_CL_ERROR_PROCESSING_EXTERNALS
+name|SVN_ERR_WC_CONFLICT_RESOLVER_FAILURE
 argument_list|,
 name|NULL
 argument_list|,

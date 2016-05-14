@@ -260,7 +260,7 @@ name|char
 modifier|*
 name|message
 decl_stmt|;
-comment|/* log message */
+comment|/* log message (not converted to UTF-8) */
 name|svn_boolean_t
 name|force
 decl_stmt|;
@@ -293,21 +293,17 @@ name|svn_boolean_t
 name|update
 decl_stmt|;
 comment|/* contact the server for the full story */
-name|svn_boolean_t
-name|strict
-decl_stmt|;
-comment|/* do strictly what was requested */
 name|svn_stringbuf_t
 modifier|*
 name|filedata
 decl_stmt|;
-comment|/* contents of file used as option data */
+comment|/* contents of file used as option data                                     (not converted to UTF-8) */
 specifier|const
 name|char
 modifier|*
 name|encoding
 decl_stmt|;
-comment|/* the locale/encoding of the data*/
+comment|/* the locale/encoding of 'message' and of                                     'filedata' (not converted to UTF-8) */
 name|svn_boolean_t
 name|help
 decl_stmt|;
@@ -318,27 +314,23 @@ modifier|*
 name|auth_username
 decl_stmt|;
 comment|/* auth username */
-comment|/* UTF-8! */
 specifier|const
 name|char
 modifier|*
 name|auth_password
 decl_stmt|;
 comment|/* auth password */
-comment|/* UTF-8! */
 specifier|const
 name|char
 modifier|*
 name|extensions
 decl_stmt|;
 comment|/* subprocess extension args */
-comment|/* UTF-8! */
 name|apr_array_header_t
 modifier|*
 name|targets
 decl_stmt|;
 comment|/* target list from file */
-comment|/* UTF-8! */
 name|svn_boolean_t
 name|xml
 decl_stmt|;
@@ -358,7 +350,7 @@ name|char
 modifier|*
 name|diff_cmd
 decl_stmt|;
-comment|/* the external diff command to use */
+comment|/* the external diff command to use                                         (not converted to UTF-8) */
 name|svn_boolean_t
 name|internal_diff
 decl_stmt|;
@@ -427,13 +419,13 @@ name|char
 modifier|*
 name|merge_cmd
 decl_stmt|;
-comment|/* the external merge command to use */
+comment|/* the external merge command to use                                     (not converted to UTF-8) */
 specifier|const
 name|char
 modifier|*
 name|editor_cmd
 decl_stmt|;
-comment|/* the external editor command to use */
+comment|/* the external editor command to use                                     (not converted to UTF-8) */
 name|svn_boolean_t
 name|record_only
 decl_stmt|;
@@ -488,12 +480,6 @@ modifier|*
 name|changelists
 decl_stmt|;
 comment|/* changelist filters */
-specifier|const
-name|char
-modifier|*
-name|changelist
-decl_stmt|;
-comment|/* operate on this changelist                                     THIS IS TEMPORARY (LAST OF CHANGELISTS) */
 name|svn_boolean_t
 name|keep_changelists
 decl_stmt|;
@@ -514,7 +500,7 @@ name|apr_hash_t
 modifier|*
 name|revprop_table
 decl_stmt|;
-comment|/* table of revision properties to get/set */
+comment|/* table of revision properties to get/set                                     (not converted to UTF-8) */
 name|svn_boolean_t
 name|parents
 decl_stmt|;
@@ -539,10 +525,22 @@ name|svn_boolean_t
 name|reintegrate
 decl_stmt|;
 comment|/* use "reintegrate" merge-source heuristic */
+comment|/* trust server SSL certs that would otherwise be rejected as "untrusted" */
 name|svn_boolean_t
-name|trust_server_cert
+name|trust_server_cert_unknown_ca
 decl_stmt|;
-comment|/* trust server SSL certs that would                                       otherwise be rejected as "untrusted" */
+name|svn_boolean_t
+name|trust_server_cert_cn_mismatch
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_expired
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_not_yet_valid
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_other_failure
+decl_stmt|;
 name|int
 name|strip
 decl_stmt|;
@@ -580,6 +578,36 @@ modifier|*
 name|search_patterns
 decl_stmt|;
 comment|/* pattern arguments for --search */
+name|svn_boolean_t
+name|mergeinfo_log
+decl_stmt|;
+comment|/* show log message in mergeinfo command */
+name|svn_boolean_t
+name|remove_unversioned
+decl_stmt|;
+comment|/* remove unversioned items */
+name|svn_boolean_t
+name|remove_ignored
+decl_stmt|;
+comment|/* remove ignored items */
+name|svn_boolean_t
+name|no_newline
+decl_stmt|;
+comment|/* do not output the trailing newline */
+name|svn_boolean_t
+name|show_passwords
+decl_stmt|;
+comment|/* show cached passwords */
+name|svn_boolean_t
+name|pin_externals
+decl_stmt|;
+comment|/* pin externals to last-changed revisions */
+specifier|const
+name|char
+modifier|*
+name|show_item
+decl_stmt|;
+comment|/* print only the given item */
 block|}
 name|svn_cl__opt_state_t
 typedef|;
@@ -601,6 +629,8 @@ typedef|;
 comment|/* Declare all the command procedures */
 name|svn_opt_subcommand_t
 name|svn_cl__add
+decl_stmt|,
+name|svn_cl__auth
 decl_stmt|,
 name|svn_cl__blame
 decl_stmt|,
@@ -693,7 +723,7 @@ name|apr_getopt_option_t
 name|svn_cl__options
 index|[]
 decl_stmt|;
-comment|/* A helper for the many subcommands that wish to merely warn when  * invoked on an unversioned, nonexistent, or otherwise innocuously  * errorful resource.  Meant to be wrapped with SVN_ERR().  *  * If ERR is null, return SVN_NO_ERROR.  *  * Else if ERR->apr_err is one of the error codes supplied in varargs,  * then handle ERR as a warning (unless QUIET is true), clear ERR, and  * return SVN_NO_ERROR, and push the value of ERR->apr_err into the  * ERRORS_SEEN array, if ERRORS_SEEN is not NULL.  *  * Else return ERR.  *  * Typically, error codes like SVN_ERR_UNVERSIONED_RESOURCE,  * SVN_ERR_ENTRY_NOT_FOUND, etc, are supplied in varargs.  Don't  * forget to terminate the argument list with SVN_NO_ERROR.  */
+comment|/* A helper for the many subcommands that wish to merely warn when  * invoked on an unversioned, nonexistent, or otherwise innocuously  * errorful resource.  Meant to be wrapped with SVN_ERR().  *  * If ERR is null, return SVN_NO_ERROR.  *  * Else if ERR->apr_err is one of the error codes supplied in varargs,  * then handle ERR as a warning (unless QUIET is true), clear ERR, and  * return SVN_NO_ERROR, and push the value of ERR->apr_err into the  * ERRORS_SEEN array, if ERRORS_SEEN is not NULL.  *  * Else return ERR.  *  * Typically, error codes like SVN_ERR_UNVERSIONED_RESOURCE,  * SVN_ERR_ENTRY_NOT_FOUND, etc, are supplied in varargs.  Don't  * forget to terminate the argument list with 0 (or APR_SUCCESS).  */
 name|svn_error_t
 modifier|*
 name|svn_cl__try
@@ -760,6 +790,20 @@ name|path_local
 parameter_list|,
 name|svn_wc_conflict_kind_t
 name|conflict_kind
+parameter_list|)
+function_decl|;
+comment|/* Print the conflict stats accumulated in CONFLICT_STATS.  *  * Return any error encountered during printing.  * See also svn_cl__notifier_print_conflict_stats().  */
+name|svn_error_t
+modifier|*
+name|svn_cl__print_conflict_stats
+parameter_list|(
+name|svn_cl__conflict_stats_t
+modifier|*
+name|conflict_stats
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Create and return an baton for use with svn_cl__conflict_func_interactive  * in *B, allocated from RESULT_POOL, and initialised with the values  * ACCEPT_WHICH, CONFIG, EDITOR_CMD, CANCEL_FUNC and CANCEL_BATON. */
@@ -1091,6 +1135,10 @@ name|svn_error_t
 modifier|*
 name|svn_cl__merge_file
 parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|remains_in_conflict
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1130,9 +1178,12 @@ name|apr_hash_t
 modifier|*
 name|config
 parameter_list|,
-name|svn_boolean_t
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
 modifier|*
-name|remains_in_conflict
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1230,7 +1281,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Print the conflict stats accumulated in BATON, which is the  * notifier baton from svn_cl__get_notifier().  * Return any error encountered during printing.  */
+comment|/* Print the conflict stats accumulated in BATON, which is the  * notifier baton from svn_cl__get_notifier().  This is just like  * calling svn_cl__print_conflict_stats().  *  * Return any error encountered during printing.  */
 name|svn_error_t
 modifier|*
 name|svn_cl__notifier_print_conflict_stats
@@ -1726,6 +1777,66 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/* Forward declaration of the similarity check context. */
+typedef|typedef
+name|struct
+name|svn_cl__simcheck_context_t
+name|svn_cl__simcheck_context_t
+typedef|;
+comment|/* Token definition for the similarity check. */
+typedef|typedef
+struct|struct
+name|svn_cl__simcheck_t
+block|{
+comment|/* The token we're checking for similarity. */
+name|svn_string_t
+name|token
+decl_stmt|;
+comment|/* User data associated with this token. */
+specifier|const
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/*    * The following fields are populated by svn_cl__similarity_check.    */
+comment|/* Similarity score [0..SVN_STRING__SIM_RANGE_MAX] */
+name|apr_size_t
+name|score
+decl_stmt|;
+comment|/* Number of characters of difference from the key. */
+name|apr_size_t
+name|diff
+decl_stmt|;
+comment|/* Similarity check context (private) */
+name|svn_cl__simcheck_context_t
+modifier|*
+name|context
+decl_stmt|;
+block|}
+name|svn_cl__simcheck_t
+typedef|;
+comment|/* Find the entries in TOKENS that are most similar to KEY.  * TOKEN_COUNT is the number of entries in the (mutable) TOKENS array.  * Use SCRATCH_POOL for temporary allocations.  *  * On return, the TOKENS array will be sorted according to similarity  * to KEY, in descending order. The return value will be zero if the  * first token is an exact match; otherwise, it will be one more than  * the number of tokens that are at least two-thirds similar to KEY.  */
+name|apr_size_t
+name|svn_cl__similarity_check
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|,
+name|svn_cl__simcheck_t
+modifier|*
+modifier|*
+name|tokens
+parameter_list|,
+name|apr_size_t
+name|token_count
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 ifdef|#

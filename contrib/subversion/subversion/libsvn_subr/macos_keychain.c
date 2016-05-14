@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_auth_private.h"
 end_include
 
@@ -739,7 +745,7 @@ end_comment
 
 begin_function
 name|void
-name|svn_auth_get_keychain_simple_provider
+name|svn_auth__get_keychain_simple_provider
 parameter_list|(
 name|svn_auth_provider_object_t
 modifier|*
@@ -783,7 +789,7 @@ end_function
 
 begin_function
 name|void
-name|svn_auth_get_keychain_ssl_client_cert_pw_provider
+name|svn_auth__get_keychain_ssl_client_cert_pw_provider
 parameter_list|(
 name|svn_auth_provider_object_t
 modifier|*

@@ -120,23 +120,24 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/** Join multiple components onto a @a base dirent. The components are  * terminated by a @c NULL.  *  * If any component is the empty string, it will be ignored.  *  * If any component is an absolute dirent, then it resets the base and  * further components will be appended to it.  *  * See svn_dirent_join() for further notes about joining dirents.  *  * Allocate the result in @a result_pool.  *  * @since New in 1.6.  */
+comment|/** Join multiple components onto a @a base dirent. The components are  * terminated by a @c SVN_VA_NULL.  *  * If any component is the empty string, it will be ignored.  *  * If any component is an absolute dirent, then it resets the base and  * further components will be appended to it.  *  * See svn_dirent_join() for further notes about joining dirents.  *  * Allocate the result in @a result_pool.  *  * @since New in 1.6.  */
 name|char
 modifier|*
 name|svn_dirent_join_many
-parameter_list|(
+argument_list|(
 name|apr_pool_t
-modifier|*
+operator|*
 name|result_pool
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|base
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+argument_list|,
+operator|...
+argument_list|)
+name|SVN_NEEDS_SENTINEL_NULL
+decl_stmt|;
 comment|/** Join a base relpath (@a base) with a component (@a component).  * @a component need not be a single component.  *  * If either @a base or @a component is the empty path, then the other  * argument will be copied and returned.  If both are the empty path the  * empty path is returned.  *  * Allocate the result in @a result_pool.  *  * @since New in 1.7.  */
 name|char
 modifier|*
@@ -265,6 +266,25 @@ specifier|const
 name|char
 modifier|*
 name|relpath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
+comment|/** Return a maximum of @a max_components components of @a relpath. This is  * an efficient way of calling svn_relpath_dirname() multiple times until only  * a specific number of components is left.  *  * Allocate the result in @a result_pool (or statically in case of 0)  *  * @since New in 1.9.  */
+specifier|const
+name|char
+modifier|*
+name|svn_relpath_prefix
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|relpath
+parameter_list|,
+name|int
+name|max_components
 parameter_list|,
 name|apr_pool_t
 modifier|*

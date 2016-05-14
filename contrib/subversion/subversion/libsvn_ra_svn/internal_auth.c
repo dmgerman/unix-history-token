@@ -424,8 +424,6 @@ name|realmstring
 argument_list|,
 name|sess
 operator|->
-name|callbacks
-operator|->
 name|auth_baton
 argument_list|,
 name|pool

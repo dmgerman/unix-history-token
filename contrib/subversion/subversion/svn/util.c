@@ -257,6 +257,7 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+comment|/* Be very careful with returning errors from this callback as those      will be returned as errors from editor->close_edit(...), which may      cause callers to assume that the commit itself failed.       See log message of r1659867 and the svn_ra_get_commit_editor3      documentation for details on error scenarios. */
 if|if
 condition|(
 name|SVN_IS_VALID_REVNUM
@@ -274,7 +275,7 @@ name|pool
 argument_list|,
 name|_
 argument_list|(
-literal|"\nCommitted revision %ld%s.\n"
+literal|"Committed revision %ld%s.\n"
 argument_list|)
 argument_list|,
 name|commit_info
@@ -655,8 +656,10 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"The external merge tool exited with exit code %d"
+literal|"The external merge tool '%s' exited with exit code %d."
 argument_list|)
+argument_list|,
+name|merge_tool
 argument_list|,
 name|exitcode
 argument_list|)
@@ -774,7 +777,7 @@ name|log_msg_baton
 modifier|*
 name|lmb
 init|=
-name|apr_palloc
+name|apr_pcalloc
 argument_list|(
 name|pool
 argument_list|,
@@ -907,15 +910,18 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|lmb
+operator|->
+name|message_encoding
+operator|=
+name|NULL
+expr_stmt|;
 name|lmb
 operator|->
 name|base_dir
 operator|=
 name|base_dir
-condition|?
-name|base_dir
-else|:
-literal|""
 expr_stmt|;
 name|lmb
 operator|->
@@ -1233,6 +1239,8 @@ literal|"PR:"
 block|,
 literal|"Submitted by:"
 block|,
+literal|"Reported by:"
+block|,
 literal|"Reviewed by:"
 block|,
 literal|"Approved by:"
@@ -1240,6 +1248,8 @@ block|,
 literal|"Obtained from:"
 block|,
 literal|"MFC after:"
+block|,
+literal|"MFH:"
 block|,
 literal|"Relnotes:"
 block|,
@@ -1640,6 +1650,14 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
+literal|"Reported by:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
 literal|"Reviewed by:\t"
 name|APR_EOL_STR
 argument_list|)
@@ -1698,6 +1716,14 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"MFH:\t\t"
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1826,7 +1852,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> PR:                       If a Bugzilla PR is affected by the change."
+literal|"> PR:                       If and which Problem Report is related."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1838,6 +1864,17 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"> Submitted by:             If someone else sent in the change."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Reported by:              If someone else reported the issue."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1979,11 +2016,11 @@ operator|->
 name|message
 condition|)
 block|{
-name|svn_stringbuf_t
+name|svn_string_t
 modifier|*
-name|log_msg_buf
+name|log_msg_str
 init|=
-name|svn_stringbuf_create
+name|svn_string_create
 argument_list|(
 name|lmb
 operator|->
@@ -1992,68 +2029,6 @@ argument_list|,
 name|pool
 argument_list|)
 decl_stmt|;
-name|svn_string_t
-modifier|*
-name|log_msg_str
-init|=
-name|apr_pcalloc
-argument_list|(
-name|pool
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|log_msg_str
-argument_list|)
-argument_list|)
-decl_stmt|;
-comment|/* Trim incoming messages of the EOF marker text and the junk          that follows it.  */
-name|truncate_buffer_at_prefix
-argument_list|(
-operator|&
-operator|(
-name|log_msg_buf
-operator|->
-name|len
-operator|)
-argument_list|,
-name|log_msg_buf
-operator|->
-name|data
-argument_list|,
-name|EDITOR_EOF_PREFIX
-argument_list|)
-expr_stmt|;
-name|cleanmsg
-argument_list|(
-name|NULL
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|log_msg_buf
-operator|->
-name|data
-argument_list|)
-expr_stmt|;
-comment|/* Make a string from a stringbuf, sharing the data allocation. */
-name|log_msg_str
-operator|->
-name|data
-operator|=
-name|log_msg_buf
-operator|->
-name|data
-expr_stmt|;
-name|log_msg_str
-operator|->
-name|len
-operator|=
-name|log_msg_buf
-operator|->
-name|len
-expr_stmt|;
 name|SVN_ERR_W
 argument_list|(
 name|svn_subst_translate_string2
@@ -2061,9 +2036,9 @@ argument_list|(
 operator|&
 name|log_msg_str
 argument_list|,
-name|FALSE
+name|NULL
 argument_list|,
-name|FALSE
+name|NULL
 argument_list|,
 name|log_msg_str
 argument_list|,
@@ -2082,6 +2057,45 @@ name|_
 argument_list|(
 literal|"Error normalizing log message to internal format"
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Strip off the EOF marker text and the junk that follows it. */
+name|truncate_buffer_at_prefix
+argument_list|(
+operator|&
+operator|(
+name|log_msg_str
+operator|->
+name|len
+operator|)
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|log_msg_str
+operator|->
+name|data
+argument_list|,
+name|EDITOR_EOF_PREFIX
+argument_list|)
+expr_stmt|;
+name|cleanmsg
+argument_list|(
+operator|&
+operator|(
+name|log_msg_str
+operator|->
+name|len
+operator|)
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|log_msg_str
+operator|->
+name|data
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2220,22 +2234,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
-operator|*
-name|path
-condition|)
-name|path
-operator|=
-literal|"."
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|svn_path_is_url
-argument_list|(
-name|path
-argument_list|)
-operator|&&
 name|lmb
 operator|->
 name|base_dir
@@ -2257,6 +2255,10 @@ comment|/* If still no path, then just use current directory. */
 if|if
 condition|(
 operator|!
+name|path
+operator|||
+operator|!
+operator|*
 name|path
 condition|)
 name|path
@@ -2457,6 +2459,12 @@ argument_list|,
 name|lmb
 operator|->
 name|base_dir
+condition|?
+name|lmb
+operator|->
+name|base_dir
+else|:
+literal|""
 argument_list|,
 name|msg_string
 argument_list|,
@@ -2561,7 +2569,7 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* Strip the prefix from the buffer. */
+comment|/* Strip off the EOF marker text and the junk that follows it. */
 if|if
 condition|(
 name|message
@@ -2882,12 +2890,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
+name|apr_get_os_error
+argument_list|()
 condition|)
+comment|/* is errno on POSIX */
 return|return
 name|svn_error_wrap_apr
 argument_list|(
-name|errno
+name|apr_get_os_error
+argument_list|()
 argument_list|,
 name|_
 argument_list|(
@@ -3121,7 +3132,7 @@ name|svn_xml_protect_pcdata
 argument_list|,
 name|tagname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_xml_escape_cdata_cstring
@@ -3195,7 +3206,7 @@ argument_list|,
 name|revision
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* "<author>xx</author>" */
@@ -3273,7 +3284,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"lock"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* "<token>xx</token>" */
@@ -3424,7 +3435,7 @@ name|svn_xml_normal
 argument_list|,
 name|tagname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 return|return

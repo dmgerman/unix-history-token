@@ -125,6 +125,26 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TERMIOS_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Baton for functions in this file which implement svn_diff_output_fns_t. */
 end_comment
@@ -176,7 +196,7 @@ name|apr_hash_t
 modifier|*
 name|config
 decl_stmt|;
-comment|/* Wether the merge should be aborted. */
+comment|/* Whether the merge should be aborted. */
 name|svn_boolean_t
 name|abort_merge
 decl_stmt|;
@@ -186,7 +206,6 @@ modifier|*
 name|scratch_pool
 decl_stmt|;
 block|}
-name|file_merge_baton
 struct|;
 end_struct
 
@@ -1864,7 +1883,7 @@ return|;
 block|}
 name|SVN_ERR
 argument_list|(
-name|svn_io_file_flush_to_disk
+name|svn_io_file_flush
 argument_list|(
 name|temp_file
 argument_list|,
@@ -3392,6 +3411,10 @@ name|svn_error_t
 modifier|*
 name|svn_cl__merge_file
 parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|remains_in_conflict
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3431,9 +3454,12 @@ name|apr_hash_t
 modifier|*
 name|config
 parameter_list|,
-name|svn_boolean_t
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
 modifier|*
-name|remains_in_conflict
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -3719,7 +3745,7 @@ name|scratch_pool
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_diff_output
+name|svn_diff_output2
 argument_list|(
 name|diff
 argument_list|,
@@ -3728,6 +3754,10 @@ name|fmb
 argument_list|,
 operator|&
 name|file_merge_diff_output_fns
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -33,6 +33,12 @@ directive|include
 file|"private/svn_cache.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"id.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -312,6 +318,24 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* Set *HAS_PROPS to TRUE if NODE has properties. Use SCRATCH_POOL    for temporary allocations */
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__dag_has_props
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|has_props
+parameter_list|,
+name|dag_node_t
+modifier|*
+name|node
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Set the property list of NODE to PROPLIST, allocating from POOL.    The node being changed must be mutable.     Use POOL for all allocations.  */
 name|svn_error_t
 modifier|*
@@ -402,7 +426,7 @@ modifier|*
 name|fs
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -426,7 +450,7 @@ modifier|*
 name|fs
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -450,7 +474,7 @@ modifier|*
 name|fs
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -460,7 +484,7 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/* Directories.  */
-comment|/* Open the node named NAME in the directory PARENT.  Set *CHILD_P to    the new node, allocated in RESULT_POOL.  NAME must be a single path    component; it cannot be a slash-separated directory path.  */
+comment|/* Open the node named NAME in the directory PARENT.  Set *CHILD_P to    the new node, allocated in RESULT_POOL.  NAME must be a single path    component; it cannot be a slash-separated directory path.  If NAME does    not exist within PARENT, set *CHILD_P to NULL.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__dag_open
@@ -488,12 +512,12 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set *ENTRIES_P to a hash table of NODE's entries.  The keys of the    table are entry names, and the values are svn_fs_dirent_t's.  The    returned table (and its keys and values) is allocated in POOL,    which is also used for temporary allocations. */
+comment|/* Set *ENTRIES_P to an array of NODE's entries, sorted by entry names,    and the values are svn_fs_dirent_t's.  The returned table (and elements)    is allocated in POOL, which is also used for temporary allocations. */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__dag_dir_entries
 parameter_list|(
-name|apr_hash_t
+name|apr_array_header_t
 modifier|*
 modifier|*
 name|entries_p
@@ -507,7 +531,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Fetches the NODE's entries and returns a copy of the entry selected    by the key value given in NAME and set *DIRENT to a copy of that    entry. If such entry was found, the copy will be allocated in POOL.    Otherwise, the *DIRENT will be set to NULL.  */
+comment|/* Fetches the NODE's entries and returns a copy of the entry selected    by the key value given in NAME and set *DIRENT to a copy of that    entry. If such entry was found, the copy will be allocated in    RESULT_POOL.  Temporary data will be used in SCRATCH_POOL.    Otherwise, the *DIRENT will be set to NULL.  */
 comment|/* ### This function is currently only called from dag.c. */
 name|svn_error_t
 modifier|*
@@ -529,7 +553,11 @@ name|name
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Set ENTRY_NAME in NODE to point to ID (with kind KIND), allocating    from POOL.  NODE must be a mutable directory.  ID can refer to a    mutable or immutable node.  If ENTRY_NAME does not exist, it will    be created.  TXN_ID is the Subversion transaction under which this    occurs.     Use POOL for all allocations, including to cache the node_revision in    NODE.  */
@@ -555,7 +583,7 @@ name|svn_node_kind_t
 name|kind
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -589,12 +617,12 @@ modifier|*
 name|name
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|copy_id
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -621,7 +649,7 @@ modifier|*
 name|name
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -693,7 +721,7 @@ modifier|*
 name|name
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -873,7 +901,7 @@ modifier|*
 name|name
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -913,7 +941,7 @@ modifier|*
 name|from_path
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -923,7 +951,7 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/* Comparison */
-comment|/* Find out what is the same between two nodes.     If PROPS_CHANGED is non-null, set *PROPS_CHANGED to 1 if the two    nodes have different property lists, or to 0 if same.     If CONTENTS_CHANGED is non-null, set *CONTENTS_CHANGED to 1 if the    two nodes have different contents, or to 0 if same.  For files,    file contents are compared; for directories, the entries lists are    compared.  If one is a file and the other is a directory, the one's    contents will be compared to the other's entries list.  (Not    terribly useful, I suppose, but that's the caller's business.)     ### todo: This function only compares rep keys at the moment.  This    may leave us with a slight chance of a false positive, though I    don't really see how that would happen in practice.  Nevertheless,    it should probably be fixed.  */
+comment|/* Find out what is the same between two nodes.  If STRICT is FALSE,    this function may report false positives, i.e. report changes even    if the resulting contents / props are equal.     If PROPS_CHANGED is non-null, set *PROPS_CHANGED to 1 if the two    nodes have different property lists, or to 0 if same.     If CONTENTS_CHANGED is non-null, set *CONTENTS_CHANGED to 1 if the    two nodes have different contents, or to 0 if same.  NODE1 and NODE2    must refer to files from the same filesystem.     Use POOL for temporary allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__dag_things_different
@@ -943,6 +971,13 @@ parameter_list|,
 name|dag_node_t
 modifier|*
 name|node2
+parameter_list|,
+name|svn_boolean_t
+name|strict
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 function_decl|;
 comment|/* Set *REV and *PATH to the copyroot revision and path of node NODE, or    to SVN_INVALID_REVNUM and NULL if no copyroot exists.  */

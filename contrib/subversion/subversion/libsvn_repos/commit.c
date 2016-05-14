@@ -181,7 +181,7 @@ comment|/* URL to the root of the open repository. */
 specifier|const
 name|char
 modifier|*
-name|repos_url
+name|repos_url_decoded
 decl_stmt|;
 comment|/* The name of the repository (here for convenience). */
 specifier|const
@@ -542,6 +542,7 @@ name|post_commit_err
 operator|=
 name|post_commit_errstr
 expr_stmt|;
+comment|/* commit_info->repos_root is not set by the repos layer, only by RA layers */
 return|return
 name|svn_error_trace
 argument_list|(
@@ -752,7 +753,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is the shared guts of add_file() and add_directory(),    which see for the meanings of the parameters.  The only extra    parameter here is IS_DIR, which is TRUE when adding a directory,    and FALSE when adding a file.  */
+comment|/* This function is the shared guts of add_file() and add_directory(),    which see for the meanings of the parameters.  The only extra    parameter here is IS_DIR, which is TRUE when adding a directory,    and FALSE when adding a file.     COPY_PATH must be a full URL, not a relative path. */
 end_comment
 
 begin_function
@@ -1017,7 +1018,7 @@ name|strlen
 argument_list|(
 name|eb
 operator|->
-name|repos_url
+name|repos_url_decoded
 argument_list|)
 expr_stmt|;
 if|if
@@ -1028,7 +1029,7 @@ name|copy_path
 argument_list|,
 name|eb
 operator|->
-name|repos_url
+name|repos_url_decoded
 argument_list|,
 name|repos_url_len
 argument_list|)
@@ -1342,6 +1343,29 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|base_revision
+operator|>
+name|youngest
+condition|)
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_FS_NO_SUCH_REVISION
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"No such revision %ld (HEAD is %ld)"
+argument_list|)
+argument_list|,
+name|base_revision
+argument_list|,
+name|youngest
+argument_list|)
+return|;
 comment|/* Unless we've been instructed to use a specific transaction, we'll      make our own. */
 if|if
 condition|(
@@ -3525,7 +3549,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|repos_url
+name|repos_url_decoded
 parameter_list|,
 specifier|const
 name|char
@@ -3579,6 +3603,18 @@ name|shim_callbacks
 init|=
 name|svn_delta_shim_callbacks_default
 argument_list|(
+name|pool
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|repos_url
+init|=
+name|svn_path_uri_encode
+argument_list|(
+name|repos_url_decoded
+argument_list|,
 name|pool
 argument_list|)
 decl_stmt|;
@@ -3781,9 +3817,9 @@ name|repos
 expr_stmt|;
 name|eb
 operator|->
-name|repos_url
+name|repos_url_decoded
 operator|=
-name|repos_url
+name|repos_url_decoded
 expr_stmt|;
 name|eb
 operator|->
@@ -3872,8 +3908,6 @@ argument_list|,
 operator|*
 name|edit_baton
 argument_list|,
-name|eb
-operator|->
 name|repos_url
 argument_list|,
 name|eb
@@ -3901,7 +3935,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static svn_error_t * ev2_check_authz(const struct ev2_baton *eb,                 const char *relpath,                 svn_repos_authz_access_t required,                 apr_pool_t *scratch_pool) {   const char *fspath;   svn_boolean_t allowed;    if (eb->authz == NULL)     return SVN_NO_ERROR;    if (relpath)     fspath = apr_pstrcat(scratch_pool, "/", relpath, NULL);   else     fspath = NULL;    SVN_ERR(svn_repos_authz_check_access(eb->authz, eb->authz_repos_name, fspath,                                        eb->authz_user, required,&allowed, scratch_pool));   if (!allowed)     return svn_error_create(required& svn_authz_write                             ? SVN_ERR_AUTHZ_UNWRITABLE                             : SVN_ERR_AUTHZ_UNREADABLE,                             NULL, "Access denied");    return SVN_NO_ERROR; }
+unit|static svn_error_t * ev2_check_authz(const struct ev2_baton *eb,                 const char *relpath,                 svn_repos_authz_access_t required,                 apr_pool_t *scratch_pool) {   const char *fspath;   svn_boolean_t allowed;    if (eb->authz == NULL)     return SVN_NO_ERROR;    if (relpath)     fspath = apr_pstrcat(scratch_pool, "/", relpath, SVN_VA_NULL);   else     fspath = NULL;    SVN_ERR(svn_repos_authz_check_access(eb->authz, eb->authz_repos_name, fspath,                                        eb->authz_user, required,&allowed, scratch_pool));   if (!allowed)     return svn_error_create(required& svn_authz_write                             ? SVN_ERR_AUTHZ_UNWRITABLE                             : SVN_ERR_AUTHZ_UNREADABLE,                             NULL, "Access denied");    return SVN_NO_ERROR; }
 endif|#
 directive|endif
 end_endif
@@ -4261,10 +4295,6 @@ parameter_list|,
 name|svn_revnum_t
 name|revision
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
 specifier|const
 name|svn_checksum_t
 modifier|*
@@ -4273,6 +4303,10 @@ parameter_list|,
 name|svn_stream_t
 modifier|*
 name|contents
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|props
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -4298,11 +4332,11 @@ name|relpath
 argument_list|,
 name|revision
 argument_list|,
-name|props
-argument_list|,
 name|checksum
 argument_list|,
 name|contents
+argument_list|,
+name|props
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4334,14 +4368,14 @@ parameter_list|,
 name|svn_revnum_t
 name|revision
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|target
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|props
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -4367,9 +4401,9 @@ name|relpath
 argument_list|,
 name|revision
 argument_list|,
-name|props
-argument_list|,
 name|target
+argument_list|,
+name|props
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4556,62 +4590,6 @@ argument_list|,
 name|dst_relpath
 argument_list|,
 name|replaces_rev
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|SVN_NO_ERROR
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* This implements svn_editor_cb_rotate_t */
-end_comment
-
-begin_function
-specifier|static
-name|svn_error_t
-modifier|*
-name|rotate_cb
-parameter_list|(
-name|void
-modifier|*
-name|baton
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|relpaths
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|revisions
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-block|{
-name|struct
-name|ev2_baton
-modifier|*
-name|eb
-init|=
-name|baton
-decl_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_editor_rotate
-argument_list|(
-name|eb
-operator|->
-name|inner
-argument_list|,
-name|relpaths
-argument_list|,
-name|revisions
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5070,8 +5048,6 @@ block|,
 name|copy_cb
 block|,
 name|move_cb
-block|,
-name|rotate_cb
 block|,
 name|complete_cb
 block|,

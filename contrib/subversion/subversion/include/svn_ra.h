@@ -264,7 +264,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** A function type for retrieving the youngest revision from a repos. */
+comment|/** A function type for retrieving the youngest revision from a repos.  * @deprecated Provided for backward compatibility with the 1.8 API.  */
+comment|/* ### It seems this type was never used by the API, since 1.0.0. */
 typedef|typedef
 name|svn_error_t
 modifier|*
@@ -471,6 +472,103 @@ parameter_list|,
 name|apr_hash_t
 modifier|*
 name|rev_props
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Callback function that checks if an ra_svn tunnel called  * @a tunnel_name is handled by the callbakcs or the default  * implementation.  *  * @a tunnel_baton is the baton as originally passed to ra_open.  *  * @since New in 1.9.  */
+typedef|typedef
+name|svn_boolean_t
+function_decl|(
+modifier|*
+name|svn_ra_check_tunnel_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|tunnel_baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tunnel_name
+parameter_list|)
+function_decl|;
+comment|/**  * Callback function for closing a tunnel in ra_svn.  *  * This function will be called when the pool that owns the tunnel  * connection is cleared or destroyed.  *  * @a close_baton is the baton as returned from the  * svn_ra_open_tunnel_func_t.  *  * @a tunnel_baton was returned by the open-tunnel callback.  *  * @since New in 1.9.  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|svn_ra_close_tunnel_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|close_baton
+parameter_list|,
+name|void
+modifier|*
+name|tunnel_baton
+parameter_list|)
+function_decl|;
+comment|/**  * Callback function for opening a tunnel in ra_svn.  *  * Given the @a tunnel_name, tunnel @a user and server @a hostname and  * @a port, open a tunnel to the server and return its file handles,  * which are owned by @a pool, in @a request and @a response.  *  * @a request and @a response represent the standard input and output,  * respectively, of the process on the other end of the tunnel.  *  * If @a *close_func is set it will be called with @a close_baton when  * the tunnel is closed.  *  * The optional @a cancel_func callback can be invoked as usual to allow  * the user to preempt potentially lengthy operations.  *  * @a tunnel_baton is the baton as set in the callbacks.  *  * @since New in 1.9.  */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_ra_open_tunnel_func_t
+function_decl|)
+parameter_list|(
+name|svn_stream_t
+modifier|*
+modifier|*
+name|request
+parameter_list|,
+name|svn_stream_t
+modifier|*
+modifier|*
+name|response
+parameter_list|,
+name|svn_ra_close_tunnel_func_t
+modifier|*
+name|close_func
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|close_baton
+parameter_list|,
+name|void
+modifier|*
+name|tunnel_baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tunnel_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|user
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostname
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -948,6 +1046,19 @@ comment|/** Working copy file content fetching function.    * @since New in 1.8.
 name|svn_ra_get_wc_contents_func_t
 name|get_wc_contents
 decl_stmt|;
+comment|/** Check-tunnel callback    *    * If not @c NULL, and open_tunnel_func is also not @c NULL, this    * callback will be invoked to check if open_tunnel_func should be    * used to create a specific tunnel, or if the default tunnel    * implementation (either built-in or configured in the client    * configuration file) should be used instead.    * @since New in 1.9.    */
+name|svn_ra_check_tunnel_func_t
+name|check_tunnel_func
+decl_stmt|;
+comment|/** Open-tunnel callback    *    * If not @c NULL, this callback will be invoked to create a tunnel    * for a ra_svn connection that needs one, overriding any tunnel    * definitions in the client config file. This callback is used only    * for ra_svn and ignored by the other RA modules.    * @since New in 1.9.    */
+name|svn_ra_open_tunnel_func_t
+name|open_tunnel_func
+decl_stmt|;
+comment|/** A baton used with open_tunnel_func and close_tunnel_func.    * @since New in 1.9.    */
+name|void
+modifier|*
+name|tunnel_baton
+decl_stmt|;
 block|}
 name|svn_ra_callbacks2_t
 typedef|;
@@ -1419,7 +1530,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *editor and @a *edit_baton to an editor for committing  * changes to the repository of @a session, setting the revision  * properties from @a revprop_table.  The revisions being committed  * against are passed to the editor functions, starting with the rev  * argument to @c open_root.  The path root of the commit is the @a  * session's URL.  *  * @a revprop_table is a hash mapping<tt>const char *</tt> property  * names to @c svn_string_t property values.  The commit log message  * is expected to be in the @c SVN_PROP_REVISION_LOG element.  @a  * revprop_table can not contain either of @c SVN_PROP_REVISION_DATE  * or @c SVN_PROP_REVISION_AUTHOR.  *  * Before @c close_edit returns, but after the commit has succeeded,  * it will invoke @a commit_callback (if non-NULL) with filled-in  * #svn_commit_info_t *, @a commit_baton, and @a pool or some subpool  * thereof as arguments.  If @a commit_callback returns an error, that error  * will be returned from @c * close_edit, otherwise @c close_edit will return  * successfully (unless it encountered an error before invoking  * @a commit_callback).  *  * The callback will not be called if the commit was a no-op  * (i.e. nothing was committed);  *  * @a lock_tokens, if non-NULL, is a hash mapping<tt>const char  * *</tt> paths (relative to the URL of @a session) to<tt>  * const char *</tt> lock tokens.  The server checks that the  * correct token is provided for each committed, locked path.  @a lock_tokens  * must live during the whole commit operation.  *  * If @a keep_locks is @c TRUE, then do not release locks on  * committed objects.  Else, automatically release such locks.  *  * The caller may not perform any RA operations using @a session before  * finishing the edit.  *  * Use @a pool for memory allocation.  *  * @since New in 1.5.  */
+comment|/**  * Set @a *editor and @a *edit_baton to an editor for committing  * changes to the repository of @a session, setting the revision  * properties from @a revprop_table.  The revisions being committed  * against are passed to the editor functions, starting with the rev  * argument to @c open_root.  The path root of the commit is the @a  * session's URL.  *  * @a revprop_table is a hash mapping<tt>const char *</tt> property  * names to @c svn_string_t property values.  The commit log message  * is expected to be in the @c SVN_PROP_REVISION_LOG element.  @a  * revprop_table can not contain either of @c SVN_PROP_REVISION_DATE  * or @c SVN_PROP_REVISION_AUTHOR.  *  * Before @c close_edit returns, but after the commit has succeeded,  * it will invoke @a commit_callback (if non-NULL) with filled-in  * #svn_commit_info_t *, @a commit_baton, and @a pool or some subpool  * thereof as arguments.  If @a commit_callback returns an error, that error  * will be returned from @c * close_edit, otherwise @c close_edit will return  * successfully (unless it encountered an error before invoking  * @a commit_callback).  *  * The callback will not be called if the commit was a no-op  * (i.e. nothing was committed);  *  * @a lock_tokens, if non-NULL, is a hash mapping<tt>const char  * *</tt> paths (relative to the URL of @a session) to<tt>  * const char *</tt> lock tokens.  The server checks that the  * correct token is provided for each committed, locked path.  @a lock_tokens  * must live during the whole commit operation.  *  * If @a keep_locks is @c TRUE, then do not release locks on  * committed objects.  Else, automatically release such locks.  *  * The caller may not perform any RA operations using @a session before  * finishing the edit.  *  * Use @a pool for memory allocation.  *  * @since New in 1.5.  *  * @note Like most commit editors, the returned editor requires that the  * @c copyfrom_path parameter passed to its @c add_file and @c add_directory  * methods is a URL, not a relative path.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_get_commit_editor3
@@ -1587,7 +1698,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * If @a dirents is non @c NULL, set @a *dirents to contain all the entries  * of directory @a path at @a revision.  The keys of @a dirents will be  * entry names (<tt>const char *</tt>), and the values dirents  * (<tt>@c svn_dirent_t *</tt>).  Use @a pool for all allocations.  *  * @a dirent_fields controls which portions of the<tt>@c svn_dirent_t</tt>  * objects are filled in.  To have them completely filled in just pass  * @c SVN_DIRENT_ALL, otherwise pass the bitwise OR of all the @c SVN_DIRENT_  * fields you would like to have returned to you.  *  * @a path is interpreted relative to the URL in @a session.  *  * If @a revision is @c SVN_INVALID_REVNUM (meaning 'head') and  * @a *fetched_rev is not @c NULL, then this function will set  * @a *fetched_rev to the actual revision that was retrieved.  (Some  * callers want to know, and some don't.)  *  * If @a props is non @c NULL, set @a *props to contain the properties of  * the directory.  This means @em all properties: not just ones controlled by  * the user and stored in the repository fs, but non-tweakable ones  * generated by the SCM system itself (e.g. 'wcprops', 'entryprops',  * etc.)  The keys are<tt>const char *</tt>, values are  *<tt>@c svn_string_t *</tt>.  *  * @since New in 1.4.  */
+comment|/**  * If @a dirents is non @c NULL, set @a *dirents to contain all the entries  * of directory @a path at @a revision.  The keys of @a dirents will be  * entry names (<tt>const char *</tt>), and the values dirents  * (<tt>@c svn_dirent_t *</tt>).  Use @a pool for all allocations.  *  * @a dirent_fields controls which portions of the<tt>@c svn_dirent_t</tt>  * objects are filled in.  To have them completely filled in just pass  * @c SVN_DIRENT_ALL, otherwise pass the bitwise OR of all the @c SVN_DIRENT_  * fields you would like to have returned to you.  *  * @a path is interpreted relative to the URL in @a session.  *  * If @a revision is @c SVN_INVALID_REVNUM (meaning 'head') and  * @a *fetched_rev is not @c NULL, then this function will set  * @a *fetched_rev to the actual revision that was retrieved.  (Some  * callers want to know, and some don't.)  *  * If @a props is non @c NULL, set @a *props to contain the properties of  * the directory, including properties that are non-tweakable and  * generated by the SCM system itself (such as #svn_prop_wc_kind and  * #svn_prop_entry_kind properties).  The keys are<tt>const char *</tt>,  * values are<tt>@c svn_string_t *</tt>.  *  * @since New in 1.4.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_get_dir2
@@ -2265,7 +2376,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Invoke @a receiver with @a receiver_baton on each log message from  * @a start to @a end.  @a start may be greater or less than @a end;  * this just controls whether the log messages are processed in descending  * or ascending revision number order.  *  * If @a start or @a end is @c SVN_INVALID_REVNUM, it defaults to youngest.  *  * If @a paths is non-NULL and has one or more elements, then only show  * revisions in which at least one of @a paths was changed (i.e., if  * file, text or props changed; if dir, props changed or an entry  * was added or deleted).  Each path is an<tt>const char *</tt>, relative  * to the @a session's common parent.  *  * If @a limit is non-zero only invoke @a receiver on the first @a limit  * logs.  *  * If @a discover_changed_paths, then each call to @a receiver passes a  *<tt>const apr_hash_t *</tt> for the receiver's @a changed_paths argument;  * the hash's keys are all the paths committed in that revision, the hash's  * values are<tt>const svn_log_changed_path2_t *</tt> for each committed  * path. Otherwise, each call to receiver passes NULL for @a changed_paths.  *  * If @a strict_node_history is set, copy history will not be traversed  * (if any exists) when harvesting the revision logs for each path.  *  * If @a include_merged_revisions is set, log information for revisions  * which have been merged to @a targets will also be returned.  *  * If @a revprops is NULL, retrieve all revision properties; else, retrieve  * only the revision properties named by the (const char *) array elements  * (i.e. retrieve none if the array is empty).  *  * If any invocation of @a receiver returns error, return that error  * immediately and without wrapping it.  *  * If @a start or @a end is a non-existent revision, return the error  * @c SVN_ERR_FS_NO_SUCH_REVISION, without ever invoking @a receiver.  *  * See also the documentation for @c svn_log_message_receiver_t.  *  * The caller may not invoke any RA operations using @a session from  * within @a receiver.  *  * Use @a pool for memory allocation.  *  * @note If @a paths is NULL or empty, the result depends on the  * server.  Pre-1.5 servers will send nothing; 1.5 servers will  * effectively perform the log operation on the root of the  * repository.  This behavior may be changed in the future to ensure  * consistency across all pedigrees of server.  *  * @note Pre-1.5 servers do not support custom revprop retrieval; if @a  * revprops is NULL or contains a revprop other than svn:author, svn:date,  * or svn:log, an @c SVN_ERR_RA_NOT_IMPLEMENTED error is returned.  *  * @since New in 1.5.  */
+comment|/**  * Invoke @a receiver with @a receiver_baton on each log message from  * @a start to @a end.  @a start may be greater or less than @a end;  * this just controls whether the log messages are processed in descending  * or ascending revision number order.  *  * If @a start or @a end is @c SVN_INVALID_REVNUM, it defaults to youngest.  *  * If @a paths is non-NULL and has one or more elements, then only show  * revisions in which at least one of @a paths was changed (i.e., if  * file, text or props changed; if dir, props changed or an entry  * was added or deleted).  Each path is an<tt>const char *</tt>, relative  * to the @a session's common parent.  *  * If @a limit is greater than zero only invoke @a receiver on the first  * @a limit logs.  *  * If @a discover_changed_paths, then each call to @a receiver passes a  *<tt>const apr_hash_t *</tt> for the receiver's @a changed_paths argument;  * the hash's keys are all the paths committed in that revision, the hash's  * values are<tt>const svn_log_changed_path2_t *</tt> for each committed  * path. Otherwise, each call to receiver passes NULL for @a changed_paths.  *  * If @a strict_node_history is set, copy history will not be traversed  * (if any exists) when harvesting the revision logs for each path.  *  * If @a include_merged_revisions is set, log information for revisions  * which have been merged to @a targets will also be returned.  *  * If @a revprops is NULL, retrieve all revision properties; else, retrieve  * only the revision properties named by the (const char *) array elements  * (i.e. retrieve none if the array is empty).  *  * If any invocation of @a receiver returns error, return that error  * immediately and without wrapping it.  *  * If @a start or @a end is a non-existent revision, return the error  * @c SVN_ERR_FS_NO_SUCH_REVISION, without ever invoking @a receiver.  *  * See also the documentation for @c svn_log_message_receiver_t.  *  * The caller may not invoke any RA operations using @a session from  * within @a receiver.  *  * Use @a pool for memory allocation.  *  * @note If @a paths is NULL or empty, the result depends on the  * server.  Pre-1.5 servers will send nothing; 1.5 servers will  * effectively perform the log operation on the root of the  * repository.  This behavior may be changed in the future to ensure  * consistency across all pedigrees of server.  *  * @note Pre-1.5 servers do not support custom revprop retrieval; if @a  * revprops is NULL or contains a revprop other than svn:author, svn:date,  * or svn:log, an @c SVN_ERR_RA_NOT_IMPLEMENTED error is returned.  *  * @since New in 1.5.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_get_log2
@@ -2558,7 +2669,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Retrieve a subset of the interesting revisions of a file @a path  * as seen in revision @a end (see svn_fs_history_prev() for a  * definition of "interesting revisions").  Invoke @a handler with  * @a handler_baton as its first argument for each such revision.  * @a session is an open RA session.  Use @a pool for all allocations.  *  * If there is an interesting revision of the file that is less than or  * equal to @a start, the iteration will begin at that revision.  * Else, the iteration will begin at the first revision of the file in  * the repository, which has to be less than or equal to @a end.  Note  * that if the function succeeds, @a handler will have been called at  * least once.  *  * In a series of calls to @a handler, the file contents for the first  * interesting revision will be provided as a text delta against the  * empty file.  In the following calls, the delta will be against the  * fulltext contents for the previous call.  *  * If @a include_merged_revisions is TRUE, revisions which are  * included as a result of a merge between @a start and @a end will be  * included.  *  * @note This functionality is not available in pre-1.1 servers.  If the  * server doesn't implement it, an alternative (but much slower)  * implementation based on svn_ra_get_log2() is used.  *  * On subversion 1.8 and newer servers this function has been enabled  * to support reversion of the revision range for @a include_merged_revision  * @c FALSE reporting by switching  @a end with @a start.  *  * @since New in 1.5.  */
+comment|/**  * Retrieve a subset of the interesting revisions of a file @a path  * as seen in revision @a end (see svn_fs_history_prev() for a  * definition of "interesting revisions").  Invoke @a handler with  * @a handler_baton as its first argument for each such revision.  * @a session is an open RA session.  Use @a pool for all allocations.  *  * If there is an interesting revision of the file that is less than or  * equal to @a start, the iteration will begin at that revision.  * Else, the iteration will begin at the first revision of the file in  * the repository, which has to be less than or equal to @a end.  Note  * that if the function succeeds, @a handler will have been called at  * least once.  *  * In a series of calls to @a handler, the file contents for the first  * interesting revision will be provided as a text delta against the  * empty file.  In the following calls, the delta will be against the  * fulltext contents for the previous call.  *  * If @a include_merged_revisions is TRUE, revisions which are  * included as a result of a merge between @a start and @a end will be  * included.  *  * @note This functionality is not available in pre-1.1 servers.  If the  * server doesn't implement it, an alternative (but much slower)  * implementation based on svn_ra_get_log2() is used.  *  * On subversion 1.8 and newer servers this function has been enabled  * to support reversion of the revision range for @a include_merged_revision  * @c FALSE reporting by switching  @a end with @a start.  *  * @note Prior to Subversion 1.9, this function may request delta handlers  * from @a handler even for empty text deltas.  Starting with 1.9, the  * delta handler / baton return arguments passed to @a handler will be  * #NULL unless there is an actual difference in the file contents between  * the current and the previous call.  *  * @since New in 1.5.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_get_file_revs2
@@ -2687,7 +2798,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * If @a path is locked, set @a *lock to an svn_lock_t which  * represents the lock, allocated in @a pool.  If @a path is not  * locked, set @a *lock to NULL.  *  * @since New in 1.2.  */
+comment|/**  * If @a path is locked, set @a *lock to an svn_lock_t which  * represents the lock, allocated in @a pool.  *  * If @a path is not locked or does not exist in HEAD, set @a *lock to NULL.  *  * @note Before 1.9, this function could return SVN_ERR_FS_NOT_FOUND  * when @a path didn't exist in HEAD on specific ra layers.  *  * @since New in 1.2.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_get_lock

@@ -4314,7 +4314,7 @@ condition|(
 name|disjoint
 condition|)
 block|{
-comment|/* Switched or disjoint, so drop P_ACCESS. Don't close any                  descendents, or we might blast the child.  */
+comment|/* Switched or disjoint, so drop P_ACCESS. Don't close any                  descendants, or we might blast the child.  */
 name|err
 operator|=
 name|close_single
@@ -4667,7 +4667,7 @@ argument_list|,
 name|scratch_pool
 argument_list|)
 expr_stmt|;
-comment|/* Close any that are descendents of this baton.  */
+comment|/* Close any that are descendants of this baton.  */
 for|for
 control|(
 name|hi
@@ -4694,7 +4694,7 @@ name|char
 modifier|*
 name|abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -4703,7 +4703,7 @@ name|svn_wc_adm_access_t
 modifier|*
 name|child
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -5864,7 +5864,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* It's possible for the required lock path to be an ancestor          of, a descendent of, or equal to, the obtained lock path. If          it's an ancestor we have to try again, otherwise the obtained          lock will do. */
+comment|/* It's possible for the required lock path to be an ancestor          of, a descendant of, or equal to, the obtained lock path. If          it's an ancestor we have to try again, otherwise the obtained          lock will do. */
 name|child
 operator|=
 name|svn_dirent_skip_ancestor
@@ -5907,7 +5907,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* required should be a descendent of, or equal to, obtained */
+comment|/* required should be a descendant of, or equal to, obtained */
 name|SVN_ERR_ASSERT
 argument_list|(
 operator|!

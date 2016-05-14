@@ -119,24 +119,25 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Join multiple components onto a @a base path, allocated in @a pool. The  * components are terminated by a @c NULL.  *  * If any component is the empty string, it will be ignored.  *  * If any component is an absolute path, then it resets the base and  * further components will be appended to it.  *  * This function does not support URLs.  *  * See svn_path_join() for further notes about joining paths.  *  * @deprecated Provided for backward compatibility with the 1.6 API.  * For new code, consider using svn_dirent_join_many() or a sequence of  * calls to one of the *_join() functions.  */
+comment|/** Join multiple components onto a @a base path, allocated in @a pool. The  * components are terminated by a @c SVN_VA_NULL.  *  * If any component is the empty string, it will be ignored.  *  * If any component is an absolute path, then it resets the base and  * further components will be appended to it.  *  * This function does not support URLs.  *  * See svn_path_join() for further notes about joining paths.  *  * @deprecated Provided for backward compatibility with the 1.6 API.  * For new code, consider using svn_dirent_join_many() or a sequence of  * calls to one of the *_join() functions.  */
 name|SVN_DEPRECATED
 name|char
 modifier|*
 name|svn_path_join_many
-parameter_list|(
+argument_list|(
 name|apr_pool_t
-modifier|*
+operator|*
 name|pool
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|base
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+argument_list|,
+operator|...
+argument_list|)
+name|SVN_NEEDS_SENTINEL_NULL
+decl_stmt|;
 comment|/** Get the basename of the specified canonicalized @a path.  The  * basename is defined as the last component of the path (ignoring any  * trailing slashes).  If the @a path is root ("/"), then that is  * returned.  Otherwise, the returned value will have no slashes in  * it.  *  * Example: svn_path_basename("/foo/bar") -> "bar"  *  * The returned basename will be allocated in @a pool.  *  * @note If an empty string is passed, then an empty string will be returned.  *  * @deprecated Provided for backward compatibility with the 1.6 API.  * New code should use svn_dirent_basename(), svn_uri_basename(),  * svn_relpath_basename() or svn_fspath__basename().  */
 name|SVN_DEPRECATED
 name|char
@@ -788,7 +789,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Return a copy of @a path, allocated from @a pool, for which control  * characters have been escaped using the form \NNN (where NNN is the  * octal representation of the byte's ordinal value).  *   * @since New in 1.8. */
+comment|/** Return a copy of @a path, allocated from @a pool, for which control  * characters have been escaped using the form "\NNN" (where NNN is the  * octal representation of the byte's ordinal value).  *  * @since New in 1.8. */
 specifier|const
 name|char
 modifier|*

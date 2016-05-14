@@ -242,7 +242,7 @@ index|]
 decl_stmt|,
 name|buffer
 index|[
-literal|1000
+literal|4096
 index|]
 decl_stmt|;
 name|char
@@ -515,7 +515,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -524,7 +524,7 @@ name|svn_string_t
 modifier|*
 name|val
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)

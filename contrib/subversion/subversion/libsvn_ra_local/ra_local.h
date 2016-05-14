@@ -113,6 +113,16 @@ name|void
 modifier|*
 name|callback_baton
 decl_stmt|;
+comment|/* Slave auth baton */
+name|svn_auth_baton_t
+modifier|*
+name|auth_baton
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|useragent
+decl_stmt|;
 block|}
 name|svn_ra_local__session_baton_t
 typedef|;

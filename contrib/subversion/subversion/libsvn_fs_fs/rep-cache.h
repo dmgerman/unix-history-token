@@ -131,7 +131,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Return the representation REP in FS which has fulltext CHECKSUM.    REP is allocated in POOL.  If the rep cache database has not been    opened, just set *REP to NULL. */
+comment|/* Return the representation REP in FS which has fulltext CHECKSUM.    REP is allocated in POOL.  If the rep cache database has not been    opened, just set *REP to NULL.  Returns SVN_ERR_FS_CORRUPT if    a reference beyond HEAD is detected. */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__get_rep_reference
@@ -154,7 +154,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Set the representation REP in FS, using REP->CHECKSUM.    Use POOL for temporary allocations.     If the rep cache database has not been opened, this may be a no op.     If REJECT_DUP is TRUE, return an error if there is an existing    match for REP->CHECKSUM. */
+comment|/* Set the representation REP in FS, using REP->CHECKSUM.    Use POOL for temporary allocations.  Returns SVN_ERR_FS_CORRUPT if    an existing reference beyond HEAD is detected.     If the rep cache database has not been opened, this may be a no op. */
 name|svn_error_t
 modifier|*
 name|svn_fs_fs__set_rep_reference
@@ -166,9 +166,6 @@ parameter_list|,
 name|representation_t
 modifier|*
 name|rep
-parameter_list|,
-name|svn_boolean_t
-name|reject_dup
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -192,14 +189,34 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Start a transaction to take an SQLite reserved lock that prevents    other writes. */
+comment|/* Start a transaction to take an SQLite reserved lock that prevents    other writes, call BODY, end the transaction, and return what BODY returned.  */
 name|svn_error_t
 modifier|*
-name|svn_fs_fs__lock_rep_cache
+name|svn_fs_fs__with_rep_cache_lock
 parameter_list|(
 name|svn_fs_t
 modifier|*
 name|fs
+parameter_list|,
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|body
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|baton
 parameter_list|,
 name|apr_pool_t
 modifier|*

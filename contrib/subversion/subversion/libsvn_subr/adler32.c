@@ -64,7 +64,7 @@ operator|>=
 literal|80
 condition|)
 block|{
-comment|/* Larger buffers can be effiently handled by Marc Adler's        * optimized code. Also, new zlib versions will come with        * SIMD code for x86 and x64.        */
+comment|/* Larger buffers can be efficiently handled by Marc Adler's        * optimized code. Also, new zlib versions will come with        * SIMD code for x86 and x64.        */
 return|return
 operator|(
 name|apr_uint32_t

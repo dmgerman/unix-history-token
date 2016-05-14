@@ -692,7 +692,7 @@ operator|=
 name|svn_diff__type_diff_modified
 expr_stmt|;
 block|}
-comment|/* Get the lcs for common ancestor - original    * Do reverse adjustements    */
+comment|/* Get the lcs for common ancestor - original    * Do reverse adjustments    */
 name|lcs_adjust
 operator|=
 name|svn_diff__lcs

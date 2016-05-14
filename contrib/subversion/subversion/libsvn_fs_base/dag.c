@@ -4183,6 +4183,11 @@ name|svn_fs_dirent_t
 modifier|*
 name|dirent
 decl_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|subpool
+argument_list|)
+expr_stmt|;
 name|apr_hash_this
 argument_list|(
 name|hi
@@ -4218,6 +4223,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|subpool
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* ... then delete the node itself, any mutable representations and      strings it points to, and possibly its node-origins record. */
@@ -5392,6 +5402,7 @@ name|dag_node_t
 modifier|*
 name|svn_fs_base__dag_dup
 parameter_list|(
+specifier|const
 name|dag_node_t
 modifier|*
 name|node
@@ -6375,9 +6386,6 @@ block|{
 name|revision_t
 name|revision
 decl_stmt|;
-name|svn_string_t
-name|date
-decl_stmt|;
 name|apr_hash_t
 modifier|*
 name|txnprops
@@ -6398,6 +6406,11 @@ init|=
 name|txn
 operator|->
 name|id
+decl_stmt|;
+specifier|const
+name|svn_string_t
+modifier|*
+name|client_date
 decl_stmt|;
 comment|/* Remove any temporary transaction properties initially created by      begin_txn().  */
 name|SVN_ERR
@@ -6496,6 +6509,37 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|client_date
+operator|=
+name|svn_hash_gets
+argument_list|(
+name|txnprops
+argument_list|,
+name|SVN_FS__PROP_TXN_CLIENT_DATE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|client_date
+condition|)
+name|SVN_ERR
+argument_list|(
+name|svn_fs_base__set_txn_prop
+argument_list|(
+name|fs
+argument_list|,
+name|txn_id
+argument_list|,
+name|SVN_FS__PROP_TXN_CLIENT_DATE
+argument_list|,
+name|NULL
+argument_list|,
+name|trail
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Promote the unfinished transaction to a committed one. */
 name|SVN_ERR
 argument_list|(
@@ -6514,7 +6558,25 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Set a date on the commit.  We wait until now to fetch the date,      so it's definitely newer than any previous revision's date. */
+if|if
+condition|(
+operator|!
+name|client_date
+operator|||
+name|strcmp
+argument_list|(
+name|client_date
+operator|->
+name|data
+argument_list|,
+literal|"1"
+argument_list|)
+condition|)
+block|{
+comment|/* Set a date on the commit if requested.  We wait until now to fetch the          date, so it's definitely newer than any previous revision's date. */
+name|svn_string_t
+name|date
+decl_stmt|;
 name|date
 operator|.
 name|data
@@ -6538,7 +6600,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
-return|return
+name|SVN_ERR
+argument_list|(
 name|svn_fs_base__set_rev_prop
 argument_list|(
 name|fs
@@ -6557,6 +6620,11 @@ name|trail
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 end_function

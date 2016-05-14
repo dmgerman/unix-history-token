@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"svn_sorts.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"svn_utf.h"
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"private/svn_diff_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_sorts_private.h"
 end_include
 
 begin_include
@@ -192,7 +192,7 @@ end_function
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_diff_output
+name|svn_diff_output2
 parameter_list|(
 name|svn_diff_t
 modifier|*
@@ -206,6 +206,13 @@ specifier|const
 name|svn_diff_output_fns_t
 modifier|*
 name|vtable
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|)
 block|{
 name|svn_error_t
@@ -238,6 +245,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|cancel_func
+condition|)
+name|SVN_ERR
+argument_list|(
+name|cancel_func
+argument_list|(
+name|cancel_baton
+argument_list|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|diff
@@ -1126,6 +1145,33 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Print a hint for 'svn patch' or smilar tools, indicating the    * number of reverse-merges and forward-merges. */
+name|SVN_ERR
+argument_list|(
+name|svn_stream_printf_from_utf8
+argument_list|(
+name|outstream
+argument_list|,
+name|encoding
+argument_list|,
+name|pool
+argument_list|,
+literal|"## -0,%u +0,%u ##%s"
+argument_list|,
+name|apr_hash_count
+argument_list|(
+name|deleted
+argument_list|)
+argument_list|,
+name|apr_hash_count
+argument_list|(
+name|added
+argument_list|)
+argument_list|,
+name|APR_EOL_STR
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|hi
@@ -1152,7 +1198,7 @@ name|char
 modifier|*
 name|from_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1161,7 +1207,7 @@ name|svn_rangelist_t
 modifier|*
 name|merge_revarray
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1240,7 +1286,7 @@ name|char
 modifier|*
 name|from_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1249,7 +1295,7 @@ name|svn_rangelist_t
 modifier|*
 name|merge_revarray
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1314,7 +1360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* qsort callback handling svn_prop_t by name */
+comment|/* svn_sort__array callback handling svn_prop_t by name */
 end_comment
 
 begin_function
@@ -1388,6 +1434,16 @@ parameter_list|,
 name|svn_boolean_t
 name|pretty_print_mergeinfo
 parameter_list|,
+name|int
+name|context_size
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -1422,19 +1478,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|qsort
+name|svn_sort__array
 argument_list|(
 name|changes
-operator|->
-name|elts
-argument_list|,
-name|changes
-operator|->
-name|nelts
-argument_list|,
-name|changes
-operator|->
-name|elt_size
 argument_list|,
 name|propchange_sort
 argument_list|)
@@ -1738,10 +1784,10 @@ name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* UNIX patch will try to apply a diff even if the diff header          * is missing. It tries to be helpful by asking the user for a          * target filename when it can't determine the target filename          * from the diff header. But there usually are no files which          * UNIX patch could apply the property diff to, so we use "##"          * instead of "@@" as the default hunk delimiter for property diffs.          * We also supress the diff header. */
+comment|/* UNIX patch will try to apply a diff even if the diff header          * is missing. It tries to be helpful by asking the user for a          * target filename when it can't determine the target filename          * from the diff header. But there usually are no files which          * UNIX patch could apply the property diff to, so we use "##"          * instead of "@@" as the default hunk delimiter for property diffs.          * We also suppress the diff header. */
 name|SVN_ERR
 argument_list|(
-name|svn_diff_mem_string_output_unified2
+name|svn_diff_mem_string_output_unified3
 argument_list|(
 name|outstream
 argument_list|,
@@ -1761,6 +1807,12 @@ argument_list|,
 name|orig
 argument_list|,
 name|val
+argument_list|,
+name|context_size
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|iterpool
 argument_list|)

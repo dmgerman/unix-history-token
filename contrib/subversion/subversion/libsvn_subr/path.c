@@ -5912,10 +5912,6 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/* Return a copy of PATH, allocated from POOL, for which control    characters have been escaped using the form \NNN (where NNN is the    octal representation of the byte's ordinal value).  */
-end_comment
-
 begin_function
 specifier|const
 name|char
@@ -6248,9 +6244,12 @@ condition|(
 name|last_dot
 operator|&&
 operator|(
+operator|*
+operator|(
 name|last_dot
 operator|+
 literal|1
+operator|)
 operator|!=
 literal|'\0'
 operator|)
@@ -6453,7 +6452,7 @@ argument_list|,
 name|relative_url
 argument_list|)
 return|;
-comment|/* No assumptions are made about the canonicalization of the inut    * arguments, it is presumed that the output will be canonicalized after    * this function, which will remove any duplicate path separator.    */
+comment|/* No assumptions are made about the canonicalization of the input    * arguments, it is presumed that the output will be canonicalized after    * this function, which will remove any duplicate path separator.    */
 operator|*
 name|absolute_url
 operator|=
@@ -6467,11 +6466,7 @@ name|relative_url
 operator|+
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -163,7 +163,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Examine MERGEINFO, removing all paths from the hash which map to    empty rangelists.  POOL is used only to allocate the apr_hash_index_t    iterator.  Returns TRUE if any paths were removed and FALSE if none were    removed or MERGEINFO is NULL. */
+comment|/* Remove all paths from MERGEINFO which map to empty rangelists.     Return TRUE if any paths were removed and FALSE if none were    removed or MERGEINFO is NULL. */
 name|svn_boolean_t
 name|svn_mergeinfo__remove_empty_rangelists
 parameter_list|(
@@ -172,7 +172,7 @@ name|mergeinfo
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Make a shallow (ie, mergeinfos are not duped, or altered at all;    keys share storage) copy of IN_CATALOG in *OUT_CATALOG, removing    PREFIX_PATH from the beginning of each key in the catalog.    PREFIX_PATH and the keys of IN_CATALOG are absolute 'fspaths',    starting with '/'.  It is illegal for any key to not start with    PREFIX_PATH.  The keys of *OUT_CATALOG are relpaths.  The new hash    and temporary values are allocated in POOL.  (This is useful for    making the return value from svn_ra_get_mergeinfo relative to the    session root, say.) */

@@ -142,14 +142,6 @@ directive|error
 error|Please update your version of serf to at least 1.2.1.
 endif|#
 directive|endif
-comment|/** Use this to silence compiler warnings about unused parameters. */
-define|#
-directive|define
-name|UNUSED_CTX
-parameter_list|(
-name|x
-parameter_list|)
-value|((void)(x))
 comment|/** Wait duration (in microseconds) used in calls to serf_context_run() */
 define|#
 directive|define
@@ -209,7 +201,7 @@ define|#
 directive|define
 name|SVN_RA_SERF__MAX_CONNECTIONS_LIMIT
 value|8
-comment|/*  * The master serf RA session.  *  * This is stored in the ra session ->priv field.  */
+comment|/*  * The master serf RA session.  *  * This is stored in the ra session ->priv field.  *  * ### Check ra_serf_dup_session when adding fields.  */
 struct|struct
 name|svn_ra_serf__session_t
 block|{
@@ -218,6 +210,11 @@ name|apr_pool_t
 modifier|*
 name|pool
 decl_stmt|;
+name|apr_hash_t
+modifier|*
+name|config
+decl_stmt|;
+comment|/* For duplicating */
 comment|/* The current context */
 name|serf_context_t
 modifier|*
@@ -308,6 +305,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|wc_callback_baton
+decl_stmt|;
+name|svn_auth_baton_t
+modifier|*
+name|auth_baton
 decl_stmt|;
 comment|/* Callback function to send progress info to the client */
 name|svn_ra_progress_notify_func_t
@@ -480,7 +481,7 @@ comment|/* Element namespace */
 specifier|const
 name|char
 modifier|*
-name|namespace
+name|xmlns
 decl_stmt|;
 comment|/* Element name */
 specifier|const
@@ -490,49 +491,6 @@ name|name
 decl_stmt|;
 block|}
 name|svn_ra_serf__dav_props_t
-typedef|;
-comment|/*  * Structure which represents an XML namespace.  */
-typedef|typedef
-struct|struct
-name|ns_t
-block|{
-comment|/* The assigned name. */
-specifier|const
-name|char
-modifier|*
-name|namespace
-decl_stmt|;
-comment|/* The full URL for this namespace. */
-specifier|const
-name|char
-modifier|*
-name|url
-decl_stmt|;
-comment|/* The next namespace in our list. */
-name|struct
-name|ns_t
-modifier|*
-name|next
-decl_stmt|;
-block|}
-name|svn_ra_serf__ns_t
-typedef|;
-comment|/*  * An incredibly simple list.  */
-typedef|typedef
-struct|struct
-name|ra_serf_list_t
-block|{
-name|void
-modifier|*
-name|data
-decl_stmt|;
-name|struct
-name|ra_serf_list_t
-modifier|*
-name|next
-decl_stmt|;
-block|}
-name|svn_ra_serf__list_t
 typedef|;
 comment|/** DAV property sets **/
 specifier|static
@@ -777,6 +735,24 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* Run the context once. Manage waittime_left to handle timing out when    nothing happens over the session->timout.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__context_run
+parameter_list|(
+name|svn_ra_serf__session_t
+modifier|*
+name|sess
+parameter_list|,
+name|apr_interval_time_t
+modifier|*
+name|waittime_left
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Callback for response handlers */
 typedef|typedef
 name|svn_error_t
@@ -803,8 +779,29 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* Callback when the request is done */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_ra_serf__response_done_delegate_t
+function_decl|)
+parameter_list|(
+name|serf_request_t
+modifier|*
+name|request
+parameter_list|,
+name|void
+modifier|*
+name|done_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Callback for when a request body is needed. */
-comment|/* ### should pass a scratch_pool  */
 typedef|typedef
 name|svn_error_t
 modifier|*
@@ -829,10 +826,13 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|request_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Callback for when request headers are needed. */
-comment|/* ### should pass a scratch_pool  */
 typedef|typedef
 name|svn_error_t
 modifier|*
@@ -852,6 +852,10 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|request_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Callback for when a response has an error. */
@@ -885,7 +889,7 @@ name|struct
 name|svn_ra_serf__server_error_t
 name|svn_ra_serf__server_error_t
 typedef|;
-comment|/*  * Structure that can be passed to our default handler to guide the  * execution of the request through its lifecycle.  */
+comment|/*  * Structure that can be passed to our default handler to guide the  * execution of the request through its lifecycle.  *  * Use svn_ra_serf__create_handler() to create instances of this struct.  */
 typedef|typedef
 struct|struct
 name|svn_ra_serf__handler_t
@@ -912,10 +916,26 @@ comment|/* If TRUE then default Accept-Encoding request header is not configured
 name|svn_boolean_t
 name|custom_accept_encoding
 decl_stmt|;
+comment|/* If TRUE then default DAV: capabilities request headers is not configured      for request. */
+name|svn_boolean_t
+name|no_dav_headers
+decl_stmt|;
+comment|/* If TRUE doesn't fail requests on HTTP error statuses like 405, 408, 500      (see util.c response_done()) */
+name|svn_boolean_t
+name|no_fail_on_http_failure_status
+decl_stmt|;
+comment|/* If TRUE doesn't fail requests on HTTP redirect statuses like 301, 307 */
+name|svn_boolean_t
+name|no_fail_on_http_redirect_status
+decl_stmt|;
 comment|/* Has the request/response been completed?  */
 name|svn_boolean_t
 name|done
 decl_stmt|;
+name|svn_boolean_t
+name|scheduled
+decl_stmt|;
+comment|/* Is the request scheduled in a context */
 comment|/* If we captured an error from the server, then this will be non-NULL.      It will be allocated from HANDLER_POOL.  */
 name|svn_ra_serf__server_error_t
 modifier|*
@@ -940,6 +960,14 @@ modifier|*
 name|location
 decl_stmt|;
 comment|/* The Location: header, if any  */
+comment|/* This function and baton pair allows handling the completion of request.    *    * The default handler is responsible for the HTTP failure processing.    *    * If no_fail_on_http_failure_status is not TRUE, then the callback will    * return recorded server errors or if there is none and the http status    * specifies an error returns an error for that.    *    * The default baton is the handler itself.    */
+name|svn_ra_serf__response_done_delegate_t
+name|done_delegate
+decl_stmt|;
+name|void
+modifier|*
+name|done_delegate_baton
+decl_stmt|;
 comment|/* The handler and baton pair to be executed when a non-recoverable error    * is detected.  If it is NULL in the presence of an error, an abort() may    * be triggered.    */
 name|svn_ra_serf__response_error_t
 name|response_error
@@ -1012,202 +1040,6 @@ modifier|*
 name|handler
 parameter_list|)
 function_decl|;
-comment|/* XML helper callbacks. */
-typedef|typedef
-struct|struct
-name|svn_ra_serf__xml_state_t
-block|{
-comment|/* A numeric value that represents the current state in parsing.    *    * Value 0 is reserved for use as the default state.    */
-name|int
-name|current_state
-decl_stmt|;
-comment|/* Private pointer set by the parsing code. */
-name|void
-modifier|*
-name|private
-decl_stmt|;
-comment|/* Allocations should be made in this pool to match the lifetime of the    * state.    */
-name|apr_pool_t
-modifier|*
-name|pool
-decl_stmt|;
-comment|/* The currently-declared namespace for this state. */
-name|svn_ra_serf__ns_t
-modifier|*
-name|ns_list
-decl_stmt|;
-comment|/* Our previous states. */
-name|struct
-name|svn_ra_serf__xml_state_t
-modifier|*
-name|prev
-decl_stmt|;
-block|}
-name|svn_ra_serf__xml_state_t
-typedef|;
-comment|/* Forward declaration of the XML parser structure. */
-typedef|typedef
-name|struct
-name|svn_ra_serf__xml_parser_t
-name|svn_ra_serf__xml_parser_t
-typedef|;
-comment|/* Callback invoked with @a baton by our XML @a parser when an element with  * the @a name containing @a attrs is opened.  */
-typedef|typedef
-name|svn_error_t
-modifier|*
-function_decl|(
-modifier|*
-name|svn_ra_serf__xml_start_element_t
-function_decl|)
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|,
-name|svn_ra_serf__dav_props_t
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|attrs
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* Callback invoked with @a baton by our XML @a parser when an element with  * the @a name is closed.  */
-typedef|typedef
-name|svn_error_t
-modifier|*
-function_decl|(
-modifier|*
-name|svn_ra_serf__xml_end_element_t
-function_decl|)
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|,
-name|svn_ra_serf__dav_props_t
-name|name
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* Callback invoked with @a baton by our XML @a parser when a CDATA portion  * of @a data with size @a len is encountered.  *  * This may be invoked multiple times for the same tag.  */
-typedef|typedef
-name|svn_error_t
-modifier|*
-function_decl|(
-modifier|*
-name|svn_ra_serf__xml_cdata_chunk_handler_t
-function_decl|)
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|data
-parameter_list|,
-name|apr_size_t
-name|len
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/*  * Helper structure associated with handle_xml_parser handler that will  * specify how an XML response will be processed.  */
-struct|struct
-name|svn_ra_serf__xml_parser_t
-block|{
-comment|/* Temporary allocations should be made in this pool. */
-name|apr_pool_t
-modifier|*
-name|pool
-decl_stmt|;
-comment|/* What kind of response are we parsing? If set, this should typically      define the report name.  */
-specifier|const
-name|char
-modifier|*
-name|response_type
-decl_stmt|;
-comment|/* Caller-specific data passed to the start, end, cdata callbacks.  */
-name|void
-modifier|*
-name|user_data
-decl_stmt|;
-comment|/* Callback invoked when a tag is opened. */
-name|svn_ra_serf__xml_start_element_t
-name|start
-decl_stmt|;
-comment|/* Callback invoked when a tag is closed. */
-name|svn_ra_serf__xml_end_element_t
-name|end
-decl_stmt|;
-comment|/* Callback invoked when a cdata chunk is received. */
-name|svn_ra_serf__xml_cdata_chunk_handler_t
-name|cdata
-decl_stmt|;
-comment|/* Our associated expat-based XML parser. */
-name|XML_Parser
-name|xmlp
-decl_stmt|;
-comment|/* Our current state. */
-name|svn_ra_serf__xml_state_t
-modifier|*
-name|state
-decl_stmt|;
-comment|/* Our previously used states (will be reused). */
-name|svn_ra_serf__xml_state_t
-modifier|*
-name|free_state
-decl_stmt|;
-comment|/* If non-NULL, this value will be set to TRUE when the response is    * completed.    */
-name|svn_boolean_t
-modifier|*
-name|done
-decl_stmt|;
-comment|/* If non-NULL, when this parser completes, it will add done_item to    * the list.    */
-name|svn_ra_serf__list_t
-modifier|*
-modifier|*
-name|done_list
-decl_stmt|;
-comment|/* A pointer to the item that will be inserted into the list upon    * completeion.    */
-name|svn_ra_serf__list_t
-modifier|*
-name|done_item
-decl_stmt|;
-comment|/* If this flag is TRUE, errors during parsing will be ignored.    *    * This is mainly used when we are processing an error XML response to    * avoid infinite loops.    */
-name|svn_boolean_t
-name|ignore_errors
-decl_stmt|;
-comment|/* If an error occurred, this value will be non-NULL. */
-name|svn_error_t
-modifier|*
-name|error
-decl_stmt|;
-comment|/* Deciding whether to pause, or not, is performed within the parsing      callbacks. If a callback decides to set this flag, then the loop      driving the parse (generally, a series of calls to serf_context_run())      is going to need to coordinate the un-pausing of the parser by      processing pending content. Thus, deciding to pause the parser is a      coordinate effort rather than merely setting this flag.       When an XML parsing callback sets this flag, note that additional      elements may be parsed (as the current buffer is consumed). At some      point, the flag will be recognized and arriving network content will      be stashed away in the PENDING structure (see below).       At some point, the controlling loop should clear this value. The      underlying network processing will note the change and begin passing      content into the XML callbacks.       Note that the controlling loop should also process pending content      since the arriving network content will typically finish first.  */
-name|svn_boolean_t
-name|paused
-decl_stmt|;
-comment|/* While the XML parser is paused, content arriving from the server      must be saved locally. We cannot stop reading, or the server may      decide to drop the connection. The content will be stored in memory      up to a certain limit, and will then be spilled over to disk.       See libsvn_ra_serf/util.c  */
-name|struct
-name|svn_ra_serf__pending_t
-modifier|*
-name|pending
-decl_stmt|;
-block|}
-struct|;
 comment|/* v2 of the XML parsing functions  */
 comment|/* The XML parsing context.  */
 typedef|typedef
@@ -1318,7 +1150,12 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* State transition table.     When the XML Context is constructed, it is in state 0. User states are    positive integers.     In a list of transitions, use { 0 } to indicate the end. Specifically,    the code looks for NS == NULL.     ### more docco */
+comment|/* Magic state value for the initial state in a svn_ra_serf__xml_transition_t    table */
+define|#
+directive|define
+name|XML_STATE_INITIAL
+value|0
+comment|/* State transition table.     When the XML Context is constructed, it is in state 0. User states are    positive integers.     In a list of transitions, use { 0 } to indicate the end. Specifically,    the code looks for NS == NULL.     The initial state for each transition table is XML_STATE_INITIAL.     ### more docco */
 typedef|typedef
 struct|struct
 name|svn_ra_serf__xml_transition_t
@@ -1362,6 +1199,20 @@ decl_stmt|;
 block|}
 name|svn_ra_serf__xml_transition_t
 typedef|;
+comment|/* Constructor for svn_ra_serf__handler_t. Initializes a new handler    with default settings for SESSION. */
+name|svn_ra_serf__handler_t
+modifier|*
+name|svn_ra_serf__create_handler
+parameter_list|(
+name|svn_ra_serf__session_t
+modifier|*
+name|session
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
 comment|/* Construct an XML parsing context, based on the TTABLE transition table.    As content is parsed, the CLOSED_CB callback will be invoked according    to the definition in the table.     If OPENED_CB is not NULL, then it will be invoked for *every* tag-open    event. The callback will need to use the ENTERED_STATE and TAG parameters    to decide what it would like to do.     If CDATA_CB is not NULL, then it will be called for all cdata that is    not be automatically collected (based on the transition table record's    COLLECT_CDATA flag). It will be called in every state, so the callback    must examine the CURRENT_STATE parameter to decide what to do.     The same BATON value will be passed to all three callbacks.     The context will be created within RESULT_POOL.  */
 name|svn_ra_serf__xml_context_t
 modifier|*
@@ -1390,23 +1241,33 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/* Destroy all subpools for this structure. */
-name|void
-name|svn_ra_serf__xml_context_destroy
+comment|/* Verifies if the parsing completed successfully and destroys    all subpools. */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__xml_context_done
 parameter_list|(
 name|svn_ra_serf__xml_context_t
 modifier|*
 name|xmlctx
 parameter_list|)
 function_decl|;
-comment|/* Construct a handler with the response function/baton set up to parse    a response body using the given XML context. The handler and its    internal structures are allocated in RESULT_POOL.     This also initializes HANDLER_POOL to the given RESULT_POOL.  */
+comment|/* Construct a handler with the response function/baton set up to parse    a response body using the given XML context. The handler and its    internal structures are allocated in RESULT_POOL.     As part of the handling the http status value is compared to 200, or    if EXPECTED_STATUS is not NULL to all the values in EXPECTED_STATUS.    EXPECTED_STATUS is expected to be a list of integers ending with a 0    that lives at least as long as RESULT_POOL. If the status doesn't    match the request has failed and will be parsed as en error response.     This also initializes HANDLER_POOL to the given RESULT_POOL.  */
 name|svn_ra_serf__handler_t
 modifier|*
 name|svn_ra_serf__create_expat_handler
 parameter_list|(
+name|svn_ra_serf__session_t
+modifier|*
+name|session
+parameter_list|,
 name|svn_ra_serf__xml_context_t
 modifier|*
 name|xmlctx
+parameter_list|,
+specifier|const
+name|int
+modifier|*
+name|expected_status
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1458,94 +1319,35 @@ modifier|*
 name|xes
 parameter_list|)
 function_decl|;
-comment|/* Any XML parser may be used. When an opening tag is seen, call this    function to feed the information into XMLCTX.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__xml_cb_start
-parameter_list|(
-name|svn_ra_serf__xml_context_t
-modifier|*
-name|xmlctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|raw_name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|attrs
-parameter_list|)
-function_decl|;
-comment|/* When a close tag is seen, call this function to feed the information    into XMLCTX.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__xml_cb_end
-parameter_list|(
-name|svn_ra_serf__xml_context_t
-modifier|*
-name|xmlctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|raw_name
-parameter_list|)
-function_decl|;
-comment|/* When cdata is parsed by the wrapping XML parser, call this function to    feed the cdata into the XMLCTX.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__xml_cb_cdata
-parameter_list|(
-name|svn_ra_serf__xml_context_t
-modifier|*
-name|xmlctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|data
-parameter_list|,
-name|apr_size_t
-name|len
-parameter_list|)
-function_decl|;
 comment|/*  * Parses a server-side error message into a local Subversion error.  */
 struct|struct
 name|svn_ra_serf__server_error_t
 block|{
-comment|/* Our local representation of the error. */
-name|svn_error_t
+name|apr_pool_t
 modifier|*
-name|error
-decl_stmt|;
-comment|/* Are we done with the response? */
-name|svn_boolean_t
-name|done
-decl_stmt|;
-comment|/* Have we seen an error tag? */
-name|svn_boolean_t
-name|in_error
-decl_stmt|;
-comment|/* Have we seen a HTTP "412 Precondition Failed" error? */
-name|svn_boolean_t
-name|contains_precondition_error
-decl_stmt|;
-comment|/* Should we be collecting the XML cdata? */
-name|svn_boolean_t
-name|collect_cdata
-decl_stmt|;
-comment|/* Collected cdata. NULL if cdata not needed. */
-name|svn_stringbuf_t
-modifier|*
-name|cdata
+name|pool
 decl_stmt|;
 comment|/* XML parser and namespace used to parse the remote response */
-name|svn_ra_serf__xml_parser_t
-name|parser
+name|svn_ra_serf__xml_context_t
+modifier|*
+name|xmlctx
+decl_stmt|;
+name|svn_ra_serf__response_handler_t
+name|response_handler
+decl_stmt|;
+name|void
+modifier|*
+name|response_baton
+decl_stmt|;
+comment|/* The partial errors to construct the final error from */
+name|apr_array_header_t
+modifier|*
+name|items
+decl_stmt|;
+comment|/* The hooked handler */
+name|svn_ra_serf__handler_t
+modifier|*
+name|handler
 decl_stmt|;
 block|}
 struct|;
@@ -1615,11 +1417,45 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/*  * This function will feed the RESPONSE body into XMLP.  When parsing is  * completed (i.e. an EOF is received), *DONE is set to TRUE.  * Implements svn_ra_serf__response_handler_t.  *  * If an error occurs during processing RESP_ERR is invoked with the  * RESP_ERR_BATON.  *  * Temporary allocations are made in POOL.  */
+comment|/*  * This function sets up error parsing for an existing request  */
 name|svn_error_t
 modifier|*
-name|svn_ra_serf__handle_xml_parser
+name|svn_ra_serf__setup_error_parsing
 parameter_list|(
+name|svn_ra_serf__server_error_t
+modifier|*
+modifier|*
+name|server_err
+parameter_list|,
+name|svn_ra_serf__handler_t
+modifier|*
+name|handler
+parameter_list|,
+name|svn_boolean_t
+name|expect_207_only
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/*  * Forwards response data to the server error parser  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__handle_server_error
+parameter_list|(
+name|svn_ra_serf__server_error_t
+modifier|*
+name|server_error
+parameter_list|,
+name|svn_ra_serf__handler_t
+modifier|*
+name|handler
+parameter_list|,
 name|serf_request_t
 modifier|*
 name|request
@@ -1628,13 +1464,27 @@ name|serf_bucket_t
 modifier|*
 name|response
 parameter_list|,
-name|void
+name|apr_status_t
 modifier|*
-name|handler_baton
+name|serf_status
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/*  * Creates the svn_error_t * instance from the error recorded in  * HANDLER->server_error  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__server_error_create
+parameter_list|(
+name|svn_ra_serf__handler_t
+modifier|*
+name|handler
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* serf_response_handler_t implementation that completely discards  * the response.  *  * All temporary allocations will be made in @a pool.  */
@@ -1656,45 +1506,6 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
-parameter_list|)
-function_decl|;
-comment|/** XML helper functions. **/
-comment|/*  * Advance the internal XML @a parser to the @a state.  */
-name|void
-name|svn_ra_serf__xml_push_state
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|,
-name|int
-name|state
-parameter_list|)
-function_decl|;
-comment|/*  * Return to the previous internal XML @a parser state.  */
-name|void
-name|svn_ra_serf__xml_pop_state
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|)
-function_decl|;
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__process_pending
-parameter_list|(
-name|svn_ra_serf__xml_parser_t
-modifier|*
-name|parser
-parameter_list|,
-name|svn_boolean_t
-modifier|*
-name|network_eof
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/*  * Add the appropriate serf buckets to @a agg_bucket represented by  * the XML * @a tag and @a value.  *  * The bucket will be allocated from @a bkt_alloc.  */
@@ -1736,23 +1547,24 @@ function_decl|;
 comment|/*  * Add the appropriate serf buckets to AGG_BUCKET representing the XML  * open tag with name TAG.  *  * Take the tag's attributes from varargs, a NULL-terminated list of  * alternating<tt>char *</tt> key and<tt>char *</tt> val.  Attribute  * will be ignored if it's value is NULL.  *  * NOTE: Callers are responsible for XML-escaping attribute values as  * necessary.  *  * The bucket will be allocated from BKT_ALLOC.  */
 name|void
 name|svn_ra_serf__add_open_tag_buckets
-parameter_list|(
+argument_list|(
 name|serf_bucket_t
-modifier|*
+operator|*
 name|agg_bucket
-parameter_list|,
+argument_list|,
 name|serf_bucket_alloc_t
-modifier|*
+operator|*
 name|bkt_alloc
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|tag
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+argument_list|,
+operator|...
+argument_list|)
+name|SVN_NEEDS_SENTINEL_NULL
+decl_stmt|;
 comment|/*  * Add the appropriate serf buckets to AGG_BUCKET representing xml tag close  * with name TAG.  *  * The bucket will be allocated from BKT_ALLOC.  */
 name|void
 name|svn_ra_serf__add_close_tag_buckets
@@ -1771,6 +1583,27 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
+comment|/* Add the appropriate serf buckets to AGG_BUCKET representing the XML  * open tag with name TAG, and then immediately closes the tag using the />  * notation  */
+name|void
+name|svn_ra_serf__add_empty_tag_buckets
+argument_list|(
+name|serf_bucket_t
+operator|*
+name|agg_bucket
+argument_list|,
+name|serf_bucket_alloc_t
+operator|*
+name|bkt_alloc
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|tag
+argument_list|,
+operator|...
+argument_list|)
+name|SVN_NEEDS_SENTINEL_NULL
+decl_stmt|;
 comment|/*  * Add the appropriate serf buckets to AGG_BUCKET with xml-escaped  * version of DATA.  *  * The bucket will be allocated from BKT_ALLOC.  */
 name|void
 name|svn_ra_serf__add_cdata_len_buckets
@@ -1792,157 +1625,137 @@ name|apr_size_t
 name|len
 parameter_list|)
 function_decl|;
-comment|/*  * Look up the @a attrs array for namespace definitions and add each one  * to the @a ns_list of namespaces.  *  * New namespaces will be allocated in RESULT_POOL.  */
-name|void
-name|svn_ra_serf__define_ns
-parameter_list|(
-name|svn_ra_serf__ns_t
-modifier|*
-modifier|*
-name|ns_list
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|attrs
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|result_pool
-parameter_list|)
-function_decl|;
-comment|/*  * Look up @a name in the @a ns_list list for previously declared namespace  * definitions.  *  * Return (in @a *returned_prop_name) a #svn_ra_serf__dav_props_t tuple  * representing the expanded name.  */
-name|void
-name|svn_ra_serf__expand_ns
-parameter_list|(
-name|svn_ra_serf__dav_props_t
-modifier|*
-name|returned_prop_name
-parameter_list|,
-specifier|const
-name|svn_ra_serf__ns_t
-modifier|*
-name|ns_list
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
 comment|/** PROPFIND-related functions **/
-comment|/*  * This function will deliver a PROP_CTX PROPFIND request in the SESS  * serf context for the properties listed in LOOKUP_PROPS at URL for  * DEPTH ("0","1","infinity").  *  * This function will not block waiting for the response. Callers are  * expected to call svn_ra_serf__wait_for_props().  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__deliver_props
-parameter_list|(
-name|svn_ra_serf__handler_t
-modifier|*
-modifier|*
-name|propfind_handler
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|prop_vals
-parameter_list|,
-name|svn_ra_serf__session_t
-modifier|*
-name|sess
-parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|url
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|depth
-parameter_list|,
-specifier|const
-name|svn_ra_serf__dav_props_t
-modifier|*
-name|lookup_props
-parameter_list|,
-name|svn_ra_serf__list_t
-modifier|*
-modifier|*
-name|done_list
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-comment|/*  * This helper function will block until PROPFIND_HANDLER indicates that is  * done or another error is returned.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__wait_for_props
-parameter_list|(
-name|svn_ra_serf__handler_t
-modifier|*
-name|handler
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* This is a blocking version of deliver_props.     The properties are fetched and placed into RESULTS, allocated in    RESULT_POOL.     ### more docco about the other params.     Temporary allocations are made in SCRATCH_POOL. */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__retrieve_props
+comment|/* Removes all non regular properties from PROPS */
+name|void
+name|svn_ra_serf__keep_only_regular_props
 parameter_list|(
 name|apr_hash_t
-modifier|*
-modifier|*
-name|results
-parameter_list|,
-name|svn_ra_serf__session_t
-modifier|*
-name|sess
-parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|url
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|depth
-parameter_list|,
-specifier|const
-name|svn_ra_serf__dav_props_t
 modifier|*
 name|props
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|result_pool
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Callback used via svn_ra_serf__deliver_props2 */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_ra_serf__prop_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ns
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+name|value
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Using CONN, fetch the properties specified by WHICH_PROPS using CONN    for URL at REVISION. The resulting properties are placed into a 2-level    hash in RESULTS, mapping NAMESPACE -> hash<PROPNAME, PROPVALUE>, which    is allocated in RESULT_POOL.     If REVISION is SVN_INVALID_REVNUM, then the properties are fetched    from HEAD for URL.     This function performs the request synchronously.     Temporary allocations are made in SCRATCH_POOL.  */
+comment|/*  * Implementation of svn_ra_serf__prop_func_t that just delivers svn compatible  * properties  in the apr_hash_t * that is used as baton.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__deliver_svn_props
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ns
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+name|value
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/*  * This function will create a handler for a PROPFIND request, which will deliver  * properties to PROP_FUNC() with PROP_BATON for the properties listed in LOOKUP_PROPS  * at URL for DEPTH ("0","1","infinity").  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__create_propfind_handler
+parameter_list|(
+name|svn_ra_serf__handler_t
+modifier|*
+modifier|*
+name|handler
+parameter_list|,
+name|svn_ra_serf__session_t
+modifier|*
+name|session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|svn_revnum_t
+name|rev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|depth
+parameter_list|,
+specifier|const
+name|svn_ra_serf__dav_props_t
+modifier|*
+name|find_props
+parameter_list|,
+name|svn_ra_serf__prop_func_t
+name|prop_func
+parameter_list|,
+name|void
+modifier|*
+name|prop_func_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
+comment|/* Using SESSION, fetch the properties specified by WHICH_PROPS using CONN    for URL at REVISION. The resulting properties are placed into a 2-level    hash in RESULTS, mapping NAMESPACE -> hash<PROPNAME, PROPVALUE>, which    is allocated in RESULT_POOL.     If REVISION is SVN_INVALID_REVNUM, then the properties are fetched    from HEAD for URL.     This function performs the request synchronously.     Temporary allocations are made in SCRATCH_POOL.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__fetch_node_props
@@ -1952,9 +1765,9 @@ modifier|*
 modifier|*
 name|results
 parameter_list|,
-name|svn_ra_serf__connection_t
+name|svn_ra_serf__session_t
 modifier|*
-name|conn
+name|session
 parameter_list|,
 specifier|const
 name|char
@@ -1978,7 +1791,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Using CONN, fetch a DAV: property from the resource identified by URL    within REVISION. The PROPNAME may be one of:       "checked-in"      "href"     The resulting value will be allocated in RESULT_POOL, and may be NULL    if the property does not exist (note: "href" always exists).     This function performs the request synchronously.     Temporary allocations are made in SCRATCH_POOL.  */
+comment|/* Using SESSION, fetch a DAV: property from the resource identified by URL    within REVISION. The PROPNAME may be one of:       "checked-in"      "href"     The resulting value will be allocated in RESULT_POOL, and may be NULL    if the property does not exist (note: "href" always exists).     This function performs the request synchronously.     Temporary allocations are made in SCRATCH_POOL.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__fetch_dav_prop
@@ -1989,9 +1802,9 @@ modifier|*
 modifier|*
 name|value
 parameter_list|,
-name|svn_ra_serf__connection_t
+name|svn_ra_serf__session_t
 modifier|*
-name|conn
+name|session
 parameter_list|,
 specifier|const
 name|char
@@ -2015,197 +1828,6 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set PROPS for PATH at REV revision with a NS:NAME VAL.  *  * The POOL governs allocation.  */
-name|void
-name|svn_ra_serf__set_ver_prop
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|svn_string_t
-modifier|*
-name|val
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-define|#
-directive|define
-name|svn_ra_serf__set_rev_prop
-value|svn_ra_serf__set_ver_prop
-comment|/** Property walker functions **/
-typedef|typedef
-name|svn_error_t
-modifier|*
-function_decl|(
-modifier|*
-name|svn_ra_serf__walker_visitor_t
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|baton
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|svn_string_t
-modifier|*
-name|val
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__walk_all_props
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-name|svn_ra_serf__walker_visitor_t
-name|walker
-parameter_list|,
-name|void
-modifier|*
-name|baton
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-comment|/* Like walk_all_props(), but a 2-level hash.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__walk_node_props
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-name|svn_ra_serf__walker_visitor_t
-name|walker
-parameter_list|,
-name|void
-modifier|*
-name|baton
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-typedef|typedef
-name|svn_error_t
-modifier|*
-function_decl|(
-modifier|*
-name|svn_ra_serf__path_rev_walker_t
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|baton
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|apr_ssize_t
-name|path_len
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-name|apr_ssize_t
-name|ns_len
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|apr_ssize_t
-name|name_len
-parameter_list|,
-specifier|const
-name|svn_string_t
-modifier|*
-name|val
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__walk_all_paths
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-name|svn_ra_serf__path_rev_walker_t
-name|walker
-parameter_list|,
-name|void
-modifier|*
-name|baton
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
 comment|/* Map a property name, as passed over the wire, into its corresponding    Subversion-internal name. The returned name will be a static value,    or allocated within RESULT_POOL.     If the property should be ignored (eg. some DAV properties), then NULL    will be returned.  */
 specifier|const
 name|char
@@ -2225,216 +1847,6 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
-parameter_list|)
-function_decl|;
-comment|/* Select the basic revision properties from the set of "all" properties.    Return these in *REVPROPS, allocated from RESULT_POOL.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__select_revprops
-parameter_list|(
-name|apr_hash_t
-modifier|*
-modifier|*
-name|revprops
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|all_revprops
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|result_pool
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* PROPS is nested hash tables mapping NS -> NAME -> VALUE.    This function takes the NS:NAME:VALUE hashes and flattens them into a set of    names to VALUE. The names are composed of NS:NAME, with specific    rewrite from wire names (DAV) to SVN names. This mapping is managed    by the svn_ra_serf__set_baton_props() function.     FLAT_PROPS is allocated in RESULT_POOL.    ### right now, we do a shallow copy from PROPS to FLAT_PROPS. therefore,    ### the names and values in PROPS must be in the proper pool.     Temporary allocations are made in SCRATCH_POOL.  */
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__flatten_props
-parameter_list|(
-name|apr_hash_t
-modifier|*
-modifier|*
-name|flat_props
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|result_pool
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* Return the property value for PATH at REV revision with a NS:NAME.  * PROPS is a four-level nested hash: (svn_revnum_t => char *path =>  * char *ns => char *name => svn_string_t *). */
-specifier|const
-name|svn_string_t
-modifier|*
-name|svn_ra_serf__get_ver_prop_string
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|/* Same as svn_ra_serf__get_ver_prop_string(), but returns a C string. */
-specifier|const
-name|char
-modifier|*
-name|svn_ra_serf__get_ver_prop
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|/* Same as svn_ra_serf__get_ver_prop_string(), but for the unknown revision. */
-specifier|const
-name|svn_string_t
-modifier|*
-name|svn_ra_serf__get_prop_string
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|/* Same as svn_ra_serf__get_ver_prop(), but for the unknown revision. */
-specifier|const
-name|char
-modifier|*
-name|svn_ra_serf__get_prop
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|/* Same as svn_ra_serf__set_rev_prop(), but for the unknown revision. */
-name|void
-name|svn_ra_serf__set_prop
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|props
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ns
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|svn_string_t
-modifier|*
-name|val
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-name|svn_error_t
-modifier|*
-name|svn_ra_serf__get_resource_type
-parameter_list|(
-name|svn_node_kind_t
-modifier|*
-name|kind
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|props
 parameter_list|)
 function_decl|;
 comment|/** MERGE-related functions **/
@@ -2474,17 +1886,9 @@ modifier|*
 modifier|*
 name|commit_info
 parameter_list|,
-name|int
-modifier|*
-name|response_code
-parameter_list|,
 name|svn_ra_serf__session_t
 modifier|*
 name|session
-parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -2531,9 +1935,9 @@ name|svn_revnum_t
 modifier|*
 name|youngest
 parameter_list|,
-name|svn_ra_serf__connection_t
+name|svn_ra_serf__session_t
 modifier|*
-name|conn
+name|session
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2551,9 +1955,9 @@ modifier|*
 modifier|*
 name|activity_url
 parameter_list|,
-name|svn_ra_serf__connection_t
+name|svn_ra_serf__session_t
 modifier|*
-name|conn
+name|session
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2564,7 +1968,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set @a VCC_URL to the default VCC for our repository based on @a  * ORIG_PATH for the session @a SESSION, ensuring that the VCC URL and  * repository root URLs are cached in @a SESSION.  Use @a CONN for any  * required network communications if it is non-NULL; otherwise use the  * default connection.  *  * All temporary allocations will be made in @a POOL. */
+comment|/* Set @a VCC_URL to the default VCC for our repository based on @a  * ORIG_PATH for the session @a SESSION, ensuring that the VCC URL and  * repository root URLs are cached in @a SESSION.  *  * All temporary allocations will be made in @a SCRATCH_POOL. */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__discover_vcc
@@ -2579,16 +1983,12 @@ name|svn_ra_serf__session_t
 modifier|*
 name|session
 parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
-parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set @a REPORT_TARGET to the URI of the resource at which generic  * (path-agnostic) REPORTs should be aimed for @a SESSION.  Use @a  * CONN for any required network communications if it is non-NULL;  * otherwise use the default connection.  *  * All temporary allocations will be made in @a POOL.  */
+comment|/* Set @a REPORT_TARGET to the URI of the resource at which generic  * (path-agnostic) REPORTs should be aimed for @a SESSION.  *  * All temporary allocations will be made in @a POOL.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__report_resource
@@ -2602,10 +2002,6 @@ parameter_list|,
 name|svn_ra_serf__session_t
 modifier|*
 name|session
-parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2632,10 +2028,6 @@ name|svn_ra_serf__session_t
 modifier|*
 name|session
 parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
-parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
@@ -2659,7 +2051,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Generate a revision-stable URL.     The RA APIs all refer to user/public URLs that float along with the    youngest revision. In many cases, we do NOT want to work with that URL    since it can change from one moment to the next. Especially if we    attempt to operation against multiple floating URLs -- we could end up    referring to two separate revisions.     The DAV RA provider(s) solve this by generating a URL that is specific    to a revision by using a URL into a "baseline collection".     For a specified SESSION, with an optional CONN (if NULL, then the    session's default connection will be used; specifically SESSION->conns[0]),    generate a revision-stable URL for URL at REVISION. If REVISION is    SVN_INVALID_REVNUM, then the stable URL will refer to the youngest    revision at the time this function was called.     If URL is NULL, then the session root will be used.     The stable URL will be placed into *STABLE_URL, allocated from RESULT_POOL.     If LATEST_REVNUM is not NULL, then the revision used will be placed into    *LATEST_REVNUM. That will be equal to youngest, or the given REVISION.     This function operates synchronously, if any communication to the server    is required. Communication is needed if REVISION is SVN_INVALID_REVNUM    (to get the current youngest revnum), or if the specified REVISION is not    (yet) in our cache of baseline collections.     All temporary allocations are performed in SCRATCH_POOL.  */
+comment|/* Generate a revision-stable URL.     The RA APIs all refer to user/public URLs that float along with the    youngest revision. In many cases, we do NOT want to work with that URL    since it can change from one moment to the next. Especially if we    attempt to operation against multiple floating URLs -- we could end up    referring to two separate revisions.     The DAV RA provider(s) solve this by generating a URL that is specific    to a revision by using a URL into a "baseline collection".     For a specified SESSION, generate a revision-stable URL for URL at    REVISION. If REVISION is    SVN_INVALID_REVNUM, then the stable URL will    refer to the youngest revision at the time this function was called.     If URL is NULL, then the session root will be used.     The stable URL will be placed into *STABLE_URL, allocated from RESULT_POOL.     If LATEST_REVNUM is not NULL, then the revision used will be placed into    *LATEST_REVNUM. That will be equal to youngest, or the given REVISION.     This function operates synchronously, if any communication to the server    is required. Communication is needed if REVISION is SVN_INVALID_REVNUM    (to get the current youngest revnum), or if the specified REVISION is not    (yet) in our cache of baseline collections.     All temporary allocations are performed in SCRATCH_POOL.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__get_stable_url
@@ -2677,10 +2069,6 @@ parameter_list|,
 name|svn_ra_serf__session_t
 modifier|*
 name|session
-parameter_list|,
-name|svn_ra_serf__connection_t
-modifier|*
-name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -2700,6 +2088,52 @@ name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/** RA functions **/
+comment|/* Implements svn_ra__vtable_t.reparent(). */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__reparent
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|url
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Implements svn_ra__vtable_t.rev_prop(). */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__rev_prop
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|session
+parameter_list|,
+name|svn_revnum_t
+name|rev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|svn_string_t
+modifier|*
+modifier|*
+name|value
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/* Implements svn_ra__vtable_t.get_log(). */
 name|svn_error_t
 modifier|*
@@ -2743,6 +2177,59 @@ parameter_list|,
 name|void
 modifier|*
 name|receiver_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Implements svn_ra__vtable_t.check_path(). */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__check_path
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|rel_path
+parameter_list|,
+name|svn_revnum_t
+name|revision
+parameter_list|,
+name|svn_node_kind_t
+modifier|*
+name|kind
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Implements svn_ra__vtable_t.stat(). */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__stat
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|rel_path
+parameter_list|,
+name|svn_revnum_t
+name|revision
+parameter_list|,
+name|svn_dirent_t
+modifier|*
+modifier|*
+name|dirent
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -3088,7 +2575,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Implements svn_ra__vtable_t.get_commit_editor(). */
+comment|/* Implements svn_ra__vtable_t.get_commit_editor().  *  * Note: Like other commit editors, the returned editor requires that the  * @c copyfrom_path parameter passed to its @c add_file and @c add_directory  * methods is a URL, not a relative path.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__get_commit_editor
@@ -3164,6 +2651,45 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/* Implements svn_ra__vtable_t.get_dir(). */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__get_dir
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+parameter_list|,
+name|apr_hash_t
+modifier|*
+modifier|*
+name|dirents
+parameter_list|,
+name|svn_revnum_t
+modifier|*
+name|fetched_rev
+parameter_list|,
+name|apr_hash_t
+modifier|*
+modifier|*
+name|ret_props
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|rel_path
+parameter_list|,
+name|svn_revnum_t
+name|revision
+parameter_list|,
+name|apr_uint32_t
+name|dirent_fields
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
 parameter_list|)
 function_decl|;
 comment|/* Implements svn_ra__vtable_t.change_rev_prop(). */
@@ -3430,7 +2956,11 @@ name|corrected_url
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Implements svn_ra__vtable_t.has_capability(). */
@@ -3592,7 +3122,7 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/*** General utility functions ***/
-comment|/**  * Convert an HTTP STATUS_CODE resulting from a WebDAV request against  * PATH to the relevant error code.  Use the response-supplied LOCATION  * where it necessary.  */
+comment|/**  * Convert an HTTP STATUS_CODE resulting from a WebDAV request against  * PATH to the relevant error code.  Use the response-supplied LOCATION  * where it necessary.  *  * Returns SVN_NO_ERROR if sline doesn't specify an error condition  */
 name|svn_error_t
 modifier|*
 name|svn_ra_serf__error_on_status
@@ -3609,6 +3139,16 @@ specifier|const
 name|char
 modifier|*
 name|location
+parameter_list|)
+function_decl|;
+comment|/**  * Convert an unexpected HTTP STATUS_CODE from a request to the relevant error  * code. Unlike svn_ra_serf__error_on_status() this function creates an error  * for any result  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__unexpected_status
+parameter_list|(
+name|svn_ra_serf__handler_t
+modifier|*
+name|handler
 parameter_list|)
 function_decl|;
 comment|/* ###? */
@@ -3670,6 +3210,43 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+comment|/* Create a bucket that just returns DATA (with length LEN) and then returns    the APR_EAGAIN status */
+name|serf_bucket_t
+modifier|*
+name|svn_ra_serf__create_bucket_with_eagain
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|apr_size_t
+name|len
+parameter_list|,
+name|serf_bucket_alloc_t
+modifier|*
+name|allocator
+parameter_list|)
+function_decl|;
+comment|/* Parse a given URL_STR, fill in all supplied fields of URI  * structure.  *  * This function is a compatibility wrapper around apr_uri_parse().  * Different apr-util versions set apr_uri_t.path to either NULL or ""  * for root paths, and serf expects to see "/". This function always  * sets URI.path to "/" for these paths. */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__uri_parse
+parameter_list|(
+name|apr_uri_t
+modifier|*
+name|uri
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|url_str
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
 parameter_list|)
 function_decl|;
 if|#

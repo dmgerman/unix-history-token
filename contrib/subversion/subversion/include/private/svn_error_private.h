@@ -38,6 +38,7 @@ comment|/**  * Returns if @a err is a "tracing" error.  */
 name|svn_boolean_t
 name|svn_error__is_tracing_link
 parameter_list|(
+specifier|const
 name|svn_error_t
 modifier|*
 name|err

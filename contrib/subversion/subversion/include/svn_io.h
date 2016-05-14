@@ -950,7 +950,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/** Create file at utf8-encoded @a file with contents @a contents.  * @a file must not already exist.  * Use @a pool for memory allocations.  */
+comment|/** Create a file at utf8-encoded path @a file with the contents given  * by the null-terminated string @a contents.  *  * @a file must not already exist. If an error occurs while writing or  * closing the file, attempt to delete the file before returning the error.  *  * Write the data in 'binary' mode (#APR_FOPEN_BINARY). If @a contents  * is @c NULL, create an empty file.  *  * Use @a pool for memory allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_io_file_create
@@ -968,6 +968,44 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/** Create a file at utf8-encoded path @a file with the contents given  * by @a contents of @a length bytes.  *  * @a file must not already exist. If an error occurs while writing or  * closing the file, attempt to delete the file before returning the error.  *  * Write the data in 'binary' mode (#APR_FOPEN_BINARY). If @a length is  * zero, create an empty file; in this case @a contents may be @c NULL.  *  * Use @a scratch_pool for temporary allocations.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_io_file_create_bytes
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|contents
+parameter_list|,
+name|apr_size_t
+name|length
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Create an empty file at utf8-encoded path @a file.  *  * @a file must not already exist. If an error occurs while  * closing the file, attempt to delete the file before returning the error.  *  * Use @a scratch_pool for temporary allocations.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_io_file_create_empty
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/**  * Lock file at @a lock_file. If @a exclusive is TRUE,  * obtain exclusive lock, otherwise obtain shared lock.  * Lock will be automatically released when @a pool is cleared or destroyed.  * Use @a pool for memory allocations.  *  * @deprecated Provided for backward compatibility with the 1.0 API.  */
@@ -1044,7 +1082,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Flush any unwritten data from @a file to disk.  Use @a pool for  * memory allocations.  *  * @since New in 1.1.  */
+comment|/**  * Flush any unwritten data from @a file to disk.  Use @a pool for  * memory allocations.  *  * @note This function uses advanced file control operations to flush buffers  * to disk that aren't always accessible and can be very expensive on systems  * that implement flushing on all IO layers, like Windows. Please avoid using  * this function in cases where the file should just work on any network  * filesystem. In many cases a normal svn_io_file_flush() will work just fine.  *  * @since New in 1.1.  */
 name|svn_error_t
 modifier|*
 name|svn_io_file_flush_to_disk
@@ -1084,7 +1122,7 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/** Generic byte-streams  *  * @defgroup svn_io_byte_streams Generic byte streams  * @{  */
-comment|/** An abstract stream of bytes--either incoming or outgoing or both.  *  * The creator of a stream sets functions to handle read and write.  * Both of these handlers accept a baton whose value is determined at  * stream creation time; this baton can point to a structure  * containing data associated with the stream.  If a caller attempts  * to invoke a handler which has not been set, it will generate a  * runtime assertion failure.  The creator can also set a handler for  * close requests so that it can flush buffered data or whatever;  * if a close handler is not specified, a close request on the stream  * will simply be ignored.  Note that svn_stream_close() does not  * deallocate the memory used to allocate the stream structure; free  * the pool you created the stream in to free that memory.  *  * The read and write handlers accept length arguments via pointer.  * On entry to the handler, the pointed-to value should be the amount  * of data which can be read or the amount of data to write.  When the  * handler returns, the value is reset to the amount of data actually  * read or written.  Handlers are obliged to complete a read or write  * to the maximum extent possible; thus, a short read with no  * associated error implies the end of the input stream, and a short  * write should never occur without an associated error.  *  * In Subversion 1.7 reset support was added as an optional feature of  * streams. If a stream implements resetting it allows reading the data  * again after a successful call to svn_stream_reset().  */
+comment|/** An abstract stream of bytes--either incoming or outgoing or both.  *  * The creator of a stream sets functions to handle read and write.  * Both of these handlers accept a baton whose value is determined at  * stream creation time; this baton can point to a structure  * containing data associated with the stream.  If a caller attempts  * to invoke a handler which has not been set, it will generate a  * runtime assertion failure.  The creator can also set a handler for  * close requests so that it can flush buffered data or whatever;  * if a close handler is not specified, a close request on the stream  * will simply be ignored.  Note that svn_stream_close() does not  * deallocate the memory used to allocate the stream structure; free  * the pool you created the stream in to free that memory.  *  * The read and write handlers accept length arguments via pointer.  * On entry to the handler, the pointed-to value should be the amount  * of data which can be read or the amount of data to write.  When the  * handler returns, the value is reset to the amount of data actually  * read or written.  The write and full read handler are obliged to  * complete a read or write to the maximum extent possible; thus, a  * short read with no associated error implies the end of the input  * stream, and a short write should never occur without an associated  * error. In Subversion 1.9 the stream api was extended to also support  * limited reads via the new svn_stream_read2() api.  *  * In Subversion 1.7 mark, seek and reset support was added as an optional  * feature of streams. If a stream implements resetting it allows reading  * the data again after a successful call to svn_stream_reset().  */
 typedef|typedef
 name|struct
 name|svn_stream_t
@@ -1214,6 +1252,24 @@ modifier|*
 name|mark
 parameter_list|)
 function_decl|;
+comment|/** Poll handler for generic streams that support incomplete reads, @see  * svn_stream_t and svn_stream_data_available().  *  * @since New in 1.9.  */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_stream_data_available_fn_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|data_available
+parameter_list|)
+function_decl|;
 comment|/** Create a generic stream.  @see svn_stream_t. */
 name|svn_stream_t
 modifier|*
@@ -1241,7 +1297,23 @@ modifier|*
 name|baton
 parameter_list|)
 function_decl|;
-comment|/** Set @a stream's read function to @a read_fn */
+comment|/** Set @a stream's read functions to @a read_fn and @a read_full_fn. If  * @a read_full_fn is NULL a default implementation based on multiple calls  * to @a read_fn will be used.  *  * @since New in 1.9.  */
+name|void
+name|svn_stream_set_read2
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|svn_read_fn_t
+name|read_fn
+parameter_list|,
+name|svn_read_fn_t
+name|read_full_fn
+parameter_list|)
+function_decl|;
+comment|/** Set @a stream's read function to @a read_fn.  *  * This function sets only the full read function to read_fn.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  */
+name|SVN_DEPRECATED
 name|void
 name|svn_stream_set_read
 parameter_list|(
@@ -1311,6 +1383,18 @@ name|stream
 parameter_list|,
 name|svn_stream_seek_fn_t
 name|seek_fn
+parameter_list|)
+function_decl|;
+comment|/** Set @a stream's data available function to @a data_available_fn  *  * @since New in 1.9.  */
+name|void
+name|svn_stream_set_data_available
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|svn_stream_data_available_fn_t
+name|data_available
 parameter_list|)
 function_decl|;
 comment|/** Create a stream that is empty for reading and infinite for writing. */
@@ -1495,6 +1579,28 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/** Set @a *str to a string buffer allocated in @a result_pool that contains  * all data from the current position in @a stream to its end.  @a len_hint  * specifies the initial capacity of the string buffer and may be 0.  The  * buffer gets automatically resized to fit the actual amount of data being  * read from @a stream.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_stringbuf_from_stream
+parameter_list|(
+name|svn_stringbuf_t
+modifier|*
+modifier|*
+name|str
+parameter_list|,
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|apr_size_t
+name|len_hint
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
 comment|/** Return a generic stream connected to stringbuf @a str.  Allocate the  * stream in @a pool.  */
 name|svn_stream_t
 modifier|*
@@ -1610,7 +1716,53 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Read from a generic stream. @see svn_stream_t. */
+comment|/** Read from a generic stream until @a buffer is filled upto @a *len or  * until EOF is reached. @see svn_stream_t  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_stream_read_full
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|apr_size_t
+modifier|*
+name|len
+parameter_list|)
+function_decl|;
+comment|/** Returns @c TRUE if the generic @c stream supports svn_stream_read2().  *  * @since New in 1.9.  */
+name|svn_boolean_t
+name|svn_stream_supports_partial_read
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|)
+function_decl|;
+comment|/** Read all currently available upto @a *len into @a buffer. Use  * svn_stream_read_full() if you want to wait for the buffer to be filled  * or EOF. If the stream doesn't support limited reads this function will  * return an #SVN_ERR_STREAM_NOT_SUPPORTED error.  *  * A 0 byte read signals the end of the stream.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_stream_read2
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|apr_size_t
+modifier|*
+name|len
+parameter_list|)
+function_decl|;
+comment|/** Read from a generic stream until the buffer is completely filled or EOF.  * @see svn_stream_t.  *  * @note This function is a wrapper of svn_stream_read_full() now, which name  * better documents the behavior of this function.  *  * @deprecated Provided for backward compatibility with the 1.8 API  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_stream_read
@@ -1721,6 +1873,20 @@ specifier|const
 name|svn_stream_mark_t
 modifier|*
 name|mark
+parameter_list|)
+function_decl|;
+comment|/** When a stream supports polling for available data, obtain a boolean  * indicating whether data is waiting to be read. If the stream doesn't  * support polling this function returns a #SVN_ERR_STREAM_NOT_SUPPORTED  * error.  *  * If the data_available callback is implemented and the stream is at the end  * the stream will set @a *data_available to FALSE.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_stream_data_available
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|data_available
 parameter_list|)
 function_decl|;
 comment|/** Return a writable stream which, when written to, writes to both of the  * underlying streams.  Both of these streams will be closed upon closure of  * the returned stream; use svn_stream_disown() if this is not the desired  * behavior.  One or both of @a out1 and @a out2 may be @c NULL.  If both are  * @c NULL, @c NULL is returned.  *  * @since New in 1.7.  */
@@ -2080,7 +2246,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/** Return a generic stream which wraps another primary stream,  * delaying the "opening" of that stream until the first time the  * returned stream is accessed.  *  * @a open_func and @a open_baton are a callback function/baton pair  * which will be invoked upon the first access of the returned  * stream (read, write, mark, seek, skip, or possibly close).  The  * callback shall open the primary stream.  *  * If the only "access" the returned stream gets is to close it  * then @a open_func will only be called if @a open_on_close is TRUE.  *  * @since New in 1.8.  */
+comment|/** Return a generic stream which wraps another primary stream,  * delaying the "opening" of that stream until the first time the  * returned stream is accessed.  *  * @a open_func and @a open_baton are a callback function/baton pair  * which will be invoked upon the first access of the returned  * stream (read, write, mark, seek, skip, or possibly close).  The  * callback shall open the primary stream.  *  * If the only "access" the returned stream gets is to close it  * then @a open_func will only be called if @a open_on_close is TRUE.  *  * Allocate the returned stream in @a result_pool. Also arrange for  * @a result_pool to be passed as the @c result_pool parameter to  * @a open_func when it is called.  *  * @since New in 1.8.  */
 end_comment
 
 begin_function_decl
@@ -3535,6 +3701,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** Set the file pointer of the #APR_BUFFERED @a file to @a offset.  In  * contrast to #svn_io_file_seek, this function will attempt to resize the  * internal data buffer to @a block_size bytes and to read data aligned to  * multiples of that value.  The beginning of the block will be returned  * in @a buffer_start, if that is not NULL.  * Uses @a scratch_pool for temporary allocations.  *  * @note Due to limitations of the APR API, the alignment may not be  * successful.  If you never use any other seek function on @a file,  * however, you are virtually guaranteed to get at least 4kByte alignment  * for all reads.  *  * @note Calling this for non-buffered files is legal but inefficient.  *  * @since New in 1.9  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_io_file_aligned_seek
+parameter_list|(
+name|apr_file_t
+modifier|*
+name|file
+parameter_list|,
+name|apr_off_t
+name|block_size
+parameter_list|,
+name|apr_off_t
+modifier|*
+name|buffer_start
+parameter_list|,
+name|apr_off_t
+name|offset
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/** Wrapper for apr_file_write(). */
 end_comment
 
@@ -3559,6 +3755,26 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Wrapper for apr_file_flush().  * @since New in 1.9  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_io_file_flush
+parameter_list|(
+name|apr_file_t
+modifier|*
+name|file
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3591,6 +3807,40 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Writes @a nbytes bytes from @a *buf to a temporary file inside the same  * directory as @a *final_path. Then syncs the temporary file to disk and  * closes the file. After this rename the temporary file to @a final_path,  * possibly replacing an existing file.  *  * If @a copy_perms_path is not NULL, copy the permissions applied on @a  * @a copy_perms_path on the temporary file before renaming.  *  * @note This function uses advanced file control operations to flush buffers  * to disk that aren't always accessible and can be very expensive. Avoid  * using this function in cases where the file should just work on any  * network filesystem.  *  * @since New in 1.9.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_io_write_atomic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|final_path
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|apr_size_t
+name|nbytes
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|copy_perms_path
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 end_function_decl

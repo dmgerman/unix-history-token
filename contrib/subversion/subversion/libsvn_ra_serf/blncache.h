@@ -85,7 +85,7 @@ name|bc_url
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Sets *BC_URL_P with a pointer to baseline collection URL for the given  * REVNUM. *BC_URL_P will be NULL if cache doesn't have information about  * this baseline.  */
@@ -108,7 +108,7 @@ name|revnum
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
 parameter_list|)
 function_decl|;
 comment|/* Sets *BC_URL_P with pointer to baseline collection URL and *REVISION_P  * with revision number of baseline BASELINE_URL. *BC_URL_P will be NULL,  * *REVNUM_P will SVN_INVALID_REVNUM if cache doesn't have such  * information.  */

@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"svn_version.h"
+file|"svn_config.h"
 end_include
 
 begin_ifdef
@@ -69,9 +69,69 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
+comment|/* Create a spill buffer, with extra parameters.  */
+name|svn_spillbuf_t
+modifier|*
+name|svn_spillbuf__create_extended
+parameter_list|(
+name|apr_size_t
+name|blocksize
+parameter_list|,
+name|apr_size_t
+name|maxsize
+parameter_list|,
+name|svn_boolean_t
+name|delete_on_close
+parameter_list|,
+name|svn_boolean_t
+name|spill_all_contents
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dirpath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
 comment|/* Determine how much content is stored in the spill buffer.  */
 name|svn_filesize_t
 name|svn_spillbuf__get_size
+parameter_list|(
+specifier|const
+name|svn_spillbuf_t
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+comment|/* Determine how much content the spill buffer is caching in memory.  */
+name|svn_filesize_t
+name|svn_spillbuf__get_memory_size
+parameter_list|(
+specifier|const
+name|svn_spillbuf_t
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+comment|/* Retrieve the name of the spill file. The returned value can be NULL    if the file has not been created yet. */
+specifier|const
+name|char
+modifier|*
+name|svn_spillbuf__get_filename
+parameter_list|(
+specifier|const
+name|svn_spillbuf_t
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+comment|/* Retrieve the handle of the spill file. The returned value can be    NULL if the file has not been created yet. */
+name|apr_file_t
+modifier|*
+name|svn_spillbuf__get_file
 parameter_list|(
 specifier|const
 name|svn_spillbuf_t
@@ -186,7 +246,7 @@ name|struct
 name|svn_spillbuf_reader_t
 name|svn_spillbuf_reader_t
 typedef|;
-comment|/* Create a spill-buffer and a reader for it.  */
+comment|/* Create a spill-buffer and a reader for it, using the same arguments as    svn_spillbuf__create().  */
 name|svn_spillbuf_reader_t
 modifier|*
 name|svn_spillbuf__reader_create
@@ -267,16 +327,14 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Return a stream built on top of a spillbuf, using the same arguments as    svn_spillbuf__create().  This stream can be used for reading and writing,    but implements the same basic sematics of a spillbuf for the underlying    storage. */
+comment|/* Return a stream built on top of a spillbuf.     This stream can be used for reading and writing, but implements the    same basic semantics of a spillbuf for the underlying storage. */
 name|svn_stream_t
 modifier|*
 name|svn_stream__from_spillbuf
 parameter_list|(
-name|apr_size_t
-name|blocksize
-parameter_list|,
-name|apr_size_t
-name|maxsize
+name|svn_spillbuf_t
+modifier|*
+name|buf
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -284,6 +342,8 @@ name|result_pool
 parameter_list|)
 function_decl|;
 comment|/** @} */
+comment|/*----------------------------------------------------*/
+comment|/**  * @defgroup svn_checksum_private Checksumming helper APIs  * @{  */
 comment|/**  * Internal function for creating a MD5 checksum from a binary digest.  *  * @since New in 1.8  */
 name|svn_checksum_t
 modifier|*
@@ -316,6 +376,105 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
+comment|/**  * Internal function for creating a 32 bit FNV-1a checksum from a binary  * digest.  *  * @since New in 1.9  */
+name|svn_checksum_t
+modifier|*
+name|svn_checksum__from_digest_fnv1a_32
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|digest
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Internal function for creating a modified 32 bit FNV-1a checksum from  * a binary digest.  *  * @since New in 1.9  */
+name|svn_checksum_t
+modifier|*
+name|svn_checksum__from_digest_fnv1a_32x4
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|digest
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a stream that calculates a checksum of type @a kind over all  * data written to the @a inner_stream.  When the returned stream gets  * closed, write the checksum to @a *checksum.  * Allocate the result in @a pool.  *  * @note The stream returned only supports #svn_stream_write and  * #svn_stream_close.  */
+name|svn_stream_t
+modifier|*
+name|svn_checksum__wrap_write_stream
+parameter_list|(
+name|svn_checksum_t
+modifier|*
+modifier|*
+name|checksum
+parameter_list|,
+name|svn_stream_t
+modifier|*
+name|inner_stream
+parameter_list|,
+name|svn_checksum_kind_t
+name|kind
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a stream that calculates a 32 bit modified FNV-1a checksum  * over all data written to the @a inner_stream and writes the digest  * to @a *digest when the returned stream gets closed.  * Allocate the stream in @a pool.  */
+name|svn_stream_t
+modifier|*
+name|svn_checksum__wrap_write_stream_fnv1a_32x4
+parameter_list|(
+name|apr_uint32_t
+modifier|*
+name|digest
+parameter_list|,
+name|svn_stream_t
+modifier|*
+name|inner_stream
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a 32 bit FNV-1a checksum for the first @a len bytes in @a input.  *  * @since New in 1.9  */
+name|apr_uint32_t
+name|svn__fnv1a_32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|input
+parameter_list|,
+name|apr_size_t
+name|len
+parameter_list|)
+function_decl|;
+comment|/**  * Return a 32 bit modified FNV-1a checksum for the first @a len bytes in  * @a input.  *  * @note This is a proprietary checksumming algorithm based FNV-1a with  *       approximately the same strength.  It is up to 4 times faster  *       than plain FNV-1a for longer data blocks.  *  * @since New in 1.9  */
+name|apr_uint32_t
+name|svn__fnv1a_32x4
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|input
+parameter_list|,
+name|apr_size_t
+name|len
+parameter_list|)
+function_decl|;
+comment|/** @} */
 comment|/**  * @defgroup svn_hash_support Hash table serialization support  * @{  */
 comment|/*----------------------------------------------------*/
 comment|/**  * @defgroup svn_hash_misc Miscellaneous hash APIs  * @{  */
@@ -366,6 +525,60 @@ name|apr_hash_t
 modifier|*
 name|svn_hash__make
 parameter_list|(
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/**  * @defgroup svn_hash_read Reading serialized hash tables  * @{  */
+comment|/** Struct that represents a key value pair read from a serialized hash  * representation.  There are special cases that can also be represented:  * a #NULL @a key signifies the end of the hash, a #NULL @a val for non-  * NULL keys is only possible in incremental mode describes a deletion.  *  * @since New in 1.9.  */
+typedef|typedef
+struct|struct
+name|svn_hash__entry_t
+block|{
+comment|/** 0-terminated Key.  #NULL if this contains no data at all because we    * encountered the end of the hash. */
+name|char
+modifier|*
+name|key
+decl_stmt|;
+comment|/** Length of @a key.  Must be 0 if @a key is #NULL. */
+name|apr_size_t
+name|keylen
+decl_stmt|;
+comment|/** 0-terminated value stored with the key.  If this is #NULL for a    * non-NULL @a key, then this means that the key shall be removed from    * the hash (only used in incremental mode).  Must be #NULL if @a key is    * #NULL. */
+name|char
+modifier|*
+name|val
+decl_stmt|;
+comment|/** Length of @a val.  Must be 0 if @a val is #NULL. */
+name|apr_size_t
+name|vallen
+decl_stmt|;
+block|}
+name|svn_hash__entry_t
+typedef|;
+comment|/** Reads a single key-value pair from @a stream and returns it in the  * caller-provided @a *entry (members don't need to be pre-initialized).  * @a pool is used to allocate members of @a *entry and for tempoaries.  *  * @see #svn_hash_read2 for more details.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_hash__read_entry
+parameter_list|(
+name|svn_hash__entry_t
+modifier|*
+name|entry
+parameter_list|,
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|terminator
+parameter_list|,
+name|svn_boolean_t
+name|incremental
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
@@ -432,43 +645,332 @@ name|int
 name|patch
 parameter_list|)
 function_decl|;
-comment|/** Like svn_ver_check_list(), but with a @a comparator parameter.  * Private backport of svn_ver_check_list2() from trunk.  */
-name|svn_error_t
-modifier|*
-name|svn_ver__check_list2
-parameter_list|(
-specifier|const
-name|svn_version_t
-modifier|*
-name|my_version
-parameter_list|,
-specifier|const
-name|svn_version_checklist_t
-modifier|*
-name|checklist
-parameter_list|,
-name|svn_boolean_t
-function_decl|(
-modifier|*
-name|comparator
-function_decl|)
-parameter_list|(
-specifier|const
-name|svn_version_t
-modifier|*
-parameter_list|,
-specifier|const
-name|svn_version_t
-modifier|*
-parameter_list|)
-parameter_list|)
-function_decl|;
-comment|/** To minimize merge churn in callers, alias the trunk name privately. */
+comment|/** @} */
+comment|/**  * @defgroup svn_compress Data (de-)compression API  * @{  */
+comment|/* This is at least as big as the largest size of an integer that    svn__encode_uint() can generate; it is sufficient for creating buffers    for it to write into.  This assumes that integers are at most 64 bits,    and so 10 bytes (with 7 bits of information each) are sufficient to    represent them. */
 define|#
 directive|define
-name|svn_ver_check_list2
-value|svn_ver__check_list2
+name|SVN__MAX_ENCODED_UINT_LEN
+value|10
+comment|/* Compression method parameters for svn__encode_uint. */
+comment|/* No compression (but a length prefix will still be added to the buffer) */
+define|#
+directive|define
+name|SVN__COMPRESSION_NONE
+value|0
+comment|/* Fastest, least effective compression method& level provided by zlib. */
+define|#
+directive|define
+name|SVN__COMPRESSION_ZLIB_MIN
+value|1
+comment|/* Default compression method& level provided by zlib. */
+define|#
+directive|define
+name|SVN__COMPRESSION_ZLIB_DEFAULT
+value|5
+comment|/* Slowest, best compression method& level provided by zlib. */
+define|#
+directive|define
+name|SVN__COMPRESSION_ZLIB_MAX
+value|9
+comment|/* Encode VAL into the buffer P using the variable-length 7b/8b unsigned    integer format.  Return the incremented value of P after the    encoded bytes have been written.  P must point to a buffer of size    at least SVN__MAX_ENCODED_UINT_LEN.     This encoding uses the high bit of each byte as a continuation bit    and the other seven bits as data bits.  High-order data bits are    encoded first, followed by lower-order bits, so the value can be    reconstructed by concatenating the data bits from left to right and    interpreting the result as a binary number.  Examples (brackets    denote byte boundaries, spaces are for clarity only):             1 encodes as [0 0000001]           33 encodes as [0 0100001]          129 encodes as [1 0000001] [0 0000001]         2000 encodes as [1 0001111] [0 1010000] */
+name|unsigned
+name|char
+modifier|*
+name|svn__encode_uint
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|apr_uint64_t
+name|val
+parameter_list|)
+function_decl|;
+comment|/* Decode an unsigned 7b/8b-encoded integer into *VAL and return a pointer    to the byte after the integer.  The bytes to be decoded live in the    range [P..END-1].  If these bytes do not contain a whole encoded    integer, return NULL; in this case *VAL is undefined.     See the comment for svn__encode_uint() earlier in this file for more    detail on the encoding format.  */
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|svn__decode_uint
+parameter_list|(
+name|apr_uint64_t
+modifier|*
+name|val
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|end
+parameter_list|)
+function_decl|;
+comment|/* Get the data from IN, compress it according to the specified  * COMPRESSION_METHOD and write the result to OUT.  * SVN__COMPRESSION_NONE is valid for COMPRESSION_METHOD.  */
+name|svn_error_t
+modifier|*
+name|svn__compress
+parameter_list|(
+name|svn_stringbuf_t
+modifier|*
+name|in
+parameter_list|,
+name|svn_stringbuf_t
+modifier|*
+name|out
+parameter_list|,
+name|int
+name|compression_method
+parameter_list|)
+function_decl|;
+comment|/* Get the compressed data from IN, decompress it and write the result to  * OUT.  Return an error if the decompressed size is larger than LIMIT.  */
+name|svn_error_t
+modifier|*
+name|svn__decompress
+parameter_list|(
+name|svn_stringbuf_t
+modifier|*
+name|in
+parameter_list|,
+name|svn_stringbuf_t
+modifier|*
+name|out
+parameter_list|,
+name|apr_size_t
+name|limit
+parameter_list|)
+function_decl|;
 comment|/** @} */
+comment|/**  * @defgroup svn_root_pools Recycle-able root pools API  * @{  */
+comment|/* Opaque thread-safe container for unused / recylcleable root pools.  *  * Recyling root pools (actually, their allocators) circumvents a  * scalability bottleneck in the OS memory management when multi-threaded  * applications frequently create and destroy allocators.  */
+typedef|typedef
+name|struct
+name|svn_root_pools__t
+name|svn_root_pools__t
+typedef|;
+comment|/* Create a new root pools container and return it in *POOLS.  */
+name|svn_error_t
+modifier|*
+name|svn_root_pools__create
+parameter_list|(
+name|svn_root_pools__t
+modifier|*
+modifier|*
+name|pools
+parameter_list|)
+function_decl|;
+comment|/* Return a currently unused pool from POOLS.  If POOLS is empty, create a  * new root pool and return that.  The pool returned is not thread-safe.  */
+name|apr_pool_t
+modifier|*
+name|svn_root_pools__acquire_pool
+parameter_list|(
+name|svn_root_pools__t
+modifier|*
+name|pools
+parameter_list|)
+function_decl|;
+comment|/* Clear and release the given root POOL and put it back into POOLS.  * If that fails, destroy POOL.  */
+name|void
+name|svn_root_pools__release_pool
+parameter_list|(
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|,
+name|svn_root_pools__t
+modifier|*
+name|pools
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/**  * @defgroup svn_config_private Private configuration handling API  * @{  */
+comment|/* Future attempts to modify CFG will trigger an assertion. */
+name|void
+name|svn_config__set_read_only
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|cfg
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE, if CFG cannot be modified. */
+name|svn_boolean_t
+name|svn_config__is_read_only
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|cfg
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE, if OPTION in SECTION in CFG exists and does not require  * further expansion (due to either containing no placeholders or already  * having been expanded). */
+name|svn_boolean_t
+name|svn_config__is_expanded
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|cfg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|section
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|option
+parameter_list|)
+function_decl|;
+comment|/* Return a shallow copy of SCR in POOL.  If SRC is read-only, different  * shallow copies may be used from different threads.  *  * Any single r/o svn_config_t or shallow copy is not thread-safe because  * it contains shared buffers for tempoary data.  */
+name|svn_config_t
+modifier|*
+name|svn_config__shallow_copy
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|src
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Add / replace SECTION in TARGET with the same section from SOURCE by  * simply adding a reference to it.  If TARGET is read-only, the sections  * list in target gets duplicated before the modification.  *  * This is an API tailored for use by the svn_repos__authz_pool_t API to  * prevent breach of encapsulation.  */
+name|void
+name|svn_config__shallow_replace_section
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|target
+parameter_list|,
+name|svn_config_t
+modifier|*
+name|source
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|section
+parameter_list|)
+function_decl|;
+comment|/* Allocate *CFG_HASH and populate it with default, empty,  * svn_config_t for the configuration categories (@c  * SVN_CONFIG_CATEGORY_SERVERS, @c SVN_CONFIG_CATEGORY_CONFIG, etc.).  * This returns a hash equivalent to svn_config_get_config when the  * config files are empty.  */
+name|svn_error_t
+modifier|*
+name|svn_config__get_default_config
+parameter_list|(
+name|apr_hash_t
+modifier|*
+modifier|*
+name|cfg_hash
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/**  * @defgroup svn_bit_array Packed bit array handling API  * @{  */
+comment|/* This opaque data struct is an alternative to an INT->VOID hash.  *  * Technically, it is an automatically growing packed bit array.  * All indexes not previously set are implicitly 0 and setting it will  * grow the array as needed.  */
+typedef|typedef
+name|struct
+name|svn_bit_array__t
+name|svn_bit_array__t
+typedef|;
+comment|/* Return a new bit array allocated in POOL.  MAX is a mere hint for  * the initial size of the array in bits.  */
+name|svn_bit_array__t
+modifier|*
+name|svn_bit_array__create
+parameter_list|(
+name|apr_size_t
+name|max
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Set bit at index IDX in ARRAY to VALUE.  If necessary, grow the  * underlying data buffer, i.e. any IDX is valid unless we run OOM.  */
+name|void
+name|svn_bit_array__set
+parameter_list|(
+name|svn_bit_array__t
+modifier|*
+name|array
+parameter_list|,
+name|apr_size_t
+name|idx
+parameter_list|,
+name|svn_boolean_t
+name|value
+parameter_list|)
+function_decl|;
+comment|/* Get the bit value at index IDX in ARRAY.  Bits not previously accessed  * are implicitly 0 (or FALSE).  That implies IDX can never be out-of-range.  */
+name|svn_boolean_t
+name|svn_bit_array__get
+parameter_list|(
+name|svn_bit_array__t
+modifier|*
+name|array
+parameter_list|,
+name|apr_size_t
+name|idx
+parameter_list|)
+function_decl|;
+comment|/* Return the global pool used by the DSO loader, this may be NULL if    no DSOs have been loaded. */
+name|apr_pool_t
+modifier|*
+name|svn_dso__pool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/* Return the xml (expat) version we compiled against. */
+specifier|const
+name|char
+modifier|*
+name|svn_xml__compiled_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return the xml (expat) version we run against. */
+specifier|const
+name|char
+modifier|*
+name|svn_xml__runtime_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return the zlib version we compiled against. */
+specifier|const
+name|char
+modifier|*
+name|svn_zlib__compiled_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Return the zlib version we run against. */
+specifier|const
+name|char
+modifier|*
+name|svn_zlib__runtime_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

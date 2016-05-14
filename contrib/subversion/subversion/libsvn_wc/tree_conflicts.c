@@ -113,6 +113,7 @@ block|,
 name|svn_node_unknown
 block|}
 block|,
+comment|/* ### should also map svn_node_symlink */
 block|{
 name|NULL
 block|}
@@ -1473,7 +1474,7 @@ name|result_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* reason */
+comment|/* local change */
 name|skel_prepend_enum
 argument_list|(
 name|c_skel
@@ -1487,7 +1488,7 @@ argument_list|,
 name|result_pool
 argument_list|)
 expr_stmt|;
-comment|/* action */
+comment|/* incoming change */
 name|skel_prepend_enum
 argument_list|(
 name|c_skel
@@ -1529,6 +1530,12 @@ operator|->
 name|node_kind
 operator|==
 name|svn_node_file
+operator|||
+name|conflict
+operator|->
+name|node_kind
+operator|==
+name|svn_node_none
 argument_list|)
 expr_stmt|;
 name|skel_prepend_enum
@@ -2001,6 +2008,8 @@ argument_list|(
 operator|&
 name|conflicts
 argument_list|,
+name|NULL
+argument_list|,
 name|wc_ctx
 operator|->
 name|db
@@ -2008,6 +2017,10 @@ argument_list|,
 name|local_abspath
 argument_list|,
 name|FALSE
+comment|/* temp files */
+argument_list|,
+name|TRUE
+comment|/* only tree conflicts */
 argument_list|,
 name|scratch_pool
 argument_list|,
@@ -2081,7 +2094,7 @@ block|{
 operator|*
 name|tree_conflict
 operator|=
-name|svn_wc__conflict_description2_dup
+name|svn_wc_conflict_description2_dup
 argument_list|(
 name|desc
 argument_list|,

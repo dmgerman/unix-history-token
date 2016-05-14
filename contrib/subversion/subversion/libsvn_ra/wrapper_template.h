@@ -268,7 +268,17 @@ name|callbacks2
 argument_list|,
 name|callback_baton
 argument_list|,
+name|callbacks
+condition|?
+name|callbacks
+operator|->
+name|auth_baton
+else|:
+name|NULL
+argument_list|,
 name|config
+argument_list|,
+name|sesspool
 argument_list|,
 name|sesspool
 argument_list|)

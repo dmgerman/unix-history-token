@@ -480,31 +480,32 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Store a new xml tag @a tagname in @a *str.  *  * If @a *str is @c NULL, set @a *str to a new stringbuf allocated  * in @a pool, else append to the existing stringbuf there.  *  * Take the tag's attributes from varargs, a NULL-terminated list of  * alternating<tt>char *</tt> key and<tt>char *</tt> val.  Do xml-escaping  * on each val.  *  * @a style is one of the enumerated styles in @c svn_xml_open_tag_style.  */
+comment|/** Store a new xml tag @a tagname in @a *str.  *  * If @a *str is @c NULL, set @a *str to a new stringbuf allocated  * in @a pool, else append to the existing stringbuf there.  *  * Take the tag's attributes from varargs, a SVN_VA_NULL-terminated list of  * alternating<tt>char *</tt> key and<tt>char *</tt> val.  Do xml-escaping  * on each val.  *  * @a style is one of the enumerated styles in @c svn_xml_open_tag_style.  */
 name|void
 name|svn_xml_make_open_tag
-parameter_list|(
+argument_list|(
 name|svn_stringbuf_t
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|str
-parameter_list|,
+argument_list|,
 name|apr_pool_t
-modifier|*
+operator|*
 name|pool
-parameter_list|,
-name|enum
+argument_list|,
+expr|enum
 name|svn_xml_open_tag_style
 name|style
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|tagname
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+argument_list|,
+operator|...
+argument_list|)
+name|SVN_NEEDS_SENTINEL_NULL
+decl_stmt|;
 comment|/** Like svn_xml_make_open_tag(), but takes a @c va_list instead of being  * variadic.  */
 name|void
 name|svn_xml_make_open_tag_v

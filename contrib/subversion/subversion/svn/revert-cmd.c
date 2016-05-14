@@ -194,7 +194,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|svn_client_revert2
+name|svn_client_revert3
 argument_list|(
 name|targets
 argument_list|,
@@ -205,6 +205,12 @@ argument_list|,
 name|opt_state
 operator|->
 name|changelists
+argument_list|,
+name|FALSE
+comment|/* clear_changelists */
+argument_list|,
+name|FALSE
+comment|/* metadata_only */
 argument_list|,
 name|ctx
 argument_list|,

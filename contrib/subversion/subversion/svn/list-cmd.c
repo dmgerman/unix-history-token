@@ -944,7 +944,7 @@ literal|"target"
 argument_list|,
 name|external_target
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|pb
@@ -987,7 +987,7 @@ operator|->
 name|kind
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1058,7 +1058,7 @@ operator|->
 name|created_rev
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1126,7 +1126,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"lock"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1670,7 +1670,7 @@ literal|"."
 else|:
 name|truepath
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -1923,6 +1923,11 @@ argument_list|(
 literal|"Could not list all targets because some targets don't exist"
 argument_list|)
 argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|svn_error_compose_create

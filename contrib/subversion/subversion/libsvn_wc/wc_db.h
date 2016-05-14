@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * @copyright  * ====================================================================  *    Licensed to the Apache Software Foundation (ASF) under one  *    or more contributor license agreements.  See the NOTICE file  *    distributed with this work for additional information  *    regarding copyright ownership.  The ASF licenses this file  *    to you under the Apache License, Version 2.0 (the  *    "License"); you may not use this file except in compliance  *    with the License.  You may obtain a copy of the License at  *  *      http://www.apache.org/licenses/LICENSE-2.0  *  *    Unless required by applicable law or agreed to in writing,  *    software distributed under the License is distributed on an  *    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY  *    KIND, either express or implied.  See the License for the  *    specific language governing permissions and limitations  *    under the License.  * ====================================================================  * @endcopyright  *  * @file svn_wc_db.h  * @brief The Subversion Working Copy Library - Metadata/Base-Text Support  *  * Requires:  *            - A working copy  *  * Provides:  *            - Ability to manipulate working copy's administrative files.  *  * Used By:  *            - The main working copy library  */
+comment|/**  * @copyright  * ====================================================================  *    Licensed to the Apache Software Foundation (ASF) under one  *    or more contributor license agreements.  See the NOTICE file  *    distributed with this work for additional information  *    regarding copyright ownership.  The ASF licenses this file  *    to you under the Apache License, Version 2.0 (the  *    "License"); you may not use this file except in compliance  *    with the License.  You may obtain a copy of the License at  *  *      http://www.apache.org/licenses/LICENSE-2.0  *  *    Unless required by applicable law or agreed to in writing,  *    software distributed under the License is distributed on an  *    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY  *    KIND, either express or implied.  See the License for the  *    specific language governing permissions and limitations  *    under the License.  * ====================================================================  * @endcopyright  *  * @file wc_db.h  * @brief The Subversion Working Copy Library - Metadata/Base-Text Support  *  * Requires:  *            - A working copy  *  * Provides:  *            - Ability to manipulate working copy's administrative files.  *  * Used By:  *            - The main working copy library  */
 end_comment
 
 begin_ifndef
@@ -338,7 +338,7 @@ function_decl|;
 comment|/* @} */
 comment|/* Different kinds of trees     The design doc mentions three different kinds of trees, BASE, WORKING and    ACTUAL: http://svn.apache.org/repos/asf/subversion/trunk/notes/wc-ng-design    We have different APIs to handle each tree, enumerated below, along with    a blurb to explain what that tree represents. */
 comment|/* @defgroup svn_wc__db_base  BASE tree management     BASE is what we get from the server.  It is the *absolute* pristine copy.    You need to use checkout, update, switch, or commit to alter your view of    the repository.     In the BASE tree, each node corresponds to a particular node-rev in the    repository.  It can be a mixed-revision tree.  Each node holds either a    copy of the node-rev as it exists in the repository (if presence =    'normal'), or a place-holder (if presence = 'server-excluded' or 'excluded' or    'not-present').     @{ */
-comment|/* Add or replace a directory in the BASE tree.     The directory is located at LOCAL_ABSPATH on the local filesystem, and    corresponds to<REPOS_RELPATH, REPOS_ROOT_URL, REPOS_UUID> in the    repository, at revision REVISION.     The directory properties are given by the PROPS hash (which is    const char *name => const svn_string_t *).     The last-change information is given by<CHANGED_REV, CHANGED_DATE,    CHANGED_AUTHOR>.     The directory's children are listed in CHILDREN, as an array of    const char *. The child nodes do NOT have to exist when this API    is called. For each child node which does not exists, an "incomplete"    node will be added. These child nodes will be added regardless of    the DEPTH value. The caller must sort out which must be recorded,    and which must be omitted.     This subsystem does not use DEPTH, but it can be recorded here in    the BASE tree for higher-level code to use.     If DAV_CACHE is not NULL, sets LOCAL_ABSPATH's dav cache to the specified    data.     If CONFLICT is not NULL, then it describes a conflict for this node. The    node will be record as conflicted (in ACTUAL).     If UPDATE_ACTUAL_PROPS is TRUE, set the properties store NEW_ACTUAL_PROPS    as the new set of properties in ACTUAL. If NEW_ACTUAL_PROPS is NULL or    when the value of NEW_ACTUAL_PROPS matches NEW_PROPS, store NULL in    ACTUAL, to mark the properties unmodified.     If NEW_IPROPS is not NULL, then it is a depth-first ordered array of    svn_prop_inherited_item_t * structures that is set as the base node's    inherited_properties.     Any work items that are necessary as part of this node construction may    be passed in WORK_ITEMS.     All temporary allocations will be made in SCRATCH_POOL. */
+comment|/* Add or replace a directory in the BASE tree.     The directory is located at LOCAL_ABSPATH on the local filesystem, and    corresponds to<REPOS_RELPATH, REPOS_ROOT_URL, REPOS_UUID> in the    repository, at revision REVISION.     The directory properties are given by the PROPS hash (which is    const char *name => const svn_string_t *).     The last-change information is given by<CHANGED_REV, CHANGED_DATE,    CHANGED_AUTHOR>.     The directory's children are listed in CHILDREN, as an array of    const char *. The child nodes do NOT have to exist when this API    is called. For each child node which does not exists, an "incomplete"    node will be added. These child nodes will be added regardless of    the DEPTH value. The caller must sort out which must be recorded,    and which must be omitted.     This subsystem does not use DEPTH, but it can be recorded here in    the BASE tree for higher-level code to use.     If DAV_CACHE is not NULL, sets LOCAL_ABSPATH's dav cache to the specified    data.     If UPDATE_ACTUAL_PROPS is TRUE, set the properties store NEW_ACTUAL_PROPS    as the new set of properties in ACTUAL. If NEW_ACTUAL_PROPS is NULL or    when the value of NEW_ACTUAL_PROPS matches NEW_PROPS, store NULL in    ACTUAL, to mark the properties unmodified.     If NEW_IPROPS is not NULL, then it is a depth-first ordered array of    svn_prop_inherited_item_t * structures that is set as the base node's    inherited_properties.     If CONFLICT is not NULL, then it describes a conflict for this node. The    node will be record as conflicted (in ACTUAL).     Any work items that are necessary as part of this node construction may    be passed in WORK_ITEMS.     All temporary allocations will be made in SCRATCH_POOL. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_base_add_directory
@@ -403,11 +403,6 @@ name|apr_hash_t
 modifier|*
 name|dav_cache
 parameter_list|,
-specifier|const
-name|svn_skel_t
-modifier|*
-name|conflict
-parameter_list|,
 name|svn_boolean_t
 name|update_actual_props
 parameter_list|,
@@ -418,6 +413,11 @@ parameter_list|,
 name|apr_array_header_t
 modifier|*
 name|new_iprops
+parameter_list|,
+specifier|const
+name|svn_skel_t
+modifier|*
+name|conflict
 parameter_list|,
 specifier|const
 name|svn_skel_t
@@ -781,7 +781,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Remove a node and all its descendants from the BASE tree. This handles    the deletion of a tree from the update editor and some file external    scenarios.     The node to remove is indicated by LOCAL_ABSPATH from the local    filesystem.     This operation *installs* workqueue operations to update the local    filesystem after the database operation.     To maintain a consistent database this function will also remove    any working node that marks LOCAL_ABSPATH as base-deleted.  If this    results in there being no working node for LOCAL_ABSPATH then any    actual node will be removed if the actual node does not mark a    conflict.     If KEEP_AS_WORKING is TRUE, then the base tree is copied to higher    layers as a copy of itself before deleting the BASE nodes.     If KEEP_AS_WORKING is FALSE, and QUEUE_DELETES is TRUE, also queue    workqueue items to delete all in-wc representations that aren't    shadowed by higher layers.    (With KEEP_AS_WORKING TRUE, this is a no-op, as everything is     automatically shadowed by the created copy)     If REMOVE_LOCKS is TRUE, all locks of this node and any subnodes    are also removed. This is to be done during commit of deleted nodes.     If NOT_PRESENT_REVISION specifies a valid revision a not-present    node is installed in BASE node with kind NOT_PRESENT_KIND after    deleting.     If CONFLICT and/or WORK_ITEMS are passed they are installed as part    of the operation, after the work items inserted by the operation    itself. */
+comment|/* Remove a node and all its descendants from the BASE tree. This can    be done in two modes:      * Remove everything, scheduling wq operations to clean up       the working copy. (KEEP_WORKING = FALSE)      * Bump things to WORKING, so the BASE layer is free, but the working       copy unmodified, except that everything that was visible from       BASE is now a copy of what it used to be. (KEEP_WORKING = TRUE)     This operation *installs* workqueue operations to update the local    filesystem after the database operation.     To maintain a consistent database this function will also remove    any working node that marks LOCAL_ABSPATH as base-deleted.  If this    results in there being no working node for LOCAL_ABSPATH then any    actual node will be removed if the actual node does not mark a    conflict.      If MARK_NOT_PRESENT or MARK_EXCLUDED is TRUE, install a marker    of the specified type at the root of the now removed tree, with    either the specified revision (or in case of SVN_INVALID_REVNUM)    the original revision.     If CONFLICT and/or WORK_ITEMS are passed they are installed as part    of the operation, after the work items inserted by the operation    itself. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_base_remove
@@ -796,16 +796,16 @@ modifier|*
 name|local_abspath
 parameter_list|,
 name|svn_boolean_t
-name|keep_as_working
+name|keep_working
 parameter_list|,
 name|svn_boolean_t
-name|queue_deletes
+name|mark_not_present
 parameter_list|,
 name|svn_boolean_t
-name|remove_locks
+name|mark_excluded
 parameter_list|,
 name|svn_revnum_t
-name|not_present_revision
+name|marker_revision
 parameter_list|,
 name|svn_skel_t
 modifier|*
@@ -1244,16 +1244,36 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set *TEMP_DIR_ABSPATH to a directory in which the caller should create    a uniquely named file for later installation as a pristine text file.     The directory is guaranteed to be one that svn_wc__db_pristine_install()    can use: specifically, one from which it can atomically move the file.     Allocate *TEMP_DIR_ABSPATH in RESULT_POOL. */
+comment|/* Baton for svn_wc__db_pristine_install */
+typedef|typedef
+name|struct
+name|svn_wc__db_install_data_t
+name|svn_wc__db_install_data_t
+typedef|;
+comment|/* Open a writable stream to a temporary text base, ready for installing    into the pristine store.  Set *STREAM to the opened stream.  The temporary    file will have an arbitrary unique name. Return as *INSTALL_DATA a baton    for eiter installing or removing the file     Arrange that, on stream closure, *MD5_CHECKSUM and *SHA1_CHECKSUM will be    set to the MD-5 and SHA-1 checksums respectively of that file.    MD5_CHECKSUM and/or SHA1_CHECKSUM may be NULL if not wanted.     Allocate the new stream, path and checksums in RESULT_POOL.  */
 name|svn_error_t
 modifier|*
-name|svn_wc__db_pristine_get_tempdir
+name|svn_wc__db_pristine_prepare_install
 parameter_list|(
-specifier|const
-name|char
+name|svn_stream_t
 modifier|*
 modifier|*
-name|temp_dir_abspath
+name|stream
+parameter_list|,
+name|svn_wc__db_install_data_t
+modifier|*
+modifier|*
+name|install_data
+parameter_list|,
+name|svn_checksum_t
+modifier|*
+modifier|*
+name|sha1_checksum
+parameter_list|,
+name|svn_checksum_t
+modifier|*
+modifier|*
+name|md5_checksum
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
@@ -1273,19 +1293,14 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Install the file TEMPFILE_ABSPATH (which is sitting in a directory given by    svn_wc__db_pristine_get_tempdir()) into the pristine data store, to be    identified by the SHA-1 checksum of its contents, SHA1_CHECKSUM, and whose    MD-5 checksum is MD5_CHECKSUM. */
+comment|/* Install the file created via svn_wc__db_pristine_prepare_install() into    the pristine data store, to be identified by the SHA-1 checksum of its    contents, SHA1_CHECKSUM, and whose MD-5 checksum is MD5_CHECKSUM. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_pristine_install
 parameter_list|(
-name|svn_wc__db_t
+name|svn_wc__db_install_data_t
 modifier|*
-name|db
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|tempfile_abspath
+name|install_data
 parameter_list|,
 specifier|const
 name|svn_checksum_t
@@ -1296,6 +1311,20 @@ specifier|const
 name|svn_checksum_t
 modifier|*
 name|md5_checksum
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Removes the temporary data created by svn_wc__db_pristine_prepare_install    when the pristine won't be installed. */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_pristine_install_abort
+parameter_list|(
+name|svn_wc__db_install_data_t
+modifier|*
+name|install_data
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -1857,6 +1886,113 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Opaque struct for svn_wc__db_create_commit_queue, svn_wc__db_commit_queue_add,    svn_wc__db_process_commit_queue */
+typedef|typedef
+name|struct
+name|svn_wc__db_commit_queue_t
+name|svn_wc__db_commit_queue_t
+typedef|;
+comment|/* Create a new svn_wc__db_commit_queue_t instance in RESULT_POOL for the    working copy specified with WRI_ABSPATH */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_create_commit_queue
+parameter_list|(
+name|svn_wc__db_commit_queue_t
+modifier|*
+modifier|*
+name|queue
+parameter_list|,
+name|svn_wc__db_t
+modifier|*
+name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wri_abspath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Adds the specified path to the commit queue with the related information.     See svn_wc_queue_committed4() for argument documentation.     Note that this function currently DOESN'T copy the passed values to    RESULT_POOL, but expects them to be valid until processing. Otherwise the    only users memory requirements would +- double.   */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_commit_queue_add
+parameter_list|(
+name|svn_wc__db_commit_queue_t
+modifier|*
+name|queue
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|local_abspath
+parameter_list|,
+name|svn_boolean_t
+name|recurse
+parameter_list|,
+name|svn_boolean_t
+name|is_commited
+parameter_list|,
+name|svn_boolean_t
+name|remove_lock
+parameter_list|,
+name|svn_boolean_t
+name|remove_changelist
+parameter_list|,
+specifier|const
+name|svn_checksum_t
+modifier|*
+name|new_sha1_checksum
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|new_dav_cache
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Process the items in QUEUE in a single transaction. Commit workqueue items    for items that need post processing.     Implementation detail of svn_wc_process_committed_queue2().  */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_process_commit_queue
+parameter_list|(
+name|svn_wc__db_t
+modifier|*
+name|db
+parameter_list|,
+name|svn_wc__db_commit_queue_t
+modifier|*
+name|queue
+parameter_list|,
+name|svn_revnum_t
+name|new_revnum
+parameter_list|,
+name|apr_time_t
+name|new_date
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|new_author
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2595,7 +2731,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Revert all local changes which are being maintained in the database,  * including conflict storage, properties and text modification status.  *  * Returns SVN_ERR_WC_INVALID_OPERATION_DEPTH if the revert is not  * possible, e.g. copy/delete but not a root, or a copy root with  * children.  *  * At present only depth=empty and depth=infinity are supported.  *  * This function populates the revert list that can be queried to  * determine what was reverted.  */
+comment|/* Revert all local changes which are being maintained in the database,  * including conflict storage, properties and text modification status.  *  * Returns SVN_ERR_WC_INVALID_OPERATION_DEPTH if the revert is not  * possible, e.g. copy/delete but not a root, or a copy root with  * children.  *  * At present only depth=empty and depth=infinity are supported.  *  * If @a clear_changelists is FALSE then changelist information is kept,  * otherwise it is cleared.  *  * This function populates the revert list that can be queried to  * determine what was reverted.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_op_revert
@@ -2611,6 +2747,9 @@ name|local_abspath
 parameter_list|,
 name|svn_depth_t
 name|depth
+parameter_list|,
+name|svn_boolean_t
+name|clear_changelists
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2683,7 +2822,6 @@ name|svn_error_t
 modifier|*
 name|svn_wc__db_revert_list_read_copied_children
 parameter_list|(
-specifier|const
 name|apr_array_header_t
 modifier|*
 modifier|*
@@ -3049,9 +3187,13 @@ comment|/* Only on op-roots. */
 name|svn_boolean_t
 name|file_external
 decl_stmt|;
+name|svn_boolean_t
+name|has_descendants
+decl_stmt|;
+comment|/* Is dir, or has tc descendants */
 block|}
 struct|;
-comment|/* Return in *NODES a hash mapping name->struct svn_wc__db_info_t for    the children of DIR_ABSPATH, and in *CONFLICTS a hash of names in    conflict.     The results include any path that was a child of a deleted directory that    existed at LOCAL_ABSPATH, even if that directory is now scheduled to be    replaced by the working node at LOCAL_ABSPATH.  */
+comment|/* Return in *NODES a hash mapping name->struct svn_wc__db_info_t for    the children of DIR_ABSPATH, and in *CONFLICTS a hash of names in    conflict.     The results include any path that was a child of a deleted directory that    existed at LOCAL_ABSPATH, even if that directory is now scheduled to be    replaced by the working node at LOCAL_ABSPATH.     If BASE_TREE_ONLY is set, only information about the BASE tree    is returned.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_children_info
@@ -3075,6 +3217,9 @@ name|char
 modifier|*
 name|dir_abspath
 parameter_list|,
+name|svn_boolean_t
+name|base_tree_only
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
@@ -3084,7 +3229,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Like svn_wc__db_read_children_info, but only gets an info node for the root    element. */
+comment|/* Like svn_wc__db_read_children_info, but only gets an info node for the root    element.     If BASE_TREE_ONLY is set, only information about the BASE tree    is returned. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_single_info
@@ -3105,6 +3250,9 @@ name|char
 modifier|*
 name|local_abspath
 parameter_list|,
+name|svn_boolean_t
+name|base_tree_only
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
@@ -3118,6 +3266,11 @@ comment|/* Structure returned by svn_wc__db_read_walker_info.  Only has the    f
 struct|struct
 name|svn_wc__db_walker_info_t
 block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|svn_wc__db_status_t
 name|status
 decl_stmt|;
@@ -3248,15 +3401,16 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Return in *NODES a hash mapping name->struct svn_wc__db_walker_info_t for    the children of DIR_ABSPATH. "name" is the child's name relative to    DIR_ABSPATH, not an absolute path. */
+comment|/* Return in *ITEMS an array of struct svn_wc__db_walker_info_t* for    the direct children of DIR_ABSPATH. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_children_walker_info
 parameter_list|(
-name|apr_hash_t
+specifier|const
+name|apr_array_header_t
 modifier|*
 modifier|*
-name|nodes
+name|items
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
@@ -3276,16 +3430,32 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set *URL to the corresponding url for LOCAL_ABSPATH.  * If the node is added, return the url it will have in the repository.  */
+comment|/**  * Set *revision, *repos_relpath, *repos_root_url, *repos_uuid to  * the intended/commit location of LOCAL_ABSPATH. These arguments may be  * NULL if they are not needed.  *  * If the node is deleted, return the url it would have in the repository  * if it wouldn't be deleted. If the node is added return the url it will  * have in the repository, once committed.  *  * If the node is not added and has an existing repository location, set  * revision to its existing revision, otherwise to SVN_INVALID_REVNUM.  */
 name|svn_error_t
 modifier|*
-name|svn_wc__db_read_url
+name|svn_wc__db_read_repos_info
 parameter_list|(
+name|svn_revnum_t
+modifier|*
+name|revision
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
-name|url
+name|repos_relpath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|repos_root_url
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|repos_uuid
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
@@ -3377,7 +3547,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set *PROPS to the properties of the node LOCAL_ABSPATH in the WORKING    tree (looking through to the BASE tree as required).     ### *PROPS will set set to NULL in the following situations:    ### ... tbd.  see props.c:svn_wc__get_pristine_props()     *PROPS maps "const char *" names to "const svn_string_t *" values.    If the node has no properties, set *PROPS to an empty hash.    If the node is not present, return an error.    Allocate *PROPS and its keys and values in RESULT_POOL. */
+comment|/* Set *PROPS to the base properties of the node at LOCAL_ABSPATH.     *PROPS maps "const char *" names to "const svn_string_t *" values.    If the node has no properties, set *PROPS to an empty hash.    If the base node is in a state that cannot have properties (such as    not-present or locally added without copy-from), return an error.     Allocate *PROPS and its keys and values in RESULT_POOL.     See also svn_wc_get_pristine_props(). */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_pristine_props
@@ -3405,7 +3575,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *iprops to a depth-first ordered array of  * #svn_prop_inherited_item_t * structures representing the properties  * inherited by @a local_abspath from the ACTUAL tree above  * @a local_abspath (looking through to the WORKING or BASE tree as  * required), up to and including the root of the working copy and  * any cached inherited properties inherited by the root.  *  * The #svn_prop_inherited_item_t->path_or_url members of the  * #svn_prop_inherited_item_t * structures in @a *iprops are  * paths relative to the repository root URL for cached inherited  * properties and absolute working copy paths otherwise.  *  * If ACTUAL_PROPS is not NULL, then set *ACTUAL_PROPS to the actual  * properties stored on LOCAL_ABSPATH.  *  * Allocate @a *iprops in @a result_pool.  Use @a scratch_pool  * for temporary allocations.  */
+comment|/**  * Set @a *iprops to a depth-first ordered array of  * #svn_prop_inherited_item_t * structures representing the properties  * inherited by @a local_abspath from the ACTUAL tree above  * @a local_abspath (looking through to the WORKING or BASE tree as  * required), up to and including the root of the working copy and  * any cached inherited properties inherited by the root.  *  * The #svn_prop_inherited_item_t->path_or_url members of the  * #svn_prop_inherited_item_t * structures in @a *iprops are  * paths relative to the repository root URL for cached inherited  * properties and absolute working copy paths otherwise.  *  * If ACTUAL_PROPS is not NULL, then set *ACTUAL_PROPS to ALL the actual  * properties stored on LOCAL_ABSPATH.  *  * Allocate @a *iprops in @a result_pool.  Use @a scratch_pool  * for temporary allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_inherited_props
@@ -3564,6 +3734,34 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+name|svn_error_t
+modifier|*
+name|svn_wc__db_base_read_not_present_children
+parameter_list|(
+specifier|const
+name|apr_array_header_t
+modifier|*
+modifier|*
+name|children
+parameter_list|,
+name|svn_wc__db_t
+modifier|*
+name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|local_abspath
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Like svn_wc__db_read_children_of_working_node(), except also include any    path that was a child of a deleted directory that existed at    LOCAL_ABSPATH, even if that directory is now scheduled to be replaced by    the working node at LOCAL_ABSPATH. */
 name|svn_error_t
 modifier|*
@@ -3651,7 +3849,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Read the conflict information recorded on LOCAL_ABSPATH in *CONFLICT,    an editable conflict skel.     If the node exists, but does not have a conflict set *CONFLICT to NULL,    otherwise return a SVN_ERR_WC_PATH_NOT_FOUND error.     Allocate *CONFLICTS in RESULT_POOL and do temporary allocations in    SCRATCH_POOL */
+comment|/* Read the conflict information recorded on LOCAL_ABSPATH in *CONFLICT,    an editable conflict skel. If kind is not NULL, also read the node kind    in *KIND. (SHOW_HIDDEN: false, SHOW_DELETED: true). If props is not NULL    read the actual properties in this value if they exist. (Set to NULL in case    the node is deleted, etc.)     If the node exists, but does not have a conflict set *CONFLICT to NULL,    otherwise return a SVN_ERR_WC_PATH_NOT_FOUND error.     Allocate *CONFLICTS in RESULT_POOL and do temporary allocations in    SCRATCH_POOL */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_read_conflict
@@ -3660,6 +3858,15 @@ name|svn_skel_t
 modifier|*
 modifier|*
 name|conflict
+parameter_list|,
+name|svn_node_kind_t
+modifier|*
+name|kind
+parameter_list|,
+name|apr_hash_t
+modifier|*
+modifier|*
+name|props
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
@@ -3705,29 +3912,6 @@ name|show_deleted
 parameter_list|,
 name|svn_boolean_t
 name|show_hidden
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* An analog to svn_wc__entry_is_hidden().  Set *HIDDEN to TRUE if    LOCAL_ABSPATH in DB "is not present, and I haven't scheduled something    over the top of it." */
-name|svn_error_t
-modifier|*
-name|svn_wc__db_node_hidden
-parameter_list|(
-name|svn_boolean_t
-modifier|*
-name|hidden
-parameter_list|,
-name|svn_wc__db_t
-modifier|*
-name|db
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -3846,7 +4030,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* ### docco     ### collapse the WORKING and ACTUAL tree changes down into BASE, called        for each committed node.     NEW_REVISION must be the revision number of the revision created by    the commit. It will become the BASE node's 'revnum' and 'changed_rev'    values in the BASE_NODE table.     CHANGED_REVISION is the new 'last changed' revision. If the node is    modified its value is equivalent to NEW_REVISION, but in case of a    descendant of a copy/move it can be an older revision.     CHANGED_DATE is the (server-side) date of CHANGED_REVISION. It may be 0 if    the revprop is missing on the revision.     CHANGED_AUTHOR is the (server-side) author of CHANGED_REVISION. It may be    NULL if the revprop is missing on the revision.     One or both of NEW_CHECKSUM and NEW_CHILDREN should be NULL. For new:      files: NEW_CHILDREN should be NULL      dirs: NEW_CHECKSUM should be NULL      symlinks: both should be NULL     WORK_ITEMS will be place into the work queue. */
+comment|/* ### docco     ### collapse the WORKING and ACTUAL tree changes down into BASE, called        for each committed node.     NEW_REVISION must be the revision number of the revision created by    the commit. It will become the BASE node's 'revnum' and 'changed_rev'    values in the BASE_NODE table.     CHANGED_REVISION is the new 'last changed' revision. If the node is    modified its value is equivalent to NEW_REVISION, but in case of a    descendant of a copy/move it can be an older revision.     CHANGED_DATE is the (server-side) date of CHANGED_REVISION. It may be 0 if    the revprop is missing on the revision.     CHANGED_AUTHOR is the (server-side) author of CHANGED_REVISION. It may be    NULL if the revprop is missing on the revision.     WORK_ITEMS will be place into the work queue. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_global_commit
@@ -3878,11 +4062,6 @@ specifier|const
 name|svn_checksum_t
 modifier|*
 name|new_checksum
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|new_children
 parameter_list|,
 name|apr_hash_t
 modifier|*
@@ -3980,7 +4159,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Modify the entry of working copy LOCAL_ABSPATH, presumably after an update    of depth DEPTH completes.  If LOCAL_ABSPATH doesn't exist, this routine    does nothing.     Set the node's repository relpath, repository root, repository uuid and    revision to NEW_REPOS_RELPATH, NEW_REPOS_ROOT and NEW_REPOS_UUID.  If    NEW_REPOS_RELPATH is null, the repository location is untouched; if    NEW_REVISION in invalid, the working revision field is untouched.    The modifications are mutually exclusive.  If NEW_REPOS_ROOT is non-NULL,    set the repository root of the entry to NEW_REPOS_ROOT.     If LOCAL_ABSPATH is a directory, then, walk entries below LOCAL_ABSPATH    according to DEPTH thusly:     If DEPTH is svn_depth_infinity, perform the following actions on    every entry below PATH; if svn_depth_immediates, svn_depth_files,    or svn_depth_empty, perform them only on LOCAL_ABSPATH.     If NEW_REVISION is valid, then tweak every entry to have this new    working revision (excluding files that are scheduled for addition    or replacement).  Likewise, if BASE_URL is non-null, then rewrite    all urls to be "telescoping" children of the base_url.     EXCLUDE_RELPATHS is a hash containing const char *local_relpath.  Nodes    for pathnames contained in EXCLUDE_RELPATHS are not touched by this    function.  These pathnames should be paths relative to the wcroot.     If WCROOT_IPROPS is not NULL it is a hash mapping const char * absolute    working copy paths to depth-first ordered arrays of    svn_prop_inherited_item_t * structures.  If LOCAL_ABSPATH exists in    WCROOT_IPROPS, then set the hashed value as the node's inherited    properties. */
+comment|/* Modify the entry of working copy LOCAL_ABSPATH, presumably after an update    of depth DEPTH completes.  If LOCAL_ABSPATH doesn't exist, this routine    does nothing.     Set the node's repository relpath, repository root, repository uuid and    revision to NEW_REPOS_RELPATH, NEW_REPOS_ROOT and NEW_REPOS_UUID.  If    NEW_REPOS_RELPATH is null, the repository location is untouched; if    NEW_REVISION in invalid, the working revision field is untouched.    The modifications are mutually exclusive.  If NEW_REPOS_ROOT is non-NULL,    set the repository root of the entry to NEW_REPOS_ROOT.     If LOCAL_ABSPATH is a directory, then, walk entries below LOCAL_ABSPATH    according to DEPTH thusly:     If DEPTH is svn_depth_infinity, perform the following actions on    every entry below PATH; if svn_depth_immediates, svn_depth_files,    or svn_depth_empty, perform them only on LOCAL_ABSPATH.     If NEW_REVISION is valid, then tweak every entry to have this new    working revision (excluding files that are scheduled for addition    or replacement).  Likewise, if BASE_URL is non-null, then rewrite    all urls to be "telescoping" children of the base_url.     EXCLUDE_RELPATHS is a hash containing const char *local_relpath.  Nodes    for pathnames contained in EXCLUDE_RELPATHS are not touched by this    function.  These pathnames should be paths relative to the wcroot.     If EMPTY_UPDATE is TRUE then no nodes at or below LOCAL_ABSPATH have been    affected by the update/switch yet.     If WCROOT_IPROPS is not NULL it is a hash mapping const char * absolute    working copy paths to depth-first ordered arrays of    svn_prop_inherited_item_t * structures.  If LOCAL_ABSPATH exists in    WCROOT_IPROPS, then set the hashed value as the node's inherited    properties. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_op_bump_revisions_post_update
@@ -4022,6 +4201,9 @@ parameter_list|,
 name|apr_hash_t
 modifier|*
 name|wcroot_iprops
+parameter_list|,
+name|svn_boolean_t
+name|empty_update
 parameter_list|,
 name|svn_wc_notify_func2_t
 name|notify_func
@@ -4087,7 +4269,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Remove any lock for LOCAL_ABSPATH in DB.  */
+comment|/* Remove any lock for LOCAL_ABSPATH in DB and install WORK_ITEMS    (if not NULL) in DB */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_lock_remove
@@ -4101,6 +4283,10 @@ name|char
 modifier|*
 name|local_abspath
 parameter_list|,
+name|svn_skel_t
+modifier|*
+name|work_items
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -4108,47 +4294,6 @@ parameter_list|)
 function_decl|;
 comment|/* @} */
 comment|/* @defgroup svn_wc__db_scan  Functions to scan up a tree for further data.    @{ */
-comment|/* Read a BASE node's repository information.     For the BASE node implied by LOCAL_ABSPATH, its location in the repository    returned in *REPOS_ROOT_URL and *REPOS_UUID will be returned in    *REPOS_RELPATH. Any of the OUT parameters may be NULL, indicating no    interest in that piece of information.     All returned data will be allocated in RESULT_POOL. All temporary    allocations will be made in SCRATCH_POOL.     ### Either delete this function and use _base_get_info instead, or    ### add a 'revision' output to make a complete repository node location    ### and rename to not say 'scan', because it doesn't. */
-name|svn_error_t
-modifier|*
-name|svn_wc__db_scan_base_repos
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|repos_relpath
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|repos_root_url
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|repos_uuid
-parameter_list|,
-name|svn_wc__db_t
-modifier|*
-name|db
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_abspath
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|result_pool
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
 comment|/* Scan upwards for information about a known addition to the WORKING tree.     IFF a node's status as returned by svn_wc__db_read_info() is    svn_wc__db_status_added (NOT obstructed_add!), then this function    returns a refined status in *STATUS, which is one of:       svn_wc__db_status_added -- this NODE is a simple add without history.        OP_ROOT_ABSPATH will be set to the topmost node in the added subtree        (implying its parent will be an unshadowed BASE node). The REPOS_*        values will be implied by that ancestor BASE node and this node's        position in the added subtree. ORIGINAL_* will be set to their        NULL values (and SVN_INVALID_REVNUM for ORIGINAL_REVISION).       svn_wc__db_status_copied -- this NODE is the root or child of a copy.        The root of the copy will be stored in OP_ROOT_ABSPATH. Note that        the parent of the operation root could be another WORKING node (from        an add, copy, or move). The REPOS_* values will be implied by the        ancestor unshadowed BASE node. ORIGINAL_* will indicate the source        of the copy.       svn_wc__db_status_incomplete -- this NODE is copied but incomplete.       svn_wc__db_status_moved_here -- this NODE arrived as a result of a move.        The root of the moved nodes will be stored in OP_ROOT_ABSPATH.        Similar to the copied state, its parent may be a WORKING node or a        BASE node. And again, the REPOS_* values are implied by this node's        position in the subtree under the ancestor unshadowed BASE node.        ORIGINAL_* will indicate the source of the move.     All OUT parameters may be NULL to indicate a lack of interest in    that piece of information.     STATUS, OP_ROOT_ABSPATH, and REPOS_* will always be assigned a value    if that information is requested (and assuming a successful return).     ORIGINAL_REPOS_RELPATH will refer to the *root* of the operation. It    does *not* correspond to the node given by LOCAL_ABSPATH. The caller    can use the suffix on LOCAL_ABSPATH (relative to OP_ROOT_ABSPATH) in    order to compute the source node which corresponds to LOCAL_ABSPATH.     If the node given by LOCAL_ABSPATH does not have changes recorded in    the WORKING tree, then SVN_ERR_WC_PATH_NOT_FOUND is returned. If it    doesn't have an "added" status, then SVN_ERR_WC_PATH_UNEXPECTED_STATUS    will be returned.     All returned data will be allocated in RESULT_POOL. All temporary    allocations will be made in SCRATCH_POOL. */
 name|svn_error_t
 modifier|*
@@ -4222,7 +4367,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Scan the working copy for move information of the node LOCAL_ABSPATH.  * If LOCAL_ABSPATH return a SVN_ERR_WC_PATH_UNEXPECTED_STATUS error.  *  * If not NULL *MOVED_FROM_ABSPATH will be set to the previous location  * of LOCAL_ABSPATH, before it or an ancestror was moved.  *  * If not NULL *OP_ROOT_ABSPATH will be set to the new location of the  * path that was actually moved  *  * If not NULL *OP_ROOT_MOVED_FROM_ABSPATH will be set to the old location  * of the path that was actually moved.  *  * If not NULL *MOVED_FROM_DELETE_ABSPATH will be set to the ancestor of the  * moved from location that deletes the original location  *  * Given a working copy  * A/B/C  * svn mv A/B D  * svn rm A  *  * You can call this function on D and D/C. When called on D/C all output  *              MOVED_FROM_ABSPATH will be A/B/C  *              OP_ROOT_ABSPATH will be D  *              OP_ROOT_MOVED_FROM_ABSPATH will be A/B  *              MOVED_FROM_DELETE_ABSPATH will be A  */
+comment|/* Scan the working copy for move information of the node LOCAL_ABSPATH.  * If LOCAL_ABSPATH is not moved here return an  * SVN_ERR_WC_PATH_UNEXPECTED_STATUS error.  *  * If not NULL *MOVED_FROM_ABSPATH will be set to the previous location  * of LOCAL_ABSPATH, before it or an ancestror was moved.  *  * If not NULL *OP_ROOT_ABSPATH will be set to the new location of the  * path that was actually moved  *  * If not NULL *OP_ROOT_MOVED_FROM_ABSPATH will be set to the old location  * of the path that was actually moved.  *  * If not NULL *MOVED_FROM_DELETE_ABSPATH will be set to the ancestor of the  * moved from location that deletes the original location  *  * Given a working copy  * A/B/C  * svn mv A/B D  * svn rm A  *  * You can call this function on D and D/C. When called on D/C all output  *              MOVED_FROM_ABSPATH will be A/B/C  *              OP_ROOT_ABSPATH will be D  *              OP_ROOT_MOVED_FROM_ABSPATH will be A/B  *              MOVED_FROM_DELETE_ABSPATH will be A  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_scan_moved
@@ -4374,70 +4519,6 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-name|svn_error_t
-modifier|*
-name|svn_wc__db_upgrade_apply_dav_cache
-parameter_list|(
-name|svn_sqlite__db_t
-modifier|*
-name|sdb
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|dir_relpath
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|cache_values
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* ### need much more docco     ### this function should be called within a sqlite transaction. it makes    ### assumptions around this fact.     Apply the various sets of properties to the database nodes based on    their existence/presence, the current state of the node, and the original    format of the working copy which provided these property sets. */
-name|svn_error_t
-modifier|*
-name|svn_wc__db_upgrade_apply_props
-parameter_list|(
-name|svn_sqlite__db_t
-modifier|*
-name|sdb
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|dir_abspath
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|local_relpath
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|base_props
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|revert_props
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|working_props
-parameter_list|,
-name|int
-name|original_format
-parameter_list|,
-name|apr_int64_t
-name|wc_id
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
 comment|/* Simply insert (or replace) one row in the EXTERNALS table. */
 name|svn_error_t
 modifier|*
@@ -4485,29 +4566,6 @@ name|def_peg_revision
 parameter_list|,
 name|svn_revnum_t
 name|def_revision
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* Get the repository identifier corresponding to REPOS_ROOT_URL from the    database in SDB. The value is returned in *REPOS_ID. All allocations    are allocated in SCRATCH_POOL.     NOTE: the row in REPOSITORY must exist. If not, then SVN_ERR_WC_DB_ERROR    is returned.     ### unclear on whether/how this interface will stay/evolve.  */
-name|svn_error_t
-modifier|*
-name|svn_wc__db_upgrade_get_repos_id
-parameter_list|(
-name|apr_int64_t
-modifier|*
-name|repos_id
-parameter_list|,
-name|svn_sqlite__db_t
-modifier|*
-name|sdb
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|repos_root_url
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -4765,7 +4823,7 @@ name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* @defgroup svn_wc__db_temp Various temporary functions during transition    ### These functions SHOULD be completely removed before 1.7    @{ */
-comment|/* Removes all references to LOCAL_ABSPATH from DB, while optionally leaving    a not present node.     This operation always recursively removes all nodes at and below    LOCAL_ABSPATH from NODES and ACTUAL.     If NOT_PRESENT_REVISION specifies a valid revision, leave a not_present    BASE node at local_abspath of the specified status and kind.    (Requires an existing BASE node before removing)     If DESTROY_WC is TRUE, this operation *installs* workqueue operations to    update the local filesystem after the database operation. If DESTROY_CHANGES    is FALSE, modified and unversioned files are left after running this    operation (and the WQ). If DESTROY_CHANGES and DESTROY_WC are TRUE,    LOCAL_ABSPATH and everything below it will be removed by the WQ.      Note: Unlike many similar functions it is a valid scenario for this    function to be called on a wcroot! In this case it will just leave the root    record in BASE  */
+comment|/* Removes all references to LOCAL_ABSPATH from DB, while optionally leaving    a not present node.     This operation always recursively removes all nodes at and below    LOCAL_ABSPATH from NODES and ACTUAL.     If DESTROY_WC is TRUE, this operation *installs* workqueue operations to    update the local filesystem after the database operation. If DESTROY_CHANGES    is FALSE, modified and unversioned files are left after running this    operation (and the WQ). If DESTROY_CHANGES and DESTROY_WC are TRUE,    LOCAL_ABSPATH and everything below it will be removed by the WQ.      Note: Unlike many similar functions it is a valid scenario for this    function to be called on a wcroot! In this case it will just leave the root    record in BASE  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_op_remove_node
@@ -4788,15 +4846,6 @@ name|destroy_wc
 parameter_list|,
 name|svn_boolean_t
 name|destroy_changes
-parameter_list|,
-name|svn_revnum_t
-name|not_present_revision
-parameter_list|,
-name|svn_wc__db_status_t
-name|not_present_status
-parameter_list|,
-name|svn_node_kind_t
-name|not_present_kind
 parameter_list|,
 specifier|const
 name|svn_skel_t
@@ -5057,7 +5106,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Copy the base tree at LOCAL_ABSPATH into the working tree as copy,    leaving any subtree additions and copies as-is.  This allows the    base node tree to be removed. */
+comment|/* When local_abspath has no WORKING layer, copy the base tree at    LOCAL_ABSPATH into the working tree as copy, leaving any subtree    additions and copies as-is.  This may introduce multiple layers if    the tree is mixed revision.     When local_abspath has a WORKING node, but is not an op-root, copy    all descendants at the same op-depth to the op-depth of local_abspath,    thereby turning this node in a copy of what was already there.     Fails with a SVN_ERR_WC_PATH_UNEXPECTED_STATUS error if LOCAL_RELPATH    is already an op-root (as in that case it can't be copied as that    would overwrite what is already there).     After this operation the copied layer (E.g. BASE) can be removed, without    the WORKING nodes chaning. Typical usecase: tree conflict handling */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_op_make_copy
@@ -5175,7 +5224,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Gather revision status information about a working copy using DB.  *  * Set *MIN_REVISION and *MAX_REVISION to the lowest and highest revision  * numbers found within LOCAL_ABSPATH.  * Only nodes with op_depth zero and presence 'normal' or 'incomplete'  * are considered, so that added, deleted or excluded nodes do not affect  * the result.  If COMMITTED is TRUE, set *MIN_REVISION and *MAX_REVISION  * to the lowest and highest committed (i.e. "last changed") revision numbers,  * respectively.  *  * Indicate in *IS_SPARSE_CHECKOUT whether any of the nodes within  * LOCAL_ABSPATH is sparse.  * Indicate in *IS_MODIFIED whether the working copy has local modifications.  *  * Indicate in *IS_SWITCHED whether any node beneath LOCAL_ABSPATH  * is switched. If TRAIL_URL is non-NULL, use it to determine if LOCAL_ABSPATH  * itself is switched.  It should be any trailing portion of LOCAL_ABSPATH's  * expected URL, long enough to include any parts that the caller considers  * might be changed by a switch.  If it does not match the end of WC_PATH's  * actual URL, then report a "switched" status.  *  * See also the functions below which provide a subset of this functionality.  */
+comment|/* Gather revision status information about a working copy using DB.  *  * Set *MIN_REVISION and *MAX_REVISION to the lowest and highest revision  * numbers found within LOCAL_ABSPATH.  * Only nodes with op_depth zero and presence 'normal' or 'incomplete'  * are considered, so that added, deleted or excluded nodes do not affect  * the result.  If COMMITTED is TRUE, set *MIN_REVISION and *MAX_REVISION  * to the lowest and highest committed (i.e. "last changed") revision numbers,  * respectively.  *  * Indicate in *IS_SPARSE_CHECKOUT whether any of the nodes within  * LOCAL_ABSPATH is sparse.  * Indicate in *IS_MODIFIED whether the working copy has local modifications  * recorded for it in DB.  *  * Indicate in *IS_SWITCHED whether any node beneath LOCAL_ABSPATH  * is switched. If TRAIL_URL is non-NULL, use it to determine if LOCAL_ABSPATH  * itself is switched.  It should be any trailing portion of LOCAL_ABSPATH's  * expected URL, long enough to include any parts that the caller considers  * might be changed by a switch.  If it does not match the end of WC_PATH's  * actual URL, then report a "switched" status.  *  * See also the functions below which provide a subset of this functionality.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_revision_status
@@ -5216,13 +5265,6 @@ name|trail_url
 parameter_list|,
 name|svn_boolean_t
 name|committed
-parameter_list|,
-name|svn_cancel_func_t
-name|cancel_func
-parameter_list|,
-name|void
-modifier|*
-name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -5315,10 +5357,10 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Indicate in *IS_MODIFIED whether the working copy has local modifications,  * using DB. Use SCRATCH_POOL for temporary allocations.  *  * This function provides a subset of the functionality of  * svn_wc__db_revision_status() and is more efficient if the caller  * doesn't need all information returned by svn_wc__db_revision_status(). */
+comment|/* Indicate in *IS_MODIFIED whether the working copy has local modifications,  * using DB. Use SCRATCH_POOL for temporary allocations.  *  * This function does not check the working copy state, but is a lot more  * efficient than a full status walk. */
 name|svn_error_t
 modifier|*
-name|svn_wc__db_has_local_mods
+name|svn_wc__db_has_db_mods
 parameter_list|(
 name|svn_boolean_t
 modifier|*
@@ -5332,13 +5374,6 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
-parameter_list|,
-name|svn_cancel_func_t
-name|cancel_func
-parameter_list|,
-name|void
-modifier|*
-name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -5408,7 +5443,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Update a moved-away tree conflict victim at VICTIM_ABSPATH with changes  * brought in by the update operation which flagged the tree conflict. */
+comment|/* Update a moved-away tree conflict victim LOCAL_ABSPATH, deleted in    DELETE_OP_ABSPATH with changes from the original location. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_update_moved_away_conflict_victim
@@ -5420,14 +5455,21 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|victim_abspath
+name|local_abspath
 parameter_list|,
-name|svn_wc_notify_func2_t
-name|notify_func
-parameter_list|,
-name|void
+specifier|const
+name|char
 modifier|*
-name|notify_baton
+name|delete_op_abspath
+parameter_list|,
+name|svn_wc_operation_t
+name|operation
+parameter_list|,
+name|svn_wc_conflict_action_t
+name|action
+parameter_list|,
+name|svn_wc_conflict_reason_t
+name|reason
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -5436,12 +5478,19 @@ name|void
 modifier|*
 name|cancel_baton
 parameter_list|,
+name|svn_wc_notify_func2_t
+name|notify_func
+parameter_list|,
+name|void
+modifier|*
+name|notify_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* LOCAL_ABSPATH is moved to MOVE_DST_ABSPATH.  MOVE_SRC_ROOT_ABSPATH  * is the root of the move to MOVE_DST_OP_ROOT_ABSPATH.  * MOVE_SRC_OP_ROOT_ABSPATH is the op-root of the move; it's the same  * as MOVE_SRC_ROOT_ABSPATH except for moves inside deletes when it is  * the op-root of the delete. */
+comment|/* LOCAL_ABSPATH is moved to MOVE_DST_ABSPATH.  MOVE_SRC_ROOT_ABSPATH  * is the root of the move to MOVE_DST_OP_ROOT_ABSPATH.  * DELETE_ABSPATH is the op-root of the move; it's the same  * as MOVE_SRC_ROOT_ABSPATH except for moves inside deletes when it is  * the op-root of the delete. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_base_moved_to
@@ -5468,7 +5517,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|move_src_op_root_abspath
+name|delete_abspath
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
@@ -5510,7 +5559,7 @@ function_decl|;
 comment|/* This raises move-edit tree-conflicts on any moves inside the    delete-edit conflict on LOCAL_ABSPATH. This is experimental: see    comment in resolve_conflict_on_node about combining with another    function. */
 name|svn_error_t
 modifier|*
-name|svn_wc__db_resolve_delete_raise_moved_away
+name|svn_wc__db_op_raise_moved_away
 parameter_list|(
 name|svn_wc__db_t
 modifier|*
@@ -5533,10 +5582,10 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Like svn_wc__db_resolve_delete_raise_moved_away this should be    combined.        ### LOCAL_ABSPATH specifies the move origin, but the move origin    ### is not necessary unique enough. This function needs an op_root_abspath    ### argument to differentiate between different origins.     ### See move_tests.py: move_many_update_delete for an example case.    */
+comment|/* Breaks all moves of nodes that exist at or below LOCAL_ABSPATH as    shadowed (read: deleted) by the opration rooted at    delete_op_root_abspath.  */
 name|svn_error_t
 modifier|*
-name|svn_wc__db_resolve_break_moved_away
+name|svn_wc__db_op_break_moved_away
 parameter_list|(
 name|svn_wc__db_t
 modifier|*
@@ -5547,31 +5596,13 @@ name|char
 modifier|*
 name|local_abspath
 parameter_list|,
-name|svn_wc_notify_func2_t
-name|notify_func
-parameter_list|,
-name|void
-modifier|*
-name|notify_baton
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
-parameter_list|)
-function_decl|;
-comment|/* Break moves for all moved-away children of LOCAL_ABSPATH, within  * a single transaction.  *  * ### Like svn_wc__db_resolve_delete_raise_moved_away this should be  * combined. */
-name|svn_error_t
-modifier|*
-name|svn_wc__db_resolve_break_moved_away_children
-parameter_list|(
-name|svn_wc__db_t
-modifier|*
-name|db
-parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|local_abspath
+name|delete_op_root_abspath
+parameter_list|,
+name|svn_boolean_t
+name|mark_tc_resolved
 parameter_list|,
 name|svn_wc_notify_func2_t
 name|notify_func
@@ -5615,6 +5646,70 @@ name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* @} */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_wc__db_verify_cb_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wc_abspath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|local_relpath
+parameter_list|,
+name|int
+name|op_depth
+parameter_list|,
+name|int
+name|id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Checks the database for FULL-correctness according to the spec.     Note that typical 1.7-1.9 databases WILL PRODUCE warnings.     This is mainly useful for WC-NG developers, as there will be    warnings without the database being corrupt */
+name|svn_error_t
+modifier|*
+name|svn_wc__db_verify_db_full
+parameter_list|(
+name|svn_wc__db_t
+modifier|*
+name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wri_abspath
+parameter_list|,
+name|svn_wc__db_verify_cb_t
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -115,6 +115,23 @@ name|struct
 name|svn_fs_t
 name|svn_fs_t
 typedef|;
+comment|/**  * @defgroup svn_fs_backend_names Built-in back-ends  * Constants defining the currently supported built-in filesystem backends.  *  * @see svn_fs_type  * @{  */
+comment|/** @since New in 1.1. */
+define|#
+directive|define
+name|SVN_FS_TYPE_BDB
+value|"bdb"
+comment|/** @since New in 1.1. */
+define|#
+directive|define
+name|SVN_FS_TYPE_FSFS
+value|"fsfs"
+comment|/**  * EXPERIMENTAL filesystem backend.  *  * It is not ready for general production use.  Please consult the  * respective release notes on suggested usage scenarios.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_TYPE_FSX
+value|"fsx"
+comment|/** @} */
 comment|/**  * @name Filesystem configuration options  * @{  */
 define|#
 directive|define
@@ -144,23 +161,27 @@ define|#
 directive|define
 name|SVN_FS_CONFIG_FSFS_CACHE_NS
 value|"fsfs-cache-namespace"
+comment|/** Enable / disable the FSFS format 7 "block read" feature.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_CONFIG_FSFS_BLOCK_READ
+value|"fsfs-block-read"
+comment|/** String with a decimal representation of the FSFS format shard size.  * Zero ("0") means that a repository with linear layout should be created.  *  * This option will only be used during the creation of new repositories  * and is otherwise ignored.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_CONFIG_FSFS_SHARD_SIZE
+value|"fsfs-shard-size"
+comment|/** Enable / disable the FSFS format 7 logical addressing feature for a  * newly created repository.  *  * This option will only be used during the creation of new repositories  * and is otherwise ignored.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_CONFIG_FSFS_LOG_ADDRESSING
+value|"fsfs-log-addressing"
 comment|/* Note to maintainers: if you add further SVN_FS_CONFIG_FSFS_CACHE_* knobs,    update fs_fs.c:verify_as_revision_before_current_plus_plus(). */
-comment|/* See also svn_fs_type(). */
-comment|/** @since New in 1.1. */
+comment|/** Select the filesystem type. See also #svn_fs_type().  *  * @since New in 1.1. */
 define|#
 directive|define
 name|SVN_FS_CONFIG_FS_TYPE
 value|"fs-type"
-comment|/** @since New in 1.1. */
-define|#
-directive|define
-name|SVN_FS_TYPE_BDB
-value|"bdb"
-comment|/** @since New in 1.1. */
-define|#
-directive|define
-name|SVN_FS_TYPE_FSFS
-value|"fsfs"
 comment|/** Create repository format compatible with Subversion versions  * earlier than 1.4.  *  *  @since New in 1.4.  */
 define|#
 directive|define
@@ -181,6 +202,11 @@ define|#
 directive|define
 name|SVN_FS_CONFIG_PRE_1_8_COMPATIBLE
 value|"pre-1.8-compatible"
+comment|/** Create repository format compatible with the specified Subversion  * release.  The value must be a version in the same format as  * #SVN_VER_NUMBER and cannot exceed the current version.  *  * @note The @c patch component would often be ignored, due to our forward  * compatibility promises within minor release lines.  It should therefore  * usually be set to @c 0.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_CONFIG_COMPATIBLE_VERSION
+value|"compatible-version"
 comment|/** @} */
 comment|/**  * Callers should invoke this function to initialize global state in  * the FS library before creating FS objects.  If this function is  * invoked, no FS objects may be created in another thread at the same  * time as this invocation, and the provided @a pool must last longer  * than any FS object created subsequently.  *  * If this function is not called, the FS library will make a best  * effort to bootstrap a mutex for protecting data common to FS  * objects; however, there is a small window of failure.  Also, a  * small amount of data will be leaked if the Subversion FS library is  * dynamically unloaded, and using the bdb FS can potentially segfault  * or invoke other undefined behavior if this function is not called  * with an appropriate pool (such as the pool the module was loaded into)  * when loaded dynamically.  *  * If this function is called multiple times before the pool passed to  * the first call is destroyed or cleared, the later calls will have  * no effect.  *  * @since New in 1.2.  */
 name|svn_error_t
@@ -225,7 +251,7 @@ modifier|*
 name|warning_baton
 parameter_list|)
 function_decl|;
-comment|/**  * Create a new, empty Subversion filesystem, stored in the directory  * @a path, and return a pointer to it in @a *fs_p.  @a path must not  * currently exist, but its parent must exist.  If @a fs_config is not  * @c NULL, the options it contains modify the behavior of the  * filesystem.  The interpretation of @a fs_config is specific to the  * filesystem back-end.  The new filesystem may be closed by  * destroying @a pool.  *  * @note The lifetime of @a fs_config must not be shorter than @a  * pool's. It's a good idea to allocate @a fs_config from @a pool or  * one of its ancestors.  *  * If @a fs_config contains a value for #SVN_FS_CONFIG_FS_TYPE, that  * value determines the filesystem type for the new filesystem.  * Currently defined values are:  *  *   SVN_FS_TYPE_BDB   Berkeley-DB implementation  *   SVN_FS_TYPE_FSFS  Native-filesystem implementation  *  * If @a fs_config is @c NULL or does not contain a value for  * #SVN_FS_CONFIG_FS_TYPE then the default filesystem type will be used.  * This will typically be BDB for version 1.1 and FSFS for later versions,  * though the caller should not rely upon any particular default if they  * wish to ensure that a filesystem of a specific type is created.  *  * @since New in 1.1.  */
+comment|/**  * Create a new, empty Subversion filesystem, stored in the directory  * @a path, and return a pointer to it in @a *fs_p.  @a path must not  * currently exist, but its parent must exist.  If @a fs_config is not  * @c NULL, the options it contains modify the behavior of the  * filesystem.  The interpretation of @a fs_config is specific to the  * filesystem back-end.  The new filesystem may be closed by  * destroying @a pool.  *  * @note The lifetime of @a fs_config must not be shorter than @a  * pool's. It's a good idea to allocate @a fs_config from @a pool or  * one of its ancestors.  *  * If @a fs_config contains a value for #SVN_FS_CONFIG_FS_TYPE, that  * value determines the filesystem type for the new filesystem.  * Currently defined values are:  *  *   SVN_FS_TYPE_BDB   Berkeley-DB implementation  *   SVN_FS_TYPE_FSFS  Native-filesystem implementation  *   SVN_FS_TYPE_FSX   Experimental filesystem implementation  *  * If @a fs_config is @c NULL or does not contain a value for  * #SVN_FS_CONFIG_FS_TYPE then the default filesystem type will be used.  * This will typically be BDB for version 1.1 and FSFS for later versions,  * though the caller should not rely upon any particular default if they  * wish to ensure that a filesystem of a specific type is created.  *  * @since New in 1.1.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_create
@@ -249,7 +275,36 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Open a Subversion filesystem located in the directory @a path, and  * return a pointer to it in @a *fs_p.  If @a fs_config is not @c  * NULL, the options it contains modify the behavior of the  * filesystem.  The interpretation of @a fs_config is specific to the  * filesystem back-end.  The opened filesystem may be closed by  * destroying @a pool.  *  * @note The lifetime of @a fs_config must not be shorter than @a  * pool's. It's a good idea to allocate @a fs_config from @a pool or  * one of its ancestors.  *  * Only one thread may operate on any given filesystem object at once.  * Two threads may access the same filesystem simultaneously only if  * they open separate filesystem objects.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_open2() instead.  *  * @since New in 1.1.  */
+comment|/**  * Open a Subversion filesystem located in the directory @a path, and  * return a pointer to it in @a *fs_p.  If @a fs_config is not @c  * NULL, the options it contains modify the behavior of the  * filesystem.  The interpretation of @a fs_config is specific to the  * filesystem back-end.  The opened filesystem will be allocated in  * @a result_pool may be closed by clearing or destroying that pool.  * Use @a scratch_pool for temporary allocations.  *  * @note The lifetime of @a fs_config must not be shorter than @a  * result_pool's. It's a good idea to allocate @a fs_config from  * @a result_pool or one of its ancestors.  *  * Only one thread may operate on any given filesystem object at once.  * Two threads may access the same filesystem simultaneously only if  * they open separate filesystem objects.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_open3() instead.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_open2
+parameter_list|(
+name|svn_fs_t
+modifier|*
+modifier|*
+name|fs_p
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|fs_config
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Like svn_fs_open2(), but without @a scratch_pool.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  * @since New in 1.1.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_fs_open
@@ -273,7 +328,79 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Upgrade the Subversion filesystem located in the directory @a path  * to the latest version supported by this library.  Return  * #SVN_ERR_FS_UNSUPPORTED_UPGRADE and make no changes to the  * filesystem if the requested upgrade is not supported.  Use @a pool  * for necessary allocations.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_upgrade() instead.  *  * @since New in 1.5.  */
+comment|/** The kind of action being taken by 'upgrade'.  *  * @since New in 1.9.  */
+typedef|typedef
+enum|enum
+name|svn_fs_upgrade_notify_action_t
+block|{
+comment|/** Packing of the revprop shard has completed.    *  The number parameter is the shard being processed. */
+name|svn_fs_upgrade_pack_revprops
+init|=
+literal|0
+block|,
+comment|/** Removal of the non-packed revprop shard is completed.    *  The number parameter is the shard being processed */
+name|svn_fs_upgrade_cleanup_revprops
+block|,
+comment|/** DB format has been set to the new value.    *  The number parameter is the new format number. */
+name|svn_fs_upgrade_format_bumped
+block|}
+name|svn_fs_upgrade_notify_action_t
+typedef|;
+comment|/** The type of an upgrade notification function.  @a number is specifc  * to @a action (see #svn_fs_upgrade_notify_action_t); @a action is the  * type of action being performed.  @a baton is the corresponding baton  * for the notification function, and @a scratch_pool can be used for  * temporary allocations, but will be cleared between invocations.  *  * @since New in 1.9.  */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_fs_upgrade_notify_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_uint64_t
+name|number
+parameter_list|,
+name|svn_fs_upgrade_notify_action_t
+name|action
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Upgrade the Subversion filesystem located in the directory @a path  * to the latest version supported by this library.  Return  * #SVN_ERR_FS_UNSUPPORTED_UPGRADE and make no changes to the  * filesystem if the requested upgrade is not supported.  Use  * @a scratch_pool for temporary allocations.  *  * The optional @a notify_func callback is only a general feedback that  * the operation is still in process but may be called in e.g. random shard  * order and more than once for the same shard.  *  * The optional @a cancel_func callback will be invoked as usual to allow  * the user to preempt this potentially lengthy operation.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_upgrade2() instead.  *  * @note Canceling an upgrade is legal but may leave remnants of previous  * format data that may not be cleaned up automatically by later calls.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_upgrade2
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|svn_fs_upgrade_notify_t
+name|notify_func
+parameter_list|,
+name|void
+modifier|*
+name|notify_baton
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Like svn_fs_upgrade2 but with notify_func, notify_baton, cancel_func  * and cancel_baton being set to NULL.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  * @since New in 1.5.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_fs_upgrade
@@ -288,7 +415,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Callback function type for progress notification.  *  * @a revision is the number of the revision currently begin processed,  * #SVN_INVALID_REVNUM if the current stage is not linked to any specific  * revision. @a baton is the callback baton.  *  * @since New in 1.8.  */
+comment|/**  * Callback function type for progress notification.  *  * @a revision is the number of the revision currently being processed,  * #SVN_INVALID_REVNUM if the current stage is not linked to any specific  * revision. @a baton is the callback baton.  *  * @since New in 1.8.  */
 typedef|typedef
 name|void
 function_decl|(
@@ -344,7 +471,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Return a shallow copy of the configuration parameters used to open  * @a fs, allocated in @a pool.  It may be @c NULL.  The contents of the  * hash contents remains valid only for @a fs's lifetime.  *   * @note This is just what was passed to svn_fs_create() or svn_fs_open().  * You may not modify it.  *  * @since New in 1.8.  */
+comment|/**  * Return a shallow copy of the configuration parameters used to open  * @a fs, allocated in @a pool.  It may be @c NULL.  The contents of the  * hash contents remains valid only for @a fs's lifetime.  *  * @note This is just what was passed to svn_fs_create() or svn_fs_open().  * You may not modify it.  *  * @since New in 1.8.  */
 name|apr_hash_t
 modifier|*
 name|svn_fs_config
@@ -373,7 +500,71 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Copy a possibly live Subversion filesystem from @a src_path to  * @a dest_path.  If @a clean is @c TRUE, perform cleanup on the  * source filesystem as part of the copy operation; currently, this  * means deleting copied, unused logfiles for a Berkeley DB source  * filesystem.  *  * If @a incremental is TRUE, make an effort to avoid re-copying  * information already present in the destination where possible.  If  * incremental hotcopy is not implemented, raise  * #SVN_ERR_UNSUPPORTED_FEATURE.  *  * Use @a scratch_pool for temporary allocations.  *  * @since New in 1.8.  */
+comment|/** The type of a hotcopy notification function.  @a start_revision and  * @a end_revision indicate the copied revision range.  @a baton is the  * corresponding baton for the notification function, and @a scratch_pool  * can be used for temporary allocations, but will be cleared between  * invocations.  */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|svn_fs_hotcopy_notify_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|svn_revnum_t
+name|start_revision
+parameter_list|,
+name|svn_revnum_t
+name|end_revision
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Copy a possibly live Subversion filesystem from @a src_path to  * @a dest_path.  If @a clean is @c TRUE, perform cleanup on the  * source filesystem as part of the copy operation; currently, this  * means deleting copied, unused logfiles for a Berkeley DB source  * filesystem.  *  * If @a incremental is TRUE, make an effort to avoid re-copying  * information already present in the destination where possible.  If  * incremental hotcopy is not implemented, raise  * #SVN_ERR_UNSUPPORTED_FEATURE.  *  * For each revision range copied, @a notify_func will be called with  * staring and ending revision numbers (both inclusive and not necessarily  * different) and with the @a notify_baton.  Currently, this notification  * is not triggered by the BDB backend.  @a notify_func may be @c NULL  * if this notification is not required.  *  * The optional @a cancel_func callback will be invoked with  * @a cancel_baton as usual to allow the user to preempt this potentially  * lengthy operation.  *  * Use @a scratch_pool for temporary allocations.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_hotcopy3
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|src_path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dest_path
+parameter_list|,
+name|svn_boolean_t
+name|clean
+parameter_list|,
+name|svn_boolean_t
+name|incremental
+parameter_list|,
+name|svn_fs_hotcopy_notify_t
+name|notify_func
+parameter_list|,
+name|void
+modifier|*
+name|notify_baton
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Like svn_fs_hotcopy3(), but with @a notify_func and @a notify_baton  * always passed as @c NULL.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  * @since New in 1.8.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_fs_hotcopy2
@@ -470,7 +661,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Take an exclusive lock on @a fs to prevent commits and then invoke  * @a freeze_func passing @a freeze_baton.  *  * @note The BDB backend doesn't implement this feature so most  * callers should not call this function directly but should use the  * higher level svn_repos_freeze() instead.  *  * @see svn_repos_freeze()  *  * @since New in 1.8.  */
+comment|/**  * Take an exclusive lock on @a fs to prevent commits and then invoke  * @a freeze_func passing @a freeze_baton.  *  * @note @a freeze_func must not, directly or indirectly, call any function  * that attempts to take out a lock on the underlying repository.  These  * include functions for packing, hotcopying, setting revprops and commits.  * Attempts to do so may result in a deadlock.  *  * @note The BDB backend doesn't implement this feature so most  * callers should not call this function directly but should use the  * higher level svn_repos_freeze() instead.  *  * @see svn_repos_freeze()  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_freeze
@@ -775,13 +966,31 @@ parameter_list|)
 function_decl|;
 comment|/** @} */
 comment|/** Filesystem Nodes and Node-Revisions.  *  * In a Subversion filesystem, a `node' corresponds roughly to an  * `inode' in a Unix filesystem:  * - A node is either a file or a directory.  * - A node's contents change over time.  * - When you change a node's contents, it's still the same node; it's  *   just been changed.  So a node's identity isn't bound to a specific  *   set of contents.  * - If you rename a node, it's still the same node, just under a  *   different name.  So a node's identity isn't bound to a particular  *   filename.  *  * A `node revision' refers to one particular version of a node's contents,  * that existed over a specific period of time (one or more repository  * revisions).  Changing a node's contents always creates a new revision of  * that node, which is to say creates a new `node revision'.  Once created,  * a node revision's contents never change.  *  * When we create a node, its initial contents are the initial revision of  * the node.  As users make changes to the node over time, we create new  * revisions of that same node.  When a user commits a change that deletes  * a file from the filesystem, we don't delete the node, or any revision  * of it --- those stick around to allow us to recreate prior revisions of  * the filesystem.  Instead, we just remove the reference to the node  * from the directory.  *  * Each node revision is a part of exactly one node, and appears only once  * in the history of that node.  It is uniquely identified by a node  * revision id, #svn_fs_id_t.  Its node revision id also identifies which  * node it is a part of.  *  * @note: Often when we talk about `the node' within the context of a single  * revision (or transaction), we implicitly mean `the node as it appears in  * this revision (or transaction)', or in other words `the node revision'.  *  * @note: Commonly, a node revision will have the same content as some other  * node revisions in the same node and in different nodes.  The FS libraries  * allow different node revisions to share the same data without storing a  * separate copy of the data.  *  * @defgroup svn_fs_nodes Filesystem nodes  * @{  */
+comment|/** Defines the possible ways two arbitrary (root, path)-pairs may be  * related.  *  * @since New in 1.9.  */
+typedef|typedef
+enum|enum
+name|svn_fs_node_relation_t
+block|{
+comment|/** The (root, path)-pairs are not related, i.e. none of the other cases    * apply.  If the roots refer to different @c svn_fs_t instances, then    * they are always considered unrelated - even if the underlying    * repository is the same.    */
+name|svn_fs_node_unrelated
+init|=
+literal|0
+block|,
+comment|/** No changes have been made between the (root, path)-pairs, i.e. they    * have the same (relative) nodes in their sub-trees, corresponding sub-    * tree nodes have the same contents as well as properties and report the    * same "created-path" and "created-rev" data.  This implies having a    * common ancestor.    *    * However, due to efficiency considerations, the FS implementation may    * report some combinations as merely having a common ancestor    * (@a svn_fs_node_common_ancestor) instead of actually being unchanged.    */
+name|svn_fs_node_unchanged
+block|,
+comment|/** The (root, path)-pairs have a common ancestor (which may be one of    * them) but there are changes between them, i.e. they don't fall into    * the @c svn_fs_node_unchanged category.    *    * Due to efficiency considerations, the FS implementation may falsely    * classify some combinations as merely having a common ancestor that    * are, in fact, unchanged (@a svn_fs_node_unchanged).    */
+name|svn_fs_node_common_ancestor
+block|}
+name|svn_fs_node_relation_t
+typedef|;
 comment|/** An object representing a node-revision id.  */
 typedef|typedef
 name|struct
 name|svn_fs_id_t
 name|svn_fs_id_t
 typedef|;
-comment|/** Return -1, 0, or 1 if node revisions @a a and @a b are respectively  * unrelated, equivalent, or otherwise related (part of the same node).  */
+comment|/** Return -1, 0, or 1 if node revisions @a a and @a b are respectively  * unrelated, equivalent, or otherwise related (part of the same node).  *  * @note Consider using the more expressive #svn_fs_node_relation() instead.  *  * @see #svn_fs_node_relation  */
 name|int
 name|svn_fs_compare_ids
 parameter_list|(
@@ -796,7 +1005,7 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/** Return TRUE if node revisions @a id1 and @a id2 are related (part of the  * same node), else return FALSE.  */
+comment|/** Return TRUE if node revisions @a id1 and @a id2 are related (part of the  * same node), else return FALSE.  *  * @note Consider using the more expressive #svn_fs_node_relation() instead.  *  * @see #svn_fs_node_relation  */
 name|svn_boolean_t
 name|svn_fs_check_related
 parameter_list|(
@@ -846,7 +1055,7 @@ name|pool
 parameter_list|)
 function_decl|;
 comment|/** @} */
-comment|/** Filesystem Transactions.  *  * To make a change to a Subversion filesystem:  * - Create a transaction object, using svn_fs_begin_txn().  * - Call svn_fs_txn_root(), to get the transaction's root directory.  * - Make whatever changes you like in that tree.  * - Commit the transaction, using svn_fs_commit_txn().  *  * The filesystem implementation guarantees that your commit will  * either:  * - succeed completely, so that all of the changes are committed to  *   create a new revision of the filesystem, or  * - fail completely, leaving the filesystem unchanged.  *  * Until you commit the transaction, any changes you make are  * invisible.  Only when your commit succeeds do they become visible  * to the outside world, as a new revision of the filesystem.  *  * If you begin a transaction, and then decide you don't want to make  * the change after all (say, because your net connection with the  * client disappeared before the change was complete), you can call  * svn_fs_abort_txn(), to cancel the entire transaction; this  * leaves the filesystem unchanged.  *  * The only way to change the contents of files or directories, or  * their properties, is by making a transaction and creating a new  * revision, as described above.  Once a revision has been committed, it  * never changes again; the filesystem interface provides no means to  * go back and edit the contents of an old revision.  Once history has  * been recorded, it is set in stone.  Clients depend on this property  * to do updates and commits reliably; proxies depend on this property  * to cache changes accurately; and so on.  *  * There are two kinds of nodes in the filesystem: mutable, and  * immutable.  Revisions in the filesystem consist entirely of  * immutable nodes, whose contents never change.  A transaction in  * progress, which the user is still constructing, uses mutable nodes  * for those nodes which have been changed so far, and refers to  * immutable nodes from existing revisions for portions of the tree  * which haven't been changed yet in that transaction.  *  * Immutable nodes, as part of revisions, never refer to mutable  * nodes, which are part of uncommitted transactions.  Mutable nodes  * may refer to immutable nodes, or other mutable nodes.  *  * Note that the terms "immutable" and "mutable" describe whether or  * not the nodes have been changed as part of a transaction --- not  * the permissions on the nodes they refer to.  Even if you aren't  * authorized to modify the filesystem's root directory, you might be  * authorized to change some descendant of the root; doing so would  * create a new mutable copy of the root directory.  Mutability refers  * to the role of the node: part of an existing revision, or part of a  * new one.  This is independent of your authorization to make changes  * to a given node.  *  * Transactions are actually persistent objects, stored in the  * database.  You can open a filesystem, begin a transaction, and  * close the filesystem, and then a separate process could open the  * filesystem, pick up the same transaction, and continue work on it.  * When a transaction is successfully committed, it is removed from  * the database.  *  * Every transaction is assigned a name.  You can open a transaction  * by name, and resume work on it, or find out the name of a  * transaction you already have open.  You can also list all the  * transactions currently present in the database.  *  * You may assign properties to transactions; these are name/value  * pairs.  When you commit a transaction, all of its properties become  * unversioned revision properties of the new revision.  (There is one  * exception: the svn:date property will be automatically set on new  * transactions to the date that the transaction was created, and will  * be overwritten when the transaction is committed by the current  * time; changes to a transaction's svn:date property will not affect  * its committed value.)  *  * Transaction names are guaranteed to contain only letters (upper-  * and lower-case), digits, `-', and `.', from the ASCII character  * set.  *  * The Subversion filesystem will make a best effort to not reuse  * transaction names.  The Berkeley DB backend generates transaction  * names using a sequence, or a counter, which is stored in the BDB  * database.  Each new transaction increments the counter.  The  * current value of the counter is not serialized into a filesystem  * dump file, so dumping and restoring the repository will reset the  * sequence and reuse transaction names.  The FSFS backend generates a  * transaction name using the hostname, process ID and current time in  * microseconds since 00:00:00 January 1, 1970 UTC.  So it is  * extremely unlikely that a transaction name will be reused.  *  * @defgroup svn_fs_txns Filesystem transactions  * @{  */
+comment|/** Filesystem Transactions.  *  * To make a change to a Subversion filesystem:  * - Create a transaction object, using svn_fs_begin_txn().  * - Call svn_fs_txn_root(), to get the transaction's root directory.  * - Make whatever changes you like in that tree.  * - Commit the transaction, using svn_fs_commit_txn().  *  * The filesystem implementation guarantees that your commit will  * either:  * - succeed completely, so that all of the changes are committed to  *   create a new revision of the filesystem, or  * - fail completely, leaving the filesystem unchanged.  *  * Until you commit the transaction, any changes you make are  * invisible.  Only when your commit succeeds do they become visible  * to the outside world, as a new revision of the filesystem.  *  * If you begin a transaction, and then decide you don't want to make  * the change after all (say, because your net connection with the  * client disappeared before the change was complete), you can call  * svn_fs_abort_txn(), to cancel the entire transaction; this  * leaves the filesystem unchanged.  *  * The only way to change the contents of files or directories, or  * their properties, is by making a transaction and creating a new  * revision, as described above.  Once a revision has been committed, it  * never changes again; the filesystem interface provides no means to  * go back and edit the contents of an old revision.  Once history has  * been recorded, it is set in stone.  Clients depend on this property  * to do updates and commits reliably; proxies depend on this property  * to cache changes accurately; and so on.  *  * There are two kinds of nodes in the filesystem: mutable, and  * immutable.  Revisions in the filesystem consist entirely of  * immutable nodes, whose contents never change.  A transaction in  * progress, which the user is still constructing, uses mutable nodes  * for those nodes which have been changed so far, and refers to  * immutable nodes from existing revisions for portions of the tree  * which haven't been changed yet in that transaction.  *  * Immutable nodes, as part of revisions, never refer to mutable  * nodes, which are part of uncommitted transactions.  Mutable nodes  * may refer to immutable nodes, or other mutable nodes.  *  * Note that the terms "immutable" and "mutable" describe whether or  * not the nodes have been changed as part of a transaction --- not  * the permissions on the nodes they refer to.  Even if you aren't  * authorized to modify the filesystem's root directory, you might be  * authorized to change some descendant of the root; doing so would  * create a new mutable copy of the root directory.  Mutability refers  * to the role of the node: part of an existing revision, or part of a  * new one.  This is independent of your authorization to make changes  * to a given node.  *  * Transactions are actually persistent objects, stored in the  * database.  You can open a filesystem, begin a transaction, and  * close the filesystem, and then a separate process could open the  * filesystem, pick up the same transaction, and continue work on it.  * When a transaction is successfully committed, it is removed from  * the database.  *  * Every transaction is assigned a name.  You can open a transaction  * by name, and resume work on it, or find out the name of a  * transaction you already have open.  You can also list all the  * transactions currently present in the database.  *  * You may assign properties to transactions; these are name/value  * pairs.  When you commit a transaction, all of its properties become  * unversioned revision properties of the new revision.  (There is one  * exception: the svn:date property will be automatically set on new  * transactions to the date that the transaction was created, and can  * be overwritten when the transaction is committed by the current  * time; see svn_fs_commit_txn.)  *  * Transaction names are guaranteed to contain only letters (upper-  * and lower-case), digits, `-', and `.', from the ASCII character  * set.  *  * The Subversion filesystem will make a best effort to not reuse  * transaction names.  The Berkeley DB backend generates transaction  * names using a sequence, or a counter, which is stored in the BDB  * database.  Each new transaction increments the counter.  The  * current value of the counter is not serialized into a filesystem  * dump file, so dumping and restoring the repository will reset the  * sequence and reuse transaction names.  The FSFS backend generates a  * transaction name using the hostname, process ID and current time in  * microseconds since 00:00:00 January 1, 1970 UTC.  So it is  * extremely unlikely that a transaction name will be reused.  *  * @defgroup svn_fs_txns Filesystem transactions  * @{  */
 comment|/** The type of a Subversion transaction object.  */
 typedef|typedef
 name|struct
@@ -864,6 +1073,11 @@ define|#
 directive|define
 name|SVN_FS_TXN_CHECK_LOCKS
 value|0x00002
+comment|/** Allow the client to specify the final svn:date of the revision by  * setting or deleting the corresponding transaction property rather  * than have it set automatically when the transaction is committed.  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_FS_TXN_CLIENT_DATE
+value|0x00004
 comment|/** @} */
 comment|/**  * Begin a new transaction on the filesystem @a fs, based on existing  * revision @a rev.  Set @a *txn_p to a pointer to the new transaction.  * When committed, this transaction will create a new revision.  *  * Allocate the new transaction in @a pool; when @a pool is freed, the new  * transaction will be closed (neither committed nor aborted).  *  * @a flags determines transaction enforcement behaviors, and is composed  * from the constants SVN_FS_TXN_* (#SVN_FS_TXN_CHECK_OOD etc.).  *  * @note If you're building a txn for committing, you probably  * don't want to call this directly.  Instead, call  * svn_repos_fs_begin_txn_for_commit(), which honors the  * repository's hook configurations.  *  * @since New in 1.2.  */
 name|svn_error_t
@@ -913,7 +1127,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Commit @a txn.  *  * @note You usually don't want to call this directly.  * Instead, call svn_repos_fs_commit_txn(), which honors the  * repository's hook configurations.  *  * If the transaction conflicts with other changes committed to the  * repository, return an #SVN_ERR_FS_CONFLICT error.  Otherwise, create  * a new filesystem revision containing the changes made in @a txn,  * storing that new revision number in @a *new_rev, and return zero.  *  * If @a conflict_p is non-zero, use it to provide details on any  * conflicts encountered merging @a txn with the most recent committed  * revisions.  If a conflict occurs, set @a *conflict_p to the path of  * the conflict in @a txn, allocated within @a pool;  * otherwise, set @a *conflict_p to NULL.  *  * If the commit succeeds, @a txn is invalid.  *  * If the commit fails for any reason, @a *new_rev is an invalid  * revision number, an error other than #SVN_NO_ERROR is returned and  * @a txn is still valid; you can make more operations to resolve the  * conflict, or call svn_fs_abort_txn() to abort the transaction.  *  * @note Success or failure of the commit of @a txn is determined by  * examining the value of @a *new_rev upon this function's return.  If  * the value is a valid revision number, the commit was successful,  * even though a non-@c NULL function return value may indicate that  * something else went wrong in post commit FS processing.  *  * @note See api-errata/1.8/fs001.txt for information on how this  * function was documented in versions prior to 1.8.  *  * ### need to document this better. there are four combinations of  * ### return values:  * ### 1) err=NULL. conflict=NULL. new_rev is valid  * ### 2) err=SVN_ERR_FS_CONFLICT. conflict is set. new_rev=SVN_INVALID_REVNUM  * ### 3) err=!NULL. conflict=NULL. new_rev is valid  * ### 4) err=!NULL. conflict=NULL. new_rev=SVN_INVALID_REVNUM  * ###  * ### some invariants:  * ###   *conflict_p will be non-NULL IFF SVN_ERR_FS_CONFLICT  * ###   if *conflict_p is set (and SVN_ERR_FS_CONFLICT), then new_rev  * ###     will always be SVN_INVALID_REVNUM  * ###   *conflict_p will always be initialized to NULL, or to a valid  * ###     conflict string  * ###   *new_rev will always be initialized to SVN_INVALID_REVNUM, or  * ###     to a valid, committed revision number  */
+comment|/** Commit @a txn.  *  * @note You usually don't want to call this directly.  * Instead, call svn_repos_fs_commit_txn(), which honors the  * repository's hook configurations.  *  * If the transaction conflicts with other changes committed to the  * repository, return an #SVN_ERR_FS_CONFLICT error.  Otherwise, create  * a new filesystem revision containing the changes made in @a txn,  * storing that new revision number in @a *new_rev, and return zero.  *  * If #SVN_FS_TXN_CLIENT_DATE was passed to #svn_fs_begin_txn2 any  * svn:date on the transaction will be become the unversioned property  * svn:date on the revision.  svn:date can have any value, it does not  * have to be a timestamp.  If the transaction has no svn:date the  * revision will have no svn:date.  *  * If #SVN_FS_TXN_CLIENT_DATE was not passed to #svn_fs_begin_txn2 the  * new revision will have svn:date set to the current time at some  * point during the commit and any svn:date on the transaction will be  * lost.  *  * If @a conflict_p is non-zero, use it to provide details on any  * conflicts encountered merging @a txn with the most recent committed  * revisions.  If a conflict occurs, set @a *conflict_p to the path of  * the conflict in @a txn, allocated within @a pool;  * otherwise, set @a *conflict_p to NULL.  *  * If the commit succeeds, @a txn is invalid.  *  * If the commit fails for any reason, @a *new_rev is an invalid  * revision number, an error other than #SVN_NO_ERROR is returned and  * @a txn is still valid; you can make more operations to resolve the  * conflict, or call svn_fs_abort_txn() to abort the transaction.  *  * @note Success or failure of the commit of @a txn is determined by  * examining the value of @a *new_rev upon this function's return.  If  * the value is a valid revision number, the commit was successful,  * even though a non-@c NULL function return value may indicate that  * something else went wrong in post commit FS processing.  *  * @note See api-errata/1.8/fs001.txt for information on how this  * function was documented in versions prior to 1.8.  *  * ### need to document this better. there are four combinations of  * ### return values:  * ### 1) err=NULL. conflict=NULL. new_rev is valid  * ### 2) err=SVN_ERR_FS_CONFLICT. conflict is set. new_rev=SVN_INVALID_REVNUM  * ### 3) err=!NULL. conflict=NULL. new_rev is valid  * ### 4) err=!NULL. conflict=NULL. new_rev=SVN_INVALID_REVNUM  * ###  * ### some invariants:  * ###   *conflict_p will be non-NULL IFF SVN_ERR_FS_CONFLICT  * ###   if *conflict_p is set (and SVN_ERR_FS_CONFLICT), then new_rev  * ###     will always be SVN_INVALID_REVNUM  * ###   *conflict_p will always be initialized to NULL, or to a valid  * ###     conflict string  * ###   *new_rev will always be initialized to SVN_INVALID_REVNUM, or  * ###     to a valid, committed revision number  *  */
 name|svn_error_t
 modifier|*
 name|svn_fs_commit_txn
@@ -1274,7 +1488,7 @@ name|svn_fs_path_change_reset
 block|}
 name|svn_fs_path_change_kind_t
 typedef|;
-comment|/** Change descriptor.  *  * @note Fields may be added to the end of this structure in future  * versions.  Therefore, to preserve binary compatibility, users  * should not directly allocate structures of this type.  *  * @since New in 1.6. */
+comment|/** Change descriptor.  *  * @note Fields may be added to the end of this structure in future  * versions.  Therefore, to preserve binary compatibility, users  * should not directly allocate structures of this type.  *  * @note The @c text_mod, @c prop_mod and @c mergeinfo_mod flags mean the  * text, properties and mergeinfo property (respectively) were "touched"  * by the commit API; this does not mean the new value is different from  * the old value.  *  * @since New in 1.6. */
 typedef|typedef
 struct|struct
 name|svn_fs_path_change2_t
@@ -1289,11 +1503,11 @@ comment|/** kind of change */
 name|svn_fs_path_change_kind_t
 name|change_kind
 decl_stmt|;
-comment|/** were there text mods? */
+comment|/** was the text touched?    * For node_kind=dir: always false. For node_kind=file:    *   modify:      true iff text touched.    *   add (copy):  true iff text touched.    *   add (plain): always true.    *   delete:      always false.    *   replace:     as for the add/copy part of the replacement.    */
 name|svn_boolean_t
 name|text_mod
 decl_stmt|;
-comment|/** were there property mods? */
+comment|/** were the properties touched?    *   modify:      true iff props touched.    *   add (copy):  true iff props touched.    *   add (plain): true iff props touched.    *   delete:      always false.    *   replace:     as for the add/copy part of the replacement.    */
 name|svn_boolean_t
 name|prop_mod
 decl_stmt|;
@@ -1312,6 +1526,10 @@ specifier|const
 name|char
 modifier|*
 name|copyfrom_path
+decl_stmt|;
+comment|/** was the mergeinfo property touched?    *   modify:      } true iff svn:mergeinfo property add/del/mod    *   add (copy):  }          and fs format supports this flag.    *   add (plain): }    *   delete:      always false.    *   replace:     as for the add/copy part of the replacement.    * (Note: Pre-1.9 repositories will report #svn_tristate_unknown.)    * @since New in 1.9. */
+name|svn_tristate_t
+name|mergeinfo_mod
 decl_stmt|;
 comment|/* NOTE! Please update svn_fs_path_change2_create() when adding new      fields here. */
 block|}
@@ -1431,7 +1649,36 @@ name|struct
 name|svn_fs_history_t
 name|svn_fs_history_t
 typedef|;
-comment|/** Set @a *history_p to an opaque node history object which  * represents @a path under @a root.  @a root must be a revision root.  * Use @a pool for all allocations.  */
+comment|/** Set @a *history_p to an opaque node history object which  * represents @a path under @a root.  @a root must be a revision root.  * Allocate the result in @a result_pool and use @a scratch_pool for  * temporary allocations.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_node_history2
+parameter_list|(
+name|svn_fs_history_t
+modifier|*
+modifier|*
+name|history_p
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Same as svn_fs_node_history2() but using a single @a pool for all  * allocations.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_fs_node_history
@@ -1455,7 +1702,34 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Set @a *prev_history_p to an opaque node history object which  * represents the previous (or "next oldest") interesting history  * location for the filesystem node represented by @a history, or @c  * NULL if no such previous history exists.  If @a cross_copies is @c  * FALSE, also return @c NULL if stepping backwards in history to @a  * *prev_history_p would cross a filesystem copy operation.  *  * @note If this is the first call to svn_fs_history_prev() for the @a  * history object, it could return a history object whose location is  * the same as the original.  This will happen if the original  * location was an interesting one (where the node was modified, or  * took place in a copy event).  This behavior allows looping callers  * to avoid the calling svn_fs_history_location() on the object  * returned by svn_fs_node_history(), and instead go ahead and begin  * calling svn_fs_history_prev().  *  * @note This function uses node-id ancestry alone to determine  * modifiedness, and therefore does NOT claim that in any of the  * returned revisions file contents changed, properties changed,  * directory entries lists changed, etc.  *  * @note The revisions returned for @a path will be older than or  * the same age as the revision of that path in @a root.  That is, if  * @a root is a revision root based on revision X, and @a path was  * modified in some revision(s) younger than X, those revisions  * younger than X will not be included for @a path.  */
+comment|/** Set @a *prev_history_p to an opaque node history object which  * represents the previous (or "next oldest") interesting history  * location for the filesystem node represented by @a history, or @c  * NULL if no such previous history exists.  If @a cross_copies is @c  * FALSE, also return @c NULL if stepping backwards in history to @a  * *prev_history_p would cross a filesystem copy operation.  *  * @note If this is the first call to svn_fs_history_prev() for the @a  * history object, it could return a history object whose location is  * the same as the original.  This will happen if the original  * location was an interesting one (where the node was modified, or  * took place in a copy event).  This behavior allows looping callers  * to avoid the calling svn_fs_history_location() on the object  * returned by svn_fs_node_history(), and instead go ahead and begin  * calling svn_fs_history_prev().  *  * @note This function uses node-id ancestry alone to determine  * modifiedness, and therefore does NOT claim that in any of the  * returned revisions file contents changed, properties changed,  * directory entries lists changed, etc.  *  * @note The revisions returned for @a path will be older than or  * the same age as the revision of that path in @a root.  That is, if  * @a root is a revision root based on revision X, and @a path was  * modified in some revision(s) younger than X, those revisions  * younger than X will not be included for @a path.  *  * Allocate the result in @a result_pool and use @a scratch_pool for  * temporary allocations.  *  * @since New in 1.9. */
+name|svn_error_t
+modifier|*
+name|svn_fs_history_prev2
+parameter_list|(
+name|svn_fs_history_t
+modifier|*
+modifier|*
+name|prev_history_p
+parameter_list|,
+name|svn_fs_history_t
+modifier|*
+name|history
+parameter_list|,
+name|svn_boolean_t
+name|cross_copies
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Same as svn_fs_history_prev2() but using a single @a pool for all  * allocations.  *  * @deprecated Provided for backward compatibility with the 1.8 API.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_fs_history_prev
@@ -1572,7 +1846,39 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Set @a *revision to the revision in which @a path under @a root was  * created.  Use @a pool for any temporary allocations.  @a *revision will  * be set to #SVN_INVALID_REVNUM for uncommitted nodes (i.e. modified nodes  * under a transaction root).  Note that the root of an unmodified transaction  * is not itself considered to be modified; in that case, return the revision  * upon which the transaction was based.  */
+comment|/** Determine how @a path_a under @a root_a and @a path_b under @a root_b  * are related and return the result in @a relation.  There is no restriction  * concerning the roots: They may refer to different repositories, be in  * arbitrary revision order and any of them may pertain to a transaction.  * @a scratch_pool is used for temporary allocations.  *  * @note Paths from different svn_fs_t will be reported as unrelated even  * if the underlying physical repository is the same.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_node_relation
+parameter_list|(
+name|svn_fs_node_relation_t
+modifier|*
+name|relation
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path_a
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root_b
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path_b
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Set @a *revision to the revision in which the node-revision identified  * by @a path under @a root was created; that is, to the revision in which  * @a path under @a root was last modified.  @a *revision will  * be set to #SVN_INVALID_REVNUM for uncommitted nodes (i.e. modified nodes  * under a transaction root).  Note that the root of an unmodified transaction  * is not itself considered to be modified; in that case, return the revision  * upon which the transaction was based.  *  * Use @a pool for any temporary allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_node_created_rev
@@ -1696,6 +2002,29 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/** Set @a *has_props to TRUE if the node @a path in @a root has properties  * and to FALSE if it doesn't have properties. Perform temporary allocations  * in @a scratch_pool.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_node_has_props
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|has_props
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/** Change a node's property's value, or add/delete a property.  *  * - @a root and @a path indicate the node whose property should change.  *   @a root must be the root of a transaction, not the root of a revision.  * - @a name is the name of the property to change.  * - @a value is the new value of the property, or zero if the property should  *   be removed altogether.  * Do any necessary temporary allocation in @a pool.  */
 name|svn_error_t
 modifier|*
@@ -1725,7 +2054,39 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Determine if the properties of two path/root combinations are different.  *  * Set @a *changed_p to 1 if the properties at @a path1 under @a root1 differ  * from those at @a path2 under @a root2, or set it to 0 if they are the  * same.  Both paths must exist under their respective roots, and both  * roots must be in the same filesystem.  */
+comment|/** Determine if the properties of two path/root combinations are different.  *  * Set @a *different_p to #TRUE if the properties at @a path1 under @a root1  * differ from those at @a path2 under @a root2, or set it to #FALSE if they  * are the same.  Both paths must exist under their respective roots, and  * both roots must be in the same filesystem.  * Do any necessary temporary allocation in @a scratch_pool.  *  * @note For the purposes of preserving accurate history, certain bits of  * code (such as the repository dump code) need to care about the distinction  * between situations when the properties are "different" and "have changed  * across two points in history".  We have a pair of functions that can  * answer both of these questions, svn_fs_props_different() and  * svn_fs_props_changed().  See issue 4598 for more details.  *  * @see svn_fs_props_changed  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_props_different
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|different_p
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path1
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root2
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path2
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Determine if the properties of two path/root combinations have changed.  *  * Set @a *changed_p to #TRUE if the properties at @a path1 under @a root1  * differ from those at @a path2 under @a root2, or set it to #FALSE if they  * are the same.  Both paths must exist under their respective roots, and  * both roots must be in the same filesystem.  * Do any necessary temporary allocation in @a pool.  *  * @note For the purposes of preserving accurate history, certain bits of  * code (such as the repository dump code) need to care about the distinction  * between situations when the properties are "different" and "have changed  * across two points in history".  We have a pair of functions that can  * answer both of these questions, svn_fs_props_different() and  * svn_fs_props_changed().  See issue 4598 for more details.  *  * @note This function can currently return false negatives for FSFS:  * If @a root1 and @a root2 were both transaction roots and the proplists  * of both paths had been changed in their respective transactions,  * @a changed_p would be set to #FALSE.  *  * @see svn_fs_props_different  */
 name|svn_error_t
 modifier|*
 name|svn_fs_props_changed
@@ -1816,7 +2177,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Retrieve mergeinfo for multiple nodes.  *  * @a *catalog is a catalog for @a paths.  It will never be @c NULL,  * but may be empty.  *  * @a root is revision root to use when looking up paths.  *  * @a paths are the paths you are requesting information for.  *  * @a inherit indicates whether to retrieve explicit,  * explicit-or-inherited, or only inherited mergeinfo.  *  * If @a adjust_inherited_mergeinfo is @c TRUE, then any inherited  * mergeinfo returned in @a *catalog is normalized to represent the  * inherited mergeinfo on the path which inherits it.  If  * @a adjust_inherited_mergeinfo is @c FALSE, then any inherited  * mergeinfo is the raw explicit mergeinfo from the nearest parent  * of the path with explicit mergeinfo, unadjusted for the path-wise  * difference between the path and its parent.  This may include  * non-inheritable mergeinfo.  *  * If @a include_descendants is TRUE, then additionally return the  * mergeinfo for any descendant of any element of @a paths which has  * the #SVN_PROP_MERGEINFO property explicitly set on it.  (Note  * that inheritance is only taken into account for the elements in @a  * paths; descendants of the elements in @a paths which get their  * mergeinfo via inheritance are not included in @a *catalog.)  *  * Allocate @a *catalog in result_pool.  Do any necessary temporary  * allocations in @a scratch_pool.  *  * @since New in 1.8.  */
+comment|/** Retrieve mergeinfo for multiple nodes.  *  * @a *catalog is a catalog for @a paths.  It will never be @c NULL,  * but may be empty.  *  * @a root is revision root to use when looking up paths.  *  * @a paths are the paths you are requesting information for.  *  * @a inherit indicates whether to retrieve explicit,  * explicit-or-inherited, or only inherited mergeinfo.  *  * If @a adjust_inherited_mergeinfo is @c TRUE, then any inherited  * mergeinfo returned in @a *catalog is normalized to represent the  * inherited mergeinfo on the path which inherits it.  This adjusted  * mergeinfo is keyed by the path which inherits it.  If  * @a adjust_inherited_mergeinfo is @c FALSE, then any inherited  * mergeinfo is the raw explicit mergeinfo from the nearest parent  * of the path with explicit mergeinfo, unadjusted for the path-wise  * difference between the path and its parent.  This may include  * non-inheritable mergeinfo.  This unadjusted mergeinfo is keyed by  * the path at which it was found.  *  * If @a include_descendants is TRUE, then additionally return the  * mergeinfo for any descendant of any element of @a paths which has  * the #SVN_PROP_MERGEINFO property explicitly set on it.  (Note  * that inheritance is only taken into account for the elements in @a  * paths; descendants of the elements in @a paths which get their  * mergeinfo via inheritance are not included in @a *catalog.)  *  * Allocate @a *catalog in result_pool.  Do any necessary temporary  * allocations in @a scratch_pool.  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_get_mergeinfo2
@@ -1972,6 +2333,33 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/** Take the #svn_fs_dirent_t structures in @a entries as returned by  * #svn_fs_dir_entries for @a root and determine an optimized ordering  * in which data access would most likely be efficient.  Set @a *ordered_p  * to a newly allocated APR array of pointers to these #svn_fs_dirent_t  * structures.  Allocate the array (but not its contents) in @a result_pool  * and use @a scratch_pool for temporaries.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_dir_optimal_order
+parameter_list|(
+name|apr_array_header_t
+modifier|*
+modifier|*
+name|ordered_p
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|entries
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/** Create a new directory named @a path in @a root.  The new directory has  * no entries, and no properties.  @a root must be the root of a transaction,  * not a revision.  *  * Do any necessary temporary allocation in @a pool.  */
@@ -2193,7 +2581,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/** Efficiently deliver the contents of the file @a path in @a root  * via @a processor (with @a baton), setting @a *success to @c TRUE  * upon doing so.  Use @a pool for allocations.  *  * This function is intended to support zero copy data processing.  It may  * not be implemented for all data backends or not applicable for certain  * content.  In that case, @a *success will always be @c FALSE.  Also, this  * is a best-effort function which means that there is no guarantee that  * @a processor gets called at all for some content.  *  * @note @a processor is expected to be relatively short function with  * at most O(content size) runtime.  *  * @since New in 1.8.  */
+comment|/** Efficiently deliver the contents of the file @a path in @a root  * via @a processor (with @a baton), setting @a *success to @c TRUE  * upon doing so.  Use @a pool for allocations.  *  * This function is intended to support zero copy data processing.  It may  * not be implemented for all data backends or not be applicable for certain  * content.  In those cases, @a *success will always be @c FALSE.  Also,  * this is a best-effort function which means that there is no guarantee  * that @a processor gets called at all.  *  * @note @a processor is expected to be a relatively simple function with  * a runtime of O(content size) or less.  *  * @since New in 1.8.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_try_process_file_contents
@@ -2280,7 +2668,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Write data directly to the file @a path in @a root.  @a root must be the  * root of a transaction, not a revision.  *  * Set @a *contents_p to a stream ready to receive full textual data.  * When the caller closes this stream, the data replaces the previous  * contents of the file.  The caller must write all file data and close  * the stream before making further changes to the transaction.  *  * If @a path does not exist in @a root, return an error.  (You cannot use  * this routine to create new files;  use svn_fs_make_file() to create  * an empty file first.)  *  * @a result_checksum is the hex MD5 digest for the final fulltext  * written to the stream.  It is ignored if NULL, but if not null, it  * must match the checksum of the result; if it does not, then the @a  * *contents_p call which detects the mismatch will return the error  * #SVN_ERR_CHECKSUM_MISMATCH.  *  * Do any necessary temporary allocation in @a pool.  *  * ### This is like svn_fs_apply_textdelta(), but takes the text  * straight.  It is currently used only by the loader, see  * libsvn_repos/load.c.  It should accept a checksum, of course, which  * would come from an (optional) header in the dump file.  See  * http://subversion.tigris.org/issues/show_bug.cgi?id=1102 for more.  */
+comment|/** Write data directly to the file @a path in @a root.  @a root must be the  * root of a transaction, not a revision.  *  * Set @a *contents_p to a stream ready to receive full textual data.  * When the caller closes this stream, the data replaces the previous  * contents of the file.  The caller must write all file data and close  * the stream before making further changes to the transaction.  *  * If @a path does not exist in @a root, return an error.  (You cannot use  * this routine to create new files;  use svn_fs_make_file() to create  * an empty file first.)  *  * @a result_checksum is the hex MD5 digest for the final fulltext  * written to the stream.  It is ignored if NULL, but if not null, it  * must match the checksum of the result; if it does not, then the @a  * *contents_p call which detects the mismatch will return the error  * #SVN_ERR_CHECKSUM_MISMATCH.  *  * Do any necessary temporary allocation in @a pool.  *  * @note This is like svn_fs_apply_textdelta(), but takes the text  * straight.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_apply_text
@@ -2309,7 +2697,39 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Check if the contents of two root/path combos have changed.  *  * Set @a *changed_p to 1 if the contents at @a path1 under @a root1 differ  * from those at @a path2 under @a root2, or set it to 0 if they are the  * same.  Both paths must exist under their respective roots, and both  * roots must be in the same filesystem.  */
+comment|/** Check if the contents of two root/path combos are different.  *  * Set @a *different_p to #TRUE if the file contents at @a path1 under  * @a root1 differ from those at @a path2 under @a root2, or set it to  * #FALSE if they are the same.  Both paths must exist under their  * respective roots, and both roots must be in the same filesystem.  * Do any necessary temporary allocation in @a scratch_pool.  *  * @note For the purposes of preserving accurate history, certain bits of  * code (such as the repository dump code) need to care about the distinction  * between situations when two files have "different" content and when the  * contents of a given file "have changed" across two points in its history.  * We have a pair of functions that can answer both of these questions,  * svn_fs_contents_different() and svn_fs_contents_changed().  See issue  * 4598 for more details.  *  * @see svn_fs_contents_changed  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_contents_different
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|different_p
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path1
+parameter_list|,
+name|svn_fs_root_t
+modifier|*
+name|root2
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path2
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Check if the contents of two root/path combos have changed.  *  * Set @a *changed_p to #TRUE if the file contents at @a path1 under  * @a root1 differ from those at @a path2 under @a root2, or set it to  * #FALSE if they are the same.  Both paths must exist under their  * respective roots, and both roots must be in the same filesystem.  * Do any necessary temporary allocation in @a pool.  *  * @note svn_fs_contents_changed() was not designed to be used to detect  * when two files have different content, but really to detect when the  * contents of a given file have changed across two points in its history.  * For the purposes of preserving accurate history, certain bits of code  * (such as the repository dump code) need to care about this distinction.  * For example, it's not an error from the FS API point of view to call  * svn_fs_apply_textdelta() and explicitly set a file's contents to exactly  * what they were before the edit was made.  We have a pair of functions  * that can answer both of these questions, svn_fs_contents_changed() and  * svn_fs_contents_different().  See issue 4598 for more details.  *  * @see svn_fs_contents_different  */
 name|svn_error_t
 modifier|*
 name|svn_fs_contents_changed
@@ -2358,6 +2778,56 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return filesystem format information for @a fs.  *  * Set @a *fs_format to the filesystem format number of @a fs, which is  * an integer that increases when incompatible changes are made (such as  * by #svn_fs_upgrade).  *  * Set @a *supports_version to the version number of the minimum Subversion GA  * release that can read and write @a fs.  *  * @see svn_repos_info_format  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_info_format
+parameter_list|(
+name|int
+modifier|*
+name|fs_format
+parameter_list|,
+name|svn_version_t
+modifier|*
+modifier|*
+name|supports_version
+parameter_list|,
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a list of admin-serviceable config files for @a fs.  @a *files  * will be set to an array containing paths as C strings.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_info_config_files
+parameter_list|(
+name|apr_array_header_t
+modifier|*
+modifier|*
+name|files
+parameter_list|,
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/** Provide filesystem @a fs the opportunity to compress storage relating to  * associated with  @a revision in filesystem @a fs.  Use @a pool for all  * allocations.  *  * @note This can be a time-consuming process, depending the breadth  * of the changes made in @a revision, and the depth of the history of  * those changed paths.  This may also be a no op.  */
@@ -2562,11 +3032,122 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Non-historical properties.  */
-comment|/* [[Yes, do tell.]] */
 comment|/** @defgroup svn_fs_locks Filesystem locks  * @{  * @since New in 1.2. */
-comment|/** A lock represents one user's exclusive right to modify a path in a  * filesystem.  In order to create or destroy a lock, a username must  * be associated with the filesystem's access context (see  * #svn_fs_access_t).  *  * When a lock is created, a 'lock-token' is returned.  The lock-token  * is a unique URI that represents the lock (treated as an opaque  * string by the client), and is required to make further use of the  * lock (including removal of the lock.)  A lock-token can also be  * queried to return a svn_lock_t structure that describes the details  * of the lock.  lock-tokens must not contain any newline character,  * mainly due to the serialization for tokens for pre-commit hook.  *  * Locks are not secret; anyone can view existing locks in a  * filesystem.  Locks are not omnipotent: they can broken and stolen  * by people who don't "own" the lock.  (Though admins can tailor a  * custom break/steal policy via libsvn_repos pre-lock hook script.)  *  * Locks can be created with an optional expiration date.  If a lock  * has an expiration date, then the act of fetching/reading it might  * cause it to automatically expire, returning either nothing or an  * expiration error (depending on the API).  */
-comment|/** Lock @a path in @a fs, and set @a *lock to a lock  * representing the new lock, allocated in @a pool.  *  * @warning You may prefer to use svn_repos_fs_lock() instead,  * which see.  *  * @a fs must have a username associated with it (see  * #svn_fs_access_t), else return #SVN_ERR_FS_NO_USER.  Set the  * 'owner' field in the new lock to the fs username.  *  * @a comment is optional: it's either an xml-escapable UTF8 string  * which describes the lock, or it is @c NULL.  *  * @a is_dav_comment describes whether the comment was created by a  * generic DAV client; only mod_dav_svn's autoversioning feature needs  * to use it.  If in doubt, pass 0.  *  * If path is already locked, then return #SVN_ERR_FS_PATH_ALREADY_LOCKED,  * unless @a steal_lock is TRUE, in which case "steal" the existing  * lock, even if the FS access-context's username does not match the  * current lock's owner: delete the existing lock on @a path, and  * create a new one.  *  * @a token is a lock token such as can be generated using  * svn_fs_generate_lock_token() (indicating that the caller wants to  * dictate the lock token used), or it is @c NULL (indicating that the  * caller wishes to have a new token generated by this function).  If  * @a token is not @c NULL, and represents an existing lock, then @a  * path must match the path associated with that existing lock.  *  * If @a expiration_date is zero, then create a non-expiring lock.  * Else, the lock will expire at @a expiration_date.  *  * If @a current_rev is a valid revnum, then do an out-of-dateness  * check.  If the revnum is less than the last-changed-revision of @a  * path (or if @a path doesn't exist in HEAD), return  * #SVN_ERR_FS_OUT_OF_DATE.  *  * @note At this time, only files can be locked.  */
+comment|/** A lock represents one user's exclusive right to modify a path in a  * filesystem.  In order to create or destroy a lock, a username must  * be associated with the filesystem's access context (see  * #svn_fs_access_t).  *  * When a lock is created, a 'lock-token' is returned.  The lock-token  * is a unique URI that represents the lock (treated as an opaque  * string by the client), and is required to make further use of the  * lock (including removal of the lock.)  A lock-token can also be  * queried to return a svn_lock_t structure that describes the details  * of the lock.  lock-tokens must not contain any newline character,  * mainly due to the serialization for tokens for pre-commit hook.  *  * Locks are not secret; anyone can view existing locks in a  * filesystem.  Locks are not omnipotent: they can be broken and stolen  * by people who don't "own" the lock.  (Though admins can tailor a  * custom break/steal policy via libsvn_repos pre-lock hook script.)  *  * Locks can be created with an optional expiration date.  If a lock  * has an expiration date, then the act of fetching/reading it might  * cause it to automatically expire, returning either nothing or an  * expiration error (depending on the API).  */
+comment|/** Lock information for use with svn_fs_lock_many() [and svn_repos_fs_...].  *  * @see svn_fs_lock_target_create  *  * @since New in 1.9.  */
+typedef|typedef
+name|struct
+name|svn_fs_lock_target_t
+name|svn_fs_lock_target_t
+typedef|;
+comment|/** Create an<tt>svn_fs_lock_target_t</tt> allocated in @a result_pool.  * @a token can be NULL and @a current_rev can be SVN_INVALID_REVNUM.  *  * The @a token is not duplicated and so must have a lifetime at least as  * long as the returned target object.  *  * @since New in 1.9.  */
+name|svn_fs_lock_target_t
+modifier|*
+name|svn_fs_lock_target_create
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|token
+parameter_list|,
+name|svn_revnum_t
+name|current_rev
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+function_decl|;
+comment|/** Update @a target changing the token to @a token, @a token can be NULL.  *  * The @a token is not duplicated and so must have a lifetime at least as  * long as @a target.  *  * @since New in 1.9.  */
+name|void
+name|svn_fs_lock_target_set_token
+parameter_list|(
+name|svn_fs_lock_target_t
+modifier|*
+name|target
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|token
+parameter_list|)
+function_decl|;
+comment|/** The callback invoked by svn_fs_lock_many() and svn_fs_unlock_many().  *  * @a path and @a lock are allocated in the result_pool passed to  * svn_fs_lock_many/svn_fs_unlock_many and so will persist beyond the  * callback invocation. @a fs_err will be cleared after the callback  * returns, use svn_error_dup() to preserve the error.  *  * If the callback returns an error no further callbacks will be made  * and svn_fs_lock_many/svn_fs_unlock_many will return an error.  The  * caller cannot rely on any particular order for these callbacks and  * cannot rely on interrupting the underlying operation by returning  * an error.  Returning an error stops the callbacks but any locks  * that would have been reported in further callbacks may, or may not,  * still be created/released.  *  * @since New in 1.9.  */
+typedef|typedef
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|svn_fs_lock_callback_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|svn_lock_t
+modifier|*
+name|lock
+parameter_list|,
+name|svn_error_t
+modifier|*
+name|fs_err
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Lock the paths in @a lock_targets in @a fs.  *  * @a fs must have a username associated with it (see  * #svn_fs_access_t), else return #SVN_ERR_FS_NO_USER.  Set the  * 'owner' field in each new lock to the fs username.  *  * @a comment is optional: it's either an xml-escapable UTF8 string  * which describes the lock, or it is @c NULL.  *  * @a is_dav_comment describes whether the comment was created by a  * generic DAV client; only mod_dav_svn's autoversioning feature needs  * to use it.  If in doubt, pass 0.  *  * The paths to be locked are passed as the<tt>const char *</tt> keys  * of the @a lock_targets hash.  The hash values are  *<tt>svn_fs_lock_target_t *</tt> and provide the token and  * @a current_rev for each path.  The token is a lock token such as can  * be generated using svn_fs_generate_lock_token() (indicating that  * the caller wants to dictate the lock token used), or it is @c NULL  * (indicating that the caller wishes to have a new token generated by  * this function).  If the token is not @c NULL, and represents an  * existing lock, then the path must match the path associated with  * that existing lock.  If @a current_rev is a valid revnum, then do an  * out-of-dateness check.  If the revnum is less than the  * last-changed-revision of the path (or if the path doesn't exist in  * HEAD), yield an #SVN_ERR_FS_OUT_OF_DATE error for this path.  *  * If a path is already locked, then yield #SVN_ERR_FS_PATH_ALREADY_LOCKED,  * unless @a steal_lock is TRUE, in which case "steal" the existing  * lock, even if the FS access-context's username does not match the  * current lock's owner: delete the existing lock on the path, and  * create a new one.  *  * If @a expiration_date is zero, then create a non-expiring lock.  * Else, the lock will expire at @a expiration_date.  *  * For each path in @a lock_targets @a lock_callback will be invoked  * passing @a lock_baton and the lock and error that apply to path.  * @a lock_callback can be NULL in which case it is not called and any  * errors that would have been passed to the callback are not reported.  *  * The lock and path passed to @a lock_callback will be allocated in  * @a result_pool.  Use @a scratch_pool for temporary allocations.  *  * @note At this time, only files can be locked.  *  * @note This function is not atomic.  If it returns an error, some targets  * may remain unlocked while others may have been locked.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_fs_lock_many() instead.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_lock_many
+parameter_list|(
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|lock_targets
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|comment
+parameter_list|,
+name|svn_boolean_t
+name|is_dav_comment
+parameter_list|,
+name|apr_time_t
+name|expiration_date
+parameter_list|,
+name|svn_boolean_t
+name|steal_lock
+parameter_list|,
+name|svn_fs_lock_callback_t
+name|lock_callback
+parameter_list|,
+name|void
+modifier|*
+name|lock_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Similar to svn_fs_lock_many() but locks only a single @a path and  * returns the lock in @a *lock, allocated in @a pool, or an error.  *  * @since New in 1.2.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_lock
@@ -2632,7 +3213,39 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Remove the lock on @a path represented by @a token in @a fs.  *  * If @a token doesn't point to a lock, return #SVN_ERR_FS_BAD_LOCK_TOKEN.  * If @a token points to an expired lock, return #SVN_ERR_FS_LOCK_EXPIRED.  * If @a fs has no username associated with it, return #SVN_ERR_FS_NO_USER  * unless @a break_lock is specified.  *  * If @a token points to a lock, but the username of @a fs's access  * context doesn't match the lock's owner, return  * #SVN_ERR_FS_LOCK_OWNER_MISMATCH.  If @a break_lock is TRUE, however, don't  * return error;  allow the lock to be "broken" in any case.  In the latter  * case, @a token shall be @c NULL.  *  * Use @a pool for temporary allocations.  */
+comment|/** Remove the locks on the paths in @a unlock_targets in @a fs.  *  * The paths to be unlocked are passed as<tt>const char *</tt> keys  * of the @a unlock_targets hash with the corresponding lock tokens as  *<tt>const char *</tt> values.  If the token doesn't point to a  * lock, yield an #SVN_ERR_FS_BAD_LOCK_TOKEN error for this path.  If  * the token points to an expired lock, yield an  * #SVN_ERR_FS_LOCK_EXPIRED error for this path.  If @a fs has no  * username associated with it, yield an #SVN_ERR_FS_NO_USER unless @a  * break_lock is specified.  *  * If the token points to a lock, but the username of @a fs's access  * context doesn't match the lock's owner, yield an  * #SVN_ERR_FS_LOCK_OWNER_MISMATCH.  If @a break_lock is TRUE,  * however, don't return error; allow the lock to be "broken" in any  * case.  In the latter case, the token shall be @c NULL.  *  * For each path in @a unlock_targets @a lock_callback will be invoked  * passing @a lock_baton and error that apply to path.  The @a lock  * passed to the callback will be NULL.  @a lock_callback can be NULL  * in which case it is not called and any errors that would have been  * passed to the callback are not reported.  *  * The path passed to lock_callback will be allocated in @a result_pool.  * Use @a scratch_pool for temporary allocations.  *  * @note This function is not atomic.  If it returns an error, some targets  * may remain locked while others may have been unlocked.  *  * @note You probably don't want to use this directly.  Take a look at  * svn_repos_fs_unlock_many() instead.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_unlock_many
+parameter_list|(
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|unlock_targets
+parameter_list|,
+name|svn_boolean_t
+name|break_lock
+parameter_list|,
+name|svn_fs_lock_callback_t
+name|lock_callback
+parameter_list|,
+name|void
+modifier|*
+name|lock_baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Similar to svn_fs_unlock_many() but only unlocks a single path.  *  * @since New in 1.2.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_unlock
@@ -2659,7 +3272,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** If @a path is locked in @a fs, set @a *lock to an svn_lock_t which  *  represents the lock, allocated in @a pool.  *  * If @a path is not locked, set @a *lock to NULL.  */
+comment|/** If @a path is locked in @a fs, set @a *lock to an svn_lock_t which  *  represents the lock, allocated in @a pool.  *  * If @a path is not locked or does not exist in HEAD, set @a *lock to NULL.  */
 name|svn_error_t
 modifier|*
 name|svn_fs_get_lock
@@ -2897,6 +3510,117 @@ parameter_list|(
 name|svn_fs_root_t
 modifier|*
 name|root
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/**  * @defgroup fs_info Filesystem information subsystem  * @{  */
+comment|/**  * A structure that provides some information about a filesystem.  * Returned by svn_fs_info() for #SVN_FS_TYPE_FSFS filesystems.  *  * @note Fields may be added to the end of this structure in future  * versions.  Therefore, users shouldn't allocate structures of this  * type, to preserve binary compatibility.  *  * @since New in 1.9.  */
+typedef|typedef
+struct|struct
+name|svn_fs_fsfs_info_t
+block|{
+comment|/** Filesystem backend (#fs_type), i.e., the string #SVN_FS_TYPE_FSFS. */
+specifier|const
+name|char
+modifier|*
+name|fs_type
+decl_stmt|;
+comment|/** Shard size, or 0 if the filesystem is not currently sharded. */
+name|int
+name|shard_size
+decl_stmt|;
+comment|/** The smallest revision (as #svn_revnum_t) which is not in a pack file.    * @note Zero (0) if (but not iff) the format does not support packing. */
+name|svn_revnum_t
+name|min_unpacked_rev
+decl_stmt|;
+comment|/** TRUE if logical addressing is enabled for this repository.    * FALSE if repository uses physical addressing. */
+name|svn_boolean_t
+name|log_addressing
+decl_stmt|;
+comment|/* ### TODO: information about fsfs.conf? rep-cache.db? write locks? */
+comment|/* If you add fields here, check whether you need to extend svn_fs_info()      or svn_fs_info_dup(). */
+block|}
+name|svn_fs_fsfs_info_t
+typedef|;
+comment|/**  * A structure that provides some information about a filesystem.  * Returned by svn_fs_info() for #SVN_FS_TYPE_FSX filesystems.  *  * @note Fields may be added to the end of this structure in future  * versions.  Therefore, users shouldn't allocate structures of this  * type, to preserve binary compatibility.  *  * @since New in 1.9.  */
+typedef|typedef
+struct|struct
+name|svn_fs_fsx_info_t
+block|{
+comment|/** Filesystem backend (#fs_type), i.e., the string #SVN_FS_TYPE_FSX. */
+specifier|const
+name|char
+modifier|*
+name|fs_type
+decl_stmt|;
+comment|/** Shard size, always> 0. */
+name|int
+name|shard_size
+decl_stmt|;
+comment|/** The smallest revision which is not in a pack file. */
+name|svn_revnum_t
+name|min_unpacked_rev
+decl_stmt|;
+comment|/* If you add fields here, check whether you need to extend svn_fs_info()      or svn_fs_info_dup(). */
+block|}
+name|svn_fs_fsx_info_t
+typedef|;
+comment|/** @see svn_fs_info  * @since New in 1.9. */
+typedef|typedef
+struct|struct
+name|svn_fs_info_placeholder_t
+block|{
+comment|/** @see svn_fs_type */
+specifier|const
+name|char
+modifier|*
+name|fs_type
+decl_stmt|;
+comment|/* Do not add new fields here, to maintain compatibility with the first      released version of svn_fs_fsfs_info_t. */
+block|}
+name|svn_fs_info_placeholder_t
+typedef|;
+comment|/**  * Set @a *fs_info to a struct describing @a fs.  The type of the  * struct depends on the backend: for #SVN_FS_TYPE_FSFS, the struct will be  * of type #svn_fs_fsfs_info_t; for #SVN_FS_TYPE_FSX, it will be of type  * #svn_fs_fsx_info_t; otherwise, the struct is guaranteed to be  * (compatible with) #svn_fs_info_placeholder_t.  *  * @see #svn_fs_fsfs_info_t, #svn_fs_fsx_info_t  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_fs_info
+parameter_list|(
+specifier|const
+name|svn_fs_info_placeholder_t
+modifier|*
+modifier|*
+name|fs_info
+parameter_list|,
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a duplicate of @a info, allocated in @a result_pool. The returned  * struct will be of the same type as the passed-in struct, which itself  * must have been returned from svn_fs_info() or svn_fs_info_dup().  No part  * of the new structure will be shared with @a info (except static string  * constants).  Use @a scratch_pool for temporary allocations.  *  * @see #svn_fs_info_placeholder_t, #svn_fs_fsfs_info_t  *  * @since New in 1.9.  */
+name|void
+modifier|*
+name|svn_fs_info_dup
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|info
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
 parameter_list|,
 name|apr_pool_t
 modifier|*

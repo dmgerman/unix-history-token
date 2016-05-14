@@ -62,26 +62,6 @@ directive|include
 file|"svn_private_config.h"
 end_include
 
-begin_comment
-comment|/* A handy constant */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|svn_opt_revision_t
-name|unspecified_revision
-init|=
-block|{
-name|svn_opt_revision_unspecified
-block|,
-block|{
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 

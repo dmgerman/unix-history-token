@@ -36,19 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"svn_props.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"wc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"adm_files.h"
+file|"conflicts.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conflicts.h"
+file|"props.h"
 end_include
 
 begin_include
@@ -351,7 +357,6 @@ argument_list|(
 name|new_mime_value
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 block|}
 comment|/* See what translations we want to do */
 if|if
@@ -1076,6 +1081,13 @@ name|char
 modifier|*
 name|right_label
 parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
@@ -1183,7 +1195,7 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_diff_file_output_merge2
+name|svn_diff_file_output_merge3
 argument_list|(
 name|ostream
 argument_list|,
@@ -1205,6 +1217,10 @@ literal|"======="
 argument_list|,
 comment|/* separator */
 name|svn_diff_conflict_display_modified_original_latest
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|pool
 argument_list|)
@@ -2180,6 +2196,11 @@ name|svn_stream_t
 modifier|*
 name|tmp_dst
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|tmp_dir
+decl_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_stream_open_readonly
@@ -2197,7 +2218,24 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_wc__open_writable_base
+name|svn_wc__db_temp_wcroot_tempdir
+argument_list|(
+operator|&
+name|tmp_dir
+argument_list|,
+name|db
+argument_list|,
+name|target_abspath
+argument_list|,
+name|scratch_pool
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_stream_open_unique
 argument_list|(
 operator|&
 name|tmp_dst
@@ -2205,13 +2243,9 @@ argument_list|,
 operator|&
 name|right_abspath
 argument_list|,
-name|NULL
+name|tmp_dir
 argument_list|,
-name|NULL
-argument_list|,
-name|db
-argument_list|,
-name|target_abspath
+name|svn_io_file_del_none
 argument_list|,
 name|scratch_pool
 argument_list|,
@@ -2592,6 +2626,10 @@ name|left_label
 argument_list|,
 name|right_label
 argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
+argument_list|,
 name|pool
 argument_list|)
 argument_list|)
@@ -2610,9 +2648,6 @@ comment|/* Determine the MERGE_OUTCOME, and record any conflict. */
 if|if
 condition|(
 name|contains_conflicts
-operator|&&
-operator|!
-name|dry_run
 condition|)
 block|{
 operator|*
@@ -2622,10 +2657,8 @@ name|svn_wc_merge_conflict
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|merge_outcome
-operator|==
-name|svn_wc_merge_conflict
+operator|!
+name|dry_run
 condition|)
 block|{
 specifier|const
@@ -2736,29 +2769,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-name|merge_outcome
-operator|==
-name|svn_wc_merge_merged
-condition|)
-goto|goto
-name|done
-goto|;
 block|}
-elseif|else
-if|if
-condition|(
-name|contains_conflicts
-operator|&&
-name|dry_run
-condition|)
-operator|*
-name|merge_outcome
-operator|=
-name|svn_wc_merge_conflict
-expr_stmt|;
 else|else
 block|{
 name|svn_boolean_t
@@ -2888,8 +2899,6 @@ name|result_pool
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-label|:
 comment|/* Remove the tempfile after use */
 name|SVN_ERR
 argument_list|(
@@ -3870,6 +3879,9 @@ name|new_actual_props
 init|=
 name|NULL
 decl_stmt|;
+name|svn_node_kind_t
+name|kind
+decl_stmt|;
 name|SVN_ERR_ASSERT
 argument_list|(
 name|svn_dirent_is_absolute
@@ -3918,9 +3930,6 @@ comment|/* Sanity check:  the merge target must be a file under revision control
 block|{
 name|svn_wc__db_status_t
 name|status
-decl_stmt|;
-name|svn_node_kind_t
-name|kind
 decl_stmt|;
 name|svn_boolean_t
 name|had_props
@@ -4532,6 +4541,8 @@ operator|->
 name|db
 argument_list|,
 name|target_abspath
+argument_list|,
+name|kind
 argument_list|,
 name|conflict_skel
 argument_list|,

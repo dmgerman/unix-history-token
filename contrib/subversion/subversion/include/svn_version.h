@@ -72,12 +72,12 @@ comment|/** Minor version number.  *  * Modify when new functionality is added o
 define|#
 directive|define
 name|SVN_VER_MINOR
-value|8
+value|9
 comment|/**  * Patch number.  *  * Modify for every released patch.  *  * @since New in 1.1.  */
 define|#
 directive|define
 name|SVN_VER_PATCH
-value|14
+value|4
 comment|/** @deprecated Provided for backward compatibility with the 1.0 API. */
 define|#
 directive|define
@@ -88,21 +88,21 @@ define|#
 directive|define
 name|SVN_VER_LIBRARY
 value|SVN_VER_MAJOR
-comment|/** Version tag: a string describing the version.  *  * This tag remains " (dev build)" in the repository so that we can  * always see from "svn --version" that the software has been built  * from the repository rather than a "blessed" distribution.  *  * When rolling a tarball, we automatically replace this text with " (r1234)"  * (where 1234 is the last revision on the branch prior to the release)  * for final releases; in prereleases, it becomes " (Alpha 1)",  * " (Beta 1)", etc., as appropriate.  *  * Always change this at the same time as SVN_VER_NUMTAG.  */
+comment|/** Version tag: a string describing the version.  *  * This tag remains " (under development)" in the repository so that we can  * always see from "svn --version" that the software has been built  * from the repository rather than a "blessed" distribution.  *  * When rolling a tarball, we automatically replace this text with " (r1234)"  * (where 1234 is the last revision on the branch prior to the release)  * for final releases; in prereleases, it becomes " (Alpha 1)",  * " (Beta 1)", etc., as appropriate.  *  * Always change this at the same time as SVN_VER_NUMTAG.  */
 define|#
 directive|define
 name|SVN_VER_TAG
-value|" (r1692801)"
+value|" (r1740329)"
 comment|/** Number tag: a string describing the version.  *  * This tag is used to generate a version number string to identify  * the client and server in HTTP requests, for example. It must not  * contain any spaces. This value remains "-dev" in the repository.  *  * When rolling a tarball, we automatically replace this text with ""  * for final releases; in prereleases, it becomes "-alpha1, "-beta1",  * etc., as appropriate.  *  * Always change this at the same time as SVN_VER_TAG.  */
 define|#
 directive|define
 name|SVN_VER_NUMTAG
 value|""
-comment|/** Revision number: The repository revision number of this release.  *  * This constant is used to generate the build number part of the Windows  * file version. Its value remains 0 in the repository.  *  * When rolling a tarball, we automatically replace it with what we  * guess to be the correct revision number.  */
+comment|/** Revision number: The repository revision number of this release.  *  * This constant is used to generate the build number part of the Windows  * file version. Its value remains 0 in the repository except in release  * tags where it is the revision from which the tag was created.  */
 define|#
 directive|define
 name|SVN_VER_REVISION
-value|1692801
+value|1740329
 comment|/* Version strings composed from the above definitions. */
 comment|/** Version number */
 define|#
@@ -154,13 +154,13 @@ parameter_list|)
 define|\
 value|static const svn_version_t name = \     { \       SVN_VER_MAJOR, \       SVN_VER_MINOR, \       SVN_VER_PATCH, \       SVN_VER_NUMTAG \     }
 block|\
-comment|/**  * Generate the implementation of a version query function.  *  * @since New in 1.1.  */
+comment|/**  * Generate the implementation of a version query function.  *  * @since New in 1.1.  * @since Since 1.9, embeds a string into the compiled object  *        file that can be queried with the 'what' utility.  */
 define|#
 directive|define
 name|SVN_VERSION_BODY
 define|\
-value|SVN_VERSION_DEFINE(versioninfo);              \   return&versioninfo
-comment|/**  * Check library version compatibility. Return #TRUE if the client's  * version, given in @a my_version, is compatible with the library  * version, provided in @a lib_version.  *  * This function checks for version compatibility as per our  * guarantees, but requires an exact match when linking to an  * unreleased library. A development client is always compatible with  * a previous released library.  *  * @since New in 1.1.  */
+value|static struct versioninfo_t       \     {                               \       const char *const str;        \       const svn_version_t num;      \     } const versioninfo =           \     {                               \       "@(#)" SVN_VERSION,           \       {                             \         SVN_VER_MAJOR,              \         SVN_VER_MINOR,              \         SVN_VER_PATCH,              \         SVN_VER_NUMTAG              \       }                             \     };                              \   return&versioninfo.num
+comment|/**  * Check library version compatibility. Return #TRUE if the client's  * version, given in @a my_version, is compatible with the library  * version, provided in @a lib_version.  *  * This function checks for version compatibility as per our  * guarantees, but requires an exact match when linking to an  * unreleased library. A development client is always compatible with  * a previous released library.  *  * @note Implements the #svn_ver_check_list2.@a comparator interface.  *  * @since New in 1.1.  */
 name|svn_boolean_t
 name|svn_ver_compatible
 parameter_list|(
@@ -175,7 +175,7 @@ modifier|*
 name|lib_version
 parameter_list|)
 function_decl|;
-comment|/**  * Check if @a my_version and @a lib_version encode the same version number.  *  * @since New in 1.2.  */
+comment|/**  * Check if @a my_version and @a lib_version encode the same version number.  *  * @note Implements the #svn_ver_check_list2.@a comparator interface.  *  * @since New in 1.2.  */
 name|svn_boolean_t
 name|svn_ver_equal
 parameter_list|(
@@ -216,7 +216,39 @@ function_decl|;
 block|}
 name|svn_version_checklist_t
 typedef|;
-comment|/**  * Perform a series of version compatibility checks. Checks if @a  * my_version is compatible with each entry in @a checklist. @a  * checklist must end with an entry whose label is @c NULL.  *  * @see svn_ver_compatible()  *  * @since New in 1.1.  */
+comment|/**  * Perform a series of version compatibility checks. Checks if @a  * my_version is compatible with each entry in @a checklist. @a  * checklist must end with an entry whose label is @c NULL.  *  * @a my_version is considered to be compatible with a version in @a checklist  * if @a comparator returns #TRUE when called with @a my_version as the first  * parammeter and the @a checklist version as the second parameter.  *  * @see svn_ver_compatible(), svn_ver_equal()  *  * @note Subversion's own code invariably uses svn_ver_equal() as @a comparator,  * since the cmdline tools sometimes use non-public APIs (such as utility  * functions that haven't been promoted to svn_cmdline.h).  Third-party code  * SHOULD use svn_ver_compatible() as @a comparator.  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_ver_check_list2
+parameter_list|(
+specifier|const
+name|svn_version_t
+modifier|*
+name|my_version
+parameter_list|,
+specifier|const
+name|svn_version_checklist_t
+modifier|*
+name|checklist
+parameter_list|,
+name|svn_boolean_t
+function_decl|(
+modifier|*
+name|comparator
+function_decl|)
+parameter_list|(
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|,
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+comment|/** Similar to svn_ver_check_list2(), with @a comparator set to  * #svn_ver_compatible.  *  * @deprecated Provided for backward compatibility with 1.8 API.  */
+name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*
 name|svn_ver_check_list
@@ -261,7 +293,7 @@ name|struct
 name|svn_version_extended_t
 name|svn_version_extended_t
 typedef|;
-comment|/**  * Return version information for the running program.  If @a verbose  * is #TRUE, collect extra information that may be expensive to  * retrieve (for example, the OS release name, list of shared  * libraries, etc.).  Use @a pool for all allocations.  *  * @since New in 1.8.  */
+comment|/**  * Return version information for the running program.  If @a verbose  * is #TRUE, collect extra information that may be expensive to  * retrieve (for example, the OS release name, list of shared  * libraries, etc.).  Use @a pool for all allocations.  *  * @note This function may allocate significant auxiliary resources  * (memory and file descriptors) in @a pool.  It is recommended to  * copy the returned data to suitable longer-lived memory and clear  * @a pool after calling this function.  *  * @since New in 1.8.  */
 specifier|const
 name|svn_version_extended_t
 modifier|*

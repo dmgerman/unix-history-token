@@ -86,6 +86,10 @@ directive|include
 file|"private/svn_wc_private.h"
 end_include
 
+begin_comment
+comment|/* #define RECORD_MIXED_MOVE */
+end_comment
+
 begin_escape
 end_escape
 
@@ -94,7 +98,7 @@ comment|/*** Code. ***/
 end_comment
 
 begin_comment
-comment|/* Make a copy of the filesystem node (or tree if RECURSIVE) at    SRC_ABSPATH under a temporary name in the directory    TMPDIR_ABSPATH and return the absolute path of the copy in    *DST_ABSPATH.  Return the node kind of SRC_ABSPATH in *KIND.  If    SRC_ABSPATH doesn't exist then set *DST_ABSPATH to NULL to indicate    that no copy was made. */
+comment|/* Make a copy of the filesystem node (or tree if RECURSIVE) at    SRC_ABSPATH under a temporary name in the directory    TMPDIR_ABSPATH and return the absolute path of the copy in    *DST_ABSPATH.  Return the node kind of SRC_ABSPATH in *KIND.  If    SRC_ABSPATH doesn't exist then set *DST_ABSPATH to NULL to indicate    that no copy was made.     If DIRENT is not NULL, it contains the on-disk information of SRC_ABSPATH.    RECORDED_SIZE (if not SVN_INVALID_FILESIZE) contains the recorded size of    SRC_ABSPATH, and RECORDED_TIME the recorded size or 0.     These values will be used to avoid unneeded work.  */
 end_comment
 
 begin_function
@@ -136,6 +140,17 @@ name|file_copy
 parameter_list|,
 name|svn_boolean_t
 name|unversioned
+parameter_list|,
+specifier|const
+name|svn_io_dirent2_t
+modifier|*
+name|dirent
+parameter_list|,
+name|svn_filesize_t
+name|recorded_size
+parameter_list|,
+name|apr_time_t
+name|recorded_time
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -182,6 +197,26 @@ name|work_item
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|dirent
+condition|)
+block|{
+operator|*
+name|kind
+operator|=
+name|dirent
+operator|->
+name|kind
+expr_stmt|;
+name|is_special
+operator|=
+name|dirent
+operator|->
+name|special
+expr_stmt|;
+block|}
+else|else
 name|SVN_ERR
 argument_list|(
 name|svn_io_check_special_path
@@ -272,6 +307,41 @@ name|svn_boolean_t
 name|modified
 decl_stmt|;
 comment|/* It's faster to look for mods on the source now, as          the timestamp might match, than to examine the          destination later as the destination timestamp will          never match. */
+if|if
+condition|(
+name|dirent
+operator|&&
+name|dirent
+operator|->
+name|kind
+operator|==
+name|svn_node_file
+operator|&&
+name|recorded_size
+operator|!=
+name|SVN_INVALID_FILESIZE
+operator|&&
+name|recorded_size
+operator|==
+name|dirent
+operator|->
+name|filesize
+operator|&&
+name|recorded_time
+operator|==
+name|dirent
+operator|->
+name|mtime
+condition|)
+block|{
+name|modified
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Recorded matches on-disk. Easy out */
+block|}
+else|else
+block|{
 name|SVN_ERR
 argument_list|(
 name|svn_wc__internal_file_modified_p
@@ -289,6 +359,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -322,6 +393,39 @@ return|return
 name|SVN_NO_ERROR
 return|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|kind
+operator|==
+name|svn_node_dir
+operator|&&
+operator|!
+name|file_copy
+condition|)
+block|{
+comment|/* Just build a new direcory from the workqueue */
+name|SVN_ERR
+argument_list|(
+name|svn_wc__wq_build_dir_install
+argument_list|(
+name|work_item
+argument_list|,
+name|db
+argument_list|,
+name|dst_abspath
+argument_list|,
+name|result_pool
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
 block|}
 comment|/* Set DST_TMP_ABSPATH to a temporary unique path.  If *KIND is file, leave      a file there and then overwrite it; otherwise leave no node on disk at      that path.  In the latter case, something else might use that path      before we get around to using it a moment later, but never mind. */
 name|SVN_ERR
@@ -475,7 +579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy the versioned file SRC_ABSPATH in DB to the path DST_ABSPATH in DB.    If METADATA_ONLY is true, copy only the versioned metadata,    otherwise copy both the versioned metadata and the filesystem node (even    if it is the wrong kind, and recursively if it is a dir).     If IS_MOVE is true, record move information in working copy meta    data in addition to copying the file.     If the versioned file has a text conflict, and the .mine file exists in    the filesystem, copy the .mine file to DST_ABSPATH.  Otherwise, copy the    versioned file itself.     This also works for versioned symlinks that are stored in the db as    svn_node_file with svn:special set. */
+comment|/* Copy the versioned file SRC_ABSPATH in DB to the path DST_ABSPATH in DB.    If METADATA_ONLY is true, copy only the versioned metadata,    otherwise copy both the versioned metadata and the filesystem node (even    if it is the wrong kind, and recursively if it is a dir).     If IS_MOVE is true, record move information in working copy meta    data in addition to copying the file.     If the versioned file has a text conflict, and the .mine file exists in    the filesystem, copy the .mine file to DST_ABSPATH.  Otherwise, copy the    versioned file itself.     This also works for versioned symlinks that are stored in the db as    svn_node_file with svn:special set.     If DIRENT is not NULL, it contains the on-disk information of SRC_ABSPATH.    RECORDED_SIZE (if not SVN_INVALID_FILESIZE) contains the recorded size of    SRC_ABSPATH, and RECORDED_TIME the recorded size or 0.     These values will be used to avoid unneeded work. */
 end_comment
 
 begin_function
@@ -516,6 +620,17 @@ name|conflicted
 parameter_list|,
 name|svn_boolean_t
 name|is_move
+parameter_list|,
+specifier|const
+name|svn_io_dirent2_t
+modifier|*
+name|dirent
+parameter_list|,
+name|svn_filesize_t
+name|recorded_size
+parameter_list|,
+name|apr_time_t
+name|recorded_time
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -592,6 +707,10 @@ name|svn_wc__db_read_conflict
 argument_list|(
 operator|&
 name|conflict
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|db
 argument_list|,
@@ -717,6 +836,12 @@ argument_list|,
 name|handle_as_unversioned
 comment|/* unversioned */
 argument_list|,
+name|dirent
+argument_list|,
+name|recorded_size
+argument_list|,
+name|recorded_time
+argument_list|,
 name|cancel_func
 argument_list|,
 name|cancel_baton
@@ -773,29 +898,6 @@ name|kind
 operator|=
 name|svn_node_file
 expr_stmt|;
-comment|/* When we notify that we performed a copy, make sure we already did */
-if|if
-condition|(
-name|work_items
-operator|!=
-name|NULL
-condition|)
-name|SVN_ERR
-argument_list|(
-name|svn_wc__wq_run
-argument_list|(
-name|db
-argument_list|,
-name|dst_abspath
-argument_list|,
-name|cancel_func
-argument_list|,
-name|cancel_baton
-argument_list|,
-name|scratch_pool
-argument_list|)
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|notify_func
@@ -816,7 +918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy the versioned dir SRC_ABSPATH in DB to the path DST_ABSPATH in DB,    recursively.  If METADATA_ONLY is true, copy only the versioned metadata,    otherwise copy both the versioned metadata and the filesystem nodes (even    if they are the wrong kind, and including unversioned children).    If IS_MOVE is true, record move information in working copy meta    data in addition to copying the directory.     WITHIN_ONE_WC is TRUE if the copy/move is within a single working copy (root)  */
+comment|/* Copy the versioned dir SRC_ABSPATH in DB to the path DST_ABSPATH in DB,    recursively.  If METADATA_ONLY is true, copy only the versioned metadata,    otherwise copy both the versioned metadata and the filesystem nodes (even    if they are the wrong kind, and including unversioned children).    If IS_MOVE is true, record move information in working copy meta    data in addition to copying the directory.     WITHIN_ONE_WC is TRUE if the copy/move is within a single working copy (root)     If DIRENT is not NULL, it contains the on-disk information of SRC_ABSPATH.  */
 end_comment
 
 begin_function
@@ -854,6 +956,11 @@ name|metadata_only
 parameter_list|,
 name|svn_boolean_t
 name|is_move
+parameter_list|,
+specifier|const
+name|svn_io_dirent2_t
+modifier|*
+name|dirent
 parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
@@ -945,6 +1052,12 @@ comment|/* file_copy */
 argument_list|,
 name|FALSE
 comment|/* unversioned */
+argument_list|,
+name|dirent
+argument_list|,
+name|SVN_INVALID_FILESIZE
+argument_list|,
+literal|0
 argument_list|,
 name|cancel_func
 argument_list|,
@@ -1092,6 +1205,9 @@ name|db
 argument_list|,
 name|src_abspath
 argument_list|,
+name|FALSE
+comment|/* base_tree_only */
+argument_list|,
 name|scratch_pool
 argument_list|,
 name|iterpool
@@ -1154,14 +1270,14 @@ argument_list|)
 expr_stmt|;
 name|child_name
 operator|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
 expr_stmt|;
 name|info
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1265,6 +1381,25 @@ name|conflicted
 argument_list|,
 name|is_move
 argument_list|,
+name|disk_children
+condition|?
+name|svn_hash_gets
+argument_list|(
+name|disk_children
+argument_list|,
+name|child_name
+argument_list|)
+else|:
+name|NULL
+argument_list|,
+name|info
+operator|->
+name|recorded_size
+argument_list|,
+name|info
+operator|->
+name|recorded_time
+argument_list|,
 name|cancel_func
 argument_list|,
 name|cancel_baton
@@ -1304,6 +1439,17 @@ argument_list|,
 name|metadata_only
 argument_list|,
 name|is_move
+argument_list|,
+name|disk_children
+condition|?
+name|svn_hash_gets
+argument_list|(
+name|disk_children
+argument_list|,
+name|child_name
+argument_list|)
+else|:
+name|NULL
 argument_list|,
 name|cancel_func
 argument_list|,
@@ -1382,7 +1528,7 @@ name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Don't recurse on children while all we do is creating not-present              children */
+comment|/* Don't recurse on children when all we do is creating not-present              children */
 block|}
 elseif|else
 if|if
@@ -1541,7 +1687,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1642,6 +1788,12 @@ argument_list|,
 name|TRUE
 comment|/* unversioned */
 argument_list|,
+name|NULL
+argument_list|,
+name|SVN_INVALID_FILESIZE
+argument_list|,
+literal|0
+argument_list|,
 name|cancel_func
 argument_list|,
 name|cancel_baton
@@ -1695,7 +1847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The guts of svn_wc_copy3() and svn_wc_move().  * The additional parameter IS_MOVE indicates whether this is a copy or  * a move operation.  *  * If MOVE_DEGRADED_TO_COPY is not NULL and a move had to be degraded  * to a copy, then set *MOVE_DEGRADED_TO_COPY. */
+comment|/* The guts of svn_wc_copy3() and svn_wc_move().  * The additional parameter IS_MOVE indicates whether this is a copy or  * a move operation.  *  * If RECORD_MOVE_ON_DELETE is not NULL and a move had to be degraded  * to a copy, then set *RECORD_MOVE_ON_DELETE to FALSE. */
 end_comment
 
 begin_function
@@ -1706,7 +1858,7 @@ name|copy_or_move
 parameter_list|(
 name|svn_boolean_t
 modifier|*
-name|move_degraded_to_copy
+name|record_move_on_delete
 parameter_list|,
 name|svn_wc_context_t
 modifier|*
@@ -1793,6 +1945,12 @@ decl_stmt|;
 name|svn_error_t
 modifier|*
 name|err
+decl_stmt|;
+name|svn_filesize_t
+name|recorded_size
+decl_stmt|;
+name|apr_time_t
+name|recorded_time
 decl_stmt|;
 name|SVN_ERR_ASSERT
 argument_list|(
@@ -1888,9 +2046,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|recorded_size
 argument_list|,
-name|NULL
+operator|&
+name|recorded_time
 argument_list|,
 name|NULL
 argument_list|,
@@ -2292,8 +2452,14 @@ else|else
 comment|/* If not added, the node must have a base or we can't copy */
 name|SVN_ERR
 argument_list|(
-name|svn_wc__db_scan_base_repos
+name|svn_wc__db_base_get_info
 argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 operator|&
@@ -2301,6 +2467,26 @@ name|src_repos_root_url
 argument_list|,
 operator|&
 name|src_repos_uuid
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|db
 argument_list|,
@@ -2363,8 +2549,14 @@ else|else
 comment|/* If not added, the node must have a base or we can't copy */
 name|SVN_ERR
 argument_list|(
-name|svn_wc__db_scan_base_repos
+name|svn_wc__db_base_get_info
 argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 operator|&
@@ -2372,6 +2564,26 @@ name|dst_repos_root_url
 argument_list|,
 operator|&
 name|dst_repos_uuid
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|db
 argument_list|,
@@ -2731,12 +2943,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|move_degraded_to_copy
+name|record_move_on_delete
 condition|)
 operator|*
-name|move_degraded_to_copy
+name|record_move_on_delete
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 name|is_move
 operator|=
@@ -2796,6 +3008,12 @@ argument_list|,
 name|conflicted
 argument_list|,
 name|is_move
+argument_list|,
+name|NULL
+argument_list|,
+name|recorded_size
+argument_list|,
+name|recorded_time
 argument_list|,
 name|cancel_func
 argument_list|,
@@ -2895,19 +3113,24 @@ argument_list|,
 name|max_rev
 argument_list|)
 return|;
+ifndef|#
+directive|ifndef
+name|RECORD_MIXED_MOVE
 name|is_move
 operator|=
 name|FALSE
 expr_stmt|;
 if|if
 condition|(
-name|move_degraded_to_copy
+name|record_move_on_delete
 condition|)
 operator|*
-name|move_degraded_to_copy
+name|record_move_on_delete
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|err
@@ -2927,6 +3150,9 @@ argument_list|,
 name|metadata_only
 argument_list|,
 name|is_move
+argument_list|,
+name|NULL
+comment|/* dirent */
 argument_list|,
 name|cancel_func
 argument_list|,
@@ -3153,6 +3379,10 @@ argument_list|(
 operator|&
 name|conflict
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 name|db
 argument_list|,
 name|src_abspath
@@ -3341,6 +3571,13 @@ name|char
 modifier|*
 name|dst_dir_abspath
 parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -3384,6 +3621,9 @@ name|db
 argument_list|,
 name|src_dir_abspath
 argument_list|,
+name|FALSE
+comment|/* base_tree_only */
+argument_list|,
 name|scratch_pool
 argument_list|,
 name|iterpool
@@ -3416,7 +3656,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -3426,11 +3666,23 @@ name|svn_wc__db_info_t
 modifier|*
 name|info
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|cancel_func
+condition|)
+name|SVN_ERR
+argument_list|(
+name|cancel_func
+argument_list|(
+name|cancel_baton
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|info
@@ -3510,6 +3762,10 @@ argument_list|,
 name|iterpool
 argument_list|)
 argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
+argument_list|,
 name|iterpool
 argument_list|)
 argument_list|)
@@ -3580,9 +3836,9 @@ operator|->
 name|db
 decl_stmt|;
 name|svn_boolean_t
-name|move_degraded_to_copy
+name|record_on_delete
 init|=
-name|FALSE
+name|TRUE
 decl_stmt|;
 name|svn_node_kind_t
 name|kind
@@ -3634,7 +3890,7 @@ argument_list|(
 name|copy_or_move
 argument_list|(
 operator|&
-name|move_degraded_to_copy
+name|record_on_delete
 argument_list|,
 name|wc_ctx
 argument_list|,
@@ -3669,7 +3925,14 @@ condition|(
 operator|!
 name|metadata_only
 condition|)
-name|SVN_ERR
+block|{
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|svn_error_trace
 argument_list|(
 name|svn_io_file_rename
 argument_list|(
@@ -3681,6 +3944,48 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Let's try if we can keep wc.db consistent even when the move          fails. Deleting the target is a wc.db only operation, while          going forward (delaying the error) would try to change          conflict markers, which might also fail. */
+if|if
+condition|(
+name|err
+condition|)
+return|return
+name|svn_error_trace
+argument_list|(
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
+name|svn_wc__db_op_delete
+argument_list|(
+name|wc_ctx
+operator|->
+name|db
+argument_list|,
+name|dst_abspath
+argument_list|,
+name|NULL
+argument_list|,
+name|TRUE
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+block|}
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_read_info
@@ -3767,6 +4072,10 @@ name|src_abspath
 argument_list|,
 name|dst_abspath
 argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -3808,11 +4117,11 @@ name|db
 argument_list|,
 name|src_abspath
 argument_list|,
-name|move_degraded_to_copy
+name|record_on_delete
 condition|?
-name|NULL
-else|:
 name|dst_abspath
+else|:
+name|NULL
 argument_list|,
 name|TRUE
 comment|/* delete_dir_externals */

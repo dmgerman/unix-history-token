@@ -41,7 +41,7 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/** @defgroup svn_fs_cache_config caching configuration  * @{  * @since New in 1.7. */
-comment|/** Cache resource settings. It controls what caches, in what size and    how they will be created. The settings apply for the whole process.     @since New in 1.7.  */
+comment|/** Cache resource settings. It controls what caches, in what size and    how they will be created. The settings apply for the whole process.     @note Do not extend this data structure as this would break binary          compatibility.     @since New in 1.7.  */
 typedef|typedef
 struct|struct
 name|svn_cache_config_t
@@ -58,6 +58,7 @@ comment|/** is this application guaranteed to be single-threaded? */
 name|svn_boolean_t
 name|single_threaded
 decl_stmt|;
+comment|/* DON'T add new members here.  Bump struct and API version instead. */
 block|}
 name|svn_cache_config_t
 typedef|;

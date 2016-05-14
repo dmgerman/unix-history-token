@@ -414,6 +414,10 @@ argument_list|(
 operator|&
 name|conflict
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 name|db
 argument_list|,
 name|local_abspath
@@ -1621,12 +1625,6 @@ comment|/* destroy_wc */
 argument_list|,
 name|destroy_wf
 comment|/* destroy_changes */
-argument_list|,
-name|SVN_INVALID_REVNUM
-argument_list|,
-name|svn_wc__db_status_not_present
-argument_list|,
-name|svn_node_none
 argument_list|,
 name|NULL
 argument_list|,

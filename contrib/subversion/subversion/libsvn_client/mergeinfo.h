@@ -508,7 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Parse any explicit mergeinfo on LOCAL_ABSPATH and store it in    *MERGEINFO.  If no record of any mergeinfo exists, set *MERGEINFO to NULL.    Does not acount for inherited mergeinfo. */
+comment|/* Parse any explicit mergeinfo on LOCAL_ABSPATH and store it in    *MERGEINFO.  If no record of any mergeinfo exists, set *MERGEINFO to NULL.    Does not acount for inherited mergeinfo.     Allocate the result deeply in @a result_pool. */
 end_comment
 
 begin_function_decl
@@ -596,7 +596,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Elide any svn:mergeinfo set on TARGET_ABSPATH to its nearest working    copy (or possibly repository) ancestor with equivalent mergeinfo.     If WC_ELISION_LIMIT_ABSPATH is NULL check up to the root of the    working copy or the nearest switched parent for an elision    destination, if none is found check the repository, otherwise check    as far as WC_ELISION_LIMIT_ABSPATH within the working copy.    TARGET_WCPATH and WC_ELISION_LIMIT_ABSPATH, if it exists, must both be    absolute or relative to the working directory.     Elision occurs if:       A) TARGET_ABSPATH has empty mergeinfo and no parent path with         explicit mergeinfo can be found in either the WC or the         repository (WC_ELISION_LIMIT_PATH must be NULL for this to         occur).       B) TARGET_ABSPATH has empty mergeinfo and its nearest parent also         has empty mergeinfo.       C) TARGET_ABSPATH has the same mergeinfo as its nearest parent         when that parent's mergeinfo is adjusted for the path         difference between the two, e.g.:             TARGET_ABSPATH                = A_COPY/D/H            TARGET_ABSPATH's mergeinfo    = '/A/D/H:3'            TARGET_ABSPATH nearest parent = A_COPY            Parent's mergeinfo            = '/A:3'            Path difference               = 'D/H'            Parent's adjusted mergeinfo   = '/A/D/H:3'     If Elision occurs remove the svn:mergeinfo property from    TARGET_ABSPATH. */
+comment|/* Elide any svn:mergeinfo set on TARGET_ABSPATH to its nearest working    copy (or possibly repository) ancestor with equivalent mergeinfo.     If WC_ELISION_LIMIT_ABSPATH is NULL check up to the root of the    working copy or the nearest switched parent for an elision    destination, if none is found check the repository, otherwise check    as far as WC_ELISION_LIMIT_ABSPATH within the working copy.     Elision occurs if:       A) TARGET_ABSPATH has empty mergeinfo and no parent path with         explicit mergeinfo can be found in either the WC or the         repository (WC_ELISION_LIMIT_PATH must be NULL for this to         occur).       B) TARGET_ABSPATH has empty mergeinfo and its nearest parent also         has empty mergeinfo.       C) TARGET_ABSPATH has the same mergeinfo as its nearest parent         when that parent's mergeinfo is adjusted for the path         difference between the two, e.g.:             TARGET_ABSPATH                = A_COPY/D/H            TARGET_ABSPATH's mergeinfo    = '/A/D/H:3'            TARGET_ABSPATH nearest parent = A_COPY            Parent's mergeinfo            = '/A:3'            Path difference               = 'D/H'            Parent's adjusted mergeinfo   = '/A/D/H:3'     If Elision occurs remove the svn:mergeinfo property from    TARGET_ABSPATH. */
 end_comment
 
 begin_function_decl

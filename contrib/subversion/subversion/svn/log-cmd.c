@@ -90,7 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_sorts_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cl-log.h"
 end_include
 
 begin_include
@@ -105,77 +117,6 @@ end_escape
 begin_comment
 comment|/*** Code. ***/
 end_comment
-
-begin_comment
-comment|/* Baton for log_entry_receiver() and log_entry_receiver_xml(). */
-end_comment
-
-begin_struct
-struct|struct
-name|log_receiver_baton
-block|{
-comment|/* Client context. */
-name|svn_client_ctx_t
-modifier|*
-name|ctx
-decl_stmt|;
-comment|/* The target of the log operation. */
-specifier|const
-name|char
-modifier|*
-name|target_path_or_url
-decl_stmt|;
-name|svn_opt_revision_t
-name|target_peg_revision
-decl_stmt|;
-comment|/* Don't print log message body nor its line count. */
-name|svn_boolean_t
-name|omit_log_message
-decl_stmt|;
-comment|/* Whether to show diffs in the log. (maps to --diff) */
-name|svn_boolean_t
-name|show_diff
-decl_stmt|;
-comment|/* Depth applied to diff output. */
-name|svn_depth_t
-name|depth
-decl_stmt|;
-comment|/* Diff arguments received from command line. */
-specifier|const
-name|char
-modifier|*
-name|diff_extensions
-decl_stmt|;
-comment|/* Stack which keeps track of merge revision nesting, using svn_revnum_t's */
-name|apr_array_header_t
-modifier|*
-name|merge_stack
-decl_stmt|;
-comment|/* Log message search patterns. Log entries will only be shown if the author,    * the log message, or a changed path matches one of these patterns. */
-name|apr_array_header_t
-modifier|*
-name|search_patterns
-decl_stmt|;
-comment|/* Pool for persistent allocations. */
-name|apr_pool_t
-modifier|*
-name|pool
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* The separator between log messages. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEP_STRING
-define|\
-value|"------------------------------------------------------------------------\n"
-end_define
 
 begin_comment
 comment|/* Display a diff of the subtree TARGET_PATH_OR_URL@TARGET_PEG_REVISION as  * it changed in the revision that LOG_ENTRY describes.  *  * Restrict the diff to depth DEPTH.  Pass DIFF_EXTENSIONS along to the diff  * subroutine.  *  * Write the diff to OUTSTREAM and write any stderr output to ERRSTREAM.  * ### How is exit code handled? 0 and 1 -> SVN_NO_ERROR, else an svn error?  * ### Should we get rid of ERRSTREAM and use svn_error_t instead?  */
@@ -535,7 +476,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -563,7 +504,7 @@ return|;
 comment|/* Match copy-from paths, too. */
 name|log_item
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -788,14 +729,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Implement `svn_log_entry_receiver_t', printing the logs in  * a human-readable and machine-parseable format.  *  * BATON is of type `struct log_receiver_baton'.  *  * First, print a header line.  Then if CHANGED_PATHS is non-null,  * print all affected paths in a list headed "Changed paths:\n",  * immediately following the header line.  Then print a newline  * followed by the message body, unless BATON->omit_log_message is true.  *  * Here are some examples of the output:  *  * $ svn log -r1847:1846  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26 | 7 lines  *  * Fix for Issue #694.  *  * * subversion/libsvn_repos/delta.c  *   (delta_files): Rework the logic in this function to only call  * send_text_deltas if there are deltas to send, and within that case,  * only use a real delta stream if the caller wants real text deltas.  *  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41 | 1 line  *  * imagine an example log message here  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -v  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26 | 7 lines  * Changed paths:  *    M /trunk/subversion/libsvn_repos/delta.c  *  * Fix for Issue #694.  *  * * subversion/libsvn_repos/delta.c  *   (delta_files): Rework the logic in this function to only call  * send_text_deltas if there are deltas to send, and within that case,  * only use a real delta stream if the caller wants real text deltas.  *  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41 | 1 line  * Changed paths:  *    M /trunk/notes/fs_dumprestore.txt  *    M /trunk/subversion/libsvn_repos/dump.c  *  * imagine an example log message here  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -q  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -qv  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26  * Changed paths:  *    M /trunk/subversion/libsvn_repos/delta.c  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41  * Changed paths:  *    M /trunk/notes/fs_dumprestore.txt  *    M /trunk/subversion/libsvn_repos/dump.c  * ------------------------------------------------------------------------  *  */
+comment|/* Implement `svn_log_entry_receiver_t', printing the logs in  * a human-readable and machine-parseable format.  *  * BATON is of type `svn_cl__log_receiver_baton'.  *  * First, print a header line.  Then if CHANGED_PATHS is non-null,  * print all affected paths in a list headed "Changed paths:\n",  * immediately following the header line.  Then print a newline  * followed by the message body, unless BATON->omit_log_message is true.  *  * Here are some examples of the output:  *  * $ svn log -r1847:1846  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26 | 7 lines  *  * Fix for Issue #694.  *  * * subversion/libsvn_repos/delta.c  *   (delta_files): Rework the logic in this function to only call  * send_text_deltas if there are deltas to send, and within that case,  * only use a real delta stream if the caller wants real text deltas.  *  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41 | 1 line  *  * imagine an example log message here  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -v  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26 | 7 lines  * Changed paths:  *    M /trunk/subversion/libsvn_repos/delta.c  *  * Fix for Issue #694.  *  * * subversion/libsvn_repos/delta.c  *   (delta_files): Rework the logic in this function to only call  * send_text_deltas if there are deltas to send, and within that case,  * only use a real delta stream if the caller wants real text deltas.  *  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41 | 1 line  * Changed paths:  *    M /trunk/notes/fs_dumprestore.txt  *    M /trunk/subversion/libsvn_repos/dump.c  *  * imagine an example log message here  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -q  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41  * ------------------------------------------------------------------------  *  * Or:  *  * $ svn log -r1847:1846 -qv  * ------------------------------------------------------------------------  * rev 1847:  cmpilato | Wed 1 May 2002 15:44:26  * Changed paths:  *    M /trunk/subversion/libsvn_repos/delta.c  * ------------------------------------------------------------------------  * rev 1846:  whoever | Wed 1 May 2002 15:23:41  * Changed paths:  *    M /trunk/notes/fs_dumprestore.txt  *    M /trunk/subversion/libsvn_repos/dump.c  * ------------------------------------------------------------------------  *  */
 end_comment
 
 begin_function
-specifier|static
 name|svn_error_t
 modifier|*
-name|log_entry_receiver
+name|svn_cl__log_entry_receiver
 parameter_list|(
 name|void
 modifier|*
@@ -810,8 +750,7 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
-name|struct
-name|log_receiver_baton
+name|svn_cl__log_receiver_baton
 modifier|*
 name|lb
 init|=
@@ -898,6 +837,12 @@ name|revision
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|lb
+operator|->
+name|merge_stack
+condition|)
 name|apr_array_pop
 argument_list|(
 name|lb
@@ -1002,6 +947,32 @@ name|log_entry
 operator|->
 name|has_children
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|lb
+operator|->
+name|merge_stack
+condition|)
+name|lb
+operator|->
+name|merge_stack
+operator|=
+name|apr_array_make
+argument_list|(
+name|lb
+operator|->
+name|pool
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_revnum_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(
 name|lb
@@ -1015,6 +986,7 @@ name|log_entry
 operator|->
 name|revision
 expr_stmt|;
+block|}
 return|return
 name|SVN_NO_ERROR
 return|;
@@ -1025,7 +997,7 @@ name|svn_cmdline_printf
 argument_list|(
 name|pool
 argument_list|,
-name|SEP_STRING
+name|SVN_CL__LOG_SEP_STRING
 literal|"r%ld | %s | %s"
 argument_list|,
 name|log_entry
@@ -1100,6 +1072,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|iterpool
+decl_stmt|;
 comment|/* Get an array of sorted hash keys. */
 name|sorted_paths
 operator|=
@@ -1125,6 +1101,13 @@ argument_list|(
 literal|"Changed paths:\n"
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|iterpool
+operator|=
+name|svn_pool_create
+argument_list|(
+name|pool
 argument_list|)
 expr_stmt|;
 for|for
@@ -1183,6 +1166,11 @@ name|copy_data
 init|=
 literal|""
 decl_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lb
@@ -1225,7 +1213,7 @@ name|copy_data
 operator|=
 name|apr_psprintf
 argument_list|(
-name|pool
+name|iterpool
 argument_list|,
 name|_
 argument_list|(
@@ -1246,7 +1234,7 @@ name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
-name|pool
+name|iterpool
 argument_list|,
 literal|"   %c %s%s\n"
 argument_list|,
@@ -1261,9 +1249,18 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
+name|lb
+operator|->
+name|merge_stack
+operator|&&
 name|lb
 operator|->
 name|merge_stack
@@ -1275,6 +1272,10 @@ condition|)
 block|{
 name|int
 name|i
+decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|iterpool
 decl_stmt|;
 comment|/* Print the result of merge line */
 if|if
@@ -1310,6 +1311,13 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|iterpool
+operator|=
+name|svn_pool_create
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1342,11 +1350,16 @@ argument_list|,
 name|svn_revnum_t
 argument_list|)
 decl_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
-name|pool
+name|iterpool
 argument_list|,
 literal|" r%ld%c"
 argument_list|,
@@ -1369,6 +1382,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1503,6 +1521,32 @@ name|log_entry
 operator|->
 name|has_children
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|lb
+operator|->
+name|merge_stack
+condition|)
+name|lb
+operator|->
+name|merge_stack
+operator|=
+name|apr_array_make
+argument_list|(
+name|lb
+operator|->
+name|pool
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_revnum_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(
 name|lb
@@ -1516,6 +1560,7 @@ name|log_entry
 operator|->
 name|revision
 expr_stmt|;
+block|}
 return|return
 name|SVN_NO_ERROR
 return|;
@@ -1523,14 +1568,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* This implements `svn_log_entry_receiver_t', printing the logs in XML.  *  * BATON is of type `struct log_receiver_baton'.  *  * Here is an example of the output; note that the "<log>" and  * "</log>" tags are not emitted by this function:  *  * $ svn log --xml -r 1648:1649  *<log>  *<logentry  *    revision="1648">  *<author>david</author>  *<date>2002-04-06T16:34:51.428043Z</date>  *<msg> * packages/rpm/subversion.spec : Now requires apache 2.0.36.  *</msg>  *</logentry>  *<logentry  *    revision="1649">  *<author>cmpilato</author>  *<date>2002-04-06T17:01:28.185136Z</date>  *<msg>Fix error handling when the $EDITOR is needed but unavailable.  Ah  * ... now that&apos;s *much* nicer.  *  * * subversion/clients/cmdline/util.c  *   (svn_cl__edit_externally): Clean up the&quot;no external editor&quot;  *   error message.  *   (svn_cl__get_log_message): Wrap&quot;no external editor&quot;  *   errors with helpful hints about the -m and -F options.  *  * * subversion/libsvn_client/commit.c  *   (svn_client_commit): Actually capture and propagate&quot;no external  *   editor&quot; errors.</msg>  *</logentry>  *</log>  *  */
+comment|/* This implements `svn_log_entry_receiver_t', printing the logs in XML.  *  * BATON is of type `svn_cl__log_receiver_baton'.  *  * Here is an example of the output; note that the "<log>" and  * "</log>" tags are not emitted by this function:  *  * $ svn log --xml -r 1648:1649  *<log>  *<logentry  *    revision="1648">  *<author>david</author>  *<date>2002-04-06T16:34:51.428043Z</date>  *<msg> * packages/rpm/subversion.spec : Now requires apache 2.0.36.  *</msg>  *</logentry>  *<logentry  *    revision="1649">  *<author>cmpilato</author>  *<date>2002-04-06T17:01:28.185136Z</date>  *<msg>Fix error handling when the $EDITOR is needed but unavailable.  Ah  * ... now that&apos;s *much* nicer.  *  * * subversion/clients/cmdline/util.c  *   (svn_cl__edit_externally): Clean up the&quot;no external editor&quot;  *   error message.  *   (svn_cl__get_log_message): Wrap&quot;no external editor&quot;  *   errors with helpful hints about the -m and -F options.  *  * * subversion/libsvn_client/commit.c  *   (svn_client_commit): Actually capture and propagate&quot;no external  *   editor&quot; errors.</msg>  *</logentry>  *</log>  *  */
 end_comment
 
 begin_function
-specifier|static
 name|svn_error_t
 modifier|*
-name|log_entry_receiver_xml
+name|svn_cl__log_entry_receiver_xml
 parameter_list|(
 name|void
 modifier|*
@@ -1545,8 +1589,7 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
-name|struct
-name|log_receiver_baton
+name|svn_cl__log_receiver_baton
 modifier|*
 name|lb
 init|=
@@ -1669,6 +1712,12 @@ name|stdout
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lb
+operator|->
+name|merge_stack
+condition|)
 name|apr_array_pop
 argument_list|(
 name|lb
@@ -1714,6 +1763,32 @@ name|log_entry
 operator|->
 name|has_children
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|lb
+operator|->
+name|merge_stack
+condition|)
+name|lb
+operator|->
+name|merge_stack
+operator|=
+name|apr_array_make
+argument_list|(
+name|lb
+operator|->
+name|pool
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_revnum_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(
 name|lb
@@ -1727,6 +1802,7 @@ name|log_entry
 operator|->
 name|revision
 expr_stmt|;
+block|}
 return|return
 name|SVN_NO_ERROR
 return|;
@@ -1784,6 +1860,21 @@ name|revision
 argument_list|)
 expr_stmt|;
 comment|/*<logentry revision="xxx"> */
+if|if
+condition|(
+name|lb
+operator|->
+name|merge_stack
+operator|&&
+name|lb
+operator|->
+name|merge_stack
+operator|->
+name|nelts
+operator|>
+literal|0
+condition|)
+block|{
 name|svn_xml_make_open_tag
 argument_list|(
 operator|&
@@ -1799,9 +1890,41 @@ literal|"revision"
 argument_list|,
 name|revstr
 argument_list|,
-name|NULL
+literal|"reverse-merge"
+argument_list|,
+name|log_entry
+operator|->
+name|subtractive_merge
+condition|?
+literal|"true"
+else|:
+literal|"false"
+argument_list|,
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|svn_xml_make_open_tag
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+name|pool
+argument_list|,
+name|svn_xml_normal
+argument_list|,
+literal|"logentry"
+argument_list|,
+literal|"revision"
+argument_list|,
+name|revstr
+argument_list|,
+name|SVN_VA_NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*<author>xxx</author> */
 name|svn_cl__xml_tagged_cdata
 argument_list|(
@@ -1871,7 +1994,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"paths"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* Get an array of sorted hash keys. */
@@ -2039,7 +2162,7 @@ operator|->
 name|props_modified
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2088,7 +2211,7 @@ operator|->
 name|props_modified
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2181,7 +2304,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"revprops"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -2221,6 +2344,32 @@ name|log_entry
 operator|->
 name|has_children
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|lb
+operator|->
+name|merge_stack
+condition|)
+name|lb
+operator|->
+name|merge_stack
+operator|=
+name|apr_array_make
+argument_list|(
+name|lb
+operator|->
+name|pool
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_revnum_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(
 name|lb
@@ -2234,6 +2383,7 @@ name|log_entry
 operator|->
 name|revision
 expr_stmt|;
+block|}
 else|else
 name|svn_xml_make_close_tag
 argument_list|(
@@ -2312,8 +2462,7 @@ name|apr_array_header_t
 modifier|*
 name|targets
 decl_stmt|;
-name|struct
-name|log_receiver_baton
+name|svn_cl__log_receiver_baton
 name|lb
 decl_stmt|;
 specifier|const
@@ -2896,17 +3045,7 @@ name|lb
 operator|.
 name|merge_stack
 operator|=
-name|apr_array_make
-argument_list|(
-name|pool
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|svn_revnum_t
-argument_list|)
-argument_list|)
+name|NULL
 expr_stmt|;
 name|lb
 operator|.
@@ -3045,7 +3184,7 @@ name|char
 modifier|*
 name|property
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -3054,7 +3193,7 @@ name|svn_string_t
 modifier|*
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -3190,7 +3329,7 @@ name|use_merge_history
 argument_list|,
 name|revprops
 argument_list|,
-name|log_entry_receiver_xml
+name|svn_cl__log_entry_receiver_xml
 argument_list|,
 operator|&
 name|lb
@@ -3310,7 +3449,7 @@ name|use_merge_history
 argument_list|,
 name|revprops
 argument_list|,
-name|log_entry_receiver
+name|svn_cl__log_entry_receiver
 argument_list|,
 operator|&
 name|lb
@@ -3334,7 +3473,7 @@ name|svn_cmdline_printf
 argument_list|(
 name|pool
 argument_list|,
-name|SEP_STRING
+name|SVN_CL__LOG_SEP_STRING
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -357,7 +357,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|svn_fs_node_relation_t
 name|svn_fs_base__id_compare
 parameter_list|(
 specifier|const
@@ -381,7 +381,7 @@ name|b
 argument_list|)
 condition|)
 return|return
-literal|0
+name|svn_fs_node_unchanged
 return|;
 return|return
 operator|(
@@ -392,10 +392,9 @@ argument_list|,
 name|b
 argument_list|)
 condition|?
-literal|1
+name|svn_fs_node_common_ancestor
 else|:
-operator|-
-literal|1
+name|svn_fs_node_unrelated
 operator|)
 return|;
 block|}

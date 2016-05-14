@@ -136,7 +136,7 @@ decl_stmt|;
 block|}
 name|svn_cmdline__config_argument_t
 typedef|;
-comment|/** Parser for 'FILE:SECTION:OPTION=[VALUE]'-style option arguments.  *  * Parses @a opt_arg and places its value in @a config_options, an apr array  * containing svn_cmdline__config_argument_t* elements, allocating the option  * data in @a pool  *  * @since New in 1.7.  */
+comment|/** Parser for 'FILE:SECTION:OPTION=[VALUE]'-style option arguments.  *  * Parses @a opt_arg and places its value in @a config_options, an apr array  * containing svn_cmdline__config_argument_t* elements, allocating the option  * data in @a pool  *  * [Since 1.9/1.10:] If the file, section, or option value is not recognized,  * warn to @c stderr, using @a prefix as in svn_handle_warning2().  *  * @since New in 1.7.  */
 name|svn_error_t
 modifier|*
 name|svn_cmdline__parse_config_option
@@ -149,6 +149,11 @@ specifier|const
 name|char
 modifier|*
 name|opt_arg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -357,6 +362,41 @@ name|non_interactive
 parameter_list|,
 name|svn_boolean_t
 name|force_interactive
+parameter_list|)
+function_decl|;
+comment|/* Parses the argument value of '--trust-server-cert-failures' OPT_ARG into  * the expected booleans for passing to svn_cmdline_create_auth_baton2()  *  * @since New in 1.9.  */
+name|svn_error_t
+modifier|*
+name|svn_cmdline__parse_trust_options
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|trust_server_cert_unknown_ca
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|trust_server_cert_cn_mismatch
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|trust_server_cert_expired
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|trust_server_cert_not_yet_valid
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|trust_server_cert_other_failure
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|opt_arg
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -35,13 +35,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"svn_error.h"
+file|"svn_dirent_uri.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"svn_version.h"
+file|"svn_error.h"
 end_include
 
 begin_include
@@ -97,15 +97,19 @@ name|version_footer
 init|=
 name|NULL
 decl_stmt|;
-comment|/* xgettext: the %s is for SVN_VER_NUMBER. */
+specifier|const
 name|char
-name|help_header_template
+modifier|*
+name|config_path
+decl_stmt|;
+name|char
+name|help_header
 index|[]
 init|=
 name|N_
 argument_list|(
 literal|"usage: svn<subcommand> [options] [args]\n"
-literal|"Subversion command-line client, version %s.\n"
+literal|"Subversion command-line client.\n"
 literal|"Type 'svn help<subcommand>' for help on a specific subcommand.\n"
 literal|"Type 'svn --version' to see the program version and RA modules\n"
 literal|"  or 'svn --version --quiet' to see just the version number.\n"
@@ -125,22 +129,6 @@ name|N_
 argument_list|(
 literal|"Subversion is a tool for version control.\n"
 literal|"For additional information, see http://subversion.apache.org/\n"
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
-name|help_header
-init|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-name|_
-argument_list|(
-name|help_header_template
-argument_list|)
-argument_list|,
-name|SVN_VER_NUMBER
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -376,6 +364,166 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*    * Show auth creds storage providers.    */
+name|SVN_ERR
+argument_list|(
+name|svn_config_get_user_config_path
+argument_list|(
+operator|&
+name|config_path
+argument_list|,
+name|opt_state
+condition|?
+name|opt_state
+operator|->
+name|config_dir
+else|:
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|version_footer
+argument_list|,
+name|_
+argument_list|(
+literal|"\nThe following authentication credential caches are available:\n\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*### There is no API to query available providers at run time. */
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|)
+name|version_footer
+operator|=
+name|svn_stringbuf_create
+argument_list|(
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+name|_
+argument_list|(
+literal|"%s* Wincrypt cache in %s\n"
+argument_list|)
+argument_list|,
+name|version_footer
+operator|->
+name|data
+argument_list|,
+name|svn_dirent_local_style
+argument_list|(
+name|config_path
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|SVN_DISABLE_PLAINTEXT_PASSWORD_STORAGE
+argument_list|)
+name|version_footer
+operator|=
+name|svn_stringbuf_create
+argument_list|(
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+name|_
+argument_list|(
+literal|"%s* Plaintext cache in %s\n"
+argument_list|)
+argument_list|,
+name|version_footer
+operator|->
+name|data
+argument_list|,
+name|svn_dirent_local_style
+argument_list|(
+name|config_path
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_GNOME_KEYRING
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|version_footer
+argument_list|,
+literal|"* Gnome Keyring\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_GPG_AGENT
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|version_footer
+argument_list|,
+literal|"* GPG-Agent\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_KEYCHAIN_SERVICES
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|version_footer
+argument_list|,
+literal|"* Mac OS X Keychain\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_KWALLET
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|version_footer
+argument_list|,
+literal|"* KWallet (KDE)\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|svn_opt_print_help4
 argument_list|(

@@ -265,7 +265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Forward definition. Upgrades svn:externals properties in the working copy    LOCAL_ABSPATH to the WC-NG  storage.  */
+comment|/* Forward definition. Upgrades svn:externals properties in the working copy    LOCAL_ABSPATH to the WC-NG  storage. INFO_BATON will be used to fetch    repository info using fetch_repos_info() function if needed.  */
 end_comment
 
 begin_function_decl
@@ -282,6 +282,11 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
+parameter_list|,
+name|struct
+name|repos_info_baton
+modifier|*
+name|info_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -495,7 +500,7 @@ argument_list|)
 expr_stmt|;
 name|ext_abspath
 operator|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -614,6 +619,9 @@ name|ctx
 argument_list|,
 name|local_abspath
 argument_list|,
+operator|&
+name|info_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -639,6 +647,11 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
+parameter_list|,
+name|struct
+name|repos_info_baton
+modifier|*
+name|info_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -671,10 +684,6 @@ block|{
 literal|0
 block|}
 block|}
-decl_stmt|;
-name|struct
-name|repos_info_baton
-name|info_baton
 decl_stmt|;
 comment|/* Now it's time to upgrade the externals too. We do it after the wc      upgrade to avoid that errors in the externals causes the wc upgrade to      fail. Thanks to caching the performance penalty of walking the wc a      second time shouldn't be too severe */
 name|SVN_ERR
@@ -773,7 +782,7 @@ name|char
 modifier|*
 name|externals_parent
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -782,7 +791,7 @@ name|svn_string_t
 modifier|*
 name|external_desc
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1214,7 +1223,6 @@ argument_list|,
 operator|&
 name|repos_uuid
 argument_list|,
-operator|&
 name|info_baton
 argument_list|,
 name|resolved_url

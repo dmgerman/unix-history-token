@@ -39,6 +39,12 @@ directive|include
 file|"svn_types.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"svn_string.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -96,7 +102,34 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Return, in @a **author, @a **date, and @a **message, the values of the  * svn:author, svn:date, and svn:log revprops from @a revprops.  If @a  * revprops is NULL, all return values are NULL.  Any return value may be  * NULL if the corresponding property is not set in @a revprops.  *  * @since New in 1.5.  */
+comment|/** Return, in @a **author, @a **date, and @a **message, the values of the  * svn:author, svn:date, and svn:log revprops from @a revprops.  If @a  * revprops is NULL, all return values are NULL.  Any return value may be  * NULL if the corresponding property is not set in @a revprops.  *  * @since New in 1.9.  */
+name|void
+name|svn_compat_log_revprops_out_string
+parameter_list|(
+specifier|const
+name|svn_string_t
+modifier|*
+modifier|*
+name|author
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+modifier|*
+name|date
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+modifier|*
+name|message
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|revprops
+parameter_list|)
+function_decl|;
+comment|/** Simiar to svn_compat_log_revprops_out_string() but returns C-style strings  * instead of #svn_string_t.  *  * @since New in 1.5.  */
 name|void
 name|svn_compat_log_revprops_out
 parameter_list|(

@@ -129,7 +129,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Iteration callback used in conjuction with svn_iter_apr_array().  *  * Use @a pool for temporary allocation, it's cleared between invocations.  *  * @a baton is the baton passed to svn_iter_apr_array().  @a item  * is a pointer to the item written to the array with the APR_ARRAY_PUSH()  * macro.  *  * @since New in 1.5.  */
+comment|/** Iteration callback used in conjunction with svn_iter_apr_array().  *  * Use @a pool for temporary allocation, it's cleared between invocations.  *  * @a baton is the baton passed to svn_iter_apr_array().  @a item  * is a pointer to the item written to the array with the APR_ARRAY_PUSH()  * macro.  *  * @since New in 1.5.  */
 typedef|typedef
 name|svn_error_t
 modifier|*

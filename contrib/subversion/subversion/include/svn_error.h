@@ -141,6 +141,7 @@ name|char
 modifier|*
 name|svn_err_best_message
 parameter_list|(
+specifier|const
 name|svn_error_t
 modifier|*
 name|err
@@ -265,6 +266,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** A quick n' easy way to create a wrapped exception with your own  * printf-style error message produced by passing @a fmt, using  * apr_psprintf(), before throwing it up the stack.  (It uses all of the  * @a child's fields.)  *  * @since New in 1.9.  */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_error_quick_wrapf
+parameter_list|(
+name|svn_error_t
+modifier|*
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/** Compose two errors, returning the composition as a brand new error  * and consuming the original errors.  Either or both of @a err1 and  * @a err2 may be @c SVN_NO_ERROR.  If both are not @c SVN_NO_ERROR,  * @a err2 will follow @a err1 in the chain of the returned error.  *  * Either @a err1 or @a err2 can be functions that return svn_error_t*  * but if both are functions they can be evaluated in either order as  * per the C language rules.  *  * @since New in 1.6.  */
 end_comment
 
@@ -304,7 +341,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Return the root cause of @a err by finding the last error in its  * chain (e.g. it or its children).  @a err may be @c SVN_NO_ERROR, in  * which case @c SVN_NO_ERROR is returned.  *  * @since New in 1.5.  */
+comment|/** Return the root cause of @a err by finding the last error in its  * chain (e.g. it or its children).  @a err may be @c SVN_NO_ERROR, in  * which case @c SVN_NO_ERROR is returned.  The returned error should  * @em not be cleared as it shares memory with @a err.  *  * @since New in 1.5.  */
 end_comment
 
 begin_function_decl
@@ -347,6 +384,7 @@ name|svn_error_t
 modifier|*
 name|svn_error_dup
 parameter_list|(
+specifier|const
 name|svn_error_t
 modifier|*
 name|err
@@ -433,13 +471,21 @@ define|\
 value|(svn_error__locate(__FILE__,__LINE__), (svn_error_quick_wrap))
 end_define
 
+begin_define
+define|#
+directive|define
+name|svn_error_quick_wrapf
+define|\
+value|(svn_error__locate(__FILE__,__LINE__), (svn_error_quick_wrapf))
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/**  * Very basic default error handler: print out error stack @a error to the  * stdio stream @a stream, with each error prefixed by @a prefix; quit and  * clear @a error iff the @a fatal flag is set.  Allocations are performed  * in the @a error's pool.  *  * If you're not sure what prefix to pass, just pass "svn: ".  That's  * what code that used to call svn_handle_error() and now calls  * svn_handle_error2() does.  *  * @since New in 1.2.  */
+comment|/**  * Very basic default error handler: print out error stack @a error to the  * stdio stream @a stream, with each error prefixed by @a prefix; quit and  * clear @a error iff the @a fatal flag is set.  Allocations are performed  * in the @a error's pool.  *  * If you're not sure what prefix to pass, just pass "svn: ".  That's  * what code that used to call svn_handle_error() and now calls  * svn_handle_error2() does.  *  * Note that this should only be used from commandline specific code, or  * code that knows that @a stream is really where the application wants  * to receive its errors on.  *  * @since New in 1.2.  */
 end_comment
 
 begin_function_decl
@@ -489,7 +535,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Very basic default warning handler: print out the error @a error to the  * stdio stream @a stream, prefixed by @a prefix.  Allocations are  * performed in the error's pool.  *  * @a error may not be @c NULL.  *  * @since New in 1.2.  */
+comment|/**  * Very basic default warning handler: print out the error @a error to the  * stdio stream @a stream, prefixed by @a prefix.  Allocations are  * performed in the error's pool.  *  * @a error may not be @c NULL.  *  * @note This does not clear @a error.  *  * @since New in 1.2.  */
 end_comment
 
 begin_function_decl
@@ -500,6 +546,7 @@ name|FILE
 modifier|*
 name|stream
 parameter_list|,
+specifier|const
 name|svn_error_t
 modifier|*
 name|error
@@ -641,7 +688,7 @@ value|do {                                                      \     svn_error_
 end_define
 
 begin_comment
-comment|/** A statement macro, similar to @c SVN_ERR, but returns an integer.  *  * Evaluate @a expr. If it yields an error, handle that error and  * return @c EXIT_FAILURE.  */
+comment|/** A statement macro intended for the main() function of the 'svn' program.  *  * Evaluate @a expr. If it yields an error, display the error on stdout  * and return @c EXIT_FAILURE.  *  * @note Not for use in the library, as it prints to stderr. This macro  * no longer suits the needs of the 'svn' program, and is not generally  * suitable for third-party use as it assumes the program name is 'svn'.  *  * @deprecated Provided for backward compatibility with the 1.8 API. Consider  * using svn_handle_error2() or svn_cmdline_handle_exit_error() instead.  */
 end_comment
 
 begin_define
@@ -667,7 +714,7 @@ comment|/** Error groups  *  * @defgroup svn_error_error_groups Error groups  * 
 end_comment
 
 begin_comment
-comment|/**  * Return TRUE if @a err is an error specifically related to locking a  * path in the repository, FALSE otherwise.  *  * SVN_ERR_FS_OUT_OF_DATE and SVN_ERR_FS_NOT_FOUND are in here because it's a  * non-fatal error that can be thrown when attempting to lock an item.  *  * @since New in 1.2.  */
+comment|/**  * Return TRUE if @a err is an error specifically related to locking a  * path in the repository, FALSE otherwise.  *  * SVN_ERR_FS_OUT_OF_DATE and SVN_ERR_FS_NOT_FOUND are in here because it's a  * non-fatal error that can be thrown when attempting to lock an item.  *  * SVN_ERR_REPOS_HOOK_FAILURE refers to the pre-lock hook.  *  * @since New in 1.2.  */
 end_comment
 
 begin_define
@@ -678,11 +725,11 @@ parameter_list|(
 name|err
 parameter_list|)
 define|\
-value|(err->apr_err == SVN_ERR_FS_PATH_ALREADY_LOCKED ||        \    err->apr_err == SVN_ERR_FS_NOT_FOUND           ||        \    err->apr_err == SVN_ERR_FS_OUT_OF_DATE         ||        \    err->apr_err == SVN_ERR_FS_BAD_LOCK_TOKEN)
+value|(err->apr_err == SVN_ERR_FS_PATH_ALREADY_LOCKED ||        \    err->apr_err == SVN_ERR_FS_NOT_FOUND           ||        \    err->apr_err == SVN_ERR_FS_OUT_OF_DATE         ||        \    err->apr_err == SVN_ERR_FS_BAD_LOCK_TOKEN      ||        \    err->apr_err == SVN_ERR_REPOS_HOOK_FAILURE     ||        \    err->apr_err == SVN_ERR_FS_NO_SUCH_REVISION    ||        \    err->apr_err == SVN_ERR_FS_OUT_OF_DATE         ||        \    err->apr_err == SVN_ERR_FS_NOT_FILE)
 end_define
 
 begin_comment
-comment|/**  * Return TRUE if @a err is an error specifically related to unlocking  * a path in the repository, FALSE otherwise.  *  * @since New in 1.2.  */
+comment|/**  * Return TRUE if @a err is an error specifically related to unlocking  * a path in the repository, FALSE otherwise.  *  * SVN_ERR_REPOS_HOOK_FAILURE refers to the pre-unlock hook.  *  * @since New in 1.2.  */
 end_comment
 
 begin_define
@@ -693,7 +740,7 @@ parameter_list|(
 name|err
 parameter_list|)
 define|\
-value|(err->apr_err == SVN_ERR_FS_PATH_NOT_LOCKED ||            \    err->apr_err == SVN_ERR_FS_BAD_LOCK_TOKEN ||             \    err->apr_err == SVN_ERR_FS_LOCK_OWNER_MISMATCH ||        \    err->apr_err == SVN_ERR_FS_NO_SUCH_LOCK ||               \    err->apr_err == SVN_ERR_RA_NOT_LOCKED ||                 \    err->apr_err == SVN_ERR_FS_LOCK_EXPIRED)
+value|(err->apr_err == SVN_ERR_FS_PATH_NOT_LOCKED ||            \    err->apr_err == SVN_ERR_FS_BAD_LOCK_TOKEN ||             \    err->apr_err == SVN_ERR_FS_LOCK_OWNER_MISMATCH ||        \    err->apr_err == SVN_ERR_FS_NO_SUCH_LOCK ||               \    err->apr_err == SVN_ERR_RA_NOT_LOCKED ||                 \    err->apr_err == SVN_ERR_FS_LOCK_EXPIRED ||               \    err->apr_err == SVN_ERR_REPOS_HOOK_FAILURE)
 end_define
 
 begin_comment
@@ -950,6 +997,19 @@ name|svn_error_set_malfunction_handler
 parameter_list|(
 name|svn_error_malfunction_handler_t
 name|func
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Return the malfunction handler that is currently in effect.  * @since New in 1.9. */
+end_comment
+
+begin_function_decl
+name|svn_error_malfunction_handler_t
+name|svn_error_get_malfunction_handler
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

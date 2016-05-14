@@ -215,7 +215,7 @@ end_function
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_ver__check_list2
+name|svn_ver_check_list2
 parameter_list|(
 specifier|const
 name|svn_version_t
@@ -489,7 +489,7 @@ name|pool
 argument_list|,
 name|_
 argument_list|(
-literal|"Copyright (C) 2015 The Apache Software Foundation.\n"
+literal|"Copyright (C) 2016 The Apache Software Foundation.\n"
 literal|"This software consists of contributions made by many people;\n"
 literal|"see the NOTICE file for more information.\n"
 literal|"Subversion is open source software, see "

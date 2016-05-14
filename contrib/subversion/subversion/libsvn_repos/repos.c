@@ -1038,7 +1038,7 @@ define|#
 directive|define
 name|HOOKS_ENVIRONMENT_TEXT
 define|\
-value|"# The hook program typically does not inherit the environment of"       NL \   "# its parent process.  For example, a common problem is for the"        NL \   "# PATH environment variable to not be set to its usual value, so"       NL \   "# that subprograms fail to launch unless invoked via absolute path."    NL \   "# If you're having unexpected problems with a hook program, the"        NL \   "# culprit may be unusual (or missing) environment variables."           NL
+value|"# The hook program runs in an empty environment, unless the server is"  NL \   "# explicitly configured otherwise.  For example, a common problem is for" NL \   "# the PATH environment variable to not be set to its usual value, so"   NL \   "# that subprograms fail to launch unless invoked via absolute path."    NL \   "# If you're having unexpected problems with a hook program, the"        NL \   "# culprit may be unusual (or missing) environment variables."           NL
 end_define
 
 begin_define
@@ -1048,6 +1048,235 @@ name|PREWRITTEN_HOOKS_TEXT
 define|\
 value|"# For more examples and pre-written hooks, see those in"                NL \   "# the Subversion repository at"                                         NL \   "# http://svn.apache.org/repos/asf/subversion/trunk/tools/hook-scripts/ and"        NL \   "# http://svn.apache.org/repos/asf/subversion/trunk/contrib/hook-scripts/"          NL
 end_define
+
+begin_define
+define|#
+directive|define
+name|HOOKS_QUOTE_ARGUMENTS_TEXT
+define|\
+value|"# CAUTION:"                                                             NL \   "# For security reasons, you MUST always properly quote arguments when"  NL \   "# you use them, as those arguments could contain whitespace or other"   NL \   "# problematic characters. Additionally, you should delimit the list"    NL \   "# of options with \"--\" before passing the arguments, so malicious"    NL \   "# clients cannot bootleg unexpected options to the commands your"       NL \   "# script aims to execute."                                              NL \   "# For similar reasons, you should also add a trailing @ to URLs which"  NL \   "# are passed to SVN commands accepting URLs with peg revisions."        NL
+end_define
+
+begin_comment
+comment|/* Return template text for a hook script named SCRIPT_NAME. Include  * DESCRIPTION and SCRIPT in the template text.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|hook_template_text
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|script_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|script
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+block|{
+return|return
+name|apr_pstrcat
+argument_list|(
+argument|result_pool
+argument_list|,
+literal|"#!/bin/sh"
+argument|NL
+literal|""
+argument|NL
+argument_list|,
+argument|description
+argument_list|,
+literal|"#"
+argument|NL
+literal|"# The default working directory for the invocation is undefined, so"
+argument|NL
+literal|"# the program should set one explicitly if it cares."
+argument|NL
+literal|"#"
+argument|NL
+literal|"# On a Unix system, the normal procedure is to have '"
+argument_list|,
+argument|script_name
+argument_list|,
+literal|"'"
+argument|NL
+literal|"# invoke other programs to do the real work, though it may do the"
+argument|NL
+literal|"# work itself too."
+argument|NL
+literal|"#"
+argument|NL
+literal|"# Note that '"
+argument_list|,
+argument|script_name
+argument_list|,
+literal|"' must be executable by the user(s) who will"
+argument|NL
+literal|"# invoke it (typically the user httpd runs as), and that user must"
+argument|NL
+literal|"# have filesystem-level permission to access the repository."
+argument|NL
+literal|"#"
+argument|NL
+literal|"# On a Windows system, you should name the hook program"
+argument|NL
+literal|"# '"
+argument_list|,
+argument|script_name
+argument_list|,
+literal|".bat' or '"
+argument_list|,
+argument|script_name
+argument_list|,
+literal|".exe',"
+argument|NL
+literal|"# but the basic idea is the same."
+argument|NL
+literal|"#"
+argument|NL HOOKS_ENVIRONMENT_TEXT
+literal|"#"
+argument|NL HOOKS_QUOTE_ARGUMENTS_TEXT
+literal|"#"
+argument|NL
+literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
+argument|NL PREWRITTEN_HOOKS_TEXT
+literal|""
+argument|NL
+literal|""
+argument|NL
+argument_list|,
+argument|script
+argument_list|,
+argument|SVN_VA_NULL
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Write a template file for a hook script named SCRIPT_NAME (appending  * '.tmpl' to that name) in REPOS. Include DESCRIPTION and SCRIPT in the  * template text.  */
+end_comment
+
+begin_function
+specifier|static
+name|svn_error_t
+modifier|*
+name|write_hook_template_file
+parameter_list|(
+name|svn_repos_t
+modifier|*
+name|repos
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|script_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|script
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|template_path
+init|=
+name|svn_dirent_join
+argument_list|(
+name|repos
+operator|->
+name|hook_path
+argument_list|,
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|script_name
+argument_list|,
+name|SVN_REPOS__HOOK_DESC_EXT
+argument_list|)
+argument_list|,
+name|pool
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|contents
+init|=
+name|hook_template_text
+argument_list|(
+name|script_name
+argument_list|,
+name|description
+argument_list|,
+name|script
+argument_list|,
+name|pool
+argument_list|)
+decl_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_io_file_create
+argument_list|(
+name|template_path
+argument_list|,
+name|contents
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_io_set_file_executable
+argument_list|(
+name|template_path
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Write the hook template files in REPOS.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1067,10 +1296,10 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|this_path
+name|description
 decl_stmt|,
 modifier|*
-name|contents
+name|script
 decl_stmt|;
 comment|/* Create the hook directory. */
 name|SVN_ERR_W
@@ -1092,35 +1321,12 @@ argument_list|)
 expr_stmt|;
 comment|/*** Write a default template for each standard hook file. */
 comment|/* Start-commit hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_start_commit_hook
-argument_list|(
-name|repos
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_START_COMMIT
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# START-COMMIT HOOK"
 name|NL
 literal|"#"
@@ -1186,62 +1392,15 @@ literal|"# you assume that clients reliably report every capability they have."
 name|NL
 literal|"#"
 name|NL
-literal|"# The working directory for this hook program's invocation is undefined,"
-name|NL
-literal|"# so the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
 literal|"# If the hook program exits with success, the commit continues; but"
 name|NL
 literal|"# if it exits with failure (non-zero), the commit is stopped before"
 name|NL
 literal|"# a Subversion txn is created, and STDERR is returned to the client."
 name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"# "
-name|NL
-name|HOOKS_ENVIRONMENT_TEXT
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
-name|NL
-name|PREWRITTEN_HOOKS_TEXT
-literal|""
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"USER=\"$2\""
@@ -1259,16 +1418,17 @@ name|NL
 literal|"exit 0"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
+name|write_hook_template_file
 argument_list|(
-name|this_path
+name|repos
 argument_list|,
-name|contents
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
 argument_list|,
 name|pool
 argument_list|)
@@ -1279,52 +1439,16 @@ literal|"Creating start-commit hook"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end start-commit hook */
+undef|#
+directive|undef
+name|SCRIPT_NAME
 comment|/* Pre-commit hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_pre_commit_hook
-argument_list|(
-name|repos
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_PRE_COMMIT
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# PRE-COMMIT HOOK"
 name|NL
 literal|"#"
@@ -1369,12 +1493,6 @@ literal|"#   followed by a newline."
 name|NL
 literal|"#"
 name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
 literal|"# If the hook program exits with success, the txn is committed; but"
 name|NL
 literal|"# if it exits with failure (non-zero), the txn is aborted, no commit"
@@ -1382,16 +1500,6 @@ name|NL
 literal|"# takes place, and STDERR is returned to the client.   The hook"
 name|NL
 literal|"# program can use the 'svnlook' utility to help it examine the txn."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
 name|NL
 literal|"#"
 name|NL
@@ -1413,40 +1521,9 @@ literal|"#   committing client of the changes).  However, right now neither"
 name|NL
 literal|"#   mechanism is implemented, so hook writers just have to be careful."
 name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"#"
-name|NL
-name|HOOKS_ENVIRONMENT_TEXT
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
-name|NL
-name|PREWRITTEN_HOOKS_TEXT
-literal|""
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"TXN=\"$2\""
@@ -1478,16 +1555,17 @@ name|NL
 literal|"exit 0"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
+name|write_hook_template_file
 argument_list|(
-name|this_path
+name|repos
 argument_list|,
-name|contents
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
 argument_list|,
 name|pool
 argument_list|)
@@ -1498,52 +1576,16 @@ literal|"Creating pre-commit hook"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end pre-commit hook */
+undef|#
+directive|undef
+name|SCRIPT_NAME
 comment|/* Pre-revprop-change hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_pre_revprop_change_hook
-argument_list|(
-name|repos
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_PRE_REVPROP_CHANGE
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# PRE-REVPROP-CHANGE HOOK"
 name|NL
 literal|"#"
@@ -1600,50 +1642,9 @@ literal|"# a successful propchange is destructive;  the old value is gone"
 name|NL
 literal|"# forever.  We recommend the hook back up the old value somewhere."
 name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"#"
-name|NL
-name|HOOKS_ENVIRONMENT_TEXT
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
-name|NL
-name|PREWRITTEN_HOOKS_TEXT
-literal|""
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"REV=\"$2\""
@@ -1665,16 +1666,17 @@ name|NL
 literal|"exit 1"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
+name|write_hook_template_file
 argument_list|(
-name|this_path
+name|repos
 argument_list|,
-name|contents
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
 argument_list|,
 name|pool
 argument_list|)
@@ -1685,52 +1687,16 @@ literal|"Creating pre-revprop-change hook"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end pre-revprop-change hook */
+undef|#
+directive|undef
+name|SCRIPT_NAME
 comment|/* Pre-lock hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_pre_lock_hook
-argument_list|(
-name|repos
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_PRE_LOCK
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# PRE-LOCK HOOK"
 name|NL
 literal|"#"
@@ -1769,56 +1735,15 @@ literal|"# the repository each time."
 name|NL
 literal|"#"
 name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
 literal|"# If the hook program exits with success, the lock is created; but"
 name|NL
 literal|"# if it exits with failure (non-zero), the lock action is aborted"
 name|NL
 literal|"# and STDERR is returned to the client."
 name|NL
-literal|""
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"#"
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter:"
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"PATH=\"$2\""
@@ -1886,69 +1811,37 @@ name|NL
 literal|"exit 1"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
-argument_list|(
-name|this_path
-argument_list|,
-name|contents
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-literal|"Creating pre-lock hook"
-argument_list|)
-expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end pre-lock hook */
-comment|/* Pre-unlock hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_pre_unlock_hook
+name|write_hook_template_file
 argument_list|(
 name|repos
 argument_list|,
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
+argument_list|,
 name|pool
 argument_list|)
 argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
+name|_
+argument_list|(
+literal|"Creating pre-lock hook"
+argument_list|)
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|SCRIPT_NAME
+comment|/* Pre-unlock hook. */
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_PRE_UNLOCK
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# PRE-UNLOCK HOOK"
 name|NL
 literal|"#"
@@ -1977,56 +1870,15 @@ literal|"#   [5] BREAK-UNLOCK (1 if the user is breaking the lock, else 0)"
 name|NL
 literal|"#"
 name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
 literal|"# If the hook program exits with success, the lock is destroyed; but"
 name|NL
 literal|"# if it exits with failure (non-zero), the unlock action is aborted"
 name|NL
 literal|"# and STDERR is returned to the client."
 name|NL
-literal|""
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"#"
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter:"
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"PATH=\"$2\""
@@ -2088,69 +1940,37 @@ name|NL
 literal|"exit 1"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
-argument_list|(
-name|this_path
-argument_list|,
-name|contents
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-literal|"Creating pre-unlock hook"
-argument_list|)
-expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end pre-unlock hook */
-comment|/* Post-commit hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_post_commit_hook
+name|write_hook_template_file
 argument_list|(
 name|repos
 argument_list|,
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
+argument_list|,
 name|pool
 argument_list|)
 argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
+name|_
+argument_list|(
+literal|"Creating pre-unlock hook"
+argument_list|)
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|SCRIPT_NAME
+comment|/* Post-commit hook. */
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_POST_COMMIT
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# POST-COMMIT HOOK"
 name|NL
 literal|"#"
@@ -2175,12 +1995,6 @@ literal|"#   [3] TXN-NAME     (the name of the transaction that has become REV)"
 name|NL
 literal|"#"
 name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
 literal|"# Because the commit has already completed and cannot be undone,"
 name|NL
 literal|"# the exit code of the hook program is ignored.  The hook program"
@@ -2189,50 +2003,9 @@ literal|"# can use the 'svnlook' utility to help it examine the"
 name|NL
 literal|"# newly-committed tree."
 name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"# "
-name|NL
-name|HOOKS_ENVIRONMENT_TEXT
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
-name|NL
-name|PREWRITTEN_HOOKS_TEXT
-literal|""
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"REV=\"$2\""
@@ -2243,16 +2016,17 @@ name|NL
 literal|"mailer.py commit \"$REPOS\" \"$REV\" /path/to/mailer.conf"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
+name|write_hook_template_file
 argument_list|(
-name|this_path
+name|repos
 argument_list|,
-name|contents
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
 argument_list|,
 name|pool
 argument_list|)
@@ -2263,52 +2037,16 @@ literal|"Creating post-commit hook"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end post-commit hook */
+undef|#
+directive|undef
+name|SCRIPT_NAME
 comment|/* Post-lock hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_post_lock_hook
-argument_list|(
-name|repos
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_POST_LOCK
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# POST-LOCK HOOK"
 name|NL
 literal|"#"
@@ -2331,68 +2069,23 @@ literal|"#   [2] USER         (the user who created the lock)"
 name|NL
 literal|"#"
 name|NL
-literal|"# The paths that were just locked are passed to the hook via STDIN (as"
-name|NL
-literal|"# of Subversion 1.2, only one path is passed per invocation, but the"
-name|NL
-literal|"# plan is to pass all locked paths at once, so the hook program"
-name|NL
-literal|"# should be written accordingly)."
+literal|"# The paths that were just locked are passed to the hook via STDIN."
 name|NL
 literal|"#"
 name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
-name|NL
-literal|"#"
-name|NL
-literal|"# Because the lock has already been created and cannot be undone,"
+literal|"# Because the locks have already been created and cannot be undone,"
 name|NL
 literal|"# the exit code of the hook program is ignored.  The hook program"
 name|NL
-literal|"# can use the 'svnlook' utility to help it examine the"
+literal|"# can use the 'svnlook' utility to examine the paths in the repository"
 name|NL
-literal|"# newly-created lock."
+literal|"# but since the hook is invoked asyncronously the newly-created locks"
 name|NL
-literal|"#"
+literal|"# may no longer be present."
 name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter:"
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"USER=\"$2\""
@@ -2404,69 +2097,37 @@ name|NL
 literal|"mailer.py lock \"$REPOS\" \"$USER\" /path/to/mailer.conf"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
-argument_list|(
-name|this_path
-argument_list|,
-name|contents
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-literal|"Creating post-lock hook"
-argument_list|)
-expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end post-lock hook */
-comment|/* Post-unlock hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_post_unlock_hook
+name|write_hook_template_file
 argument_list|(
 name|repos
 argument_list|,
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
+argument_list|,
 name|pool
 argument_list|)
 argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
+name|_
+argument_list|(
+literal|"Creating post-lock hook"
+argument_list|)
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|SCRIPT_NAME
+comment|/* Post-unlock hook. */
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_POST_UNLOCK
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# POST-UNLOCK HOOK"
 name|NL
 literal|"#"
@@ -2489,19 +2150,7 @@ literal|"#   [2] USER         (the user who destroyed the lock)"
 name|NL
 literal|"#"
 name|NL
-literal|"# The paths that were just unlocked are passed to the hook via STDIN"
-name|NL
-literal|"# (as of Subversion 1.2, only one path is passed per invocation, but"
-name|NL
-literal|"# the plan is to pass all unlocked paths at once, so the hook program"
-name|NL
-literal|"# should be written accordingly)."
-name|NL
-literal|"#"
-name|NL
-literal|"# The default working directory for the invocation is undefined, so"
-name|NL
-literal|"# the program should set one explicitly if it cares."
+literal|"# The paths that were just unlocked are passed to the hook via STDIN."
 name|NL
 literal|"#"
 name|NL
@@ -2509,44 +2158,9 @@ literal|"# Because the lock has already been destroyed and cannot be undone,"
 name|NL
 literal|"# the exit code of the hook program is ignored."
 name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter:"
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"USER=\"$2\""
@@ -2558,69 +2172,37 @@ name|NL
 literal|"mailer.py unlock \"$REPOS\" \"$USER\" /path/to/mailer.conf"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
-argument_list|(
-name|this_path
-argument_list|,
-name|contents
-argument_list|,
-name|pool
-argument_list|)
-argument_list|,
-literal|"Creating post-unlock hook"
-argument_list|)
-expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end post-unlock hook */
-comment|/* Post-revprop-change hook. */
-block|{
-name|this_path
-operator|=
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|svn_repos_post_revprop_change_hook
+name|write_hook_template_file
 argument_list|(
 name|repos
 argument_list|,
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
+argument_list|,
 name|pool
 argument_list|)
 argument_list|,
-name|SVN_REPOS__HOOK_DESC_EXT
+name|_
+argument_list|(
+literal|"Creating post-unlock hook"
+argument_list|)
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|SCRIPT_NAME
+comment|/* Post-revprop-change hook. */
 define|#
 directive|define
 name|SCRIPT_NAME
 value|SVN_REPOS__HOOK_POST_REVPROP_CHANGE
-name|contents
+name|description
 operator|=
-literal|"#!/bin/sh"
-name|NL
-literal|""
-name|NL
 literal|"# POST-REVPROP-CHANGE HOOK"
 name|NL
 literal|"#"
@@ -2663,50 +2245,9 @@ literal|"# can use the 'svnlook' utility to help it examine the"
 name|NL
 literal|"# new property value."
 name|NL
-literal|"#"
-name|NL
-literal|"# On a Unix system, the normal procedure is to have '"
-name|SCRIPT_NAME
-literal|"'"
-name|NL
-literal|"# invoke other programs to do the real work, though it may do the"
-name|NL
-literal|"# work itself too."
-name|NL
-literal|"#"
-name|NL
-literal|"# Note that '"
-name|SCRIPT_NAME
-literal|"' must be executable by the user(s) who will"
-name|NL
-literal|"# invoke it (typically the user httpd runs as), and that user must"
-name|NL
-literal|"# have filesystem-level permission to access the repository."
-name|NL
-literal|"#"
-name|NL
-literal|"# On a Windows system, you should name the hook program"
-name|NL
-literal|"# '"
-name|SCRIPT_NAME
-literal|".bat' or '"
-name|SCRIPT_NAME
-literal|".exe',"
-name|NL
-literal|"# but the basic idea is the same."
-name|NL
-literal|"# "
-name|NL
-name|HOOKS_ENVIRONMENT_TEXT
-literal|"# "
-name|NL
-literal|"# Here is an example hook script, for a Unix /bin/sh interpreter."
-name|NL
-name|PREWRITTEN_HOOKS_TEXT
-literal|""
-name|NL
-literal|""
-name|NL
+expr_stmt|;
+name|script
+operator|=
 literal|"REPOS=\"$1\""
 name|NL
 literal|"REV=\"$2\""
@@ -2723,16 +2264,17 @@ literal|"mailer.py propchange2 \"$REPOS\" \"$REV\" \"$USER\" \"$PROPNAME\" "
 literal|"\"$ACTION\" /path/to/mailer.conf"
 name|NL
 expr_stmt|;
-undef|#
-directive|undef
-name|SCRIPT_NAME
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_create
+name|write_hook_template_file
 argument_list|(
-name|this_path
+name|repos
 argument_list|,
-name|contents
+name|SCRIPT_NAME
+argument_list|,
+name|description
+argument_list|,
+name|script
 argument_list|,
 name|pool
 argument_list|)
@@ -2743,22 +2285,9 @@ literal|"Creating post-revprop-change hook"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_set_file_executable
-argument_list|(
-name|this_path
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end post-revprop-change hook */
+undef|#
+directive|undef
+name|SCRIPT_NAME
 return|return
 name|SVN_NO_ERROR
 return|;
@@ -2879,15 +2408,25 @@ name|NL
 literal|"# authz-db = "
 name|SVN_REPOS__CONF_AUTHZ
 name|NL
-literal|"### The groups-db option controls the location of the groups file."
+literal|"### The groups-db option controls the location of the file with the"
 name|NL
-literal|"### Unless you specify a path starting with a /, the file's location is"
+literal|"### group definitions and allows maintaining groups separately from the"
 name|NL
-literal|"### relative to the directory containing this file.  The specified path"
+literal|"### authorization rules.  The groups-db file is of the same format as the"
 name|NL
-literal|"### may be a repository relative URL (^/) or an absolute file:// URL to a"
+literal|"### authz-db file and should contain a single [groups] section with the"
 name|NL
-literal|"### text file in a Subversion repository."
+literal|"### group definitions.  If the option is enabled, the authz-db file cannot"
+name|NL
+literal|"### contain a [groups] section.  Unless you specify a path starting with"
+name|NL
+literal|"### a /, the file's location is relative to the directory containing this"
+name|NL
+literal|"### file.  The specified path may be a repository relative URL (^/) or an"
+name|NL
+literal|"### absolute file:// URL to a text file in a Subversion repository."
+name|NL
+literal|"### This option is not being used by default."
 name|NL
 literal|"# groups-db = "
 name|SVN_REPOS__CONF_GROUPS
@@ -3861,7 +3400,7 @@ name|fs_config
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
 parameter_list|)
 block|{
 name|svn_repos_t
@@ -3871,6 +3410,15 @@ decl_stmt|;
 name|svn_error_t
 modifier|*
 name|err
+decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+init|=
+name|svn_pool_create
+argument_list|(
+name|result_pool
+argument_list|)
 decl_stmt|;
 specifier|const
 name|char
@@ -3889,7 +3437,7 @@ name|create_svn_repos_t
 argument_list|(
 name|path
 argument_list|,
-name|pool
+name|result_pool
 argument_list|)
 expr_stmt|;
 name|repos
@@ -3939,7 +3487,7 @@ name|local_abspath
 argument_list|,
 name|path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3949,7 +3497,7 @@ name|svn_repos_find_root_path
 argument_list|(
 name|local_abspath
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 if|if
@@ -3986,7 +3534,7 @@ name|svn_dirent_local_style
 argument_list|(
 name|root_path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 return|;
@@ -4009,14 +3557,14 @@ name|svn_dirent_local_style
 argument_list|(
 name|local_abspath
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
 name|root_path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 return|;
@@ -4032,7 +3580,7 @@ name|path
 argument_list|,
 name|fs_config
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|,
 name|_
@@ -4052,7 +3600,7 @@ name|FALSE
 argument_list|,
 name|FALSE
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4075,12 +3623,18 @@ name|db_path
 argument_list|,
 name|fs_config
 argument_list|,
-name|pool
+name|result_pool
 argument_list|)
 operator|)
 condition|)
 block|{
 comment|/* If there was an error making the filesytem, e.g. unknown/supported        * filesystem type.  Clean up after ourselves.  Yes this is safe because        * create_repos_structure will fail if the path existed before we started        * so we can't accidentally remove a directory that previously existed.        */
+name|svn_pool_destroy
+argument_list|(
+name|scratch_pool
+argument_list|)
+expr_stmt|;
+comment|/* Release lock to allow deleting dir */
 return|return
 name|svn_error_trace
 argument_list|(
@@ -4098,7 +3652,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|pool
+name|result_pool
 argument_list|)
 argument_list|)
 argument_list|)
@@ -4115,17 +3669,23 @@ name|path
 argument_list|,
 name|SVN_REPOS__FORMAT
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|,
 name|repos
 operator|->
 name|format
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|svn_pool_destroy
+argument_list|(
+name|scratch_pool
+argument_list|)
+expr_stmt|;
+comment|/* Release lock */
 operator|*
 name|repos_p
 operator|=
@@ -4385,12 +3945,21 @@ name|fs_config
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 block|{
 name|svn_repos_t
 modifier|*
 name|repos
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fs_type
 decl_stmt|;
 comment|/* Allocate a repository object. */
 name|repos
@@ -4399,7 +3968,7 @@ name|create_svn_repos_t
 argument_list|(
 name|path
 argument_list|,
-name|pool
+name|result_pool
 argument_list|)
 expr_stmt|;
 comment|/* Verify the validity of our repository format. */
@@ -4409,7 +3978,7 @@ name|check_repos_format
 argument_list|(
 name|repos
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4419,16 +3988,25 @@ argument_list|(
 name|svn_fs_type
 argument_list|(
 operator|&
-name|repos
-operator|->
 name|fs_type
 argument_list|,
 name|repos
 operator|->
 name|db_path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|repos
+operator|->
+name|fs_type
+operator|=
+name|apr_pstrdup
+argument_list|(
+name|result_pool
+argument_list|,
+name|fs_type
 argument_list|)
 expr_stmt|;
 comment|/* Lock if needed. */
@@ -4442,7 +4020,7 @@ name|exclusive
 argument_list|,
 name|nonblocking
 argument_list|,
-name|pool
+name|result_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4453,7 +4031,7 @@ name|open_fs
 condition|)
 name|SVN_ERR
 argument_list|(
-name|svn_fs_open
+name|svn_fs_open2
 argument_list|(
 operator|&
 name|repos
@@ -4466,7 +4044,9 @@ name|db_path
 argument_list|,
 name|fs_config
 argument_list|,
-name|pool
+name|result_pool
+argument_list|,
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4492,13 +4072,13 @@ name|conf_path
 argument_list|,
 literal|"debug-abort"
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|,
 operator|&
 name|kind
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 decl_stmt|;
 name|svn_error_clear
@@ -4640,7 +4220,7 @@ end_function
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_repos_open2
+name|svn_repos_open3
 parameter_list|(
 name|svn_repos_t
 modifier|*
@@ -4658,7 +4238,11 @@ name|fs_config
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 block|{
 comment|/* Fetch a repository object initialized with a shared read/write      lock on the database. */
@@ -4677,8 +4261,150 @@ name|TRUE
 argument_list|,
 name|fs_config
 argument_list|,
+name|result_pool
+argument_list|,
+name|scratch_pool
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Baton used with fs_upgrade_notify, specifying the svn_repos layer  * notification parameters.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fs_upgrade_notify_baton_t
+block|{
+name|svn_repos_notify_func_t
+name|notify_func
+decl_stmt|;
+name|void
+modifier|*
+name|notify_baton
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Implements svn_fs_upgrade_notify_t as forwarding to a  * svn_repos_notify_func_t passed in a fs_upgrade_notify_baton_t* BATON.  */
+end_comment
+
+begin_function
+specifier|static
+name|svn_error_t
+modifier|*
+name|fs_upgrade_notify
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_uint64_t
+name|number
+parameter_list|,
+name|svn_fs_upgrade_notify_action_t
+name|action
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|struct
+name|fs_upgrade_notify_baton_t
+modifier|*
+name|fs_baton
+init|=
+name|baton
+decl_stmt|;
+name|svn_repos_notify_t
+modifier|*
+name|notify
+init|=
+name|svn_repos_notify_create
+argument_list|(
+name|svn_repos_notify_mutex_acquired
+argument_list|,
 name|pool
 argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|action
+condition|)
+block|{
+case|case
+name|svn_fs_upgrade_pack_revprops
+case|:
+name|notify
+operator|->
+name|shard
+operator|=
+name|number
+expr_stmt|;
+name|notify
+operator|->
+name|action
+operator|=
+name|svn_repos_notify_pack_revprops
+expr_stmt|;
+break|break;
+case|case
+name|svn_fs_upgrade_cleanup_revprops
+case|:
+name|notify
+operator|->
+name|shard
+operator|=
+name|number
+expr_stmt|;
+name|notify
+operator|->
+name|action
+operator|=
+name|svn_repos_notify_cleanup_revprops
+expr_stmt|;
+break|break;
+case|case
+name|svn_fs_upgrade_format_bumped
+case|:
+name|notify
+operator|->
+name|revision
+operator|=
+name|number
+expr_stmt|;
+name|notify
+operator|->
+name|action
+operator|=
+name|svn_repos_notify_format_bumped
+expr_stmt|;
+break|break;
+default|default:
+comment|/* unknown notification */
+name|SVN_ERR_MALFUNCTION
+argument_list|()
+expr_stmt|;
+block|}
+name|fs_baton
+operator|->
+name|notify_func
+argument_list|(
+name|fs_baton
+operator|->
+name|notify_baton
+argument_list|,
+name|notify
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 end_function
@@ -4729,6 +4455,22 @@ argument_list|(
 name|pool
 argument_list|)
 decl_stmt|;
+name|struct
+name|fs_upgrade_notify_baton_t
+name|fs_notify_baton
+decl_stmt|;
+name|fs_notify_baton
+operator|.
+name|notify_func
+operator|=
+name|notify_func
+expr_stmt|;
+name|fs_notify_baton
+operator|.
+name|notify_baton
+operator|=
+name|notify_baton
+expr_stmt|;
 comment|/* Fetch a repository object; for the Berkeley DB backend, it is      initialized with an EXCLUSIVE lock on the database.  This will at      least prevent others from trying to read or write to it while we      run recovery. (Other backends should do their own locking; see      lock_repos.) */
 name|SVN_ERR
 argument_list|(
@@ -4746,6 +4488,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|NULL
+argument_list|,
+name|subpool
 argument_list|,
 name|subpool
 argument_list|)
@@ -4835,11 +4579,24 @@ expr_stmt|;
 comment|/* Try to upgrade the filesystem. */
 name|SVN_ERR
 argument_list|(
-name|svn_fs_upgrade
+name|svn_fs_upgrade2
 argument_list|(
 name|repos
 operator|->
 name|db_path
+argument_list|,
+name|notify_func
+condition|?
+name|fs_upgrade_notify
+else|:
+name|NULL
+argument_list|,
+operator|&
+name|fs_notify_baton
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|subpool
 argument_list|)
@@ -4912,6 +4669,8 @@ argument_list|)
 expr_stmt|;
 comment|/* ...then blow away everything else.  */
 return|return
+name|svn_error_trace
+argument_list|(
 name|svn_io_remove_dir2
 argument_list|(
 name|path
@@ -4923,6 +4682,7 @@ argument_list|,
 name|NULL
 argument_list|,
 name|pool
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -5238,6 +4998,242 @@ block|}
 end_function
 
 begin_function
+name|svn_error_t
+modifier|*
+name|svn_repos_capabilities
+parameter_list|(
+name|apr_hash_t
+modifier|*
+modifier|*
+name|capabilities
+parameter_list|,
+name|svn_repos_t
+modifier|*
+name|repos
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|queries
+index|[]
+init|=
+block|{
+name|SVN_REPOS_CAPABILITY_MERGEINFO
+block|,
+name|NULL
+block|}
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|i
+decl_stmt|;
+operator|*
+name|capabilities
+operator|=
+name|apr_hash_make
+argument_list|(
+name|result_pool
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|queries
+init|;
+operator|*
+name|i
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|svn_boolean_t
+name|has
+decl_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_repos_has_capability
+argument_list|(
+name|repos
+argument_list|,
+operator|&
+name|has
+argument_list|,
+operator|*
+name|i
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|has
+condition|)
+name|svn_hash_sets
+argument_list|(
+operator|*
+name|capabilities
+argument_list|,
+operator|*
+name|i
+argument_list|,
+operator|*
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|svn_error_t
+modifier|*
+name|svn_repos_info_format
+parameter_list|(
+name|int
+modifier|*
+name|repos_format
+parameter_list|,
+name|svn_version_t
+modifier|*
+modifier|*
+name|supports_version
+parameter_list|,
+name|svn_repos_t
+modifier|*
+name|repos
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+block|{
+operator|*
+name|repos_format
+operator|=
+name|repos
+operator|->
+name|format
+expr_stmt|;
+operator|*
+name|supports_version
+operator|=
+name|apr_palloc
+argument_list|(
+name|result_pool
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_version_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|supports_version
+operator|)
+operator|->
+name|major
+operator|=
+name|SVN_VER_MAJOR
+expr_stmt|;
+operator|(
+operator|*
+name|supports_version
+operator|)
+operator|->
+name|minor
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|supports_version
+operator|)
+operator|->
+name|patch
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|supports_version
+operator|)
+operator|->
+name|tag
+operator|=
+literal|""
+expr_stmt|;
+switch|switch
+condition|(
+name|repos
+operator|->
+name|format
+condition|)
+block|{
+case|case
+name|SVN_REPOS__FORMAT_NUMBER_LEGACY
+case|:
+break|break;
+case|case
+name|SVN_REPOS__FORMAT_NUMBER_1_4
+case|:
+operator|(
+operator|*
+name|supports_version
+operator|)
+operator|->
+name|minor
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|SVN_DEBUG
+if|#
+directive|if
+name|SVN_REPOS__FORMAT_NUMBER
+operator|!=
+name|SVN_REPOS__FORMAT_NUMBER_1_4
+error|#
+directive|error
+literal|"Need to add a 'case' statement here"
+endif|#
+directive|endif
+endif|#
+directive|endif
+block|}
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
 name|svn_fs_t
 modifier|*
 name|svn_repos_fs
@@ -5259,6 +5255,34 @@ return|return
 name|repos
 operator|->
 name|fs
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|svn_repos_fs_type
+parameter_list|(
+name|svn_repos_t
+modifier|*
+name|repos
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|)
+block|{
+return|return
+name|apr_pstrdup
+argument_list|(
+name|result_pool
+argument_list|,
+name|repos
+operator|->
+name|fs_type
+argument_list|)
 return|;
 block|}
 end_function
@@ -5330,6 +5354,8 @@ name|FALSE
 argument_list|,
 comment|/* don't try to open the db yet. */
 name|NULL
+argument_list|,
+name|subpool
 argument_list|,
 name|subpool
 argument_list|)
@@ -5424,6 +5450,11 @@ name|void
 modifier|*
 name|freeze_baton
 decl_stmt|;
+comment|/* Scratch pool used for every freeze callback invocation. */
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -5450,6 +5481,13 @@ name|fb
 init|=
 name|baton
 decl_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|fb
+operator|->
+name|scratch_pool
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fb
@@ -5543,6 +5581,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|subpool
+argument_list|,
+name|fb
+operator|->
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5584,7 +5626,7 @@ else|else
 block|{
 name|SVN_ERR
 argument_list|(
-name|svn_fs_open
+name|svn_fs_open2
 argument_list|(
 operator|&
 name|repos
@@ -5598,6 +5640,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|subpool
+argument_list|,
+name|fb
+operator|->
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5684,6 +5730,15 @@ name|freeze_baton
 operator|=
 name|freeze_baton
 expr_stmt|;
+name|fb
+operator|.
+name|scratch_pool
+operator|=
+name|svn_pool_create
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|multi_freeze
@@ -5693,6 +5748,13 @@ name|fb
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|svn_pool_destroy
+argument_list|(
+name|fb
+operator|.
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 return|return
@@ -5748,6 +5810,8 @@ name|FALSE
 argument_list|,
 comment|/* Do not open fs. */
 name|NULL
+argument_list|,
+name|pool
 argument_list|,
 name|pool
 argument_list|)
@@ -6202,13 +6266,104 @@ block|}
 end_function
 
 begin_comment
+comment|/* Baton used with fs_hotcopy_notify(), specifying the svn_repos layer  * notification parameters.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fs_hotcopy_notify_baton_t
+block|{
+name|svn_repos_notify_func_t
+name|notify_func
+decl_stmt|;
+name|void
+modifier|*
+name|notify_baton
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Implements svn_fs_hotcopy_notify_t as forwarding to a  * svn_repos_notify_func_t passed in a fs_hotcopy_notify_baton_t* BATON.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|fs_hotcopy_notify
+parameter_list|(
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|svn_revnum_t
+name|start_revision
+parameter_list|,
+name|svn_revnum_t
+name|end_revision
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|struct
+name|fs_hotcopy_notify_baton_t
+modifier|*
+name|fs_baton
+init|=
+name|baton
+decl_stmt|;
+name|svn_repos_notify_t
+modifier|*
+name|notify
+decl_stmt|;
+name|notify
+operator|=
+name|svn_repos_notify_create
+argument_list|(
+name|svn_repos_notify_hotcopy_rev_range
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+name|notify
+operator|->
+name|start_revision
+operator|=
+name|start_revision
+expr_stmt|;
+name|notify
+operator|->
+name|end_revision
+operator|=
+name|end_revision
+expr_stmt|;
+name|fs_baton
+operator|->
+name|notify_func
+argument_list|(
+name|fs_baton
+operator|->
+name|notify_baton
+argument_list|,
+name|notify
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Make a copy of a repository with hot backup of fs. */
 end_comment
 
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_repos_hotcopy2
+name|svn_repos_hotcopy3
 parameter_list|(
 specifier|const
 name|char
@@ -6226,6 +6381,13 @@ parameter_list|,
 name|svn_boolean_t
 name|incremental
 parameter_list|,
+name|svn_repos_notify_func_t
+name|notify_func
+parameter_list|,
+name|void
+modifier|*
+name|notify_baton
+parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
 parameter_list|,
@@ -6235,24 +6397,19 @@ name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 block|{
-name|svn_repos_t
-modifier|*
-name|src_repos
+name|svn_fs_hotcopy_notify_t
+name|fs_notify_func
 decl_stmt|;
-name|svn_repos_t
-modifier|*
-name|dst_repos
+name|struct
+name|fs_hotcopy_notify_baton_t
+name|fs_notify_baton
 decl_stmt|;
 name|struct
 name|hotcopy_ctx_t
 name|hotcopy_context
-decl_stmt|;
-name|svn_error_t
-modifier|*
-name|err
 decl_stmt|;
 specifier|const
 name|char
@@ -6264,6 +6421,18 @@ name|char
 modifier|*
 name|dst_abspath
 decl_stmt|;
+name|svn_repos_t
+modifier|*
+name|src_repos
+decl_stmt|;
+name|svn_repos_t
+modifier|*
+name|dst_repos
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_dirent_get_absolute
@@ -6273,7 +6442,7 @@ name|src_abspath
 argument_list|,
 name|src_path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6286,7 +6455,7 @@ name|dst_abspath
 argument_list|,
 name|dst_path
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6333,7 +6502,9 @@ argument_list|,
 comment|/* don't try to open the db yet. */
 name|NULL
 argument_list|,
-name|pool
+name|scratch_pool
+argument_list|,
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6346,7 +6517,7 @@ name|src_repos
 argument_list|,
 name|clean_logs
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6397,7 +6568,7 @@ argument_list|,
 operator|&
 name|hotcopy_context
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6408,7 +6579,7 @@ name|create_svn_repos_t
 argument_list|(
 name|dst_abspath
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 name|dst_repos
@@ -6433,7 +6604,7 @@ name|create_locks
 argument_list|(
 name|dst_repos
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 if|if
@@ -6474,7 +6645,7 @@ name|db_path
 argument_list|,
 name|APR_OS_DEFAULT
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 expr_stmt|;
 if|if
@@ -6517,13 +6688,33 @@ name|TRUE
 argument_list|,
 name|FALSE
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fs_notify_func
+operator|=
+name|notify_func
+condition|?
+name|fs_hotcopy_notify
+else|:
+name|NULL
+expr_stmt|;
+name|fs_notify_baton
+operator|.
+name|notify_func
+operator|=
+name|notify_func
+expr_stmt|;
+name|fs_notify_baton
+operator|.
+name|notify_baton
+operator|=
+name|notify_baton
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_fs_hotcopy2
+name|svn_fs_hotcopy3
 argument_list|(
 name|src_repos
 operator|->
@@ -6537,11 +6728,16 @@ name|clean_logs
 argument_list|,
 name|incremental
 argument_list|,
+name|fs_notify_func
+argument_list|,
+operator|&
+name|fs_notify_baton
+argument_list|,
 name|cancel_func
 argument_list|,
 name|cancel_baton
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6557,61 +6753,14 @@ name|path
 argument_list|,
 name|SVN_REPOS__FORMAT
 argument_list|,
-name|pool
+name|scratch_pool
 argument_list|)
 argument_list|,
 name|dst_repos
 operator|->
 name|format
 argument_list|,
-name|pool
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|svn_error_t
-modifier|*
-name|svn_repos_hotcopy
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|src_path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|dst_path
-parameter_list|,
-name|svn_boolean_t
-name|clean_logs
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-block|{
-return|return
-name|svn_error_trace
-argument_list|(
-name|svn_repos_hotcopy2
-argument_list|(
-name|src_path
-argument_list|,
-name|dst_path
-argument_list|,
-name|clean_logs
-argument_list|,
-name|FALSE
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|pool
-argument_list|)
+name|scratch_pool
 argument_list|)
 return|;
 block|}
@@ -6670,10 +6819,6 @@ specifier|const
 name|char
 modifier|*
 name|datestring
-decl_stmt|;
-name|apr_hash_t
-modifier|*
-name|prophash
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
@@ -6746,10 +6891,12 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_fs_node_proplist
+name|svn_fs_node_has_props
 argument_list|(
 operator|&
-name|prophash
+name|ent
+operator|->
+name|has_props
 argument_list|,
 name|root
 argument_list|,
@@ -6758,21 +6905,6 @@ argument_list|,
 name|pool
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|apr_hash_count
-argument_list|(
-name|prophash
-argument_list|)
-operator|>
-literal|0
-condition|)
-name|ent
-operator|->
-name|has_props
-operator|=
-name|TRUE
 expr_stmt|;
 name|SVN_ERR
 argument_list|(

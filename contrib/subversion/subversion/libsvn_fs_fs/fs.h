@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<apr_md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<apr_sha1.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_fs.h"
 end_include
 
@@ -78,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_named_atomic.h"
+file|"id.h"
 end_include
 
 begin_ifdef
@@ -119,6 +131,11 @@ value|"write-lock"
 comment|/* Revision lock file */
 define|#
 directive|define
+name|PATH_PACK_LOCK_FILE
+value|"pack-lock"
+comment|/* Pack lock file */
+define|#
+directive|define
 name|PATH_REVS_DIR
 value|"revs"
 comment|/* Directory of revisions */
@@ -131,7 +148,7 @@ define|#
 directive|define
 name|PATH_TXNS_DIR
 value|"transactions"
-comment|/* Directory of transactions */
+comment|/* Directory of transactions in                                                     repos w/o log addressing */
 define|#
 directive|define
 name|PATH_NODE_ORIGINS_DIR
@@ -182,6 +199,16 @@ directive|define
 name|PATH_EXT_PACKED_SHARD
 value|".pack"
 comment|/* Extension for packed                                                     shards */
+define|#
+directive|define
+name|PATH_EXT_L2P_INDEX
+value|".l2p"
+comment|/* extension of the log-                                                     to-phys index */
+define|#
+directive|define
+name|PATH_EXT_P2L_INDEX
+value|".p2l"
+comment|/* extension of the phys-                                                     to-log index */
 comment|/* If you change this, look at tests/svn_test_fs.c(maybe_install_fsfs_conf) */
 define|#
 directive|define
@@ -199,6 +226,11 @@ directive|define
 name|PATH_TXN_PROPS
 value|"props"
 comment|/* Transaction properties */
+define|#
+directive|define
+name|PATH_TXN_PROPS_FINAL
+value|"props-final"
+comment|/* Final transaction properties                                               before moving to revprops */
 define|#
 directive|define
 name|PATH_NEXT_IDS
@@ -234,6 +266,16 @@ directive|define
 name|PATH_EXT_REV_LOCK
 value|".rev-lock"
 comment|/* Extension of protorev lock file */
+define|#
+directive|define
+name|PATH_TXN_ITEM_INDEX
+value|"itemidx"
+comment|/* File containing the current item                                               index number */
+define|#
+directive|define
+name|PATH_INDEX
+value|"index"
+comment|/* name of index files w/o ext */
 comment|/* Names of files in legacy FS formats */
 define|#
 directive|define
@@ -284,6 +326,10 @@ name|CONFIG_OPTION_MAX_LINEAR_DELTIFICATION
 value|"max-linear-deltification"
 define|#
 directive|define
+name|CONFIG_OPTION_COMPRESSION_LEVEL
+value|"compression-level"
+define|#
+directive|define
 name|CONFIG_SECTION_PACKED_REVPROPS
 value|"packed-revprops"
 define|#
@@ -294,11 +340,35 @@ define|#
 directive|define
 name|CONFIG_OPTION_COMPRESS_PACKED_REVPROPS
 value|"compress-packed-revprops"
-comment|/* The format number of this filesystem.    This is independent of the repository format number, and    independent of any other FS back ends. */
+define|#
+directive|define
+name|CONFIG_SECTION_IO
+value|"io"
+define|#
+directive|define
+name|CONFIG_OPTION_BLOCK_SIZE
+value|"block-size"
+define|#
+directive|define
+name|CONFIG_OPTION_L2P_PAGE_SIZE
+value|"l2p-page-size"
+define|#
+directive|define
+name|CONFIG_OPTION_P2L_PAGE_SIZE
+value|"p2l-page-size"
+define|#
+directive|define
+name|CONFIG_SECTION_DEBUG
+value|"debug"
+define|#
+directive|define
+name|CONFIG_OPTION_PACK_AFTER_COMMIT
+value|"pack-after-commit"
+comment|/* The format number of this filesystem.    This is independent of the repository format number, and    independent of any other FS back ends.     Note: If you bump this, please update the switch statement in          svn_fs_fs__create() as well.  */
 define|#
 directive|define
 name|SVN_FS_FS__FORMAT_NUMBER
-value|6
+value|7
 comment|/* The minimum format number that supports svndiff version 1.  */
 define|#
 directive|define
@@ -359,45 +429,32 @@ define|#
 directive|define
 name|SVN_FS_FS__MIN_PACKED_REVPROP_FORMAT
 value|6
+comment|/* The minimum format number that supports packed revprops. */
+define|#
+directive|define
+name|SVN_FS_FS__MIN_LOG_ADDRESSING_FORMAT
+value|7
+comment|/* Minimum format number that providing a separate lock file for pack ops */
+define|#
+directive|define
+name|SVN_FS_FS__MIN_PACK_LOCK_FORMAT
+value|7
+comment|/* Minimum format number that stores mergeinfo-mode flag in changed paths */
+define|#
+directive|define
+name|SVN_FS_FS__MIN_MERGEINFO_IN_CHANGED_FORMAT
+value|7
+comment|/* Minimum format number that supports per-instance filesystem IDs. */
+define|#
+directive|define
+name|SVN_FS_FS__MIN_INSTANCE_ID_FORMAT
+value|7
 comment|/* The minimum format number that supports a configuration file (fsfs.conf) */
 define|#
 directive|define
 name|SVN_FS_FS__MIN_CONFIG_FILE
 value|4
-comment|/* Private FSFS-specific data shared between all svn_txn_t objects that    relate to a particular transaction in a filesystem (as identified    by transaction id and filesystem UUID).  Objects of this type are    allocated in their own subpool of the common pool. */
-typedef|typedef
-struct|struct
-name|fs_fs_shared_txn_data_t
-block|{
-comment|/* The next transaction in the list, or NULL if there is no following      transaction. */
-name|struct
-name|fs_fs_shared_txn_data_t
-modifier|*
-name|next
-decl_stmt|;
-comment|/* This transaction's ID.  For repositories whose format is less      than SVN_FS_FS__MIN_TXN_CURRENT_FORMAT, the ID is in the form<rev>-<uniqueifier>, where<uniqueifier> runs from 0-99999 (see      create_txn_dir_pre_1_5() in fs_fs.c).  For newer repositories,      the form is<rev>-<200 digit base 36 number> (see      create_txn_dir() in fs_fs.c). */
-name|char
-name|txn_id
-index|[
-name|SVN_FS__TXN_MAX_LEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* Whether the transaction's prototype revision file is locked for      writing by any thread in this process (including the current      thread; recursive locks are not permitted).  This is effectively      a non-recursive mutex. */
-name|svn_boolean_t
-name|being_written
-decl_stmt|;
-comment|/* The pool in which this object has been allocated; a subpool of the      common pool. */
-name|apr_pool_t
-modifier|*
-name|pool
-decl_stmt|;
-block|}
-name|fs_fs_shared_txn_data_t
-typedef|;
 comment|/* On most operating systems apr implements file locks per process, not    per file.  On Windows apr implements the locking as per file handle    locks, so we don't have to add our own mutex for just in-process    synchronization. */
-comment|/* Compare ../libsvn_subr/named_atomic.c:USE_THREAD_MUTEX */
 if|#
 directive|if
 name|APR_HAS_THREADS
@@ -419,6 +476,33 @@ name|SVN_FS_FS__USE_LOCK_MUTEX
 value|0
 endif|#
 directive|endif
+comment|/* Private FSFS-specific data shared between all svn_txn_t objects that    relate to a particular transaction in a filesystem (as identified    by transaction id and filesystem UUID).  Objects of this type are    allocated in their own subpool of the common pool. */
+typedef|typedef
+struct|struct
+name|fs_fs_shared_txn_data_t
+block|{
+comment|/* The next transaction in the list, or NULL if there is no following      transaction. */
+name|struct
+name|fs_fs_shared_txn_data_t
+modifier|*
+name|next
+decl_stmt|;
+comment|/* ID of this transaction. */
+name|svn_fs_fs__id_part_t
+name|txn_id
+decl_stmt|;
+comment|/* Whether the transaction's prototype revision file is locked for      writing by any thread in this process (including the current      thread; recursive locks are not permitted).  This is effectively      a non-recursive mutex. */
+name|svn_boolean_t
+name|being_written
+decl_stmt|;
+comment|/* The pool in which this object has been allocated; a subpool of the      common pool. */
+name|apr_pool_t
+modifier|*
+name|pool
+decl_stmt|;
+block|}
+name|fs_fs_shared_txn_data_t
+typedef|;
 comment|/* Private FSFS-specific data shared between all svn_fs_t objects that    relate to a particular filesystem, as identified by filesystem UUID.    Objects of this type are allocated in the common pool. */
 typedef|typedef
 struct|struct
@@ -434,6 +518,7 @@ name|fs_fs_shared_txn_data_t
 modifier|*
 name|free_txn
 decl_stmt|;
+comment|/* The following lock must be taken out in reverse order of their      declaration here.  Any subset may be acquired and held at any given      time but their relative acquisition order must not change.       (lock 'txn-current' before 'pack' before 'write' before 'txn-list') */
 comment|/* A lock for intra-process synchronization when accessing the TXNS list. */
 name|svn_mutex__t
 modifier|*
@@ -443,6 +528,11 @@ comment|/* A lock for intra-process synchronization when grabbing the      repos
 name|svn_mutex__t
 modifier|*
 name|fs_write_lock
+decl_stmt|;
+comment|/* A lock for intra-process synchronization when grabbing the      repository pack operation lock. */
+name|svn_mutex__t
+modifier|*
+name|fs_pack_lock
 decl_stmt|;
 comment|/* A lock for intra-process synchronization when locking the      txn-current file. */
 name|svn_mutex__t
@@ -463,19 +553,41 @@ name|struct
 name|fs_fs_dag_cache_t
 name|fs_fs_dag_cache_t
 typedef|;
-comment|/* Key type for all caches that use revision + offset / counter as key. */
+comment|/* Key type for all caches that use revision + offset / counter as key.     Note: Cache keys should be 16 bytes for best performance and there          should be no padding. */
 typedef|typedef
 struct|struct
 name|pair_cache_key_t
 block|{
-name|svn_revnum_t
+comment|/* The object's revision.  Use the 64 data type to prevent padding. */
+name|apr_int64_t
 name|revision
 decl_stmt|;
+comment|/* Sub-address: item index, revprop generation, packed flag, etc. */
 name|apr_int64_t
 name|second
 decl_stmt|;
 block|}
 name|pair_cache_key_t
+typedef|;
+comment|/* Key type that identifies a txdelta window.     Note: Cache keys should require no padding. */
+typedef|typedef
+struct|struct
+name|window_cache_key_t
+block|{
+comment|/* The object's revision.  Use the 64 data type to prevent padding. */
+name|apr_int64_t
+name|revision
+decl_stmt|;
+comment|/* Window number within that representation. */
+name|apr_int64_t
+name|chunk_index
+decl_stmt|;
+comment|/* Item index of the representation */
+name|apr_uint64_t
+name|item_index
+decl_stmt|;
+block|}
+name|window_cache_key_t
 typedef|;
 comment|/* Private (non-shared) FSFS-specific data for each svn_fs_t object.    Any caches in here may be NULL. */
 typedef|typedef
@@ -490,16 +602,40 @@ comment|/* The maximum number of files to store per directory (for sharded      
 name|int
 name|max_files_per_dir
 decl_stmt|;
+comment|/* If set, this FS is using logical addressing. Otherwise, it is using      physical addressing. */
+name|svn_boolean_t
+name|use_log_addressing
+decl_stmt|;
+comment|/* Rev / pack file read granularity in bytes. */
+name|apr_int64_t
+name|block_size
+decl_stmt|;
+comment|/* Capacity in entries of log-to-phys index pages */
+name|apr_int64_t
+name|l2p_page_size
+decl_stmt|;
+comment|/* Rev / pack file granularity (in bytes) covered by a single phys-to-log    * index page. */
+name|apr_int64_t
+name|p2l_page_size
+decl_stmt|;
+comment|/* If set, parse and cache *all* data of each block that we read    * (not just the one bit that we need, atm). */
+name|svn_boolean_t
+name|use_block_read
+decl_stmt|;
 comment|/* The revision that was youngest, last time we checked. */
 name|svn_revnum_t
 name|youngest_rev_cache
 decl_stmt|;
-comment|/* The fsfs.conf file, parsed.  Allocated in FS->pool. */
-name|svn_config_t
+comment|/* Caches of immutable data.  (Note that these may be shared between      multiple svn_fs_t's for the same filesystem.) */
+comment|/* Access to the configured memcached instances.  May be NULL. */
+name|svn_memcache_t
 modifier|*
-name|config
+name|memcache
 decl_stmt|;
-comment|/* Caches of immutable data.  (Note that if these are created with      svn_cache__create_memcache, the data can be shared between      multiple svn_fs_t's for the same filesystem.) */
+comment|/* If TRUE, don't ignore any cache-related errors.  If FALSE, errors from      e.g. memcached may be ignored as caching is an optional feature. */
+name|svn_boolean_t
+name|fail_stop
+decl_stmt|;
 comment|/* A cache of revision root IDs, mapping from (svn_revnum_t *) to      (svn_fs_id_t *).  (Not threadsafe.) */
 name|svn_cache__t
 modifier|*
@@ -525,26 +661,6 @@ name|svn_cache__t
 modifier|*
 name|fulltext_cache
 decl_stmt|;
-comment|/* Access object to the atomics namespace used by revprop caching.      Will be NULL until the first access. */
-name|svn_atomic_namespace__t
-modifier|*
-name|revprop_namespace
-decl_stmt|;
-comment|/* Access object to the revprop "generation". Will be NULL until      the first access. */
-name|svn_named_atomic__t
-modifier|*
-name|revprop_generation
-decl_stmt|;
-comment|/* Access object to the revprop update timeout. Will be NULL until      the first access. */
-name|svn_named_atomic__t
-modifier|*
-name|revprop_timeout
-decl_stmt|;
-comment|/* Revision property cache.  Maps from (rev,generation) to apr_hash_t. */
-name|svn_cache__t
-modifier|*
-name|revprop_cache
-decl_stmt|;
 comment|/* Node properties cache.  Maps from rep key to apr_hash_t. */
 name|svn_cache__t
 modifier|*
@@ -555,17 +671,22 @@ name|svn_cache__t
 modifier|*
 name|packed_offset_cache
 decl_stmt|;
-comment|/* Cache for txdelta_window_t objects; the key is (revFilePath, offset) */
+comment|/* Cache for svn_fs_fs__raw_cached_window_t objects; the key is      window_cache_key_t. */
+name|svn_cache__t
+modifier|*
+name|raw_window_cache
+decl_stmt|;
+comment|/* Cache for txdelta_window_t objects; the key is window_cache_key_t */
 name|svn_cache__t
 modifier|*
 name|txdelta_window_cache
 decl_stmt|;
-comment|/* Cache for combined windows as svn_stringbuf_t objects;      the key is (revFilePath, offset) */
+comment|/* Cache for combined windows as svn_stringbuf_t objects;      the key is window_cache_key_t */
 name|svn_cache__t
 modifier|*
 name|combined_window_cache
 decl_stmt|;
-comment|/* Cache for node_revision_t objects; the key is (revision, id offset) */
+comment|/* Cache for node_revision_t objects; the key is (revision, item_index) */
 name|svn_cache__t
 modifier|*
 name|node_revision_cache
@@ -574,6 +695,11 @@ comment|/* Cache for change lists as APR arrays of change_t * objects; the key  
 name|svn_cache__t
 modifier|*
 name|changes_cache
+decl_stmt|;
+comment|/* Cache for svn_fs_fs__rep_header_t objects; the key is a      (revision, item index) pair */
+name|svn_cache__t
+modifier|*
+name|rep_header_cache
 decl_stmt|;
 comment|/* Cache for svn_mergeinfo_t objects; the key is a combination of      revision, inheritance flags and path. */
 name|svn_cache__t
@@ -584,6 +710,26 @@ comment|/* Cache for presence of svn_mergeinfo_t on a noderev; the key is a     
 name|svn_cache__t
 modifier|*
 name|mergeinfo_existence_cache
+decl_stmt|;
+comment|/* Cache for l2p_header_t objects; the key is (revision, is-packed).      Will be NULL for pre-format7 repos */
+name|svn_cache__t
+modifier|*
+name|l2p_header_cache
+decl_stmt|;
+comment|/* Cache for l2p_page_t objects; the key is svn_fs_fs__page_cache_key_t.      Will be NULL for pre-format7 repos */
+name|svn_cache__t
+modifier|*
+name|l2p_page_cache
+decl_stmt|;
+comment|/* Cache for p2l_header_t objects; the key is (revision, is-packed).      Will be NULL for pre-format7 repos */
+name|svn_cache__t
+modifier|*
+name|p2l_header_cache
+decl_stmt|;
+comment|/* Cache for apr_array_header_t objects containing svn_fs_fs__p2l_entry_t      elements; the key is svn_fs_fs__page_cache_key_t.      Will be NULL for pre-format7 repos */
+name|svn_cache__t
+modifier|*
+name|p2l_page_cache
 decl_stmt|;
 comment|/* TRUE while the we hold a lock on the write lock file. */
 name|svn_boolean_t
@@ -644,6 +790,20 @@ comment|/* Maximum number of length of the linear part at the top of the    * de
 name|apr_int64_t
 name|max_linear_deltification
 decl_stmt|;
+comment|/* Compression level to use with txdelta storage format in new revs. */
+name|int
+name|delta_compression_level
+decl_stmt|;
+comment|/* Pack after every commit. */
+name|svn_boolean_t
+name|pack_after_commit
+decl_stmt|;
+comment|/* Per-instance filesystem ID, which provides an additional level of      uniqueness for filesystems that share the same UUID, but should      still be distinguishable (e.g. backups produced by svn_fs_hotcopy()      or dump / load cycles). */
+specifier|const
+name|char
+modifier|*
+name|instance_id
+decl_stmt|;
 comment|/* Pointer to svn_fs_open. */
 name|svn_error_t
 modifier|*
@@ -665,6 +825,9 @@ modifier|*
 parameter_list|,
 name|apr_pool_t
 modifier|*
+parameter_list|,
+name|apr_pool_t
+modifier|*
 parameter_list|)
 function_decl|;
 block|}
@@ -675,11 +838,6 @@ typedef|typedef
 struct|struct
 name|transaction_t
 block|{
-comment|/* property list (const char * name, svn_string_t * value).      may be NULL if there are no properties.  */
-name|apr_hash_t
-modifier|*
-name|proplist
-decl_stmt|;
 comment|/* node revision id of the root node.  */
 specifier|const
 name|svn_fs_id_t
@@ -706,22 +864,31 @@ typedef|typedef
 struct|struct
 name|representation_t
 block|{
-comment|/* Checksums for the contents produced by this representation.      This checksum is for the contents the rep shows to consumers,      regardless of how the rep stores the data under the hood.  It is      independent of the storage (fulltext, delta, whatever).       If checksum is NULL, then for compatibility behave as though this      checksum matches the expected checksum.       The md5 checksum is always filled, unless this is rep which was      retrieved from the rep-cache.  The sha1 checksum is only computed on      a write, for use with rep-sharing; it may be read from an existing      representation, but otherwise it is NULL. */
-name|svn_checksum_t
-modifier|*
-name|md5_checksum
+comment|/* Checksums digests for the contents produced by this representation.      This checksum is for the contents the rep shows to consumers,      regardless of how the rep stores the data under the hood.  It is      independent of the storage (fulltext, delta, whatever).       If has_sha1 is FALSE, then for compatibility behave as though this      checksum matches the expected checksum.       The md5 checksum is always filled, unless this is rep which was      retrieved from the rep-cache.  The sha1 checksum is only computed on      a write, for use with rep-sharing. */
+name|svn_boolean_t
+name|has_sha1
 decl_stmt|;
-name|svn_checksum_t
-modifier|*
-name|sha1_checksum
+name|unsigned
+name|char
+name|sha1_digest
+index|[
+name|APR_SHA1_DIGESTSIZE
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|md5_digest
+index|[
+name|APR_MD5_DIGESTSIZE
+index|]
 decl_stmt|;
 comment|/* Revision where this representation is located. */
 name|svn_revnum_t
 name|revision
 decl_stmt|;
-comment|/* Offset into the revision file where it is located. */
-name|apr_off_t
-name|offset
+comment|/* Item index with the the revision. */
+name|apr_uint64_t
+name|item_index
 decl_stmt|;
 comment|/* The size of the representation in bytes as seen in the revision      file. */
 name|svn_filesize_t
@@ -731,18 +898,24 @@ comment|/* The size of the fulltext of the representation. If this is 0,    * th
 name|svn_filesize_t
 name|expanded_size
 decl_stmt|;
-comment|/* Is this representation a transaction? */
-specifier|const
-name|char
-modifier|*
+comment|/* Is this a representation (still) within a transaction? */
+name|svn_fs_fs__id_part_t
 name|txn_id
 decl_stmt|;
-comment|/* For rep-sharing, we need a way of uniquifying node-revs which share the      same representation (see svn_fs_fs__noderev_same_rep_key() ).  So, we      store the original txn of the node rev (not the rep!), along with some      intra-node uniqification content.       May be NULL, in which case, it is considered to match other NULL      values.*/
-specifier|const
-name|char
-modifier|*
-name|uniquifier
+comment|/* For rep-sharing, we need a way of uniquifying node-revs which share the      same representation (see svn_fs_fs__noderev_same_rep_key() ).  So, we      store the original txn of the node rev (not the rep!), along with some      intra-node uniqification content. */
+struct|struct
+block|{
+comment|/* unique context, i.e. txn ID, in which the noderev (!) got created */
+name|svn_fs_fs__id_part_t
+name|noderev_txn_id
 decl_stmt|;
+comment|/* unique value within that txn */
+name|apr_uint64_t
+name|number
+decl_stmt|;
+block|}
+name|uniquifier
+struct|;
 block|}
 name|representation_t
 typedef|;
@@ -827,40 +1000,12 @@ struct|struct
 name|change_t
 block|{
 comment|/* Path of the change. */
-specifier|const
-name|char
-modifier|*
+name|svn_string_t
 name|path
 decl_stmt|;
-comment|/* Node revision ID of the change. */
-specifier|const
-name|svn_fs_id_t
-modifier|*
-name|noderev_id
-decl_stmt|;
-comment|/* The kind of change. */
-name|svn_fs_path_change_kind_t
-name|kind
-decl_stmt|;
-comment|/* Text or property mods? */
-name|svn_boolean_t
-name|text_mod
-decl_stmt|;
-name|svn_boolean_t
-name|prop_mod
-decl_stmt|;
-comment|/* Node kind (possibly svn_node_unknown). */
-name|svn_node_kind_t
-name|node_kind
-decl_stmt|;
-comment|/* Copyfrom revision and path. */
-name|svn_revnum_t
-name|copyfrom_rev
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|copyfrom_path
+comment|/* API compatible change description */
+name|svn_fs_path_change2_t
+name|info
 decl_stmt|;
 block|}
 name|change_t

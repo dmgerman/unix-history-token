@@ -175,26 +175,21 @@ modifier|*
 name|strbuf
 parameter_list|)
 function_decl|;
-comment|/** Like apr_strtoff but provided here for backward compatibility  *  with APR 0.9 */
-name|apr_status_t
-name|svn__strtoff
+comment|/** Like strtoul but with a fixed base of 10 and without overflow checks.  * This allows the compiler to generate massively faster (4x on 64bit LINUX)  * code.  Overflow checks may be added on the caller side where you might  * want to test for a more specific value range anyway.  */
+name|unsigned
+name|long
+name|svn__strtoul
 parameter_list|(
-name|apr_off_t
+specifier|const
+name|char
 modifier|*
-name|offset
+name|buffer
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|buf
-parameter_list|,
-name|char
-modifier|*
 modifier|*
 name|end
-parameter_list|,
-name|int
-name|base
 parameter_list|)
 function_decl|;
 comment|/** Number of chars needed to represent signed (19 places + sign + NUL) or  * unsigned (20 places + NUL) integers as strings.  */
@@ -226,7 +221,7 @@ name|apr_int64_t
 name|number
 parameter_list|)
 function_decl|;
-comment|/** Returns a decimal string for @a number allocated in @a pool.  Put in  * the @a seperator at each third place.  */
+comment|/** Returns a decimal string for @a number allocated in @a pool.  Put in  * the @a separator at each third place.  */
 name|char
 modifier|*
 name|svn__ui64toa_sep
@@ -235,14 +230,14 @@ name|apr_uint64_t
 name|number
 parameter_list|,
 name|char
-name|seperator
+name|separator
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Returns a decimal string for @a number allocated in @a pool.  Put in  * the @a seperator at each third place.  */
+comment|/** Returns a decimal string for @a number allocated in @a pool.  Put in  * the @a separator at each third place.  */
 name|char
 modifier|*
 name|svn__i64toa_sep
@@ -251,16 +246,48 @@ name|apr_int64_t
 name|number
 parameter_list|,
 name|char
-name|seperator
+name|separator
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Computes the similarity score of STRA and STRB. Returns the ratio  * of the length of their longest common subsequence and the average  * length of the strings, normalized to the range [0..1000].  * The result is equivalent to Python's  *  *   difflib.SequenceMatcher.ratio  *  * Optionally sets *RLCS to the length of the longest common  * subsequence of STRA and STRB. Using BUFFER for temporary storage,  * requires memory proportional to the length of the shorter string.  *  * The LCS algorithm used is described in, e.g.,  *  *   http://en.wikipedia.org/wiki/Longest_common_subsequence_problem  *  * Q: Why another LCS when we already have one in libsvn_diff?  * A: svn_diff__lcs is too heavyweight and too generic for the  *    purposes of similarity testing. Whilst it would be possible  *    to use a character-based tokenizer with it, we really only need  *    the *length* of the LCS for the similarity score, not all the  *    other information that svn_diff__lcs produces in order to  *    make printing diffs possible.  *  * Q: Is there a limit on the length of the string parameters?  * A: Only available memory. But note that the LCS algorithm used  *    has O(strlen(STRA) * strlen(STRB)) worst-case performance,  *    so do keep a rein on your enthusiasm.  */
-name|unsigned
-name|int
+comment|/** Writes the @a number as base36-encoded string into @a dest. The latter  * must provide space for at least #SVN_INT64_BUFFER_SIZE characters.  * Returns the number chars written excluding the terminating NUL.  *  * @note The actual maximum buffer requirement is much shorter than  * #SVN_INT64_BUFFER_SIZE but introducing yet another constant is only  * marginally useful and may open the door to security issues when e.g.  * switching between base10 and base36 encoding.  */
+name|apr_size_t
+name|svn__ui64tobase36
+parameter_list|(
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|apr_uint64_t
+name|number
+parameter_list|)
+function_decl|;
+comment|/** Returns the value of the base36 encoded unsigned integer starting at  * @a source.  If @a next is not NULL, @a *next will be set to the first  * position after the integer.  *  * The data in @a source will be considered part of the number to parse  * as long as the characters are within the base36 range.  If there are  * no such characters to begin with, 0 is returned.  Inputs with more than  * #SVN_INT64_BUFFER_SIZE digits will not be fully parsed, i.e. the value  * of @a *next as well as the return value are undefined.  */
+name|apr_uint64_t
+name|svn__base36toui64
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|next
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source
+parameter_list|)
+function_decl|;
+comment|/**  * The upper limit of the similarity range returned by  * svn_cstring__similarity() and svn_string__similarity().  */
+define|#
+directive|define
+name|SVN_STRING__SIM_RANGE_MAX
+value|1000000
+comment|/**  * Computes the similarity score of STRA and STRB. Returns the ratio  * of the length of their longest common subsequence and the average  * length of the strings, normalized to the range  * [0..SVN_STRING__SIM_RANGE_MAX]. The result is equivalent to  * Python's  *  *   difflib.SequenceMatcher.ratio  *  * Optionally sets *RLCS to the length of the longest common  * subsequence of STRA and STRB. Using BUFFER for temporary storage,  * requires memory proportional to the length of the shorter string.  *  * The LCS algorithm used is described in, e.g.,  *  *   http://en.wikipedia.org/wiki/Longest_common_subsequence_problem  *  * Q: Why another LCS when we already have one in libsvn_diff?  * A: svn_diff__lcs is too heavyweight and too generic for the  *    purposes of similarity testing. Whilst it would be possible  *    to use a character-based tokenizer with it, we really only need  *    the *length* of the LCS for the similarity score, not all the  *    other information that svn_diff__lcs produces in order to  *    make printing diffs possible.  *  * Q: Is there a limit on the length of the string parameters?  * A: Only available memory. But note that the LCS algorithm used  *    has O(strlen(STRA) * strlen(STRB)) worst-case performance,  *    so do keep a rein on your enthusiasm.  */
+name|apr_size_t
 name|svn_cstring__similarity
 parameter_list|(
 specifier|const
@@ -283,8 +310,7 @@ name|rlcs
 parameter_list|)
 function_decl|;
 comment|/**  * Like svn_cstring__similarity, but accepts svn_string_t's instead  * of NUL-terminated character strings.  */
-name|unsigned
-name|int
+name|apr_size_t
 name|svn_string__similarity
 parameter_list|(
 specifier|const
@@ -304,6 +330,111 @@ parameter_list|,
 name|apr_size_t
 modifier|*
 name|rlcs
+parameter_list|)
+function_decl|;
+comment|/* Return the lowest position at which A and B differ. If no difference  * can be found in the first MAX_LEN characters, MAX_LEN will be returned.  */
+name|apr_size_t
+name|svn_cstring__match_length
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|b
+parameter_list|,
+name|apr_size_t
+name|max_len
+parameter_list|)
+function_decl|;
+comment|/* Return the number of bytes before A and B that don't differ.  If no  * difference can be found in the first MAX_LEN characters,  MAX_LEN will  * be returned.  Please note that A-MAX_LEN and B-MAX_LEN must both be  * valid addresses.  */
+name|apr_size_t
+name|svn_cstring__reverse_match_length
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|b
+parameter_list|,
+name|apr_size_t
+name|max_len
+parameter_list|)
+function_decl|;
+comment|/** @} */
+comment|/** Prefix trees.  *  * Prefix trees allow for a space-efficient representation of a set of path-  * like strings, i.e. those that share common prefixes.  Any given string  * value will be stored only once, i.e. two strings stored in the same tree  * are equal if and only if the point to the same #svn_prefix_string__t.  *  * @defgroup svn_prefix_string Strings in prefix trees. * @{  */
+comment|/**  * Opaque data type for prefix-tree-based strings.  */
+typedef|typedef
+name|struct
+name|svn_prefix_string__t
+name|svn_prefix_string__t
+typedef|;
+comment|/**  * Opaque data type representing a prefix tree  */
+typedef|typedef
+name|struct
+name|svn_prefix_tree__t
+name|svn_prefix_tree__t
+typedef|;
+comment|/**  * Return a new prefix tree allocated in @a pool.  */
+name|svn_prefix_tree__t
+modifier|*
+name|svn_prefix_tree__create
+parameter_list|(
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Return a string with the value @a s stored in @a tree.  If no such string  * exists yet, add it automatically.  */
+name|svn_prefix_string__t
+modifier|*
+name|svn_prefix_string__create
+parameter_list|(
+name|svn_prefix_tree__t
+modifier|*
+name|tree
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+comment|/**  * Return the contents of @a s as a new string object allocated in @a pool.  */
+name|svn_string_t
+modifier|*
+name|svn_prefix_string__expand
+parameter_list|(
+specifier|const
+name|svn_prefix_string__t
+modifier|*
+name|s
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Compare the two strings @a lhs and @a rhs that must be part of the same  * tree.  */
+name|int
+name|svn_prefix_string__compare
+parameter_list|(
+specifier|const
+name|svn_prefix_string__t
+modifier|*
+name|lhs
+parameter_list|,
+specifier|const
+name|svn_prefix_string__t
+modifier|*
+name|rhs
 parameter_list|)
 function_decl|;
 comment|/** @} */

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_sorts_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_string_private.h"
 end_include
 
@@ -112,7 +118,7 @@ file|"private/svn_dep_compat.h"
 end_include
 
 begin_comment
-comment|/* Attempt to combine two ranges, IN1 and IN2. If they are adjacent or    overlapping, and their inheritability allows them to be combined, put    the result in OUTPUT and return TRUE, otherwise return FALSE.     CONSIDER_INHERITANCE determines how to account for the inheritability    of IN1 and IN2 when trying to combine ranges.  If ranges with different    inheritability are combined (CONSIDER_INHERITANCE must be FALSE for this    to happen) the result is inheritable.  If both ranges are inheritable the    result is inheritable.  Only and if both ranges are non-inheritable is    the result is non-inheritable.     Range overlapping detection algorithm from    http://c2.com/cgi-bin/wiki/fullSearch?TestIfDateRangesOverlap */
+comment|/* Attempt to combine two ranges, IN1 and IN2. If they are adjacent or    overlapping, and their inheritability allows them to be combined, put    the result in OUTPUT and return TRUE, otherwise return FALSE.     CONSIDER_INHERITANCE determines how to account for the inheritability    of IN1 and IN2 when trying to combine ranges.  If ranges with different    inheritability are combined (CONSIDER_INHERITANCE must be FALSE for this    to happen) the result is inheritable.  If both ranges are inheritable the    result is inheritable.  And only if both ranges are non-inheritable    the result is non-inheritable.     Range overlapping detection algorithm from    http://c2.com/cgi-bin/wiki/fullSearch?TestIfDateRangesOverlap */
 end_comment
 
 begin_function
@@ -322,26 +328,6 @@ argument_list|,
 name|_
 argument_list|(
 literal|"Pathname not terminated by ':'"
-argument_list|)
-argument_list|)
-return|;
-if|if
-condition|(
-name|last_colon
-operator|==
-operator|*
-name|input
-condition|)
-return|return
-name|svn_error_create
-argument_list|(
-name|SVN_ERR_MERGEINFO_PARSE_ERROR
-argument_list|,
-name|NULL
-argument_list|,
-name|_
-argument_list|(
-literal|"No pathname preceding ':'"
 argument_list|)
 argument_list|)
 return|;
@@ -705,7 +691,7 @@ operator|!
 name|consider_inheritance
 condition|)
 block|{
-comment|/* We are not considering inheritance so we can merge intersecting          ranges of different inheritability.  Of course if the ranges          don't intersect at all we simply push NEW_RANGE only RANGELIST. */
+comment|/* We are not considering inheritance so we can merge intersecting          ranges of different inheritability.  Of course if the ranges          don't intersect at all we simply push NEW_RANGE onto RANGELIST. */
 if|if
 condition|(
 name|combine_ranges
@@ -803,7 +789,7 @@ block|{
 case|case
 name|svn__no_intersection
 case|:
-comment|/* NEW_RANGE and *LASTRANGE *really* don't intersect so                    just push NEW_RANGE only RANGELIST. */
+comment|/* NEW_RANGE and *LASTRANGE *really* don't intersect so                    just push NEW_RANGE onto RANGELIST. */
 name|APR_ARRAY_PUSH
 argument_list|(
 name|rangelist
@@ -1409,19 +1395,9 @@ condition|(
 operator|!
 name|sorted
 condition|)
-name|qsort
+name|svn_sort__array
 argument_list|(
 name|rangelist
-operator|->
-name|elts
-argument_list|,
-name|rangelist
-operator|->
-name|nelts
-argument_list|,
-name|rangelist
-operator|->
-name|elt_size
 argument_list|,
 name|svn_sort_compare_ranges
 argument_list|)
@@ -2234,19 +2210,9 @@ name|rangelist
 argument_list|)
 condition|)
 block|{
-name|qsort
+name|svn_sort__array
 argument_list|(
 name|rangelist
-operator|->
-name|elts
-argument_list|,
-name|rangelist
-operator|->
-name|nelts
-argument_list|,
-name|rangelist
-operator|->
-name|elt_size
 argument_list|,
 name|svn_sort_compare_ranges
 argument_list|)
@@ -2464,7 +2430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* revisionline -> PATHNAME COLON revisionlist */
+comment|/* revisionline -> PATHNAME COLON revisionlist  *  * Parse one line of mergeinfo starting at INPUT, not reading beyond END,  * into HASH. Allocate the new entry in HASH deeply from HASH's pool.  */
 end_comment
 
 begin_function
@@ -2738,7 +2704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* top -> revisionline (NEWLINE revisionline)*  */
+comment|/* top -> revisionline (NEWLINE revisionline)*  *  * Parse mergeinfo starting at INPUT, not reading beyond END, into HASH.  * Allocate all the new entries in HASH deeply from HASH's pool.  */
 end_comment
 
 begin_function
@@ -2763,7 +2729,7 @@ name|hash
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 block|{
 name|apr_pool_t
@@ -2772,7 +2738,7 @@ name|iterpool
 init|=
 name|svn_pool_create
 argument_list|(
-name|pool
+name|scratch_pool
 argument_list|)
 decl_stmt|;
 while|while
@@ -3095,7 +3061,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* NEXT_RANGE is a proper subset MODIFIED_RANGE but                  MODIFIED_RANGE is non-inheritable and NEXT_RANGE is                  inheritable.  This means MODIFIED_RANGE is truncated,                  NEXT_RANGE remains, and the portion of MODIFIED_RANGE                  younger than NEXT_RANGE is added as a separate range:                   ______________________________________________                  |                                              |                  M                 MODIFIED_RANGE               N                  |                 (!inhertiable)               |                  |______________________________________________|                                   |              |                                   O  NEXT_RANGE  P                                   | (inheritable)|                                   |______________|                                          |                                          V                   _______________________________________________                  |                |              |               |                  M MODIFIED_RANGE O  NEXT_RANGE  P   NEW_RANGE   N                  | (!inhertiable) | (inheritable)| (!inheritable)|                  |________________|______________|_______________|               */
+comment|/* NEXT_RANGE is a proper subset MODIFIED_RANGE but                  MODIFIED_RANGE is non-inheritable and NEXT_RANGE is                  inheritable.  This means MODIFIED_RANGE is truncated,                  NEXT_RANGE remains, and the portion of MODIFIED_RANGE                  younger than NEXT_RANGE is added as a separate range:                   ______________________________________________                  |                                              |                  M                 MODIFIED_RANGE               N                  |                 (!inheritable)               |                  |______________________________________________|                                   |              |                                   O  NEXT_RANGE  P                                   | (inheritable)|                                   |______________|                                          |                                          V                   _______________________________________________                  |                |              |               |                  M MODIFIED_RANGE O  NEXT_RANGE  P   NEW_RANGE   N                  | (!inheritable) | (inheritable)| (!inheritable)|                  |________________|______________|_______________|               */
 name|svn_merge_range_t
 modifier|*
 name|new_modified_range
@@ -3150,10 +3116,10 @@ literal|2
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|new_modified_range
-argument_list|,
-name|rangelist
 argument_list|,
 operator|*
 name|range_index
@@ -3420,7 +3386,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Only when merging two non-inheritable ranges is the result also              non-inheritable.  In all other cases ensure an inheritiable              result. */
+comment|/* Only when merging two non-inheritable ranges is the result also              non-inheritable.  In all other cases ensure an inheritable              result. */
 if|if
 condition|(
 name|range
@@ -3612,10 +3578,10 @@ name|start
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|range_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|i
 operator|++
@@ -3671,10 +3637,10 @@ argument_list|)
 decl_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|change_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|i
 operator|++
@@ -3737,10 +3703,10 @@ argument_list|)
 decl_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|change_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|i
 argument_list|)
@@ -3857,10 +3823,10 @@ name|start
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|change_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|i
 operator|++
@@ -4001,10 +3967,10 @@ name|TRUE
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|range_copy
-argument_list|,
-name|rangelist
 argument_list|,
 operator|++
 name|i
@@ -4053,10 +4019,10 @@ name|end
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|range_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|i
 operator|++
@@ -4113,10 +4079,10 @@ argument_list|)
 decl_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|rangelist
+argument_list|,
 operator|&
 name|change_copy
-argument_list|,
-name|rangelist
 argument_list|,
 name|rangelist
 operator|->
@@ -4513,7 +4479,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -6743,7 +6709,7 @@ argument_list|(
 name|scratch_pool
 argument_list|)
 expr_stmt|;
-comment|/* ### TODO(reint): Do we care about the case when a path in one      ### mergeinfo hash has inheritable mergeinfo, and in the other      ### has non-inhertiable mergeinfo?  It seems like that path      ### itself should really be an intersection, while child paths      ### should not be... */
+comment|/* ### TODO(reint): Do we care about the case when a path in one      ### mergeinfo hash has inheritable mergeinfo, and in the other      ### has non-inheritable mergeinfo?  It seems like that path      ### itself should really be an intersection, while child paths      ### should not be... */
 for|for
 control|(
 name|hi
@@ -6770,7 +6736,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -6779,7 +6745,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist1
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7336,24 +7302,14 @@ name|apr_array_header_t
 modifier|*
 name|rl
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
 decl_stmt|;
-name|qsort
+name|svn_sort__array
 argument_list|(
 name|rl
-operator|->
-name|elts
-argument_list|,
-name|rl
-operator|->
-name|nelts
-argument_list|,
-name|rl
-operator|->
-name|elt_size
 argument_list|,
 name|svn_sort_compare_ranges
 argument_list|)
@@ -7407,7 +7363,7 @@ name|apr_array_header_t
 modifier|*
 name|rl
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7479,7 +7435,7 @@ name|char
 modifier|*
 name|key
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7487,7 +7443,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|val
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7568,7 +7524,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7576,7 +7532,7 @@ decl_stmt|;
 name|apr_ssize_t
 name|pathlen
 init|=
-name|svn__apr_hash_index_klen
+name|apr_hash_this_key_len
 argument_list|(
 name|hi
 argument_list|)
@@ -7585,7 +7541,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7693,7 +7649,7 @@ name|char
 modifier|*
 name|key
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7701,7 +7657,7 @@ decl_stmt|;
 name|apr_ssize_t
 name|keylen
 init|=
-name|svn__apr_hash_index_klen
+name|apr_hash_this_key_len
 argument_list|(
 name|hi
 argument_list|)
@@ -7710,7 +7666,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -7876,10 +7832,10 @@ operator|<
 name|start
 condition|)
 block|{
+comment|/* We want all (non-inheritable or inheritable) ranges removed. */
 name|int
 name|i
 decl_stmt|;
-comment|/* We want all non-inheritable ranges removed. */
 for|for
 control|(
 name|i
@@ -7919,43 +7875,6 @@ operator|==
 name|inheritable
 condition|)
 block|{
-name|svn_merge_range_t
-modifier|*
-name|inheritable_range
-init|=
-name|apr_palloc
-argument_list|(
-name|result_pool
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|inheritable_range
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|inheritable_range
-operator|->
-name|start
-operator|=
-name|range
-operator|->
-name|start
-expr_stmt|;
-name|inheritable_range
-operator|->
-name|end
-operator|=
-name|range
-operator|->
-name|end
-expr_stmt|;
-name|inheritable_range
-operator|->
-name|inheritable
-operator|=
-name|TRUE
-expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(
 operator|*
@@ -7965,14 +7884,19 @@ name|svn_merge_range_t
 operator|*
 argument_list|)
 operator|=
+name|svn_merge_range_dup
+argument_list|(
 name|range
+argument_list|,
+name|result_pool
+argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
 else|else
 block|{
-comment|/* We want only the non-inheritable ranges bound by START              and END removed. */
+comment|/* We want only the (non-inheritable or inheritable) ranges              bound by START and END removed. */
 name|svn_rangelist_t
 modifier|*
 name|ranges_inheritable
@@ -8027,7 +7951,7 @@ name|mergeinfo
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 block|{
 name|apr_hash_index_t
@@ -8050,7 +7974,7 @@ name|hi
 operator|=
 name|apr_hash_first
 argument_list|(
-name|pool
+name|scratch_pool
 argument_list|,
 name|mergeinfo
 argument_list|)
@@ -8070,7 +7994,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -8079,7 +8003,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -8185,7 +8109,7 @@ name|char
 modifier|*
 name|original_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -8193,7 +8117,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -8298,7 +8222,7 @@ name|char
 modifier|*
 name|original_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -8306,7 +8230,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -8421,7 +8345,7 @@ name|char
 modifier|*
 name|fspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -8430,7 +8354,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -8459,6 +8383,160 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Deep-copy an array of pointers to simple objects.  *  * Return a duplicate in POOL of the array ARRAY of pointers to objects  * of size OBJECT_SIZE bytes. Duplicate each object bytewise.  */
+end_comment
+
+begin_function
+specifier|static
+name|apr_array_header_t
+modifier|*
+name|ptr_array_dup
+parameter_list|(
+specifier|const
+name|apr_array_header_t
+modifier|*
+name|array
+parameter_list|,
+name|size_t
+name|object_size
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|apr_array_header_t
+modifier|*
+name|new_array
+init|=
+name|apr_array_make
+argument_list|(
+name|pool
+argument_list|,
+name|array
+operator|->
+name|nelts
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|/* allocate target range buffer with a single operation */
+name|char
+modifier|*
+name|copy
+init|=
+name|apr_palloc
+argument_list|(
+name|pool
+argument_list|,
+name|object_size
+operator|*
+name|array
+operator|->
+name|nelts
+argument_list|)
+decl_stmt|;
+comment|/* for efficiency, directly address source and target reference buffers */
+name|void
+modifier|*
+modifier|*
+name|source
+init|=
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|(
+name|array
+operator|->
+name|elts
+operator|)
+decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|target
+init|=
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|(
+name|new_array
+operator|->
+name|elts
+operator|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* copy ranges iteratively and link them into the target range list */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|array
+operator|->
+name|nelts
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|target
+index|[
+name|i
+index|]
+operator|=
+operator|&
+name|copy
+index|[
+name|i
+operator|*
+name|object_size
+index|]
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|target
+index|[
+name|i
+index|]
+argument_list|,
+name|source
+index|[
+name|i
+index|]
+argument_list|,
+name|object_size
+argument_list|)
+expr_stmt|;
+block|}
+name|new_array
+operator|->
+name|nelts
+operator|=
+name|array
+operator|->
+name|nelts
+expr_stmt|;
+return|return
+name|new_array
+return|;
+block|}
+end_function
+
 begin_function
 name|svn_rangelist_t
 modifier|*
@@ -8474,103 +8552,18 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
-name|svn_rangelist_t
-modifier|*
-name|new_rl
-init|=
-name|apr_array_make
-argument_list|(
-name|pool
-argument_list|,
-name|rangelist
-operator|->
-name|nelts
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|svn_merge_range_t
-operator|*
-argument_list|)
-argument_list|)
-decl_stmt|;
-comment|/* allocate target range buffer with a single operation */
-name|svn_merge_range_t
-modifier|*
-name|copy
-init|=
-name|apr_palloc
-argument_list|(
-name|pool
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|copy
-argument_list|)
-operator|*
-name|rangelist
-operator|->
-name|nelts
-argument_list|)
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* fill it iteratively and link it into the range list */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|rangelist
-operator|->
-name|nelts
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|memcpy
-argument_list|(
-name|copy
-operator|+
-name|i
-argument_list|,
-name|APR_ARRAY_IDX
-argument_list|(
-name|rangelist
-argument_list|,
-name|i
-argument_list|,
-name|svn_merge_range_t
-operator|*
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|copy
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|APR_ARRAY_PUSH
-argument_list|(
-name|new_rl
-argument_list|,
-name|svn_merge_range_t
-operator|*
-argument_list|)
-operator|=
-name|copy
-operator|+
-name|i
-expr_stmt|;
-block|}
 return|return
-name|new_rl
+name|ptr_array_dup
+argument_list|(
+name|rangelist
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_merge_range_t
+argument_list|)
+argument_list|,
+name|pool
+argument_list|)
 return|;
 block|}
 end_function
@@ -9051,7 +9044,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -9220,7 +9213,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -9228,7 +9221,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -9397,7 +9390,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -9406,7 +9399,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -9542,7 +9535,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -9551,7 +9544,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -9624,23 +9617,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|range
-operator|->
-name|start
-operator|+
-name|offset
-operator|<
-literal|0
-condition|)
-name|range
-operator|->
-name|start
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|range
 operator|->
 name|start
@@ -9651,23 +9627,6 @@ name|start
 operator|+
 name|offset
 expr_stmt|;
-if|if
-condition|(
-name|range
-operator|->
-name|end
-operator|+
-name|offset
-operator|<
-literal|0
-condition|)
-name|range
-operator|->
-name|end
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|range
 operator|->
 name|end
@@ -9765,7 +9724,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -10003,11 +9962,7 @@ name|segment
 operator|->
 name|path
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* See if we already stored ranges for this path.  If not, make          a new list.  */
@@ -10196,7 +10151,7 @@ name|svn_rangelist_t
 modifier|*
 name|subtree_rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)

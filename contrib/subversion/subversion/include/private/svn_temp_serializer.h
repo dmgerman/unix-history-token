@@ -122,6 +122,25 @@ modifier|*
 name|context
 parameter_list|)
 function_decl|;
+comment|/**  * Serialize a referenced sub-structure within the serialization  * @a context.  @a source_struct must be a reference to the  * pointer in the original parent structure so that the correspondence in  * the serialized structure can be established. @a struct_size must match  * the result of @c sizeof() of the actual structure.  *  * This function is equivalent but more efficient than calling  * #svn_temp_serializer__push() immediately followed by  * #svn_temp_serializer__pop().  */
+name|void
+name|svn_temp_serializer__add_leaf
+parameter_list|(
+name|svn_temp_serializer__context_t
+modifier|*
+name|context
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+specifier|const
+modifier|*
+name|source_struct
+parameter_list|,
+name|apr_size_t
+name|struct_size
+parameter_list|)
+function_decl|;
 comment|/**  * Serialize a string referenced from the current structure within the  * serialization @a context. @a s must be a reference to the @c char*  * pointer in the original structure so that the correspondence in the  * serialized structure can be established.  *  * Only in case that svn_temp_serializer__init() has not been provided  * with a root structure and this is the first call after the initialization,  * @a s will not be related to some struct.  */
 name|void
 name|svn_temp_serializer__add_string

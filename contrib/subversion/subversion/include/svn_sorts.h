@@ -124,25 +124,8 @@ directive|endif
 comment|/* __cplusplus */
 comment|/** This structure is used to hold a key/value from a hash table.  * @note Private. For use by Subversion's own code only. See issue #1644.  */
 typedef|typedef
-struct|struct
+name|struct
 name|svn_sort__item_t
-block|{
-comment|/** pointer to the key */
-specifier|const
-name|void
-modifier|*
-name|key
-decl_stmt|;
-comment|/** size of the key */
-name|apr_ssize_t
-name|klen
-decl_stmt|;
-comment|/** pointer to the value */
-name|void
-modifier|*
-name|value
-decl_stmt|;
-block|}
 name|svn_sort__item_t
 typedef|;
 comment|/** Compare two @c svn_sort__item_t's, returning an integer greater than,  * equal to, or less than 0, according to whether the key of @a a is  * greater than, equal to, or less than the key of @a b as determined  * by comparing them with svn_path_compare_paths().  *  * The key strings must be NULL-terminated, even though klen does not  * include the terminator.  *  * This is useful for converting a hash into a sorted  * @c apr_array_header_t.  For example, to convert hash @a hsh to a sorted  * array, do this:  *  * @code      apr_array_header_t *array;      array = svn_sort__hash(hsh, svn_sort_compare_items_as_paths, pool);    @endcode  *  * This function works like svn_sort_compare_items_lexically() except that it  * orders children in subdirectories directly after their parents. This allows  * using the given ordering for a depth first walk, but at a performance  * penalty. Code that doesn't need this special behavior for children, e.g. when  * sorting files at a single directory level should use  * svn_sort_compare_items_lexically() instead.  */
@@ -218,110 +201,6 @@ specifier|const
 name|void
 modifier|*
 name|b
-parameter_list|)
-function_decl|;
-comment|/** Sort @a ht according to its keys, return an @c apr_array_header_t  * containing @c svn_sort__item_t structures holding those keys and values  * (i.e. for each @c svn_sort__item_t @a item in the returned array,  * @a item->key and @a item->size are the hash key, and @a item->value points to  * the hash value).  *  * Storage is shared with the original hash, not copied.  *  * @a comparison_func should take two @c svn_sort__item_t's and return an  * integer greater than, equal to, or less than 0, according as the first item  * is greater than, equal to, or less than the second.  *  * @note Private. For use by Subversion's own code only. See issue #1644.  *  * @note This function and the @c svn_sort__item_t should go over to APR.  */
-name|apr_array_header_t
-modifier|*
-name|svn_sort__hash
-parameter_list|(
-name|apr_hash_t
-modifier|*
-name|ht
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|comparison_func
-function_decl|)
-parameter_list|(
-specifier|const
-name|svn_sort__item_t
-modifier|*
-parameter_list|,
-specifier|const
-name|svn_sort__item_t
-modifier|*
-parameter_list|)
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-comment|/* Return the lowest index at which the element @a *key should be inserted into  * the array @a array, according to the ordering defined by @a compare_func.  * The array must already be sorted in the ordering defined by @a compare_func.  * @a compare_func is defined as for the C stdlib function bsearch().  *  * @note Private. For use by Subversion's own code only.  */
-name|int
-name|svn_sort__bsearch_lower_bound
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|key
-parameter_list|,
-specifier|const
-name|apr_array_header_t
-modifier|*
-name|array
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|compare_func
-function_decl|)
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-parameter_list|)
-function_decl|;
-comment|/* Insert a shallow copy of @a *new_element into the array @a array at the index  * @a insert_index, growing the array and shuffling existing elements along to  * make room.  *  * @note Private. For use by Subversion's own code only.  */
-name|void
-name|svn_sort__array_insert
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|new_element
-parameter_list|,
-name|apr_array_header_t
-modifier|*
-name|array
-parameter_list|,
-name|int
-name|insert_index
-parameter_list|)
-function_decl|;
-comment|/* Remove @a elements_to_delete elements starting at @a delete_index from the  * array @a arr. If @a delete_index is not a valid element of @a arr,  * @a elements_to_delete is not greater than zero, or  * @a delete_index + @a elements_to_delete is greater than @a arr->nelts,  * then do nothing.  *  * @note Private. For use by Subversion's own code only.  */
-name|void
-name|svn_sort__array_delete
-parameter_list|(
-name|apr_array_header_t
-modifier|*
-name|arr
-parameter_list|,
-name|int
-name|delete_index
-parameter_list|,
-name|int
-name|elements_to_delete
-parameter_list|)
-function_decl|;
-comment|/* Reverse the order of elements in @a array, in place.  *  * @note Private. For use by Subversion's own code only.  */
-name|void
-name|svn_sort__array_reverse
-parameter_list|(
-name|apr_array_header_t
-modifier|*
-name|array
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|scratch_pool
 parameter_list|)
 function_decl|;
 ifdef|#

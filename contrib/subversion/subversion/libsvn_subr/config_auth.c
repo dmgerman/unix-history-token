@@ -54,10 +54,6 @@ directive|include
 file|"private/svn_auth_private.h"
 end_include
 
-begin_comment
-comment|/* Helper for svn_config_{read|write}_auth_data.  Return a path to a    file within ~/.subversion/auth/ that holds CRED_KIND credentials    within REALMSTRING.  If no path is available *PATH will be set to    NULL. */
-end_comment
-
 begin_function
 name|svn_error_t
 modifier|*
@@ -420,12 +416,6 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
-name|apr_file_t
-modifier|*
-name|authfile
-init|=
-name|NULL
-decl_stmt|;
 name|svn_stream_t
 modifier|*
 name|stream
@@ -434,6 +424,9 @@ specifier|const
 name|char
 modifier|*
 name|auth_path
+decl_stmt|,
+modifier|*
+name|tmp_path
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
@@ -470,7 +463,7 @@ literal|"Unable to locate auth file"
 argument_list|)
 argument_list|)
 return|;
-comment|/* Add the realmstring to the hash, so programs (or users) can      verify exactly which set of credentials this file holds.  */
+comment|/* Add the realmstring to the hash, so programs (or users) can      verify exactly which set of credentials this file holds.      ### What if realmstring key is already in the hash? */
 name|svn_hash_sets
 argument_list|(
 name|hash
@@ -487,24 +480,24 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR_W
 argument_list|(
-name|svn_io_file_open
+name|svn_stream_open_unique
 argument_list|(
 operator|&
-name|authfile
+name|stream
 argument_list|,
+operator|&
+name|tmp_path
+argument_list|,
+name|svn_dirent_dirname
+argument_list|(
 name|auth_path
 argument_list|,
-operator|(
-name|APR_WRITE
-operator||
-name|APR_CREATE
-operator||
-name|APR_TRUNCATE
-operator||
-name|APR_BUFFERED
-operator|)
+name|pool
+argument_list|)
 argument_list|,
-name|APR_OS_DEFAULT
+name|svn_io_file_del_on_pool_cleanup
+argument_list|,
+name|pool
 argument_list|,
 name|pool
 argument_list|)
@@ -513,17 +506,6 @@ name|_
 argument_list|(
 literal|"Unable to open auth file for writing"
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|stream
-operator|=
-name|svn_stream_from_aprfile2
-argument_list|(
-name|authfile
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
 argument_list|)
 expr_stmt|;
 name|SVN_ERR_W
@@ -565,7 +547,19 @@ name|stream
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* To be nice, remove the realmstring from the hash again, just in      case the caller wants their hash unchanged. */
+name|SVN_ERR
+argument_list|(
+name|svn_io_file_rename
+argument_list|(
+name|tmp_path
+argument_list|,
+name|auth_path
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* To be nice, remove the realmstring from the hash again, just in      case the caller wants their hash unchanged.      ### Should we also do this when a write error occurs? */
 name|svn_hash_sets
 argument_list|(
 name|hash
@@ -806,7 +800,7 @@ name|svn_io_dirent2_t
 modifier|*
 name|dirent
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -854,7 +848,7 @@ name|svn_dirent_join
 argument_list|(
 name|dir_path
 argument_list|,
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)

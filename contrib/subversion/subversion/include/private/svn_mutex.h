@@ -41,24 +41,13 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/**  * This is a simple wrapper around @c apr_thread_mutex_t and will be a  * valid identifier even if APR does not support threading.  */
-if|#
-directive|if
-name|APR_HAS_THREADS
 comment|/** A mutex for synchronization between threads. It may be NULL, in  * which case no synchronization will take place. The latter is useful  * when implementing some functionality with optional synchronization.  */
 typedef|typedef
-name|apr_thread_mutex_t
+name|struct
+name|svn_mutex__t
 name|svn_mutex__t
 typedef|;
-else|#
-directive|else
-comment|/** Dummy definition. The content will never be actually accessed.  */
-typedef|typedef
-name|void
-name|svn_mutex__t
-typedef|;
-endif|#
-directive|endif
-comment|/** Initialize the @a *mutex. If @a mutex_required is TRUE, the mutex will  * actually be created with a lifetime defined by @a result_pool. Otherwise,  * the pointer will be set to @c NULL and svn_mutex__lock() as well as  * svn_mutex__unlock() will be no-ops.  *  * If threading is not supported by APR, this function is a no-op.  */
+comment|/** Initialize the @a *mutex. If @a mutex_required is TRUE, the mutex will  * actually be created with a lifetime defined by @a result_pool. Otherwise,  * the pointer will be set to @c NULL and svn_mutex__lock() as well as  * svn_mutex__unlock() will be no-ops.  *  * We don't support recursive locks, i.e. a thread may not acquire the same  * mutex twice without releasing it in between.  Attempts to lock a mutex  * recursively will cause lock ups and other undefined behavior on some  * systems.  *  * If threading is not supported by APR, this function is a no-op.  */
 name|svn_error_t
 modifier|*
 name|svn_mutex__init

@@ -45,6 +45,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* The kind values used on NODES */
 specifier|static
 specifier|const
 name|svn_token_map_t
@@ -80,6 +81,49 @@ name|svn_node_unknown
 block|}
 block|,
 comment|/* MAP_UNKNOWN */
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+comment|/* Like kind_map, but also supports 'none' */
+specifier|static
+specifier|const
+name|svn_token_map_t
+name|kind_map_none
+index|[]
+init|=
+block|{
+block|{
+literal|"none"
+block|,
+name|svn_node_none
+block|}
+block|,
+block|{
+literal|"file"
+block|,
+name|svn_node_file
+block|}
+block|,
+block|{
+literal|"dir"
+block|,
+name|svn_node_dir
+block|}
+block|,
+block|{
+literal|"symlink"
+block|,
+name|svn_node_symlink
+block|}
+block|,
+block|{
+literal|"unknown"
+block|,
+name|svn_node_unknown
+block|}
+block|,
 block|{
 name|NULL
 block|}

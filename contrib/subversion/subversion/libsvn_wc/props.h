@@ -281,6 +281,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* Creates a property reject file at *TMP_PREJFILE_ABSPATH, with    either the property conflict data from DB (when PROP_CONFLICT_DATA    is NULL) or the information in PROP_CONFLICT_DATA if it isn't.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__create_prejfile
@@ -303,7 +304,14 @@ parameter_list|,
 specifier|const
 name|svn_skel_t
 modifier|*
-name|conflict_skel
+name|prop_conflict_data
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
