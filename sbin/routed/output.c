@@ -2817,6 +2817,10 @@ case|:
 if|if
 condition|(
 name|ifp
+operator|!=
+name|NULL
+operator|&&
+name|ifp
 operator|->
 name|int_if_flags
 operator|&
@@ -3057,6 +3061,8 @@ comment|/*  Fake a default route if asked and if there is not already 	 * a bett
 if|if
 condition|(
 name|supplier
+operator|&&
+name|ifp
 operator|&&
 operator|(
 name|def_metric
