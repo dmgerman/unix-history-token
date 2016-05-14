@@ -721,8 +721,6 @@ sizeof|sizeof
 argument_list|(
 name|hostname
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 operator|<
 literal|0
@@ -2118,11 +2116,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tname
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tname
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while

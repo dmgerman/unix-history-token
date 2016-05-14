@@ -663,7 +663,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|newdate
 argument_list|,
@@ -671,6 +671,11 @@ name|ctime
 argument_list|(
 operator|&
 name|tsp_time_sec
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newdate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -754,7 +759,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|newdate
 argument_list|,
@@ -762,6 +767,11 @@ name|ctime
 argument_list|(
 operator|&
 name|tsp_time_sec
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newdate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1476,12 +1486,17 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|olddate
 argument_list|,
 name|date
 argument_list|()
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|olddate
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* adjust time for residence on the queue */
