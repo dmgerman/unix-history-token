@@ -2024,8 +2024,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2123,8 +2122,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2195,8 +2193,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2600,14 +2597,12 @@ parameter_list|)
 block|{
 name|int32_t
 name|i
+decl_stmt|,
+name|tok
 decl_stmt|;
 name|enum
 name|snmp_tc
 name|tc
-decl_stmt|;
-name|enum
-name|tok
-name|tok
 decl_stmt|;
 name|struct
 name|snmp_index_entry
@@ -3022,8 +3017,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -3256,8 +3250,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|enum
-name|tok
+name|int32_t
 name|tok
 decl_stmt|;
 name|struct
@@ -3665,8 +3658,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|)
@@ -3779,8 +3771,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|)
@@ -4058,8 +4049,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|enum
-name|tok
+name|int32_t
 name|tok
 decl_stmt|;
 name|tok
