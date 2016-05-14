@@ -35422,6 +35422,17 @@ name|phyctl
 operator||=
 name|BWN_TX_PHY_SHORTPRMBL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|phy
+operator|->
+name|gmode
+condition|)
+name|macctl
+operator||=
+name|BWN_TX_MAC_5GHZ
+expr_stmt|;
 comment|/* XXX TX antenna selection */
 switch|switch
 condition|(
