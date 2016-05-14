@@ -8777,6 +8777,15 @@ condition|)
 goto|goto
 name|fail
 goto|;
+comment|/* XXX need bhnd */
+if|if
+condition|(
+name|bwn_is_bus_siba
+argument_list|(
+name|mac
+argument_list|)
+condition|)
+block|{
 name|have_a
 operator|=
 operator|(
@@ -8801,6 +8810,34 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: not siba; bailing\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|#
+directive|if
+literal|0
+block|device_printf(sc->sc_dev, "%s: high=0x%08x, have_a=%d, have_bg=%d," 	    " deviceid=0x%04x, siba_deviceid=0x%04x\n", 	    __func__, 	    high, 	    have_a, 	    have_bg, 	    siba_get_pci_device(sc->sc_dev), 	    siba_get_chipid(sc->sc_dev));
+endif|#
+directive|endif
 if|if
 condition|(
 name|siba_get_pci_device
@@ -9971,6 +10008,13 @@ operator|&
 literal|0x00000fff
 operator|)
 expr_stmt|;
+comment|/* 	 * For now, just always do full init (ie, what bwn has traditionally 	 * done) 	 */
+name|phy
+operator|->
+name|phy_do_full_init
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|phy
@@ -10478,6 +10522,21 @@ operator|->
 name|ic_nchans
 operator|=
 literal|0
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_EEPROM
+argument_list|,
+literal|"%s: called; bg=%d, a=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|have_bg
+argument_list|,
+name|have_a
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
