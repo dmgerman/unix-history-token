@@ -419,6 +419,27 @@ operator|->
 name|fh
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For WRONLY opens, force DIRECT_IO.  This is necessary 	 * since writing a partial block through the buffer cache 	 * will result in a read of the block and that read won't 	 * be allowed by the WRONLY open. 	 */
+if|if
+condition|(
+name|fufh_type
+operator|==
+name|FUFH_WRONLY
+condition|)
+name|fuse_vnode_open
+argument_list|(
+name|vp
+argument_list|,
+name|foo
+operator|->
+name|open_flags
+operator||
+name|FOPEN_DIRECT_IO
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+else|else
 name|fuse_vnode_open
 argument_list|(
 name|vp
