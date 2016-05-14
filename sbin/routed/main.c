@@ -3533,7 +3533,7 @@ else|:
 operator|(
 name|lo
 operator|+
-name|random
+name|arc4random
 argument_list|()
 operator|%
 operator|(
@@ -3550,7 +3550,7 @@ name|tp
 operator|->
 name|tv_usec
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|%
 literal|1000000
