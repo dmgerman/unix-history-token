@@ -251,11 +251,20 @@ name|pics
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EARLY_AP_STARTUP
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1360,6 +1369,27 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+name|mp_ncpus
+operator|==
+literal|1
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpu
+operator|!=
+name|NOCPU
+condition|)
+block|{
+else|#
+directive|else
 comment|/* 	 * Don't do anything during early boot.  We will pick up the 	 * assignment once the APs are started. 	 */
 if|if
 condition|(
@@ -1370,6 +1400,8 @@ operator|!=
 name|NOCPU
 condition|)
 block|{
+endif|#
+directive|endif
 name|isrc
 operator|=
 name|arg
@@ -1423,9 +1455,6 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|intrcnt_setname
@@ -1463,9 +1492,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|intrcnt_updatename
@@ -1490,9 +1516,6 @@ name|is_index
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|intrcnt_register
@@ -1611,9 +1634,6 @@ name|intrcnt_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|intrcnt_add
 parameter_list|(
@@ -1660,9 +1680,6 @@ name|intrcnt_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|intr_init
@@ -1715,9 +1732,6 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|intr_init
@@ -1731,9 +1745,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|void
 name|intr_init_final
@@ -1749,9 +1760,6 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|intr_init_final
@@ -1765,19 +1773,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|DEV_ATPIC
-end_ifndef
-
-begin_comment
 comment|/* Initialize the two 8259A's to a known-good shutdown state. */
-end_comment
-
-begin_function
 name|void
 name|atpic_reset
 parameter_list|(
@@ -1898,18 +1897,9 @@ name|OCW3_RR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Add a description to an active interrupt handler. */
-end_comment
-
-begin_function
 name|int
 name|intr_describe
 parameter_list|(
@@ -1985,9 +1975,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|intr_reprogram
 parameter_list|(
@@ -2063,28 +2050,16 @@ name|intr_table_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
-end_ifdef
-
-begin_comment
 comment|/*  * Dump data about interrupt handlers  */
-end_comment
-
-begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
 argument|irqs
 argument_list|,
 argument|db_show_irqs
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|struct
 name|intsrc
@@ -2160,24 +2135,12 @@ name|verbose
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SMP
-end_ifdef
-
-begin_comment
 comment|/*  * Support for balancing interrupt sources across CPUs.  For now we just  * allocate CPUs round-robin.  */
-end_comment
-
-begin_decl_stmt
 name|cpuset_t
 name|intr_cpus
 init|=
@@ -2186,20 +2149,11 @@ argument_list|(
 literal|0x1
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|current_cpu
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Return the CPU that the next interrupt source should use.  For now  * this just returns the next local APIC according to round-robin.  */
-end_comment
-
-begin_function
 name|u_int
 name|intr_next_cpu
 parameter_list|(
@@ -2209,6 +2163,20 @@ block|{
 name|u_int
 name|apic_id
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+name|mp_ncpus
+operator|==
+literal|1
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Leave all interrupts on the BSP during boot. */
 if|if
 condition|(
@@ -2223,6 +2191,8 @@ name|apic_id
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2276,13 +2246,7 @@ name|apic_id
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Attempt to bind the specified IRQ to the specified CPU. */
-end_comment
-
-begin_function
 name|int
 name|intr_bind
 parameter_list|(
@@ -2329,13 +2293,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Add a CPU to our mask of valid CPUs that can be destinations of  * interrupts.  */
-end_comment
-
-begin_function
 name|void
 name|intr_add_cpu
 parameter_list|(
@@ -2379,13 +2337,10 @@ name|intr_cpus
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/*  * Distribute all the interrupt sources among the available CPUs once the  * AP's have been launched.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|intr_shuffle_irqs
@@ -2523,9 +2478,6 @@ name|intr_table_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|intr_shuffle_irqs
@@ -2539,18 +2491,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
+endif|#
+directive|endif
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/*  * Always route interrupts to the current processor in the UP case.  */
-end_comment
-
-begin_function
 name|u_int
 name|intr_next_cpu
 parameter_list|(

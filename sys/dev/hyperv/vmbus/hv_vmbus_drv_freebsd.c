@@ -1880,12 +1880,17 @@ name|vmbus_devp
 operator|=
 name|dev
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible indicated by the global 	 * cold set to zero, we just call the driver 	 * initialization directly. 	 */
 if|if
 condition|(
 operator|!
 name|cold
 condition|)
+endif|#
+directive|endif
 name|vmbus_bus_init
 argument_list|()
 expr_stmt|;
@@ -1917,12 +1922,17 @@ operator|!=
 name|VM_GUEST_HV
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible, as indicated by the 	 * global cold set to zero, we just call the driver 	 * initialization directly. 	 */
 if|if
 condition|(
 operator|!
 name|cold
 condition|)
+endif|#
+directive|endif
 name|vmbus_bus_init
 argument_list|()
 expr_stmt|;
@@ -2148,6 +2158,14 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|vmbus_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|vmbus_mod_load
 argument_list|()
 expr_stmt|;
@@ -2338,6 +2356,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
+end_ifndef
+
 begin_comment
 comment|/* We want to be started after SMP is initialized */
 end_comment
@@ -2359,6 +2383,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

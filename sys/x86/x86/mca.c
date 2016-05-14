@@ -3057,6 +3057,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+end_ifdef
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|mca_startup
+argument_list|,
+name|SI_SUB_KICK_SCHEDULER
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|mca_startup
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -3072,6 +3099,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

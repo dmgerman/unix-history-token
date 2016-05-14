@@ -1483,11 +1483,43 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+name|mp_ncpus
+operator|==
+literal|1
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Prepare broadcasting to other CPUs for non-per-CPU timers. */
 name|bcast
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+if|if
+condition|(
+operator|(
+name|et
+operator|->
+name|et_flags
+operator|&
+name|ET_FLAGS_PERCPU
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -1503,6 +1535,8 @@ operator|&&
 name|smp_started
 condition|)
 block|{
+endif|#
+directive|endif
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -1635,13 +1669,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Load new value into hardware timer.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|loadtimer
@@ -1868,13 +1896,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Prepare event timer parameters after configuration changes.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|setuptimer
@@ -1975,13 +1997,7 @@ operator|/
 name|freq
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Reconfigure specified per-CPU timer on other CPU. Called from IPI handler.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|doconfigtimer
@@ -2139,13 +2155,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Reconfigure specified timer.  * For per-CPU timers use IPI to make other CPUs to reconfigure.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|configtimer
@@ -2223,6 +2233,20 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+name|mp_ncpus
+operator|==
+literal|1
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -2243,6 +2267,9 @@ name|now
 operator|=
 name|now
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 if|if
 condition|(
 operator|!
@@ -2260,6 +2287,8 @@ operator|=
 name|SBT_MAX
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|state
 operator|->
 name|nextevent
@@ -2357,6 +2386,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+comment|/* If timer is global we are done. */
+if|if
+condition|(
+operator|(
+name|timer
+operator|->
+name|et_flags
+operator|&
+name|ET_FLAGS_PERCPU
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+else|#
+directive|else
 comment|/* If timer is global or there is no other CPUs yet - we are done. */
 if|if
 condition|(
@@ -2374,6 +2422,8 @@ operator|!
 name|smp_started
 condition|)
 block|{
+endif|#
+directive|endif
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -2472,13 +2522,7 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Calculate nearest frequency supported by hardware timer.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|round_freq
@@ -2637,13 +2681,7 @@ name|freq
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Configure and start event timers (BSP part).  */
-end_comment
-
-begin_function
 name|void
 name|cpu_initclocks_bsp
 parameter_list|(
@@ -3111,13 +3149,7 @@ name|ET_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Start per-CPU event timers on APs.  */
-end_comment
-
-begin_function
 name|void
 name|cpu_initclocks_ap
 parameter_list|(
@@ -3200,13 +3232,7 @@ name|spinlock_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Switch to profiling clock rates.  */
-end_comment
-
-begin_function
 name|void
 name|cpu_startprofclock
 parameter_list|(
@@ -3257,13 +3283,7 @@ name|ET_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Switch to regular clock rates.  */
-end_comment
-
-begin_function
 name|void
 name|cpu_stopprofclock
 parameter_list|(
@@ -3314,13 +3334,7 @@ name|ET_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Switch to idle mode (all ticks handled).  */
-end_comment
-
-begin_function
 name|sbintime_t
 name|cpu_idleclock
 parameter_list|(
@@ -3475,13 +3489,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Switch to active mode (skip empty ticks).  */
-end_comment
-
-begin_function
 name|void
 name|cpu_activeclock
 parameter_list|(
@@ -3590,13 +3598,7 @@ name|spinlock_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Change the frequency of the given timer.  This changes et->et_frequency and  * if et is the active timer it reconfigures the timer on all CPUs.  This is  * intended to be a private interface for the use of et_change_frequency() only.  */
-end_comment
-
-begin_function
 name|void
 name|cpu_et_frequency
 parameter_list|(
@@ -3647,9 +3649,6 @@ name|ET_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cpu_new_callout
 parameter_list|(
@@ -3845,13 +3844,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  * Report or change the active event timers hardware.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sysctl_kern_eventtimer_timer
@@ -4047,9 +4040,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_kern_eventtimer
@@ -4075,13 +4065,7 @@ argument_list|,
 literal|"Chosen event timer"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Report or change the active event timer periodicity.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|sysctl_kern_eventtimer_periodic
@@ -4157,9 +4141,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_kern_eventtimer
@@ -4185,36 +4166,21 @@ argument_list|,
 literal|"Enable event timer periodic mode"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
-end_include
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<ddb/ddb.h>
-end_include
-
-begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
 argument|clocksource
 argument_list|,
 argument|db_show_clocksource
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|struct
 name|pcpu_state
@@ -4428,7 +4394,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

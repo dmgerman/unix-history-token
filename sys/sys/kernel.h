@@ -306,9 +306,19 @@ init|=
 literal|0x2800000
 block|,
 comment|/* interrupt threads */
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|SI_SUB_SMP
+init|=
+literal|0x2900000
+block|,
+comment|/* start the APs*/
+endif|#
+directive|endif
 name|SI_SUB_SOFTINTR
 init|=
-literal|0x2800001
+literal|0x2A00000
 block|,
 comment|/* start soft interrupt thread */
 name|SI_SUB_DEVFS
@@ -486,11 +496,16 @@ init|=
 literal|0xee00000
 block|,
 comment|/* idle procs*/
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 name|SI_SUB_SMP
 init|=
 literal|0xf000000
 block|,
 comment|/* start the APs*/
+endif|#
+directive|endif
 name|SI_SUB_RACCTD
 init|=
 literal|0xf100000

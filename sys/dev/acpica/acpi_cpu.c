@@ -2309,6 +2309,16 @@ condition|(
 name|attached
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|acpi_cpu_startup
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Queue post cpu-probing task handler */
 name|AcpiOsExecute
 argument_list|(
@@ -2319,6 +2329,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function

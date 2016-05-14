@@ -3738,10 +3738,15 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/* Start per-CPU event timers. */
 name|cpu_initclocks_ap
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|sched_throw
 argument_list|(
 name|NULL

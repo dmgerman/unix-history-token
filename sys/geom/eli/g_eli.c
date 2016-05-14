@@ -2201,7 +2201,23 @@ name|w_softc
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+operator|!
+name|sc
+operator|->
+name|sc_cpubind
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
 comment|/* Before sched_bind() to a CPU, wait for all CPUs to go on-line. */
 if|if
 condition|(

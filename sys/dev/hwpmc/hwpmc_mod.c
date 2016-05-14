@@ -1629,6 +1629,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+end_ifdef
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|pmc
+argument_list|,
+name|pmc_mod
+argument_list|,
+name|SI_SUB_SYSCALLS
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
@@ -1642,6 +1667,11 @@ name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MODULE_VERSION

@@ -1239,6 +1239,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|MPASS
+argument_list|(
+name|mp_ncpus
+operator|==
+literal|1
+operator|||
+name|smp_started
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* 	 * If still booting and secondary CPUs not started yet, don't allow 	 * changing the frequency until they're online.  This is because we 	 * can't switch to them using sched_bind() and thus we'd only be 	 * switching the main CPU.  XXXTODO: Need to think more about how to 	 * handle having different CPUs at different frequencies.   	 */
 if|if
 condition|(
@@ -1265,6 +1279,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* SMP */

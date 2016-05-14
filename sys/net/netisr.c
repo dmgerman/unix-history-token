@@ -4482,6 +4482,16 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|struct
+name|pcpu
+modifier|*
+name|pc
+decl_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|curcpu
@@ -4601,6 +4611,37 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+name|STAILQ_FOREACH
+argument_list|(
+argument|pc
+argument_list|,
+argument|&cpuhead
+argument_list|,
+argument|pc_allcpu
+argument_list|)
+block|{
+if|if
+condition|(
+name|nws_count
+operator|>=
+name|netisr_maxthreads
+condition|)
+break|break;
+name|netisr_start_swi
+argument_list|(
+name|pc
+operator|->
+name|pc_cpuid
+argument_list|,
+name|pc
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|netisr_start_swi
 argument_list|(
 name|curcpu
@@ -4611,6 +4652,8 @@ name|curcpu
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4629,6 +4672,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
+end_ifndef
 
 begin_comment
 comment|/*  * Start worker threads for additional CPUs.  No attempt to gracefully handle  * work reassignment, we don't yet support dynamic reconfiguration.  */
@@ -4703,6 +4752,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Sysctl monitoring for netisr: query a list of registered protocols.  */
