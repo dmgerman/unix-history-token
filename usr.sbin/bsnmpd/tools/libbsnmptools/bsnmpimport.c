@@ -3368,12 +3368,10 @@ name|string
 argument_list|,
 name|nexttok
 argument_list|,
-name|strlen
+name|nitems
 argument_list|(
-name|nexttok
+name|string
 argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|oid2str
