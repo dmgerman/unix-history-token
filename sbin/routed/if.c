@@ -4412,6 +4412,10 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 continue|continue;
 block|}
@@ -5285,7 +5289,11 @@ expr_stmt|;
 comment|/* If we are multi-homed, optionally advertise a route to 	 * our main address. 	 */
 if|if
 condition|(
+operator|(
 name|advertise_mhome
+operator|&&
+name|ifp
+operator|)
 operator|||
 operator|(
 name|tot_interfaces
