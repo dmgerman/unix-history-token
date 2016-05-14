@@ -1229,7 +1229,7 @@ name|fstring
 argument_list|,
 name|filename
 argument_list|,
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|fstring
 argument_list|)
