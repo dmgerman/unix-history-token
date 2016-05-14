@@ -1395,11 +1395,9 @@ name|lanes
 operator|!=
 name|NULL
 condition|)
-name|free
+name|OF_prop_free
 argument_list|(
 name|lanes
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1410,13 +1408,11 @@ name|function
 operator|!=
 name|NULL
 condition|)
-name|free
+name|OF_prop_free
 argument_list|(
 name|cfg
 operator|.
 name|function
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return

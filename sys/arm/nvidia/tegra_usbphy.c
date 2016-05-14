@@ -3212,11 +3212,9 @@ argument_list|,
 name|tmpstr
 argument_list|)
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|tmpstr
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return
@@ -3346,11 +3344,9 @@ argument_list|,
 name|tmpstr
 argument_list|)
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|tmpstr
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return

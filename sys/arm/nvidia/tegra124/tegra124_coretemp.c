@@ -557,11 +557,9 @@ operator|->
 name|cpu_id
 expr_stmt|;
 comment|//cells[0];
-name|free
+name|OF_prop_free
 argument_list|(
 name|cells
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 name|sc
