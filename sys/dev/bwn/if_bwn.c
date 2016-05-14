@@ -12709,6 +12709,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sc
@@ -12891,6 +12902,17 @@ decl_stmt|;
 name|BWN_ASSERT_LOCKED
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -27288,11 +27310,15 @@ operator|(
 literal|0
 operator|)
 return|;
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|BWN_DEBUG_RF
+operator||
+name|BWN_DEBUG_PHY
+operator||
+name|BWN_DEBUG_RESET
 argument_list|,
 literal|"switching to %s-GHz band\n"
 argument_list|,
@@ -27465,6 +27491,19 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|bwn_mac_suspend
 argument_list|(
 name|mac
@@ -27508,6 +27547,19 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|bwn_mac_suspend
 argument_list|(
 name|mac
