@@ -1229,12 +1229,10 @@ name|fstring
 argument_list|,
 name|filename
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
-name|filename
+name|fstring
 argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|entry
