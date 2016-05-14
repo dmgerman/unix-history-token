@@ -271,7 +271,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|bwn_txpwr_result_t
 name|bwn_phy_g_recalc_txpwr
 parameter_list|(
 name|struct
