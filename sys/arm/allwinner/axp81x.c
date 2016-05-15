@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/gpio.h>
 end_include
 
@@ -1046,9 +1040,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|THREAD_SLEEPING_OK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|axp81x_read
@@ -1119,9 +1110,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|THREAD_NO_SLEEPING
-argument_list|()
-expr_stmt|;
 name|AXP_UNLOCK
 argument_list|(
 name|sc
@@ -1186,9 +1174,6 @@ name|AXP_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|THREAD_SLEEPING_OK
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1268,9 +1253,6 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-name|THREAD_NO_SLEEPING
-argument_list|()
-expr_stmt|;
 name|AXP_UNLOCK
 argument_list|(
 name|sc
@@ -1339,9 +1321,6 @@ name|AXP_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|THREAD_SLEEPING_OK
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1451,9 +1430,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|THREAD_NO_SLEEPING
-argument_list|()
-expr_stmt|;
 name|AXP_UNLOCK
 argument_list|(
 name|sc
@@ -1522,9 +1498,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|THREAD_SLEEPING_OK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|axp81x_read
@@ -1616,9 +1589,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|THREAD_NO_SLEEPING
-argument_list|()
-expr_stmt|;
 name|AXP_UNLOCK
 argument_list|(
 name|sc
@@ -1682,9 +1652,6 @@ name|AXP_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|THREAD_SLEEPING_OK
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -1790,9 +1757,6 @@ name|ctrl_reg
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-name|THREAD_NO_SLEEPING
-argument_list|()
 expr_stmt|;
 name|AXP_UNLOCK
 argument_list|(
