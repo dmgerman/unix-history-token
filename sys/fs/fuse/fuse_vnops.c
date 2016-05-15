@@ -4528,12 +4528,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fuse_filehandle_valid
+name|fuse_filehandle_validrw
 argument_list|(
 name|vp
 argument_list|,
 name|fufh_type
 argument_list|)
+operator|!=
+name|FUFH_INVALID
 condition|)
 block|{
 name|fuse_vnode_open
