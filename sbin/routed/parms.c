@@ -2835,12 +2835,19 @@ name|intnet_metric
 operator|>=
 name|HOPCNT_INFINITY
 condition|)
+block|{
+name|free
+argument_list|(
+name|intnetp
+argument_list|)
+expr_stmt|;
 return|return
 name|bad_str
 argument_list|(
 name|line
 argument_list|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -3313,6 +3320,10 @@ block|{
 comment|/* This is a bad idea, because the address based 			 * sets of parameters cannot be checked for 			 * consistency with the interface name parameters. 			 * The parm_net stuff is needed to allow several 			 * -F settings. 			 */
 if|if
 condition|(
+name|val0
+operator|==
+name|NULL
+operator|||
 operator|!
 name|getnet
 argument_list|(
@@ -3372,6 +3383,18 @@ argument_list|)
 condition|)
 block|{
 comment|/* since cleartext passwords are so weak allow 			 * them anywhere 			 */
+if|if
+condition|(
+name|val0
+operator|==
+name|NULL
+condition|)
+return|return
+name|bad_str
+argument_list|(
+literal|"no passwd"
+argument_list|)
+return|;
 name|msg
 operator|=
 name|get_passwd
@@ -4263,12 +4286,19 @@ name|mask
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|tg
+argument_list|)
+expr_stmt|;
 return|return
 name|bad_str
 argument_list|(
 name|tgt
 argument_list|)
 return|;
+block|}
 name|i
 operator|++
 expr_stmt|;
