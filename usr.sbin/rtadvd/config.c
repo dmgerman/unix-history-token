@@ -3136,7 +3136,7 @@ name|ndi
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ndi
 operator|.

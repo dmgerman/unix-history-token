@@ -1823,7 +1823,7 @@ name|nd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|nd
 operator|.
@@ -2532,7 +2532,7 @@ name|sa_family
 operator|=
 name|AF_INET6
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
