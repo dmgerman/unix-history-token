@@ -879,6 +879,12 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|arm_tmr_sc
+operator|!=
+name|NULL
+condition|)
 name|smp_rendezvous
 argument_list|(
 name|NULL
