@@ -8429,7 +8429,7 @@ operator|=
 operator|*
 name|sin6
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
