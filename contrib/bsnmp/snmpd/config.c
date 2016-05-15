@@ -3582,9 +3582,11 @@ name|ASN_MAXID
 condition|)
 name|report
 argument_list|(
-literal|"subid too large %#"
-name|QUADXFMT
+literal|"subid too large %#jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|numval
 argument_list|)
 expr_stmt|;
@@ -3899,9 +3901,11 @@ literal|0x7fffffff
 condition|)
 name|report
 argument_list|(
-literal|"INTEGER too large %"
-name|QUADFMT
+literal|"INTEGER too large %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|numval
 argument_list|)
 expr_stmt|;
