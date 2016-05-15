@@ -428,7 +428,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Reply to ICMP Address Mask Request packets."
+literal|"Reply to ICMP Address Mask Request packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -474,7 +474,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Fake reply to ICMP Address Mask Request packets."
+literal|"Fake reply to ICMP Address Mask Request packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -612,7 +612,7 @@ argument_list|)
 argument_list|,
 name|IFNAMSIZ
 argument_list|,
-literal|"icmp reply source for non-local packets."
+literal|"ICMP reply source for non-local packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -709,10 +709,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * ICMP broadcast echo sysctl  */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -754,7 +750,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Reply to multicast ICMP Echo Request and Timestamp packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
