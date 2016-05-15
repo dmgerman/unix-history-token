@@ -6165,6 +6165,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|DT
 argument_list|(
 name|ipf_checkv6sum_fi_nocksum
@@ -6173,6 +6174,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -6185,6 +6187,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|DT
 argument_list|(
 name|ipf_checkv6sum_fi_short
@@ -6193,6 +6196,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|fin
@@ -6201,6 +6205,7 @@ name|fin_cksum
 operator|!=
 name|FI_CK_NEEDED
 condition|)
+block|{
 name|DT
 argument_list|(
 name|ipf_checkv6sum_fi_ck_needed
@@ -6220,6 +6225,7 @@ else|:
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|ipf_checkl4sum
