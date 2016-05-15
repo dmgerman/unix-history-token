@@ -4374,5 +4374,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|gpioc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|gpioc_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|gpioc
+argument_list|,
+name|tegra_gpio
+argument_list|,
+name|gpioc_driver
+argument_list|,
+name|gpioc_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
