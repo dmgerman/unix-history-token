@@ -2213,29 +2213,32 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
+decl_stmt|,
+name|val
 decl_stmt|;
-name|int
-name|old
-decl_stmt|;
+name|val
+operator|=
+name|V_ip6_temp_preferred_lifetime
+expr_stmt|;
 name|error
 operator|=
-name|SYSCTL_OUT
+name|sysctl_handle_int
 argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
+argument_list|,
 name|req
-argument_list|,
-name|arg1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 operator|||
 operator|!
 name|req
@@ -2247,46 +2250,26 @@ operator|(
 name|error
 operator|)
 return|;
-name|old
-operator|=
-name|V_ip6_temp_preferred_lifetime
-expr_stmt|;
-name|error
-operator|=
-name|SYSCTL_IN
-argument_list|(
-name|req
-argument_list|,
-name|arg1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|V_ip6_temp_preferred_lifetime
+name|val
 operator|<
 name|V_ip6_desync_factor
 operator|+
 name|V_ip6_temp_regen_advance
 condition|)
-block|{
-name|V_ip6_temp_preferred_lifetime
-operator|=
-name|old
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+name|V_ip6_temp_preferred_lifetime
+operator|=
+name|val
+expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -2302,29 +2285,32 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
+decl_stmt|,
+name|val
 decl_stmt|;
-name|int
-name|old
-decl_stmt|;
+name|val
+operator|=
+name|V_ip6_temp_valid_lifetime
+expr_stmt|;
 name|error
 operator|=
-name|SYSCTL_OUT
+name|sysctl_handle_int
 argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
+argument_list|,
 name|req
-argument_list|,
-name|arg1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 operator|||
 operator|!
 name|req
@@ -2336,44 +2322,24 @@ operator|(
 name|error
 operator|)
 return|;
-name|old
-operator|=
-name|V_ip6_temp_valid_lifetime
-expr_stmt|;
-name|error
-operator|=
-name|SYSCTL_IN
-argument_list|(
-name|req
-argument_list|,
-name|arg1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|V_ip6_temp_valid_lifetime
+name|val
 operator|<
 name|V_ip6_temp_preferred_lifetime
 condition|)
-block|{
-name|V_ip6_temp_preferred_lifetime
-operator|=
-name|old
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+name|V_ip6_temp_valid_lifetime
+operator|=
+name|val
+expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -2400,7 +2366,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable IPv6 forwarding between interfaces"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2426,7 +2392,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Send a redirect message when forwarding back to a source link"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2452,7 +2418,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default hop limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2497,7 +2463,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum allowed number of outstanding fragmented IPv6 packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2523,8 +2489,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Default value of per-interface flag for accepting ICMPv6 Router"
-literal|"Advertisement messages"
+literal|"Default value of per-interface flag for accepting ICMPv6 RA messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2552,7 +2517,7 @@ literal|0
 argument_list|,
 literal|"Default value of per-interface flag to control whether routers "
 literal|"sending ICMPv6 RA messages on that interface are added into the "
-literal|"default router list."
+literal|"default router list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2578,8 +2543,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Always set 0 to R flag in ICMPv6 NA messages when accepting RA"
-literal|" on the interface."
+literal|"Always set clear the R flag in ICMPv6 NA messages when accepting RA "
+literal|"on the interface"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2606,7 +2571,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Accept the default router list from ICMPv6 RA messages even "
-literal|"when packet forwarding enabled."
+literal|"when packet forwarding is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2632,7 +2597,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Frequency in seconds at which to log IPv6 forwarding errors"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2658,7 +2623,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum allowed number of nested protocol headers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2684,7 +2649,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of ICMPv6 NS messages sent during duplicate address detection"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2710,7 +2675,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Provide an IPv6 flowlabel in outbound packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2736,7 +2701,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default hop limit for multicast packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2756,7 +2721,7 @@ name|__KAME_VERSION
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"KAME version string"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2782,7 +2747,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow the use of addresses whose preferred lifetimes have expired"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2813,6 +2778,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX unused */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2834,7 +2803,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Create RFC3041 temporary addresses for autoconfigured addresses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2854,11 +2823,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ip6_temp_preferred_lifetime
-argument_list|)
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -2866,7 +2831,7 @@ name|sysctl_ip6_temppltime
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Maximum preferred lifetime for temporary addresses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2886,11 +2851,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ip6_temp_valid_lifetime
-argument_list|)
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -2898,7 +2859,7 @@ name|sysctl_ip6_tempvltime
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Maximum valid lifetime for temporary addresses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2924,7 +2885,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Restrict AF_INET6 sockets to IPv6 addresses only"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2950,8 +2911,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Default value of per-interface flag for automatically adding an IPv6"
-literal|" link-local address to interfaces when attached"
+literal|"Default value of per-interface flag for automatically adding an IPv6 "
+literal|"link-local address to interfaces when attached"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2996,7 +2957,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Prefer RFC3041 temporary addresses in source address selection"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3022,7 +2983,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Use the default scope zone when none is specified"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3048,7 +3009,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum allowed number of outstanding IPv6 packet fragments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3074,7 +3035,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable path MTU discovery for multicast packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3106,7 +3067,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Forward IPv6 packets without decrementing their TTL"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3141,7 +3102,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Accept ICMPv6 redirect messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3171,6 +3132,10 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* XXX unused */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_VNET_PCPUSTAT
@@ -3212,7 +3177,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Frequency in seconds of checks for expired prefixes and routers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3238,7 +3203,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay in seconds before probing for reachability"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3264,7 +3229,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of ICMPv6 NS messages sent during reachability detection"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3290,7 +3255,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of ICMPv6 NS messages sent during address resolution"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3316,7 +3281,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Create a loopback route when configuring an IPv6 address"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3342,7 +3307,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Mask of enabled RF4620 node information query types"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3368,8 +3333,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Join old IPv6 NI group address in draft-ietf-ipngwg-icmp-name-lookup"
-literal|" for compatibility with KAME implememtation."
+literal|"Join old IPv6 NI group address in draft-ietf-ipngwg-icmp-name-lookup "
+literal|"for compatibility with KAME implementation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3395,7 +3360,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of ICMPv6 error messages per second"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3426,6 +3391,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX unused */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -3447,7 +3416,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Log NDP debug messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3473,7 +3442,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Accept 'on-link' nd6 NS in compliance with RFC 4861."
+literal|"Accept 'on-link' ICMPv6 NS messages in compliance with RFC 4861"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
