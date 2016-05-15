@@ -255,7 +255,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|ofwiicbus_devclass
 decl_stmt|;
