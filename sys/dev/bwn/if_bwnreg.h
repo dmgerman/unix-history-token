@@ -624,6 +624,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BWN_TGSHIGH_DUALPHY
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BWN_PHYTYPE_A
 value|0x00
 end_define
