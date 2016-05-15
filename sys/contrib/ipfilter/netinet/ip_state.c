@@ -2696,7 +2696,7 @@ operator|)
 operator|&
 name|st
 operator|.
-name|is_src
+name|is_dst
 argument_list|,
 sizeof|sizeof
 argument_list|(
