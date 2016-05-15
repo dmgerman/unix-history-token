@@ -5061,7 +5061,7 @@ continue|continue;
 comment|/* ignore compat message */
 endif|#
 directive|endif
-name|strcpy
+name|strlcpy
 argument_list|(
 name|str
 argument_list|,
@@ -5074,6 +5074,11 @@ operator|.
 name|rtm
 operator|.
 name|rtm_type
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
