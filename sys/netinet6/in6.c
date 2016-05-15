@@ -2760,17 +2760,6 @@ argument_list|()
 expr_stmt|;
 name|aifaddr_out
 label|:
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-operator|||
-name|ia
-operator|==
-name|NULL
-condition|)
-break|break;
 comment|/* 		 * Try to clear the flag when a new IPv6 address is added 		 * onto an IFDISABLED interface and it succeeds. 		 */
 if|if
 condition|(
