@@ -3030,9 +3030,15 @@ name|trace_rdisc
 argument_list|(
 name|msg
 argument_list|,
+operator|(
+name|ifp
+condition|?
 name|ifp
 operator|->
 name|int_addr
+else|:
+literal|0
+operator|)
 argument_list|,
 name|rsin
 operator|.
