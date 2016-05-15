@@ -71,12 +71,20 @@ name|PCI_VENDOR_LINKSYS
 value|0x1737
 end_define
 
+begin_comment
+comment|/* SPROM flags */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFL_BTCOEXIST
 value|0x0001
 end_define
+
+begin_comment
+comment|/* implements Bluetooth coexistance */
+end_comment
 
 begin_define
 define|#
@@ -85,12 +93,42 @@ name|BWN_BFL_PACTRL
 value|0x0002
 end_define
 
+begin_comment
+comment|/* GPIO 9 controlling the PA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_AIRLINEMODE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* implements GPIO 13 radio disable indication */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFL_RSSI
 value|0x0008
 end_define
+
+begin_comment
+comment|/* software calculates nrssi slope. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_ENETSPI
+value|0x0010
+end_define
+
+begin_comment
+comment|/* has ephy roboswitch spi */
+end_comment
 
 begin_define
 define|#
@@ -99,6 +137,65 @@ name|BWN_BFL_CRYSTAL_NOSLOW
 value|0x0020
 end_define
 
+begin_comment
+comment|/* no slow clock available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_CCKHIPWR
+value|0x0040
+end_define
+
+begin_comment
+comment|/* can do high power CCK transmission */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_ENETADM
+value|0x0080
+end_define
+
+begin_comment
+comment|/* has ADMtek switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_ENETVLAN
+value|0x0100
+end_define
+
+begin_comment
+comment|/* can do vlan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_AFTERBURNER
+value|0x0200
+end_define
+
+begin_comment
+comment|/* supports Afterburner mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL_NOPCI
+value|0x0400
+end_define
+
+begin_comment
+comment|/* leaves PCI floating */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -106,12 +203,20 @@ name|BWN_BFL_FEM
 value|0x0800
 end_define
 
+begin_comment
+comment|/* supports the Front End Module */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFL_EXTLNA
 value|0x1000
 end_define
+
+begin_comment
+comment|/* has an external LNA */
+end_comment
 
 begin_define
 define|#
@@ -131,12 +236,24 @@ name|BWN_BFL_BTCMOD
 value|0x4000
 end_define
 
+begin_comment
+comment|/* BFL_BTCOEXIST is given in alternate GPIOs */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFL_ALTIQ
 value|0x8000
 end_define
+
+begin_comment
+comment|/* alternate I/Q settings */
+end_comment
+
+begin_comment
+comment|/* SPROM boardflags_hi values */
+end_comment
 
 begin_define
 define|#
@@ -145,12 +262,20 @@ name|BWN_BFH_NOPA
 value|0x0001
 end_define
 
+begin_comment
+comment|/* has no PA */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFH_RSSIINV
 value|0x0002
 end_define
+
+begin_comment
+comment|/* RSSI uses positive slope (not TSSI) */
+end_comment
 
 begin_define
 define|#
@@ -159,12 +284,253 @@ name|BWN_BFH_LDO_PAREF
 value|0x0004
 end_define
 
+begin_comment
+comment|/* uses the PARef LDO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_3TSWITCH
+value|0x0008
+end_define
+
+begin_comment
+comment|/* uses a triple throw switch shared 						 * with bluetooth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_PHASESHIFT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* can support phase shifter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_BUCKBOOST
+value|0x0020
+end_define
+
+begin_comment
+comment|/* has buck/booster */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BWN_BFH_FEM_BT
 value|0x0040
 end_define
+
+begin_comment
+comment|/* has FEM and switch to share antenna 						 * with bluetooth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_NOCBUCK
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_PALDO
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH_EXTLNA_5GHZ
+value|0x1000
+end_define
+
+begin_comment
+comment|/* has an external LNA (5GHz mode) */
+end_comment
+
+begin_comment
+comment|/* SPROM boardflags2_lo values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_RXBB_INT_REG_DIS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* external RX BB regulator present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_APLL_WAR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* alternative A-band PLL settings implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_TXPWRCTRL_EN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* permits enabling TX Power Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_2X4_DIV
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 2x4 diversity switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_5G_PWRGAIN
+value|0x0010
+end_define
+
+begin_comment
+comment|/* supports 5G band power gain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_PCIEWAR_OVR
+value|0x0020
+end_define
+
+begin_comment
+comment|/* overrides ASPM and Clkreq settings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_CAESERS_BRD
+value|0x0040
+end_define
+
+begin_comment
+comment|/* is Caesers board (unused) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_BTC3WIRE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* used 3-wire bluetooth coexist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_SKWRKFEM_BRD
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 4321mcm93 uses Skyworks FEM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_SPUR_WAR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* has a workaround for clock-harmonic spurs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_GPLL_WAR
+value|0x0400
+end_define
+
+begin_comment
+comment|/* altenative G-band PLL settings implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_SINGLEANT_CCK
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFL2_2G_SPUR_WAR
+value|0x2000
+end_define
+
+begin_comment
+comment|/* SPROM boardflags2_hi values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH2_GPLL_WAR2
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH2_IPALVLSHIFT_3P3
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH2_INTERNDET_TXIQCAL
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_BFH2_XTALBUFOUTEN
+value|0x0008
+end_define
+
+begin_comment
+comment|/* SIBA control registers */
+end_comment
 
 begin_define
 define|#
