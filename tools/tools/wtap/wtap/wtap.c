@@ -243,7 +243,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"wtap ioctl: unkown command '%c'\n"
+literal|"wtap ioctl: unknown command '%c'\n"
 argument_list|,
 operator|*
 name|argv

@@ -309,7 +309,7 @@ block|,
 block|{
 literal|30
 block|,
-literal|"Number of probe reponses transmitted"
+literal|"Number of probe responses transmitted"
 block|,
 name|INT
 block|}
@@ -629,7 +629,7 @@ block|,
 block|{
 literal|92
 block|,
-literal|"Number of probe reponses received"
+literal|"Number of probe responses received"
 block|,
 name|INT
 block|}

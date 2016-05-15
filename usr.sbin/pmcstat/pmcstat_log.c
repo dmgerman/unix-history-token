@@ -5345,7 +5345,7 @@ name|err
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"Elf library intialization failed"
+literal|"Elf library initialization failed"
 argument_list|)
 expr_stmt|;
 while|while

@@ -2711,7 +2711,7 @@ literal|"if Role Switch is supported, local device will try to perform Role Swit
 expr|\
 literal|"and become Master on incoming connection. Some devices do not support Role\n"
 expr|\
-literal|"Switch and thus incomming connections from such devices will fail. Setting\n"
+literal|"Switch and thus incoming connections from such devices will fail. Setting\n"
 expr|\
 literal|"this parameter to zero will prevent Role Switch and thus accepting device\n"
 expr|\
