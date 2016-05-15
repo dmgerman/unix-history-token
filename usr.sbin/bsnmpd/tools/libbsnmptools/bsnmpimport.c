@@ -3297,7 +3297,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"calloc() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -3317,14 +3317,9 @@ condition|(
 operator|(
 name|string
 operator|=
-name|malloc
-argument_list|(
-name|strlen
+name|strdup
 argument_list|(
 name|nexttok
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 operator|)
 operator|==
@@ -3335,7 +3330,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"strdup() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -3355,18 +3350,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|strlcpy
-argument_list|(
-name|string
-argument_list|,
-name|nexttok
-argument_list|,
-name|nitems
-argument_list|(
-name|string
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|oid2str
 operator|->
 name|string
