@@ -4872,6 +4872,17 @@ argument_list|,
 name|nm
 argument_list|)
 expr_stmt|;
+name|VERIFY0
+argument_list|(
+name|vn_lock
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|mount_snapshot
