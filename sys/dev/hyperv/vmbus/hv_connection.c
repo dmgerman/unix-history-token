@@ -1058,8 +1058,10 @@ name|recv_interrupt_page
 index|[
 name|dword
 index|]
+operator|==
+literal|0
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|bit
@@ -1136,6 +1138,7 @@ name|channel
 operator|->
 name|batched_reading
 condition|)
+block|{
 name|hv_ring_buffer_read_begin
 argument_list|(
 operator|&
@@ -1144,6 +1147,7 @@ operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
+block|}
 name|taskqueue_enqueue
 argument_list|(
 name|channel
@@ -1156,7 +1160,6 @@ operator|->
 name|channel_task
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
