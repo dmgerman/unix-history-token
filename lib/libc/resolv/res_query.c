@@ -387,6 +387,13 @@ argument_list|,
 name|anslen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
 name|rdata
 operator|=
 operator|&
@@ -397,10 +404,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|>
-literal|0
-operator|&&
 operator|(
 name|statp
 operator|->
@@ -436,6 +439,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 endif|#
