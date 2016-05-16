@@ -2881,7 +2881,7 @@ index|]
 init|;
 name|fup
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|fup
 operator|=
