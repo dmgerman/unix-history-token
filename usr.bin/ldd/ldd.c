@@ -289,7 +289,7 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|8
+literal|9
 index|]
 decl_stmt|;
 name|int
