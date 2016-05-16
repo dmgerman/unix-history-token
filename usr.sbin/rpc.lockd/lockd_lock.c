@@ -6429,6 +6429,10 @@ argument_list|(
 name|releasedfl
 argument_list|)
 expr_stmt|;
+name|releasedfl
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 block|}
