@@ -17,6 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_bwn.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_wlan.h"
+end_include
+
 begin_comment
 comment|/*  * The Broadcom Wireless LAN controller driver.  */
 end_comment
