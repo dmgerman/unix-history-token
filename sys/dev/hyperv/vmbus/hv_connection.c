@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -997,10 +1003,8 @@ expr_stmt|;
 comment|/* 		 * receive size is 1/2 page and divide that by 4 bytes 		 */
 if|if
 condition|(
-name|synch_test_and_clear_bit
+name|atomic_testandclear_int
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|event
 operator|->
@@ -1008,6 +1012,8 @@ name|flags32
 index|[
 literal|0
 index|]
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -1078,19 +1084,15 @@ control|)
 block|{
 if|if
 condition|(
-name|synch_test_and_clear_bit
+name|atomic_testandclear_int
 argument_list|(
-name|bit
-argument_list|,
-operator|(
-name|uint32_t
-operator|*
-operator|)
 operator|&
 name|recv_interrupt_page
 index|[
 name|dword
 index|]
+argument_list|,
+name|bit
 argument_list|)
 condition|)
 block|{
