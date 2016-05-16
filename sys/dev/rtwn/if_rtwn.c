@@ -10414,11 +10414,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|RTWN_UNLOCK
 argument_list|(
 name|sc
