@@ -1239,6 +1239,12 @@ operator|=
 operator|&
 name|siba_pci_ops
 expr_stmt|;
+name|siba
+operator|->
+name|siba_debug
+operator|=
+name|SIBA_DEBUG_SCAN
+expr_stmt|;
 name|siba_pci_gpio
 argument_list|(
 name|siba
@@ -2086,7 +2092,7 @@ name|sd
 operator|->
 name|sd_id
 operator|.
-name|vendor
+name|sd_vendor
 argument_list|)
 expr_stmt|;
 switch|switch

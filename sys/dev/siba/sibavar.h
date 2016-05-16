@@ -2872,6 +2872,9 @@ decl_stmt|;
 name|uint8_t
 name|siba_ncores
 decl_stmt|;
+name|uint32_t
+name|siba_debug
+decl_stmt|;
 comment|/* 	 * the following variables are only used for siba_bwn bridge. 	 */
 name|enum
 name|siba_type
