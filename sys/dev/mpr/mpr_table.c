@@ -2032,8 +2032,7 @@ name|sc
 argument_list|,
 name|MPR_EVENT
 argument_list|,
-literal|"PHY[%d].PhyStatus: "
-literal|"%s\n"
+literal|"PHY[%d].PhyStatus: %s\n"
 argument_list|,
 name|phynum
 argument_list|,

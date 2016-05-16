@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
 end_comment
 
 begin_include
@@ -1931,6 +1931,18 @@ operator|||
 operator|(
 name|saved_facts
 operator|.
+name|IOCMaxChainSegmentSize
+operator|!=
+name|sc
+operator|->
+name|facts
+operator|->
+name|IOCMaxChainSegmentSize
+operator|)
+operator|||
+operator|(
+name|saved_facts
+operator|.
 name|MaxTargets
 operator|!=
 name|sc
@@ -2364,8 +2376,8 @@ name|mpr_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s failed to transition to "
-literal|"operational with error %d\n"
+literal|"%s failed to transition to operational "
+literal|"with error %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5378,7 +5390,68 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rsize
+comment|/* 	 * Gen3 and beyond uses the IOCMaxChainSegmentSize from IOC Facts to 	 * get the size of a Chain Frame.  Previous versions use the size as a 	 * Request Frame for the Chain Frame size.  If IOCMaxChainSegmentSize 	 * is 0, use the default value.  The IOCMaxChainSegmentSize is the 	 * number of 16-byte elelements that can fit in a Chain Frame, which is 	 * the size of an IEEE Simple SGE. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|facts
+operator|->
+name|MsgVersion
+operator|>=
+name|MPI2_VERSION_02_05
+condition|)
+block|{
+name|sc
+operator|->
+name|chain_seg_size
+operator|=
+name|htole16
+argument_list|(
+name|sc
+operator|->
+name|facts
+operator|->
+name|IOCMaxChainSegmentSize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|chain_seg_size
+operator|==
+literal|0
+condition|)
+block|{
+name|sc
+operator|->
+name|chain_frame_size
+operator|=
+name|MPR_DEFAULT_CHAIN_SEG_SIZE
+operator|*
+name|MPR_MAX_CHAIN_ELEMENT_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|chain_frame_size
+operator|=
+name|sc
+operator|->
+name|chain_seg_size
+operator|*
+name|MPR_MAX_CHAIN_ELEMENT_SIZE
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|chain_frame_size
 operator|=
 name|sc
 operator|->
@@ -5386,11 +5459,18 @@ name|facts
 operator|->
 name|IOCRequestFrameSize
 operator|*
+literal|4
+expr_stmt|;
+block|}
+name|rsize
+operator|=
+name|sc
+operator|->
+name|chain_frame_size
+operator|*
 name|sc
 operator|->
 name|max_chains
-operator|*
-literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -5775,11 +5855,7 @@ name|i
 operator|*
 name|sc
 operator|->
-name|facts
-operator|->
-name|IOCRequestFrameSize
-operator|*
-literal|4
+name|chain_frame_size
 operator|)
 expr_stmt|;
 name|chain
@@ -5794,11 +5870,7 @@ name|i
 operator|*
 name|sc
 operator|->
-name|facts
-operator|->
-name|IOCRequestFrameSize
-operator|*
-literal|4
+name|chain_frame_size
 expr_stmt|;
 name|mpr_free_chain
 argument_list|(
@@ -8247,7 +8319,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_LOG
 argument_list|,
 literal|"log_info(0x%08x): originator(%s), "
 literal|"code(0x%02x), sub_code(0x%04x)\n"
@@ -8815,12 +8887,16 @@ name|reply
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|rel_rep
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED
 condition|)
@@ -10010,8 +10086,6 @@ modifier|*
 name|chain
 decl_stmt|;
 name|int
-name|space
-decl_stmt|,
 name|sgc_size
 decl_stmt|,
 name|current_segs
@@ -10091,21 +10165,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|space
-operator|=
-operator|(
-name|int
-operator|)
-name|cm
-operator|->
-name|cm_sc
-operator|->
-name|facts
-operator|->
-name|IOCRequestFrameSize
-operator|*
-literal|4
-expr_stmt|;
 comment|/* 	 * Note: a double-linked list is used to make it easier to walk for 	 * debugging. 	 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -10158,7 +10217,9 @@ name|current_segs
 expr_stmt|;
 name|segs_per_frame
 operator|=
-name|space
+name|sc
+operator|->
+name|chain_frame_size
 operator|/
 name|sgc_size
 expr_stmt|;
@@ -10203,7 +10264,9 @@ argument_list|(
 operator|(
 name|uint32_t
 operator|)
-name|space
+name|sc
+operator|->
+name|chain_frame_size
 argument_list|)
 else|:
 name|htole32
@@ -10295,15 +10358,9 @@ operator|->
 name|ChainOffset
 operator|=
 operator|(
-operator|(
 name|sc
 operator|->
-name|facts
-operator|->
-name|IOCRequestFrameSize
-operator|*
-literal|4
-operator|)
+name|chain_frame_size
 operator|-
 name|sgc_size
 operator|)
@@ -10314,7 +10371,9 @@ name|cm
 operator|->
 name|cm_sglsize
 operator|=
-name|space
+name|sc
+operator|->
+name|chain_frame_size
 expr_stmt|;
 return|return
 operator|(
@@ -11302,8 +11361,8 @@ name|sc
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"%s: warning: busdma returned %d segments, "
-literal|"more than the %d allowed\n"
+literal|"%s: warning: busdma returned %d "
+literal|"segments, more than the %d allowed\n"
 argument_list|,
 name|__func__
 argument_list|,

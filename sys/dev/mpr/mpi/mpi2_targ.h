@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2012-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2015 Avago Technologies  *  *  *           Name:  mpi2_targ.h  *          Title:  MPI Target mode messages and structures  *  Creation Date:  September 8, 2006  *  *  mpi2_targ.h Version: 02.00.06  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  08-31-07  02.00.01  Added Command Buffer Data Location Address Space bits to  *                      BufferPostFlags field of CommandBufferPostBase Request.  *  02-29-08  02.00.02  Modified various names to make them 32-character unique.  *  10-02-08  02.00.03  Removed NextCmdBufferOffset from  *                      MPI2_TARGET_CMD_BUF_POST_BASE_REQUEST.  *                      Target Status Send Request only takes a single SGE for  *                      response data.  *  02-10-10  02.00.04  Added comment to MPI2_TARGET_SSP_RSP_IU structure.  *  11-18-11  02.00.05  Incorporating additions for MPI v2.5.  *  11-27-12  02.00.06  Added InitiatorDevHandle field to MPI2_TARGET_MODE_ABORT  *                      request message structure.  *                      Added AbortType MPI2_TARGET_MODE_ABORT_DEVHANDLE and  *                      MPI2_TARGET_MODE_ABORT_ALL_COMMANDS.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2015 LSI Corporation.  *  Copyright (c) 2013-2016 Avago Technologies  *  All rights reserved.  *  *  *           Name:  mpi2_targ.h  *          Title:  MPI Target mode messages and structures  *  Creation Date:  September 8, 2006  *  *  mpi2_targ.h Version: 02.00.09  *  *  NOTE: Names (typedefs, defines, etc.) beginning with an MPI25 or Mpi25  *        prefix are for use only on MPI v2.5 products, and must not be used  *        with MPI v2.0 products. Unless otherwise noted, names beginning with  *        MPI2 or Mpi2 are for use with both MPI v2.0 and MPI v2.5 products.  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  08-31-07  02.00.01  Added Command Buffer Data Location Address Space bits to  *                      BufferPostFlags field of CommandBufferPostBase Request.  *  02-29-08  02.00.02  Modified various names to make them 32-character unique.  *  10-02-08  02.00.03  Removed NextCmdBufferOffset from  *                      MPI2_TARGET_CMD_BUF_POST_BASE_REQUEST.  *                      Target Status Send Request only takes a single SGE for  *                      response data.  *  02-10-10  02.00.04  Added comment to MPI2_TARGET_SSP_RSP_IU structure.  *  11-18-11  02.00.05  Incorporating additions for MPI v2.5.  *  11-27-12  02.00.06  Added InitiatorDevHandle field to MPI2_TARGET_MODE_ABORT  *                      request message structure.  *                      Added AbortType MPI2_TARGET_MODE_ABORT_DEVHANDLE and  *                      MPI2_TARGET_MODE_ABORT_ALL_COMMANDS.  *  06-13-14  02.00.07  Added MinMSIxIndex and MaxMSIxIndex fields to  *                      MPI2_TARGET_CMD_BUF_POST_BASE_REQUEST.  *  11-18-14  02.00.08  Updated copyright information.  *  03-16-15  02.00.09  Updated for MPI v2.6.  *                      Added MPI26_TARGET_ASSIST_IOFLAGS_ESCAPE_PASSTHROUGH.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -80,10 +80,16 @@ name|U16
 name|CmdBufferLength
 decl_stmt|;
 comment|/* 0x10 */
-name|U16
-name|Reserved4
+name|U8
+name|MinMSIxIndex
 decl_stmt|;
 comment|/* 0x12 */
+comment|/* MPI 2.5 and newer only; Reserved in MPI 2.0 */
+name|U8
+name|MaxMSIxIndex
+decl_stmt|;
+comment|/* 0x13 */
+comment|/* MPI 2.5 and newer only; Reserved in MPI 2.0 */
 name|U32
 name|BaseAddressLow
 decl_stmt|;
@@ -137,12 +143,31 @@ name|MPI2_CMD_BUF_POST_BASE_IOCPLB_ADDRESS_SPACE
 value|(0x08)
 end_define
 
+begin_comment
+comment|/* only for MPI v2.5 and earlier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_CMD_BUF_POST_BASE_IOCCTL_ADDRESS_SPACE
+value|(0x08)
+end_define
+
+begin_comment
+comment|/* for MPI v2.6 only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MPI2_CMD_BUF_POST_BASE_IOCPLBNTA_ADDRESS_SPACE
 value|(0x0C)
 end_define
+
+begin_comment
+comment|/* only for MPI v2.5 and earlier */
+end_comment
 
 begin_define
 define|#
@@ -1296,6 +1321,17 @@ end_define
 
 begin_comment
 comment|/* defines for the IoFlags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI26_TARGET_ASSIST_IOFLAGS_ESCAPE_PASSTHROUGH
+value|(0x2000)
+end_define
+
+begin_comment
+comment|/* MPI v2.6 and later */
 end_comment
 
 begin_define

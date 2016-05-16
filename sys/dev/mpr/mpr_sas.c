@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2016 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  */
 end_comment
 
 begin_include
@@ -1673,6 +1673,11 @@ modifier|*
 name|tm
 parameter_list|)
 block|{
+name|int
+name|target_id
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
@@ -1704,6 +1709,14 @@ operator|&=
 operator|~
 name|MPRSAS_TARGET_INRESET
 expr_stmt|;
+name|target_id
+operator|=
+name|tm
+operator|->
+name|cm_targ
+operator|->
+name|tid
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1720,11 +1733,7 @@ name|MPR_INFO
 argument_list|,
 literal|"Unfreezing devq for target ID %d\n"
 argument_list|,
-name|tm
-operator|->
-name|cm_targ
-operator|->
-name|tid
+name|target_id
 argument_list|)
 expr_stmt|;
 name|xpt_release_devq
@@ -2323,9 +2332,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -2334,26 +2350,21 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_FAULT
+name|MPR_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting "
 literal|"device 0x%x\n"
 argument_list|,
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
 argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mpr_dprint
 argument_list|(
@@ -2363,9 +2374,12 @@ name|MPR_XINFO
 argument_list|,
 literal|"Reset aborted %u commands\n"
 argument_list|,
+name|le32toh
+argument_list|(
 name|reply
 operator|->
 name|TerminationCount
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mpr_free_reply
@@ -2402,9 +2416,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3128,14 +3149,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -3170,12 +3183,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3184,7 +3201,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_FAULT
+name|MPR_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting "
 literal|"device 0x%x\n"
@@ -3199,14 +3216,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mprsas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mpr_dprint
 argument_list|(
@@ -3578,12 +3587,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3853,6 +3866,13 @@ argument_list|(
 name|events
 argument_list|,
 name|MPI2_EVENT_TEMP_THRESHOLD
+argument_list|)
+expr_stmt|;
+name|setbit
+argument_list|(
+name|events
+argument_list|,
+name|MPI2_EVENT_ACTIVE_CABLE_EXCEPTION
 argument_list|)
 expr_stmt|;
 name|mpr_register_events
@@ -4686,12 +4706,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|sassc
-operator|->
-name|flags
-operator||=
-name|MPRSAS_SHUTDOWN
-expr_stmt|;
 name|mpr_unlock
 argument_list|(
 name|sc
@@ -5369,7 +5383,8 @@ name|sc
 argument_list|,
 name|MPR_XINFO
 argument_list|,
-literal|"mprsas_action XPT_RESET_DEV\n"
+literal|"mprsas_action "
+literal|"XPT_RESET_DEV\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_action_resetdev
@@ -5397,7 +5412,8 @@ name|sc
 argument_list|,
 name|MPR_XINFO
 argument_list|,
-literal|"mprsas_action faking success for abort or reset\n"
+literal|"mprsas_action faking success "
+literal|"for abort or reset\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_set_ccbstatus
@@ -5663,8 +5679,7 @@ name|cm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"completing cm %p state %x ccb %p for diag "
-literal|"reset\n"
+literal|"completing cm %p state %x ccb %p for diag reset\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -6050,7 +6065,8 @@ name|MPR_INFO
 operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"task mgmt %p timed out\n"
+literal|"task mgmt %p timed "
+literal|"out\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -6189,7 +6205,8 @@ name|tm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm %p\n"
+literal|"NULL reset reply for tm "
+literal|"%p\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -6516,7 +6533,8 @@ name|tm
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm %p\n"
+literal|"NULL reset reply for tm "
+literal|"%p\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -7785,8 +7803,8 @@ name|cm
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"command timeout cm %p ccb %p "
-literal|"target %u, handle(0x%04x)\n"
+literal|"command timeout cm %p ccb %p target "
+literal|"%u, handle(0x%04x)\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -7942,7 +7960,8 @@ name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"timedout cm %p failed to allocate a tm\n"
+literal|"timedout cm %p failed to "
+literal|"allocate a tm\n"
 argument_list|,
 name|cm
 argument_list|)
@@ -9231,6 +9250,11 @@ name|handle
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000029
 name|callout_reset_sbt
 argument_list|(
 operator|&
@@ -9255,6 +9279,36 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|//__FreeBSD_version< 1000029
+name|callout_reset
+argument_list|(
+operator|&
+name|cm
+operator|->
+name|cm_callout
+argument_list|,
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+operator|*
+name|hz
+operator|)
+operator|/
+literal|1000
+argument_list|,
+name|mprsas_scsiio_timeout
+argument_list|,
+name|cm
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|//__FreeBSD_version>= 1000029
 name|targ
 operator|->
 name|issued
@@ -9663,6 +9717,14 @@ case|:
 name|desc_ioc_state
 operator|=
 literal|"eedp app tag error"
+expr_stmt|;
+break|break;
+case|case
+name|MPI2_IOCSTATUS_INSUFFICIENT_POWER
+case|:
+name|desc_ioc_state
+operator|=
+literal|"insufficient power"
 expr_stmt|;
 break|break;
 default|default:
@@ -12121,8 +12183,8 @@ name|sc
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"%s: multiple request or response buffer segments "
-literal|"not supported for SMP\n"
+literal|"%s: multiple request or "
+literal|"response buffer segments not supported for SMP\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -13415,7 +13477,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in XPT_RESET_DEV\n"
+literal|"Target %d out of "
+literal|"bounds in XPT_RESET_DEV\n"
 operator|,
 name|ccb
 operator|->
@@ -13451,7 +13514,8 @@ name|sc
 argument_list|,
 name|MPR_ERROR
 argument_list|,
-literal|"command alloc failure in mprsas_action_resetdev\n"
+literal|"command alloc failure in "
+literal|"mprsas_action_resetdev\n"
 argument_list|)
 expr_stmt|;
 name|mprsas_set_ccbstatus
@@ -14599,7 +14663,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in mprsas_check_eedp\n"
+literal|"Target %d out of bounds in "
+literal|"mprsas_check_eedp\n"
 operator|,
 name|targetid
 operator|)
@@ -14624,7 +14689,7 @@ operator|==
 literal|0x0
 condition|)
 return|return;
-comment|/* 	 * Determine if the device is EEDP capable. 	 * 	 * If this flag is set in the inquiry data, the device supports 	 * protection information, and must support the 16 byte read capacity 	 * command, otherwise continue without sending read cap 16 	 */
+comment|/* 	 * Determine if the device is EEDP capable. 	 * 	 * If this flag is set in the inquiry data, the device supports 	 * protection information, and must support the 16 byte read capacity 	 * command, otherwise continue without sending read cap 16. 	 */
 if|if
 condition|(
 operator|(
@@ -14691,7 +14756,7 @@ argument_list|,
 name|MPR_ERROR
 argument_list|,
 literal|"Unable to create path for EEDP "
-literal|"support\n"
+literal|"support.\n"
 argument_list|)
 expr_stmt|;
 name|xpt_free_ccb
@@ -15173,7 +15238,8 @@ operator|->
 name|maxtargets
 argument_list|,
 operator|(
-literal|"Target %d out of bounds in mprsas_read_cap_done\n"
+literal|"Target %d out "
+literal|"of bounds in mprsas_read_cap_done\n"
 operator|,
 name|done_ccb
 operator|->
