@@ -13354,6 +13354,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|scsi_devid_is_port_naa
+parameter_list|(
+name|uint8_t
+modifier|*
+name|bufp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|scsi_vpd_id_descriptor
 modifier|*
