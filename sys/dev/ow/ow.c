@@ -2099,6 +2099,11 @@ return|;
 goto|goto
 name|again
 goto|;
+default|default:
+comment|/* NOTREACHED */
+name|__unreachable
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
