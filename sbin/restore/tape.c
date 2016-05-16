@@ -480,7 +480,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -608,7 +608,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -621,7 +621,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -634,7 +634,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -647,7 +647,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,7 +660,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -673,7 +673,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2912,7 +2912,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 name|uid_t
@@ -4822,7 +4822,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -4834,7 +4834,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -4846,13 +4846,14 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
+specifier|volatile
 name|off_t
 name|size
 decl_stmt|;
@@ -4870,7 +4871,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 specifier|static
@@ -5576,7 +5577,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5626,7 +5627,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5697,7 +5698,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5761,7 +5762,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5829,7 +5830,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5865,7 +5866,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5902,7 +5903,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -5934,7 +5935,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{

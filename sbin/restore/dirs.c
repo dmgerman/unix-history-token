@@ -238,7 +238,7 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 name|int
@@ -425,7 +425,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -438,7 +438,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1628,7 +1628,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -1637,7 +1637,7 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
-name|long
+name|size_t
 name|loc
 decl_stmt|,
 name|i
@@ -1844,7 +1844,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"reclen less than DIRSIZ (%d< %zu) "
+literal|"reclen less than DIRSIZ (%u< %zu) "
 argument_list|,
 name|dp
 operator|->
@@ -1875,7 +1875,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"reclen name too big (%d> %d) "
+literal|"reclen name too big (%u> %u) "
 argument_list|,
 name|dp
 operator|->
@@ -2144,7 +2144,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|long
+name|size_t
 name|size
 parameter_list|)
 block|{

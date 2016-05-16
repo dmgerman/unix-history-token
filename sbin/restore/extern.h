@@ -282,7 +282,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -293,7 +293,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -304,7 +304,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -812,7 +812,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
