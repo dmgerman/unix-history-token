@@ -962,14 +962,6 @@ name|vdev_tsd
 operator|=
 name|cp
 expr_stmt|;
-comment|/* Fetch initial physical path information for this device. */
-name|vdev_geom_attrchanged
-argument_list|(
-name|cp
-argument_list|,
-literal|"GEOM::physpath"
-argument_list|)
-expr_stmt|;
 name|cp
 operator|->
 name|flags
@@ -3653,6 +3645,20 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+comment|/* Fetch initial physical path information for this device. */
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+name|vdev_geom_attrchanged
+argument_list|(
+name|cp
+argument_list|,
+literal|"GEOM::physpath"
+argument_list|)
+expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
