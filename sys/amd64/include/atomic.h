@@ -199,6 +199,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|atomic_testandclear_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_testandclear_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|atomic_thread_fence_acq
 parameter_list|(
@@ -665,6 +695,131 @@ literal|"		"
 literal|"	btsq	%2,%1 ;		"
 literal|"	setc	%0 ;		"
 literal|"# atomic_testandset_long"
+operator|:
+literal|"=q"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"Jr"
+operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
+name|v
+operator|&
+literal|0x3f
+argument_list|)
+operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_testandclear_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	btrl	%2,%1 ;		"
+literal|"	setc	%0 ;		"
+literal|"# atomic_testandclear_int"
+operator|:
+literal|"=q"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"Ir"
+operator|(
+name|v
+operator|&
+literal|0x1f
+operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_testandclear_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	btrq	%2,%1 ;		"
+literal|"	setc	%0 ;		"
+literal|"# atomic_testandclear_long"
 operator|:
 literal|"=q"
 operator|(
@@ -2034,6 +2189,13 @@ name|atomic_testandset_32
 value|atomic_testandset_int
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_testandclear_32
+value|atomic_testandclear_int
+end_define
+
 begin_comment
 comment|/* Operations on 64-bit quad words. */
 end_comment
@@ -2183,6 +2345,13 @@ define|#
 directive|define
 name|atomic_testandset_64
 value|atomic_testandset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_testandclear_64
+value|atomic_testandclear_long
 end_define
 
 begin_comment
