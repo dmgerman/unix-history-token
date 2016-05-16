@@ -926,7 +926,14 @@ condition|(
 name|bsddev
 operator|==
 name|NULL
+operator|&&
+name|dev
+operator|->
+name|parent
+operator|!=
+name|NULL
 condition|)
+block|{
 name|bsddev
 operator|=
 name|device_add_child
@@ -948,9 +955,12 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bsddev
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
