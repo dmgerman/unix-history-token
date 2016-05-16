@@ -22589,6 +22589,13 @@ index|]
 operator|=
 name|off
 expr_stmt|;
+operator|*
+name|ap
+operator|->
+name|a_ncookies
+operator|+=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
