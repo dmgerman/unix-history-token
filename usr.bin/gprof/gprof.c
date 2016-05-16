@@ -1713,7 +1713,7 @@ if|if
 condition|(
 name|samples
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(

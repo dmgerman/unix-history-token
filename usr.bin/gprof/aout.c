@@ -625,7 +625,7 @@ if|if
 condition|(
 name|nl
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -841,7 +841,7 @@ if|if
 condition|(
 name|textspace
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx

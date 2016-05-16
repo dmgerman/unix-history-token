@@ -1505,7 +1505,7 @@ if|if
 condition|(
 name|cyclenl
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2027,7 +2027,7 @@ if|if
 condition|(
 name|cyclestack
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2665,7 +2665,7 @@ if|if
 condition|(
 name|clp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx
