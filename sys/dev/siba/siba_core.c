@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_siba.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -153,12 +159,6 @@ directive|include
 file|<dev/siba/sibavar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIBA_DEBUG
-end_ifdef
-
 begin_enum
 enum|enum
 block|{
@@ -199,6 +199,12 @@ block|}
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIBA_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -208,11 +214,9 @@ name|siba
 parameter_list|,
 name|m
 parameter_list|,
-name|fmt
-parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (siba->siba_debug& (m))			\ 		printf(fmt, __VA_ARGS__);		\ } while (0)
+value|do {				\ 	if (siba->siba_debug& (m))				\ 		device_printf(siba->siba_dev, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_else
@@ -228,8 +232,6 @@ parameter_list|(
 name|siba
 parameter_list|,
 name|m
-parameter_list|,
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1238,12 +1240,6 @@ name|siba_ops
 operator|=
 operator|&
 name|siba_pci_ops
-expr_stmt|;
-name|siba
-operator|->
-name|siba_debug
-operator|=
-name|SIBA_DEBUG_SCAN
 expr_stmt|;
 name|siba_pci_gpio
 argument_list|(
