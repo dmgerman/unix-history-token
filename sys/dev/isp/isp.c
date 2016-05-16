@@ -21621,6 +21621,17 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|if
+condition|(
+name|lp
+operator|->
+name|state
+operator|==
+name|FC_PORTDB_STATE_ZOMBIE
+condition|)
+goto|goto
+name|relogin
+goto|;
 comment|/* 			 * See if we're still logged into it. 			 * 			 * If we aren't, mark it as a dead device and 			 * leave the new portid in the database entry 			 * for somebody further along to decide what to 			 * do (policy choice). 			 * 			 * If we are, check to see if it's the same 			 * device still (it should be). If for some 			 * reason it isn't, mark it as a changed device 			 * and leave the new portid and role in the 			 * database entry for somebody further along to 			 * decide what to do (policy choice). 			 */
 name|r
 operator|=
