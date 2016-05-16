@@ -412,9 +412,7 @@ name|objascbuffer
 init|;
 name|i
 operator|<
-name|obj
-operator|->
-name|n_len
+name|maxlen
 condition|;
 name|i
 operator|++
