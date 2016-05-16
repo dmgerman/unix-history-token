@@ -741,7 +741,7 @@ argument_list|,
 name|instance
 argument_list|)
 expr_stmt|;
-name|efx_mcdi_execute
+name|efx_mcdi_execute_quiet
 argument_list|(
 name|enp
 argument_list|,
