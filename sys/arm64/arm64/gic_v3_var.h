@@ -784,19 +784,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|uint32_t
-function_decl|(
-modifier|*
-name|its_devid_func_t
-function_decl|)
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|its_quirks
@@ -806,9 +793,6 @@ name|cpuid
 decl_stmt|;
 name|uint64_t
 name|cpuid_mask
-decl_stmt|;
-name|its_devid_func_t
-name|devid_func
 decl_stmt|;
 name|its_devbits_func_t
 name|devbits_func

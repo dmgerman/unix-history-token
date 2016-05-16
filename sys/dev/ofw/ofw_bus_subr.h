@@ -258,6 +258,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Routines for processing msi maps */
+end_comment
+
+begin_function_decl
+name|int
+name|ofw_bus_msimap
+parameter_list|(
+name|phandle_t
+parameter_list|,
+name|uint16_t
+parameter_list|,
+name|phandle_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Routines for parsing device-tree data into resource lists. */
 end_comment
 
