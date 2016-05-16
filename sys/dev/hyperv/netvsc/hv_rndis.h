@@ -3744,6 +3744,7 @@ name|netvsc_packet
 modifier|*
 name|packet
 parameter_list|,
+specifier|const
 name|rndis_tcp_ip_csum_info
 modifier|*
 name|csum_info
