@@ -1092,6 +1092,11 @@ index|]
 argument_list|)
 condition|)
 block|{
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|channel
+decl_stmt|;
 name|rel_id
 operator|=
 operator|(
@@ -1102,29 +1107,15 @@ operator|)
 operator|+
 name|bit
 expr_stmt|;
-if|if
-condition|(
-name|rel_id
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 	    		 * Special case - 	    		 * vmbus channel protocol msg. 	    		 */
-continue|continue;
-block|}
-else|else
-block|{
-name|hv_vmbus_channel
-modifier|*
 name|channel
-init|=
+operator|=
 name|hv_vmbus_g_connection
 operator|.
 name|channels
 index|[
 name|rel_id
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/* if channel is closed or closing */
 if|if
 condition|(
@@ -1165,7 +1156,6 @@ operator|->
 name|channel_task
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
