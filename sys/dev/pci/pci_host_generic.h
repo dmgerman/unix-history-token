@@ -111,9 +111,6 @@ name|struct
 name|ofw_bus_iinfo
 name|pci_iinfo
 decl_stmt|;
-name|phandle_t
-name|msi_parent
-decl_stmt|;
 endif|#
 directive|endif
 block|}
