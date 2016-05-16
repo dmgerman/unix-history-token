@@ -163,7 +163,7 @@ if|if
 condition|(
 name|j
 operator|+
-literal|3
+literal|4
 operator|>
 operator|(
 name|int
