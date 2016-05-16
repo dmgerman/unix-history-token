@@ -861,6 +861,8 @@ define|#
 directive|define
 name|_BHND_DEVICE
 parameter_list|(
+name|_vendor
+parameter_list|,
 name|_device
 parameter_list|,
 name|_desc
@@ -872,7 +874,41 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{ BHND_CORE_MATCH(BHND_MFGID_BCM, BHND_COREID_ ## _device, \ 	    BHND_HWREV_ANY), _desc, _quirks, _flags }
+value|{ BHND_CORE_MATCH(BHND_MFGID_ ## _vendor, BHND_COREID_ ## _device, \ 	    BHND_HWREV_ANY), _desc, _quirks, _flags }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_MIPS_DEVICE
+parameter_list|(
+name|_device
+parameter_list|,
+name|_desc
+parameter_list|,
+name|_quirks
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|_BHND_DEVICE(MIPS, _device, _desc, _quirks, ## __VA_ARGS__, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_ARM_DEVICE
+parameter_list|(
+name|_device
+parameter_list|,
+name|_desc
+parameter_list|,
+name|_quirks
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|_BHND_DEVICE(ARM, _device, _desc, _quirks, ## __VA_ARGS__, 0)
 end_define
 
 begin_define
@@ -889,7 +925,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(_device, _desc, _quirks, ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(BCM, _device, _desc, _quirks, ## __VA_ARGS__, 0)
 end_define
 
 begin_define
