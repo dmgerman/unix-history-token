@@ -2674,7 +2674,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|EF_SEG_READ
