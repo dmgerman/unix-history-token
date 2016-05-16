@@ -1659,7 +1659,7 @@ name|kenv_value
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|initial_transition
 operator|=
@@ -4051,7 +4051,7 @@ if|if
 condition|(
 name|clear
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|*
 name|clear
@@ -4527,7 +4527,7 @@ name|_PATH_RUNCOM
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 name|next_transition
@@ -5413,7 +5413,7 @@ name|command
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|free
