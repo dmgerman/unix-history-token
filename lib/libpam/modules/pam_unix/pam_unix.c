@@ -1473,6 +1473,10 @@ name|old_pass
 operator|=
 literal|""
 expr_stmt|;
+name|retval
+operator|=
+name|PAM_SUCCESS
+expr_stmt|;
 block|}
 else|else
 block|{
