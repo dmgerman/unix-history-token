@@ -961,6 +961,17 @@ name|value
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|db_print_format
+operator|=
+literal|'x'
+expr_stmt|;
+name|db_error
+argument_list|(
+literal|"Syntax error: unsupported print modifier\n"
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 name|db_printf
 argument_list|(
