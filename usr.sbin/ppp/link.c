@@ -952,6 +952,7 @@ literal|0
 block|,
 literal|"Others"
 block|}
+comment|/* must be last */
 block|}
 struct|;
 end_struct
@@ -998,8 +999,17 @@ operator|.
 name|number
 operator|==
 name|proto
+operator|||
+name|ProtocolStat
+index|[
+name|i
+index|]
+operator|.
+name|number
+operator|==
+literal|0
 condition|)
-break|break;
+block|{
 if|if
 condition|(
 name|type
@@ -1023,6 +1033,8 @@ name|i
 index|]
 operator|++
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
