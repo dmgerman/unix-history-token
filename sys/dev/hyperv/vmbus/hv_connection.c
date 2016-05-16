@@ -942,7 +942,6 @@ name|hv_vmbus_synic_event_flags
 modifier|*
 name|event
 decl_stmt|;
-comment|/* int maxdword = PAGE_SIZE>> 3; */
 name|KASSERT
 argument_list|(
 name|cpu
@@ -1011,12 +1010,18 @@ literal|0
 index|]
 argument_list|)
 condition|)
+block|{
 name|recv_interrupt_page
 operator|=
 name|hv_vmbus_g_connection
 operator|.
 name|recv_interrupt_page
 expr_stmt|;
+block|}
+else|else
+block|{
+return|return;
+block|}
 block|}
 else|else
 block|{
@@ -1033,13 +1038,6 @@ name|flags32
 expr_stmt|;
 block|}
 comment|/* 	 * Check events 	 */
-if|if
-condition|(
-name|recv_interrupt_page
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|dword
@@ -1111,7 +1109,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Special case - 				 * vmbus channel protocol msg. 				 */
+comment|/* 	    		 * Special case - 	    		 * vmbus channel protocol msg. 	    		 */
 continue|continue;
 block|}
 else|else
@@ -1172,8 +1170,6 @@ block|}
 block|}
 block|}
 block|}
-block|}
-return|return;
 block|}
 end_function
 
