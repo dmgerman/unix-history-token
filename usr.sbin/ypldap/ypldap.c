@@ -1116,13 +1116,15 @@ block|{
 comment|/* User not found */
 name|log_warnx
 argument_list|(
-literal|"main: user: %s is referenced as a "
-literal|"group member, but can't be found in the "
-literal|"users map.\n"
+literal|"main: unknown user %s in group %s\n"
 argument_list|,
 name|ukey
 operator|.
 name|ue_line
+argument_list|,
+name|ge
+operator|->
+name|ge_line
 argument_list|)
 expr_stmt|;
 if|if
