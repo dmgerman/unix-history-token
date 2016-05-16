@@ -272,11 +272,6 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|irq
-parameter_list|,
-name|__out_opt
-name|uint32_t
-modifier|*
-name|irqp
 parameter_list|)
 block|{
 name|efx_mcdi_req_t
@@ -620,22 +615,7 @@ goto|goto
 name|fail3
 goto|;
 block|}
-if|if
-condition|(
-name|irqp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|irqp
-operator|=
-name|MCDI_OUT_DWORD
-argument_list|(
-name|req
-argument_list|,
-name|INIT_EVQ_OUT_IRQ
-argument_list|)
-expr_stmt|;
+comment|/* NOTE: ignore the returned IRQ param as firmware does not set it. */
 return|return
 operator|(
 literal|0
@@ -1001,7 +981,7 @@ name|ee_mcdi
 operator|=
 name|ef10_ev_mcdi
 expr_stmt|;
-comment|/* 	 * Set up the event queue 	 * NOTE: ignore the returned IRQ param as firmware does not set it. 	 */
+comment|/* Set up the event queue */
 name|irq
 operator|=
 name|index
@@ -1023,8 +1003,6 @@ argument_list|,
 name|n
 argument_list|,
 name|irq
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|!=
