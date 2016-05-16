@@ -7870,6 +7870,7 @@ argument_list|,
 name|SIBA_TGSHIGH
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Guess at whether it has A-PHY or G-PHY. 	 * This is just used for resetting the core to probe things; 	 * we will re-guess once it's all up and working. 	 * 	 * XXX TODO: there's the TGSHIGH DUALPHY flag based on 	 * the PHY revision. 	 */
 name|bwn_reset_core
 argument_list|(
 name|mac
@@ -7883,6 +7884,7 @@ name|BWN_TGSHIGH_HAVE_2GHZ
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Get the PHY version. 	 */
 name|error
 operator|=
 name|bwn_phy_getinfo
@@ -7899,7 +7901,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* XXX need bhnd */
+comment|/* XXX TODO need bhnd */
 if|if
 condition|(
 name|bwn_is_bus_siba
@@ -7932,6 +7934,22 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|high
+operator|&
+name|BWN_TGSHIGH_DUALPHY
+condition|)
+block|{
+name|have_bg
+operator|=
+literal|1
+expr_stmt|;
+name|have_a
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -7988,6 +8006,15 @@ name|sc_dev
 argument_list|)
 operator|!=
 literal|0x4324
+operator|&&
+name|siba_get_pci_device
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|!=
+literal|0x4328
 condition|)
 block|{
 name|have_a
@@ -8062,7 +8089,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX turns off PHY A because it's not supported */
+comment|/* 	 * XXX turns off PHY A because it's not supported. 	 * Implement PHY-A support so we can use it for PHY-G 	 * dual-band support. 	 */
 if|if
 condition|(
 name|mac
@@ -8082,6 +8109,17 @@ operator|!=
 name|BWN_PHYTYPE_N
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: forcing 2GHz only; missing PHY-A support\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|have_a
 operator|=
 literal|0
