@@ -1196,11 +1196,22 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INTRNG
-end_ifndef
+end_ifdef
+
+begin_expr_stmt
+name|intr_pic_init_secondary
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* Configure the interrupt controller */
@@ -1329,23 +1340,6 @@ name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRNG
-end_ifdef
-
-begin_expr_stmt
-name|intr_pic_init_secondary
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Enter the scheduler */
