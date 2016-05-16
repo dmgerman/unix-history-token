@@ -4042,7 +4042,7 @@ begin_define
 define|#
 directive|define
 name|EFX_LICENSE_V3_KEY_LENGTH_MAX
-value|(128)
+value|(160)
 end_define
 
 begin_define
