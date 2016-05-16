@@ -95,7 +95,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -156,7 +156,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -272,7 +272,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -384,7 +384,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.

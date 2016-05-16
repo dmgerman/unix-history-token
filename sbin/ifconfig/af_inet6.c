@@ -966,7 +966,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr6
 operator|.
@@ -2451,7 +2451,7 @@ name|in6_ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|in6_ifr
 operator|.
@@ -2459,7 +2459,12 @@ name|ifr_name
 argument_list|,
 name|name
 argument_list|,
-name|IFNAMSIZ
+sizeof|sizeof
+argument_list|(
+name|in6_ifr
+operator|.
+name|ifr_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2630,7 +2635,7 @@ name|in6_addreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|in6_addreq
 operator|.
@@ -2638,7 +2643,12 @@ name|ifra_name
 argument_list|,
 name|name
 argument_list|,
-name|IFNAMSIZ
+sizeof|sizeof
+argument_list|(
+name|in6_addreq
+operator|.
+name|ifra_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy

@@ -265,7 +265,7 @@ name|nd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|nd
 operator|.
@@ -407,7 +407,7 @@ name|ndifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ndifreq
 operator|.
@@ -543,7 +543,7 @@ name|ndifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ndifreq
 operator|.
@@ -647,7 +647,7 @@ name|nd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|nd
 operator|.

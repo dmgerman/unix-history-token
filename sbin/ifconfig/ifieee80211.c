@@ -17188,7 +17188,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ireq
 operator|.
@@ -19727,7 +19727,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ireq
 operator|.
@@ -20696,7 +20696,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ireq
 operator|.
@@ -21328,7 +21328,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ireq
 operator|.
@@ -21866,7 +21866,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifmr
 operator|.
@@ -22543,7 +22543,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ireq
 operator|.

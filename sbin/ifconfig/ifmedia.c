@@ -327,7 +327,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifmr
 operator|.
@@ -825,7 +825,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifmr
 operator|->
@@ -1166,7 +1166,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -1347,7 +1347,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -1500,7 +1500,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -1610,7 +1610,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
