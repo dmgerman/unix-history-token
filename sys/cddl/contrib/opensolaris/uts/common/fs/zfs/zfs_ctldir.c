@@ -4791,12 +4791,6 @@ name|snap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VN_HOLD
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
 name|avl_insert
 argument_list|(
 operator|&
@@ -6800,11 +6794,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|VN_HOLD
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 name|zcp
