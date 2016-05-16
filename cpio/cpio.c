@@ -1526,6 +1526,13 @@ operator|&=
 operator|~
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
+name|cpio
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_PASSPHRASE
