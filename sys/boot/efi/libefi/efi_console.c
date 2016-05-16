@@ -1162,6 +1162,11 @@ operator|=
 name|x
 expr_stmt|;
 break|break;
+default|default:
+comment|/* NOTREACHED */
+name|__unreachable
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
