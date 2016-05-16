@@ -4515,12 +4515,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VN_RELE
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -7588,6 +7582,13 @@ name|sep
 operator|->
 name|se_root
 condition|)
+block|{
+name|VN_RELE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* release covered vp */
 name|error
 operator|=
 name|SET_ERROR
@@ -7595,7 +7596,9 @@ argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 operator|*
 name|zfsvfsp
 operator|=
@@ -7606,6 +7609,13 @@ argument_list|)
 operator|->
 name|z_zfsvfs
 expr_stmt|;
+name|VN_URELE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* put snapshot's root vp */
+block|}
 block|}
 name|mutex_exit
 argument_list|(
@@ -7613,23 +7623,6 @@ operator|&
 name|sdp
 operator|->
 name|sd_lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|VN_URELE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-else|else
-name|VN_RELE
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 block|}
