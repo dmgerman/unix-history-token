@@ -1357,7 +1357,7 @@ argument_list|,
 name|MC_CMD_FC_IN_LICENSE_GET_KEY_STATS
 argument_list|)
 expr_stmt|;
-name|efx_mcdi_execute
+name|efx_mcdi_execute_quiet
 argument_list|(
 name|enp
 argument_list|,
@@ -3341,7 +3341,7 @@ argument_list|,
 name|MC_CMD_LICENSING_V3_IN_OP_REPORT_LICENSE
 argument_list|)
 expr_stmt|;
-name|efx_mcdi_execute
+name|efx_mcdi_execute_quiet
 argument_list|(
 name|enp
 argument_list|,
@@ -3888,7 +3888,7 @@ name|emr_out_length
 argument_list|)
 expr_stmt|;
 block|}
-name|efx_mcdi_execute
+name|efx_mcdi_execute_quiet
 argument_list|(
 name|enp
 argument_list|,
