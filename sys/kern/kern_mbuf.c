@@ -2842,19 +2842,43 @@ name|ext_count
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if the header is embedded in the cluster.  It is 	 * important that we can't touch any of the mbuf fields 	 * after we have freed the external storage, since mbuf 	 * could have been embedded in it. 	 */
-name|freembuf
-operator|=
-operator|(
+comment|/* 	 * Check if the header is embedded in the cluster.  It is 	 * important that we can't touch any of the mbuf fields 	 * after we have freed the external storage, since mbuf 	 * could have been embedded in it.  For now, the mbufs 	 * embedded into the cluster are always of type EXT_EXTREF, 	 * and for this type we won't free the mref. 	 */
+if|if
+condition|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_NOFREE
-operator|)
-condition|?
+condition|)
+block|{
+name|freembuf
+operator|=
 literal|0
-else|:
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|==
+name|EXT_EXTREF
+argument_list|,
+operator|(
+literal|"%s: no-free mbuf %p has wrong type"
+operator|,
+name|__func__
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|freembuf
+operator|=
 literal|1
 expr_stmt|;
 comment|/* Free attached storage if this mbuf is the only reference to it. */
