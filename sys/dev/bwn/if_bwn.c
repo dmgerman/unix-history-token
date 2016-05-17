@@ -32842,11 +32842,18 @@ operator|.
 name|power1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DPRINTF(mac->mac_sc, BWN_DEBUG_RECV, 		    "%s: power0=%d, power1=%d, power2=%d\n", 		    __func__, 		    rxhdr->phy.n.power0, 		    rxhdr->phy.n.power1, 		    rxhdr->ps2.n.power2);
+endif|#
+directive|endif
 break|break;
 default|default:
 comment|/* XXX TODO: implement rssi for other PHYs */
 break|break;
 block|}
+comment|/* 	 * RSSI here is absolute, not relative to the noise floor. 	 */
 name|noise
 operator|=
 name|mac
@@ -32854,6 +32861,12 @@ operator|->
 name|mac_stats
 operator|.
 name|link_noise
+expr_stmt|;
+name|rssi
+operator|=
+name|rssi
+operator|-
+name|noise
 expr_stmt|;
 comment|/* RX radio tap */
 if|if
