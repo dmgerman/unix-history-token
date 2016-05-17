@@ -13701,7 +13701,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * For physical writes, we allow 512b aligned writes and assume 		 * the device will perform a read-modify-write as necessary. 		 */
+comment|/* 		 * For the physical io we allow alignment 		 * to a logical block size. 		 */
+name|uint64_t
+name|log_align
+init|=
+literal|1ULL
+operator|<<
+name|vd
+operator|->
+name|vdev_top
+operator|->
+name|vdev_logical_ashift
+decl_stmt|;
 name|ASSERT0
 argument_list|(
 name|P2PHASE
@@ -13710,7 +13721,7 @@ name|zio
 operator|->
 name|io_offset
 argument_list|,
-name|SPA_MINBLOCKSIZE
+name|log_align
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13722,7 +13733,7 @@ name|zio
 operator|->
 name|io_size
 argument_list|,
-name|SPA_MINBLOCKSIZE
+name|log_align
 argument_list|)
 argument_list|)
 expr_stmt|;
