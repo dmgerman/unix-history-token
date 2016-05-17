@@ -526,7 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Those two are not a public API; only to be used between icl_soft.c and icl_proxy.c.  */
+comment|/*  * Those two are not a public API; only to be used between icl_soft.c  * and icl_soft_proxy.c.  */
 end_comment
 
 begin_function_decl
