@@ -14511,7 +14511,8 @@ decl_stmt|;
 name|uint64_t
 name|zoned
 decl_stmt|;
-name|dmu_objset_type_t
+name|enum
+name|lzc_dataset_type
 name|ost
 decl_stmt|;
 operator|(
@@ -14634,12 +14635,12 @@ name|ZFS_TYPE_VOLUME
 condition|)
 name|ost
 operator|=
-name|DMU_OST_ZVOL
+name|LZC_DATSET_TYPE_ZVOL
 expr_stmt|;
 else|else
 name|ost
 operator|=
-name|DMU_OST_ZFS
+name|LZC_DATSET_TYPE_ZFS
 expr_stmt|;
 comment|/* open zpool handle for prop validation */
 name|char

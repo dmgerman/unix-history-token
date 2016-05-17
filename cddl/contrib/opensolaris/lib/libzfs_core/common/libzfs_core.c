@@ -753,7 +753,8 @@ name|char
 modifier|*
 name|fsname
 parameter_list|,
-name|dmu_objset_type_t
+name|enum
+name|lzc_dataset_type
 name|type
 parameter_list|,
 name|nvlist_t
@@ -777,6 +778,9 @@ name|args
 argument_list|,
 literal|"type"
 argument_list|,
+operator|(
+name|dmu_objset_type_t
+operator|)
 name|type
 argument_list|)
 expr_stmt|;
