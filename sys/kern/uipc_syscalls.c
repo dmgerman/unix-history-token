@@ -9084,6 +9084,17 @@ decl_stmt|;
 if|if
 condition|(
 name|buflen
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|buflen
 operator|>
 name|MLEN
 condition|)
