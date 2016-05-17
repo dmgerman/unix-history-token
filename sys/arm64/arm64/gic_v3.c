@@ -1290,7 +1290,9 @@ block|{
 comment|/* XXX call intr_isrc_deregister() */
 name|free
 argument_list|(
-name|irqs
+name|sc
+operator|->
+name|gic_irqs
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2737,11 +2739,45 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|panic
-argument_list|(
-literal|"gic_v3_teardown_intr"
-argument_list|)
+name|struct
+name|gic_v3_irqsrc
+modifier|*
+name|gi
+init|=
+operator|(
+expr|struct
+name|gic_v3_irqsrc
+operator|*
+operator|)
+name|isrc
+decl_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|isrc_handlers
+operator|==
+literal|0
+condition|)
+block|{
+name|gi
+operator|->
+name|gi_pol
+operator|=
+name|INTR_POLARITY_CONFORM
 expr_stmt|;
+name|gi
+operator|->
+name|gi_trig
+operator|=
+name|INTR_TRIGGER_CONFORM
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2870,7 +2906,11 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"gic_v3_disable_intr"
+literal|"%s: Unsupported IRQ %u"
+argument_list|,
+name|__func__
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
@@ -3001,7 +3041,11 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"gic_v3_enable_intr"
+literal|"%s: Unsupported IRQ %u"
+argument_list|,
+name|__func__
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
