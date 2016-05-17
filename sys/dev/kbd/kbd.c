@@ -5061,7 +5061,7 @@ index|]
 operator|.
 name|len
 operator|=
-name|imin
+name|min
 argument_list|(
 name|fkeyp
 operator|->
