@@ -1027,9 +1027,9 @@ name|stderr
 argument_list|,
 name|dohalt
 condition|?
-literal|"usage: halt [-lnpq] [-k kernel]\n"
+literal|"usage: halt [-lNnpq] [-k kernel]\n"
 else|:
-literal|"usage: reboot [-dlnpq] [-k kernel]\n"
+literal|"usage: reboot [-dlNnpqr] [-k kernel]\n"
 argument_list|)
 expr_stmt|;
 name|exit
