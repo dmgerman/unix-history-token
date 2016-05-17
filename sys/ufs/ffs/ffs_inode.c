@@ -3259,6 +3259,14 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|flags
+operator|&
+name|IO_SYNC
+operator|)
+operator|!=
+literal|0
+operator|||
 operator|!
 name|DOINGASYNC
 argument_list|(
