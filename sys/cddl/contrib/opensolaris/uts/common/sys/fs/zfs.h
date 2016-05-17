@@ -100,6 +100,7 @@ operator|)
 block|}
 name|zfs_type_t
 typedef|;
+comment|/*  * NB: lzc_dataset_type should be updated whenever a new objset type is added,  * if it represents a real type of a dataset that can be created from userland.  */
 typedef|typedef
 enum|enum
 name|dmu_objset_type

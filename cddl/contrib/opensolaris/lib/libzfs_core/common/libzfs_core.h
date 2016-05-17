@@ -37,12 +37,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/fs/zfs.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -67,6 +61,17 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/*  * NB: this type should be kept binary compatible with dmu_objset_type_t.  */
+enum|enum
+name|lzc_dataset_type
+block|{
+name|LZC_DATSET_TYPE_ZFS
+init|=
+literal|2
+block|,
+name|LZC_DATSET_TYPE_ZVOL
+block|}
+enum|;
 name|int
 name|lzc_snapshot
 parameter_list|(
@@ -88,7 +93,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|dmu_objset_type_t
+name|enum
+name|lzc_dataset_type
 parameter_list|,
 name|nvlist_t
 modifier|*
