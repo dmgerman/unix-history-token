@@ -501,13 +501,6 @@ name|int
 name|reg
 parameter_list|)
 block|{
-name|MTKSWITCH_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|MTKSWITCH_READ
@@ -538,13 +531,6 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
-name|MTKSWITCH_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|MTKSWITCH_WRITE
 argument_list|(
 name|sc
@@ -975,6 +961,26 @@ name|val
 decl_stmt|;
 comment|/* Called early and hence unlocked */
 comment|/* Set the port to secure mode */
+name|val
+operator|=
+name|sc
+operator|->
+name|hal
+operator|.
+name|mtkswitch_read
+argument_list|(
+name|sc
+argument_list|,
+name|MTKSWITCH_PCR
+argument_list|(
+name|port
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|val
+operator||=
+name|PCR_PORT_VLAN_SECURE
+expr_stmt|;
 name|sc
 operator|->
 name|hal
@@ -988,7 +994,7 @@ argument_list|(
 name|port
 argument_list|)
 argument_list|,
-name|PCR_PORT_VLAN_SECURE
+name|val
 argument_list|)
 expr_stmt|;
 comment|/* Set port's vlan_attr to user port */
@@ -1010,6 +1016,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|&=
+operator|~
 name|PVC_VLAN_ATTR_MASK
 expr_stmt|;
 name|sc
@@ -1028,6 +1035,28 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+name|PMCR_CFG_DEFAULT
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|==
+name|sc
+operator|->
+name|cpuport
+condition|)
+name|val
+operator||=
+name|PMCR_FORCE_LINK
+operator||
+name|PMCR_FORCE_DPX
+operator||
+name|PMCR_FORCE_SPD_1000
+operator||
+name|PMCR_FORCE_MODE
+expr_stmt|;
 comment|/* Set port's MAC to default settings */
 name|sc
 operator|->
@@ -1042,7 +1071,7 @@ argument_list|(
 name|port
 argument_list|)
 argument_list|,
-name|PMCR_CFG_DEFAULT
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -1593,6 +1622,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|&=
+operator|~
 operator|(
 name|VTIM_MASK
 operator|<<
@@ -2228,6 +2258,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|&=
+operator|~
 operator|(
 name|VTIM_MASK
 operator|<<
