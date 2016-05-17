@@ -414,6 +414,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint64_t
+name|msr
+decl_stmt|;
 comment|/* 	 * Work around Erratum 721 for Family 10h and 12h processors. 	 * These processors may incorrectly update the stack pointer 	 * after a long series of push and/or near-call instructions, 	 * or a long series of pop and/or near-return instructions. 	 * 	 * http://support.amd.com/us/Processor_TechDocs/41322_10h_Rev_Gd.pdf 	 * http://support.amd.com/us/Processor_TechDocs/44739_12h_Rev_Gd.pdf 	 * 	 * Hypervisors do not provide access to the errata MSR, 	 * causing #GP exception on attempt to apply the errata.  The 	 * MSR write shall be done on host and persist globally 	 * anyway, so do not try to do it when under virtualization. 	 */
 switch|switch
 condition|(
