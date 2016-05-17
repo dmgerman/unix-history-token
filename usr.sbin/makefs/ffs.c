@@ -6373,6 +6373,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+comment|/* Seeding affects reproducible builds. */
 name|srandom
 argument_list|(
 name|time
@@ -6404,10 +6405,6 @@ name|di_gen
 operator|=
 name|random
 argument_list|()
-operator|/
-literal|2
-operator|+
-literal|1
 expr_stmt|;
 name|dip
 operator|++
