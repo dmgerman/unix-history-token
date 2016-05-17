@@ -862,6 +862,12 @@ name|MTK_SOC_MT7620A
 block|}
 block|,
 block|{
+literal|"mediatek,mt7628-pci"
+block|,
+name|MTK_SOC_MT7628
+block|}
+block|,
+block|{
 literal|"mediatek,mt7621-pci"
 block|,
 name|MTK_SOC_MT7621
