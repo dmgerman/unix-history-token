@@ -558,6 +558,11 @@ parameter_list|(
 name|struct
 name|syncache
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2329,6 +2334,8 @@ operator|)
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_INC
@@ -5952,6 +5959,8 @@ condition|(
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|m
 argument_list|)
 operator|==
 literal|0
@@ -6584,6 +6593,8 @@ condition|(
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|m
 argument_list|)
 operator|==
 literal|0
@@ -6714,6 +6725,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Send SYN|ACK to the peer.  Either in response to the peer's SYN,  * i.e. m0 != NULL, or upon 3WHS ACK timeout, i.e. m0 == NULL.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6723,6 +6738,12 @@ name|struct
 name|syncache
 modifier|*
 name|sc
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+name|m0
 parameter_list|)
 block|{
 name|struct
@@ -7613,6 +7634,44 @@ argument_list|,
 name|th_sum
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we have peer's SYN and it has a flowid, then let's assign it to 	 * our SYN|ACK.  ip6_output() and ip_output() will not assign flowid 	 * to SYN|ACK due to lack of inp here. 	 */
+if|if
+condition|(
+name|m0
+operator|!=
+name|NULL
+operator|&&
+name|M_HASHTYPE_GET
+argument_list|(
+name|m0
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
+condition|)
+block|{
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|=
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
+name|m
+argument_list|,
+name|M_HASHTYPE_GET
+argument_list|(
+name|m0
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|INET6
