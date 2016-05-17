@@ -1086,6 +1086,10 @@ name|pv_chunk
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Locks  * (p) PV list lock  */
+end_comment
+
 begin_struct
 struct|struct
 name|md_page
@@ -1097,9 +1101,11 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+comment|/* (p) */
 name|int
 name|pv_gen
 decl_stmt|;
+comment|/* (p) */
 name|int
 name|pat_mode
 decl_stmt|;
