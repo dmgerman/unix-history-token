@@ -234,7 +234,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{ BHND_DEVICE(_core, _desc, BHND_ ## _core ## _QUIRKS,	\ 	    ## __VA_ARGS__), BHND_PCI_REGFMT_ ## _core }
+value|{ BHND_DEVICE(_core, _desc, BHND_ ## _core ## _QUIRKS, NULL,	\ 	    ## __VA_ARGS__), BHND_PCI_REGFMT_ ## _core }
 end_define
 
 begin_struct

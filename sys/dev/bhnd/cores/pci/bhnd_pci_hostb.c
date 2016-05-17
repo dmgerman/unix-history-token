@@ -114,9 +114,11 @@ parameter_list|(
 name|_core
 parameter_list|,
 name|_quirks
+parameter_list|,
+name|_chip_quirks
 parameter_list|)
 define|\
-value|BHND_DEVICE(_core, "", _quirks, BHND_DF_HOSTB)
+value|BHND_DEVICE(_core, "", _quirks, _chip_quirks, BHND_DF_HOSTB)
 end_define
 
 begin_decl_stmt
@@ -135,6 +137,16 @@ specifier|const
 name|struct
 name|bhnd_device_quirk
 name|bhnd_pcie_quirks
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|bhnd_chip_quirk
+name|bhnd_pcie_chip_quirks
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -196,6 +208,8 @@ argument_list|(
 name|PCI
 argument_list|,
 name|bhnd_pci_quirks
+argument_list|,
+name|NULL
 argument_list|)
 block|,
 name|BHND_PCI_DEV
@@ -203,6 +217,8 @@ argument_list|(
 name|PCIE
 argument_list|,
 name|bhnd_pcie_quirks
+argument_list|,
+name|bhnd_pcie_chip_quirks
 argument_list|)
 block|,
 name|BHND_DEVICE_END
@@ -344,6 +360,47 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|bhnd_chip_quirk
+name|bhnd_pcie_chip_quirks
+index|[]
+init|=
+block|{
+comment|/* Apple boards on which BHND_BFL2_PCIEWAR_OVR should be assumed 	 * to be set. */
+block|{
+block|{
+name|BHND_CHIP_BVENDOR
+argument_list|(
+name|PCI_VENDOR_APPLE
+argument_list|)
+block|,
+name|BHND_CHIP_SROMREV
+argument_list|(
+name|HWREV_EQ
+argument_list|(
+literal|4
+argument_list|)
+argument_list|)
+block|,
+name|BHND_CHIP_BREV
+argument_list|(
+argument|HWREV_LTE(
+literal|0x71
+argument|)
+argument_list|)
+block|}
+block|,
+name|BHND_PCIE_QUIRK_BFL2_PCIEWAR_EN
+block|}
+block|,
+name|BHND_CHIP_QUIRK_END
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// Quirk handling TODO
 end_comment
@@ -354,6 +411,10 @@ end_comment
 
 begin_comment
 comment|// - BHND_PCIE_QUIRK_ASPM_OVR
+end_comment
+
+begin_comment
+comment|// - BHND_PCIE_QUIRK_BFL2_PCIEWAR_EN
 end_comment
 
 begin_comment

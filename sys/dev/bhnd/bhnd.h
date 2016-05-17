@@ -316,6 +316,46 @@ name|BHND_ACCESSOR
 end_undef
 
 begin_comment
+comment|/**  * A bhnd(4) board descriptor.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_board_info
+block|{
+name|uint16_t
+name|board_vendor
+decl_stmt|;
+comment|/**< PCI-SIG vendor ID (even on non-PCI 					  *  devices). 					  * 					  *  On PCI devices, this will generally 					  *  be the subsystem vendor ID, but the 					  *  value may be overridden in device 					  *  NVRAM. 					  */
+name|uint16_t
+name|board_type
+decl_stmt|;
+comment|/**< Board type (See BHND_BOARD_*) 					  * 					  *  On PCI devices, this will generally 					  *  be the subsystem device ID, but the 					  *  value may be overridden in device 					  *  NVRAM. 					  */
+name|uint16_t
+name|board_rev
+decl_stmt|;
+comment|/**< Board revision. */
+name|uint8_t
+name|board_srom_rev
+decl_stmt|;
+comment|/**< Board SROM format revision */
+name|uint32_t
+name|board_flags
+decl_stmt|;
+comment|/**< Board flags (see BHND_BFL_*) */
+name|uint32_t
+name|board_flags2
+decl_stmt|;
+comment|/**< Board flags 2 (see BHND_BFL2_*) */
+name|uint32_t
+name|board_flags3
+decl_stmt|;
+comment|/**< Board flags 3 (see BHND_BFL3_*) */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/**  * Chip Identification  *   * This is read from the ChipCommon ID register; on earlier bhnd(4) devices  * where ChipCommon is unavailable, known values must be supplied.  */
 end_comment
 
@@ -352,28 +392,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/** * A bhnd(4) bus resource. *  * This provides an abstract interface to per-core resources that may require * bus-level remapping of address windows prior to access. */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_resource
-block|{
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-comment|/**< the system resource. */
-name|bool
-name|direct
-decl_stmt|;
-comment|/**< false if the resource requires 					 *   bus window remapping before it 					 *   is MMIO accessible. */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/**  * A bhnd(4) core descriptor.  */
 end_comment
 
@@ -384,7 +402,7 @@ block|{
 name|uint16_t
 name|vendor
 decl_stmt|;
-comment|/**< vendor */
+comment|/**< JEP-106 vendor (BHND_MFGID_*) */
 name|uint16_t
 name|device
 decl_stmt|;
@@ -421,6 +439,28 @@ name|uint16_t
 name|end
 decl_stmt|;
 comment|/**< last revision, or BHND_HWREV_INVALID 					     to match on any revision. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/** * A bhnd(4) bus resource. *  * This provides an abstract interface to per-core resources that may require * bus-level remapping of address windows prior to access. */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_resource
+block|{
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+comment|/**< the system resource. */
+name|bool
+name|direct
+decl_stmt|;
+comment|/**< false if the resource requires 					 *   bus window remapping before it 					 *   is MMIO accessible. */
 block|}
 struct|;
 end_struct
@@ -570,7 +610,7 @@ value|{					\ 		.vendor = BHND_MFGID_INVALID,	\ 		.device = BHND_COREID_INVALID,
 end_define
 
 begin_comment
-comment|/** A chipset match descriptor. */
+comment|/**  * A chipset match descriptor.  *   * @warning Matching on board/nvram attributes relies on NVRAM access, and will  * fail if a valid NVRAM device cannot be found, or is not yet attached.  */
 end_comment
 
 begin_struct
@@ -578,7 +618,7 @@ struct|struct
 name|bhnd_chip_match
 block|{
 comment|/** Select fields to be matched */
-name|uint8_t
+name|uint16_t
 name|match_id
 range|:
 literal|1
@@ -591,9 +631,29 @@ name|match_pkg
 range|:
 literal|1
 decl_stmt|,
+name|match_bvendor
+range|:
+literal|1
+decl_stmt|,
+name|match_btype
+range|:
+literal|1
+decl_stmt|,
+name|match_brev
+range|:
+literal|1
+decl_stmt|,
+name|match_srom_rev
+range|:
+literal|1
+decl_stmt|,
+name|match_any
+range|:
+literal|1
+decl_stmt|,
 name|match_flags_unused
 range|:
-literal|5
+literal|8
 decl_stmt|;
 name|uint16_t
 name|chip_id
@@ -608,6 +668,24 @@ name|uint8_t
 name|chip_pkg
 decl_stmt|;
 comment|/**< required package */
+name|uint16_t
+name|board_vendor
+decl_stmt|;
+comment|/**< required board vendor */
+name|uint16_t
+name|board_type
+decl_stmt|;
+comment|/**< required board type */
+name|struct
+name|bhnd_hwrev_match
+name|board_rev
+decl_stmt|;
+comment|/**< matching board revisions */
+name|struct
+name|bhnd_hwrev_match
+name|board_srom_rev
+decl_stmt|;
+comment|/**< matching board srom revisions */
 block|}
 struct|;
 end_struct
@@ -617,7 +695,7 @@ define|#
 directive|define
 name|BHND_CHIP_MATCH_ANY
 define|\
-value|{ .match_id = 0, .match_rev = 0, .match_pkg = 0 }
+value|{ .match_any = 1 }
 end_define
 
 begin_define
@@ -628,7 +706,18 @@ parameter_list|(
 name|_m
 parameter_list|)
 define|\
-value|((_m)->match_id == 0&& (_m)->match_rev == 0&& (_m)->match_pkg == 0)
+value|((_m)->match_any == 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_MATCH_REQ_BOARD_INFO
+parameter_list|(
+name|_m
+parameter_list|)
+define|\
+value|((_m)->match_srom_rev || (_m)->match_bvendor ||	\ 	    (_m)->match_btype || (_m)->match_brev)
 end_define
 
 begin_comment
@@ -647,7 +736,7 @@ value|.match_id = 1, .chip_id = BHND_CHIPID_BCM ## _cid
 end_define
 
 begin_comment
-comment|/** Set the required revision range within a bhnd_chip_match instance */
+comment|/** Set the required chip revision range within a bhnd_chip_match instance */
 end_comment
 
 begin_define
@@ -674,6 +763,102 @@ name|_pkg
 parameter_list|)
 define|\
 value|.match_pkg = 1, .chip_pkg = BHND_PKGID_BCM ## _pkg
+end_define
+
+begin_comment
+comment|/** Set the required board vendor within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_BVENDOR
+parameter_list|(
+name|_vend
+parameter_list|)
+define|\
+value|.match_bvendor = 1, .board_vendor = _vend
+end_define
+
+begin_comment
+comment|/** Set the required board type within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_BT
+parameter_list|(
+name|_btype
+parameter_list|)
+define|\
+value|.match_btype = 1, .board_type = BHND_BOARD_BCM ## _btype
+end_define
+
+begin_comment
+comment|/** Set the required SROM revision range within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_SROMREV
+parameter_list|(
+name|_rev
+parameter_list|)
+define|\
+value|.match_srom_rev = 1, .board_srom_rev = BHND_ ## _rev
+end_define
+
+begin_comment
+comment|/** Set the required board revision range within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_BREV
+parameter_list|(
+name|_rev
+parameter_list|)
+define|\
+value|.match_brev = 1, .board_rev = BHND_ ## _rev
+end_define
+
+begin_comment
+comment|/** Set the required board vendor and type within a bhnd_chip_match instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_BVT
+parameter_list|(
+name|_vend
+parameter_list|,
+name|_type
+parameter_list|)
+define|\
+value|BHND_CHIP_BVEND(_vend), BHND_CHIP_BTYPE(_type)
+end_define
+
+begin_comment
+comment|/** Set the required board vendor, type, and revision within a bhnd_chip_match  *  instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_BVTR
+parameter_list|(
+name|_vend
+parameter_list|,
+name|_type
+parameter_list|,
+name|_rev
+parameter_list|)
+define|\
+value|BHND_CHIP_BVT(_vend, _type), BHND_CHIP_BREV(_rev)
 end_define
 
 begin_comment
@@ -854,6 +1039,13 @@ modifier|*
 name|quirks_table
 decl_stmt|;
 comment|/**< quirks table for this device, or NULL */
+specifier|const
+name|struct
+name|bhnd_chip_quirk
+modifier|*
+name|chip_quirks_table
+decl_stmt|;
+comment|/**< chipset-specific quirks for this device, or NULL */
 name|uint32_t
 name|device_flags
 decl_stmt|;
@@ -875,12 +1067,14 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
+name|_chip_quirks
+parameter_list|,	\
 name|_flags
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{ BHND_CORE_MATCH(BHND_MFGID_ ## _vendor, BHND_COREID_ ## _device, \ 	    BHND_HWREV_ANY), _desc, _quirks, _flags }
+value|{ BHND_CORE_MATCH(BHND_MFGID_ ## _vendor,			\ 	    BHND_COREID_ ## _device, BHND_HWREV_ANY), _desc, _quirks,	\ 	    _chip_quirks, _flags }
 end_define
 
 begin_define
@@ -894,10 +1088,12 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
+name|_chip_quirks
+parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(MIPS, _device, _desc, _quirks, ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(MIPS, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
@@ -911,10 +1107,12 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
+name|_chip_quirks
+parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(ARM, _device, _desc, _quirks, ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(ARM, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
@@ -928,17 +1126,19 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
+name|_chip_quirks
+parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(BCM, _device, _desc, _quirks, ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(BCM, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BHND_DEVICE_END
-value|{ BHND_CORE_MATCH_ANY, NULL, NULL, 0 }
+value|{ BHND_CORE_MATCH_ANY, NULL, NULL, NULL, 0 }
 end_define
 
 begin_function_decl
@@ -1128,6 +1328,12 @@ name|struct
 name|bhnd_chipid
 modifier|*
 name|chipid
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_board_info
+modifier|*
+name|binfo
 parameter_list|,
 specifier|const
 name|struct
@@ -1421,6 +1627,50 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|bhnd_bus_generic_read_board_info
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|struct
+name|bhnd_board_info
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_bus_generic_get_nvram_var
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|bhnd_resource
 modifier|*
@@ -1619,7 +1869,44 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**  * Determine an NVRAM variable's expected size.  *  * @param 	dev	A bhnd bus child device.  * @param	name	The variable name.  * @param[out]	len	On success, the variable's size, in bytes.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
+comment|/**  * Attempt to read the BHND board identification from the bhnd bus.  *  * This relies on NVRAM access, and will fail if a valid NVRAM device cannot  * be found, or is not yet attached.  *  * @param dev The parent of @p child.  * @param child The bhnd device requesting board info.  * @param[out] info On success, will be populated with the bhnd(4) device's  * board information.  *  * @retval 0 success  * @retval ENODEV	No valid NVRAM source could be found.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_read_board_info
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|bhnd_board_info
+modifier|*
+name|info
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_READ_BOARD_INFO
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|info
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Determine an NVRAM variable's expected size.  *  * @param 	dev	A bhnd bus child device.  * @param	name	The variable name.  * @param[out]	len	On success, the variable's size, in bytes.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval ENODEV	No valid NVRAM source could be found.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
 end_comment
 
 begin_function
@@ -1664,7 +1951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Read an NVRAM variable.  *  * @param 	dev	A bhnd bus child device.  * @param	name	The NVRAM variable name.  * @param	buf	A buffer large enough to hold @p len bytes. On success,  * 			the requested value will be written to this buffer.  * @param	len	The required variable length.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval EINVAL	If @p len does not match the actual variable size.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
+comment|/**  * Read an NVRAM variable.  *  * @param 	dev	A bhnd bus child device.  * @param	name	The NVRAM variable name.  * @param	buf	A buffer large enough to hold @p len bytes. On success,  * 			the requested value will be written to this buffer.  * @param	len	The required variable length.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval EINVAL	If @p len does not match the actual variable size.  * @retval ENODEV	No valid NVRAM source could be found.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
 end_comment
 
 begin_function

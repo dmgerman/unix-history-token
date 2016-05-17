@@ -144,6 +144,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|bhnd_chip_quirk
+name|chipc_chip_quirks
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Supported device identifiers */
 end_comment
@@ -164,6 +173,8 @@ argument_list|,
 literal|"CC"
 argument_list|,
 name|chipc_quirks
+argument_list|,
+name|chipc_chip_quirks
 argument_list|)
 block|,
 name|BHND_DEVICE_END
@@ -558,17 +569,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|quirks
-operator||=
-name|bhnd_chip_quirks
-argument_list|(
-name|dev
-argument_list|,
-name|chipc_chip_quirks
 argument_list|)
 expr_stmt|;
 name|CHIPC_LOCK_INIT

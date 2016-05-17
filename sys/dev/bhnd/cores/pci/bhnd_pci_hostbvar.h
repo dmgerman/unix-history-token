@@ -138,13 +138,22 @@ operator|<<
 literal|9
 operator|)
 block|,
+comment|/** 	 * A subset of Apple devices did not set the BHND_BFL2_PCIEWAR_OVR 	 * flag in SPROM; on these devices, the BHND_BFL2_PCIEWAR_OVR flag 	 * should always be treated as if set. 	 */
+name|BHND_PCIE_QUIRK_BFL2_PCIEWAR_EN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|10
+operator|)
+block|,
 comment|/** 	 * Fix SerDes polarity on SerDes<= rev9 devices. 	 * 	 * The SerDes polarity must be saved at device attachment, and 	 * restored on suspend/resume. 	 */
 name|BHND_PCIE_QUIRK_SDR9_POLARITY
 init|=
 operator|(
 literal|1
 operator|<<
-literal|10
+literal|11
 operator|)
 block|,
 comment|/** 	 * SerDes PLL down flag must be manually disabled (by ChipCommon) on 	 * resume. 	 */
@@ -153,7 +162,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|11
+literal|12
 operator|)
 block|,
 comment|/** 	 * On attach and resume, consult the SPROM to determine whether 	 * the L2/L3-Ready w/o PCI RESET work-around must be applied. 	 * 	 * If L23READY_EXIT_NOPRST is not already set in the SPROM, set it 	 */
@@ -162,7 +171,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|12
+literal|13
 operator|)
 block|,
 comment|/** 	 * The PCIe SerDes supports non-standard extended MDIO register access. 	 *  	 * The PCIe SerDes supports access to extended MDIO registers via 	 * a non-standard Clause 22 address extension mechanism. 	 */
@@ -171,7 +180,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|13
+literal|14
 operator|)
 block|,
 comment|/** 	 * The PCIe SerDes PLL must be configured to not retry the startup 	 * sequence upon frequency detection failure on SerDes<= rev9 devices 	 *  	 * The issue this workaround resolves has not be determined. 	 */
@@ -180,7 +189,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|14
+literal|15
 operator|)
 block|, }
 enum|;
