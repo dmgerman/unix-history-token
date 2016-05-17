@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -6946,10 +6952,6 @@ argument_list|(
 name|is
 operator|->
 name|is_conn
-argument_list|,
-name|idc
-operator|->
-name|idc_iser
 argument_list|,
 name|idc
 operator|->

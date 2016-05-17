@@ -435,44 +435,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Initiator part.  */
-end_comment
-
-begin_function_decl
-name|int
-name|icl_conn_connect
-parameter_list|(
-name|struct
-name|icl_conn
-modifier|*
-name|ic
-parameter_list|,
-name|bool
-name|rdma
-parameter_list|,
-name|int
-name|domain
-parameter_list|,
-name|int
-name|socktype
-parameter_list|,
-name|int
-name|protocol
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|from_sa
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|to_sa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Target part.  */
 end_comment
 
@@ -564,12 +526,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This one is not a public API; only to be used by icl_proxy.c.  */
+comment|/*  * Those two are not a public API; only to be used between icl_soft.c and icl_proxy.c.  */
 end_comment
 
 begin_function_decl
 name|int
-name|icl_conn_handoff_sock
+name|icl_soft_handoff_sock
 parameter_list|(
 name|struct
 name|icl_conn
@@ -580,6 +542,37 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|icl_soft_proxy_connect
+parameter_list|(
+name|struct
+name|icl_conn
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|domain
+parameter_list|,
+name|int
+name|socktype
+parameter_list|,
+name|int
+name|protocol
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|from_sa
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|to_sa
 parameter_list|)
 function_decl|;
 end_function_decl
