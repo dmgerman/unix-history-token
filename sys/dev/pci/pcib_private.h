@@ -442,12 +442,6 @@ decl_stmt|;
 name|uint32_t
 name|pcie_slot_cap
 decl_stmt|;
-name|uint16_t
-name|pcie_pending_link_ctl_mask
-decl_stmt|;
-name|uint16_t
-name|pcie_pending_link_ctl_val
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
