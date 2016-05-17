@@ -2132,6 +2132,13 @@ name|emi_pending_req
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Ensure stale MCDI requests fail after an MC reboot. */
+name|emip
+operator|->
+name|emi_new_epoch
+operator|=
+name|B_FALSE
+expr_stmt|;
 name|EFSYS_UNLOCK
 argument_list|(
 name|enp
