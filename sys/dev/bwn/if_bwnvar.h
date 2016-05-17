@@ -167,6 +167,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BWN_MAXTXHDRSIZE
+value|(112 + (sizeof(struct bwn_plcp6)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BWN_PIO_COOKIE
 parameter_list|(
 name|tq

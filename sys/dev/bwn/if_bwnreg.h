@@ -2923,8 +2923,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BWN_DMA0_RX_FRAMEOFFSET
+name|BWN_DMA0_RX_FRAMEOFFSET_FW351
 value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_DMA0_RX_FRAMEOFFSET_FW598
+value|38
 end_define
 
 begin_define
@@ -2944,8 +2951,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BWN_DMA0_RX_BUFFERSIZE
-value|IEEE80211_MAX_LEN
+name|BWN_DMA0_RX_BUFFERSIZE_FW351
+value|(IEEE80211_MAX_LEN + BWN_DMA0_RX_FRAMEOFFSET_FW351)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_DMA0_RX_BUFFERSIZE_FW598
+value|(IEEE80211_MAX_LEN + BWN_DMA0_RX_FRAMEOFFSET_FW598)
 end_define
 
 begin_define
