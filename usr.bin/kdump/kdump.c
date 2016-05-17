@@ -1419,6 +1419,8 @@ name|tracefile
 argument_list|,
 literal|"-"
 argument_list|)
+operator|!=
+literal|0
 condition|)
 if|if
 condition|(
