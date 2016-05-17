@@ -3482,7 +3482,7 @@ name|t
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|t
 operator|->
@@ -5778,7 +5778,7 @@ argument_list|(
 name|this_node
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|warnx
@@ -5810,7 +5810,7 @@ name|iterator
 operator|->
 name|child
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|cd9660_convert_structure
@@ -5890,7 +5890,7 @@ name|iterator
 operator|->
 name|next
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|this_node
@@ -6987,7 +6987,7 @@ comment|/* NEW */
 name|cd9660_filename_conversion_functor
 name|conversion_function
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
