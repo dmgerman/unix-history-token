@@ -60,6 +60,9 @@ decl_stmt|;
 name|uint32_t
 name|nirqs
 decl_stmt|;
+name|uint32_t
+name|typer
+decl_stmt|;
 block|}
 struct|;
 end_struct

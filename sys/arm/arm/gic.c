@@ -550,6 +550,28 @@ comment|/* Irqs 32+ are shared peripherals. */
 end_comment
 
 begin_comment
+comment|/* TYPER Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GICD_TYPER_SECURITYEXT
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIC_SUPPORT_SECEXT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|((_sc->typer& GICD_TYPER_SECURITYEXT) == GICD_TYPER_SECURITYEXT)
+end_define
+
+begin_comment
 comment|/* First bit is a polarity bit (0 - low, 1 - high) */
 end_comment
 
@@ -832,6 +854,9 @@ name|mutex
 decl_stmt|;
 name|uint32_t
 name|nirqs
+decl_stmt|;
+name|uint32_t
+name|typer
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1463,6 +1488,11 @@ name|irq
 operator|=
 literal|0
 init|;
+name|GIC_SUPPORT_SECEXT
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
 name|irq
 operator|<
 name|sc
@@ -1670,6 +1700,11 @@ name|i
 operator|=
 literal|0
 init|;
+name|GIC_SUPPORT_SECEXT
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
 name|i
 operator|<
 name|sc
@@ -3400,7 +3435,9 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* Get the number of interrupts */
-name|nirqs
+name|sc
+operator|->
+name|typer
 operator|=
 name|gic_d_read_4
 argument_list|(
@@ -3415,7 +3452,9 @@ literal|32
 operator|*
 operator|(
 operator|(
-name|nirqs
+name|sc
+operator|->
+name|typer
 operator|&
 literal|0x1f
 operator|)
@@ -3671,6 +3710,11 @@ name|i
 operator|=
 literal|0
 init|;
+name|GIC_SUPPORT_SECEXT
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
 name|i
 operator|<
 name|sc
