@@ -16190,6 +16190,7 @@ name|zc_objset_type
 operator|==
 name|DMU_OST_ZFS
 operator|&&
+operator|!
 name|allow_mounted
 condition|)
 block|{
