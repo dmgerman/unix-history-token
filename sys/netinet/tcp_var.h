@@ -436,6 +436,17 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|tfb_tcp_rexmit_tmr
+function_decl|)
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|)
+function_decl|;
 specifier|volatile
 name|uint32_t
 name|tfb_refcnt

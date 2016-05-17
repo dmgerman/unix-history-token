@@ -3118,6 +3118,29 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_fb
+operator|->
+name|tfb_tcp_rexmit_tmr
+condition|)
+block|{
+comment|/* The stack has a timer action too. */
+call|(
+modifier|*
+name|tp
+operator|->
+name|t_fb
+operator|->
+name|tfb_tcp_rexmit_tmr
+call|)
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit one segment. 	 */
 if|if
 condition|(
