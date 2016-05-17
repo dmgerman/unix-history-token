@@ -6380,6 +6380,17 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|__checkReturn
+name|boolean_t
+name|efx_lic_check_support
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|__checkReturn
 name|efx_rc_t
 name|efx_lic_update_licenses
 parameter_list|(
