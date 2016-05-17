@@ -2465,11 +2465,18 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|V_tcps_states
+value|VNET(tcps_states)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCPSTATES_INC
 parameter_list|(
 name|state
 parameter_list|)
-value|counter_u64_add(VNET(tcps_states)[state], 1)
+value|counter_u64_add(V_tcps_states[state], 1)
 end_define
 
 begin_define
@@ -2479,7 +2486,7 @@ name|TCPSTATES_DEC
 parameter_list|(
 name|state
 parameter_list|)
-value|counter_u64_add(VNET(tcps_states)[state], -1)
+value|counter_u64_add(V_tcps_states[state], -1)
 end_define
 
 begin_comment

@@ -7299,10 +7299,7 @@ name|ipi_count
 operator|+
 name|counter_u64_fetch
 argument_list|(
-name|VNET
-argument_list|(
-name|tcps_states
-argument_list|)
+name|V_tcps_states
 index|[
 name|TCPS_SYN_RECEIVED
 index|]
@@ -7386,10 +7383,7 @@ name|m
 operator|=
 name|counter_u64_fetch
 argument_list|(
-name|VNET
-argument_list|(
-name|tcps_states
-argument_list|)
+name|V_tcps_states
 index|[
 name|TCPS_SYN_RECEIVED
 index|]

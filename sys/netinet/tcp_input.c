@@ -1348,10 +1348,7 @@ parameter_list|)
 block|{
 name|COUNTER_ARRAY_ALLOC
 argument_list|(
-name|VNET
-argument_list|(
-name|tcps_states
-argument_list|)
+name|V_tcps_states
 argument_list|,
 name|TCP_NSTATES
 argument_list|,
@@ -1403,10 +1400,7 @@ parameter_list|)
 block|{
 name|COUNTER_ARRAY_FREE
 argument_list|(
-name|VNET
-argument_list|(
-name|tcps_states
-argument_list|)
+name|V_tcps_states
 argument_list|,
 name|TCP_NSTATES
 argument_list|)
