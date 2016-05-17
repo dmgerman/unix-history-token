@@ -901,6 +901,11 @@ name|iscsi_session
 modifier|*
 name|is
 parameter_list|,
+name|struct
+name|icl_pdu
+modifier|*
+name|request
+parameter_list|,
 name|union
 name|ccb
 modifier|*
@@ -9390,6 +9395,11 @@ name|iscsi_session
 modifier|*
 name|is
 parameter_list|,
+name|struct
+name|icl_pdu
+modifier|*
+name|request
+parameter_list|,
 name|union
 name|ccb
 modifier|*
@@ -9457,6 +9467,8 @@ argument_list|(
 name|is
 operator|->
 name|is_conn
+argument_list|,
+name|request
 argument_list|,
 operator|&
 name|ccb
@@ -9768,6 +9780,8 @@ name|iscsi_outstanding_add
 argument_list|(
 name|is
 argument_list|,
+name|request
+argument_list|,
 name|NULL
 argument_list|,
 operator|&
@@ -10076,6 +10090,8 @@ operator|=
 name|iscsi_outstanding_add
 argument_list|(
 name|is
+argument_list|,
+name|request
 argument_list|,
 name|ccb
 argument_list|,

@@ -3904,6 +3904,11 @@ modifier|*
 name|ic
 parameter_list|,
 name|struct
+name|icl_pdu
+modifier|*
+name|ip
+parameter_list|,
+name|struct
 name|ccb_scsiio
 modifier|*
 name|csio

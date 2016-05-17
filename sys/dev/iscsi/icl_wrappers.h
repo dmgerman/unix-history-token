@@ -307,6 +307,11 @@ modifier|*
 name|ic
 parameter_list|,
 name|struct
+name|icl_pdu
+modifier|*
+name|ip
+parameter_list|,
+name|struct
 name|ccb_scsiio
 modifier|*
 name|csio
@@ -326,6 +331,8 @@ operator|(
 name|ICL_CONN_TASK_SETUP
 argument_list|(
 name|ic
+argument_list|,
+name|ip
 argument_list|,
 name|csio
 argument_list|,
