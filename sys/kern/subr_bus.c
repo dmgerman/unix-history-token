@@ -4076,6 +4076,11 @@ operator|*
 name|src
 operator|==
 literal|'"'
+operator|||
+operator|*
+name|src
+operator|==
+literal|'\\'
 condition|)
 block|{
 if|if
