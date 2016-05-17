@@ -247,7 +247,7 @@ literal|"efi"
 block|,
 literal|"EFI console"
 block|,
-literal|0
+name|C_WIDEOUT
 block|,
 name|efi_cons_probe
 block|,

@@ -516,6 +516,11 @@ directive|define
 name|C_ACTIVEOUT
 value|(1<<3)
 comment|/* user wants output to console */
+define|#
+directive|define
+name|C_WIDEOUT
+value|(1<<4)
+comment|/* c_out routine groks wide chars */
 name|void
 function_decl|(
 modifier|*
