@@ -4758,7 +4758,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2820
-value|1
+value|0x0001
 end_define
 
 begin_comment
@@ -4769,7 +4769,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2850
-value|2
+value|0x0002
 end_define
 
 begin_comment
@@ -4780,7 +4780,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2720
-value|3
+value|0x0003
 end_define
 
 begin_comment
@@ -4791,7 +4791,7 @@ begin_define
 define|#
 directive|define
 name|RT2860_RF_2750
-value|4
+value|0x0004
 end_define
 
 begin_comment
@@ -4802,7 +4802,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3020
-value|5
+value|0x0005
 end_define
 
 begin_comment
@@ -4813,7 +4813,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_2020
-value|6
+value|0x0006
 end_define
 
 begin_comment
@@ -4824,7 +4824,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3021
-value|7
+value|0x0007
 end_define
 
 begin_comment
@@ -4835,7 +4835,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3022
-value|8
+value|0x0008
 end_define
 
 begin_comment
@@ -4846,7 +4846,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3052
-value|9
+value|0x0009
 end_define
 
 begin_comment
@@ -4857,7 +4857,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3320
-value|11
+value|0x000b
 end_define
 
 begin_comment
@@ -4868,7 +4868,7 @@ begin_define
 define|#
 directive|define
 name|RT3070_RF_3053
-value|13
+value|0x000d
 end_define
 
 begin_comment
@@ -4878,12 +4878,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RT5390_RF_5390
-value|15
+name|RT5390_RF_5360
+value|0x5360
 end_define
 
 begin_comment
-comment|/* b/g/n */
+comment|/* 1T1R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RF_5390
+value|0x5390
+end_define
+
+begin_comment
+comment|/* 1T1R */
 end_comment
 
 begin_comment
@@ -4935,6 +4946,13 @@ end_define
 begin_comment
 comment|/* minimum hold time (microsecond) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2860_EEPROM_CHIPID
+value|0x00
+end_define
 
 begin_define
 define|#
