@@ -113,6 +113,11 @@ name|siba_devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
+name|struct
+name|siba_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|device_t
 modifier|*
 name|devs
@@ -123,11 +128,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|// TODO: We need to set the initiator timeout for the
-comment|// core that will be issuing requests to non-memory locations.
-comment|//
-comment|// In the case of a bridged device, this is the hostb core.
-comment|// On a non-bridged device, this will be the CPU.
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* Fetch references to the siba SIBA_CFG* blocks for all 	 * registered devices */
 if|if
 condition|(
@@ -444,6 +457,44 @@ block|{
 return|return
 operator|(
 name|bhnd_generic_detach
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|siba_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bhnd_generic_resume
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|siba_suspend
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bhnd_generic_suspend
 argument_list|(
 name|dev
 argument_list|)
@@ -2537,6 +2588,20 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|siba_detach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|siba_resume
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|siba_suspend
 argument_list|)
 block|,
 comment|/* Bus interface */

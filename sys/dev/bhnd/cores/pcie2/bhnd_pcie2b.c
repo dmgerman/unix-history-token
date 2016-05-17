@@ -72,19 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bhnd_pcireg.h"
+file|"bhnd_pcie2_reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bhnd_pcibvar.h"
+file|"bhnd_pcie2b_var.h"
 end_include
 
 begin_function
 specifier|static
 name|int
-name|bhnd_pcib_attach
+name|bhnd_pcie2b_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -93,7 +93,7 @@ block|{
 comment|// TODO
 return|return
 operator|(
-name|bhnd_pci_generic_attach
+name|bhnd_pcie2_generic_attach
 argument_list|(
 name|dev
 argument_list|)
@@ -105,7 +105,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bhnd_pcib_detach
+name|bhnd_pcie2b_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -114,7 +114,7 @@ block|{
 comment|// TODO
 return|return
 operator|(
-name|bhnd_pci_generic_detach
+name|bhnd_pcie2_generic_detach
 argument_list|(
 name|dev
 argument_list|)
@@ -126,7 +126,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bhnd_pcib_suspend
+name|bhnd_pcie2b_suspend
 parameter_list|(
 name|device_t
 name|dev
@@ -134,7 +134,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|bhnd_pci_generic_suspend
+name|bhnd_pcie2_generic_suspend
 argument_list|(
 name|dev
 argument_list|)
@@ -146,7 +146,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bhnd_pcib_resume
+name|bhnd_pcie2b_resume
 parameter_list|(
 name|device_t
 name|dev
@@ -154,7 +154,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|bhnd_pci_generic_resume
+name|bhnd_pcie2_generic_resume
 argument_list|(
 name|dev
 argument_list|)
@@ -166,7 +166,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|bhnd_pcib_methods
+name|bhnd_pcie2b_methods
 index|[]
 init|=
 block|{
@@ -175,28 +175,28 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|bhnd_pcib_attach
+name|bhnd_pcie2b_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|bhnd_pcib_detach
+name|bhnd_pcie2b_detach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|bhnd_pcib_suspend
+name|bhnd_pcie2b_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bhnd_pcib_resume
+name|bhnd_pcie2b_resume
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -209,17 +209,17 @@ name|DEFINE_CLASS_1
 argument_list|(
 name|pcib
 argument_list|,
-name|bhnd_pcib_driver
+name|bhnd_pcie2b_driver
 argument_list|,
-name|bhnd_pcib_methods
+name|bhnd_pcie2b_methods
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|bhnd_pcib_softc
+name|bhnd_pcie2b_softc
 argument_list|)
 argument_list|,
-name|bhnd_pci_driver
+name|bhnd_pcie2_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -234,11 +234,11 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|bhnd_pcib
+name|bhnd_pcie2b
 argument_list|,
 name|bhnd
 argument_list|,
-name|bhnd_pcib_driver
+name|bhnd_pcie2b_driver
 argument_list|,
 name|pcib_devclass
 argument_list|,
@@ -252,7 +252,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|bhnd_pcib
+name|bhnd_pcie2b
 argument_list|,
 literal|1
 argument_list|)
@@ -262,7 +262,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|bhnd_pcib
+name|bhnd_pcie2b
 argument_list|,
 name|bhnd
 argument_list|,
@@ -278,9 +278,9 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|bhnd_pcib
+name|bhnd_pcie2b
 argument_list|,
-name|bhnd_pci
+name|bhnd_pcie2
 argument_list|,
 literal|1
 argument_list|,
@@ -294,7 +294,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|bhnd_pcib
+name|bhnd_pcie2b
 argument_list|,
 name|pci
 argument_list|,

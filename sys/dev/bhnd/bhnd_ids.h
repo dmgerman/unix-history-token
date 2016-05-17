@@ -6604,42 +6604,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_BU4321
+name|BHND_BOARD_BCM4321BU
 value|0x046b
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_BU4321E
+name|BHND_BOARD_BCM4321BUE
 value|0x047c
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_MP4321
+name|BHND_BOARD_BCM4321MP
 value|0x046c
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_CB2_4321
+name|BHND_BOARD_BCM4321CB2
 value|0x046d
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_CB2_4321_AG
+name|BHND_BOARD_BCM4321CB2_AG
 value|0x0066
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_BOARD_MC4321
+name|BHND_BOARD_BCM4321MC
 value|0x046e
 end_define
 

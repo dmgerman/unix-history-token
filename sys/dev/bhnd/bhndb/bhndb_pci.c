@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * PCI-specific implementation for the BHNDB bridge driver.  *   * Provides support for bridging from a PCI parent bus to a BHND-compatible  * bus (e.g. bcma or siba) via a Broadcom PCI core configured in end-point  * mode.  *   * This driver handles all host-level PCI interactions with a PCI/PCIe bridge  * core operating in endpoint mode. On the bridged bhnd bus, the PCI core  * device will be managed by a bhnd_pci_hostb driver.  */
+comment|/*  * PCI-specific implementation for the BHNDB bridge driver.  *   * Provides support for bridging from a PCI parent bus to a BHND-compatible  * bus (e.g. bcma or siba) via a Broadcom PCI core configured in end-point  * mode.  *   * This driver handles all initial generic host-level PCI interactions with a  * PCI/PCIe bridge core operating in endpoint mode. Once the bridged bhnd(4)  * bus has been enumerated, this driver works in tandem with a core-specific  * bhnd_pci_hostb driver to manage the PCI core.  */
 end_comment
 
 begin_include
@@ -1723,6 +1723,50 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/*  	 * On a subset of Apple BCM4360 modules, always prefer the 	 * PCI subdevice to the SPROM-supplied boardtype. 	 *  	 * TODO: 	 *  	 * Broadcom's own drivers implement this override, and then later use 	 * the remapped BCM4360 board type to determine the required 	 * board-specific workarounds. 	 *  	 * Without access to this hardware, it's unclear why this mapping 	 * is done, and we must do the same. If we can survey the hardware 	 * in question, it may be possible to replace this behavior with 	 * explicit references to the SPROM-supplied boardtype(s) in our 	 * quirk definitions. 	 */
+if|if
+condition|(
+name|pci_get_subvendor
+argument_list|(
+name|sc
+operator|->
+name|parent
+argument_list|)
+operator|==
+name|PCI_VENDOR_APPLE
+condition|)
+block|{
+switch|switch
+condition|(
+name|info
+operator|->
+name|board_type
+condition|)
+block|{
+case|case
+name|BHND_BOARD_BCM94360X29C
+case|:
+case|case
+name|BHND_BOARD_BCM94360X29CP2
+case|:
+case|case
+name|BHND_BOARD_BCM94360X51
+case|:
+case|case
+name|BHND_BOARD_BCM94360X51P2
+case|:
+name|info
+operator|->
+name|board_type
+operator|=
+literal|0
+expr_stmt|;
+comment|/* allow override below */
+break|break;
+default|default:
+break|break;
+block|}
+block|}
 comment|/* If NVRAM did not supply vendor/type info, provide the PCI 	 * subvendor/subdevice values. */
 if|if
 condition|(
@@ -2011,9 +2055,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|// TODO: Check board flags for BFL2_XTALBUFOUTEN?
-comment|// TODO: Check PCI core revision?
-comment|// TODO: Switch to 'slow' clock?
 comment|/* Fetch current config */
 name|gpio_out
 operator|=
@@ -2200,6 +2241,22 @@ argument_list|(
 name|bhndb_pci
 argument_list|,
 name|bhnd_pci_hostb
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|bhndb_pci
+argument_list|,
+name|bhnd_pcie2_hostb
 argument_list|,
 literal|1
 argument_list|,

@@ -2321,45 +2321,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_DEVAD_SD
-value|0x1
-end_define
-
-begin_comment
-comment|/* serdes pseudo-devad (PMA) recognized by 						   the bhnd_mdio_pcie driver */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BHND_PCIE_SD_ADDREXT
 value|0x1F
 end_define
 
 begin_comment
 comment|/* serdes address extension register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_SD_ADDREXT_BLK_MASK
-value|0xFFF0
-end_define
-
-begin_comment
-comment|/* register block mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_SD_ADDREXT_REG_MASK
-value|0x000F
-end_define
-
-begin_comment
-comment|/* register address mask */
 end_comment
 
 begin_define
@@ -2442,23 +2409,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_SD_REGS_TXPLL
+name|BHND_PCIE_SD_REGS_PLL
 value|0x8080
 end_define
 
 begin_comment
-comment|/* TXPLL register block */
+comment|/* (?) PLL register block */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_SD_REGS_TXCTRL0
+name|BHND_PCIE_SD_REGS_TX0
 value|0x8200
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* (?) Transmit 0 block */
 end_comment
 
 begin_define
@@ -2475,12 +2442,163 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_SD_REGS_RXCTRL0
+name|BHND_PCIE_SD_REGS_RX0
 value|0x8400
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* (?) Receive 0 register block */
+end_comment
+
+begin_comment
+comment|/* The interpretation of these registers and values are just guesses based on  * the limited available documentation from other (likely similar) Broadcom  * SerDes IP. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER
+value|0x17
+end_define
+
+begin_comment
+comment|/* TX transmit driver register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IFIR_MASK
+value|0x000E
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IFIR_SHIFT
+value|1
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IPRE_MASK
+value|0x00F0
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IPRE_SHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IDRIVER_MASK
+value|0x0F00
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_IDRIVER_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_P2_COEFF_SHIFT
+value|12
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_SD_TX_DRIVER_P2_COEFF_MASK
+value|0xF000
+end_define
+
+begin_comment
+comment|/* unconfirmed */
+end_comment
+
+begin_comment
+comment|/* Constants used with host bridge quirk handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_APPLE_TX_P2_COEFF_MAX
+value|0x7
+end_define
+
+begin_comment
+comment|/* 9.6dB pre-emphassis coeff (???) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_APPLE_TX_IDRIVER_MAX
+value|0xF
+end_define
+
+begin_comment
+comment|/* 1400mV voltage range (???) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_APPLE_TX_P2_COEFF_700MV
+value|0x7
+end_define
+
+begin_comment
+comment|/* 2.3dB pre-emphassis coeff (???) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_APPLE_TX_IDRIVER_700MV
+value|0x0
+end_define
+
+begin_comment
+comment|/* 670mV voltage range (???) */
 end_comment
 
 begin_comment
@@ -2832,7 +2950,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_SRSH_CLKREQ_OFFSET_REV5
+name|BHND_PCIE_SRSH_CLKREQ_OFFSET_R5
 value|40
 end_define
 
@@ -2843,7 +2961,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PCIE_SRSH_CLKREQ_OFFSET_REV8
+name|BHND_PCIE_SRSH_CLKREQ_OFFSET_R8
 value|104
 end_define
 
@@ -2882,98 +3000,6 @@ end_define
 
 begin_comment
 comment|/* auto initialization enable */
-end_comment
-
-begin_comment
-comment|/* Linkcontrol reg offset in PCIE Cap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_CAP_LINKCTRL_OFFSET
-value|16
-end_define
-
-begin_comment
-comment|/* linkctrl offset in pcie cap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_CAP_LCREG_ASPML0s
-value|0x01
-end_define
-
-begin_comment
-comment|/* ASPM L0s in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_CAP_LCREG_ASPML1
-value|0x02
-end_define
-
-begin_comment
-comment|/* ASPM L1 in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_CLKREQ_ENAB
-value|0x100
-end_define
-
-begin_comment
-comment|/* CLKREQ Enab in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_ASPM_ENAB
-value|3
-end_define
-
-begin_comment
-comment|/* ASPM L0s& L1 in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_ASPM_L1_ENAB
-value|2
-end_define
-
-begin_comment
-comment|/* ASPM L0s& L1 in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_ASPM_L0s_ENAB
-value|1
-end_define
-
-begin_comment
-comment|/* ASPM L0s& L1 in linkctrl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_ASPM_DISAB
-value|0
-end_define
-
-begin_comment
-comment|/* ASPM L0s& L1 in linkctrl */
 end_comment
 
 begin_comment

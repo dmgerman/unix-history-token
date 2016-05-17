@@ -787,12 +787,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_BT
+name|BHND_CHIP_BTYPE
 parameter_list|(
 name|_btype
 parameter_list|)
 define|\
-value|.match_btype = 1, .board_type = BHND_BOARD_BCM ## _btype
+value|.match_btype = 1, .board_type = BHND_BOARD_ ## _btype
 end_define
 
 begin_comment
@@ -839,7 +839,7 @@ parameter_list|,
 name|_type
 parameter_list|)
 define|\
-value|BHND_CHIP_BVEND(_vend), BHND_CHIP_BTYPE(_type)
+value|BHND_CHIP_BVENDOR(_vend), BHND_CHIP_BTYPE(_type)
 end_define
 
 begin_comment
@@ -1249,6 +1249,19 @@ name|class
 parameter_list|,
 name|int
 name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|device_t
+name|bhnd_find_bridge_root
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|devclass_t
+name|bus_class
 parameter_list|)
 function_decl|;
 end_function_decl

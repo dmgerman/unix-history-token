@@ -110,6 +110,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|siba_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|siba_suspend
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint16_t
 name|siba_get_bhnd_mfgid
 parameter_list|(
@@ -482,6 +502,10 @@ name|bhnd_softc
 name|bhnd_sc
 decl_stmt|;
 comment|/**< bhnd state */
+name|device_t
+name|dev
+decl_stmt|;
+comment|/**< siba device */
 name|device_t
 name|hostb_dev
 decl_stmt|;
