@@ -6982,16 +6982,10 @@ name|mh
 argument_list|)
 expr_stmt|;
 return|return
-name|sp
-operator|!=
-name|NULL
-condition|?
 operator|&
 name|sp
 operator|->
 name|public
-else|:
-name|NULL
 return|;
 block|}
 end_function
