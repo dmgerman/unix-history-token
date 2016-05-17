@@ -3467,11 +3467,18 @@ name|done
 goto|;
 block|}
 else|else
+block|{
+name|RO_RTFREE
+argument_list|(
+name|ro
+argument_list|)
+expr_stmt|;
 name|needfiblookup
 operator|=
 literal|1
 expr_stmt|;
 comment|/* Redo the routing table lookup. */
+block|}
 block|}
 comment|/* See if fib was changed by packet filter. */
 if|if
