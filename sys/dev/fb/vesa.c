@@ -5209,6 +5209,12 @@ operator|++
 name|modes
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vesa_vmode
+operator|!=
+name|NULL
+condition|)
 name|vesa_vmode
 index|[
 name|modes
