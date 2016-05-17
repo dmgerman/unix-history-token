@@ -3291,6 +3291,14 @@ sizeof|sizeof
 argument_list|(
 name|ws
 argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|ws
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|,
 literal|L"%-ls %d"
 argument_list|,
@@ -5048,6 +5056,14 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
 argument_list|)
 argument_list|,
 literal|L"%a"
