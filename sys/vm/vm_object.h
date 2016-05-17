@@ -914,6 +914,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|umtx_shm_vnobj_persistent
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|vm_object_t
 name|vm_object_allocate

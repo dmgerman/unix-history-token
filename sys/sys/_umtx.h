@@ -47,10 +47,22 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* Priority protect ceiling */
+name|__uintptr_t
+name|m_rb_lnk
+decl_stmt|;
+comment|/* Robust linkage */
+ifndef|#
+directive|ifndef
+name|__LP64__
+name|__uint32_t
+name|m_pad
+decl_stmt|;
+endif|#
+directive|endif
 name|__uint32_t
 name|m_spare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}

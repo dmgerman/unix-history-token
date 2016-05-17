@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -1792,6 +1798,11 @@ argument_list|,
 name|args
 operator|->
 name|rval
+argument_list|)
+expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|linux_thread_detach

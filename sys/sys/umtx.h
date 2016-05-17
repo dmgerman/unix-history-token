@@ -21,6 +21,10 @@ directive|include
 file|<sys/_umtx.h>
 end_include
 
+begin_comment
+comment|/* Common lock flags */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -32,19 +36,9 @@ begin_comment
 comment|/* Process shared sync objs */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UMUTEX_UNOWNED
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UMUTEX_CONTESTED
-value|0x80000000U
-end_define
+begin_comment
+comment|/* umutex flags */
+end_comment
 
 begin_define
 define|#
@@ -67,6 +61,60 @@ end_define
 begin_comment
 comment|/* Priority protect mutex */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_ROBUST
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Robust mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_NONCONSISTENT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Robust locked but not consistent */
+end_comment
+
+begin_comment
+comment|/*  * The umutex.m_lock values and bits.  The m_owner is the word which  * serves as the lock.  Its high bit is the contention indicator and  * rest of bits records the owner TID.  TIDs values start with PID_MAX  * + 2 and end by INT32_MAX.  The low range [1..PID_MAX] is guaranteed  * to be useable as the special markers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_UNOWNED
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_CONTESTED
+value|0x80000000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_RB_OWNERDEAD
+value|(UMUTEX_CONTESTED | 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMUTEX_RB_NOTRECOV
+value|(UMUTEX_CONTESTED | 0x11)
+end_define
 
 begin_comment
 comment|/* urwlock flags */
@@ -354,6 +402,13 @@ name|UMTX_OP_SHM
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|UMTX_OP_ROBUST_LISTS
+value|26
+end_define
+
 begin_comment
 comment|/* Flags for UMTX_OP_CV_WAIT */
 end_comment
@@ -425,6 +480,23 @@ name|UMTX_SHM_ALIVE
 value|0x0008
 end_define
 
+begin_struct
+struct|struct
+name|umtx_robust_lists_params
+block|{
+name|uintptr_t
+name|robust_list_offset
+decl_stmt|;
+name|uintptr_t
+name|robust_priv_list_offset
+decl_stmt|;
+name|uintptr_t
+name|robust_inact_offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -487,6 +559,10 @@ block|,
 name|TYPE_FUTEX
 block|,
 name|TYPE_SHM
+block|,
+name|TYPE_PI_ROBUST_UMUTEX
+block|,
+name|TYPE_PP_ROBUST_UMUTEX
 block|, }
 enum|;
 end_enum

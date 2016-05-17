@@ -363,6 +363,11 @@ operator|.
 name|m_pshared
 operator|=
 name|PTHREAD_PROCESS_PRIVATE
+block|,
+operator|.
+name|m_robust
+operator|=
+name|PTHREAD_MUTEX_STALLED
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -392,6 +397,11 @@ operator|.
 name|m_pshared
 operator|=
 name|PTHREAD_PROCESS_PRIVATE
+block|,
+operator|.
+name|m_robust
+operator|=
+name|PTHREAD_MUTEX_STALLED
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1538,7 +1548,32 @@ argument_list|(
 argument|_pthread_cancel_leave
 argument_list|)
 block|}
+block|,
 comment|/* PJT_CANCEL_LEAVE */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutex_consistent
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEX_CONSISTENT */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_getrobust
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_GETROBUST */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_mutexattr_setrobust
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_SETROBUST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1608,17 +1643,13 @@ decl_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
-operator|(
 name|_thr_initial
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|curthread
 operator|==
 name|NULL
-operator|)
 condition|)
 comment|/* Only initialize the threaded application once. */
 return|return;
@@ -1630,7 +1661,6 @@ argument_list|(
 name|jmp_table
 argument_list|)
 operator|!=
-operator|(
 sizeof|sizeof
 argument_list|(
 name|pthread_func_t
@@ -1639,7 +1669,6 @@ operator|*
 name|PJT_MAX
 operator|*
 literal|2
-operator|)
 condition|)
 name|PANIC
 argument_list|(

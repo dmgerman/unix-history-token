@@ -863,6 +863,18 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
+name|uintptr_t
+name|td_rb_list
+decl_stmt|;
+comment|/* (k) Robust list head. */
+name|uintptr_t
+name|td_rbp_list
+decl_stmt|;
+comment|/* (k) Robust priv list head. */
+name|uintptr_t
+name|td_rb_inact
+decl_stmt|;
+comment|/* (k) Current in-action mutex loc. */
 define|#
 directive|define
 name|td_endzero

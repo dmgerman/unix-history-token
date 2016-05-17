@@ -690,6 +690,11 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+name|umtx_shm_object_terminated
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|obj

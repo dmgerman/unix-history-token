@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/cloudabi/cloudabi_types_common.h>
 end_include
 
@@ -88,6 +94,11 @@ operator|->
 name|scope
 block|, 	}
 decl_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* Wake up joining thread. */
 name|cloudabi_sys_lock_unlock
 argument_list|(

@@ -339,6 +339,12 @@ name|PJT_CANCEL_ENTER
 block|,
 name|PJT_CANCEL_LEAVE
 block|,
+name|PJT_MUTEX_CONSISTENT
+block|,
+name|PJT_MUTEXATTR_GETROBUST
+block|,
+name|PJT_MUTEXATTR_SETROBUST
+block|,
 name|PJT_MAX
 block|}
 name|pjt_index_t

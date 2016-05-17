@@ -1379,6 +1379,11 @@ name|uap
 parameter_list|)
 comment|/* long *state */
 block|{
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* Signal userland that it can free the stack. */
 if|if
 condition|(
@@ -1555,11 +1560,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|tdsigcleanup
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|umtx_thread_exit
 argument_list|(
 name|td
 argument_list|)

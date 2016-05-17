@@ -1717,6 +1717,9 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+name|umtx_shm_vnobj_persistent
+operator|&&
 name|object
 operator|->
 name|ref_count

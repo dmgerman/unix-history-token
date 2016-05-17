@@ -3786,6 +3786,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|kern_thr_exit
 argument_list|(
 name|td

@@ -1310,6 +1310,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */
 name|funsetownlst
 argument_list|(
@@ -2115,11 +2120,6 @@ name|p
 operator|->
 name|p_pptr
 argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|umtx_thread_exit
-argument_list|(
 name|td
 argument_list|)
 expr_stmt|;

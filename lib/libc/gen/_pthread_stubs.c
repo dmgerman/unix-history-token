@@ -666,6 +666,30 @@ argument_list|)
 block|}
 block|,
 comment|/* PJT_CANCEL_LEAVE */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEX_CONSISTENT */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_GETROBUST */
+block|{
+name|PJT_DUAL_ENTRY
+argument_list|(
+argument|stub_zero
+argument_list|)
+block|}
+block|,
+comment|/* PJT_MUTEXATTR_SETROBUST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -979,6 +1003,19 @@ end_macro
 begin_macro
 name|STUB_FUNC1
 argument_list|(
+argument|pthread_mutex_consistent
+argument_list|,
+argument|PJT_MUTEX_CONSISTENT
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC1
+argument_list|(
 argument|pthread_mutexattr_destroy
 argument_list|,
 argument|PJT_MUTEXATTR_DESTROY
@@ -1008,6 +1045,36 @@ argument_list|(
 argument|pthread_mutexattr_settype
 argument_list|,
 argument|PJT_MUTEXATTR_SETTYPE
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_mutexattr_getrobust
+argument_list|,
+argument|PJT_MUTEXATTR_GETROBUST
+argument_list|,
+argument|int
+argument_list|,
+argument|void *
+argument_list|,
+argument|int *
+argument_list|)
+end_macro
+
+begin_macro
+name|STUB_FUNC2
+argument_list|(
+argument|pthread_mutexattr_setrobust
+argument_list|,
+argument|PJT_MUTEXATTR_SETROBUST
 argument_list|,
 argument|int
 argument_list|,

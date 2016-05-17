@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -513,7 +519,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMUTEX_FLAG_DEFERED
+name|PMUTEX_FLAG_DEFERRED
 value|0x200
 end_define
 
@@ -525,6 +531,16 @@ parameter_list|(
 name|mtxflags
 parameter_list|)
 value|((mtxflags)& PMUTEX_FLAG_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMUTEX_OWNER_ID
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_lock.m_owner& ~UMUTEX_CONTESTED)
 end_define
 
 begin_define
@@ -571,9 +587,6 @@ decl_stmt|;
 name|int
 name|m_flags
 decl_stmt|;
-name|uint32_t
-name|m_owner
-decl_stmt|;
 name|int
 name|m_count
 decl_stmt|;
@@ -601,6 +614,11 @@ argument|pthread_mutex
 argument_list|)
 name|m_pqe
 expr_stmt|;
+name|struct
+name|pthread_mutex
+modifier|*
+name|m_rb_prev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -622,6 +640,9 @@ decl_stmt|;
 name|int
 name|m_pshared
 decl_stmt|;
+name|int
+name|m_robust
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -631,7 +652,7 @@ define|#
 directive|define
 name|PTHREAD_MUTEXATTR_STATIC_INITIALIZER
 define|\
-value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, 0, MUTEX_FLAGS_PRIVATE }
+value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, 0, MUTEX_FLAGS_PRIVATE, \ 	    PTHREAD_MUTEX_STALLED }
 end_define
 
 begin_struct
@@ -1429,8 +1450,18 @@ value|3
 comment|/* PRIO_PROTECT normal priv */
 define|#
 directive|define
-name|TMQ_NITEMS
+name|TMQ_ROBUST_PP
 value|4
+comment|/* PRIO_PROTECT robust mutexes */
+define|#
+directive|define
+name|TMQ_ROBUST_PP_PRIV
+value|5
+comment|/* PRIO_PROTECT robust priv */
+define|#
+directive|define
+name|TMQ_NITEMS
+value|6
 name|struct
 name|mutex_queue
 name|mq
@@ -1524,6 +1555,18 @@ decl_stmt|;
 comment|/* Number of threads deferred. */
 name|int
 name|nwaiter_defer
+decl_stmt|;
+name|int
+name|robust_inited
+decl_stmt|;
+name|uintptr_t
+name|robust_list
+decl_stmt|;
+name|uintptr_t
+name|priv_robust_list
+decl_stmt|;
+name|uintptr_t
+name|inact_mtx
 decl_stmt|;
 comment|/* Deferred threads from pthread_cond_signal. */
 name|unsigned
@@ -2250,6 +2293,8 @@ name|pthread_mutex
 operator|*
 argument_list|,
 name|int
+argument_list|,
+name|bool
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -2338,6 +2383,42 @@ expr|struct
 name|pthread
 operator|*
 name|curthread
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_mutex_enter_robust
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+name|curthread
+argument_list|,
+expr|struct
+name|pthread_mutex
+operator|*
+name|m
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_mutex_leave_robust
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+name|curthread
+argument_list|,
+expr|struct
+name|pthread_mutex
+operator|*
+name|m
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -3059,6 +3140,58 @@ name|maycancel
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutex_consistent
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|int
+name|_pthread_mutexattr_getrobust
+argument_list|(
+name|pthread_mutexattr_t
+operator|*
+name|__restrict
+argument_list|,
+name|int
+operator|*
+name|__restrict
+argument_list|)
+name|__nonnull_all
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|_pthread_mutexattr_setrobust
+parameter_list|(
+name|pthread_mutexattr_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* #include<fcntl.h> */
