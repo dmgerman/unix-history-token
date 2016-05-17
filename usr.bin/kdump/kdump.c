@@ -1413,6 +1413,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|tracefile
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+if|if
+condition|(
 operator|!
 name|freopen
 argument_list|(
