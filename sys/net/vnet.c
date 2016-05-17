@@ -893,6 +893,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|rw_init
@@ -952,6 +953,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 comment|/* Warn people before take off - in case we crash early. */
@@ -1000,6 +1002,7 @@ parameter_list|(
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|curvnet
