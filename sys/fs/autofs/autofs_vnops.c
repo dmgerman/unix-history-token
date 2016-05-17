@@ -2932,7 +2932,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_WARN
+name|AUTOFS_DEBUG
 argument_list|(
 literal|"insmntque() failed with error %d"
 argument_list|,
