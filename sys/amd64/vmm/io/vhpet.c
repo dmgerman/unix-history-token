@@ -587,7 +587,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The sbinuptime corresponding to the 'countbase' is 		 * meaningless when the counter is disabled. Make sure 		 * that the the caller doesn't want to use it. 		 */
+comment|/* 		 * The sbinuptime corresponding to the 'countbase' is 		 * meaningless when the counter is disabled. Make sure 		 * that the caller doesn't want to use it. 		 */
 name|KASSERT
 argument_list|(
 name|nowptr

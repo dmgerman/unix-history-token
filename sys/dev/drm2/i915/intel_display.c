@@ -38782,7 +38782,7 @@ operator|=
 operator|*
 name|mode
 expr_stmt|;
-comment|/* Only after disabling all output pipelines that will be changed can we 	 * update the the output configuration. */
+comment|/* Only after disabling all output pipelines that will be changed can we 	 * update the output configuration. */
 name|intel_modeset_update_state
 argument_list|(
 name|dev

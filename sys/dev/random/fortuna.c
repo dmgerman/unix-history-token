@@ -895,7 +895,7 @@ name|event
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * Don't wrap the length. Doing the the hard way so as not to wrap at MAXUINT. 	 * This is a "saturating" add. 	 * XXX: FIX!!: We don't actually need lengths for anything but fs_pool[0], 	 * but it's been useful debugging to see them all. 	 */
+comment|/*- 	 * Don't wrap the length. Doing this the hard way so as not to wrap at MAXUINT. 	 * This is a "saturating" add. 	 * XXX: FIX!!: We don't actually need lengths for anything but fs_pool[0], 	 * but it's been useful debugging to see them all. 	 */
 if|if
 condition|(
 name|RANDOM_FORTUNA_MAXPOOLSIZE

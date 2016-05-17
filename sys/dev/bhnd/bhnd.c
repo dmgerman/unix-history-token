@@ -323,7 +323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhnd(4) bus driver implementation of DEVICE_DETACH().  *  * This implementation calls device_detach() for each of the the device's  * children, in reverse bhnd probe order, terminating if any call to  * device_detach() fails.  */
+comment|/**  * Default bhnd(4) bus driver implementation of DEVICE_DETACH().  *  * This implementation calls device_detach() for each of the device's  * children, in reverse bhnd probe order, terminating if any call to  * device_detach() fails.  */
 end_comment
 
 begin_function

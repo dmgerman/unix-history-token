@@ -2070,7 +2070,7 @@ operator||=
 name|EFX_PKT_PREFIX_LEN
 expr_stmt|;
 block|}
-comment|/* Calculate the index of the the last descriptor consumed */
+comment|/* Calculate the index of the last descriptor consumed */
 name|last_used_id
 operator|=
 operator|(

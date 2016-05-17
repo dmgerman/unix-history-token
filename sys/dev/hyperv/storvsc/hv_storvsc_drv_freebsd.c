@@ -1169,7 +1169,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * The host is capable of sending messages to us that are  * completely unsolicited. So, we need to address the race  * condition where we may be in the process of unloading the  * driver when the host may send us an unsolicited message.  * We address this issue by implementing a sequentially  * consistent protocol:  *  * 1. Channel callback is invoked while holding the the channel lock  *    and an unloading driver will reset the channel callback under  *    the protection of this channel lock.  *  * 2. To ensure bounded wait time for unloading a driver, we don't  *    permit outgoing traffic once the device is marked as being  *    destroyed.  *  * 3. Once the device is marked as being destroyed, we only  *    permit incoming traffic to properly account for  *    packets already sent out.  */
+comment|/**  * The host is capable of sending messages to us that are  * completely unsolicited. So, we need to address the race  * condition where we may be in the process of unloading the  * driver when the host may send us an unsolicited message.  * We address this issue by implementing a sequentially  * consistent protocol:  *  * 1. Channel callback is invoked while holding the channel lock  *    and an unloading driver will reset the channel callback under  *    the protection of this channel lock.  *  * 2. To ensure bounded wait time for unloading a driver, we don't  *    permit outgoing traffic once the device is marked as being  *    destroyed.  *  * 3. Once the device is marked as being destroyed, we only  *    permit incoming traffic to properly account for  *    packets already sent out.  */
 end_comment
 
 begin_function

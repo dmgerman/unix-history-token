@@ -202,7 +202,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * LEENTRY()/LEEND() are the the same for local symbols.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
+comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * LEENTRY()/LEEND() are the same for local symbols.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
 end_comment
 
 begin_define

@@ -3233,7 +3233,7 @@ name|hotplug_supported_mask
 operator||=
 name|CRT_HOTPLUG_INT_STATUS
 expr_stmt|;
-comment|/* 	 * TODO: find a proper way to discover whether we need to set the the 	 * polarity and link reversal bits or not, instead of relying on the 	 * BIOS. 	 */
+comment|/* 	 * TODO: find a proper way to discover whether we need to set the 	 * polarity and link reversal bits or not, instead of relying on the 	 * BIOS. 	 */
 if|if
 condition|(
 name|HAS_PCH_LPT

@@ -3777,7 +3777,7 @@ name|BIO_READ
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This keeps the the kernel stack of current thread from getting 	 * swapped.  In low-memory situations where the kernel stack might 	 * otherwise get swapped out, this holds it and allows the thread 	 * to make progress and release the kernel mapped pages sooner. 	 * 	 * XXX KDM should I use P_NOSWAP instead? 	 */
+comment|/* 	 * This keeps the kernel stack of current thread from getting 	 * swapped.  In low-memory situations where the kernel stack might 	 * otherwise get swapped out, this holds it and allows the thread 	 * to make progress and release the kernel mapped pages sooner. 	 * 	 * XXX KDM should I use P_NOSWAP instead? 	 */
 name|PHOLD
 argument_list|(
 name|curproc

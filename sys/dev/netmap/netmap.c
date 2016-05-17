@@ -9227,7 +9227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Wrapper for the register callback provided hardware drivers.  * na->ifp == NULL means the the driver module has been  * unloaded, so we cannot call into it.  * Note that module unloading, in our patched linux drivers,  * happens under NMG_LOCK and after having stopped all the  * nic rings (see netmap_detach). This provides sufficient  * protection for the other driver-provied callbacks  * (i.e., nm_config and nm_*xsync), that therefore don't need  * to wrapped.  */
+comment|/* Wrapper for the register callback provided hardware drivers.  * na->ifp == NULL means the driver module has been  * unloaded, so we cannot call into it.  * Note that module unloading, in our patched linux drivers,  * happens under NMG_LOCK and after having stopped all the  * nic rings (see netmap_detach). This provides sufficient  * protection for the other driver-provied callbacks  * (i.e., nm_config and nm_*xsync), that therefore don't need  * to wrapped.  */
 end_comment
 
 begin_function

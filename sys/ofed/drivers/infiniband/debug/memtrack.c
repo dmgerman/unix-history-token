@@ -2334,7 +2334,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* WA - In this function handles confirm    the the function name is    '__ib_umem_release' or 'ib_umem_get'    In this case we won't track the    memory there because the kernel    was the one who allocated it.    Return value:      1 - if the function name is match, else 0 */
+comment|/* WA - In this function handles confirm    the function name is    '__ib_umem_release' or 'ib_umem_get'    In this case we won't track the    memory there because the kernel    was the one who allocated it.    Return value:      1 - if the function name is match, else 0 */
 end_comment
 
 begin_function

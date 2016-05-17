@@ -4006,7 +4006,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/** \fn mpiMsgFreeSet(mpiOCQueue_t *circularQ, void *messagePtr)  *  \brief Returns a received message to the outbound queue  *  \param circularQ   Pointer to an outbound queue  *  \param messagePtr1 Pointer to the returned message buffer to free  *  \param messagePtr2 Pointer to the returned message buffer to free if bc> 1  *  * Returns consumed and processed message to the the specified outbounf queue  *  * Return:  *         AGSA_RC_SUCCESS if the message has been returned succesfully  */
+comment|/** \fn mpiMsgFreeSet(mpiOCQueue_t *circularQ, void *messagePtr)  *  \brief Returns a received message to the outbound queue  *  \param circularQ   Pointer to an outbound queue  *  \param messagePtr1 Pointer to the returned message buffer to free  *  \param messagePtr2 Pointer to the returned message buffer to free if bc> 1  *  * Returns consumed and processed message to the specified outbounf queue  *  * Return:  *         AGSA_RC_SUCCESS if the message has been returned succesfully  */
 end_comment
 
 begin_comment

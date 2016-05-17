@@ -640,7 +640,7 @@ name|MODULE_PARM_DESC
 argument_list|(
 name|enable_64b_cqe_eqe
 argument_list|,
-literal|"Enable 64 byte CQEs/EQEs when the the FW supports this if non-zero (default: 1)"
+literal|"Enable 64 byte CQEs/EQEs when the FW supports this if non-zero (default: 1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

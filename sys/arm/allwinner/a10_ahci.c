@@ -636,7 +636,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Here start the the magic -- most of the comments are based 	 * on guesswork, names of routines and printf error 	 * messages.  The code works, but it will do that even if the 	 * comments are 100% BS. 	 */
+comment|/* 	 * Here starts the magic -- most of the comments are based 	 * on guesswork, names of routines and printf error 	 * messages.  The code works, but it will do that even if the 	 * comments are 100% BS. 	 */
 comment|/* 	 * Lock out other access while we initialize.  Or at least that 	 * seems to be the case based on Linux SDK #defines.  Maybe this 	 * put things into reset? 	 */
 name|ATA_OUTL
 argument_list|(

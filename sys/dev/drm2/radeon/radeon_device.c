@@ -533,7 +533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * radeon_wb_*()  * Writeback is the the method by which the the GPU updates special pages  * in memory with the status of certain GPU events (fences, ring pointers,  * etc.).  */
+comment|/*  * radeon_wb_*()  * Writeback is the method by which the GPU updates special pages  * in memory with the status of certain GPU events (fences, ring pointers,  * etc.).  */
 end_comment
 
 begin_comment

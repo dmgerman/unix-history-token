@@ -3337,7 +3337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct rm_class *  * cbq_class_create(cbq_mod_state_t *cbqp, struct cbq_add_class *acp,  *		struct rm_class *parent, struct rm_class *borrow)  *  * This function create a new traffic class in the CBQ class hierarchy of  * given parameters.  The class that created is either the root, default,  * or a new dynamic class.  If CBQ is not initilaized, the the root class  * will be created.  */
+comment|/*  * struct rm_class *  * cbq_class_create(cbq_mod_state_t *cbqp, struct cbq_add_class *acp,  *		struct rm_class *parent, struct rm_class *borrow)  *  * This function create a new traffic class in the CBQ class hierarchy of  * given parameters.  The class that created is either the root, default,  * or a new dynamic class.  If CBQ is not initilaized, the root class  * will be created.  */
 end_comment
 
 begin_function

@@ -48363,7 +48363,7 @@ operator|==
 name|agTRUE
 condition|)
 block|{
-comment|/*      * Setting RETURNED LOGICAL BLOCK ADDRESS in READ CAPACITY(10) response data:      * SBC-2 specifies that if the capacity exceeded the 4-byte RETURNED LOGICAL      * BLOCK ADDRESS in READ CAPACITY(10) parameter data, the the RETURNED LOGICAL      * BLOCK ADDRESS should be set to 0xFFFFFFFF so the application client would      * then issue a READ CAPACITY(16) command.      */
+comment|/*      * Setting RETURNED LOGICAL BLOCK ADDRESS in READ CAPACITY(10) response data:      * SBC-2 specifies that if the capacity exceeded the 4-byte RETURNED LOGICAL      * BLOCK ADDRESS in READ CAPACITY(10) parameter data, the RETURNED LOGICAL      * BLOCK ADDRESS should be set to 0xFFFFFFFF so the application client would      * then issue a READ CAPACITY(16) command.      */
 comment|/* ATA Identify Device information word 100 - 103 */
 if|if
 condition|(

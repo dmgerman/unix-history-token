@@ -11293,7 +11293,7 @@ comment|/* Various aggregative variables*/
 decl_stmt|;
 name|uint16_t
 name|__reserved67
-comment|/* A counter for the number of RQ WQEs with invalidate the the USTORM encountered */
+comment|/* A counter for the number of RQ WQEs with invalidate the USTORM encountered */
 decl_stmt|;
 elif|#
 directive|elif
@@ -11303,7 +11303,7 @@ name|__LITTLE_ENDIAN
 argument_list|)
 name|uint16_t
 name|__reserved67
-comment|/* A counter for the number of RQ WQEs with invalidate the the USTORM encountered */
+comment|/* A counter for the number of RQ WQEs with invalidate the USTORM encountered */
 decl_stmt|;
 name|uint16_t
 name|__agg_vars3
