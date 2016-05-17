@@ -3519,7 +3519,8 @@ name|rthdr
 expr_stmt|;
 name|bzero
 argument_list|(
-name|rt
+operator|&
+name|rtmsg
 argument_list|,
 sizeof|sizeof
 argument_list|(
