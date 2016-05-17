@@ -2614,17 +2614,17 @@ name|idx
 decl_stmt|;
 comment|/* Name index			*/
 name|uint8_t
-name|spare
+name|set
 decl_stmt|;
-comment|/* unused			*/
+comment|/* set, if applicable		*/
 name|uint8_t
 name|type
 decl_stmt|;
 comment|/* object type, if applicable	*/
 name|uint32_t
-name|set
+name|spare
 decl_stmt|;
-comment|/* set, if applicable		*/
+comment|/* unused			*/
 name|char
 name|name
 index|[

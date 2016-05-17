@@ -11645,6 +11645,27 @@ operator|&
 name|rt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"failed to move %s"
+argument_list|,
+name|cmd
+operator|==
+name|IP_FW_SET_MOVE
+condition|?
+literal|"set"
+else|:
+literal|"rule"
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
