@@ -115,7 +115,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* ipcs shmctl commands for Linux compatability */
+comment|/* ipcs shmctl commands for Linux compatibility */
 end_comment
 
 begin_define

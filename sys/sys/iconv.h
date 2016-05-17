@@ -210,7 +210,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Paramters for 'add' sysctl  */
+comment|/*  * Parameters for 'add' sysctl  */
 end_comment
 
 begin_define

@@ -569,7 +569,7 @@ comment|/* Remove a jail. */
 end_comment
 
 begin_comment
-comment|/*  * Kernel environment priveleges.  */
+comment|/*  * Kernel environment privileges.  */
 end_comment
 
 begin_define

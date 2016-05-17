@@ -3220,7 +3220,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: successfull probe result but not setup correctly"
+literal|"%s: successful probe result but not setup correctly"
 operator|,
 name|__func__
 operator|)

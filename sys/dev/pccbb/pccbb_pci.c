@@ -1695,7 +1695,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "memory", 	    CTLFLAG_RD,&sc->subbus, 0, "Memory window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "premem", 	    CTLFLAG_RD,&sc->subbus, 0, "Prefetch memroy window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io1", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 1 open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io2", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 2 open");
+block|SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "memory", 	    CTLFLAG_RD,&sc->subbus, 0, "Memory window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "premem", 	    CTLFLAG_RD,&sc->subbus, 0, "Prefetch memory window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io1", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 1 open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io2", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 2 open");
 endif|#
 directive|endif
 if|#

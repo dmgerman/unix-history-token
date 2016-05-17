@@ -378,7 +378,7 @@ name|__BSD_VISIBLE
 end_if
 
 begin_comment
-comment|/*  * For Linux compatability.  */
+comment|/*  * For Linux compatibility.  */
 end_comment
 
 begin_define

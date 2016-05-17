@@ -635,7 +635,7 @@ value|_IOW('i', 70, struct ifaliasreq)
 end_define
 
 begin_comment
-comment|/* set gif addres */
+comment|/* set gif address */
 end_comment
 
 begin_define

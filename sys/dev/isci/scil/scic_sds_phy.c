@@ -2226,7 +2226,7 @@ name|link_layer_registers
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Perfrom the initialization of the TL hardware
+comment|// Perform the initialization of the TL hardware
 name|scic_sds_phy_transport_layer_initialization
 argument_list|(
 name|this_phy
@@ -2903,7 +2903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will process the event code recieved.  *  * @param[in] this_phy  * @param[in] event_code  *  * @return SCI_STATUS  */
+comment|/**  * @brief This method will process the event code received.  *  * @param[in] this_phy  * @param[in] event_code  *  * @return SCI_STATUS  */
 end_comment
 
 begin_function
@@ -2952,7 +2952,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method will process the frame index recieved.  *  * @param[in] this_phy  * @param[in] frame_index  *  * @return SCI_STATUS  */
+comment|/**  * @brief This method will process the frame index received.  *  * @param[in] this_phy  * @param[in] frame_index  *  * @return SCI_STATUS  */
 end_comment
 
 begin_function
@@ -5112,7 +5112,7 @@ argument_list|)
 operator|,
 name|SCIC_LOG_OBJECT_PHY
 operator|,
-literal|"SCIC Phy 0x%08x recieved unexpected frame data %d while in state %d\n"
+literal|"SCIC Phy 0x%08x received unexpected frame data %d while in state %d\n"
 operator|,
 name|this_phy
 operator|,
@@ -5323,7 +5323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method takes the SCIC_SDS_PHY from a stopped state and destroys it.  *    - This function takes no action.  *  * @todo Shouldnt this function transition the SCI_BASE_PHY::state_machine to  *        the SCI_BASE_PHY_STATE_FINAL?  *  * @param[in] phy This is the SCI_BASE_PHY object which is cast into a  *       SCIC_SDS_PHY object.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS  */
+comment|/**  * This method takes the SCIC_SDS_PHY from a stopped state and destroys it.  *    - This function takes no action.  *  * @todo Shouldn't this function transition the SCI_BASE_PHY::state_machine to  *        the SCI_BASE_PHY_STATE_FINAL?  *  * @param[in] phy This is the SCI_BASE_PHY object which is cast into a  *       SCIC_SDS_PHY object.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS  */
 end_comment
 
 begin_function
@@ -5483,7 +5483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * This method request the SCIC_SDS_PHY handle the received event.  The only  * event that we are interested in while in the ready state is the link  * failure event.  *    - decoded event is a link failure  *       - transition the SCIC_SDS_PHY back to the SCI_BASE_PHY_STATE_STARTING  *         state.  *    - any other event recived will report a warning message  *  * @param[in] phy This is the SCIC_SDS_PHY object which has received the  *       event.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS if the event received is a link failure  * @retval SCI_FAILURE_INVALID_STATE for any other event received.  */
+comment|/**  * This method request the SCIC_SDS_PHY handle the received event.  The only  * event that we are interested in while in the ready state is the link  * failure event.  *    - decoded event is a link failure  *       - transition the SCIC_SDS_PHY back to the SCI_BASE_PHY_STATE_STARTING  *         state.  *    - any other event received will report a warning message  *  * @param[in] phy This is the SCIC_SDS_PHY object which has received the  *       event.  *  * @return SCI_STATUS  * @retval SCI_SUCCESS if the event received is a link failure  * @retval SCI_FAILURE_INVALID_STATE for any other event received.  */
 end_comment
 
 begin_function
@@ -5635,7 +5635,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"SCIC PHY 0x%x ready state machine recieved unexpected event_code %x\n"
+literal|"SCIC PHY 0x%x ready state machine received unexpected event_code %x\n"
 operator|,
 name|this_phy
 operator|,
@@ -5721,7 +5721,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"SCIC PHY 0x%x resetting state machine recieved unexpected event_code %x\n"
+literal|"SCIC PHY 0x%x resetting state machine received unexpected event_code %x\n"
 operator|,
 name|this_phy
 operator|,
@@ -6933,7 +6933,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7069,7 +7069,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7167,7 +7167,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7238,7 +7238,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7325,7 +7325,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7434,7 +7434,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7570,7 +7570,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7656,7 +7656,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_RECEIVED_EVENTS
 operator|,
-literal|"PHY starting substate machine recieved unexpected event_code %x\n"
+literal|"PHY starting substate machine received unexpected event_code %x\n"
 operator|,
 name|event_code
 operator|)
@@ -7925,7 +7925,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_UNSOLICITED_FRAMES
 operator|,
-literal|"PHY starting substate machine recieved unexpected frame id %x\n"
+literal|"PHY starting substate machine received unexpected frame id %x\n"
 operator|,
 name|frame_index
 operator|)
@@ -8114,7 +8114,7 @@ name|SCIC_LOG_OBJECT_PHY
 operator||
 name|SCIC_LOG_OBJECT_UNSOLICITED_FRAMES
 operator|,
-literal|"PHY starting substate machine recieved unexpected frame id %x\n"
+literal|"PHY starting substate machine received unexpected frame id %x\n"
 operator|,
 name|frame_index
 operator|)

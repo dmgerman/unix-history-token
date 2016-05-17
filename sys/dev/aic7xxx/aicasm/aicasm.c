@@ -2801,7 +2801,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Accepted this patch.  Advance to the next 			 * one and wait for our intruction pointer to 			 * hit this point. 			 */
+comment|/* Accepted this patch.  Advance to the next 			 * one and wait for our instruction pointer to 			 * hit this point. 			 */
 name|cur_patch
 operator|=
 name|STAILQ_NEXT

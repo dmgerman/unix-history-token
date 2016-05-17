@@ -457,7 +457,7 @@ directive|define
 name|__PMC_CAPS
 parameter_list|()
 define|\
-value|__PMC_CAP(INTERRUPT,	0, "generate interrupts")		\ 	__PMC_CAP(USER,		1, "count user-mode events")		\ 	__PMC_CAP(SYSTEM,	2, "count system-mode events")		\ 	__PMC_CAP(EDGE,		3, "do edge detection of events")	\ 	__PMC_CAP(THRESHOLD,	4, "ignore events below a threshold")	\ 	__PMC_CAP(READ,		5, "read PMC counter")			\ 	__PMC_CAP(WRITE,	6, "reprogram PMC counter")		\ 	__PMC_CAP(INVERT,	7, "invert comparision sense")		\ 	__PMC_CAP(QUALIFIER,	8, "further qualify monitored events")	\ 	__PMC_CAP(PRECISE,	9, "perform precise sampling")		\ 	__PMC_CAP(TAGGING,	10, "tag upstream events")		\ 	__PMC_CAP(CASCADE,	11, "cascade counters")
+value|__PMC_CAP(INTERRUPT,	0, "generate interrupts")		\ 	__PMC_CAP(USER,		1, "count user-mode events")		\ 	__PMC_CAP(SYSTEM,	2, "count system-mode events")		\ 	__PMC_CAP(EDGE,		3, "do edge detection of events")	\ 	__PMC_CAP(THRESHOLD,	4, "ignore events below a threshold")	\ 	__PMC_CAP(READ,		5, "read PMC counter")			\ 	__PMC_CAP(WRITE,	6, "reprogram PMC counter")		\ 	__PMC_CAP(INVERT,	7, "invert comparison sense")		\ 	__PMC_CAP(QUALIFIER,	8, "further qualify monitored events")	\ 	__PMC_CAP(PRECISE,	9, "perform precise sampling")		\ 	__PMC_CAP(TAGGING,	10, "tag upstream events")		\ 	__PMC_CAP(CASCADE,	11, "cascade counters")
 end_define
 
 begin_enum
@@ -1200,7 +1200,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * OP GETMSR  *  * Retrieve the machine specific address assoicated with the allocated  * PMC.  This number can be used subsequently with a read-performance-counter  * instruction.  */
+comment|/*  * OP GETMSR  *  * Retrieve the machine specific address associated with the allocated  * PMC.  This number can be used subsequently with a read-performance-counter  * instruction.  */
 end_comment
 
 begin_struct

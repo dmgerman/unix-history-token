@@ -12679,7 +12679,7 @@ name|hba
 operator|->
 name|pcidev
 argument_list|,
-literal|"invaild req offset\n"
+literal|"invalid req offset\n"
 argument_list|)
 expr_stmt|;
 name|ccb

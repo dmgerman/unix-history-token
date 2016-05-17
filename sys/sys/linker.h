@@ -498,7 +498,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Functions soley for use by the linker class handlers.  */
+comment|/*  * Functions solely for use by the linker class handlers.  */
 end_comment
 
 begin_function_decl

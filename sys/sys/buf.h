@@ -551,7 +551,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* Write this and all preceeding first. */
+comment|/* Write this and all preceding first. */
 end_comment
 
 begin_define

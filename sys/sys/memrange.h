@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Memory range attribute operations, peformed on /dev/mem  *  * $FreeBSD$  */
+comment|/*  * Memory range attribute operations, performed on /dev/mem  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

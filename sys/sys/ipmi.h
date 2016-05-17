@@ -452,7 +452,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Compatiblity with 32-bit binaries. */
+comment|/* Compatibility with 32-bit binaries. */
 end_comment
 
 begin_define

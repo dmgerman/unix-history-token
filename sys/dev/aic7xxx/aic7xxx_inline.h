@@ -858,7 +858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************** Miscelaneous Support Functions ***********************/
+comment|/********************** Miscellaneous Support Functions ***********************/
 end_comment
 
 begin_function_decl

@@ -1523,7 +1523,7 @@ value|LA_NOTRECURSED
 end_define
 
 begin_comment
-comment|/* Backwards compatability. */
+comment|/* Backwards compatibility. */
 end_comment
 
 begin_define
