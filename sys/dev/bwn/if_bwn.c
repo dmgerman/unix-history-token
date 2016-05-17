@@ -4538,6 +4538,20 @@ argument_list|,
 literal|"PIO\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BWN_GPL_PHY
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"Note: compiled with BWN_GPL_PHY; includes GPLv2 code\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * setup PCI resources and interrupt. 	 */
 if|if
 condition|(
