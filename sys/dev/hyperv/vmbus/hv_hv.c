@@ -1802,7 +1802,20 @@ operator|!
 name|hyperv_identify
 argument_list|()
 condition|)
+block|{
+comment|/* Not Hyper-V; reset guest id to the generic one. */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_HV
+condition|)
+name|vm_guest
+operator|=
+name|VM_GUEST_VM
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|hyperv_features
