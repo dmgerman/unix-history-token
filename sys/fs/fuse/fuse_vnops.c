@@ -1362,18 +1362,20 @@ name|VREG
 operator|)
 condition|)
 block|{
-name|MPASS
+name|printf
 argument_list|(
+literal|"fuse_vnop_create: unsupported va_type %d\n"
+argument_list|,
 name|vap
 operator|->
 name|va_type
-operator|!=
-name|VFIFO
 argument_list|)
 expr_stmt|;
-goto|goto
-name|bringup
-goto|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|debug_printf
 argument_list|(
@@ -1548,8 +1550,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|bringup
-label|:
 name|feo
 operator|=
 name|fdip
