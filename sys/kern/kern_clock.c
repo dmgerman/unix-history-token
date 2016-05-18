@@ -2327,6 +2327,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|!=
+literal|0
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|td
@@ -2343,6 +2350,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
