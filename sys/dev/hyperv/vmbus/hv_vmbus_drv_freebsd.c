@@ -246,11 +246,12 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|vmbus_msg_swintr
+name|vmbus_msg_task
 parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|int
 name|pending
@@ -1643,7 +1644,7 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|vmbus_msg_swintr
+name|vmbus_msg_task
 argument_list|,
 name|NULL
 argument_list|)
