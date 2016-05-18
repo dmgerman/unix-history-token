@@ -1960,9 +1960,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vmbus_init
+name|vmbus_sysinit
 parameter_list|(
 name|void
+modifier|*
+name|arg
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -2288,21 +2291,19 @@ name|EARLY_AP_STARTUP
 end_ifndef
 
 begin_comment
-comment|/* We want to be started after SMP is initialized */
+comment|/*  * NOTE:  * We have to start as the last step of SI_SUB_SMP, i.e. after SMP is  * initialized.  */
 end_comment
 
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|vmb_init
+name|vmbus_initialize
 argument_list|,
 name|SI_SUB_SMP
-operator|+
-literal|1
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
-name|vmbus_init
+name|vmbus_sysinit
 argument_list|,
 name|NULL
 argument_list|)
