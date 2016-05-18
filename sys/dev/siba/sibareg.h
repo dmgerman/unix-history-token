@@ -2889,28 +2889,28 @@ begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_CDDPO
-value|0x0192
+value|0x1192
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_STBCPO
-value|0x0194
+value|0x1194
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_BW40PO
-value|0x0196
+value|0x1196
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_BWDUPPO
-value|0x0198
+value|0x1198
 end_define
 
 begin_comment
