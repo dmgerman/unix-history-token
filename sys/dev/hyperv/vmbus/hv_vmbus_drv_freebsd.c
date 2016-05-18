@@ -174,7 +174,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_vmbus_priv.h"
+file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
 begin_include
@@ -188,6 +194,14 @@ include|#
 directive|include
 file|"acpi_if.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|vmbus_softc
+modifier|*
+name|vmbus_sc
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1880,6 +1894,13 @@ name|vmbus_devp
 operator|=
 name|dev
 expr_stmt|;
+name|vmbus_sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|EARLY_AP_STARTUP
@@ -1920,6 +1941,11 @@ condition|(
 name|vm_guest
 operator|!=
 name|VM_GUEST_HV
+operator|||
+name|vmbus_get_softc
+argument_list|()
+operator|==
+name|NULL
 condition|)
 return|return;
 ifndef|#
@@ -2283,26 +2309,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|driver_name
-index|[]
-init|=
-literal|"vmbus"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|driver_t
 name|vmbus_driver
 init|=
 block|{
-name|driver_name
+literal|"vmbus"
 block|,
 name|vmbus_methods
 block|,
-literal|0
-block|, }
+expr|sizeof
+operator|(
+expr|struct
+name|vmbus_softc
+operator|)
+block|}
 decl_stmt|;
 end_decl_stmt
 

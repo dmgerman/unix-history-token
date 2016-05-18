@@ -92,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_vmbus_priv.h"
+file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
 begin_function_decl
@@ -861,6 +867,11 @@ operator|->
 name|channel_callback_context
 operator|=
 name|context
+expr_stmt|;
+name|vmbus_on_channel_open
+argument_list|(
+name|new_channel
+argument_list|)
 expr_stmt|;
 name|new_channel
 operator|->
