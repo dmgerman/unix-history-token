@@ -3682,7 +3682,9 @@ block|}
 endif|#
 directive|endif
 comment|/*  *  Register interrupt controller.  */
-name|int
+name|struct
+name|intr_pic
+modifier|*
 name|intr_pic_register
 parameter_list|(
 name|device_t
@@ -3705,7 +3707,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|NULL
 operator|)
 return|;
 name|pic
@@ -3725,7 +3727,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|NULL
 operator|)
 return|;
 name|pic
@@ -3752,7 +3754,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|pic
 operator|)
 return|;
 block|}

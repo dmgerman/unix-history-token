@@ -512,8 +512,8 @@ name|dev
 argument_list|,
 name|xref
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -610,7 +610,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+name|ENXIO
 operator|)
 return|;
 block|}

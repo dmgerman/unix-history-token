@@ -397,7 +397,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|intr_pic
+modifier|*
 name|intr_pic_register
 parameter_list|(
 name|device_t

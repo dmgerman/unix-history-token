@@ -1581,8 +1581,8 @@ name|intptr_t
 operator|)
 name|xref
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf

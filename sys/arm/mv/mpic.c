@@ -1361,8 +1361,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf

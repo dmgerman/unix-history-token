@@ -5358,8 +5358,8 @@ operator|)
 return|;
 comment|/* XXX deregister ISRCs */
 block|}
-return|return
-operator|(
+if|if
+condition|(
 name|intr_pic_register
 argument_list|(
 name|sc
@@ -5376,6 +5376,17 @@ name|sc_dev
 argument_list|)
 argument_list|)
 argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
