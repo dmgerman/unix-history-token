@@ -3904,84 +3904,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The MUTEX_DEBUG-enabled mtx_validate()  *  * Most of these checks have been moved off into the LO_INITIALIZED flag  * maintained by the witness code.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-end_ifdef
-
-begin_function_decl
-name|void
-name|mtx_validate
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|mtx_validate
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|m
-parameter_list|)
-block|{
-comment|/*  * XXX: When kernacc() does not require Giant we can reenable this check  */
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 	 * Can't call kernacc() from early init386(), especially when 	 * initializing Giant mutex, because some stuff in kernacc() 	 * requires Giant itself. 	 */
-if|if
-condition|(
-operator|!
-name|cold
-condition|)
-if|if
-condition|(
-operator|!
-name|kernacc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"Can't read and write to mutex %p"
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * General init routine used by the MTX_SYSINIT() macro.  */
 end_comment
 
@@ -4119,17 +4041,6 @@ name|mtx_lock
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-comment|/* Diagnostic and error correction */
-name|mtx_validate
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Determine lock class and lock flags. */
 if|if
 condition|(
