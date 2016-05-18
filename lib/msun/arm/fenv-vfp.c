@@ -19,11 +19,23 @@ directive|include
 file|"fenv-mangle.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ARM_PCS_VFP
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|__ARM_PCS_VFP
+value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
