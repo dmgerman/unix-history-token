@@ -922,6 +922,17 @@ begin_comment
 comment|/* exclusive create request */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VA_SYNC
+value|0x04
+end_define
+
+begin_comment
+comment|/* O_SYNC truncation */
+end_comment
+
 begin_comment
 comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead and  * help with write clustering)  * NB: IO_NDELAY and IO_DIRECT are linked to fcntl.h  */
 end_comment
