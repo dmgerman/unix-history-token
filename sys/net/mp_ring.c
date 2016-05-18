@@ -65,11 +65,30 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/mp_ring.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_64BIT_ATOMICS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -98,6 +117,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<net/mp_ring.h>
+end_include
 
 begin_union
 union|union
