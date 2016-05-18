@@ -1122,6 +1122,41 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Dummy VNET_SYSINIT to make sure we always reach the final end state. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vnet_sysinit_done
+parameter_list|(
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSINIT
+argument_list|(
+name|vnet_sysinit_done
+argument_list|,
+name|SI_SUB_VNET_DONE
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_sysinit_done
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * When a module is loaded and requires storage for a virtualized global  * variable, allocate space from the modspace free list.  This interface  * should be used only by the kernel linker.  */
 end_comment
 
