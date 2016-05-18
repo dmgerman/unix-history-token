@@ -5562,7 +5562,7 @@ argument_list|,
 name|align
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Standard mbuf zones only guarantee pointer-size alignment; 	 * we need extra space to align to the cache line 	 */
+comment|/* 	 * Standard mbuf zones only guarantee pointer-size alignment; 	 * we need extra space to align to the cache line 	 */
 name|reserved
 operator|=
 name|sc
