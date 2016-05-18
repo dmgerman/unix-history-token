@@ -2036,28 +2036,28 @@ begin_define
 define|#
 directive|define
 name|SIBA_SPROM4_PWR_INFO_CORE0
-value|0x0080
+value|0x1080
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM4_PWR_INFO_CORE1
-value|0x00AE
+value|0x10AE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM4_PWR_INFO_CORE2
-value|0x00DC
+value|0x10DC
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM4_PWR_INFO_CORE3
-value|0x010A
+value|0x110A
 end_define
 
 begin_define
@@ -2658,14 +2658,14 @@ begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_FEM2G
-value|0x00AE
+value|0x10ae
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_FEM5G
-value|0x00B0
+value|0x10b0
 end_define
 
 begin_define
@@ -2921,28 +2921,28 @@ begin_define
 define|#
 directive|define
 name|SIBA_SROM8_PWR_INFO_CORE0
-value|0x00C0
+value|0x10C0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SROM8_PWR_INFO_CORE1
-value|0x00E0
+value|0x10E0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SROM8_PWR_INFO_CORE2
-value|0x0100
+value|0x1100
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SROM8_PWR_INFO_CORE3
-value|0x0120
+value|0x1120
 end_define
 
 begin_define
