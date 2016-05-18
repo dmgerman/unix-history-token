@@ -2397,44 +2397,34 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_macro
-name|DB_SHOW_COMMAND
-argument_list|(
-argument|vnets
-argument_list|,
-argument|db_show_vnets
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|VNET_ITERATOR_DECL
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
-name|VNET_FOREACH
-argument_list|(
-argument|vnet_iter
-argument_list|)
+begin_function
+specifier|static
+name|void
+name|db_vnet_print
+parameter_list|(
+name|struct
+name|vnet
+modifier|*
+name|vnet
+parameter_list|)
 block|{
 name|db_printf
 argument_list|(
 literal|"vnet            = %p\n"
 argument_list|,
-name|vnet_iter
+name|vnet
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" vnet_magic_n   = 0x%x (%s, orig 0x%x)\n"
+literal|" vnet_magic_n   = %#08x (%s, orig %#08x)\n"
 argument_list|,
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_magic_n
 argument_list|,
 operator|(
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_magic_n
 operator|==
@@ -2452,7 +2442,7 @@ name|db_printf
 argument_list|(
 literal|" vnet_ifcnt     = %u\n"
 argument_list|,
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_ifcnt
 argument_list|)
@@ -2461,7 +2451,7 @@ name|db_printf
 argument_list|(
 literal|" vnet_sockcnt   = %u\n"
 argument_list|,
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_sockcnt
 argument_list|)
@@ -2470,19 +2460,19 @@ name|db_printf
 argument_list|(
 literal|" vnet_data_mem  = %p\n"
 argument_list|,
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_data_mem
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" vnet_data_base = 0x%jx\n"
+literal|" vnet_data_base = %#jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
-name|vnet_iter
+name|vnet
 operator|->
 name|vnet_data_base
 argument_list|)
@@ -2492,12 +2482,78 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|DB_SHOW_ALL_COMMAND
+argument_list|(
+argument|vnets
+argument_list|,
+argument|db_show_all_vnets
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|db_vnet_print
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|db_pager_quit
 condition|)
 break|break;
 block|}
+block|}
+end_block
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|vnet
+argument_list|,
+argument|db_show_vnet
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+operator|!
+name|have_addr
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"usage: show vnet<struct vnet *>\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|db_vnet_print
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2624,7 +2680,7 @@ argument_list|)
 expr_stmt|;
 name|xprint
 argument_list|(
-literal|"  0x%08x 0x%08x\n"
+literal|"  %#08x %#08x\n"
 argument_list|,
 name|vs
 operator|->
