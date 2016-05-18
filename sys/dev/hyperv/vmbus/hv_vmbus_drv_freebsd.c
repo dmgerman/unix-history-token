@@ -1300,7 +1300,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Vmbus Devices"
+literal|"Hyper-V Vmbus"
 argument_list|)
 expr_stmt|;
 return|return
