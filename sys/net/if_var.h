@@ -2258,21 +2258,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|if_vmove
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|vnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|if_purgeaddrs
 parameter_list|(
 name|struct
