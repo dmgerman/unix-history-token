@@ -63,6 +63,10 @@ decl_stmt|;
 name|u_int
 name|vnet_sockcnt
 decl_stmt|;
+name|u_int
+name|vnet_state
+decl_stmt|;
+comment|/* SI_SUB_* */
 name|void
 modifier|*
 name|vnet_data_mem
