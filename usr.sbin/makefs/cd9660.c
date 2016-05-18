@@ -2993,6 +2993,22 @@ argument_list|,
 name|tim
 argument_list|)
 expr_stmt|;
+comment|/* make this sane */
+name|cd9660_time_915
+argument_list|(
+name|diskStructure
+operator|.
+name|rootNode
+operator|->
+name|dot_record
+operator|->
+name|isoDirRecord
+operator|->
+name|date
+argument_list|,
+name|tim
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
