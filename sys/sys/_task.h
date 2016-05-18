@@ -51,10 +51,14 @@ argument_list|)
 name|ta_link
 expr_stmt|;
 comment|/* (q) link for queue */
-name|u_short
+name|uint8_t
 name|ta_pending
 decl_stmt|;
 comment|/* (q) count times queued */
+name|uint8_t
+name|ta_flags
+decl_stmt|;
+comment|/* (q) flags */
 name|u_short
 name|ta_priority
 decl_stmt|;
@@ -69,6 +73,42 @@ modifier|*
 name|ta_context
 decl_stmt|;
 comment|/* (c) argument for handler */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|grouptask
+block|{
+name|struct
+name|task
+name|gt_task
+decl_stmt|;
+name|void
+modifier|*
+name|gt_taskqueue
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|grouptask
+argument_list|)
+name|gt_list
+expr_stmt|;
+name|void
+modifier|*
+name|gt_uniq
+decl_stmt|;
+name|char
+modifier|*
+name|gt_name
+decl_stmt|;
+name|int16_t
+name|gt_irq
+decl_stmt|;
+name|int16_t
+name|gt_cpu
+decl_stmt|;
 block|}
 struct|;
 end_struct

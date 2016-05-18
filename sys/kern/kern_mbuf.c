@@ -1908,6 +1908,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|MB_DTOR_SKIP
+operator|)
+operator|&&
 operator|(
 name|m
 operator|->

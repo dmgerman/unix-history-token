@@ -1045,6 +1045,17 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MB_DTOR_SKIP
+value|0x1
+end_define
+
+begin_comment
+comment|/* don't pollute the cache by touching a freed mbuf */
+end_comment
+
 begin_comment
 comment|/*  * Flags to purge when crossing layers.  */
 end_comment
