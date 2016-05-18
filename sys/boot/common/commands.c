@@ -918,7 +918,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Please note: although we use the pager for the list of commands,  * this routine is called from the ? FORTH function which then  * unconditionally prints some commands. This will lead to anomalous  * behavior. There's no 'pager_output' binding to FORTH to allow  * things to work right, so I'm documenting the bug rather than  * fixnig it.  */
+comment|/*  * Please note: although we use the pager for the list of commands,  * this routine is called from the ? FORTH function which then  * unconditionally prints some commands. This will lead to anomalous  * behavior. There's no 'pager_output' binding to FORTH to allow  * things to work right, so I'm documenting the bug rather than  * fixing it.  */
 end_comment
 
 begin_function
