@@ -7579,9 +7579,14 @@ name|client_ident
 index|[
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|hardware
+name|ip
+operator|->
+name|hw_address
+operator|.
+name|haddr
 argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
