@@ -4734,7 +4734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the sockargs() call because sockargs() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
+comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the getsockaddr() call because getsockaddr() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
 end_comment
 
 begin_comment
@@ -7199,7 +7199,7 @@ name|hostname
 operator|=
 name|hst
 expr_stmt|;
-comment|/* sockargs() call must be after above copyin() calls */
+comment|/* getsockaddr() call must be after above copyin() calls */
 name|error
 operator|=
 name|getsockaddr
@@ -7846,7 +7846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the sockargs() call because sockargs() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
+comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the getsockaddr() call because getsockaddr() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
 end_comment
 
 begin_comment
