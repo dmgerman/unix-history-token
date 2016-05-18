@@ -491,11 +491,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|functions
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return

@@ -551,11 +551,9 @@ operator||
 name|AML_USB_PHY_MISC_ID_OVERIDE_DEVICE
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|usb_mode
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return
@@ -922,11 +920,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|prop
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 if|if
