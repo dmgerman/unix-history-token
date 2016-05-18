@@ -504,7 +504,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Open the PID file and obtain exclusive lock. 	 * We truncate PID file here only to remove old PID immediatelly, 	 * PID file will be truncated again in pidfile_write(), so 	 * pidfile_write() can be called multiple times. 	 */
+comment|/* 	 * Open the PID file and obtain exclusive lock. 	 * We truncate PID file here only to remove old PID immediately, 	 * PID file will be truncated again in pidfile_write(), so 	 * pidfile_write() can be called multiple times. 	 */
 name|fd
 operator|=
 name|flopen

@@ -150,7 +150,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * auth_checknologin()  * Checks for the existance of a nologin file in the login_cap  * capability<lc>.  If there isn't one specified, then it checks  * to see if this class should just ignore nologin files.  Lastly,  * it tries to print out the default nologin file, and, if such  * exists, it exits.  */
+comment|/*  * auth_checknologin()  * Checks for the existence of a nologin file in the login_cap  * capability<lc>.  If there isn't one specified, then it checks  * to see if this class should just ignore nologin files.  Lastly,  * it tries to print out the default nologin file, and, if such  * exists, it exits.  */
 end_comment
 
 begin_function

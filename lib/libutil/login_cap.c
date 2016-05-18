@@ -2754,7 +2754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login_getcapbool()  * From the login_cap_t<lc>, check for the existance of the capability  * of<cap>.  Return<def> if<lc>->lc_cap is NULL, otherwise return  * the whether or not<cap> exists there.  */
+comment|/*  * login_getcapbool()  * From the login_cap_t<lc>, check for the existence of the capability  * of<cap>.  Return<def> if<lc>->lc_cap is NULL, otherwise return  * the whether or not<cap> exists there.  */
 end_comment
 
 begin_function
