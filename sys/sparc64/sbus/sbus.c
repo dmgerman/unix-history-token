@@ -1591,11 +1591,9 @@ operator|=
 name|res
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|range
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the SBus burst transfer size if burst transfers are supported. 	 */
@@ -2623,11 +2621,9 @@ operator|.
 name|obd_name
 argument_list|)
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|reg
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2669,11 +2665,9 @@ name|sbr_size
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|reg
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2783,11 +2777,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|intr
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 block|}

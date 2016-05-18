@@ -377,11 +377,9 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-name|free
+name|OF_prop_free
 argument_list|(
 name|range
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 return|return
@@ -407,11 +405,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|OF_prop_free
 argument_list|(
 name|range
-argument_list|,
-name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure that the expected ranges are actually present. 	 * The OFW_PCI_CS_MEM64 one is not currently used. 	 */
