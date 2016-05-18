@@ -225,6 +225,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|ntb_link_enabled
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ntb_set_ctx
 parameter_list|(
