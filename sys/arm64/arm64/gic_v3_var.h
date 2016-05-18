@@ -296,9 +296,6 @@ name|u_int
 name|lpi_base
 decl_stmt|;
 name|u_int
-name|lpi_num
-decl_stmt|;
-name|u_int
 name|lpi_free
 decl_stmt|;
 comment|/* First free LPI in set */
@@ -306,6 +303,14 @@ name|u_int
 modifier|*
 name|lpi_col_ids
 decl_stmt|;
+name|u_int
+name|lpi_num
+decl_stmt|;
+comment|/* Total number of LPIs in chunk */
+name|u_int
+name|lpi_busy
+decl_stmt|;
+comment|/* Number of busy LPIs in chink */
 block|}
 struct|;
 end_struct
@@ -340,6 +345,9 @@ decl_stmt|;
 comment|/* Virtual address of ITT */
 name|vm_offset_t
 name|itt
+decl_stmt|;
+name|size_t
+name|itt_size
 decl_stmt|;
 block|}
 struct|;
@@ -910,7 +918,36 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|gic_v3_its_release_msix
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gic_v3_its_alloc_msi
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gic_v3_its_release_msi
 parameter_list|(
 name|device_t
 parameter_list|,
