@@ -3338,6 +3338,12 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spin_time
+operator|!=
+literal|0
+condition|)
 name|LOCKSTAT_RECORD1
 argument_list|(
 name|thread__spin
