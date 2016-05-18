@@ -6373,7 +6373,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-comment|/* Seeding affects reproducible builds. */
+comment|/* 		 * XXX: Time-based seeds should be avoided for 		 * reproduceable builds. 		 */
 name|srandom
 argument_list|(
 name|time
