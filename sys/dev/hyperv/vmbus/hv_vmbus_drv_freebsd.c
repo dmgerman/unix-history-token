@@ -243,10 +243,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/**  * @brief Software interrupt thread routine to handle channel messages from  * the hypervisor.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -264,21 +260,6 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
-name|void
-modifier|*
-name|page_addr
-decl_stmt|;
-name|hv_vmbus_channel_msg_header
-modifier|*
-name|hdr
-decl_stmt|;
-name|hv_vmbus_channel_msg_table_entry
-modifier|*
-name|entry
-decl_stmt|;
-name|hv_vmbus_channel_msg_type
-name|msg_type
-decl_stmt|;
 name|hv_vmbus_message
 modifier|*
 name|msg
@@ -293,34 +274,20 @@ name|long
 operator|)
 name|arg
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cpu
-operator|<=
-name|mp_maxid
-argument_list|,
-operator|(
-literal|"VMBUS: vmbus_msg_swintr: "
-literal|"cpu out of range!"
-operator|)
-argument_list|)
-expr_stmt|;
-name|page_addr
+name|msg
 operator|=
+operator|(
+operator|(
+name|hv_vmbus_message
+operator|*
+operator|)
 name|hv_vmbus_g_context
 operator|.
 name|syn_ic_msg_page
 index|[
 name|cpu
 index|]
-expr_stmt|;
-name|msg
-operator|=
-operator|(
-name|hv_vmbus_message
-operator|*
 operator|)
-name|page_addr
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
@@ -330,6 +297,18 @@ init|;
 condition|;
 control|)
 block|{
+specifier|const
+name|hv_vmbus_channel_msg_table_entry
+modifier|*
+name|entry
+decl_stmt|;
+name|hv_vmbus_channel_msg_header
+modifier|*
+name|hdr
+decl_stmt|;
+name|hv_vmbus_channel_msg_type
+name|msg_type
+decl_stmt|;
 if|if
 condition|(
 name|msg
@@ -409,7 +388,7 @@ name|message_type
 operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
-comment|/* 	     * Make sure the write to message_type (ie set to 	     * HV_MESSAGE_TYPE_NONE) happens before we read the 	     * message_pending and EOMing. Otherwise, the EOMing will 	     * not deliver any more messages 	     * since there is no empty slot 	     * 	     * NOTE: 	     * mb() is used here, since atomic_thread_fence_seq_cst() 	     * will become compiler fence on UP kernel. 	     */
+comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
 name|mb
 argument_list|()
 expr_stmt|;
@@ -504,10 +483,12 @@ expr_stmt|;
 name|msg
 operator|=
 operator|(
+operator|(
 name|hv_vmbus_message
 operator|*
 operator|)
 name|page_addr
+operator|)
 operator|+
 name|HV_VMBUS_TIMER_SINT
 expr_stmt|;
@@ -567,10 +548,12 @@ block|}
 name|msg
 operator|=
 operator|(
+operator|(
 name|hv_vmbus_message
 operator|*
 operator|)
 name|page_addr
+operator|)
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
