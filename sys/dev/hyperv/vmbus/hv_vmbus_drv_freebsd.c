@@ -257,23 +257,10 @@ name|pending
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|cpu
-decl_stmt|;
 name|hv_vmbus_message
 modifier|*
 name|msg
 decl_stmt|;
-name|cpu
-operator|=
-operator|(
-name|int
-operator|)
-operator|(
-name|long
-operator|)
-name|arg
-expr_stmt|;
 name|msg
 operator|=
 operator|(
@@ -285,7 +272,7 @@ name|hv_vmbus_g_context
 operator|.
 name|syn_ic_msg_page
 index|[
-name|cpu
+name|curcpu
 index|]
 operator|)
 operator|+
@@ -444,6 +431,8 @@ argument_list|()
 decl_stmt|;
 name|int
 name|cpu
+init|=
+name|curcpu
 decl_stmt|;
 name|hv_vmbus_message
 modifier|*
@@ -453,13 +442,6 @@ name|void
 modifier|*
 name|page_addr
 decl_stmt|;
-name|cpu
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The Windows team has advised that we check for events 	 * before checking for messages. This is the way they do it 	 * in Windows when running as a guest in Hyper-V 	 */
 name|sc
 operator|->
@@ -1663,14 +1645,7 @@ literal|0
 argument_list|,
 name|vmbus_msg_swintr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|long
-operator|)
-name|j
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Prepare the per cpu msg and event pages to be called on each cpu. 		 */
