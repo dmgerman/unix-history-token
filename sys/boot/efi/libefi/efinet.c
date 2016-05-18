@@ -1601,6 +1601,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|pager_open
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|unit
@@ -1646,12 +1649,18 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
+name|pager_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

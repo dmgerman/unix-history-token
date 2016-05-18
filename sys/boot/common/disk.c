@@ -816,7 +816,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ptable_print
 parameter_list|(
 name|void
@@ -857,6 +857,9 @@ name|line
 index|[
 literal|80
 index|]
+decl_stmt|;
+name|int
+name|res
 decl_stmt|;
 name|pa
 operator|=
@@ -941,10 +944,19 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+name|res
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -997,7 +1009,9 @@ name|table
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|sprintf
 argument_list|(
 name|line
@@ -1033,6 +1047,8 @@ name|pa
 operator|->
 name|verbose
 expr_stmt|;
+name|res
+operator|=
 name|ptable_iterate
 argument_list|(
 name|table
@@ -1049,6 +1065,11 @@ name|table
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|res
+operator|)
+return|;
 block|}
 end_function
 
@@ -1059,7 +1080,7 @@ name|PWIDTH
 end_undef
 
 begin_function
-name|void
+name|int
 name|disk_print
 parameter_list|(
 name|struct
@@ -1114,6 +1135,8 @@ name|verbose
 operator|=
 name|verbose
 expr_stmt|;
+return|return
+operator|(
 name|ptable_iterate
 argument_list|(
 name|od
@@ -1125,7 +1148,8 @@ name|pa
 argument_list|,
 name|ptable_print
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

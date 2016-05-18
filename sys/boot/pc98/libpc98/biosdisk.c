@@ -386,7 +386,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bd_printslice
 parameter_list|(
 name|struct
@@ -411,7 +411,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bd_printbsdslice
 parameter_list|(
 name|struct
@@ -1246,6 +1246,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|done
 decl_stmt|;
 name|char
 name|line
@@ -1267,6 +1269,13 @@ name|pc98_partition
 modifier|*
 name|dptr
 decl_stmt|;
+name|pager_open
+argument_list|()
+expr_stmt|;
+name|done
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1276,6 +1285,9 @@ init|;
 name|i
 operator|<
 name|nbdinfo
+operator|&&
+operator|!
+name|done
 condition|;
 name|i
 operator|++
@@ -1294,11 +1306,14 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 comment|/* try to open the whole disk */
 name|dev
 operator|.
@@ -1391,6 +1406,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|bd_printslice
 argument_list|(
 name|od
@@ -1405,7 +1422,14 @@ name|line
 argument_list|,
 name|verbose
 argument_list|)
+condition|)
+block|{
+name|done
+operator|=
+literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 name|bd_closedisk
@@ -1415,6 +1439,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pager_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1528,7 +1555,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bd_printslice
 parameter_list|(
 name|struct
@@ -1656,6 +1683,8 @@ block|{
 case|case
 name|PC98_MID_386BSD
 case|:
+return|return
+operator|(
 name|bd_printbsdslice
 argument_list|(
 name|od
@@ -1666,13 +1695,17 @@ name|prefix
 argument_list|,
 name|verbose
 argument_list|)
-expr_stmt|;
-return|return;
+operator|)
+return|;
 case|case
 literal|0x00
 case|:
 comment|/* unused partition */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 literal|0x01
 case|:
@@ -1735,11 +1768,14 @@ name|stats
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1749,7 +1785,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bd_printbsdslice
 parameter_list|(
 name|struct
@@ -1804,7 +1840,11 @@ argument_list|,
 name|buf
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|lp
 operator|=
 operator|(
@@ -1838,12 +1878,14 @@ argument_list|,
 name|prefix
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 comment|/* Print partitions */
 for|for
@@ -2069,13 +2111,25 @@ else|:
 literal|"FFS"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

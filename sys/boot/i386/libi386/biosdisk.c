@@ -1492,6 +1492,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|pager_open
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1550,11 +1553,14 @@ literal|0x80
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 name|dev
 operator|.
 name|d_dev
@@ -1656,6 +1662,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pager_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

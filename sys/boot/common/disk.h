@@ -208,7 +208,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|disk_print
 parameter_list|(
 name|struct

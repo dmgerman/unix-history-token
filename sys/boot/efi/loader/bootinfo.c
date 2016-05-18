@@ -1774,7 +1774,7 @@ name|dtbp
 argument_list|)
 expr_stmt|;
 else|else
-name|pager_output
+name|printf
 argument_list|(
 literal|"WARNING! Trying to fire up the kernel, but no "
 literal|"device tree blob found!\n"

@@ -120,7 +120,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 name|ptable_iterate_t
 function_decl|)
@@ -232,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ptable_iterate
 parameter_list|(
 specifier|const

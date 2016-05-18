@@ -656,6 +656,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|pager_open
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -688,12 +691,18 @@ operator|.
 name|sp_devicespec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
+name|pager_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

@@ -4700,7 +4700,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ptable_iterate
 parameter_list|(
 specifier|const
@@ -4857,6 +4857,8 @@ operator|.
 name|index
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|iter
 argument_list|(
 name|arg
@@ -4868,8 +4870,14 @@ name|entry
 operator|->
 name|part
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|1
+return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

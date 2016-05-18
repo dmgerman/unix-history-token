@@ -1096,6 +1096,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|pager_open
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1157,11 +1160,14 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 if|if
 condition|(
 name|stor_opendev
@@ -1200,6 +1206,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pager_close
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

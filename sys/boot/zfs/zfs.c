@@ -2097,7 +2097,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|zfs_probe_partition
 parameter_list|(
 name|void
@@ -2152,7 +2152,9 @@ name|type
 operator|!=
 name|PART_FREEBSD_ZFS
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|ppa
 operator|=
 operator|(
@@ -2225,7 +2227,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|ret
 operator|=
 name|zfs_probe
@@ -2245,7 +2249,9 @@ name|ret
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Do we have BSD label here? */
 if|if
 condition|(
@@ -2309,6 +2315,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|ret
+operator|=
 name|ptable_iterate
 argument_list|(
 name|table
@@ -2333,6 +2341,11 @@ operator|.
 name|fd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
