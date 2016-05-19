@@ -549,7 +549,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BWN_TMSLOW_MACPHYCLKEN
+name|BWN_TGSLOW_MACPHYCLKEN
 value|0x00100000
 end_define
 
@@ -560,7 +560,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BWN_TMSLOW_PLLREFSEL
+name|BWN_TGSLOW_PLLREFSEL
 value|0x00200000
 end_define
 

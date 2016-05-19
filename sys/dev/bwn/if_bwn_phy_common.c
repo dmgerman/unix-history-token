@@ -772,13 +772,13 @@ name|enabled
 condition|)
 name|val
 operator||=
-name|BWN_TMSLOW_MACPHYCLKEN
+name|BWN_TGSLOW_MACPHYCLKEN
 expr_stmt|;
 else|else
 name|val
 operator|&=
 operator|~
-name|BWN_TMSLOW_MACPHYCLKEN
+name|BWN_TGSLOW_MACPHYCLKEN
 expr_stmt|;
 name|siba_write_4
 argument_list|(
