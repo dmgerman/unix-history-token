@@ -434,6 +434,9 @@ decl_stmt|;
 name|int
 name|txfree
 decl_stmt|;
+name|uint16_t
+name|chanmask
+decl_stmt|;
 name|struct
 name|ipw_rx_radiotap_header
 name|sc_rxtap
