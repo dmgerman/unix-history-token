@@ -21892,17 +21892,21 @@ name|state
 operator|!=
 name|BWN_SHARED_UCODESTAT_SLEEP
 condition|)
-name|device_printf
+block|{
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
 argument_list|,
-literal|"warn: firmware state (%d)\n"
+name|BWN_DEBUG_FW
+argument_list|,
+literal|"%s: warn: firmware state (%d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+block|}
 name|mac
 operator|->
 name|mac_suspended
