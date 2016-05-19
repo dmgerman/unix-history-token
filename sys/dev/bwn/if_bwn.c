@@ -12443,6 +12443,19 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|siba_powerup
 argument_list|(
 name|sc
@@ -12672,6 +12685,19 @@ goto|goto
 name|fail0
 goto|;
 block|}
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: chip_init\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bwn_chip_init
@@ -12978,6 +13004,19 @@ argument_list|(
 name|mac
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: powerup\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|siba_powerup
 argument_list|(
 name|sc
@@ -13014,6 +13053,19 @@ name|mac_status
 operator|=
 name|BWN_MAC_STATUS_INITED
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: done\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -13043,6 +13095,19 @@ name|__func__
 operator|,
 name|__LINE__
 operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: fail\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -21549,6 +21614,23 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: suspended=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|mac
+operator|->
+name|mac_suspended
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mac
@@ -21703,6 +21785,23 @@ decl_stmt|;
 name|uint16_t
 name|state
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: suspended=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|mac
+operator|->
+name|mac_suspended
+argument_list|)
+expr_stmt|;
 name|state
 operator|=
 name|bwn_shm_read_2
@@ -27305,6 +27404,17 @@ operator|(
 name|FILTER_STRAY
 operator|)
 return|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_INTR
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|reason
 operator|=
 name|BWN_READ_4
@@ -27343,6 +27453,19 @@ operator|(
 name|FILTER_HANDLED
 operator|)
 return|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_INTR
+argument_list|,
+literal|"%s: reason=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
 name|mac
 operator|->
 name|mac_reason
