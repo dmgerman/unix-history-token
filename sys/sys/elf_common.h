@@ -3452,6 +3452,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHF_COMPRESSED
+value|0x800
+end_define
+
+begin_comment
+comment|/* Section contains compressed data. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHF_MASKOS
 value|0x0ff00000
 end_define
@@ -4440,6 +4451,28 @@ end_define
 
 begin_comment
 comment|/* GNU-style hash table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_TLSDESC_PLT
+value|0x6ffffef6
+end_define
+
+begin_comment
+comment|/* loc. of PLT for tlsdesc resolver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_TLSDESC_GOT
+value|0x6ffffef7
+end_define
+
+begin_comment
+comment|/* loc. of GOT for tlsdesc resolver */
 end_comment
 
 begin_define
