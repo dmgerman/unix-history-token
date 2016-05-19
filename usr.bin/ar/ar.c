@@ -958,14 +958,8 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|bsdar
-operator|->
-name|posarg
-operator|=
 operator|*
 name|argv
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -989,9 +983,8 @@ name|posarg
 operator|=
 name|basename
 argument_list|(
-name|bsdar
-operator|->
-name|posarg
+operator|*
+name|argv
 argument_list|)
 operator|)
 operator|==
