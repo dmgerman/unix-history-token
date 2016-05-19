@@ -12511,12 +12511,12 @@ condition|(
 name|NANOTIME_SUB
 argument_list|(
 operator|&
+name|now
+argument_list|,
+operator|&
 name|isp
 operator|->
 name|isp_init_time
-argument_list|,
-operator|&
-name|now
 argument_list|)
 operator|>
 literal|2000000000ULL
