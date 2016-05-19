@@ -3012,6 +3012,11 @@ argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
+name|iscsi_pdu_update_statsn
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
@@ -3059,11 +3064,6 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|iscsi_pdu_update_statsn
-argument_list|(
-name|response
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The handling routine is responsible for freeing the PDU 	 * when it's no longer needed. 	 */
 switch|switch
 condition|(
@@ -7269,19 +7269,9 @@ name|M_ISCSI
 argument_list|)
 expr_stmt|;
 block|}
-name|ISCSI_SESSION_LOCK
-argument_list|(
-name|is
-argument_list|)
-expr_stmt|;
-name|icl_pdu_queue
+name|iscsi_pdu_queue
 argument_list|(
 name|ip
-argument_list|)
-expr_stmt|;
-name|ISCSI_SESSION_UNLOCK
-argument_list|(
-name|is
 argument_list|)
 expr_stmt|;
 return|return
