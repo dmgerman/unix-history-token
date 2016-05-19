@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bwn.h'
+file|"opt_bwn.h"
 end_include
 
 begin_include
