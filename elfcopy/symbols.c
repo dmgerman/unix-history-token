@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: symbols.c 3376 2016-01-26 18:41:39Z emaste $"
+literal|"$Id: symbols.c 3446 2016-05-03 01:31:17Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -676,7 +676,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Symbols refered by COMDAT sections are needed. */
+comment|/* Symbols referred by COMDAT sections are needed. */
 if|if
 condition|(
 name|BIT_ISSET
@@ -1074,7 +1074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark symbols refered by relocation entries.  */
+comment|/*  * Mark symbols referred by relocation entries.  */
 end_comment
 
 begin_function

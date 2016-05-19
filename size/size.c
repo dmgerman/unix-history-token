@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: size.c 3242 2015-08-07 12:47:11Z emaste $"
+literal|"$Id: size.c 3458 2016-05-09 15:01:25Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1166,6 +1166,8 @@ parameter_list|)
 block|{
 name|size_t
 name|max_size
+decl_stmt|,
+name|segment_end
 decl_stmt|;
 name|uint64_t
 name|raw_size
@@ -1243,14 +1245,30 @@ name|phdr
 operator|->
 name|p_offset
 expr_stmt|;
-while|while
+if|if
 condition|(
-name|data
-operator|!=
-name|NULL
-operator|&&
 name|offset
-operator|<
+operator|>=
+name|max_size
+operator|||
+name|phdr
+operator|->
+name|p_filesz
+operator|>
+name|max_size
+operator|-
+name|offset
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid PHDR offset"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|segment_end
+operator|=
 name|phdr
 operator|->
 name|p_offset
@@ -1258,6 +1276,21 @@ operator|+
 name|phdr
 operator|->
 name|p_filesz
+expr_stmt|;
+while|while
+condition|(
+name|data
+operator|!=
+name|NULL
+operator|&&
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|Elf32_Nhdr
+argument_list|)
+operator|<
+name|segment_end
 condition|)
 block|{
 name|nhdr
@@ -1370,6 +1403,43 @@ argument_list|)
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|Elf32_Nhdr
+argument_list|)
+operator|+
+name|ELF_ALIGN
+argument_list|(
+name|nhdr_l
+operator|.
+name|n_namesz
+argument_list|,
+literal|4
+argument_list|)
+operator|+
+name|ELF_ALIGN
+argument_list|(
+name|nhdr_l
+operator|.
+name|n_descsz
+argument_list|,
+literal|4
+argument_list|)
+operator|>=
+name|segment_end
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid note header"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|name
 operator|=
 operator|(
@@ -2175,7 +2245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handles program headers except for PT_NOTE, when sysv output stlye is  * choosen, prints out the segment name and length. For berkely output  * style only PT_LOAD segments are handled, and text,  * data, bss size is calculated for them.  */
+comment|/*  * Handles program headers except for PT_NOTE, when sysv output style is  * chosen, prints out the segment name and length. For berkely output  * style only PT_LOAD segments are handled, and text,  * data, bss size is calculated for them.  */
 end_comment
 
 begin_function
@@ -3043,8 +3113,14 @@ argument_list|(
 literal|"%s: File format not recognized"
 argument_list|,
 name|arhdr
+operator|!=
+name|NULL
+condition|?
+name|arhdr
 operator|->
 name|ar_name
+else|:
+name|name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3757,9 +3833,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|long
-name|unsigned
-name|int
+name|uint64_t
 name|grand_total
 decl_stmt|;
 name|grand_total

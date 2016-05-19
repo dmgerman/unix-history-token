@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu3.c 3291 2016-01-04 02:36:38Z emaste $"
+literal|"$Id: libelftc_dem_gnu3.c 3447 2016-05-03 13:32:23Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3047,7 +3047,6 @@ name|e_idx
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 operator|--
 name|idx
 expr_stmt|;
@@ -3986,7 +3985,6 @@ literal|0
 operator|)
 return|;
 block|}
-empty_stmt|;
 case|case
 literal|'d'
 case|:
@@ -4230,7 +4228,6 @@ literal|0
 operator|)
 return|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -5726,7 +5723,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -5758,7 +5754,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -7840,7 +7835,6 @@ operator|)
 return|;
 break|break;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|cpp_demangle_read_name
@@ -8205,7 +8199,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -8721,7 +8714,6 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 operator|++
 name|ddata
 operator|->
@@ -8846,7 +8838,6 @@ goto|goto
 name|clean
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -10480,7 +10471,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -11203,7 +11193,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|cpp_demangle_read_type
@@ -13286,7 +13275,6 @@ goto|goto
 name|rtn
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -15688,7 +15676,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* vendor extened operator */
 if|if
 condition|(
@@ -15999,7 +15986,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 comment|/* source name */
 if|if
 condition|(
@@ -17922,7 +17908,6 @@ literal|1
 operator|)
 return|;
 block|}
-empty_stmt|;
 block|}
 end_function
 

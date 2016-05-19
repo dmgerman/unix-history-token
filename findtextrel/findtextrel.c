@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: findtextrel.c 3359 2016-01-24 17:06:20Z jkoshy $"
+literal|"$Id: findtextrel.c 3461 2016-05-10 18:00:05Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -231,6 +231,26 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|sh
+operator|->
+name|sh_entsize
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid sh_entsize"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|len
 operator|=
 call|(
@@ -1083,6 +1103,22 @@ decl_stmt|;
 name|GElf_Rel
 name|rel
 decl_stmt|;
+if|if
+condition|(
+name|sh
+operator|->
+name|sh_entsize
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid sh_entsize"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|len
 operator|=
 call|(

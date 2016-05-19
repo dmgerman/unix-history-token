@@ -114,7 +114,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: strings.c 3360 2016-01-24 18:34:06Z jkoshy $"
+literal|"$Id: strings.c 3446 2016-05-03 01:31:17Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1056,7 +1056,7 @@ name|rc
 operator|=
 name|RETURN_OK
 expr_stmt|;
-comment|/* If entire file is choosen, treat it as a binary file */
+comment|/* If entire file is chosen, treat it as a binary file */
 if|if
 condition|(
 name|entire_file

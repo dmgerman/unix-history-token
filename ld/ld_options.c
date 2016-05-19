@@ -48,7 +48,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ld_options.c 2926 2013-03-17 22:53:54Z kaiwang27 $"
+literal|"$Id: ld_options.c 3406 2016-02-14 17:45:43Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -597,7 +597,7 @@ name|NO_ARG
 block|}
 block|,
 block|{
-literal|"no-keep-memorg"
+literal|"no-keep-memory"
 block|,
 name|KEY_NO_KEEP_MEMORY
 block|,
@@ -841,7 +841,7 @@ literal|"shared"
 block|,
 name|KEY_SHARED
 block|,
-name|ANY_DASH
+name|ONE_DASH
 block|,
 name|NO_ARG
 block|}
@@ -999,7 +999,7 @@ block|,
 block|{
 literal|"verbose"
 block|,
-literal|'v'
+name|KEY_VERBOSE
 block|,
 name|ANY_DASH
 block|,
@@ -1009,7 +1009,7 @@ block|,
 block|{
 literal|"version"
 block|,
-name|KEY_VERSION
+literal|'V'
 block|,
 name|ANY_DASH
 block|,
@@ -1097,7 +1097,7 @@ name|NO_ARG
 block|}
 block|,
 block|{
-literal|"whole_archive"
+literal|"whole-archive"
 block|,
 name|KEY_WHOLE_ARCHIVE
 block|,

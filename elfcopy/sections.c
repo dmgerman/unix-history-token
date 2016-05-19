@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3346 2016-01-17 20:09:15Z kaiwang27 $"
+literal|"$Id: sections.c 3443 2016-04-15 18:57:54Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1832,6 +1832,8 @@ name|int
 name|elferr
 decl_stmt|,
 name|sec_flags
+decl_stmt|,
+name|reorder
 decl_stmt|;
 comment|/* 	 * Insert a pseudo section that contains the ELF header 	 * and program header. Used as reference for section offset 	 * or load address adjustment. 	 */
 if|if
@@ -1962,6 +1964,10 @@ operator|-
 literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|reorder
+operator|=
+literal|0
 expr_stmt|;
 name|is
 operator|=
@@ -2535,6 +2541,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|copy_shdr
 argument_list|(
 name|ecp
@@ -2547,6 +2554,24 @@ literal|0
 argument_list|,
 name|sec_flags
 argument_list|)
+expr_stmt|;
+comment|/* 			 * elfcopy puts .symtab, .strtab and .shstrtab 			 * sections in the end of the output object. 			 * If the input objects have more sections 			 * after any of these 3 sections, the section 			 * table will be reordered. section symbols 			 * should be regenerated for relocations. 			 */
+if|if
+condition|(
+name|reorder
+condition|)
+name|ecp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SYMTAB_INTACT
+expr_stmt|;
+block|}
+else|else
+name|reorder
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -7889,6 +7914,25 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|,
 literal|"stat failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"empty debug link target %s"
+argument_list|,
+name|ecp
+operator|->
+name|debuglink
 argument_list|)
 expr_stmt|;
 if|if

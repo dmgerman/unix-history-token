@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: addr2line.c 3273 2015-12-11 21:38:57Z kaiwang27 $"
+literal|"$Id: addr2line.c 3446 2016-05-03 01:31:17Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1201,7 +1201,7 @@ condition|)
 goto|goto
 name|add_func
 goto|;
-comment|/* Skip if no name assoicated with this DIE. */
+comment|/* Skip if no name associated with this DIE. */
 goto|goto
 name|cont_search
 goto|;

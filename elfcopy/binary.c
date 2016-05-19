@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -60,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: binary.c 3270 2015-12-11 18:48:56Z emaste $"
+literal|"$Id: binary.c 3445 2016-04-20 19:08:30Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -990,28 +996,31 @@ argument_list|,
 literal|"strdup"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
 name|p
 operator|=
 name|sym_basename
-expr_stmt|;
-while|while
-condition|(
-operator|(
+init|;
+operator|*
 name|p
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'.'
-argument_list|)
-operator|)
 operator|!=
-name|NULL
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+operator|*
+name|p
+argument_list|)
 condition|)
 operator|*
 name|p
-operator|++
 operator|=
 literal|'_'
 expr_stmt|;
