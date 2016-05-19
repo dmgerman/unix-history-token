@@ -7771,6 +7771,19 @@ condition|)
 return|return
 literal|0
 return|;
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RF
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mast2
 operator|=
 name|BWN_RF_READ
@@ -7906,6 +7919,19 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RF
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|BWN_PHY_MASK
 argument_list|(
 name|mac
@@ -7959,6 +7985,19 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RF
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|BWN_RF_SET
 argument_list|(
 name|mac
@@ -8052,6 +8091,19 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+name|BWN_DEBUG_RF
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|bwn_radio_init2056_pre
 argument_list|(
 name|mac
@@ -39685,6 +39737,19 @@ name|mac
 argument_list|)
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|BWN_DEBUG_RESET
+argument_list|,
+literal|"%s: spuravoid %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|avoid
+argument_list|)
+expr_stmt|;
 name|siba_pmu_spuravoid_pllupdate
 argument_list|(
 name|sc
@@ -39782,9 +39847,11 @@ name|sc
 argument_list|,
 name|BWN_DEBUG_RESET
 argument_list|,
-literal|"%s: BAND_2G\n"
+literal|"%s: BAND_5G; chan=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ch
 argument_list|)
 expr_stmt|;
 comment|/* Switch to 2 GHz for a moment to access BWN_PHY_B_BBCFG */
@@ -39868,9 +39935,11 @@ name|sc
 argument_list|,
 name|BWN_DEBUG_RESET
 argument_list|,
-literal|"%s: BAND_2G\n"
+literal|"%s: BAND_2G; chan=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ch
 argument_list|)
 expr_stmt|;
 name|BWN_PHY_MASK
@@ -41565,11 +41634,6 @@ argument_list|,
 literal|"MAC not suspended\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|active
-condition|)
-block|{
 name|DPRINTF
 argument_list|(
 name|mac
@@ -41580,7 +41644,7 @@ name|BWN_DEBUG_RESET
 operator||
 name|BWN_DEBUG_PHY
 argument_list|,
-literal|"%s: called; rev=%d, rf_on=%d\n"
+literal|"%s: called; rev=%d, rf_on=%d, active=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -41593,8 +41657,15 @@ operator|->
 name|mac_phy
 operator|.
 name|rf_on
+argument_list|,
+name|active
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|active
+condition|)
+block|{
 if|if
 condition|(
 name|phy
