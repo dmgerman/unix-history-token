@@ -226,7 +226,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"received Text PDU with wrong StatSN: "
+literal|"received Text PDU with wrong ExpStatSN: "
 literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
@@ -577,7 +577,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"received Logout PDU with wrong StatSN: "
+literal|"received Logout PDU with wrong ExpStatSN: "
 literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
