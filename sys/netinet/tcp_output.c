@@ -4185,6 +4185,8 @@ operator|==
 name|TCPS_SYN_SENT
 operator|&&
 name|V_tcp_do_ecn
+operator|==
+literal|1
 condition|)
 block|{
 if|if

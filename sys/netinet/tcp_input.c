@@ -880,7 +880,7 @@ argument_list|,
 name|tcp_do_ecn
 argument_list|)
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 end_expr_stmt
 
