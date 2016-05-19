@@ -420,6 +420,9 @@ name|vm_cnt
 operator|.
 name|v_cache_count
 operator|<
+operator|(
+name|u_int
+operator|)
 name|vm_pageout_wakeup_thresh
 operator|)
 return|;
