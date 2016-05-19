@@ -454,7 +454,7 @@ decl_stmt|;
 name|int
 name|pq_cnt
 decl_stmt|;
-name|int
+name|u_int
 modifier|*
 specifier|const
 name|pq_vcnt

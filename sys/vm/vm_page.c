@@ -1427,7 +1427,7 @@ expr_stmt|;
 operator|*
 name|__DECONST
 argument_list|(
-name|int
+name|u_int
 operator|*
 operator|*
 argument_list|,
@@ -1470,7 +1470,7 @@ expr_stmt|;
 operator|*
 name|__DECONST
 argument_list|(
-name|int
+name|u_int
 operator|*
 operator|*
 argument_list|,
