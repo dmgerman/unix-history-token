@@ -569,6 +569,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -616,6 +617,7 @@ name|ip6_getpmtu_ctl
 parameter_list|(
 name|u_int
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -1347,8 +1349,6 @@ name|exthdrs
 decl_stmt|;
 name|struct
 name|in6_addr
-name|finaldst
-decl_stmt|,
 name|src0
 decl_stmt|,
 name|dst0
@@ -1467,12 +1467,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|finaldst
-operator|=
-name|ip6
-operator|->
-name|ip6_dst
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3030,7 +3024,9 @@ argument_list|,
 name|ifp
 argument_list|,
 operator|&
-name|finaldst
+name|ip6
+operator|->
+name|ip6_dst
 argument_list|,
 operator|&
 name|mtu
@@ -5255,6 +5251,7 @@ parameter_list|(
 name|u_int
 name|fibnum
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -5389,6 +5386,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
