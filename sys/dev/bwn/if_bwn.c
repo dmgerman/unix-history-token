@@ -8049,6 +8049,15 @@ name|sc_dev
 argument_list|)
 operator|!=
 literal|0x4328
+operator|&&
+name|siba_get_pci_device
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|!=
+literal|0x432b
 condition|)
 block|{
 name|have_a
