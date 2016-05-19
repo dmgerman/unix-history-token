@@ -299,7 +299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return TRUE if we are under our minimum low-free-pages threshold.  *  * This routine is typically used within the system to determine whether  * we can execute potentially very expensive code in terms of memory.  It  * is also used by the pageout daemon to calculate when to sleep, when  * to wake waiters up, and when (after making a pass) to become more  * desparate.  */
+comment|/*  * Return TRUE if we are under our minimum low-free-pages threshold.  *  * This routine is typically used within the system to determine whether  * we can execute potentially very expensive code in terms of memory.  It  * is also used by the pageout daemon to calculate when to sleep, when  * to wake waiters up, and when (after making a pass) to become more  * desperate.  */
 end_comment
 
 begin_function
