@@ -723,6 +723,7 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
+operator|*
 name|clkp
 argument_list|)
 argument_list|,
