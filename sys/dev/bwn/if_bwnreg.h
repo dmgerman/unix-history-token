@@ -1031,6 +1031,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|BWN_MAC_HW_CAP
+value|0x15c
+end_define
+
+begin_comment
+comment|/* core rev>= 13 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BWN_RF_HWENABLED_HI
 value|0x158
 end_define
@@ -1791,6 +1802,20 @@ define|#
 directive|define
 name|BWN_SHARED_CHAN
 value|0x00a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_SHARED_MACHW_L
+value|0x00c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWN_SHARED_MACHW_H
+value|0x00c2
 end_define
 
 begin_define
