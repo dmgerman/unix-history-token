@@ -192,6 +192,11 @@ init|=
 literal|0x00000020
 block|,
 comment|/* handling cores */
+name|SIBA_DEBUG_DMA
+init|=
+literal|0x00000040
+block|,
+comment|/* DMA bits */
 name|SIBA_DEBUG_ANY
 init|=
 literal|0xffffffff
