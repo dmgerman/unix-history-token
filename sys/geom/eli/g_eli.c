@@ -1424,6 +1424,9 @@ case|:
 case|case
 name|BIO_FLUSH
 case|:
+case|case
+name|BIO_ZONE
+case|:
 break|break;
 case|case
 name|BIO_DELETE
@@ -1563,6 +1566,9 @@ name|BIO_FLUSH
 case|:
 case|case
 name|BIO_DELETE
+case|:
+case|case
+name|BIO_ZONE
 case|:
 name|cbp
 operator|->

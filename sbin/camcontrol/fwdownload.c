@@ -2719,6 +2719,8 @@ case|case
 name|CC_DT_ATA
 case|:
 block|{
+name|retval
+operator|=
 name|build_ata_cmd
 argument_list|(
 name|ccb
@@ -2757,6 +2759,9 @@ argument_list|,
 comment|/*command*/
 name|ATA_ATA_IDENTIFY
 argument_list|,
+comment|/*auxiliary*/
+literal|0
+argument_list|,
 comment|/*data_ptr*/
 operator|(
 name|uint8_t
@@ -2766,6 +2771,12 @@ name|ptr
 argument_list|,
 comment|/*dxfer_len*/
 name|dxfer_len
+argument_list|,
+comment|/*cdb_storage*/
+name|NULL
+argument_list|,
+comment|/*cdb_storage_len*/
+literal|0
 argument_list|,
 comment|/*sense_len*/
 name|SSD_FULL_SIZE
@@ -2786,6 +2797,30 @@ comment|/*devtype*/
 name|devtype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+block|{
+name|retval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"%s: build_ata_cmd() failed, likely "
+literal|"programmer error"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
 break|break;
 block|}
 default|default:
@@ -3470,6 +3505,8 @@ operator|-
 name|buf
 argument_list|)
 expr_stmt|;
+name|retval
+operator|=
 name|build_ata_cmd
 argument_list|(
 name|ccb
@@ -3515,6 +3552,9 @@ argument_list|,
 comment|/*command*/
 name|ATA_DOWNLOAD_MICROCODE
 argument_list|,
+comment|/*auxiliary*/
+literal|0
+argument_list|,
 comment|/*data_ptr*/
 operator|(
 name|uint8_t
@@ -3524,6 +3564,12 @@ name|pkt_ptr
 argument_list|,
 comment|/*dxfer_len*/
 name|pkt_size
+argument_list|,
+comment|/*cdb_storage*/
+name|NULL
+argument_list|,
+comment|/*cdb_storage_len*/
+literal|0
 argument_list|,
 comment|/*sense_len*/
 name|SSD_FULL_SIZE
@@ -3542,6 +3588,25 @@ comment|/*devtype*/
 name|devtype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: build_ata_cmd() failed, likely "
+literal|"programmer error"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
 break|break;
 block|}
 default|default:

@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/disk_zone.h>
+end_include
+
 begin_comment
 comment|/* bio_cmd */
 end_comment
@@ -51,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|BIO_DELETE
-value|0x04
+value|0x03
 end_define
 
 begin_comment
@@ -62,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|BIO_GETATTR
-value|0x08
+value|0x04
 end_define
 
 begin_comment
@@ -73,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|BIO_FLUSH
-value|0x10
+value|0x05
 end_define
 
 begin_comment
@@ -84,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|BIO_CMD0
-value|0x20
+value|0x06
 end_define
 
 begin_comment
@@ -95,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|BIO_CMD1
-value|0x40
+value|0x07
 end_define
 
 begin_comment
@@ -106,11 +112,22 @@ begin_define
 define|#
 directive|define
 name|BIO_CMD2
-value|0x80
+value|0x08
 end_define
 
 begin_comment
 comment|/* Available for local hacks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_ZONE
+value|0x09
+end_define
+
+begin_comment
+comment|/* Zone command */
 end_comment
 
 begin_comment
@@ -343,6 +360,11 @@ modifier|*
 name|bio_attribute
 decl_stmt|;
 comment|/* Attribute for BIO_[GS]ETATTR */
+name|struct
+name|disk_zone_args
+name|bio_zone
+decl_stmt|;
+comment|/* Used for BIO_ZONE */
 name|struct
 name|g_consumer
 modifier|*

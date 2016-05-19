@@ -117,6 +117,12 @@ name|g_configargs
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|disk_zone_args
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -1906,6 +1912,23 @@ parameter_list|,
 name|void
 modifier|*
 name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|g_io_zonecmd
+parameter_list|(
+name|struct
+name|disk_zone_args
+modifier|*
+name|zone_args
+parameter_list|,
+name|struct
+name|g_consumer
+modifier|*
+name|cp
 parameter_list|)
 function_decl|;
 end_function_decl

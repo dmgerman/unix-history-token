@@ -7388,6 +7388,15 @@ literal|"BIO_CMD2"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|BIO_ZONE
+case|:
+name|db_printf
+argument_list|(
+literal|"BIO_ZONE"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|db_printf
 argument_list|(

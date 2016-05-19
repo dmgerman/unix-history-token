@@ -15349,13 +15349,6 @@ name|tag
 operator|<<
 literal|3
 expr_stmt|;
-name|fis
-index|[
-literal|13
-index|]
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -15372,6 +15365,7 @@ name|cmd
 operator|.
 name|sector_count
 expr_stmt|;
+block|}
 name|fis
 index|[
 literal|13
@@ -15385,7 +15379,6 @@ name|cmd
 operator|.
 name|sector_count_exp
 expr_stmt|;
-block|}
 name|fis
 index|[
 literal|15

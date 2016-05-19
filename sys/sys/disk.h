@@ -27,6 +27,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/disk_zone.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -303,6 +309,13 @@ define|#
 directive|define
 name|DIOCGATTR
 value|_IOWR('d', 142, struct diocgattr_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCZONECMD
+value|_IOWR('d', 143, struct disk_zone_args)
 end_define
 
 begin_endif
