@@ -1784,6 +1784,16 @@ argument_list|(
 literal|"failed to open DTB blob for applying overlays\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|new_fdtp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|overlay
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 for|for
