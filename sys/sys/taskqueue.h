@@ -130,6 +130,13 @@ name|TASKQUEUE_NUM_CALLBACKS
 value|TASKQUEUE_CALLBACK_TYPE_MAX + 1
 end_define
 
+begin_define
+define|#
+directive|define
+name|TASKQUEUE_NAMELEN
+value|32
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
