@@ -10667,7 +10667,7 @@ name|tssipos
 argument_list|,
 name|SIBA_SPROM8_FEM2G
 argument_list|,
-name|SSB_SROM8_FEM_TSSIPOS
+name|SIBA_SROM8_FEM_TSSIPOS
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10680,7 +10680,7 @@ name|extpa_gain
 argument_list|,
 name|SIBA_SPROM8_FEM2G
 argument_list|,
-name|SSB_SROM8_FEM_EXTPA_GAIN
+name|SIBA_SROM8_FEM_EXTPA_GAIN
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10693,7 +10693,7 @@ name|pdet_range
 argument_list|,
 name|SIBA_SPROM8_FEM2G
 argument_list|,
-name|SSB_SROM8_FEM_PDET_RANGE
+name|SIBA_SROM8_FEM_PDET_RANGE
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10706,7 +10706,7 @@ name|tr_iso
 argument_list|,
 name|SIBA_SPROM8_FEM2G
 argument_list|,
-name|SSB_SROM8_FEM_TR_ISO
+name|SIBA_SROM8_FEM_TR_ISO
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10719,7 +10719,7 @@ name|antswlut
 argument_list|,
 name|SIBA_SPROM8_FEM2G
 argument_list|,
-name|SSB_SROM8_FEM_ANTSWLUT
+name|SIBA_SROM8_FEM_ANTSWLUT
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10732,7 +10732,7 @@ name|tssipos
 argument_list|,
 name|SIBA_SPROM8_FEM5G
 argument_list|,
-name|SSB_SROM8_FEM_TSSIPOS
+name|SIBA_SROM8_FEM_TSSIPOS
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10745,7 +10745,7 @@ name|extpa_gain
 argument_list|,
 name|SIBA_SPROM8_FEM5G
 argument_list|,
-name|SSB_SROM8_FEM_EXTPA_GAIN
+name|SIBA_SROM8_FEM_EXTPA_GAIN
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10758,7 +10758,7 @@ name|pdet_range
 argument_list|,
 name|SIBA_SPROM8_FEM5G
 argument_list|,
-name|SSB_SROM8_FEM_PDET_RANGE
+name|SIBA_SROM8_FEM_PDET_RANGE
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10771,7 +10771,7 @@ name|tr_iso
 argument_list|,
 name|SIBA_SPROM8_FEM5G
 argument_list|,
-name|SSB_SROM8_FEM_TR_ISO
+name|SIBA_SROM8_FEM_TR_ISO
 argument_list|)
 expr_stmt|;
 name|SIBA_SHIFTOUT
@@ -10784,7 +10784,7 @@ name|antswlut
 argument_list|,
 name|SIBA_SPROM8_FEM5G
 argument_list|,
-name|SSB_SROM8_FEM_ANTSWLUT
+name|SIBA_SROM8_FEM_ANTSWLUT
 argument_list|)
 expr_stmt|;
 comment|/* Extract cores power info info */

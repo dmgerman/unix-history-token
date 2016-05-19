@@ -2671,35 +2671,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSB_SROM8_FEM_TSSIPOS
+name|SIBA_SROM8_FEM_TSSIPOS
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSB_SROM8_FEM_EXTPA_GAIN
+name|SIBA_SROM8_FEM_EXTPA_GAIN
 value|0x0006
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSB_SROM8_FEM_PDET_RANGE
+name|SIBA_SROM8_FEM_PDET_RANGE
 value|0x00F8
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSB_SROM8_FEM_TR_ISO
+name|SIBA_SROM8_FEM_TR_ISO
 value|0x0700
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSB_SROM8_FEM_ANTSWLUT
+name|SIBA_SROM8_FEM_ANTSWLUT
 value|0xF800
 end_define
 
@@ -2889,28 +2889,28 @@ begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_CDDPO
-value|0x1192
+value|0x0192
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_STBCPO
-value|0x1194
+value|0x0194
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_BW40PO
-value|0x1196
+value|0x0196
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIBA_SPROM8_BWDUPPO
-value|0x1198
+value|0x0198
 end_define
 
 begin_comment
