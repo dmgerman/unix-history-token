@@ -476,6 +476,14 @@ name|dev
 argument_list|,
 literal|"gianfar"
 argument_list|)
+operator|&&
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"fsl,etsec2"
+argument_list|)
 condition|)
 return|return
 operator|(
