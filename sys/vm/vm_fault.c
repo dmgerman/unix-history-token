@@ -2501,7 +2501,6 @@ expr_stmt|;
 break|break;
 comment|/* break to PAGE HAS BEEN FOUND */
 block|}
-comment|/* 			 * Remove the bogus page (which does not exist at this 			 * object/offset); before doing so, we must get back 			 * our object lock to preserve our invariant. 			 * 			 * Also wake up any other process that may want to bring 			 * in this page. 			 * 			 * If this is the top-level object, we must leave the 			 * busy page to prevent another process from rushing 			 * past us, and inserting the page in that object at 			 * the same time that we are. 			 */
 if|if
 condition|(
 name|rv
@@ -2521,31 +2520,16 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Data outside the range of the pager or an I/O error 			 */
-comment|/* 			 * XXX - the check for kernel_map is a kludge to work 			 * around having the machine panic on a kernel space 			 * fault w/ I/O error. 			 */
+comment|/* 			 * If an I/O error occurred or the requested page was 			 * outside the range of the pager, clean up and return 			 * an error. 			 */
 if|if
 condition|(
-operator|(
-operator|(
-name|fs
-operator|.
-name|map
-operator|!=
-name|kernel_map
-operator|)
-operator|&&
-operator|(
 name|rv
 operator|==
 name|VM_PAGER_ERROR
-operator|)
-operator|)
 operator|||
-operator|(
 name|rv
 operator|==
 name|VM_PAGER_BAD
-operator|)
 condition|)
 block|{
 name|vm_page_lock
@@ -2583,11 +2567,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|rv
 operator|==
 name|VM_PAGER_ERROR
-operator|)
 condition|?
 name|KERN_FAILURE
 else|:
@@ -2595,6 +2577,7 @@ name|KERN_PROTECTION_FAILURE
 operator|)
 return|;
 block|}
+comment|/* 			 * The requested page does not exist at this object/ 			 * offset.  Remove the invalid page from the object, 			 * waking up anyone waiting for it, and continue on to 			 * the next object.  However, if this is the top-level 			 * object, we must leave the busy page in place to 			 * prevent another process from rushing past us, and 			 * inserting the page in that object at the same time 			 * that we are. 			 */
 if|if
 condition|(
 name|fs
@@ -2633,7 +2616,6 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 				 * XXX - we cannot just fall out at this 				 * point, m has been freed and is invalid! 				 */
 block|}
 block|}
 comment|/* 		 * We get here if the object has default pager (or unwiring)  		 * or the pager doesn't have the page. 		 */
