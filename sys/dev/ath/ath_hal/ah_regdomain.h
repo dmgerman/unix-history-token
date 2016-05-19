@@ -454,6 +454,10 @@ decl_stmt|;
 name|u_int
 name|flags
 decl_stmt|;
+name|REG_DMN_FREQ_BAND
+modifier|*
+name|freqs
+decl_stmt|;
 block|}
 struct|;
 end_struct
