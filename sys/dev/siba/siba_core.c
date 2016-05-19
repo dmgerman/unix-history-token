@@ -2064,7 +2064,7 @@ name|siba
 argument_list|,
 name|SIBA_DEBUG_SCAN
 argument_list|,
-literal|"core %d (%s) found (cc %#xrev %#x vendor %#x)\n"
+literal|"core %d (%s) found (cc %#x rev %#x vendor %#x)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2480,6 +2480,19 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|siba
+argument_list|,
+name|SIBA_DEBUG_SWITCHCORE
+argument_list|,
+literal|"%s: idx %d, failed\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENODEV
@@ -12874,6 +12887,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Default */
 return|return
 operator|(
 name|SIBA_PCI_DMA
