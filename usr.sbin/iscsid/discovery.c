@@ -939,6 +939,30 @@ argument_list|(
 name|conn
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|conn
+operator|->
+name|conn_conf
+operator|.
+name|isc_iser
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 		 * If we're going through the proxy, the kernel already 		 * sent Logout PDU for us and destroyed the session, 		 * so we can't send anything anymore. 		 */
+name|log_debugx
+argument_list|(
+literal|"discovery session done"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|log_debugx
 argument_list|(
 literal|"discovery done; logging out"
