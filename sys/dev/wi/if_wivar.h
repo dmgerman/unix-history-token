@@ -346,6 +346,9 @@ decl_stmt|;
 name|u_int16_t
 name|sc_monitor_port
 decl_stmt|;
+name|u_int16_t
+name|sc_chanmask
+decl_stmt|;
 comment|/* RSSI interpretation */
 name|u_int16_t
 name|sc_min_rssi
