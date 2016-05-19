@@ -512,6 +512,12 @@ begin_comment
 comment|/* country code mismatch */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -566,6 +572,11 @@ end_define
 begin_comment
 comment|/* protocol version mismatch */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7722,15 +7733,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
-decl_stmt|;
 comment|/* 				 * Create a HT capable IBSS; the per-node 				 * probe request/response will result in 				 * "correct" rate control capabilities being 				 * negotiated. 				 */
 name|chan
 operator|=

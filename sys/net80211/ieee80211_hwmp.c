@@ -5176,10 +5176,6 @@ name|vap
 operator|->
 name|iv_hwmp
 decl_stmt|;
-name|struct
-name|ieee80211_meshprep_ie
-name|prep
-decl_stmt|;
 name|ieee80211_hwmp_seq
 name|preqid
 decl_stmt|;
@@ -5733,6 +5729,10 @@ name|IEEE80211_MESHRT_FLAGS_VALID
 operator|)
 condition|)
 block|{
+name|struct
+name|ieee80211_meshprep_ie
+name|prep
+decl_stmt|;
 comment|/* 		 * When we are the target we shall update our own HWMP seq 		 * number with max of (current and preq->seq) + 1 		 */
 name|hs
 operator|->
@@ -6148,6 +6148,10 @@ name|IEEE80211_MESHPREQ_FLAGS_PP
 operator|)
 condition|)
 block|{
+name|struct
+name|ieee80211_meshprep_ie
+name|prep
+decl_stmt|;
 name|prep
 operator|.
 name|prep_flags

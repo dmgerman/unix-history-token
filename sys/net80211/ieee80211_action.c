@@ -408,7 +408,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-break|break;
 case|case
 name|IEEE80211_ACTION_CAT_VENDOR
 case|:

@@ -190,6 +190,7 @@ name|IEEE80211_DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ieee80211_debug
 init|=

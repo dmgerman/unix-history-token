@@ -3871,9 +3871,7 @@ directive|endif
 comment|/* 			 * Update bss node channel to reflect where 			 * we landed after CSA. 			 */
 name|ieee80211_node_set_chan
 argument_list|(
-name|vap
-operator|->
-name|iv_bss
+name|ni
 argument_list|,
 name|ieee80211_ht_adjust_channel
 argument_list|(
@@ -3885,9 +3883,7 @@ name|ic_curchan
 argument_list|,
 name|ieee80211_htchanflags
 argument_list|(
-name|vap
-operator|->
-name|iv_bss
+name|ni
 operator|->
 name|ni_chan
 argument_list|)
@@ -3913,15 +3909,6 @@ name|vap
 argument_list|)
 condition|)
 block|{
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-name|vap
-operator|->
-name|iv_bss
-decl_stmt|;
 name|ieee80211_note
 argument_list|(
 name|vap
@@ -3971,9 +3958,7 @@ break|break;
 block|}
 name|ieee80211_node_authorize
 argument_list|(
-name|vap
-operator|->
-name|iv_bss
+name|ni
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -7261,6 +7246,7 @@ name|ms_flags
 operator|&
 name|IEEE80211_MESHFLAGS_FWD
 condition|)
+block|{
 name|IEEE80211_NOTE_MAC
 argument_list|(
 name|vap
@@ -7279,6 +7265,7 @@ argument_list|,
 literal|"forward from MBSS to the DS"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return

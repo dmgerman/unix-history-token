@@ -418,8 +418,6 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|uint8_t
 name|keyid
 decl_stmt|;
@@ -448,6 +446,8 @@ argument_list|,
 name|keyid
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vap
 operator|->
 name|iv_stats

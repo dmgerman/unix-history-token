@@ -612,15 +612,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|vap
-operator|->
-name|iv_ic
-decl_stmt|;
 comment|/* 		 * If we receive a beacon miss interrupt when using 		 * dynamic turbo, attempt to switch modes before 		 * reassociating. 		 */
 if|if
 condition|(

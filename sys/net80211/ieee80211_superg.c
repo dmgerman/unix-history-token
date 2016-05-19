@@ -4583,9 +4583,6 @@ return|return
 name|ENOSYS
 return|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 

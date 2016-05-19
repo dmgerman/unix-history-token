@@ -7708,6 +7708,10 @@ literal|8
 operator|-
 literal|1
 expr_stmt|;
+name|maxunequalmcs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ic
@@ -7754,11 +7758,6 @@ operator|=
 literal|76
 expr_stmt|;
 block|}
-else|else
-name|maxunequalmcs
-operator|=
-literal|0
-expr_stmt|;
 name|rs
 operator|=
 operator|&

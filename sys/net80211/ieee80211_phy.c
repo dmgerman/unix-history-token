@@ -4332,7 +4332,6 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 return|return
 name|txTime
