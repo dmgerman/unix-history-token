@@ -41661,6 +41661,7 @@ argument_list|,
 name|active
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: don't bother doing RF programming if it's 	 * already done.  But, bwn(4) currently sets rf_on in the 	 * PHY setup and leaves it on after startup, which causes 	 * the below to not init the 2056/2057 radios. 	 */
 if|if
 condition|(
 name|active
@@ -41687,15 +41688,7 @@ operator|>=
 literal|7
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mac
-operator|->
-name|mac_phy
-operator|.
-name|rf_on
-condition|)
+comment|//			if (!mac->mac_phy.rf_on)
 name|bwn_radio_2057_init
 argument_list|(
 name|mac
@@ -41722,15 +41715,7 @@ operator|>=
 literal|3
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|mac
-operator|->
-name|mac_phy
-operator|.
-name|rf_on
-condition|)
+comment|//			if (!mac->mac_phy.rf_on)
 name|bwn_radio_init2056
 argument_list|(
 name|mac
