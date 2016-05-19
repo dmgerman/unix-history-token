@@ -12819,6 +12819,8 @@ name|aep
 argument_list|,
 name|nphdl
 argument_list|,
+name|chan
+argument_list|,
 name|SCSI_STATUS_BUSY
 argument_list|,
 literal|0
