@@ -3872,9 +3872,9 @@ argument_list|(
 name|strlen
 argument_list|(
 name|SNMP_DEFAULT_LOCAL
+argument_list|)
 operator|+
 literal|1
-argument_list|)
 argument_list|)
 operator|)
 operator|==
