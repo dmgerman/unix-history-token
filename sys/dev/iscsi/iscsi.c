@@ -6238,21 +6238,7 @@ argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICL_KERNEL_PROXY
-if|if
-condition|(
-name|handoff
-operator|->
-name|idh_socket
-operator|!=
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
-comment|/* 		 * Handoff without using ICL proxy. 		 */
+comment|/* 	 * If we're going through the proxy, the idh_socket will be 0, 	 * and the ICL module can simply ignore this call.  It can also 	 * use it to determine it's no longer in the Login phase. 	 */
 name|error
 operator|=
 name|icl_conn_handoff
@@ -6290,12 +6276,6 @@ name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|ICL_KERNEL_PROXY
-block|}
-endif|#
-directive|endif
 name|sx_sunlock
 argument_list|(
 operator|&
