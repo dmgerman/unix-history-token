@@ -271,7 +271,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|vm_page_count_severe
 parameter_list|(
@@ -284,7 +284,6 @@ name|vm_cnt
 operator|.
 name|v_free_severe
 operator|>
-operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
@@ -292,7 +291,6 @@ operator|+
 name|vm_cnt
 operator|.
 name|v_cache_count
-operator|)
 operator|)
 return|;
 block|}
@@ -304,7 +302,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|vm_page_count_min
 parameter_list|(
@@ -317,7 +315,6 @@ name|vm_cnt
 operator|.
 name|v_free_min
 operator|>
-operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
@@ -325,7 +322,6 @@ operator|+
 name|vm_cnt
 operator|.
 name|v_cache_count
-operator|)
 operator|)
 return|;
 block|}
@@ -337,7 +333,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|vm_page_count_target
 parameter_list|(
@@ -350,7 +346,6 @@ name|vm_cnt
 operator|.
 name|v_free_target
 operator|>
-operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
@@ -358,7 +353,6 @@ operator|+
 name|vm_cnt
 operator|.
 name|v_cache_count
-operator|)
 operator|)
 return|;
 block|}
@@ -370,7 +364,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|vm_paging_target
 parameter_list|(
@@ -403,7 +397,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|vm_paging_needed
 parameter_list|(
