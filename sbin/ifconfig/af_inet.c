@@ -773,7 +773,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -952,7 +952,7 @@ name|addreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|addreq
 operator|.
