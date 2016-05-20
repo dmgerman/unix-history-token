@@ -1817,7 +1817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delegate all indirect I/O to the parent device. When inherited by  * non-bridged bus implementations, resources will never be marked as  * indirect, and these methods should never be called.  */
+comment|/*  * Delegate all indirect I/O to the parent device. When inherited by  * non-bridged bus implementations, resources will never be marked as  * indirect, and these methods will never be called.  */
 end_comment
 
 begin_define
@@ -1832,7 +1832,7 @@ parameter_list|,
 name|_method
 parameter_list|)
 define|\
-value|static _type							\ bhnd_read_ ## _name (device_t dev, device_t child,		\     struct bhnd_resource *r, bus_size_t offset)			\ {								\ 	return (BHND_BUS_READ_ ## _method(			\ 		    device_get_parent(dev), child, r, offset));	\ }
+value|static _type								\ bhnd_read_ ## _name (device_t dev, device_t child,			\     struct bhnd_resource *r, bus_size_t offset)				\ {									\ 	return (BHND_BUS_READ_ ## _method(				\ 		    device_get_parent(dev), child, r, offset));		\ }
 end_define
 
 begin_define
@@ -1847,24 +1847,22 @@ parameter_list|,
 name|_method
 parameter_list|)
 define|\
-value|static void							\ bhnd_write_ ## _name (device_t dev, device_t child,		\     struct bhnd_resource *r, bus_size_t offset, _type value)	\ {								\ 	return (BHND_BUS_WRITE_ ## _method(			\ 		    device_get_parent(dev), child, r, offset,	\ 		    value));	\ }
+value|static void								\ bhnd_write_ ## _name (device_t dev, device_t child,			\     struct bhnd_resource *r, bus_size_t offset, _type value)		\ {									\ 	return (BHND_BUS_WRITE_ ## _method(				\ 		    device_get_parent(dev), child, r, offset,		\ 		    value));	\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_IO_MULTI
+name|BHND_IO_MISC
 parameter_list|(
 name|_type
 parameter_list|,
-name|_rw
-parameter_list|,
-name|_name
+name|_op
 parameter_list|,
 name|_method
 parameter_list|)
 define|\
-value|static void								\ bhnd_ ## _rw ## _multi_ ## _name (device_t dev, device_t child,	\     struct bhnd_resource *r, bus_size_t offset, _type *datap,		\     bus_size_t count)							\ {									\ 	BHND_BUS_ ## _method(device_get_parent(dev), child, r,		\ 	    offset, datap, count);					\ }
+value|static void								\ bhnd_ ## _op (device_t dev, device_t child,				\     struct bhnd_resource *r, bus_size_t offset, _type datap,		\     bus_size_t count)							\ {									\ 	BHND_BUS_ ## _method(device_get_parent(dev), child, r,		\ 	    offset, datap, count);					\ }
 end_define
 
 begin_define
@@ -1877,7 +1875,7 @@ parameter_list|,
 name|_size
 parameter_list|)
 define|\
-value|BHND_IO_READ(_type, _size, _size)				\ 	BHND_IO_WRITE(_type, _size, _size)				\ 									\ 	BHND_IO_READ(_type, stream_ ## _size, STREAM_ ## _size)		\ 	BHND_IO_WRITE(_type, stream_ ## _size, STREAM_ ## _size)	\ 									\ 	BHND_IO_MULTI(_type, read, _size, READ_MULTI_ ## _size)		\ 	BHND_IO_MULTI(_type, write, _size, WRITE_MULTI_ ## _size)	\ 									\ 	BHND_IO_MULTI(_type, read, stream_ ## _size,			\ 	   READ_MULTI_STREAM_ ## _size)					\ 	BHND_IO_MULTI(_type, write, stream_ ## _size,			\ 	   WRITE_MULTI_STREAM_ ## _size)				\  BHND_IO_METHODS(uint8_t, 1);
+value|BHND_IO_READ(_type, _size, _size)				\ 	BHND_IO_WRITE(_type, _size, _size)				\ 									\ 	BHND_IO_READ(_type, stream_ ## _size, STREAM_ ## _size)		\ 	BHND_IO_WRITE(_type, stream_ ## _size, STREAM_ ## _size)	\ 									\ 	BHND_IO_MISC(_type*, read_multi_ ## _size,			\ 	    READ_MULTI_ ## _size)					\ 	BHND_IO_MISC(_type*, write_multi_ ## _size,			\ 	    WRITE_MULTI_ ## _size)					\ 									\ 	BHND_IO_MISC(_type*, read_multi_stream_ ## _size,		\ 	   READ_MULTI_STREAM_ ## _size)					\ 	BHND_IO_MISC(_type*, write_multi_stream_ ## _size,		\ 	   WRITE_MULTI_STREAM_ ## _size)				\ 									\ 	BHND_IO_MISC(_type, set_multi_ ## _size, SET_MULTI_ ## _size)	\ 	BHND_IO_MISC(_type, set_region_ ## _size, SET_REGION_ ## _size)	\ 									\ 	BHND_IO_MISC(_type*, read_region_ ## _size,			\ 	    READ_REGION_ ## _size)					\ 	BHND_IO_MISC(_type*, write_region_ ## _size,			\ 	    WRITE_REGION_ ## _size)					\ 									\ 	BHND_IO_MISC(_type*, read_region_stream_ ## _size,		\ 	    READ_REGION_STREAM_ ## _size)				\ 	BHND_IO_MISC(_type*, write_region_stream_ ## _size,		\ 	    WRITE_REGION_STREAM_ ## _size)				\  BHND_IO_METHODS(uint8_t, 1);
 end_define
 
 begin_expr_stmt
@@ -2168,6 +2166,7 @@ argument_list|,
 name|bhnd_bus_generic_get_nvram_var
 argument_list|)
 block|,
+comment|/* BHND interface (bus I/O) */
 name|DEVMETHOD
 argument_list|(
 name|bhnd_bus_read_1
@@ -2334,6 +2333,132 @@ argument_list|(
 name|bhnd_bus_write_multi_stream_4
 argument_list|,
 name|bhnd_write_multi_stream_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_multi_1
+argument_list|,
+name|bhnd_set_multi_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_multi_2
+argument_list|,
+name|bhnd_set_multi_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_multi_4
+argument_list|,
+name|bhnd_set_multi_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_region_1
+argument_list|,
+name|bhnd_set_region_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_region_2
+argument_list|,
+name|bhnd_set_region_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_set_region_4
+argument_list|,
+name|bhnd_set_region_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_1
+argument_list|,
+name|bhnd_read_region_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_2
+argument_list|,
+name|bhnd_read_region_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_4
+argument_list|,
+name|bhnd_read_region_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_1
+argument_list|,
+name|bhnd_write_region_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_2
+argument_list|,
+name|bhnd_write_region_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_4
+argument_list|,
+name|bhnd_write_region_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_stream_1
+argument_list|,
+name|bhnd_read_region_stream_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_stream_2
+argument_list|,
+name|bhnd_read_region_stream_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_read_region_stream_4
+argument_list|,
+name|bhnd_read_region_stream_4
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_stream_1
+argument_list|,
+name|bhnd_write_region_stream_1
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_stream_2
+argument_list|,
+name|bhnd_write_region_stream_2
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_write_region_stream_4
+argument_list|,
+name|bhnd_write_region_stream_4
 argument_list|)
 block|,
 name|DEVMETHOD

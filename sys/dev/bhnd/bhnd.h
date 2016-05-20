@@ -2622,6 +2622,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_read_region_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_1((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_write_1
 parameter_list|(
 name|r
@@ -2654,6 +2671,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_write_region_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_1((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_read_stream_1
 parameter_list|(
 name|r
@@ -2679,6 +2713,23 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_read_multi_stream_1((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_MULTI_STREAM_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_read_region_stream_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_stream_1((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_STREAM_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
 end_define
 
 begin_define
@@ -2716,6 +2767,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_write_region_stream_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_stream_1((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_STREAM_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_multi_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_multi_1((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_MULTI_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_region_1
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_region_1((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_REGION_1( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_read_2
 parameter_list|(
 name|r
@@ -2741,6 +2843,23 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_read_multi_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_MULTI_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_read_region_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
 end_define
 
 begin_define
@@ -2778,6 +2897,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_write_region_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_read_stream_2
 parameter_list|(
 name|r
@@ -2803,6 +2939,23 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_read_multi_stream_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_MULTI_STREAM_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_read_region_stream_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_stream_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_STREAM_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
 end_define
 
 begin_define
@@ -2840,6 +2993,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_write_region_stream_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_stream_2((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_STREAM_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_multi_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_multi_2((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_MULTI_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_region_2
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_region_2((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_REGION_2( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_read_4
 parameter_list|(
 name|r
@@ -2865,6 +3069,23 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_read_multi_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_MULTI_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_read_region_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
 end_define
 
 begin_define
@@ -2902,6 +3123,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_bus_write_region_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_bus_read_stream_4
 parameter_list|(
 name|r
@@ -2927,6 +3165,23 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_read_multi_stream_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_MULTI_STREAM_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_read_region_stream_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_read_region_stream_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_READ_REGION_STREAM_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
 end_define
 
 begin_define
@@ -2959,6 +3214,57 @@ name|c
 parameter_list|)
 define|\
 value|((r)->direct) ? \ 	bus_write_multi_stream_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_MULTI_STREAM_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_write_region_stream_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_write_region_stream_4((r)->res, (o), (d), (c)) : \ 	BHND_BUS_WRITE_REGION_STREAM_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_multi_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_multi_4((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_MULTI_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_bus_set_region_4
+parameter_list|(
+name|r
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((r)->direct) ? \ 	bus_set_region_4((r)->res, (o), (v), (c)) : \ 	BHND_BUS_SET_REGION_4( \ 	    device_get_parent(rman_get_device((r)->res)),	\ 	    rman_get_device((r)->res), (r), (o), (v), (c))
 end_define
 
 begin_endif
