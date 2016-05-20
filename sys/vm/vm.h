@@ -238,7 +238,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The exact set of memory attributes is machine dependent.  However, every  * machine is required to define VM_MEMATTR_DEFAULT.  */
+comment|/*  * The exact set of memory attributes is machine dependent.  However,  * every machine is required to define VM_MEMATTR_DEFAULT and  * VM_MEMATTR_UNCACHEABLE.  */
 end_comment
 
 begin_typedef

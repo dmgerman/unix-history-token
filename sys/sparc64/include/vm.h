@@ -26,6 +26,13 @@ name|VM_MEMATTR_DEFAULT
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_MEMATTR_UNCACHEABLE
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
