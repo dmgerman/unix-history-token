@@ -509,7 +509,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|nicvf
+name|vnicvf
 argument_list|,
 name|pci
 argument_list|,
@@ -525,9 +525,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|vnicvf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicvf
+name|vnicvf
 argument_list|,
 name|pci
 argument_list|,
@@ -543,7 +553,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicvf
+name|vnicvf
 argument_list|,
 name|ether
 argument_list|,
@@ -559,9 +569,9 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicvf
+name|vnicvf
 argument_list|,
-name|vnic_pf
+name|vnicpf
 argument_list|,
 literal|1
 argument_list|,

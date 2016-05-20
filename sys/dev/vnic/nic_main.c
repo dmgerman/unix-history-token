@@ -547,7 +547,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|nicpf_driver
+name|vnicpf_driver
 init|=
 block|{
 literal|"vnicpf"
@@ -566,20 +566,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|nicpf_devclass
+name|vnicpf_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|nicpf
+name|vnicpf
 argument_list|,
 name|pci
 argument_list|,
-name|nicpf_driver
+name|vnicpf_driver
 argument_list|,
-name|nicpf_devclass
+name|vnicpf_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -589,9 +589,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|vnicpf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicpf
+name|vnicpf
 argument_list|,
 name|pci
 argument_list|,
@@ -607,7 +617,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicpf
+name|vnicpf
 argument_list|,
 name|ether
 argument_list|,
@@ -623,7 +633,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nicpf
+name|vnicpf
 argument_list|,
 name|thunder_bgx
 argument_list|,

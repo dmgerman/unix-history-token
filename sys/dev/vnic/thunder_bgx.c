@@ -454,6 +454,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|thunder_bgx
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|thunder_bgx
@@ -490,7 +500,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|thunder_bgx
 argument_list|,
-name|octeon_mdio
+name|thunder_mdio
 argument_list|,
 literal|1
 argument_list|,
