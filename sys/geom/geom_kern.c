@@ -399,12 +399,6 @@ expr_stmt|;
 name|g_ctl_init
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|kproc_kthread_add
 argument_list|(
 name|g_event_procbody
@@ -466,12 +460,6 @@ argument_list|,
 literal|"geom"
 argument_list|,
 literal|"g_down"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
