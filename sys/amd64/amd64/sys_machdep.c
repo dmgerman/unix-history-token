@@ -1503,11 +1503,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|,
-name|error
-decl_stmt|;
 name|char
 modifier|*
 name|iomap
@@ -1526,6 +1521,12 @@ name|struct
 name|pcb
 modifier|*
 name|pcb
+decl_stmt|;
+name|u_int
+name|i
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
