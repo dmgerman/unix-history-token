@@ -694,10 +694,15 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|__aarch64__
 name|void
 modifier|*
 name|invalid_ptr
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|null_errno
 init|=
@@ -903,6 +908,10 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__aarch64__
+comment|/* There is no sbrk on AArch64 */
 comment|/* 	 * Try to create a pointer to an unmapped page - first after current 	 * brk will likely do. 	 */
 name|invalid_ptr
 operator|=
@@ -976,6 +985,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

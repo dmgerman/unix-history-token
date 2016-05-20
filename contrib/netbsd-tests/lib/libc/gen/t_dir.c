@@ -385,6 +385,16 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__aarch64__
+end_ifndef
+
+begin_comment
+comment|/* There is no sbrk on AArch64 */
+end_comment
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -623,6 +633,11 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -639,6 +654,9 @@ argument_list|,
 name|seekdir_basic
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__aarch64__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -646,6 +664,8 @@ argument_list|,
 name|telldir_leak
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|atf_no_error
 argument_list|()
