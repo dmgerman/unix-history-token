@@ -3100,7 +3100,6 @@ name|td_ucred
 operator|=
 name|td_savedcred
 expr_stmt|;
-comment|/* XXX: Not sure if this is needed? */
 if|if
 condition|(
 name|cnt
@@ -3215,13 +3214,28 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|error
+condition|)
+name|aio_complete
+argument_list|(
+name|job
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+else|else
 name|aio_complete
 argument_list|(
 name|job
 argument_list|,
 name|cnt
 argument_list|,
-name|error
+literal|0
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
