@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.54 2016/03/11 07:01:21 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.57 2016/05/12 20:28:34 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -249,6 +249,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAKE_META_IGNORE_PATTERNS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAKE_META_IGNORE_PATTERNS
+value|".MAKE.META.IGNORE_PATTERNS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|Boolean
 name|useMeta
@@ -308,6 +326,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* ignore CMDs in .meta files */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|metaIgnorePatterns
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do we need to do pattern matches */
 end_comment
 
 begin_decl_stmt
@@ -633,7 +664,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|filemon_read
 parameter_list|(
 name|FILE
@@ -652,6 +683,9 @@ index|]
 decl_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* Check if we're not writing to a meta data file.*/
 if|if
@@ -673,7 +707,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 comment|/* not interested */
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* rewind */
 operator|(
@@ -690,6 +726,10 @@ literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -719,6 +759,11 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|int
+operator|)
 name|fwrite
 argument_list|(
 name|buf
@@ -729,6 +774,12 @@ name|n
 argument_list|,
 name|mfp
 argument_list|)
+operator|<
+name|n
+condition|)
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 block|}
 name|fflush
@@ -736,11 +787,22 @@ argument_list|(
 name|mfp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|close
 argument_list|(
 name|fd
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+name|errno
 expr_stmt|;
+return|return
+name|error
+return|;
 block|}
 end_function
 
@@ -2676,6 +2738,34 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * We ignore any paths that match ${.MAKE.META.IGNORE_PATTERNS}      */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|Var_Value
+argument_list|(
+name|MAKE_META_IGNORE_PATTERNS
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+operator|&
+name|cp
+argument_list|)
+condition|)
+block|{
+name|metaIgnorePatterns
+operator|=
+name|TRUE
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3242,7 +3332,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|meta_cmd_finish
 parameter_list|(
 name|void
@@ -3250,6 +3340,11 @@ modifier|*
 name|pbmp
 parameter_list|)
 block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_FILEMON
@@ -3258,6 +3353,9 @@ modifier|*
 name|pbm
 init|=
 name|pbmp
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 if|if
 condition|(
@@ -3278,13 +3376,23 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|close
 argument_list|(
 name|pbm
 operator|->
 name|filemon_fd
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+name|errno
 expr_stmt|;
+name|x
+operator|=
 name|filemon_read
 argument_list|(
 name|pbm
@@ -3295,6 +3403,20 @@ name|pbm
 operator|->
 name|mon_fd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|x
+operator|!=
+literal|0
+condition|)
+name|error
+operator|=
+name|x
 expr_stmt|;
 name|pbm
 operator|->
@@ -3310,11 +3432,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+return|return
+name|error
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|meta_job_finish
 parameter_list|(
 name|Job
@@ -3325,6 +3450,14 @@ block|{
 name|BuildMon
 modifier|*
 name|pbm
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 if|if
 condition|(
@@ -3358,17 +3491,35 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
 name|meta_cmd_finish
 argument_list|(
 name|pbm
 argument_list|)
 expr_stmt|;
+name|x
+operator|=
 name|fclose
 argument_list|(
 name|pbm
 operator|->
 name|mfp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|x
+operator|!=
+literal|0
+condition|)
+name|error
+operator|=
+name|errno
 expr_stmt|;
 name|pbm
 operator|->
@@ -3386,6 +3537,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+return|return
+name|error
+return|;
 block|}
 end_function
 
@@ -5184,14 +5338,25 @@ operator|*
 name|p
 operator|==
 literal|'/'
-operator|&&
+condition|)
+block|{
+name|realpath
+argument_list|(
+name|p
+argument_list|,
+name|fname1
+argument_list|)
+expr_stmt|;
+comment|/* clean it up */
+if|if
+condition|(
 name|Lst_ForEach
 argument_list|(
 name|metaIgnorePaths
 argument_list|,
 name|prefix_match
 argument_list|,
-name|p
+name|fname1
 argument_list|)
 condition|)
 block|{
@@ -5209,7 +5374,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"meta_oodate: ignoring: %s\n"
+literal|"meta_oodate: ignoring path: %s\n"
 argument_list|,
 name|p
 argument_list|)
@@ -5217,6 +5382,85 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
+block|}
+block|}
+if|if
+condition|(
+name|metaIgnorePatterns
+condition|)
+block|{
+name|char
+modifier|*
+name|pm
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|fname1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname1
+argument_list|)
+argument_list|,
+literal|"${%s:@m@${%s:L:M$m}@}"
+argument_list|,
+name|MAKE_META_IGNORE_PATTERNS
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|pm
+operator|=
+name|Var_Subst
+argument_list|(
+name|NULL
+argument_list|,
+name|fname1
+argument_list|,
+name|gn
+argument_list|,
+name|VARF_WANTRES
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pm
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_META_MODE
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|META
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|debug_file
+argument_list|,
+literal|"meta_oodate: ignoring pattern: %s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|free
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|free
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		     * The rest of the record is the file name. 		     * Check if it's not an absolute path. 		     */
 block|{

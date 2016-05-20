@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $"
+literal|"$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.213 2016/03/11 13:54:47 matthias Exp $"
+literal|"$NetBSD: parse.c,v 1.214 2016/04/06 09:57:00 gson Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2957,7 +2957,8 @@ condition|(
 name|isalpha
 argument_list|(
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|)
 operator|*
 name|line
@@ -2972,7 +2973,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|)
 operator|*
 name|line
@@ -2987,7 +2989,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|)
 operator|*
 name|line

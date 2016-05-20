@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.68 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: arch.c,v 1.69 2016/04/06 09:57:00 gson Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2816,7 +2816,8 @@ argument_list|,
 literal|"Found svr4 archive name table with %lu entries\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|entry
 argument_list|)
@@ -2935,7 +2936,8 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|ar
 operator|->
