@@ -229,6 +229,10 @@ decl_stmt|;
 name|int
 name|ipfr_inited
 decl_stmt|;
+name|ipftuneable_t
+modifier|*
+name|ipf_frag_tune
+decl_stmt|;
 name|ipfr_t
 modifier|*
 name|ipfr_list
