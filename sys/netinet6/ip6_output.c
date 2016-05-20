@@ -2260,18 +2260,6 @@ operator|=
 name|V_ip6_defmcasthlim
 expr_stmt|;
 block|}
-comment|/* adjust pointer */
-name|ip6
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip6_hdr
-operator|*
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Validate route against routing table additions; 	 * a better/more specific route might have been added. 	 * Make sure address family is set in route. 	 */
 if|if
 condition|(
@@ -3308,6 +3296,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* adjust pointer */
 name|ip6
 operator|=
 name|mtod
