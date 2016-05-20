@@ -13256,9 +13256,6 @@ name|mp
 operator|=
 name|arg
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -13302,9 +13299,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -13366,9 +13360,6 @@ expr_stmt|;
 name|mp
 operator|=
 name|arg
-expr_stmt|;
-name|DROP_GIANT
-argument_list|()
 expr_stmt|;
 name|g_topology_lock
 argument_list|()
@@ -13496,9 +13487,6 @@ condition|)
 break|break;
 block|}
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -14065,9 +14053,6 @@ name|error
 decl_stmt|,
 name|save
 decl_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -14141,9 +14126,6 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -14208,9 +14190,6 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* mtx_unlock(&mountlist_mtx) was done inside vfs_busy() */
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -14226,9 +14205,6 @@ name|mnt_gjprovider
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -14599,9 +14575,6 @@ init|;
 condition|;
 control|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -14681,9 +14654,6 @@ name|NULL
 expr_stmt|;
 block|}
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if

@@ -6032,9 +6032,6 @@ name|mp
 operator|=
 name|arg
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -6131,9 +6128,6 @@ expr_stmt|;
 block|}
 block|}
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
