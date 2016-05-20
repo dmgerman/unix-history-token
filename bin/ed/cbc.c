@@ -328,13 +328,11 @@ index|[
 name|i
 index|]
 operator|=
-call|(
+operator|(
 name|char
-call|)
+operator|)
+name|arc4random_uniform
 argument_list|(
-name|arc4random
-argument_list|()
-operator|%
 literal|256
 argument_list|)
 expr_stmt|;
@@ -595,7 +593,6 @@ comment|/* I/O buffer */
 comment|/* 	 * get the key 	 */
 if|if
 condition|(
-operator|*
 operator|(
 name|p
 operator|=
@@ -604,6 +601,13 @@ argument_list|(
 literal|"Enter key: "
 argument_list|)
 operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* 		 * copy it, nul-padded, into the key area 		 */
