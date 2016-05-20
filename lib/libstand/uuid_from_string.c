@@ -130,7 +130,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|8
+name|len
 condition|;
 name|i
 operator|++
