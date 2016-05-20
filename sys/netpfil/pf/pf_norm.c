@@ -1858,7 +1858,7 @@ name|frag
 operator|->
 name|fr_timeout
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|frag
 operator|->
