@@ -34,20 +34,6 @@ name|cpu_clock
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|uint32_t
-name|clockintr
-parameter_list|(
-name|uint32_t
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
