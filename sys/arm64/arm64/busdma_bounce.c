@@ -4611,6 +4611,13 @@ name|tempvaddr
 decl_stmt|;
 if|if
 condition|(
+name|op
+operator|==
+name|BUS_DMASYNC_POSTWRITE
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|op
 operator|&
