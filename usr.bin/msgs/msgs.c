@@ -4023,7 +4023,7 @@ name|in
 argument_list|)
 operator|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|date
 argument_list|,
@@ -4122,7 +4122,7 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|subj
 argument_list|,
@@ -4158,7 +4158,7 @@ operator|!
 name|seensubj
 condition|)
 comment|/* 		 * for possible use with Mail 		 */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|subj
 argument_list|,
