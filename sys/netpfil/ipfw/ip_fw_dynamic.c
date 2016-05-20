@@ -3198,8 +3198,6 @@ name|q
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|dir
 decl_stmt|;
 name|DEB
 argument_list|(
@@ -3237,8 +3235,7 @@ name|f_id
 argument_list|,
 name|i
 argument_list|,
-operator|&
-name|dir
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -3785,7 +3782,7 @@ name|f_id
 argument_list|,
 name|NULL
 argument_list|,
-name|dir
+name|MATCH_FORWARD
 argument_list|)
 expr_stmt|;
 name|IPFW_BUCK_UNLOCK
