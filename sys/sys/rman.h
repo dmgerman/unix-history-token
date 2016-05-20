@@ -425,24 +425,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rman_await_resource
-parameter_list|(
-name|struct
-name|resource
-modifier|*
-name|r
-parameter_list|,
-name|int
-name|pri
-parameter_list|,
-name|int
-name|timo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|rman_first_free_region
 parameter_list|(
 name|struct
