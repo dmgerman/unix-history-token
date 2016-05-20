@@ -400,6 +400,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_SRPTLP
+block|,
+literal|"Intel Sunrise Point-LP"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_SRPT
+block|,
+literal|"Intel Sunrise Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"

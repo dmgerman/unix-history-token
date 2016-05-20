@@ -1329,6 +1329,96 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x9d038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point-LP"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9d058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x9d078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point-LP (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1038086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1058086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1078086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa10f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Sunrise Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x23238086
 block|,
 literal|0x00
