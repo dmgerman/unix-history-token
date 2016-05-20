@@ -898,8 +898,6 @@ decl_stmt|,
 name|alignlba
 decl_stmt|;
 name|off_t
-name|alignoff
-decl_stmt|,
 name|diff
 decl_stmt|;
 name|unsigned
@@ -962,25 +960,15 @@ name|dsk
 operator|->
 name|start
 expr_stmt|;
-comment|/* Align reads to 4k else 4k sector GELIs will not decrypt. */
-name|alignoff
-operator|=
-name|off
-operator|&
-operator|~
-call|(
-name|off_t
-call|)
-argument_list|(
-name|DEV_GELIBOOT_BSIZE
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Round LBA down to nearest multiple of DEV_GELIBOOT_BSIZE bytes. */
+comment|/* 	 * Align reads to 4k else 4k sector GELIs will not decrypt. 	 * Round LBA down to nearest multiple of DEV_GELIBOOT_BSIZE bytes. 	 */
 name|alignlba
 operator|=
-name|alignoff
+name|rounddown2
+argument_list|(
+name|off
+argument_list|,
+name|DEV_GELIBOOT_BSIZE
+argument_list|)
 operator|/
 name|DEV_BSIZE
 expr_stmt|;
