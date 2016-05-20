@@ -1385,6 +1385,19 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|nmsgs
+operator|>
+name|IIC_RDRW_MAX_MSGS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|buf
 operator|=
 name|malloc
@@ -1429,6 +1442,26 @@ operator|->
 name|nmsgs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_IIC
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* Alloc kernel buffers for userland data, copyin write data */
 name|usrbufs
 operator|=
@@ -1500,6 +1533,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+comment|/* m->len is uint16_t, so allocation size is capped at 64K. */
 name|m
 operator|->
 name|buf

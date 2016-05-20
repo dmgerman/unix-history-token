@@ -107,6 +107,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|IIC_RDRW_MAX_MSGS
+value|42
+end_define
+
+begin_define
+define|#
+directive|define
 name|I2CSTART
 value|_IOW('i', 1, struct iiccmd)
 end_define
