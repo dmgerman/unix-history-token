@@ -1045,7 +1045,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|iohdr
 operator|->
