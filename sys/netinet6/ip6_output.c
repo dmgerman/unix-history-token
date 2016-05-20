@@ -1402,33 +1402,6 @@ decl_stmt|;
 name|uint32_t
 name|id
 decl_stmt|;
-name|ip6
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip6_hdr
-operator|*
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ip6
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ip6 is NULL"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 name|inp
@@ -1717,7 +1690,6 @@ name|hdrsplit
 operator|++
 expr_stmt|;
 block|}
-comment|/* adjust pointer */
 name|ip6
 operator|=
 name|mtod
