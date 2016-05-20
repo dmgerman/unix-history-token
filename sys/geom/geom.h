@@ -2238,7 +2238,7 @@ directive|define
 name|g_topology_lock
 parameter_list|()
 define|\
-value|do {							\ 		mtx_assert(&Giant, MA_NOTOWNED);		\ 		sx_xlock(&topology_lock);			\ 	} while (0)
+value|do {							\ 		sx_xlock(&topology_lock);			\ 	} while (0)
 end_define
 
 begin_define
