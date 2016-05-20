@@ -162,6 +162,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|EM_RISCV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EM_RISCV
+value|243
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|STB_GNU_UNIQUE
 end_ifndef
 
