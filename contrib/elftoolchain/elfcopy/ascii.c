@@ -66,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ascii.c 3177 2015-03-30 18:19:41Z emaste $"
+literal|"$Id: ascii.c 3446 2016-05-03 01:31:17Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1112,7 +1112,7 @@ name|elferr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Generate S{7,8,9} end of block recrod. */
+comment|/* Generate S{7,8,9} end of block record. */
 if|if
 condition|(
 name|gelf_getehdr

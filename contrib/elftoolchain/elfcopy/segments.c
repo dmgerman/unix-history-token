@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3397 2016-02-12 14:35:19Z emaste $"
+literal|"$Id: segments.c 3449 2016-05-03 13:59:29Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1985,8 +1985,7 @@ name|iphdr
 decl_stmt|;
 name|size_t
 name|iphnum
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
 if|if
@@ -2057,9 +2056,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|(
-name|size_t
-operator|)
 name|i
 operator|<
 name|iphnum

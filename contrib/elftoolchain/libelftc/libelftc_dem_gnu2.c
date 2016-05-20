@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu2.c 2065 2011-10-26 15:24:47Z jkoshy $"
+literal|"$Id: libelftc_dem_gnu2.c 3447 2016-05-03 13:32:23Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -577,7 +577,6 @@ goto|goto
 name|flat
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|*
@@ -1553,7 +1552,6 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 block|}
 block|}
 name|str
@@ -7005,9 +7003,7 @@ break|break;
 default|default :
 break|break;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|ELFTC_ISDIGIT

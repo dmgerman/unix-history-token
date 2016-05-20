@@ -138,7 +138,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: nm.c 3179 2015-03-31 19:38:56Z emaste $"
+literal|"$Id: nm.c 3472 2016-05-17 20:11:16Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4114,15 +4114,17 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|shname
-operator|!=
+operator|==
 name|NULL
-operator|&&
-literal|"shname is NULL"
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|false
+operator|)
+return|;
 for|for
 control|(
 name|p
@@ -8717,7 +8719,6 @@ literal|"NOTYPE"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|sym
@@ -9801,7 +9802,6 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-empty_stmt|;
 name|nm_opts
 operator|.
 name|elem_print_fn

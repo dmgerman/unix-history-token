@@ -90,7 +90,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: brandelf.c 3354 2016-01-18 21:50:15Z jkoshy $"
+literal|"$Id: brandelf.c 3440 2016-04-07 14:51:47Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -199,6 +199,12 @@ block|{
 literal|"AROS"
 block|,
 name|ELFOSABI_AROS
+block|}
+block|,
+block|{
+literal|"CloudABI"
+block|,
+name|ELFOSABI_CLOUDABI
 block|}
 block|,
 block|{

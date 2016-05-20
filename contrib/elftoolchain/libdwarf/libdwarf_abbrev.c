@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_abbrev.c 3136 2014-12-24 16:04:38Z kaiwang27 $"
+literal|"$Id: libdwarf_abbrev.c 3420 2016-02-27 02:14:05Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -400,15 +400,12 @@ argument_list|,
 literal|".debug_abbrev"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|ds
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|ds
+operator|==
+name|NULL
+operator|||
 operator|*
 name|offset
 operator|>=
