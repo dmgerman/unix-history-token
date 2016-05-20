@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $	*/
+comment|/*	$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $"
+literal|"$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $"
+literal|"$NetBSD: str.c,v 1.36 2016/04/06 09:57:00 gson Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -142,7 +142,8 @@ operator|=
 name|bmake_malloc
 argument_list|(
 call|(
-name|u_int
+name|unsigned
+name|int
 call|)
 argument_list|(
 name|len1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.187 2016/05/12 20:28:34 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: job.c,v 1.187 2016/05/12 20:28:34 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.186 2016/02/18 18:29:14 christos Exp $"
+literal|"$NetBSD: job.c,v 1.187 2016/05/12 20:28:34 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3547,11 +3547,32 @@ condition|(
 name|useMeta
 condition|)
 block|{
+name|int
+name|x
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|x
+operator|=
 name|meta_job_finish
 argument_list|(
 name|job
 argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|status
+operator|==
+literal|0
+condition|)
+block|{
+name|status
+operator|=
+name|x
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
