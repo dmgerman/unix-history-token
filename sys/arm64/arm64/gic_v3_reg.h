@@ -176,7 +176,7 @@ name|GICD_TYPER_I_NUM
 parameter_list|(
 name|n
 parameter_list|)
-value|((((n)& 0xF1) + 1) * 32)
+value|((((n)& 0x1F) + 1) * 32)
 end_define
 
 begin_define
