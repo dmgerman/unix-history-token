@@ -15,6 +15,28 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_comment
+comment|/* Backwards compatability for older FreeBSD releases. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EM_IAMCU
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EM_IAMCU
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|const
 name|char
