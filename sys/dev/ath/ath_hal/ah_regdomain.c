@@ -1751,7 +1751,7 @@ name|maxchans
 condition|)
 return|return
 operator|(
-name|ENOBUFS
+name|HAL_ENOMEM
 operator|)
 return|;
 name|c
@@ -1849,18 +1849,18 @@ name|ieee80211_channel
 modifier|*
 name|c
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|*
 name|nchans
-operator|>
+operator|==
 literal|0
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"channel list is empty\n"
+name|HAL_EINVAL
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 if|if
 condition|(
 operator|*
@@ -1870,7 +1870,7 @@ name|maxchans
 condition|)
 return|return
 operator|(
-name|ENOBUFS
+name|HAL_ENOMEM
 operator|)
 return|;
 name|c
@@ -2748,19 +2748,17 @@ name|rd2GHz
 expr_stmt|;
 else|else
 block|{
-name|KASSERT
+name|ath_hal_printf
 argument_list|(
-literal|0
+name|ah
 argument_list|,
-operator|(
 literal|"%s: Unkonwn HAL flags 0x%x\n"
-operator|,
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|cm
 operator|->
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
