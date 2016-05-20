@@ -1403,6 +1403,9 @@ name|ddp_active_id
 operator|^=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE_TRACES
 name|CTR2
 argument_list|(
 name|KTR_CXGBE
@@ -1416,6 +1419,8 @@ operator|->
 name|ddp_active_id
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
