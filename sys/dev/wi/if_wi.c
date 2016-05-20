@@ -3629,7 +3629,7 @@ decl_stmt|;
 name|u_int8_t
 name|bands
 index|[
-name|IEEE80211_MODE_MAX
+name|IEEE80211_MODE_BYTES
 index|]
 decl_stmt|;
 name|int
