@@ -537,6 +537,14 @@ name|GICR_PROPBASER_CACHE_NIRAWAWB
 value|0x7UL
 end_define
 
+begin_define
+define|#
+directive|define
+name|GICR_PROPBASER_CACHE_MASK
+define|\
+value|(0x7UL<< GICR_PROPBASER_CACHE_SHIFT)
+end_define
+
 begin_comment
 comment|/*  * Shareability  * 0x0 - Non-shareable  * 0x1 - Inner-shareable  * 0x2 - Outer-shareable  * 0x3 - Reserved. Threated as 0x0  */
 end_comment
@@ -656,6 +664,14 @@ define|#
 directive|define
 name|GICR_PENDBASER_CACHE_NIRAWAWB
 value|0x7UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICR_PENDBASER_CACHE_MASK
+define|\
+value|(0x7UL<< GICR_PENDBASER_CACHE_SHIFT)
 end_define
 
 begin_comment
@@ -821,6 +837,107 @@ end_define
 begin_define
 define|#
 directive|define
+name|GITS_IIDR
+value|(0x0004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_PRODUCT_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_PRODUCT_MASK
+value|(0xff<< GITS_IIDR_PRODUCT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_VARIANT_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_VARIANT_MASK
+value|(0xf<< GITS_IIDR_VARIANT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_REVISION_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_REVISION_MASK
+value|(0xf<< GITS_IIDR_REVISION_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_IMPLEMENTOR_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_IMPLEMENTOR_MASK
+value|(0xfff<< GITS_IIDR_IMPLEMENTOR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_RAW
+parameter_list|(
+name|impl
+parameter_list|,
+name|prod
+parameter_list|,
+name|var
+parameter_list|,
+name|rev
+parameter_list|)
+define|\
+value|((prod)<< GITS_IIDR_PRODUCT_SHIFT |		\      (var)<< GITS_IIDR_VARIANT_SHIFT | 		\      (rev)<< GITS_IIDR_REVISION_SHIFT |		\      (impl)<< GITS_IIDR_IMPLEMENTOR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_IMPL_CAVIUM
+value|(0x34c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_PROD_THUNDER
+value|(0xa1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GITS_IIDR_VAR_THUNDER_1
+value|(0x0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GITS_CBASER
 value|(0x0080)
 end_define
@@ -903,7 +1020,7 @@ begin_define
 define|#
 directive|define
 name|GITS_CBASER_CACHE_MASK
-value|(0x7UL<< GITS_CBASER_TYPE_SHIFT)
+value|(0x7UL<< GITS_CBASER_CACHE_SHIFT)
 end_define
 
 begin_comment
