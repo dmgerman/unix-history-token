@@ -3655,7 +3655,28 @@ comment|/* Initiator Identifier */
 name|u_int
 name|arg
 decl_stmt|;
-comment|/* Function specific */
+comment|/* Response information */
+comment|/* 	 * Lower byte of arg is one of RESPONSE CODE values defined below 	 * (subset of response codes from SPL-4 and FCP-4 specifications), 	 * upper 3 bytes is code-specific ADDITIONAL RESPONSE INFORMATION. 	 */
+define|#
+directive|define
+name|CAM_RSP_TMF_COMPLETE
+value|0x00
+define|#
+directive|define
+name|CAM_RSP_TMF_REJECTED
+value|0x04
+define|#
+directive|define
+name|CAM_RSP_TMF_FAILED
+value|0x05
+define|#
+directive|define
+name|CAM_RSP_TMF_SUCCEEDED
+value|0x08
+define|#
+directive|define
+name|CAM_RSP_TMF_INCORRECT_LUN
+value|0x09
 block|}
 struct|;
 end_struct
