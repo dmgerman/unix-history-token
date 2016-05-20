@@ -386,6 +386,19 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IP6OPT
+argument_list|,
+literal|"ip6opt"
+argument_list|,
+literal|"IPv6 options"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int

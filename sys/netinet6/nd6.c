@@ -301,6 +301,18 @@ parameter_list|)
 value|((const struct sockaddr_in6 *)(s))
 end_define
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IP6NDP
+argument_list|,
+literal|"ip6ndp"
+argument_list|,
+literal|"IPv6 Neighbor Discovery"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* timer values */
 end_comment
