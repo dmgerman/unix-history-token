@@ -2062,6 +2062,11 @@ define|#
 directive|define
 name|ARCHIVE_EXTRACT_HFS_COMPRESSION_FORCED
 value|(0x8000)
+comment|/* Default: Do not reject entries with absolute paths */
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
+value|(0x10000)
 name|__LA_DECL
 name|int
 name|archive_read_extract

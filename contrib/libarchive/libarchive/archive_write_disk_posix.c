@@ -11311,7 +11311,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Canonicalize the pathname.  In particular, this strips duplicate  * '/' characters, '.' elements, and trailing '/'.  It also raises an  * error for an empty path, a trailing '..' or (if _SECURE_NODOTDOT is  * set) any '..' in the path.  */
+comment|/*  * Canonicalize the pathname.  In particular, this strips duplicate  * '/' characters, '.' elements, and trailing '/'.  It also raises an  * error for an empty path, a trailing '..', (if _SECURE_NODOTDOT is  * set) any '..' in the path or (if ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS  * is set) if the path is absolute.  */
 end_comment
 
 begin_function
@@ -11392,12 +11392,41 @@ name|src
 operator|==
 literal|'/'
 condition|)
+block|{
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_SECURE_NOABSOLUTEPATHS
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Path is absolute"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FAILED
+operator|)
+return|;
+block|}
 name|separator
 operator|=
 operator|*
 name|src
 operator|++
 expr_stmt|;
+block|}
 comment|/* Scan the pathname one element at a time. */
 for|for
 control|(
