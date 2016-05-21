@@ -494,7 +494,7 @@ parameter_list|,
 name|context
 parameter_list|)
 define|\
-value|{ .ta_pending = 0,				\ 	  .ta_flags = 0,				\ 	  .ta_priority = (priority),			\ 	  .ta_func = (func),				\ 	  .ta_context = (context) }
+value|{ .ta_pending = 0,				\ 	  .ta_priority = (priority),			\ 	  .ta_func = (func),				\ 	  .ta_context = (context) }
 end_define
 
 begin_comment
@@ -540,7 +540,7 @@ name|func
 parameter_list|,
 name|context
 parameter_list|)
-value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_flags = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
+value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
 end_define
 
 begin_function_decl
@@ -896,7 +896,7 @@ name|func
 parameter_list|,
 name|context
 parameter_list|)
-value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_flags = TASK_SKIP_WAKEUP;		\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
+value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
 end_define
 
 begin_define

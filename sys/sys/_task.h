@@ -51,14 +51,10 @@ argument_list|)
 name|ta_link
 expr_stmt|;
 comment|/* (q) link for queue */
-name|uint8_t
+name|uint16_t
 name|ta_pending
 decl_stmt|;
 comment|/* (q) count times queued */
-name|uint8_t
-name|ta_flags
-decl_stmt|;
-comment|/* (q) flags */
 name|u_short
 name|ta_priority
 decl_stmt|;
