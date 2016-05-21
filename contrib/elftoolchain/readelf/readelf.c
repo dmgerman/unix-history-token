@@ -144,6 +144,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ELFOSABI_CLOUDABI
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_CLOUDABI
+value|17
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|EM_IAMCU
 end_ifndef
 
