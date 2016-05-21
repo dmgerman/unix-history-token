@@ -3483,12 +3483,6 @@ name|ss
 operator|->
 name|ss_last
 condition|)
-block|{
-name|ieee80211_notify_scan_done
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|ic
 operator|->
 name|ic_flags_ext
@@ -3496,7 +3490,11 @@ operator|&=
 operator|~
 name|IEEE80211_FEXT_BGSCAN
 expr_stmt|;
-block|}
+name|ieee80211_notify_scan_done
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
 block|}
 name|ss_priv
 operator|->
