@@ -6182,6 +6182,12 @@ name|ic_data_crc32c
 operator|=
 name|false
 expr_stmt|;
+name|ic
+operator|->
+name|ic_maxtags
+operator|=
+name|maxtags
+expr_stmt|;
 name|is
 operator|->
 name|is_cmdsn
@@ -6351,7 +6357,9 @@ name|is_devq
 operator|=
 name|cam_simq_alloc
 argument_list|(
-name|maxtags
+name|ic
+operator|->
+name|ic_maxtags
 argument_list|)
 expr_stmt|;
 if|if
@@ -6407,7 +6415,9 @@ name|is_lock
 argument_list|,
 literal|1
 argument_list|,
-name|maxtags
+name|ic
+operator|->
+name|ic_maxtags
 argument_list|,
 name|is
 operator|->

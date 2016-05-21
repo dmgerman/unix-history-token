@@ -275,6 +275,9 @@ decl_stmt|;
 name|size_t
 name|ic_max_data_segment_length
 decl_stmt|;
+name|size_t
+name|ic_maxtags
+decl_stmt|;
 name|bool
 name|ic_disconnecting
 decl_stmt|;
