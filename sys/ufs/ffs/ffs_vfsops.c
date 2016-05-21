@@ -1151,9 +1151,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1175,9 +1172,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|ump
@@ -1446,9 +1440,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1469,9 +1460,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|fs
@@ -1749,9 +1737,6 @@ operator|)
 return|;
 block|}
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1772,9 +1757,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -2074,9 +2056,6 @@ literal|"soft updates enabled on read-only file system"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2097,9 +2076,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -2445,9 +2421,6 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2468,9 +2441,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -3733,9 +3703,6 @@ name|EBUSY
 operator|)
 return|;
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -3758,9 +3725,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -5653,9 +5617,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -5665,9 +5626,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -6642,9 +6600,6 @@ name|um_trim_tq
 argument_list|)
 expr_stmt|;
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -6689,9 +6644,6 @@ name|um_cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|atomic_store_rel_ptr
