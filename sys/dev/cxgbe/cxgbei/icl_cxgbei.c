@@ -2187,6 +2187,12 @@ name|ic_offload
 operator|=
 literal|"cxgbei"
 expr_stmt|;
+name|ic
+operator|->
+name|ic_unmapped
+operator|=
+name|false
+expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_CXGBE

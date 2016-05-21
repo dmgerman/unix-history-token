@@ -4790,6 +4790,12 @@ name|ic_offload
 operator|=
 literal|"None"
 expr_stmt|;
+name|ic
+operator|->
+name|ic_unmapped
+operator|=
+name|false
+expr_stmt|;
 return|return
 operator|(
 name|ic

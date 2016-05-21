@@ -10708,6 +10708,35 @@ name|hba_misc
 operator|=
 name|PIM_EXTLUNS
 expr_stmt|;
+comment|/* 		 * XXX: It shouldn't ever be NULL; this could be turned 		 *      into a KASSERT eventually. 		 */
+if|if
+condition|(
+name|is
+operator|->
+name|is_conn
+operator|==
+name|NULL
+condition|)
+name|ISCSI_WARN
+argument_list|(
+literal|"NULL conn"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|is
+operator|->
+name|is_conn
+operator|->
+name|ic_unmapped
+condition|)
+name|cpi
+operator|->
+name|hba_misc
+operator||=
+name|PIM_UNMAPPED
+expr_stmt|;
 name|cpi
 operator|->
 name|hba_eng_cnt

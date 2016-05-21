@@ -284,6 +284,9 @@ decl_stmt|;
 name|bool
 name|ic_iser
 decl_stmt|;
+name|bool
+name|ic_unmapped
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
