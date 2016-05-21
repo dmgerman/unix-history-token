@@ -16,14 +16,14 @@ name|_ARM_INCLUDE__ALIGN_H_
 end_define
 
 begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */
+comment|/*  * Round p (pointer or byte index) up to the hardware-required alignment which  * is sufficient for any data type, pointer or numeric.  The resulting type  * is equivelent to arm's uintptr_t (but is purposely spelled "unsigned" here).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_ALIGNBYTES
-value|(sizeof(int) - 1)
+value|(sizeof(long long) - 1)
 end_define
 
 begin_define
