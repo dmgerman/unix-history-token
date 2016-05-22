@@ -1789,6 +1789,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|mpic_post_filter
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|intr_irqsrc
+modifier|*
+name|isrc
+parameter_list|)
+block|{ }
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -1837,6 +1853,13 @@ argument_list|(
 name|pic_map_intr
 argument_list|,
 name|mpic_map_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pic_post_filter
+argument_list|,
+name|mpic_post_filter
 argument_list|)
 block|,
 name|DEVMETHOD
