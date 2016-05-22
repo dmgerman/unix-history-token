@@ -7906,7 +7906,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"stime="
+literal|"mtime="
 argument_list|)
 expr_stmt|;
 if|if
