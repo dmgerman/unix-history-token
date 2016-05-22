@@ -156,8 +156,7 @@ name|GPIOLED_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), \ 	    "gpioled", MTX_DEF)
+value|mtx_init(&(_sc)->sc_mtx,	\     device_get_nameunit((_sc)->sc_dev), "gpioled", MTX_DEF)
 end_define
 
 begin_define
@@ -167,7 +166,7 @@ name|GPIOLED_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|mtx_destroy(&(_sc)->sc_mtx)
 end_define
 
 begin_struct
@@ -647,7 +646,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
