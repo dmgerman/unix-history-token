@@ -309,9 +309,12 @@ begin_comment
 comment|/* Define if you have the iconv() function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ICONV */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ICONV
+value|1
+end_define
 
 begin_comment
 comment|/* Define if<inttypes.h> exists, doesn't clash with<sys/types.h>, and    declares uintmax_t. */
@@ -853,9 +856,11 @@ begin_comment
 comment|/* Define as const if the declaration of iconv() needs const. */
 end_comment
 
-begin_comment
-comment|/* #undef ICONV_CONST */
-end_comment
+begin_define
+define|#
+directive|define
+name|ICONV_CONST
+end_define
 
 begin_comment
 comment|/* Name of package */
