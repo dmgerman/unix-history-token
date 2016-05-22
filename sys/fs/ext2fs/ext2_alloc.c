@@ -1896,6 +1896,21 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Set up a new generation number for this inode. 	 */
+while|while
+condition|(
+name|ip
+operator|->
+name|i_gen
+operator|==
+literal|0
+operator|||
+operator|++
+name|ip
+operator|->
+name|i_gen
+operator|==
+literal|0
+condition|)
 name|ip
 operator|->
 name|i_gen

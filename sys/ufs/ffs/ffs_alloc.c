@@ -5471,7 +5471,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up a new generation number for this inode. 	 */
-if|if
+while|while
 condition|(
 name|ip
 operator|->
@@ -5492,10 +5492,6 @@ name|i_gen
 operator|=
 name|arc4random
 argument_list|()
-operator|/
-literal|2
-operator|+
-literal|1
 expr_stmt|;
 name|DIP_SET
 argument_list|(
@@ -10436,16 +10432,20 @@ name|i
 operator|++
 control|)
 block|{
+while|while
+condition|(
+name|dp2
+operator|->
+name|di_gen
+operator|==
+literal|0
+condition|)
 name|dp2
 operator|->
 name|di_gen
 operator|=
 name|arc4random
 argument_list|()
-operator|/
-literal|2
-operator|+
-literal|1
 expr_stmt|;
 name|dp2
 operator|++
