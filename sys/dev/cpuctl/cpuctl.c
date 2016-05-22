@@ -547,11 +547,15 @@ operator|==
 name|cpu
 argument_list|,
 operator|(
-literal|"[cpuctl,%d]: cannot bind to target cpu %d"
+literal|"[cpuctl,%d]: cannot bind to target cpu %d on cpu %d"
 operator|,
 name|__LINE__
 operator|,
 name|cpu
+operator|,
+name|td
+operator|->
+name|td_oncpu
 operator|)
 argument_list|)
 expr_stmt|;
