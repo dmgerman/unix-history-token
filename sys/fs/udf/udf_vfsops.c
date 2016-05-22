@@ -1316,9 +1316,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1337,9 +1334,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2243,9 +2237,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2255,9 +2246,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -2374,9 +2362,6 @@ block|if (udfmp->im_l2d) 			udf_iconv->close(udfmp->im_l2d);
 endif|#
 directive|endif
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2388,9 +2373,6 @@ name|im_cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|vrele
