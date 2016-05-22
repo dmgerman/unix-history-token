@@ -784,7 +784,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Invalid #interrupt-cells"
+literal|"Invalid #interrupt-cells\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -822,7 +822,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Invalid interrupt number %d"
+literal|"Invalid interrupt number %u\n"
 argument_list|,
 name|irq
 argument_list|)
@@ -893,7 +893,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"unsupported trigger/polarity 0x%2x\n"
+literal|"Unsupported trigger/polarity 0x%2x\n"
 argument_list|,
 name|tripol
 argument_list|)
