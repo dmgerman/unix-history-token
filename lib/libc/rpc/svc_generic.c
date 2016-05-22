@@ -446,11 +446,13 @@ operator|&
 name|xprtlist_lock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|num
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 name|l
 operator|->
@@ -480,6 +482,8 @@ name|xprtlist_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|done
+label|:
 name|__rpc_endconf
 argument_list|(
 name|handle
