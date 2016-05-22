@@ -16,13 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -34,13 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"commands.h"
 end_include
 
 begin_include
@@ -69,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"utils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine.h"
 end_include
 
 begin_decl_stmt
@@ -112,16 +130,54 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|str_adderr
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+name|err
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|str_addarg
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|first
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *  show_help() - display the help screen; invoked in response to  *		either 'h' or '?'.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|show_help
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|printf
 argument_list|(
@@ -198,7 +254,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  Utility routines that help with some of the commands.  */
@@ -271,30 +327,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|scanint
-argument_list|(
-argument|str
-argument_list|,
-argument|intp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|intp
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|intp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -389,7 +437,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  Some of the commands make system calls that could generate errors.  *  These errors are collected up in an array of structures for later  *  contemplation and display.  Such routines return a string containing an  *  error message, or NULL if no errors occurred.  The next few routines are  *  for manipulating and displaying these errors.  We need an upper limit on  *  the number of errors, so we arbitrarily choose 20.  */
@@ -736,37 +784,27 @@ begin_comment
 comment|/*  *  str_adderr(str, len, err) - add an explanation of error "err" to  *	the string "str".  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|str_adderr
-argument_list|(
-argument|str
-argument_list|,
-argument|len
-argument_list|,
-argument|err
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|len
+parameter_list|,
+name|err
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|err
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -840,52 +878,39 @@ name|msglen
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  str_addarg(str, len, arg, first) - add the string argument "arg" to  *	the string "str".  This is the first in the group when "first"  *	is set (indicating that a comma should NOT be added to the front).  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|str_addarg
-argument_list|(
-argument|str
-argument_list|,
-argument|len
-argument_list|,
-argument|arg
-argument_list|,
-argument|first
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|len
+parameter_list|,
+name|arg
+parameter_list|,
+name|first
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|first
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -957,29 +982,30 @@ name|arglen
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  err_compar(p1, p2) - comparison routine used by "qsort"  *	for sorting errors.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|err_compar
-argument_list|(
+parameter_list|(
 name|p1
-argument_list|,
+parameter_list|,
 name|p2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|errs
-operator|*
+modifier|*
 name|p1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|p2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -1031,12 +1057,10 @@ begin_comment
 comment|/*  *  error_count() - return the number of errors currently logged.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|error_count
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -1044,18 +1068,16 @@ name|errcnt
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  show_errors() - display on stdout the current log of errors.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|show_errors
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1123,7 +1145,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  kill_procs(str) - send signals to processes, much like the "kill"  *		command does; invoked in response to 'k'.  */

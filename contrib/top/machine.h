@@ -7,6 +7,24 @@ begin_comment
 comment|/*  *  This file defines the interface between top and the machine-dependent  *  module.  It is NOT machine dependent and should not need to be changed  *  for any specific machine.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"top.h"
+end_include
+
 begin_comment
 comment|/*  * the statics struct is filled in by machine_init  */
 end_comment
@@ -223,6 +241,52 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|toggle_pcpustats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|get_system_info
+parameter_list|(
+name|struct
+name|system_info
+modifier|*
+name|si
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|machine_init
+parameter_list|(
+name|struct
+name|statics
+modifier|*
+name|statics
+parameter_list|,
+name|char
+name|do_unames
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|proc_owner
+parameter_list|(
+name|int
+name|pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* non-int routines typically used by the machine dependent module */
 end_comment
@@ -234,6 +298,15 @@ name|printable
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MACHINE_H */
+end_comment
 
 end_unit
 

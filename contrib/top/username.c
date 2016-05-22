@@ -22,13 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -41,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"utils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"username.h"
 end_include
 
 begin_struct
@@ -106,16 +124,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|init_hash
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/*      *  There used to be some steps we had to take to initialize things.      *  We don't need to do that anymore, but we will leave this stub in      *  just in case future changes require initialization steps.      */
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -124,7 +140,6 @@ name|username
 parameter_list|(
 name|uid
 parameter_list|)
-specifier|register
 name|int
 name|uid
 decl_stmt|;
@@ -252,11 +267,9 @@ name|name
 parameter_list|,
 name|wecare
 parameter_list|)
-specifier|register
 name|int
 name|uid
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|name
@@ -378,7 +391,6 @@ name|get_user
 parameter_list|(
 name|uid
 parameter_list|)
-specifier|register
 name|int
 name|uid
 decl_stmt|;

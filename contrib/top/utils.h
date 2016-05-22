@@ -97,5 +97,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|string_index
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|array
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

@@ -173,13 +173,6 @@ name|myname
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|putstdout
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|overstrike
@@ -931,12 +924,10 @@ directive|endif
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|init_screen
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* get the old settings for safe keeping */
 ifdef|#
@@ -1289,14 +1280,12 @@ name|No
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|end_screen
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* move to the lower left, clear the line and send "te" */
 if|if
@@ -1405,14 +1394,12 @@ endif|#
 directive|endif
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|reinit_screen
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* install our settings if it is a terminal */
 if|if
@@ -1506,14 +1493,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|get_screensize
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
@@ -1678,23 +1663,18 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|standout
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1730,14 +1710,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|clear
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1751,22 +1729,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|clear_eol
-argument_list|(
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|len
+parameter_list|)
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1826,14 +1799,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|go_home
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1847,26 +1818,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This has to be defined as a subroutine for tputs (instead of a macro) */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|putstdout
-argument_list|(
-argument|ch
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ch
+parameter_list|)
 name|char
 name|ch
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|putchar
 argument_list|(
@@ -1874,7 +1840,7 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
