@@ -2266,7 +2266,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * When an attempt at a new connection is noted on a socket which accepts  * connections, sonewconn is called.  If the connection is possible (subject  * to space constraints, etc.) then we allocate a new structure, propoerly  * linked into the data structure of the original socket, and return this.  * Connstatus may be 0, or SS_ISCONFIRMING, or SS_ISCONNECTED.  *  * Note: the ref count on the socket is 0 on return.  */
+comment|/*  * When an attempt at a new connection is noted on a socket which accepts  * connections, sonewconn is called.  If the connection is possible (subject  * to space constraints, etc.) then we allocate a new structure, properly  * linked into the data structure of the original socket, and return this.  * Connstatus may be 0, or SS_ISCONFIRMING, or SS_ISCONNECTED.  *  * Note: the ref count on the socket is 0 on return.  */
 end_comment
 
 begin_function
@@ -5103,7 +5103,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously done could be out 	 * of date.  We could have received a reset packet in an interrupt or 	 * maybe we slept while doing page faults in uiomove() etc.  We could 	 * probably recheck again inside the locking protection here, but 	 * there are probably other places that this also happens.  We must 	 * rethink this. 	 */
+comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously done could be out 	 * of date.  We could have recived a reset packet in an interrupt or 	 * maybe we slept while doing page faults in uiomove() etc.  We could 	 * probably recheck again inside the locking protection here, but 	 * there are probably other places that this also happens.  We must 	 * rethink this. 	 */
 name|VNET_SO_ASSERT
 argument_list|(
 name|so
@@ -12352,7 +12352,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Documented get behavior is that we always return a value, possibly 	 * truncated to fit in the user's buffer.  Traditional behavior is 	 * that we always tell the user precisely how much we copied, rather 	 * than something useful like the total amount we had available for 	 * her.  Note that this interface is not idempotent; the entire 	 * answer must generated ahead of time. 	 */
+comment|/* 	 * Documented get behavior is that we always return a value, possibly 	 * truncated to fit in the user's buffer.  Traditional behavior is 	 * that we always tell the user precisely how much we copied, rather 	 * than something useful like the total amount we had available for 	 * her.  Note that this interface is not idempotent; the entire 	 * answer must be generated ahead of time. 	 */
 name|valsize
 operator|=
 name|min
