@@ -15230,8 +15230,6 @@ name|rate
 decl_stmt|,
 name|ridx
 decl_stmt|,
-name|subtype
-decl_stmt|,
 name|type
 decl_stmt|,
 name|tid
@@ -15250,7 +15248,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Software crypto. 	 */
 name|wh
 operator|=
 name|mtod
@@ -15272,17 +15269,6 @@ literal|0
 index|]
 operator|&
 name|IEEE80211_FC0_TYPE_MASK
-expr_stmt|;
-name|subtype
-operator|=
-name|wh
-operator|->
-name|i_fc
-index|[
-literal|0
-index|]
-operator|&
-name|IEEE80211_FC0_SUBTYPE_MASK
 expr_stmt|;
 name|hasqos
 operator|=
