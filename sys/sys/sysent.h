@@ -639,6 +639,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|SV_ABI_ERRNO
+parameter_list|(
+name|p
+parameter_list|,
+name|e
+parameter_list|)
+value|((p)->p_sysent->sv_errsize<= 0 ? e :	\ 	((e)>= (p)->p_sysent->sv_errsize ? -1 : (p)->p_sysent->sv_errtbl[e]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SV_PROC_FLAG
 parameter_list|(
 name|p
