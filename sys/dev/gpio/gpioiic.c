@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/gpio.h>
 end_include
 
 begin_include
@@ -59,18 +59,6 @@ directive|include
 file|<sys/module.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/gpio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpiobus_if.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -80,19 +68,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_bus_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_endif
@@ -116,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<dev/iicbus/iicbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gpiobus_if.h"
 end_include
 
 begin_include
