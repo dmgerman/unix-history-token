@@ -238,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|AXP209_0C_TO_K
-value|2732
+value|2731
 end_define
 
 begin_struct

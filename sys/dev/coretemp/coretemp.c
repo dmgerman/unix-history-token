@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|TZ_ZEROC
-value|2732
+value|2731
 end_define
 
 begin_define

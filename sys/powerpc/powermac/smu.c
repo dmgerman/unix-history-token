@@ -5731,7 +5731,7 @@ operator|>>
 literal|16
 operator|)
 operator|+
-literal|2732
+literal|2731
 expr_stmt|;
 break|break;
 case|case
@@ -6448,7 +6448,7 @@ name|target_temp
 operator|=
 literal|500
 operator|+
-literal|2732
+literal|2731
 expr_stmt|;
 comment|/* 50 C */
 name|sens
@@ -6459,7 +6459,7 @@ name|max_temp
 operator|=
 literal|900
 operator|+
-literal|2732
+literal|2731
 expr_stmt|;
 comment|/* 90 C */
 name|sens
