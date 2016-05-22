@@ -14145,10 +14145,6 @@ return|return
 operator|(
 name|random
 argument_list|()
-operator|/
-literal|2
-operator|+
-literal|1
 operator|)
 return|;
 block|}
@@ -14164,6 +14160,16 @@ name|int
 name|seed
 parameter_list|)
 block|{
+if|if
+condition|(
+name|seed
+operator|==
+literal|0
+condition|)
+name|seed
+operator|=
+literal|1
+expr_stmt|;
 name|srandom
 argument_list|(
 name|seed
