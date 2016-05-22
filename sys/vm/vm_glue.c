@@ -2890,7 +2890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  * Giant is held on entry.  */
+comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  */
 end_comment
 
 begin_function
