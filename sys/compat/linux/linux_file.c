@@ -549,7 +549,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/*      * XXX In between kern_open() and fget(), another process      * having the same filedesc could use that fd without      * checking below.      */
+comment|/* 	 * XXX In between kern_open() and fget(), another process 	 * having the same filedesc could use that fd without 	 * checking below. 	*/
 name|fd
 operator|=
 name|td
@@ -985,7 +985,7 @@ parameter_list|)
 block|{
 name|struct
 name|lseek_args
-comment|/* { 	int fd; 	int pad; 	off_t offset; 	int whence;     } */
+comment|/* { 		int fd; 		int pad; 		off_t offset; 		int whence; 	} */
 name|tmp_args
 decl_stmt|;
 name|int
@@ -1066,7 +1066,9 @@ name|tmp_args
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1213,7 +1215,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -1238,7 +1242,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|td
 operator|->
@@ -1250,7 +1256,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1297,6 +1305,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|linux_getdents
 argument_list|(
 name|td
@@ -1304,6 +1313,7 @@ argument_list|,
 operator|&
 name|lda
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5243,6 +5253,7 @@ operator|->
 name|fd
 expr_stmt|;
 return|return
+operator|(
 name|sys_fsync
 argument_list|(
 name|td
@@ -5250,6 +5261,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5461,6 +5473,7 @@ operator|->
 name|offset
 expr_stmt|;
 return|return
+operator|(
 name|sys_pwrite
 argument_list|(
 name|td
@@ -5468,6 +5481,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
