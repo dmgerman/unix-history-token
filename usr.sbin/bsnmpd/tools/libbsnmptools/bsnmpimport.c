@@ -267,15 +267,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|input
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|inputs
 operator|=
 name|LIST_HEAD_INITIALIZER
@@ -286,6 +284,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|input
 modifier|*
@@ -296,6 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|pbchar
 init|=
@@ -1043,6 +1043,7 @@ struct|;
 end_struct
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 comment|/* Current OID type, regarding table membership. */
@@ -1062,6 +1063,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|asn_oid
 name|current_oid
@@ -1069,6 +1071,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|nexttok
 index|[
@@ -1078,6 +1081,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|val
 decl_stmt|;
@@ -1088,6 +1092,7 @@ comment|/* integer values */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|all_cond
 decl_stmt|;
@@ -1098,6 +1103,7 @@ comment|/* all conditions are true */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int32_t
 name|saved_token
 init|=
@@ -2018,8 +2024,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2117,8 +2122,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2189,8 +2193,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -2594,14 +2597,12 @@ parameter_list|)
 block|{
 name|int32_t
 name|i
+decl_stmt|,
+name|tok
 decl_stmt|;
 name|enum
 name|snmp_tc
 name|tc
-decl_stmt|;
-name|enum
-name|tok
-name|tok
 decl_stmt|;
 name|struct
 name|snmp_index_entry
@@ -2613,8 +2614,10 @@ condition|(
 operator|(
 name|entry
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2645,19 +2648,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|entry
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snmp_index_entry
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -3027,8 +3017,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|,
@@ -3261,8 +3250,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|enum
-name|tok
+name|int32_t
 name|tok
 decl_stmt|;
 name|struct
@@ -3290,8 +3278,10 @@ condition|(
 operator|(
 name|oid2str
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3307,7 +3297,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"calloc() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -3327,14 +3317,9 @@ condition|(
 operator|(
 name|string
 operator|=
-name|malloc
-argument_list|(
-name|strlen
+name|strdup
 argument_list|(
 name|nexttok
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 operator|)
 operator|==
@@ -3345,7 +3330,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"strdup() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -3365,33 +3350,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|oid2str
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snmp_oid2str
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|string
-argument_list|,
-name|nexttok
-argument_list|,
-name|strlen
-argument_list|(
-name|nexttok
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|oid2str
 operator|->
 name|string
@@ -3683,8 +3641,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|)
@@ -3797,8 +3754,7 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|enum
-name|tok
+name|int32_t
 modifier|*
 name|tok
 parameter_list|)
@@ -4076,8 +4032,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|enum
-name|tok
+name|int32_t
 name|tok
 decl_stmt|;
 name|tok
