@@ -125,6 +125,28 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/**  * bhnd(4) attachment types.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BHND_ATTACH_ADAPTER
+init|=
+literal|0
+block|,
+comment|/**< A bridged card, such as a PCI WiFi chipset  */
+name|BHND_ATTACH_NATIVE
+init|=
+literal|1
+comment|/**< A bus resident on the native host, such as 					  *  the primary or secondary bus of an embedded 					  *  SoC */
+block|}
+name|bhnd_attach_type
+typedef|;
+end_typedef
+
+begin_comment
 comment|/** Evaluates to true if @p cls is a device class that can be configured  *  as a host bridge device. */
 end_comment
 

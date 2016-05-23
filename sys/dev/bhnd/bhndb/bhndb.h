@@ -64,6 +64,14 @@ name|bhndb_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|DECLARE_CLASS
+argument_list|(
+name|bhnd_bhndb_driver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|int
 name|bhndb_attach_bridge

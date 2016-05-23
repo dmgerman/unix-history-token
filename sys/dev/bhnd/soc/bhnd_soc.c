@@ -901,6 +901,26 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|bhnd_soc_get_attach_type
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_ATTACH_NATIVE
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * **************************** DRIVER METADATA ****************************  */
 end_comment
@@ -1048,6 +1068,13 @@ argument_list|(
 name|bhnd_bus_get_chipid
 argument_list|,
 name|bhnd_soc_get_chipid
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_get_attach_type
+argument_list|,
+name|bhnd_soc_get_attach_type
 argument_list|)
 block|,
 name|DEVMETHOD_END

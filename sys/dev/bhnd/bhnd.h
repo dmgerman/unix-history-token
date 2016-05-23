@@ -1882,6 +1882,36 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/**  * Return the BHND attachment type of the parent bhnd bus.  *  * @param dev A bhnd bus child device.  *  * @retval BHND_ATTACH_ADAPTER if the bus is resident on a bridged adapter,  * such as a WiFi chipset.  * @retval BHND_ATTACH_NATIVE if the bus provides hardware services (clock,  * CPU, etc) to a directly attached native host.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bhnd_attach_type
+name|bhnd_get_attach_type
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_ATTACH_TYPE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Attempt to read the BHND board identification from the bhnd bus.  *  * This relies on NVRAM access, and will fail if a valid NVRAM device cannot  * be found, or is not yet attached.  *  * @param dev The parent of @p child.  * @param child The bhnd device requesting board info.  * @param[out] info On success, will be populated with the bhnd(4) device's  * board information.  *  * @retval 0 success  * @retval ENODEV	No valid NVRAM source could be found.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
 end_comment
 
