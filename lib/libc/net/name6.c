@@ -3225,12 +3225,6 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|free_addrselectpolicy
-argument_list|(
-operator|&
-name|policyhead
-argument_list|)
-expr_stmt|;
 return|return
 name|hp
 return|;
