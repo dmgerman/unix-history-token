@@ -332,6 +332,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.if_ntb.debug_level"
+argument_list|,
+operator|&
+name|g_if_ntb_debug_level
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_if_ntb
@@ -385,6 +396,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.if_ntb.max_mw_size"
+argument_list|,
+operator|&
+name|max_mw_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_hw_if_ntb
@@ -412,6 +434,17 @@ name|unsigned
 name|max_num_clients
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.if_ntb.max_num_clients"
+argument_list|,
+operator|&
+name|max_num_clients
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -442,6 +475,17 @@ name|unsigned
 name|enable_xeon_watchdog
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.if_ntb.enable_xeon_watchdog"
+argument_list|,
+operator|&
+name|enable_xeon_watchdog
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT

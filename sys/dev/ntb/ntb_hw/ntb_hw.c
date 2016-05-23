@@ -1642,6 +1642,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.debug_level"
+argument_list|,
+operator|&
+name|g_ntb_hw_debug_level
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_ntb
@@ -1724,6 +1735,17 @@ init|=
 name|_NTB_PAT_UC
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.default_mw_pat"
+argument_list|,
+operator|&
+name|g_ntb_mw_pat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -1937,6 +1959,17 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.b2b_mw_idx"
+argument_list|,
+operator|&
+name|g_ntb_mw_idx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2413,6 +2446,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.usd_bar2_addr64"
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar2_addr64
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_hw_ntb_xeon_b2b
@@ -2439,6 +2485,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.usd_bar4_addr64"
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar4_addr64
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_hw_ntb_xeon_b2b
@@ -2457,6 +2516,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"See usd_bar2_addr64, but BAR4."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.usd_bar4_addr32"
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar4_addr32
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2486,6 +2558,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.usd_bar5_addr32"
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar5_addr32
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_hw_ntb_xeon_b2b
@@ -2505,6 +2590,19 @@ literal|0
 argument_list|,
 literal|"See usd_bar2_addr64, but BAR5 "
 literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.dsd_bar2_addr64"
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar2_addr64
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2536,6 +2634,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.dsd_bar4_addr64"
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar4_addr64
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_hw_ntb_xeon_b2b
@@ -2554,6 +2665,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"See dsd_bar2_addr64, but BAR4."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.dsd_bar4_addr32"
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar4_addr32
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2578,6 +2702,19 @@ literal|0
 argument_list|,
 literal|"See dsd_bar2_addr64, but BAR4 "
 literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"hw.ntb.dsd_bar5_addr32"
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar5_addr32
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4556,6 +4693,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.force_remap_mode"
+argument_list|,
+operator|&
+name|ntb_force_remap_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ntb
@@ -4588,6 +4736,17 @@ name|int
 name|ntb_prefer_intx
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.prefer_intx_to_remap"
+argument_list|,
+operator|&
+name|ntb_prefer_intx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -6943,6 +7102,17 @@ name|int
 name|ntb_b2b_mw_share
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ntb.b2b_mw_share"
+argument_list|,
+operator|&
+name|ntb_b2b_mw_share
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
