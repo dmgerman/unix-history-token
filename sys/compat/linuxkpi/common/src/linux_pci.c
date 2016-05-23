@@ -669,7 +669,7 @@ name|dev
 operator|.
 name|irq
 operator|=
-literal|0
+literal|255
 expr_stmt|;
 name|pdev
 operator|->
