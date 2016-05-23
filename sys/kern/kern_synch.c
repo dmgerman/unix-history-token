@@ -1381,6 +1381,9 @@ condition|(
 name|cold
 operator|||
 name|kdb_active
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * We delay one second at a time to avoid overflowing the 		 * system specific DELAY() function(s): 		 */
