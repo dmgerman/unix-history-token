@@ -128,11 +128,11 @@ define|#
 directive|define
 name|GENMASK
 parameter_list|(
-name|lo
+name|h
 parameter_list|,
-name|hi
+name|l
 parameter_list|)
-value|(((2UL<< ((hi) - (lo))) - 1UL)<< (lo))
+value|(((~0UL)>> (BITS_PER_LONG - (h) - 1))& ((~0UL)<< (l)))
 end_define
 
 begin_define
