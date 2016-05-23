@@ -1863,23 +1863,6 @@ name|_state
 parameter_list|)
 define|\
 value|do {								\ 		if ((_state) != EFSYS_LOCK_MAGIC)			\ 			KASSERT(B_FALSE, ("not locked"));		\ 		SFXGE_EFSYS_UNLOCK(_lockp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
-comment|/* PREEMPT */
-define|#
-directive|define
-name|EFSYS_PREEMPT_DISABLE
-parameter_list|(
-name|_state
-parameter_list|)
-define|\
-value|do {								\ 		(_state) = (_state);					\ 		critical_enter();					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
-define|#
-directive|define
-name|EFSYS_PREEMPT_ENABLE
-parameter_list|(
-name|_state
-parameter_list|)
-define|\
-value|do {								\ 		(_state) = (_state);					\ 		critical_exit(_state);					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* STAT */
 typedef|typedef
 name|uint64_t
