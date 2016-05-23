@@ -9631,12 +9631,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCTL_DECL
-end_ifdef
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -9645,13 +9639,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
-name|SYSCTL_NODE
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -9659,17 +9648,27 @@ name|ICMPV6CTL_ND6_DRLIST
 argument_list|,
 name|nd6_drlist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|nd6_sysctl_drlist
 argument_list|,
-literal|""
+literal|"S,in6_defrouter"
+argument_list|,
+literal|"NDP default router list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -9677,11 +9676,21 @@ name|ICMPV6CTL_ND6_PRLIST
 argument_list|,
 name|nd6_prlist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|nd6_sysctl_prlist
 argument_list|,
-literal|""
+literal|"S,in6_prefix"
+argument_list|,
+literal|"NDP prefix list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
