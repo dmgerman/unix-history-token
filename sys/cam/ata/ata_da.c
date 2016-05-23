@@ -6891,14 +6891,6 @@ name|CAM_REQ_CMP_ERR
 operator|)
 return|;
 block|}
-comment|/* 	 * Set support flags based on the Identify data. 	 */
-name|adasetflags
-argument_list|(
-name|softc
-argument_list|,
-name|cgd
-argument_list|)
-expr_stmt|;
 name|periph
 operator|->
 name|softc
@@ -7139,6 +7131,14 @@ operator|&
 name|softc
 operator|->
 name|write_cache
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set support flags based on the Identify data and quirks. 	 */
+name|adasetflags
+argument_list|(
+name|softc
+argument_list|,
+name|cgd
 argument_list|)
 expr_stmt|;
 comment|/* Disable queue sorting for non-rotational media by default. */
