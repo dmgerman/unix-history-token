@@ -1290,6 +1290,10 @@ name|dev
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
 condition|)
 return|return
 operator|(
@@ -1376,31 +1380,6 @@ operator|=
 name|vmbus_get_softc
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
-name|hv_vmbus_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Error VMBUS: Hypervisor Initialization Failed!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
 comment|/* 	 * Find a free IDT slot for vmbus callback. 	 */
 name|hv_vmbus_g_context
 operator|.
@@ -1432,6 +1411,10 @@ argument_list|(
 literal|"Error VMBUS: Cannot find free IDT slot for "
 literal|"vmbus callback!\n"
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ENXIO
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -1861,9 +1844,6 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
-name|hv_vmbus_cleanup
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -2066,9 +2046,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-name|hv_vmbus_cleanup
-argument_list|()
-expr_stmt|;
 comment|/* remove swi */
 name|CPU_FOREACH
 argument_list|(
