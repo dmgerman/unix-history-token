@@ -13771,7 +13771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns the number of one bits within the given PV chunk map element.  *  * The erratas for Intel processors state that "POPCNT Instruction May  * Take Longer to Execute Than Expected".  It is believed that the  * issue is the spurious dependency on the destination register.  * Provide a hint to the register rename logic that the destination  * value is overwritten, by clearing it, as suggested in the  * optimization manual.  It should be cheap for unaffected processors  * as well.  *  * Reference numbers for erratas are  * 4th Gen Core: HSD146  * 5th Gen Core: BDM85  */
+comment|/*  * Returns the number of one bits within the given PV chunk map element.  *  * The erratas for Intel processors state that "POPCNT Instruction May  * Take Longer to Execute Than Expected".  It is believed that the  * issue is the spurious dependency on the destination register.  * Provide a hint to the register rename logic that the destination  * value is overwritten, by clearing it, as suggested in the  * optimization manual.  It should be cheap for unaffected processors  * as well.  *  * Reference numbers for erratas are  * 4th Gen Core: HSD146  * 5th Gen Core: BDM85  * 6th Gen Core: SKL029  */
 end_comment
 
 begin_function
