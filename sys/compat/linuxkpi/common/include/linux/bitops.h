@@ -329,6 +329,7 @@ name|unsigned
 name|long
 name|find_first_bit
 parameter_list|(
+specifier|const
 name|unsigned
 name|long
 modifier|*
@@ -436,6 +437,7 @@ name|unsigned
 name|long
 name|find_first_zero_bit
 parameter_list|(
+specifier|const
 name|unsigned
 name|long
 modifier|*
@@ -550,6 +552,7 @@ name|unsigned
 name|long
 name|find_last_bit
 parameter_list|(
+specifier|const
 name|unsigned
 name|long
 modifier|*
@@ -671,6 +674,7 @@ name|unsigned
 name|long
 name|find_next_bit
 parameter_list|(
+specifier|const
 name|unsigned
 name|long
 modifier|*
@@ -874,6 +878,7 @@ name|unsigned
 name|long
 name|find_next_zero_bit
 parameter_list|(
+specifier|const
 name|unsigned
 name|long
 modifier|*
@@ -1423,7 +1428,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
+value|atomic_set_long(&((volatile unsigned long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1436,7 +1441,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
+value|atomic_set_long(&((volatile unsigned long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1449,7 +1454,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
+value|atomic_clear_long(&((volatile unsigned long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1462,7 +1467,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
+value|atomic_clear_long(&((volatile unsigned long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1475,18 +1480,20 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|!!(atomic_load_acq_long(&((volatile long *)(a))[BIT_WORD(i)])&	\     BIT_MASK(i))
+value|!!(atomic_load_acq_long(&((volatile unsigned long *)(a))[BIT_WORD(i)])&	\     BIT_MASK(i))
 end_define
 
 begin_function
 specifier|static
 specifier|inline
-name|long
+name|int
 name|test_and_clear_bit
 parameter_list|(
 name|long
 name|bit
 parameter_list|,
+specifier|volatile
+name|unsigned
 name|long
 modifier|*
 name|var
@@ -1519,11 +1526,6 @@ block|{
 name|val
 operator|=
 operator|*
-operator|(
-specifier|volatile
-name|long
-operator|*
-operator|)
 name|var
 expr_stmt|;
 block|}
@@ -1559,12 +1561,14 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|long
+name|int
 name|test_and_set_bit
 parameter_list|(
 name|long
 name|bit
 parameter_list|,
+specifier|volatile
+name|unsigned
 name|long
 modifier|*
 name|var
@@ -1597,11 +1601,6 @@ block|{
 name|val
 operator|=
 operator|*
-operator|(
-specifier|volatile
-name|long
-operator|*
-operator|)
 name|var
 expr_stmt|;
 block|}
@@ -1869,6 +1868,7 @@ end_enum
 
 begin_function
 specifier|static
+specifier|inline
 name|int
 name|__reg_op
 parameter_list|(
