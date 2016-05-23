@@ -673,6 +673,8 @@ operator|&&
 name|depth
 operator|<
 name|MAKEFS_MAX_TREE_DEPTH
+operator|-
+literal|1
 condition|;
 name|pnode
 operator|=
