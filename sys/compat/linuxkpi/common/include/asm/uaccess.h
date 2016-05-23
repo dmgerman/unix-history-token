@@ -63,6 +63,16 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|__copy_to_user
+parameter_list|(
+modifier|...
+parameter_list|)
+value|copy_to_user(__VA_ARGS__)
+end_define
+
 begin_function
 specifier|static
 specifier|inline
@@ -104,6 +114,26 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|__copy_from_user
+parameter_list|(
+modifier|...
+parameter_list|)
+value|copy_from_user(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__copy_in_user
+parameter_list|(
+modifier|...
+parameter_list|)
+value|copy_from_user(__VA_ARGS__)
+end_define
 
 begin_endif
 endif|#
