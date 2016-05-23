@@ -31436,7 +31436,7 @@ name|pf_change_icmp
 argument_list|(
 name|pd2
 operator|.
-name|src
+name|dst
 argument_list|,
 name|NULL
 argument_list|,
