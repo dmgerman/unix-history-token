@@ -25,6 +25,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NSEC_PER_MSEC
+value|1000000L
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSEC_PER_SEC
 value|1000000000L
 end_define
