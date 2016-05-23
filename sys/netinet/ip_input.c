@@ -2393,9 +2393,8 @@ operator|&
 name|M_IP_NEXTHOP
 condition|)
 block|{
-name|dchg
-operator|=
-operator|(
+if|if
+condition|(
 name|m_tag_find
 argument_list|(
 name|m
@@ -2406,13 +2405,6 @@ name|NULL
 argument_list|)
 operator|!=
 name|NULL
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|dchg
-operator|!=
-literal|0
 condition|)
 block|{
 comment|/* 			 * Directly ship the packet on.  This allows 			 * forwarding packets originally destined to us 			 * to some other directly connected host. 			 */
