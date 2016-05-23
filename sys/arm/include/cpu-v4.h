@@ -299,6 +299,17 @@ argument|)
 argument_list|)
 end_macro
 
+begin_macro
+name|_RF0
+argument_list|(
+argument|cp15_sctlr_get
+argument_list|,
+argument|CP15_SCTLR(%
+literal|0
+argument|)
+argument_list|)
+end_macro
+
 begin_undef
 undef|#
 directive|undef

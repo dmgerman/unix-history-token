@@ -1120,7 +1120,7 @@ literal|1024
 operator|*
 literal|1024
 expr_stmt|;
-comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
+comment|/* Enable MMU in system control register (SCTLR). */
 name|cpu_control
 argument_list|(
 name|CPU_CONTROL_MMU_ENABLE
@@ -1128,6 +1128,7 @@ argument_list|,
 name|CPU_CONTROL_MMU_ENABLE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
 name|set_stackptrs
 argument_list|(
 literal|0

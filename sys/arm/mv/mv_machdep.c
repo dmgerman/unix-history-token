@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -94,6 +100,36 @@ include|#
 directive|include
 file|<machine/platform.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu-v4.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu-v6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1716,7 +1752,11 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0" : "=r" (reg));
+name|reg
+operator|=
+name|cp15_sctlr_get
+argument_list|()
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"Ctrl: 0x%08x\n"
@@ -1724,7 +1764,11 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 1" : "=r" (reg));
+name|reg
+operator|=
+name|cp15_actlr_get
+argument_list|()
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"Aux Ctrl: 0x%08x\n"

@@ -1175,6 +1175,7 @@ literal|"bic %0, %0, #0xff000000\n"
 literal|"and %1, %1, #0xff000000\n"
 literal|"orr %0, %0, %1\n"
 literal|"mrc p15, 0, %1, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%1)*/
 literal|"bic %1, %1, #1\n"
 comment|/* Disable MMU */
 literal|"orr %1, %1, #(4 | 8)\n"
@@ -1184,6 +1185,7 @@ comment|/* Add IC enable */
 literal|"orr %1, %1, #(0x800)\n"
 comment|/* BPRD enable */
 literal|"mcr p15, 0, %1, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%1)*/
 literal|"nop\n"
 literal|"nop\n"
 literal|"nop\n"
@@ -3226,10 +3228,15 @@ begin_asm
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0\n"
 end_asm
 
+begin_comment
+comment|/* CP15_SCTLR(%0)*/
+end_comment
+
 begin_expr_stmt
 literal|"bic %0, %0, #1\n"
 comment|/* MMU_ENABLE */
 literal|"mcr p15, 0, %0, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%0)*/
 operator|:
 literal|"=r"
 operator|(
@@ -3471,9 +3478,11 @@ comment|/* Flush TTB */
 literal|"mcr p15, 0, %2, c3, c0, 0\n"
 comment|/* Set DAR */
 literal|"mrc p15, 0, %0, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%0)*/
 literal|"orr %0, %0, #1\n"
 comment|/* MMU_ENABLE */
 literal|"mcr p15, 0, %0, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%0)*/
 literal|"mrc p15, 0, %0, c2, c0, 0\n"
 comment|/* CPWAIT */
 literal|"mov r0, r0\n"
@@ -3731,9 +3740,11 @@ name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%0)*/
 literal|"bic %0, %0, #1\n"
 comment|/* MMU_DISABLE */
 literal|"mcr p15, 0, %0, c1, c0, 0\n"
+comment|/* CP15_SCTLR(%0)*/
 operator|:
 literal|"=r"
 operator|(

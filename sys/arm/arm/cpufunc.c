@@ -2720,7 +2720,7 @@ comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
-comment|/* Set the control register */
+comment|/* Set the control register (SCTLR)   */
 name|cpu_control
 argument_list|(
 name|cpuctrlmask
