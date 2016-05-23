@@ -88,6 +88,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|getchar
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|keyhit
 parameter_list|(
 name|unsigned
