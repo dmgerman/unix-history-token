@@ -506,6 +506,18 @@ name|HV_HYPERCALL_PARAM_ALIGN
 value|sizeof(uint64_t)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|vmbus_message
+struct_decl|;
+end_struct_decl
+
+begin_union_decl
+union_decl|union
+name|vmbus_event_flags
+union_decl|;
+end_union_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -513,13 +525,17 @@ block|{
 name|hv_bool_uint8_t
 name|syn_ic_initialized
 decl_stmt|;
-name|hv_vmbus_handle
+name|struct
+name|vmbus_message
+modifier|*
 name|syn_ic_msg_page
 index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-name|hv_vmbus_handle
+name|union
+name|vmbus_event_flags
+modifier|*
 name|syn_ic_event_page
 index|[
 name|MAXCPU
@@ -754,6 +770,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|vmbus_message
 block|{
 name|hv_vmbus_msg_header
 name|header
@@ -1555,6 +1572,7 @@ end_comment
 begin_typedef
 typedef|typedef
 union|union
+name|vmbus_event_flags
 block|{
 name|uint8_t
 name|flags8
