@@ -2063,7 +2063,7 @@ condition|(
 name|rep_len
 operator|+
 literal|1
-operator|<=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|report_buffer
