@@ -105,6 +105,35 @@ begin_comment
 comment|/* HV#1 */
 end_comment
 
+begin_comment
+comment|/*  * The guest OS needs to register the guest ID with the hypervisor.  * The guest ID is a 64 bit entity and the structure of this ID is  * specified in the Hyper-V specification:  *  * http://msdn.microsoft.com/en-us/library/windows/  * hardware/ff542653%28v=vs.85%29.aspx  *  * While the current guideline does not specify how FreeBSD guest ID(s)  * need to be generated, our plan is to publish the guidelines for  * FreeBSD and other guest operating systems that currently are hosted  * on Hyper-V. The implementation here conforms to this yet  * unpublished guidelines.  *  * Bit(s)  * 63    - Indicates if the OS is Open Source or not; 1 is Open Source  * 62:56 - Os Type: FreeBSD is 0x02  * 55:48 - Distro specific identification  * 47:16 - FreeBSD kernel version number  * 15:0  - Distro specific identification  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYPERV_GUESTID_OSS
+value|(0x1ULL<< 63)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HYPERV_GUESTID_FREEBSD
+value|(0x02ULL<< 56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HYPERV_GUESTID
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|(HYPERV_GUESTID_OSS | HYPERV_GUESTID_FREEBSD |	\ 	 (((uint64_t)(((id)& 0xff0000)>> 16))<< 48) |\ 	 (((uint64_t)__FreeBSD_version)<< 16) |	\ 	 ((uint64_t)((id)& 0x00ffff)))
+end_define
+
 begin_function_decl
 specifier|static
 name|u_int
@@ -472,25 +501,6 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/* 	 * Write our OS info 	 */
-name|uint64_t
-name|os_guest_info
-init|=
-name|HV_FREEBSD_GUEST_ID
-decl_stmt|;
-name|wrmsr
-argument_list|(
-name|HV_X64_MSR_GUEST_OS_ID
-argument_list|,
-name|os_guest_info
-argument_list|)
-expr_stmt|;
-name|hv_vmbus_g_context
-operator|.
-name|guest_id
-operator|=
-name|os_guest_info
-expr_stmt|;
 comment|/* 	 * See if the hypercall page is already set 	 */
 name|hypercall_msr
 operator|.
@@ -646,18 +656,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|hv_vmbus_x64_msr_hypercall_contents
-name|hypercall_msr
-decl_stmt|;
-if|if
-condition|(
-name|hv_vmbus_g_context
-operator|.
-name|guest_id
-operator|==
-name|HV_FREEBSD_GUEST_ID
-condition|)
-block|{
 if|if
 condition|(
 name|hv_vmbus_g_context
@@ -667,6 +665,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|hv_vmbus_x64_msr_hypercall_contents
+name|hypercall_msr
+decl_stmt|;
 name|hypercall_msr
 operator|.
 name|as_uint64_t
@@ -697,7 +698,6 @@ name|hypercall_page
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1816,6 +1816,17 @@ name|VM_GUEST_VM
 expr_stmt|;
 return|return;
 block|}
+comment|/* Write guest id */
+name|wrmsr
+argument_list|(
+name|HV_X64_MSR_GUEST_OS_ID
+argument_list|,
+name|HYPERV_GUESTID
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hyperv_features
