@@ -68,6 +68,16 @@ parameter_list|)
 value|atomic_long_add_return(1, (v))
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_long_inc_not_zero
+parameter_list|(
+name|v
+parameter_list|)
+value|atomic_long_inc_not_zero(v)
+end_define
+
 begin_function
 specifier|static
 specifier|inline
