@@ -3718,11 +3718,6 @@ literal|"got no \"T\" flag after answering AuthMethod"
 argument_list|)
 expr_stmt|;
 block|}
-name|pdu_delete
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 name|log_debugx
 argument_list|(
 literal|"got state transition request"
@@ -3731,6 +3726,11 @@ expr_stmt|;
 name|response
 operator|=
 name|login_new_response
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|pdu_delete
 argument_list|(
 name|request
 argument_list|)
