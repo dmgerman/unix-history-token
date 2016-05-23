@@ -64,6 +64,9 @@ decl_stmt|;
 name|device_t
 name|vmbus_dev
 decl_stmt|;
+name|int
+name|vmbus_idtvec
+decl_stmt|;
 block|}
 struct|;
 end_struct

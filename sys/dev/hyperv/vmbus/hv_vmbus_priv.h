@@ -572,10 +572,6 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-comment|/* 	 * Host use this vector to interrupt guest for vmbus channel 	 * event and msg. 	 */
-name|int
-name|hv_cb_vector
-decl_stmt|;
 block|}
 name|hv_vmbus_context
 typedef|;
@@ -2370,10 +2366,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|unsigned
-name|int
-name|vector
-decl_stmt|;
 name|void
 modifier|*
 name|page_buffers
