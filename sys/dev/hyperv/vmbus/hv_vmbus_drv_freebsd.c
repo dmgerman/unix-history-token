@@ -205,13 +205,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|device_t
-name|vmbus_devp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|vmbus_inited
 decl_stmt|;
@@ -1164,7 +1157,8 @@ name|child
 operator|=
 name|device_add_child
 argument_list|(
-name|vmbus_devp
+name|vmbus_get_device
+argument_list|()
 argument_list|,
 name|NULL
 argument_list|,
@@ -1219,7 +1213,8 @@ name|ret
 operator|=
 name|device_delete_child
 argument_list|(
-name|vmbus_devp
+name|vmbus_get_device
+argument_list|()
 argument_list|,
 name|child_dev
 operator|->
@@ -1721,12 +1716,16 @@ argument_list|()
 expr_stmt|;
 name|bus_generic_attach
 argument_list|(
-name|vmbus_devp
+name|sc
+operator|->
+name|vmbus_dev
 argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|vmbus_devp
+name|sc
+operator|->
+name|vmbus_dev
 argument_list|,
 literal|"device scan, probe and attach done\n"
 argument_list|)
@@ -1860,29 +1859,18 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"VMBUS: attach dev: %p\n"
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-name|vmbus_devp
-operator|=
-name|dev
-expr_stmt|;
 name|vmbus_sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|vmbus_sc
+operator|->
+name|vmbus_dev
+operator|=
+name|dev
 expr_stmt|;
 comment|/* 	 * Event processing logic will be configured: 	 * - After the vmbus protocol version negotiation. 	 * - Before we request channel offers. 	 */
 name|vmbus_sc
