@@ -1850,7 +1850,24 @@ name|readrest
 goto|;
 break|break;
 block|}
-comment|/* 		 * Page is not resident.  If this is the search termination 		 * or the pager might contain the page, allocate a new page. 		 * Default objects are zero-fill, there is no real pager. 		 */
+name|KASSERT
+argument_list|(
+name|fs
+operator|.
+name|m
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"fs.m should be NULL, not %p"
+operator|,
+name|fs
+operator|.
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Page is not resident.  If the pager might contain the page 		 * or this is the beginning of the search, allocate a new 		 * page.  (Default objects are zero-fill, so there is no real 		 * pager for them.) 		 */
 if|if
 condition|(
 name|fs
@@ -1896,12 +1913,6 @@ operator|)
 return|;
 block|}
 comment|/* 			 * Allocate a new page for this object/offset pair. 			 * 			 * Unlocked read of the p_flag is harmless. At 			 * worst, the P_KILLED might be not observed 			 * there, and allocation can fail, causing 			 * restart and new reading of the p_flag. 			 */
-name|fs
-operator|.
-name|m
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2024,7 +2035,7 @@ break|break;
 block|}
 name|readrest
 label|:
-comment|/* 		 * We have found a valid page or we have allocated a new page. 		 * The page thus may not be valid or may not be entirely  		 * valid. 		 * 		 * Attempt to fault-in the page if there is a chance that the 		 * pager has it, and potentially fault in additional pages 		 * at the same time.  For default objects simply provide 		 * zero-filled pages. 		 */
+comment|/* 		 * We have either allocated a new page or found an existing 		 * page that is only partially valid. 		 * 		 * Attempt to fault-in the page if there is a chance that the 		 * pager has it, and potentially fault in additional pages 		 * at the same time. 		 */
 if|if
 condition|(
 name|fs
