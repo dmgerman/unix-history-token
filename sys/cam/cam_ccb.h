@@ -4134,6 +4134,17 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|CCB_CLEAR_ALL_EXCEPT_HDR
+parameter_list|(
+name|ccbp
+parameter_list|)
+define|\
+value|bzero((char *)(ccbp) + sizeof((ccbp)->ccb_h),	\ 	    sizeof(*(ccbp)) - sizeof((ccbp)->ccb_h))
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|static
