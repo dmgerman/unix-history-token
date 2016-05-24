@@ -1102,7 +1102,7 @@ decl_stmt|;
 comment|/* 	 * On Host with Win8 or above, the event page can be checked directly 	 * to get the id of the channel that has the pending interrupt. 	 */
 name|event
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1119,7 +1119,7 @@ name|event
 operator|->
 name|flagsul
 argument_list|,
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1152,7 +1152,7 @@ name|event
 decl_stmt|;
 name|event
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1429,6 +1429,9 @@ name|flag_cnt_ptr
 operator|=
 name|VMBUS_PCPU_PTR
 argument_list|(
+name|vmbus_get_softc
+argument_list|()
+argument_list|,
 name|event_flag_cnt
 argument_list|,
 name|chan

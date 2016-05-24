@@ -252,7 +252,7 @@ name|msg
 decl_stmt|;
 name|msg
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -434,7 +434,7 @@ expr_stmt|;
 comment|/* Check if there are actual msgs to be process */
 name|msg_base
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -576,7 +576,7 @@ expr_stmt|;
 comment|/* 	 * Do a little interrupt counting. 	 */
 operator|(
 operator|*
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -682,7 +682,7 @@ name|u
 operator|.
 name|base_simp_gpa
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -728,7 +728,7 @@ name|u
 operator|.
 name|base_siefp_gpa
 operator|=
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1041,7 +1041,7 @@ argument|cpu
 argument_list|)
 block|{
 comment|/* 		 * Per-cpu messages and event flags. 		 */
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1065,7 +1065,7 @@ literal|0
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
@@ -1079,7 +1079,7 @@ operator||
 name|BUS_DMA_ZERO
 argument_list|)
 expr_stmt|;
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1103,7 +1103,7 @@ literal|0
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
@@ -1142,7 +1142,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1156,7 +1156,7 @@ condition|)
 block|{
 name|hyperv_dmamem_free
 argument_list|(
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
@@ -1165,7 +1165,7 @@ argument_list|,
 name|cpu
 argument_list|)
 argument_list|,
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1175,7 +1175,7 @@ name|cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1189,7 +1189,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1203,7 +1203,7 @@ condition|)
 block|{
 name|hyperv_dmamem_free
 argument_list|(
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
@@ -1212,7 +1212,7 @@ argument_list|,
 name|cpu
 argument_list|)
 argument_list|,
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -1222,7 +1222,7 @@ name|cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
@@ -2063,7 +2063,7 @@ name|intrcnt_add
 argument_list|(
 name|buf
 argument_list|,
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,

@@ -157,7 +157,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|VMBUS_SC_PCPU_GET
+name|VMBUS_PCPU_GET
 parameter_list|(
 name|sc
 parameter_list|,
@@ -171,7 +171,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMBUS_SC_PCPU_PTR
+name|VMBUS_PCPU_PTR
 parameter_list|(
 name|sc
 parameter_list|,
@@ -180,32 +180,6 @@ parameter_list|,
 name|cpu
 parameter_list|)
 value|&(sc)->vmbus_pcpu[(cpu)].field
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_PCPU_GET
-parameter_list|(
-name|field
-parameter_list|,
-name|cpu
-parameter_list|)
-define|\
-value|VMBUS_SC_PCPU_GET(vmbus_get_softc(), field, (cpu))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_PCPU_PTR
-parameter_list|(
-name|field
-parameter_list|,
-name|cpu
-parameter_list|)
-define|\
-value|VMBUS_SC_PCPU_PTR(vmbus_get_softc(), field, (cpu))
 end_define
 
 begin_function_decl
