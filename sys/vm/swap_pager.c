@@ -2451,12 +2451,6 @@ condition|(
 name|handle
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Reference existing named region or allocate new one.  There 		 * should not be a race here against swp_pager_meta_build() 		 * as called from vm_page_remove() in regards to the lookup 		 * of the handle. 		 */
 name|sx_xlock
 argument_list|(
@@ -2505,12 +2499,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|sw_alloc_sx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -2584,12 +2572,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|sw_alloc_sx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
