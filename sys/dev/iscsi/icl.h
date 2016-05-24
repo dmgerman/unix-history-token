@@ -339,6 +339,9 @@ name|char
 modifier|*
 name|offload
 parameter_list|,
+name|bool
+name|iser
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -361,6 +364,9 @@ name|char
 modifier|*
 name|offload
 parameter_list|,
+name|bool
+name|iser
+parameter_list|,
 name|size_t
 modifier|*
 name|limitp
@@ -376,6 +382,9 @@ specifier|const
 name|char
 operator|*
 name|offload
+argument_list|,
+name|bool
+name|iser
 argument_list|,
 name|int
 name|priority
@@ -418,6 +427,9 @@ specifier|const
 name|char
 modifier|*
 name|offload
+parameter_list|,
+name|bool
+name|rdma
 parameter_list|)
 function_decl|;
 end_function_decl

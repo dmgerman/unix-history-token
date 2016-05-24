@@ -5437,6 +5437,8 @@ name|icl_new_conn
 argument_list|(
 name|offload
 argument_list|,
+name|false
+argument_list|,
 literal|"cfiscsi"
 argument_list|,
 operator|&
@@ -8110,6 +8112,8 @@ argument_list|(
 name|cilp
 operator|->
 name|offload
+argument_list|,
+name|false
 argument_list|,
 operator|&
 name|cilp

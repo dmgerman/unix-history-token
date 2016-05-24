@@ -5838,6 +5838,12 @@ name|is_conf
 operator|.
 name|isc_offload
 argument_list|,
+name|is
+operator|->
+name|is_conf
+operator|.
+name|isc_iser
+argument_list|,
 operator|&
 name|request
 operator|->
@@ -8065,6 +8071,12 @@ operator|->
 name|is_conf
 operator|.
 name|isc_offload
+argument_list|,
+name|is
+operator|->
+name|is_conf
+operator|.
+name|isc_iser
 argument_list|,
 literal|"iscsi"
 argument_list|,

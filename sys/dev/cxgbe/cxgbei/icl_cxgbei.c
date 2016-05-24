@@ -4208,6 +4208,8 @@ name|icl_register
 argument_list|(
 literal|"cxgbei"
 argument_list|,
+name|false
+argument_list|,
 literal|100
 argument_list|,
 name|icl_cxgbei_limits
@@ -4256,6 +4258,8 @@ return|;
 name|icl_unregister
 argument_list|(
 literal|"cxgbei"
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|uma_zdestroy
