@@ -4541,7 +4541,16 @@ name|i_endoff
 argument_list|,
 name|IO_NORMAL
 operator||
+operator|(
+name|DOINGASYNC
+argument_list|(
+name|dvp
+argument_list|)
+condition|?
+literal|0
+else|:
 name|IO_SYNC
+operator|)
 argument_list|,
 name|cr
 argument_list|)
