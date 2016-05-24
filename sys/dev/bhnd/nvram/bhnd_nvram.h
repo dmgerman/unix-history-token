@@ -26,9 +26,9 @@ block|{
 name|BHND_NVRAM_SRC_OTP
 block|,
 comment|/**< On-chip one-time-programmable 				  *  memory. */
-name|BHND_NVRAM_SRC_NFLASH
+name|BHND_NVRAM_SRC_FLASH
 block|,
-comment|/**< External flash device accessible 				  *  via on-chip flash core, such 				  *  as the NAND/QSPI controller cores 				  *  used on Northstar devices to access 				  *  NVRAM. */
+comment|/**< External flash */
 name|BHND_NVRAM_SRC_SPROM
 block|,
 comment|/**< External serial EEPROM. */
@@ -38,21 +38,6 @@ block|}
 name|bhnd_nvram_src_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/**  * Evaluates to true if the given NVRAM data source is accessible via  * ChipCommon.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_NVRAM_SRC_CC
-parameter_list|(
-name|_src
-parameter_list|)
-define|\
-value|((_src) == BHND_NVRAM_SRC_OTP || (_src) == BHND_NVRAM_SRC_SPROM)
-end_define
 
 begin_endif
 endif|#

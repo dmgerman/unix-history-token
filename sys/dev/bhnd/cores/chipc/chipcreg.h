@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Landon Fuller<landon@landonf.org>  * Copyright (c) 2010 Broadcom Corporation  * All rights reserved.  *  * This file is derived from the sbchipc.h header distributed with  * Broadcom's initial brcm80211 Linux driver release, as  * contributed to the Linux staging repository.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2010 Broadcom Corporation  * All rights reserved.  *  * This file is derived from the sbchipc.h header distributed with  * Broadcom's initial brcm80211 Linux driver release, as  * contributed to the Linux staging repository.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/**< size of the register block 					     containing the chip 					     identification registers. */
+comment|/**< size of the register block 						     containing the chip 						     identification registers 						     required during bus 						     enumeration */
 end_comment
 
 begin_comment
@@ -43,21 +43,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIPC_GET_ATTR
+name|CHIPC_GET_FLAG
 parameter_list|(
-name|_entry
+name|_value
 parameter_list|,
-name|_attr
+name|_flag
+parameter_list|)
+value|(((_value)& _flag) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GET_BITS
+parameter_list|(
+name|_value
+parameter_list|,
+name|_field
 parameter_list|)
 define|\
-value|((_entry& CHIPC_ ## _attr ## _MASK)>> CHIPC_ ## _attr ## _SHIFT)
+value|((_value& _field ## _MASK)>> _field ## _SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHIPC_ID
-value|0x0
+value|0x00
 end_define
 
 begin_define
@@ -70,9 +82,82 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_CORECTRL
+value|0x08
+end_define
+
+begin_comment
+comment|/* rev>= 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_BIST
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHIPC_OTPST
 value|0x10
 end_define
+
+begin_comment
+comment|/**< otp status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPCTRL
+value|0x14
+end_define
+
+begin_comment
+comment|/**< otp control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPPROG
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPLAYOUT
+value|0x1C
+end_define
+
+begin_comment
+comment|/**< otp layout (rev>= 23) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_INTST
+value|0x20
+end_define
+
+begin_comment
+comment|/**< interrupt status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_INTM
+value|0x24
+end_define
+
+begin_comment
+comment|/**< interrupt mask */
+end_comment
 
 begin_define
 define|#
@@ -82,18 +167,18 @@ value|0x28
 end_define
 
 begin_comment
-comment|/**< chip control */
+comment|/**< chip control (rev>= 11) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CHIPC_CHIPST
-value|0x2c
+value|0x2C
 end_define
 
 begin_comment
-comment|/**< chip status */
+comment|/**< chip status (rev>= 11) */
 end_comment
 
 begin_define
@@ -127,16 +212,63 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIPC_GPIOPU
-value|0x58
+name|CHIPC_SFLASHCTRL
+value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHIPC_GPIOPD
-value|0x5c
+name|CHIPC_SFLASHADDR
+value|0x44
 end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SFLASHDATA
+value|0x48
+end_define
+
+begin_comment
+comment|/* siba backplane configuration broadcast (siba-only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SBBCAST_ADDR
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SBBCAST_DATA
+value|0x54
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOPU
+value|0x58
+end_define
+
+begin_comment
+comment|/**< pull-up mask (rev>= 20) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOPD
+value|0x5C
+end_define
+
+begin_comment
+comment|/**< pull down mask (rev>= 20) */
+end_comment
 
 begin_define
 define|#
@@ -163,7 +295,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_GPIOCTRL
-value|0x6c
+value|0x6C
 end_define
 
 begin_define
@@ -180,12 +312,75 @@ name|CHIPC_GPIOINTM
 value|0x74
 end_define
 
+begin_comment
+comment|/**< gpio interrupt mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOEVENT
+value|0x78
+end_define
+
+begin_comment
+comment|/**< gpio event (rev>= 11) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOEVENT_INTM
+value|0x7C
+end_define
+
+begin_comment
+comment|/**< gpio event interrupt mask (rev>= 11) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CHIPC_WATCHDOG
 value|0x80
 end_define
+
+begin_comment
+comment|/**< watchdog timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOEVENT_INTPOLARITY
+value|0x84
+end_define
+
+begin_comment
+comment|/**< gpio even interrupt polarity (rev>= 11) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOTIMERVAL
+value|0x88
+end_define
+
+begin_comment
+comment|/**< gpio-based LED duty cycle (rev>= 16) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOTIMEROUTMASK
+value|0x8C
+end_define
+
+begin_comment
+comment|/* clock control block */
+end_comment
 
 begin_define
 define|#
@@ -197,54 +392,458 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIPC_CLKC_M0
+name|CHIPC_CLKC_SB
 value|0x94
 end_define
+
+begin_comment
+comment|/* m0 (backplane) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CHIPC_CLKC_M1
+name|CHIPC_CLKC_PCI
 value|0x98
 end_define
+
+begin_comment
+comment|/* m1 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CHIPC_CLKC_M2
-value|0x9c
+value|0x9C
 end_define
+
+begin_comment
+comment|/* mii/uart/mipsref */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CHIPC_CLKC_M3
-value|0xa0
+value|0xA0
 end_define
+
+begin_comment
+comment|/* cpu */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CHIPC_CLKDIV
-value|0xa4
+value|0xA4
+end_define
+
+begin_comment
+comment|/* rev>= 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIODEBUGSEL
+value|0xA8
+end_define
+
+begin_comment
+comment|/* rev>= 28 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAPABILITIES_EXT
+value|0xAC
+end_define
+
+begin_comment
+comment|/* pll delay (registers rev>= 4) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PLL_ON_DELAY
+value|0xB0
 end_define
 
 begin_define
 define|#
 directive|define
+name|CHIPC_PLL_FREFSEL_DELAY
+value|0xB4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PLL_SLOWCLK_CTL
+value|0xB8
+end_define
+
+begin_comment
+comment|/* revs 6-9 */
+end_comment
+
+begin_comment
+comment|/* "instaclock" registers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_SYS_CLK_CTL
-value|0xc0
+value|0xC0
+end_define
+
+begin_comment
+comment|/* rev>= 10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SYS_CLKSTATESTRETCH
+value|0xC4
+end_define
+
+begin_comment
+comment|/* rev>= 10 */
+end_comment
+
+begin_comment
+comment|/* indirect backplane access (rev>= 10) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_BP_ADDRLOW
+value|0xD0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_BP_ADDRHIGH
+value|0xD4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_BP_DATA
+value|0xD8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_BP_INDACCESS
+value|0xE0
+end_define
+
+begin_comment
+comment|/* SPI/I2C (rev>= 37) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GSIO_CTRL
+value|0xE4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GSIO_ADDR
+value|0xE8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GSIO_DATA
+value|0xEC
+end_define
+
+begin_comment
+comment|/* More clock dividers (corerev>= 32) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CLKDIV2
+value|0xF0
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHIPC_EROMPTR
-value|0xfc
+value|0xFC
 end_define
 
 begin_comment
 comment|/**< 32-bit EROM base address 						  *  on BCMA devices */
+end_comment
+
+begin_comment
+comment|/* ExtBus control registers (rev>= 3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PCMCIA_CFG
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PCMCIA_MEMWAIT
+value|0x104
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PCMCIA_ATTRWAIT
+value|0x108
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PCMCIA_IOWAIT
+value|0x10C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_IDE_CFG
+value|0x110
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_IDE_MEMWAIT
+value|0x114
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_IDE_ATTRWAIT
+value|0x118
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_IDE_IOWAIT
+value|0x11C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PROG_CFG
+value|0x120
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PROG_WAITCOUNT
+value|0x124
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLASH_CFG
+value|0x128
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLASH_WAITCOUNT
+value|0x12C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SECI_CFG
+value|0x130
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SECI_ST
+value|0x134
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SECI_STM
+value|0x138
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SECI_RXNBC
+value|0x13C
+end_define
+
+begin_comment
+comment|/* Enhanced Coexistence Interface (ECI) registers (rev 21-34) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_OUTPUT
+value|0x140
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_CTRL
+value|0x144
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTLO
+value|0x148
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTMI
+value|0x14C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTHI
+value|0x150
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTINTPOLARITYLO
+value|0x154
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTINTPOLARITYMI
+value|0x158
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INPUTINTPOLARITYHI
+value|0x15C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INTMASKLO
+value|0x160
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INTMASKMI
+value|0x164
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_INTMASKHI
+value|0x168
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTLO
+value|0x16C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTMI
+value|0x170
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTHI
+value|0x174
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTMASKLO
+value|0x178
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTMASKMI
+value|0x17C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_ECI_EVENTMASKHI
+value|0x180
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLASHSTRCFG
+value|0x18C
+end_define
+
+begin_comment
+comment|/**< BCM4706 NAND flash config */
 end_comment
 
 begin_define
@@ -272,17 +871,53 @@ name|CHIPC_SPROM_DATA
 value|0x198
 end_define
 
+begin_comment
+comment|/* Clock control and hardware workarounds (corerev>= 20) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CHIPC_CLK_CTL_ST
-value|SI_CLK_CTL_ST
+value|0x1E0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHIPC_PMU_CTL
+name|CHIPC_SPROM_HWWAR
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_UART0
+value|0x300
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_UART1
+value|0x400
+end_define
+
+begin_comment
+comment|/* PMU registers (rev>= 20) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_BASE
+value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_CTRL
 value|0x600
 end_define
 
@@ -310,6 +945,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_PMU_RES_PENDING
+value|0x610
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHIPC_PMU_TIMER
 value|0x614
 end_define
@@ -326,6 +968,91 @@ define|#
 directive|define
 name|CHIPC_PMU_MAX_RES_MASK
 value|0x61c
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_TABLE_SEL
+value|0x620
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_DEP_MASK
+value|0x624
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_UPDN_TIMER
+value|0x628
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_TIMER
+value|0x62C
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_CLKSTRETCH
+value|0x630
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_WATCHDOG
+value|0x634
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_GPIOSEL
+value|0x638
+end_define
+
+begin_comment
+comment|/* pmu rev>= 1 ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_GPIOEN
+value|0x63C
+end_define
+
+begin_comment
+comment|/* pmu rev>= 1 ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_REQ_TIMER_SEL
+value|0x640
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_REQ_TIMER
+value|0x644
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_RES_REQ_MASK
+value|0x648
 end_define
 
 begin_define
@@ -373,6 +1100,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_PMU_STRAPOPT
+value|0x668
+end_define
+
+begin_comment
+comment|/* chipc rev>= 28 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_XTALFREQ
+value|0x66C
+end_define
+
+begin_comment
+comment|/* pmu rev>= 10 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_SPROM_OTP
 value|0x800
 end_define
@@ -381,19 +1130,15 @@ begin_comment
 comment|/* SPROM/OTP address space */
 end_comment
 
-begin_comment
-comment|/** chipid */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|CHIPC_ID
-value|0x0
+name|CHIPC_SPROM_OTP_SIZE
+value|0x400
 end_define
 
 begin_comment
-comment|/**< identification register */
+comment|/** chipid */
 end_comment
 
 begin_define
@@ -493,13 +1238,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CAP_UARTS_MASK
+name|CHIPC_CAP_NUM_UART_MASK
 value|0x00000003
 end_define
 
 begin_comment
-comment|/* Number of UARTs */
+comment|/* Number of UARTs (1-3) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_NUM_UART_SHIFT
+value|0
+end_define
 
 begin_define
 define|#
@@ -515,7 +1267,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CAP_UCLKSEL
+name|CHIPC_CAP_UCLKSEL_MASK
 value|0x00000018
 end_define
 
@@ -526,8 +1278,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CAP_UINTCLK
-value|0x00000008
+name|CHIPC_CAP_UCLKSEL_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_UCLKSEL_UINTCLK
+value|0x1
 end_define
 
 begin_comment
@@ -559,8 +1318,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIPC_CAP_EXTBUS_SHIFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHIPC_CAP_EXTBUS_NONE
-value|0x00000000
+value|0x0
 end_define
 
 begin_comment
@@ -571,7 +1337,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_EXTBUS_FULL
-value|0x00000040
+value|0x1
 end_define
 
 begin_comment
@@ -582,7 +1348,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_EXTBUS_PROG
-value|0x00000080
+value|0x2
 end_define
 
 begin_comment
@@ -603,6 +1369,68 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIPC_CAP_FLASH_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_FLASH_NONE
+value|0x000
+end_define
+
+begin_comment
+comment|/* No flash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_SFLASH_ST
+value|0x100
+end_define
+
+begin_comment
+comment|/* ST serial flash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_SFLASH_AT
+value|0x200
+end_define
+
+begin_comment
+comment|/* Atmel serial flash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_NFLASH
+value|0x300
+end_define
+
+begin_comment
+comment|/* NAND flash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_PFLASH
+value|0x700
+end_define
+
+begin_comment
+comment|/* Parallel flash */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_CAP_PLL_MASK
 value|0x00038000
 end_define
@@ -610,6 +1438,13 @@ end_define
 begin_comment
 comment|/* Type of PLL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP_PLL_SHIFT
+value|15
+end_define
 
 begin_define
 define|#
@@ -625,7 +1460,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CAP_OTP_SIZE
+name|CHIPC_CAP_OTP_SIZE_MASK
 value|0x00380000
 end_define
 
@@ -702,6 +1537,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIPC_CAP_ECI
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Enhanced Coexistence Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CHIPC_CAP_SPROM
 value|0x40000000
 end_define
@@ -713,12 +1559,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CAP_NFLASH
+name|CHIPC_CAP_4706_NFLASH
 value|0x80000000
 end_define
 
 begin_comment
-comment|/* Nand flash present, rev>= 35 */
+comment|/* NAND flash present, BCM4706 or chipc rev38 (BCM5357)? */
 end_comment
 
 begin_define
@@ -741,6 +1587,28 @@ end_define
 
 begin_comment
 comment|/* GSIO (spi/i2c) present, rev>= 37 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP2_GCI
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* GCI present (rev>= ??) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CAP2_AOB
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Always on Bus present (rev>= 49) 							 * 							 * If set, PMU and GCI registers 							 * are found in dedicated cores. 							 * 							 * This appears to be a lower power 							 * APB bus, bridged via ARM APB IP. */
 end_comment
 
 begin_comment
@@ -1294,15 +2162,37 @@ comment|/* HND OTP */
 end_comment
 
 begin_comment
-comment|/* otplayout reg corerev>= 36 */
+comment|/* otplayout */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CHIPC_OTP_CISFORMAT_NEW
+name|CHIPC_OTPL_SIZE_MASK
+value|0x0000f000
+end_define
+
+begin_comment
+comment|/* rev>= 49 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPL_SIZE_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPL_CISFORMAT_NEW
 value|0x80000000
 end_define
+
+begin_comment
+comment|/* rev>= 36 */
+end_comment
 
 begin_comment
 comment|/* Opcodes for OTPP_OC field */
@@ -3207,54 +4097,6 @@ value|0x04020009
 end_define
 
 begin_comment
-comment|/* Flash types in the chipcommon capabilities register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_FLASH_NONE
-value|0x000
-end_define
-
-begin_comment
-comment|/* No flash */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_SFLASH_ST
-value|0x100
-end_define
-
-begin_comment
-comment|/* ST serial flash */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_SFLASH_AT
-value|0x200
-end_define
-
-begin_comment
-comment|/* Atmel serial flash */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_PFLASH
-value|0x700
-end_define
-
-begin_comment
-comment|/* Parallel flash */
-end_comment
-
-begin_comment
 comment|/* Bits in the ExtBus config registers */
 end_comment
 
@@ -3327,7 +4169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CFG_DS
+name|CHIPC_FLASH_CFG_DS
 value|0x0010
 end_define
 
@@ -3338,7 +4180,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CFG_CD_MASK
+name|CHIPC_FLASH_CFG_CD_MASK
 value|0x00e0
 end_define
 
@@ -3349,7 +4191,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CFG_CE
+name|CHIPC_FLASH_CFG_CE
 value|0x0100
 end_define
 
@@ -3360,7 +4202,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CFG_SB
+name|CHIPC_FLASH_CFG_SB
 value|0x0200
 end_define
 
@@ -3371,7 +4213,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHIPC_CFG_IS
+name|CHIPC_FLASH_CFG_IS
 value|0x0400
 end_define
 

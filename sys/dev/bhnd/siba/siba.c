@@ -1644,6 +1644,10 @@ operator|=
 name|addrspace
 operator|->
 name|sa_size
+operator|-
+name|addrspace
+operator|->
+name|sa_bus_reserved
 expr_stmt|;
 return|return
 operator|(

@@ -371,6 +371,10 @@ name|int
 name|sa_rid
 decl_stmt|;
 comment|/**< bus resource id */
+name|uint32_t
+name|sa_bus_reserved
+decl_stmt|;
+comment|/**< number of bytes at high end of 					  *  address space reserved for the bus */
 name|STAILQ_ENTRY
 argument_list|(
 argument|siba_addrspace

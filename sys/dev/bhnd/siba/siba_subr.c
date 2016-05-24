@@ -665,6 +665,9 @@ name|siba_port
 modifier|*
 name|port
 decl_stmt|;
+name|rman_res_t
+name|r_size
+decl_stmt|;
 comment|/* Verify that base + size will not overflow */
 if|if
 condition|(
@@ -673,6 +676,18 @@ operator|-
 name|size
 operator|<
 name|base
+condition|)
+return|return
+operator|(
+name|ERANGE
+operator|)
+return|;
+comment|/* Verify that size - bus_reserved will not underflow */
+if|if
+condition|(
+name|size
+operator|<
+name|bus_reserved
 condition|)
 return|return
 operator|(
@@ -767,9 +782,17 @@ name|sa_region_num
 operator|=
 name|region_num
 expr_stmt|;
+name|sa
+operator|->
+name|sa_bus_reserved
+operator|=
+name|bus_reserved
+expr_stmt|;
 comment|/* Populate the resource list */
+name|r_size
+operator|=
 name|size
-operator|-=
+operator|-
 name|bus_reserved
 expr_stmt|;
 name|sa
@@ -789,11 +812,11 @@ name|base
 argument_list|,
 name|base
 operator|+
-name|size
+name|r_size
 operator|-
 literal|1
 argument_list|,
-name|size
+name|r_size
 argument_list|)
 expr_stmt|;
 comment|/* Append to target port */
