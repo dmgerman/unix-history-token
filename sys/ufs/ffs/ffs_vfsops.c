@@ -2381,7 +2381,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		 * New mount 		 * 		 * We need the name for the mount point (also used for 		 * "last mounted on") copied in. If an error occurs, 		 * the mount point is discarded by the upper level code. 		 * Note that vfs_mount() populates f_mntonname for us. 		 */
+comment|/* 		 * New mount 		 * 		 * We need the name for the mount point (also used for 		 * "last mounted on") copied in. If an error occurs, 		 * the mount point is discarded by the upper level code. 		 * Note that vfs_mount_alloc() populates f_mntonname for us. 		 */
 if|if
 condition|(
 operator|(
@@ -5531,7 +5531,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize filesystem stat information in mount struct. 	 */
+comment|/* 	 * Initialize filesystem state information in mount struct. 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
