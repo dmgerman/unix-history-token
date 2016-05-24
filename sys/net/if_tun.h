@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|TUNMRU
-value|16384
+value|65535
 end_define
 
 begin_struct
@@ -53,6 +53,7 @@ name|int
 name|baudrate
 decl_stmt|;
 comment|/* linespeed */
+name|unsigned
 name|short
 name|mtu
 decl_stmt|;
