@@ -4554,7 +4554,7 @@ literal|0
 condition|)
 name|vprint
 argument_list|(
-literal|"ufs_direnter: failted to truncate"
+literal|"ufs_direnter: failed to truncate"
 argument_list|,
 name|dvp
 argument_list|)
