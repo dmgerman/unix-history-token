@@ -1448,10 +1448,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|outbuf_pmap
-operator|=
-name|NULL
-expr_stmt|;
 name|_close
 argument_list|(
 name|fd
