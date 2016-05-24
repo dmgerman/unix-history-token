@@ -3820,8 +3820,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ECMD_TERMINATE
+name|ECMD_RVALID
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECMD_TERMINATE
+value|0x400
 end_define
 
 begin_comment
