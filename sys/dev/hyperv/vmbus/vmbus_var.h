@@ -29,6 +29,10 @@ name|int
 name|event_flag_cnt
 decl_stmt|;
 comment|/* # of event flags */
+name|u_long
+modifier|*
+name|intr_cnt
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
