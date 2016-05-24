@@ -26988,13 +26988,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SSB PHY reset.  *  * XXX TODO: BCMA PHY reset.  */
+comment|/*  * SSB PHY reset.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|bwn_phy_reset
+name|bwn_phy_reset_siba
 parameter_list|(
 name|struct
 name|bwn_mac
@@ -27073,6 +27073,48 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bwn_phy_reset
+parameter_list|(
+name|struct
+name|bwn_mac
+modifier|*
+name|mac
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bwn_is_bus_siba
+argument_list|(
+name|mac
+argument_list|)
+condition|)
+block|{
+name|bwn_phy_reset_siba
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|BWN_ERRPRINTF
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+argument_list|,
+literal|"%s: unknown bus!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

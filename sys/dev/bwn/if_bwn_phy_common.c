@@ -634,6 +634,18 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|BWN_ERRPRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"%s: unknown bus!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -792,6 +804,18 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|BWN_ERRPRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"%s: unknown bus!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -871,6 +895,18 @@ name|SIBA_CC_CHIPCTL_DATA
 argument_list|,
 operator|~
 literal|0x4
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|BWN_ERRPRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"%s: unknown bus!\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
