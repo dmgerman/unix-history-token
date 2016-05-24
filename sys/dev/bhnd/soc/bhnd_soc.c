@@ -903,7 +903,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bhnd_attach_type
 name|bhnd_soc_get_attach_type
 parameter_list|(
 name|device_t
