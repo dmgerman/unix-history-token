@@ -2168,7 +2168,7 @@ literal|0x21BD
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P244br"
 block|}
 block|,
 block|{
@@ -2178,7 +2178,7 @@ literal|0x21BE
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P741m"
 block|}
 block|,
 block|{
@@ -2188,7 +2188,7 @@ literal|0x21BF
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array H240ar"
 block|}
 block|,
 block|{
@@ -2198,7 +2198,17 @@ literal|0x21C0
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P440ar"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x21C1
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P840ar"
 block|}
 block|,
 block|{
@@ -2208,7 +2218,7 @@ literal|0x21C2
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P440"
 block|}
 block|,
 block|{
@@ -2218,7 +2228,7 @@ literal|0x21C3
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P441"
 block|}
 block|,
 block|{
@@ -2228,7 +2238,7 @@ literal|0x21C5
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P841"
 block|}
 block|,
 block|{
@@ -2238,7 +2248,7 @@ literal|0x21C6
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array H244br"
 block|}
 block|,
 block|{
@@ -2248,7 +2258,7 @@ literal|0x21C7
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array H240"
 block|}
 block|,
 block|{
@@ -2258,7 +2268,7 @@ literal|0x21C8
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array H241"
 block|}
 block|,
 block|{
@@ -2268,7 +2278,7 @@ literal|0x21CA
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P246br"
 block|}
 block|,
 block|{
@@ -2278,7 +2288,7 @@ literal|0x21CB
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P840"
 block|}
 block|,
 block|{
@@ -2298,7 +2308,7 @@ literal|0x21CD
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array P240nr"
 block|}
 block|,
 block|{
@@ -2308,7 +2318,7 @@ literal|0x21CE
 block|,
 name|CISS_BOARD_SA5
 block|,
-literal|"HP Smart Array TBD"
+literal|"HP Smart Array H240nr"
 block|}
 block|,
 block|{
