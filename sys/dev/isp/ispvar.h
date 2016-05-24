@@ -1420,7 +1420,7 @@ comment|/* 	 * This is the handle that the firmware needs in order for us to 	 *
 name|uint16_t
 name|handle
 decl_stmt|;
-comment|/* 	 * A device is 'autologin' if the firmware automatically logs into 	 * it (re-logins as needed). Basically, local private loop devices. 	 * 	 * PRLI word 3 parameters contains role as well as other things. 	 * 	 * The state is the current state of this entry. 	 * 	 * The is_target is the current state of target on this port. 	 * 	 * The is_initiator is the current state of initiator on this port. 	 * 	 * Portid is obvious, as are node&& port WWNs. The new_role and 	 * new_portid is for when we are pending a change. 	 */
+comment|/* 	 * PRLI word 3 parameters contains role as well as other things. 	 * 	 * The state is the current state of this entry. 	 * 	 * The is_target is the current state of target on this port. 	 * 	 * The is_initiator is the current state of initiator on this port. 	 * 	 * Portid is obvious, as are node&& port WWNs. The new_role and 	 * new_portid is for when we are pending a change. 	 */
 name|uint16_t
 name|prli_word3
 decl_stmt|;
@@ -1431,13 +1431,8 @@ decl_stmt|;
 comment|/* Incoming new PRLI parameters */
 name|uint16_t
 label|:
-literal|11
+literal|12
 operator|,
-name|autologin
-operator|:
-literal|1
-operator|,
-comment|/* F/W does PLOGI/PLOGO */
 name|probational
 operator|:
 literal|1

@@ -2223,7 +2223,7 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"Chan %d [%d]: hdl 0x%x %s al%d %s 0x%06x =>%s 0x%06x; WWNN 0x%08x%08x WWPN 0x%08x%08x"
+literal|"Chan %d [%d]: hdl 0x%x %s %s 0x%06x =>%s 0x%06x; WWNN 0x%08x%08x WWPN 0x%08x%08x"
 argument_list|,
 name|chan
 argument_list|,
@@ -2239,10 +2239,6 @@ name|lp
 operator|->
 name|state
 index|]
-argument_list|,
-name|lp
-operator|->
-name|autologin
 argument_list|,
 name|buf1
 argument_list|,
