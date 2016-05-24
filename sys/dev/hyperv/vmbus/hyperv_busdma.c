@@ -50,8 +50,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|HYPERV_DMA_WAITMASK
-value|(BUS_DMA_WAITOK | BUS_DMA_NOWAIT)
+name|HYPERV_DMA_MASK
+value|(BUS_DMA_WAITOK | BUS_DMA_NOWAIT | BUS_DMA_ZERO)
 end_define
 
 begin_function
@@ -209,7 +209,7 @@ argument_list|,
 operator|(
 name|flags
 operator|&
-name|HYPERV_DMA_WAITMASK
+name|HYPERV_DMA_MASK
 operator|)
 operator||
 name|BUS_DMA_COHERENT
