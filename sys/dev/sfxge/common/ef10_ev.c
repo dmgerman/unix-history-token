@@ -987,6 +987,7 @@ operator|=
 name|index
 expr_stmt|;
 comment|/* INIT_EVQ expects function-relative vector number */
+comment|/* 	 * Interrupts may be raised for events immediately after the queue is 	 * created. See bug58606. 	 */
 if|if
 condition|(
 operator|(
