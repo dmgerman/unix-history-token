@@ -2914,7 +2914,7 @@ operator|++
 expr_stmt|;
 name|ret
 operator|=
-name|SNMP_CODE_FAILED
+name|SNMPD_INPUT_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2934,7 +2934,7 @@ name|SNMP_CODE_OK
 condition|)
 name|ret
 operator|=
-name|SNMP_CODE_FAILED
+name|SNMPD_INPUT_FAILED
 expr_stmt|;
 return|return
 operator|(
@@ -12870,7 +12870,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|snmpd_usmstats
 argument_list|)
 argument_list|)
