@@ -4638,6 +4638,8 @@ name|long
 name|reps
 init|=
 literal|1
+decl_stmt|,
+name|m
 decl_stmt|;
 name|int
 name|ch
@@ -4646,8 +4648,6 @@ name|u_int
 name|i
 decl_stmt|,
 name|x
-decl_stmt|,
-name|m
 decl_stmt|,
 name|j
 decl_stmt|;
@@ -4937,6 +4937,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|u_int
+operator|)
 name|count
 condition|;
 name|i
