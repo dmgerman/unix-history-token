@@ -261,6 +261,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_pager.h>
 end_include
 
@@ -1741,7 +1747,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|linux_set_current
 parameter_list|(
@@ -1787,7 +1792,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|linux_clear_current
 parameter_list|(
