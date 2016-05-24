@@ -8173,7 +8173,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGTINFO
+name|ISP_LOGTDEBUG0
 argument_list|,
 literal|"[0x%x] now sending synthesized status orig_dl=%u xfered=%u bit=%u"
 argument_list|,
