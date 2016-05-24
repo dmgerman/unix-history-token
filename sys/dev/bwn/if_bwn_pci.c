@@ -393,6 +393,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|BWN_BCM_DEV
+argument_list|(
+name|BCM43225_D11N2G
+argument_list|,
+literal|"BCM43225 802.11n 2GHz"
+argument_list|,
+literal|0
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
