@@ -1099,18 +1099,20 @@ name|hv_vmbus_synic_event_flags
 modifier|*
 name|event
 decl_stmt|;
+comment|/* 	 * On Host with Win8 or above, the event page can be checked directly 	 * to get the id of the channel that has the pending interrupt. 	 */
 name|event
 operator|=
-name|hv_vmbus_g_context
-operator|.
-name|syn_ic_event_page
-index|[
+name|VMBUS_SC_PCPU_GET
+argument_list|(
+name|sc
+argument_list|,
+name|event_flag
+argument_list|,
 name|cpu
-index|]
+argument_list|)
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
-comment|/* 	 * On Host with Win8 or above, the event page can be checked directly 	 * to get the id of the channel that has the pending interrupt. 	 */
 name|vmbus_event_flags_proc
 argument_list|(
 name|event
@@ -1150,12 +1152,14 @@ name|event
 decl_stmt|;
 name|event
 operator|=
-name|hv_vmbus_g_context
-operator|.
-name|syn_ic_event_page
-index|[
+name|VMBUS_SC_PCPU_GET
+argument_list|(
+name|sc
+argument_list|,
+name|event_flag
+argument_list|,
 name|cpu
-index|]
+argument_list|)
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
