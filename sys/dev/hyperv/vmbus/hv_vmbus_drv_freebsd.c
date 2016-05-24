@@ -1317,11 +1317,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|n
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|cpu
 decl_stmt|;
 name|char
 name|buf
@@ -1412,7 +1412,7 @@ expr_stmt|;
 block|}
 name|CPU_FOREACH
 argument_list|(
-argument|j
+argument|cpu
 argument_list|)
 block|{
 name|snprintf
@@ -1426,7 +1426,7 @@ argument_list|)
 argument_list|,
 literal|"cpu%d:hyperv"
 argument_list|,
-name|j
+name|cpu
 argument_list|)
 expr_stmt|;
 name|intrcnt_add
@@ -1439,7 +1439,7 @@ name|sc
 argument_list|,
 name|intr_cnt
 argument_list|,
-name|j
+name|cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1462,7 +1462,7 @@ name|page_buffers
 index|[
 literal|2
 operator|*
-name|j
+name|cpu
 operator|+
 name|i
 index|]
@@ -1473,7 +1473,7 @@ block|}
 comment|/* 	 * Per cpu setup. 	 */
 name|CPU_FOREACH
 argument_list|(
-argument|j
+argument|cpu
 argument_list|)
 block|{
 comment|/* 		 * Setup taskqueue to handle events 		 */
@@ -1481,7 +1481,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 operator|=
 name|taskqueue_create_fast
@@ -1497,13 +1497,13 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 argument_list|)
 expr_stmt|;
 name|CPU_SETOF
 argument_list|(
-name|j
+name|cpu
 argument_list|,
 operator|&
 name|cpu_mask
@@ -1516,7 +1516,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 argument_list|,
 literal|1
@@ -1528,7 +1528,7 @@ name|cpu_mask
 argument_list|,
 literal|"hvevent%d"
 argument_list|,
-name|j
+name|cpu
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Setup per-cpu tasks and taskqueues to handle msg. 		 */
@@ -1536,7 +1536,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_msg_tq
 index|[
-name|j
+name|cpu
 index|]
 operator|=
 name|taskqueue_create_fast
@@ -1552,13 +1552,13 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_msg_tq
 index|[
-name|j
+name|cpu
 index|]
 argument_list|)
 expr_stmt|;
 name|CPU_SETOF
 argument_list|(
-name|j
+name|cpu
 argument_list|,
 operator|&
 name|cpu_mask
@@ -1571,7 +1571,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_msg_tq
 index|[
-name|j
+name|cpu
 index|]
 argument_list|,
 literal|1
@@ -1583,7 +1583,7 @@ name|cpu_mask
 argument_list|,
 literal|"hvmsg%d"
 argument_list|,
-name|j
+name|cpu
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -1593,7 +1593,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_msg_task
 index|[
-name|j
+name|cpu
 index|]
 argument_list|,
 literal|0
@@ -1603,7 +1603,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Prepare the per cpu msg and event pages to be called on each cpu. 		 */
+comment|/* 		 * Prepare the per cpu msg and event pages to be called on 		 * each cpu. 		 */
 for|for
 control|(
 name|i
@@ -1624,7 +1624,7 @@ name|page_buffers
 index|[
 literal|2
 operator|*
-name|j
+name|cpu
 operator|+
 name|i
 index|]
@@ -1774,7 +1774,7 @@ expr_stmt|;
 comment|/* 	 * remove swi and vmbus callback vector; 	 */
 name|CPU_FOREACH
 argument_list|(
-argument|j
+argument|cpu
 argument_list|)
 block|{
 if|if
@@ -1783,7 +1783,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 operator|!=
 name|NULL
@@ -1795,7 +1795,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 argument_list|)
 expr_stmt|;
@@ -1803,7 +1803,7 @@ name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
 index|[
-name|j
+name|cpu
 index|]
 operator|=
 name|NULL
