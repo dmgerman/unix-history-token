@@ -479,9 +479,17 @@ name|limit
 parameter_list|)
 parameter_list|)
 block|{
-name|printf
+call|(
+modifier|*
+name|func
+call|)
 argument_list|(
-literal|"IMPLEMENT ME: dtrace_toxic_ranges\n"
+literal|0
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|VM_MIN_KERNEL_ADDRESS
 argument_list|)
 expr_stmt|;
 block|}
