@@ -1251,6 +1251,11 @@ if|if
 condition|(
 name|pmc_hook
 operator|&&
+name|TRAPF_USERMODE
+argument_list|(
+name|tf
+argument_list|)
+operator|&&
 operator|(
 name|PCPU_GET
 argument_list|(
