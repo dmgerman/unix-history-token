@@ -5175,6 +5175,26 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|family
+operator|==
+name|EFX_FAMILY_MEDFORD
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Solarflare SFC9200 family"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|DBGPRINT
 argument_list|(
 name|dev
