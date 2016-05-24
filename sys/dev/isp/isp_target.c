@@ -492,7 +492,7 @@ name|at7iop
 operator|->
 name|at_ta_len
 operator|&
-literal|0xfffff
+literal|0x0fff
 expr_stmt|;
 if|if
 condition|(
