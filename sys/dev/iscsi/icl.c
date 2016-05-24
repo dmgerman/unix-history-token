@@ -193,7 +193,7 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|sysctl_kern_icl_drivers
+name|sysctl_kern_icl_offloads
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -276,7 +276,7 @@ name|_kern_icl
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|drivers
+name|offloads
 argument_list|,
 name|CTLTYPE_STRING
 operator||
@@ -288,11 +288,11 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|sysctl_kern_icl_drivers
+name|sysctl_kern_icl_offloads
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"List of ICL drivers"
+literal|"List of ICL modules"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -300,7 +300,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|sysctl_kern_icl_drivers
+name|sysctl_kern_icl_offloads
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
