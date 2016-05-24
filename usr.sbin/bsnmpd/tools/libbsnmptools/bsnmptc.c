@@ -4036,9 +4036,9 @@ operator|>
 literal|9
 condition|)
 block|{
-name|saved_errno
-operator|=
 name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 name|warnx
 argument_list|(
@@ -4055,9 +4055,9 @@ operator|)
 return|;
 block|}
 else|else
-name|saved_errno
-operator|=
 name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 if|if
 condition|(
@@ -4158,9 +4158,9 @@ operator|>
 literal|9
 condition|)
 block|{
-name|saved_errno
-operator|=
 name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 name|warnx
 argument_list|(
@@ -4177,9 +4177,9 @@ operator|)
 return|;
 block|}
 else|else
-name|saved_errno
-operator|=
 name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 for|for
 control|(
