@@ -87,6 +87,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|riscv_frame
+block|{
+name|struct
+name|riscv_frame
+modifier|*
+name|f_frame
+decl_stmt|;
+name|u_long
+name|f_retaddr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Signal frame. Pushed onto user stack before calling sigcode.  */
 end_comment

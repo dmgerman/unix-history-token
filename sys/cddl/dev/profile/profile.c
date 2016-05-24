@@ -413,6 +413,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__riscv__
+end_ifdef
+
+begin_comment
+comment|/* TODO: verify */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROF_ARTIFICIAL_FRAMES
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct

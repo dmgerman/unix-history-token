@@ -49655,6 +49655,11 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 comment|/* 	 * FreeBSD isn't good at limiting the amount of memory we 	 * ask to malloc, so let's place a limit here before trying 	 * to do something that might well end in tears at bedtime. 	 */
 if|if
 condition|(
