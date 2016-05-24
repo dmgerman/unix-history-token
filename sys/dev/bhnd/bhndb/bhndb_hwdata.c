@@ -77,7 +77,7 @@ value|(const struct bhndb_port_priority[]) {	\ 	__VA_ARGS__							\ }
 end_define
 
 begin_comment
-comment|/*  * Define a core priority record for all cores matching @p devclass and  * @p unit.  *   * If a devclass of BHNDB_DEVCLASS_INVALID is specified, this will match  * on all device classes.  *   * If a unit number of -1 is specified, this will match on all units.  */
+comment|/*  * Define a core priority record for all cores matching @p devclass  */
 end_comment
 
 begin_define
@@ -87,13 +87,25 @@ name|BHNDB_CLASS_PRIO
 parameter_list|(
 name|_devclass
 parameter_list|,
-name|_unit
-parameter_list|,
 name|_priority
 parameter_list|,
 modifier|...
 parameter_list|)
-value|{		\ 	.match	= {							\ 		.vendor	= BHND_MFGID_INVALID,				\ 		.device	= BHND_COREID_INVALID,				\ 		.hwrev	= { BHND_HWREV_INVALID, BHND_HWREV_INVALID },	\ 		.class	= (BHND_DEVCLASS_ ## _devclass),		\ 		.unit	= (_unit)					\ 	},								\ 	.priority = (BHNDB_PRIORITY_ ## _priority),		\ 	BHNDB_PORTS(__VA_ARGS__)					\ }
+value|{		\ 	.match	= {							\ 		BHND_MATCH_CORE_CLASS(BHND_DEVCLASS_ ## _devclass),	\ 	},								\ 	.priority = (BHNDB_PRIORITY_ ## _priority),		\ 	BHNDB_PORTS(__VA_ARGS__)					\ }
+end_define
+
+begin_comment
+comment|/*  * Define a default core priority record  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHNDB_DEFAULT_PRIO
+parameter_list|(
+modifier|...
+parameter_list|)
+value|{		\ 	.match	= {				\ 		BHND_MATCH_ANY	,		\ 	},					\ 	.priority = (BHNDB_PRIORITY_DEFAULT),	\ 	BHNDB_PORTS(__VA_ARGS__)		\ }
 end_define
 
 begin_comment
@@ -150,18 +162,12 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|SOC_ROUTER
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|NONE
 argument_list|)
 block|,
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|SOC_BRIDGE
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|NONE
 argument_list|)
@@ -170,18 +176,12 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|EROM
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|NONE
 argument_list|)
 block|,
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|OTHER
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|NONE
 argument_list|)
@@ -190,9 +190,6 @@ comment|/* 	 * Low priority device classes. 	 *  	 * These devices do not sit in
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|CC
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|LOW
 argument_list|,
@@ -217,9 +214,6 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|PMU
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|LOW
 argument_list|,
 comment|/* Device Block */
@@ -240,15 +234,8 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require efficient runtime access to 	 * the default device port, and if supported by the bus, an agent port. 	 */
-name|BHNDB_CLASS_PRIO
+name|BHNDB_DEFAULT_PRIO
 argument_list|(
-name|INVALID
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|DEFAULT
-argument_list|,
 comment|/* Device Block */
 name|BHNDB_PORT0_PRIO
 argument_list|(
@@ -288,18 +275,12 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|SOC_ROUTER
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|NONE
 argument_list|)
 block|,
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|SOC_BRIDGE
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|NONE
 argument_list|)
@@ -308,18 +289,12 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|EROM
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|NONE
 argument_list|)
 block|,
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|OTHER
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|NONE
 argument_list|)
@@ -328,9 +303,6 @@ comment|/* 	 * Low priority device classes. 	 *  	 * These devices do not sit in
 name|BHNDB_CLASS_PRIO
 argument_list|(
 name|CC
-argument_list|,
-operator|-
-literal|1
 argument_list|,
 name|LOW
 argument_list|,
@@ -351,9 +323,6 @@ name|BHNDB_CLASS_PRIO
 argument_list|(
 name|PMU
 argument_list|,
-operator|-
-literal|1
-argument_list|,
 name|LOW
 argument_list|,
 comment|/* Device Block */
@@ -370,15 +339,8 @@ argument_list|)
 argument_list|)
 block|,
 comment|/* 	 * Default Core Behavior 	 *  	 * All other cores are assumed to require efficient runtime access to 	 * the device port. 	 */
-name|BHNDB_CLASS_PRIO
+name|BHNDB_DEFAULT_PRIO
 argument_list|(
-name|INVALID
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|DEFAULT
-argument_list|,
 comment|/* Device Block */
 name|BHNDB_PORT_PRIO
 argument_list|(

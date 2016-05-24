@@ -147,16 +147,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|bhnd_chip_quirk
-name|bhnd_pcie2_chip_quirks
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -208,11 +198,9 @@ parameter_list|(
 name|_core
 parameter_list|,
 name|_quirks
-parameter_list|,
-name|_chip_quirks
 parameter_list|)
 define|\
-value|BHND_DEVICE(_core, "", _quirks, _chip_quirks, BHND_DF_HOSTB)
+value|BHND_DEVICE(_core, NULL, _quirks, BHND_DF_HOSTB)
 end_define
 
 begin_decl_stmt
@@ -229,8 +217,6 @@ argument_list|(
 name|PCIE2
 argument_list|,
 name|bhnd_pcie2_quirks
-argument_list|,
-name|bhnd_pcie2_chip_quirks
 argument_list|)
 block|,
 name|BHND_DEVICE_END
@@ -247,48 +233,34 @@ name|bhnd_pcie2_quirks
 index|[]
 init|=
 block|{
-name|BHND_DEVICE_QUIRK_END
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|bhnd_chip_quirk
-name|bhnd_pcie2_chip_quirks
-index|[]
-init|=
-block|{
 comment|/* Apple BCM4360 boards that require adjusting TX amplitude and 	 * differential output de-emphasis of the PCIe SerDes */
 block|{
 block|{
-name|BHND_CHIP_BVT
+name|BHND_MATCH_BOARD
 argument_list|(
-argument|PCI_VENDOR_APPLE
+name|PCI_VENDOR_APPLE
 argument_list|,
-argument|BCM94360X51P2
+name|BCM94360X51P2
 argument_list|)
-block|}
+block|, }
 block|,
 name|BHND_PCIE2_QUIRK_SERDES_TXDRV_DEEMPH
 block|}
 block|,
 block|{
 block|{
-name|BHND_CHIP_BVT
+name|BHND_MATCH_BOARD
 argument_list|(
-argument|PCI_VENDOR_APPLE
+name|PCI_VENDOR_APPLE
 argument_list|,
-argument|BCM94360X51A
+name|BCM94360X51A
 argument_list|)
-block|}
+block|, }
 block|,
 name|BHND_PCIE2_QUIRK_SERDES_TXDRV_DEEMPH
 block|}
 block|,
-name|BHND_CHIP_QUIRK_END
+name|BHND_DEVICE_QUIRK_END
 block|}
 decl_stmt|;
 end_decl_stmt

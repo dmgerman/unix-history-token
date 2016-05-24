@@ -57,6 +57,12 @@ directive|include
 file|"bhnd_bus_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bhnd_match.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -424,26 +430,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * A hardware revision match descriptor.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_hwrev_match
-block|{
-name|uint16_t
-name|start
-decl_stmt|;
-comment|/**< first revision, or BHND_HWREV_INVALID 					     to match on any revision. */
-name|uint16_t
-name|end
-decl_stmt|;
-comment|/**< last revision, or BHND_HWREV_INVALID 					     to match on any revision. */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/** * A bhnd(4) bus resource. *  * This provides an abstract interface to per-core resources that may require * bus-level remapping of address windows prior to access. */
 end_comment
 
@@ -466,495 +452,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**   * Wildcard hardware revision match descriptor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_ANY
-value|{ BHND_HWREV_INVALID, BHND_HWREV_INVALID }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_IS_ANY
-parameter_list|(
-name|_m
-parameter_list|)
-define|\
-value|((_m)->start == BHND_HWREV_INVALID&& (_m)->end == BHND_HWREV_INVALID)
-end_define
-
-begin_comment
-comment|/**  * Hardware revision match descriptor for an inclusive range.  *   * @param _start The first applicable hardware revision.  * @param _end The last applicable hardware revision, or BHND_HWREV_INVALID  * to match on any revision.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_RANGE
-parameter_list|(
-name|_start
-parameter_list|,
-name|_end
-parameter_list|)
-value|{ _start, _end }
-end_define
-
-begin_comment
-comment|/**  * Hardware revision match descriptor for a single revision.  *   * @param _hwrev The hardware revision to match on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_EQ
-parameter_list|(
-name|_hwrev
-parameter_list|)
-value|BHND_HWREV_RANGE(_hwrev, _hwrev)
-end_define
-
-begin_comment
-comment|/**  * Hardware revision match descriptor for any revision equal to or greater  * than @p _start.  *   * @param _start The first hardware revision to match on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_GTE
-parameter_list|(
-name|_start
-parameter_list|)
-value|BHND_HWREV_RANGE(_start, BHND_HWREV_INVALID)
-end_define
-
-begin_comment
-comment|/**  * Hardware revision match descriptor for any revision equal to or less  * than @p _end.  *   * @param _end The last hardware revision to match on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_HWREV_LTE
-parameter_list|(
-name|_end
-parameter_list|)
-value|BHND_HWREV_RANGE(0, _end)
-end_define
-
-begin_comment
-comment|/** A core match descriptor. */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_core_match
-block|{
-name|uint16_t
-name|vendor
-decl_stmt|;
-comment|/**< required JEP106 device vendor or BHND_MFGID_INVALID. */
-name|uint16_t
-name|device
-decl_stmt|;
-comment|/**< required core ID or BHND_COREID_INVALID */
-name|struct
-name|bhnd_hwrev_match
-name|hwrev
-decl_stmt|;
-comment|/**< matching revisions. */
-name|bhnd_devclass_t
-name|class
-decl_stmt|;
-comment|/**< required class or BHND_DEVCLASS_INVALID */
-name|int
-name|unit
-decl_stmt|;
-comment|/**< required core unit, or -1 */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/**  * Core match descriptor matching against the given @p _vendor, @p _device,  * and @p _hwrev match descriptors.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CORE_MATCH
-parameter_list|(
-name|_vendor
-parameter_list|,
-name|_device
-parameter_list|,
-name|_hwrev
-parameter_list|)
-define|\
-value|{ _vendor, _device, _hwrev, BHND_DEVCLASS_INVALID, -1 }
-end_define
-
-begin_comment
-comment|/**   * Wildcard core match descriptor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CORE_MATCH_ANY
-define|\
-value|{					\ 		.vendor = BHND_MFGID_INVALID,	\ 		.device = BHND_COREID_INVALID,	\ 		.hwrev = BHND_HWREV_ANY,	\ 		.class = BHND_DEVCLASS_INVALID,	\ 		.unit = -1			\ 	}
-end_define
-
-begin_comment
-comment|/**  * A chipset match descriptor.  *   * @warning Matching on board/nvram attributes relies on NVRAM access, and will  * fail if a valid NVRAM device cannot be found, or is not yet attached.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_chip_match
-block|{
-comment|/** Select fields to be matched */
-name|uint16_t
-name|match_id
-range|:
-literal|1
-decl_stmt|,
-name|match_rev
-range|:
-literal|1
-decl_stmt|,
-name|match_pkg
-range|:
-literal|1
-decl_stmt|,
-name|match_bvendor
-range|:
-literal|1
-decl_stmt|,
-name|match_btype
-range|:
-literal|1
-decl_stmt|,
-name|match_brev
-range|:
-literal|1
-decl_stmt|,
-name|match_srom_rev
-range|:
-literal|1
-decl_stmt|,
-name|match_any
-range|:
-literal|1
-decl_stmt|,
-name|match_flags_unused
-range|:
-literal|8
-decl_stmt|;
-name|uint16_t
-name|chip_id
-decl_stmt|;
-comment|/**< required chip id */
-name|struct
-name|bhnd_hwrev_match
-name|chip_rev
-decl_stmt|;
-comment|/**< matching chip revisions */
-name|uint8_t
-name|chip_pkg
-decl_stmt|;
-comment|/**< required package */
-name|uint16_t
-name|board_vendor
-decl_stmt|;
-comment|/**< required board vendor */
-name|uint16_t
-name|board_type
-decl_stmt|;
-comment|/**< required board type */
-name|struct
-name|bhnd_hwrev_match
-name|board_rev
-decl_stmt|;
-comment|/**< matching board revisions */
-name|struct
-name|bhnd_hwrev_match
-name|board_srom_rev
-decl_stmt|;
-comment|/**< matching board srom revisions */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_MATCH_ANY
-define|\
-value|{ .match_any = 1 }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_MATCH_IS_ANY
-parameter_list|(
-name|_m
-parameter_list|)
-define|\
-value|((_m)->match_any == 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_MATCH_REQ_BOARD_INFO
-parameter_list|(
-name|_m
-parameter_list|)
-define|\
-value|((_m)->match_srom_rev || (_m)->match_bvendor ||	\ 	    (_m)->match_btype || (_m)->match_brev)
-end_define
-
-begin_comment
-comment|/** Set the required chip ID within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_ID
-parameter_list|(
-name|_cid
-parameter_list|)
-define|\
-value|.match_id = 1, .chip_id = BHND_CHIPID_BCM ## _cid
-end_define
-
-begin_comment
-comment|/** Set the required chip revision range within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_REV
-parameter_list|(
-name|_rev
-parameter_list|)
-define|\
-value|.match_rev = 1, .chip_rev = BHND_ ## _rev
-end_define
-
-begin_comment
-comment|/** Set the required package ID within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_PKG
-parameter_list|(
-name|_pkg
-parameter_list|)
-define|\
-value|.match_pkg = 1, .chip_pkg = BHND_PKGID_BCM ## _pkg
-end_define
-
-begin_comment
-comment|/** Set the required board vendor within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_BVENDOR
-parameter_list|(
-name|_vend
-parameter_list|)
-define|\
-value|.match_bvendor = 1, .board_vendor = _vend
-end_define
-
-begin_comment
-comment|/** Set the required board type within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_BTYPE
-parameter_list|(
-name|_btype
-parameter_list|)
-define|\
-value|.match_btype = 1, .board_type = BHND_BOARD_ ## _btype
-end_define
-
-begin_comment
-comment|/** Set the required SROM revision range within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_SROMREV
-parameter_list|(
-name|_rev
-parameter_list|)
-define|\
-value|.match_srom_rev = 1, .board_srom_rev = BHND_ ## _rev
-end_define
-
-begin_comment
-comment|/** Set the required board revision range within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_BREV
-parameter_list|(
-name|_rev
-parameter_list|)
-define|\
-value|.match_brev = 1, .board_rev = BHND_ ## _rev
-end_define
-
-begin_comment
-comment|/** Set the required board vendor and type within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_BVT
-parameter_list|(
-name|_vend
-parameter_list|,
-name|_type
-parameter_list|)
-define|\
-value|BHND_CHIP_BVENDOR(_vend), BHND_CHIP_BTYPE(_type)
-end_define
-
-begin_comment
-comment|/** Set the required board vendor, type, and revision within a bhnd_chip_match  *  instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_BVTR
-parameter_list|(
-name|_vend
-parameter_list|,
-name|_type
-parameter_list|,
-name|_rev
-parameter_list|)
-define|\
-value|BHND_CHIP_BVT(_vend, _type), BHND_CHIP_BREV(_rev)
-end_define
-
-begin_comment
-comment|/** Set the required chip and package ID within a bhnd_chip_match instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_IP
-parameter_list|(
-name|_cid
-parameter_list|,
-name|_pkg
-parameter_list|)
-define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg)
-end_define
-
-begin_comment
-comment|/** Set the required chip ID, package ID, and revision within a bhnd_chip_match  *  instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_IPR
-parameter_list|(
-name|_cid
-parameter_list|,
-name|_pkg
-parameter_list|,
-name|_rev
-parameter_list|)
-define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg), BHND_CHIP_REV(_rev)
-end_define
-
-begin_comment
-comment|/** Set the required chip ID and revision within a bhnd_chip_match  *  instance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_IR
-parameter_list|(
-name|_cid
-parameter_list|,
-name|_rev
-parameter_list|)
-define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_REV(_rev)
-end_define
-
-begin_comment
-comment|/**  * Chipset quirk table descriptor.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_chip_quirk
-block|{
-specifier|const
-name|struct
-name|bhnd_chip_match
-name|chip
-decl_stmt|;
-comment|/**< chip match descriptor */
-name|uint32_t
-name|quirks
-decl_stmt|;
-comment|/**< quirk flags */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_QUIRK_END
-value|{ BHND_CHIP_MATCH_ANY, 0 }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIP_QUIRK_IS_END
-parameter_list|(
-name|_q
-parameter_list|)
-define|\
-value|(BHND_CHIP_MATCH_IS_ANY(&(_q)->chip)&& (_q)->quirks == 0)
-end_define
-
-begin_comment
 comment|/**  * Device quirk table descriptor.  */
 end_comment
 
@@ -963,10 +460,10 @@ struct|struct
 name|bhnd_device_quirk
 block|{
 name|struct
-name|bhnd_hwrev_match
-name|hwrev
+name|bhnd_device_match
+name|desc
 decl_stmt|;
-comment|/**< applicable hardware revisions */
+comment|/**< device match descriptor */
 name|uint32_t
 name|quirks
 decl_stmt|;
@@ -978,8 +475,64 @@ end_struct
 begin_define
 define|#
 directive|define
+name|BHND_CORE_QUIRK
+parameter_list|(
+name|_rev
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|{{ BHND_MATCH_CORE_REV(_rev) }, (_flags) }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIP_QUIRK
+parameter_list|(
+name|_chip
+parameter_list|,
+name|_rev
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|{{ BHND_CHIP_IR(BCM ## _chip, _rev) }, (_flags) }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_PKG_QUIRK
+parameter_list|(
+name|_chip
+parameter_list|,
+name|_pkg
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|{{ BHND_CHIP_IP(BCM ## _chip, BCM ## _chip ## _pkg) }, (_flags) }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_BOARD_QUIRK
+parameter_list|(
+name|_board
+parameter_list|,
+name|_flags
+parameter_list|)
+define|\
+value|{{ BHND_MATCH_BOARD_TYPE(_board) },	\ 	    (_flags) }
+end_define
+
+begin_define
+define|#
+directive|define
 name|BHND_DEVICE_QUIRK_END
-value|{ BHND_HWREV_ANY, 0 }
+value|{ { BHND_MATCH_ANY }, 0 }
 end_define
 
 begin_define
@@ -990,7 +543,7 @@ parameter_list|(
 name|_q
 parameter_list|)
 define|\
-value|(BHND_HWREV_IS_ANY(&(_q)->hwrev)&& (_q)->quirks == 0)
+value|(((_q)->desc.m.match_flags == 0)&& (_q)->quirks == 0)
 end_define
 
 begin_enum
@@ -1007,7 +560,26 @@ literal|1
 operator|<<
 literal|0
 operator|)
-comment|/**< core is serving as the bus' 					  *  host bridge */
+block|,
+comment|/**< core is serving as the bus' host 					  *  bridge. implies BHND_DF_ADAPTER */
+name|BHND_DF_SOC
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/**< core is attached to a native 					     bus (BHND_ATTACH_NATIVE) */
+name|BHND_DF_ADAPTER
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/**< core is attached to a bridged 					  *  adapter (BHND_ATTACH_ADAPTER) */
 block|}
 enum|;
 end_enum
@@ -1022,7 +594,7 @@ name|bhnd_device
 block|{
 specifier|const
 name|struct
-name|bhnd_core_match
+name|bhnd_device_match
 name|core
 decl_stmt|;
 comment|/**< core match descriptor */
@@ -1039,13 +611,6 @@ modifier|*
 name|quirks_table
 decl_stmt|;
 comment|/**< quirks table for this device, or NULL */
-specifier|const
-name|struct
-name|bhnd_chip_quirk
-modifier|*
-name|chip_quirks_table
-decl_stmt|;
-comment|/**< chipset-specific quirks for this device, or NULL */
 name|uint32_t
 name|device_flags
 decl_stmt|;
@@ -1066,15 +631,13 @@ parameter_list|,
 name|_desc
 parameter_list|,
 name|_quirks
-parameter_list|,
-name|_chip_quirks
-parameter_list|,	\
+parameter_list|,		\
 name|_flags
 parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{ BHND_CORE_MATCH(BHND_MFGID_ ## _vendor,			\ 	    BHND_COREID_ ## _device, BHND_HWREV_ANY), _desc, _quirks,	\ 	    _chip_quirks, _flags }
+value|{ { BHND_MATCH_CORE(BHND_MFGID_ ## _vendor,		\ 	    BHND_COREID_ ## _device) }, _desc, _quirks,		\ 	    _flags }
 end_define
 
 begin_define
@@ -1088,12 +651,10 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
-name|_chip_quirks
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(MIPS, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(MIPS, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
@@ -1107,12 +668,10 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
-name|_chip_quirks
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(ARM, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(ARM, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
@@ -1126,19 +685,28 @@ name|_desc
 parameter_list|,
 name|_quirks
 parameter_list|,
-name|_chip_quirks
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(BCM, _device, _desc, _quirks, _chip_quirks,	\ 	    ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(BCM, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BHND_DEVICE_END
-value|{ BHND_CORE_MATCH_ANY, NULL, NULL, NULL, 0 }
+value|{ { BHND_MATCH_ANY }, NULL, NULL, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_DEVICE_IS_END
+parameter_list|(
+name|_d
+parameter_list|)
+define|\
+value|(BHND_MATCH_IS_ANY(&(_d)->core)&& (_d)->desc == NULL)
 end_define
 
 begin_function_decl
@@ -1344,13 +912,26 @@ name|chipid
 parameter_list|,
 specifier|const
 name|struct
+name|bhnd_chip_match
+modifier|*
+name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_board_matches
+parameter_list|(
+specifier|const
+name|struct
 name|bhnd_board_info
 modifier|*
-name|binfo
+name|info
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_chip_match
+name|bhnd_board_match
 modifier|*
 name|desc
 parameter_list|)
@@ -1374,22 +955,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
-name|bhnd_chip_quirks
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-specifier|const
-name|struct
-name|bhnd_chip_quirk
-modifier|*
-name|table
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|bhnd_device_matches
 parameter_list|(
@@ -1398,7 +963,7 @@ name|dev
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_core_match
+name|bhnd_device_match
 modifier|*
 name|desc
 parameter_list|)

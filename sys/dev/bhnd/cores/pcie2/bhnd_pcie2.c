@@ -120,7 +120,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|BHND_DEVICE(_core, _desc, bhnd_pcie2_quirks, NULL, ## __VA_ARGS__)
+value|BHND_DEVICE(_core, _desc, bhnd_pcie2_quirks, ## __VA_ARGS__)
 end_define
 
 begin_decl_stmt
@@ -146,6 +146,8 @@ argument_list|(
 name|PCIE2
 argument_list|,
 literal|"PCIe-G2 PCI-BHND bridge"
+argument_list|,
+name|BHND_DF_SOC
 argument_list|)
 block|,
 name|BHND_DEVICE_END

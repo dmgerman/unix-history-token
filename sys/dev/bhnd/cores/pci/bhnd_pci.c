@@ -234,7 +234,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{ BHND_DEVICE(_core, _desc, BHND_ ## _core ## _QUIRKS, NULL,	\ 	    ## __VA_ARGS__), BHND_PCI_REGFMT_ ## _core }
+value|{ BHND_DEVICE(_core, _desc, BHND_ ## _core ## _QUIRKS,	\ 	    ## __VA_ARGS__), BHND_PCI_REGFMT_ ## _core }
 end_define
 
 begin_struct
@@ -270,6 +270,8 @@ argument_list|(
 name|PCI
 argument_list|,
 literal|"PCI-BHND bridge"
+argument_list|,
+name|BHND_DF_SOC
 argument_list|)
 block|,
 name|BHND_PCI_DEV
@@ -286,6 +288,8 @@ argument_list|(
 name|PCIE
 argument_list|,
 literal|"PCIe-G1 PCI-BHND bridge"
+argument_list|,
+name|BHND_DF_SOC
 argument_list|)
 block|,
 block|{
@@ -322,14 +326,15 @@ name|bhnd_pcie_quirks
 index|[]
 init|=
 block|{
-block|{
-name|BHND_HWREV_GTE
+name|BHND_CORE_QUIRK
+argument_list|(
+name|HWREV_GTE
 argument_list|(
 literal|10
 argument_list|)
-block|,
+argument_list|,
 name|BHND_PCI_QUIRK_SD_C22_EXTADDR
-block|}
+argument_list|)
 block|,
 name|BHND_DEVICE_QUIRK_END
 block|}
