@@ -323,7 +323,7 @@ end_define
 begin_expr_stmt
 name|TASKQUEUE_DEFINE_THREAD
 argument_list|(
-name|kqueue
+name|kqueue_ctx
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6889,7 +6889,7 @@ condition|)
 block|{
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_kqueue
+name|taskqueue_kqueue_ctx
 argument_list|,
 operator|&
 name|kq
