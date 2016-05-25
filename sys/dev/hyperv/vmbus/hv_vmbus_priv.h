@@ -525,13 +525,6 @@ block|{
 name|hv_bool_uint8_t
 name|syn_ic_initialized
 decl_stmt|;
-comment|/* 	 * For FreeBSD cpuid to Hyper-V vcpuid mapping. 	 */
-name|uint32_t
-name|hv_vcpu_index
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
 block|}
 name|hv_vmbus_context
 typedef|;

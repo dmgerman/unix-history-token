@@ -48,6 +48,10 @@ modifier|*
 name|message
 decl_stmt|;
 comment|/* shared messages */
+name|uint32_t
+name|vcpuid
+decl_stmt|;
+comment|/* virtual cpuid */
 name|int
 name|event_flag_cnt
 decl_stmt|;
