@@ -694,9 +694,19 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__aarch64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 name|void
 modifier|*
 name|invalid_ptr
@@ -908,10 +918,20 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+comment|/* There is no sbrk on AArch64 and RISC-V */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__aarch64__
-comment|/* There is no sbrk on AArch64 */
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 comment|/* 	 * Try to create a pointer to an unmapped page - first after current 	 * brk will likely do. 	 */
 name|invalid_ptr
 operator|=

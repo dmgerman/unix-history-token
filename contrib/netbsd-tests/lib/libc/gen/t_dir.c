@@ -385,15 +385,25 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__aarch64__
-end_ifndef
-
 begin_comment
-comment|/* There is no sbrk on AArch64 */
+comment|/* There is no sbrk on AArch64 and RISC-V */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|ATF_TC
@@ -654,9 +664,19 @@ argument_list|,
 name|seekdir_basic
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__aarch64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
