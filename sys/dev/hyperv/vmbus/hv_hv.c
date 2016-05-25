@@ -1352,6 +1352,9 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
+name|uint64_t
+name|hc
+decl_stmt|;
 if|if
 condition|(
 name|hypercall_context
@@ -1362,11 +1365,22 @@ name|NULL
 condition|)
 return|return;
 comment|/* Disable Hypercall */
+name|hc
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_HV_HYPERCALL
+argument_list|)
+expr_stmt|;
 name|wrmsr
 argument_list|(
 name|MSR_HV_HYPERCALL
 argument_list|,
-literal|0
+operator|(
+name|hc
+operator|&
+name|MSR_HV_HYPERCALL_RSVD_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|hypercall_memfree
