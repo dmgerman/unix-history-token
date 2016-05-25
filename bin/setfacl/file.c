@@ -75,6 +75,8 @@ name|char
 name|buf
 index|[
 name|BUFSIZ
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -170,6 +172,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 operator|(
 name|size_t
