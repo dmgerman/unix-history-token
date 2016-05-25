@@ -13109,7 +13109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Change pte1 on current pmap.  *  Note that kernel pte1 must be changed on all pmaps.  *  *  By ARM ARM manual, the behaviour is UNPREDICABLE when two or more TLB  *  entries map same VA. It's a problem when either promotion or demotion  *  is being done. The pte1 update and appropriate TLB flush must be done  *  atomically in general.  */
+comment|/*  *  Change pte1 on current pmap.  *  Note that kernel pte1 must be changed on all pmaps.  *  *  According to the architecture reference manual published by ARM,  *  the behaviour is UNPREDICTABLE when two or more TLB entries map the same VA.  *  According to this manual, UNPREDICTABLE behaviours must never happen in  *  a viable system. In contrast, on x86 processors, it is not specified which  *  TLB entry mapping the virtual address will be used, but the MMU doesn't  *  generate a bogus translation the way it does on Cortex-A8 rev 2 (Beaglebone  *  Black).  *  *  It's a problem when either promotion or demotion is being done. The pte1  *  update and appropriate TLB flush must be done atomically in general.  */
 end_comment
 
 begin_function
@@ -13189,7 +13189,7 @@ block|{
 name|register_t
 name|cspr
 decl_stmt|;
-comment|/* 		 * Use break-before-make approach for changing userland 		 * mappings. It can cause L1 translation aborts on other 		 * cores in SMP case. So, special treatment is implemented 		 * in pmap_fault(). Interrups are disabled here to make it 		 * without any interruption as quick as possible. 		 */
+comment|/* 		 * Use break-before-make approach for changing userland 		 * mappings. It can cause L1 translation aborts on other 		 * cores in SMP case. So, special treatment is implemented 		 * in pmap_fault(). To reduce the likelihood that another core 		 * will be affected by the broken mapping, disable interrupts 		 * until the mapping change is completed. 		 */
 name|cspr
 operator|=
 name|disable_interrupts
@@ -26311,7 +26311,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * Special treatment due to break-before-make approach done when 	 * pte1 is updated for userland mapping during section promotion or 	 * demotion. If not catched here, pmap_enter() can find a section 	 * mapping on faulting address. That is not allowed. 	 */
+comment|/* 	 * Special treatment is due to break-before-make approach done when 	 * pte1 is updated for userland mapping during section promotion or 	 * demotion. If not caught here, pmap_enter() can find a section 	 * mapping on faulting address. That is not allowed. 	 */
 if|if
 condition|(
 name|idx
