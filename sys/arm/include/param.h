@@ -25,12 +25,6 @@ directive|include
 file|<machine/_align.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_define
 define|#
 directive|define

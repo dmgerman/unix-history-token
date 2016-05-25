@@ -29,12 +29,6 @@ directive|include
 file|<machine/_bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_comment
 comment|/*  *	int bus_space_map  (bus_space_tag_t t, bus_addr_t addr,  *	    bus_size_t size, int flags, bus_space_handle_t *bshp);  *  * Map a region of bus space.  */
 end_comment

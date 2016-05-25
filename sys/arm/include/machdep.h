@@ -19,12 +19,6 @@ directive|define
 name|_MACHDEP_BOOT_MACHDEP_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_comment
 comment|/* Structs that need to be initialised by initarm */
 end_comment

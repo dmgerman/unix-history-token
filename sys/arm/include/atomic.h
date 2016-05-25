@@ -31,12 +31,6 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

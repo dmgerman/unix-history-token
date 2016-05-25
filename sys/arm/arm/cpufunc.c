@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/acle-compat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpuconf.h>
 end_include
 

@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_VM_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_if
 if|#
 directive|if

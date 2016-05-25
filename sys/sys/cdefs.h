@@ -3962,6 +3962,36 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Old versions of GCC use non-standard ARM arch symbols; acle-compat.h  * translates them to __ARM_ARCH and the modern feature symbols defined by ARM.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ARM_ARCH
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Type Safety Checking  *  * Clang provides additional attributes to enable checking type safety  * properties that cannot be enforced by the C type system.   */
 end_comment
 

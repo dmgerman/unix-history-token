@@ -19,12 +19,6 @@ directive|define
 name|MACHINE_ARMREG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_define
 define|#
 directive|define

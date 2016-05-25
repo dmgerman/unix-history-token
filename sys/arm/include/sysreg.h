@@ -19,12 +19,6 @@ directive|define
 name|MACHINE_SYSREG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/acle-compat.h>
-end_include
-
 begin_comment
 comment|/*  * CP14 registers  */
 end_comment
