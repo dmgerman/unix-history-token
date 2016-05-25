@@ -266,7 +266,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Could not allocate memory.\n"
+literal|"Could not allocate cache enabled memory.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -275,6 +275,33 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|tlb1_set_entry
+argument_list|(
+name|rman_get_bushandle
+argument_list|(
+name|sc
+operator|->
+name|sc_rres
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|rle
+operator|->
+name|start
+operator|+
+name|sc
+operator|->
+name|sc_dp_pa
+argument_list|,
+name|rle
+operator|->
+name|count
+argument_list|,
+name|_TLB_ENTRY_MEM
+argument_list|)
+expr_stmt|;
 comment|/* Cache inhibited area */
 name|rle
 operator|=
@@ -356,7 +383,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Could not allocate memory.\n"
+literal|"Could not allocate cache inhibited memory.\n"
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -386,6 +413,44 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|tlb1_set_entry
+argument_list|(
+name|rman_get_bushandle
+argument_list|(
+name|sc
+operator|->
+name|sc_rres
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+name|rle
+operator|->
+name|start
+operator|+
+name|sc
+operator|->
+name|sc_dp_pa
+argument_list|,
+name|rle
+operator|->
+name|count
+argument_list|,
+name|_TLB_ENTRY_IO
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dp
+index|[
+name|cpu
+index|]
+operator|.
+name|dp_regs_mapped
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* Acquire portal's CE_PA and CI_PA */
 name|rle
