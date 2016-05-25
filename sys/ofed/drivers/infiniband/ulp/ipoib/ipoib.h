@@ -15,6 +15,13 @@ directive|define
 name|_IPOIB_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUXKPI_PARAM_PREFIX
+value|ipoib_
+end_define
+
 begin_include
 include|#
 directive|include

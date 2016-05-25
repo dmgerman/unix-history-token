@@ -6,6 +6,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINUXKPI_PARAM_PREFIX
+value|memtrack_
+end_define
+
+begin_define
+define|#
+directive|define
 name|C_MEMTRACK_C
 end_define
 
