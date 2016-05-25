@@ -391,6 +391,13 @@ name|QNICHOST_TAIL
 block|}
 block|,
 block|{
+literal|".gov.uk"
+block|,
+literal|"ac.uk"
+name|QNICHOST_TAIL
+block|}
+block|,
+block|{
 literal|""
 block|,
 name|IANAHOST
