@@ -518,18 +518,6 @@ name|vmbus_event_flags
 union_decl|;
 end_union_decl
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|hv_bool_uint8_t
-name|syn_ic_initialized
-decl_stmt|;
-block|}
-name|hv_vmbus_context
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Define hypervisor message types  */
 end_comment
@@ -1848,13 +1836,6 @@ end_typedef
 begin_comment
 comment|/**  * Global variables  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|hv_vmbus_context
-name|hv_vmbus_g_context
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

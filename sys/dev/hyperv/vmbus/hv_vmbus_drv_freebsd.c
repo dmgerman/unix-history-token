@@ -205,13 +205,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|vmbus_inited
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|vmbus_ids
@@ -842,12 +835,6 @@ operator|.
 name|as_uint64_t
 argument_list|)
 expr_stmt|;
-name|hv_vmbus_g_context
-operator|.
-name|syn_ic_initialized
-operator|=
-name|TRUE
-expr_stmt|;
 comment|/* 	 * Set up the cpuid mapping from Hyper-V to FreeBSD. 	 * The array is indexed using FreeBSD cpuid. 	 */
 name|VMBUS_PCPU_GET
 argument_list|(
@@ -885,14 +872,6 @@ decl_stmt|;
 name|hv_vmbus_synic_siefp
 name|siefp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|hv_vmbus_g_context
-operator|.
-name|syn_ic_initialized
-condition|)
-return|return;
 name|shared_sint
 operator|.
 name|as_uint64_t
@@ -2375,27 +2354,31 @@ name|struct
 name|vmbus_softc
 modifier|*
 name|sc
+init|=
+name|vmbus_get_softc
+argument_list|()
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 if|if
 condition|(
-name|vmbus_inited
+name|sc
+operator|->
+name|vmbus_flags
+operator|&
+name|VMBUS_FLAG_ATTACHED
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|vmbus_inited
-operator|=
-literal|1
-expr_stmt|;
 name|sc
-operator|=
-name|vmbus_get_softc
-argument_list|()
+operator|->
+name|vmbus_flags
+operator||=
+name|VMBUS_FLAG_ATTACHED
 expr_stmt|;
 comment|/* 	 * Allocate DMA stuffs. 	 */
 name|ret
@@ -2431,13 +2414,18 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+comment|/* 	 * Setup SynIC. 	 */
 if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"VMBUS: Calling smp_rendezvous, smp_started = %d\n"
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"smp_started = %d\n"
 argument_list|,
 name|smp_started
 argument_list|)
@@ -2452,6 +2440,12 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vmbus_flags
+operator||=
+name|VMBUS_FLAG_SYNIC
 expr_stmt|;
 comment|/* 	 * Connect to VMBus in the root partition 	 */
 name|ret
@@ -2684,6 +2678,22 @@ expr_stmt|;
 name|hv_vmbus_disconnect
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|vmbus_flags
+operator|&
+name|VMBUS_FLAG_SYNIC
+condition|)
+block|{
+name|sc
+operator|->
+name|vmbus_flags
+operator|&=
+operator|~
+name|VMBUS_FLAG_SYNIC
+expr_stmt|;
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -2695,6 +2705,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|vmbus_intr_teardown
 argument_list|(
 name|sc

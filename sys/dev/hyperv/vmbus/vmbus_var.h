@@ -129,9 +129,35 @@ decl_stmt|;
 name|int
 name|vmbus_idtvec
 decl_stmt|;
+name|uint32_t
+name|vmbus_flags
+decl_stmt|;
+comment|/* see VMBUS_FLAG_ */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VMBUS_FLAG_ATTACHED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vmbus was attached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_FLAG_SYNIC
+value|0x0002
+end_define
+
+begin_comment
+comment|/* SynIC was setup */
+end_comment
 
 begin_decl_stmt
 specifier|extern
