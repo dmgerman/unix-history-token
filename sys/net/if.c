@@ -504,7 +504,7 @@ name|OID_AUTO
 argument_list|,
 name|log_promisc_mode_change
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|log_promisc_mode_change
