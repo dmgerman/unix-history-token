@@ -1096,7 +1096,7 @@ name|crd
 operator|->
 name|do_unlock
 operator|=
-name|usbd_enum_lock
+name|usbd_enum_lock_sig
 argument_list|(
 name|cpd
 operator|->
@@ -1116,6 +1116,26 @@ name|is_uref
 operator|=
 literal|1
 expr_stmt|;
+comment|/* check for signal */
+if|if
+condition|(
+name|crd
+operator|->
+name|do_unlock
+operator|>
+literal|1
+condition|)
+block|{
+name|crd
+operator|->
+name|do_unlock
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 block|}
 comment|/* check if we are doing an open */
 if|if
