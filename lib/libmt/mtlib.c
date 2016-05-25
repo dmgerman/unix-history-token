@@ -3349,6 +3349,16 @@ literal|"LTO-6"
 block|}
 block|,
 block|{
+literal|0x5C
+block|,
+literal|19107
+block|,
+literal|485318
+block|,
+literal|"LTO-7"
+block|}
+block|,
+block|{
 literal|0x71
 block|,
 literal|11800
