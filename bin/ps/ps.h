@@ -79,11 +79,13 @@ modifier|*
 name|ki_p
 decl_stmt|;
 comment|/* kinfo_proc structure */
+specifier|const
 name|char
 modifier|*
 name|ki_args
 decl_stmt|;
 comment|/* exec args */
+specifier|const
 name|char
 modifier|*
 name|ki_env
