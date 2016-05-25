@@ -1743,6 +1743,8 @@ name|DW_ISA_X86_64
 block|,
 name|DW_ISA_AARCH64
 block|,
+name|DW_ISA_RISCV
+block|,
 name|DW_ISA_MAX
 block|}
 enum|;
