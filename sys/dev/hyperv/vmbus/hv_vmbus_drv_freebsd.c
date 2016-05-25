@@ -641,22 +641,11 @@ decl_stmt|;
 name|hv_vmbus_synic_sint
 name|shared_sint
 decl_stmt|;
-name|uint64_t
-name|version
-decl_stmt|;
 name|cpu
 operator|=
 name|PCPU_GET
 argument_list|(
 name|cpuid
-argument_list|)
-expr_stmt|;
-comment|/* 	 * TODO: Check the version 	 */
-name|version
-operator|=
-name|rdmsr
-argument_list|(
-name|HV_X64_MSR_SVERSION
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup the Synic's message page 	 */
