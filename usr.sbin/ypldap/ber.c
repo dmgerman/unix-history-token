@@ -3160,11 +3160,6 @@ operator|)
 return|;
 name|fail
 label|:
-name|ber_free_elements
-argument_list|(
-name|ber
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
