@@ -4630,7 +4630,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Failed to set variable: error %d\n"
+literal|"Failed to set variable: error %lu\n"
 argument_list|,
 name|EFI_ERROR_CODE
 argument_list|(
@@ -4809,7 +4809,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Failed to unset variable: error %d\n"
+literal|"Failed to unset variable: error %lu\n"
 argument_list|,
 name|EFI_ERROR_CODE
 argument_list|(
