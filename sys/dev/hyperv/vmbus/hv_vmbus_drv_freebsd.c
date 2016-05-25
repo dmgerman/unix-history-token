@@ -616,8 +616,7 @@ name|vmbus_synic_setup
 parameter_list|(
 name|void
 modifier|*
-name|arg
-name|__unused
+name|xsc
 parameter_list|)
 block|{
 name|struct
@@ -625,8 +624,7 @@ name|vmbus_softc
 modifier|*
 name|sc
 init|=
-name|vmbus_get_softc
-argument_list|()
+name|xsc
 decl_stmt|;
 name|int
 name|cpu
@@ -2438,7 +2436,7 @@ name|vmbus_synic_setup
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|sc
 argument_list|)
 expr_stmt|;
 name|sc
