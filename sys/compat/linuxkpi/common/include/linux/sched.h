@@ -264,7 +264,7 @@ directive|define
 name|schedule
 parameter_list|()
 define|\
-value|do {									\ 	void *c;							\ 									\ 	if (cold)							\ 		break;							\ 	c = curthread;							\ 	sleepq_lock(c);							\ 	if (current->state == TASK_INTERRUPTIBLE ||			\ 	    current->state == TASK_UNINTERRUPTIBLE) {			\ 		sleepq_add(c, NULL, "task", SLEEPQ_SLEEP, 0);		\ 		sleepq_wait(c, 0);					\ 	} else {							\ 		sleepq_release(c);					\ 		sched_relinquish(curthread);				\ 	}								\ } while (0)
+value|do {									\ 	void *c;							\ 									\ 	if (cold || SCHEDULER_STOPPED())				\ 		break;							\ 	c = curthread;							\ 	sleepq_lock(c);							\ 	if (current->state == TASK_INTERRUPTIBLE ||			\ 	    current->state == TASK_UNINTERRUPTIBLE) {			\ 		sleepq_add(c, NULL, "task", SLEEPQ_SLEEP, 0);		\ 		sleepq_wait(c, 0);					\ 	} else {							\ 		sleepq_release(c);					\ 		sched_relinquish(curthread);				\ 	}								\ } while (0)
 end_define
 
 begin_define
