@@ -51,6 +51,41 @@ parameter_list|)
 value|((((MAJOR_)& 0xff)<< 8) | \                                                  (((MINOR_)& 0xff)     ))
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMSTOR_PROTOCOL_VERSION_WIN6
+value|VMSTOR_PROTOCOL_VERSION(2, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMSTOR_PROTOCOL_VERSION_WIN7
+value|VMSTOR_PROTOCOL_VERSION(4, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMSTOR_PROTOCOL_VERSION_WIN8
+value|VMSTOR_PROTOCOL_VERSION(5, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMSTOR_PROTOCOL_VERSION_WIN8_1
+value|VMSTOR_PROTOCOL_VERSION(6, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMSTOR_PROTOCOL_VERSION_WIN10
+value|VMSTOR_PROTOCOL_VERSION(6, 2)
+end_define
+
 begin_comment
 comment|/*  * Invalid version.  */
 end_comment
