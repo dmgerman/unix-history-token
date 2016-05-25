@@ -24776,6 +24776,9 @@ literal|32
 operator|)
 operator||
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|desc
 operator|->
 name|lba_31_24
@@ -24983,6 +24986,9 @@ operator|*
 name|lba
 operator||=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|res
 operator|->
 name|lba_low_exp
