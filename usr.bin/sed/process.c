@@ -267,6 +267,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|size_t
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1337,7 +1339,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline())
+value|((a)->type == AT_RE ? regexec_e((a)->u.r, ps, 0, 1, 0, psl) :	\ 	    (a)->type == AT_LINE ? linenum == (a)->u.l : lastline())
 end_define
 
 begin_comment
@@ -1717,6 +1719,11 @@ name|lastempty
 decl_stmt|,
 name|n
 decl_stmt|;
+name|size_t
+name|le
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -1805,6 +1812,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|psl
 argument_list|)
 condition|)
@@ -1853,6 +1862,8 @@ literal|0
 index|]
 operator|.
 name|rm_so
+operator|-
+name|le
 condition|)
 name|cspace
 argument_list|(
@@ -1867,6 +1878,8 @@ literal|0
 index|]
 operator|.
 name|rm_so
+operator|-
+name|le
 argument_list|,
 name|APPEND
 argument_list|)
@@ -1876,12 +1889,16 @@ if|if
 condition|(
 name|lastempty
 operator|||
+operator|(
 name|match
 index|[
 literal|0
 index|]
 operator|.
 name|rm_so
+operator|-
+name|le
+operator|)
 operator|||
 name|match
 index|[
@@ -1911,7 +1928,7 @@ argument_list|(
 operator|&
 name|SS
 argument_list|,
-name|s
+name|ps
 argument_list|,
 name|cp
 operator|->
@@ -1945,6 +1962,8 @@ literal|0
 index|]
 operator|.
 name|rm_eo
+operator|-
+name|le
 condition|)
 name|cspace
 argument_list|(
@@ -1959,6 +1978,8 @@ literal|0
 index|]
 operator|.
 name|rm_eo
+operator|-
+name|le
 argument_list|,
 name|APPEND
 argument_list|)
@@ -1971,15 +1992,32 @@ block|}
 comment|/* Move past this match. */
 name|s
 operator|+=
+operator|(
 name|match
 index|[
 literal|0
 index|]
 operator|.
 name|rm_eo
+operator|-
+name|le
+operator|)
 expr_stmt|;
 name|slen
 operator|-=
+operator|(
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_eo
+operator|-
+name|le
+operator|)
+expr_stmt|;
+name|le
+operator|=
 name|match
 index|[
 literal|0
@@ -2033,6 +2071,7 @@ name|s
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|cspace
 argument_list|(
 operator|&
@@ -2046,6 +2085,10 @@ argument_list|,
 name|APPEND
 argument_list|)
 expr_stmt|;
+name|le
+operator|++
+expr_stmt|;
+block|}
 name|lastempty
 operator|=
 literal|1
@@ -2071,13 +2114,15 @@ name|regexec_e
 argument_list|(
 name|re
 argument_list|,
-name|s
-argument_list|,
-name|REG_NOTBOL
+name|ps
 argument_list|,
 literal|0
 argument_list|,
-name|slen
+literal|0
+argument_list|,
+name|le
+argument_list|,
+name|psl
 argument_list|)
 condition|)
 do|;
@@ -3339,7 +3384,10 @@ name|int
 name|nomatch
 parameter_list|,
 name|size_t
-name|slen
+name|start
+parameter_list|,
+name|size_t
+name|stop
 parameter_list|)
 block|{
 name|int
@@ -3379,7 +3427,7 @@ index|]
 operator|.
 name|rm_so
 operator|=
-literal|0
+name|start
 expr_stmt|;
 name|match
 index|[
@@ -3388,7 +3436,7 @@ index|]
 operator|.
 name|rm_eo
 operator|=
-name|slen
+name|stop
 expr_stmt|;
 name|eval
 operator|=
