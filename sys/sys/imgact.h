@@ -34,6 +34,12 @@ name|MAXSHELLCMDLEN
 value|PAGE_SIZE
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|image_args
@@ -233,6 +239,16 @@ decl_stmt|;
 name|u_long
 name|stack_sz
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|newcred
+decl_stmt|;
+comment|/* new credentials if changing */
+name|bool
+name|credential_setid
+decl_stmt|;
+comment|/* true if becoming setid */
 block|}
 struct|;
 end_struct
