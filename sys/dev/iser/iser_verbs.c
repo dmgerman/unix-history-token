@@ -738,7 +738,7 @@ name|comp
 init|=
 name|cq_context
 decl_stmt|;
-name|taskqueue_enqueue_fast
+name|taskqueue_enqueue
 argument_list|(
 name|comp
 operator|->
