@@ -587,6 +587,18 @@ name|nif
 operator|->
 name|nif_devdata
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|status
 operator|=
 name|net
@@ -728,6 +740,17 @@ name|nif
 operator|->
 name|nif_devdata
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|t
 operator|=
 name|time
@@ -940,7 +963,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net%d: cannot start interface (status=%lu)\n"
+literal|"net%d: cannot fetch interface data (status=%lu)\n"
 argument_list|,
 name|nif
 operator|->
@@ -1170,6 +1193,13 @@ name|nif
 operator|->
 name|nif_devdata
 decl_stmt|;
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+return|return;
 name|net
 operator|->
 name|Shutdown
