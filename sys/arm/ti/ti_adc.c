@@ -3567,6 +3567,13 @@ condition|(
 name|child
 operator|!=
 literal|0
+operator|&&
+name|OF_hasprop
+argument_list|(
+name|child
+argument_list|,
+literal|"ti,wires"
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3727,7 +3734,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"invalid nubmer of ti,wire-config: %d (should be %d)\n"
+literal|"invalid number of ti,wire-config: %d (should be %d)\n"
 argument_list|,
 name|nwire_configs
 argument_list|,
