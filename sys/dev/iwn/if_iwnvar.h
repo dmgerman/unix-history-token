@@ -1056,6 +1056,10 @@ name|last_calib_ticks
 decl_stmt|;
 name|struct
 name|callout
+name|scan_timeout
+decl_stmt|;
+name|struct
+name|callout
 name|watchdog_to
 decl_stmt|;
 name|struct
@@ -1212,9 +1216,6 @@ name|chainmask
 decl_stmt|;
 name|int
 name|sc_tx_timer
-decl_stmt|;
-name|int
-name|sc_scan_timer
 decl_stmt|;
 comment|/* Are we doing a scan? */
 name|int
