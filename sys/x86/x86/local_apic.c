@@ -2611,6 +2611,12 @@ literal|"TSC not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|x2apic_mode
+condition|)
+block|{
 name|r
 operator|=
 name|rdtsc
@@ -2678,7 +2684,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"LAPIC: ipi_wait() us multiplier %ju (r %ju tsc %ju)\n"
+literal|"LAPIC: ipi_wait() us multiplier %ju (r %ju "
+literal|"tsc %ju)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2696,6 +2703,7 @@ operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 undef|#
 directive|undef
