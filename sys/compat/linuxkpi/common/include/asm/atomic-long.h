@@ -33,6 +33,16 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ATOMIC_LONG_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|{ .counter = (x) }
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
