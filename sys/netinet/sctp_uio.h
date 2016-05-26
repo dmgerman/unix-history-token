@@ -2135,6 +2135,9 @@ decl_stmt|;
 name|uint16_t
 name|spt_pathpfthld
 decl_stmt|;
+name|uint16_t
+name|spt_pathcpthld
+decl_stmt|;
 block|}
 struct|;
 end_struct
