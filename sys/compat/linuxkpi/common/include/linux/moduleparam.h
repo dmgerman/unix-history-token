@@ -131,6 +131,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUXKPI_PARAM_bool
+parameter_list|(
+name|name
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_BOOL(LINUXKPI_PARAM_PARENT, OID_AUTO,\ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUXKPI_PARAM_byte
 parameter_list|(
 name|name
