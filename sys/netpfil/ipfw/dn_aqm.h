@@ -98,11 +98,11 @@ name|l
 parameter_list|,
 name|h
 parameter_list|)
-value|(x< l? l : x> h? h : x)
+value|((x)> (h)? (h) : ((x)> (l)? (x) : (l)))
 end_define
 
 begin_comment
-comment|/* sysctl variable to count number of droped packets */
+comment|/* sysctl variable to count number of dropped packets */
 end_comment
 
 begin_decl_stmt
