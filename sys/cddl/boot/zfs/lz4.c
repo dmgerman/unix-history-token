@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<netinet/in.h>
 end_include
 
 begin_function_decl
