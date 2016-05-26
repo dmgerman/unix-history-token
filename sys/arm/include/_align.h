@@ -19,12 +19,37 @@ begin_comment
 comment|/*  * Round p (pointer or byte index) up to the hardware-required alignment which  * is sufficient for any data type, pointer or numeric.  The resulting type  * is equivelent to arm's uintptr_t (but is purposely spelled "unsigned" here).  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_define
+define|#
+directive|define
+name|_ALIGNBYTES
+value|(sizeof(int) - 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|_ALIGNBYTES
 value|(sizeof(long long) - 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

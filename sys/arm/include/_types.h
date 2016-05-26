@@ -32,6 +32,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
+begin_define
+define|#
+directive|define
+name|__NO_STRICT_ALIGNMENT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Basic types upon which most other types are built.  */
 end_comment
