@@ -1817,6 +1817,12 @@ name|rt2661_scan_end
 expr_stmt|;
 name|ic
 operator|->
+name|ic_getradiocaps
+operator|=
+name|rt2661_getradiocaps
+expr_stmt|;
+name|ic
+operator|->
 name|ic_set_channel
 operator|=
 name|rt2661_set_channel
