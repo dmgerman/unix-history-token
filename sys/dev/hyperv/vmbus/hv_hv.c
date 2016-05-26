@@ -123,33 +123,57 @@ begin_comment
 comment|/* HV#1 */
 end_comment
 
-begin_comment
-comment|/*  * The guest OS needs to register the guest ID with the hypervisor.  * The guest ID is a 64 bit entity and the structure of this ID is  * specified in the Hyper-V specification:  *  * http://msdn.microsoft.com/en-us/library/windows/  * hardware/ff542653%28v=vs.85%29.aspx  *  * While the current guideline does not specify how FreeBSD guest ID(s)  * need to be generated, our plan is to publish the guidelines for  * FreeBSD and other guest operating systems that currently are hosted  * on Hyper-V. The implementation here conforms to this yet  * unpublished guidelines.  *  * Bit(s)  * 63    - Indicates if the OS is Open Source or not; 1 is Open Source  * 62:56 - Os Type: FreeBSD is 0x02  * 55:48 - Distro specific identification  * 47:16 - FreeBSD kernel version number  * 15:0  - Distro specific identification  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|HYPERV_GUESTID_OSS
-value|(0x1ULL<< 63)
+name|HYPERV_FREEBSD_BUILD
+value|0ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|HYPERV_GUESTID_FREEBSD
-value|(0x02ULL<< 56)
+name|HYPERV_FREEBSD_VERSION
+value|((uint64_t)__FreeBSD_version)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HYPERV_GUESTID
-parameter_list|(
-name|id
-parameter_list|)
+name|HYPERV_FREEBSD_OSID
+value|0ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_HV_GUESTID_BUILD_FREEBSD
 define|\
-value|(HYPERV_GUESTID_OSS | HYPERV_GUESTID_FREEBSD |	\ 	 (((uint64_t)(((id)& 0xff0000)>> 16))<< 48) |\ 	 (((uint64_t)__FreeBSD_version)<< 16) |	\ 	 ((uint64_t)((id)& 0x00ffff)))
+value|(HYPERV_FREEBSD_BUILD& MSR_HV_GUESTID_BUILD_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_HV_GUESTID_VERSION_FREEBSD
+define|\
+value|((HYPERV_FREEBSD_VERSION<< MSR_HV_GUESTID_VERSION_SHIFT)& \ 	 MSR_HV_GUESTID_VERSION_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_HV_GUESTID_OSID_FREEBSD
+define|\
+value|((HYPERV_FREEBSD_OSID<< MSR_HV_GUESTID_OSID_SHIFT)& \ 	 MSR_HV_GUESTID_OSID_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_HV_GUESTID_FREEBSD
+define|\
+value|(MSR_HV_GUESTID_BUILD_FREEBSD |	\ 	 MSR_HV_GUESTID_VERSION_FREEBSD | \ 	 MSR_HV_GUESTID_OSID_FREEBSD |	\ 	 MSR_HV_GUESTID_OSTYPE_FREEBSD)
 end_define
 
 begin_struct
@@ -1099,15 +1123,12 @@ name|VM_GUEST_VM
 expr_stmt|;
 return|return;
 block|}
-comment|/* Write guest id */
+comment|/* Set guest id */
 name|wrmsr
 argument_list|(
-name|HV_X64_MSR_GUEST_OS_ID
+name|MSR_HV_GUEST_OS_ID
 argument_list|,
-name|HYPERV_GUESTID
-argument_list|(
-literal|0
-argument_list|)
+name|MSR_HV_GUESTID_FREEBSD
 argument_list|)
 expr_stmt|;
 if|if
