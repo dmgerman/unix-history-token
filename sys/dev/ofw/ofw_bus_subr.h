@@ -461,7 +461,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Helper routine to find a device_t child matchig a given phandle_t */
+comment|/* Helper routine to find a device_t child matching a given phandle_t */
 end_comment
 
 begin_function_decl
