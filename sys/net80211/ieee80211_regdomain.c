@@ -220,44 +220,11 @@ name|ic
 operator|->
 name|ic_regdomain
 operator|.
-name|country
-operator|=
-name|CTRY_UNITED_STATES
-expr_stmt|;
-comment|/* XXX */
-name|ic
-operator|->
-name|ic_regdomain
-operator|.
 name|location
 operator|=
 literal|' '
 expr_stmt|;
 comment|/* both */
-name|ic
-operator|->
-name|ic_regdomain
-operator|.
-name|isocc
-index|[
-literal|0
-index|]
-operator|=
-literal|'U'
-expr_stmt|;
-comment|/* XXX */
-name|ic
-operator|->
-name|ic_regdomain
-operator|.
-name|isocc
-index|[
-literal|1
-index|]
-operator|=
-literal|'S'
-expr_stmt|;
-comment|/* XXX */
 comment|/* NB: driver calls ieee80211_init_channels or similar */
 block|}
 name|ic
