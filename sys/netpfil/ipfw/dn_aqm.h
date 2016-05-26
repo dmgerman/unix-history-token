@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2016 Centre for Advanced Internet Architectures,  *
 end_comment
 
 begin_comment
-comment|/*  * API for writting an Active Queue Management algorithm for Dummynet  *  * $FreeBSD$  */
+comment|/*  * API for writing an Active Queue Management algorithm for Dummynet  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
