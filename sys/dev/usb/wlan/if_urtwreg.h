@@ -1945,6 +1945,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|URTW_EPROM_CHANPLAN_BY_HW
+value|(0x80)
+end_define
+
+begin_define
+define|#
+directive|define
 name|URTW_EPROM_TXPW_BASE
 value|0x05
 end_define
