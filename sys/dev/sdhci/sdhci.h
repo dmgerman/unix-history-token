@@ -722,6 +722,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_DIVIDERS_MASK
+define|\
+value|((SDHCI_DIVIDER_MASK<< SDHCI_DIVIDER_SHIFT) | \     (SDHCI_DIVIDER_HI_MASK<< SDHCI_DIVIDER_HI_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_TIMEOUT_CONTROL
 value|0x2E
 end_define
