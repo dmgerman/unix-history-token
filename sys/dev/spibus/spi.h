@@ -42,6 +42,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|SPI_COMMAND_INITIALIZER
+value|{ 0 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPI_CHIP_SELECT_HIGH
 value|0x1
 end_define
