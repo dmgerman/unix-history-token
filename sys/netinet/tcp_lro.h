@@ -43,17 +43,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|TCP_LRO_SEQUENCE
-parameter_list|(
-name|mb
-parameter_list|)
-define|\
-value|(mb)->m_pkthdr.PH_loc.thirtytwo[0]
-end_define
-
 begin_struct
 struct|struct
 name|lro_entry
@@ -215,6 +204,22 @@ name|dest_ip6
 value|ledest.d_ip6
 end_define
 
+begin_struct
+struct|struct
+name|lro_mbuf_sort
+block|{
+name|uint64_t
+name|seq
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* NB: This is part of driver structs. */
 end_comment
@@ -229,8 +234,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
+name|lro_mbuf_sort
 modifier|*
 name|lro_mbuf_data
 decl_stmt|;
