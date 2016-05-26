@@ -574,6 +574,10 @@ name|char
 modifier|*
 name|bname
 decl_stmt|;
+name|char
+modifier|*
+name|tmpname
+decl_stmt|;
 if|if
 condition|(
 name|name
@@ -655,6 +659,30 @@ name|NULL
 operator|)
 return|;
 block|}
+name|tmpname
+operator|=
+name|strdup
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpname
+operator|==
+name|NULL
+condition|)
+name|bsdar_errc
+argument_list|(
+name|bsdar
+argument_list|,
+name|EX_SOFTWARE
+argument_list|,
+name|errno
+argument_list|,
+literal|"strdup failed"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -662,7 +690,7 @@ name|bname
 operator|=
 name|basename
 argument_list|(
-name|name
+name|tmpname
 argument_list|)
 operator|)
 operator|==
@@ -772,6 +800,11 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"strdup failed"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmpname
 argument_list|)
 expr_stmt|;
 if|if
