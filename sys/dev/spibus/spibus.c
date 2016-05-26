@@ -608,6 +608,7 @@ name|devi
 operator|->
 name|clock
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
