@@ -241,6 +241,8 @@ name|phandle_t
 name|child
 decl_stmt|;
 name|pcell_t
+name|clock
+decl_stmt|,
 name|paddr
 decl_stmt|;
 name|device_t
@@ -331,6 +333,31 @@ literal|1
 condition|)
 continue|continue;
 block|}
+comment|/* 		 * Get the maximum clock frequency for device, zero means 		 * use the default bus speed. 		 */
+if|if
+condition|(
+name|OF_getencprop
+argument_list|(
+name|child
+argument_list|,
+literal|"spi-max-frequency"
+argument_list|,
+operator|&
+name|clock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|clock
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|clock
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * Now set up the SPI and OFW bus layer devinfo and add it 		 * to the bus. 		 */
 name|dinfo
 operator|=
@@ -363,6 +390,14 @@ operator|.
 name|cs
 operator|=
 name|paddr
+expr_stmt|;
+name|dinfo
+operator|->
+name|opd_dinfo
+operator|.
+name|clock
+operator|=
+name|clock
 expr_stmt|;
 if|if
 condition|(
