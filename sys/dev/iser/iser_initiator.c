@@ -1809,16 +1809,6 @@ name|icl_pdu
 operator|.
 name|ip_data_len
 decl_stmt|;
-name|struct
-name|icl_conn
-modifier|*
-name|ic
-init|=
-operator|&
-name|iser_conn
-operator|->
-name|icl_conn
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -1932,22 +1922,13 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-comment|/* For discovery session we re-use the login buffer */
+comment|/* For login phase and discovery session we re-use the login buffer */
 if|if
 condition|(
-name|ic
+operator|!
+name|iser_conn
 operator|->
-name|ic_session_login_phase
-argument_list|(
-name|ic
-argument_list|)
-operator|||
-name|ic
-operator|->
-name|ic_session_type_discovery
-argument_list|(
-name|ic
-argument_list|)
+name|handoff_done
 condition|)
 block|{
 name|err
