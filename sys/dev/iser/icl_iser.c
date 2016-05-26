@@ -962,6 +962,15 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|iser_conn
+operator|->
+name|state
+operator|!=
+name|ISER_CONN_UP
+condition|)
+return|return;
 name|ret
 operator|=
 name|iser_initialize_headers
