@@ -327,7 +327,7 @@ return|;
 comment|/* Reserve GPIO pin. */
 name|rv
 operator|=
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 argument_list|(
 name|busdev
 argument_list|,
@@ -2160,7 +2160,7 @@ block|}
 comment|/* Reserve the GPIO pin. */
 if|if
 condition|(
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 argument_list|(
 name|bussc
 operator|->

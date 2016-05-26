@@ -657,7 +657,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 parameter_list|(
 name|device_t
 parameter_list|,

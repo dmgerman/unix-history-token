@@ -462,10 +462,10 @@ return|;
 block|}
 block|}
 comment|/* Reserve pin. */
-comment|/* XXX Can we call gpiobus_map_pin() with gpio_list_mtx mutex held? */
+comment|/* XXX Can we call gpiobus_acquire_pin() with gpio_list_mtx held? */
 name|rv
 operator|=
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 argument_list|(
 name|busdev
 argument_list|,

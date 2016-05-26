@@ -1328,7 +1328,7 @@ end_function
 
 begin_function
 name|int
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 parameter_list|(
 name|device_t
 name|bus
@@ -1470,7 +1470,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"gpiobus_map_pin: invalid pin %d, max=%d\n"
+literal|"gpiobus_acquire_pin: invalid pin %d, max=%d\n"
 argument_list|,
 name|pin
 argument_list|,
@@ -1505,7 +1505,7 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"gpiobus_map_pin: pin %d is not mapped\n"
+literal|"gpiobus_acquire_pin: pin %d is not mapped\n"
 argument_list|,
 name|pin
 argument_list|)
@@ -1685,7 +1685,7 @@ continue|continue;
 comment|/* Reserve the GPIO pin. */
 if|if
 condition|(
-name|gpiobus_map_pin
+name|gpiobus_acquire_pin
 argument_list|(
 name|sc
 operator|->
