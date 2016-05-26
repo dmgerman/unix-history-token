@@ -212,6 +212,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHIPC_SFLASH_BASE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_SFLASH_SIZE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHIPC_SFLASHCTRL
 value|0x40
 end_define
@@ -892,15 +906,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIPC_UART0
+name|CHIPC_UART_BASE
 value|0x300
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHIPC_UART1
-value|0x400
+name|CHIPC_UART_SIZE
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_UART0_BASE
+value|CHIPC_UART_BASE
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_UART1_BASE
+value|(CHIPC_UART_BASE + CHIPC_UART_SIZE)
 end_define
 
 begin_comment
@@ -912,6 +940,13 @@ define|#
 directive|define
 name|CHIPC_PMU_BASE
 value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_PMU_SIZE
+value|0x70
 end_define
 
 begin_define
