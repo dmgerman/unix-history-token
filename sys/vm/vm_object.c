@@ -6039,6 +6039,11 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
+name|vm_object_t
+name|backing_object
+decl_stmt|,
+name|new_backing_object
+decl_stmt|;
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
@@ -6049,9 +6054,6 @@ condition|(
 name|TRUE
 condition|)
 block|{
-name|vm_object_t
-name|backing_object
-decl_stmt|;
 comment|/* 		 * Verify that the conditions are right for collapse: 		 * 		 * The object exists and the backing object exists. 		 */
 if|if
 condition|(
@@ -6376,9 +6378,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vm_object_t
-name|new_backing_object
-decl_stmt|;
 comment|/* 			 * If we do not entirely shadow the backing object, 			 * there is nothing we can do so we give up. 			 */
 if|if
 condition|(
