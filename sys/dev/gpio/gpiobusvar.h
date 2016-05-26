@@ -516,6 +516,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|gpio_pin_getcaps
+parameter_list|(
+name|gpio_pin_t
+name|pin
+parameter_list|,
+name|uint32_t
+modifier|*
+name|caps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gpio_pin_is_active
 parameter_list|(
 name|gpio_pin_t
