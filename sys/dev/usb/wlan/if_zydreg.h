@@ -2945,6 +2945,49 @@ value|0x93fc
 end_define
 
 begin_comment
+comment|/* nitems(ZYD_*_CHANTABLE) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint8_t
+name|zyd_chan_2ghz
+index|[]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|8
+block|,
+literal|9
+block|,
+literal|10
+block|,
+literal|11
+block|,
+literal|12
+block|,
+literal|13
+block|,
+literal|14
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* copied nearly verbatim from the Linux driver rewrite */
 end_comment
 
