@@ -72,6 +72,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUXKPI_PARAM_PERM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LINUXKPI_PARAM_PERM
+parameter_list|(
+name|perm
+parameter_list|)
+value|(((perm)& 0222) ? CTLFLAG_RWTUN : CTLFLAG_RDTUN)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -136,9 +157,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_BOOL(LINUXKPI_PARAM_PARENT, OID_AUTO,\ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_BOOL(LINUXKPI_PARAM_PARENT, OID_AUTO,\ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -149,9 +172,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_U8(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_U8(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -162,9 +187,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_S16(LINUXKPI_PARAM_PARENT, OID_AUTO,	\         LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_S16(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -175,9 +202,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_U16(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_U16(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -188,9 +217,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_INT(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_INT(LINUXKPI_PARAM_PARENT, OID_AUTO,	\ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0,\ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -201,9 +232,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_UINT(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_UINT(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -214,9 +247,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_LONG(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_LONG(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -227,9 +262,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_ULONG(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN,&(var), 0,		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_ULONG(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm),&(var), 0, \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -246,7 +283,7 @@ parameter_list|,
 name|perm
 parameter_list|)
 define|\
-value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_STRING(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), CTLFLAG_RDTUN, (str), (len),		\ 	LINUXKPI_PARAM_DESC(name)))
+value|extern const char LINUXKPI_PARAM_DESC(name)[];			\ 	LINUXKPI_PARAM_PASS(SYSCTL_STRING(LINUXKPI_PARAM_PARENT, OID_AUTO, \ 	LINUXKPI_PARAM_NAME(name), LINUXKPI_PARAM_PERM(perm), (str), (len), \ 	LINUXKPI_PARAM_DESC(name)))
 end_define
 
 begin_define
@@ -263,7 +300,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|LINUXKPI_PARAM_##type(name, var)
+value|LINUXKPI_PARAM_##type(name, var, mode)
 end_define
 
 begin_define
@@ -278,7 +315,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|LINUXKPI_PARAM_##type(var, var)
+value|LINUXKPI_PARAM_##type(var, var, mode)
 end_define
 
 begin_define
@@ -295,7 +332,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|LINUXKPI_PARAM_##type(name, var)
+value|LINUXKPI_PARAM_##type(name, var, mode)
 end_define
 
 begin_define
@@ -310,7 +347,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|LINUXKPI_PARAM_##type(var, var)
+value|LINUXKPI_PARAM_##type(var, var, mode)
 end_define
 
 begin_define
