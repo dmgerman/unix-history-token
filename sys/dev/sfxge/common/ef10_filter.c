@@ -3861,9 +3861,9 @@ name|list
 argument_list|,
 name|length
 argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 goto|goto
 name|fail1
