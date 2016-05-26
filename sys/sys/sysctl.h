@@ -829,6 +829,15 @@ end_define
 
 begin_function_decl
 name|int
+name|sysctl_handle_bool
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_handle_8
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
@@ -1401,6 +1410,65 @@ name|descr
 parameter_list|)
 define|\
 value|({									\ 	char *__arg = (arg);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_STRING);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|(access),	\ 	    __arg, len, sysctl_handle_string, "A", __DESCR(descr));	\ })
+end_define
+
+begin_comment
+comment|/* Oid for a bool.  If ptr is NULL, val is returned. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_NULL_BOOL_PTR
+value|((bool *)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_BOOL
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_bool, "CU", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0&&			\ 	    sizeof(bool) == sizeof(*(ptr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_BOOL
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|({									\ 	bool *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0);				\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_bool, "CU", __DESCR(descr));	\ })
 end_define
 
 begin_comment
