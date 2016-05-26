@@ -355,15 +355,10 @@ name|mtx
 name|mtx
 decl_stmt|;
 comment|/**< state mutex. */
-name|struct
-name|bhnd_sprom
-name|sprom
-decl_stmt|;
-comment|/**< OTP/SPROM shadow, if any */
 name|size_t
 name|sprom_refcnt
 decl_stmt|;
-comment|/**< SPROM hardware refcount */
+comment|/**< SPROM pin enable refcount */
 name|struct
 name|rman
 name|mem_rman

@@ -1186,14 +1186,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|bhnd_sprom_fini
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sprom
-argument_list|)
-expr_stmt|;
 name|CHIPC_LOCK_DESTROY
 argument_list|(
 name|sc
