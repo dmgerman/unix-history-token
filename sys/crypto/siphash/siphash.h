@@ -129,7 +129,8 @@ parameter_list|,
 specifier|const
 name|uint8_t
 index|[
-literal|16
+specifier|static
+name|SIPHASH_KEY_LENGTH
 index|]
 parameter_list|)
 function_decl|;
@@ -155,8 +156,11 @@ begin_function_decl
 name|void
 name|SipHash_Final
 parameter_list|(
-name|void
-modifier|*
+name|uint8_t
+index|[
+specifier|static
+name|SIPHASH_DIGEST_LENGTH
+index|]
 parameter_list|,
 name|SIPHASH_CTX
 modifier|*
@@ -220,7 +224,8 @@ parameter_list|,
 specifier|const
 name|uint8_t
 index|[
-literal|16
+specifier|static
+name|SIPHASH_KEY_LENGTH
 index|]
 parameter_list|,
 specifier|const

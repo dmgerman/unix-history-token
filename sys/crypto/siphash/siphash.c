@@ -176,7 +176,8 @@ specifier|const
 name|uint8_t
 name|key
 index|[
-literal|16
+specifier|static
+name|SIPHASH_KEY_LENGTH
 index|]
 parameter_list|)
 block|{
@@ -763,9 +764,12 @@ begin_function
 name|void
 name|SipHash_Final
 parameter_list|(
-name|void
-modifier|*
+name|uint8_t
 name|dst
+index|[
+specifier|static
+name|SIPHASH_DIGEST_LENGTH
+index|]
 parameter_list|,
 name|SIPHASH_CTX
 modifier|*
@@ -936,7 +940,8 @@ specifier|const
 name|uint8_t
 name|key
 index|[
-literal|16
+specifier|static
+name|SIPHASH_KEY_LENGTH
 index|]
 parameter_list|,
 specifier|const

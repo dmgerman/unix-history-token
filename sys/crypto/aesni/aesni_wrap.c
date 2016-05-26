@@ -122,6 +122,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|)
@@ -237,6 +238,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|)
@@ -1268,6 +1270,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|)
@@ -2516,6 +2519,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|,
@@ -2734,6 +2738,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|)
@@ -2793,6 +2798,7 @@ specifier|const
 name|uint8_t
 name|iv
 index|[
+specifier|static
 name|AES_BLOCK_LEN
 index|]
 parameter_list|)

@@ -194,6 +194,7 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
+specifier|static
 name|SHA256_DIGEST_LENGTH
 index|]
 parameter_list|,

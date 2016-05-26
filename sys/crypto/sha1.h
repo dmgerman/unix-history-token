@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NETINET6_SHA1_H_
+name|_CRYPTO_SHA1_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NETINET6_SHA1_H_
+name|_CRYPTO_SHA1_H_
 end_define
 
 begin_struct
@@ -97,6 +97,13 @@ name|SHA1_CTX
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|SHA1_RESULTLEN
+value|(160/8)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -154,7 +161,11 @@ name|struct
 name|sha1_ctxt
 modifier|*
 parameter_list|,
-name|caddr_t
+name|char
+index|[
+specifier|static
+name|SHA1_RESULTLEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -208,20 +219,13 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SHA1_RESULTLEN
-value|(160/8)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_SHA1_H_*/
+comment|/*_CRYPTO_SHA1_H_*/
 end_comment
 
 end_unit

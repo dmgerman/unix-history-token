@@ -1036,21 +1036,18 @@ begin_function
 name|void
 name|MD5Final
 parameter_list|(
-name|digest
-parameter_list|,
-name|context
-parameter_list|)
 name|unsigned
 name|char
 name|digest
 index|[
-literal|16
+specifier|static
+name|MD5_DIGEST_LENGTH
 index|]
-decl_stmt|;
+parameter_list|,
 name|MD5_CTX
 modifier|*
 name|context
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Do padding. */
 name|MD5Pad
@@ -1067,16 +1064,12 @@ name|context
 operator|->
 name|state
 argument_list|,
-literal|16
+name|MD5_DIGEST_LENGTH
 argument_list|)
 expr_stmt|;
 comment|/* Zeroize sensitive information. */
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|context
 argument_list|,
 literal|0

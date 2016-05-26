@@ -1751,7 +1751,8 @@ name|unsigned
 name|char
 name|digest
 index|[
-literal|32
+specifier|static
+name|SHA256_DIGEST_LENGTH
 index|]
 parameter_list|,
 name|SHA256_CTX
@@ -1774,16 +1775,12 @@ name|ctx
 operator|->
 name|state
 argument_list|,
-literal|32
+name|SHA256_DIGEST_LENGTH
 argument_list|)
 expr_stmt|;
 comment|/* Clear the context state */
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ctx
 argument_list|,
 literal|0

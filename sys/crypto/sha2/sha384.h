@@ -188,6 +188,7 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
+specifier|static
 name|SHA384_DIGEST_LENGTH
 index|]
 parameter_list|,

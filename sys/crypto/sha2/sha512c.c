@@ -2139,6 +2139,7 @@ name|unsigned
 name|char
 name|digest
 index|[
+specifier|static
 name|SHA512_DIGEST_LENGTH
 index|]
 parameter_list|,
@@ -2168,10 +2169,6 @@ expr_stmt|;
 comment|/* Clear the context state */
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ctx
 argument_list|,
 literal|0
@@ -2349,6 +2346,7 @@ name|unsigned
 name|char
 name|digest
 index|[
+specifier|static
 name|SHA384_DIGEST_LENGTH
 index|]
 parameter_list|,
@@ -2382,10 +2380,6 @@ expr_stmt|;
 comment|/* Clear the context state */
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|ctx
 argument_list|,
 literal|0

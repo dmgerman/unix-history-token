@@ -902,23 +902,18 @@ begin_function
 name|void
 name|MD4Final
 parameter_list|(
-name|digest
-parameter_list|,
-name|context
-parameter_list|)
 name|unsigned
 name|char
 name|digest
 index|[
+specifier|static
 literal|16
 index|]
-decl_stmt|;
-comment|/* message digest */
+parameter_list|,
 name|MD4_CTX
 modifier|*
 name|context
-decl_stmt|;
-comment|/* context */
+parameter_list|)
 block|{
 comment|/* Do padding */
 name|MD4Pad
@@ -941,9 +936,6 @@ expr_stmt|;
 comment|/* Zeroize sensitive information.    */
 name|bzero
 argument_list|(
-operator|(
-name|POINTER
-operator|)
 name|context
 argument_list|,
 sizeof|sizeof
