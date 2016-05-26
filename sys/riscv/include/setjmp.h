@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|_JBLEN
-value|32
+value|63
 end_define
 
 begin_comment
@@ -100,7 +100,9 @@ name|_JBLEN
 operator|+
 literal|1
 index|]
-decl_stmt|;
+name|__aligned
+decl|(16
+decl_stmt|);
 block|}
 name|sigjmp_buf
 index|[
@@ -126,7 +128,9 @@ name|_JBLEN
 operator|+
 literal|1
 index|]
-decl_stmt|;
+name|__aligned
+decl|(16
+decl_stmt|);
 block|}
 name|jmp_buf
 index|[
