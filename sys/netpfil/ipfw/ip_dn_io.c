@@ -215,6 +215,23 @@ directive|include
 file|<netpfil/ipfw/ip_dn_private.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/dn_aqm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -318,6 +335,24 @@ name|io_pkt_fast
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|io_pkt_drop
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -325,6 +360,11 @@ name|long
 name|io_pkt_drop
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We use a heap to store entities for which we have pending timer events.  * The heap is checked at every tick and all entities with expired events  * are extracted.  */
@@ -590,6 +630,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dummynet
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Dummynet"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -608,6 +677,11 @@ literal|"Dummynet"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* wrapper to pass dn_cfg fields to SYSCTL_* */
@@ -1232,6 +1306,45 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+comment|/* XXX: to skip ts m_tag. For Debugging only*/
+if|if
+condition|(
+name|mtag
+operator|!=
+name|NULL
+operator|&&
+name|mtag
+operator|->
+name|m_tag_id
+operator|==
+name|DN_AQM_MTAG_TS
+condition|)
+block|{
+name|m_tag_delete
+argument_list|(
+name|m
+argument_list|,
+name|mtag
+argument_list|)
+expr_stmt|;
+name|mtag
+operator|=
+name|m_tag_first
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|D
+argument_list|(
+literal|"skip TS tag"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|mtag
@@ -1269,6 +1382,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_AQM
+end_ifndef
 
 begin_function
 specifier|static
@@ -1484,6 +1603,11 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Dispose a list of packet. Use a functions so if we need to do  * more work, this is a central point to do it.  */
@@ -1957,8 +2081,16 @@ begin_comment
 comment|/*  * ECN/ECT Processing (partially adopted from altq)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_AQM
+end_ifndef
+
 begin_function
 specifier|static
+endif|#
+directive|endif
 name|int
 name|ecn_mark
 parameter_list|(
@@ -2365,6 +2497,34 @@ condition|)
 goto|goto
 name|drop
 goto|;
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+comment|/* Call AQM enqueue function */
+if|if
+condition|(
+name|q
+operator|->
+name|fs
+operator|->
+name|aqmfp
+condition|)
+return|return
+name|q
+operator|->
+name|fs
+operator|->
+name|aqmfp
+operator|->
+name|enqueue
+argument_list|(
+name|q
+argument_list|,
+name|m
+argument_list|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|f
@@ -4190,6 +4350,10 @@ operator|*
 name|m0
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* dn_enqueue already increases io_pkt_drop */
+name|io_pkt_drop
+operator|--
 expr_stmt|;
 goto|goto
 name|dropit

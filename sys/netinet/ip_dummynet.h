@@ -15,6 +15,12 @@ directive|define
 name|_IP_DUMMYNET_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|NEW_AQM
+end_define
+
 begin_comment
 comment|/*  * Definition of the kernel-userland API for dummynet.  *  * Setsockopt() and getsockopt() pass a batch of objects, each  * of them starting with a "struct dn_id" which should fully identify  * the object and its relation with others in the sequence.  * The first object in each request should have  *	 type= DN_CMD_*, id = DN_API_VERSION.  * For other objects, type and subtype specify the object, len indicates  * the total length including the header, and 'id' identifies the specific  * object.  *  * Most objects are numbered with an identifier in the range 1..65535.  * DN_MAX_ID indicates the first value outside the range.  */
 end_comment
@@ -113,6 +119,18 @@ name|DN_SYSCTL_GET
 block|,
 name|DN_SYSCTL_SET
 block|,
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+comment|/* subtypes used for setting/getting extra parameters. 	 * these subtypes used with IP_DUMMYNET3 command (get) 	 * and DN_TEXT (set). */
+name|DN_AQM_PARAMS
+block|,
+comment|/* AQM extra params */
+name|DN_SCH_PARAMS
+block|,
+comment|/* scheduler extra params */
+endif|#
+directive|endif
 name|DN_LAST
 block|, }
 enum|;
@@ -180,6 +198,16 @@ name|DN_IS_ECN
 init|=
 literal|0x0080
 block|,
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+name|DN_IS_AQM
+init|=
+literal|0x0100
+block|,
+comment|/* AQMs: e.g Codel& PIE */
+endif|#
+directive|endif
 name|DN_PIPE_CMD
 init|=
 literal|0x1000
@@ -449,6 +477,52 @@ comment|/* may be shorter */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_comment
+comment|/* Extra parameters for AQM and scheduler.  * This struct is used to pass and retrieve parameters (configurations)  * to/from AQM and Scheduler.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dn_extra_parms
+block|{
+name|struct
+name|dn_id
+name|oid
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint32_t
+name|nr
+decl_stmt|;
+define|#
+directive|define
+name|DN_MAX_EXTRA_PARM
+value|10
+name|int64_t
+name|par
+index|[
+name|DN_MAX_EXTRA_PARM
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Overall structure of dummynet  In dummynet, packets are selected with the firewall rules, and passed to two different objects: PIPE or QUEUE (bad name).  A QUEUE defines a classifier, which groups packets into flows according to a 'mask', puts them into independent queues (one per flow) with configurable size and queue management policy, and passes flows to a scheduler:                   (flow_mask|sched_mask)  sched_mask 	 +---------+   weight Wx  +-------------+          |         |->-[flow]-->--|             |-+     -->--| QUEUE x |   ...        |             | |          |         |->-[flow]-->--| SCHEDuler N | | 	 +---------+              |             | | 	     ...                  |             +--[LINK N]-->-- 	 +---------+   weight Wy  |             | +--[LINK N]-->--          |         |->-[flow]-->--|             | |     -->--| QUEUE y |   ...        |             | |          |         |->-[flow]-->--|             | | 	 +---------+              +-------------+ | 	                            +-------------+  Many QUEUE objects can connect to the same scheduler, each QUEUE object can have its own set of parameters.  In turn, the SCHEDuler 'forks' multiple instances according to a 'sched_mask', each instance manages its own set of queues and transmits on a private instance of a configurable LINK.  A PIPE is a simplified version of the above, where there is no flow_mask, and each scheduler instance handles a single queue.  The following data structures (visible from userland) describe the objects used by dummynet:   + dn_link, contains the main configuration parameters related    to delay and bandwidth;  + dn_profile describes a delay profile;  + dn_flow describes the flow status (flow id, statistics)      + dn_sch describes a scheduler  + dn_fs describes a flowset (msk, weight, queue parameters)   *  */

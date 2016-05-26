@@ -103,6 +103,23 @@ directive|include
 file|<netpfil/ipfw/ip_dn_private.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/dn_aqm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -450,7 +467,19 @@ argument_list|(
 argument|.free_queue =
 argument_list|)
 name|NULL
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+name|_SI
+argument_list|(
+argument|.getconfig =
+argument_list|)
+name|NULL
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
