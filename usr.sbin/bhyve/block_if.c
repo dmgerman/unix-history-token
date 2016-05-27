@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -2092,9 +2098,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"Could not open backing file"
+literal|"Could not open backing file: %s"
+argument_list|,
+name|nopt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2114,9 +2122,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"Could not stat backing file"
+literal|"Could not stat backing file %s"
+argument_list|,
+name|nopt
 argument_list|)
 expr_stmt|;
 goto|goto
