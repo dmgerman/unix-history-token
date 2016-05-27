@@ -11381,28 +11381,34 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the contained declarator of an array declarator.  DECL is the    declarator, as constructed by build_array_declarator; INNER is what    appears on the left of the [].  ABSTRACT_P is true if it is an    abstract declarator, false otherwise; this is used to reject static    and type qualifiers in abstract declarators, where they are not in    the C99 grammar (subject to possible change in DR#289).  */
+comment|/* Set the contained declarator of an array declarator.  DECL is the    declarator, as constructed by build_array_declarator; INNER is what    appears on the left of the []. */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|struct
 name|c_declarator
 modifier|*
 name|set_array_declarator_inner
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|c_declarator
-modifier|*
+operator|*
 name|decl
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|c_declarator
-modifier|*
+operator|*
 name|inner
-parameter_list|,
+argument_list|,
 name|bool
 name|abstract_p
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|decl
 operator|->
@@ -11410,50 +11416,11 @@ name|declarator
 operator|=
 name|inner
 expr_stmt|;
-if|if
-condition|(
-name|abstract_p
-operator|&&
-operator|(
-name|decl
-operator|->
-name|u
-operator|.
-name|array
-operator|.
-name|quals
-operator|!=
-name|TYPE_UNQUALIFIED
-operator|||
-name|decl
-operator|->
-name|u
-operator|.
-name|array
-operator|.
-name|attrs
-operator|!=
-name|NULL_TREE
-operator|||
-name|decl
-operator|->
-name|u
-operator|.
-name|array
-operator|.
-name|static_p
-operator|)
-condition|)
-name|error
-argument_list|(
-literal|"static or type qualifiers in abstract declarator"
-argument_list|)
-expr_stmt|;
 return|return
 name|decl
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* INIT is a constructor that forms DECL's initializer.  If the final    element initializes a flexible array field, add the size of that    initializer to DECL's size.  */
