@@ -1203,9 +1203,6 @@ name|int
 name|sc_scanband
 decl_stmt|;
 name|int
-name|sc_auth_prot
-decl_stmt|;
-name|int
 name|sc_fixed_ridx
 decl_stmt|;
 name|int
