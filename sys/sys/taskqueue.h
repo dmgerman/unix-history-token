@@ -938,6 +938,32 @@ define|\
 value|extern struct taskqgroup *qgroup_##name
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EARLY_AP_STARTUP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TASKQGROUP_DEFINE
+parameter_list|(
+name|name
+parameter_list|,
+name|cnt
+parameter_list|,
+name|stride
+parameter_list|)
+define|\ 									\
+value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -952,6 +978,11 @@ parameter_list|)
 define|\ 									\
 value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL);				\ 									\ static void								\ taskqgroup_adjust_##name(void *arg)					\ {									\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_adj_##name, SI_SUB_SMP, SI_ORDER_ANY,		\ 	taskqgroup_adjust_##name, NULL);				\ 									\ struct __hack
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|TASKQGROUP_DECLARE
