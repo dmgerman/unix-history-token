@@ -215,6 +215,12 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|filemon
+operator|->
+name|error
+operator|==
+literal|0
 condition|)
 name|filemon
 operator|->
