@@ -2559,6 +2559,10 @@ name|_NOTE
 argument_list|(
 argument|ARGUNUSED(etp, ns)
 argument_list|)
+name|_NOTE
+argument_list|(
+argument|CONSTANTCONDITION
+argument_list|)
 if|if
 condition|(
 name|B_FALSE
