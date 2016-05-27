@@ -499,10 +499,15 @@ condition|)
 block|{
 name|ISER_ERR
 argument_list|(
-literal|"conn %p wr id %lx status %d vend_err %x"
+literal|"conn %p wr id %llx status %d vend_err %x"
 argument_list|,
 name|iser_conn
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|wc
 operator|->
 name|wr_id
@@ -521,10 +526,15 @@ else|else
 block|{
 name|ISER_DBG
 argument_list|(
-literal|"flush error: conn %p wr id %lx"
+literal|"flush error: conn %p wr id %llx"
 argument_list|,
 name|iser_conn
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|wc
 operator|->
 name|wr_id
