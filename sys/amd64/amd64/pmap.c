@@ -27372,9 +27372,6 @@ operator|!=
 name|MADV_FREE
 condition|)
 return|return;
-name|pmap_delayed_invl_started
-argument_list|()
-expr_stmt|;
 comment|/* 	 * A/D bit emulation requires an alternate code path when clearing 	 * the modified and accessed bits below. Since this function is 	 * advisory in nature we skip it entirely for pmaps that require 	 * A/D bit emulation. 	 */
 if|if
 condition|(
@@ -27422,6 +27419,9 @@ expr_stmt|;
 name|anychanged
 operator|=
 name|FALSE
+expr_stmt|;
+name|pmap_delayed_invl_started
+argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
