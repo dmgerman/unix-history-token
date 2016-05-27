@@ -18,12 +18,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/spa.h>
 end_include
 
@@ -132,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_pageout.h>
 end_include
 
 begin_include
