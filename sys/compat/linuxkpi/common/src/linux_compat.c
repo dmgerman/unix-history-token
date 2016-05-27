@@ -5351,11 +5351,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|unlikely
-argument_list|(
 name|SCHEDULER_STOPPED
 argument_list|()
-argument_list|)
 condition|)
 return|return
 operator|(
@@ -5491,11 +5488,8 @@ name|timeout
 decl_stmt|;
 if|if
 condition|(
-name|unlikely
-argument_list|(
 name|SCHEDULER_STOPPED
 argument_list|()
-argument_list|)
 condition|)
 return|return
 operator|(

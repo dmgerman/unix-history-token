@@ -262,7 +262,7 @@ parameter_list|,
 name|cond
 parameter_list|)
 define|\
-value|do {									\ 	void *c =&(q).wchan;						\ 	if (!(cond)) {							\ 		for (;;) {						\ 			if (unlikely(SCHEDULER_STOPPED()))		\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion", SLEEPQ_SLEEP, 0); \ 			sleepq_wait(c, 0);				\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	void *c =&(q).wchan;						\ 	if (!(cond)) {							\ 		for (;;) {						\ 			if (SCHEDULER_STOPPED())			\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion", SLEEPQ_SLEEP, 0); \ 			sleepq_wait(c, 0);				\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -275,7 +275,7 @@ parameter_list|,
 name|cond
 parameter_list|)
 define|\
-value|({									\ 	void *c =&(q).wchan;						\ 	int _error;							\ 									\ 	_error = 0;							\ 	if (!(cond)) {							\ 		for (; _error == 0;) {					\ 			if (unlikely(SCHEDULER_STOPPED()))		\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion",		\ 			    SLEEPQ_SLEEP | SLEEPQ_INTERRUPTIBLE, 0);	\ 			if (sleepq_wait_sig(c, 0))			\ 				_error = -ERESTARTSYS;			\ 		}							\ 	}								\ 	-_error;							\ })
+value|({									\ 	void *c =&(q).wchan;						\ 	int _error;							\ 									\ 	_error = 0;							\ 	if (!(cond)) {							\ 		for (; _error == 0;) {					\ 			if (SCHEDULER_STOPPED())			\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion",		\ 			    SLEEPQ_SLEEP | SLEEPQ_INTERRUPTIBLE, 0);	\ 			if (sleepq_wait_sig(c, 0))			\ 				_error = -ERESTARTSYS;			\ 		}							\ 	}								\ 	-_error;							\ })
 end_define
 
 begin_define
@@ -290,7 +290,7 @@ parameter_list|,
 name|timeout
 parameter_list|)
 define|\
-value|({									\ 	void *c =&(q).wchan;						\ 	long end = jiffies + timeout;					\ 	int __ret = 0;	 						\ 	int __rc = 0;							\ 									\ 	if (!(cond)) {							\ 		for (; __rc == 0;) {					\ 			if (unlikely(SCHEDULER_STOPPED()))		\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				__ret = 1;				\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion",		\ 			SLEEPQ_SLEEP | SLEEPQ_INTERRUPTIBLE, 0);	\ 			sleepq_set_timeout(c, linux_timer_jiffies_until(end));\ 			__rc = sleepq_timedwait_sig (c, 0);		\ 			if (__rc != 0) {				\
+value|({									\ 	void *c =&(q).wchan;						\ 	long end = jiffies + timeout;					\ 	int __ret = 0;	 						\ 	int __rc = 0;							\ 									\ 	if (!(cond)) {							\ 		for (; __rc == 0;) {					\ 			if (SCHEDULER_STOPPED())			\ 				break;					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				__ret = 1;				\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion",		\ 			SLEEPQ_SLEEP | SLEEPQ_INTERRUPTIBLE, 0);	\ 			sleepq_set_timeout(c, linux_timer_jiffies_until(end));\ 			__rc = sleepq_timedwait_sig (c, 0);		\ 			if (__rc != 0) {				\
 comment|/* check for timeout or signal. 	\ 				 * 0 if the condition evaluated to false\ 				 * after the timeout elapsed,  1 if the \ 				 * condition evaluated to true after the\ 				 * timeout elapsed.			\ 				 */
 value|\ 				if (__rc == EWOULDBLOCK)		\ 					__ret = (cond);			\ 				 else					\ 					__ret = -ERESTARTSYS;		\ 			}						\ 									\ 		}							\ 	} else {							\
 comment|/* return remaining jiffies (at least 1) if the 	\ 		 * condition evaluated to true before the timeout	\ 		 * elapsed.						\ 		 */
