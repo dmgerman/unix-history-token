@@ -476,7 +476,7 @@ name|struct
 name|ffec_bufmap
 name|txbuf_map
 index|[
-name|RX_DESC_COUNT
+name|TX_DESC_COUNT
 index|]
 decl_stmt|;
 name|uint32_t
@@ -3666,7 +3666,7 @@ name|rxdesc_tag
 argument_list|,
 name|sc
 operator|->
-name|txdesc_map
+name|rxdesc_map
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
@@ -3688,7 +3688,7 @@ name|rxdesc_tag
 argument_list|,
 name|sc
 operator|->
-name|txdesc_map
+name|rxdesc_map
 argument_list|,
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
