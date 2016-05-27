@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -362,6 +368,19 @@ decl_stmt|;
 name|unsigned
 name|modeflags
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|t
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fflag
 operator|=
 name|rflag
