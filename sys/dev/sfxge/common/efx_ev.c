@@ -5053,6 +5053,10 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(esmp)
+argument_list|)
 name|EFX_STATIC_ASSERT
 argument_list|(
 name|ISP2
