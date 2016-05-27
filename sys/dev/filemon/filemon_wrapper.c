@@ -201,9 +201,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|curthread
+name|filemon
 operator|->
-name|td_ucred
+name|cred
 argument_list|,
 literal|0
 argument_list|,
