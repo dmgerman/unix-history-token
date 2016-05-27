@@ -4449,12 +4449,19 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+comment|/* 	 * Release the route if using our private route, or if 	 * (with flowtable) we don't have our own reference. 	 */
 if|if
 condition|(
 name|ro
 operator|==
 operator|&
 name|ip6route
+operator|||
+name|ro
+operator|->
+name|ro_flags
+operator|&
+name|RT_NORTREF
 condition|)
 name|RO_RTFREE
 argument_list|(
