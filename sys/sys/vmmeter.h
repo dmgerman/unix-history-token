@@ -123,7 +123,7 @@ comment|/* (f) pages reactivated from free list */
 name|u_int
 name|v_pdwakeups
 decl_stmt|;
-comment|/* (f) times daemon has awaken from sleep */
+comment|/* (p) times daemon has awaken from sleep */
 name|u_int
 name|v_pdpages
 decl_stmt|;

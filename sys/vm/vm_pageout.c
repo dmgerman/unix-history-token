@@ -470,16 +470,6 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|vm_pages_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Event on which pageout daemon sleeps */
-end_comment
-
-begin_decl_stmt
-name|int
 name|vm_pageout_deficit
 decl_stmt|;
 end_decl_stmt
@@ -502,6 +492,26 @@ init|=
 literal|12
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|vm_pageout_wanted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Event on which pageout daemon sleeps */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|vm_pages_needed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are threads waiting for free pages? */
+end_comment
 
 begin_if
 if|#
@@ -5538,13 +5548,13 @@ condition|(
 name|TRUE
 condition|)
 block|{
-comment|/* 		 * If we have enough free memory, wakeup waiters.  Do 		 * not clear vm_pages_needed until we reach our target, 		 * otherwise we may be woken up over and over again and 		 * waste a lot of cpu. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Generally, after a level>= 1 scan, if there are enough 		 * free pages to wakeup the waiters, then they are already 		 * awake.  A call to vm_page_free() during the scan awakened 		 * them.  However, in the following case, this wakeup serves 		 * to bound the amount of time that a thread might wait. 		 * Suppose a thread's call to vm_page_alloc() fails, but 		 * before that thread calls VM_WAIT, enough pages are freed by 		 * other threads to alleviate the free page shortage.  The 		 * thread will, nonetheless, wait until another page is freed 		 * or this wakeup is performed. 		 */
 if|if
 condition|(
 name|vm_pages_needed
@@ -5554,15 +5564,9 @@ name|vm_page_count_min
 argument_list|()
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|vm_paging_needed
-argument_list|()
-condition|)
 name|vm_pages_needed
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -5573,12 +5577,32 @@ name|v_free_count
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Do not clear vm_pageout_wanted until we reach our target. 		 * Otherwise, we may be awakened over and over again, wasting 		 * CPU time. 		 */
 if|if
 condition|(
-name|vm_pages_needed
+name|vm_pageout_wanted
+operator|&&
+operator|!
+name|vm_paging_needed
+argument_list|()
+condition|)
+name|vm_pageout_wanted
+operator|=
+name|false
+expr_stmt|;
+comment|/* 		 * Might the page daemon receive a wakeup call? 		 */
+if|if
+condition|(
+name|vm_pageout_wanted
 condition|)
 block|{
-comment|/* 			 * We're still not done.  Either vm_pages_needed was 			 * set by another thread during the previous scan 			 * (typically, this happens during a level 0 scan) or 			 * vm_pages_needed was already set and the scan failed 			 * to free enough pages.  If we haven't yet performed 			 * a level>= 2 scan (unlimited dirty cleaning), then 			 * upgrade the level and scan again now.  Otherwise, 			 * sleep a bit and try again later.  While sleeping, 			 * vm_pages_needed can be cleared. 			 */
+comment|/* 			 * No.  Either vm_pageout_wanted was set by another 			 * thread during the previous scan, which must have 			 * been a level 0 scan, or vm_pageout_wanted was 			 * already set and the scan failed to free enough 			 * pages.  If we haven't yet performed a level>= 2 			 * scan (unlimited dirty cleaning), then upgrade the 			 * level and scan again now.  Otherwise, sleep a bit 			 * and try again later. 			 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|domain
@@ -5587,16 +5611,8 @@ name|vmd_pass
 operator|>
 literal|1
 condition|)
-name|msleep
+name|pause
 argument_list|(
-operator|&
-name|vm_pages_needed
-argument_list|,
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|,
-name|PVM
-argument_list|,
 literal|"psleep"
 argument_list|,
 name|hz
@@ -5604,40 +5620,49 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|domain
+operator|->
+name|vmd_pass
+operator|++
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Good enough, sleep until required to refresh 			 * stats. 			 */
-name|msleep
+comment|/* 			 * Yes.  Sleep until pages need to be reclaimed or 			 * have their reference stats updated. 			 */
+if|if
+condition|(
+name|mtx_sleep
 argument_list|(
 operator|&
-name|vm_pages_needed
+name|vm_pageout_wanted
 argument_list|,
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|,
+name|PDROP
+operator||
 name|PVM
 argument_list|,
 literal|"psleep"
 argument_list|,
 name|hz
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|vm_pages_needed
+operator|==
+literal|0
 condition|)
 block|{
-name|vm_cnt
+name|PCPU_INC
+argument_list|(
+name|cnt
 operator|.
 name|v_pdwakeups
-operator|++
+argument_list|)
 expr_stmt|;
 name|domain
 operator|->
 name|vmd_pass
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -5647,12 +5672,7 @@ name|vmd_pass
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
+block|}
 name|vm_pageout_scan
 argument_list|(
 name|domain
@@ -6033,7 +6053,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|vm_pages_needed
+name|vm_pageout_wanted
 operator|&&
 name|curthread
 operator|->
@@ -6042,14 +6062,14 @@ operator|!=
 name|pageproc
 condition|)
 block|{
-name|vm_pages_needed
+name|vm_pageout_wanted
 operator|=
-literal|1
+name|true
 expr_stmt|;
 name|wakeup
 argument_list|(
 operator|&
-name|vm_pages_needed
+name|vm_pageout_wanted
 argument_list|)
 expr_stmt|;
 block|}

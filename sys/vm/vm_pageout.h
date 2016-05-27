@@ -33,17 +33,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|vm_pages_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* should be some "event" structure */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|vm_pageout_deficit
 decl_stmt|;
 end_decl_stmt
@@ -52,6 +41,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|vm_pageout_page_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|vm_pageout_wanted
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|vm_pages_needed
 decl_stmt|;
 end_decl_stmt
 
