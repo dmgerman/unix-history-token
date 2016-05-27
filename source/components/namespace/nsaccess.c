@@ -180,13 +180,14 @@ name|AcpiNsLookup
 argument_list|(
 name|NULL
 argument_list|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|char
-operator|*
-operator|)
+argument_list|,
 name|InitVal
 operator|->
 name|Name
+argument_list|)
 argument_list|,
 name|InitVal
 operator|->

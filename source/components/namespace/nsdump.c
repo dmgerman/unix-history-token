@@ -942,7 +942,7 @@ name|String
 operator|.
 name|Pointer
 argument_list|,
-literal|32
+literal|80
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf

@@ -2465,7 +2465,22 @@ break|break;
 case|case
 name|AML_EXTERNAL_OP
 case|:
+if|if
+condition|(
+name|AcpiGbl_DmEmitExternalOpcodes
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/* Opcode 0x15 */ "
+argument_list|)
+expr_stmt|;
+comment|/* Fallthrough */
+block|}
+else|else
+block|{
 break|break;
+block|}
 default|default:
 comment|/* Just get the opcode name and print it */
 name|AcpiOsPrintf

@@ -1103,7 +1103,14 @@ name|DisasmFlags
 operator||=
 name|ACPI_PARSEOP_PARAMETER_LIST
 expr_stmt|;
-comment|/*              * A Zero predicate indicates the possibility of one or more              * External() opcodes within the If() block.              */
+comment|/* Don't emit the actual embedded externals unless asked */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_DmEmitExternalOpcodes
+condition|)
+block|{
+comment|/*                  * A Zero predicate indicates the possibility of one or more                  * External() opcodes within the If() block.                  */
 if|if
 condition|(
 name|NextOp
@@ -1152,6 +1159,7 @@ operator|(
 name|AE_CTRL_DEPTH
 operator|)
 return|;
+block|}
 block|}
 block|}
 block|}

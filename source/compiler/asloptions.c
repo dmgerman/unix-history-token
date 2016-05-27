@@ -1149,10 +1149,15 @@ break|break;
 case|case
 literal|'e'
 case|:
-comment|/* Disable External opcode generation */
+comment|/* iASL: Disable External opcode generation */
 name|Gbl_DoExternals
 operator|=
 name|FALSE
+expr_stmt|;
+comment|/* Disassembler: Emit embedded external operators */
+name|AcpiGbl_DmEmitExternalOpcodes
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case

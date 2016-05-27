@@ -1405,6 +1405,17 @@ argument_list|)
 expr_stmt|;
 name|AsReplaceString
 argument_list|(
+literal|"return_STR"
+argument_list|,
+literal|"return"
+argument_list|,
+name|REPLACE_WHOLE_WORD
+argument_list|,
+name|Buffer
+argument_list|)
+expr_stmt|;
+name|AsReplaceString
+argument_list|(
 literal|"return_ACPI_STATUS"
 argument_list|,
 literal|"return"

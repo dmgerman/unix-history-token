@@ -467,12 +467,29 @@ begin_comment
 comment|/*  * Common error message prefixes  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_ERROR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_MSG_ERROR
 value|"ACPI Error: "
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_EXCEPTION
+end_ifndef
 
 begin_define
 define|#
@@ -481,12 +498,34 @@ name|ACPI_MSG_EXCEPTION
 value|"ACPI Exception: "
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_WARNING
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_MSG_WARNING
 value|"ACPI Warning: "
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_INFO
+end_ifndef
 
 begin_define
 define|#
@@ -495,6 +534,17 @@ name|ACPI_MSG_INFO
 value|"ACPI: "
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_BIOS_ERROR
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -502,12 +552,28 @@ name|ACPI_MSG_BIOS_ERROR
 value|"ACPI BIOS Error (bug): "
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MSG_BIOS_WARNING
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_WARNING
 value|"ACPI BIOS Warning (bug): "
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Common message suffix  */
@@ -1364,6 +1430,34 @@ parameter_list|,
 name|UINT8
 modifier|*
 name|Ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiUtStrExit
+parameter_list|(
+name|UINT32
+name|LineNumber
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|FunctionName
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|ComponentId
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|String
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -596,7 +596,7 @@ literal|"Invalid object"
 argument_list|)
 expr_stmt|;
 block|}
-name|return_PTR
+name|return_STR
 argument_list|(
 name|AcpiUtGetTypeName
 argument_list|(

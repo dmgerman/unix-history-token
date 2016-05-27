@@ -25,6 +25,11 @@ name|defined
 argument_list|(
 name|__FreeBSD_kernel__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
 end_if
 
 begin_include
@@ -907,6 +912,11 @@ name|defined
 argument_list|(
 name|__FreeBSD_kernel__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
 name|char
 name|Buffer
 index|[
@@ -990,6 +1000,11 @@ operator|||
 name|defined
 argument_list|(
 name|__FreeBSD_kernel__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
 argument_list|)
 elseif|else
 if|if

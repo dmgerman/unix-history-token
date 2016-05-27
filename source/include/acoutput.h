@@ -1342,7 +1342,7 @@ parameter_list|,
 name|String
 parameter_list|)
 define|\
-value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, char *, String)
+value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, const char *, String)
 end_define
 
 begin_define
@@ -1448,6 +1448,17 @@ name|Pointer
 parameter_list|)
 define|\
 value|ACPI_TRACE_EXIT (AcpiUtPtrExit, void *, Pointer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_STR
+parameter_list|(
+name|String
+parameter_list|)
+define|\
+value|ACPI_TRACE_EXIT (AcpiUtStrExit, const char *, String)
 end_define
 
 begin_define
@@ -1815,6 +1826,16 @@ begin_define
 define|#
 directive|define
 name|return_PTR
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_STR
 parameter_list|(
 name|s
 parameter_list|)

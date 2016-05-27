@@ -1312,33 +1312,10 @@ operator|==
 name|AML_EXTERNAL_OP
 condition|)
 block|{
-comment|/* TBD: May only be temporary */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateStringObject
-argument_list|(
-operator|(
-name|ACPI_SIZE
-operator|)
-name|NameLength
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-argument_list|,
-name|NameString
-argument_list|,
-name|NameLength
-argument_list|)
-expr_stmt|;
+comment|/*                      * This opcode should never appear here. It is used only                      * by AML disassemblers and is surrounded by an If(0)                      * by the ASL compiler.                      *                      * Therefore, if we see it here, it is a serious error.                      */
 name|Status
 operator|=
-name|AE_OK
+name|AE_AML_BAD_OPCODE
 expr_stmt|;
 block|}
 else|else

@@ -511,6 +511,48 @@ directive|define
 name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCloseDirectory
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_ERROR
+value|KERN_ERR "ACPI Error: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_EXCEPTION
+value|KERN_ERR "ACPI Exception: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_WARNING
+value|KERN_WARNING "ACPI Warning: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_INFO
+value|KERN_INFO "ACPI: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_BIOS_ERROR
+value|KERN_ERR "ACPI BIOS Error (bug): "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_BIOS_WARNING
+value|KERN_WARNING "ACPI BIOS Warning (bug): "
+end_define
+
 begin_else
 else|#
 directive|else
