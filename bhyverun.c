@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"atkbdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
@@ -3960,6 +3966,11 @@ argument_list|()
 expr_stmt|;
 name|init_inout
 argument_list|()
+expr_stmt|;
+name|atkbdc_init
+argument_list|(
+name|ctx
+argument_list|)
 expr_stmt|;
 name|pci_irq_init
 argument_list|(
