@@ -541,6 +541,9 @@ name|epp
 operator|->
 name|ep_brdcst
 condition|)
+block|{
+comment|/* 		 * NOTE: due to constant folding, some of this evaluates 		 * to null expressions, giving E_EXPR_NULL_EFFECT during 		 * lint on Illumos.  No good way to fix this without 		 * explicit coding the individual word/bit setting. 		 * So just suppress lint for this one line. 		 */
+comment|/* LINTED */
 name|EFX_SET_OWORD_BIT
 argument_list|(
 name|multicast_hash
@@ -551,6 +554,7 @@ argument_list|,
 literal|0x7f
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
