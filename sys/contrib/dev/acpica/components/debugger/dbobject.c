@@ -249,7 +249,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%u) \"%.24s"
+literal|"(%u) \"%.60s"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -272,7 +272,7 @@ name|String
 operator|.
 name|Length
 operator|>
-literal|24
+literal|60
 condition|)
 block|{
 name|AcpiOsPrintf
