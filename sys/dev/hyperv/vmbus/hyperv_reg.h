@@ -434,12 +434,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPUID_HV_MSR_VP_INDEX
+value|0x0040
+end_define
+
+begin_comment
+comment|/* MSR_HV_VP_INDEX */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPUID_HV_MSR_GUEST_IDLE
 value|0x0400
 end_define
 
 begin_comment
-comment|/* MSR_VH_GUEST_IDLE */
+comment|/* MSR_HV_GUEST_IDLE */
 end_comment
 
 begin_comment

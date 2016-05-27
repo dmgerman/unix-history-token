@@ -83,6 +83,12 @@ directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/hyperv_var.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -114,6 +120,17 @@ directive|define
 name|MSR_HV_STIMER0_CFG_SINT
 define|\
 value|((((uint64_t)HV_VMBUS_TIMER_SINT)<< MSR_HV_STIMER_CFG_SINT_SHIFT)& \ 	 MSR_HV_STIMER_CFG_SINT_MASK)
+end_define
+
+begin_comment
+comment|/*  * Two additionally required features:  * - SynIC is needed for interrupt generation.  * - Time reference counter is needed to set ABS reference count to  *   STIMER0_COUNT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_HV_ET_MASK
+value|(CPUID_HV_MSR_TIME_REFCNT |	\ 					 CPUID_HV_MSR_SYNIC |		\ 					 CPUID_HV_MSR_SYNTIMER)
 end_define
 
 begin_decl_stmt
@@ -359,6 +376,14 @@ literal|1
 argument_list|)
 operator|!=
 name|NULL
+operator|||
+operator|(
+name|hyperv_features
+operator|&
+name|CPUID_HV_ET_MASK
+operator|)
+operator|!=
+name|CPUID_HV_ET_MASK
 condition|)
 return|return;
 name|device_add_child

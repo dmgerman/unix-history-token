@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/vmbus/hyperv_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
@@ -645,7 +651,14 @@ decl_stmt|;
 name|uint32_t
 name|sint
 decl_stmt|;
-comment|/* 	 * Save virtual processor id. 	 */
+if|if
+condition|(
+name|hyperv_features
+operator|&
+name|CPUID_HV_MSR_VP_INDEX
+condition|)
+block|{
+comment|/* 		 * Save virtual processor id. 		 */
 name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
@@ -660,6 +673,22 @@ argument_list|(
 name|MSR_HV_VP_INDEX
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * XXX 		 * Virtual processoor id is only used by a pretty broken 		 * channel selection code from storvsc.  It's nothing 		 * critical even if CPUID_HV_MSR_VP_INDEX is not set; keep 		 * moving on. 		 */
+name|VMBUS_PCPU_GET
+argument_list|(
+name|sc
+argument_list|,
+name|vcpuid
+argument_list|,
+name|cpu
+argument_list|)
+operator|=
+name|cpu
+expr_stmt|;
+block|}
 comment|/* 	 * Setup the SynIC message. 	 */
 name|orig
 operator|=
@@ -2280,6 +2309,14 @@ operator|||
 name|vm_guest
 operator|!=
 name|VM_GUEST_HV
+operator|||
+operator|(
+name|hyperv_features
+operator|&
+name|CPUID_HV_MSR_SYNIC
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
