@@ -699,7 +699,7 @@ end_include
 begin_function
 specifier|static
 name|void
-name|filemon_comment
+name|filemon_write_header
 parameter_list|(
 name|struct
 name|filemon
@@ -1443,7 +1443,7 @@ operator|==
 literal|0
 condition|)
 comment|/* Write the file header. */
-name|filemon_comment
+name|filemon_write_header
 argument_list|(
 name|filemon
 argument_list|)
