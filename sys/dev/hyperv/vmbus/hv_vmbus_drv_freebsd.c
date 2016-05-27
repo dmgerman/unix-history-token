@@ -389,7 +389,7 @@ block|{
 comment|/* 			 * This will cause message queue rescan to possibly 			 * deliver another msg from the hypervisor 			 */
 name|wrmsr
 argument_list|(
-name|HV_X64_MSR_EOM
+name|MSR_HV_EOM
 argument_list|,
 literal|0
 argument_list|)
@@ -504,7 +504,7 @@ block|{
 comment|/* 			 * This will cause message queue rescan to possibly 			 * deliver another msg from the hypervisor 			 */
 name|wrmsr
 argument_list|(
-name|HV_X64_MSR_EOM
+name|MSR_HV_EOM
 argument_list|,
 literal|0
 argument_list|)

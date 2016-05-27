@@ -220,6 +220,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_HV_EOM
+value|0x40000084
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_HV_SINT0
 value|0x40000090
 end_define
