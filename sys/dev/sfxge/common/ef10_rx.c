@@ -80,17 +80,12 @@ decl_stmt|;
 name|uint8_t
 name|payload
 index|[
-name|MAX
-argument_list|(
 name|MC_CMD_INIT_RXQ_IN_LEN
 argument_list|(
 name|EFX_RXQ_NBUFS
 argument_list|(
 name|EFX_RXQ_MAXNDESCS
 argument_list|)
-argument_list|)
-argument_list|,
-name|MC_CMD_INIT_RXQ_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
@@ -115,6 +110,16 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+comment|/* If this changes, then the payload size might need to change. */
+name|EFSYS_ASSERT3U
+argument_list|(
+name|MC_CMD_INIT_RXQ_OUT_LEN
+argument_list|,
+operator|==
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|size
