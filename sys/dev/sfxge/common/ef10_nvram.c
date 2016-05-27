@@ -1232,10 +1232,11 @@ operator|->
 name|block
 decl_stmt|;
 comment|/* 	 * Go through each segment and check that it has an end tag. If there 	 * is no end tag then the previous segment was the last valid one, 	 * so return the pointer to its end tag. 	 */
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
