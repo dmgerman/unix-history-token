@@ -4431,6 +4431,9 @@ name|isdir
 init|=
 literal|0
 decl_stmt|;
+name|int32_t
+name|fuse_open_flags
+decl_stmt|;
 name|FS_DEBUG2G
 argument_list|(
 literal|"inode=%ju mode=0x%x\n"
@@ -4478,6 +4481,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|fuse_open_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|isdir
@@ -4497,6 +4504,27 @@ argument_list|(
 name|mode
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For WRONLY opens, force DIRECT_IO.  This is necessary 		 * since writing a partial block through the buffer cache 		 * will result in a read of the block and that read won't 		 * be allowed by the WRONLY open. 		 */
+if|if
+condition|(
+name|fufh_type
+operator|==
+name|FUFH_WRONLY
+operator|||
+operator|(
+name|fvdat
+operator|->
+name|flag
+operator|&
+name|FN_DIRECTIO
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fuse_open_flags
+operator|=
+name|FOPEN_DIRECT_IO
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4512,7 +4540,7 @@ name|fuse_vnode_open
 argument_list|(
 name|vp
 argument_list|,
-literal|0
+name|fuse_open_flags
 argument_list|,
 name|td
 argument_list|)
