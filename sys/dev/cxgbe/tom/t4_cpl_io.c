@@ -7806,13 +7806,22 @@ name|rcv_nxt
 operator|+=
 name|len
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|tp
 operator|->
 name|rcv_wnd
-operator|>=
+operator|<
 name|len
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|toep
+operator|->
+name|ulp_mode
+operator|!=
+name|ULP_MODE_RDMA
 argument_list|,
 operator|(
 literal|"%s: negative window size"
@@ -7821,6 +7830,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|tp
 operator|->
 name|rcv_wnd
