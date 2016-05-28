@@ -69,6 +69,12 @@ directive|include
 file|"sha512.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sha512t.h"
+end_include
+
 begin_comment
 comment|/* The following makes SHA default to SHA-1 if it has not already been  * defined with C compiler flags. */
 end_comment
@@ -173,6 +179,27 @@ define|#
 directive|define
 name|SHA_Data
 value|SHA512_Data
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SHA
+operator|==
+literal|512256
+end_elif
+
+begin_undef
+undef|#
+directive|undef
+name|SHA_Data
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SHA_Data
+value|SHA512_256_Data
 end_define
 
 begin_endif
