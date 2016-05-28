@@ -924,12 +924,11 @@ comment|/* NB: check seq # and frag together */
 if|if
 condition|(
 name|rxseq
-operator|!=
+operator|==
 name|last_rxseq
 operator|+
 literal|1
-operator|||
-operator|!
+operator|&&
 name|IEEE80211_ADDR_EQ
 argument_list|(
 name|wh
@@ -940,8 +939,7 @@ name|lwh
 operator|->
 name|i_addr1
 argument_list|)
-operator|||
-operator|!
+operator|&&
 name|IEEE80211_ADDR_EQ
 argument_list|(
 name|wh
@@ -953,6 +951,45 @@ operator|->
 name|i_addr2
 argument_list|)
 condition|)
+block|{
+comment|/* XXX clear MORE_FRAG bit? */
+comment|/* track last seqnum and fragno */
+operator|*
+operator|(
+name|uint16_t
+operator|*
+operator|)
+name|lwh
+operator|->
+name|i_seq
+operator|=
+operator|*
+operator|(
+name|uint16_t
+operator|*
+operator|)
+name|wh
+operator|->
+name|i_seq
+expr_stmt|;
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+name|hdrspace
+argument_list|)
+expr_stmt|;
+comment|/* strip header */
+name|m_catpkt
+argument_list|(
+name|mfrag
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* concatenate */
+block|}
+else|else
 block|{
 comment|/* 			 * Unrelated fragment or no space for it, 			 * clear current fragments. 			 */
 name|m_freem
@@ -1007,55 +1044,6 @@ block|}
 name|mfrag
 operator|=
 name|m
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* concatenate */
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|hdrspace
-argument_list|)
-expr_stmt|;
-comment|/* strip header */
-name|m_catpkt
-argument_list|(
-name|mfrag
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* track last seqnum and fragno */
-name|lwh
-operator|=
-name|mtod
-argument_list|(
-name|mfrag
-argument_list|,
-expr|struct
-name|ieee80211_frame
-operator|*
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|uint16_t
-operator|*
-operator|)
-name|lwh
-operator|->
-name|i_seq
-operator|=
-operator|*
-operator|(
-name|uint16_t
-operator|*
-operator|)
-name|wh
-operator|->
-name|i_seq
 expr_stmt|;
 block|}
 if|if
