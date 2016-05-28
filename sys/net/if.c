@@ -3930,16 +3930,11 @@ modifier|*
 name|dp
 decl_stmt|;
 comment|/* 	 * Since dp->dom_ifattach calls malloc() with M_WAITOK, we 	 * cannot lock ifp->if_afdata initialization, entirely. 	 */
-if|if
-condition|(
-name|IF_AFDATA_TRYLOCK
+name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
 argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
+expr_stmt|;
 if|if
 condition|(
 name|ifp
