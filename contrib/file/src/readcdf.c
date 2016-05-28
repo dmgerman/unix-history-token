@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readcdf.c,v 1.53 2015/04/09 20:01:41 christos Exp $"
+literal|"@(#)$File: readcdf.c,v 1.57 2016/05/03 16:08:49 christos Exp $"
 argument_list|)
 end_macro
 
@@ -193,6 +193,18 @@ index|[]
 init|=
 block|{
 block|{
+literal|"Book"
+block|,
+literal|"vnd.ms-excel"
+block|,		}
+block|,
+block|{
+literal|"Workbook"
+block|,
+literal|"vnd.ms-excel"
+block|,		}
+block|,
+block|{
 literal|"WordDocument"
 block|,
 literal|"msword"
@@ -222,10 +234,22 @@ index|[]
 init|=
 block|{
 block|{
+literal|"Book"
+block|,
+literal|"Microsoft Excel"
+block|,	}
+block|,
+block|{
+literal|"Workbook"
+block|,
+literal|"Microsoft Excel"
+block|,	}
+block|,
+block|{
 literal|"WordDocument"
 block|,
-literal|"Microsoft Office Word"
-block|,}
+literal|"Microsoft Word"
+block|,	}
 block|,
 block|{
 literal|"PowerPoint"
@@ -503,6 +527,19 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|char
+modifier|*
+name|old_lc_ctype
+init|=
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|"C"
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
 for|for
@@ -579,6 +616,15 @@ expr_stmt|;
 name|freelocale
 argument_list|(
 name|c_lc_ctype
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+name|old_lc_ctype
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1993,7 +2039,6 @@ argument_list|(
 operator|&
 name|h
 argument_list|,
-operator|&
 name|scn
 argument_list|)
 expr_stmt|;

@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: print.c,v 1.80 2015/07/16 14:28:57 christos Exp $"
+literal|"@(#)$File: print.c,v 1.81 2016/01/19 15:09:03 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1048,6 +1048,9 @@ name|FILE_USE
 case|:
 case|case
 name|FILE_NAME
+case|:
+case|case
+name|FILE_DER
 case|:
 operator|(
 name|void

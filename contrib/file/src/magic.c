@@ -41,7 +41,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: magic.c,v 1.95 2015/09/11 17:24:09 christos Exp $"
+literal|"@(#)$File: magic.c,v 1.99 2016/05/03 16:09:38 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1928,7 +1928,7 @@ name|CAST
 argument_list|(
 argument|unsigned char *
 argument_list|,
-argument|malloc(HOWMANY + SLOP)
+argument|malloc(ms->bytes_max + SLOP)
 argument_list|)
 operator|)
 operator|==
@@ -2203,7 +2203,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * try looking at the first HOWMANY bytes 	 */
+comment|/* 	 * try looking at the first ms->bytes_max bytes 	 */
 if|if
 condition|(
 name|ispipe
@@ -2237,7 +2237,9 @@ call|(
 name|size_t
 call|)
 argument_list|(
-name|HOWMANY
+name|ms
+operator|->
+name|bytes_max
 operator|-
 name|nbytes
 argument_list|)
@@ -2309,12 +2311,6 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
-operator|&&
-name|HOWMANY
-operator|>
-literal|8
-operator|*
-literal|1024
 name|_isatty
 argument_list|(
 name|fd
@@ -2326,7 +2322,9 @@ literal|1024
 else|:
 endif|#
 directive|endif
-name|HOWMANY
+name|ms
+operator|->
+name|bytes_max
 decl_stmt|;
 if|if
 condition|(
@@ -2447,6 +2445,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
 name|pos
 operator|!=
 operator|(
@@ -2479,6 +2485,7 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -2883,6 +2890,24 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|MAGIC_PARAM_BYTES_MAX
+case|:
+name|ms
+operator|->
+name|bytes_max
+operator|=
+operator|*
+operator|(
+specifier|const
+name|size_t
+operator|*
+operator|)
+name|val
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 name|errno
 operator|=
@@ -3017,6 +3042,23 @@ operator|=
 name|ms
 operator|->
 name|regex_max
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|MAGIC_PARAM_BYTES_MAX
+case|:
+operator|*
+operator|(
+name|size_t
+operator|*
+operator|)
+name|val
+operator|=
+name|ms
+operator|->
+name|bytes_max
 expr_stmt|;
 return|return
 literal|0
