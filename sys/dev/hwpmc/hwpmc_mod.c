@@ -15785,6 +15785,9 @@ name|INVARIANTS
 name|int
 name|ncallchains
 decl_stmt|;
+name|int
+name|nfree
+decl_stmt|;
 endif|#
 directive|endif
 name|psb
@@ -15825,6 +15828,10 @@ name|ncallchains
 operator|=
 literal|0
 expr_stmt|;
+name|nfree
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Iterate through all deferred callchain requests. 	 * Walk from the current read pointer to the current 	 * write pointer. 	 */
@@ -15842,6 +15849,24 @@ name|ps_write
 expr_stmt|;
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+if|if
+condition|(
+name|ps
+operator|->
+name|ps_pmc
+operator|->
+name|pm_state
+operator|!=
+name|PMC_STATE_RUNNING
+condition|)
+name|nfree
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ps
@@ -15982,6 +16007,10 @@ do|;
 name|KASSERT
 argument_list|(
 name|ncallchains
+operator|>
+literal|0
+operator|||
+name|nfree
 operator|>
 literal|0
 argument_list|,
