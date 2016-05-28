@@ -10,6 +10,8 @@ literal|"help"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"                 display this help and exit\n"
 argument_list|,
 argument|OPT_HELP
@@ -22,6 +24,8 @@ argument_list|(
 literal|'v'
 argument_list|,
 literal|"version"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -38,6 +42,8 @@ literal|"magic-file"
 argument_list|,
 literal|1
 argument_list|,
+literal|0
+argument_list|,
 literal|" LIST      use LIST as a colon-separated list of magic\n"
 literal|"                               number files\n"
 argument_list|)
@@ -49,6 +55,8 @@ argument_list|(
 literal|'z'
 argument_list|,
 literal|"uncompress"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -65,6 +73,8 @@ literal|"uncompress-noreport"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"  only print the contents of compressed files\n"
 argument_list|)
 end_macro
@@ -78,6 +88,8 @@ literal|"brief"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"                do not prepend filenames to output lines\n"
 argument_list|)
 end_macro
@@ -88,6 +100,8 @@ argument_list|(
 literal|'c'
 argument_list|,
 literal|"checking-printout"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -106,6 +120,8 @@ literal|"exclude"
 argument_list|,
 literal|1
 argument_list|,
+literal|0
+argument_list|,
 literal|" TEST         exclude TEST from the list of test to be\n"
 literal|"                               performed for file. Valid tests are:\n"
 literal|"                               %o\n"
@@ -121,6 +137,8 @@ literal|"files-from"
 argument_list|,
 literal|1
 argument_list|,
+literal|0
+argument_list|,
 literal|" FILE      read the filenames to be examined from FILE\n"
 argument_list|)
 end_macro
@@ -133,6 +151,8 @@ argument_list|,
 literal|"separator"
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|" STRING     use string as separator instead of `:'\n"
 argument_list|)
@@ -147,6 +167,8 @@ literal|"mime"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"                 output MIME type strings (--mime-type and\n"
 literal|"                               --mime-encoding)\n"
 argument_list|)
@@ -156,6 +178,8 @@ begin_macro
 name|OPT_LONGONLY
 argument_list|(
 literal|"apple"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -172,6 +196,8 @@ literal|"extension"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"            output a slash-separated list of extensions\n"
 argument_list|,
 argument|OPT_EXTENSIONS
@@ -185,6 +211,8 @@ literal|"mime-type"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"            output the MIME type\n"
 argument_list|,
 argument|OPT_MIME_TYPE
@@ -195,6 +223,8 @@ begin_macro
 name|OPT_LONGONLY
 argument_list|(
 literal|"mime-encoding"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -213,6 +243,8 @@ literal|"keep-going"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"           don't stop at the first match\n"
 argument_list|)
 end_macro
@@ -223,6 +255,8 @@ argument_list|(
 literal|'l'
 argument_list|,
 literal|"list"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -245,7 +279,9 @@ literal|"dereference"
 argument_list|,
 literal|0
 argument_list|,
-literal|"          follow symlinks (default)\n"
+literal|1
+argument_list|,
+literal|"          follow symlinks"
 argument_list|)
 end_macro
 
@@ -258,7 +294,9 @@ literal|"no-dereference"
 argument_list|,
 literal|0
 argument_list|,
-literal|"       don't follow symlinks\n"
+literal|2
+argument_list|,
+literal|"       don't follow symlinks"
 argument_list|)
 end_macro
 
@@ -276,6 +314,8 @@ literal|"no-buffer"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"            do not buffer output\n"
 argument_list|)
 end_macro
@@ -289,6 +329,8 @@ literal|"no-pad"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"               do not pad output\n"
 argument_list|)
 end_macro
@@ -299,6 +341,8 @@ argument_list|(
 literal|'0'
 argument_list|,
 literal|"print0"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -329,6 +373,8 @@ literal|"preserve-date"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"        preserve access times on files\n"
 argument_list|)
 end_macro
@@ -346,6 +392,8 @@ argument_list|,
 literal|"parameter"
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|"            set file engine parameter limits\n"
 literal|"                               indir        15 recursion limit for indirection\n"
@@ -365,6 +413,8 @@ literal|"raw"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"                  don't translate unprintable chars to \\ooo\n"
 argument_list|)
 end_macro
@@ -375,6 +425,8 @@ argument_list|(
 literal|'s'
 argument_list|,
 literal|"special-files"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -392,6 +444,8 @@ literal|"compile"
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"              compile file specified by -m\n"
 argument_list|)
 end_macro
@@ -402,6 +456,8 @@ argument_list|(
 literal|'d'
 argument_list|,
 literal|"debug"
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

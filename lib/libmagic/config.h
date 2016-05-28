@@ -160,6 +160,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `dprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DPRINTF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<err.h> header file. */
 end_comment
 
@@ -1065,7 +1076,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.25"
+value|"file 5.27"
 end_define
 
 begin_comment
@@ -1098,7 +1109,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.25"
+value|"5.27"
 end_define
 
 begin_comment
@@ -1238,7 +1249,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.25"
+value|"5.27"
 end_define
 
 begin_comment

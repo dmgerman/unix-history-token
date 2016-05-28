@@ -423,6 +423,9 @@ decl_stmt|;
 name|size_t
 name|sst_dirlen
 decl_stmt|;
+name|size_t
+name|sst_ss
+decl_stmt|;
 block|}
 name|cdf_stream_t
 typedef|;
@@ -1162,7 +1165,7 @@ decl_stmt|;
 name|cdf_catalog_entry_t
 name|cat_e
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 block|}
