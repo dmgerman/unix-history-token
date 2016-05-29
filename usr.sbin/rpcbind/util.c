@@ -1493,6 +1493,11 @@ expr|*
 name|local_in4
 argument_list|)
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1591,6 +1596,11 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|local_in6
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 block|}
@@ -1759,11 +1769,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
 comment|/* close(s); */
 block|}
 end_function
