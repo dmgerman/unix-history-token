@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -206,12 +218,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"opt_smp.h"
-end_include
 
 begin_decl_stmt
 specifier|extern
@@ -674,6 +680,21 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+operator|&&
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+name|dbg_monitor_init_secondary
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Signal our startup to BSP */
 name|atomic_add_rel_32
 argument_list|(
