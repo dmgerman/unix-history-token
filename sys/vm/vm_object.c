@@ -7399,6 +7399,11 @@ name|cred
 argument_list|)
 condition|)
 block|{
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|prev_object
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
