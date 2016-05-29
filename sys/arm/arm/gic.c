@@ -5754,11 +5754,22 @@ operator|)
 return|;
 block|}
 else|else
-return|return
-operator|(
-name|ENOTSUP
-operator|)
-return|;
+block|{
+name|irq
+operator|=
+name|gi
+operator|->
+name|gi_irq
+expr_stmt|;
+name|pol
+operator|=
+name|INTR_POLARITY_CONFORM
+expr_stmt|;
+name|trig
+operator|=
+name|INTR_TRIGGER_CONFORM
+expr_stmt|;
+block|}
 comment|/* Compare config if this is not first setup. */
 if|if
 condition|(
