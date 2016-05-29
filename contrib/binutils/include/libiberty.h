@@ -223,16 +223,9 @@ name|defined
 argument_list|(
 name|HAVE_DECL_BASENAME
 argument_list|)
-specifier|extern
-name|char
-modifier|*
-name|basename
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
+include|#
+directive|include
+file|<libgen.h>
 else|#
 directive|else
 comment|/* Do not allow basename to be used if there is no prototype seen.  We    either need to use the above prototype or have one from    autoconf which would result in HAVE_DECL_BASENAME being set.  */
