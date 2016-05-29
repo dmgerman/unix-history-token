@@ -1664,11 +1664,9 @@ argument_list|,
 literal|"couldn't create ip6 socket"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|done_inet6
+goto|;
 block|}
 comment|/* 	 * Loop through all interfaces. For each IPv6 multicast-capable 	 * interface, join the RPC multicast group on that interface. 	 */
 for|for
@@ -1762,6 +1760,8 @@ literal|"setsockopt v6 multicast"
 argument_list|)
 expr_stmt|;
 block|}
+name|done_inet6
+label|:
 name|freeifaddrs
 argument_list|(
 name|ifp
