@@ -175,11 +175,11 @@ value|"kern:"
 define|#
 directive|define
 name|SUNW_KERN_PUB
-value|SUNW_VENDOR":"SE_KERN_PUB
+value|SUNW_VENDOR ":" SE_KERN_PUB
 define|#
 directive|define
 name|SUNW_USR_PUB
-value|SUNW_VENDOR":"SE_USR_PUB
+value|SUNW_VENDOR ":" SE_USR_PUB
 comment|/*  * Event header and attribute value limits  */
 define|#
 directive|define
