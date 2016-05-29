@@ -1765,6 +1765,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 comment|/* close(s); */
 block|}
 end_function
