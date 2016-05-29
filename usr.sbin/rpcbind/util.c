@@ -1480,6 +1480,11 @@ argument_list|,
 literal|"can't alloc local ip4 addr\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
@@ -1575,6 +1580,11 @@ argument_list|,
 literal|"can't alloc local ip6 addr\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
@@ -1631,6 +1641,31 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|debugging
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"couldn't create ip6 socket"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Loop through all interfaces. For each IPv6 multicast-capable 	 * interface, join the RPC multicast group on that interface. 	 */
 for|for
 control|(
