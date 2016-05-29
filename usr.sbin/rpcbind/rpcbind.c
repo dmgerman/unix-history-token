@@ -270,6 +270,7 @@ value|"/var/run/rpcbind.lock"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|runasdaemon
 init|=
@@ -321,6 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -331,6 +333,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr
 modifier|*
@@ -340,6 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ipv6_only
 init|=
@@ -348,6 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nhosts
 init|=
@@ -356,6 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|on
 init|=
@@ -364,6 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rpcbindlockfd
 decl_stmt|;
