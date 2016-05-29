@@ -1758,6 +1758,11 @@ literal|"setsockopt v6 multicast"
 argument_list|)
 expr_stmt|;
 block|}
+name|freeifaddrs
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* close(s); */
