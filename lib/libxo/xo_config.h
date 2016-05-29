@@ -621,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION
-value|"0.6.1"
+value|"0.6.2"
 end_define
 
 begin_comment
@@ -643,7 +643,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_NUMBER
-value|6001
+value|6002
 end_define
 
 begin_comment
@@ -654,7 +654,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION_STRING
-value|"6001"
+value|"6002"
 end_define
 
 begin_comment
@@ -720,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.6.1"
+value|"libxo 0.6.2"
 end_define
 
 begin_comment
@@ -753,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.6.1"
+value|"0.6.2"
 end_define
 
 begin_comment
@@ -783,7 +783,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.6.1"
+value|"0.6.2"
 end_define
 
 begin_comment

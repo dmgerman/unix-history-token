@@ -118,7 +118,7 @@ file|"xo_buf.h"
 end_include
 
 begin_comment
-comment|/*  * We ask wcwidth() to do an impossible job, really.  It's supposed to  * need to tell us the number of columns consumed to display a unicode  * character.  It returns that number without any sort of context, but  * we know they are characters whose glyph differs based on placement  * (end of word, middle of word, etc) and many that affect characters  * previously emitted.  Without content, it can't hope to tell us.  * But it's the only standard tool we've got, so we use it.  We would  * use wcswidth() but it typically just loops thru adding the results  * of wcwidth() calls in an entirely unhelpful way.  *  * Even then, there are many poor implementations (macosx), so we have  * to carry our own.  We could have configure.ac test this (with  * something like 'assert(wcwidth(0x200d) == 0)'), but it would have  * to run a binary, which breaks cross-compilation.  Hmm... I could  * run this test at init time and make a warning for our dear user.  *  * Anyhow, it remains a best-effort sort of thing.  And it's all made  * more hopeless because we assume the display code doing the rendering is  * playing by the same rules we are.  If it display 0x200d as a square  * box or a funky question mark, the output will be hosed.  */
+comment|/*  * We ask wcwidth() to do an impossible job, really.  It's supposed to  * need to tell us the number of columns consumed to display a unicode  * character.  It returns that number without any sort of context, but  * we know they are characters whose glyph differs based on placement  * (end of word, middle of word, etc) and many that affect characters  * previously emitted.  Without content, it can't hope to tell us.  * But it's the only standard tool we've got, so we use it.  We would  * use wcswidth() but it typically just loops through adding the results  * of wcwidth() calls in an entirely unhelpful way.  *  * Even then, there are many poor implementations (macosx), so we have  * to carry our own.  We could have configure.ac test this (with  * something like 'assert(wcwidth(0x200d) == 0)'), but it would have  * to run a binary, which breaks cross-compilation.  Hmm... I could  * run this test at init time and make a warning for our dear user.  *  * Anyhow, it remains a best-effort sort of thing.  And it's all made  * more hopeless because we assume the display code doing the rendering is  * playing by the same rules we are.  If it display 0x200d as a square  * box or a funky question mark, the output will be hosed.  */
 end_comment
 
 begin_ifdef
@@ -251,7 +251,7 @@ comment|/* HAVE_GETTEXT */
 end_comment
 
 begin_comment
-comment|/*  * Three styles of specifying thread-local variables are supported.  * configure.ac has the brains to run each possibility thru the  * compiler and see what works; we are left to define the THREAD_LOCAL  * macro to the right value.  Most toolchains (clang, gcc) use  * "before", but some (borland) use "after" and I've heard of some  * (ms) that use __declspec.  Any others out there?  */
+comment|/*  * Three styles of specifying thread-local variables are supported.  * configure.ac has the brains to run each possibility through the  * compiler and see what works; we are left to define the THREAD_LOCAL  * macro to the right value.  Most toolchains (clang, gcc) use  * "before", but some (borland) use "after" and I've heard of some  * (ms) that use __declspec.  Any others out there?  */
 end_comment
 
 begin_define
@@ -4119,7 +4119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print some data thru the handle.  */
+comment|/*  * Print some data through the handle.  */
 end_comment
 
 begin_function
@@ -5359,7 +5359,7 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
-comment|/* Next time thru, we'll start at the next character */
+comment|/* Next time through, we'll start at the next character */
 name|cp
 operator|+=
 name|slen
@@ -12043,7 +12043,12 @@ name|xo_buf_has_room
 argument_list|(
 name|xbp
 argument_list|,
-name|delta
+name|xfp
+operator|->
+name|xf_width
+index|[
+name|XF_WIDTH_MIN
+index|]
 argument_list|)
 condition|)
 goto|goto
@@ -14566,7 +14571,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-comment|/* fall thru */
+comment|/* FALLTHRU */
 case|case
 name|XO_STYLE_HTML
 case|:
@@ -16201,7 +16206,7 @@ operator|&
 name|XFF_ENCODE_ONLY
 condition|)
 block|{
-comment|/* 	 * Even if this is encode-only, we need to go thru the 	 * work of formatting it to make sure the args are cleared 	 * from xo_vap. 	 */
+comment|/* 	 * Even if this is encode-only, we need to go through the 	 * work of formatting it to make sure the args are cleared 	 * from xo_vap. 	 */
 name|xo_do_format_field
 argument_list|(
 name|xop
@@ -23816,7 +23821,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The format string uses field numbers, so we need to whiffle thru it  * and make sure everything's sane and lovely.  */
+comment|/*  * The format string uses field numbers, so we need to whiffle through it  * and make sure everything's sane and lovely.  */
 end_comment
 
 begin_function
@@ -27311,6 +27316,23 @@ name|xop
 argument_list|,
 name|XOIF_REORDER
 argument_list|)
+expr_stmt|;
+comment|/*      * If we've got enough data, flush it.      */
+if|if
+condition|(
+name|xo_buf_offset
+argument_list|(
+operator|&
+name|xop
+operator|->
+name|xo_data
+argument_list|)
+operator|>
+name|XO_BUF_HIGH_WATER
+condition|)
+name|flush
+operator|=
+literal|1
 expr_stmt|;
 comment|/* If we don't have an anchor, write the text out */
 if|if
@@ -31655,7 +31677,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*fallthru*/
+comment|/* FALLTHRU */
 default|default:
 name|xo_depth_change
 argument_list|(
@@ -35146,7 +35168,7 @@ condition|(
 operator|*
 name|cp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|cp
@@ -35161,7 +35183,7 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|xo_warnx
@@ -35542,7 +35564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the version number for the API content being carried thru  * the xo handle.  */
+comment|/*  * Set the version number for the API content being carried through  * the xo handle.  */
 end_comment
 
 begin_function
