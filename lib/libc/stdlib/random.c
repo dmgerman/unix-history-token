@@ -1289,14 +1289,10 @@ name|r
 expr_stmt|;
 name|i
 operator|=
-operator|(
 operator|*
 name|f
 operator|>>
 literal|1
-operator|)
-operator|&
-literal|0x7fffffff
 expr_stmt|;
 comment|/* chucking least random bit */
 if|if
