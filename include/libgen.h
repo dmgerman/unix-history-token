@@ -69,18 +69,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|char	*regcmp(const char *, ...); char	*regex(const char *, const char *, ...);  extern char *__loc1;
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|__END_DECLS
 end_macro
@@ -91,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBGEN_H_ */
+comment|/* !_LIBGEN_H_ */
 end_comment
 
 end_unit
