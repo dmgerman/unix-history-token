@@ -1205,6 +1205,13 @@ operator|&
 name|FOPEN_DIRECT_IO
 condition|)
 block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|VTOFUD
 argument_list|(
 name|vp
@@ -1213,6 +1220,13 @@ operator|->
 name|flag
 operator||=
 name|FN_DIRECTIO
+expr_stmt|;
+name|fuse_io_invalbuf
+argument_list|(
+name|vp
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 block|}
 else|else
