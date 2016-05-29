@@ -662,14 +662,9 @@ block|{
 name|__uint32_t
 name|__has_user_waiters
 decl_stmt|;
-name|__uint32_t
-name|__has_kern_waiters
-decl_stmt|;
-name|__uint32_t
-name|__flags
-decl_stmt|;
-name|__uint32_t
-name|__clock_id
+name|struct
+name|ucond
+name|kcond
 decl_stmt|;
 block|}
 struct|;
