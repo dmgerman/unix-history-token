@@ -1246,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A couple of function varieties here, to allow for multiple  * use cases.  This varient is for when the main program knows  * its own encoder needs.  */
+comment|/*  * A couple of function varieties here, to allow for multiple  * use cases.  This variant is for when the main program knows  * its own encoder needs.  */
 end_comment
 
 begin_function

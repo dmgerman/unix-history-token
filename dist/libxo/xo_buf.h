@@ -30,6 +30,17 @@ begin_comment
 comment|/* Initial buffer size */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XO_BUF_HIGH_WATER
+value|(XO_BUFSIZ - 512)
+end_define
+
+begin_comment
+comment|/* When to auto-flush */
+end_comment
+
 begin_comment
 comment|/*  * xo_buffer_t: a memory buffer that can be grown as needed.  We  * use them for building format strings and output data.  */
 end_comment
