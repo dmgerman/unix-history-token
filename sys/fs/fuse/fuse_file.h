@@ -307,6 +307,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|fufh_type_t
+name|fuse_filehandle_validrw
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|fufh_type_t
+name|fufh_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fuse_filehandle_get
 parameter_list|(
