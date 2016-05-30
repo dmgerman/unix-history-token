@@ -85,7 +85,7 @@ name|bool
 name|Stop
 parameter_list|()
 function_decl|;
-comment|/** 	 * \brief Establish or change a timeout. 	 * 	 * \param interval  Timeval indicating the time which must elapse 	 *                  before this callout fires. 	 * \param func      Pointer to the callback funtion 	 * \param arg       Argument pointer to pass to callback function 	 * 	 * \return  Cancellation status. 	 *             true:  The previous callback was pending and therefore 	 *                    was cancelled. 	 *             false: The callout was not pending at the time of this 	 *                    reset request. 	 *          In all cases, a new callout is established. 	 */
+comment|/** 	 * \brief Establish or change a timeout. 	 * 	 * \param interval  Timeval indicating the time which must elapse 	 *                  before this callout fires. 	 * \param func      Pointer to the callback function 	 * \param arg       Argument pointer to pass to callback function 	 * 	 * \return  Cancellation status. 	 *             true:  The previous callback was pending and therefore 	 *                    was cancelled. 	 *             false: The callout was not pending at the time of this 	 *                    reset request. 	 *          In all cases, a new callout is established. 	 */
 name|bool
 name|Reset
 parameter_list|(
