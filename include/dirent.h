@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -36,6 +42,30 @@ if|#
 directive|if
 name|__XSI_VISIBLE
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_INO_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__ino_t
+name|ino_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INO_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * XXX this is probably illegal in the __XSI_VISIBLE case, but brings us closer  * to the specification.  */
@@ -56,6 +86,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __XSI_VISIBLE */
+end_comment
 
 begin_if
 if|#
