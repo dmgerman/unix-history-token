@@ -1636,6 +1636,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5717_C0
+value|0x05717200
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM5719_A0
 value|0x05719000
 end_define
@@ -13783,6 +13790,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5717
 value|0x1655
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5717C
+value|0x1665
 end_define
 
 begin_define

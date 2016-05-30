@@ -545,6 +545,12 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5717C
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5718
 block|}
 block|,
@@ -1322,6 +1328,12 @@ block|{
 name|BGE_CHIPID_BCM5717_B0
 block|,
 literal|"BCM5717 B0"
+block|}
+block|,
+block|{
+name|BGE_CHIPID_BCM5717_C0
+block|,
+literal|"BCM5717 C0"
 block|}
 block|,
 block|{
@@ -13154,6 +13166,9 @@ case|case
 name|BCOM_DEVICEID_BCM5717
 case|:
 case|case
+name|BCOM_DEVICEID_BCM5717C
+case|:
+case|case
 name|BCOM_DEVICEID_BCM5718
 case|:
 case|case
@@ -13247,6 +13262,16 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|id
+operator|==
+name|BGE_CHIPID_BCM5717_C0
+condition|)
+name|id
+operator|=
+name|BGE_CHIPID_BCM5720_A0
+expr_stmt|;
 block|}
 return|return
 operator|(
