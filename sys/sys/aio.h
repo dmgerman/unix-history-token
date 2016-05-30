@@ -638,26 +638,28 @@ begin_comment
 comment|/*  * List I/O Asynchronously/synchronously read/write to/from file  *	"lio_mode" specifies whether or not the I/O is synchronous.  *	"acb_list" is an array of "nacb_listent" I/O control blocks.  *	when all I/Os are complete, the optional signal "sig" is sent.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|lio_listio
-argument_list|(
+parameter_list|(
 name|int
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|aiocb
-operator|*
+modifier|*
+name|__restrict
 specifier|const
-index|[]
-argument_list|,
+modifier|*
+name|__restrict
+parameter_list|,
 name|int
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|sigevent
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Get completion status  *	returns EINPROGRESS until I/O is complete.  *	this routine does not block.  */
