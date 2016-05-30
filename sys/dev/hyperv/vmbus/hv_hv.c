@@ -114,13 +114,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|HV_NANOSECONDS_PER_SEC
-value|1000000000L
-end_define
-
-begin_define
-define|#
-directive|define
 name|HYPERV_FREEBSD_BUILD
 value|0ULL
 end_define
@@ -251,9 +244,7 @@ block|,
 operator|.
 name|tc_frequency
 operator|=
-name|HV_NANOSECONDS_PER_SEC
-operator|/
-literal|100
+name|HYPERV_TIMER_FREQ
 block|,
 operator|.
 name|tc_name
