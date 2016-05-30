@@ -28822,12 +28822,15 @@ name|stc
 operator|.
 name|scope_id
 operator|=
+name|ntohs
+argument_list|(
 name|in6_getscope
 argument_list|(
 operator|&
 name|src6
 operator|->
 name|sin6_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
