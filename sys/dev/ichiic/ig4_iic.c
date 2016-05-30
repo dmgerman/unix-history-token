@@ -337,6 +337,43 @@ decl_stmt|;
 name|uint32_t
 name|v
 decl_stmt|;
+comment|/* 	 * When the controller is enabled, interrupt on STOP detect 	 * or receive character ready and clear pending interrupts. 	 */
+if|if
+condition|(
+name|ctl
+operator|&
+name|IG4_I2C_ENABLE
+condition|)
+block|{
+name|reg_write
+argument_list|(
+name|sc
+argument_list|,
+name|IG4_REG_INTR_MASK
+argument_list|,
+name|IG4_INTR_STOP_DET
+operator||
+name|IG4_INTR_RX_FULL
+argument_list|)
+expr_stmt|;
+name|reg_read
+argument_list|(
+name|sc
+argument_list|,
+name|IG4_REG_CLR_INTR
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|reg_write
+argument_list|(
+name|sc
+argument_list|,
+name|IG4_REG_INTR_MASK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|reg_write
 argument_list|(
 name|sc
@@ -1812,18 +1849,6 @@ comment|/* 	 * Don't do this, it blows up the PCI config 	 */
 block|reg_write(sc, IG4_REG_RESETS, IG4_RESETS_ASSERT); 	reg_write(sc, IG4_REG_RESETS, IG4_RESETS_DEASSERT);
 endif|#
 directive|endif
-comment|/* 	 * Interrupt on STOP detect or receive character ready 	 */
-name|reg_write
-argument_list|(
-name|sc
-argument_list|,
-name|IG4_REG_INTR_MASK
-argument_list|,
-name|IG4_INTR_STOP_DET
-operator||
-name|IG4_INTR_RX_FULL
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1939,7 +1964,7 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-comment|/* We have to wait until interrupts are enabled. I2C read and write 	 * only works if the interrupts are available. 	 */
+comment|/* 	 * We have to wait until interrupts are enabled. I2C read and write 	 * only works if the interrupts are available. 	 */
 if|if
 condition|(
 name|config_intrhook_establish
@@ -2154,13 +2179,6 @@ argument_list|,
 name|IG4_REG_INTR_MASK
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|reg_read
-argument_list|(
-name|sc
-argument_list|,
-name|IG4_REG_CLR_INTR
 argument_list|)
 expr_stmt|;
 name|set_controller
@@ -3531,6 +3549,13 @@ name|io_lock
 argument_list|)
 expr_stmt|;
 comment|/*	reg_write(sc, IG4_REG_INTR_MASK, IG4_INTR_STOP_DET);*/
+name|reg_read
+argument_list|(
+name|sc
+argument_list|,
+name|IG4_REG_CLR_INTR
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|reg_read
@@ -3583,13 +3608,6 @@ name|IG4_REG_I2C_STA
 argument_list|)
 expr_stmt|;
 block|}
-name|reg_read
-argument_list|(
-name|sc
-argument_list|,
-name|IG4_REG_CLR_INTR
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|sc
