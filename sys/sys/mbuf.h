@@ -1108,8 +1108,29 @@ value|(M_FLAG_BITS M_FLAG_PROTOBITS)
 end_define
 
 begin_comment
-comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE can be set by non-RSS cards or configurations  * that provide an opaque flow identifier, allowing for ordering and  * distribution without explicit affinity.  */
+comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE and M_HASHTYPE_OPAQUE_HASH can be set by non-  * RSS cards or configurations that provide an opaque flow identifier, allowing  * for ordering and distribution without explicit affinity.  Additionally,  * M_HASHTYPE_OPAQUE_HASH indicates that the flow identifier has hash  * properties.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_HASHPROP
+value|0x80
+end_define
+
+begin_comment
+comment|/* has hash properties */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_HASH
+parameter_list|(
+name|t
+parameter_list|)
+value|(M_HASHTYPE_HASHPROP | (t))
+end_define
 
 begin_comment
 comment|/* Microsoft RSS standard hash types */
@@ -1126,7 +1147,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV4
-value|1
+value|M_HASHTYPE_HASH(1)
 end_define
 
 begin_comment
@@ -1137,7 +1158,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV4
-value|2
+value|M_HASHTYPE_HASH(2)
 end_define
 
 begin_comment
@@ -1148,7 +1169,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6
-value|3
+value|M_HASHTYPE_HASH(3)
 end_define
 
 begin_comment
@@ -1159,7 +1180,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6
-value|4
+value|M_HASHTYPE_HASH(4)
 end_define
 
 begin_comment
@@ -1170,22 +1191,22 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6_EX
-value|5
+value|M_HASHTYPE_HASH(5)
 end_define
 
 begin_comment
-comment|/* IPv6 2-tuple + ext hdrs */
+comment|/* IPv6 2-tuple + 							    * ext hdrs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6_EX
-value|6
+value|M_HASHTYPE_HASH(6)
 end_define
 
 begin_comment
-comment|/* TCPv6 4-tiple + ext hdrs */
+comment|/* TCPv6 4-tiple + 							    * ext hdrs */
 end_comment
 
 begin_comment
@@ -1196,55 +1217,66 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_UDP_IPV4
-value|7
+value|M_HASHTYPE_HASH(7)
 end_define
 
 begin_comment
-comment|/* IPv4 UDP 4-tuple */
+comment|/* IPv4 UDP 4-tuple*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_UDP_IPV4_EX
-value|8
+value|M_HASHTYPE_HASH(8)
 end_define
 
 begin_comment
-comment|/* IPv4 UDP 4-tuple + ext hdrs */
+comment|/* IPv4 UDP 4-tuple + 							    * ext hdrs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_UDP_IPV6
-value|9
+value|M_HASHTYPE_HASH(9)
 end_define
 
 begin_comment
-comment|/* IPv6 UDP 4-tuple */
+comment|/* IPv6 UDP 4-tuple*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_UDP_IPV6_EX
-value|10
+value|M_HASHTYPE_HASH(10)
 end_define
 
 begin_comment
-comment|/* IPv6 UDP 4-tuple + ext hdrs */
+comment|/* IPv6 UDP 4-tuple + 							    * ext hdrs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_OPAQUE
-value|255
+value|63
 end_define
 
 begin_comment
 comment|/* ordering, not affinity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_OPAQUE_HASH
+value|M_HASHTYPE_HASH(M_HASHTYPE_OPAQUE)
+end_define
+
+begin_comment
+comment|/* ordering+hash, not affinity*/
 end_comment
 
 begin_define
@@ -1289,6 +1321,16 @@ parameter_list|,
 name|v
 parameter_list|)
 value|(M_HASHTYPE_GET(m) == (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_ISHASH
+parameter_list|(
+name|m
+parameter_list|)
+value|(M_HASHTYPE_GET(m)& M_HASHTYPE_HASHPROP)
 end_define
 
 begin_comment
