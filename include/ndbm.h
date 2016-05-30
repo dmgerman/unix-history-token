@@ -65,7 +65,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|void
 modifier|*
 name|dptr
 decl_stmt|;
