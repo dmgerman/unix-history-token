@@ -195,7 +195,7 @@ name|GetType
 argument_list|()
 specifier|const
 argument_list|;
-comment|/** 	 * Get the orginal DevdCtl event string for this event. 	 * 	 * \return  The DevdCtl event string. 	 */
+comment|/** 	 * Get the original DevdCtl event string for this event. 	 * 	 * \return  The DevdCtl event string. 	 */
 specifier|const
 name|std
 operator|::
@@ -327,7 +327,7 @@ specifier|const
 name|Type
 name|m_type
 argument_list|;
-comment|/** 	 * Event attribute storage. 	 * 	 * \note Although stored by reference (since m_nvPairs can 	 *       never be NULL), the NVPairMap referenced by this field 	 *       is dynamically allocated and owned by this event object. 	 *       m_nvPairs must be deleted at event desctruction. 	 */
+comment|/** 	 * Event attribute storage. 	 * 	 * \note Although stored by reference (since m_nvPairs can 	 *       never be NULL), the NVPairMap referenced by this field 	 *       is dynamically allocated and owned by this event object. 	 *       m_nvPairs must be deleted at event destruction. 	 */
 name|NVPairMap
 operator|&
 name|m_nvPairs
