@@ -679,7 +679,6 @@ name|libpath
 operator|==
 name|NULL
 condition|)
-block|{
 name|snprintf
 argument_list|(
 name|dlpath
@@ -696,7 +695,6 @@ argument_list|,
 name|LIBCRYPTO
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|snprintf
 argument_list|(
@@ -714,10 +712,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dlpath
-operator|!=
-name|NULL
-operator|&&
 operator|(
 name|dlhandle
 operator|=
