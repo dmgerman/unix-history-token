@@ -644,7 +644,6 @@ begin_function_decl
 name|void
 name|psignal
 parameter_list|(
-name|unsigned
 name|int
 parameter_list|,
 specifier|const

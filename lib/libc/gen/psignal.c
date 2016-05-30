@@ -89,7 +89,6 @@ begin_function
 name|void
 name|psignal
 parameter_list|(
-name|unsigned
 name|int
 name|sig
 parameter_list|,
@@ -106,6 +105,10 @@ name|c
 decl_stmt|;
 if|if
 condition|(
+name|sig
+operator|>=
+literal|0
+operator|&&
 name|sig
 operator|<
 name|NSIG
