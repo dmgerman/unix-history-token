@@ -689,6 +689,8 @@ block|,
 operator|.
 name|pr_flags
 operator|=
+name|PR_CONNREQUIRED
+operator||
 name|PR_WANTRCVD
 block|,
 operator|.
