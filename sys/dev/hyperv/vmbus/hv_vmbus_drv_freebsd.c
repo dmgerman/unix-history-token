@@ -276,7 +276,7 @@ argument_list|,
 name|curcpu
 argument_list|)
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 for|for
 control|(
@@ -458,13 +458,13 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+comment|/* we call eventtimer process the message */
 name|msg
 operator|=
 name|msg_base
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
-comment|/* we call eventtimer process the message */
 if|if
 condition|(
 name|msg
@@ -485,7 +485,7 @@ operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
 comment|/* call intrrupt handler of event timer */
-name|hv_et_intr
+name|vmbus_et_intr
 argument_list|(
 name|frame
 argument_list|)
@@ -521,7 +521,7 @@ name|msg
 operator|=
 name|msg_base
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 if|if
 condition|(
@@ -782,7 +782,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 name|orig
 operator|=
@@ -817,7 +817,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
 name|orig
 operator|=
@@ -915,7 +915,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 name|orig
 operator|=
@@ -938,7 +938,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
 name|orig
 operator|=

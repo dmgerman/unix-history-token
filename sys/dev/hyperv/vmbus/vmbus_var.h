@@ -30,8 +30,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/hyperv_busdma.h>
 end_include
+
+begin_comment
+comment|/*  * NOTE: DO NOT CHANGE THIS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_SINT_MESSAGE
+value|2
+end_define
+
+begin_comment
+comment|/*  * NOTE:  * - DO NOT set it to the same value as VMBUS_SINT_MESSAGE.  * - DO NOT set it to 0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_SINT_TIMER
+value|4
+end_define
 
 begin_struct
 struct|struct
@@ -230,6 +258,18 @@ parameter_list|)
 value|&(sc)->vmbus_pcpu[(cpu)].field
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|vmbus_on_channel_open
@@ -264,6 +304,17 @@ name|vmbus_softc
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_et_intr
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

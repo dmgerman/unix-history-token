@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/vmbus/hyperv_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
 begin_define
@@ -119,7 +119,7 @@ define|#
 directive|define
 name|MSR_HV_STIMER0_CFG_SINT
 define|\
-value|((((uint64_t)HV_VMBUS_TIMER_SINT)<< MSR_HV_STIMER_CFG_SINT_SHIFT)& \ 	 MSR_HV_STIMER_CFG_SINT_MASK)
+value|((((uint64_t)VMBUS_SINT_TIMER)<< MSR_HV_STIMER_CFG_SINT_SHIFT)& \ 	 MSR_HV_STIMER_CFG_SINT_MASK)
 end_define
 
 begin_comment
@@ -234,7 +234,7 @@ end_function
 
 begin_function
 name|void
-name|hv_et_intr
+name|vmbus_et_intr
 parameter_list|(
 name|struct
 name|trapframe
