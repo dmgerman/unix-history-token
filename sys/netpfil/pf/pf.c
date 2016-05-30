@@ -29780,9 +29780,8 @@ name|th
 operator|.
 name|th_dport
 argument_list|,
-name|NULL
+name|saddr
 argument_list|,
-comment|/* XXX Inbound NAT? */
 operator|&
 name|nk
 operator|->
@@ -30284,9 +30283,8 @@ name|uh
 operator|.
 name|uh_dport
 argument_list|,
-name|NULL
+name|saddr
 argument_list|,
-comment|/* XXX Inbound NAT? */
 operator|&
 name|nk
 operator|->
@@ -30771,9 +30769,8 @@ name|iih
 operator|.
 name|icmp_id
 argument_list|,
-name|NULL
+name|saddr
 argument_list|,
-comment|/* XXX Inbound NAT? */
 operator|&
 name|nk
 operator|->
@@ -31189,9 +31186,8 @@ name|iih
 operator|.
 name|icmp6_id
 argument_list|,
-name|NULL
+name|saddr
 argument_list|,
-comment|/* XXX Inbound NAT? */
 operator|&
 name|nk
 operator|->
@@ -31521,13 +31517,12 @@ name|pf_change_icmp
 argument_list|(
 name|pd2
 operator|.
-name|src
+name|dst
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|saddr
 argument_list|,
-comment|/* XXX Inbound NAT? */
 operator|&
 name|nk
 operator|->
