@@ -8024,8 +8024,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_MIPS_GOTHI16
+name|R_MIPS_GOT_DISP
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_PAGE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_OFST
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_HI16
+value|22
 end_define
 
 begin_comment
@@ -8035,13 +8056,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_MIPS_GOTLO16
-value|22
+name|R_MIPS_GOT_LO16
+value|23
 end_define
 
 begin_comment
 comment|/* GOT LO 16 bit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_SUB
+value|24
+end_define
 
 begin_define
 define|#
@@ -8064,6 +8092,20 @@ end_define
 begin_comment
 comment|/* lower 16 bit GOT entry for function */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_JALR
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_TLS_GD
+value|42
+end_define
 
 begin_define
 define|#
