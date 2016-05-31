@@ -288,9 +288,6 @@ block|,
 literal|"noparity"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|illumos
 block|{
 block|{
 name|zio_checksum_SHA512_native
@@ -333,6 +330,9 @@ block|,
 literal|"skein"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|illumos
 block|{
 block|{
 name|zio_checksum_edonr_native
@@ -372,9 +372,6 @@ name|zio_checksum
 name|cksum
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|illumos
 name|VERIFY
 argument_list|(
 operator|(
@@ -408,6 +405,9 @@ operator|(
 name|SPA_FEATURE_SKEIN
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|illumos
 case|case
 name|ZIO_CHECKSUM_EDONR
 case|:
@@ -416,9 +416,9 @@ operator|(
 name|SPA_FEATURE_EDONR
 operator|)
 return|;
-block|}
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 name|SPA_FEATURE_NONE

@@ -209,9 +209,6 @@ specifier|extern
 name|zio_checksum_t
 name|zio_checksum_SHA256
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
 specifier|extern
 name|zio_checksum_t
 name|zio_checksum_SHA512_native
@@ -237,6 +234,9 @@ specifier|extern
 name|zio_checksum_tmpl_free_t
 name|zio_checksum_skein_tmpl_free
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* Edon-R */
 specifier|extern
 name|zio_checksum_t

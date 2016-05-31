@@ -846,9 +846,6 @@ argument_list|,
 name|large_blocks_deps
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
 name|zfeature_register
 argument_list|(
 name|SPA_FEATURE_SHA512
@@ -879,6 +876,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|zfeature_register
 argument_list|(
 name|SPA_FEATURE_EDONR

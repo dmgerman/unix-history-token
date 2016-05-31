@@ -19,11 +19,33 @@ directive|include
 file|<sys/zio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/skein.h>
+file|<crypto/skein/skein.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<skein.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Computes a native 256-bit skein MAC checksum. Please note that this  * function requires the presence of a ctx_template that should be allocated  * using zio_checksum_skein_tmpl_init.  */

@@ -35,6 +35,12 @@ directive|include
 file|<crypto/sha2/sha256.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<crypto/sha2/sha512t.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -44,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sha256.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sha512t.h>
 end_include
 
 begin_endif
@@ -185,12 +197,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|illumos
-end_ifdef
-
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -217,18 +223,16 @@ modifier|*
 name|zcp
 parameter_list|)
 block|{
-name|SHA2_CTX
+name|SHA512_CTX
 name|ctx
 decl_stmt|;
-name|SHA2Init
+name|SHA512_256_Init
 argument_list|(
-name|SHA512_256
-argument_list|,
 operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|SHA2Update
+name|SHA512_256_Update
 argument_list|(
 operator|&
 name|ctx
@@ -238,8 +242,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|SHA2Final
+name|SHA512_256_Final
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|zcp
 argument_list|,
 operator|&
@@ -360,11 +369,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -200,9 +200,6 @@ block|,
 name|ZIO_CHECKSUM_NOPARITY
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|illumos
 block|{
 literal|"sha512"
 block|,
@@ -215,6 +212,9 @@ block|,
 name|ZIO_CHECKSUM_SKEIN
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|illumos
 block|{
 literal|"edonr"
 block|,
@@ -268,9 +268,6 @@ operator||
 name|ZIO_CHECKSUM_VERIFY
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|illumos
 block|{
 literal|"sha512"
 block|,
@@ -299,6 +296,9 @@ operator||
 name|ZIO_CHECKSUM_VERIFY
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|illumos
 block|{
 literal|"edonr,verify"
 block|,

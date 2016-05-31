@@ -31,6 +31,16 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OPENSOLARIS_SYS_TYPES_H_
+end_ifndef
+
+begin_comment
+comment|/* Avoid redefining this typedef */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -42,6 +52,11 @@ end_typedef
 begin_comment
 comment|/* native unsigned integer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
