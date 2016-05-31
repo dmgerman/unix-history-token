@@ -6237,7 +6237,7 @@ name|uint32_t
 name|__ahdecl
 function_decl|(
 modifier|*
-name|ah_btMciGetState
+name|ah_btMciState
 function_decl|)
 parameter_list|(
 name|struct

@@ -1281,6 +1281,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * Note: these are done in attach too for now, because 		 * at this point we haven't yet setup the mac/bb revision 		 * values, so this code is effectively NULL. 		 * However, I'm leaving this here so people digging 		 * into the code (a) see the MCI bits here, and (b) 		 * are now told they should look elsewhere for 		 * these methods. 		 */
 name|ah
 operator|->
 name|ah_btCoexSetWeights
@@ -1320,7 +1321,7 @@ name|ar9300_mci_get_interrupt
 expr_stmt|;
 name|ah
 operator|->
-name|ah_btMciGetState
+name|ah_btMciState
 operator|=
 name|ar9300_mci_state
 expr_stmt|;
