@@ -773,6 +773,11 @@ operator|>
 name|UCHAR_MAX
 condition|)
 block|{
+operator|*
+name|src
+operator|=
+name|s
+expr_stmt|;
 name|errno
 operator|=
 name|EILSEQ

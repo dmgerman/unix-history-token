@@ -584,6 +584,11 @@ operator|&
 literal|0x80
 condition|)
 block|{
+operator|*
+name|src
+operator|=
+name|s
+expr_stmt|;
 name|errno
 operator|=
 name|EILSEQ
@@ -787,6 +792,11 @@ operator|>
 literal|127
 condition|)
 block|{
+operator|*
+name|src
+operator|=
+name|s
+expr_stmt|;
 name|errno
 operator|=
 name|EILSEQ
