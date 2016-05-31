@@ -358,6 +358,60 @@ begin_comment
 comment|/* Xerox loopback */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_RESERVED
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_DMAQ_LABEL_WIDTH
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_DMAQ_LABEL_MASK
+define|\
+value|((1<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_RX_QFLUSH_DONE
+define|\
+value|(SFXGE_MAGIC_RESERVED | (1<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_RX_QFLUSH_FAILED
+define|\
+value|(SFXGE_MAGIC_RESERVED | (2<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_RX_QREFILL
+define|\
+value|(SFXGE_MAGIC_RESERVED | (3<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_MAGIC_TX_QFLUSH_DONE
+define|\
+value|(SFXGE_MAGIC_RESERVED | (4<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
+end_define
+
 begin_enum
 enum|enum
 name|sfxge_evq_state
