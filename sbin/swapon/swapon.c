@@ -964,10 +964,11 @@ name|mntops
 parameter_list|)
 block|{
 name|char
+modifier|*
 name|base
-index|[
-name|PATH_MAX
-index|]
+decl_stmt|,
+modifier|*
+name|basebuf
 decl_stmt|;
 comment|/* Swap on vnode-backed md(4) device. */
 if|if
@@ -1039,11 +1040,18 @@ name|doingall
 argument_list|)
 operator|)
 return|;
-name|basename_r
+name|basebuf
+operator|=
+name|strdup
 argument_list|(
 name|name
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|base
+operator|=
+name|basename
+argument_list|(
+name|basebuf
 argument_list|)
 expr_stmt|;
 comment|/* Swap on encrypted device by GEOM_BDE. */
@@ -1060,6 +1068,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|basebuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|swap_on_off_gbde
@@ -1070,6 +1084,7 @@ name|doingall
 argument_list|)
 operator|)
 return|;
+block|}
 comment|/* Swap on encrypted device by GEOM_ELI. */
 if|if
 condition|(
@@ -1084,6 +1099,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|basebuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|swap_on_off_geli
@@ -1096,7 +1117,13 @@ name|doingall
 argument_list|)
 operator|)
 return|;
+block|}
 comment|/* Swap on special file. */
+name|free
+argument_list|(
+name|basebuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|swap_on_off_sfile
