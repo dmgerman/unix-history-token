@@ -5007,8 +5007,6 @@ argument_list|)
 condition|)
 name|mask
 operator||=
-literal|1
-operator|<<
 name|arm_gic_map
 index|[
 name|cpu
