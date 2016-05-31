@@ -905,6 +905,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_timespec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -931,12 +937,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|timespec
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
