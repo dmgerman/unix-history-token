@@ -198,6 +198,11 @@ name|ATH_DEBUG_PWRSAVE
 init|=
 literal|0x2000000000ULL
 block|,
+name|ATH_DEBUG_BTCOEX
+init|=
+literal|0x4000000000ULL
+block|,
+comment|/* BT Coex */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL
@@ -287,11 +292,9 @@ name|sc
 parameter_list|,
 name|m
 parameter_list|,
-name|fmt
-parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (sc->sc_debug& (m))					\ 		device_printf(sc->sc_dev, fmt, __VA_ARGS__);		\ } while (0)
+value|do {				\ 	if (sc->sc_debug& (m))					\ 		device_printf(sc->sc_dev, __VA_ARGS__);		\ } while (0)
 end_define
 
 begin_define
