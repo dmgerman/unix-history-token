@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE__STDINT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/_limits.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -638,14 +644,14 @@ begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MIN
-value|LONG_MIN
+value|__LONG_MIN
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MAX
-value|LONG_MAX
+value|__LONG_MAX
 end_define
 
 begin_comment
