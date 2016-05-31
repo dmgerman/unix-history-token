@@ -235,7 +235,7 @@ specifier|extern
 name|inthand_t
 name|IDTVEC
 parameter_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -407,9 +407,9 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
-name|hv_vmbus_isr
+name|vmbus_handle_intr1
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -564,7 +564,7 @@ end_function
 
 begin_function
 name|void
-name|hv_vector_handler
+name|vmbus_handle_intr
 parameter_list|(
 name|struct
 name|trapframe
@@ -603,7 +603,7 @@ argument_list|)
 operator|)
 operator|++
 expr_stmt|;
-name|hv_vmbus_isr
+name|vmbus_handle_intr1
 argument_list|(
 name|sc
 argument_list|,
@@ -1450,7 +1450,7 @@ name|lapic_ipi_alloc
 argument_list|(
 name|IDTVEC
 argument_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 argument_list|)
 argument_list|)
 expr_stmt|;
