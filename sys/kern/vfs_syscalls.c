@@ -10057,6 +10057,17 @@ modifier|*
 name|ost
 decl_stmt|;
 block|{
+name|bzero
+argument_list|(
+name|ost
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ost
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ost
 operator|->
 name|st_dev
