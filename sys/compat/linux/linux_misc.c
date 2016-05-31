@@ -563,6 +563,17 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|sysinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sysinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|getnanouptime
 argument_list|(
 operator|&
