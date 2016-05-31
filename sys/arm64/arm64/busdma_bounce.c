@@ -829,9 +829,6 @@ name|segments
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -848,8 +845,6 @@ name|bounce_flags
 operator||=
 name|BF_COHERENT
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|parent
