@@ -77,9 +77,16 @@ end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+operator|||
+name|defined
+argument_list|(
 name|_XLOCALE_H_
+argument_list|)
 include|#
 directive|include
 file|<xlocale/_monetary.h>
