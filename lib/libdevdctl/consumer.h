@@ -31,12 +31,6 @@ comment|/*=========================== Forward Declarations =====================
 name|class
 name|Event
 decl_stmt|;
-name|class
-name|EventBuffer
-decl_stmt|;
-name|class
-name|FDReader
-decl_stmt|;
 comment|/*============================ Class Declarations ============================*/
 comment|/*----------------------------- DevdCtl::Consumer ----------------------------*/
 comment|/**  */
@@ -149,16 +143,6 @@ decl_stmt|;
 comment|/** 	 * File descriptor representing the unix domain socket 	 * connection with devd. 	 */
 name|int
 name|m_devdSockFD
-decl_stmt|;
-comment|/** 	 * Reader tied to the devd socket. 	 */
-name|FDReader
-modifier|*
-name|m_reader
-decl_stmt|;
-comment|/** 	 * Default EventBuffer connected to m_reader. 	 */
-name|EventBuffer
-modifier|*
-name|m_eventBuffer
 decl_stmt|;
 name|EventFactory
 name|m_eventFactory
