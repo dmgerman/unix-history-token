@@ -4119,32 +4119,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|discovery_host
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-M and -d are mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|aflag
-operator|!=
-literal|0
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-M and -a are mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|nickname
 operator|!=
 name|NULL
@@ -4205,6 +4179,32 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|aflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-a cannot be used with -M"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|discovery_host
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-d cannot be used with -M"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|rflag
 operator|!=
 literal|0
@@ -4252,45 +4252,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|user
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-R and -u are mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|secret
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-R and -s are mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|discovery_host
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-R and -d are mutually exclusive"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|aflag
@@ -4395,6 +4356,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|discovery_host
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-d cannot be used with -R"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|session_id
 operator|!=
 operator|-
@@ -4418,6 +4392,32 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-r cannot be used with -R"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|user
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-u cannot be used with -R"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|secret
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-s cannot be used with -R"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4459,71 +4459,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|portal
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -p and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|target
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -t and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|user
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -u and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|secret
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -s and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nickname
-operator|!=
-name|NULL
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -n and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|discovery_host
 operator|!=
 name|NULL
@@ -4532,20 +4467,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-L and -d and mutually exclusive"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rflag
-operator|!=
-literal|0
-condition|)
-name|xo_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-L and -r and mutually exclusive"
+literal|"-d cannot be used with -L"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4560,6 +4482,84 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-i cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nickname
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-n cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|portal
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-p cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+operator|!=
+literal|0
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-r cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|target
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-t cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|user
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-u cannot be used with -L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|secret
+operator|!=
+name|NULL
+condition|)
+name|xo_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-s cannot be used with -L"
 argument_list|)
 expr_stmt|;
 block|}
