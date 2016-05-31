@@ -5009,7 +5009,10 @@ name|mask
 operator||=
 literal|1
 operator|<<
+name|arm_gic_map
+index|[
 name|cpu
+index|]
 expr_stmt|;
 name|gic_d_write_1
 argument_list|(
