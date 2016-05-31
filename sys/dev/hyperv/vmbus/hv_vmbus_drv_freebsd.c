@@ -192,6 +192,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/vmbus/vmbus_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
@@ -246,7 +252,9 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-name|hv_vmbus_message
+specifier|volatile
+name|struct
+name|vmbus_message
 modifier|*
 name|msg
 decl_stmt|;
@@ -285,25 +293,24 @@ if|if
 condition|(
 name|msg
 operator|->
-name|header
-operator|.
-name|message_type
+name|msg_type
 operator|==
-name|HV_MESSAGE_TYPE_NONE
+name|VMBUS_MSGTYPE_NONE
 condition|)
 break|break;
 comment|/* no message */
+comment|/* XXX: update messageHandler interface */
 name|hdr
 operator|=
-operator|(
+name|__DEVOLATILE
+argument_list|(
 name|hv_vmbus_channel_msg_header
 operator|*
-operator|)
+argument_list|,
 name|msg
 operator|->
-name|u
-operator|.
-name|payload
+name|msg_data
+argument_list|)
 expr_stmt|;
 name|msg_type
 operator|=
@@ -354,13 +361,11 @@ name|handled
 label|:
 name|msg
 operator|->
-name|header
-operator|.
-name|message_type
+name|msg_type
 operator|=
-name|HV_MESSAGE_TYPE_NONE
+name|VMBUS_MSGTYPE_NONE
 expr_stmt|;
-comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
+comment|/* 		 * Make sure the write to msg_type (i.e. set to 		 * VMBUS_MSGTYPE_NONE) happens before we read the 		 * msg_flags and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages since there is no 		 * empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
 name|mb
 argument_list|()
 expr_stmt|;
@@ -368,13 +373,9 @@ if|if
 condition|(
 name|msg
 operator|->
-name|header
-operator|.
-name|message_flags
-operator|.
-name|u
-operator|.
-name|message_pending
+name|msg_flags
+operator|&
+name|VMBUS_MSGFLAG_PENDING
 condition|)
 block|{
 comment|/* 			 * This will cause message queue rescan to possibly 			 * deliver another msg from the hypervisor 			 */
@@ -410,10 +411,14 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-name|hv_vmbus_message
+specifier|volatile
+name|struct
+name|vmbus_message
 modifier|*
 name|msg
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|vmbus_message
 modifier|*
 name|msg_base
 decl_stmt|;
@@ -439,27 +444,23 @@ if|if
 condition|(
 name|msg
 operator|->
-name|header
-operator|.
-name|message_type
+name|msg_type
 operator|==
-name|HV_MESSAGE_TIMER_EXPIRED
+name|VMBUS_MSGTYPE_TIMER_EXPIRED
 condition|)
 block|{
 name|msg
 operator|->
-name|header
-operator|.
-name|message_type
+name|msg_type
 operator|=
-name|HV_MESSAGE_TYPE_NONE
+name|VMBUS_MSGTYPE_NONE
 expr_stmt|;
 name|vmbus_et_intr
 argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Make sure the write to message_type (ie set to 		 * HV_MESSAGE_TYPE_NONE) happens before we read the 		 * message_pending and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages 		 * since there is no empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
+comment|/* 		 * Make sure the write to msg_type (i.e. set to 		 * VMBUS_MSGTYPE_NONE) happens before we read the 		 * msg_flags and EOMing. Otherwise, the EOMing will 		 * not deliver any more messages since there is no 		 * empty slot 		 * 		 * NOTE: 		 * mb() is used here, since atomic_thread_fence_seq_cst() 		 * will become compiler fence on UP kernel. 		 */
 name|mb
 argument_list|()
 expr_stmt|;
@@ -467,13 +468,9 @@ if|if
 condition|(
 name|msg
 operator|->
-name|header
-operator|.
-name|message_flags
-operator|.
-name|u
-operator|.
-name|message_pending
+name|msg_flags
+operator|&
+name|VMBUS_MSGFLAG_PENDING
 condition|)
 block|{
 comment|/* 			 * This will cause message queue rescan to possibly 			 * deliver another msg from the hypervisor 			 */
@@ -509,11 +506,9 @@ name|__predict_false
 argument_list|(
 name|msg
 operator|->
-name|header
-operator|.
-name|message_type
+name|msg_type
 operator|!=
-name|HV_MESSAGE_TYPE_NONE
+name|VMBUS_MSGTYPE_NONE
 argument_list|)
 condition|)
 block|{
