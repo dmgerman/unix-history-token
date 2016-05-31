@@ -5433,6 +5433,17 @@ name|struct
 name|linux_serial_struct
 name|lss
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|lss
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lss
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|lss
 operator|.
 name|type
