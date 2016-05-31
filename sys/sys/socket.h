@@ -2631,7 +2631,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|((char *)(cmsg) == NULL ? CMSG_FIRSTHDR(mhdr) : \ 	    ((char *)(cmsg) + _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)0 : \ 	    (struct cmsghdr *)(void *)((char *)(cmsg) + \ 	    _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len)))
+value|((char *)(cmsg) == (char *)0 ? CMSG_FIRSTHDR(mhdr) : \ 	    ((char *)(cmsg) + _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len) + \ 	  _ALIGN(sizeof(struct cmsghdr))> \ 	    (char *)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)0 : \ 	    (struct cmsghdr *)(void *)((char *)(cmsg) + \ 	    _ALIGN(((struct cmsghdr *)(cmsg))->cmsg_len)))
 end_define
 
 begin_comment
@@ -2646,7 +2646,7 @@ parameter_list|(
 name|mhdr
 parameter_list|)
 define|\
-value|((mhdr)->msg_controllen>= sizeof(struct cmsghdr) ? \ 	 (struct cmsghdr *)(mhdr)->msg_control : \ 	 (struct cmsghdr *)NULL)
+value|((mhdr)->msg_controllen>= sizeof(struct cmsghdr) ? \ 	 (struct cmsghdr *)(mhdr)->msg_control : \ 	 (struct cmsghdr *)0)
 end_define
 
 begin_if
