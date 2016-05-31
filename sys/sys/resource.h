@@ -401,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|RLIM_INFINITY
-value|((rlim_t)(((uint64_t)1<< 63) - 1))
+value|((rlim_t)(((__uint64_t)1<< 63) - 1))
 end_define
 
 begin_comment
