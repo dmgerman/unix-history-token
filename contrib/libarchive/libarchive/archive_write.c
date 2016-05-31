@@ -2138,6 +2138,12 @@ operator|*
 operator|)
 name|_a
 decl_stmt|;
+specifier|const
+name|size_t
+name|max_write
+init|=
+name|INT_MAX
+decl_stmt|;
 name|__archive_check_magic
 argument_list|(
 operator|&
@@ -2151,6 +2157,17 @@ name|ARCHIVE_STATE_DATA
 argument_list|,
 literal|"archive_write_data"
 argument_list|)
+expr_stmt|;
+comment|/* In particular, this catches attempts to pass negative values. */
+if|if
+condition|(
+name|s
+operator|>
+name|max_write
+condition|)
+name|s
+operator|=
+name|max_write
 expr_stmt|;
 name|archive_clear_error
 argument_list|(
