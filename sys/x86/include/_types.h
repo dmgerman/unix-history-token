@@ -32,6 +32,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<machine/_limits.h>
+end_include
+
 begin_define
 define|#
 directive|define
