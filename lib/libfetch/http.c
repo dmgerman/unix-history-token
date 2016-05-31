@@ -312,7 +312,7 @@ name|HTTP_REDIRECT
 parameter_list|(
 name|xyz
 parameter_list|)
-value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_USE_PROXY \ 			    || (xyz) == HTTP_SEE_OTHER)
+value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_PERM_REDIRECT \ 			    || (xyz) == HTTP_USE_PROXY \ 			    || (xyz) == HTTP_SEE_OTHER)
 end_define
 
 begin_define
@@ -8644,6 +8644,12 @@ name|HTTP_MOVED_PERM
 case|:
 case|case
 name|HTTP_MOVED_TEMP
+case|:
+case|case
+name|HTTP_TEMP_REDIRECT
+case|:
+case|case
+name|HTTP_PERM_REDIRECT
 case|:
 case|case
 name|HTTP_SEE_OTHER
