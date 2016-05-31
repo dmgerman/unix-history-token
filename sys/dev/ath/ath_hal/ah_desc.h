@@ -1121,6 +1121,21 @@ value|0x1000
 end_define
 
 begin_comment
+comment|/* Set LDPC TX for all rates */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_HWTS
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Request Azimuth Timestamp in TX payload */
+end_comment
+
+begin_comment
 comment|/* flags passed to rx descriptor setup methods */
 end_comment
 
