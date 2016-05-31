@@ -1438,7 +1438,7 @@ name|txPower
 operator|=
 literal|63
 expr_stmt|;
-comment|/* 	 * XXX For now, just assume that this isn't a HT40 frame. 	 */
+comment|/* 	 * XXX For now, just assume that this isn't a HT40 frame. 	 * It'll get over-ridden by the multi-rate TX power setup. 	 */
 if|if
 condition|(
 name|AH5212
@@ -1529,6 +1529,16 @@ operator|&
 name|HAL_TXDESC_NOACK
 condition|?
 name|AR_NoAck
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|flags
+operator|&
+name|HAL_TXDESC_HWTS
+condition|?
+name|AR_InsertTS
 else|:
 literal|0
 operator|)
@@ -2035,6 +2045,10 @@ name|AH_TRUE
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * XXX TODO: Figure out if AR_InsertTS is required on all sub-frames  * of a TX descriptor.  */
+end_comment
 
 begin_function
 name|HAL_BOOL
