@@ -109,7 +109,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|mode_t
 name|mode
 parameter_list|)
 block|{
