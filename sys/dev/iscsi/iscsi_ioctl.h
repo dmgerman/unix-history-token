@@ -199,9 +199,12 @@ name|ISCSI_OFFLOAD_LEN
 index|]
 decl_stmt|;
 name|int
+name|isc_enable
+decl_stmt|;
+name|int
 name|isc_spare
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 block|}
