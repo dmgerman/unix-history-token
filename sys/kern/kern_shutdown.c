@@ -3178,7 +3178,7 @@ name|arg
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Waiting (max %d seconds) for system process `%s' to stop..."
+literal|"Waiting (max %d seconds) for system process `%s' to stop... "
 argument_list|,
 name|kproc_shutdown_wait
 argument_list|,
@@ -3254,7 +3254,7 @@ name|arg
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Waiting (max %d seconds) for system thread `%s' to stop..."
+literal|"Waiting (max %d seconds) for system thread `%s' to stop... "
 argument_list|,
 name|kproc_shutdown_wait
 argument_list|,
