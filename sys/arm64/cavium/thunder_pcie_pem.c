@@ -704,6 +704,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|bus_dma_tag_t
+name|thunder_pem_get_dma_tag
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|thunder_pem_detach
 parameter_list|(
@@ -1008,6 +1020,13 @@ argument_list|(
 name|bus_teardown_intr
 argument_list|,
 name|bus_generic_teardown_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_dma_tag
+argument_list|,
+name|thunder_pem_get_dma_tag
 argument_list|)
 block|,
 comment|/* pcib interface */
@@ -1703,6 +1722,40 @@ name|start
 argument_list|,
 name|end
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bus_dma_tag_t
+name|thunder_pem_get_dma_tag
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|struct
+name|thunder_pem_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sc
+operator|->
+name|dmat
 operator|)
 return|;
 block|}
@@ -3811,6 +3864,67 @@ operator|->
 name|reg
 argument_list|)
 expr_stmt|;
+comment|/* Create the parent DMA tag to pass down the coherent flag */
+name|error
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+comment|/* parent */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* alignment, bounds */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|BUS_SPACE_MAXSIZE
+argument_list|,
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
+argument_list|,
+comment|/* nsegments */
+name|BUS_SPACE_MAXSIZE
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_COHERENT
+argument_list|,
+comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* lockfunc, lockarg */
+operator|&
+name|sc
+operator|->
+name|dmat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Map SLI, do it only once */
 if|if
 condition|(

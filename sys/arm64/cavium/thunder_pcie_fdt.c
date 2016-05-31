@@ -452,6 +452,12 @@ operator|->
 name|ecam
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|coherent
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|pci_host_generic_attach

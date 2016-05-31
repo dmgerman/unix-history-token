@@ -40,6 +40,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|reg_bsh
 decl_stmt|;
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
 name|struct
 name|pcie_range
 name|ranges

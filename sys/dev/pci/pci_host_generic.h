@@ -71,6 +71,9 @@ decl_stmt|;
 name|int
 name|nranges
 decl_stmt|;
+name|int
+name|coherent
+decl_stmt|;
 name|struct
 name|rman
 name|mem_rman
@@ -103,6 +106,9 @@ name|dev
 decl_stmt|;
 name|bus_space_handle_t
 name|ioh
+decl_stmt|;
+name|bus_dma_tag_t
+name|dmat
 decl_stmt|;
 ifdef|#
 directive|ifdef
