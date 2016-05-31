@@ -405,6 +405,8 @@ literal|0
 decl_stmt|;
 name|uintptr_t
 name|oldfp
+init|=
+name|fp
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -555,6 +557,10 @@ name|CPU_DTRACE_FAULT
 expr_stmt|;
 break|break;
 block|}
+name|oldfp
+operator|=
+name|fp
+expr_stmt|;
 block|}
 return|return
 operator|(
