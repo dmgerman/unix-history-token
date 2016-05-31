@@ -861,7 +861,10 @@ literal|"dma-coherent"
 argument_list|)
 expr_stmt|;
 block|}
-comment|//if (bootverbose)
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
