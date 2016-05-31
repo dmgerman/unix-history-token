@@ -800,7 +800,7 @@ name|compat
 operator|=
 name|compat_data
 init|;
-name|compat_data
+name|compat
 operator|->
 name|ocd_str
 operator|!=
