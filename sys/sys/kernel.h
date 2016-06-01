@@ -406,6 +406,11 @@ init|=
 literal|0x8000000
 block|,
 comment|/* VNET initialization */
+name|SI_SUB_PROTO_PFIL
+init|=
+literal|0x8100000
+block|,
+comment|/* Initialize pfil before FWs */
 name|SI_SUB_PROTO_IF
 init|=
 literal|0x8400000
@@ -416,16 +421,26 @@ init|=
 literal|0x8600000
 block|,
 comment|/* domain registration system */
+name|SI_SUB_PROTO_MC
+init|=
+literal|0x8700000
+block|,
+comment|/* Multicast */
 name|SI_SUB_PROTO_DOMAIN
 init|=
 literal|0x8800000
 block|,
 comment|/* domains (address families?)*/
+name|SI_SUB_PROTO_FIREWALL
+init|=
+literal|0x8806000
+block|,
+comment|/* Firewalls */
 name|SI_SUB_PROTO_IFATTACHDOMAIN
 init|=
-literal|0x8800001
+literal|0x8808000
 block|,
-comment|/* domain dependent data init*/
+comment|/* domain dependent data init */
 name|SI_SUB_PROTO_END
 init|=
 literal|0x8ffffff

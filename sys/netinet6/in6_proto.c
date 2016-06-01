@@ -453,16 +453,6 @@ name|pr_init
 operator|=
 name|ip6_init
 block|,
-ifdef|#
-directive|ifdef
-name|VIMAGE
-operator|.
-name|pr_destroy
-operator|=
-name|ip6_destroy
-block|,
-endif|#
-directive|endif
 operator|.
 name|pr_slowtimo
 operator|=

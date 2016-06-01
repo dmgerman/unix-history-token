@@ -480,6 +480,9 @@ name|void
 name|div_destroy
 parameter_list|(
 name|void
+modifier|*
+name|unused
+name|__unused
 parameter_list|)
 block|{
 name|in_pcbinfo_destroy
@@ -490,6 +493,22 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|divert
+argument_list|,
+name|SI_SUB_PROTO_DOMAININIT
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|div_destroy
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * IPPROTO_DIVERT is not in the real IP protocol number space; this  * function should never be called.  Just in case, drop any packets.  */
@@ -3133,16 +3152,6 @@ name|pr_init
 operator|=
 name|div_init
 block|,
-ifdef|#
-directive|ifdef
-name|VIMAGE
-operator|.
-name|pr_destroy
-operator|=
-name|div_destroy
-block|,
-endif|#
-directive|endif
 operator|.
 name|pr_usrreqs
 operator|=
@@ -3233,16 +3242,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|err
-operator|=
-name|EPERM
-expr_stmt|;
-break|break;
-else|#
-directive|else
 comment|/* 		 * Forced unload. 		 * 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a new 		 * socket open request could be spinning on the lock and then 		 * we destroy the lock. 		 */
 name|INP_INFO_WLOCK
 argument_list|(
@@ -3292,9 +3291,16 @@ operator|&
 name|V_divcbinfo
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VIMAGE
 name|div_destroy
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|maxsockets_change
@@ -3303,9 +3309,6 @@ name|ip_divert_event_tag
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* !VIMAGE */
 default|default:
 name|err
 operator|=
@@ -3341,7 +3344,7 @@ name|ipdivert
 argument_list|,
 name|ipdivertmod
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PROTO_FIREWALL
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

@@ -149,16 +149,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|pr_destroy_t
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
 name|pr_fasttimo_t
 parameter_list|(
 name|void
@@ -233,10 +223,6 @@ comment|/* utility hooks */
 name|pr_init_t
 modifier|*
 name|pr_init
-decl_stmt|;
-name|pr_destroy_t
-modifier|*
-name|pr_destroy
 decl_stmt|;
 name|pr_fasttimo_t
 modifier|*

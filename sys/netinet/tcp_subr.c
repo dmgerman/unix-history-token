@@ -3264,10 +3264,14 @@ name|VIMAGE
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|tcp_destroy
 parameter_list|(
 name|void
+modifier|*
+name|unused
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -3382,6 +3386,22 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|tcp
+argument_list|,
+name|SI_SUB_PROTO_DOMAIN
+argument_list|,
+name|SI_ORDER_FOURTH
+argument_list|,
+name|tcp_destroy
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
