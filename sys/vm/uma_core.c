@@ -9028,7 +9028,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Avoid conflict with the use-after-free 			 * protecting infrastructure from INVARIANTS. 			 */
 if|if
 condition|(
 name|zone
@@ -9036,12 +9035,6 @@ operator|->
 name|uz_init
 operator|!=
 name|NULL
-operator|&&
-name|zone
-operator|->
-name|uz_init
-operator|!=
-name|mtrash_init
 operator|&&
 name|zone
 operator|->
@@ -9070,12 +9063,6 @@ operator|->
 name|uz_ctor
 operator|!=
 name|NULL
-operator|&&
-name|zone
-operator|->
-name|uz_ctor
-operator|!=
-name|mtrash_ctor
 operator|&&
 name|zone
 operator|->
@@ -11182,12 +11169,6 @@ operator|->
 name|uz_dtor
 operator|!=
 name|NULL
-operator|&&
-name|zone
-operator|->
-name|uz_dtor
-operator|!=
-name|mtrash_dtor
 condition|)
 name|zone
 operator|->
@@ -11209,12 +11190,6 @@ operator|->
 name|uz_fini
 operator|!=
 name|NULL
-operator|&&
-name|zone
-operator|->
-name|uz_fini
-operator|!=
-name|mtrash_fini
 condition|)
 name|zone
 operator|->

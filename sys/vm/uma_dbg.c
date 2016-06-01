@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -111,6 +117,12 @@ directive|include
 file|<vm/uma_dbg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/memguard.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -122,7 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Checks an item to make sure it hasn't been overwritten since it was freed,  * prior to subsequent reallocation.  *  * Complies with standard ctor arg/return  *  */
+comment|/*  * Checks an item to make sure it hasn't been overwritten since it was freed,  * prior to subsequent reallocation.  *  * Complies with standard ctor arg/return  */
 end_comment
 
 begin_function
@@ -151,6 +163,23 @@ name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+if|if
+condition|(
+name|is_memguard_addr
+argument_list|(
+name|mem
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|cnt
 operator|=
 name|size
@@ -260,6 +289,19 @@ name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+if|if
+condition|(
+name|is_memguard_addr
+argument_list|(
+name|mem
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|cnt
 operator|=
 name|size
@@ -396,6 +438,23 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+if|if
+condition|(
+name|is_memguard_addr
+argument_list|(
+name|mem
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|size
 operator|-=
 sizeof|sizeof
@@ -530,6 +589,19 @@ name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+if|if
+condition|(
+name|is_memguard_addr
+argument_list|(
+name|mem
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|size
 operator|-=
 sizeof|sizeof
@@ -597,6 +669,23 @@ modifier|*
 modifier|*
 name|ksp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+if|if
+condition|(
+name|is_memguard_addr
+argument_list|(
+name|mem
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|mtrash_dtor
 argument_list|(
 name|mem
