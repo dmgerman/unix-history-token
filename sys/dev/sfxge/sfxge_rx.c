@@ -781,10 +781,6 @@ name|sfxge_evq
 modifier|*
 name|evq
 decl_stmt|;
-name|unsigned
-name|int
-name|label
-decl_stmt|;
 name|uint16_t
 name|magic
 decl_stmt|;
@@ -809,33 +805,14 @@ index|[
 name|index
 index|]
 expr_stmt|;
-name|label
-operator|=
-literal|0
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|label
-operator|&
-name|SFXGE_MAGIC_DMAQ_LABEL_MASK
-operator|)
-operator|==
-name|label
-argument_list|,
-operator|(
-literal|"(label& SFXGE_MAGIC_DMAQ_LABEL_MASK) != level"
-operator|)
-argument_list|)
-expr_stmt|;
 name|magic
 operator|=
-name|SFXGE_SW_EV_MAGIC
+name|sfxge_sw_ev_rxq_magic
 argument_list|(
 name|SFXGE_SW_EV_RX_QREFILL
+argument_list|,
+name|rxq
 argument_list|)
-operator||
-name|label
 expr_stmt|;
 comment|/* This is guaranteed due to the start/stop order of rx and ev */
 name|KASSERT
