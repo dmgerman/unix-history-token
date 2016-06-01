@@ -698,9 +698,9 @@ argument_list|(
 name|ki_flag
 argument_list|)
 block|,
-name|INT
+name|LONG
 block|,
-literal|"x"
+literal|"lx"
 block|,
 literal|0
 block|}

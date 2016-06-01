@@ -1046,7 +1046,7 @@ name|ve
 name|__unused
 parameter_list|)
 block|{
-name|int
+name|long
 name|flag
 decl_stmt|,
 name|tdflags
