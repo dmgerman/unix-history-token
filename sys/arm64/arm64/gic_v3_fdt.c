@@ -523,6 +523,10 @@ argument_list|,
 literal|"could not register PIC\n"
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|error
 goto|;
@@ -549,6 +553,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|err
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|error
 goto|;
@@ -610,7 +618,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|err
 operator|)
 return|;
 block|}
