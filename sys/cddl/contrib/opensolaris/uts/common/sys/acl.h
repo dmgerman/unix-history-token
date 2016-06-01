@@ -41,7 +41,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * When compiling OpenSolaris kernel code, this file is getting  * included instead of FreeBSD one.  Pull the original sys/acl.h as well.  */
+comment|/*  * When compiling OpenSolaris kernel code, this file is included instead of the  * FreeBSD one.  Include the original sys/acl.h as well.  */
 end_comment
 
 begin_undef
