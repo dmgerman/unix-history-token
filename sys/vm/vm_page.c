@@ -9537,6 +9537,12 @@ if|if
 condition|(
 name|object
 operator|->
+name|type
+operator|==
+name|OBJT_VNODE
+operator|&&
+name|object
+operator|->
 name|resident_page_count
 operator|==
 literal|0
