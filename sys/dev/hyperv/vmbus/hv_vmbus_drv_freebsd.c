@@ -735,7 +735,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag_dma
+name|event_flags_dma
 operator|.
 name|hv_paddr
 argument_list|,
@@ -1071,7 +1071,7 @@ name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag_dma
+name|event_flags_dma
 argument_list|,
 name|cpu
 argument_list|)
@@ -1094,7 +1094,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag
+name|event_flags
 argument_list|,
 name|cpu
 argument_list|)
@@ -1180,7 +1180,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag
+name|event_flags
 argument_list|,
 name|cpu
 argument_list|)
@@ -1194,7 +1194,7 @@ name|VMBUS_PCPU_PTR
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag_dma
+name|event_flags_dma
 argument_list|,
 name|cpu
 argument_list|)
@@ -1203,7 +1203,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag
+name|event_flags
 argument_list|,
 name|cpu
 argument_list|)
@@ -1213,7 +1213,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
 argument_list|,
-name|event_flag
+name|event_flags
 argument_list|,
 name|cpu
 argument_list|)

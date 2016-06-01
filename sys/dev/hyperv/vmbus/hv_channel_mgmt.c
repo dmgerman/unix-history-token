@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/vmbus/vmbus_reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
@@ -2523,7 +2529,7 @@ name|hv_vmbus_channel
 operator|*
 argument_list|)
 operator|*
-name|HV_CHANNEL_MAX_COUNT
+name|VMBUS_CHAN_MAX
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

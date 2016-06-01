@@ -85,101 +85,6 @@ value|(0xFFFFFFFF)
 end_define
 
 begin_comment
-comment|/*  * Synthetic interrupt controller flag constants.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HV_EVENT_FLAGS_COUNT
-value|(256 * 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_EVENT_FLAGS_BYTE_COUNT
-value|(256)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_EVENT_FLAGS_DWORD_COUNT
-value|(256 / sizeof(uint32_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_EVENT_FLAGS_ULONG_COUNT
-value|(256 / sizeof(unsigned long))
-end_define
-
-begin_comment
-comment|/**  * max channel count<== event_flags_dword_count * bit_of_dword  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__LP64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_ULONG_LEN
-value|(64)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_ULONG_SHIFT
-value|(6)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_ULONG_LEN
-value|(32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_ULONG_SHIFT
-value|(5)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_DWORD_LEN
-value|(32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_CHANNEL_MAX_COUNT
-define|\
-value|((HV_EVENT_FLAGS_DWORD_COUNT) * HV_CHANNEL_DWORD_LEN)
-end_define
-
-begin_comment
 comment|/*  * MessageId: HV_STATUS_INSUFFICIENT_BUFFERS  * MessageText:  *    You did not supply enough message buffers to send a message.  */
 end_comment
 
@@ -498,18 +403,6 @@ name|HV_HYPERCALL_PARAM_ALIGN
 value|sizeof(uint64_t)
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|vmbus_message
-struct_decl|;
-end_struct_decl
-
-begin_union_decl
-union_decl|union
-name|vmbus_event_flags
-union_decl|;
-end_union_decl
-
 begin_comment
 comment|/*  * Define hypervisor message types  */
 end_comment
@@ -621,28 +514,6 @@ name|uint64_t
 name|hv_vmbus_partition_id
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  *  Maximum channels is determined by the size of the interrupt  *  page which is PAGE_SIZE. 1/2 of PAGE_SIZE is for  *  send endpoint interrupt and the other is receive  *  endpoint interrupt.  *  *   Note: (PAGE_SIZE>> 1)<< 3 allocates 16348 channels  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HV_MAX_NUM_CHANNELS
-value|(PAGE_SIZE>> 1)<< 3
-end_define
-
-begin_comment
-comment|/*  * (The value here must be in multiple of 32)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HV_MAX_NUM_CHANNELS_SUPPORTED
-value|256
-end_define
 
 begin_comment
 comment|/*  * VM Bus connection states  */
@@ -905,52 +776,6 @@ block|}
 name|hv_vmbus_input_post_message
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Define the synthetic interrupt controller event flags format  */
-end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-name|vmbus_event_flags
-block|{
-name|uint8_t
-name|flags8
-index|[
-name|HV_EVENT_FLAGS_BYTE_COUNT
-index|]
-decl_stmt|;
-name|uint32_t
-name|flags32
-index|[
-name|HV_EVENT_FLAGS_DWORD_COUNT
-index|]
-decl_stmt|;
-name|unsigned
-name|long
-name|flagsul
-index|[
-name|HV_EVENT_FLAGS_ULONG_COUNT
-index|]
-decl_stmt|;
-block|}
-name|hv_vmbus_synic_event_flags
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|hv_vmbus_synic_event_flags
-argument_list|)
-operator|==
-name|HV_EVENT_FLAGS_BYTE_COUNT
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Declare the various hypercall operations  */
