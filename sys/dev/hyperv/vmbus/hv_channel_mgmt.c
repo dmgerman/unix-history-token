@@ -1093,6 +1093,23 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hv_vmbus_protocal_version
+operator|==
+name|HV_VMBUS_VERSION_WS2008
+operator|||
+name|hv_vmbus_protocal_version
+operator|==
+name|HV_VMBUS_VERSION_WIN7
+condition|)
+block|{
+comment|/* Only cpu0 is supported */
+name|cpu
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|chan
 operator|->
 name|target_cpu
@@ -1282,22 +1299,8 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
-name|hv_vmbus_protocal_version
-operator|==
-name|HV_VMBUS_VERSION_WS2008
-operator|)
-operator|||
-operator|(
-name|hv_vmbus_protocal_version
-operator|==
-name|HV_VMBUS_VERSION_WIN7
-operator|)
-operator|||
-operator|(
 operator|!
 name|is_perf_channel
-operator|)
 condition|)
 block|{
 comment|/* Stick to cpu0 */
