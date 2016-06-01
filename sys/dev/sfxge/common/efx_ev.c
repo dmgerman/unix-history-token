@@ -1289,14 +1289,6 @@ name|int
 name|count
 parameter_list|)
 block|{
-name|efx_nic_t
-modifier|*
-name|enp
-init|=
-name|eep
-operator|->
-name|ee_enp
-decl_stmt|;
 name|unsigned
 name|int
 name|offset
