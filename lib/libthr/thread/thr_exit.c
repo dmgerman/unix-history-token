@@ -833,22 +833,8 @@ name|curthread
 operator|->
 name|cancelling
 condition|)
-block|{
-name|char
-name|msg
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|snprintf
+name|PANIC
 argument_list|(
-name|msg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|msg
-argument_list|)
-argument_list|,
 literal|"Thread %p has called "
 literal|"pthread_exit() from a destructor. POSIX 1003.1 "
 literal|"1996 s16.2.5.2 does not allow this!"
@@ -856,12 +842,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|PANIC
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Flag this thread as exiting. */
 name|curthread
 operator|->
@@ -1214,7 +1194,9 @@ argument_list|)
 condition|)
 name|PANIC
 argument_list|(
-literal|"thread exits with resources held!"
+literal|"thread %p exits with resources held!"
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 endif|#

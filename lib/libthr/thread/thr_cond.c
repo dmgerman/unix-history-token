@@ -984,7 +984,9 @@ name|NULL
 condition|)
 name|PANIC
 argument_list|(
-literal|"thread was already on queue."
+literal|"thread %p was already on queue."
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
