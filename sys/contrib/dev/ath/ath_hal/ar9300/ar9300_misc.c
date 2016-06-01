@@ -10922,6 +10922,19 @@ name|ah_curchan
 decl_stmt|;
 endif|#
 directive|endif
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_BT_COEX
+argument_list|,
+literal|"%s: called, value=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ahp
@@ -11048,6 +11061,11 @@ case|:
 if|if
 condition|(
 name|AR_SREV_POSEIDON
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_APHRODITE
 argument_list|(
 name|ah
 argument_list|)
