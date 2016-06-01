@@ -1498,6 +1498,19 @@ argument_list|,
 name|AR_MCI_CONT_STATUS
 argument_list|)
 expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_BT_COEX
+argument_list|,
+literal|"(MCI) cont_status=0x%08x\n"
+argument_list|,
+name|ahp
+operator|->
+name|ah_mci_cont_status
+argument_list|)
+expr_stmt|;
 block|}
 name|OS_REG_WRITE
 argument_list|(
