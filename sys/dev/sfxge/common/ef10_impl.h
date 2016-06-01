@@ -122,6 +122,10 @@ name|uint32_t
 name|id
 parameter_list|,
 name|__in
+name|uint32_t
+name|us
+parameter_list|,
+name|__in
 name|efx_evq_t
 modifier|*
 name|eep

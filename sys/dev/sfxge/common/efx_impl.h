@@ -284,6 +284,8 @@ name|size_t
 parameter_list|,
 name|uint32_t
 parameter_list|,
+name|uint32_t
+parameter_list|,
 name|efx_evq_t
 modifier|*
 parameter_list|)
