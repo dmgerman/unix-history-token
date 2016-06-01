@@ -15829,8 +15829,6 @@ operator||=
 name|htole32
 argument_list|(
 name|R92C_TXDW4_CTS2SELF
-operator||
-name|R92C_TXDW4_HWRTSEN
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16560,6 +16558,8 @@ operator||=
 name|htole32
 argument_list|(
 name|R92C_TXDW4_RTSEN
+operator||
+name|R92C_TXDW4_HWRTSEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -16593,15 +16593,6 @@ name|R92C_TXDW4_CTS2SELF
 argument_list|)
 condition|)
 block|{
-name|txd
-operator|->
-name|txdw4
-operator||=
-name|htole32
-argument_list|(
-name|R92C_TXDW4_HWRTSEN
-argument_list|)
-expr_stmt|;
 name|txd
 operator|->
 name|txdw4
