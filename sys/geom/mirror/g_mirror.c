@@ -14947,6 +14947,9 @@ operator|->
 name|ace
 operator|!=
 literal|0
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 operator|)
 condition|)
 block|{
