@@ -13163,10 +13163,16 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|BCOM_DEVICEID_BCM5717
-case|:
-case|case
 name|BCOM_DEVICEID_BCM5717C
+case|:
+comment|/* 5717 C0 seems to belong to 5720 line. */
+name|id
+operator|=
+name|BGE_CHIPID_BCM5720_A0
+expr_stmt|;
+break|break;
+case|case
+name|BCOM_DEVICEID_BCM5717
 case|:
 case|case
 name|BCOM_DEVICEID_BCM5718
@@ -13262,16 +13268,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|id
-operator|==
-name|BGE_CHIPID_BCM5717_C0
-condition|)
-name|id
-operator|=
-name|BGE_CHIPID_BCM5720_A0
-expr_stmt|;
 block|}
 return|return
 operator|(
