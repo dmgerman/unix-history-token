@@ -2412,6 +2412,16 @@ operator||
 operator|(
 name|flags
 operator|&
+name|HAL_TXDESC_HWTS
+condition|?
+name|AR_insert_ts
+else|:
+literal|0
+operator|)
+operator||
+operator|(
+name|flags
+operator|&
 name|HAL_TXDESC_EXT_ONLY
 condition|?
 name|AR_ext_only
