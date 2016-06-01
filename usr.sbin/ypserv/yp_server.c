@@ -3224,6 +3224,11 @@ argument_list|(
 name|yp_maplist
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|cur
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
