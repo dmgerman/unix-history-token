@@ -911,6 +911,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|install_zoneinfo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|zoneinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|install_zoneinfo_file
 parameter_list|(
 specifier|const
@@ -3471,6 +3484,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|set_zone_utc
 parameter_list|(
@@ -3494,9 +3508,9 @@ operator|)
 return|;
 return|return
 operator|(
-name|install_zoneinfo_file
+name|install_zoneinfo
 argument_list|(
-name|NULL
+literal|"UTC"
 argument_list|)
 operator|)
 return|;
