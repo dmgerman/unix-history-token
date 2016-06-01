@@ -343,7 +343,7 @@ name|pst
 operator|->
 name|drop_prob
 expr_stmt|;
-comment|/* De-randomize option  	 * if accu_prob< 0.85 -> enqueue 	 * if accu_prob>8.5 ->drop 	 * between 0.85 and 8.5 || !De-randomize --> drop on prob 	 */
+comment|/* De-randomize option  	 * if accu_prob< 0.85 -> enqueue 	 * if accu_prob>8.5 ->drop 	 * between 0.85 and 8.5 || !De-randomize --> drop on prob 	 *  	 * (0.85 = 17/20 ,8.5 = 17/2) 	 */
 if|if
 condition|(
 name|pprms
@@ -365,7 +365,9 @@ call|)
 argument_list|(
 name|PIE_MAX_PROB
 operator|*
-literal|0.85
+literal|17
+operator|/
+literal|20
 argument_list|)
 condition|)
 return|return
@@ -383,7 +385,9 @@ call|)
 argument_list|(
 name|PIE_MAX_PROB
 operator|*
-literal|8.5
+literal|17
+operator|/
+literal|2
 argument_list|)
 condition|)
 return|return

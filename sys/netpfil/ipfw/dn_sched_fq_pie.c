@@ -1836,15 +1836,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.000001
-argument_list|)
+operator|/
+literal|1000000
+operator|)
 condition|)
+comment|/* 0.000001 */
 name|p
 operator|>>=
 literal|11
@@ -1858,15 +1856,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.00001
-argument_list|)
+operator|/
+literal|100000
+operator|)
 condition|)
+comment|/* 0.00001 */
 name|p
 operator|>>=
 literal|9
@@ -1880,15 +1876,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.0001
-argument_list|)
+operator|/
+literal|10000
+operator|)
 condition|)
+comment|/* 0.0001 */
 name|p
 operator|>>=
 literal|7
@@ -1902,15 +1896,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.001
-argument_list|)
+operator|/
+literal|1000
+operator|)
 condition|)
+comment|/* 0.001 */
 name|p
 operator|>>=
 literal|5
@@ -1924,15 +1916,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.01
-argument_list|)
+operator|/
+literal|100
+operator|)
 condition|)
+comment|/* 0.01 */
 name|p
 operator|>>=
 literal|3
@@ -1946,15 +1936,13 @@ if|if
 condition|(
 name|prob
 operator|<
-call|(
-name|int64_t
-call|)
-argument_list|(
+operator|(
 name|PIE_MAX_PROB
-operator|*
-literal|0.1
-argument_list|)
+operator|/
+literal|10
+operator|)
 condition|)
+comment|/* 0.1 */
 name|p
 operator|>>=
 literal|1
