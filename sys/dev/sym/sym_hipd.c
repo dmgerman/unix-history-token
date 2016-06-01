@@ -349,6 +349,21 @@ parameter_list|()
 value|dmb(sy)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__riscv__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|fence()
+end_define
+
 begin_else
 else|#
 directive|else
