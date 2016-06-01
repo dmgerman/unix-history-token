@@ -14091,6 +14091,7 @@ name|iv_opmode
 operator|!=
 name|IEEE80211_M_HOSTAP
 condition|)
+block|{
 name|reg
 operator||=
 name|R92C_RCR_CBSSID_DATA
@@ -14107,6 +14108,7 @@ name|reg
 operator||=
 name|R92C_RCR_CBSSID_BCN
 expr_stmt|;
+block|}
 name|urtwn_write_4
 argument_list|(
 name|sc
@@ -25121,6 +25123,12 @@ operator|->
 name|ic_opmode
 operator|!=
 name|IEEE80211_M_IBSS
+operator|&&
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
 condition|)
 name|urtwn_set_rx_bssid_all
 argument_list|(
@@ -25184,6 +25192,12 @@ operator|->
 name|ic_opmode
 operator|!=
 name|IEEE80211_M_IBSS
+operator|&&
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
 condition|)
 name|urtwn_set_rx_bssid_all
 argument_list|(
@@ -26224,17 +26238,9 @@ name|IEEE80211_M_STA
 case|:
 name|mask2
 operator||=
-name|R92C_RCR_CBSSID_DATA
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|IEEE80211_M_HOSTAP
-case|:
-name|mask2
-operator||=
 name|R92C_RCR_CBSSID_BCN
 expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 case|case
 name|IEEE80211_M_IBSS
 case|:
@@ -26242,6 +26248,10 @@ name|mask2
 operator||=
 name|R92C_RCR_CBSSID_DATA
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_HOSTAP
+case|:
 break|break;
 default|default:
 name|device_printf
