@@ -7706,6 +7706,12 @@ operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|||
+operator|!
+name|netfront_carrier_ok
+argument_list|(
+name|np
+argument_list|)
 condition|)
 return|return;
 name|xn_stop
@@ -9549,6 +9555,17 @@ name|np
 operator|->
 name|num_queues
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|npairs
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"called with 0 available queues"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* check if flowid is set */
 if|if
 condition|(
@@ -10072,6 +10089,13 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|np
+operator|->
+name|xn_ifp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|np
@@ -10088,13 +10112,6 @@ operator|->
 name|txq
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|np
-operator|->
-name|xn_ifp
 argument_list|)
 expr_stmt|;
 name|if_free
