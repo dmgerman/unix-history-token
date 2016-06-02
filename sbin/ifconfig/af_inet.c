@@ -146,11 +146,7 @@ specifier|static
 name|char
 name|addr_buf
 index|[
-name|MAXHOSTNAMELEN
-operator|*
-literal|2
-operator|+
-literal|1
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -370,9 +370,6 @@ name|f_ether
 decl_stmt|,
 modifier|*
 name|f_addr
-decl_stmt|,
-modifier|*
-name|f_scope
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,17 +1192,6 @@ argument_list|(
 name|f_addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|f_scope
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|f_scope
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1365,25 +1351,6 @@ operator|==
 literal|0
 condition|)
 name|f_inet6
-operator|=
-name|strdup
-argument_list|(
-name|modifier
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|category
-argument_list|,
-literal|"scope"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|f_scope
 operator|=
 name|strdup
 argument_list|(
@@ -1810,8 +1777,6 @@ operator|=
 name|f_ether
 operator|=
 name|f_addr
-operator|=
-name|f_scope
 operator|=
 name|NULL
 expr_stmt|;
