@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -5767,7 +5773,9 @@ end_comment
 begin_function
 name|void
 name|pfxlist_onlink_check
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|nd_prefix
@@ -5790,6 +5798,10 @@ modifier|*
 name|pfxrtr
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|rm_priotracker
+name|in6_ifa_tracker
 decl_stmt|;
 comment|/* 	 * Check if there is a prefix that has a reachable advertising 	 * router. 	 */
 name|LIST_FOREACH
@@ -6246,7 +6258,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 * 	 * XXXRW: in6_ifaddrhead locking. 	 */
+comment|/* 	 * Changes on the prefix status might affect address status as well. 	 * Make sure that all addresses derived from an attached prefix are 	 * attached, and that all addresses derived from a detached prefix are 	 * detached.  Note, however, that a manually configured address should 	 * always be attached. 	 * The precise detection logic is same as the one for prefixes. 	 */
+name|IN6_IFADDR_RLOCK
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -6447,6 +6465,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IN6_IFADDR_RUNLOCK
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
