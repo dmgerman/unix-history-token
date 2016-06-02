@@ -1501,6 +1501,9 @@ name|more_data
 init|=
 name|HAL_MCI_GPM_MORE
 decl_stmt|;
+name|int8_t
+name|value_dbm
+decl_stmt|;
 name|bool
 name|skip_gpm
 init|=
@@ -2170,9 +2173,8 @@ operator|&
 name|HAL_MCI_INTERRUPT_RX_MSG_CONT_INFO
 condition|)
 block|{
-name|int8_t
 name|value_dbm
-init|=
+operator|=
 name|ath_hal_btcoex_mci_state
 argument_list|(
 name|sc
@@ -2183,7 +2185,7 @@ name|HAL_MCI_STATE_CONT_RSSI_POWER
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|mciIntRxMsg
 operator|&=
 operator|~
