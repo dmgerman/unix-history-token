@@ -13635,6 +13635,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWM_MAX_CMD_PAYLOAD_SIZE
+value|((4096 - 4) - sizeof(struct iwm_cmd_header))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWM_CMD_FAILED_MSK
 value|0x40
 end_define
