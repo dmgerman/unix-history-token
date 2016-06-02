@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2009-2011 Semihalf.  * All rights reserved.  *  * R
 end_comment
 
 begin_comment
-comment|/*  * CESA SRAM Memory Map:  *  * +------------------------+<= sc->sc_sram_base + CESA_SRAM_SIZE  * |                        |  * |          DATA          |  * |                        |  * +------------------------+<= sc->sc_sram_base + CESA_DATA(0)  * |  struct cesa_sa_data   |  * +------------------------+  * |  struct cesa_sa_hdesc  |  * +------------------------+<= sc->sc_sram_base  */
+comment|/*  * CESA SRAM Memory Map:  *  * +------------------------+<= sc->sc_sram_base_va + CESA_SRAM_SIZE  * |                        |  * |          DATA          |  * |                        |  * +------------------------+<= sc->sc_sram_base_va + CESA_DATA(0)  * |  struct cesa_sa_data   |  * +------------------------+  * |  struct cesa_sa_hdesc  |  * +------------------------+<= sc->sc_sram_base_va  */
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/fdt.h>
 end_include
 
 begin_include
@@ -1722,7 +1728,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -1775,7 +1781,7 @@ name|cr_csd_paddr
 argument_list|,
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -1820,7 +1826,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 argument_list|,
 name|csd
 operator|->
@@ -2814,7 +2820,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 operator|+
 name|CESA_DATA
 argument_list|(
@@ -2865,7 +2871,7 @@ name|ds_addr
 argument_list|,
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 operator|+
 name|CESA_DATA
 argument_list|(
@@ -4692,9 +4698,15 @@ name|pcell_t
 name|sram_handle
 decl_stmt|,
 name|sram_reg
+index|[
+literal|2
+index|]
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|rv
+decl_stmt|;
+name|rv
+operator|=
 name|OF_getprop
 argument_list|(
 name|ofw_bus_get_node
@@ -4718,12 +4730,16 @@ argument_list|(
 name|sram_handle
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|<=
 literal|0
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|rv
 operator|)
 return|;
 name|sram_ihandle
@@ -4747,8 +4763,8 @@ argument_list|(
 name|sram_ihandle
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|rv
+operator|=
 name|OF_getprop
 argument_list|(
 name|sram_node
@@ -4759,7 +4775,6 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|sram_reg
 argument_list|,
 sizeof|sizeof
@@ -4767,23 +4782,87 @@ argument_list|(
 name|sram_reg
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|<=
 literal|0
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|rv
 operator|)
 return|;
 name|sc
 operator|->
-name|sc_sram_base
+name|sc_sram_base_pa
 operator|=
 name|fdt32_to_cpu
 argument_list|(
 name|sram_reg
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
+comment|/* Store SRAM size to be able to unmap in detach() */
+name|sc
+operator|->
+name|sc_sram_size
+operator|=
+name|fdt32_to_cpu
+argument_list|(
+name|sram_reg
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+comment|/* SRAM memory was not mapped in platform_sram_devmap(), map it now */
+name|rv
+operator|=
+name|bus_space_map
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_base_pa
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_size
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+operator|(
+name|sc
+operator|->
+name|sc_sram_base_va
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -5236,7 +5315,7 @@ literal|"could not setup engine completion irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err1
+name|err2
 goto|;
 block|}
 comment|/* Create DMA tag for processed data */
@@ -5294,7 +5373,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|err2
+name|err3
 goto|;
 comment|/* Initialize data structures: TDMA Descriptors Pool */
 name|error
@@ -5322,7 +5401,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|err3
+name|err4
 goto|;
 name|STAILQ_INIT
 argument_list|(
@@ -5440,7 +5519,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|err4
+name|err5
 goto|;
 name|STAILQ_INIT
 argument_list|(
@@ -5558,7 +5637,7 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|err5
+name|err6
 goto|;
 name|STAILQ_INIT
 argument_list|(
@@ -5707,7 +5786,7 @@ operator|--
 condition|)
 do|;
 goto|goto
-name|err6
+name|err7
 goto|;
 block|}
 name|STAILQ_INSERT_TAIL
@@ -5897,7 +5976,7 @@ literal|"could not get crypto driver id\n"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err7
+name|err8
 goto|;
 block|}
 name|crypto_register
@@ -5996,7 +6075,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|err7
+name|err8
 label|:
 for|for
 control|(
@@ -6027,7 +6106,7 @@ operator|.
 name|cr_dmap
 argument_list|)
 expr_stmt|;
-name|err6
+name|err7
 label|:
 name|cesa_free_dma_mem
 argument_list|(
@@ -6037,7 +6116,7 @@ operator|->
 name|sc_requests_cdm
 argument_list|)
 expr_stmt|;
-name|err5
+name|err6
 label|:
 name|cesa_free_dma_mem
 argument_list|(
@@ -6047,7 +6126,7 @@ operator|->
 name|sc_sdesc_cdm
 argument_list|)
 expr_stmt|;
-name|err4
+name|err5
 label|:
 name|cesa_free_dma_mem
 argument_list|(
@@ -6057,7 +6136,7 @@ operator|->
 name|sc_tdesc_cdm
 argument_list|)
 expr_stmt|;
-name|err3
+name|err4
 label|:
 name|bus_dma_tag_destroy
 argument_list|(
@@ -6066,7 +6145,7 @@ operator|->
 name|sc_data_dtag
 argument_list|)
 expr_stmt|;
-name|err2
+name|err3
 label|:
 name|bus_teardown_intr
 argument_list|(
@@ -6084,6 +6163,29 @@ operator|->
 name|sc_icookie
 argument_list|)
 expr_stmt|;
+name|err2
+label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+name|bus_space_unmap
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_base_va
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|err1
 label|:
 name|bus_release_resources
@@ -6291,6 +6393,28 @@ operator|->
 name|sc_res
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+comment|/* Unmap SRAM memory */
+name|bus_space_unmap
+argument_list|(
+name|fdtbus_bs_tag
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_base_va
+argument_list|,
+name|sc
+operator|->
+name|sc_sram_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Destroy mutexes */
 name|mtx_destroy
 argument_list|(

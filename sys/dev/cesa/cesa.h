@@ -755,7 +755,13 @@ name|sc_free_sessions
 expr_stmt|;
 comment|/* CESA SRAM Address */
 name|bus_addr_t
-name|sc_sram_base
+name|sc_sram_base_pa
+decl_stmt|;
+name|bus_space_handle_t
+name|sc_sram_base_va
+decl_stmt|;
+name|bus_size_t
+name|sc_sram_size
 decl_stmt|;
 block|}
 struct|;

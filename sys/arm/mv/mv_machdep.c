@@ -1111,6 +1111,12 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
 name|phandle_t
 name|child
 decl_stmt|,
