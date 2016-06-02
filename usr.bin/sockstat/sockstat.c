@@ -2028,7 +2028,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_in6
 argument_list|)
 expr_stmt|;
 name|local_all_loopback
@@ -2110,7 +2110,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_in
+name|sockaddr_in6
 argument_list|)
 expr_stmt|;
 name|no_stcb
