@@ -1677,7 +1677,7 @@ comment|/*  * BEGIN iwl-fw.h  */
 end_comment
 
 begin_comment
-comment|/**  * enum iwl_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWM_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_RX_ENERGY_API: supports rx signal strength api  * @IWM_UCODE_TLV_FLAGS_TIME_EVENT_API_V2: using the new time event API.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_BF_UPDATED: new beacon filtering API  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_D3_CONTINUITY_API: modified D3 API to allow keeping  *	connection when going back to D0  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_SCHED_SCAN: this uCode image supports scheduled scan.  * @IWM_UCODE_TLV_FLAGS_STA_KEY_CMD: new ADD_STA and ADD_STA_KEY command API  * @IWM_UCODE_TLV_FLAGS_DEVICE_PS_CMD: support device wide power command  *	containing CAM (Continuous Active Mode) indication.  * @IWM_UCODE_TLV_FLAGS_P2P_PS: P2P client power save is supported (only on a  *	single bound interface).  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  */
+comment|/**  * enum iwm_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWM_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_RX_ENERGY_API: supports rx signal strength api  * @IWM_UCODE_TLV_FLAGS_TIME_EVENT_API_V2: using the new time event API.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_BF_UPDATED: new beacon filtering API  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_D3_CONTINUITY_API: modified D3 API to allow keeping  *	connection when going back to D0  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_SCHED_SCAN: this uCode image supports scheduled scan.  * @IWM_UCODE_TLV_FLAGS_STA_KEY_CMD: new ADD_STA and ADD_STA_KEY command API  * @IWM_UCODE_TLV_FLAGS_DEVICE_PS_CMD: support device wide power command  *	containing CAM (Continuous Active Mode) indication.  * @IWM_UCODE_TLV_FLAGS_P2P_PS: P2P client power save is supported (only on a  *	single bound interface).  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  */
 end_comment
 
 begin_enum
@@ -4252,12 +4252,30 @@ block|, }
 enum|;
 end_enum
 
-begin_define
-define|#
-directive|define
-name|IWM_MVM_CMD_FIFO
-value|7
-end_define
+begin_enum
+enum|enum
+name|iwm_mvm_tx_fifo
+block|{
+name|IWM_MVM_TX_FIFO_BK
+init|=
+literal|0
+block|,
+name|IWM_MVM_TX_FIFO_BE
+block|,
+name|IWM_MVM_TX_FIFO_VI
+block|,
+name|IWM_MVM_TX_FIFO_VO
+block|,
+name|IWM_MVM_TX_FIFO_MCAST
+init|=
+literal|5
+block|,
+name|IWM_MVM_TX_FIFO_CMD
+init|=
+literal|7
+block|, }
+enum|;
+end_enum
 
 begin_define
 define|#
@@ -4948,6 +4966,107 @@ directive|define
 name|IWM_PHY_CFG_RX_CHAIN_C
 value|(1<< 14)
 end_define
+
+begin_comment
+comment|/*  * PHY db  */
+end_comment
+
+begin_enum
+enum|enum
+name|iwm_phy_db_section_type
+block|{
+name|IWM_PHY_DB_CFG
+init|=
+literal|1
+block|,
+name|IWM_PHY_DB_CALIB_NCH
+block|,
+name|IWM_PHY_DB_UNUSED
+block|,
+name|IWM_PHY_DB_CALIB_CHG_PAPD
+block|,
+name|IWM_PHY_DB_CALIB_CHG_TXP
+block|,
+name|IWM_PHY_DB_MAX
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|IWM_PHY_DB_CMD
+value|0x6c
+end_define
+
+begin_comment
+comment|/* TEMP API - The actual is 0x8c */
+end_comment
+
+begin_comment
+comment|/*  * phy db - configure operational ucode  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_phy_db_cmd
+block|{
+name|uint16_t
+name|type
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* for parsing of tx power channel group data that comes from the firmware */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_phy_db_chg_txp
+block|{
+name|uint32_t
+name|space
+decl_stmt|;
+name|uint16_t
+name|max_channel_idx
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * phy db - Receive phy db chunk after calibrations  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_calib_res_notif_phy_db
+block|{
+name|uint16_t
+name|type
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_comment
 comment|/* Target of the IWM_NVM_ACCESS_CMD */

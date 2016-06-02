@@ -1124,6 +1124,11 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 comment|/* If HW is not ready, prepare the conditions to check again */
 name|IWM_SETBITS
 argument_list|(
@@ -1366,6 +1371,10 @@ name|sc_dev
 argument_list|,
 literal|"timeout waiting for clock stabilization\n"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ETIMEDOUT
 expr_stmt|;
 goto|goto
 name|out
