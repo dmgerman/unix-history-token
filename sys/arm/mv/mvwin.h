@@ -1184,6 +1184,36 @@ parameter_list|)
 value|(1 | ((eng_sel)<< 2))
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_TARGET
+value|9
+end_define
+
+begin_comment
+comment|/*  * Bits [1:0] = Data swapping  *  0x0 = Byte swap  *  0x1 = No swap  *  0x2 = Byte and word swap  *  0x3 = Word swap  * Bits [4:2] = CESA select:  *  0x6 = CESA0  *  0x5 = CESA1  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_ATTR
+parameter_list|(
+name|eng_sel
+parameter_list|)
+value|(0x11 | (1<< (3 - (eng_sel))))
+end_define
+
 begin_else
 else|#
 directive|else
