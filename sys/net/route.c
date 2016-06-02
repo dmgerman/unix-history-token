@@ -907,6 +907,23 @@ argument_list|,
 name|fam
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rnh
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: NULL rib_head pointer table %d fam %d"
+operator|,
+name|__func__
+operator|,
+name|table
+operator|,
+name|fam
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rnh

@@ -497,6 +497,8 @@ operator|&
 name|adst
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -676,6 +678,8 @@ name|dst
 argument_list|,
 operator|&
 name|adst
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

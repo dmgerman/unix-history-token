@@ -1016,6 +1016,8 @@ argument_list|,
 name|edst
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1163,6 +1165,8 @@ argument_list|,
 name|dst
 argument_list|,
 name|edst
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

@@ -261,6 +261,12 @@ name|ifaddr
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|llentry
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|arpresolve_addr
@@ -286,6 +292,12 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|pflags
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+modifier|*
+name|plle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -320,6 +332,12 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|pflags
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+modifier|*
+name|plle
 parameter_list|)
 function_decl|;
 end_function_decl

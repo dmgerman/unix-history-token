@@ -1202,6 +1202,12 @@ name|rtentry
 modifier|*
 name|ro_rt
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|ro_lle
+decl_stmt|;
+comment|/* 	 * ro_prepend and ro_plen are only used for bpf to pass in a 	 * preformed header.  They are not cacheable. 	 */
 name|char
 modifier|*
 name|ro_prepend

@@ -538,6 +538,8 @@ operator|)
 name|destfw
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -674,6 +676,8 @@ name|u_char
 operator|*
 operator|)
 name|destfw
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

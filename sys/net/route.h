@@ -44,6 +44,12 @@ name|rtentry
 modifier|*
 name|ro_rt
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|ro_lle
+decl_stmt|;
+comment|/* 	 * ro_prepend and ro_plen are only used for bpf to pass in a 	 * preformed header.  They are not cacheable. 	 */
 name|char
 modifier|*
 name|ro_prepend
@@ -188,6 +194,17 @@ end_define
 
 begin_comment
 comment|/* Destination has GW  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_LLE_CACHE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Cache link layer  */
 end_comment
 
 begin_struct
@@ -1845,7 +1862,7 @@ name|RO_RTFREE
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {					\ 	if ((_ro)->ro_rt) {					\ 		if ((_ro)->ro_flags& RT_NORTREF) {		\ 			(_ro)->ro_flags&= ~RT_NORTREF;		\ 			(_ro)->ro_rt = NULL;			\ 		} else {					\ 			RT_LOCK((_ro)->ro_rt);			\ 			RTFREE_LOCKED((_ro)->ro_rt);		\ 		}						\ 	}							\ } while (0)
+value|do {					\ 	if ((_ro)->ro_rt) {					\ 		if ((_ro)->ro_flags& RT_NORTREF) {		\ 			(_ro)->ro_flags&= ~RT_NORTREF;		\ 			(_ro)->ro_rt = NULL;			\ 			(_ro)->ro_lle = NULL;			\ 		} else {					\ 			RT_LOCK((_ro)->ro_rt);			\ 			RTFREE_LOCKED((_ro)->ro_rt);		\ 		}						\ 	}							\ } while (0)
 end_define
 
 begin_comment
@@ -1863,7 +1880,7 @@ name|cookiep
 parameter_list|,
 name|fibnum
 parameter_list|)
-value|do {				\ 	rt_gen_t cookie = RT_GEN(fibnum, (ro)->ro_dst.sa_family);	\ 	if (*(cookiep) != cookie&& (ro)->ro_rt != NULL) {		\ 		RTFREE((ro)->ro_rt);					\ 		(ro)->ro_rt = NULL;					\ 		*(cookiep) = cookie;					\ 	}								\ } while (0)
+value|do {				\ 	rt_gen_t cookie = RT_GEN(fibnum, (ro)->ro_dst.sa_family);	\ 	if (*(cookiep) != cookie) {					\ 		if ((ro)->ro_rt != NULL) {				\ 			RTFREE((ro)->ro_rt);				\ 			(ro)->ro_rt = NULL;				\ 		}							\ 		*(cookiep) = cookie;					\ 	}								\ } while (0)
 end_define
 
 begin_struct_decl

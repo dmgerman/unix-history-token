@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_llatbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -3629,6 +3635,24 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|in6p
+operator|->
+name|inp_route
+operator|.
+name|ro_lle
+condition|)
+name|LLE_FREE
+argument_list|(
+name|in6p
+operator|->
+name|inp_route
+operator|.
+name|ro_lle
+argument_list|)
+expr_stmt|;
+comment|/* zeros ro_lle */
 return|return;
 block|}
 end_function
@@ -3684,6 +3708,24 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_lle
+condition|)
+name|LLE_FREE
+argument_list|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_lle
+argument_list|)
+expr_stmt|;
+comment|/* zeros ro_lle */
 return|return
 name|inp
 return|;
