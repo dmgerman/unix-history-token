@@ -5160,6 +5160,9 @@ case|:
 case|case
 name|MV_DEV_88F6282
 case|:
+case|case
+name|MV_DEV_88F6828
+case|:
 name|sc
 operator|->
 name|sc_tperr
@@ -6057,6 +6060,8 @@ condition|(
 name|sc
 operator|->
 name|sc_cid
+operator|<
+literal|0
 condition|)
 block|{
 name|device_printf
