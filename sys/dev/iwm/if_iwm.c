@@ -822,6 +822,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|iwm_disable_rx_dma
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|iwm_reset_rx_ring
 parameter_list|(
 name|struct
@@ -4501,17 +4513,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|iwm_reset_rx_ring
+name|iwm_disable_rx_dma
 parameter_list|(
 name|struct
 name|iwm_softc
 modifier|*
 name|sc
-parameter_list|,
-name|struct
-name|iwm_rx_ring
-modifier|*
-name|ring
 parameter_list|)
 block|{
 comment|/* XXX print out if we can't lock the NIC? */
@@ -4538,6 +4545,25 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|iwm_reset_rx_ring
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|iwm_rx_ring
+modifier|*
+name|ring
+parameter_list|)
+block|{
 comment|/* Reset the ring state */
 name|ring
 operator|->
@@ -5794,6 +5820,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|iwm_disable_rx_dma
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Stop RX ring. */
 name|iwm_reset_rx_ring
 argument_list|(
@@ -6088,13 +6119,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* stop DMA */
-name|IWM_WRITE
+name|iwm_disable_rx_dma
 argument_list|(
 name|sc
-argument_list|,
-name|IWM_FH_MEM_RCSR_CHNL0_CONFIG_REG
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|IWM_WRITE
