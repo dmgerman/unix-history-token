@@ -3085,11 +3085,13 @@ operator|->
 name|gref_head
 argument_list|)
 expr_stmt|;
-name|gnttab_end_foreign_access_ref
+name|gnttab_end_foreign_access
 argument_list|(
 name|rxq
 operator|->
 name|ring_ref
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * No split event channel support at the moment, handle will 	 * be unbound in tx. So no need to call xen_intr_unbind here, 	 * but we do want to reset the handler to 0. 	 */
@@ -3573,11 +3575,13 @@ operator|->
 name|gref_head
 argument_list|)
 expr_stmt|;
-name|gnttab_end_foreign_access_ref
+name|gnttab_end_foreign_access
 argument_list|(
 name|txq
 operator|->
 name|ring_ref
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|xen_intr_unbind
@@ -4175,11 +4179,13 @@ operator|->
 name|tq
 argument_list|)
 expr_stmt|;
-name|gnttab_end_foreign_access_ref
+name|gnttab_end_foreign_access
 argument_list|(
 name|txq
 operator|->
 name|ring_ref
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fail_grant_ring
