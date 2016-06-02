@@ -12173,7 +12173,7 @@ comment|/* CW minimum  */
 name|tx
 operator|->
 name|retry
-operator|=
+operator||=
 literal|7
 operator|<<
 literal|4
@@ -12182,7 +12182,7 @@ comment|/* CW maximum  */
 name|tx
 operator|->
 name|retry
-operator|=
+operator||=
 name|URTW_TX_MAXRETRY
 operator|<<
 literal|8
