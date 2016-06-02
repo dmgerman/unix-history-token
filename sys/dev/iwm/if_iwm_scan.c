@@ -1704,12 +1704,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * If the scan failed, it usually means that the FW was unable 		 * to allocate the time events. Warn on it, but maybe we 		 * should try to send the command again with different params. 		 */
-name|sc
-operator|->
-name|sc_scanband
-operator|=
-literal|0
-expr_stmt|;
 name|ret
 operator|=
 name|EIO

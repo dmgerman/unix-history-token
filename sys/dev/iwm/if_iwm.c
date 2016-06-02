@@ -16937,7 +16937,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not initiate scan\n"
+literal|"could not initiate 5 GHz scan\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -22849,7 +22849,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not initiate scan\n"
+literal|"could not initiate 2 GHz scan\n"
 argument_list|)
 expr_stmt|;
 name|IWM_UNLOCK
@@ -22861,6 +22861,12 @@ name|ieee80211_cancel_scan
 argument_list|(
 name|vap
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_scanband
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
