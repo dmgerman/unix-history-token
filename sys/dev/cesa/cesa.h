@@ -199,20 +199,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CESA_READ
+name|CESA_REG_READ
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sc_bst, (sc)->sc_bsh, (reg))
+value|bus_read_4((sc)->sc_res[RES_CESA_REGS], (reg))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CESA_WRITE
+name|CESA_REG_WRITE
 parameter_list|(
 name|sc
 parameter_list|,
@@ -221,7 +221,35 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sc_bst, (sc)->sc_bsh, (reg), (val))
+value|bus_write_4((sc)->sc_res[RES_CESA_REGS], (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CESA_TDMA_READ
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_read_4((sc)->sc_res[RES_TDMA_REGS], (reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CESA_TDMA_WRITE
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_write_4((sc)->sc_res[RES_TDMA_REGS], (reg), (val))
 end_define
 
 begin_comment
@@ -281,6 +309,25 @@ parameter_list|)
 define|\
 value|(sizeof(struct cesa_sa_hdesc) + sizeof(struct cesa_sa_data) + offset)
 end_define
+
+begin_comment
+comment|/* CESA memory and IRQ resources */
+end_comment
+
+begin_enum
+enum|enum
+name|cesa_res_type
+block|{
+name|RES_TDMA_REGS
+block|,
+name|RES_CESA_REGS
+block|,
+name|RES_CESA_IRQ
+block|,
+name|RES_CESA_NUM
+block|}
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -622,7 +669,7 @@ name|resource
 modifier|*
 name|sc_res
 index|[
-literal|2
+name|RES_CESA_NUM
 index|]
 decl_stmt|;
 name|void
@@ -631,12 +678,6 @@ name|sc_icookie
 decl_stmt|;
 name|bus_dma_tag_t
 name|sc_data_dtag
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_bst
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_bsh
 decl_stmt|;
 name|int
 name|sc_error
@@ -974,7 +1015,7 @@ begin_define
 define|#
 directive|define
 name|CESA_ICR
-value|0xDE20
+value|0x0E20
 end_define
 
 begin_define
@@ -995,7 +1036,7 @@ begin_define
 define|#
 directive|define
 name|CESA_ICM
-value|0xDE24
+value|0x0E24
 end_define
 
 begin_define
@@ -1188,7 +1229,7 @@ begin_define
 define|#
 directive|define
 name|CESA_SA_CMD
-value|0xDE00
+value|0x0E00
 end_define
 
 begin_define
@@ -1202,14 +1243,14 @@ begin_define
 define|#
 directive|define
 name|CESA_SA_DPR
-value|0xDE04
+value|0x0E04
 end_define
 
 begin_define
 define|#
 directive|define
 name|CESA_SA_CR
-value|0xDE08
+value|0x0E08
 end_define
 
 begin_define
@@ -1237,7 +1278,7 @@ begin_define
 define|#
 directive|define
 name|CESA_SA_SR
-value|0xDE0C
+value|0x0E0C
 end_define
 
 begin_define

@@ -293,6 +293,14 @@ name|RF_ACTIVE
 block|}
 block|,
 block|{
+name|SYS_RES_MEMORY
+block|,
+literal|1
+block|,
+name|RF_ACTIVE
+block|}
+block|,
+block|{
 name|SYS_RES_IRQ
 block|,
 literal|0
@@ -4647,7 +4655,7 @@ operator|->
 name|cr_tdesc
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -4658,7 +4666,7 @@ operator|->
 name|ctd_cthd_paddr
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5194,34 +5202,6 @@ goto|goto
 name|err0
 goto|;
 block|}
-name|sc
-operator|->
-name|sc_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-operator|*
-operator|(
-name|sc
-operator|->
-name|sc_res
-operator|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-operator|*
-operator|(
-name|sc
-operator|->
-name|sc_res
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Setup CESA decoding windows */
 name|error
 operator|=
@@ -5281,7 +5261,7 @@ name|sc
 operator|->
 name|sc_res
 index|[
-literal|1
+name|RES_CESA_IRQ
 index|]
 argument_list|,
 name|INTR_TYPE_NET
@@ -5862,7 +5842,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize TDMA: 	 * - Burst limit: 128 bytes, 	 * - Outstanding reads enabled, 	 * - No byte-swap. 	 */
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5880,7 +5860,7 @@ name|CESA_TDMA_CR_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize SA: 	 * - SA descriptor is present at beginning of CESA SRAM, 	 * - Multi-packet chain mode, 	 * - Cooperation with TDMA enabled. 	 */
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5889,7 +5869,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5903,7 +5883,7 @@ name|CESA_SA_CR_MULTI_MODE
 argument_list|)
 expr_stmt|;
 comment|/* Unmask interrupts */
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5912,7 +5892,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5925,7 +5905,7 @@ operator|->
 name|sc_tperr
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -5934,7 +5914,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -6155,7 +6135,7 @@ name|sc
 operator|->
 name|sc_res
 index|[
-literal|1
+name|RES_CESA_IRQ
 index|]
 argument_list|,
 name|sc
@@ -6275,7 +6255,7 @@ argument_list|)
 expr_stmt|;
 comment|/* TODO: Wait for queued requests completion before shutdown. */
 comment|/* Mask interrupts */
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -6284,7 +6264,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -6373,7 +6353,7 @@ name|sc
 operator|->
 name|sc_res
 index|[
-literal|1
+name|RES_CESA_IRQ
 index|]
 argument_list|,
 name|sc
@@ -6509,14 +6489,14 @@ expr_stmt|;
 comment|/* Ack interrupt */
 name|ecr
 operator|=
-name|CESA_READ
+name|CESA_TDMA_READ
 argument_list|(
 name|sc
 argument_list|,
 name|CESA_TDMA_ECR
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -6527,14 +6507,14 @@ argument_list|)
 expr_stmt|;
 name|icr
 operator|=
-name|CESA_READ
+name|CESA_REG_READ
 argument_list|(
 name|sc
 argument_list|,
 name|CESA_ICR
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_REG_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -8256,7 +8236,7 @@ name|i
 operator|++
 control|)
 block|{
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -8268,7 +8248,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -8353,7 +8333,7 @@ operator||
 name|MV_WIN_CPU_ENABLE_BIT
 operator|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -8365,7 +8345,7 @@ argument_list|,
 name|br
 argument_list|)
 expr_stmt|;
-name|CESA_WRITE
+name|CESA_TDMA_WRITE
 argument_list|(
 name|sc
 argument_list|,
