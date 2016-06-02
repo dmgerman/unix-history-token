@@ -1725,6 +1725,8 @@ argument_list|,
 name|edst
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1755,6 +1757,8 @@ else|:
 name|dst_in
 argument_list|,
 name|edst
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
