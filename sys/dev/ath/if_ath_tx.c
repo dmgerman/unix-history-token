@@ -6283,6 +6283,13 @@ return|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+comment|/* 	 * Placeholder: if you want to transmit with the azimuth 	 * timestamp in the end of the payload, here's where you 	 * should set the TXDESC field. 	 */
+block|flags |= HAL_TXDESC_HWTS;
+endif|#
+directive|endif
 comment|/* 	 * Determine if a tx interrupt should be generated for 	 * this descriptor.  We take a tx interrupt to reap 	 * descriptors when the h/w hits an EOL condition or 	 * when the descriptor is specifically marked to generate 	 * an interrupt.  We periodically mark descriptors in this 	 * way to insure timely replenishing of the supply needed 	 * for sending frames.  Defering interrupts reduces system 	 * load and potentially allows more concurrent work to be 	 * done but if done to aggressively can cause senders to 	 * backup. 	 * 	 * NB: use>= to deal with sc_txintrperiod changing 	 *     dynamically through sysctl. 	 */
 if|if
 condition|(

@@ -15,6 +15,16 @@ directive|define
 name|__IF_ATH_BTCOEX_H__
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_COEX_EVENT_BT_NOOP
+block|, }
+name|ATH_BT_COEX_EVENT
+typedef|;
+end_typedef
+
 begin_function_decl
 specifier|extern
 name|int

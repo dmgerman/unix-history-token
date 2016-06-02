@@ -399,6 +399,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_btcoex_mci.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_ath_spectral.h>
 end_include
 
@@ -2304,6 +2310,23 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"WB335 2-ANT card detected\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_pci_devinfo
+operator|&
+name|ATH_PCI_BT_ANT_DIV
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"Bluetooth Antenna Diversity card detected\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8980,6 +9003,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|status
+operator|&
+name|HAL_INT_MCI
+condition|)
+block|{
+name|ath_btcoex_mci_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|ATH_PCU_LOCK
 argument_list|(
@@ -10020,6 +10056,19 @@ operator|->
 name|sc_imask
 operator||=
 name|HAL_INT_RXEOL
+expr_stmt|;
+comment|/* 	 * Enable MCI interrupt for MCI devices. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_btcoex_mci
+condition|)
+name|sc
+operator|->
+name|sc_imask
+operator||=
+name|HAL_INT_MCI
 expr_stmt|;
 comment|/* 	 * Enable MIB interrupts when there are hardware phy counters. 	 * Note we only do this (at the moment) for station mode. 	 */
 if|if
