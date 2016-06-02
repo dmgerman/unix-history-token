@@ -5158,7 +5158,7 @@ operator|<
 name|NET_RX_SLOTS_MIN
 condition|)
 block|{
-name|callout_reset
+name|callout_reset_curcpu
 argument_list|(
 operator|&
 name|rxq
