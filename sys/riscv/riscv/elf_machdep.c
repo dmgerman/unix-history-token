@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * Copyright (c) 2015 Ruslan Bukin<br@bsdpad.com>  * Copyright (c) 2016 Yukishige SHibata<y-shibat@mtd.biglobe.ne.jp>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * Copyright (c) 2015 Ruslan Bukin<br@bsdpad.com>  * Copyright (c) 2016 Yukishige Shibata<y-shibat@mtd.biglobe.ne.jp>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -770,7 +770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The RISCV ISA is designed so that all of immediate value is  * sign-extened.  * An immediate value is sometimes generated at runtime by adding  * 12bit sign integer and 20bit signed integer. This requests 20bit  * immediate value to be ajusted if the MSB of the 12bit immediate  * value is asserted (sign extened value is treated as negative value).  *  * For example, 0x123800 can be calculated by adding upper 20 bit of  * 0x124000 and signed-extended 12bit immediate whose bit pattern is  * 0x800 as follows;  *   0x123800  *     = 0x123000 + 0x800  *     = (0x123000 + 0x1000) + (-0x1000 + 0x800)  *     = (0x123000 + 0x1000) + (0xff...ff800)  *     = 0x124000            + sign-exntend(0x800)  */
+comment|/*  * The RISC-V ISA is designed so that all of immediate values are  * sign-extended.  * An immediate value is sometimes generated at runtime by adding  * 12bit sign integer and 20bit signed integer. This requests 20bit  * immediate value to be ajusted if the MSB of the 12bit immediate  * value is asserted (sign-extended value is treated as negative value).  *  * For example, 0x123800 can be calculated by adding upper 20 bit of  * 0x124000 and sign-extended 12bit immediate whose bit pattern is  * 0x800 as follows:  *   0x123800  *     = 0x123000 + 0x800  *     = (0x123000 + 0x1000) + (-0x1000 + 0x800)  *     = (0x123000 + 0x1000) + (0xff...ff800)  *     = 0x124000            + sign-extention(0x800)  */
 end_comment
 
 begin_function
@@ -782,7 +782,7 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
-comment|/* 	 * There is the arithmetical hack that can remove conditional 	 * statement. But I implement it in straghtforward way. 	 */
+comment|/* 	 * There is the arithmetical hack that can remove conditional 	 * statement. But I implement it in straightforward way. 	 */
 if|if
 condition|(
 operator|(
@@ -1488,7 +1488,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kldload:%s: huge offset against R_RISCV_CALL\n"
+literal|"kldload: huge offset against R_RISCV_CALL\n"
 argument_list|)
 expr_stmt|;
 return|return
