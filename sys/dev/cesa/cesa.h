@@ -80,7 +80,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CESA_HMAC_HASH_LENGTH
+name|CESA_HMAC_TRUNC_LEN
 value|12
 end_define
 
@@ -906,14 +906,21 @@ begin_define
 define|#
 directive|define
 name|CESA_CSHD_MD5_HMAC
-value|((6<< 4) | (1<< 7))
+value|(6<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CESA_CSHD_SHA1_HMAC
-value|((7<< 4) | (1<< 7))
+value|(7<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CESA_CSHD_96_BIT_HMAC
+value|(1<< 7)
 end_define
 
 begin_define
