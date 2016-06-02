@@ -1044,6 +1044,10 @@ name|callout
 name|sc_watchdog_to
 decl_stmt|;
 name|struct
+name|callout
+name|sc_led_blink_to
+decl_stmt|;
+name|struct
 name|task
 name|init_task
 decl_stmt|;
