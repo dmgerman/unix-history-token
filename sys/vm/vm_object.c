@@ -6119,6 +6119,20 @@ operator|==
 literal|1
 condition|)
 block|{
+name|vm_object_pip_add
+argument_list|(
+name|object
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|vm_object_pip_add
+argument_list|(
+name|backing_object
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If there is exactly one reference to the backing 			 * object, we can collapse it into the parent.   			 */
 name|vm_object_backing_scan
 argument_list|(
@@ -6292,6 +6306,11 @@ name|backing_object
 operator|)
 argument_list|)
 expr_stmt|;
+name|vm_object_pip_wakeup
+argument_list|(
+name|backing_object
+argument_list|)
+expr_stmt|;
 name|backing_object
 operator|->
 name|type
@@ -6312,6 +6331,11 @@ expr_stmt|;
 name|vm_object_destroy
 argument_list|(
 name|backing_object
+argument_list|)
+expr_stmt|;
+name|vm_object_pip_wakeup
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|object_collapses
