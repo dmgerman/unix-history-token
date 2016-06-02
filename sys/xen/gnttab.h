@@ -9,6 +9,12 @@ directive|ifndef
 name|__ASM_GNTTAB_H__
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|__ASM_GNTTAB_H__
+end_define
+
 begin_include
 include|#
 directive|include
