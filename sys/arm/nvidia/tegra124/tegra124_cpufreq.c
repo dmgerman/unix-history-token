@@ -1004,7 +1004,7 @@ name|val
 parameter_list|,
 name|div
 parameter_list|)
-value|((((val) + ((div) - 1)) / (div)) * (div))
+value|roundup(val, div)
 end_define
 
 begin_define
@@ -1016,7 +1016,7 @@ name|val
 parameter_list|,
 name|div
 parameter_list|)
-value|(((val) / (div)) * (div))
+value|rounddown(val, div)
 end_define
 
 begin_comment
