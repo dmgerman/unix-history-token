@@ -798,7 +798,7 @@ comment|/* CESA SRAM Address */
 name|bus_addr_t
 name|sc_sram_base_pa
 decl_stmt|;
-name|bus_space_handle_t
+name|vm_offset_t
 name|sc_sram_base_va
 decl_stmt|;
 name|bus_size_t
