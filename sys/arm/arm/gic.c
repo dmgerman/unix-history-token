@@ -5639,9 +5639,6 @@ operator|*
 operator|)
 name|isrc
 decl_stmt|;
-name|u_int
-name|irq
-decl_stmt|;
 name|enum
 name|intr_trigger
 name|trig
@@ -5663,12 +5660,6 @@ operator|==
 name|GI_FLAG_MSI
 condition|)
 block|{
-name|irq
-operator|=
-name|gi
-operator|->
-name|gi_irq
-expr_stmt|;
 name|pol
 operator|=
 name|gi
@@ -5716,6 +5707,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|u_int
+name|irq
+decl_stmt|;
 comment|/* Get config for resource. */
 if|if
 condition|(
@@ -5734,14 +5728,7 @@ argument_list|,
 operator|&
 name|trig
 argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
+operator|||
 name|gi
 operator|->
 name|gi_irq
@@ -5756,12 +5743,6 @@ return|;
 block|}
 else|else
 block|{
-name|irq
-operator|=
-name|gi
-operator|->
-name|gi_irq
-expr_stmt|;
 name|pol
 operator|=
 name|INTR_POLARITY_CONFORM
