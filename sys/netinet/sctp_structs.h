@@ -568,6 +568,11 @@ name|sctp_rtentry_t
 modifier|*
 name|ro_rt
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|ro_lle
+decl_stmt|;
 name|char
 modifier|*
 name|ro_prepend
