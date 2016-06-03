@@ -33,6 +33,19 @@ directive|include
 file|<sys/timeb.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -48,6 +61,11 @@ block|}
 name|timespec_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

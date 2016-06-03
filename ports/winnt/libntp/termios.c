@@ -147,6 +147,9 @@ name|char
 modifier|*
 name|pch
 decl_stmt|;
+name|u_int
+name|uibuf
+decl_stmt|;
 comment|/* 	 * This is odd, but we'll take any unix device path 	 * by looking for the initial '/' and strip off everything 	 * before the final digits, then translate that to COM__: 	 * maintaining backward compatibility with NTP practice of 	 * mapping unit 0 to the nonfunctional COM0: 	 * 	 * To ease the job of taking the windows COMx: device names 	 * out of reference clocks, we'll also work with those 	 * equanimously. 	 */
 name|TRACE
 argument_list|(
@@ -320,19 +323,19 @@ name|sscanf
 argument_list|(
 name|pch
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 operator|&
-name|unit
+name|uibuf
 argument_list|)
 operator|||
+operator|(
 name|unit
+operator|=
+name|uibuf
+operator|)
 operator|>
 name|MAX_SERIAL
-operator|||
-name|unit
-operator|<
-literal|0
 condition|)
 block|{
 name|TRACE
