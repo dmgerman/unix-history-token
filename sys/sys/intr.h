@@ -195,6 +195,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|int
+name|intr_child_irq_filter_t
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|uintptr_t
+name|irq
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -234,6 +249,12 @@ end_define
 begin_comment
 comment|/* bound to a CPU */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|intr_pic
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Interrupt source definition. */
@@ -439,6 +460,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|intr_pic
+modifier|*
+name|intr_pic_add_handler
+parameter_list|(
+name|device_t
+parameter_list|,
+name|struct
+name|intr_pic
+modifier|*
+parameter_list|,
+name|intr_child_irq_filter_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uintptr_t
+parameter_list|,
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|device_t
@@ -552,6 +598,19 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|intr_child_irq_handler
+parameter_list|(
+name|struct
+name|intr_pic
+modifier|*
+parameter_list|,
+name|uintptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
