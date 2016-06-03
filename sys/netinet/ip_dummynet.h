@@ -176,6 +176,10 @@ name|DN_IS_GENTLE_RED
 init|=
 literal|0x0040
 block|,
+name|DN_IS_ECN
+init|=
+literal|0x0080
+block|,
 name|DN_PIPE_CMD
 init|=
 literal|0x1000
