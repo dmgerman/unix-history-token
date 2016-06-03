@@ -2052,7 +2052,7 @@ name|j
 operator|>
 name|linebuflen
 operator|-
-literal|1
+literal|4
 condition|)
 break|break;
 name|sprintf
