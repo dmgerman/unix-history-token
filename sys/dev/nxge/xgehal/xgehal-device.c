@@ -13897,11 +13897,6 @@ name|iwl_rxcnt
 operator|+
 name|iwl_txcnt
 expr_stmt|;
-name|iwl_cnt
-operator|=
-name|iwl_cnt
-expr_stmt|;
-comment|/* just to remove the lint warning */
 comment|/* 	 * we need to take hldev->config.isr_polling_cnt into account 	 * but for some reason this line causing GCC to produce wrong 	 * code on Solaris. As of now, if bimodal_interrupts is configured 	 * hldev->config.isr_polling_cnt is forced to be "0". 	 * 	 * iwl_cnt = iwl_cnt / (hldev->config.isr_polling_cnt + 1); */
 comment|/* 	 * iwl_avg - how many RXDs on avarage been processed since 	 *           last bimodal timer tick. This indirectly includes 	 *           CPU utilizations. 	 */
 name|iwl_rxavg
