@@ -442,17 +442,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|xbb_detach
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*------------------------------ Data Structures -----------------------------*/
 end_comment
@@ -10691,12 +10680,12 @@ operator|&=
 operator|~
 name|XBBF_IN_SHUTDOWN
 expr_stmt|;
-comment|/* The front can submit I/O until entering the closed state. */
+comment|/* Wait for the frontend to disconnect (if it's connected). */
 if|if
 condition|(
 name|frontState
-operator|<
-name|XenbusStateClosed
+operator|==
+name|XenbusStateConnected
 condition|)
 return|return
 operator|(
@@ -10889,11 +10878,25 @@ argument_list|,
 literal|"0"
 argument_list|)
 expr_stmt|;
-name|xbb_detach
+name|mtx_lock
 argument_list|(
+operator|&
 name|xbb
 operator|->
-name|dev
+name|lock
+argument_list|)
+expr_stmt|;
+name|xbb_shutdown
+argument_list|(
+name|xbb
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|xbb
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
