@@ -29449,11 +29449,14 @@ name|stc
 operator|.
 name|peers_vtag
 operator|=
+name|ntohl
+argument_list|(
 name|init_chk
 operator|->
 name|init
 operator|.
 name|initiate_tag
+argument_list|)
 expr_stmt|;
 comment|/* who are we */
 name|memcpy
