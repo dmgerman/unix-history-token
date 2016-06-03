@@ -30,6 +30,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTRNG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -54,6 +60,11 @@ directive|define
 name|LPI_PENDTAB_SIZE
 value|((LPI_CONFTAB_SIZE / 8) + 0x400)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -182,6 +193,18 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INTRNG
+name|int
+name|gic_nchildren
+decl_stmt|;
+name|device_t
+modifier|*
+name|gic_children
+decl_stmt|;
+name|struct
+name|intr_pic
+modifier|*
+name|gic_pic
+decl_stmt|;
 name|struct
 name|gic_v3_irqsrc
 modifier|*
@@ -225,6 +248,53 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* ivars */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|GICV3_IVAR_NIRQS
+block|,
+name|GICV3_IVAR_REDIST_VADDR
+block|, }
+enum|;
+end_enum
+
+begin_expr_stmt
+name|__BUS_ACCESSOR
+argument_list|(
+name|gicv3
+argument_list|,
+name|nirqs
+argument_list|,
+name|GICV3
+argument_list|,
+name|NIRQS
+argument_list|,
+name|u_int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__BUS_ACCESSOR
+argument_list|(
+name|gicv3
+argument_list|,
+name|redist_vaddr
+argument_list|,
+name|GICV3
+argument_list|,
+name|REDIST_VADDR
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Device methods */
 end_comment
 
@@ -258,31 +328,70 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTRNG
+end_ifdef
+
+begin_function_decl
+name|uint32_t
+name|gic_r_read_4
+parameter_list|(
+name|device_t
+parameter_list|,
+name|bus_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|gic_r_read_8
+parameter_list|(
+name|device_t
+parameter_list|,
+name|bus_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gic_r_write_4
+parameter_list|(
+name|device_t
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|uint32_t
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gic_r_write_8
+parameter_list|(
+name|device_t
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|uint64_t
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * ITS  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GIC_V3_ITS_DEVSTR
-value|"ARM GIC Interrupt Translation Service"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GIC_V3_ITS_COMPSTR
-value|"arm,gic-v3-its"
-end_define
-
-begin_expr_stmt
-name|DECLARE_CLASS
-argument_list|(
-name|gic_v3_its_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* LPI chunk owned by ITS device */
@@ -299,10 +408,15 @@ name|u_int
 name|lpi_free
 decl_stmt|;
 comment|/* First free LPI in set */
+ifndef|#
+directive|ifndef
+name|INTRNG
 name|u_int
 modifier|*
 name|lpi_col_ids
 decl_stmt|;
+endif|#
+directive|endif
 name|u_int
 name|lpi_num
 decl_stmt|;
@@ -352,6 +466,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTRNG
+end_ifndef
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -425,6 +545,28 @@ comment|/* ITS command double word */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GIC_V3_ITS_DEVSTR
+value|"ARM GIC Interrupt Translation Service"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIC_V3_ITS_COMPSTR
+value|"arm,gic-v3-its"
+end_define
+
+begin_expr_stmt
+name|DECLARE_CLASS
+argument_list|(
+name|gic_v3_its_driver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ITS commands encoding */
@@ -613,6 +755,15 @@ name|CMD_VALID_MASK
 value|(1UL<< CMD_VALID_SHIFT)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INTRNG */
+end_comment
+
 begin_comment
 comment|/*  * ITS command descriptor.  * Idea for command description passing taken from Linux.  */
 end_comment
@@ -756,6 +907,19 @@ end_struct
 begin_define
 define|#
 directive|define
+name|ITS_TARGET_NONE
+value|0xFBADBEEF
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTRNG
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|ITS_CMDQ_SIZE
 value|PAGE_SIZE_64K
 end_define
@@ -772,13 +936,6 @@ define|#
 directive|define
 name|ITS_FLAGS_CMDQ_FLUSH
 value|(1UL<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ITS_TARGET_NONE
-value|0xFBADBEEF
 end_define
 
 begin_struct
@@ -825,10 +982,15 @@ comment|/* Per-CPU collections */
 name|uint64_t
 name|its_flags
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|INTRNG
 name|struct
 name|its_dev_list
 name|its_dev_list
 decl_stmt|;
+endif|#
+directive|endif
 name|bitstr_t
 modifier|*
 name|its_lpi_bitmap
@@ -1025,6 +1187,11 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * GIC Distributor accessors.  * Notice that only GIC sofc can be passed.  */

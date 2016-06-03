@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|NIRQ
-value|1024
+value|2048
 end_define
 
 begin_comment
