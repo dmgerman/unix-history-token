@@ -2590,7 +2590,7 @@ name|SMP
 define|#
 directive|define
 name|LOOPS
-value|1000000
+value|100000
 comment|/* 	 * Calibrate the busy loop waiting for IPI ack in xAPIC mode. 	 * lapic_ipi_wait_mult contains the number of iterations which 	 * approximately delay execution for 1 microsecond (the 	 * argument to native_lapic_ipi_wait() is in microseconds). 	 * 	 * We assume that TSC is present and already measured. 	 * Possible TSC frequency jumps are irrelevant to the 	 * calibration loop below, the CPU clock management code is 	 * not yet started, and we do not enter sleep states. 	 */
 name|KASSERT
 argument_list|(
