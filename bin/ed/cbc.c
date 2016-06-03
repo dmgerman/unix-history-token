@@ -292,9 +292,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DES
-name|int
-name|i
-decl_stmt|;
 name|des_ct
 operator|=
 name|des_n
@@ -310,32 +307,14 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* initialize the padding vector */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-name|i
-operator|++
-control|)
-name|pvec
-index|[
-name|i
-index|]
-operator|=
-call|(
-name|char
-call|)
+name|arc4random_buf
 argument_list|(
-name|arc4random
-argument_list|()
-operator|%
-literal|256
+name|pvec
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pvec
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -595,7 +574,6 @@ comment|/* I/O buffer */
 comment|/* 	 * get the key 	 */
 if|if
 condition|(
-operator|*
 operator|(
 name|p
 operator|=
@@ -604,6 +582,13 @@ argument_list|(
 literal|"Enter key: "
 argument_list|)
 operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* 		 * copy it, nul-padded, into the key area 		 */
