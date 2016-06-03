@@ -8681,8 +8681,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"parse: local_receive: fd %d PPSAPI seq %ld - PPS %s\n"
+literal|"parse: local_receive: fd %ld PPSAPI seq %ld - PPS %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rbufp
 operator|->
 name|fd
@@ -8736,8 +8739,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"parse: local_receive: fd %d PPSAPI seq assert %ld, seq clear %ld - NO PPS event\n"
+literal|"parse: local_receive: fd %ld PPSAPI seq assert %ld, seq clear %ld - NO PPS event\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rbufp
 operator|->
 name|fd
@@ -8788,8 +8794,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"parse: local_receive: fd %d PPSAPI time_pps_fetch errno = %d\n"
+literal|"parse: local_receive: fd %ld PPSAPI time_pps_fetch errno = %d\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rbufp
 operator|->
 name|fd
