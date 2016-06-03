@@ -55,7 +55,7 @@ value|""
 define|#
 directive|define
 name|SHLIB_VERSION_NUMBER
-value|"7"
+value|"8"
 ifdef|#
 directive|ifdef
 name|__cplusplus
