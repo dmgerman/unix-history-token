@@ -4306,6 +4306,17 @@ argument_list|,
 name|epair_clone_destroy
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|netisr_register_vnet
+argument_list|(
+operator|&
+name|epair_nh
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4337,6 +4348,17 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|netisr_unregister_vnet
+argument_list|(
+operator|&
+name|epair_nh
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|if_clone_detach
 argument_list|(
 name|V_epair_cloner
