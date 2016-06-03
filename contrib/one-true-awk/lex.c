@@ -955,7 +955,7 @@ name|char
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -968,7 +968,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|buf
@@ -2024,7 +2024,7 @@ name|char
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -2036,7 +2036,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|buf
@@ -2910,7 +2910,7 @@ name|char
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -2926,7 +2926,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|buf
@@ -3144,7 +3144,7 @@ name|FILE
 modifier|*
 name|yyin
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

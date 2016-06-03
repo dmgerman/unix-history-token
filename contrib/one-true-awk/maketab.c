@@ -910,7 +910,7 @@ index|[
 name|i
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 name|printf
 argument_list|(

@@ -338,7 +338,7 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* first time through any RE */
@@ -382,11 +382,11 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 operator|||
 name|tmpset
 operator|==
-literal|0
+name|NULL
 condition|)
 name|overflo
 argument_list|(
@@ -1836,7 +1836,7 @@ name|uschar
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -1852,7 +1852,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|buf
@@ -2313,11 +2313,11 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 operator|||
 name|tmpset
 operator|==
-literal|0
+name|NULL
 condition|)
 name|overflo
 argument_list|(
@@ -2585,11 +2585,11 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 operator|||
 name|tmpset
 operator|==
-literal|0
+name|NULL
 condition|)
 name|overflo
 argument_list|(
@@ -4816,7 +4816,7 @@ name|uschar
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -4928,7 +4928,7 @@ if|if
 condition|(
 name|buf
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|buf
@@ -5447,11 +5447,11 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 operator|||
 name|tmpset
 operator|==
-literal|0
+name|NULL
 condition|)
 name|overflo
 argument_list|(
@@ -5743,11 +5743,11 @@ if|if
 condition|(
 name|setvec
 operator|==
-literal|0
+name|NULL
 operator|||
 name|tmpset
 operator|==
-literal|0
+name|NULL
 condition|)
 name|overflo
 argument_list|(

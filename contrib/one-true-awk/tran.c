@@ -1271,7 +1271,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if

@@ -1322,7 +1322,7 @@ literal|0
 init|;
 name|p
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|p
 operator|=

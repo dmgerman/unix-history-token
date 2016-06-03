@@ -3223,7 +3223,7 @@ index|[
 literal|1
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* delete the elements, not the table */
@@ -3831,7 +3831,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* a[1] == 0: already-compiled reg expr */
 name|i
@@ -4618,7 +4618,7 @@ index|]
 operator|.
 name|cnext
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|x
@@ -4818,7 +4818,7 @@ decl_stmt|,
 modifier|*
 name|z
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|x
 operator|=
@@ -4847,7 +4847,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|z
 operator|=
@@ -4899,7 +4899,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|tempfree
@@ -4969,7 +4969,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|n
@@ -7605,7 +7605,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 name|x
 operator|=
@@ -7814,7 +7814,7 @@ name|Cell
 modifier|*
 name|x
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|y
@@ -7846,7 +7846,7 @@ decl_stmt|,
 modifier|*
 name|fs
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|n
@@ -7895,7 +7895,7 @@ index|[
 literal|2
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* fs string */
 name|fs
@@ -8808,7 +8808,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|arg3type
 operator|==
@@ -8986,7 +8986,7 @@ index|[
 literal|2
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|tempfree
@@ -9276,7 +9276,7 @@ index|[
 literal|1
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|x
@@ -9813,7 +9813,7 @@ if|if
 condition|(
 name|nextarg
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|WARNING
@@ -10181,7 +10181,7 @@ if|if
 condition|(
 name|nextarg
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|WARNING
@@ -10248,7 +10248,7 @@ index|[
 literal|1
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* a[1] is redirection operator, a[2] is file */
 name|fp
@@ -10349,7 +10349,7 @@ index|[
 literal|1
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|fflush
 argument_list|(
@@ -10663,7 +10663,7 @@ name|FILE
 modifier|*
 name|fp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -10795,7 +10795,7 @@ index|]
 operator|.
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -11627,7 +11627,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* 0 => a[1] is already-compiled regexpr */
 name|pfa
@@ -11982,7 +11982,6 @@ name|result
 operator|=
 name|True
 expr_stmt|;
-empty_stmt|;
 block|}
 name|tempfree
 argument_list|(
@@ -12119,7 +12118,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* 0 => a[1] is already-compiled regexpr */
 name|pfa
