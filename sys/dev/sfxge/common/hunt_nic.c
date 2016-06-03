@@ -934,6 +934,13 @@ operator|/
 literal|1000
 expr_stmt|;
 block|}
+name|encp
+operator|->
+name|enc_bug61265_workaround
+operator|=
+name|B_FALSE
+expr_stmt|;
+comment|/* Medford only */
 comment|/* Check capabilities of running datapath firmware */
 if|if
 condition|(
