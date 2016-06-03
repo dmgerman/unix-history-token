@@ -319,6 +319,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -3252,6 +3269,14 @@ argument_list|,
 literal|"FTP server ready."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+name|blacklist_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -6935,6 +6960,20 @@ argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+name|blacklist_notify
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Login incorrect"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|logging
@@ -6992,6 +7031,23 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+else|else
+block|{
+name|blacklist_notify
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Login successful"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 name|login_attempts
 operator|=
