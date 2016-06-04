@@ -388,12 +388,6 @@ directive|include
 file|"ucl_hash.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"xxhash.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
