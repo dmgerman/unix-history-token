@@ -1132,14 +1132,6 @@ name|efx_pattern_type_t
 name|type
 parameter_list|)
 block|{
-name|efx_nic_ops_t
-modifier|*
-name|enop
-init|=
-name|enp
-operator|->
-name|en_enop
-decl_stmt|;
 name|efx_sram_pattern_fn_t
 name|func
 decl_stmt|;
@@ -1201,6 +1193,20 @@ name|EFX_MOD_EV
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* SRAM testing is only available on Siena. */
+if|if
+condition|(
+name|enp
+operator|->
+name|en_family
+operator|!=
+name|EFX_FAMILY_SIENA
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Select pattern generator */
 name|EFSYS_ASSERT3U
 argument_list|(
@@ -1220,9 +1226,7 @@ index|]
 expr_stmt|;
 return|return
 operator|(
-name|enop
-operator|->
-name|eno_sram_test
+name|siena_sram_test
 argument_list|(
 name|enp
 argument_list|,
