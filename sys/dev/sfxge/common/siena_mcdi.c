@@ -709,6 +709,10 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(mtp)
+argument_list|)
 name|EFSYS_ASSERT
 argument_list|(
 name|enp
@@ -827,7 +831,12 @@ name|efx_nic_t
 modifier|*
 name|enp
 parameter_list|)
-block|{ }
+block|{
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp)
+argument_list|)
+block|}
 end_function
 
 begin_function

@@ -243,6 +243,10 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(type)
+argument_list|)
 operator|(
 name|void
 operator|)

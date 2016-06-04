@@ -2256,6 +2256,13 @@ modifier|*
 name|lengthp
 parameter_list|)
 block|{
+name|_NOTE
+argument_list|(
+name|ARGUNUSED
+argument_list|(
+name|enp
+argument_list|)
+argument_list|)
 comment|/* 	 * The RX pseudo-header contains the packet length, excluding the 	 * pseudo-header. If the hardware receive datapath was operating in 	 * cut-through mode then the length in the RX pseudo-header will be 	 * zero, and the packet length must be obtained from the DMA length 	 * reported in the RX event. 	 */
 operator|*
 name|lengthp
@@ -2308,6 +2315,10 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp)
+argument_list|)
 switch|switch
 condition|(
 name|func
@@ -2850,7 +2861,7 @@ name|disable_scatter
 decl_stmt|;
 name|_NOTE
 argument_list|(
-argument|ARGUNUSED(erp)
+argument|ARGUNUSED(id, erp)
 argument_list|)
 name|EFX_STATIC_ASSERT
 argument_list|(

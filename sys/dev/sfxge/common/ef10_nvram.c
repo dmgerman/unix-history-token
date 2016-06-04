@@ -3571,6 +3571,10 @@ name|uint32_t
 modifier|*
 name|segment_used
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(offset)
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -4239,6 +4243,10 @@ decl_stmt|;
 name|tlv_cursor_t
 name|cursor
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(length, end)
+argument_list|)
 if|if
 condition|(
 operator|(

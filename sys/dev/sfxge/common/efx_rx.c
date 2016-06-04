@@ -3667,6 +3667,10 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp)
+argument_list|)
 switch|switch
 condition|(
 name|func
@@ -3776,6 +3780,10 @@ modifier|*
 name|lengthp
 parameter_list|)
 block|{
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp, buffer, lengthp)
+argument_list|)
 comment|/* Not supported by Falcon/Siena hardware */
 name|EFSYS_ASSERT
 argument_list|(
@@ -4350,6 +4358,10 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(esmp)
+argument_list|)
 name|EFX_STATIC_ASSERT
 argument_list|(
 name|EFX_EV_RX_NLABELS
