@@ -35,7 +35,7 @@ comment|/**< External serial EEPROM. */
 name|BHND_NVRAM_SRC_UNKNOWN
 comment|/**< No NVRAM source is directly 				  *  attached. 				  * 				  *  This will be returned by ChipCommon 				  *  revisions (rev<= 31) used in early 				  *  chipsets that vend SPROM/OTP via the 				  *  native host bridge interface. 				  * 				  *  For example, PCMCIA cards may vend 				  *  Broadcom NVRAM data via their standard CIS 				  *  table, and earlier PCI(e) devices map 				  *  SPROM statically into PCI BARs, and the 				  *  control registers into PCI config space. 				   				  *  This will also be returned on later 				  *  devices that are attached via PCI(e) to 				  *  BHND SoCs, but do not include an attached 				  *  SPROM, or programmed OTP. On such SoCs, 				  *  NVRAM configuration for individual devices 				  *  is provided by a common platform NVRAM 				  *  device. 				  */
 block|}
-name|bhnd_nvram_src_t
+name|bhnd_nvram_src
 typedef|;
 end_typedef
 

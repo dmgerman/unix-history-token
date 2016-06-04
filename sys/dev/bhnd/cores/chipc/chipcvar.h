@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bhnd/nvram/bhnd_spromvar.h>
 end_include
 
@@ -132,6 +144,14 @@ name|chipc_flash
 name|flash_type
 decl_stmt|;
 comment|/**< Flash type */
+name|bhnd_nvram_src
+name|nvram_src
+decl_stmt|;
+comment|/**< identified NVRAM source */
+name|bus_size_t
+name|sprom_offset
+decl_stmt|;
+comment|/**< Offset to SPROM data within 					     SPROM/OTP, 0 if unknown or not 					     present */
 name|uint8_t
 name|otp_size
 decl_stmt|;
@@ -139,7 +159,7 @@ comment|/**< OTP (row?) size, 0 if not present */
 name|uint8_t
 name|cfi_width
 decl_stmt|;
-comment|/**< CFI bus width, 0 if unknown or CFI not present */
+comment|/**< CFI bus width, 0 if unknown or CFI 					     not present */
 name|uint8_t
 name|pll_type
 decl_stmt|;
@@ -280,15 +300,46 @@ operator|<<
 literal|6
 operator|)
 block|,
-comment|/** OTP size is defined via CHIPC_OTPLAYOUT register in later 	 *  ChipCommon revisions using the 'IPX' OTP controller. */
-name|CHIPC_QUIRK_IPX_OTPLAYOUT_SIZE
+comment|/** Supports HND or IPX OTP registers (CHIPC_OTPST, CHIPC_OTPCTRL, 	 *  CHIPC_OTPPROG) */
+name|CHIPC_QUIRK_SUPPORTS_OTP
 init|=
 operator|(
 literal|1
 operator|<<
 literal|7
 operator|)
-block|, }
+block|,
+comment|/** Supports HND OTP registers. */
+name|CHIPC_QUIRK_OTP_HND
+init|=
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+operator||
+name|CHIPC_QUIRK_SUPPORTS_OTP
+block|,
+comment|/** Supports IPX OTP registers. */
+name|CHIPC_QUIRK_OTP_IPX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
+operator||
+name|CHIPC_QUIRK_SUPPORTS_OTP
+block|,
+comment|/** OTP size is defined via CHIPC_OTPLAYOUT register in later 	 *  ChipCommon revisions using the 'IPX' OTP controller. */
+name|CHIPC_QUIRK_IPX_OTPL_SIZE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|10
+operator|)
+block|}
 enum|;
 end_enum
 
@@ -346,10 +397,6 @@ name|chipc_caps
 name|caps
 decl_stmt|;
 comment|/**< chipc capabilities */
-name|bhnd_nvram_src_t
-name|nvram_src
-decl_stmt|;
-comment|/**< identified NVRAM source */
 name|struct
 name|mtx
 name|mtx

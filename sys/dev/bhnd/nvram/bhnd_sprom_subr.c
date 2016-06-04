@@ -1591,7 +1591,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"unrecognized sprom format\n"
+literal|"unrecognized SPROM format\n"
 argument_list|)
 expr_stmt|;
 return|return

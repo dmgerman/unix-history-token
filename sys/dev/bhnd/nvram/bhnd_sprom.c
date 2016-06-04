@@ -179,7 +179,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Broadcom SPROM/OTP"
+literal|"SPROM/OTP"
 argument_list|)
 expr_stmt|;
 comment|/* Refuse wildcard attachments */
@@ -192,7 +192,33 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhnd sprom driver implementation of DEVICE_ATTACH().  *   * Assumes sprom is mapped via YS_RES_MEMORY resource with RID 0.  */
+comment|/* Default DEVICE_ATTACH() implementation; assumes a zero offset to the  * SPROM data */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bhnd_sprom_attach_meth
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bhnd_sprom_attach
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * BHND SPROM device attach.  *   * This should be called from DEVICE_ATTACH() with the @p offset to the  * SPROM data.  *   * Assumes SPROM is mapped via SYS_RES_MEMORY resource with RID 0.  *   * @param dev BHND SPROM device.  * @param offset Offset to the SPROM data.  */
 end_comment
 
 begin_function
@@ -201,6 +227,9 @@ name|bhnd_sprom_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|bus_size_t
+name|offset
 parameter_list|)
 block|{
 name|struct
@@ -288,22 +317,13 @@ name|sc
 operator|->
 name|sprom_res
 argument_list|,
-literal|0
+name|offset
 argument_list|)
 operator|)
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unrecognized SPROM format\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|failed
 goto|;
-block|}
 comment|/* Initialize mutex */
 name|SPROM_LOCK_INIT
 argument_list|(
@@ -341,7 +361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhnd sprom driver implementation of DEVICE_DETACH().  */
+comment|/**  * Default bhnd_sprom implementation of DEVICE_RESUME().  */
 end_comment
 
 begin_function
@@ -361,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default bhnd sprom driver implementation of DEVICE_DETACH().  */
+comment|/**  * Default bhnd sprom driver implementation of DEVICE_SUSPEND().  */
 end_comment
 
 begin_function
@@ -609,7 +629,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|bhnd_sprom_attach
+name|bhnd_sprom_attach_meth
 argument_list|)
 block|,
 name|DEVMETHOD

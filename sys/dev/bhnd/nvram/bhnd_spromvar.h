@@ -51,6 +51,9 @@ name|bhnd_sprom_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|bus_size_t
+name|offset
 parameter_list|)
 function_decl|;
 end_function_decl

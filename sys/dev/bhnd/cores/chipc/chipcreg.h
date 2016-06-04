@@ -134,7 +134,7 @@ value|0x1C
 end_define
 
 begin_comment
-comment|/**< otp layout (rev>= 23) */
+comment|/**< otp layout (IPX OTP) */
 end_comment
 
 begin_define
@@ -2045,7 +2045,7 @@ value|0x0fff0000
 end_define
 
 begin_comment
-comment|/* Fields in the otpcontrol register in rev>= 21 */
+comment|/* IPX OTP fields in the otpcontrol register */
 end_comment
 
 begin_define
@@ -2112,7 +2112,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Fields in otpprog in rev>= 21 and HND OTP */
+comment|/* Fields in otpprog in IPX OTP and HND OTP */
 end_comment
 
 begin_define
@@ -2216,6 +2216,24 @@ define|#
 directive|define
 name|CHIPC_OTPL_SIZE_SHIFT
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPL_GUP_MASK
+value|0x00000FFF
+end_define
+
+begin_comment
+comment|/* bit offset to general use region */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_OTPL_GUP_SHIFT
+value|0
 end_define
 
 begin_define

@@ -33,31 +33,6 @@ directive|include
 file|"bhnd_chipc_if.h"
 end_include
 
-begin_comment
-comment|/**  * Query a ChipCommon device and return the preferred NVRAM data source.  *  * @param dev A bhnd(4) ChipCommon device.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|bhnd_nvram_src_t
-name|bhnd_chipc_nvram_src
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_CHIPC_NVRAM_SRC
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
