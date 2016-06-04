@@ -626,7 +626,7 @@ value|1
 define|#
 directive|define
 name|EFSYS_OPT_MEDFORD
-value|0
+value|1
 ifdef|#
 directive|ifdef
 name|DEBUG
