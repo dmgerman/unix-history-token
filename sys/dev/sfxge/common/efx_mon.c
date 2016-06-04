@@ -66,6 +66,7 @@ block|,
 literal|"sfx90x0"
 block|,
 literal|"sfx91x0"
+block|,
 literal|"sfx92x0"
 block|}
 decl_stmt|;
