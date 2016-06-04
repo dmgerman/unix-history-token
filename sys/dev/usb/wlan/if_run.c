@@ -17008,6 +17008,11 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* in case it can't be found below */
+name|RUN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|run_get_tsf
 argument_list|(
 name|sc
@@ -17016,6 +17021,11 @@ operator|&
 name|tap
 operator|->
 name|wr_tsf
+argument_list|)
+expr_stmt|;
+name|RUN_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|phy
