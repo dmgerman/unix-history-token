@@ -3830,6 +3830,21 @@ comment|/*  * User API functions  */
 end_comment
 
 begin_function
+name|unsigned
+name|ioat_get_nchannels
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ioat_channel_index
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|bus_dmaengine_t
 name|ioat_get_dmaengine
 parameter_list|(
