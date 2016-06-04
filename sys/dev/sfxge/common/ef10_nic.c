@@ -3042,9 +3042,6 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|efx_rc_t
-name|rc
-decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|max_piobuf_count
@@ -3103,16 +3100,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|rc
-operator|=
 name|efx_mcdi_alloc_piobuf
 argument_list|(
 name|enp
 argument_list|,
 name|handlep
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
