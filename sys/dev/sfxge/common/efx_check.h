@@ -809,11 +809,8 @@ operator|||
 expr|\
 name|EFSYS_MON_STATS
 operator|||
-name|EFSYS_OPT_PHY_PROPS
-operator|||
 name|EFSYS_OPT_PHY_STATS
 operator|||
-expr|\
 name|EFSYS_OPT_QSTATS
 operator|)
 end_if
@@ -821,7 +818,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"NAMES requires LOOPBACK or xxxSTATS or MCDI or PHY_PROPS"
+literal|"NAMES requires LOOPBACK or xxxSTATS or MCDI"
 end_error
 
 begin_endif
@@ -1066,7 +1063,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-literal|"EFSYS_OPT_PHY_PM8358 is obsolete and is not supported."
+literal|"PHY_PM8358 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1074,42 +1071,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Support PHY properties */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_PROPS
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_SIENA
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_PROPS requires SIENA"
+literal|"PHY_PROPS is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_PROPS */
-end_comment
 
 begin_ifdef
 ifdef|#
