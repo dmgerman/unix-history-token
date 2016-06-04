@@ -734,6 +734,10 @@ define|#
 directive|define
 name|EFSYS_OPT_LICENSING
 value|0
+define|#
+directive|define
+name|EFSYS_OPT_ALLOW_UNCONFIGURED_NIC
+value|0
 comment|/* ID */
 typedef|typedef
 name|struct

@@ -1568,6 +1568,43 @@ begin_comment
 comment|/* EFSYS_OPT_LICENSING */
 end_comment
 
+begin_comment
+comment|/* Support adapters with missing static config (for factory use only) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_ALLOW_UNCONFIGURED_NIC
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|EFSYS_OPT_MEDFORD
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"ALLOW_UNCONFIGURED_NIC requires MEDFORD"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_ALLOW_UNCONFIGURED_NIC */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

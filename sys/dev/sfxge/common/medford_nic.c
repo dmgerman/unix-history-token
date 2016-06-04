@@ -553,6 +553,13 @@ argument_list|,
 name|mac_addr
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_ALLOW_UNCONFIGURED_NIC
+comment|/* Disable static config checking for Medford NICs, ONLY 		 * for manufacturing test and setup at the factory, to 		 * allow the static config to be installed. 		 */
+else|#
+directive|else
+comment|/* EFSYS_OPT_ALLOW_UNCONFIGURED_NIC */
 if|if
 condition|(
 operator|(
@@ -577,6 +584,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_ALLOW_UNCONFIGURED_NIC */
 block|}
 else|else
 block|{
