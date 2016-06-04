@@ -2480,6 +2480,14 @@ name|EALREADY
 operator|)
 return|;
 comment|/* MCDI v2 */
+case|case
+name|MC_CMD_ERR_EEXIST
+case|:
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MC_CMD_ERR_EAGAIN
