@@ -1234,11 +1234,11 @@ begin_comment
 comment|/* Obsolete option */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_BIST
-end_if
+end_ifdef
 
 begin_error
 error|#
@@ -1250,10 +1250,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_BIST */
-end_comment
 
 begin_comment
 comment|/* Support PHY flags */
