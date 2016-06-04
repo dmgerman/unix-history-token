@@ -525,6 +525,21 @@ name|enc_allow_set_mac_with_installed_filters
 operator|=
 name|B_TRUE
 expr_stmt|;
+comment|/* Siena supports two 10G ports, and 8 lanes of PCIe Gen2 */
+name|encp
+operator|->
+name|enc_required_pcie_bandwidth_mbps
+operator|=
+literal|2
+operator|*
+literal|10000
+expr_stmt|;
+name|encp
+operator|->
+name|enc_max_pcie_link_gen
+operator|=
+name|EFX_PCIE_LINK_SPEED_GEN2
+expr_stmt|;
 return|return
 operator|(
 literal|0
