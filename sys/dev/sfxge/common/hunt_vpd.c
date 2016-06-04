@@ -171,7 +171,7 @@ operator|==
 name|EACCES
 condition|)
 block|{
-comment|/* Unpriviledged functions cannot access VPD */
+comment|/* Unprivileged functions cannot access VPD */
 goto|goto
 name|out
 goto|;
