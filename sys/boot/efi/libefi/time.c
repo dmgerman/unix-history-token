@@ -70,6 +70,24 @@ value|(24 * SECSPERHOUR)
 end_define
 
 begin_function
+name|void
+name|efi_time_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|efi_time_fini
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 specifier|static
 name|time_t
 name|efi_time

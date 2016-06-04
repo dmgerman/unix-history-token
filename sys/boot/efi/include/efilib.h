@@ -228,6 +228,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|efi_time_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|efi_time_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|EFI_STATUS
 name|main
 parameter_list|(

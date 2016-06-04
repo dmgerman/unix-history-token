@@ -1027,6 +1027,10 @@ name|efi_zfs_probe
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Init the time source */
+name|efi_time_init
+argument_list|()
+expr_stmt|;
 name|has_kbd
 operator|=
 name|has_keyboard

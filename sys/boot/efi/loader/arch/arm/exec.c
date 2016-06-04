@@ -238,6 +238,9 @@ name|fmp
 operator|->
 name|md_data
 expr_stmt|;
+name|efi_time_fini
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -259,11 +262,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|efi_time_init
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|entry
 operator|=
 name|efi_translate

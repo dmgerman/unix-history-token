@@ -503,6 +503,9 @@ operator|->
 name|e_entry
 argument_list|)
 expr_stmt|;
+name|efi_time_fini
+argument_list|()
+expr_stmt|;
 name|err
 operator|=
 name|bi_load
@@ -524,11 +527,16 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|efi_time_init
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 name|dev_cleanup
 argument_list|()
 expr_stmt|;
