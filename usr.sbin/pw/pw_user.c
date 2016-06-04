@@ -4026,7 +4026,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cq"
+literal|"C:q"
 argument_list|)
 operator|)
 operator|!=
