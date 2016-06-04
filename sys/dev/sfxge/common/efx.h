@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"efx_check.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"efx_phy_ids.h"
 end_include
 
