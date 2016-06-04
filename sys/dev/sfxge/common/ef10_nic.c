@@ -4007,12 +4007,7 @@ name|B_TRUE
 else|:
 name|B_FALSE
 expr_stmt|;
-if|if
-condition|(
-name|encp
-operator|->
-name|enc_rx_batching_enabled
-condition|)
+comment|/* 	 * Even if batching isn't reported as supported, we may still get 	 * batched events. 	 */
 name|encp
 operator|->
 name|enc_rx_batch_max
