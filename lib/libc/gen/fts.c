@@ -429,8 +429,6 @@ literal|"zfs"
 block|,
 literal|"nfs"
 block|,
-literal|"nfs4"
-block|,
 literal|"ext2fs"
 block|,
 literal|0
