@@ -2146,7 +2146,7 @@ argument_list|)
 expr_stmt|;
 name|ioat_log_message
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"Capabilities: %b\n"
 argument_list|,
