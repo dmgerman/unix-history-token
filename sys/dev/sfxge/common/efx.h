@@ -1065,20 +1065,25 @@ name|EFX_MAC_SDU_MAX
 value|9202
 define|#
 directive|define
-name|EFX_MAC_PDU
-parameter_list|(
-name|_sdu
-parameter_list|)
+name|EFX_MAC_PDU_ADJUSTMENT
 define|\
-value|P2ROUNDUP(((_sdu)				\ 		    +
+value|(
 comment|/* EtherII */
-value|14			\ 		    +
+value|14					\ 	    +
 comment|/* VLAN */
-value|4			\ 		    +
+value|4					\ 	    +
 comment|/* CRC */
-value|4			\ 		    +
+value|4					\ 	    +
 comment|/* bug16011 */
-value|16),		\ 		    (1<< 3))
+value|16)				\  #define	EFX_MAC_PDU(_sdu)					\ 	P2ROUNDUP((_sdu) + EFX_MAC_PDU_ADJUSTMENT, 8)
+comment|/*  * Due to the P2ROUNDUP in EFX_MAC_PDU(), EFX_MAC_SDU_FROM_PDU() may give  * the SDU rounded up slightly.  */
+define|#
+directive|define
+name|EFX_MAC_SDU_FROM_PDU
+parameter_list|(
+name|_pdu
+parameter_list|)
+value|((_pdu) - EFX_MAC_PDU_ADJUSTMENT)
 define|#
 directive|define
 name|EFX_MAC_PDU_MIN
@@ -1087,6 +1092,22 @@ define|#
 directive|define
 name|EFX_MAC_PDU_MAX
 value|EFX_MAC_PDU(EFX_MAC_SDU_MAX)
+specifier|extern
+name|__checkReturn
+name|efx_rc_t
+name|efx_mac_pdu_get
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__out
+name|size_t
+modifier|*
+name|pdu
+parameter_list|)
+function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t

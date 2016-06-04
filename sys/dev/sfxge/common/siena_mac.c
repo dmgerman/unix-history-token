@@ -2311,6 +2311,30 @@ begin_comment
 comment|/* EFSYS_OPT_MAC_STATS */
 end_comment
 
+begin_function
+name|__checkReturn
+name|efx_rc_t
+name|siena_mac_pdu_get
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__out
+name|size_t
+modifier|*
+name|pdu
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
