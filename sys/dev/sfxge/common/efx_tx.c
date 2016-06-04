@@ -394,6 +394,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_tx_ops_t
 name|__efx_tx_siena_ops
 init|=
@@ -481,6 +482,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_tx_ops_t
 name|__efx_tx_hunt_ops
 init|=
@@ -568,6 +570,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_tx_ops_t
 name|__efx_tx_medford_ops
 init|=
@@ -658,6 +661,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -739,10 +743,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|etxop
 operator|=
-operator|(
-name|efx_tx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_tx_siena_ops
 expr_stmt|;
@@ -758,10 +758,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|etxop
 operator|=
-operator|(
-name|efx_tx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_tx_hunt_ops
 expr_stmt|;
@@ -777,10 +773,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|etxop
 operator|=
-operator|(
-name|efx_tx_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_tx_medford_ops
 expr_stmt|;
@@ -911,6 +903,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1041,6 +1034,7 @@ modifier|*
 name|addedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1281,6 +1275,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1382,6 +1377,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1482,6 +1478,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1539,6 +1536,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1624,6 +1622,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1706,6 +1705,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1754,6 +1754,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1885,6 +1886,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -1957,6 +1959,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2076,6 +2079,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2204,6 +2208,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2311,6 +2316,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2392,6 +2398,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2480,6 +2487,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2555,6 +2563,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop
@@ -2629,6 +2638,7 @@ name|etp
 operator|->
 name|et_enp
 decl_stmt|;
+specifier|const
 name|efx_tx_ops_t
 modifier|*
 name|etxop

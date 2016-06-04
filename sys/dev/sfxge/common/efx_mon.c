@@ -161,6 +161,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_mon_ops_t
 name|__efx_mon_mcdi_ops
 init|=
@@ -221,6 +222,7 @@ operator|->
 name|en_mon
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mon_ops_t
 modifier|*
 name|emop
@@ -746,6 +748,7 @@ operator|->
 name|en_mon
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mon_ops_t
 modifier|*
 name|emop
@@ -823,6 +826,7 @@ operator|->
 name|en_mon
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mon_ops_t
 modifier|*
 name|emop

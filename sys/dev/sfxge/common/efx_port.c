@@ -51,6 +51,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop
@@ -328,6 +329,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -481,6 +483,7 @@ operator|->
 name|en_nic_cfg
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mac_ops_t
 modifier|*
 name|emop
@@ -814,6 +817,7 @@ operator|->
 name|en_port
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_phy_ops_t
 modifier|*
 name|epop

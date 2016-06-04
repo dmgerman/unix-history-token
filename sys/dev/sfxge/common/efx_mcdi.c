@@ -47,6 +47,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_mcdi_ops_t
 name|__efx_mcdi_siena_ops
 init|=
@@ -95,6 +96,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|efx_mcdi_ops_t
 name|__efx_mcdi_ef10_ops
 init|=
@@ -150,6 +152,7 @@ modifier|*
 name|emtp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -194,10 +197,6 @@ name|EFX_FAMILY_SIENA
 case|:
 name|emcop
 operator|=
-operator|(
-name|efx_mcdi_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_mcdi_siena_ops
 expr_stmt|;
@@ -213,10 +212,6 @@ name|EFX_FAMILY_HUNTINGTON
 case|:
 name|emcop
 operator|=
-operator|(
-name|efx_mcdi_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_mcdi_ef10_ops
 expr_stmt|;
@@ -232,10 +227,6 @@ name|EFX_FAMILY_MEDFORD
 case|:
 name|emcop
 operator|=
-operator|(
-name|efx_mcdi_ops_t
-operator|*
-operator|)
 operator|&
 name|__efx_mcdi_ef10_ops
 expr_stmt|;
@@ -433,6 +424,7 @@ operator|.
 name|em_emip
 operator|)
 decl_stmt|;
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -597,6 +589,7 @@ name|size_t
 name|sdu_len
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -636,6 +629,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -677,6 +671,7 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -731,6 +726,7 @@ name|size_t
 name|length
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -6088,6 +6084,7 @@ modifier|*
 name|supportedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -6180,6 +6177,7 @@ modifier|*
 name|supportedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -6272,6 +6270,7 @@ modifier|*
 name|supportedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
@@ -6364,6 +6363,7 @@ modifier|*
 name|supportedp
 parameter_list|)
 block|{
+specifier|const
 name|efx_mcdi_ops_t
 modifier|*
 name|emcop
