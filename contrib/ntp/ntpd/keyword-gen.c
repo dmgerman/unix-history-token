@@ -1281,6 +1281,14 @@ name|FOLLBY_TOKEN
 block|}
 block|,
 block|{
+literal|"mode7"
+block|,
+name|T_Mode7
+block|,
+name|FOLLBY_TOKEN
+block|}
+block|,
+block|{
 literal|"ntp"
 block|,
 name|T_Ntp
@@ -1289,9 +1297,9 @@ name|FOLLBY_TOKEN
 block|}
 block|,
 block|{
-literal|"mode7"
+literal|"peer_clear_digest_early"
 block|,
-name|T_Mode7
+name|T_PCEdigest
 block|,
 name|FOLLBY_TOKEN
 block|}

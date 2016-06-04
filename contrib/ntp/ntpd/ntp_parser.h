@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
+comment|/* A Bison parser, made by GNU Bison 3.0.4.  */
 end_comment
 
 begin_comment
-comment|/* Bison interface for Yacc-like parsers in C           Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.        This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
+comment|/* Bison interface for Yacc-like parsers in C     Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.     This program is free software: you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation, either version 3 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program.  If not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_comment
-comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.        This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
+comment|/* As a special exception, you may create a larger work that contains    part or all of the Bison parser skeleton and distribute that work    under terms of your choice, so long as that work isn't itself a    parser generator using the skeleton or a modified version thereof    as a parser skeleton.  Alternatively, if you modify or redistribute    the parser skeleton itself, you may (at your option) remove this    special exception, which will cause the skeleton and the resulting    Bison output files to be licensed under the GNU General Public    License without this special exception.     This special exception was added by the Free Software Foundation in    version 2.2 of Bison.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YY_YY_NTP_PARSER_H_INCLUDED
+name|YY_YY_Y_TAB_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|YY_YY_NTP_PARSER_H_INCLUDED
+name|YY_YY_Y_TAB_H_INCLUDED
 end_define
 
 begin_comment
-comment|/* Enabling traces.  */
+comment|/* Debug traces.  */
 end_comment
 
 begin_ifndef
@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Tokens.  */
+comment|/* Token type.  */
 end_comment
 
 begin_ifndef
@@ -78,10 +78,6 @@ define|#
 directive|define
 name|YYTOKENTYPE
 end_define
-
-begin_comment
-comment|/* Put the tokens into the symbol table, so that GDB and other debuggers       know about them.  */
-end_comment
 
 begin_enum
 enum|enum
@@ -575,293 +571,297 @@ name|T_Orphanwait
 init|=
 literal|379
 block|,
-name|T_Panic
+name|T_PCEdigest
 init|=
 literal|380
 block|,
-name|T_Peer
+name|T_Panic
 init|=
 literal|381
 block|,
-name|T_Peerstats
+name|T_Peer
 init|=
 literal|382
 block|,
-name|T_Phone
+name|T_Peerstats
 init|=
 literal|383
 block|,
-name|T_Pid
+name|T_Phone
 init|=
 literal|384
 block|,
-name|T_Pidfile
+name|T_Pid
 init|=
 literal|385
 block|,
-name|T_Pool
+name|T_Pidfile
 init|=
 literal|386
 block|,
-name|T_Port
+name|T_Pool
 init|=
 literal|387
 block|,
-name|T_Preempt
+name|T_Port
 init|=
 literal|388
 block|,
-name|T_Prefer
+name|T_Preempt
 init|=
 literal|389
 block|,
-name|T_Protostats
+name|T_Prefer
 init|=
 literal|390
 block|,
-name|T_Pw
+name|T_Protostats
 init|=
 literal|391
 block|,
-name|T_Randfile
+name|T_Pw
 init|=
 literal|392
 block|,
-name|T_Rawstats
+name|T_Randfile
 init|=
 literal|393
 block|,
-name|T_Refid
+name|T_Rawstats
 init|=
 literal|394
 block|,
-name|T_Requestkey
+name|T_Refid
 init|=
 literal|395
 block|,
-name|T_Reset
+name|T_Requestkey
 init|=
 literal|396
 block|,
-name|T_Restrict
+name|T_Reset
 init|=
 literal|397
 block|,
-name|T_Revoke
+name|T_Restrict
 init|=
 literal|398
 block|,
-name|T_Rlimit
+name|T_Revoke
 init|=
 literal|399
 block|,
-name|T_Saveconfigdir
+name|T_Rlimit
 init|=
 literal|400
 block|,
-name|T_Server
+name|T_Saveconfigdir
 init|=
 literal|401
 block|,
-name|T_Setvar
+name|T_Server
 init|=
 literal|402
 block|,
-name|T_Source
+name|T_Setvar
 init|=
 literal|403
 block|,
-name|T_Stacksize
+name|T_Source
 init|=
 literal|404
 block|,
-name|T_Statistics
+name|T_Stacksize
 init|=
 literal|405
 block|,
-name|T_Stats
+name|T_Statistics
 init|=
 literal|406
 block|,
-name|T_Statsdir
+name|T_Stats
 init|=
 literal|407
 block|,
-name|T_Step
+name|T_Statsdir
 init|=
 literal|408
 block|,
-name|T_Stepback
+name|T_Step
 init|=
 literal|409
 block|,
-name|T_Stepfwd
+name|T_Stepback
 init|=
 literal|410
 block|,
-name|T_Stepout
+name|T_Stepfwd
 init|=
 literal|411
 block|,
-name|T_Stratum
+name|T_Stepout
 init|=
 literal|412
 block|,
-name|T_String
+name|T_Stratum
 init|=
 literal|413
 block|,
-name|T_Sys
+name|T_String
 init|=
 literal|414
 block|,
-name|T_Sysstats
+name|T_Sys
 init|=
 literal|415
 block|,
-name|T_Tick
+name|T_Sysstats
 init|=
 literal|416
 block|,
-name|T_Time1
+name|T_Tick
 init|=
 literal|417
 block|,
-name|T_Time2
+name|T_Time1
 init|=
 literal|418
 block|,
-name|T_Timer
+name|T_Time2
 init|=
 literal|419
 block|,
-name|T_Timingstats
+name|T_Timer
 init|=
 literal|420
 block|,
-name|T_Tinker
+name|T_Timingstats
 init|=
 literal|421
 block|,
-name|T_Tos
+name|T_Tinker
 init|=
 literal|422
 block|,
-name|T_Trap
+name|T_Tos
 init|=
 literal|423
 block|,
-name|T_True
+name|T_Trap
 init|=
 literal|424
 block|,
-name|T_Trustedkey
+name|T_True
 init|=
 literal|425
 block|,
-name|T_Ttl
+name|T_Trustedkey
 init|=
 literal|426
 block|,
-name|T_Type
+name|T_Ttl
 init|=
 literal|427
 block|,
-name|T_U_int
+name|T_Type
 init|=
 literal|428
 block|,
-name|T_UEcrypto
+name|T_U_int
 init|=
 literal|429
 block|,
-name|T_UEcryptonak
+name|T_UEcrypto
 init|=
 literal|430
 block|,
-name|T_UEdigest
+name|T_UEcryptonak
 init|=
 literal|431
 block|,
-name|T_Unconfig
+name|T_UEdigest
 init|=
 literal|432
 block|,
-name|T_Unpeer
+name|T_Unconfig
 init|=
 literal|433
 block|,
-name|T_Version
+name|T_Unpeer
 init|=
 literal|434
 block|,
-name|T_WanderThreshold
+name|T_Version
 init|=
 literal|435
 block|,
-name|T_Week
+name|T_WanderThreshold
 init|=
 literal|436
 block|,
-name|T_Wildcard
+name|T_Week
 init|=
 literal|437
 block|,
-name|T_Xleave
+name|T_Wildcard
 init|=
 literal|438
 block|,
-name|T_Year
+name|T_Xleave
 init|=
 literal|439
 block|,
-name|T_Flag
+name|T_Year
 init|=
 literal|440
 block|,
-name|T_EOC
+name|T_Flag
 init|=
 literal|441
 block|,
-name|T_Simulate
+name|T_EOC
 init|=
 literal|442
 block|,
-name|T_Beep_Delay
+name|T_Simulate
 init|=
 literal|443
 block|,
-name|T_Sim_Duration
+name|T_Beep_Delay
 init|=
 literal|444
 block|,
-name|T_Server_Offset
+name|T_Sim_Duration
 init|=
 literal|445
 block|,
-name|T_Duration
+name|T_Server_Offset
 init|=
 literal|446
 block|,
-name|T_Freq_Offset
+name|T_Duration
 init|=
 literal|447
 block|,
-name|T_Wander
+name|T_Freq_Offset
 init|=
 literal|448
 block|,
-name|T_Jitter
+name|T_Wander
 init|=
 literal|449
 block|,
-name|T_Prop_Delay
+name|T_Jitter
 init|=
 literal|450
 block|,
-name|T_Proc_Delay
+name|T_Prop_Delay
 init|=
 literal|451
+block|,
+name|T_Proc_Delay
+init|=
+literal|452
 block|}
 enum|;
 end_enum
@@ -1732,506 +1732,517 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_Panic
+name|T_PCEdigest
 value|380
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Peer
+name|T_Panic
 value|381
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Peerstats
+name|T_Peer
 value|382
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Phone
+name|T_Peerstats
 value|383
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Pid
+name|T_Phone
 value|384
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Pidfile
+name|T_Pid
 value|385
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Pool
+name|T_Pidfile
 value|386
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Port
+name|T_Pool
 value|387
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Preempt
+name|T_Port
 value|388
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Prefer
+name|T_Preempt
 value|389
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Protostats
+name|T_Prefer
 value|390
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Pw
+name|T_Protostats
 value|391
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Randfile
+name|T_Pw
 value|392
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Rawstats
+name|T_Randfile
 value|393
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Refid
+name|T_Rawstats
 value|394
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Requestkey
+name|T_Refid
 value|395
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Reset
+name|T_Requestkey
 value|396
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Restrict
+name|T_Reset
 value|397
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Revoke
+name|T_Restrict
 value|398
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Rlimit
+name|T_Revoke
 value|399
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Saveconfigdir
+name|T_Rlimit
 value|400
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Server
+name|T_Saveconfigdir
 value|401
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Setvar
+name|T_Server
 value|402
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Source
+name|T_Setvar
 value|403
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stacksize
+name|T_Source
 value|404
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Statistics
+name|T_Stacksize
 value|405
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stats
+name|T_Statistics
 value|406
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Statsdir
+name|T_Stats
 value|407
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Step
+name|T_Statsdir
 value|408
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stepback
+name|T_Step
 value|409
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stepfwd
+name|T_Stepback
 value|410
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stepout
+name|T_Stepfwd
 value|411
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Stratum
+name|T_Stepout
 value|412
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_String
+name|T_Stratum
 value|413
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Sys
+name|T_String
 value|414
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Sysstats
+name|T_Sys
 value|415
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Tick
+name|T_Sysstats
 value|416
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Time1
+name|T_Tick
 value|417
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Time2
+name|T_Time1
 value|418
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Timer
+name|T_Time2
 value|419
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Timingstats
+name|T_Timer
 value|420
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Tinker
+name|T_Timingstats
 value|421
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Tos
+name|T_Tinker
 value|422
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Trap
+name|T_Tos
 value|423
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_True
+name|T_Trap
 value|424
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Trustedkey
+name|T_True
 value|425
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Ttl
+name|T_Trustedkey
 value|426
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Type
+name|T_Ttl
 value|427
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_U_int
+name|T_Type
 value|428
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_UEcrypto
+name|T_U_int
 value|429
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_UEcryptonak
+name|T_UEcrypto
 value|430
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_UEdigest
+name|T_UEcryptonak
 value|431
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Unconfig
+name|T_UEdigest
 value|432
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Unpeer
+name|T_Unconfig
 value|433
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Version
+name|T_Unpeer
 value|434
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_WanderThreshold
+name|T_Version
 value|435
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Week
+name|T_WanderThreshold
 value|436
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Wildcard
+name|T_Week
 value|437
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Xleave
+name|T_Wildcard
 value|438
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Year
+name|T_Xleave
 value|439
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Flag
+name|T_Year
 value|440
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_EOC
+name|T_Flag
 value|441
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Simulate
+name|T_EOC
 value|442
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Beep_Delay
+name|T_Simulate
 value|443
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Sim_Duration
+name|T_Beep_Delay
 value|444
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Server_Offset
+name|T_Sim_Duration
 value|445
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Duration
+name|T_Server_Offset
 value|446
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Freq_Offset
+name|T_Duration
 value|447
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Wander
+name|T_Freq_Offset
 value|448
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Jitter
+name|T_Wander
 value|449
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Prop_Delay
+name|T_Jitter
 value|450
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_Proc_Delay
+name|T_Prop_Delay
 value|451
 end_define
+
+begin_define
+define|#
+directive|define
+name|T_Proc_Delay
+value|452
+end_define
+
+begin_comment
+comment|/* Value type.  */
+end_comment
 
 begin_if
 if|#
@@ -2245,16 +2256,15 @@ name|defined
 name|YYSTYPE_IS_DECLARED
 end_if
 
-begin_typedef
-typedef|typedef
+begin_union
 union|union
 name|YYSTYPE
 block|{
-comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
 number|51
 file|"../../ntpd/ntp_parser.y"
+comment|/* yacc.c:1909  */
 name|char
 modifier|*
 name|String
@@ -2316,12 +2326,19 @@ name|script_info_fifo
 modifier|*
 name|Sim_script_fifo
 decl_stmt|;
-comment|/* Line 2053 of yacc.c  */
 line|#
 directive|line
-number|469
-file|"ntp_parser.h"
+number|467
+file|"../../ntpd/ntp_parser.h"
+comment|/* yacc.c:1909  */
 block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|YYSTYPE
 name|YYSTYPE
 typedef|;
 end_typedef
@@ -2332,17 +2349,6 @@ directive|define
 name|YYSTYPE_IS_TRIVIAL
 value|1
 end_define
-
-begin_define
-define|#
-directive|define
-name|yystype
-value|YYSTYPE
-end_define
-
-begin_comment
-comment|/* obsolescent; will be withdrawn */
-end_comment
 
 begin_define
 define|#
@@ -2363,69 +2369,6 @@ name|yylval
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YYPARSE_PARAM
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|void
-modifier|*
-name|YYPARSE_PARAM
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|||
-name|defined
-name|__cplusplus
-end_if
-
 begin_function_decl
 name|int
 name|yyparse
@@ -2435,39 +2378,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ! YYPARSE_PARAM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !YY_YY_NTP_PARSER_H_INCLUDED  */
+comment|/* !YY_YY_Y_TAB_H_INCLUDED  */
 end_comment
 
 end_unit

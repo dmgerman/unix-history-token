@@ -875,7 +875,19 @@ comment|/* KoD sent */
 end_comment
 
 begin_comment
-comment|/*  * Mechanism knobs: how soon do we unpeer()?  *  * The default way is "on-receipt".  If this was a packet from a  * well-behaved source, on-receipt will offer the fastest recovery.  * If this was from a DoS attack, the default way makes it easier  * for a bad-guy to DoS us.  So look and see what bites you harder  * and choose according to your environment.  */
+comment|/*  * Mechanism knobs: how soon do we peer_clear() or unpeer()?  *  * The default way is "on-receipt".  If this was a packet from a  * well-behaved source, on-receipt will offer the fastest recovery.  * If this was from a DoS attack, the default way makes it easier  * for a bad-guy to DoS us.  So look and see what bites you harder  * and choose according to your environment.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|peer_clear_digest_early
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bad digest (TEST5) and Autokey */
 end_comment
 
 begin_decl_stmt
@@ -1420,6 +1432,16 @@ decl_stmt|;
 name|int
 name|keyid
 decl_stmt|;
+name|l_fp
+name|p_org
+decl_stmt|;
+comment|/* origin timestamp */
+specifier|const
+name|l_fp
+modifier|*
+name|myorg
+decl_stmt|;
+comment|/* selected peer origin */
 comment|/* 	 * Check to see if there is something beyond the basic packet 	 */
 if|if
 condition|(
@@ -1471,9 +1493,7 @@ name|MODE_PASSIVE
 condition|)
 block|{
 return|return
-operator|(
 name|INVALIDNAK
-operator|)
 return|;
 block|}
 comment|/*  	 * Make sure that the extra field in the packet is all zeros 	 */
@@ -1510,41 +1530,100 @@ literal|0
 condition|)
 block|{
 return|return
-operator|(
 name|INVALIDNAK
-operator|)
 return|;
 block|}
 comment|/*  	 * Only valid if peer uses a key 	 */
 if|if
 condition|(
+operator|!
+name|peer
+operator|||
+operator|!
 name|peer
 operator|->
 name|keyid
-operator|>
-literal|0
 operator|||
+operator|!
+operator|(
 name|peer
 operator|->
 name|flags
 operator|&
 name|FLAG_SKEY
+operator|)
 condition|)
 block|{
 return|return
-operator|(
-name|VALIDNAK
-operator|)
+name|INVALIDNAK
 return|;
 block|}
+comment|/* 	 * The ORIGIN must match, or this cannot be a valid NAK, either. 	 */
+name|NTOHL_FP
+argument_list|(
+operator|&
+name|rpkt
+operator|->
+name|org
+argument_list|,
+operator|&
+name|p_org
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|flip
+operator|>
+literal|0
+condition|)
+name|myorg
+operator|=
+operator|&
+name|peer
+operator|->
+name|borg
+expr_stmt|;
 else|else
+name|myorg
+operator|=
+operator|&
+name|peer
+operator|->
+name|aorg
+expr_stmt|;
+if|if
+condition|(
+name|L_ISZERO
+argument_list|(
+operator|&
+name|p_org
+argument_list|)
+operator|||
+name|L_ISZERO
+argument_list|(
+name|myorg
+argument_list|)
+operator|||
+operator|!
+name|L_ISEQU
+argument_list|(
+operator|&
+name|p_org
+argument_list|,
+name|myorg
+argument_list|)
+condition|)
 block|{
 return|return
-operator|(
 name|INVALIDNAK
-operator|)
 return|;
 block|}
+comment|/* If we ever passed all that checks, we should be safe. Well, 	 * as safe as we can ever be with an unauthenticated crypto-nak. 	 */
+return|return
+name|VALIDNAK
+return|;
 block|}
 end_function
 
@@ -2277,7 +2356,7 @@ comment|/* offset of MAC field */
 name|int
 name|is_authentic
 init|=
-literal|0
+name|AUTH_NONE
 decl_stmt|;
 comment|/* cryptosum ok */
 name|int
@@ -2535,6 +2614,13 @@ argument_list|(
 name|pkt
 operator|->
 name|stratum
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+literal|0
+operator|!=
+name|hisstratum
 argument_list|)
 expr_stmt|;
 if|if
@@ -5188,7 +5274,7 @@ expr_stmt|;
 comment|/* unsynch */
 if|if
 condition|(
-literal|0
+name|STRATUM_UNSPEC
 operator|==
 name|hisstratum
 condition|)
@@ -5247,7 +5333,7 @@ name|oldpkt
 operator|++
 expr_stmt|;
 return|return;
-comment|/* 	 * If this is a broadcast mode packet, skip further checking. If 	 * an initial volley, bail out now and let the client do its 	 * stuff. If the origin timestamp is nonzero, this is an 	 * interleaved broadcast. so restart the protocol. 	 */
+comment|/* 	 * If this is a broadcast mode packet, make sure hisstratum 	 * is appropriate.  Don't do anything else here - we wait to 	 * see if this is an interleave broadcast packet until after 	 * we've validated the MAC that SHOULD be provided. 	 * 	 * hisstratum should never be 0. 	 * If hisstratum is 15, then we'll advertise as UNSPEC but 	 * at least we'll be able to sync with the broadcast server. 	 */
 block|}
 elseif|else
 if|if
@@ -5259,50 +5345,31 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|L_ISZERO
-argument_list|(
-operator|&
-name|p_org
-argument_list|)
-operator|&&
-operator|!
-operator|(
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_XB
-operator|)
+literal|0
+operator|==
+name|hisstratum
+operator|||
+name|STRATUM_UNSPEC
+operator|<=
+name|hisstratum
 condition|)
 block|{
-name|peer
-operator|->
-name|flags
-operator||=
-name|FLAG_XB
-expr_stmt|;
-name|peer
-operator|->
-name|aorg
-operator|=
-name|p_xmt
-expr_stmt|;
-name|peer
-operator|->
-name|borg
-operator|=
-name|rbufp
-operator|->
-name|recv_time
-expr_stmt|;
-name|report_event
+comment|/* Is this a ++sys_declined or ??? */
+name|msyslog
 argument_list|(
-name|PEVNT_XLEAVE
+name|LOG_INFO
 argument_list|,
+literal|"receive: Unexpected stratum (%d) in broadcast from %s"
+argument_list|,
+name|hisstratum
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
 name|peer
-argument_list|,
-name|NULL
+operator|->
+name|srcadr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5312,7 +5379,7 @@ block|}
 elseif|else
 if|if
 condition|(
-literal|0
+name|STRATUM_UNSPEC
 operator|==
 name|hisstratum
 condition|)
@@ -5553,6 +5620,13 @@ block|{
 name|INSIST
 argument_list|(
 literal|0
+operator|!=
+name|hisstratum
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|STRATUM_UNSPEC
 operator|!=
 name|hisstratum
 argument_list|)
@@ -5870,6 +5944,7 @@ comment|/* bogus */
 return|return;
 comment|/* Bogus packet, we are done */
 block|}
+comment|/**/
 comment|/* 	 * If this is a crypto_NAK, the server cannot authenticate a 	 * client packet. The server might have just changed keys. Clear 	 * the association and restart the protocol. 	 */
 if|if
 condition|(
@@ -5930,6 +6005,7 @@ name|peer
 operator|->
 name|crypto
 condition|)
+block|{
 name|peer_clear
 argument_list|(
 name|peer
@@ -5937,6 +6013,7 @@ argument_list|,
 literal|"AUTH"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* AUTOKEY */
@@ -5965,6 +6042,32 @@ name|is_authentic
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|peer
+operator|->
+name|flash
+operator|&
+name|PKT_TEST_MASK
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: Bad auth in packet with bad timestamps from %s denied - spoof?"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|report_event
 argument_list|(
 name|PEVNT_AUTH
@@ -6031,17 +6134,20 @@ name|peer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 ifdef|#
 directive|ifdef
 name|AUTOKEY
+elseif|else
 if|if
 condition|(
+name|peer_clear_digest_early
+operator|&&
 name|peer
 operator|->
 name|crypto
 condition|)
+block|{
 name|peer_clear
 argument_list|(
 name|peer
@@ -6049,12 +6155,156 @@ argument_list|,
 literal|"AUTH"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* AUTOKEY */
 return|return;
 block|}
-comment|/* 	 * Update the state variables. 	 */
+comment|/* 	 * For broadcast packets: 	 * 	 * HMS: This next line never made much sense to me, even 	 * when it was up higher: 	 *   If an initial volley, bail out now and let the 	 *   client do its stuff. 	 * 	 * If the packet has not failed authentication, then 	 * - if the origin timestamp is nonzero this is an 	 *   interleaved broadcast, so restart the protocol. 	 * - else, this is not an interleaved broadcast packet. 	 */
+if|if
+condition|(
+name|hismode
+operator|==
+name|MODE_BROADCAST
+condition|)
+block|{
+if|if
+condition|(
+name|is_authentic
+operator|==
+name|AUTH_OK
+operator|||
+name|is_authentic
+operator|==
+name|AUTH_NONE
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|L_ISZERO
+argument_list|(
+operator|&
+name|p_org
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_XB
+operator|)
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: Broadcast server at %s is in interleave mode"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|flags
+operator||=
+name|FLAG_XB
+expr_stmt|;
+name|peer
+operator|->
+name|aorg
+operator|=
+name|p_xmt
+expr_stmt|;
+name|peer
+operator|->
+name|borg
+operator|=
+name|rbufp
+operator|->
+name|recv_time
+expr_stmt|;
+name|report_event
+argument_list|(
+name|PEVNT_XLEAVE
+argument_list|,
+name|peer
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_XB
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: Broadcast server at %s is no longer in interleave mode"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|peer
+operator|->
+name|flags
+operator|&=
+operator|~
+name|FLAG_XB
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receive: Bad broadcast auth (%d) from %s"
+argument_list|,
+name|is_authentic
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* 	** Update the state variables. 	*/
 if|if
 condition|(
 name|peer
@@ -6220,6 +6470,7 @@ comment|/* Increment the KoD count */
 return|return;
 comment|/* Drop any other kiss code packets */
 block|}
+comment|/* 	 * XXX 	 */
 comment|/* 	 * If: 	 *	- this is a *cast (uni-, broad-, or m-) server packet 	 *	- and it's symmetric-key authenticated 	 * then see if the sender's IP is trusted for this keyid. 	 * If it is, great - nothing special to do here. 	 * Otherwise, we should report and bail. 	 * 	 * Autokey-authenticated packets are accepted. 	 */
 switch|switch
 condition|(
@@ -6781,7 +7032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * process_packet - Packet Procedure, a la Section 3.4.4 of the  *	specification. Or almost, at least. If we're in here we have a  *	reasonable expectation that we will be having a long term  *	relationship with this host.  */
+comment|/*  * process_packet - Packet Procedure, a la Section 3.4.4 of RFC-1305  *	Or almost, at least.  If we're in here we have a reasonable  *	expectation that we will be having a long term  *	relationship with this host.  */
 end_comment
 
 begin_function
@@ -6858,14 +7109,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* ASSYM */
-name|sys_processed
-operator|++
-expr_stmt|;
-name|peer
-operator|->
-name|processed
-operator|++
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|sys_processed++; 	peer->processed++;
+endif|#
+directive|endif
 name|p_del
 operator|=
 name|FPTOD
@@ -6974,6 +7223,93 @@ operator|->
 name|stratum
 argument_list|)
 expr_stmt|;
+comment|/**/
+comment|/**/
+comment|/* 	 * Verify the server is synchronized; that is, the leap bits, 	 * stratum and root distance are valid. 	 */
+if|if
+condition|(
+name|pleap
+operator|==
+name|LEAP_NOTINSYNC
+comment|/* test 6 */
+operator|||
+name|pstratum
+operator|<
+name|sys_floor
+operator|||
+name|pstratum
+operator|>=
+name|sys_ceiling
+condition|)
+name|peer
+operator|->
+name|flash
+operator||=
+name|TEST6
+expr_stmt|;
+comment|/* bad synch or strat */
+if|if
+condition|(
+name|p_del
+operator|/
+literal|2
+operator|+
+name|p_disp
+operator|>=
+name|MAXDISPERSE
+condition|)
+comment|/* test 7 */
+name|peer
+operator|->
+name|flash
+operator||=
+name|TEST7
+expr_stmt|;
+comment|/* bad header */
+comment|/* 	 * If any tests fail at this point, the packet is discarded. 	 * Note that some flashers may have already been set in the 	 * receive() routine. 	 */
+if|if
+condition|(
+name|peer
+operator|->
+name|flash
+operator|&
+name|PKT_TEST_MASK
+condition|)
+block|{
+name|peer
+operator|->
+name|seldisptoolarge
+operator|++
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"packet: flash header %04x\n"
+operator|,
+name|peer
+operator|->
+name|flash
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/**/
+if|#
+directive|if
+literal|1
+name|sys_processed
+operator|++
+expr_stmt|;
+name|peer
+operator|->
+name|processed
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Capture the header values in the client/peer association.. 	 */
 name|record_raw_stats
 argument_list|(
@@ -7170,77 +7506,7 @@ operator|->
 name|hpoll
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Verify the server is synchronized; that is, the leap bits, 	 * stratum and root distance are valid. 	 */
-if|if
-condition|(
-name|pleap
-operator|==
-name|LEAP_NOTINSYNC
-comment|/* test 6 */
-operator|||
-name|pstratum
-operator|<
-name|sys_floor
-operator|||
-name|pstratum
-operator|>=
-name|sys_ceiling
-condition|)
-name|peer
-operator|->
-name|flash
-operator||=
-name|TEST6
-expr_stmt|;
-comment|/* bad synch or strat */
-if|if
-condition|(
-name|p_del
-operator|/
-literal|2
-operator|+
-name|p_disp
-operator|>=
-name|MAXDISPERSE
-condition|)
-comment|/* test 7 */
-name|peer
-operator|->
-name|flash
-operator||=
-name|TEST7
-expr_stmt|;
-comment|/* bad header */
-comment|/* 	 * If any tests fail at this point, the packet is discarded. 	 * Note that some flashers may have already been set in the 	 * receive() routine. 	 */
-if|if
-condition|(
-name|peer
-operator|->
-name|flash
-operator|&
-name|PKT_TEST_MASK
-condition|)
-block|{
-name|peer
-operator|->
-name|seldisptoolarge
-operator|++
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"packet: flash header %04x\n"
-operator|,
-name|peer
-operator|->
-name|flash
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+comment|/**/
 comment|/* 	 * If the peer was previously unreachable, raise a trap. In any 	 * case, mark it reachable. 	 */
 if|if
 condition|(
@@ -17093,6 +17359,16 @@ name|io_multicast_del
 argument_list|(
 name|svalue
 argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * Peer_clear Early policy choices 	 */
+case|case
+name|PROTO_PCEDIGEST
+case|:
+comment|/* Digest */
+name|peer_clear_digest_early
+operator|=
+name|value
 expr_stmt|;
 break|break;
 comment|/* 	 * Unpeer Early policy choices 	 */

@@ -3608,6 +3608,13 @@ name|PROTO_UEDIGEST
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_PCEDIGEST
+value|32
+end_define
+
 begin_comment
 comment|/*  * Configuration items for the loop filter  */
 end_comment
