@@ -5592,7 +5592,10 @@ if|if
 condition|(
 operator|!
 name|res
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|params
 operator|->
@@ -5613,12 +5616,11 @@ name|err
 operator|=
 name|NULL
 expr_stmt|;
-name|parser
-operator|->
-name|state
+name|res
 operator|=
-name|UCL_STATE_AFTER_VALUE
+name|true
 expr_stmt|;
+block|}
 block|}
 comment|/* Stop nesting the include, take 1 level off the stack */
 if|if
@@ -8936,6 +8938,19 @@ argument_list|)
 expr_stmt|;
 return|return
 name|false
+return|;
+block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+name|true
 return|;
 block|}
 if|if
