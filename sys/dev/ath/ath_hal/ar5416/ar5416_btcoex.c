@@ -411,6 +411,10 @@ name|stompType
 condition|)
 block|{
 case|case
+name|HAL_BT_COEX_STOMP_AUDIO
+case|:
+comment|/* XXX TODO */
+case|case
 name|HAL_BT_COEX_STOMP_ALL
 case|:
 name|ahp
@@ -521,6 +525,10 @@ condition|(
 name|stompType
 condition|)
 block|{
+case|case
+name|HAL_BT_COEX_STOMP_AUDIO
+case|:
+comment|/* XXX TODO */
 case|case
 name|HAL_BT_COEX_STOMP_ALL
 case|:
