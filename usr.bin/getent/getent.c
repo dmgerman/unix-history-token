@@ -406,6 +406,12 @@ name|hosts
 block|,		}
 block|,
 block|{
+literal|"netgroup"
+block|,
+name|netgroup
+block|,	}
+block|,
+block|{
 literal|"networks"
 block|,
 name|networks
@@ -440,12 +446,6 @@ literal|"shells"
 block|,
 name|shells
 block|,		}
-block|,
-block|{
-literal|"netgroup"
-block|,
-name|netgroup
-block|,	}
 block|,
 block|{
 literal|"utmpx"
