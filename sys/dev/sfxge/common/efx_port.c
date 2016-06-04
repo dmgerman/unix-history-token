@@ -132,12 +132,6 @@ name|EFX_LINK_UNKNOWN
 expr_stmt|;
 name|epp
 operator|->
-name|ep_mac_poll_needed
-operator|=
-name|B_TRUE
-expr_stmt|;
-name|epp
-operator|->
 name|ep_mac_drain
 operator|=
 name|B_TRUE
@@ -894,12 +888,6 @@ expr_stmt|;
 name|epp
 operator|->
 name|ep_mac_drain
-operator|=
-name|B_FALSE
-expr_stmt|;
-name|epp
-operator|->
-name|ep_mac_poll_needed
 operator|=
 name|B_FALSE
 expr_stmt|;
