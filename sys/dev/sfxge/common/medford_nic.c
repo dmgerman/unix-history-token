@@ -322,9 +322,6 @@ name|uint32_t
 name|mask
 decl_stmt|;
 name|uint32_t
-name|flags
-decl_stmt|;
-name|uint32_t
 name|sysclk
 decl_stmt|;
 name|uint32_t
