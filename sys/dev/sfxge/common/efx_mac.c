@@ -32,42 +32,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-end_if
-
-begin_include
-include|#
-directive|include
-file|"falcon_gmac.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-end_if
-
-begin_include
-include|#
-directive|include
-file|"falcon_xmac.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -91,157 +55,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_mac_ops_t
-name|__efx_falcon_gmac_ops
-init|=
-block|{
-name|falcon_gmac_reset
-block|,
-comment|/* emo_reset */
-name|falcon_mac_poll
-block|,
-comment|/* emo_poll */
-name|falcon_mac_up
-block|,
-comment|/* emo_up */
-name|falcon_gmac_reconfigure
-block|,
-comment|/* emo_addr_set */
-name|falcon_gmac_reconfigure
-block|,
-comment|/* emo_pdu_set */
-name|falcon_gmac_reconfigure
-block|,
-comment|/* emo_reconfigure */
-name|falconsiena_mac_multicast_list_set
-block|,
-comment|/* emo_multicast_list_set */
-name|NULL
-block|,
-comment|/* emo_filter_set_default_rxq */
-name|NULL
-block|,
-comment|/* emo_filter_default_rxq_clear */
-if|#
-directive|if
-name|EFSYS_OPT_LOOPBACK
-name|falcon_mac_loopback_set
-block|,
-comment|/* emo_loopback_set */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_LOOPBACK */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_STATS
-name|falcon_mac_stats_upload
-block|,
-comment|/* emo_stats_upload */
-name|NULL
-block|,
-comment|/* emo_stats_periodic */
-name|falcon_gmac_stats_update
-comment|/* emo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MAC_STATS */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MAC_FALCON_GMAC */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_mac_ops_t
-name|__efx_falcon_xmac_ops
-init|=
-block|{
-name|falcon_xmac_reset
-block|,
-comment|/* emo_reset */
-name|falcon_mac_poll
-block|,
-comment|/* emo_poll */
-name|falcon_mac_up
-block|,
-comment|/* emo_up */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_addr_set */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_pdu_set */
-name|falcon_xmac_reconfigure
-block|,
-comment|/* emo_reconfigure */
-name|falconsiena_mac_multicast_list_set
-block|,
-comment|/* emo_multicast_list_set */
-name|NULL
-block|,
-comment|/* emo_filter_set_default_rxq */
-name|NULL
-block|,
-comment|/* emo_filter_default_rxq_clear */
-if|#
-directive|if
-name|EFSYS_OPT_LOOPBACK
-name|falcon_mac_loopback_set
-block|,
-comment|/* emo_loopback_set */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_LOOPBACK */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_STATS
-name|falcon_mac_stats_upload
-block|,
-comment|/* emo_stats_upload */
-name|NULL
-block|,
-comment|/* emo_stats_periodic */
-name|falcon_xmac_stats_update
-comment|/* emo_stats_update */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_MAC_STATS */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MAC_FALCON_XMAC */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -408,31 +222,11 @@ comment|/* [EFX_MAC_INVALID] */
 name|NULL
 block|,
 comment|/* [EFX_MAC_FALCON_GMAC] */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-operator|&
-name|__efx_falcon_gmac_ops
-block|,
-else|#
-directive|else
 name|NULL
 block|,
-endif|#
-directive|endif
 comment|/* [EFX_MAC_FALCON_XMAC] */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-operator|&
-name|__efx_falcon_xmac_ops
-block|,
-else|#
-directive|else
 name|NULL
 block|,
-endif|#
-directive|endif
 comment|/* [EFX_MAC_SIENA] */
 if|#
 directive|if
@@ -2972,139 +2766,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-switch|switch
-condition|(
-name|epp
-operator|->
-name|ep_link_mode
-condition|)
-block|{
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-case|case
-name|EFX_LINK_100HDX
-case|:
-case|case
-name|EFX_LINK_100FDX
-case|:
-case|case
-name|EFX_LINK_1000HDX
-case|:
-case|case
-name|EFX_LINK_1000FDX
-case|:
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-goto|goto
-name|chosen
-goto|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON_GMAC */
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_XMAC
-case|case
-name|EFX_LINK_10000FDX
-case|:
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-goto|goto
-name|chosen
-goto|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON_XMAC */
-default|default:
-if|#
-directive|if
-name|EFSYS_OPT_MAC_FALCON_GMAC
-operator|&&
-name|EFSYS_OPT_MAC_FALCON_XMAC
-comment|/* Only initialise a MAC supported by the PHY */
-if|if
-condition|(
-name|epp
-operator|->
-name|ep_phy_cap_mask
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_1000FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_1000HDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_100FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_100HDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_10FDX
-operator|)
-operator||
-operator|(
-literal|1
-operator|<<
-name|EFX_PHY_CAP_10FDX
-operator|)
-operator|)
-condition|)
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-else|else
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-elif|#
-directive|elif
-name|EFSYS_OPT_MAC_FALCON_GMAC
-name|type
-operator|=
-name|EFX_MAC_FALCON_GMAC
-expr_stmt|;
-else|#
-directive|else
-name|type
-operator|=
-name|EFX_MAC_FALCON_XMAC
-expr_stmt|;
-endif|#
-directive|endif
-goto|goto
-name|chosen
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 name|chosen
 label|:
 name|EFSYS_ASSERT
@@ -3222,8 +2883,6 @@ end_function
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -3536,7 +3195,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 end_unit

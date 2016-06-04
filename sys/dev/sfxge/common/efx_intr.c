@@ -32,8 +32,6 @@ end_include
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -210,59 +208,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_intr_ops_t
-name|__efx_intr_falcon_ops
-init|=
-block|{
-name|falconsiena_intr_init
-block|,
-comment|/* eio_init */
-name|falconsiena_intr_enable
-block|,
-comment|/* eio_enable */
-name|falconsiena_intr_disable
-block|,
-comment|/* eio_disable */
-name|falconsiena_intr_disable_unlocked
-block|,
-comment|/* eio_disable_unlocked */
-name|falconsiena_intr_trigger
-block|,
-comment|/* eio_trigger */
-name|falconsiena_intr_status_line
-block|,
-comment|/* eio_status_line */
-name|falconsiena_intr_status_message
-block|,
-comment|/* eio_status_message */
-name|falconsiena_intr_fatal
-block|,
-comment|/* eio_fatal */
-name|falconsiena_intr_fini
-block|,
-comment|/* eio_fini */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -479,25 +425,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|eiop
-operator|=
-operator|(
-name|efx_intr_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_intr_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
@@ -1195,8 +1122,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -2494,7 +2419,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 end_unit

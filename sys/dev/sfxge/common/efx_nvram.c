@@ -38,70 +38,6 @@ end_if
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_nvram_ops_t
-name|__efx_nvram_falcon_ops
-init|=
-block|{
-if|#
-directive|if
-name|EFSYS_OPT_DIAG
-name|falcon_nvram_test
-block|,
-comment|/* envo_test */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_DIAG */
-name|falcon_nvram_type_to_partn
-block|,
-comment|/* envo_type_to_partn */
-name|falcon_nvram_partn_size
-block|,
-comment|/* envo_partn_size */
-name|falcon_nvram_partn_rw_start
-block|,
-comment|/* envo_partn_rw_start */
-name|falcon_nvram_partn_read
-block|,
-comment|/* envo_partn_read */
-name|falcon_nvram_partn_erase
-block|,
-comment|/* envo_partn_erase */
-name|falcon_nvram_partn_write
-block|,
-comment|/* envo_partn_write */
-name|falcon_nvram_partn_rw_finish
-block|,
-comment|/* envo_partn_rw_finish */
-name|falcon_nvram_partn_get_version
-block|,
-comment|/* envo_partn_get_version */
-name|falcon_nvram_partn_set_version
-block|,
-comment|/* envo_partn_set_version */
-name|NULL
-block|,
-comment|/* envo_partn_validate */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
-end_comment
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -288,25 +224,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|envop
-operator|=
-operator|(
-name|efx_nvram_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_nvram_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA

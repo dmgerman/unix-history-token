@@ -136,61 +136,6 @@ end_define
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_vpd_ops_t
-name|__efx_vpd_falcon_ops
-init|=
-block|{
-name|NULL
-block|,
-comment|/* evpdo_init */
-name|falcon_vpd_size
-block|,
-comment|/* evpdo_size */
-name|falcon_vpd_read
-block|,
-comment|/* evpdo_read */
-name|falcon_vpd_verify
-block|,
-comment|/* evpdo_verify */
-name|NULL
-block|,
-comment|/* evpdo_reinit */
-name|falcon_vpd_get
-block|,
-comment|/* evpdo_get */
-name|falcon_vpd_set
-block|,
-comment|/* evpdo_set */
-name|falcon_vpd_next
-block|,
-comment|/* evpdo_next */
-name|falcon_vpd_write
-block|,
-comment|/* evpdo_write */
-name|NULL
-block|,
-comment|/* evpdo_fini */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
-end_comment
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -359,25 +304,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|evpdop
-operator|=
-operator|(
-name|efx_vpd_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_vpd_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA

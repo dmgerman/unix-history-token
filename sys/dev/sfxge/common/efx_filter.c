@@ -38,8 +38,6 @@ end_if
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -156,53 +154,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_filter_ops_t
-name|__efx_filter_falcon_ops
-init|=
-block|{
-name|falconsiena_filter_init
-block|,
-comment|/* efo_init */
-name|falconsiena_filter_fini
-block|,
-comment|/* efo_fini */
-name|falconsiena_filter_restore
-block|,
-comment|/* efo_restore */
-name|falconsiena_filter_add
-block|,
-comment|/* efo_add */
-name|falconsiena_filter_delete
-block|,
-comment|/* efo_delete */
-name|falconsiena_filter_supported_filters
-block|,
-comment|/* efo_supported_filters */
-name|NULL
-block|,
-comment|/* efo_reconfigure */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_if
@@ -593,25 +545,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|efop
-operator|=
-operator|(
-name|efx_filter_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_filter_falcon_ops
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA
@@ -1671,8 +1604,6 @@ end_function
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -4398,32 +4329,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|fsftp
-operator|=
-operator|&
-name|fsfp
-operator|->
-name|fsf_tbl
-index|[
-name|EFX_FS_FILTER_TBL_RX_IP
-index|]
-expr_stmt|;
-name|fsftp
-operator|->
-name|fsft_size
-operator|=
-name|FR_AZ_RX_FILTER_TBL0_ROWS
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FAMILY_SIENA
@@ -5911,7 +5816,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_FALCON || EFSYS_OPT_SIENA */
+comment|/* EFSYS_OPT_SIENA */
 end_comment
 
 begin_endif

@@ -62,25 +62,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_PCI_DEVID_FALCON
-case|:
-operator|*
-name|efp
-operator|=
-name|EFX_FAMILY_FALCON
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 case|case
 name|EFX_PCI_DEVID_SIENA_F1_UNINIT
@@ -213,6 +194,10 @@ return|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MEDFORD */
+case|case
+name|EFX_PCI_DEVID_FALCON
+case|:
+comment|/* Obsolete, not supported */
 default|default:
 break|break;
 block|}
@@ -363,21 +348,6 @@ comment|/* 			 * BIU_HW_REV_ID is the same for Huntington and Medford. 			 * Ass
 name|family
 operator|=
 name|EFX_FAMILY_HUNTINGTON
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-name|family
-operator|=
-name|EFX_FAMILY_FALCON
 expr_stmt|;
 goto|goto
 name|out
@@ -739,70 +709,6 @@ end_function
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_decl_stmt
-specifier|static
-name|efx_nic_ops_t
-name|__efx_nic_falcon_ops
-init|=
-block|{
-name|falcon_nic_probe
-block|,
-comment|/* eno_probe */
-name|NULL
-block|,
-comment|/* eno_board_cfg */
-name|NULL
-block|,
-comment|/* eno_set_drv_limits */
-name|falcon_nic_reset
-block|,
-comment|/* eno_reset */
-name|falcon_nic_init
-block|,
-comment|/* eno_init */
-name|NULL
-block|,
-comment|/* eno_get_vi_pool */
-name|NULL
-block|,
-comment|/* eno_get_bar_region */
-if|#
-directive|if
-name|EFSYS_OPT_DIAG
-name|falcon_sram_test
-block|,
-comment|/* eno_sram_test */
-name|falcon_nic_register_test
-block|,
-comment|/* eno_register_test */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_DIAG */
-name|falcon_nic_fini
-block|,
-comment|/* eno_fini */
-name|falcon_nic_unprobe
-block|,
-comment|/* eno_unprobe */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON */
-end_comment
-
-begin_if
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
@@ -1087,33 +993,6 @@ condition|(
 name|family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|enp
-operator|->
-name|en_enop
-operator|=
-operator|(
-name|efx_nic_ops_t
-operator|*
-operator|)
-operator|&
-name|__efx_nic_falcon_ops
-expr_stmt|;
-name|enp
-operator|->
-name|en_features
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
 if|#
 directive|if
 name|EFSYS_OPT_SIENA

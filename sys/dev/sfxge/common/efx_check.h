@@ -37,127 +37,6 @@ directive|error
 literal|"FALCON is obsolete and is not supported."
 end_error
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* FIXME: remove this after Falcon support has been removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_FALCON
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_MAC_FALCON_GMAC
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_MAC_FALCON_XMAC
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_MON_LM87
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_MON_MAX6647
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_MON_NULL
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_NVRAM_FALCON_BOOTROM
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_NVRAM_SFT9001
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_NVRAM_SFX7101
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_NULL
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_QT2022C2
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_QT2025C
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_SFT9001
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_SFX7101
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFSYS_OPT_PHY_TXC43128
-value|(0)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -215,11 +94,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -229,7 +105,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"CHECK_REG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"CHECK_REG requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -260,17 +136,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"INTR_FATAL requires FALCON or SIENA"
+literal|"INTR_FATAL requires SIENA"
 end_error
 
 begin_endif
@@ -302,11 +174,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -316,7 +185,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"DIAG requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"DIAG requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -348,11 +217,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -362,7 +228,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"EV_PREFETCH requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"EV_PREFETCH requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -379,42 +245,22 @@ begin_comment
 comment|/* EFSYS_OPT_EV_PREFETCH */
 end_comment
 
-begin_comment
-comment|/* Support overriding the NVRAM and VPD configuration */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"FALCON_NIC_CFG_OVERRIDE requires FALCON"
+literal|"FALCON_NIC_CFG_OVERRIDE is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE */
-end_comment
 
 begin_comment
 comment|/* Support hardware packet filters */
@@ -431,11 +277,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -445,7 +288,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"FILTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"FILTER requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -514,11 +357,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -528,7 +368,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"LOOPBACK requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"LOOPBACK requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -545,27 +385,16 @@ begin_comment
 comment|/* EFSYS_OPT_LOOPBACK */
 end_comment
 
-begin_comment
-comment|/* Support Falcon GMAC */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MAC_FALCON_GMAC
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MAC_FALCON_GMAC requires FALCON"
+literal|"MAC_FALCON_GMAC is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -573,51 +402,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MAC_FALCON_GMAC */
-end_comment
-
-begin_comment
-comment|/* Support Falcon XMAC */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MAC_FALCON_XMAC
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MAC_FALCON_XMAC requires FALCON"
+literal|"MAC_FALCON_XMAC is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MAC_FALCON_XMAC */
-end_comment
 
 begin_comment
 comment|/* Support MAC statistics */
@@ -634,11 +434,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -648,7 +445,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"MAC_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"MAC_STATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -817,27 +614,16 @@ begin_comment
 comment|/* EFSYS_OPT_MCDI_PROXY_AUTH */
 end_comment
 
-begin_comment
-comment|/* Support LM87 monitor */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MON_LM87
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MON_LM87 requires FALCON"
+literal|"MON_LM87 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -845,36 +631,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_LM87 */
-end_comment
-
-begin_comment
-comment|/* Support MAX6647 monitor */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MON_MAX6647
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MON_MAX6647 requires FALCON"
+literal|"MON_MAX6647 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -882,51 +648,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_MAX6647 */
-end_comment
-
-begin_comment
-comment|/* Support null monitor */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_MON_NULL
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"MON_NULL requires FALCON"
+literal|"MON_NULL is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_NULL */
-end_comment
 
 begin_comment
 comment|/* Obsolete option */
@@ -993,11 +730,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1007,7 +741,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"MON_STATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"MON_STATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1135,11 +869,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1149,7 +880,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"NVRAM requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"NVRAM requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1166,27 +897,16 @@ begin_comment
 comment|/* EFSYS_OPT_NVRAM */
 end_comment
 
-begin_comment
-comment|/* Support Falcon bootrom */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_NVRAM_FALCON_BOOTROM
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_NVRAM
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"NVRAM_FALCON_BOOTROM requires NVRAM"
+literal|"NVRAM_FALCON_BOOTROM is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1194,54 +914,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"NVRAM_FALCON_BOOTROM requires FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_NVRAM_FALCON_BOOTROM */
-end_comment
-
-begin_comment
-comment|/* Support NVRAM config for SFT9001 */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_NVRAM_SFT9001
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_NVRAM
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"NVRAM_SFT9001 requires NVRAM"
+literal|"NVRAM_SFT9001 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1249,87 +931,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"NVRAM_SFT9001 requires FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_NVRAM_SFT9001 */
-end_comment
-
-begin_comment
-comment|/* Support NVRAM config for SFX7101 */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_NVRAM_SFX7101
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_NVRAM
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"NVRAM_SFX7101 requires NVRAM"
+literal|"NVRAM_SFX7101 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"NVRAM_SFX7101 requires FALCON"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_NVRAM_SFX7101 */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1383,17 +1000,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_FLAGS requires FALCON or SIENA"
+literal|"PHY_FLAGS requires SIENA"
 end_error
 
 begin_endif
@@ -1424,17 +1037,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_LED_CONTROL requires FALCON or SIENA"
+literal|"PHY_LED_CONTROL requires SIENA"
 end_error
 
 begin_endif
@@ -1451,42 +1060,22 @@ begin_comment
 comment|/* EFSYS_OPT_PHY_LED_CONTROL */
 end_comment
 
-begin_comment
-comment|/* Support NULL PHY */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_NULL
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_NULL requires FALCON"
+literal|"PHY_NULL is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_NULL */
-end_comment
 
 begin_comment
 comment|/* Obsolete option */
@@ -1523,17 +1112,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_PROPS requires FALCON or SIENA"
+literal|"PHY_PROPS requires SIENA"
 end_error
 
 begin_endif
@@ -1550,27 +1135,16 @@ begin_comment
 comment|/* EFSYS_OPT_PHY_PROPS */
 end_comment
 
-begin_comment
-comment|/* Support QT2022C2 PHY */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_QT2022C2
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_QT2022C2 requires FALCON"
+literal|"PHY_QT2022C2 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1578,36 +1152,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_QT2022C2 */
-end_comment
-
-begin_comment
-comment|/* Support QT2025C PHY (Wakefield NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_QT2025C
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_QT2025C requires FALCON"
+literal|"PHY_QT2025C is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1615,36 +1169,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_QT2025C */
-end_comment
-
-begin_comment
-comment|/* Support SFT9001 PHY (Starbolt NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_SFT9001
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_SFT9001 requires FALCON"
+literal|"PHY_SFT9001 is obsolete and is not supported."
 end_error
 
 begin_endif
@@ -1652,51 +1186,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_SFT9001 */
-end_comment
-
-begin_comment
-comment|/* Support SFX7101 PHY (SFE4001 NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_SFX7101
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_SFX7101 requires FALCON"
+literal|"PHY_SFX7101 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_SFX7101 */
-end_comment
 
 begin_comment
 comment|/* Support PHY statistics */
@@ -1712,17 +1217,13 @@ begin_if
 if|#
 directive|if
 operator|!
-operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
-operator|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"PHY_STATS requires FALCON or SIENA"
+literal|"PHY_STATS requires SIENA"
 end_error
 
 begin_endif
@@ -1739,42 +1240,22 @@ begin_comment
 comment|/* EFSYS_OPT_PHY_STATS */
 end_comment
 
-begin_comment
-comment|/* Support TXC43128 PHY (SFE4003 NIC) */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PHY_TXC43128
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PHY_TXC43128 requires FALCON"
+literal|"PHY_TXC43128 is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PHY_TXC43128 */
-end_comment
 
 begin_comment
 comment|/* Support EVQ/RXQ/TXQ statistics */
@@ -1791,11 +1272,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1805,7 +1283,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"QSTATS requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"QSTATS requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1862,11 +1340,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1876,7 +1351,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"RX_SCALE requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"RX_SCALE requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1908,11 +1383,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1922,7 +1394,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"RX_SCATTER requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"RX_SCATTER requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -1975,11 +1447,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -1989,7 +1458,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"VPD requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"VPD requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif
@@ -2083,11 +1552,8 @@ if|#
 directive|if
 operator|!
 operator|(
-name|EFSYS_OPT_FALCON
-operator|||
 name|EFSYS_OPT_SIENA
 operator|||
-expr|\
 name|EFSYS_OPT_HUNTINGTON
 operator|||
 name|EFSYS_OPT_MEDFORD
@@ -2097,7 +1563,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"BIST requires FALCON or SIENA or HUNTINGTON or MEDFORD"
+literal|"BIST requires SIENA or HUNTINGTON or MEDFORD"
 end_error
 
 begin_endif

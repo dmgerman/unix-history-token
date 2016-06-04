@@ -188,24 +188,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|EFSYS_OPT_FALCON
-case|case
-name|EFX_FAMILY_FALCON
-case|:
-name|emcop
-operator|=
-name|NULL
-expr_stmt|;
-name|emtp
-operator|=
-name|NULL
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_FALCON */
-if|#
-directive|if
 name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FAMILY_SIENA
