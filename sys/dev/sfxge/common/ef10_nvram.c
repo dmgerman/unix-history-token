@@ -4087,6 +4087,10 @@ name|cursor
 argument_list|,
 name|TLV_TAG_LICENSE
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|keyp
 argument_list|,
 name|length
