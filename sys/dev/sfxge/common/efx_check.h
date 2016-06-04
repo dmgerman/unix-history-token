@@ -665,10 +665,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Obsolete option */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -686,14 +682,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* EFSYS_OPT_MON_SIENA*/
-end_comment
-
-begin_comment
-comment|/* Obsolete option */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -710,10 +698,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MON_HUNTINGTON*/
-end_comment
 
 begin_comment
 comment|/* Support monitor statistics (voltage/temperature) */
@@ -965,10 +949,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Obsolete option */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1076,10 +1056,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Obsolete option */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1300,10 +1276,6 @@ begin_comment
 comment|/* EFSYS_OPT_QSTATS */
 end_comment
 
-begin_comment
-comment|/* Obsolete option */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1320,10 +1292,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_RX_HDR_SPLIT */
-end_comment
 
 begin_comment
 comment|/* Support receive scaling (RSS) */
@@ -1409,10 +1377,6 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_RX_SCATTER */
-end_comment
-
-begin_comment
-comment|/* Obsolete option */
 end_comment
 
 begin_ifdef
@@ -1512,10 +1476,6 @@ begin_comment
 comment|/* EFSYS_OPT_WOL */
 end_comment
 
-begin_comment
-comment|/* Obsolete option */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1532,10 +1492,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_MCAST_FILTER_LIST */
-end_comment
 
 begin_comment
 comment|/* Support BIST */
