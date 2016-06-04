@@ -90,6 +90,7 @@ name|EFX_FAMILY_INVALID
 block|,
 name|EFX_FAMILY_FALCON
 block|,
+comment|/* Obsolete and not supported */
 name|EFX_FAMILY_SIENA
 block|,
 name|EFX_FAMILY_HUNTINGTON
@@ -611,10 +612,6 @@ endif|#
 directive|endif
 comment|/* EFSYS_OPT_MCDI */
 comment|/* INTR */
-define|#
-directive|define
-name|EFX_NINTR_FALCON
-value|64
 define|#
 directive|define
 name|EFX_NINTR_SIENA

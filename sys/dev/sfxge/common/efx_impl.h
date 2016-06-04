@@ -3562,7 +3562,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|do {								\ 		const char *name = #_reg;				\ 		char min = name[4];					\ 		char max = name[5];					\ 		char rev;						\ 									\ 		switch ((_enp)->en_family) {				\ 		case EFX_FAMILY_FALCON:					\ 			rev = 'B';					\ 			break;						\ 									\ 		case EFX_FAMILY_SIENA:					\ 			rev = 'C';					\ 			break;						\ 									\ 		case EFX_FAMILY_HUNTINGTON:				\ 			rev = 'D';					\ 			break;						\ 									\ 		case EFX_FAMILY_MEDFORD:				\ 			rev = 'E';					\ 			break;						\ 									\ 		default:						\ 			rev = '?';					\ 			break;						\ 		}							\ 									\ 		EFSYS_ASSERT3S(rev,>=, min);				\ 		EFSYS_ASSERT3S(rev,<=, max);				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		const char *name = #_reg;				\ 		char min = name[4];					\ 		char max = name[5];					\ 		char rev;						\ 									\ 		switch ((_enp)->en_family) {				\ 		case EFX_FAMILY_SIENA:					\ 			rev = 'C';					\ 			break;						\ 									\ 		case EFX_FAMILY_HUNTINGTON:				\ 			rev = 'D';					\ 			break;						\ 									\ 		case EFX_FAMILY_MEDFORD:				\ 			rev = 'E';					\ 			break;						\ 									\ 		default:						\ 			rev = '?';					\ 			break;						\ 		}							\ 									\ 		EFSYS_ASSERT3S(rev,>=, min);				\ 		EFSYS_ASSERT3S(rev,<=, max);				\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 else|#
 directive|else
 define|#

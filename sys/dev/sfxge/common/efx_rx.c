@@ -2611,7 +2611,7 @@ parameter_list|,
 name|_rc
 parameter_list|)
 define|\
-value|do {								\ 		efx_oword_t oword;					\ 									\ 		if ((_enp)->en_family == EFX_FAMILY_FALCON) {		\ 			(_rc) = ((_ip) || (_tcp)) ? ENOTSUP : 0;	\ 			break;						\ 		}							\ 									\ 		EFX_BAR_READO((_enp), FR_CZ_RX_RSS_IPV6_REG3,&oword);	\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_THASH_ENABLE, 1);		\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_IP_THASH_ENABLE, (_ip) ? 1 : 0);	\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_TCP_SUPPRESS, (_tcp) ? 0 : 1);	\ 		EFX_BAR_WRITEO((_enp), FR_CZ_RX_RSS_IPV6_REG3,&oword);	\ 									\ 		(_rc) = 0;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 	} while (B_FALSE)
+value|do {								\ 		efx_oword_t oword;					\ 									\ 		EFX_BAR_READO((_enp), FR_CZ_RX_RSS_IPV6_REG3,&oword);	\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_THASH_ENABLE, 1);		\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_IP_THASH_ENABLE, (_ip) ? 1 : 0);	\ 		EFX_SET_OWORD_FIELD(oword,				\ 		    FRF_CZ_RX_RSS_IPV6_TCP_SUPPRESS, (_tcp) ? 0 : 1);	\ 		EFX_BAR_WRITEO((_enp), FR_CZ_RX_RSS_IPV6_REG3,&oword);	\ 									\ 		(_rc) = 0;						\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 	} while (B_FALSE)
 end_define
 
 begin_if
@@ -2957,17 +2957,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|EFSYS_ASSERT3U
-argument_list|(
-name|enp
-operator|->
-name|en_family
-argument_list|,
-operator|!=
-argument_list|,
-name|EFX_FAMILY_FALCON
-argument_list|)
-expr_stmt|;
 name|byte
 operator|=
 literal|0
