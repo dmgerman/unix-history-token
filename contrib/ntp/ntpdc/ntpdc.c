@@ -3470,6 +3470,9 @@ name|printf
 argument_list|(
 literal|" %zd,"
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -3554,6 +3557,9 @@ name|printf
 argument_list|(
 literal|"Short (%zd byte) packet received\n"
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
