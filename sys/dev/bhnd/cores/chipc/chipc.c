@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Broadcom ChipCommon driver.  *   * With the exception of some very early chipsets, the ChipCommon core  * has been included in all HND SoCs and chipsets based on the siba(4)   * and bcma(4) interconnects, providing a common interface to chipset   * identification, bus enumeration, UARTs, clocks, watchdog interrupts, GPIO,   * flash, etc.  */
+comment|/*  * Broadcom ChipCommon driver.  *   * With the exception of some very early chipsets, the ChipCommon core  * has been included in all HND SoCs and chipsets based on the siba(4)   * and bcma(4) interconnects, providing a common interface to chipset   * identification, bus enumeration, UARTs, clocks, watchdog interrupts, GPIO,   * flash, etc.  *  * The purpose of this driver is memory resource management for ChipCommon drivers  * like UART, PMU, flash. ChipCommon core has several memory regions.  *  * ChipCommon driver has memory resource manager. Driver  * gets information about BHND core ports/regions and map them  * into drivers' resources.  *  * Here is overview of mapping:  *  * ------------------------------------------------------  * | Port.Region| Purpose				|  * ------------------------------------------------------  * |	0.0	| PMU, SPI(0x40), UART(0x300)           |  * |	1.0	| ?					|  * |	1.1	| MMIO flash (SPI& CFI)		|  * ------------------------------------------------------  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -317,6 +317,10 @@ name|BHND_DEVICE_QUIRK_END
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Here is resource configuration hints for child devices  *  * [Flash] There are 2 flash resources:  *  - resource ID (rid) = 0: memory-mapped flash memory  *  - resource ID (rid) = 1: memory-mapped flash registers (i.e for SPI)  *  * [UART] Uses IRQ and memory resources:  *  - resource ID (rid) = 0: memory-mapped registers  *  - IRQ resource ID (rid) = 0: shared IRQ line for Tx/Rx.  */
+end_comment
 
 begin_struct
 specifier|static
@@ -5456,6 +5460,42 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|uint32_t
+name|chipc_get_flash_cfg
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|chipc_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|bhnd_bus_read_4
+argument_list|(
+name|sc
+operator|->
+name|core
+argument_list|,
+name|CHIPC_FLASH_CFG
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -5684,6 +5724,13 @@ argument_list|,
 name|chipc_get_caps
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_chipc_get_flash_cfg
+argument_list|,
+name|chipc_get_flash_cfg
+argument_list|)
+block|,
 name|DEVMETHOD_END
 block|}
 decl_stmt|;
@@ -5708,7 +5755,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|bhnd_chipc
 argument_list|,
@@ -5721,6 +5768,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_BUS
+operator|+
+name|BUS_PASS_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
