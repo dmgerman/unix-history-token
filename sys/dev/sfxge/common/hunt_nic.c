@@ -328,6 +328,8 @@ name|flags
 decl_stmt|;
 name|uint32_t
 name|sysclk
+decl_stmt|,
+name|dpcpu_clk
 decl_stmt|;
 name|uint32_t
 name|base
@@ -860,7 +862,7 @@ goto|goto
 name|fail10
 goto|;
 block|}
-comment|/* Get sysclk frequency (in MHz). */
+comment|/* Get clock frequencies (in MHz). */
 if|if
 condition|(
 operator|(
@@ -872,6 +874,9 @@ name|enp
 argument_list|,
 operator|&
 name|sysclk
+argument_list|,
+operator|&
+name|dpcpu_clk
 argument_list|)
 operator|)
 operator|!=
@@ -880,7 +885,7 @@ condition|)
 goto|goto
 name|fail11
 goto|;
-comment|/* 	 * The timer quantum is 1536 sysclk cycles, documented for the 	 * EV_TMR_VAL field of EV_TIMER_TBL. Scale for MHz and ns units. 	 */
+comment|/* 	 * The Huntington timer quantum is 1536 sysclk cycles, documented for 	 * the EV_TMR_VAL field of EV_TIMER_TBL. Scale for MHz and ns units. 	 */
 name|encp
 operator|->
 name|enc_evq_timer_quantum_ns

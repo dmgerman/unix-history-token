@@ -431,6 +431,8 @@ name|mask
 decl_stmt|;
 name|uint32_t
 name|sysclk
+decl_stmt|,
+name|dpcpu_clk
 decl_stmt|;
 name|uint32_t
 name|base
@@ -733,7 +735,7 @@ name|enc_bug26807_workaround
 operator|=
 name|B_TRUE
 expr_stmt|;
-comment|/* Get sysclk frequency (in MHz). */
+comment|/* Get clock frequencies (in MHz). */
 if|if
 condition|(
 operator|(
@@ -745,6 +747,9 @@ name|enp
 argument_list|,
 operator|&
 name|sysclk
+argument_list|,
+operator|&
+name|dpcpu_clk
 argument_list|)
 operator|)
 operator|!=
@@ -753,14 +758,14 @@ condition|)
 goto|goto
 name|fail8
 goto|;
-comment|/* 	 * The timer quantum is 1536 sysclk cycles, documented for the 	 * EV_TMR_VAL field of EV_TIMER_TBL. Scale for MHz and ns units. 	 */
+comment|/* 	 * The Medford timer quantum is 1536 dpcpu_clk cycles, documented for 	 * the EV_TMR_VAL field of EV_TIMER_TBL. Scale for MHz and ns units. 	 */
 name|encp
 operator|->
 name|enc_evq_timer_quantum_ns
 operator|=
 literal|1536000UL
 operator|/
-name|sysclk
+name|dpcpu_clk
 expr_stmt|;
 comment|/* 1536 cycles */
 name|encp

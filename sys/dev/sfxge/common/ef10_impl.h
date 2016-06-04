@@ -3160,6 +3160,11 @@ name|__out
 name|uint32_t
 modifier|*
 name|sys_freqp
+parameter_list|,
+name|__out
+name|uint32_t
+modifier|*
+name|dpcpu_freqp
 parameter_list|)
 function_decl|;
 specifier|extern
