@@ -966,7 +966,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
 name|ioat_channel_index
 init|=
 literal|0
@@ -974,7 +974,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_hw_ioat
 argument_list|,
