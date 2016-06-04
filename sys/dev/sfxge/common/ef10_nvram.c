@@ -33,6 +33,8 @@ begin_if
 if|#
 directive|if
 name|EFSYS_OPT_HUNTINGTON
+operator|||
+name|EFSYS_OPT_MEDFORD
 end_if
 
 begin_if
@@ -6527,7 +6529,7 @@ decl_stmt|;
 name|size_t
 name|modified_segment_size
 decl_stmt|;
-comment|/* 	 * Read the segment from NVRAM into the segment_data buffer and validate 	 * it, returning if it does not validate. This is not a failure unless 	 * this is the first segment in a partition. In this case the caller 	 * must propogate the error. 	 */
+comment|/* 	 * Read the segment from NVRAM into the segment_data buffer and validate 	 * it, returning if it does not validate. This is not a failure unless 	 * this is the first segment in a partition. In this case the caller 	 * must propagate the error. 	 */
 name|status
 operator|=
 name|ef10_nvram_read_tlv_segment
@@ -9357,7 +9359,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_HUNTINGTON */
+comment|/* EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD */
 end_comment
 
 end_unit
