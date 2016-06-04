@@ -2992,6 +2992,11 @@ define|#
 directive|define
 name|EFX_EF10_FILTER_TBL_ROWS
 value|8192
+comment|/* Only need to allow for one directed and one unknown unicast filter */
+define|#
+directive|define
+name|EFX_EF10_FILTER_UNICAST_FILTERS_MAX
+value|2
 comment|/* Allow for the broadcast address to be added to the multicast list */
 define|#
 directive|define
@@ -3015,10 +3020,13 @@ name|boolean_t
 name|eft_using_rss
 decl_stmt|;
 name|uint32_t
-name|eft_unicst_filter_index
+name|eft_unicst_filter_indexes
+index|[
+name|EFX_EF10_FILTER_UNICAST_FILTERS_MAX
+index|]
 decl_stmt|;
 name|boolean_t
-name|eft_unicst_filter_set
+name|eft_unicst_filter_count
 decl_stmt|;
 name|uint32_t
 name|eft_mulcst_filter_indexes
