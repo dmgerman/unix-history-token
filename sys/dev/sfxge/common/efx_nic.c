@@ -2155,12 +2155,6 @@ condition|)
 goto|goto
 name|fail2
 goto|;
-name|enp
-operator|->
-name|en_reset_flags
-operator||=
-name|EFX_RESET_MAC
-expr_stmt|;
 return|return
 operator|(
 literal|0
