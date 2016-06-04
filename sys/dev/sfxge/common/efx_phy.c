@@ -54,12 +54,6 @@ comment|/* epo_reconfigure */
 name|siena_phy_verify
 block|,
 comment|/* epo_verify */
-name|NULL
-block|,
-comment|/* epo_uplink_check */
-name|NULL
-block|,
-comment|/* epo_downlink_check */
 name|siena_phy_oui_get
 block|,
 comment|/* epo_oui_get */
@@ -130,12 +124,6 @@ comment|/* epo_reconfigure */
 name|ef10_phy_verify
 block|,
 comment|/* epo_verify */
-name|NULL
-block|,
-comment|/* epo_uplink_check */
-name|NULL
-block|,
-comment|/* epo_downlink_check */
 name|ef10_phy_oui_get
 block|,
 comment|/* epo_oui_get */
