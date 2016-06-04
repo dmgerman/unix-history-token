@@ -3188,6 +3188,9 @@ name|efx_lic_ops_t
 modifier|*
 name|en_elop
 decl_stmt|;
+name|boolean_t
+name|en_licensing_supported
+decl_stmt|;
 endif|#
 directive|endif
 union|union
