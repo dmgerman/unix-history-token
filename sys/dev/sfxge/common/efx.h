@@ -332,17 +332,6 @@ name|int
 name|nlanes
 parameter_list|)
 function_decl|;
-specifier|extern
-name|__checkReturn
-name|efx_rc_t
-name|efx_nic_pcie_extended_sync
-parameter_list|(
-name|__in
-name|efx_nic_t
-modifier|*
-name|enp
-parameter_list|)
-function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_PCIE_TUNE */
