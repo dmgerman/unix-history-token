@@ -968,7 +968,6 @@ expr_stmt|;
 goto|goto
 name|fail1
 goto|;
-break|break;
 block|}
 return|return
 operator|(
