@@ -70,13 +70,7 @@ name|HAL_BOOL
 name|bt_single_ant
 decl_stmt|;
 name|u_int8_t
-name|bt_dutyCycle
-decl_stmt|;
-name|u_int8_t
 name|bt_isolation
-decl_stmt|;
-name|u_int8_t
-name|bt_period
 decl_stmt|;
 block|}
 name|HAL_BT_COEX_INFO
@@ -302,6 +296,8 @@ block|,
 name|HAL_BT_COEX_STOMP_ALL_FORCE
 block|,
 name|HAL_BT_COEX_STOMP_LOW_FORCE
+block|,
+name|HAL_BT_COEX_STOMP_AUDIO
 block|, }
 name|HAL_BT_COEX_STOMP_TYPE
 typedef|;
