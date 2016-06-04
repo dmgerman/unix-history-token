@@ -4705,7 +4705,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|hunt_filter_get_workarounds
+name|ef10_filter_get_workarounds
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5138,13 +5138,13 @@ goto|goto
 name|fail1
 goto|;
 block|}
-comment|/* 	 * WORKAROUND_BUG26807 controls firmware support for chained multicast 	 * filters, and can only be enabled or disabled when the hardware filter 	 * table is empty. 	 * 	 * Firmware will reset (FLR) functions which have inserted filters in 	 * the hardware filter table when the workaround is enabled/disabled. 	 * Functions without any hardware filters are not reset. 	 * 	 * Re-check if the workaround is enabled after adding unicast hardware 	 * filters. This ensures that encp->enc_workaround_bug26807 matches the 	 * firmware state, and that later changes to enable/disable the 	 * workaround will result in this function seeing a reset (FLR). 	 * 	 * FIXME: On Medford multicast chaining should always be on. 	 */
+comment|/* 	 * WORKAROUND_BUG26807 controls firmware support for chained multicast 	 * filters, and can only be enabled or disabled when the hardware filter 	 * table is empty. 	 * 	 * Chained multicast filters require support from the datapath firmware, 	 * and may not be available (e.g. low-latency variants or old Huntington 	 * firmware). 	 * 	 * Firmware will reset (FLR) functions which have inserted filters in 	 * the hardware filter table when the workaround is enabled/disabled. 	 * Functions without any hardware filters are not reset. 	 * 	 * Re-check if the workaround is enabled after adding unicast hardware 	 * filters. This ensures that encp->enc_bug26807_workaround matches the 	 * firmware state, and that later changes to enable/disable the 	 * workaround will result in this function seeing a reset (FLR). 	 * 	 * In common-code drivers, we only support multiple PCI function 	 * scenarios with firmware that supports multicast chaining, so we can 	 * assume it is enabled for such cases and hence simplify the filter 	 * insertion logic. Firmware that does not support multicast chaining 	 * does not support multiple PCI function configurations either, so 	 * filter insertion is much simpler and the same strategies can still be 	 * used. 	 */
 if|if
 condition|(
 operator|(
 name|rc
 operator|=
-name|hunt_filter_get_workarounds
+name|ef10_filter_get_workarounds
 argument_list|(
 name|enp
 argument_list|)
