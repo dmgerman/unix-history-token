@@ -824,7 +824,10 @@ argument_list|)
 expr_stmt|;
 name|magic
 operator|=
-name|SFXGE_MAGIC_RX_QREFILL
+name|SFXGE_SW_EV_MAGIC
+argument_list|(
+name|SFXGE_SW_EV_RX_QREFILL
+argument_list|)
 operator||
 name|label
 expr_stmt|;

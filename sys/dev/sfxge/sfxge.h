@@ -374,36 +374,32 @@ define|\
 value|((1<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH) - 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SFXGE_MAGIC_RX_QFLUSH_DONE
-define|\
-value|(SFXGE_MAGIC_RESERVED | (1<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
-end_define
+begin_enum
+enum|enum
+name|sfxge_sw_ev
+block|{
+name|SFXGE_SW_EV_RX_QFLUSH_DONE
+init|=
+literal|1
+block|,
+name|SFXGE_SW_EV_RX_QFLUSH_FAILED
+block|,
+name|SFXGE_SW_EV_RX_QREFILL
+block|,
+name|SFXGE_SW_EV_TX_QFLUSH_DONE
+block|, }
+enum|;
+end_enum
 
 begin_define
 define|#
 directive|define
-name|SFXGE_MAGIC_RX_QFLUSH_FAILED
+name|SFXGE_SW_EV_MAGIC
+parameter_list|(
+name|_sw_ev
+parameter_list|)
 define|\
-value|(SFXGE_MAGIC_RESERVED | (2<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SFXGE_MAGIC_RX_QREFILL
-define|\
-value|(SFXGE_MAGIC_RESERVED | (3<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SFXGE_MAGIC_TX_QFLUSH_DONE
-define|\
-value|(SFXGE_MAGIC_RESERVED | (4<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
+value|(SFXGE_MAGIC_RESERVED | ((_sw_ev)<< SFXGE_MAGIC_DMAQ_LABEL_WIDTH))
 end_define
 
 begin_enum
