@@ -119,13 +119,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EFSYS_OPT_PCIE_TUNE
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EFSYS_OPT_PHY_NULL
 value|(0)
 end_define
@@ -1338,42 +1331,22 @@ begin_comment
 comment|/* EFSYS_OPT_NVRAM_SFX7101 */
 end_comment
 
-begin_comment
-comment|/* Support PCIe interface tuning */
-end_comment
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_PCIE_TUNE
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_FALCON
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"PCIE_TUNE requires FALCON"
+literal|"PCIE_TUNE is obsolete and is not supported."
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EFSYS_OPT_PCIE_TUNE */
-end_comment
 
 begin_comment
 comment|/* Obsolete option */

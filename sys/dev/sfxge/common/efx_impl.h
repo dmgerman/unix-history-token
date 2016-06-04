@@ -3254,16 +3254,6 @@ comment|/* EFSYS_OPT_FALCON_NIC_CFG_OVERRIDE */
 name|uint8_t
 name|enu_mon_devid
 decl_stmt|;
-if|#
-directive|if
-name|EFSYS_OPT_PCIE_TUNE
-name|unsigned
-name|int
-name|enu_nlanes
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_PCIE_TUNE */
 name|uint16_t
 name|enu_board_rev
 decl_stmt|;
