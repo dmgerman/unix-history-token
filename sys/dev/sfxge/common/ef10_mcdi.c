@@ -761,6 +761,10 @@ operator|=
 name|new_status
 expr_stmt|;
 comment|/* 		 * FIXME: Ignore detected MC REBOOT for now. 		 * 		 * The Siena support for checking for MC reboot from status 		 * flags is broken - see comments in siena_mcdi_poll_reboot(). 		 * As the generic MCDI code is shared the EF10 reboot 		 * detection suffers similar problems. 		 * 		 * Do not report an error when the boot status changes until 		 * this can be handled by common code drivers (and reworked to 		 * support Siena too). 		 */
+name|_NOTE
+argument_list|(
+argument|CONSTANTCONDITION
+argument_list|)
 if|if
 condition|(
 name|B_FALSE
