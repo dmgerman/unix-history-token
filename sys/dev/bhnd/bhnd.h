@@ -1354,6 +1354,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bhnd_attach_type
+name|bhnd_bus_generic_get_attach_type
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * Return the active host bridge core for the bhnd bus, if any, or NULL if  * not found.  *  * @param dev A bhnd bus device.  */
 end_comment

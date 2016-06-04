@@ -1412,7 +1412,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_FLASH_NONE
-value|0x000
+value|0x0
 end_define
 
 begin_comment
@@ -1423,7 +1423,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_SFLASH_ST
-value|0x100
+value|0x1
 end_define
 
 begin_comment
@@ -1434,7 +1434,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_SFLASH_AT
-value|0x200
+value|0x2
 end_define
 
 begin_comment
@@ -1445,7 +1445,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_NFLASH
-value|0x300
+value|0x3
 end_define
 
 begin_comment
@@ -1456,7 +1456,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_CAP_PFLASH
-value|0x700
+value|0x7
 end_define
 
 begin_comment
