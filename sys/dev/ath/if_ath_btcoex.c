@@ -800,19 +800,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* in dB, not used */
-comment|/* Implement a default dutycycle/period */
-name|btinfo
-operator|.
-name|bt_dutyCycle
-operator|=
-literal|55
-expr_stmt|;
-name|btinfo
-operator|.
-name|bt_period
-operator|=
-literal|40
-expr_stmt|;
 name|ath_hal_btcoex_set_info
 argument_list|(
 name|ah
