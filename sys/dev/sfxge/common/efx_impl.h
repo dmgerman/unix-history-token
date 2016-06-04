@@ -2175,7 +2175,7 @@ name|efx_filter_t
 typedef|;
 specifier|extern
 name|void
-name|falconsiena_filter_tbl_clear
+name|siena_filter_tbl_clear
 parameter_list|(
 name|__in
 name|efx_nic_t

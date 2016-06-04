@@ -39,7 +39,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_mac_multicast_list_set
+name|siena_mac_multicast_list_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -89,7 +89,7 @@ comment|/* emo_pdu_set */
 name|siena_mac_reconfigure
 block|,
 comment|/* emo_reconfigure */
-name|falconsiena_mac_multicast_list_set
+name|siena_mac_multicast_list_set
 block|,
 comment|/* emo_multicast_list_set */
 name|NULL
@@ -2859,7 +2859,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|void
-name|falconsiena_mac_multicast_hash_compute
+name|siena_mac_multicast_hash_compute
 argument_list|(
 name|__in_ecount
 argument_list|(
@@ -2993,7 +2993,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_mac_multicast_list_set
+name|siena_mac_multicast_list_set
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3066,7 +3066,7 @@ name|old_hash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|falconsiena_mac_multicast_hash_compute
+name|siena_mac_multicast_hash_compute
 argument_list|(
 name|epp
 operator|->

@@ -45,7 +45,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_init
+name|siena_filter_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -58,7 +58,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|falconsiena_filter_fini
+name|siena_filter_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -72,7 +72,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_restore
+name|siena_filter_restore
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -86,7 +86,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_add
+name|siena_filter_add
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -109,7 +109,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_delete
+name|siena_filter_delete
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -128,7 +128,7 @@ begin_function_decl
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_supported_filters
+name|siena_filter_supported_filters
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -170,22 +170,22 @@ name|efx_filter_ops_t
 name|__efx_filter_siena_ops
 init|=
 block|{
-name|falconsiena_filter_init
+name|siena_filter_init
 block|,
 comment|/* efo_init */
-name|falconsiena_filter_fini
+name|siena_filter_fini
 block|,
 comment|/* efo_fini */
-name|falconsiena_filter_restore
+name|siena_filter_restore
 block|,
 comment|/* efo_restore */
-name|falconsiena_filter_add
+name|siena_filter_add
 block|,
 comment|/* efo_add */
-name|falconsiena_filter_delete
+name|siena_filter_delete
 block|,
 comment|/* efo_delete */
-name|falconsiena_filter_supported_filters
+name|siena_filter_supported_filters
 block|,
 comment|/* efo_supported_filters */
 name|NULL
@@ -1633,7 +1633,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_spec_from_gen_spec
+name|siena_filter_spec_from_gen_spec
 parameter_list|(
 name|__out
 name|falconsiena_filter_spec_t
@@ -2314,7 +2314,7 @@ end_comment
 begin_function
 specifier|static
 name|uint16_t
-name|falconsiena_filter_tbl_hash
+name|siena_filter_tbl_hash
 parameter_list|(
 name|__in
 name|uint32_t
@@ -2411,7 +2411,7 @@ end_comment
 begin_function
 specifier|static
 name|uint16_t
-name|falconsiena_filter_tbl_increment
+name|siena_filter_tbl_increment
 parameter_list|(
 name|__in
 name|uint32_t
@@ -2439,7 +2439,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_filter_test_used
+name|siena_filter_test_used
 parameter_list|(
 name|__in
 name|falconsiena_filter_tbl_t
@@ -2495,7 +2495,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_set_used
+name|siena_filter_set_used
 parameter_list|(
 name|__in
 name|falconsiena_filter_tbl_t
@@ -2549,7 +2549,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_clear_used
+name|siena_filter_clear_used
 parameter_list|(
 name|__in
 name|falconsiena_filter_tbl_t
@@ -2615,7 +2615,7 @@ end_function
 begin_function
 specifier|static
 name|falconsiena_filter_tbl_id_t
-name|falconsiena_filter_tbl_id
+name|siena_filter_tbl_id
 parameter_list|(
 name|__in
 name|falconsiena_filter_type_t
@@ -2647,9 +2647,6 @@ operator|=
 name|EFX_FS_FILTER_TBL_RX_IP
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FS_FILTER_RX_MAC_FULL
 case|:
@@ -2689,9 +2686,6 @@ operator|=
 name|EFX_FS_FILTER_TBL_TX_MAC
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -2715,7 +2709,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_reset_search_depth
+name|siena_filter_reset_search_depth
 parameter_list|(
 name|__inout
 name|falconsiena_filter_t
@@ -2772,9 +2766,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FS_FILTER_TBL_RX_MAC
 case|:
@@ -2859,9 +2850,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -2876,7 +2864,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_push_rx_limits
+name|siena_filter_push_rx_limits
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2971,9 +2959,6 @@ operator|+
 name|FILTER_CTL_SRCH_FUDGE_WILD
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 if|if
 condition|(
 name|fsfp
@@ -3019,9 +3004,6 @@ name|FILTER_CTL_SRCH_FUDGE_WILD
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 name|EFX_BAR_WRITEO
 argument_list|(
 name|enp
@@ -3038,7 +3020,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_push_tx_limits
+name|siena_filter_push_tx_limits
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -3216,7 +3198,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|uint32_t
-name|falconsiena_filter_build
+name|siena_filter_build
 parameter_list|(
 name|__out
 name|efx_oword_t
@@ -3251,7 +3233,7 @@ name|fsfs_flags
 decl_stmt|;
 switch|switch
 condition|(
-name|falconsiena_filter_tbl_id
+name|siena_filter_tbl_id
 argument_list|(
 name|type
 argument_list|)
@@ -3347,9 +3329,6 @@ name|is_udp
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FS_FILTER_TBL_RX_MAC
 case|:
@@ -3436,9 +3415,6 @@ name|is_wild
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 case|case
 name|EFX_FS_FILTER_TBL_TX_IP
 case|:
@@ -3511,9 +3487,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FS_FILTER_TBL_TX_MAC
 case|:
@@ -3582,9 +3555,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -3634,7 +3604,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_push_entry
+name|siena_filter_push_entry
 parameter_list|(
 name|__inout
 name|efx_nic_t
@@ -3689,9 +3659,6 @@ name|B_TRUE
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FS_FILTER_RX_MAC_FULL
 case|:
@@ -3758,9 +3725,6 @@ name|B_TRUE
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -3794,7 +3758,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|boolean_t
-name|falconsiena_filter_equal
+name|siena_filter_equal
 parameter_list|(
 name|__in
 specifier|const
@@ -3814,7 +3778,7 @@ name|tbl_id
 decl_stmt|;
 name|tbl_id
 operator|=
-name|falconsiena_filter_tbl_id
+name|siena_filter_tbl_id
 argument_list|(
 name|left
 operator|->
@@ -3898,7 +3862,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_search
+name|siena_filter_search
 parameter_list|(
 name|__in
 name|falconsiena_filter_tbl_t
@@ -3941,14 +3905,14 @@ name|depth
 decl_stmt|;
 name|hash
 operator|=
-name|falconsiena_filter_tbl_hash
+name|siena_filter_tbl_hash
 argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
 name|incr
 operator|=
-name|falconsiena_filter_tbl_increment
+name|siena_filter_tbl_increment
 argument_list|(
 name|key
 argument_list|)
@@ -3978,14 +3942,14 @@ block|{
 comment|/* 		 * Return success if entry is used and matches this spec 		 * or entry is unused and we are trying to insert. 		 */
 if|if
 condition|(
-name|falconsiena_filter_test_used
+name|siena_filter_test_used
 argument_list|(
 name|fsftp
 argument_list|,
 name|filter_idx
 argument_list|)
 condition|?
-name|falconsiena_filter_equal
+name|siena_filter_equal
 argument_list|(
 name|spec
 argument_list|,
@@ -4059,7 +4023,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_clear_entry
+name|siena_filter_clear_entry
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4081,7 +4045,7 @@ name|filter
 decl_stmt|;
 if|if
 condition|(
-name|falconsiena_filter_test_used
+name|siena_filter_test_used
 argument_list|(
 name|fsftp
 argument_list|,
@@ -4089,7 +4053,7 @@ name|index
 argument_list|)
 condition|)
 block|{
-name|falconsiena_filter_clear_used
+name|siena_filter_clear_used
 argument_list|(
 name|fsftp
 argument_list|,
@@ -4101,7 +4065,7 @@ argument_list|(
 name|filter
 argument_list|)
 expr_stmt|;
-name|falconsiena_filter_push_entry
+name|siena_filter_push_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -4149,7 +4113,7 @@ end_function
 
 begin_function
 name|void
-name|falconsiena_filter_tbl_clear
+name|siena_filter_tbl_clear
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4214,7 +4178,7 @@ operator|++
 name|index
 control|)
 block|{
-name|falconsiena_filter_clear_entry
+name|siena_filter_clear_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -4232,7 +4196,7 @@ name|fsft_used
 operator|==
 literal|0
 condition|)
-name|falconsiena_filter_reset_search_depth
+name|siena_filter_reset_search_depth
 argument_list|(
 name|fsfp
 argument_list|,
@@ -4255,7 +4219,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_init
+name|siena_filter_init
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4320,9 +4284,6 @@ operator|->
 name|en_family
 condition|)
 block|{
-if|#
-directive|if
-name|EFSYS_OPT_SIENA
 case|case
 name|EFX_FAMILY_SIENA
 case|:
@@ -4391,9 +4352,6 @@ operator|=
 name|FR_CZ_TX_MAC_FILTER_TBL0_ROWS
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
 default|default:
 name|rc
 operator|=
@@ -4595,7 +4553,7 @@ argument_list|(
 name|fail2
 argument_list|)
 expr_stmt|;
-name|falconsiena_filter_fini
+name|siena_filter_fini
 argument_list|(
 name|enp
 argument_list|)
@@ -4622,7 +4580,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|falconsiena_filter_fini
+name|siena_filter_fini
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4839,7 +4797,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_restore
+name|siena_filter_restore
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -4932,7 +4890,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|falconsiena_filter_test_used
+name|siena_filter_test_used
 argument_list|(
 name|fsftp
 argument_list|,
@@ -4955,7 +4913,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|falconsiena_filter_build
+name|siena_filter_build
 argument_list|(
 operator|&
 name|filter
@@ -4974,7 +4932,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|falconsiena_filter_push_entry
+name|siena_filter_push_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -4996,12 +4954,12 @@ name|fail2
 goto|;
 block|}
 block|}
-name|falconsiena_filter_push_rx_limits
+name|siena_filter_push_rx_limits
 argument_list|(
 name|enp
 argument_list|)
 expr_stmt|;
-name|falconsiena_filter_push_tx_limits
+name|siena_filter_push_tx_limits
 argument_list|(
 name|enp
 argument_list|)
@@ -5059,7 +5017,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_add
+name|siena_filter_add
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5133,7 +5091,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|falconsiena_filter_spec_from_gen_spec
+name|siena_filter_spec_from_gen_spec
 argument_list|(
 operator|&
 name|fs_spec
@@ -5149,7 +5107,7 @@ name|fail1
 goto|;
 name|tbl_id
 operator|=
-name|falconsiena_filter_tbl_id
+name|siena_filter_tbl_id
 argument_list|(
 name|fs_spec
 operator|.
@@ -5185,7 +5143,7 @@ goto|;
 block|}
 name|key
 operator|=
-name|falconsiena_filter_build
+name|siena_filter_build
 argument_list|(
 operator|&
 name|filter
@@ -5205,7 +5163,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|falconsiena_filter_search
+name|siena_filter_search
 argument_list|(
 name|fsftp
 argument_list|,
@@ -5255,7 +5213,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|falconsiena_filter_test_used
+name|siena_filter_test_used
 argument_list|(
 name|fsftp
 argument_list|,
@@ -5279,7 +5237,7 @@ name|fail4
 goto|;
 block|}
 block|}
-name|falconsiena_filter_set_used
+name|siena_filter_set_used
 argument_list|(
 name|fsftp
 argument_list|,
@@ -5326,19 +5284,19 @@ name|tbl_id
 operator|==
 name|EFX_FS_FILTER_TBL_TX_MAC
 condition|)
-name|falconsiena_filter_push_tx_limits
+name|siena_filter_push_tx_limits
 argument_list|(
 name|enp
 argument_list|)
 expr_stmt|;
 else|else
-name|falconsiena_filter_push_rx_limits
+name|siena_filter_push_rx_limits
 argument_list|(
 name|enp
 argument_list|)
 expr_stmt|;
 block|}
-name|falconsiena_filter_push_entry
+name|siena_filter_push_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -5419,7 +5377,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_delete
+name|siena_filter_delete
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -5485,7 +5443,7 @@ condition|(
 operator|(
 name|rc
 operator|=
-name|falconsiena_filter_spec_from_gen_spec
+name|siena_filter_spec_from_gen_spec
 argument_list|(
 operator|&
 name|fs_spec
@@ -5501,7 +5459,7 @@ name|fail1
 goto|;
 name|tbl_id
 operator|=
-name|falconsiena_filter_tbl_id
+name|siena_filter_tbl_id
 argument_list|(
 name|fs_spec
 operator|.
@@ -5520,7 +5478,7 @@ index|]
 expr_stmt|;
 name|key
 operator|=
-name|falconsiena_filter_build
+name|siena_filter_build
 argument_list|(
 operator|&
 name|filter
@@ -5540,7 +5498,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|falconsiena_filter_search
+name|siena_filter_search
 argument_list|(
 name|fsftp
 argument_list|,
@@ -5567,7 +5525,7 @@ condition|)
 goto|goto
 name|fail2
 goto|;
-name|falconsiena_filter_clear_entry
+name|siena_filter_clear_entry
 argument_list|(
 name|enp
 argument_list|,
@@ -5584,7 +5542,7 @@ name|fsft_used
 operator|==
 literal|0
 condition|)
-name|falconsiena_filter_reset_search_depth
+name|siena_filter_reset_search_depth
 argument_list|(
 name|fsfp
 argument_list|,
@@ -5651,7 +5609,7 @@ begin_function
 specifier|static
 name|__checkReturn
 name|efx_rc_t
-name|falconsiena_filter_supported_filters
+name|siena_filter_supported_filters
 parameter_list|(
 name|__in
 name|efx_nic_t
