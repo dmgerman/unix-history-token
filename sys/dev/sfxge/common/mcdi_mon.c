@@ -1748,7 +1748,7 @@ name|SENSOR_INFO_OUT_MASK
 argument_list|)
 operator|&
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|MC_CMD_SENSOR_PAGE0_NEXT
 operator|)
