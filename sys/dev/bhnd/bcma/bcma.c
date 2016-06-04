@@ -290,8 +290,10 @@ name|dinfo
 operator|->
 name|res_agent
 operator|=
-name|bhnd_alloc_resource
+name|BHND_BUS_ALLOC_RESOURCE
 argument_list|(
+name|dev
+argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY

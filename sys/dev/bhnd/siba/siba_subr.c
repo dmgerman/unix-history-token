@@ -671,9 +671,17 @@ decl_stmt|;
 comment|/* Verify that base + size will not overflow */
 if|if
 condition|(
+name|size
+operator|>
+literal|0
+operator|&&
 name|UINT32_MAX
 operator|-
+operator|(
 name|size
+operator|-
+literal|1
+operator|)
 operator|<
 name|base
 condition|)
@@ -812,9 +820,11 @@ name|base
 argument_list|,
 name|base
 operator|+
+operator|(
 name|r_size
 operator|-
 literal|1
+operator|)
 argument_list|,
 name|r_size
 argument_list|)

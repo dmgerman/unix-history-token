@@ -359,8 +359,10 @@ index|[
 name|cfgidx
 index|]
 operator|=
-name|bhnd_alloc_resource
+name|BHND_BUS_ALLOC_RESOURCE
 argument_list|(
+name|dev
+argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY
@@ -1784,14 +1786,6 @@ argument_list|,
 name|adm_offset
 argument_list|)
 expr_stmt|;
-comment|/* Skip disabled entries */
-if|if
-condition|(
-name|adm
-operator|&
-name|SIBA_AM_ADEN
-condition|)
-continue|continue;
 comment|/* Parse the value */
 if|if
 condition|(
@@ -2095,7 +2089,9 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|device
+name|ccid
+operator|.
+name|chip_id
 condition|)
 block|{
 case|case
