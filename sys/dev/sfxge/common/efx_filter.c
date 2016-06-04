@@ -920,7 +920,7 @@ operator|*
 name|addrs
 argument_list|,
 name|__in
-name|int
+name|uint32_t
 name|count
 argument_list|)
 block|{
