@@ -1535,16 +1535,6 @@ block|{
 name|efx_rc_t
 function_decl|(
 modifier|*
-name|emo_reset
-function_decl|)
-parameter_list|(
-name|efx_nic_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|efx_rc_t
-function_decl|(
-modifier|*
 name|emo_reconfigure
 function_decl|)
 parameter_list|(
