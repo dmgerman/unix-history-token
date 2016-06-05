@@ -198,6 +198,11 @@ name|defined
 argument_list|(
 name|__llvm__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_MUM_FRESH_GCC
+argument_list|)
 end_if
 
 begin_define
