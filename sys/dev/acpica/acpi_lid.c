@@ -107,6 +107,12 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|ACPI_HANDLE
+name|acpi_lid_handle
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
 argument_list|(
@@ -397,6 +403,8 @@ name|lid_dev
 operator|=
 name|dev
 expr_stmt|;
+name|acpi_lid_handle
+operator|=
 name|sc
 operator|->
 name|lid_handle
