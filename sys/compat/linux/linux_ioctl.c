@@ -5718,11 +5718,7 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+break|break;
 switch|switch
 condition|(
 name|bsd_line
