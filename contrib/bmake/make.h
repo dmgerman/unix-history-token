@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.98 2016/02/18 18:29:14 christos Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.99 2016/06/03 01:21:59 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -509,6 +509,11 @@ directive|define
 name|DONECYCLE
 value|0x2000
 comment|/* Used by MakePrintStatus */
+define|#
+directive|define
+name|INTERNAL
+value|0x4000
+comment|/* Internal use only */
 enum|enum
 name|enum_made
 block|{
