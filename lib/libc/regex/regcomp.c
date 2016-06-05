@@ -4334,7 +4334,7 @@ name|void
 operator|)
 name|REQUIRE
 argument_list|(
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
 name|table
 argument_list|,
@@ -4364,7 +4364,7 @@ control|)
 block|{
 if|if
 condition|(
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
 name|table
 argument_list|,
@@ -4375,7 +4375,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
 name|table
 argument_list|,
