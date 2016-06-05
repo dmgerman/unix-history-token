@@ -317,8 +317,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|thread
-name|thread0
+name|thread0_storage
+name|thread0_st
 name|__aligned
 argument_list|(
 literal|16

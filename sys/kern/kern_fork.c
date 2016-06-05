@@ -4335,9 +4335,10 @@ literal|"fork_exit: new thread %p (td_sched %p, pid %d, %s)"
 argument_list|,
 name|td
 argument_list|,
+name|td_get_sched
+argument_list|(
 name|td
-operator|->
-name|td_sched
+argument_list|)
 argument_list|,
 name|p
 operator|->

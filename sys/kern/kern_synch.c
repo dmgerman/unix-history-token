@@ -1855,9 +1855,10 @@ name|td
 operator|->
 name|td_tid
 argument_list|,
+name|td_get_sched
+argument_list|(
 name|td
-operator|->
-name|td_sched
+argument_list|)
 argument_list|,
 name|td
 operator|->
@@ -1990,9 +1991,10 @@ name|td
 operator|->
 name|td_tid
 argument_list|,
+name|td_get_sched
+argument_list|(
 name|td
-operator|->
-name|td_sched
+argument_list|)
 argument_list|,
 name|td
 operator|->

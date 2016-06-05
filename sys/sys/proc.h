@@ -1007,12 +1007,6 @@ name|td_md
 decl_stmt|;
 comment|/* (k) Any machine-dependent fields. */
 name|struct
-name|td_sched
-modifier|*
-name|td_sched
-decl_stmt|;
-comment|/* (*) Scheduler-specific data. */
-name|struct
 name|kaudit_record
 modifier|*
 name|td_ar
@@ -1084,6 +1078,24 @@ name|int
 name|td_oncpu
 decl_stmt|;
 comment|/* (t) Which cpu we are on. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|thread0_storage
+block|{
+name|struct
+name|thread
+name|t0st_thread
+decl_stmt|;
+name|uint64_t
+name|t0st_sched
+index|[
+literal|10
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2860,12 +2872,6 @@ modifier|*
 name|p_label
 decl_stmt|;
 comment|/* (*) Proc (not subject) MAC label. */
-name|struct
-name|p_sched
-modifier|*
-name|p_sched
-decl_stmt|;
-comment|/* (*) Scheduler-specific data. */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -4483,14 +4489,21 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|thread
-name|thread0
+name|thread0_storage
+name|thread0_st
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Primary thread in proc0. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|thread0
+value|(thread0_st.t0st_thread)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -6355,6 +6368,35 @@ name|save
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|static
+name|__inline
+name|__pure2
+expr|struct
+name|td_sched
+operator|*
+name|td_get_sched
+argument_list|(
+argument|struct thread *td
+argument_list|)
+block|{
+return|return
+operator|(
+operator|(
+expr|struct
+name|td_sched
+operator|*
+operator|)
+operator|&
+name|td
+index|[
+literal|1
+index|]
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_endif
 endif|#
