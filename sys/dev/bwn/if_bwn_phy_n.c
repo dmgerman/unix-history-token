@@ -321,6 +321,20 @@ argument_list|)
 return|;
 else|#
 directive|else
+name|device_printf
+argument_list|(
+name|mac
+operator|->
+name|mac_sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: BWN_GPL_PHY not in kernel config; "
+literal|"no PHY-N support\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
