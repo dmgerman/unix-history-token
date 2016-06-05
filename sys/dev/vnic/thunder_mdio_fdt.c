@@ -1244,6 +1244,9 @@ operator|->
 name|di_rl
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|INTRNG
 name|ofw_bus_intr_to_rl
 argument_list|(
 name|dev
@@ -1258,6 +1261,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Add newbus device for this FDT node */
 name|child
 operator|=

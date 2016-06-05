@@ -143,6 +143,23 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

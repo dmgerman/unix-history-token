@@ -2098,14 +2098,7 @@ directive|ifdef
 name|INTRNG
 return|return
 operator|(
-name|intr_fdt_map_irq
-argument_list|(
-name|iparent
-argument_list|,
-name|intr
-argument_list|,
-name|icells
-argument_list|)
+name|INTR_IRQ_INVALID
 operator|)
 return|;
 else|#

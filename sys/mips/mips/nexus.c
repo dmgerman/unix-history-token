@@ -2632,6 +2632,16 @@ modifier|*
 name|intr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INTRNG
+return|return
+operator|(
+name|INTR_IRQ_INVALID
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|intr_fdt_map_irq
@@ -2644,6 +2654,8 @@ name|icells
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
