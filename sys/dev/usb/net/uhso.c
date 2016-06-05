@@ -5998,6 +5998,8 @@ comment|/* FALLTHROUGH */
 case|case
 name|USB_ST_SETUP
 case|:
+name|tr_setup
+label|:
 name|pc
 operator|=
 name|usbd_xfer_get_frame
@@ -6190,7 +6192,14 @@ operator|==
 name|USB_ERR_CANCELLED
 condition|)
 break|break;
-break|break;
+name|usbd_xfer_set_stall
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+goto|goto
+name|tr_setup
+goto|;
 block|}
 block|}
 end_function
