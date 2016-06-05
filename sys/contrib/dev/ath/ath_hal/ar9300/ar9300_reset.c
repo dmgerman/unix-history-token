@@ -12101,7 +12101,7 @@ name|ATH_INI_POST
 operator|)
 operator|&&
 operator|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -12707,7 +12707,8 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (AR_SREV_JUPITER_20(ah) || AR_SREV_APHRODITE(ah)) {         ar9300_prog_ini(ah,&ahp->ah_ini_BTCOEX_MAX_TXPWR, 1);     }
+comment|/* XXX TODO! */
+block|if (AR_SREV_JUPITER_20_OR_LATER(ah) || AR_SREV_APHRODITE(ah)) {         ar9300_prog_ini(ah,&ahp->ah_ini_BTCOEX_MAX_TXPWR, 1);     }
 endif|#
 directive|endif
 comment|/* Override INI with chip specific configuration */
@@ -17382,7 +17383,7 @@ operator|.
 name|halMciSupport
 operator|&&
 operator|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
