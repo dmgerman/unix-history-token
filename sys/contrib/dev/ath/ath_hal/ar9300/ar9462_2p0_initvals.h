@@ -26,11 +26,15 @@ name|ar9462_2p0_mac_postamble
 value|ar9331_1p1_mac_postamble
 end_define
 
+begin_comment
+comment|//#define ar9462_2p0_common_wo_xlna_rx_gain ar9300Common_wo_xlna_rx_gain_table_2p2
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ar9462_2p0_common_wo_xlna_rx_gain
-value|ar9300Common_wo_xlna_rx_gain_table_2p2
+value|ar9300Common_wo_xlna_rx_gain_table_osprey_2p2
 end_define
 
 begin_define
@@ -50,7 +54,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_modes_fast_clock
 index|[]
 index|[
@@ -137,7 +141,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_baseband_postamble
 index|[]
 index|[
@@ -812,7 +816,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_common_rx_gain
 index|[]
 index|[
@@ -2363,7 +2367,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_pciephy_clkreq_disable_L1
 index|[]
 index|[
@@ -2396,7 +2400,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_radio_postamble_sys2ant
 index|[]
 index|[
@@ -2447,7 +2451,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_modes_low_ob_db_tx_gain
 index|[]
 index|[
@@ -3242,7 +3246,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_soc_postamble
 index|[]
 index|[
@@ -3269,7 +3273,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_baseband_core
 index|[]
 index|[
@@ -4160,7 +4164,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_radio_postamble
 index|[]
 index|[
@@ -4223,7 +4227,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_modes_mix_ob_db_tx_gain
 index|[]
 index|[
@@ -4946,7 +4950,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_modes_high_ob_db_tx_gain
 index|[]
 index|[
@@ -5741,7 +5745,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_radio_core
 index|[]
 index|[
@@ -6080,7 +6084,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_soc_preamble
 index|[]
 index|[
@@ -6119,7 +6123,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_mac_core
 index|[]
 index|[
@@ -7088,7 +7092,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_common_mixed_rx_gain
 index|[]
 index|[
@@ -8639,7 +8643,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_baseband_postamble_5g_xlna
 index|[]
 index|[
@@ -8666,7 +8670,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_baseband_core_mix_rxgain
 index|[]
 index|[
@@ -8687,7 +8691,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u32
+name|uint32_t
 name|ar9462_2p0_baseband_postamble_mix_rxgain
 index|[]
 index|[
