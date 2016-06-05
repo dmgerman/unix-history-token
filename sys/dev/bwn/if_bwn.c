@@ -7952,6 +7952,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|device_printf(sc->sc_dev, "%s: high=0x%08x, have_a=%d, have_bg=%d," 		    " deviceid=0x%04x, siba_deviceid=0x%04x\n", 		    __func__, 		    high, 		    have_a, 		    have_bg, 		    siba_get_pci_device(sc->sc_dev), 		    siba_get_chipid(sc->sc_dev));
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -7999,12 +8005,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-if|#
-directive|if
-literal|0
-block|device_printf(sc->sc_dev, "%s: high=0x%08x, have_a=%d, have_bg=%d," 	    " deviceid=0x%04x, siba_deviceid=0x%04x\n", 	    __func__, 	    high, 	    have_a, 	    have_bg, 	    siba_get_pci_device(sc->sc_dev), 	    siba_get_chipid(sc->sc_dev));
-endif|#
-directive|endif
+comment|/* 	 * This is the whitelist of devices which we "believe" 	 * the SPROM PHY config from.  The rest are "guessed". 	 */
 if|if
 condition|(
 name|siba_get_pci_device
@@ -8015,6 +8016,15 @@ name|sc_dev
 argument_list|)
 operator|!=
 literal|0x4312
+operator|&&
+name|siba_get_pci_device
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|!=
+literal|0x4315
 operator|&&
 name|siba_get_pci_device
 argument_list|(
