@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nonints.h,v 1.72 2016/02/18 20:25:08 sjg Exp $	*/
+comment|/*	$NetBSD: nonints.h,v 1.73 2016/06/03 01:21:59 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -492,6 +492,21 @@ name|char
 modifier|*
 parameter_list|,
 name|Boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|cached_realpath
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
