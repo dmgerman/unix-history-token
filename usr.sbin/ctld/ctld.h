@@ -909,6 +909,9 @@ decl_stmt|;
 name|size_t
 name|conn_max_burst_length
 decl_stmt|;
+name|size_t
+name|conn_first_burst_length
+decl_stmt|;
 name|int
 name|conn_immediate_data
 decl_stmt|;

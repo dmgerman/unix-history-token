@@ -241,6 +241,9 @@ decl_stmt|;
 name|size_t
 name|cs_max_burst_length
 decl_stmt|;
+name|size_t
+name|cs_first_burst_length
+decl_stmt|;
 name|bool
 name|cs_immediate_data
 decl_stmt|;

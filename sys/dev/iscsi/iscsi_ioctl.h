@@ -276,10 +276,10 @@ name|ISCSI_OFFLOAD_LEN
 index|]
 decl_stmt|;
 name|int
-name|iss_spare
-index|[
-literal|2
-index|]
+name|iss_max_burst_length
+decl_stmt|;
+name|int
+name|iss_first_burst_length
 decl_stmt|;
 block|}
 struct|;

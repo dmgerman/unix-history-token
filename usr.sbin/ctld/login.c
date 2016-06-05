@@ -2816,7 +2816,12 @@ operator|->
 name|conn_data_segment_limit
 expr_stmt|;
 block|}
-comment|/* 		 * We don't pass the value to the kernel; it only enforces 		 * hardcoded limit anyway. 		 */
+name|conn
+operator|->
+name|conn_first_burst_length
+operator|=
+name|tmp
+expr_stmt|;
 name|keys_add_int
 argument_list|(
 name|response_keys
