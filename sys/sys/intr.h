@@ -28,34 +28,6 @@ name|INTR_IRQ_INVALID
 value|0xFFFFFFFF
 end_define
 
-begin_enum
-enum|enum
-name|intr_map_data_type
-block|{
-name|INTR_MAP_DATA_ACPI
-block|,
-name|INTR_MAP_DATA_FDT
-block|,
-name|INTR_MAP_DATA_GPIO
-block|, }
-enum|;
-end_enum
-
-begin_struct
-struct|struct
-name|intr_map_data
-block|{
-name|enum
-name|intr_map_data_type
-name|type
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

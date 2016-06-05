@@ -2263,14 +2263,6 @@ operator|+
 name|size
 operator|)
 expr_stmt|;
-name|ddata
-operator|->
-name|idd_data
-operator|->
-name|size
-operator|=
-name|extsize
-expr_stmt|;
 return|return
 operator|(
 name|ddata
