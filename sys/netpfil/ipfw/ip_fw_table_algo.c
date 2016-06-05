@@ -2004,6 +2004,12 @@ operator|++
 operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|>
+literal|0
+condition|)
 operator|*
 name|cp
 operator|=
