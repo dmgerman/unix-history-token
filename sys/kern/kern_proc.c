@@ -1053,7 +1053,9 @@ end_comment
 begin_function
 name|void
 name|procinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sx_init
 argument_list|(
