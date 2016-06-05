@@ -2182,6 +2182,18 @@ name|struct
 name|ar9300_ini_array
 name|ah_ini_BTCOEX_MAX_TXPWR
 decl_stmt|;
+name|struct
+name|ar9300_ini_array
+name|ah_ini_modes_rxgain_xlna
+decl_stmt|;
+name|struct
+name|ar9300_ini_array
+name|ah_ini_modes_rxgain_bb_core
+decl_stmt|;
+name|struct
+name|ar9300_ini_array
+name|ah_ini_modes_rxgain_bb_postamble
+decl_stmt|;
 comment|/*       * New INI format starting with Osprey 2.0 INI.      * Pre, core, post arrays for each sub-system (mac, bb, radio, soc)      */
 define|#
 directive|define
