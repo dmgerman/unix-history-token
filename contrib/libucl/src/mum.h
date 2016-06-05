@@ -148,6 +148,12 @@ end_endif
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNUC__
@@ -179,6 +185,11 @@ define|#
 directive|define
 name|_MUM_FRESH_GCC
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
