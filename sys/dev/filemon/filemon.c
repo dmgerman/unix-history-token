@@ -154,17 +154,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|COMPAT_IA32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|COMPAT_FREEBSD32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_ARCH32
 argument_list|)
 end_if
 
@@ -180,34 +170,16 @@ directive|include
 file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<compat/freebsd32/freebsd32_util.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|elf32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|elf64_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static

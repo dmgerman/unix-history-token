@@ -65,39 +65,6 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_IA32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_FREEBSD32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_ARCH32
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysent
-name|freebsd32_sysent
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
@@ -2101,17 +2068,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|COMPAT_IA32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|COMPAT_FREEBSD32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_ARCH32
 argument_list|)
 name|freebsd32_sysent
 index|[
@@ -2219,7 +2176,7 @@ name|filemon_wrapper_linkat
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* COMPAT_ARCH32 */
+comment|/* COMPAT_FREEBSD32 */
 name|filemon_exec_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -2378,17 +2335,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|COMPAT_IA32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|COMPAT_FREEBSD32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_ARCH32
 argument_list|)
 name|freebsd32_sysent
 index|[
@@ -2496,7 +2443,7 @@ name|sys_linkat
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* COMPAT_ARCH32 */
+comment|/* COMPAT_FREEBSD32 */
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|process_exec
