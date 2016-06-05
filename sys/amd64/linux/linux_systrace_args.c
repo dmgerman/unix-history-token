@@ -6266,7 +6266,7 @@ name|p
 operator|->
 name|param
 expr_stmt|;
-comment|/* struct l_sched_param * */
+comment|/* struct sched_param * */
 operator|*
 name|n_args
 operator|=
@@ -6308,7 +6308,7 @@ name|p
 operator|->
 name|param
 expr_stmt|;
-comment|/* struct l_sched_param * */
+comment|/* struct sched_param * */
 operator|*
 name|n_args
 operator|=
@@ -6360,7 +6360,7 @@ name|p
 operator|->
 name|param
 expr_stmt|;
-comment|/* struct l_sched_param * */
+comment|/* struct sched_param * */
 operator|*
 name|n_args
 operator|=
@@ -15672,7 +15672,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct l_sched_param *"
+literal|"struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -15702,7 +15702,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct l_sched_param *"
+literal|"struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -15740,7 +15740,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct l_sched_param *"
+literal|"struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
