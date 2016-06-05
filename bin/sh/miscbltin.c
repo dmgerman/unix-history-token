@@ -1676,7 +1676,7 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_SBSIZE
 block|{
-literal|"sbsize"
+literal|"socket buffer size"
 block|,
 literal|"bytes"
 block|,
@@ -1735,7 +1735,7 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_UMTXP
 block|{
-literal|"umtxp"
+literal|"umtx shared locks"
 block|,
 operator|(
 name|char
