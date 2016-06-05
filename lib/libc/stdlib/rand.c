@@ -119,37 +119,6 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_WEAK_SEEDING
-comment|/*  * Historic implementation compatibility.  * The random sequences do not vary much with the seed,  * even with overflowing.  */
-return|return
-operator|(
-operator|(
-operator|*
-name|ctx
-operator|=
-operator|*
-name|ctx
-operator|*
-literal|1103515245
-operator|+
-literal|12345
-operator|)
-operator|%
-operator|(
-operator|(
-name|u_long
-operator|)
-name|RAND_MAX
-operator|+
-literal|1
-operator|)
-operator|)
-return|;
-else|#
-directive|else
-comment|/* !USE_WEAK_SEEDING */
 comment|/*  * Compute x = (7^5 * x) mod (2^31 - 1)  * without overflowing 31 bits:  *      (2^31 - 1) = 127773 * (7^5) + 2836  * From "Random number generators: good ones are hard to find",  * Park and Miller, Communications of the ACM, vol. 31, no. 10,  * October 1988, p. 1195.  */
 name|long
 name|hi
@@ -158,18 +127,27 @@ name|lo
 decl_stmt|,
 name|x
 decl_stmt|;
-comment|/* Must be in [1, 0x7ffffffe] range at this point. */
-name|hi
+comment|/* Transform to [1, 0x7ffffffe] range. */
+name|x
 operator|=
+operator|(
 operator|*
 name|ctx
+operator|%
+literal|0x7ffffffe
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|hi
+operator|=
+name|x
 operator|/
 literal|127773
 expr_stmt|;
 name|lo
 operator|=
-operator|*
-name|ctx
+name|x
 operator|%
 literal|127773
 expr_stmt|;
@@ -193,22 +171,20 @@ name|x
 operator|+=
 literal|0x7fffffff
 expr_stmt|;
+comment|/* Transform to [0, 0x7ffffffd] range. */
+name|x
+operator|--
+expr_stmt|;
 operator|*
 name|ctx
 operator|=
 name|x
 expr_stmt|;
-comment|/* Transform to [0, 0x7ffffffd] range. */
 return|return
 operator|(
 name|x
-operator|-
-literal|1
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* !USE_WEAK_SEEDING */
 block|}
 end_function
 
@@ -217,7 +193,6 @@ name|int
 name|rand_r
 parameter_list|(
 name|unsigned
-name|int
 modifier|*
 name|ctx
 parameter_list|)
@@ -228,30 +203,11 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_WEAK_SEEDING
 name|val
 operator|=
 operator|*
 name|ctx
 expr_stmt|;
-else|#
-directive|else
-comment|/* Transform to [1, 0x7ffffffe] range. */
-name|val
-operator|=
-operator|(
-operator|*
-name|ctx
-operator|%
-literal|0x7ffffffe
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|r
 operator|=
 name|do_rand
@@ -260,35 +216,14 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_WEAK_SEEDING
 operator|*
 name|ctx
 operator|=
 operator|(
 name|unsigned
-name|int
 operator|)
 name|val
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|ctx
-operator|=
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
-name|val
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|r
@@ -302,27 +237,9 @@ specifier|static
 name|u_long
 name|next
 init|=
-ifdef|#
-directive|ifdef
-name|USE_WEAK_SEEDING
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-literal|2
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -347,7 +264,7 @@ begin_function
 name|void
 name|srand
 parameter_list|(
-name|u_int
+name|unsigned
 name|seed
 parameter_list|)
 block|{
@@ -355,22 +272,6 @@ name|next
 operator|=
 name|seed
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|USE_WEAK_SEEDING
-comment|/* Transform to [1, 0x7ffffffe] range. */
-name|next
-operator|=
-operator|(
-name|next
-operator|%
-literal|0x7ffffffe
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -436,22 +337,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|USE_WEAK_SEEDING
-comment|/* Transform to [1, 0x7ffffffe] range. */
-name|next
-operator|=
-operator|(
-name|next
-operator|%
-literal|0x7ffffffe
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
