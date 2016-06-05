@@ -5481,6 +5481,11 @@ operator|->
 name|sc_snd
 argument_list|)
 expr_stmt|;
+name|bwn_release_firmware
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
 name|BWN_LOCK_DESTROY
 argument_list|(
 name|sc
@@ -8853,6 +8858,11 @@ argument_list|(
 name|sc
 operator|->
 name|sc_dev
+argument_list|)
+expr_stmt|;
+name|bwn_release_firmware
+argument_list|(
+name|mac
 argument_list|)
 expr_stmt|;
 return|return
@@ -22662,6 +22672,11 @@ argument_list|,
 literal|"no PCM for rev %d\n"
 argument_list|,
 name|rev
+argument_list|)
+expr_stmt|;
+name|bwn_release_firmware
+argument_list|(
+name|mac
 argument_list|)
 expr_stmt|;
 return|return
