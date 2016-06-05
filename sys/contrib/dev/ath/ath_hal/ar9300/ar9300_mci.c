@@ -319,7 +319,7 @@ block|{
 comment|/* to be tested in emulation */
 if|if
 condition|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -1713,7 +1713,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -1936,7 +1936,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -2014,7 +2014,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -4608,7 +4608,7 @@ condition|(
 name|is_2g
 operator|&&
 operator|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -4651,7 +4651,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -7722,7 +7722,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_JUPITER_20
+name|AR_SREV_JUPITER_20_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
