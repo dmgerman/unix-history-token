@@ -567,13 +567,6 @@ name|low
 decl_stmt|,
 name|hi
 decl_stmt|;
-name|MTKSWITCH_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|mtkswitch_phy_write_locked
 argument_list|(
 name|sc
@@ -648,13 +641,6 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
-name|MTKSWITCH_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|mtkswitch_phy_write_locked
 argument_list|(
 name|sc
