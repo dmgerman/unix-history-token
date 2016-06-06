@@ -1490,13 +1490,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vnet_pfil_init
 parameter_list|(
 specifier|const
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|LIST_INIT
@@ -1513,11 +1514,6 @@ argument_list|,
 literal|"shared"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1527,13 +1523,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vnet_pfil_uninit
 parameter_list|(
 specifier|const
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|KASSERT
@@ -1560,11 +1557,6 @@ operator|&
 name|V_pfil_lock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
