@@ -1400,6 +1400,9 @@ decl_stmt|;
 name|u_int
 name|ifru_fib
 decl_stmt|;
+name|u_char
+name|ifru_vlan_pcp
+decl_stmt|;
 block|}
 name|ifr_ifru
 union|;
@@ -1483,6 +1486,11 @@ directive|define
 name|ifr_fib
 value|ifr_ifru.ifru_fib
 comment|/* interface fib */
+define|#
+directive|define
+name|ifr_vlan_pcp
+value|ifr_ifru.ifru_vlan_pcp
+comment|/* VLAN priority */
 block|}
 struct|;
 end_struct

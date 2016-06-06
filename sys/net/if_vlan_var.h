@@ -103,6 +103,120 @@ name|SIOCGETVLAN
 value|SIOCGIFGENERIC
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIOCGVLANPCP
+value|_IOWR('i', 152, struct ifreq)
+end_define
+
+begin_comment
+comment|/* Get VLAN PCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSVLANPCP
+value|_IOW('i', 153, struct ifreq)
+end_define
+
+begin_comment
+comment|/* Set VLAN PCP */
+end_comment
+
+begin_comment
+comment|/*  * Names for 802.1q priorities ("802.1p").  Notice that in this scheme,  * (0< 1), allowing default 0-tagged traffic to take priority over background  * tagged traffic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_BK
+value|1
+end_define
+
+begin_comment
+comment|/* Background (lowest) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_BE
+value|0
+end_define
+
+begin_comment
+comment|/* Best effort (default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_EE
+value|2
+end_define
+
+begin_comment
+comment|/* Excellent effort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_CA
+value|3
+end_define
+
+begin_comment
+comment|/* Critical applications */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_VI
+value|4
+end_define
+
+begin_comment
+comment|/* Video,< 100ms latency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_VO
+value|5
+end_define
+
+begin_comment
+comment|/* Video,< 10ms latency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_IC
+value|6
+end_define
+
+begin_comment
+comment|/* Internetwork control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE8021Q_PCP_NC
+value|7
+end_define
+
+begin_comment
+comment|/* Network control (highest) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -115,6 +229,39 @@ end_comment
 
 begin_comment
 comment|/*  * VLAN tags are stored in host byte order.  Byte swapping may be  * necessary.  *  * Drivers that support hardware VLAN tag stripping fill in the  * received VLAN tag (containing both vlan and priority information)  * into the ether_vtag mbuf packet header field:  *   *	m->m_pkthdr.ether_vtag = vtag;		// ntohs()?  *	m->m_flags |= M_VLANTAG;  *  * to mark the packet m with the specified VLAN tag.  *  * On output the driver should check the mbuf for the M_VLANTAG  * flag to see if a VLAN tag is present and valid:  *  *	if (m->m_flags& M_VLANTAG) {  *		... = m->m_pkthdr.ether_vtag;	// htons()?  *		... pass tag to hardware ...  *	}  *  * Note that a driver must indicate it supports hardware VLAN  * stripping/insertion by marking IFCAP_VLAN_HWTAGGING in  * if_capabilities.  */
+end_comment
+
+begin_comment
+comment|/*  * The 802.1q code may also tag mbufs with the PCP (priority) field for use in  * other layers of the stack, in which case an m_tag will be used.  This is  * semantically quite different from use of the ether_vtag field, which is  * defined only between the device driver and VLAN layer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_8021Q
+value|1326104895
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_8021Q_PCP_IN
+value|0
+end_define
+
+begin_comment
+comment|/* Input priority. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_8021Q_PCP_OUT
+value|1
+end_define
+
+begin_comment
+comment|/* Output priority. */
 end_comment
 
 begin_define
