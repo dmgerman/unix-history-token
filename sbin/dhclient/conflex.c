@@ -353,11 +353,11 @@ else|else
 block|{
 name|cur_line
 operator|=
-name|line2
+name|line1
 expr_stmt|;
 name|prev_line
 operator|=
-name|line1
+name|line2
 expr_stmt|;
 block|}
 name|line
