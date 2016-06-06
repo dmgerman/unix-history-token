@@ -1266,7 +1266,7 @@ name|hv_vmbus_post_msg_via_msg_ipc
 argument_list|(
 name|connId
 argument_list|,
-literal|1
+name|VMBUS_MSGTYPE_CHANNEL
 argument_list|,
 name|buffer
 argument_list|,

@@ -297,8 +297,25 @@ name|msg_type
 operator|==
 name|VMBUS_MSGTYPE_NONE
 condition|)
+block|{
+comment|/* No message */
 break|break;
-comment|/* no message */
+block|}
+elseif|else
+if|if
+condition|(
+name|msg
+operator|->
+name|msg_type
+operator|!=
+name|VMBUS_MSGTYPE_CHANNEL
+condition|)
+block|{
+comment|/* Not a channel message */
+goto|goto
+name|handled
+goto|;
+block|}
 comment|/* XXX: update messageHandler interface */
 name|hdr
 operator|=

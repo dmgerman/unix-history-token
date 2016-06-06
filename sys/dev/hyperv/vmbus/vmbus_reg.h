@@ -96,6 +96,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_MSGTYPE_CHANNEL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_MSGTYPE_TIMER_EXPIRED
 value|0x80000010
 end_define
