@@ -1199,9 +1199,19 @@ operator|.
 name|ptr
 argument_list|,
 operator|(
-literal|"%s: called when curvnet was not restored"
+literal|"%s: called when curvnet was not restored: cuvnet %p m ptr %p"
 operator|,
 name|__func__
+operator|,
+name|curvnet
+operator|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|PH_loc
+operator|.
+name|ptr
 operator|)
 argument_list|)
 expr_stmt|;
