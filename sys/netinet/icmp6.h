@@ -614,6 +614,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP6_DST_UNREACH_POLICY
+value|5
+end_define
+
+begin_comment
+comment|/* failed ingress/egress policy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_DST_UNREACH_REJECT
+value|6
+end_define
+
+begin_comment
+comment|/* Reject route to destination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_DST_UNREACH_SRCROUTE
+value|7
+end_define
+
+begin_comment
+comment|/* Error in source routing header */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP6_TIME_EXCEED_TRANSIT
 value|0
 end_define
