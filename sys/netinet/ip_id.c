@@ -1100,12 +1100,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mtx_destroy
-argument_list|(
-operator|&
-name|V_ip_id_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|V_id_array
@@ -1131,6 +1125,12 @@ block|}
 name|counter_u64_free
 argument_list|(
 name|V_ip_id
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|V_ip_id_mtx
 argument_list|)
 expr_stmt|;
 block|}
