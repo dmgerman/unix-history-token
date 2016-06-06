@@ -214,7 +214,7 @@ literal|4
 block|}
 block|,
 block|{
-literal|"typdef"
+literal|"typedef"
 block|,
 literal|4
 block|}
