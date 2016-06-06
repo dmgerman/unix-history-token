@@ -1560,6 +1560,10 @@ init|=
 literal|1
 decl_stmt|,
 name|tos
+decl_stmt|,
+name|s
+init|=
+name|STDIN_FILENO
 decl_stmt|;
 name|char
 modifier|*
@@ -2412,7 +2416,7 @@ name|dup2
 argument_list|(
 name|fd
 argument_list|,
-literal|0
+name|s
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2422,7 +2426,7 @@ name|dup2
 argument_list|(
 name|fd
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2504,7 +2508,7 @@ if|if
 condition|(
 name|getpeername
 argument_list|(
-literal|0
+name|s
 argument_list|,
 operator|(
 expr|struct
@@ -2729,7 +2733,7 @@ if|if
 condition|(
 name|getsockname
 argument_list|(
-literal|0
+name|s
 argument_list|,
 operator|(
 expr|struct
@@ -2808,7 +2812,7 @@ if|if
 condition|(
 name|setsockopt
 argument_list|(
-literal|0
+name|s
 argument_list|,
 name|IPPROTO_IP
 argument_list|,
@@ -2840,7 +2844,7 @@ if|if
 condition|(
 name|setsockopt
 argument_list|(
-literal|0
+name|s
 argument_list|,
 name|IPPROTO_TCP
 argument_list|,
@@ -2906,7 +2910,7 @@ if|if
 condition|(
 name|setsockopt
 argument_list|(
-literal|0
+name|s
 argument_list|,
 name|SOL_SOCKET
 argument_list|,
@@ -2939,10 +2943,7 @@ if|if
 condition|(
 name|fcntl
 argument_list|(
-name|fileno
-argument_list|(
-name|stdin
-argument_list|)
+name|s
 argument_list|,
 name|F_SETOWN
 argument_list|,
@@ -6967,7 +6968,7 @@ name|blacklist_notify
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|,
 literal|"Login incorrect"
 argument_list|)
@@ -7040,7 +7041,7 @@ name|blacklist_notify
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|,
 literal|"Login successful"
 argument_list|)

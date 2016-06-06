@@ -88,15 +88,6 @@ name|blstate
 operator|==
 name|NULL
 condition|)
-name|blacklist_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|blstate
-operator|==
-name|NULL
-condition|)
 return|return;
 operator|(
 name|void
