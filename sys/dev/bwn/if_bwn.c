@@ -34957,7 +34957,6 @@ name|ucastrate
 expr_stmt|;
 else|else
 block|{
-comment|/* XXX TODO: don't fall back to CCK rates for OFDM */
 name|rix
 operator|=
 name|ieee80211_ratectl_rate
@@ -35480,11 +35479,21 @@ operator|&
 name|IEEE80211_F_USEPROT
 condition|)
 block|{
-comment|/* XXX RTS rate is always 1MB??? */
-comment|/* XXX TODO: don't fall back to CCK rates for OFDM */
+comment|/* Note: don't fall back to CCK rates for 5G */
+if|if
+condition|(
+name|phy
+operator|->
+name|gmode
+condition|)
 name|rts_rate
 operator|=
 name|BWN_CCK_RATE_1MB
+expr_stmt|;
+else|else
+name|rts_rate
+operator|=
+name|BWN_OFDM_RATE_6MB
 expr_stmt|;
 name|rts_rate_fb
 operator|=
