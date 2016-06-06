@@ -270,6 +270,12 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vmbus_message
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|vmbus_on_channel_open
@@ -325,6 +331,22 @@ name|vmbus_et_intr
 parameter_list|(
 name|struct
 name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_chan_msgproc
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|,
+specifier|volatile
+name|struct
+name|vmbus_message
 modifier|*
 parameter_list|)
 function_decl|;
