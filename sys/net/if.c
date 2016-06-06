@@ -4056,6 +4056,7 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
+comment|/* XXX cannot hold IF_ADDR_WLOCK over called functions. */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|ifa
@@ -4183,6 +4184,11 @@ block|}
 endif|#
 directive|endif
 comment|/* INET6 */
+name|IF_ADDR_WLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4193,6 +4199,11 @@ argument_list|,
 name|ifa
 argument_list|,
 name|ifa_link
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_WUNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|ifa_free
