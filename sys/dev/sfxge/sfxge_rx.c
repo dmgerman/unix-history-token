@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -118,6 +124,23 @@ include|#
 directive|include
 file|<machine/in_cksum.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -660,6 +683,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|uint8_t
+name|toep_key
+index|[
+name|RSS_KEYSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|uint8_t
@@ -749,6 +793,11 @@ literal|0xfa
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -5709,6 +5758,16 @@ argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|rss_getkey
+argument_list|(
+name|toep_key
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
