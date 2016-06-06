@@ -2272,6 +2272,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rt_flushifroutes_af
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rt_flushifroutes
 parameter_list|(
 name|struct
