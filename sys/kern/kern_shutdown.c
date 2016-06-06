@@ -3938,5 +3938,49 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|panic
+argument_list|,
+argument|db_show_panic
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|panicstr
+operator|==
+name|NULL
+condition|)
+name|db_printf
+argument_list|(
+literal|"panicstr not set\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|db_printf
+argument_list|(
+literal|"panic: %s\n"
+argument_list|,
+name|panicstr
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
