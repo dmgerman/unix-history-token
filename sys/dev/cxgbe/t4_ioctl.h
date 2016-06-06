@@ -724,6 +724,58 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Tx Scheduling Class parameters */
+end_comment
+
+begin_struct
+struct|struct
+name|t4_sched_class_params
+block|{
+name|int8_t
+name|level
+decl_stmt|;
+comment|/* scheduler hierarchy level */
+name|int8_t
+name|mode
+decl_stmt|;
+comment|/* per-class or per-flow */
+name|int8_t
+name|rateunit
+decl_stmt|;
+comment|/* bit or packet rate */
+name|int8_t
+name|ratemode
+decl_stmt|;
+comment|/* %port relative or kbps absolute */
+name|int8_t
+name|channel
+decl_stmt|;
+comment|/* scheduler channel [0..N] */
+name|int8_t
+name|cl
+decl_stmt|;
+comment|/* scheduler class [0..N] */
+name|int32_t
+name|minrate
+decl_stmt|;
+comment|/* minimum rate */
+name|int32_t
+name|maxrate
+decl_stmt|;
+comment|/* maximum rate */
+name|int16_t
+name|weight
+decl_stmt|;
+comment|/* percent weight */
+name|int16_t
+name|pktsize
+decl_stmt|;
+comment|/* average packet size */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Support for "sched-class" command to allow a TX Scheduling Class to be  * programmed with various parameters.  */
 end_comment
 
@@ -751,52 +803,10 @@ comment|/* minmax enable */
 block|}
 name|config
 struct|;
-struct|struct
-block|{
-comment|/* sub-command SCHED_CLASS_PARAMS */
-name|int8_t
-name|level
-decl_stmt|;
-comment|/* scheduler hierarchy level */
-name|int8_t
-name|mode
-decl_stmt|;
-comment|/* per-class or per-flow */
-name|int8_t
-name|rateunit
-decl_stmt|;
-comment|/* bit or packet rate */
-name|int8_t
-name|ratemode
-decl_stmt|;
-comment|/* %port relative or kbps 						   absolute */
-name|int8_t
-name|channel
-decl_stmt|;
-comment|/* scheduler channel [0..N] */
-name|int8_t
-name|cl
-decl_stmt|;
-comment|/* scheduler class [0..N] */
-name|int32_t
-name|minrate
-decl_stmt|;
-comment|/* minimum rate */
-name|int32_t
-name|maxrate
-decl_stmt|;
-comment|/* maximum rate */
-name|int16_t
-name|weight
-decl_stmt|;
-comment|/* percent weight */
-name|int16_t
-name|pktsize
-decl_stmt|;
-comment|/* average packet size */
-block|}
+name|struct
+name|t4_sched_class_params
 name|params
-struct|;
+decl_stmt|;
 name|uint8_t
 name|reserved
 index|[
