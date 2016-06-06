@@ -739,7 +739,7 @@ literal|0
 operator|||
 name|control_path
 operator|!=
-literal|0
+name|NULL
 operator|||
 operator|(
 name|service_name
