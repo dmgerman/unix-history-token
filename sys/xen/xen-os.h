@@ -375,7 +375,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|NPBL
+name|NBPL
 end_undef
 
 begin_comment
