@@ -344,7 +344,7 @@ name|struct
 name|vmbus_softc
 modifier|*
 parameter_list|,
-specifier|volatile
+specifier|const
 name|struct
 name|vmbus_message
 modifier|*

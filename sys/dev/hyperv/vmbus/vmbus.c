@@ -304,7 +304,15 @@ name|vmbus_chan_msgproc
 argument_list|(
 name|sc
 argument_list|,
+name|__DEVOLATILE
+argument_list|(
+specifier|const
+expr|struct
+name|vmbus_message
+operator|*
+argument_list|,
 name|msg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
