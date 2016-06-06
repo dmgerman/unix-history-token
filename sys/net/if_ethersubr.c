@@ -3361,9 +3361,20 @@ operator|==
 name|ifp
 argument_list|,
 operator|(
-literal|"%s: ifnet mismatch"
+literal|"%s: ifnet mismatch m %p "
+literal|"rcvif %p ifp %p"
 operator|,
 name|__func__
+operator|,
+name|m
+operator|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|,
+name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
