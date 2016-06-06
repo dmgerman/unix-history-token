@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -142,6 +148,23 @@ include|#
 directive|include
 file|<net/if_types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -452,6 +475,27 @@ name|uint32_t
 name|txq_allocated
 decl_stmt|;
 comment|/* 	 * Limit the number of event queues to: 	 *  - number of CPUs 	 *  - hardwire maximum RSS channels 	 *  - administratively specified maximum RSS channels 	 */
+ifdef|#
+directive|ifdef
+name|RSS
+comment|/* 	 * Avoid extra limitations so that the number of queues 	 * may be configured at administrator's will 	 */
+name|evq_max
+operator|=
+name|MIN
+argument_list|(
+name|MAX
+argument_list|(
+name|rss_getnumbuckets
+argument_list|()
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+name|EFX_MAXRSS
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|evq_max
 operator|=
 name|MIN
@@ -461,6 +505,8 @@ argument_list|,
 name|EFX_MAXRSS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -668,6 +714,38 @@ literal|"allocated more than maximum requested"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+name|sc
+operator|->
+name|evq_max
+operator|<
+name|rss_getnumbuckets
+argument_list|()
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"The number of allocated queues (%u) "
+literal|"is less than the number of RSS buckets (%u); "
+literal|"performance degradation might be observed"
+argument_list|,
+name|sc
+operator|->
+name|evq_max
+argument_list|,
+name|rss_getnumbuckets
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * NIC is kept initialized in the case of success to be able to 	 * initialize port to find out media types. 	 */
 return|return
 operator|(
