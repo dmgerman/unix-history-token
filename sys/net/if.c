@@ -4583,6 +4583,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* We can now free link ifaddr. */
+name|IF_ADDR_WLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4617,12 +4622,23 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
+name|IF_ADDR_WUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|IF_ADDR_WUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 name|rt_flushifroutes
 argument_list|(
