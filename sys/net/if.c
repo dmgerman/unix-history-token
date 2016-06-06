@@ -4707,6 +4707,7 @@ operator|->
 name|dom_family
 index|]
 condition|)
+block|{
 call|(
 modifier|*
 name|dp
@@ -4726,6 +4727,18 @@ name|dom_family
 index|]
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_afdata
+index|[
+name|dp
+operator|->
+name|dom_family
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
