@@ -1344,6 +1344,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ch
+operator|->
+name|idtype
+operator|=
+name|idtype
+expr_stmt|;
 if|if
 condition|(
 name|ch

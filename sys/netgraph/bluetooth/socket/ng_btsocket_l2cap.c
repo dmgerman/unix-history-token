@@ -4971,7 +4971,9 @@ name|ip
 operator|->
 name|lcid
 argument_list|,
-name|NG_L2CAP_L2CA_IDTYPE_BREDR
+name|ip
+operator|->
+name|idtype
 argument_list|)
 expr_stmt|;
 if|if
