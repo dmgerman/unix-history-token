@@ -15759,7 +15759,7 @@ name|mh
 operator|->
 name|mh_head
 argument_list|,
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 argument_list|)
 expr_stmt|;
 name|mh

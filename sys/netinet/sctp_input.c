@@ -31845,7 +31845,7 @@ name|M_HASHTYPE_SET
 argument_list|(
 name|m
 argument_list|,
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 argument_list|)
 expr_stmt|;
 block|}

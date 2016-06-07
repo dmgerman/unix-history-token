@@ -23786,7 +23786,7 @@ name|rxr
 operator|->
 name|fmp
 argument_list|,
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 argument_list|)
 expr_stmt|;
 block|}

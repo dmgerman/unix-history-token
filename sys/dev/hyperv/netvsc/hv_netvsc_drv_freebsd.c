@@ -5981,6 +5981,11 @@ name|do_csum
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|hash_type
+init|=
+name|M_HASHTYPE_OPAQUE_HASH
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -6635,11 +6640,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
-name|hash_type
-init|=
-name|M_HASHTYPE_OPAQUE
-decl_stmt|;
 name|rxr
 operator|->
 name|hn_rss_pkts
@@ -6734,13 +6734,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|M_HASHTYPE_SET
-argument_list|(
-name|m_new
-argument_list|,
-name|hash_type
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -6750,6 +6743,7 @@ name|hash_value
 operator|!=
 name|NULL
 condition|)
+block|{
 name|m_new
 operator|->
 name|m_pkthdr
@@ -6760,7 +6754,9 @@ name|hash_value
 operator|->
 name|hash_value
 expr_stmt|;
+block|}
 else|else
+block|{
 name|m_new
 operator|->
 name|m_pkthdr
@@ -6771,14 +6767,19 @@ name|rxr
 operator|->
 name|hn_rx_idx
 expr_stmt|;
+name|hash_type
+operator|=
+name|M_HASHTYPE_OPAQUE
+expr_stmt|;
+block|}
+block|}
 name|M_HASHTYPE_SET
 argument_list|(
 name|m_new
 argument_list|,
-name|M_HASHTYPE_OPAQUE
+name|hash_type
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Note:  Moved RX completion back to hv_nv_on_receive() so all 	 * messages (not just data messages) will trigger a response. 	 */
 name|if_inc_counter
 argument_list|(

@@ -10754,19 +10754,10 @@ expr_stmt|;
 comment|/* check if flowid is set and not opaque */
 if|if
 condition|(
-name|M_HASHTYPE_GET
+name|M_HASHTYPE_ISHASH
 argument_list|(
 name|m
 argument_list|)
-operator|!=
-name|M_HASHTYPE_NONE
-operator|&&
-name|M_HASHTYPE_GET
-argument_list|(
-name|m
-argument_list|)
-operator|!=
-name|M_HASHTYPE_OPAQUE
 condition|)
 name|hash
 operator|=

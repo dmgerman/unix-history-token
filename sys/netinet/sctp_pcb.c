@@ -18077,7 +18077,7 @@ name|net
 operator|->
 name|flowtype
 operator|=
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 expr_stmt|;
 if|if
 condition|(

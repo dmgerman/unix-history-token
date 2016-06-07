@@ -6611,7 +6611,7 @@ operator|.
 name|known
 condition|)
 return|return
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 return|;
 if|if
 condition|(
@@ -6622,7 +6622,7 @@ operator|==
 name|I40E_RX_PTYPE_OUTER_L2
 condition|)
 return|return
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 return|;
 comment|/* Note: anything that gets to this point is IP */
 if|if
@@ -6727,7 +6727,7 @@ block|}
 block|}
 comment|/* We should never get here!! */
 return|return
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 return|;
 block|}
 end_function
