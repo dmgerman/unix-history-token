@@ -1895,22 +1895,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set up a new generation number for this inode. 	 */
-while|while
-condition|(
-name|ip
-operator|->
-name|i_gen
-operator|==
-literal|0
-operator|||
-operator|++
-name|ip
-operator|->
-name|i_gen
-operator|==
-literal|0
-condition|)
+comment|/* 	 * Set up a new generation number for this inode. 	 * Avoid zero values. 	 */
+do|do
+block|{
 name|ip
 operator|->
 name|i_gen
@@ -1918,6 +1905,16 @@ operator|=
 name|arc4random
 argument_list|()
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|ip
+operator|->
+name|i_gen
+operator|==
+literal|0
+condition|)
+do|;
 name|vfs_timestamp
 argument_list|(
 operator|&
