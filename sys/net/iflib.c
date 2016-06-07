@@ -16198,7 +16198,10 @@ if|if
 condition|(
 name|count
 operator|>
-literal|8
+name|nitems
+argument_list|(
+name|marr
+argument_list|)
 condition|)
 if|if
 condition|(
@@ -16387,7 +16390,10 @@ if|if
 condition|(
 name|count
 operator|>
-literal|16
+name|nitems
+argument_list|(
+name|marr
+argument_list|)
 condition|)
 name|free
 argument_list|(
