@@ -4445,7 +4445,7 @@ name|delimp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*          * If there has been a trailing slash at mounttime it seems          * that some mountd implementations fail to remove the mount          * entries from their mountlist while unmounting.          */
+comment|/* 	 * If there has been a trailing slash at mounttime it seems 	 * that some mountd implementations fail to remove the mount 	 * entries from their mountlist while unmounting. 	 */
 for|for
 control|(
 name|speclen
