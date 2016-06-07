@@ -4606,6 +4606,14 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+else|else
+name|nam
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* 	 * XXX: IPv6 	 */
 name|sin
 operator|=
