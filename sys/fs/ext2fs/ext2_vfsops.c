@@ -768,9 +768,6 @@ argument_list|,
 name|MNT_RDONLY
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -789,9 +786,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -936,9 +930,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -958,9 +949,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 if|if
@@ -2769,9 +2757,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX: use VOP_ACESS to check FS perms */
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2794,9 +2779,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2843,9 +2825,6 @@ name|sectorsize
 operator|)
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2855,9 +2834,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 return|return
@@ -3582,9 +3558,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -3594,9 +3567,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
@@ -3827,9 +3797,6 @@ name|MNT_WAIT
 argument_list|)
 expr_stmt|;
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -3841,9 +3808,6 @@ name|um_cp
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|vrele
