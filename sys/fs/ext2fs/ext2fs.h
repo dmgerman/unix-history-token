@@ -265,7 +265,7 @@ comment|/* high bits of free blocks count */
 name|uint16_t
 name|e4fs_min_extra_isize
 decl_stmt|;
-comment|/* all inodes have at least some bytes */
+comment|/* all inodes have some bytes */
 name|uint16_t
 name|e4fs_want_extra_isize
 decl_stmt|;
@@ -281,7 +281,7 @@ comment|/* RAID stride */
 name|uint16_t
 name|e4fs_mmpintv
 decl_stmt|;
-comment|/* number of seconds to wait in MMP checking */
+comment|/* seconds to wait in MMP checking */
 name|uint64_t
 name|e4fs_mmpblk
 decl_stmt|;
@@ -289,7 +289,7 @@ comment|/* block for multi-mount protection */
 name|uint32_t
 name|e4fs_raid_stripe_wid
 decl_stmt|;
-comment|/* blocks on all data disks (N * stride) */
+comment|/* blocks on data disks (N * stride) */
 name|uint8_t
 name|e4fs_log_gpf
 decl_stmt|;

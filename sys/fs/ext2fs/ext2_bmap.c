@@ -259,7 +259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function converts the logical block number of a file to  * its physical block number on the disk within ext4 extents.  */
+comment|/*  * Convert the logical block number of a file to its physical block number  * on the disk within ext4 extents.  */
 end_comment
 
 begin_function
@@ -318,7 +318,7 @@ name|daddr_t
 name|lbn
 decl_stmt|;
 name|int
-name|ret
+name|error
 init|=
 literal|0
 decl_stmt|;
@@ -445,7 +445,7 @@ name|ep
 operator|==
 name|NULL
 condition|)
-name|ret
+name|error
 operator|=
 name|EIO
 expr_stmt|;
@@ -558,7 +558,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
