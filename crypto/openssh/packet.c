@@ -281,6 +281,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|USE_BLACKLIST
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PACKET_DEBUG
 end_ifdef
 
@@ -10700,6 +10717,16 @@ operator|->
 name|failed_choice
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+name|blacklist_notify
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fatal
 argument_list|(
 literal|"Unable to negotiate with %.200s port %d: %s. "
