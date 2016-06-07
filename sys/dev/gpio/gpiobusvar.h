@@ -218,6 +218,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|intr_map_data_gpio
+block|{
+name|struct
+name|intr_map_data
+name|hdr
+decl_stmt|;
+name|u_int
+name|gpio_pin_num
+decl_stmt|;
+name|u_int
+name|gpio_pin_flags
+decl_stmt|;
+name|u_int
+name|gpio_intr_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|gpiobus_softc
 block|{
 name|struct
