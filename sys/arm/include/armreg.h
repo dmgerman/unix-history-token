@@ -297,12 +297,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_ID_INTEL
-value|0x69000000
+name|CPU_ID_MOTOROLA
+value|0x4D000000
 end_define
 
 begin_comment
-comment|/* 'i' */
+comment|/* 'M' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_QUALCOM
+value|0x51000000
+end_define
+
+begin_comment
+comment|/* 'Q' */
 end_comment
 
 begin_define
@@ -319,6 +330,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_ID_MARVELL
+value|0x56000000
+end_define
+
+begin_comment
+comment|/* 'V' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_INTEL
+value|0x69000000
+end_define
+
+begin_comment
+comment|/* 'i' */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_FARADAY
 value|0x66000000
 end_define
@@ -326,6 +359,20 @@ end_define
 begin_comment
 comment|/* 'f' */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_VARIANT_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_VARIANT_MASK
+value|0x00f00000
+end_define
 
 begin_comment
 comment|/* How to decide what format the CPUID is in. */
@@ -433,13 +480,6 @@ define|#
 directive|define
 name|CPU_ID_CPUID_SCHEME
 value|0x000f0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_ID_VARIANT_MASK
-value|0x00f00000
 end_define
 
 begin_comment
@@ -634,109 +674,153 @@ name|CPU_ID_ARM1176JZS
 value|0x410fb760
 end_define
 
+begin_comment
+comment|/* CPUs that follow the CPUID scheme */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_SCHEME_MASK
+define|\
+value|(CPU_ID_IMPLEMENTOR_MASK | CPU_ID_ARCH_MASK | CPU_ID_PARTNO_MASK)
+end_define
+
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA5
-value|0x410fc050
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc050)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA7
-value|0x410fc070
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc070)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA8
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc080)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA8R1
-value|0x411fc080
+value|(CPU_ID_CORTEXA8 | (1<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA8R2
-value|0x412fc080
+value|(CPU_ID_CORTEXA8 | (2<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA8R3
-value|0x413fc080
+value|(CPU_ID_CORTEXA8 | (3<< CPU_ID_VARIANT_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA9
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc090)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA9R1
-value|0x411fc090
+value|(CPU_ID_CORTEXA9 | (1<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA9R2
-value|0x412fc090
+value|(CPU_ID_CORTEXA9 | (2<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA9R3
-value|0x413fc090
+value|(CPU_ID_CORTEXA9 | (3<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA9R4
-value|0x414fc090
+value|(CPU_ID_CORTEXA9 | (4<< CPU_ID_VARIANT_SHIFT))
+end_define
+
+begin_comment
+comment|/* XXX: Cortx-A12 is the old name for this part, it has been renamed the A17 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA12
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc0d0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA12R0
-value|0x410fc0d0
+value|(CPU_ID_CORTEXA12 | (0<< CPU_ID_VARIANT_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA15
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xc0f0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA15R0
-value|0x410fc0f0
+value|(CPU_ID_CORTEXA15 | (0<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA15R1
-value|0x411fc0f0
+value|(CPU_ID_CORTEXA15 | (1<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA15R2
-value|0x412fc0f0
+value|(CPU_ID_CORTEXA15 | (2<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_CORTEXA15R3
-value|0x413fc0f0
+value|(CPU_ID_CORTEXA15 | (3<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_ID_KRAIT300R0
-value|0x510f06f0
+name|CPU_ID_KRAIT300
+value|(CPU_ID_QUALCOM | CPU_ID_CPUID_SCHEME | 0x06f0)
 end_define
 
 begin_comment
@@ -746,8 +830,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_ID_KRAIT300R0
+value|(CPU_ID_KRAIT300 | (0<< CPU_ID_VARIANT_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_KRAIT300R1
-value|0x511f06f0
+value|(CPU_ID_KRAIT300 | (1<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_define
