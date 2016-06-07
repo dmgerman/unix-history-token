@@ -18551,6 +18551,15 @@ name|verbose
 condition|)
 block|{
 comment|/* XXX we assume duplicates are adjacent */
+name|assert
+argument_list|(
+name|achans
+operator|->
+name|ic_nchans
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 name|prev
 operator|=
 operator|&
