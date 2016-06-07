@@ -1728,7 +1728,16 @@ name|devcount
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|devs
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/*      * Create thread to service all of the thermal zones.      */
 name|error
 operator|=
