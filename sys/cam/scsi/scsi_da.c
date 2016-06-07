@@ -8787,6 +8787,13 @@ literal|"daregister: Unable to probe new device. "
 literal|"Unable to allocate iosched memory\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|softc
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CAM_REQ_CMP_ERR
