@@ -3090,8 +3090,19 @@ operator|&
 name|HAL_BEACON_PERIOD
 argument_list|)
 expr_stmt|;
-comment|/* XXX TODO! */
-comment|//        ahp->ah_beaconInterval = bt->bt_intval& HAL_BEACON_PERIOD;
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_beaconInterval
+operator|=
+name|bt
+operator|->
+name|bt_intval
+operator|&
+name|HAL_BEACON_PERIOD
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah

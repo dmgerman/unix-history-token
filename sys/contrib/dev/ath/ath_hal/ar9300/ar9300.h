@@ -2903,6 +2903,9 @@ name|ar9300NfLimits
 modifier|*
 name|nfp
 decl_stmt|;
+name|uint32_t
+name|ah_beaconInterval
+decl_stmt|;
 block|}
 struct|;
 end_struct
