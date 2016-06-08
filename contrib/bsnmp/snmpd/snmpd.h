@@ -1127,6 +1127,8 @@ name|u_char
 name|comm
 index|[
 name|SNMP_COMMUNITY_MAXLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
