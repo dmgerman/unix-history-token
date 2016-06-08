@@ -3575,6 +3575,25 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* Check if we are using supported flags. */
+if|if
+condition|(
+operator|(
+name|fr
+operator|->
+name|fr_pd_flags
+operator|&
+operator|~
+name|PD_ALLOWED_AT_FORK
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|p1
 operator|=
@@ -3750,7 +3769,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|falloc_caps
+name|procdesc_falloc
 argument_list|(
 name|td
 argument_list|,
@@ -3761,7 +3780,9 @@ name|fr
 operator|->
 name|fr_pd_fd
 argument_list|,
-literal|0
+name|fr
+operator|->
+name|fr_pd_flags
 argument_list|,
 name|fr
 operator|->

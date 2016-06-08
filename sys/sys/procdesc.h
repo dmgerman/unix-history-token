@@ -301,6 +301,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|procdesc_falloc
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|file
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -413,6 +438,24 @@ end_define
 begin_comment
 comment|/* Don't exit when procdesc closes. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PD_CLOEXEC
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Close file descriptor on exec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PD_ALLOWED_AT_FORK
+value|(PD_DAEMON | PD_CLOEXEC)
+end_define
 
 begin_endif
 endif|#
