@@ -2001,6 +2001,10 @@ name|__be32
 name|cpl_ctrl0
 decl_stmt|;
 comment|/* for convenience */
+name|int
+name|tc_idx
+decl_stmt|;
+comment|/* traffic class */
 name|struct
 name|task
 name|tx_reclaim_task
