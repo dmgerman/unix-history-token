@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vis.h,v 1.21 2013/02/20 17:01:15 christos Exp $	*/
+comment|/*	$NetBSD: vis.h,v 1.24 2016/01/14 20:42:14 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -202,6 +202,35 @@ begin_comment
 comment|/* for unvis */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIS_SHELL
+value|0x2000
+end_define
+
+begin_comment
+comment|/* encode shell special characters [not glob] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIS_META
+value|(VIS_WHITE | VIS_GLOB | VIS_SHELL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIS_NOLOCALE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* encode using the C locale */
+end_comment
+
 begin_comment
 comment|/*  * unvis return codes  */
 end_comment
@@ -368,6 +397,23 @@ name|int
 name|strvis
 parameter_list|(
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|stravis
+parameter_list|(
+name|char
+modifier|*
 modifier|*
 parameter_list|,
 specifier|const

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unvis.c,v 1.41 2012/12/15 04:29:53 matt Exp $	*/
+comment|/*	$NetBSD: unvis.c,v 1.44 2014/09/26 15:43:36 roy Exp $	*/
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: unvis.c,v 1.41 2012/12/15 04:29:53 matt Exp $"
+literal|"$NetBSD: unvis.c,v 1.44 2014/09/26 15:43:36 roy Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1727,6 +1727,34 @@ expr_stmt|;
 return|return
 name|UNVIS_NOCHAR
 return|;
+default|default:
+if|if
+condition|(
+name|isgraph
+argument_list|(
+name|c
+argument_list|)
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+name|c
+expr_stmt|;
+operator|*
+name|astate
+operator|=
+name|SS
+argument_list|(
+literal|0
+argument_list|,
+name|S_GROUND
+argument_list|)
+expr_stmt|;
+return|return
+name|UNVIS_VALID
+return|;
+block|}
 block|}
 goto|goto
 name|bad
