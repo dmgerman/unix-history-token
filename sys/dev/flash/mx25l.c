@@ -771,6 +771,23 @@ literal|512
 block|,
 name|FL_ERASE_4K
 block|}
+block|,
+comment|/* Atmel */
+block|{
+literal|"at25df641"
+block|,
+literal|0x1f
+block|,
+literal|0x4800
+block|,
+literal|64
+operator|*
+literal|1024
+block|,
+literal|128
+block|,
+name|FL_ERASE_4K
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

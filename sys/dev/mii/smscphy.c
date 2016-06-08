@@ -276,6 +276,13 @@ argument_list|,
 name|LAN8710A
 argument_list|)
 block|,
+name|MII_PHY_DESC
+argument_list|(
+name|SMC
+argument_list|,
+name|LAN8700
+argument_list|)
+block|,
 name|MII_PHY_END
 block|}
 decl_stmt|;
