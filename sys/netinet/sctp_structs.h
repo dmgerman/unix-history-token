@@ -1430,9 +1430,6 @@ name|uint32_t
 name|fsn
 decl_stmt|;
 name|uint32_t
-name|msg_id
-decl_stmt|;
-name|uint32_t
 name|length
 decl_stmt|;
 name|uint32_t
@@ -1755,10 +1752,13 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * For associations using DATA chunks, the lower 16-bit of 	 * next_mid_ordered are used as the next SSN. 	 */
 name|uint32_t
-name|next_sequence_send
+name|next_mid_ordered
 decl_stmt|;
-comment|/* next one I expect to send out */
+name|uint32_t
+name|next_mid_unordered
+decl_stmt|;
 name|uint16_t
 name|stream_no
 decl_stmt|;
@@ -2846,9 +2846,6 @@ name|stream_scheduling_module
 decl_stmt|;
 name|uint32_t
 name|vrf_id
-decl_stmt|;
-name|uint32_t
-name|assoc_msg_id
 decl_stmt|;
 name|uint32_t
 name|cookie_preserve_req
