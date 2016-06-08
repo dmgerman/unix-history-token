@@ -840,12 +840,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|allocated_uaddr
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|allocated_uaddr
