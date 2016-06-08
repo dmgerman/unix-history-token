@@ -172,6 +172,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_EVTFLAG_MASK
+value|(VMBUS_EVTFLAG_LEN - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_EVTFLAGS_SIZE
 value|256
 end_define

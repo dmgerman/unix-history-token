@@ -143,7 +143,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|void
+name|u_long
 modifier|*
 name|vmbus_tx_evtflags
 decl_stmt|;
