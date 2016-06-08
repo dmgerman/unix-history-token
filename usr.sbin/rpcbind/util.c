@@ -1265,12 +1265,6 @@ argument_list|)
 expr_stmt|;
 name|freeit
 label|:
-if|if
-condition|(
-name|caller_uaddr
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|caller_uaddr
