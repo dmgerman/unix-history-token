@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -105,7 +111,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [-E|-f|-m] OPTIONS<channel #><txns> [<bufsize> "
+literal|"Usage: %s [-c period] [-EfmVz] channel-number num-txns [<bufsize> "
 literal|"[<chain-len> [duration]]]\n"
 argument_list|,
 name|getprogname
@@ -114,7 +120,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       %s -r [-v] OPTIONS<channel #><addr> [<bufsize>]\n\n"
+literal|"       %s -r [-c period] [-vVwz] channel-number address [<bufsize>]\n\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -122,22 +128,47 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       OPTIONS:\n"
+literal|"           -c period - Enable interrupt coalescing (us) (default: 0)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"           -c<period> - Enable interrupt coalescing (us)\n"
+literal|"           -E        - Test non-contiguous 8k copy.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"           -V          - Enable verification\n"
+literal|"           -f        - Test block fill (default: DMA copy).\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"           -z          - Zero device stats before test\n"
+literal|"           -m        - Test memcpy instead of DMA.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -r        - Issue DMA to or from a specific address.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -V        - Enable verification\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -v        -<address> is a kernel virtual address\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -w        - Write to the specified address\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"           -z        - Zero device stats before test\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -362,6 +393,19 @@ decl_stmt|;
 name|unsigned
 name|modeflags
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|t
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fflag
 operator|=
 name|rflag
