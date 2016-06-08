@@ -2590,6 +2590,17 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|olen
+operator|>
+literal|0
+condition|)
+name|free
+argument_list|(
+name|olinep
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
