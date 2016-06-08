@@ -3578,6 +3578,7 @@ name|newcred
 operator|!=
 name|NULL
 condition|)
+block|{
 name|proc_set_cred
 argument_list|(
 name|p
@@ -3587,6 +3588,16 @@ operator|->
 name|newcred
 argument_list|)
 expr_stmt|;
+name|crfree
+argument_list|(
+name|oldcred
+argument_list|)
+expr_stmt|;
+name|oldcred
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 	 * Store the vp for use in procfs.  This vnode was referenced by namei 	 * or fgetvp_exec. 	 */
 name|oldtextvp
 operator|=
@@ -3992,10 +4003,16 @@ operator|->
 name|newcred
 operator|!=
 name|NULL
+operator|&&
+name|oldcred
+operator|!=
+name|NULL
 condition|)
 name|crfree
 argument_list|(
-name|oldcred
+name|imgp
+operator|->
+name|newcred
 argument_list|)
 expr_stmt|;
 ifdef|#
