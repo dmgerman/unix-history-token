@@ -405,7 +405,7 @@ name|MIPS33
 argument_list|,
 name|CPU
 argument_list|,
-literal|"MIPS 3302 Core"
+literal|"MIPS3302 Core"
 argument_list|)
 block|,
 name|BHND_CDESC
@@ -641,7 +641,7 @@ argument_list|)
 block|,
 name|BHND_CDESC
 argument_list|(
-name|BCM
+name|MIPS
 argument_list|,
 name|MIPS74K
 argument_list|,
