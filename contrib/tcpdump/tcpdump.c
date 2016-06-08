@@ -233,6 +233,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libgen.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -288,12 +294,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libgen.h>
 end_include
 
 begin_endif
@@ -2068,7 +2068,7 @@ name|p
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|int
 name|dirfd
 decl_stmt|;
@@ -4225,7 +4225,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 end_ifdef
 
 begin_comment
@@ -4478,13 +4478,13 @@ name|VFile
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|cap_rights_t
 name|rights
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_CASPER */
+comment|/* !__FreeBSD__ */
 name|int
 name|cansandbox
 decl_stmt|;
@@ -7993,7 +7993,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|set_dumper_capsicum_rights
 argument_list|(
 name|p
@@ -8014,7 +8014,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|dumpinfo
 operator|.
 name|WFileName
@@ -8132,7 +8132,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* !HAVE_CASPER */
+comment|/* !__FreeBSD__ */
 name|dumpinfo
 operator|.
 name|WFileName
@@ -9491,7 +9491,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|FILE
 modifier|*
 name|fp
@@ -9676,7 +9676,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|fd
 operator|=
 name|openat
@@ -9756,7 +9756,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !HAVE_CASPER */
+comment|/* !__FreeBSD__ */
 name|dump_info
 operator|->
 name|p
@@ -9814,7 +9814,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info
@@ -9865,7 +9865,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|FILE
 modifier|*
 name|fp
@@ -9998,7 +9998,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|fd
 operator|=
 name|openat
@@ -10078,7 +10078,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !HAVE_CASPER */
+comment|/* !__FreeBSD__ */
 name|dump_info
 operator|->
 name|p
@@ -10136,7 +10136,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|__FreeBSD__
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info
