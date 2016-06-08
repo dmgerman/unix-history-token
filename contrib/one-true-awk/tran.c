@@ -2412,16 +2412,9 @@ expr_stmt|;
 block|}
 name|t
 operator|=
-name|s
-condition|?
 name|tostring
 argument_list|(
 name|s
-argument_list|)
-else|:
-name|tostring
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 comment|/* in case it's self-assign */
