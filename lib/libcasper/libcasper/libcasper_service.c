@@ -219,6 +219,9 @@ parameter_list|,
 name|service_command_func_t
 modifier|*
 name|commandfunc
+parameter_list|,
+name|uint64_t
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -302,6 +305,8 @@ argument_list|,
 name|limitfunc
 argument_list|,
 name|commandfunc
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -536,7 +541,6 @@ argument_list|,
 literal|"service"
 argument_list|)
 expr_stmt|;
-comment|//XXX: We should remove this?
 name|procfd
 operator|=
 name|nvlist_take_descriptor
@@ -556,6 +560,8 @@ argument_list|(
 name|service
 argument_list|,
 name|chanfd
+argument_list|,
+name|procfd
 argument_list|)
 expr_stmt|;
 comment|/* Not reached. */
@@ -822,6 +828,8 @@ argument_list|,
 name|casper_limit
 argument_list|,
 name|casper_command
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sconn

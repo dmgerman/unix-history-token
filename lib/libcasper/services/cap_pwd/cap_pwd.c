@@ -4060,6 +4060,8 @@ argument_list|,
 name|pwd_limit
 argument_list|,
 name|pwd_command
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

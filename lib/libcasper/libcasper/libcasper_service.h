@@ -46,6 +46,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|CASPER_SERVICE_STDIO
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASPER_SERVICE_FD
+value|0x00000002
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -103,6 +117,9 @@ parameter_list|,
 name|service_command_func_t
 modifier|*
 name|commandfunc
+parameter_list|,
+name|uint64_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -124,9 +141,11 @@ parameter_list|,
 name|limit_func
 parameter_list|,
 name|command_func
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|static __constructor void					\ 	init_casper_service(void)					\ 	{								\ 									\ 		(void)service_register(name, limit_func,		\ 		    command_func);					\ 	}
+value|static __constructor void					\ 	init_casper_service(void)					\ 	{								\ 									\ 		(void)service_register(name, limit_func, command_func,  \ 		    flags);						\ 	}
 end_define
 
 begin_endif

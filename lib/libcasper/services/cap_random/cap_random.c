@@ -418,6 +418,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|random_command
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

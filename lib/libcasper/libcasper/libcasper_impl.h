@@ -77,6 +77,9 @@ parameter_list|,
 name|service_command_func_t
 modifier|*
 name|commandfunc
+parameter_list|,
+name|uint64_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -121,6 +124,9 @@ name|service
 parameter_list|,
 name|int
 name|sock
+parameter_list|,
+name|int
+name|procfd
 parameter_list|)
 function_decl|;
 end_function_decl
