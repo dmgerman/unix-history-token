@@ -71,6 +71,11 @@ decl_stmt|;
 name|register_t
 name|md_tp
 decl_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 name|void
 modifier|*
 name|md_ras_start
@@ -79,6 +84,8 @@ name|void
 modifier|*
 name|md_ras_end
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
