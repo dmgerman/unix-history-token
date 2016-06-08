@@ -53,37 +53,6 @@ name|PAM_OPT_DEBUG
 value|"debug"
 end_define
 
-begin_function_decl
-name|__BEGIN_DECLS
-name|void
-name|_pam_verbose_error
-parameter_list|(
-name|pam_handle_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_macro
-name|__END_DECLS
-end_macro
-
 begin_define
 define|#
 directive|define
@@ -114,7 +83,7 @@ parameter_list|(
 modifier|...
 parameter_list|)
 define|\
-value|_pam_verbose_error(pamh, flags, __FILE__, __func__, __VA_ARGS__)
+value|do {								\ 		if (!(flags& PAM_SILENT)&&				\ 		    !openpam_get_option(pamh, "no_warn"))		\ 			pam_error(pamh, __VA_ARGS__);			\ 	} while (0);
 end_define
 
 begin_endif
