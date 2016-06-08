@@ -444,6 +444,9 @@ name|int
 name|arg
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|TERM_EMU
 name|conout
 operator|->
 name|SetAttribute
@@ -458,9 +461,6 @@ name|DEFAULT_BGCOLOR
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TERM_EMU
 name|end_term
 argument_list|()
 expr_stmt|;
@@ -749,6 +749,12 @@ directive|endif
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERM_EMU
+end_ifdef
 
 begin_comment
 comment|/* Gracefully exit ESC-sequence processing in case of misunderstanding. */
@@ -1761,6 +1767,25 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|HO
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
