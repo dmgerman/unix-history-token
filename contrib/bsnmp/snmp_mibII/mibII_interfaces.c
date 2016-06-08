@@ -2503,7 +2503,12 @@ name|string_get
 argument_list|(
 name|value
 argument_list|,
-literal|""
+name|MIBIF_PRIV
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|alias
 argument_list|,
 operator|-
 literal|1
