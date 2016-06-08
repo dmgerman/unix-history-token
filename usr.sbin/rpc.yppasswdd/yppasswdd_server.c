@@ -406,7 +406,7 @@ name|EXPAND
 parameter_list|(
 name|e
 parameter_list|)
-value|e = t; while ((*t++ = *p++));
+value|do { \ 	e = t; \ 	while ((*t++ = *p++)); \ } while (0)
 name|EXPAND
 argument_list|(
 name|yp_password
