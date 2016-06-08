@@ -11,23 +11,17 @@ begin_comment
 comment|/* Define to 1 if basename takes a constant pointer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_CONST_BASENAME
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_CONST_BASENAME */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if dirname takes a constant pointer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_CONST_DIRNAME
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_CONST_DIRNAME */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
