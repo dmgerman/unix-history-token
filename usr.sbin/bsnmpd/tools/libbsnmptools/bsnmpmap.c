@@ -1146,7 +1146,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"calloc() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1181,7 +1181,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"malloc() failed: %s"
+literal|"strdup() failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
