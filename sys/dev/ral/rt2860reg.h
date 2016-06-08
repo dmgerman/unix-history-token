@@ -1447,6 +1447,59 @@ value|(1<< 0)
 end_define
 
 begin_comment
+comment|/* flags for register WPDMA_RST_IDX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DRX_IDX0
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX5
+value|(1<<  5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX4
+value|(1<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX3
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX2
+value|(1<<  2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX1
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2860_RST_DTX_IDX0
+value|(1<<  0)
+end_define
+
+begin_comment
 comment|/* possible flags for register DELAY_INT_CFG */
 end_comment
 
@@ -5599,7 +5652,7 @@ define|#
 directive|define
 name|RT3070_DEF_RF
 define|\
-value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x60 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x01 },	\ 	{ 29, 0x1f }
+value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x60 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x03 },	\ 	{ 29, 0x1f }
 end_define
 
 begin_define
