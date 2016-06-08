@@ -93,13 +93,6 @@ directive|include
 file|"bsnmptools.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_bsnmptools_debug
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
