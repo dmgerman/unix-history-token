@@ -564,13 +564,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INSN_SIZE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|RISCV_INSN_NOP
 value|0x00000013
 end_define
