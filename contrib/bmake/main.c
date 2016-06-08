@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.245 2016/06/03 01:21:59 sjg Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.245 2016/06/03 01:21:59 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.245 2016/06/03 01:21:59 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7747,10 +7747,6 @@ name|rp
 condition|)
 block|{
 comment|/* a hit */
-if|if
-condition|(
-name|resolved
-condition|)
 name|strlcpy
 argument_list|(
 name|resolved
@@ -7760,17 +7756,8 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-else|else
-name|resolved
-operator|=
-name|bmake_strdup
-argument_list|(
-name|rp
-argument_list|)
-expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|(
@@ -7797,7 +7784,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|free
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 return|return
 name|rp
 condition|?
