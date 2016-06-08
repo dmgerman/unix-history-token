@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.60 2016/06/04 22:17:14 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.61 2016/06/07 00:40:00 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -1804,7 +1804,7 @@ block|}
 comment|/* The object directory may not exist. Check it.. */
 if|if
 condition|(
-name|stat
+name|cached_stat
 argument_list|(
 name|dname
 argument_list|,
@@ -5294,7 +5294,7 @@ name|link_src
 operator|!=
 name|NULL
 operator|&&
-name|lstat
+name|cached_lstat
 argument_list|(
 name|p
 argument_list|,
@@ -5310,7 +5310,7 @@ name|link_src
 operator|==
 name|NULL
 operator|&&
-name|stat
+name|cached_stat
 argument_list|(
 name|p
 argument_list|,
@@ -5729,7 +5729,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|stat
+name|cached_stat
 argument_list|(
 operator|*
 name|sdp
