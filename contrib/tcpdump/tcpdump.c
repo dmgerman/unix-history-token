@@ -245,7 +245,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 end_ifdef
 
 begin_include
@@ -302,7 +302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CAPSPER */
+comment|/* HAVE_CASPER */
 end_comment
 
 begin_include
@@ -659,7 +659,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -2068,7 +2068,7 @@ name|p
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|int
 name|dirfd
 decl_stmt|;
@@ -3969,7 +3969,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 end_ifdef
 
 begin_function
@@ -4116,7 +4116,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CAPSPER */
+comment|/* HAVE_CASPER */
 end_comment
 
 begin_ifdef
@@ -4225,7 +4225,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 end_ifdef
 
 begin_comment
@@ -4478,13 +4478,13 @@ name|VFile
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|cap_rights_t
 name|rights
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_CAPSPER */
+comment|/* HAVE_CASPER */
 name|int
 name|cansandbox
 decl_stmt|;
@@ -6333,7 +6333,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -7527,7 +7527,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 if|if
 condition|(
 operator|!
@@ -7540,7 +7540,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_CAPSPER */
+comment|/* HAVE_CASPER */
 name|init_addrtoname
 argument_list|(
 name|gndo
@@ -7758,7 +7758,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 if|if
 condition|(
 name|RFileName
@@ -7993,7 +7993,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|set_dumper_capsicum_rights
 argument_list|(
 name|p
@@ -8014,7 +8014,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|dumpinfo
 operator|.
 name|WFileName
@@ -8132,7 +8132,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* !HAVE_CAPSPER */
+comment|/* !HAVE_CASPER */
 name|dumpinfo
 operator|.
 name|WFileName
@@ -8450,7 +8450,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|cansandbox
 operator|=
 operator|(
@@ -8658,7 +8658,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -9491,7 +9491,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|FILE
 modifier|*
 name|fp
@@ -9676,7 +9676,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|fd
 operator|=
 name|openat
@@ -9756,7 +9756,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !HAVE_CAPSPER */
+comment|/* !HAVE_CASPER */
 name|dump_info
 operator|->
 name|p
@@ -9814,7 +9814,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info
@@ -9865,7 +9865,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|FILE
 modifier|*
 name|fp
@@ -9998,7 +9998,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|fd
 operator|=
 name|openat
@@ -10078,7 +10078,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !HAVE_CAPSPER */
+comment|/* !HAVE_CASPER */
 name|dump_info
 operator|->
 name|p
@@ -10136,7 +10136,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CAPSPER
+name|HAVE_CASPER
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info

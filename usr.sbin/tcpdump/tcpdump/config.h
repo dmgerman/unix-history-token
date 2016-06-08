@@ -57,7 +57,7 @@ comment|/* See Makefile */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_CAPSPER */
+comment|/* #undef HAVE_CASPER */
 end_comment
 
 begin_comment
