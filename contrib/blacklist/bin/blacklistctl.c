@@ -341,6 +341,7 @@ name|blocked
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 case|case
 literal|'D'
 case|:
@@ -348,7 +349,6 @@ name|dbname
 operator|=
 name|optarg
 expr_stmt|;
-break|break;
 break|break;
 case|case
 literal|'d'
