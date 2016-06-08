@@ -3677,6 +3677,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_Q_MISC_FSP_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_Q_MISC_FSP_ASAP
 value|0
 end_define
