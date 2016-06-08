@@ -552,28 +552,6 @@ decl_stmt|;
 name|uint32_t
 name|next_gpadl_handle
 decl_stmt|;
-comment|/** 	 * Represents channel interrupts. Each bit position 	 * represents a channel. 	 * When a channel sends an interrupt via VMBUS, it 	 * finds its bit in the send_interrupt_page, set it and 	 * calls Hv to generate a port event. The other end 	 * receives the port event and parse the 	 * recv_interrupt_page to see which bit is set 	 */
-name|void
-modifier|*
-name|interrupt_page
-decl_stmt|;
-name|void
-modifier|*
-name|send_interrupt_page
-decl_stmt|;
-name|void
-modifier|*
-name|recv_interrupt_page
-decl_stmt|;
-comment|/* 	 * 2 pages - 1st page for parent->child 	 * notification and 2nd is child->parent 	 * notification 	 */
-name|void
-modifier|*
-name|monitor_page_1
-decl_stmt|;
-name|void
-modifier|*
-name|monitor_page_2
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1105,11 +1083,19 @@ begin_comment
 comment|/**  * Connection interfaces  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|vmbus_softc
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|hv_vmbus_connect
 parameter_list|(
-name|void
+name|struct
+name|vmbus_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -89,7 +89,7 @@ name|vmbus_evtflags
 modifier|*
 name|event_flags
 decl_stmt|;
-comment|/* shared event flags */
+comment|/* event flags from host */
 comment|/* Rarely used fields */
 name|struct
 name|hyperv_dma
@@ -143,6 +143,21 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|vmbus_tx_evtflags
+decl_stmt|;
+comment|/* event flags to host */
+name|void
+modifier|*
+name|vmbus_mnf2
+decl_stmt|;
+comment|/* monitored by host */
+name|u_long
+modifier|*
+name|vmbus_rx_evtflags
+decl_stmt|;
+comment|/* compat evtflgs from host */
 name|struct
 name|vmbus_pcpu_data
 name|vmbus_pcpu
@@ -161,6 +176,28 @@ name|uint32_t
 name|vmbus_flags
 decl_stmt|;
 comment|/* see VMBUS_FLAG_ */
+comment|/* Shared memory for vmbus_{rx,tx}_evtflags */
+name|void
+modifier|*
+name|vmbus_evtflags
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|vmbus_evtflags_dma
+decl_stmt|;
+name|void
+modifier|*
+name|vmbus_mnf1
+decl_stmt|;
+comment|/* monitored by VM, unused */
+name|struct
+name|hyperv_dma
+name|vmbus_mnf1_dma
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|vmbus_mnf2_dma
+decl_stmt|;
 block|}
 struct|;
 end_struct
