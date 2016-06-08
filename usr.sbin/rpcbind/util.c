@@ -478,6 +478,9 @@ name|caller_uaddr
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ND_DEBUG
 specifier|const
 name|char
 modifier|*
@@ -485,6 +488,8 @@ name|hint_uaddr
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|ret
@@ -574,10 +579,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ND_DEBUG
 name|hint_uaddr
 operator|=
 name|clnt_uaddr
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -618,10 +628,15 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ND_DEBUG
 name|hint_uaddr
 operator|=
 name|caller_uaddr
 expr_stmt|;
+endif|#
+directive|endif
 name|hint_sa
 operator|=
 name|caller
@@ -1465,6 +1480,11 @@ argument_list|,
 literal|"can't alloc local ip4 addr\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
@@ -1477,6 +1497,11 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|local_in4
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 block|}
@@ -1560,6 +1585,11 @@ argument_list|,
 literal|"can't alloc local ip6 addr\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
@@ -1572,6 +1602,11 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|local_in6
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 block|}
@@ -1616,6 +1651,29 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|debugging
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"couldn't create ip6 socket"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done_inet6
+goto|;
+block|}
 comment|/* 	 * Loop through all interfaces. For each IPv6 multicast-capable 	 * interface, join the RPC multicast group on that interface. 	 */
 for|for
 control|(
@@ -1708,6 +1766,13 @@ literal|"setsockopt v6 multicast"
 argument_list|)
 expr_stmt|;
 block|}
+name|done_inet6
+label|:
+name|freeifaddrs
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* close(s); */
