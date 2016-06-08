@@ -200,7 +200,7 @@ parameter_list|,
 name|_quirks
 parameter_list|)
 define|\
-value|BHND_DEVICE(_core, NULL, _quirks, BHND_DF_HOSTB)
+value|BHND_DEVICE(BCM, _core, NULL, _quirks, BHND_DF_HOSTB)
 end_define
 
 begin_decl_stmt

@@ -151,6 +151,8 @@ init|=
 block|{
 name|BHND_DEVICE
 argument_list|(
+name|BCM
+argument_list|,
 name|CC
 argument_list|,
 name|NULL

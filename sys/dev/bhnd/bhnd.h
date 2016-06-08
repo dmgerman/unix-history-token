@@ -643,42 +643,10 @@ end_define
 begin_define
 define|#
 directive|define
-name|BHND_MIPS_DEVICE
-parameter_list|(
-name|_device
-parameter_list|,
-name|_desc
-parameter_list|,
-name|_quirks
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|_BHND_DEVICE(MIPS, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_ARM_DEVICE
-parameter_list|(
-name|_device
-parameter_list|,
-name|_desc
-parameter_list|,
-name|_quirks
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|_BHND_DEVICE(ARM, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BHND_DEVICE
 parameter_list|(
+name|_vendor
+parameter_list|,
 name|_device
 parameter_list|,
 name|_desc
@@ -688,7 +656,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|_BHND_DEVICE(BCM, _device, _desc, _quirks,	\ 	    ## __VA_ARGS__, 0)
+value|_BHND_DEVICE(_vendor, _device, _desc, _quirks,		\ 	    ## __VA_ARGS__, 0)
 end_define
 
 begin_define

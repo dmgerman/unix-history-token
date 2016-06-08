@@ -120,7 +120,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|BHND_DEVICE(_core, _desc, bhnd_pcie2_quirks, ## __VA_ARGS__)
+value|BHND_DEVICE(BCM, _core, _desc, bhnd_pcie2_quirks, ## __VA_ARGS__)
 end_define
 
 begin_decl_stmt
