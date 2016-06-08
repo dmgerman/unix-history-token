@@ -278,6 +278,7 @@ name|netconfig
 modifier|*
 name|rpcbind_get_conf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -762,15 +763,18 @@ name|netbuf
 modifier|*
 name|caller
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|serv_uaddr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|clnt_uaddr
 parameter_list|,
 name|char
+specifier|const
 modifier|*
 name|netid
 parameter_list|)
