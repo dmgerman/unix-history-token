@@ -588,7 +588,6 @@ argument_list|(
 literal|'\r'
 argument_list|)
 expr_stmt|;
-else|else
 name|efi_cons_efiputchar
 argument_list|(
 name|c
