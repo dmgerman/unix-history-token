@@ -125,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pageout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmparam.h>
 end_include
 
