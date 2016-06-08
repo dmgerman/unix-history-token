@@ -2360,6 +2360,11 @@ name|rv
 operator|=
 name|NS_RETURN
 expr_stmt|;
+name|free
+argument_list|(
+name|resultbuf
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|aliases
@@ -2415,6 +2420,11 @@ expr_stmt|;
 name|rv
 operator|=
 name|NS_RETURN
+expr_stmt|;
+name|free
+argument_list|(
+name|resultbuf
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
