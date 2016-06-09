@@ -1748,13 +1748,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|conn
-operator|->
-name|conn_immediate_data
-condition|)
-block|{
 name|tmp
 operator|=
 name|strtoul
@@ -1779,13 +1772,34 @@ argument_list|,
 literal|"received invalid MaxBurstLength"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|MAX_BURST_LENGTH
+condition|)
+block|{
+name|log_debugx
+argument_list|(
+literal|"capping MaxBurstLength "
+literal|"from %d to %d"
+argument_list|,
+name|tmp
+argument_list|,
+name|MAX_BURST_LENGTH
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|MAX_BURST_LENGTH
+expr_stmt|;
+block|}
 name|conn
 operator|->
 name|conn_max_burst_length
 operator|=
 name|tmp
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1824,6 +1838,28 @@ argument_list|,
 literal|"received invalid FirstBurstLength"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|FIRST_BURST_LENGTH
+condition|)
+block|{
+name|log_debugx
+argument_list|(
+literal|"capping FirstBurstLength "
+literal|"from %d to %d"
+argument_list|,
+name|tmp
+argument_list|,
+name|FIRST_BURST_LENGTH
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|FIRST_BURST_LENGTH
+expr_stmt|;
+block|}
 name|conn
 operator|->
 name|conn_first_burst_length
@@ -2346,13 +2382,7 @@ name|request_keys
 argument_list|,
 literal|"MaxBurstLength"
 argument_list|,
-literal|2
-operator|*
-name|conn
-operator|->
-name|conn_limits
-operator|.
-name|isl_max_data_segment_length
+name|MAX_BURST_LENGTH
 argument_list|)
 expr_stmt|;
 name|keys_add_int
@@ -2361,11 +2391,7 @@ name|request_keys
 argument_list|,
 literal|"FirstBurstLength"
 argument_list|,
-name|conn
-operator|->
-name|conn_limits
-operator|.
-name|isl_max_data_segment_length
+name|FIRST_BURST_LENGTH
 argument_list|)
 expr_stmt|;
 name|keys_add
