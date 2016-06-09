@@ -14938,6 +14938,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_STR
+argument_list|(
+literal|"kern.corefile"
+argument_list|,
+name|corefilename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|corefilename
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -14996,7 +15011,7 @@ name|corefile
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
