@@ -5346,6 +5346,11 @@ name|error
 operator|=
 name|ENAMETOOLONG
 expr_stmt|;
+name|vrele
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done_free
 goto|;
