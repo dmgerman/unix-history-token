@@ -3064,7 +3064,6 @@ name|frexpl
 parameter_list|(
 name|long
 name|double
-name|value
 parameter_list|,
 name|int
 modifier|*
