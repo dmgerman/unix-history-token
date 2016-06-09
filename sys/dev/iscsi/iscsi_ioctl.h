@@ -461,6 +461,7 @@ begin_struct
 struct|struct
 name|iscsi_daemon_connect
 block|{
+name|unsigned
 name|int
 name|idc_session_id
 decl_stmt|;
@@ -506,6 +507,7 @@ begin_struct
 struct|struct
 name|iscsi_daemon_send
 block|{
+name|unsigned
 name|int
 name|ids_session_id
 decl_stmt|;
@@ -541,6 +543,7 @@ begin_struct
 struct|struct
 name|iscsi_daemon_receive
 block|{
+name|unsigned
 name|int
 name|idr_session_id
 decl_stmt|;
