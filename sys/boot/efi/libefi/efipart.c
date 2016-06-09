@@ -559,7 +559,20 @@ name|Media
 operator|->
 name|LogicalPartition
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%d isn't a logical partition, skipping\n"
+argument_list|,
+name|efipart_dev
+operator|.
+name|dv_name
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 		 * If we come across a logical partition of subtype CDROM 		 * it doesn't refer to the CD filesystem itself, but rather 		 * to any usable El Torito boot image on it. In this case 		 * we try to find the parent device and add that instead as 		 * that will be the CD filesystem. 		 */
 name|node
 operator|=
