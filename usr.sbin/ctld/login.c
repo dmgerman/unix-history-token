@@ -2784,8 +2784,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"received invalid "
-literal|"FirstBurstLength"
+literal|"received invalid FirstBurstLength"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2793,27 +2792,21 @@ if|if
 condition|(
 name|tmp
 operator|>
-name|conn
-operator|->
-name|conn_data_segment_limit
+name|FIRST_BURST_LENGTH
 condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"capping FirstBurstLength from %zd to %zd"
+literal|"capping FirstBurstLength from %zd to %d"
 argument_list|,
 name|tmp
 argument_list|,
-name|conn
-operator|->
-name|conn_data_segment_limit
+name|FIRST_BURST_LENGTH
 argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|conn
-operator|->
-name|conn_data_segment_limit
+name|FIRST_BURST_LENGTH
 expr_stmt|;
 block|}
 name|conn
