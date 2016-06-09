@@ -324,6 +324,15 @@ name|struct
 name|task
 name|tsf_task_adhoc
 decl_stmt|;
+specifier|const
+name|struct
+name|ieee80211_key
+modifier|*
+name|keys
+index|[
+name|IEEE80211_WEP_NKID
+index|]
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
