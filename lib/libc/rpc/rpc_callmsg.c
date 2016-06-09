@@ -986,7 +986,7 @@ operator|==
 name|CALL
 operator|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1010,7 +1010,7 @@ operator|==
 name|RPC_MSG_VERSION
 operator|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1024,7 +1024,7 @@ name|cb_prog
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1038,7 +1038,7 @@ name|cb_vers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcproc
 argument_list|(
 name|xdrs
 argument_list|,
