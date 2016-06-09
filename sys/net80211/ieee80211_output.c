@@ -2062,6 +2062,25 @@ name|EIO
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|ieee80211_anyhdrsize
+argument_list|(
+name|wh
+argument_list|)
+condition|)
+name|senderr
+argument_list|(
+name|EIO
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 comment|/* locate destination node */
 switch|switch
 condition|(
@@ -2099,26 +2118,6 @@ case|:
 case|case
 name|IEEE80211_FC1_DIR_DSTODS
 case|:
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ieee80211_frame
-argument_list|)
-condition|)
-name|senderr
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|ni
 operator|=
 name|ieee80211_find_txnode
