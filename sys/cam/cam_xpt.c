@@ -25256,6 +25256,12 @@ literal|"XPT_SET_SIM_KNOB"
 block|}
 block|,
 block|{
+name|XPT_NVME_IO
+block|,
+literal|"XPT_NVME_IO"
+block|}
+block|,
+block|{
 name|XPT_SMP_IO
 block|,
 literal|"XPT_SMP_IO"

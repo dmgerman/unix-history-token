@@ -618,6 +618,13 @@ operator||
 name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Serial Management Protocol */
+name|XPT_NVME_IO
+init|=
+literal|0x1c
+operator||
+name|XPT_FC_DEV_QUEUED
+block|,
+comment|/* Execiute the requestred NVMe I/O operation */
 name|XPT_SCAN_TGT
 init|=
 literal|0x1E
