@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ipfw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ipstealth.h"
 end_include
 
