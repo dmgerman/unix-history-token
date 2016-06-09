@@ -2195,15 +2195,6 @@ name|EIO
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|if_inc_counter
-argument_list|(
-name|ifp
-argument_list|,
-name|IFCOUNTER_OPACKETS
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|IEEE80211_NODE_STAT
 argument_list|(
 name|ni
