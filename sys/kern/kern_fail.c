@@ -214,11 +214,11 @@ define|#
 directive|define
 name|fs_malloc
 parameter_list|()
-value|fp_malloc(sizeof(struct fail_point_setting), \         M_WAITOK | M_ZERO)
+value|fp_malloc(sizeof(struct fail_point_setting), \     M_WAITOK | M_ZERO)
 end_define
 
 begin_comment
-comment|/**   * These define the wchans that are used for sleeping, pausing respectively.   * They are chosen arbitrarily but need to be distinct to the failpoint and   * the sleep/pause distinction.   */
+comment|/**  * These define the wchans that are used for sleeping, pausing respectively.  * They are chosen arbitrarily but need to be distinct to the failpoint and  * the sleep/pause distinction.  */
 end_comment
 
 begin_define
@@ -542,7 +542,7 @@ name|int
 name|fe_prob
 decl_stmt|;
 comment|/**< likelihood of firing in millionths */
-name|int
+name|int32_t
 name|fe_count
 decl_stmt|;
 comment|/**< number of times to fire, -1 means infinite */
@@ -1347,7 +1347,9 @@ begin_function
 specifier|static
 name|void
 name|fail_point_garbage_collect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|fail_point_setting
@@ -3347,16 +3349,18 @@ name|buf
 decl_stmt|;
 name|struct
 name|sbuf
+name|sb
+decl_stmt|,
 modifier|*
 name|sb_check
-decl_stmt|;
-name|struct
-name|sbuf
-name|sb
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3364,10 +3368,6 @@ expr_stmt|;
 name|fp
 operator|=
 name|arg1
-expr_stmt|;
-name|buf
-operator|=
-name|NULL
 expr_stmt|;
 name|sb_check
 operator|=
