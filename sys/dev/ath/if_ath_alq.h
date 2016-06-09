@@ -308,6 +308,33 @@ name|ATH_ALQ_RESUME_BEACON
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_ALQ_TX_FIFO_PUSH
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|if_ath_alq_tx_fifo_push
+block|{
+name|uint32_t
+name|txq
+decl_stmt|;
+name|uint32_t
+name|nframes
+decl_stmt|;
+name|uint32_t
+name|fifo_depth
+decl_stmt|;
+name|uint32_t
+name|frame_cnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * These will always be logged, regardless.  */
 end_comment
