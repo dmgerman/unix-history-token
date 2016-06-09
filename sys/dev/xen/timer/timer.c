@@ -1664,6 +1664,12 @@ comment|/* Reset the last uptime value */
 name|pvclock_resume
 argument_list|()
 expr_stmt|;
+comment|/* Reset the RTC clock */
+name|inittodr
+argument_list|(
+name|time_second
+argument_list|)
+expr_stmt|;
 comment|/* Kick the timers on all CPUs */
 name|smp_rendezvous
 argument_list|(
