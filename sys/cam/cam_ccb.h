@@ -625,6 +625,13 @@ operator||
 name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Execiute the requestred NVMe I/O operation */
+name|XPT_MMCSD_IO
+init|=
+literal|0x1d
+operator||
+name|XPT_FC_DEV_QUEUED
+block|,
+comment|/* Placeholder for MMC / SD / SDIO I/O stuff */
 name|XPT_SCAN_TGT
 init|=
 literal|0x1E

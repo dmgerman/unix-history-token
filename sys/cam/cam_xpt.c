@@ -25262,6 +25262,12 @@ literal|"XPT_NVME_IO"
 block|}
 block|,
 block|{
+name|XPT_MMCSD_IO
+block|,
+literal|"XPT_MMCSD_IO"
+block|}
+block|,
+block|{
 name|XPT_SMP_IO
 block|,
 literal|"XPT_SMP_IO"
