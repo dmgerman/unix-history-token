@@ -9723,6 +9723,8 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
 name|vfs_getopt
 argument_list|(
 name|opts
@@ -9740,9 +9742,9 @@ argument_list|,
 operator|&
 name|errmsg_len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|errmsg_len
 operator|>
 literal|0
@@ -9761,13 +9763,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|errmsg_pos
-operator|>
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|optuio
@@ -9809,7 +9804,6 @@ argument_list|,
 name|errmsg_len
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|done_free
