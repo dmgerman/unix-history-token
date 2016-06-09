@@ -68,24 +68,6 @@ end_struct
 
 begin_function_decl
 name|void
-name|random_harvest_queue
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|enum
-name|random_entropy_source
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|read_rate_increment
 parameter_list|(
 name|u_int
