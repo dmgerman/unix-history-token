@@ -4790,7 +4790,7 @@ comment|/*  * Find the mapped address for program, version.  * Calls the rpcbind
 end_comment
 
 begin_function
-name|int
+name|bool_t
 name|rpcb_getaddr
 parameter_list|(
 name|rpcprog_t
