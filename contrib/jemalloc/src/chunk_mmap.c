@@ -48,6 +48,8 @@ operator|=
 name|size
 operator|+
 name|alignment
+operator|-
+name|PAGE
 expr_stmt|;
 comment|/* Beware size_t wrap-around. */
 if|if

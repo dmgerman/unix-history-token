@@ -2188,6 +2188,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * Don't sample.  The usize passed to prof_alloc_prep() 			 * was larger than what actually got allocated, so a 			 * backtrace was captured for this allocation, even 			 * though its actual usize was insufficient to cross the 			 * sample threshold. 			 */
+name|prof_alloc_rollback
+argument_list|(
+name|tsd
+argument_list|,
+name|tctx
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
 name|tctx
 operator|=
 operator|(

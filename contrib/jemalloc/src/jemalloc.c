@@ -7357,7 +7357,7 @@ name|ret
 argument_list|,
 name|usize
 argument_list|,
-name|false
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -10305,7 +10305,7 @@ name|usize
 argument_list|,
 name|prof_active
 argument_list|,
-name|true
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -10389,7 +10389,7 @@ name|tsd
 argument_list|,
 name|tctx
 argument_list|,
-name|true
+name|false
 argument_list|)
 expr_stmt|;
 return|return
@@ -10439,7 +10439,7 @@ name|tctx
 argument_list|,
 name|prof_active
 argument_list|,
-name|true
+name|false
 argument_list|,
 name|old_ptr
 argument_list|,

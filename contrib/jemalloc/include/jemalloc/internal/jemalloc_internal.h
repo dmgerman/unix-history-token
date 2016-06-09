@@ -3338,6 +3338,8 @@ operator|+
 name|large_pad
 operator|+
 name|alignment
+operator|-
+name|PAGE
 operator|<=
 name|arena_maxrun
 condition|)
@@ -3411,6 +3413,8 @@ condition|(
 name|usize
 operator|+
 name|alignment
+operator|-
+name|PAGE
 operator|<
 name|usize
 condition|)

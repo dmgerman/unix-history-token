@@ -536,6 +536,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+block|{
 name|struct
 name|timeval
 name|tv
@@ -564,6 +565,7 @@ name|tv_usec
 operator|*
 literal|1000
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Handle non-monotonic clocks. */

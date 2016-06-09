@@ -1439,10 +1439,10 @@ operator|->
 name|huge_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copy zero into is_zeroed_chunk and pass the copy to chunk_alloc(), so 	 * that it is possible to make correct junk/zero fill decisions below. 	 */
+comment|/* 	 * Use is_zeroed_chunk to detect whether the trailing memory is zeroed, 	 * update extent's zeroed field, and zero as necessary. 	 */
 name|is_zeroed_chunk
 operator|=
-name|zero
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1477,7 +1477,6 @@ operator|->
 name|huge_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Update the size of the huge allocation. */
 name|huge_node_unset
 argument_list|(
 name|ptr
@@ -1490,6 +1489,18 @@ argument_list|(
 name|node
 argument_list|,
 name|usize
+argument_list|)
+expr_stmt|;
+name|extent_node_zeroed_set
+argument_list|(
+name|node
+argument_list|,
+name|extent_node_zeroed_get
+argument_list|(
+name|node
+argument_list|)
+operator|&&
+name|is_zeroed_chunk
 argument_list|)
 expr_stmt|;
 name|huge_node_reset

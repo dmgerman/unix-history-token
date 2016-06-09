@@ -14066,6 +14066,8 @@ operator|+
 name|large_pad
 operator|+
 name|alignment
+operator|-
+name|PAGE
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
