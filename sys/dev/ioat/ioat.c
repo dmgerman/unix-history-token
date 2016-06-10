@@ -966,7 +966,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
 name|ioat_channel_index
 init|=
 literal|0
@@ -974,7 +974,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_hw_ioat
 argument_list|,
@@ -2146,7 +2146,7 @@ argument_list|)
 expr_stmt|;
 name|ioat_log_message
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"Capabilities: %b\n"
 argument_list|,
@@ -3828,6 +3828,21 @@ end_function
 begin_comment
 comment|/*  * User API functions  */
 end_comment
+
+begin_function
+name|unsigned
+name|ioat_get_nchannels
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ioat_channel_index
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|bus_dmaengine_t

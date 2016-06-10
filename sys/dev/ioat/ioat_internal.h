@@ -1494,7 +1494,7 @@ value|({									\ 	bus_dmaengine_t *_p = (_dmaeng);				\ 	(struct ioat_softc *)
 name|int
 name|version
 decl_stmt|;
-name|int
+name|unsigned
 name|chan_idx
 decl_stmt|;
 name|struct

@@ -183,6 +183,15 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_function_decl
+name|unsigned
+name|ioat_get_nchannels
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Called first to acquire a reference to the DMA channel  *  * Flags may be M_WAITOK or M_NOWAIT.  */
 end_comment
