@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -864,7 +870,20 @@ condition|)
 block|{
 name|buf
 index|[
+name|MIN
+argument_list|(
+operator|(
+name|size_t
+operator|)
 name|n
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|)
 index|]
 operator|=
 literal|'\0'
