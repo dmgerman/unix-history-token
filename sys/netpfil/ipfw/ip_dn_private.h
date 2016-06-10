@@ -276,6 +276,31 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|dn_aqm_head
+argument_list|,
+name|dn_aqm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* for new AQMs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|mq
@@ -427,6 +452,16 @@ name|dn_alg_head
 name|schedlist
 decl_stmt|;
 comment|/* list of algorithms */
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+name|struct
+name|dn_aqm_head
+name|aqmlist
+decl_stmt|;
+comment|/* list of AQMs */
+endif|#
+directive|endif
 comment|/* Store the fs/sch to scan when draining. The value is the 	 * bucket number of the hash table. Expire can be disabled 	 * with net.inet.ip.dummynet.expire=0, or it happens every 	 * expire ticks. 	 **/
 name|int
 name|drain_fs
@@ -623,6 +658,22 @@ name|int
 name|max_pkt_size
 decl_stmt|;
 comment|/* max packet size */
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+name|struct
+name|dn_aqm
+modifier|*
+name|aqmfp
+decl_stmt|;
+comment|/* Pointer to AQM functions */
+name|void
+modifier|*
+name|aqmcfg
+decl_stmt|;
+comment|/* configuration parameters for AQM */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -681,6 +732,16 @@ name|uint64_t
 name|q_time
 decl_stmt|;
 comment|/* start of queue idle time */
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+name|void
+modifier|*
+name|aqm_status
+decl_stmt|;
+comment|/* per-queue status variables*/
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1192,6 +1253,92 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_function_decl
+name|int
+name|ecn_mark
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* moved from ip_dn_io.c to here to be available for AQMs modules*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|mq_append
+parameter_list|(
+name|struct
+name|mq
+modifier|*
+name|q
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+if|if
+condition|(
+name|q
+operator|->
+name|head
+operator|==
+name|NULL
+condition|)
+name|q
+operator|->
+name|head
+operator|=
+name|m
+expr_stmt|;
+else|else
+name|q
+operator|->
+name|tail
+operator|->
+name|m_nextpkt
+operator|=
+name|m
+expr_stmt|;
+name|q
+operator|->
+name|tail
+operator|=
+name|m
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEW_AQM */
+end_comment
 
 begin_endif
 endif|#

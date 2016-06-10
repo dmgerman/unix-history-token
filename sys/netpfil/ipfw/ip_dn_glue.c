@@ -153,6 +153,23 @@ directive|include
 file|<netpfil/ipfw/ip_dn_private.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_AQM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/dn_aqm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
