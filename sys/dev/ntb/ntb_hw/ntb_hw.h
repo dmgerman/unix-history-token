@@ -225,6 +225,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|ntb_link_enabled
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ntb_set_ctx
 parameter_list|(
@@ -391,6 +402,18 @@ end_function_decl
 begin_function_decl
 name|uint8_t
 name|ntb_get_max_spads
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ntb_spad_clear
 parameter_list|(
 name|struct
 name|ntb_softc
