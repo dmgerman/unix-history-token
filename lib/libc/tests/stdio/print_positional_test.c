@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -297,8 +303,10 @@ name|swprintf
 argument_list|(
 name|wbuf1
 argument_list|,
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|wbuf1
+argument_list|)
 argument_list|,
 literal|L"|xx %1$s %2$s %3$s %4$s\n"
 literal|"|xx %5$s %6$s %7$s %8$s\n"
@@ -425,8 +433,10 @@ argument_list|,
 operator|&
 name|temp
 argument_list|,
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|wbuf2
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -550,8 +560,10 @@ argument_list|,
 operator|&
 name|temp
 argument_list|,
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|wbuf2
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
