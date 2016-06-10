@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cam.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3246,7 +3252,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|nvme_ctrlr_intx_handler
 parameter_list|(

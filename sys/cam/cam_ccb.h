@@ -1212,6 +1212,18 @@ decl_stmt|;
 name|u_int8_t
 name|serial_num_len
 decl_stmt|;
+specifier|const
+name|struct
+name|nvme_controller_data
+modifier|*
+name|nvme_cdata
+decl_stmt|;
+specifier|const
+name|struct
+name|nvme_namespace_data
+modifier|*
+name|nvme_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2077,6 +2089,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_pathinq_settings_nvme
+block|{
+name|uint16_t
+name|nsid
+decl_stmt|;
+comment|/* Namespace ID for this path */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -2197,6 +2221,10 @@ decl_stmt|;
 name|struct
 name|ccb_pathinq_settings_sas
 name|sas
+decl_stmt|;
+name|struct
+name|ccb_pathinq_settings_nvme
+name|nvme
 decl_stmt|;
 name|char
 name|ccb_pathinq_settings_opaque
@@ -3297,6 +3325,45 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_trans_settings_nvme
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_NVME_VALID_SPEC
+value|0x01
+define|#
+directive|define
+name|CTS_NVME_VALID_CAPS
+value|0x02
+name|u_int
+name|spec_major
+decl_stmt|;
+comment|/* Major version of spec supported */
+name|u_int
+name|spec_minor
+decl_stmt|;
+comment|/* Minor verison of spec supported */
+name|u_int
+name|spec_tiny
+decl_stmt|;
+comment|/* Tiny version of spec supported */
+name|u_int
+name|max_xfer
+decl_stmt|;
+comment|/* Max transfer size (0 -> unlimited */
+name|u_int
+name|caps
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Get/Set transfer rate/width/disconnection/tag queueing settings */
 end_comment
@@ -3339,6 +3406,10 @@ name|struct
 name|ccb_trans_settings_scsi
 name|scsi
 decl_stmt|;
+name|struct
+name|ccb_trans_settings_nvme
+name|nvme
+decl_stmt|;
 block|}
 name|proto_specific
 union|;
@@ -3367,6 +3438,10 @@ decl_stmt|;
 name|struct
 name|ccb_trans_settings_sata
 name|sata
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_nvme
+name|nvme
 decl_stmt|;
 block|}
 name|xport_specific
