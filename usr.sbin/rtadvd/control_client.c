@@ -392,6 +392,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -401,6 +402,13 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|state
 operator|=
 name|CM_STATE_ACK_WAIT
