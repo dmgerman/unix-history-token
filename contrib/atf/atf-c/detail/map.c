@@ -1387,11 +1387,6 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|me
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
