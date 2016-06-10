@@ -3749,6 +3749,12 @@ operator|.
 name|server
 argument_list|)
 expr_stmt|;
+name|tmp_creds
+operator|.
+name|server
+operator|=
+name|NULL
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_make_principal
