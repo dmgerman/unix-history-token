@@ -13409,11 +13409,17 @@ if|if
 condition|(
 name|buf
 condition|)
+block|{
 name|free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sysctl
