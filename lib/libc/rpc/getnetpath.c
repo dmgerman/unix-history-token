@@ -999,7 +999,7 @@ literal|'\\'
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
