@@ -33,30 +33,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/jail.h>
 end_include
 
@@ -69,12 +45,48 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
 comment|/* includes specific to top */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"commands.h"
+end_include
 
 begin_include
 include|#
@@ -124,6 +136,12 @@ begin_include
 include|#
 directive|include
 file|"utils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"username.h"
 end_include
 
 begin_comment
@@ -439,141 +457,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* display routines that need to be predeclared */
-end_comment
-
-begin_function_decl
-name|int
-name|i_loadave
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_loadave
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_procstates
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_procstates
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_cpustates
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_cpustates
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_memory
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_memory
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_arc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_arc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_swap
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_swap
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_message
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_message
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_header
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_header
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|i_process
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|u_process
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* pointers to display routines */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_loadave
@@ -585,7 +473,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_procstates
@@ -597,7 +485,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_cpustates
@@ -609,7 +497,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_memory
@@ -621,7 +509,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_arc
@@ -633,7 +521,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_swap
@@ -645,7 +533,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_message
@@ -657,7 +545,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_header
@@ -669,7 +557,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 function_decl|(
 modifier|*
 name|d_process
@@ -680,7 +568,17 @@ name|i_process
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|reset_display
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -4312,12 +4210,10 @@ begin_comment
 comment|/*  *  reset_display() - reset all the display routine pointers so that entire  *	screen will get redrawn.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|reset_display
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|d_loadave
 operator|=
@@ -4356,7 +4252,7 @@ operator|=
 name|i_process
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  signal handlers  */

@@ -7,6 +7,18 @@ begin_comment
 comment|/*  *  Top - a top users display for Berkeley Unix  *  *  General (global) definitions  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TOP_H
+end_define
+
 begin_comment
 comment|/* Current major version number */
 end_comment
@@ -159,6 +171,15 @@ name|int
 name|pcpu_stats
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TOP_H */
+end_comment
 
 end_unit
 
