@@ -6167,6 +6167,24 @@ name|sgl_node
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|g_hv_sgl_page_pool
+operator|.
+name|in_use_sgl_list
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"storvsc error: not enough in use sgl\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|sgl_node
 operator|=
 name|LIST_FIRST
@@ -6184,20 +6202,6 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|sgl_node
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"storvsc error: not enough in use sgl\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|sgl_node
 operator|->
 name|sgl_data
@@ -6273,6 +6277,26 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* get struct sglist from free_sgl_list */
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|g_hv_sgl_page_pool
+operator|.
+name|free_sgl_list
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"storvsc error: not enough free sgl\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|sgl_node
 operator|=
 name|LIST_FIRST
@@ -6290,22 +6314,6 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|sgl_node
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"storvsc error: not enough free sgl\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|bounce_sgl
 operator|=
 name|sgl_node
