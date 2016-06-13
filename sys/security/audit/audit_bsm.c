@@ -3723,6 +3723,12 @@ case|case
 name|AUE_POLL
 case|:
 case|case
+name|AUE_PREAD
+case|:
+case|case
+name|AUE_PWRITE
+case|:
+case|case
 name|AUE_READ
 case|:
 case|case
