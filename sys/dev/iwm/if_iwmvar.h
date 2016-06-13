@@ -614,6 +614,10 @@ index|[
 name|IWM_RX_RING_COUNT
 index|]
 decl_stmt|;
+name|bus_dmamap_t
+name|spare_map
+decl_stmt|;
+comment|/* for iwm_rx_addbuf() */
 name|bus_dma_tag_t
 name|data_dmat
 decl_stmt|;
