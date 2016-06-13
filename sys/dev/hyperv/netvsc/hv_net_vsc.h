@@ -2015,6 +2015,9 @@ name|int
 name|hn_txeof
 decl_stmt|;
 name|int
+name|hn_sched_tx
+decl_stmt|;
+name|int
 name|hn_direct_tx_size
 decl_stmt|;
 name|struct
