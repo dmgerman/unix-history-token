@@ -1755,6 +1755,10 @@ return|return
 operator|(
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 argument_list|)
 operator|)
