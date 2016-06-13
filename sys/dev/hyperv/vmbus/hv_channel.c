@@ -213,12 +213,8 @@ operator|*
 operator|)
 name|hv_vmbus_g_connection
 operator|.
-name|monitor_pages
+name|monitor_page_2
 expr_stmt|;
-name|monitor_page
-operator|++
-expr_stmt|;
-comment|/* Get the child to parent monitor page */
 name|synch_set_bit
 argument_list|(
 name|channel

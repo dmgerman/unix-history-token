@@ -595,24 +595,11 @@ argument_list|)
 argument_list|,
 name|M_NETVSC
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|device
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|mtx_init
 argument_list|(
 operator|&
@@ -624,9 +611,7 @@ literal|"HV-FRL"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Same effect as STAILQ_HEAD_INITIALIZER() static initializer */
@@ -730,24 +715,11 @@ argument_list|)
 argument_list|,
 name|M_NETVSC
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|request
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|sema_init
 argument_list|(
 operator|&
@@ -811,7 +783,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* Add to the request list */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|device
@@ -831,7 +803,7 @@ argument_list|,
 name|mylist_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|device
@@ -866,7 +838,7 @@ modifier|*
 name|request
 parameter_list|)
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|device
@@ -890,7 +862,7 @@ argument_list|,
 name|mylist_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|device
@@ -1154,7 +1126,7 @@ name|found
 init|=
 name|FALSE
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|device
@@ -1221,7 +1193,7 @@ operator|=
 name|next_request
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|device
