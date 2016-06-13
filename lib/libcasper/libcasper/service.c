@@ -1519,6 +1519,12 @@ argument_list|,
 literal|"Unable to cover stderr"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+name|STDERR_FILENO
+condition|)
 name|close
 argument_list|(
 name|fd
