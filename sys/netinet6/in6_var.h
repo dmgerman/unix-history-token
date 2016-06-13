@@ -1317,13 +1317,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCSIFALIFETIME_IN6
-value|_IOWR('i', 82, struct in6_ifreq)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SIOCGIFSTAT_IN6
 value|_IOWR('i', 83, struct in6_ifreq)
 end_define
