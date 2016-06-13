@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -1965,9 +1977,6 @@ name|netvsc_dev
 modifier|*
 name|net_dev
 decl_stmt|;
-name|int
-name|hn_txdesc_cnt
-decl_stmt|;
 name|struct
 name|hn_txdesc
 modifier|*
@@ -1994,10 +2003,29 @@ name|hn_txdesc_list
 name|hn_txlist
 decl_stmt|;
 name|int
+name|hn_txdesc_cnt
+decl_stmt|;
+name|int
 name|hn_txdesc_avail
 decl_stmt|;
 name|int
 name|hn_txeof
+decl_stmt|;
+name|int
+name|hn_direct_tx_size
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|hn_tx_taskq
+decl_stmt|;
+name|struct
+name|task
+name|hn_start_task
+decl_stmt|;
+name|struct
+name|task
+name|hn_txeof_task
 decl_stmt|;
 name|struct
 name|lro_ctrl
