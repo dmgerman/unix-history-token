@@ -9123,6 +9123,14 @@ argument_list|,
 name|ZIO_COMPRESS_OFF
 argument_list|)
 expr_stmt|;
+name|hdr
+operator|->
+name|b_l1hdr
+operator|.
+name|b_tmp_cdata
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * There's nothing to free since the buffer was all zero's and 	 * compressed to a zero length buffer. 	 */
