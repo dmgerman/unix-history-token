@@ -1994,6 +1994,9 @@ decl_stmt|;
 name|int
 name|hn_tx_chimney_max
 decl_stmt|;
+name|uint64_t
+name|hn_csum_assist
+decl_stmt|;
 name|struct
 name|mtx
 name|hn_txlist_spin
@@ -2034,15 +2037,19 @@ decl_stmt|;
 name|int
 name|hn_lro_hiwat
 decl_stmt|;
-comment|/* Trust tcp segments verification on host side */
+comment|/* Trust csum verification on host side */
 name|int
-name|hn_trust_hosttcp
+name|hn_trust_hcsum
 decl_stmt|;
+comment|/* HN_TRUST_HCSUM_ */
 name|u_long
 name|hn_csum_ip
 decl_stmt|;
 name|u_long
 name|hn_csum_tcp
+decl_stmt|;
+name|u_long
+name|hn_csum_udp
 decl_stmt|;
 name|u_long
 name|hn_csum_trusted
@@ -2072,6 +2079,27 @@ block|}
 name|hn_softc_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_IP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_TCP
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_TRUST_HCSUM_UDP
+value|0x0004
+end_define
 
 begin_comment
 comment|/*  * Externs  */
