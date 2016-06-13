@@ -6002,7 +6002,7 @@ name|hv_kvp_poll_fd
 argument_list|,
 literal|1
 argument_list|,
-literal|100
+name|INFTIM
 argument_list|)
 expr_stmt|;
 name|KVP_LOG
