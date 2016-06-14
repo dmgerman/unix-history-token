@@ -1331,6 +1331,12 @@ operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|il
+operator|!=
+name|NULL
+condition|)
 name|bitmap_fill
 argument_list|(
 operator|&
