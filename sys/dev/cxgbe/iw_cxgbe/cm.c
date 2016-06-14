@@ -3929,7 +3929,7 @@ name|SBS_CANTRCVMORE
 operator|)
 operator|&&
 name|state
-operator|<
+operator|<=
 name|CLOSING
 condition|)
 block|{
@@ -6716,6 +6716,7 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since socket options were set as l_onoff=1 and l_linger=0 in in 	 * abort_socket, invoking soclose here sends a RST (reset) to the peer. 	 */
 name|err
 operator|=
 name|close_socket
@@ -6725,7 +6726,7 @@ name|ep
 operator|->
 name|com
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|set_bit
@@ -6749,6 +6750,15 @@ argument_list|,
 name|__func__
 argument_list|,
 name|ep
+argument_list|)
+expr_stmt|;
+comment|/* 	 * TBD: iw_cgbe driver should receive ABORT reply for every ABORT 	 * request it has sent. But the current TOE driver is not propagating 	 * this ABORT reply event (via do_abort_rpl) to iw_cxgbe. So as a work- 	 * around de-refer 'ep' (which was refered before sending ABORT request) 	 * here instead of doing it in abort_rpl() handler of iw_cxgbe driver. 	 */
+name|c4iw_put_ep
+argument_list|(
+operator|&
+name|ep
+operator|->
+name|com
 argument_list|)
 expr_stmt|;
 return|return
