@@ -6557,6 +6557,11 @@ name|oodate
 operator|=
 name|TRUE
 expr_stmt|;
+name|needOODATE
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* assume the worst */
 block|}
 block|}
 block|}
