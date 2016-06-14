@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: newfs_extern.h,v 1.3 2009/10/21 01:07:47 snj Exp $	*/
+comment|/*	$NetBSD: newfs_extern.h,v 1.4 2015/12/21 00:58:08 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -28,6 +28,8 @@ parameter_list|,
 specifier|const
 name|fsinfo_t
 modifier|*
+parameter_list|,
+name|time_t
 parameter_list|)
 function_decl|;
 end_function_decl

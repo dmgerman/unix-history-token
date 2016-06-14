@@ -2647,7 +2647,20 @@ name|void
 parameter_list|)
 block|{
 name|time_t
-name|tim
+name|tstamp
+init|=
+name|stampst
+operator|.
+name|st_ino
+condition|?
+name|stampst
+operator|.
+name|st_mtime
+else|:
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
 comment|/* root should be a fixed size of 34 bytes since it has no name */
 name|memcpy
@@ -2914,12 +2927,6 @@ literal|37
 argument_list|)
 expr_stmt|;
 comment|/* Setup dates */
-name|time
-argument_list|(
-operator|&
-name|tim
-argument_list|)
-expr_stmt|;
 name|cd9660_time_8426
 argument_list|(
 operator|(
@@ -2933,7 +2940,7 @@ name|primaryDescriptor
 operator|.
 name|creation_date
 argument_list|,
-name|tim
+name|tstamp
 argument_list|)
 expr_stmt|;
 name|cd9660_time_8426
@@ -2949,10 +2956,15 @@ name|primaryDescriptor
 operator|.
 name|modification_date
 argument_list|,
-name|tim
+name|tstamp
 argument_list|)
 expr_stmt|;
-comment|/* 	cd9660_set_date(diskStructure.primaryDescriptor.expiration_date, now); 	*/
+if|#
+directive|if
+literal|0
+block|cd9660_set_date(diskStructure.primaryDescriptor.expiration_date, 	    tstamp);
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|diskStructure
@@ -2990,7 +3002,7 @@ name|primaryDescriptor
 operator|.
 name|effective_date
 argument_list|,
-name|tim
+name|tstamp
 argument_list|)
 expr_stmt|;
 comment|/* make this sane */
@@ -3006,7 +3018,7 @@ name|isoDirRecord
 operator|->
 name|date
 argument_list|,
-name|tim
+name|tstamp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3564,7 +3576,20 @@ name|newnode
 parameter_list|)
 block|{
 name|time_t
-name|tim
+name|tstamp
+init|=
+name|stampst
+operator|.
+name|st_ino
+condition|?
+name|stampst
+operator|.
+name|st_mtime
+else|:
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
 name|int
 name|test
@@ -3652,12 +3677,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Set the various dates */
 comment|/* If we want to use the current date and time */
-name|time
-argument_list|(
-operator|&
-name|tim
-argument_list|)
-expr_stmt|;
 name|cd9660_time_915
 argument_list|(
 name|newnode
@@ -3666,7 +3685,7 @@ name|isoDirRecord
 operator|->
 name|date
 argument_list|,
-name|tim
+name|tstamp
 argument_list|)
 expr_stmt|;
 name|cd9660_bothendian_dword
@@ -3830,6 +3849,14 @@ name|isoDirRecord
 operator|->
 name|date
 argument_list|,
+name|stampst
+operator|.
+name|st_ino
+condition|?
+name|stampst
+operator|.
+name|st_mtime
+else|:
 name|node
 operator|->
 name|inode
@@ -5247,6 +5274,29 @@ condition|)
 return|return
 literal|0
 return|;
+name|cd9660_time_915
+argument_list|(
+name|diskStructure
+operator|.
+name|rr_moved_dir
+operator|->
+name|isoDirRecord
+operator|->
+name|date
+argument_list|,
+name|stampst
+operator|.
+name|st_ino
+condition|?
+name|stampst
+operator|.
+name|st_mtime
+else|:
+name|start_time
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Create a file with the same ORIGINAL name */
 name|tfile

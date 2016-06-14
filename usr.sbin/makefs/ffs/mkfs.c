@@ -463,6 +463,9 @@ specifier|const
 name|fsinfo_t
 modifier|*
 name|fsopts
+parameter_list|,
+name|time_t
+name|tstamp
 parameter_list|)
 block|{
 name|int
@@ -2510,9 +2513,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|start_time
-operator|.
-name|tv_sec
+name|tstamp
 expr_stmt|;
 name|sblock
 operator|.
@@ -2673,9 +2674,7 @@ name|sblock
 operator|.
 name|fs_time
 operator|=
-name|start_time
-operator|.
-name|tv_sec
+name|tstamp
 expr_stmt|;
 if|if
 condition|(
@@ -2688,9 +2687,7 @@ name|sblock
 operator|.
 name|fs_old_time
 operator|=
-name|start_time
-operator|.
-name|tv_sec
+name|tstamp
 expr_stmt|;
 name|sblock
 operator|.
@@ -3003,9 +3000,7 @@ name|initcg
 argument_list|(
 name|cylno
 argument_list|,
-name|start_time
-operator|.
-name|tv_sec
+name|tstamp
 argument_list|,
 name|fsopts
 argument_list|)
@@ -3064,9 +3059,7 @@ name|sblock
 operator|.
 name|fs_time
 operator|=
-name|start_time
-operator|.
-name|tv_sec
+name|tstamp
 expr_stmt|;
 if|if
 condition|(

@@ -548,6 +548,14 @@ name|start_time
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|stat
+name|stampst
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * If -x is specified, we want to exclude nodes which do not appear  * in the spec file.  */
 end_comment
