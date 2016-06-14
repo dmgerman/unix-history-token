@@ -7820,7 +7820,7 @@ argument_list|(
 name|toep
 operator|->
 name|ulp_mode
-operator|!=
+operator|==
 name|ULP_MODE_RDMA
 argument_list|,
 operator|(
