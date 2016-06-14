@@ -772,6 +772,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Configure the interrupt controller */
+name|intr_pic_init_secondary
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -907,9 +911,6 @@ name|KTR_SMP
 argument_list|,
 literal|"go into scheduler"
 argument_list|)
-expr_stmt|;
-name|intr_pic_init_secondary
-argument_list|()
 expr_stmt|;
 comment|/* Enter the scheduler */
 name|sched_throw
