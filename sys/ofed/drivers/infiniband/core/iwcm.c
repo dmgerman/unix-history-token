@@ -906,6 +906,9 @@ name|iwcm_id_private
 modifier|*
 name|cm_id_priv
 decl_stmt|;
+name|int
+name|cb_destroy
+decl_stmt|;
 name|cm_id_priv
 operator|=
 name|container_of
@@ -918,13 +921,9 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|iwcm_deref_id
-argument_list|(
-name|cm_id_priv
-argument_list|)
-operator|&&
+comment|/* 	 * Test bit before deref in case the cm_id gets freed on another 	 * thread. 	 */
+name|cb_destroy
+operator|=
 name|test_bit
 argument_list|(
 name|IWCM_F_CALLBACK_DESTROY
@@ -934,6 +933,15 @@ name|cm_id_priv
 operator|->
 name|flags
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iwcm_deref_id
+argument_list|(
+name|cm_id_priv
+argument_list|)
+operator|&&
+name|cb_destroy
 condition|)
 block|{
 name|BUG_ON
@@ -4756,6 +4764,11 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+if|if
+condition|(
+name|empty
+condition|)
+return|return;
 name|spin_lock_irqsave
 argument_list|(
 operator|&
