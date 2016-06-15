@@ -220,6 +220,9 @@ parameter_list|,
 name|void
 modifier|*
 name|additl_info
+parameter_list|,
+name|int
+name|nchan
 parameter_list|)
 function_decl|;
 end_function_decl

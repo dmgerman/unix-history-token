@@ -3271,6 +3271,10 @@ parameter_list|,
 name|void
 modifier|*
 name|additl_info
+parameter_list|,
+name|int
+name|nchan
+name|__unused
 parameter_list|)
 block|{
 name|int
