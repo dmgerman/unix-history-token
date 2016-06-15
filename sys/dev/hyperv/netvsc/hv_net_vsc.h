@@ -1581,9 +1581,6 @@ name|hv_device
 modifier|*
 name|dev
 decl_stmt|;
-name|int
-name|num_outstanding_sends
-decl_stmt|;
 comment|/* Send buffer allocated by us but manages by NetVSP */
 name|void
 modifier|*
@@ -1956,6 +1953,11 @@ struct|struct
 name|hn_rx_ring
 block|{
 name|struct
+name|ifnet
+modifier|*
+name|hn_ifp
+decl_stmt|;
+name|struct
 name|lro_ctrl
 name|hn_lro
 decl_stmt|;
@@ -2010,6 +2012,12 @@ directive|define
 name|HN_TRUST_HCSUM_UDP
 value|0x0004
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -2087,6 +2095,11 @@ name|struct
 name|hn_softc
 modifier|*
 name|hn_sc
+decl_stmt|;
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|hn_chan
 decl_stmt|;
 name|int
 name|hn_direct_tx_size
@@ -2306,9 +2319,9 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*

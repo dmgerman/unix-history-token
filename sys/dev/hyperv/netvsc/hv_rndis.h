@@ -3575,14 +3575,20 @@ begin_comment
 comment|/*  * Externs  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|netvsc_recv
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device_ctx
+name|chan
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -3597,24 +3603,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netvsc_recv_rollup
-parameter_list|(
-name|struct
-name|hv_device
-modifier|*
-name|device_ctx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|netvsc_channel_rollup
 parameter_list|(
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|device_ctx
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
