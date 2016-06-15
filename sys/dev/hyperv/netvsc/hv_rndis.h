@@ -2367,6 +2367,13 @@ name|ndis_per_pkt_infotype
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|nbl_hash_value
+value|pkt_cancel_id
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2411,6 +2418,18 @@ block|}
 name|ndis_8021q_info
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|ndis_hash_info
+block|{
+name|uint32_t
+name|hash
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -2738,6 +2757,13 @@ block|}
 name|rndis_tcp_tso_info
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|RNDIS_HASH_PPI_SIZE
+value|(sizeof(rndis_per_packet_info) + \ 				sizeof(struct ndis_hash_info))
+end_define
 
 begin_define
 define|#

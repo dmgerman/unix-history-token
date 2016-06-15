@@ -1957,15 +1957,18 @@ name|ifnet
 modifier|*
 name|hn_ifp
 decl_stmt|;
-name|struct
-name|lro_ctrl
-name|hn_lro
+name|int
+name|hn_rx_idx
 decl_stmt|;
 comment|/* Trust csum verification on host side */
 name|int
 name|hn_trust_hcsum
 decl_stmt|;
 comment|/* HN_TRUST_HCSUM_ */
+name|struct
+name|lro_ctrl
+name|hn_lro
+decl_stmt|;
 name|u_long
 name|hn_csum_ip
 decl_stmt|;
@@ -2086,6 +2089,9 @@ name|hn_mbuf_br
 decl_stmt|;
 name|int
 name|hn_oactive
+decl_stmt|;
+name|int
+name|hn_tx_idx
 decl_stmt|;
 name|struct
 name|mtx

@@ -399,7 +399,7 @@ define|#
 directive|define
 name|HN_RNDIS_MSG_LEN
 define|\
-value|(sizeof(rndis_msg) +		\      RNDIS_VLAN_PPI_SIZE +		\      RNDIS_TSO_PPI_SIZE +		\      RNDIS_CSUM_PPI_SIZE)
+value|(sizeof(rndis_msg) +		\      RNDIS_HASH_PPI_SIZE +		\      RNDIS_VLAN_PPI_SIZE +		\      RNDIS_TSO_PPI_SIZE +		\      RNDIS_CSUM_PPI_SIZE)
 end_define
 
 begin_define
@@ -1068,7 +1068,7 @@ specifier|static
 name|int
 name|hn_use_if_start
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3610,6 +3610,11 @@ name|rndis_per_packet_info
 modifier|*
 name|rppi
 decl_stmt|;
+name|struct
+name|ndis_hash_info
+modifier|*
+name|hash_info
+decl_stmt|;
 name|uint32_t
 name|rndis_msg_size
 decl_stmt|;
@@ -3700,6 +3705,49 @@ name|RNDIS_MESSAGE_SIZE
 argument_list|(
 name|rndis_packet
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the hash info for this packet, so that the host could 	 * dispatch the TX done event for this packet back to this TX 	 * ring's channel. 	 */
+name|rndis_msg_size
+operator|+=
+name|RNDIS_HASH_PPI_SIZE
+expr_stmt|;
+name|rppi
+operator|=
+name|hv_set_rppi_data
+argument_list|(
+name|rndis_mesg
+argument_list|,
+name|RNDIS_HASH_PPI_SIZE
+argument_list|,
+name|nbl_hash_value
+argument_list|)
+expr_stmt|;
+name|hash_info
+operator|=
+operator|(
+expr|struct
+name|ndis_hash_info
+operator|*
+operator|)
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|rppi
+operator|+
+name|rppi
+operator|->
+name|per_packet_info_offset
+operator|)
+expr_stmt|;
+name|hash_info
+operator|->
+name|hash
+operator|=
+name|txr
+operator|->
+name|hn_tx_idx
 expr_stmt|;
 if|if
 condition|(
@@ -6061,6 +6109,23 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
+name|m_new
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|=
+name|rxr
+operator|->
+name|hn_rx_idx
+expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
+name|m_new
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Note:  Moved RX completion back to hv_nv_on_receive() so all 	 * messages (not just data messages) will trigger a response. 	 */
 name|ifp
 operator|->
@@ -9610,6 +9675,12 @@ name|sc
 operator|->
 name|hn_ifp
 expr_stmt|;
+name|rxr
+operator|->
+name|hn_rx_idx
+operator|=
+name|i
+expr_stmt|;
 comment|/* 		 * Initialize LRO. 		 */
 if|#
 directive|if
@@ -10262,6 +10333,12 @@ operator|->
 name|hn_sc
 operator|=
 name|sc
+expr_stmt|;
+name|txr
+operator|->
+name|hn_tx_idx
+operator|=
+name|id
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -12383,8 +12460,33 @@ name|txr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|idx
+init|=
+literal|0
 decl_stmt|;
-comment|/* TODO: vRSS, TX ring selection */
+comment|/* 	 * Select the TX ring based on flowid 	 */
+if|if
+condition|(
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
+condition|)
+name|idx
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|%
+name|sc
+operator|->
+name|hn_tx_ring_cnt
+expr_stmt|;
 name|txr
 operator|=
 operator|&
@@ -12392,7 +12494,7 @@ name|sc
 operator|->
 name|hn_tx_ring
 index|[
-literal|0
+name|idx
 index|]
 expr_stmt|;
 name|error
