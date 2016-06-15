@@ -1565,16 +1565,8 @@ name|next_gpadl_handle
 decl_stmt|;
 name|next_gpadl_handle
 operator|=
-name|hv_vmbus_g_connection
-operator|.
-name|next_gpadl_handle
-expr_stmt|;
-name|atomic_add_int
+name|atomic_fetchadd_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|hv_vmbus_g_connection
 operator|.
@@ -1605,22 +1597,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* if(allocation failed) return immediately */
-comment|/* reverse atomic_add_int above */
-name|atomic_subtract_int
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|hv_vmbus_g_connection
-operator|.
-name|next_gpadl_handle
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* 		 * XXX 		 * We can _not_ even revert the above incremental, 		 * if multiple GPADL establishments are running 		 * parallelly, decrement the global next_gpadl_handle 		 * is calling for _big_ trouble.  A better solution 		 * is to have a 0-based GPADL id bitmap ... 		 */
 return|return
 name|ret
 return|;

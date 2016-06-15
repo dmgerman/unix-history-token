@@ -2072,6 +2072,14 @@ name|task
 name|hn_txeof_task
 decl_stmt|;
 name|struct
+name|buf_ring
+modifier|*
+name|hn_mbuf_br
+decl_stmt|;
+name|int
+name|hn_oactive
+decl_stmt|;
+name|struct
 name|mtx
 name|hn_tx_lock
 decl_stmt|;
