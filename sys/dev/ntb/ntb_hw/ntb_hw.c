@@ -13894,6 +13894,15 @@ if|if
 condition|(
 name|ntb
 operator|->
+name|peer_msix_good
+condition|)
+goto|goto
+name|msix_good
+goto|;
+if|if
+condition|(
+name|ntb
+operator|->
 name|peer_msix_done
 condition|)
 goto|goto
@@ -14081,6 +14090,12 @@ name|peer_msix_good
 operator|=
 name|true
 expr_stmt|;
+comment|/* Give peer time to see our NTB_MSIX_RECEIVED. */
+goto|goto
+name|reschedule
+goto|;
+name|msix_good
+label|:
 name|ntb_poll_link
 argument_list|(
 name|ntb
@@ -14120,6 +14135,7 @@ argument_list|(
 name|ntb
 argument_list|)
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -14128,6 +14144,16 @@ operator|->
 name|peer_msix_work
 argument_list|,
 name|hz
+operator|*
+operator|(
+name|ntb
+operator|->
+name|peer_msix_good
+condition|?
+literal|2
+else|:
+literal|1
+operator|)
 operator|/
 literal|100
 argument_list|,
@@ -14136,6 +14162,7 @@ argument_list|,
 name|ntb
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|ntb_spad_clear
 argument_list|(
