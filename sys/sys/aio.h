@@ -382,36 +382,6 @@ name|outputcharge
 decl_stmt|;
 comment|/* (*) output blocks */
 name|struct
-name|bio
-modifier|*
-name|bp
-decl_stmt|;
-comment|/* (*) BIO backend BIO pointer */
-name|struct
-name|buf
-modifier|*
-name|pbuf
-decl_stmt|;
-comment|/* (*) BIO backend buffer pointer */
-name|struct
-name|vm_page
-modifier|*
-name|pages
-index|[
-name|btoc
-argument_list|(
-name|MAXPHYS
-argument_list|)
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* BIO backend pages */
-name|int
-name|npages
-decl_stmt|;
-comment|/* BIO backend number of pages */
-name|struct
 name|proc
 modifier|*
 name|userproc
@@ -459,10 +429,6 @@ name|uint64_t
 name|seqno
 decl_stmt|;
 comment|/* (*) job number */
-name|int
-name|pending
-decl_stmt|;
-comment|/* (a) number of pending I/O, aio_fsync only */
 name|aio_cancel_fn_t
 modifier|*
 name|cancel_fn
@@ -473,6 +439,73 @@ modifier|*
 name|handle_fn
 decl_stmt|;
 comment|/* (c) backend handle function */
+union|union
+block|{
+comment|/* Backend-specific data fields */
+struct|struct
+block|{
+comment|/* BIO backend */
+name|struct
+name|bio
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* (*) BIO pointer */
+name|struct
+name|buf
+modifier|*
+name|pbuf
+decl_stmt|;
+comment|/* (*) buffer pointer */
+name|struct
+name|vm_page
+modifier|*
+name|pages
+index|[
+name|btoc
+argument_list|(
+name|MAXPHYS
+argument_list|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* (*) */
+name|int
+name|npages
+decl_stmt|;
+comment|/* (*) number of pages */
+block|}
+struct|;
+struct|struct
+block|{
+comment|/* fsync() requests */
+name|int
+name|pending
+decl_stmt|;
+comment|/* (a) number of pending I/O */
+block|}
+struct|;
+struct|struct
+block|{
+name|void
+modifier|*
+name|backend1
+decl_stmt|;
+name|void
+modifier|*
+name|backend2
+decl_stmt|;
+name|long
+name|backend3
+decl_stmt|;
+name|int
+name|backend4
+decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
 block|}
 struct|;
 end_struct

@@ -2769,15 +2769,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
-name|job
-operator|->
-name|bp
-operator|==
-name|NULL
-argument_list|)
-expr_stmt|;
 name|AIO_UNLOCK
 argument_list|(
 name|ki

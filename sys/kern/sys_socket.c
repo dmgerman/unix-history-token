@@ -2016,6 +2016,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Use the 'backend3' field in AIO jobs to store the amount of data  * completed by the AIO job so far.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|aio_done
+value|backend3
+end_define
+
 begin_expr_stmt
 specifier|static
 name|STAILQ_HEAD
@@ -2871,11 +2882,7 @@ name|done
 operator|=
 name|job
 operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|status
+name|aio_done
 expr_stmt|;
 name|cnt
 operator|=
@@ -3116,11 +3123,7 @@ name|uio_resid
 expr_stmt|;
 name|job
 operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|status
+name|aio_done
 operator|=
 name|done
 expr_stmt|;
@@ -3727,11 +3730,7 @@ name|done
 operator|=
 name|job
 operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|status
+name|aio_done
 expr_stmt|;
 if|if
 condition|(
@@ -3890,16 +3889,6 @@ name|job
 argument_list|,
 name|list
 argument_list|)
-expr_stmt|;
-name|job
-operator|->
-name|uaiocb
-operator|.
-name|_aiocb_private
-operator|.
-name|status
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
