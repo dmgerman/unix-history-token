@@ -930,14 +930,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 comment|/* Necessary evil to compensate for files that don't end with a newline */
 if|if
 condition|(
@@ -953,6 +945,14 @@ goto|goto
 name|make_token
 goto|;
 block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|buf
