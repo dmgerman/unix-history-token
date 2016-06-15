@@ -1757,6 +1757,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|rotatereq
+operator|&&
+name|nosignal
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|noaction
 condition|)
 name|printf
@@ -1772,8 +1782,8 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Pause 10 seconds to allow daemon(s)"
-literal|" to close log file(s)\n"
+literal|"Pause 10 seconds to allow "
+literal|"daemon(s) to close log file(s)\n"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1781,6 +1791,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Compress all files that we're expected to compress, now 	 * that all processes should have closed the files which 	 * have been rotated. 	 */
