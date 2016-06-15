@@ -135,6 +135,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HV_STATUS_SUCCESS
+value|((uint16_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HV_STATUS_INSUFFICIENT_BUFFERS
 value|((uint16_t)0x0013)
 end_define
