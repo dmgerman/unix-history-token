@@ -6084,11 +6084,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|coveredvp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Check for mp being unmounted while waiting for the 		 * covered vnode lock. 		 */
 if|if
 condition|(
@@ -6112,6 +6107,11 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|coveredvp
 argument_list|)
 expr_stmt|;
 name|vfs_rel
@@ -6146,7 +6146,10 @@ block|{
 if|if
 condition|(
 name|coveredvp
+operator|!=
+name|NULL
 condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|coveredvp
@@ -6154,6 +6157,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|coveredvp
+argument_list|)
+expr_stmt|;
+block|}
 name|vfs_rel
 argument_list|(
 name|mp
@@ -6212,7 +6221,10 @@ expr_stmt|;
 if|if
 condition|(
 name|coveredvp
+operator|!=
+name|NULL
 condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|coveredvp
@@ -6220,6 +6232,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|coveredvp
+argument_list|)
+expr_stmt|;
+block|}
 name|vn_finished_write
 argument_list|(
 name|mp
@@ -6365,6 +6383,18 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 	 * From now, we can claim that the use reference on the 	 * coveredvp is ours, and the ref can be released only by 	 * successfull unmount by us, or left for later unmount 	 * attempt.  The previously acquired hold reference is no 	 * longer needed to protect the vnode from reuse. 	 */
+if|if
+condition|(
+name|coveredvp
+operator|!=
+name|NULL
+condition|)
+name|vdrop
+argument_list|(
+name|coveredvp
 argument_list|)
 expr_stmt|;
 name|vfs_msync
