@@ -20405,7 +20405,7 @@ name|jail_max_af_ips
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of IP addresses a jail may have at most per address family"
+literal|"Number of IP addresses a jail may have at most per address family (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20593,7 +20593,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can set their hostnames"
+literal|"Processes in jail can set their hostnames (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20625,7 +20625,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail are limited to creating UNIX/IP/route sockets only"
+literal|"Processes in jail are limited to creating UNIX/IP/route sockets only (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20653,7 +20653,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can use System V IPC primitives"
+literal|"Processes in jail can use System V IPC primitives (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20681,7 +20681,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Prison root can create raw sockets"
+literal|"Prison root can create raw sockets (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20709,7 +20709,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can alter system file flags"
+literal|"Processes in jail can alter system file flags (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20737,7 +20737,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount/unmount jail-friendly file systems"
+literal|"Processes in jail can mount/unmount jail-friendly file systems (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20765,7 +20765,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the devfs file system"
+literal|"Processes in jail can mount the devfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20793,7 +20793,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the fdescfs file system"
+literal|"Processes in jail can mount the fdescfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20821,7 +20821,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the nullfs file system"
+literal|"Processes in jail can mount the nullfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20849,7 +20849,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the procfs file system"
+literal|"Processes in jail can mount the procfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20877,7 +20877,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the linprocfs file system"
+literal|"Processes in jail can mount the linprocfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20905,7 +20905,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the linsysfs file system"
+literal|"Processes in jail can mount the linsysfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20933,7 +20933,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the tmpfs file system"
+literal|"Processes in jail can mount the tmpfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20961,7 +20961,7 @@ name|sysctl_jail_default_allow
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail can mount the zfs file system"
+literal|"Processes in jail can mount the zfs file system (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21100,7 +21100,7 @@ name|sysctl_jail_default_level
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Processes in jail cannot see all mounted file systems"
+literal|"Processes in jail cannot see all mounted file systems (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21135,7 +21135,7 @@ name|sysctl_jail_default_level
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Ruleset for the devfs filesystem in jail"
+literal|"Ruleset for the devfs filesystem in jail (deprecated)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
