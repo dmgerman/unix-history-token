@@ -1153,7 +1153,7 @@ argument_list|,
 name|user_data_len
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1173,7 +1173,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1292,7 +1292,7 @@ expr_stmt|;
 block|}
 name|cleanup
 label|:
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1312,7 +1312,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2121,7 +2121,7 @@ name|gpadl
 operator|=
 name|next_gpadl_handle
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2141,7 +2141,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2285,7 +2285,7 @@ name|gpadl
 expr_stmt|;
 name|cleanup
 label|:
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2305,7 +2305,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2460,7 +2460,7 @@ name|gpadl
 operator|=
 name|gpadl_handle
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2480,7 +2480,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2527,7 +2527,7 @@ comment|/* KYS 5 seconds */
 name|cleanup
 label|:
 comment|/* 	 * Received a torndown response 	 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2547,7 +2547,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection

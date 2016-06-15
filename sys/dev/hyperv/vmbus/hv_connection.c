@@ -268,7 +268,7 @@ name|monitor_page_2
 argument_list|)
 expr_stmt|;
 comment|/** 	 * Add to list before we send the request since we may receive the 	 * response before returning from this routine 	 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -288,7 +288,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -315,7 +315,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -335,7 +335,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -365,7 +365,7 @@ name|hz
 argument_list|)
 expr_stmt|;
 comment|/* KYS 5 seconds */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -385,7 +385,7 @@ argument_list|,
 name|msg_list_entry
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -495,7 +495,7 @@ literal|"vmbus channel msg"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT

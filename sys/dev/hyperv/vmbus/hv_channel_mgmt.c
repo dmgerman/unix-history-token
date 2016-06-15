@@ -1691,7 +1691,7 @@ operator|)
 name|hdr
 expr_stmt|;
 comment|/* 	 * Find the open msg, copy the result and signal/unblock the wait event 	 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1785,7 +1785,7 @@ break|break;
 block|}
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1835,7 +1835,7 @@ operator|)
 name|hdr
 expr_stmt|;
 comment|/* Find the establish msg, copy the result and signal/unblock 	 * the wait event 	 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1931,7 +1931,7 @@ break|break;
 block|}
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -1981,7 +1981,7 @@ operator|)
 name|hdr
 expr_stmt|;
 comment|/* 	 * Find the open msg, copy the result and signal/unblock the 	 * wait event. 	 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2065,7 +2065,7 @@ break|break;
 block|}
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2114,7 +2114,7 @@ operator|*
 operator|)
 name|hdr
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
@@ -2185,7 +2185,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|hv_vmbus_g_connection
