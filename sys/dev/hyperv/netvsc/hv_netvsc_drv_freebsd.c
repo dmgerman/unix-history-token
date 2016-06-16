@@ -775,14 +775,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100045
-end_if
-
 begin_comment
 comment|/* Limit TSO burst size */
 end_comment
@@ -816,11 +808,6 @@ literal|"TSO burst limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Limit chimney send size */
@@ -2078,16 +2065,9 @@ name|ring_cnt
 decl_stmt|,
 name|tx_ring_cnt
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100045
 name|int
 name|tso_maxlen
 decl_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|=
 name|device_get_softc
@@ -2807,11 +2787,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100045
 name|tso_maxlen
 operator|=
 name|hn_tso_maxlen
@@ -2854,8 +2829,6 @@ operator|+
 name|ETHER_VLAN_ENCAP_LEN
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -2865,11 +2838,6 @@ operator|.
 name|mac_addr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100045
 name|if_printf
 argument_list|(
 name|ifp
@@ -2889,8 +2857,6 @@ operator|->
 name|if_hw_tsomaxsegsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|hn_tx_chimney_max
