@@ -239,7 +239,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cpuctl_do_cpuid
 parameter_list|(
 name|int
@@ -259,7 +259,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cpuctl_do_cpuid_count
 parameter_list|(
 name|int
@@ -800,6 +800,8 @@ break|break;
 case|case
 name|CPUCTL_CPUID
 case|:
+name|ret
+operator|=
 name|cpuctl_do_cpuid
 argument_list|(
 name|cpu
@@ -812,10 +814,6 @@ name|data
 argument_list|,
 name|td
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -858,6 +856,8 @@ break|break;
 case|case
 name|CPUCTL_CPUID_COUNT
 case|:
+name|ret
+operator|=
 name|cpuctl_do_cpuid_count
 argument_list|(
 name|cpu
@@ -870,10 +870,6 @@ name|data
 argument_list|,
 name|td
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -899,7 +895,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cpuctl_do_cpuid_count
 parameter_list|(
 name|int
@@ -974,6 +970,22 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+name|cpu_id
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+endif|#
+directive|endif
 name|oldcpu
 operator|=
 name|td
@@ -1018,12 +1030,17 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cpuctl_do_cpuid
 parameter_list|(
 name|int
@@ -1042,6 +1059,9 @@ block|{
 name|cpuctl_cpuid_count_args_t
 name|cdata
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|cdata
 operator|.
 name|level
@@ -1057,6 +1077,8 @@ name|level_type
 operator|=
 literal|0
 expr_stmt|;
+name|error
+operator|=
 name|cpuctl_do_cpuid_count
 argument_list|(
 name|cpu
@@ -1086,6 +1108,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Ignore error */
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -1161,6 +1188,26 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_MSR
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+endif|#
+directive|endif
 name|oldcpu
 operator|=
 name|td
@@ -1424,6 +1471,8 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|cpuctl_do_cpuid
 argument_list|(
 name|cpu
@@ -1434,6 +1483,17 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 operator|(
 operator|(
 name|uint32_t
@@ -2538,32 +2598,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-if|if
-condition|(
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_MSR
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"cpuctl: not available.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENODEV
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|bootverbose
