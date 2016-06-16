@@ -2307,6 +2307,13 @@ name|claimed_interface
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * The following variable is only used by the libusb v1.0 	 * compat layer: 	 */
+name|pdev
+operator|->
+name|auto_detach
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|error

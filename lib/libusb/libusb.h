@@ -1603,6 +1603,17 @@ name|interface
 parameter_list|)
 function_decl|;
 name|int
+name|libusb_set_auto_detach_kernel_driver
+parameter_list|(
+name|libusb_device_handle
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+name|int
 name|libusb_set_interface_alt_setting
 parameter_list|(
 name|libusb_device_handle
