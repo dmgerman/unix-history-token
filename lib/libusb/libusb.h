@@ -51,6 +51,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|LIBUSB_API_VERSION
+value|0x01000102
+end_define
+
+begin_define
+define|#
+directive|define
 name|LIBUSB_CALL
 end_define
 
