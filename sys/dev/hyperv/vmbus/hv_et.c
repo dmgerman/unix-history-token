@@ -179,7 +179,7 @@ name|timer_cfg
 operator|.
 name|sintx
 operator|=
-name|HV_VMBUS_MESSAGE_SINT
+name|HV_VMBUS_TIMER_SINT
 expr_stmt|;
 name|periodticks
 index|[

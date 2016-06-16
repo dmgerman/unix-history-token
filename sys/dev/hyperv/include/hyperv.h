@@ -323,6 +323,22 @@ name|hv_guid
 typedef|;
 end_typedef
 
+begin_function_decl
+name|int
+name|snprintf_hv_guid
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|hv_guid
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
