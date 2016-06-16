@@ -1307,6 +1307,14 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
+name|uint8_t
+name|libusb_get_port_number
+parameter_list|(
+name|libusb_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
 name|int
 name|libusb_get_port_numbers
 parameter_list|(
