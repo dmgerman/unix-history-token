@@ -2153,7 +2153,9 @@ operator|!=
 name|PART_FREEBSD_ZFS
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ppa
 operator|=
@@ -2228,7 +2230,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ret
 operator|=
@@ -2250,7 +2254,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Do we have BSD label here? */
 if|if
@@ -2315,8 +2321,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ret
-operator|=
 name|ptable_iterate
 argument_list|(
 name|table
@@ -2343,7 +2347,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
