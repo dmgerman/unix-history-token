@@ -540,7 +540,7 @@ name|cr_count
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Note that not all regions have an assigned rid, in which case 	 * this will return -1 */
+comment|/* Fetch default resource ID for this region. Not all regions have an 	 * assigned rid, in which case this will return -1 */
 name|cr
 operator|->
 name|cr_rid
@@ -668,7 +668,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|cr
 operator|->
-name|cr_rid
+name|cr_res_rid
 argument_list|,
 name|cr
 operator|->
@@ -929,6 +929,35 @@ literal|"non-NULL resource has refcount"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Fetch initial resource ID */
+if|if
+condition|(
+operator|(
+name|cr
+operator|->
+name|cr_res_rid
+operator|=
+name|cr
+operator|->
+name|cr_rid
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|CHIPC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* Allocate resource */
 name|cr
 operator|->
 name|cr_res
@@ -944,7 +973,7 @@ argument_list|,
 operator|&
 name|cr
 operator|->
-name|cr_rid
+name|cr_res_rid
 argument_list|,
 name|cr
 operator|->
@@ -1032,7 +1061,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|cr
 operator|->
-name|cr_rid
+name|cr_res_rid
 argument_list|,
 name|cr
 operator|->
@@ -1123,6 +1152,19 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cr
+operator|->
+name|cr_res
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"release on NULL region resource"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1180,7 +1222,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|cr
 operator|->
-name|cr_rid
+name|cr_res_rid
 argument_list|,
 name|cr
 operator|->
@@ -1244,7 +1286,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|cr
 operator|->
-name|cr_rid
+name|cr_res_rid
 argument_list|,
 name|cr
 operator|->
@@ -1263,13 +1305,6 @@ operator|->
 name|cr_res
 operator|=
 name|NULL
-expr_stmt|;
-name|cr
-operator|->
-name|cr_rid
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 block|}
 comment|/* Drop our allocation refcount */

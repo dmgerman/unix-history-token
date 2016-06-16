@@ -275,13 +275,17 @@ comment|/**< region count */
 name|int
 name|cr_rid
 decl_stmt|;
-comment|/**< rid, or -1 if no rid 						  *  is allocated by the bus for 						  *  this region */
+comment|/**< rid to use when performing 						     resource allocation, or -1 						     if region has no assigned 						     resource ID */
 name|struct
 name|bhnd_resource
 modifier|*
 name|cr_res
 decl_stmt|;
 comment|/**< bus resource, or NULL */
+name|int
+name|cr_res_rid
+decl_stmt|;
+comment|/**< cr_res RID, if any. */
 name|u_int
 name|cr_refs
 decl_stmt|;

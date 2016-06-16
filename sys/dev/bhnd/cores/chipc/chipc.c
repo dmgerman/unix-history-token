@@ -1143,6 +1143,13 @@ operator|)
 return|;
 name|failed
 label|:
+name|device_delete_children
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3690,18 +3697,11 @@ name|RF_ALLOCATED
 argument_list|)
 operator|)
 condition|)
-block|{
-name|CHIPC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 comment|/* Make our rman reservation */
 name|rv
 operator|=
