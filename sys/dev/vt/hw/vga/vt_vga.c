@@ -6603,10 +6603,6 @@ name|vd
 operator|->
 name|vd_softc
 expr_stmt|;
-name|textmode
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -6687,6 +6683,13 @@ name|sc
 operator|->
 name|vga_reg_handle
 argument_list|)
+expr_stmt|;
+comment|/* 	 * If "hw.vga.textmode" is not set and we're running on hypervisor, 	 * we use text mode by default, this is because when we're on 	 * hypervisor, vt(4) is usually much slower in graphics mode than 	 * in text mode, especially when we're on Hyper-V. 	 */
+name|textmode
+operator|=
+name|vm_guest
+operator|!=
+name|VM_GUEST_NO
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
