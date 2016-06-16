@@ -2344,6 +2344,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vmbus_channel_cpu_set
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * @brief Get physical address from virtual  */
 end_comment

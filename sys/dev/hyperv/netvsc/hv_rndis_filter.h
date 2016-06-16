@@ -85,9 +85,15 @@ name|struct
 name|sema
 name|wait_sema
 decl_stmt|;
-comment|/* 	 * Fixme:  We assumed a fixed size response here.  If we do ever 	 * need to handle a bigger response, we can either define a max 	 * response message or add a response buffer variable above this field 	 */
+comment|/* 	 * The max response size is sizeof(rndis_msg) + PAGE_SIZE. 	 * 	 * XXX 	 * This is ugly and should be cleaned up once we busdma-fy 	 * RNDIS request bits. 	 */
 name|rndis_msg
 name|response_msg
+decl_stmt|;
+name|uint8_t
+name|buf_resp
+index|[
+name|PAGE_SIZE
+index|]
 decl_stmt|;
 comment|/* Simplify allocation by having a netvsc packet inline */
 name|netvsc_packet
@@ -96,9 +102,15 @@ decl_stmt|;
 name|hv_vmbus_page_buffer
 name|buffer
 decl_stmt|;
-comment|/* Fixme:  We assumed a fixed size request here. */
+comment|/* 	 * The max request size is sizeof(rndis_msg) + PAGE_SIZE. 	 * 	 * NOTE: 	 * This is required for the large request like RSS settings. 	 * 	 * XXX 	 * This is ugly and should be cleaned up once we busdma-fy 	 * RNDIS request bits. 	 */
 name|rndis_msg
 name|request_msg
+decl_stmt|;
+name|uint8_t
+name|buf_req
+index|[
+name|PAGE_SIZE
+index|]
 decl_stmt|;
 comment|/* Fixme:  Poor man's semaphore. */
 name|uint32_t

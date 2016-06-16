@@ -794,6 +794,32 @@ name|RNDIS_OID_GEN_RNDIS_CONFIG_PARAMETER
 value|0x0001021B
 end_define
 
+begin_comment
+comment|/*  * For receive side scale  */
+end_comment
+
+begin_comment
+comment|/* Query only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_OID_GEN_RSS_CAPABILITIES
+value|0x00010203
+end_define
+
+begin_comment
+comment|/* Query and set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_OID_GEN_RSS_PARAMETERS
+value|0x00010204
+end_define
+
 begin_define
 define|#
 directive|define
@@ -3631,6 +3657,23 @@ begin_function_decl
 name|void
 name|netvsc_channel_rollup
 parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netvsc_subchan_callback
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|hv_vmbus_channel
 modifier|*
