@@ -1875,10 +1875,6 @@ block|}
 block|}
 name|cleanup
 label|:
-if|if
-condition|(
-name|request
-condition|)
 name|hv_put_rndis_request
 argument_list|(
 name|rndis_dev
@@ -3953,13 +3949,6 @@ name|state
 operator|=
 name|RNDIS_DEV_UNINITIALIZED
 expr_stmt|;
-if|if
-condition|(
-name|request
-operator|!=
-name|NULL
-condition|)
-block|{
 name|hv_put_rndis_request
 argument_list|(
 name|device
@@ -3967,7 +3956,6 @@ argument_list|,
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
