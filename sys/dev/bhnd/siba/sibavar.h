@@ -69,12 +69,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|siba_port
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|siba_core_id
 struct_decl|;
 end_struct_decl
@@ -209,10 +203,55 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|siba_addrspace_port_count
+parameter_list|(
 name|struct
-name|siba_port
+name|siba_devinfo
 modifier|*
-name|siba_dinfo_get_port
+name|dinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|siba_addrspace_region_count
+parameter_list|(
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|u_int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|siba_addrspace_port
+parameter_list|(
+name|u_int
+name|addrspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|siba_addrspace_region
+parameter_list|(
+name|u_int
+name|addrspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|siba_is_port_valid
 parameter_list|(
 name|struct
 name|siba_devinfo
@@ -220,10 +259,10 @@ modifier|*
 name|dinfo
 parameter_list|,
 name|bhnd_port_type
-name|port_type
+name|type
 parameter_list|,
 name|u_int
-name|port_num
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,15 +271,21 @@ begin_function_decl
 name|struct
 name|siba_addrspace
 modifier|*
-name|siba_find_port_addrspace
+name|siba_find_addrspace
 parameter_list|(
 name|struct
-name|siba_port
+name|siba_devinfo
 modifier|*
+name|dinfo
+parameter_list|,
+name|bhnd_port_type
+name|type
+parameter_list|,
+name|u_int
 name|port
 parameter_list|,
-name|uint8_t
-name|sid
+name|u_int
+name|region
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -253,15 +298,6 @@ name|struct
 name|siba_devinfo
 modifier|*
 name|dinfo
-parameter_list|,
-name|bhnd_port_type
-name|port_type
-parameter_list|,
-name|u_int
-name|port_num
-parameter_list|,
-name|u_int
-name|region_num
 parameter_list|,
 name|uint8_t
 name|sid
@@ -335,12 +371,53 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIBA_CFG_NUM_MAX
+name|SIBA_MAX_CFG
 value|SIBA_CFG_NUM_2_3
 end_define
 
 begin_comment
 comment|/**< maximum number of supported config 							     register blocks */
+end_comment
+
+begin_comment
+comment|/* Sonics/OCP address space mappings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_CORE_ADDRSPACE
+value|0
+end_define
+
+begin_comment
+comment|/**< Address space mapping the primary 					     device registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_MAX_ADDRSPACE
+value|4
+end_define
+
+begin_comment
+comment|/**< Maximum number of Sonics/OCP 					  *  address space mappings for a 					  *  single core. */
+end_comment
+
+begin_comment
+comment|/* bhnd(4) (port,region) representation of siba address space mappings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_MAX_PORT
+value|2
+end_define
+
+begin_comment
+comment|/**< maximum number of advertised 					  *  bhnd(4) ports */
 end_comment
 
 begin_comment
@@ -359,14 +436,6 @@ name|uint32_t
 name|sa_size
 decl_stmt|;
 comment|/**< size */
-name|u_int
-name|sa_region_num
-decl_stmt|;
-comment|/**< bhnd region id */
-name|uint8_t
-name|sa_sid
-decl_stmt|;
-comment|/**< siba-assigned address space ID */
 name|int
 name|sa_rid
 decl_stmt|;
@@ -375,44 +444,6 @@ name|uint32_t
 name|sa_bus_reserved
 decl_stmt|;
 comment|/**< number of bytes at high end of 					  *  address space reserved for the bus */
-name|STAILQ_ENTRY
-argument_list|(
-argument|siba_addrspace
-argument_list|)
-name|sa_link
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/** siba(4) port descriptor */
-end_comment
-
-begin_struct
-struct|struct
-name|siba_port
-block|{
-name|bhnd_port_type
-name|sp_type
-decl_stmt|;
-comment|/**< port type */
-name|u_int
-name|sp_num
-decl_stmt|;
-comment|/**< port number */
-name|u_int
-name|sp_num_addrs
-decl_stmt|;
-comment|/**< number of address space mappings */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|siba_addrspace
-argument_list|)
-name|sp_addrs
-expr_stmt|;
-comment|/**< address spaces mapped to this port */
 block|}
 struct|;
 end_struct
@@ -469,26 +500,29 @@ name|core_id
 decl_stmt|;
 comment|/**< core identification info */
 name|struct
-name|siba_port
-name|device_port
+name|siba_addrspace
+name|addrspace
+index|[
+name|SIBA_MAX_ADDRSPACE
+index|]
 decl_stmt|;
-comment|/**< device port holding ownership 						 *   of all siba address space 						 *   entries for this core. */
-comment|/** SIBA_CFG* register blocks */
+comment|/**< memory map descriptors */
 name|struct
 name|bhnd_resource
 modifier|*
 name|cfg
 index|[
-name|SIBA_CFG_NUM_MAX
+name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
-comment|/** SIBA_CFG* resource IDs */
+comment|/**< SIBA_CFG_* registers */
 name|int
 name|cfg_rid
 index|[
-name|SIBA_CFG_NUM_MAX
+name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
+comment|/**< SIBA_CFG_* resource IDs */
 block|}
 struct|;
 end_struct

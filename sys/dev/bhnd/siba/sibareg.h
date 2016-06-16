@@ -87,17 +87,6 @@ begin_comment
 comment|/**< Maximum number of cores */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIBA_ADDRSPACE_CORE
-value|0
-end_define
-
-begin_comment
-comment|/**< address space identifier of the 							     core enumeration block. */
-end_comment
-
 begin_comment
 comment|/**< Evaluates to the bus address of the @p idx core register block */
 end_comment
@@ -997,7 +986,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* sbadmatch0 */
+comment|/* sbadmatch0-4 */
 end_comment
 
 begin_define
