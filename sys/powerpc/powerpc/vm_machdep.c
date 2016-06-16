@@ -594,7 +594,7 @@ end_comment
 
 begin_function
 name|void
-name|cpu_set_fork_handler
+name|cpu_fork_kthread_handler
 parameter_list|(
 name|struct
 name|thread

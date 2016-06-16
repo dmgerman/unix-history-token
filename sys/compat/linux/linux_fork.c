@@ -1262,7 +1262,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|cpu_set_upcall
+name|cpu_copy_thread
 argument_list|(
 name|newtd
 argument_list|,

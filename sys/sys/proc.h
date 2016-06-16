@@ -5726,6 +5726,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|void
+name|cpu_copy_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cpu_fetch_syscall_args
 parameter_list|(
@@ -5765,7 +5782,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_set_fork_handler
+name|cpu_fork_kthread_handler
 parameter_list|(
 name|struct
 name|thread
@@ -5802,23 +5819,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|cpu_set_upcall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td0
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cpu_set_upcall_kse
 parameter_list|(
 name|struct
 name|thread

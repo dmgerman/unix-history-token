@@ -693,7 +693,7 @@ operator|->
 name|stack_size
 expr_stmt|;
 comment|/* Set upcall address to user thread entry function. */
-name|cpu_set_upcall_kse
+name|cpu_set_upcall
 argument_list|(
 name|td
 argument_list|,
@@ -997,7 +997,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|cpu_set_upcall
+name|cpu_copy_thread
 argument_list|(
 name|newtd
 argument_list|,

@@ -3927,7 +3927,7 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
-name|cpu_set_fork_handler
+name|cpu_fork_kthread_handler
 argument_list|(
 name|FIRST_THREAD_IN_PROC
 argument_list|(

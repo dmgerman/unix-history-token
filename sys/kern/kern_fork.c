@@ -4406,7 +4406,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * cpu_set_fork_handler intercepts this function call to 	 * have this call a non-return function to stay in kernel mode. 	 * initproc has its own fork handler, but it does return. 	 */
+comment|/* 	 * cpu_fork_kthread_handler intercepts this function call to 	 * have this call a non-return function to stay in kernel mode. 	 * initproc has its own fork handler, but it does return. 	 */
 name|KASSERT
 argument_list|(
 name|callout

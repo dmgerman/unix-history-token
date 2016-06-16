@@ -478,7 +478,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* call the processes' main()... */
-name|cpu_set_fork_handler
+name|cpu_fork_kthread_handler
 argument_list|(
 name|td
 argument_list|,
@@ -1116,11 +1116,9 @@ name|td_proc
 operator|=
 name|p
 expr_stmt|;
-comment|/* needed for cpu_set_upcall */
-comment|/* XXX optimise this probably? */
-comment|/* On x86 (and probably the others too) it is way too full of junk */
-comment|/* Needs a better name */
-name|cpu_set_upcall
+comment|/* needed for cpu_copy_thread */
+comment|/* might be further optimized for kthread */
+name|cpu_copy_thread
 argument_list|(
 name|newtd
 argument_list|,
@@ -1128,7 +1126,7 @@ name|oldtd
 argument_list|)
 expr_stmt|;
 comment|/* put the designated function(arg) as the resume context */
-name|cpu_set_fork_handler
+name|cpu_fork_kthread_handler
 argument_list|(
 name|newtd
 argument_list|,

@@ -4845,7 +4845,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_set_upcall
+name|cpu_copy_thread
 parameter_list|(
 name|struct
 name|thread
@@ -5109,7 +5109,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_set_upcall_kse
+name|cpu_set_upcall
 parameter_list|(
 name|struct
 name|thread

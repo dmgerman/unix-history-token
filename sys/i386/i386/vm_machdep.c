@@ -1300,24 +1300,15 @@ begin_comment
 comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|cpu_set_fork_handler
-argument_list|(
-name|td
-argument_list|,
-name|func
-argument_list|,
-name|arg
-argument_list|)
-decl|struct
+name|cpu_fork_kthread_handler
+parameter_list|(
+name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -1327,17 +1318,11 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 comment|/* 	 * Note that the trap frame follows the args, so the function 	 * is really called like this:  func(arg, frame); 	 */
 name|td
@@ -1365,7 +1350,7 @@ name|arg
 expr_stmt|;
 comment|/* first arg */
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1813,12 +1798,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state, mostly pcb and trap frame for a new  * thread, about to return to userspace.  Put enough state in the new  * thread's PCB to get it to go back to the fork_return(), which  * finalizes the thread state and handles peculiarities of the first  * return to userspace for the new thread.  */
 end_comment
 
 begin_function
 name|void
-name|cpu_set_upcall
+name|cpu_copy_thread
 parameter_list|(
 name|struct
 name|thread
@@ -2030,12 +2015,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set that machine state for performing an upcall that has to  * be done in thread_userret() so that those upcalls generated  * in thread_userret() itself can be done as well.  */
+comment|/*  * Set that machine state for performing an upcall that starts  * the entry function with the given argument.  */
 end_comment
 
 begin_function
 name|void
-name|cpu_set_upcall_kse
+name|cpu_set_upcall
 parameter_list|(
 name|struct
 name|thread
@@ -2067,7 +2052,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the trap frame to point at the beginning of the uts 	 * function. 	 */
+comment|/* 	 * Set the trap frame to point at the beginning of the entry 	 * function. 	 */
 name|td
 operator|->
 name|td_frame
@@ -2115,7 +2100,7 @@ name|int
 operator|)
 name|entry
 expr_stmt|;
-comment|/* 	 * Pass the address of the mailbox for this kse to the uts 	 * function as a parameter on the stack. 	 */
+comment|/* Pass the argument to the entry point. */
 name|suword
 argument_list|(
 operator|(
