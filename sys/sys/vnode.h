@@ -2599,6 +2599,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|vfsops
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vnode
 struct_decl|;
 end_struct_decl
@@ -4268,6 +4274,19 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vnlru_free
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|vfsops
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
