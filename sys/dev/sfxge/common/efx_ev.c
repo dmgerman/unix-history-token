@@ -160,6 +160,10 @@ name|uint32_t
 name|id
 parameter_list|,
 name|__in
+name|uint32_t
+name|us
+parameter_list|,
+name|__in
 name|efx_evq_t
 modifier|*
 name|eep
@@ -765,6 +769,10 @@ name|__in
 name|uint32_t
 name|id
 parameter_list|,
+name|__in
+name|uint32_t
+name|us
+parameter_list|,
 name|__deref_out
 name|efx_evq_t
 modifier|*
@@ -927,6 +935,8 @@ argument_list|,
 name|n
 argument_list|,
 name|id
+argument_list|,
+name|us
 argument_list|,
 name|eep
 argument_list|)
@@ -5028,6 +5038,10 @@ name|uint32_t
 name|id
 parameter_list|,
 name|__in
+name|uint32_t
+name|us
+parameter_list|,
+name|__in
 name|efx_evq_t
 modifier|*
 name|eep
@@ -5305,6 +5319,14 @@ operator|&
 name|oword
 argument_list|,
 name|B_TRUE
+argument_list|)
+expr_stmt|;
+comment|/* Set initial interrupt moderation */
+name|siena_ev_qmoderate
+argument_list|(
+name|eep
+argument_list|,
+name|us
 argument_list|)
 expr_stmt|;
 return|return

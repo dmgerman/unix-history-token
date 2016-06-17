@@ -3074,6 +3074,10 @@ name|evq
 operator|->
 name|buf_base_id
 argument_list|,
+name|sc
+operator|->
+name|ev_moderation
+argument_list|,
 operator|&
 name|evq
 operator|->
@@ -3089,21 +3093,6 @@ goto|;
 name|SFXGE_EVQ_LOCK
 argument_list|(
 name|evq
-argument_list|)
-expr_stmt|;
-comment|/* Set the default moderation */
-operator|(
-name|void
-operator|)
-name|efx_ev_qmoderate
-argument_list|(
-name|evq
-operator|->
-name|common
-argument_list|,
-name|sc
-operator|->
-name|ev_moderation
 argument_list|)
 expr_stmt|;
 comment|/* Prime the event queue for interrupts */
