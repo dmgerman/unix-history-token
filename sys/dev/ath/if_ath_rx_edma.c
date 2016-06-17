@@ -1537,6 +1537,15 @@ argument_list|,
 name|rs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_rxstatus
+operator|==
+name|HAL_EINPROGRESS
+condition|)
+break|break;
 ifdef|#
 directive|ifdef
 name|ATH_DEBUG
@@ -1604,15 +1613,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ATH_DEBUG */
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_rxstatus
-operator|==
-name|HAL_EINPROGRESS
-condition|)
-break|break;
 comment|/* 		 * Completed descriptor. 		 */
 name|DPRINTF
 argument_list|(
