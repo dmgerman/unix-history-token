@@ -17,18 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|time_t
-name|__archive_get_date
-parameter_list|(
-name|time_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_BUILD
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|"archive_getdate.h"
+end_include
 
 begin_function
 specifier|static

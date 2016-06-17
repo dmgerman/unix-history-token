@@ -224,6 +224,12 @@ name|archive_write_set_format_pax
 block|}
 block|,
 block|{
+literal|"raw"
+block|,
+name|archive_write_set_format_raw
+block|}
+block|,
+block|{
 literal|"rpax"
 block|,
 name|archive_write_set_format_pax_restricted
@@ -257,6 +263,12 @@ block|{
 literal|"v7"
 block|,
 name|archive_write_set_format_v7tar
+block|}
+block|,
+block|{
+literal|"warc"
+block|,
+name|archive_write_set_format_warc
 block|}
 block|,
 block|{

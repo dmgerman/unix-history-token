@@ -536,6 +536,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|archive_read_format_ar_cleanup
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -802,7 +806,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -991,16 +995,47 @@ index|]
 operator|!=
 literal|'/'
 operator|&&
+name|p
+operator|>
+name|filename
+operator|&&
 operator|*
 name|p
 operator|==
 literal|'/'
 condition|)
+block|{
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|p
+operator|<
+name|filename
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Found entry with empty filename"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 comment|/* 	 * '//' is the GNU filename table. 	 * Later entries can refer to names in this table. 	 */
 if|if
 condition|(
@@ -1103,7 +1138,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -1130,7 +1165,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -1328,7 +1363,7 @@ name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Can't find long filename for entry"
+literal|"Can't find long filename for GNU/SVR4 archive entry"
 argument_list|)
 expr_stmt|;
 name|archive_entry_copy_pathname
@@ -1350,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -2541,7 +2576,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}

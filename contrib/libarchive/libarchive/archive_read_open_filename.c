@@ -527,13 +527,21 @@ name|filenames
 index|[
 literal|2
 index|]
-init|=
-block|{
-name|filename
-block|,
-name|NULL
-block|}
 decl_stmt|;
+name|filenames
+index|[
+literal|0
+index|]
+operator|=
+name|filename
+expr_stmt|;
+name|filenames
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|archive_read_open_filenames
 argument_list|(
@@ -962,7 +970,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 		 * POSIX system does not support a wchar_t interface for 		 * open() system call, so we have to translate a whcar_t 		 * filename to multi-byte one and use it. 		 */
+comment|/* 		 * POSIX system does not support a wchar_t interface for 		 * open() system call, so we have to translate a wchar_t 		 * filename to multi-byte one and use it. 		 */
 name|struct
 name|archive_string
 name|fn

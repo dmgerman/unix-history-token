@@ -2875,6 +2875,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|archive_strcat
+argument_list|(
+operator|&
+name|shar
+operator|->
+name|work
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|shar_quote
 argument_list|(
 operator|&

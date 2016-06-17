@@ -334,7 +334,7 @@ name|f
 operator|=
 name|f
 expr_stmt|;
-comment|/* 	 * If we can't fstat() the file, it may just be that it's not 	 * a file.  (FILE * objects can wrap many kinds of I/O 	 * streams, some of which don't support fileno()).) 	 */
+comment|/* 	 * If we can't fstat() the file, it may just be that it's not 	 * a file.  (On some platforms, FILE * objects can wrap I/O 	 * streams that don't support fileno()).  As a result, fileno() 	 * should be used cautiously.) 	 */
 if|if
 condition|(
 name|fstat
@@ -700,8 +700,30 @@ operator|=
 name|max_skip
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|__ANDROID__
+comment|/* fileno() isn't safe on all platforms ... see above. */
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fileno
+argument_list|(
+name|mine
+operator|->
+name|f
+argument_list|)
+argument_list|,
+name|skip
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|<
+literal|0
+condition|)
+elif|#
+directive|elif
 name|HAVE_FSEEKO
 if|if
 condition|(

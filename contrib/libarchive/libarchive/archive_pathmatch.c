@@ -1699,18 +1699,13 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Certain patterns and file names anchor implicitly. */
+comment|/* Certain patterns anchor implicitly. */
 if|if
 condition|(
 operator|*
 name|p
 operator|==
 literal|'*'
-operator|||
-operator|*
-name|p
-operator|==
-literal|'/'
 operator|||
 operator|*
 name|p
@@ -1907,7 +1902,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Certain patterns and file names anchor implicitly. */
+comment|/* Certain patterns anchor implicitly. */
 if|if
 condition|(
 operator|*
@@ -1915,12 +1910,6 @@ name|p
 operator|==
 literal|L'
 expr|*'
-operator|||
-operator|*
-name|p
-operator|==
-literal|L'
-expr|/'
 operator|||
 operator|*
 name|p

@@ -66,22 +66,18 @@ directive|include
 file|<time.h>
 end_include
 
-begin_comment
-comment|/* This file defines a single public function. */
-end_comment
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_BUILD
+value|1
+end_define
 
-begin_function_decl
-name|time_t
-name|__archive_get_date
-parameter_list|(
-name|time_t
-name|now
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"archive_getdate.h"
+end_include
 
 begin_comment
 comment|/* Basic time units. */
@@ -5374,6 +5370,7 @@ specifier|static
 name|int
 name|nexttoken
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5483,6 +5480,7 @@ block|}
 comment|/* Try the next token in the word table first. */
 comment|/* This allows us to match "2nd", for example. */
 block|{
+specifier|const
 name|char
 modifier|*
 name|src
@@ -5937,6 +5935,7 @@ parameter_list|(
 name|time_t
 name|now
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p

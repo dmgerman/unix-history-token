@@ -110,6 +110,8 @@ name|gzip
 block|,
 name|lzo
 block|,
+name|none
+block|,
 name|zpaq
 block|}
 name|compression
@@ -268,7 +270,9 @@ operator|->
 name|pdata
 operator|=
 name|__archive_write_program_allocate
-argument_list|()
+argument_list|(
+literal|"lrzip"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -484,6 +488,24 @@ name|strcmp
 argument_list|(
 name|value
 argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|data
+operator|->
+name|compression
+operator|=
+name|none
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|value
+argument_list|,
 literal|"zpaq"
 argument_list|)
 operator|==
@@ -673,6 +695,18 @@ operator|&
 name|as
 argument_list|,
 literal|" -l"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|none
+case|:
+name|archive_strcat
+argument_list|(
+operator|&
+name|as
+argument_list|,
+literal|" -n"
 argument_list|)
 expr_stmt|;
 break|break;

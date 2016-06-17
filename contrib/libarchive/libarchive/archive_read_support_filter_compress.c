@@ -485,13 +485,14 @@ operator|)
 name|self
 expr_stmt|;
 comment|/* UNUSED */
+comment|/* Shortest valid compress file is 3 bytes. */
 name|buffer
 operator|=
 name|__archive_read_filter_ahead
 argument_list|(
 name|filter
 argument_list|,
-literal|2
+literal|3
 argument_list|,
 operator|&
 name|avail
@@ -512,6 +513,7 @@ name|bits_checked
 operator|=
 literal|0
 expr_stmt|;
+comment|/* First two bytes are the magic value */
 if|if
 condition|(
 name|buffer
@@ -533,11 +535,41 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Third byte holds compression parameters. */
+if|if
+condition|(
+name|buffer
+index|[
+literal|2
+index|]
+operator|&
+literal|0x20
+condition|)
+comment|/* Reserved bit, must be zero. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|buffer
+index|[
+literal|2
+index|]
+operator|&
+literal|0x40
+condition|)
+comment|/* Reserved bit, must be zero. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|bits_checked
 operator|+=
-literal|16
+literal|18
 expr_stmt|;
-comment|/* 	 * TODO: Verify more. 	 */
 return|return
 operator|(
 name|bits_checked
@@ -724,6 +756,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Skip second signature byte. */
+comment|/* Get compression parameters. */
 name|code
 operator|=
 name|getbits
@@ -733,6 +766,38 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|code
+operator|&
+literal|0x1f
+operator|)
+operator|>
+literal|16
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|self
+operator|->
+name|archive
+operator|->
+name|archive
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"Invalid compressed data"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|state
 operator|->
 name|maxcode_bits
@@ -1341,6 +1406,20 @@ operator|>
 name|state
 operator|->
 name|free_ent
+operator|||
+operator|(
+name|code
+operator|==
+name|state
+operator|->
+name|free_ent
+operator|&&
+name|state
+operator|->
+name|oldcode
+operator|<
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* An invalid code is a fatal error. */

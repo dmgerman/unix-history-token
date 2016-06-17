@@ -218,6 +218,10 @@ name|child_buf_len
 decl_stmt|,
 name|child_buf_avail
 decl_stmt|;
+name|char
+modifier|*
+name|program_name
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -412,7 +416,9 @@ operator|->
 name|pdata
 operator|=
 name|__archive_write_program_allocate
-argument_list|()
+argument_list|(
+name|cmd
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -754,7 +760,10 @@ name|archive_write_program_data
 modifier|*
 name|__archive_write_program_allocate
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|program
 parameter_list|)
 block|{
 name|struct
@@ -799,6 +808,15 @@ name|child_stdout
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|data
+operator|->
+name|program_name
+operator|=
+name|strdup
+argument_list|(
+name|program
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1013,7 +1031,9 @@ name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Can't initialise filter"
+literal|"Can't launch external program: %s"
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1092,7 +1112,9 @@ name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Can't initialise filter"
+literal|"Can't launch external program: %s"
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1567,7 +1589,11 @@ name|archive
 argument_list|,
 name|EIO
 argument_list|,
-literal|"Can't write to filter"
+literal|"Can't write to program: %s"
+argument_list|,
+name|data
+operator|->
+name|program_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1747,7 +1773,11 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Read from filter failed unexpectedly."
+literal|"Error reading from program: %s"
+argument_list|,
+name|data
+operator|->
+name|program_name
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1902,7 +1932,11 @@ name|archive
 argument_list|,
 name|EIO
 argument_list|,
-literal|"Filter exited with failure."
+literal|"Error closing program: %s"
+argument_list|,
+name|data
+operator|->
+name|program_name
 argument_list|)
 expr_stmt|;
 name|ret

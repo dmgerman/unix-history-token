@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|reffile
 init|=
-literal|"test_extract.cpio.lrz"
+literal|"test_extract.cpio.lzo"
 decl_stmt|;
 name|int
 name|f

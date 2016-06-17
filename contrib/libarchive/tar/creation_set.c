@@ -257,6 +257,12 @@ literal|"lzip"
 block|}
 block|,
 block|{
+literal|".lz4"
+block|,
+literal|"lz4"
+block|}
+block|,
+block|{
 literal|".lzo"
 block|,
 literal|"lzop"
@@ -360,6 +366,12 @@ block|{
 literal|".tar"
 block|,
 literal|"paxr"
+block|}
+block|,
+block|{
+literal|".warc"
+block|,
+literal|"warc"
 block|}
 block|,
 block|{

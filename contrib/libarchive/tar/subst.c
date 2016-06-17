@@ -1126,6 +1126,11 @@ name|regular
 condition|)
 continue|continue;
 block|}
+while|while
+condition|(
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|regexec
@@ -1144,7 +1149,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-continue|continue;
+break|break;
 name|got_match
 operator|=
 literal|1
@@ -1469,6 +1474,7 @@ operator|->
 name|global
 condition|)
 break|break;
+block|}
 block|}
 if|if
 condition|(

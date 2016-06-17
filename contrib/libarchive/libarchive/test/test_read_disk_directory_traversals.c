@@ -5172,18 +5172,7 @@ argument_list|(
 literal|".."
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|ae
-operator|=
-name|archive_entry_new
-argument_list|()
-operator|)
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
+comment|/* Note: this test uses archive_read_next_header() 	   instead of archive_read_next_header2() */
 name|assert
 argument_list|(
 operator|(
@@ -5239,10 +5228,11 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_next_header2
+name|archive_read_next_header
 argument_list|(
 name|a
 argument_list|,
+operator|&
 name|ae
 argument_list|)
 argument_list|)
@@ -5720,10 +5710,11 @@ name|a
 argument_list|,
 name|ARCHIVE_EOF
 argument_list|,
-name|archive_read_next_header2
+name|archive_read_next_header
 argument_list|(
 name|a
 argument_list|,
+operator|&
 name|ae
 argument_list|)
 argument_list|)
@@ -5770,10 +5761,11 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_next_header2
+name|archive_read_next_header
 argument_list|(
 name|a
 argument_list|,
+operator|&
 name|ae
 argument_list|)
 argument_list|)
@@ -6853,10 +6845,11 @@ name|a
 argument_list|,
 name|ARCHIVE_EOF
 argument_list|,
-name|archive_read_next_header2
+name|archive_read_next_header
 argument_list|(
 name|a
 argument_list|,
+operator|&
 name|ae
 argument_list|)
 argument_list|)
@@ -6881,11 +6874,6 @@ name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|archive_entry_free
-argument_list|(
-name|ae
 argument_list|)
 expr_stmt|;
 block|}
@@ -7960,16 +7948,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|failure
-argument_list|(
-literal|"Atime should be restored"
-argument_list|)
-expr_stmt|;
-name|assertFileAtimeRecent
-argument_list|(
-literal|"at"
-argument_list|)
-expr_stmt|;
+comment|/* On FreeBSD (and likely other systems), atime on 	   dirs does not change when it is read. */
+comment|/* failure("Atime should be restored"); */
+comment|/* assertFileAtimeRecent("at"); */
 name|failure
 argument_list|(
 literal|"Atime should be restored"

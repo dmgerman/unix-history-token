@@ -87,6 +87,11 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|archive_read_support_format_warc
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Install expensive bidders last.  By doing them last, we 	 * increase the chance that a high bid from someone else will 	 * make it unnecessary for these to do anything at all. 	 */
 comment|/* These three have potentially large look-ahead. */
 name|archive_read_support_format_7zip

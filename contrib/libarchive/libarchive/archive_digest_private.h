@@ -1378,7 +1378,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.md5init(ctx)
+value|__archive_digest.md5init(ctx)
 end_define
 
 begin_define
@@ -1391,7 +1391,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.md5final(ctx, md)
+value|__archive_digest.md5final(ctx, md)
 end_define
 
 begin_define
@@ -1406,7 +1406,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.md5update(ctx, buf, n)
+value|__archive_digest.md5update(ctx, buf, n)
 end_define
 
 begin_if
@@ -1449,7 +1449,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.rmd160init(ctx)
+value|__archive_digest.rmd160init(ctx)
 end_define
 
 begin_define
@@ -1462,7 +1462,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.rmd160final(ctx, md)
+value|__archive_digest.rmd160final(ctx, md)
 end_define
 
 begin_define
@@ -1477,7 +1477,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.rmd160update(ctx, buf, n)
+value|__archive_digest.rmd160update(ctx, buf, n)
 end_define
 
 begin_if
@@ -1538,7 +1538,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.sha1init(ctx)
+value|__archive_digest.sha1init(ctx)
 end_define
 
 begin_define
@@ -1551,7 +1551,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.sha1final(ctx, md)
+value|__archive_digest.sha1final(ctx, md)
 end_define
 
 begin_define
@@ -1566,7 +1566,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.sha1update(ctx, buf, n)
+value|__archive_digest.sha1update(ctx, buf, n)
 end_define
 
 begin_if
@@ -1639,7 +1639,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.sha256init(ctx)
+value|__archive_digest.sha256init(ctx)
 end_define
 
 begin_define
@@ -1652,7 +1652,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.sha256final(ctx, md)
+value|__archive_digest.sha256final(ctx, md)
 end_define
 
 begin_define
@@ -1667,7 +1667,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.sha256update(ctx, buf, n)
+value|__archive_digest.sha256update(ctx, buf, n)
 end_define
 
 begin_if
@@ -1734,7 +1734,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.sha384init(ctx)
+value|__archive_digest.sha384init(ctx)
 end_define
 
 begin_define
@@ -1747,7 +1747,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.sha384final(ctx, md)
+value|__archive_digest.sha384final(ctx, md)
 end_define
 
 begin_define
@@ -1762,7 +1762,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.sha384update(ctx, buf, n)
+value|__archive_digest.sha384update(ctx, buf, n)
 end_define
 
 begin_if
@@ -1835,7 +1835,7 @@ parameter_list|(
 name|ctx
 parameter_list|)
 define|\
-value|__archive_crypto.sha512init(ctx)
+value|__archive_digest.sha512init(ctx)
 end_define
 
 begin_define
@@ -1848,7 +1848,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|__archive_crypto.sha512final(ctx, md)
+value|__archive_digest.sha512final(ctx, md)
 end_define
 
 begin_define
@@ -1863,16 +1863,16 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|__archive_crypto.sha512update(ctx, buf, n)
+value|__archive_digest.sha512update(ctx, buf, n)
 end_define
 
 begin_comment
-comment|/* Minimal interface to crypto functionality for internal use in libarchive */
+comment|/* Minimal interface to digest functionality for internal use in libarchive */
 end_comment
 
 begin_struct
 struct|struct
-name|archive_crypto
+name|archive_digest
 block|{
 comment|/* Message Digest */
 name|int
@@ -2118,8 +2118,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|archive_crypto
-name|__archive_crypto
+name|archive_digest
+name|__archive_digest
 decl_stmt|;
 end_decl_stmt
 

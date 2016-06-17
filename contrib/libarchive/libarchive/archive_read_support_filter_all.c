@@ -153,6 +153,12 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+comment|/* Lz4 falls back to "lz4 -d" command-line program. */
+name|archive_read_support_filter_lz4
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 comment|/* Note: We always return ARCHIVE_OK here, even if some of the 	 * above return ARCHIVE_WARN.  The intent here is to enable 	 * "as much as possible."  Clients who need specific 	 * compression should enable those individually so they can 	 * verify the level of support. */
 comment|/* Clear any warning messages set by the above functions. */
 name|archive_clear_error

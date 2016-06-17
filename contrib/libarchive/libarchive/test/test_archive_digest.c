@@ -10,7 +10,7 @@ file|"test.h"
 end_include
 
 begin_comment
-comment|/* Sanity test of internal crypto functionality */
+comment|/* Sanity test of internal digest functionality */
 end_comment
 
 begin_define
@@ -23,7 +23,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"archive_crypto_private.h"
+file|"archive_digest_private.h"
 end_include
 
 begin_macro

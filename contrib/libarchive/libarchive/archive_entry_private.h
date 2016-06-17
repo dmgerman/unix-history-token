@@ -266,6 +266,21 @@ name|archive_mstring
 name|ae_sourcepath
 decl_stmt|;
 comment|/* Path this entry is sourced from. */
+define|#
+directive|define
+name|AE_ENCRYPTION_NONE
+value|0
+define|#
+directive|define
+name|AE_ENCRYPTION_DATA
+value|1
+define|#
+directive|define
+name|AE_ENCRYPTION_METADATA
+value|2
+name|char
+name|encryption
+decl_stmt|;
 name|void
 modifier|*
 name|mac_metadata

@@ -466,6 +466,28 @@ name|archive_string_conv
 modifier|*
 name|sconv
 decl_stmt|;
+comment|/* 	 * Used by archive_read_data() to track blocks and copy 	 * data to client buffers, filling gaps with zero bytes. 	 */
+specifier|const
+name|char
+modifier|*
+name|read_data_block
+decl_stmt|;
+name|int64_t
+name|read_data_offset
+decl_stmt|;
+name|int64_t
+name|read_data_output_offset
+decl_stmt|;
+name|size_t
+name|read_data_remaining
+decl_stmt|;
+comment|/* 	 * Used by formats/filters to determine the amount of data 	 * requested from a call to archive_read_data(). This is only 	 * useful when the format/filter has seek support. 	 */
+name|char
+name|read_data_is_posix_read
+decl_stmt|;
+name|size_t
+name|read_data_requested
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -556,6 +578,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|__archive_clean
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__archive_reset_read_data
 parameter_list|(
 name|struct
 name|archive

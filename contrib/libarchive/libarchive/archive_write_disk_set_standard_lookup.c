@@ -232,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Installs functions that use getpwnam()/getgrnam()---along with  * a simple cache to accelerate such lookups---into the archive_write_disk  * object.  This is in a separate file because getpwnam()/getgrnam()  * can pull in a LOT of library code (including NIS/LDAP functions, which  * pull in DNS resolveers, etc).  This can easily top 500kB, which makes  * it inappropriate for some space-constrained applications.  *  * Applications that are size-sensitive may want to just use the  * real default functions (defined in archive_write_disk.c) that just  * use the uid/gid without the lookup.  Or define your own custom functions  * if you prefer.  *  * TODO: Replace these hash tables with simpler move-to-front LRU  * lists with a bounded size (128 items?).  The hash is a bit faster,  * but has a bad pathology in which it thrashes a single bucket.  Even  * walking a list of 128 items is a lot faster than calling  * getpwnam()!  */
+comment|/*  * Installs functions that use getpwnam()/getgrnam()---along with  * a simple cache to accelerate such lookups---into the archive_write_disk  * object.  This is in a separate file because getpwnam()/getgrnam()  * can pull in a LOT of library code (including NIS/LDAP functions, which  * pull in DNS resolvers, etc).  This can easily top 500kB, which makes  * it inappropriate for some space-constrained applications.  *  * Applications that are size-sensitive may want to just use the  * real default functions (defined in archive_write_disk.c) that just  * use the uid/gid without the lookup.  Or define your own custom functions  * if you prefer.  *  * TODO: Replace these hash tables with simpler move-to-front LRU  * lists with a bounded size (128 items?).  The hash is a bit faster,  * but has a bad pathology in which it thrashes a single bucket.  Even  * walking a list of 128 items is a lot faster than calling  * getpwnam()!  */
 end_comment
 
 begin_function
@@ -277,6 +277,33 @@ name|bucket
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|ucache
+operator|==
+name|NULL
+operator|||
+name|gcache
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|ucache
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|gcache
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|memset
 argument_list|(
 name|ucache

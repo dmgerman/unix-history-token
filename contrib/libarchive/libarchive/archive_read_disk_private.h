@@ -52,6 +52,12 @@ name|struct
 name|archive
 name|archive
 decl_stmt|;
+comment|/* Reused by archive_read_next_header() */
+name|struct
+name|archive_entry
+modifier|*
+name|entry
+decl_stmt|;
 comment|/* 	 * Symlink mode is one of 'L'ogical, 'P'hysical, or 'H'ybrid, 	 * following an old BSD convention.  'L' follows all symlinks, 	 * 'P' follows none, 'H' follows symlinks only for the first 	 * item. 	 */
 name|char
 name|symlink_mode
@@ -121,6 +127,10 @@ decl_stmt|;
 comment|/* Set 1 if users request to traverse mount points. */
 name|int
 name|traverse_mount_points
+decl_stmt|;
+comment|/* Set 1 if users want to suppress xattr information. */
+name|int
+name|suppress_xattr
 decl_stmt|;
 specifier|const
 name|char

@@ -102,21 +102,11 @@ directive|include
 file|"archive_write_disk_private.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_POSIX_ACL
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|ACL_TYPE_NFS4
-argument_list|)
-end_if
+end_ifndef
 
 begin_comment
 comment|/* Default empty function body to satisfy mainline code. */
@@ -311,6 +301,9 @@ operator|(
 name|ret
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 block|}
 elseif|else
 if|if
@@ -349,6 +342,8 @@ operator|(
 name|ret
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 else|else
 return|return
@@ -390,6 +385,9 @@ block|,
 name|ACL_READ
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 block|{
 name|ARCHIVE_ENTRY_ACL_READ_DATA
 block|,
@@ -485,9 +483,17 @@ name|ARCHIVE_ENTRY_ACL_SYNCHRONIZE
 block|,
 name|ACL_SYNCHRONIZE
 block|}
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
+end_ifdef
 
 begin_struct
 specifier|static
@@ -530,6 +536,11 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -575,9 +586,14 @@ decl_stmt|;
 name|acl_permset_t
 name|acl_permset
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 name|acl_flagset_t
 name|acl_flagset
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 decl_stmt|;
@@ -785,6 +801,9 @@ name|ACL_OTHER
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 case|case
 name|ARCHIVE_ENTRY_ACL_EVERYONE
 case|:
@@ -796,10 +815,15 @@ name|ACL_EVERYONE
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* XXX */
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 switch|switch
 condition|(
 name|ae_type
@@ -861,6 +885,8 @@ default|default:
 comment|// XXX error handling here.
 break|break;
 block|}
+endif|#
+directive|endif
 name|acl_get_permset
 argument_list|(
 name|acl_entry
@@ -928,6 +954,9 @@ name|platform_perm
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACL_TYPE_NFS4
 name|acl_get_flagset_np
 argument_list|(
 name|acl_entry
@@ -995,6 +1024,8 @@ name|platform_inherit
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* Try restoring the ACL through 'fd' if we can. */
 if|#

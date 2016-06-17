@@ -151,6 +151,11 @@ name|int
 name|day_first
 decl_stmt|;
 comment|/* true if locale prefers day/mon */
+specifier|const
+name|char
+modifier|*
+name|passphrase
+decl_stmt|;
 comment|/* If>= 0, then close this when done. */
 name|int
 name|fd
@@ -206,6 +211,10 @@ decl_stmt|;
 name|size_t
 name|buff_size
 decl_stmt|;
+name|char
+modifier|*
+name|ppbuff
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -246,9 +255,13 @@ name|OPTION_INSECURE
 block|,
 name|OPTION_LRZIP
 block|,
+name|OPTION_LZ4
+block|,
 name|OPTION_LZMA
 block|,
 name|OPTION_LZOP
+block|,
+name|OPTION_PASSPHRASE
 block|,
 name|OPTION_NO_PRESERVE_OWNER
 block|,

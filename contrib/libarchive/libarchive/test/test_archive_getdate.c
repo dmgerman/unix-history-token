@@ -23,22 +23,22 @@ directive|include
 file|<time.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_BUILD
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|"archive_getdate.h"
+end_include
+
 begin_comment
 comment|/*  * Verify that the getdate() function works.  */
 end_comment
-
-begin_function_decl
-name|time_t
-name|__archive_get_date
-parameter_list|(
-name|time_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -138,6 +138,40 @@ argument_list|(
 name|now
 argument_list|,
 literal|"2 hours ago"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"2 hours ago"
+argument_list|)
+argument_list|,
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"+2 hours ago"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"now - 2 hours"
+argument_list|)
+argument_list|,
+name|get_date
+argument_list|(
+name|now
+argument_list|,
+literal|"-2 hours"
 argument_list|)
 argument_list|)
 expr_stmt|;
