@@ -20110,6 +20110,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_VFS_LOCKS
+end_ifdef
+
 begin_function
 name|void
 name|vop_strategy_pre
@@ -20119,9 +20125,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
 name|struct
 name|vop_strategy_args
 modifier|*
@@ -20190,8 +20193,6 @@ literal|"lock violation"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -20204,9 +20205,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
 name|struct
 name|vop_lock1_args
 modifier|*
@@ -20245,8 +20243,6 @@ argument_list|,
 literal|"VOP_LOCK"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -20262,9 +20258,6 @@ name|int
 name|rc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
 name|struct
 name|vop_lock1_args
 modifier|*
@@ -20306,8 +20299,6 @@ argument_list|,
 literal|"VOP_LOCK"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -20320,9 +20311,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
 name|struct
 name|vop_unlock_args
 modifier|*
@@ -20356,8 +20344,6 @@ argument_list|,
 literal|"VOP_UNLOCK"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -20373,9 +20359,6 @@ name|int
 name|rc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
 name|struct
 name|vop_unlock_args
 modifier|*
@@ -20400,10 +20383,13 @@ argument_list|,
 literal|"VOP_UNLOCK"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
