@@ -72,15 +72,16 @@ parameter_list|)
 value|(0)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|dnlc_reduce_cache
 parameter_list|(
-name|percent
+name|void
+modifier|*
+name|arg
 parameter_list|)
-value|do { } while (0)
-end_define
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
