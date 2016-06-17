@@ -4062,6 +4062,22 @@ name|B_TRUE
 else|:
 name|B_FALSE
 expr_stmt|;
+comment|/* 	 * Check if firmware supports version 2 of MC_CMD_INIT_EVQ, which allows 	 * us to let the firmware choose the settings to use on an EVQ. 	 */
+name|encp
+operator|->
+name|enc_init_evq_v2_supported
+operator|=
+name|CAP_FLAG2
+argument_list|(
+name|flags2
+argument_list|,
+name|INIT_EVQ_V2
+argument_list|)
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
+expr_stmt|;
 undef|#
 directive|undef
 name|CAP_FLAG

@@ -2893,6 +2893,9 @@ decl_stmt|;
 name|boolean_t
 name|enc_enhanced_set_mac_supported
 decl_stmt|;
+name|boolean_t
+name|enc_init_evq_v2_supported
+decl_stmt|;
 comment|/* External port identifier */
 name|uint8_t
 name|enc_external_port
