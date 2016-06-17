@@ -2854,6 +2854,9 @@ name|boolean_t
 name|enc_bug41750_workaround
 decl_stmt|;
 name|boolean_t
+name|enc_bug61265_workaround
+decl_stmt|;
+name|boolean_t
 name|enc_rx_batching_enabled
 decl_stmt|;
 comment|/* Maximum number of descriptors completed in an rx event. */

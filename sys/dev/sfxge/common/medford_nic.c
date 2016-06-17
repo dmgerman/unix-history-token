@@ -722,6 +722,7 @@ name|els
 operator|.
 name|els_adv_cap_mask
 expr_stmt|;
+comment|/* 	 * Enable firmware workarounds for hardware errata. 	 * Expected responses are: 	 *  - 0 (zero): 	 *	Success: workaround enabled or disabled as requested. 	 *  - MC_CMD_ERR_ENOSYS (reported as ENOTSUP): 	 *	Firmware does not support the MC_CMD_WORKAROUND request. 	 *	(assume that the workaround is not supported). 	 *  - MC_CMD_ERR_ENOENT (reported as ENOENT): 	 *	Firmware does not support the requested workaround. 	 *  - MC_CMD_ERR_EPERM  (reported as EACCES): 	 *	Unprivileged function cannot enable/disable workarounds. 	 * 	 * See efx_mcdi_request_errcode() for MCDI error translations. 	 */
 if|if
 condition|(
 name|EFX_PCI_FUNCTION_IS_VF
@@ -745,6 +746,65 @@ name|enc_bug26807_workaround
 operator|=
 name|B_TRUE
 expr_stmt|;
+comment|/* 	 * If the bug61265 workaround is enabled, then interrupt holdoff timers 	 * cannot be controlled by timer table writes, so MCDI must be used 	 * (timer table writes can still be used for wakeup timers). 	 */
+name|rc
+operator|=
+name|efx_mcdi_set_workaround
+argument_list|(
+name|enp
+argument_list|,
+name|MC_CMD_WORKAROUND_BUG61265
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rc
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|rc
+operator|==
+name|EACCES
+operator|)
+condition|)
+name|encp
+operator|->
+name|enc_bug61265_workaround
+operator|=
+name|B_TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|rc
+operator|==
+name|ENOTSUP
+operator|)
+operator|||
+operator|(
+name|rc
+operator|==
+name|ENOENT
+operator|)
+condition|)
+name|encp
+operator|->
+name|enc_bug61265_workaround
+operator|=
+name|B_FALSE
+expr_stmt|;
+else|else
+goto|goto
+name|fail8
+goto|;
 comment|/* Get clock frequencies (in MHz). */
 if|if
 condition|(
@@ -766,7 +826,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail8
+name|fail9
 goto|;
 comment|/* 	 * The Medford timer quantum is 1536 dpcpu_clk cycles, documented for 	 * the EV_TMR_VAL field of EV_TIMER_TBL. Scale for MHz and ns units. 	 */
 name|encp
@@ -807,7 +867,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail9
+name|fail10
 goto|;
 comment|/* Alignment for receive packet DMA buffers */
 name|encp
@@ -834,7 +894,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail10
+name|fail11
 goto|;
 name|encp
 operator|->
@@ -910,7 +970,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail11
+name|fail12
 goto|;
 name|encp
 operator|->
@@ -949,7 +1009,7 @@ name|encp
 argument_list|)
 condition|)
 goto|goto
-name|fail12
+name|fail13
 goto|;
 comment|/* Ignore error (cannot query vector limits from a VF). */
 name|base
@@ -1004,7 +1064,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail13
+name|fail14
 goto|;
 name|encp
 operator|->
@@ -1023,6 +1083,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|fail14
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail14
+argument_list|)
+expr_stmt|;
 name|fail13
 label|:
 name|EFSYS_PROBE
