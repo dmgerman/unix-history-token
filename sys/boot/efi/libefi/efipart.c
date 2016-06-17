@@ -326,6 +326,8 @@ decl_stmt|,
 name|nin
 decl_stmt|,
 name|nout
+decl_stmt|,
+name|nrdisk
 decl_stmt|;
 name|int
 name|err
@@ -450,6 +452,10 @@ name|nout
 operator|=
 literal|0
 expr_stmt|;
+name|nrdisk
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|aliases
@@ -560,16 +566,8 @@ operator|->
 name|LogicalPartition
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s%d isn't a logical partition, skipping\n"
-argument_list|,
-name|efipart_dev
-operator|.
-name|dv_name
-argument_list|,
-name|n
-argument_list|)
+name|nrdisk
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -723,6 +721,23 @@ expr_stmt|;
 name|free
 argument_list|(
 name|hin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nout
+operator|==
+literal|0
+operator|&&
+name|nrdisk
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Found %d disk(s) but no logical partition\n"
+argument_list|,
+name|nrdisk
 argument_list|)
 expr_stmt|;
 return|return
