@@ -1846,18 +1846,6 @@ name|uint32_t
 name|length
 argument_list|)
 block|{
-specifier|const
-name|efx_lic_ops_t
-modifier|*
-name|elop
-init|=
-name|enp
-operator|->
-name|en_elop
-decl_stmt|;
-name|efx_rc_t
-name|rc
-decl_stmt|;
 name|uint16_t
 name|tlv_type
 decl_stmt|;
@@ -2275,9 +2263,6 @@ operator|*
 name|deltap
 argument_list|)
 block|{
-name|efx_rc_t
-name|rc
-decl_stmt|;
 name|uint32_t
 name|move_start
 init|=
@@ -4229,9 +4214,6 @@ name|length
 argument_list|)
 block|{
 comment|// Check key is a valid V3 key
-name|efx_rc_t
-name|rc
-decl_stmt|;
 name|uint8_t
 name|key_type
 decl_stmt|;
@@ -5038,15 +5020,6 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
-specifier|const
-name|efx_lic_ops_t
-modifier|*
-name|elop
-init|=
-name|enp
-operator|->
-name|en_elop
-decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp
@@ -5795,9 +5768,6 @@ name|enp
 operator|->
 name|en_elop
 decl_stmt|;
-name|boolean_t
-name|rc
-decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp
@@ -5900,12 +5870,6 @@ name|en_elop
 decl_stmt|;
 name|boolean_t
 name|rc
-decl_stmt|;
-name|uint16_t
-name|tlv_type
-decl_stmt|;
-name|uint16_t
-name|tlv_length
 decl_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
