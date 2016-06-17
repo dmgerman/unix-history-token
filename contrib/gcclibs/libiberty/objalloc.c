@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objalloc.c -- routines to allocate memory for objects    Copyright 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* objalloc.c -- routines to allocate memory for objects    Copyright 1997-2012 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -320,9 +320,15 @@ name|o
 parameter_list|,
 name|unsigned
 name|long
-name|len
+name|original_len
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|len
+init|=
+name|original_len
+decl_stmt|;
 comment|/* We avoid confusion from zero sized objects by always allocating      at least 1 byte.  */
 if|if
 condition|(
@@ -351,6 +357,18 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* CVE-2012-3509: Check for overflow in the alignment operation above    * and then malloc argument below. */
+if|if
+condition|(
+name|len
+operator|+
+name|CHUNK_HEADER_SIZE
+operator|<
+name|original_len
+condition|)
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|len
