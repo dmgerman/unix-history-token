@@ -1910,9 +1910,8 @@ name|u_int16_t
 name|match_tag
 decl_stmt|;
 name|u_int16_t
-name|spare2
+name|scrub_flags
 decl_stmt|;
-comment|/* netgraph */
 name|struct
 name|pf_rule_uid
 name|uid
@@ -2015,6 +2014,24 @@ name|PF_FLUSH_GLOBAL
 value|0x02
 name|u_int8_t
 name|flush
+decl_stmt|;
+define|#
+directive|define
+name|PF_PRIO_ZERO
+value|0xff
+comment|/* match "prio 0" packets */
+define|#
+directive|define
+name|PF_PRIO_MAX
+value|7
+name|u_int8_t
+name|prio
+decl_stmt|;
+name|u_int8_t
+name|set_prio
+index|[
+literal|2
+index|]
 decl_stmt|;
 struct|struct
 block|{
@@ -2705,6 +2722,14 @@ define|#
 directive|define
 name|PFSTATE_ACK
 value|0x10
+define|#
+directive|define
+name|PFSTATE_SETPRIO
+value|0x0200
+define|#
+directive|define
+name|PFSTATE_SETMASK
+value|(PFSTATE_SETPRIO)
 name|u_int8_t
 name|timeout
 decl_stmt|;
