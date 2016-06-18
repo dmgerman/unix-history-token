@@ -3142,11 +3142,13 @@ name|GNUTAR_linkname_size
 condition|)
 block|{
 name|size_t
-name|todo
+name|length
 init|=
 name|gnutar
 operator|->
 name|linkname_length
+operator|+
+literal|1
 decl_stmt|;
 name|struct
 name|archive_entry
@@ -3187,11 +3189,7 @@ name|archive_entry_set_size
 argument_list|(
 name|temp
 argument_list|,
-name|gnutar
-operator|->
-name|linkname_length
-operator|+
-literal|1
+name|length
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3241,7 +3239,7 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* Write as many 512 bytes blocks as needed to write full name. */
+comment|/* Write name and trailing null byte. */
 name|ret
 operator|=
 name|__archive_write_output
@@ -3252,7 +3250,7 @@ name|gnutar
 operator|->
 name|linkname
 argument_list|,
-name|todo
+name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -3264,6 +3262,7 @@ condition|)
 goto|goto
 name|exit_write_header
 goto|;
+comment|/* Pad to 512 bytes */
 name|ret
 operator|=
 name|__archive_write_nulls
@@ -3277,7 +3276,7 @@ operator|-
 operator|(
 name|ssize_t
 operator|)
-name|todo
+name|length
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3311,11 +3310,13 @@ operator|->
 name|pathname
 decl_stmt|;
 name|size_t
-name|todo
+name|length
 init|=
 name|gnutar
 operator|->
 name|pathname_length
+operator|+
+literal|1
 decl_stmt|;
 name|struct
 name|archive_entry
@@ -3356,11 +3357,7 @@ name|archive_entry_set_size
 argument_list|(
 name|temp
 argument_list|,
-name|gnutar
-operator|->
-name|pathname_length
-operator|+
-literal|1
+name|length
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3410,7 +3407,7 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* Write as many 512 bytes blocks as needed to write full name. */
+comment|/* Write pathname + trailing null byte. */
 name|ret
 operator|=
 name|__archive_write_output
@@ -3419,7 +3416,7 @@ name|a
 argument_list|,
 name|pathname
 argument_list|,
-name|todo
+name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -3431,6 +3428,7 @@ condition|)
 goto|goto
 name|exit_write_header
 goto|;
+comment|/* Pad to multiple of 512 bytes. */
 name|ret
 operator|=
 name|__archive_write_nulls
@@ -3444,7 +3442,7 @@ operator|-
 operator|(
 name|ssize_t
 operator|)
-name|todo
+name|length
 operator|)
 argument_list|)
 expr_stmt|;

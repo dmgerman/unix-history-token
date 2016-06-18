@@ -336,25 +336,6 @@ name|ae_xattr
 modifier|*
 name|xp
 decl_stmt|;
-for|for
-control|(
-name|xp
-operator|=
-name|entry
-operator|->
-name|xattr_head
-init|;
-name|xp
-operator|!=
-name|NULL
-condition|;
-name|xp
-operator|=
-name|xp
-operator|->
-name|next
-control|)
-empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -377,8 +358,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-comment|/* XXX Error XXX */
-return|return;
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -394,8 +380,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-comment|/* XXX Error XXX */
-return|return;
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

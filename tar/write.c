@@ -4308,6 +4308,10 @@ condition|(
 name|r
 operator|==
 name|ARCHIVE_FATAL
+operator|||
+name|r
+operator|==
+name|ARCHIVE_FAILED
 condition|)
 block|{
 name|bsdtar
