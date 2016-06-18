@@ -14686,6 +14686,9 @@ operator|=
 operator|(
 name|u_int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|arg
 expr_stmt|;
 name|mutex_enter
