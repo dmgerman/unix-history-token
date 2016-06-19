@@ -337,10 +337,6 @@ name|ni_refcnt
 decl_stmt|;
 comment|/* count of held references */
 name|u_int
-name|ni_scangen
-decl_stmt|;
-comment|/* gen# for timeout scan */
-name|u_int
 name|ni_flags
 decl_stmt|;
 define|#
@@ -1449,14 +1445,6 @@ modifier|*
 name|nt_name
 decl_stmt|;
 comment|/* table name for debug msgs */
-name|ieee80211_scan_lock_t
-name|nt_scanlock
-decl_stmt|;
-comment|/* on nt_scangen */
-name|u_int
-name|nt_scangen
-decl_stmt|;
-comment|/* gen# for iterators */
 name|int
 name|nt_inact_init
 decl_stmt|;

@@ -1216,11 +1216,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\tscangen %u authmode %u ath_flags 0x%x ath_defkeyix %u\n"
-argument_list|,
-name|ni
-operator|->
-name|ni_scangen
+literal|"\tauthmode %u ath_flags 0x%x ath_defkeyix %u\n"
 argument_list|,
 name|ni
 operator|->
@@ -4436,25 +4432,6 @@ argument_list|,
 name|nt
 operator|->
 name|nt_inact_init
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|" scanlock %p"
-argument_list|,
-operator|&
-name|nt
-operator|->
-name|nt_scanlock
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|" scangen %u\n"
-argument_list|,
-name|nt
-operator|->
-name|nt_scangen
 argument_list|)
 expr_stmt|;
 name|db_printf

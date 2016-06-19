@@ -4935,16 +4935,6 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-name|IEEE80211_NODE_LOCK_ASSERT
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_ic
-operator|->
-name|ic_sta
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Age frames on the power save queue. 	 */
 if|if
 condition|(
@@ -8658,15 +8648,6 @@ operator|->
 name|ic_name
 argument_list|)
 expr_stmt|;
-name|IEEE80211_NODE_ITERATE_LOCK_INIT
-argument_list|(
-name|nt
-argument_list|,
-name|ic
-operator|->
-name|ic_name
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -8680,12 +8661,6 @@ operator|->
 name|nt_name
 operator|=
 name|name
-expr_stmt|;
-name|nt
-operator|->
-name|nt_scangen
-operator|=
-literal|1
 expr_stmt|;
 name|nt
 operator|->
@@ -9026,11 +9001,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|IEEE80211_NODE_ITERATE_LOCK_DESTROY
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
 name|IEEE80211_NODE_LOCK_DESTROY
 argument_list|(
 name|nt
@@ -9039,98 +9009,41 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Timeout inactive stations and do related housekeeping.  * Note that we cannot hold the node lock while sending a  * frame as this would lead to a LOR.  Instead we use a  * generation number to mark nodes that we've scanned and  * drop the lock and restart a scan if we have to time out  * a node.  Since we are single-threaded by virtue of  * controlling the inactivity timer we can be sure this will  * process each node only once.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|ieee80211_timeout_stations
+name|timeout_stations
 parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|)
+block|{
 name|struct
 name|ieee80211com
 modifier|*
 name|ic
-parameter_list|)
-block|{
-name|struct
-name|ieee80211_node_table
-modifier|*
-name|nt
 init|=
-operator|&
-name|ic
+name|ni
 operator|->
-name|ic_sta
+name|ni_ic
 decl_stmt|;
 name|struct
 name|ieee80211vap
 modifier|*
 name|vap
-decl_stmt|;
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-decl_stmt|;
-name|int
-name|gen
 init|=
-literal|0
-decl_stmt|;
-name|IEEE80211_NODE_ITERATE_LOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
-name|gen
-operator|=
-operator|++
-name|nt
-operator|->
-name|nt_scangen
-expr_stmt|;
-name|restart
-label|:
-name|IEEE80211_NODE_LOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ni
-argument_list|,
-argument|&nt->nt_node
-argument_list|,
-argument|ni_list
-argument_list|)
-block|{
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_scangen
-operator|==
-name|gen
-condition|)
-comment|/* previously handled */
-continue|continue;
-name|ni
-operator|->
-name|ni_scangen
-operator|=
-name|gen
-expr_stmt|;
-comment|/* 		 * Ignore entries for which have yet to receive an 		 * authentication frame.  These are transient and 		 * will be reclaimed when the last reference to them 		 * goes away (when frame xmits complete). 		 */
-name|vap
-operator|=
 name|ni
 operator|->
 name|ni_vap
-expr_stmt|;
-comment|/* 		 * Only process stations when in RUN state.  This 		 * insures, for example, that we don't timeout an 		 * inactive station during CAC.  Note that CSA state 		 * is actually handled in ieee80211_node_timeout as 		 * it applies to more than timeout processing. 		 */
+decl_stmt|;
+comment|/* 	 * Only process stations when in RUN state.  This 	 * insures, for example, that we don't timeout an 	 * inactive station during CAC.  Note that CSA state 	 * is actually handled in ieee80211_node_timeout as 	 * it applies to more than timeout processing. 	 */
 if|if
 condition|(
 name|vap
@@ -9139,8 +9052,8 @@ name|iv_state
 operator|!=
 name|IEEE80211_S_RUN
 condition|)
-continue|continue;
-comment|/* XXX can vap be NULL? */
+return|return;
+comment|/* 	 * Ignore entries for which have yet to receive an 	 * authentication frame.  These are transient and 	 * will be reclaimed when the last reference to them 	 * goes away (when frame xmits complete). 	 */
 if|if
 condition|(
 operator|(
@@ -9167,8 +9080,8 @@ operator|)
 operator|==
 literal|0
 condition|)
-continue|continue;
-comment|/* 		 * Free fragment if not needed anymore 		 * (last fragment older than 1s). 		 * XXX doesn't belong here, move to node_age 		 */
+return|return;
+comment|/* 	 * Free fragment if not needed anymore 	 * (last fragment older than 1s). 	 * XXX doesn't belong here, move to node_age 	 */
 if|if
 condition|(
 name|ni
@@ -9251,7 +9164,8 @@ name|rs_nrates
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Special case ourself; we may be idle for extended periods 		 * of time and regardless reclaiming our state is wrong. 		 * XXX run ic_node_age 		 */
+comment|/* 	 * Special case ourself; we may be idle for extended periods 	 * of time and regardless reclaiming our state is wrong. 	 * XXX run ic_node_age 	 */
+comment|/* XXX before inact decrement? */
 if|if
 condition|(
 name|ni
@@ -9260,7 +9174,7 @@ name|vap
 operator|->
 name|iv_bss
 condition|)
-continue|continue;
+return|return;
 if|if
 condition|(
 name|ni
@@ -9284,7 +9198,7 @@ name|IEEE80211_M_AHDEMO
 operator|)
 condition|)
 block|{
-comment|/* 			 * Age/drain resources held by the station. 			 */
+comment|/* 		 * Age/drain resources held by the station. 		 */
 name|ic
 operator|->
 name|ic_node_age
@@ -9292,7 +9206,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Probe the station before time it out.  We 			 * send a null data frame which may not be 			 * universally supported by drivers (need it 			 * for ps-poll support so it should be...). 			 * 			 * XXX don't probe the station unless we've 			 *     received a frame from them (and have 			 *     some idea of the rates they are capable 			 *     of); this will get fixed more properly 			 *     soon with better handling of the rate set. 			 */
+comment|/* 		 * Probe the station before time it out.  We 		 * send a null data frame which may not be 		 * universally supported by drivers (need it 		 * for ps-poll support so it should be...). 		 * 		 * XXX don't probe the station unless we've 		 *     received a frame from them (and have 		 *     some idea of the rates they are capable 		 *     of); this will get fixed more properly 		 *     soon with better handling of the rate set. 		 */
 if|if
 condition|(
 operator|(
@@ -9343,26 +9257,21 @@ argument_list|,
 literal|"probe station due to inactivity"
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Grab a reference before unlocking the table 				 * so the node cannot be reclaimed before we 				 * send the frame. ieee80211_send_nulldata 				 * understands we've done this and reclaims the 				 * ref for us as needed. 				 */
+comment|/* 			 * Grab a reference so the node cannot 			 * be reclaimed before we send the frame. 			 * ieee80211_send_nulldata understands 			 * we've done this and reclaims the 			 * ref for us as needed. 			 */
+comment|/* XXX fix this (not required anymore). */
 name|ieee80211_ref_node
 argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
+comment|/* XXX useless */
 name|ieee80211_send_nulldata
 argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
 comment|/* XXX stat? */
-goto|goto
-name|restart
-goto|;
+return|return;
 block|}
 block|}
 if|if
@@ -9401,17 +9310,7 @@ name|ni
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Send a deauthenticate frame and drop the station. 			 * This is somewhat complicated due to reference counts 			 * and locking.  At this point a station will typically 			 * have a reference count of 1.  ieee80211_node_leave 			 * will do a "free" of the node which will drop the 			 * reference count.  But in the meantime a reference 			 * wil be held by the deauth frame.  The actual reclaim 			 * of the node will happen either after the tx is 			 * completed or by ieee80211_node_leave. 			 * 			 * Separately we must drop the node lock before sending 			 * in case the driver takes a lock, as this can result 			 * in a LOR between the node lock and the driver lock. 			 */
-name|ieee80211_ref_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Send a deauthenticate frame and drop the station. 		 * This is somewhat complicated due to reference counts 		 * and locking.  At this point a station will typically 		 * have a reference count of 2.  ieee80211_node_leave 		 * will do a "free" of the node which will drop the 		 * reference count.  But in the meantime a reference 		 * wil be held by the deauth frame.  The actual reclaim 		 * of the node will happen either after the tx is 		 * completed or by ieee80211_node_leave. 		 */
 if|if
 condition|(
 name|ni
@@ -9436,11 +9335,6 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
@@ -9448,19 +9342,42 @@ operator|.
 name|is_node_timeout
 operator|++
 expr_stmt|;
-goto|goto
-name|restart
-goto|;
 block|}
 block|}
-name|IEEE80211_NODE_UNLOCK
+end_function
+
+begin_comment
+comment|/*  * Timeout inactive stations and do related housekeeping.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ieee80211_timeout_stations
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_node_table
+modifier|*
+name|nt
+init|=
+operator|&
+name|ic
+operator|->
+name|ic_sta
+decl_stmt|;
+name|ieee80211_iterate_nodes
 argument_list|(
 name|nt
-argument_list|)
-expr_stmt|;
-name|IEEE80211_NODE_ITERATE_UNLOCK
-argument_list|(
-name|nt
+argument_list|,
+name|timeout_stations
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -9726,9 +9643,6 @@ name|uint16_t
 name|max_aid
 parameter_list|)
 block|{
-name|u_int
-name|gen
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -9741,22 +9655,10 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
-name|IEEE80211_NODE_ITERATE_LOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
 name|IEEE80211_NODE_LOCK
 argument_list|(
 name|nt
 argument_list|)
-expr_stmt|;
-name|gen
-operator|=
-operator|++
-name|nt
-operator|->
-name|nt_scangen
 expr_stmt|;
 name|i
 operator|=
@@ -9764,7 +9666,6 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * We simply assume here that since the node 	 * scan generation doesn't change (as 	 * we are holding both the node table and 	 * node table iteration locks), we can simply 	 * assign it to the node here. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ni
@@ -9808,26 +9709,12 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|ni_arr
-index|[
-name|i
-index|]
-operator|->
-name|ni_scangen
-operator|=
-name|gen
-expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * It's safe to unlock here. 	 * 	 * If we're successful, the list is returned. 	 * If we're unsuccessful, the list is ignored 	 * and we remove our references. 	 * 	 * This avoids any potential LOR with 	 * ieee80211_free_node(). 	 */
 name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
-name|IEEE80211_NODE_ITERATE_UNLOCK
 argument_list|(
 name|nt
 argument_list|)
@@ -10093,11 +9980,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tscangen %u authmode %u flags 0x%x\n"
-argument_list|,
-name|ni
-operator|->
-name|ni_scangen
+literal|"\tauthmode %u flags 0x%x\n"
 argument_list|,
 name|ni
 operator|->
