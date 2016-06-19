@@ -16447,6 +16447,22 @@ operator|==
 name|F_SETLK
 condition|)
 block|{
+name|error
+operator|=
+name|NFSVOPLOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_SHARED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Mark that a file lock has been acquired. */
 name|mtx_lock
 argument_list|(
@@ -16470,6 +16486,14 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
+name|NFSVOPUNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 return|return
