@@ -3481,6 +3481,12 @@ name|NLM_SYSID_CLIENT
 operator||
 name|sysid
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|error
 operator|=
 name|lf_advlockasync
@@ -3496,6 +3502,41 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EDEADLK
+condition|)
+block|{
+comment|/* 			 * Locks are associated with the processes and 			 * not with threads.  Suppose we have two 			 * threads A1 A2 in one process, A1 locked 			 * file f1, A2 is locking file f2, and A1 is 			 * unlocking f1. Then remote server may 			 * already unlocked f1, while local still not 			 * yet scheduled A1 to make the call to local 			 * advlock manager. The process B owns lock on 			 * f2 and issued the lock on f1.  Remote would 			 * grant B the request on f1, but local would 			 * return EDEADLK. 			*/
+name|pause
+argument_list|(
+literal|"nlmdlk"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* XXXKIB allow suspend */
+block|}
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+name|EINTR
+condition|)
+block|{
+comment|/* 			 * lf_purgelocks() might wake up the lock 			 * waiter and removed our lock graph edges. 			 * There is no sense in re-trying recording 			 * the lock to the local manager after 			 * reclaim. 			 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+else|else
+break|break;
+block|}
 name|KASSERT
 argument_list|(
 name|error
