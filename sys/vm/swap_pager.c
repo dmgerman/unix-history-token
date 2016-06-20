@@ -2133,6 +2133,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sw_alloc_sx
+argument_list|,
+literal|"swspsx"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Device Stripe, in PAGE_SIZE'd blocks 	 */
 name|dmmax
 operator|=
