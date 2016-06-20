@@ -731,6 +731,18 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
+comment|/* Ensure the flags are cleared */
+name|bf
+operator|->
+name|bf_flags
+operator|&=
+operator|~
+operator|(
+name|ATH_BUF_FIFOPTR
+operator||
+name|ATH_BUF_FIFOEND
+operator|)
+expr_stmt|;
 name|sqdepth
 operator|++
 expr_stmt|;
