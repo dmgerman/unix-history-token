@@ -10515,7 +10515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it.  VI_DOOMED is set if the vnode  * is being destroyed.  Only callers who specify LK_RETRY will  * see doomed vnodes.  If inactive processing was delayed in  * vput try to do it here.  *  * Notes on lockless counter manipulation:  * _vhold, vputx and other routines make various decisions based  * on either holdcnt or usecount being 0. As long as either contuner  * is not transitioning 0->1 nor 1->0, the manipulation can be done  * with atomic operations. Otherwise the interlock is taken.  */
+comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it.  VI_DOOMED is set if the vnode  * is being destroyed.  Only callers who specify LK_RETRY will  * see doomed vnodes.  If inactive processing was delayed in  * vput try to do it here.  *  * Notes on lockless counter manipulation:  * _vhold, vputx and other routines make various decisions based  * on either holdcnt or usecount being 0. As long as either counter  * is not transitioning 0->1 nor 1->0, the manipulation can be done  * with atomic operations. Otherwise the interlock is taken covering  * both the atomic and additional actions.  */
 end_comment
 
 begin_function
