@@ -2022,9 +2022,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|mpi_reply
 operator|.
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_CONFIG_INVALID_PAGE
 condition|)
