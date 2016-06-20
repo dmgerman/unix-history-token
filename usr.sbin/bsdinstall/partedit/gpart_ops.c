@@ -1208,7 +1208,7 @@ literal|"GPT"
 block|,
 literal|"GUID Partition Table"
 block|,
-literal|"Bootable on most x86 systems"
+literal|"Bootable on most x86 systems and EFI aware ARM64"
 block|,
 literal|0
 block|}
