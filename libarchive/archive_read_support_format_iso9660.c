@@ -5255,6 +5255,9 @@ name|skipsize
 operator|=
 name|LOGICAL_BLOCK_SIZE
 operator|*
+operator|(
+name|int64_t
+operator|)
 name|vd
 operator|->
 name|location
@@ -5430,6 +5433,9 @@ name|skipsize
 operator|=
 name|LOGICAL_BLOCK_SIZE
 operator|*
+operator|(
+name|int64_t
+operator|)
 name|vd
 operator|->
 name|location

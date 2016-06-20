@@ -26,7 +26,7 @@ specifier|static
 name|char
 name|filename
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|;
 end_decl_stmt
