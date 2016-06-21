@@ -297,6 +297,8 @@ parameter_list|)
 block|{
 name|boolean_t
 name|needs_update
+init|=
+name|B_FALSE
 decl_stmt|;
 name|vdev_t
 modifier|*
