@@ -481,9 +481,6 @@ decl_stmt|;
 name|boolean_t
 name|hs_drain_notify
 decl_stmt|;
-name|boolean_t
-name|hs_open_multi_channel
-decl_stmt|;
 name|struct
 name|sema
 name|hs_drain_sema
@@ -1255,24 +1252,17 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * @brief Callback handler, will be invoked when receive mutil-channel offer  *  * @param context  new multi-channel  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|storvsc_handle_sc_creation
+name|storvsc_subchan_attach
 parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|)
-block|{
+name|struct
 name|hv_vmbus_channel
 modifier|*
 name|new_channel
-decl_stmt|;
+parameter_list|)
+block|{
 name|struct
 name|hv_device
 modifier|*
@@ -1292,14 +1282,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|new_channel
-operator|=
-operator|(
-name|hv_vmbus_channel
-operator|*
-operator|)
-name|context
-expr_stmt|;
 name|device
 operator|=
 name|new_channel
@@ -1320,15 +1302,6 @@ condition|(
 name|sc
 operator|==
 name|NULL
-condition|)
-return|return;
-if|if
-condition|(
-name|FALSE
-operator|==
-name|sc
-operator|->
-name|hs_open_multi_channel
 condition|)
 return|return;
 name|memset
@@ -1403,6 +1376,12 @@ name|max_chans
 parameter_list|)
 block|{
 name|struct
+name|hv_vmbus_channel
+modifier|*
+modifier|*
+name|subchan
+decl_stmt|;
+name|struct
 name|storvsc_softc
 modifier|*
 name|sc
@@ -1424,6 +1403,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* get multichannels count that need to create */
 name|request_channels_cnt
@@ -1465,15 +1446,6 @@ operator|&
 name|sc
 operator|->
 name|hs_init_req
-expr_stmt|;
-comment|/* Establish a handler for multi-channel */
-name|dev
-operator|->
-name|channel
-operator|->
-name|sc_creation_callback
-operator|=
-name|storvsc_handle_sc_creation
 expr_stmt|;
 comment|/* request the host to create multi-channel */
 name|memset
@@ -1617,11 +1589,47 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sc
-operator|->
-name|hs_open_multi_channel
+comment|/* Wait for sub-channels setup to complete. */
+name|subchan
 operator|=
-name|TRUE
+name|vmbus_get_subchan
+argument_list|(
+name|dev
+operator|->
+name|channel
+argument_list|,
+name|request_channels_cnt
+argument_list|)
+expr_stmt|;
+comment|/* Attach the sub-channels. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|request_channels_cnt
+condition|;
+operator|++
+name|i
+control|)
+name|storvsc_subchan_attach
+argument_list|(
+name|subchan
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Release the sub-channels. */
+name|vmbus_rel_subchan
+argument_list|(
+name|subchan
+argument_list|,
+name|request_channels_cnt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3932,12 +3940,6 @@ expr_stmt|;
 name|sc
 operator|->
 name|hs_drain_notify
-operator|=
-name|FALSE
-expr_stmt|;
-name|sc
-operator|->
-name|hs_open_multi_channel
 operator|=
 name|FALSE
 expr_stmt|;
