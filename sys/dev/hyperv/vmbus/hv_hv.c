@@ -429,7 +429,7 @@ name|void
 modifier|*
 name|virt_addr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1590,7 +1590,7 @@ literal|"\004SYNTM"
 comment|/* MSRs for SynTimer */
 literal|"\005APIC"
 comment|/* MSR_{EOI,ICR,TPR} */
-literal|"\006HYERCALL"
+literal|"\006HYPERCALL"
 comment|/* MSR_{GUEST_OS_ID,HYPERCALL} */
 literal|"\007VPINDEX"
 comment|/* MSR_VP_INDEX */
