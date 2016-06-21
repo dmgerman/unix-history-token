@@ -1332,12 +1332,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HYPERV
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|inthand_t
@@ -1595,51 +1589,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* HYPERV */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|vmbus_vector_alloc
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|vmbus_vector_free
-parameter_list|(
-name|int
-name|vector
-parameter_list|)
-block|{ }
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HYPERV */
-end_comment
 
 begin_function
 specifier|static
