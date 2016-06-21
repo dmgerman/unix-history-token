@@ -163,6 +163,20 @@ name|devstat
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|DISK_INIT_NONE
+block|,
+name|DISK_INIT_START
+block|,
+name|DISK_INIT_DONE
+block|}
+name|disk_init_level
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|disk
@@ -179,7 +193,23 @@ modifier|*
 name|d_devstat
 decl_stmt|;
 name|int
+name|d_goneflag
+decl_stmt|;
+name|int
 name|d_destroyed
+decl_stmt|;
+name|struct
+name|mtx
+name|d_mtx
+decl_stmt|;
+name|char
+name|d_mtx_name
+index|[
+literal|24
+index|]
+decl_stmt|;
+name|disk_init_level
+name|d_init_level
 decl_stmt|;
 comment|/* Shared fields */
 name|u_int
@@ -499,8 +529,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_05
+value|0x5856105e
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_04
+value|DISK_VERSION_05
 end_define
 
 begin_endif
