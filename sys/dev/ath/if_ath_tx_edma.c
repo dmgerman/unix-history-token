@@ -597,6 +597,10 @@ begin_comment
 comment|/* ATH_DEBUG_ALQ */
 end_comment
 
+begin_comment
+comment|/*  * XXX TODO: push an aggregate as a single FIFO slot, even though  * it may not meet the TXOP for say, DBA-gated traffic in TDMA mode.  *  * The TX completion code handles a TX FIFO slot having multiple frames,  * aggregate or otherwise, but it may just make things easier to deal  * with.  *  * XXX TODO: track the number of aggregate subframes and put that in the  * push alq message.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1005,6 +1009,13 @@ comment|/* ATH_DEBUG_ALQ */
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|TX_BATCH_SIZE
+value|32
+end_define
+
 begin_comment
 comment|/*  * Push some frames into the TX FIFO if we have space.  */
 end_comment
@@ -1046,15 +1057,82 @@ name|axq_qnum
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For now, push up to 4 frames per TX FIFO slot. 	 * If more are in the hardware queue then they'll 	 * get populated when we try to send another frame 	 * or complete a frame - so at most there'll be 	 * 32 non-AMPDU frames per TXQ. 	 * 	 * Note that the hardware staging queue will limit 	 * how many frames in total we will have pushed into 	 * here. 	 * 	 * Later on, we'll want to push less frames into 	 * the TX FIFO since we don't want to necessarily 	 * fill tens or hundreds of milliseconds of potential 	 * frames. 	 * 	 * However, we need more frames right now because of 	 * how the MAC implements the frame scheduling policy. 	 * It only ungates a single FIFO entry at a time, 	 * and will run that until CHNTIME expires or the 	 * end of that FIFO entry descriptor list is reached. 	 * So for TDMA we suffer a big performance penalty - 	 * single TX FIFO entries mean the MAC only sends out 	 * one frame per DBA event, which turned out on average 	 * 6ms per TX frame. 	 * 	 * So, for aggregates it's okay - it'll push two at a 	 * time and this will just do them more efficiently. 	 * For non-aggregates it'll do 4 at a time, up to the 	 * non-aggr limit (non_aggr, which is 32.)  They should 	 * be time based rather than a hard count, but I also 	 * do need sleep. 	 */
+comment|/* 	 * Do some basic, basic batching to the hardware 	 * queue. 	 * 	 * If we have TX_BATCH_SIZE entries in the staging 	 * queue, then let's try to send them all in one hit. 	 * 	 * Ensure we don't push more than TX_BATCH_SIZE worth 	 * in, otherwise we end up draining 8 slots worth of 	 * 32 frames into the hardware queue and then we don't 	 * attempt to push more frames in until we empty the 	 * FIFO. 	 */
+if|if
+condition|(
+name|txq
+operator|->
+name|axq_depth
+operator|>=
+name|TX_BATCH_SIZE
+operator|/
+literal|2
+operator|&&
+name|txq
+operator|->
+name|fifo
+operator|.
+name|axq_depth
+operator|<=
+name|TX_BATCH_SIZE
+condition|)
+block|{
 name|ath_tx_edma_push_staging_list
 argument_list|(
 name|sc
 argument_list|,
 name|txq
 argument_list|,
-literal|4
+name|TX_BATCH_SIZE
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Aggregate check: if we have less than two FIFO slots 	 * busy and we have some aggregate frames, queue it. 	 * 	 * Now, ideally we'd just check to see if the scheduler 	 * has given us aggregate frames and push them into the FIFO 	 * as individual slots, as honestly we should just be pushing 	 * a single aggregate in as one FIFO slot. 	 * 	 * Let's do that next once I know this works. 	 */
+elseif|else
+if|if
+condition|(
+name|txq
+operator|->
+name|axq_aggr_depth
+operator|>
+literal|0
+operator|&&
+name|txq
+operator|->
+name|axq_fifo_depth
+operator|<
+literal|2
+condition|)
+name|ath_tx_edma_push_staging_list
+argument_list|(
+name|sc
+argument_list|,
+name|txq
+argument_list|,
+name|TX_BATCH_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* 	 * 	 * If we have less, and the TXFIFO isn't empty, let's 	 * wait until we've finished sending the FIFO. 	 * 	 * If we have less, and the TXFIFO is empty, then 	 * send them. 	 */
+elseif|else
+if|if
+condition|(
+name|txq
+operator|->
+name|axq_fifo_depth
+operator|==
+literal|0
+condition|)
+block|{
+name|ath_tx_edma_push_staging_list
+argument_list|(
+name|sc
+argument_list|,
+name|txq
+argument_list|,
+name|TX_BATCH_SIZE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1451,7 +1529,6 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-comment|/* For now, set the link pointer in the last descriptor 	 * to be NULL. 	 * 	 * Later on, when it comes time to handling multiple descriptors 	 * in one FIFO push, we can link descriptors together this way. 	 */
 comment|/* 	 * Finally, call the FIFO schedule routine to schedule some 	 * frames to the FIFO. 	 */
 name|ath_edma_tx_fifo_fill
 argument_list|(
@@ -2314,6 +2391,9 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_DEBUG
@@ -2953,29 +3033,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-comment|/* bf is invalid at this point */
-comment|/* 		 * Now that there's space in the FIFO, let's push some 		 * more frames into it. 		 */
-name|ATH_TXQ_LOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dosched
-condition|)
-name|ath_edma_tx_fifo_fill
-argument_list|(
-name|sc
-argument_list|,
-name|txq
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
+comment|/* NB: bf is invalid at this point */
 block|}
 name|sc
 operator|->
@@ -2983,17 +3041,81 @@ name|sc_wd_timer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Kick software scheduler */
 comment|/* 	 * XXX It's inefficient to do this if the FIFO queue is full, 	 * but there's no easy way right now to only populate 	 * the txq task for _one_ TXQ.  This should be fixed. 	 */
 if|if
 condition|(
 name|dosched
 condition|)
+block|{
+comment|/* Attempt to schedule more hardware frames to the TX FIFO */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HAL_NUM_TX_QUEUES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ATH_TXQ_SETUP
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+name|ATH_TXQ_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ath_edma_tx_fifo_fill
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Kick software scheduler */
 name|ath_tx_swq_kick
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
