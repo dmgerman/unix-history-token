@@ -1780,6 +1780,12 @@ literal|0
 expr_stmt|;
 name|p2
 operator|->
+name|p_filemon
+operator|=
+name|NULL
+expr_stmt|;
+name|p2
+operator|->
 name|p_ucred
 operator|=
 name|crhold
