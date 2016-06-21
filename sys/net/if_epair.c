@@ -4325,7 +4325,7 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_epair_init
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -4372,7 +4372,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_epair_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_INIT_IF
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -4520,7 +4520,7 @@ name|epair_mod
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

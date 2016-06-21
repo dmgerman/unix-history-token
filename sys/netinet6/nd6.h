@@ -1829,6 +1829,10 @@ name|void
 name|nd6_ifdetach
 parameter_list|(
 name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
 name|nd_ifinfo
 modifier|*
 parameter_list|)

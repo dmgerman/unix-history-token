@@ -1143,7 +1143,7 @@ name|ip_id
 argument_list|,
 name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_THIRD
 argument_list|,
 name|ipid_sysuninit
 argument_list|,

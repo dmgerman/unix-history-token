@@ -20659,7 +20659,7 @@ name|pf
 argument_list|,
 name|pf_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_FIREWALL
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|)

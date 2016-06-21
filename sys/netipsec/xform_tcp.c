@@ -494,9 +494,9 @@ name|SYSINIT
 argument_list|(
 name|tcpsignature_xform_init
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|tcpsignature_attach
 argument_list|,

@@ -12010,7 +12010,7 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_mroute_init
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -12052,7 +12052,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_mroute_uninit
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,
@@ -12395,7 +12395,7 @@ name|ip_mroute
 argument_list|,
 name|ip_mroutemod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|)

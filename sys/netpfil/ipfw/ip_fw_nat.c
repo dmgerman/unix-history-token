@@ -5702,7 +5702,7 @@ begin_define
 define|#
 directive|define
 name|IPFW_NAT_SI_SUB_FIREWALL
-value|SI_SUB_PROTO_IFATTACHDOMAIN
+value|SI_SUB_PROTO_FIREWALL
 end_define
 
 begin_define

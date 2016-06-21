@@ -3226,17 +3226,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NOTE: in6_ifdetach() does not support loopback if at this moment.  * We don't need this function in bsdi, because interfaces are never removed  * from the ifnet list in bsdi.  */
+comment|/*  * NOTE: in6_ifdetach() does not support loopback if at this moment.  *  * When shutting down a VNET we clean up layers top-down.  In that case  * upper layer protocols (ulp) are cleaned up already and locks are destroyed  * and we must not call into these cleanup functions anymore, thus purgeulp  * is set to 0 in that case by in6_ifdetach_destroy().  * The normal case of destroying a (cloned) interface still needs to cleanup  * everything related to the interface and will have purgeulp set to 1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|in6_ifdetach
+name|_in6_ifdetach
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|int
+name|purgeulp
 parameter_list|)
 block|{
 name|struct
@@ -3259,7 +3263,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* remove neighbor management table */
+comment|/* 	 * Remove neighbor management table. 	 * Enabling the nd6_purge will panic on vmove for interfaces on VNET 	 * teardown as the IPv6 layer is cleaned up already and the locks 	 * are destroyed. 	 */
+if|if
+condition|(
+name|purgeulp
+condition|)
 name|nd6_purge
 argument_list|(
 name|ifp
@@ -3294,6 +3302,11 @@ name|ifa
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|purgeulp
+condition|)
+block|{
 name|in6_pcbpurgeif0
 argument_list|(
 operator|&
@@ -3318,6 +3331,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* leave from all multicast groups joined */
 name|in6_purgemaddrs
 argument_list|(
@@ -3325,9 +3339,53 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * remove neighbor management table.  we call it twice just to make 	 * sure we nuke everything.  maybe we need just one call. 	 * XXX: since the first call did not release addresses, some prefixes 	 * might remain.  We should call nd6_purge() again to release the 	 * prefixes after removing all addresses above. 	 * (Or can we just delay calling nd6_purge until at this point?) 	 */
+if|if
+condition|(
+name|purgeulp
+condition|)
 name|nd6_purge
 argument_list|(
 name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|in6_ifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|_in6_ifdetach
+argument_list|(
+name|ifp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|in6_ifdetach_destroy
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|_in6_ifdetach
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

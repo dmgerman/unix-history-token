@@ -1522,7 +1522,7 @@ name|vnet_route_uninit
 argument_list|,
 name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_THIRD
+name|SI_ORDER_FIRST
 argument_list|,
 name|vnet_route_uninit
 argument_list|,

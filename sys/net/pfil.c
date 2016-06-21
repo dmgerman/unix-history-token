@@ -1561,40 +1561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Define startup order. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFIL_SYSINIT_ORDER
-value|SI_SUB_PROTO_BEGIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFIL_MODEVENT_ORDER
-value|(SI_ORDER_FIRST)
-end_define
-
-begin_comment
-comment|/* On boot slot in here. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFIL_VNET_ORDER
-value|(PFIL_MODEVENT_ORDER + 2)
-end_define
-
-begin_comment
-comment|/* Later still. */
-end_comment
-
-begin_comment
-comment|/*  * Starting up.  *  * VNET_SYSINIT is called for each existing vnet and each new vnet.  */
+comment|/*  * Starting up.  *  * VNET_SYSINIT is called for each existing vnet and each new vnet.  * Make sure the pfil bits are first before any possible subsystem which  * might piggyback on the SI_SUB_PROTO_PFIL.  */
 end_comment
 
 begin_expr_stmt
@@ -1602,9 +1569,9 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_pfil_init
 argument_list|,
-name|PFIL_SYSINIT_ORDER
+name|SI_SUB_PROTO_PFIL
 argument_list|,
-name|PFIL_VNET_ORDER
+name|SI_ORDER_FIRST
 argument_list|,
 name|vnet_pfil_init
 argument_list|,
@@ -1622,9 +1589,9 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_pfil_uninit
 argument_list|,
-name|PFIL_SYSINIT_ORDER
+name|SI_SUB_PROTO_PFIL
 argument_list|,
-name|PFIL_VNET_ORDER
+name|SI_ORDER_FIRST
 argument_list|,
 name|vnet_pfil_uninit
 argument_list|,

@@ -2335,20 +2335,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|panic
-argument_list|(
-literal|"%s: mld_ifsoftc not found for ifp %p\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -12420,7 +12406,7 @@ name|SYSINIT
 argument_list|(
 name|mld_init
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,
@@ -12462,7 +12448,7 @@ name|SYSUNINIT
 argument_list|(
 name|mld_uninit
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,
@@ -12508,7 +12494,7 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_mld_init
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -12531,6 +12517,7 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+comment|/* This can happen if we shutdown the network stack. */
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -12538,21 +12525,6 @@ argument_list|,
 literal|"%s: tearing down"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|V_mli_head
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: mli list not empty; ifnets not detached?"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12563,7 +12535,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_mld_uninit
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -12640,7 +12612,7 @@ name|mld
 argument_list|,
 name|mld_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

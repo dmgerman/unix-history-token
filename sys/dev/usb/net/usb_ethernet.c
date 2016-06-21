@@ -2887,6 +2887,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * USB net drivers are run by DRIVER_MODULE() thus SI_SUB_DRIVERS,  * SI_ORDER_MIDDLE.  Run uether after that.  */
+end_comment
+
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
@@ -2894,7 +2898,7 @@ name|uether
 argument_list|,
 name|uether_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_DRIVERS
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

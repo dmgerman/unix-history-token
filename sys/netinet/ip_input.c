@@ -1698,6 +1698,11 @@ name|unused
 name|__unused
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1800,6 +1805,36 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Remove the IPv4 addresses from all interfaces. */
+name|in_ifscrub_all
+argument_list|()
+expr_stmt|;
+comment|/* Make sure the IPv4 routes are gone as well. */
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&V_ifnet
+argument_list|,
+argument|if_link
+argument_list|)
+name|rt_flushifroutes_af
+argument_list|(
+name|ifp
+argument_list|,
+name|AF_INET
+argument_list|)
+expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
+comment|/* Destroy IP reassembly queue. */
+name|ipreass_destroy
+argument_list|()
+expr_stmt|;
 comment|/* Cleanup in_ifaddr hash table; should be empty. */
 name|hashdestroy
 argument_list|(
@@ -1809,10 +1844,6 @@ name|M_IFADDR
 argument_list|,
 name|V_in_ifaddrhmask
 argument_list|)
-expr_stmt|;
-comment|/* Destroy IP reassembly queue. */
-name|ipreass_destroy
-argument_list|()
 expr_stmt|;
 block|}
 end_function

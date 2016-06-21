@@ -8279,7 +8279,7 @@ name|ip6_mroute
 argument_list|,
 name|ip6_mroutemod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_MC
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

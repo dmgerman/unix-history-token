@@ -3170,7 +3170,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_ng_iface_uninit
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_INIT_IF
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,

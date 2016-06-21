@@ -13736,7 +13736,7 @@ begin_define
 define|#
 directive|define
 name|DN_SI_SUB
-value|SI_SUB_PROTO_IFATTACHDOMAIN
+value|SI_SUB_PROTO_FIREWALL
 end_define
 
 begin_define

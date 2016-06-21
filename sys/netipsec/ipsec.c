@@ -8473,9 +8473,9 @@ name|VNET_SYSINIT
 argument_list|(
 name|def_policy_init
 argument_list|,
-name|SI_SUB_PROTO_DOMAININIT
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|,
 name|def_policy_init
 argument_list|,

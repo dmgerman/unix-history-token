@@ -1428,6 +1428,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|in_ifscrub_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ip_input
 parameter_list|(
 name|struct

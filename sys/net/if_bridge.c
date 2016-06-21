@@ -3090,7 +3090,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_bridge_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,

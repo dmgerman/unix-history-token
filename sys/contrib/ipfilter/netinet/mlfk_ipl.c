@@ -1711,7 +1711,7 @@ name|ipfilter
 argument_list|,
 name|ipfiltermod
 argument_list|,
-name|SI_SUB_PROTO_DOMAIN
+name|SI_SUB_PROTO_FIREWALL
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

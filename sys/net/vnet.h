@@ -204,7 +204,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static void				\ vnet_##name##_init(const void *unused)	\ {					\ 	VNET_PCPUSTAT_ALLOC(name, M_WAITOK);	\ }					\ VNET_SYSINIT(vnet_ ## name ## _init, SI_SUB_PROTO_IFATTACHDOMAIN,	\     SI_ORDER_ANY, vnet_ ## name ## _init, NULL)
+value|static void				\ vnet_##name##_init(const void *unused)	\ {					\ 	VNET_PCPUSTAT_ALLOC(name, M_WAITOK);	\ }					\ VNET_SYSINIT(vnet_ ## name ## _init, SI_SUB_INIT_IF,			\     SI_ORDER_FIRST, vnet_ ## name ## _init, NULL)
 end_define
 
 begin_define
@@ -215,7 +215,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static void								\ vnet_##name##_uninit(const void *unused)				\ {									\ 	VNET_PCPUSTAT_FREE(name);					\ }									\ VNET_SYSUNINIT(vnet_ ## name ## _uninit, SI_SUB_PROTO_IFATTACHDOMAIN,	\     SI_ORDER_ANY, vnet_ ## name ## _uninit, NULL)
+value|static void								\ vnet_##name##_uninit(const void *unused)				\ {									\ 	VNET_PCPUSTAT_FREE(name);					\ }									\ VNET_SYSUNINIT(vnet_ ## name ## _uninit, SI_SUB_INIT_IF,		\     SI_ORDER_FIRST, vnet_ ## name ## _uninit, NULL)
 end_define
 
 begin_ifdef

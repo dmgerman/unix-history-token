@@ -10571,6 +10571,8 @@ argument_list|)
 expr_stmt|;
 name|nd6_ifdetach
 argument_list|(
+name|ifp
+argument_list|,
 name|ext
 operator|->
 name|nd_ifinfo

@@ -985,7 +985,7 @@ name|vnet_init_done
 argument_list|,
 name|SI_SUB_VNET_DONE
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
 name|vnet_init_done
 argument_list|,

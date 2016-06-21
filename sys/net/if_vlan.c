@@ -3677,7 +3677,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_vlan_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_INIT_IF
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,

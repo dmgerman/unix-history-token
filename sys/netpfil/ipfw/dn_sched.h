@@ -549,7 +549,7 @@ parameter_list|,
 name|dnsched
 parameter_list|)
 define|\
-value|static moduledata_t name##_mod = {			\ 		#name, dn_sched_modevent, dnsched		\ 	};							\ 	DECLARE_MODULE(name, name##_mod, 			\ 		SI_SUB_PROTO_IFATTACHDOMAIN, SI_ORDER_ANY); 	\         MODULE_DEPEND(name, dummynet, 3, 3, 3)
+value|static moduledata_t name##_mod = {			\ 		#name, dn_sched_modevent, dnsched		\ 	};							\ 	DECLARE_MODULE(name, name##_mod, 			\ 		SI_SUB_PROTO_FIREWALL, SI_ORDER_ANY); 		\         MODULE_DEPEND(name, dummynet, 3, 3, 3)
 end_define
 
 begin_endif

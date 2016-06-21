@@ -841,7 +841,7 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_edsc_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_INIT_IF
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
