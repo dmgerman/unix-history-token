@@ -2455,6 +2455,9 @@ decl_stmt|;
 name|u_long
 name|hn_pkts
 decl_stmt|;
+name|u_long
+name|hn_rss_pkts
+decl_stmt|;
 comment|/* Rarely used stuffs */
 name|struct
 name|sysctl_oid
