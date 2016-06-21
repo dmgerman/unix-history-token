@@ -459,6 +459,13 @@ name|HN_DIRECT_TX_SIZE_DEF
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_EARLY_TXEOF_THRESH
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|hn_txdesc
@@ -2015,7 +2022,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Synthetic Network Interface"
+literal|"Hyper-V Network Interface"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3868,6 +3875,34 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
+name|void
+name|hn_txeof
+parameter_list|(
+name|struct
+name|hn_tx_ring
+modifier|*
+name|txr
+parameter_list|)
+block|{
+name|txr
+operator|->
+name|hn_has_txeof
+operator|=
+literal|0
+expr_stmt|;
+name|txr
+operator|->
+name|hn_txeof
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|hn_tx_done
 parameter_list|(
@@ -3965,6 +4000,38 @@ argument_list|,
 name|txd
 argument_list|)
 expr_stmt|;
+operator|++
+name|txr
+operator|->
+name|hn_txdone_cnt
+expr_stmt|;
+if|if
+condition|(
+name|txr
+operator|->
+name|hn_txdone_cnt
+operator|>=
+name|HN_EARLY_TXEOF_THRESH
+condition|)
+block|{
+name|txr
+operator|->
+name|hn_txdone_cnt
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|txr
+operator|->
+name|hn_oactive
+condition|)
+name|hn_txeof
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4074,12 +4141,10 @@ condition|)
 return|return;
 name|txr
 operator|->
-name|hn_has_txeof
+name|hn_txdone_cnt
 operator|=
 literal|0
 expr_stmt|;
-name|txr
-operator|->
 name|hn_txeof
 argument_list|(
 name|txr
@@ -4809,7 +4874,7 @@ name|rndis_mesg
 operator|->
 name|msg_len
 expr_stmt|;
-comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 * 	 * TODO: vRSS, chimney buffer should be per-channel. 	 */
+comment|/* 	 * Chimney send, if the packet could fit into one chimney buffer. 	 */
 if|if
 condition|(
 name|packet
