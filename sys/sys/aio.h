@@ -374,13 +374,21 @@ name|jobflags
 decl_stmt|;
 comment|/* (a) job flags */
 name|int
-name|inputcharge
+name|inblock
 decl_stmt|;
 comment|/* (*) input blocks */
 name|int
-name|outputcharge
+name|outblock
 decl_stmt|;
 comment|/* (*) output blocks */
+name|int
+name|msgsnd
+decl_stmt|;
+comment|/* (*) messages sent */
+name|int
+name|msgrcv
+decl_stmt|;
+comment|/* (*) messages received */
 name|struct
 name|proc
 modifier|*
