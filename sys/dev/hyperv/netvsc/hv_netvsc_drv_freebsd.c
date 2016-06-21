@@ -669,6 +669,8 @@ argument_list|,
 name|hn
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -4899,6 +4901,11 @@ decl_stmt|;
 name|uint32_t
 name|send_buf_section_idx
 decl_stmt|;
+name|txr
+operator|->
+name|hn_tx_chimney_tried
+operator|++
+expr_stmt|;
 name|send_buf_section_idx
 operator|=
 name|hv_nv_get_next_send_section
@@ -10224,6 +10231,8 @@ argument_list|,
 literal|"rx"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -10434,6 +10443,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -10490,6 +10501,8 @@ argument_list|,
 name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10534,6 +10547,8 @@ argument_list|,
 name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10578,6 +10593,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10614,6 +10631,8 @@ argument_list|,
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10639,6 +10658,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10666,6 +10687,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10692,6 +10715,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10718,6 +10743,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10744,6 +10771,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10775,6 +10804,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10806,6 +10837,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10837,6 +10870,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -10868,6 +10903,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -11797,6 +11834,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -12292,6 +12331,8 @@ argument_list|,
 literal|"tx"
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -12347,6 +12388,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12378,6 +12421,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12409,6 +12454,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12440,6 +12487,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12471,6 +12520,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12487,6 +12538,39 @@ argument_list|,
 literal|"LU"
 argument_list|,
 literal|"# of chimney send"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_chimney_tried"
+argument_list|,
+name|CTLTYPE_ULONG
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|sc
+argument_list|,
+name|__offsetof
+argument_list|(
+expr|struct
+name|hn_tx_ring
+argument_list|,
+name|hn_tx_chimney_tried
+argument_list|)
+argument_list|,
+name|hn_tx_stat_ulong_sysctl
+argument_list|,
+literal|"LU"
+argument_list|,
+literal|"# of chimney send tries"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -12551,6 +12635,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12576,6 +12662,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -12607,6 +12695,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,

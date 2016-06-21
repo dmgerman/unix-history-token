@@ -2613,6 +2613,9 @@ name|u_long
 name|hn_tx_collapsed
 decl_stmt|;
 name|u_long
+name|hn_tx_chimney_tried
+decl_stmt|;
+name|u_long
 name|hn_tx_chimney
 decl_stmt|;
 name|u_long
