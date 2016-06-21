@@ -235,33 +235,8 @@ value|_ALIGN(p)
 end_define
 
 begin_comment
-comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).  *  * armv4 and v5 require alignment to the type's size.  armv6 and later require  * that an 8-byte type be aligned to at least a 4-byte boundary; access to  * smaller types can be unaligned.  */
+comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).  *  * armv4 and v5 require alignment to the type's size.  armv6 requires 8-byte  * alignment for the ldrd/strd instructions, but otherwise follows armv7 rules.  * armv7 requires that an 8-byte type be aligned to at least a 4-byte boundary;  * access to smaller types can be unaligned, except that the compiler may  * optimize access to adjacent uint32_t values into a single load/store-multiple  * instruction which requires 4-byte alignment, so we must provide the most-  * pessimistic answer possible even on armv7.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|6
-end_if
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_POINTER
-parameter_list|(
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-value|(((sizeof(t) != 8) || ((unsigned)(p)& 3) == 0))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -274,11 +249,6 @@ name|t
 parameter_list|)
 value|((((unsigned)(p))& (sizeof(t)-1)) == 0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * CACHE_LINE_SIZE is the compile-time maximum cache line size for an  * architecture.  It should be used with appropriate caution.  */
