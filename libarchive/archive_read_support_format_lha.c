@@ -8236,6 +8236,9 @@ literal|8
 control|)
 block|{
 comment|/* This if statement expects compiler optimization will 		 * remove the stament which will not be executed. */
+undef|#
+directive|undef
+name|bswap16
 if|#
 directive|if
 name|defined
