@@ -3041,6 +3041,22 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_WITHER
+operator|)
+argument_list|,
+operator|(
+literal|"g_resize_provider_event but withered"
+operator|)
+argument_list|)
+expr_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -3234,6 +3250,15 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_WITHER
+condition|)
+return|return;
 if|if
 condition|(
 name|size
@@ -4450,6 +4475,20 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s(%d): provider %s has error\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|pp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|pp
@@ -4457,6 +4496,7 @@ operator|->
 name|error
 operator|)
 return|;
+block|}
 comment|/* Ok then... */
 name|error
 operator|=
