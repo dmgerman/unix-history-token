@@ -1482,18 +1482,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* pipe */
-case|case
-literal|42
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* getegid */
 case|case
 literal|43
@@ -19412,11 +19400,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* pipe */
-case|case
-literal|42
-case|:
-break|break;
 comment|/* getegid */
 case|case
 literal|43
@@ -32164,10 +32147,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* pipe */
-case|case
-literal|42
-case|:
 comment|/* getegid */
 case|case
 literal|43

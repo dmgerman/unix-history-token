@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -1986,13 +1992,19 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD10
+end_ifdef
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|int
-name|sys_pipe
+name|freebsd10_pipe
 parameter_list|(
 name|struct
 name|thread
@@ -2000,9 +2012,10 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|pipe_args
+name|freebsd10_pipe_args
 modifier|*
 name|uap
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -2069,6 +2082,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
