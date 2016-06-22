@@ -4354,7 +4354,11 @@ name|int
 name|found
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|int
 name|shutdown
 decl_stmt|;
 name|shutdown
@@ -4381,6 +4385,8 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
@@ -4487,6 +4493,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
 comment|/* 	 * On VNET shutdown abort here as the stack teardown will do all 	 * the work top-down for us. 	 */
 if|if
 condition|(
@@ -4498,6 +4507,8 @@ goto|goto
 name|finish_vnet_shutdown
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * At this point we are not tearing down a VNET and are either 	 * going to destroy or vmove the interface and have to cleanup 	 * accordingly. 	 */
 comment|/* 	 * Remove routes and flush queues. 	 */
 ifdef|#
@@ -4689,8 +4700,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
 name|finish_vnet_shutdown
 label|:
+endif|#
+directive|endif
 comment|/* 	 * We cannot hold the lock over dom_ifdetach calls as they might 	 * sleep, for example trying to drain a callout, thus open up the 	 * theoretical race with re-attaching. 	 */
 name|IF_AFDATA_LOCK
 argument_list|(
