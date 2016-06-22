@@ -249,7 +249,7 @@ name|XHCI_HCS2_SPR
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 24)& 0x1)
+value|(((x)>> 26)& 0x1)
 end_define
 
 begin_define
@@ -259,7 +259,7 @@ name|XHCI_HCS2_SPB_MAX
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 27)& 0x7F)
+value|((((x)>> 16)& 0x3E0) | (((x)>> 27)& 0x1F))
 end_define
 
 begin_define
