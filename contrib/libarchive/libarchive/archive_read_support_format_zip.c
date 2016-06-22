@@ -493,6 +493,7 @@ name|char
 name|init_decryption
 decl_stmt|;
 comment|/* Decryption buffer. */
+comment|/* 	 * The decrypted data starts at decrypted_ptr and 	 * extends for decrypted_bytes_remaining.  Decryption 	 * adds new data to the end of this block, data is returned 	 * to clients from the beginning.  When the block hits the 	 * end of decrypted_buffer, it has to be shuffled back to 	 * the beginning of the buffer. 	 */
 name|unsigned
 name|char
 modifier|*
@@ -5712,18 +5713,24 @@ block|{
 name|size_t
 name|buff_remaining
 init|=
+operator|(
+name|zip
+operator|->
+name|decrypted_buffer
+operator|+
 name|zip
 operator|->
 name|decrypted_buffer_size
+operator|)
 operator|-
 operator|(
 name|zip
 operator|->
 name|decrypted_ptr
-operator|-
+operator|+
 name|zip
 operator|->
-name|decrypted_buffer
+name|decrypted_bytes_remaining
 operator|)
 decl_stmt|;
 if|if

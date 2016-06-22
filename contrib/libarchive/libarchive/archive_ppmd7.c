@@ -822,6 +822,18 @@ operator|!=
 name|size
 condition|)
 block|{
+comment|/* RestartModel() below assumes that p->Size>= UNIT_SIZE        (see the calculation of m->MinContext). */
+if|if
+condition|(
+name|size
+operator|<
+name|UNIT_SIZE
+condition|)
+block|{
+return|return
+name|False
+return|;
+block|}
 name|Ppmd7_Free
 argument_list|(
 name|p

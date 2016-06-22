@@ -464,13 +464,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -505,7 +499,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -575,12 +581,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|M
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a> b ? a : b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_SIGNO
+value|M(M(M(SIGALRM, SIGHUP), \                       M(SIGINT, SIGPIPE)), \                     M(M(SIGQUIT, SIGTERM), \                       M(M(SIGTSTP, SIGTTIN), SIGTTOU)))
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|volatile
 name|sig_atomic_t
-modifier|*
 name|signo
+index|[
+name|MAX_SIGNO
+operator|+
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -593,6 +622,13 @@ name|int
 name|s
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|s
+operator|<=
+name|MAX_SIGNO
+argument_list|)
+expr_stmt|;
 name|signo
 index|[
 name|s
@@ -696,26 +732,6 @@ name|NULL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|signo
-operator|==
-name|NULL
-condition|)
-block|{
-name|signo
-operator|=
-name|calloc
-argument_list|(
-name|SIGRTMAX
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sig_atomic_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|restart
 label|:
 for|for
@@ -725,8 +741,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|SIGRTMAX
+operator|<=
+name|MAX_SIGNO
 condition|;
 name|i
 operator|++
@@ -825,6 +841,7 @@ name|sa_handler
 operator|=
 name|handler
 expr_stmt|;
+comment|/* Keep this list in sync with MAX_SIGNO! */
 operator|(
 name|void
 operator|)
@@ -1194,6 +1211,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
@@ -1213,6 +1234,10 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 expr_stmt|;
@@ -1231,6 +1256,10 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 expr_stmt|;
@@ -1463,8 +1492,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|SIGRTMAX
+operator|<=
+name|MAX_SIGNO
 condition|;
 name|i
 operator|++
