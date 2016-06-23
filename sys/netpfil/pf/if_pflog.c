@@ -1284,7 +1284,7 @@ name|VNET_SYSINIT
 argument_list|(
 name|vnet_pflog_init
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_FIREWALL
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
@@ -1314,6 +1314,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Detach after pf is gone; otherwise we might touch pflog memory  * from within pf after freeing pflog.  */
+end_comment
 
 begin_expr_stmt
 name|VNET_SYSUNINIT
@@ -1420,6 +1424,10 @@ name|PFLOG_MODVER
 value|1
 end_define
 
+begin_comment
+comment|/* Do not run before pf is initialized as we depend on its locks. */
+end_comment
+
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
@@ -1427,7 +1435,7 @@ name|pflog
 argument_list|,
 name|pflog_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_FIREWALL
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
