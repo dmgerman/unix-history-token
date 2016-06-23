@@ -525,22 +525,6 @@ block|{
 name|hv_bool_uint8_t
 name|syn_ic_initialized
 decl_stmt|;
-name|struct
-name|vmbus_message
-modifier|*
-name|syn_ic_msg_page
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-name|union
-name|vmbus_event_flags
-modifier|*
-name|syn_ic_event_page
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
 comment|/* 	 * For FreeBSD cpuid to Hyper-V vcpuid mapping. 	 */
 name|uint32_t
 name|hv_vcpu_index
@@ -2339,24 +2323,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|page_buffers
-index|[
-literal|2
-operator|*
-name|MAXCPU
-index|]
-decl_stmt|;
-block|}
-name|hv_setup_args
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

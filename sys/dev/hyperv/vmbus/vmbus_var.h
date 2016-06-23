@@ -21,18 +21,54 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus_dma.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/hyperv_busdma.h>
+end_include
+
 begin_struct
 struct|struct
 name|vmbus_pcpu_data
 block|{
-name|int
-name|event_flag_cnt
-decl_stmt|;
-comment|/* # of event flags */
 name|u_long
 modifier|*
 name|intr_cnt
 decl_stmt|;
+comment|/* Hyper-V interrupt counter */
+name|struct
+name|vmbus_message
+modifier|*
+name|message
+decl_stmt|;
+comment|/* shared messages */
+name|int
+name|event_flag_cnt
+decl_stmt|;
+comment|/* # of event flags */
+name|union
+name|vmbus_event_flags
+modifier|*
+name|event_flag
+decl_stmt|;
+comment|/* shared event flags */
+comment|/* Rarely used fields */
+name|struct
+name|hyperv_dma
+name|message_dma
+decl_stmt|;
+comment|/* busdma glue */
+name|struct
+name|hyperv_dma
+name|event_flag_dma
+decl_stmt|;
+comment|/* busdma glue */
 block|}
 name|__aligned
 argument_list|(
