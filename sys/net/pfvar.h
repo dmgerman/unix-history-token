@@ -3171,13 +3171,6 @@ name|pflog_packet_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|V_pf_end_threads
-value|VNET(pf_end_threads)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -6196,6 +6189,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|pf_unload_vnet_purge
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|pf_intr
 parameter_list|(
 name|void
@@ -7663,7 +7666,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pfi_initialize_vnet
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pfi_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfi_cleanup_vnet
 parameter_list|(
 name|void
 parameter_list|)
