@@ -1662,7 +1662,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXXSMP */
 comment|/* 	 * The last thread is left attached to the process 	 * So that the whole bundle gets recycled. Skip 	 * all this stuff if we never had threads. 	 * EXIT clears all sign of other threads when 	 * it goes to single threading, so the last thread always 	 * takes the short path. 	 */
 if|if
 condition|(
@@ -3302,7 +3301,7 @@ literal|"singlethread not set"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The only suspension in action is a 			 * single-threading. Single threader need not stop. 			 * XXX Should be safe to access unlocked 			 * as it can only be set to be true by us. 			 */
+comment|/* 			 * The only suspension in action is a 			 * single-threading. Single threader need not stop. 			 * It is safe to access p->p_singlethread unlocked 			 * because it can only be set to our address by us. 			 */
 if|if
 condition|(
 name|p
