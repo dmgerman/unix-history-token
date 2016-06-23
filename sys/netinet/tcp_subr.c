@@ -3280,7 +3280,11 @@ decl_stmt|,
 name|n
 decl_stmt|;
 comment|/* 	 * All our processes are gone, all our sockets should be cleaned 	 * up, which means, we should be past the tcp_discardcb() calls. 	 * Sleep to let all tcpcb timers really disappear and cleanup. 	 */
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|INP_LIST_RLOCK
 argument_list|(
@@ -3303,9 +3307,10 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|!=
+operator|==
 literal|0
 condition|)
+break|break;
 name|pause
 argument_list|(
 literal|"tcpdes"
@@ -3316,13 +3321,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|n
-operator|!=
-literal|0
-condition|)
-do|;
 name|tcp_hc_destroy
 argument_list|()
 expr_stmt|;
