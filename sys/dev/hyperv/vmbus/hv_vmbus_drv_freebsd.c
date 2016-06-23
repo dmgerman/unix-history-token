@@ -1661,31 +1661,30 @@ operator|=
 name|vmbus_get_softc
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Find a free IDT slot for vmbus callback. 	 */
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
+comment|/* 	 * Find a free IDT vector for vmbus messages/events. 	 */
+name|sc
+operator|->
+name|vmbus_idtvec
 operator|=
 name|vmbus_vector_alloc
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
+name|sc
+operator|->
+name|vmbus_idtvec
 operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"Error VMBUS: Cannot find free IDT slot for "
-literal|"vmbus callback!\n"
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"cannot find free IDT vector\n"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1700,24 +1699,21 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+block|{
+name|device_printf
 argument_list|(
-literal|"VMBUS: vmbus callback vector %d\n"
+name|sc
+operator|->
+name|vmbus_dev
 argument_list|,
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
+literal|"vmbus IDT vector %d\n"
+argument_list|,
+name|sc
+operator|->
+name|vmbus_idtvec
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Notify the hypervisor of our vector. 	 */
-name|setup_args
-operator|.
-name|vector
-operator|=
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
-expr_stmt|;
+block|}
 name|CPU_FOREACH
 argument_list|(
 argument|j
@@ -2193,9 +2189,9 @@ block|}
 block|}
 name|vmbus_vector_free
 argument_list|(
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
+name|sc
+operator|->
+name|vmbus_idtvec
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -2321,6 +2317,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2422,9 +2428,9 @@ block|}
 block|}
 name|vmbus_vector_free
 argument_list|(
-name|hv_vmbus_g_context
-operator|.
-name|hv_cb_vector
+name|sc
+operator|->
+name|vmbus_idtvec
 argument_list|)
 expr_stmt|;
 return|return

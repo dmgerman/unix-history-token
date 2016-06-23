@@ -99,6 +99,12 @@ directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_var.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -697,6 +703,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+init|=
+name|vmbus_get_softc
+argument_list|()
+decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
@@ -888,9 +902,9 @@ name|u
 operator|.
 name|vector
 operator|=
-name|setup_args
+name|sc
 operator|->
-name|vector
+name|vmbus_idtvec
 expr_stmt|;
 name|shared_sint
 operator|.
