@@ -215,23 +215,6 @@ name|hyperv_features3
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/**  * Globals  */
-end_comment
-
-begin_decl_stmt
-name|hv_vmbus_context
-name|hv_vmbus_g_context
-init|=
-block|{
-operator|.
-name|syn_ic_initialized
-operator|=
-name|FALSE
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct
