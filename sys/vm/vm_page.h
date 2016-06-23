@@ -2400,6 +2400,10 @@ parameter_list|)
 value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busying", __func__,	\ 		    (m));						\ } while (0)
 end_define
 
+begin_comment
+comment|/* Note: page m's lock must not be owned by the caller. */
+end_comment
+
 begin_define
 define|#
 directive|define
