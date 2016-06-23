@@ -1159,13 +1159,14 @@ expr_stmt|;
 name|u_int
 name|axq_depth
 decl_stmt|;
+comment|/* how many frames (1 per legacy, 1 per A-MPDU list) are in the FIFO queue */
 block|}
 name|fifo
 struct|;
 name|u_int
 name|axq_fifo_depth
 decl_stmt|;
-comment|/* depth of FIFO frames */
+comment|/* how many FIFO slots are active */
 comment|/* 	 * XXX the holdingbf field is protected by the TXBUF lock 	 * for now, NOT the TXQ lock. 	 * 	 * Architecturally, it would likely be better to move 	 * the holdingbf field to a separate array in ath_softc 	 * just to highlight that it's not protected by the normal 	 * TX path lock. 	 */
 name|struct
 name|ath_buf
