@@ -847,14 +847,6 @@ operator||
 name|INTR_OFLD_RXQ
 operator|)
 block|,
-name|VI_NETMAP
-init|=
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-block|,
 comment|/* adapter debug_flags */
 name|DF_DUMP_MBOX
 init|=
@@ -948,6 +940,9 @@ decl_stmt|;
 name|uint16_t
 modifier|*
 name|rss
+decl_stmt|,
+modifier|*
+name|nm_rss
 decl_stmt|;
 name|uint16_t
 name|viid
@@ -1010,6 +1005,18 @@ name|int
 name|first_ofld_rxq
 decl_stmt|;
 comment|/* index of first offload rx queue */
+name|int
+name|nnmtxq
+decl_stmt|;
+name|int
+name|first_nm_txq
+decl_stmt|;
+name|int
+name|nnmrxq
+decl_stmt|;
+name|int
+name|first_nm_rxq
+decl_stmt|;
 name|int
 name|tmr_idx
 decl_stmt|;
@@ -1387,6 +1394,19 @@ init|=
 literal|1
 block|,
 name|IQS_IDLE
+init|=
+literal|2
+block|,
+comment|/* netmap related flags */
+name|NM_OFF
+init|=
+literal|0
+block|,
+name|NM_ON
+init|=
+literal|1
+block|,
+name|NM_BUSY
 init|=
 literal|2
 block|, }
@@ -2789,11 +2809,30 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+specifier|volatile
+name|int
+name|nm_state
+decl_stmt|;
+comment|/* NM_OFF, NM_ON, or NM_BUSY */
 name|void
 modifier|*
 name|tag
 decl_stmt|;
+name|struct
+name|sge_rxq
+modifier|*
+name|rxq
+decl_stmt|;
+name|struct
+name|sge_nm_rxq
+modifier|*
+name|nm_rxq
+decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 modifier|*
 name|irq
 struct|;
@@ -3431,7 +3470,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&vi->pi->adapter->sge.nm_txq[vi->first_txq], iter = 0; \ 	    iter< vi->ntxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.nm_txq[vi->first_nm_txq], iter = 0; \ 	    iter< vi->nnmtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3446,7 +3485,7 @@ parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&vi->pi->adapter->sge.nm_rxq[vi->first_rxq], iter = 0; \ 	    iter< vi->nrxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.nm_rxq[vi->first_nm_rxq], iter = 0; \ 	    iter< vi->nnmrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -4438,22 +4477,22 @@ comment|/* t4_netmap.c */
 end_comment
 
 begin_function_decl
-name|int
-name|create_netmap_ifnet
+name|void
+name|cxgbe_nm_attach
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|destroy_netmap_ifnet
+name|void
+name|cxgbe_nm_detach
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4636,6 +4675,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|t4_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_vi_intr
 parameter_list|(
 name|void
 modifier|*
