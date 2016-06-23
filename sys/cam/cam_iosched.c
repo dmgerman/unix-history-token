@@ -133,7 +133,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_decl_stmt
@@ -761,7 +761,7 @@ name|sort_io_queue
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|int
 name|read_bias
 decl_stmt|;
@@ -830,7 +830,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_comment
@@ -2223,7 +2223,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_function_decl
@@ -2293,7 +2293,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|do_netflix_iosched
@@ -2505,7 +2505,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|iosched_debug
@@ -2556,7 +2556,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_function
@@ -3968,7 +3968,7 @@ name|ENOMEM
 return|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|iosched_debug
@@ -4017,7 +4017,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|do_netflix_iosched
@@ -4241,7 +4241,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|cam_iosched_iop_stats_fini
 argument_list|(
 operator|&
@@ -4361,7 +4361,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|struct
 name|sysctl_oid_list
 modifier|*
@@ -4398,7 +4398,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 operator|!
@@ -4608,7 +4608,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|do_netflix_iosched
@@ -4633,7 +4633,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_function
@@ -4875,7 +4875,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|isc
 operator|->
 name|trim_stats
@@ -4955,7 +4955,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|isc
 operator|->
 name|trim_stats
@@ -5061,7 +5061,7 @@ name|bp
 return|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 comment|/* 	 * See if we have any pending writes, and room in the queue for them, 	 * and if so, those are next. 	 */
 if|if
 condition|(
@@ -5109,7 +5109,7 @@ name|NULL
 return|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 comment|/* 	 * For the netflix scheduler, bio_queue is only for reads, so enforce 	 * the limits here. Enforce only for reads. 	 */
 if|if
 condition|(
@@ -5154,7 +5154,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|do_netflix_iosched
@@ -5268,7 +5268,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 name|isc
 operator|->
 name|trim_stats
@@ -5288,7 +5288,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 elseif|else
 if|if
 condition|(
@@ -5413,7 +5413,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 name|iosched_debug
@@ -5577,7 +5577,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 operator|!
@@ -5885,7 +5885,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_comment
@@ -6186,7 +6186,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAM_NETFLIX_IOSCHED
+name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_function
