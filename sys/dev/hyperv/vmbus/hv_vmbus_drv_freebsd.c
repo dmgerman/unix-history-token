@@ -1300,7 +1300,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Vmbus Devices"
+literal|"Hyper-V Vmbus"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2331,9 +2331,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vmbus_init
+name|vmbus_sysinit
 parameter_list|(
 name|void
+modifier|*
+name|arg
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -2493,7 +2496,7 @@ name|vmbus_methods
 index|[]
 init|=
 block|{
-comment|/** Device interface */
+comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -2536,7 +2539,7 @@ argument_list|,
 name|bus_generic_resume
 argument_list|)
 block|,
-comment|/** Bus interface */
+comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
 name|bus_add_child
@@ -2572,11 +2575,7 @@ argument_list|,
 name|vmbus_child_pnpinfo_str
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2601,6 +2600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|vmbus_devclass
 decl_stmt|;
@@ -2651,21 +2651,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* We want to be started after SMP is initialized */
+comment|/*  * NOTE:  * We have to start as the last step of SI_SUB_SMP, i.e. after SMP is  * initialized.  */
 end_comment
 
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|vmb_init
+name|vmbus_initialize
 argument_list|,
 name|SI_SUB_SMP
-operator|+
-literal|1
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
-name|vmbus_init
+name|vmbus_sysinit
 argument_list|,
 name|NULL
 argument_list|)
