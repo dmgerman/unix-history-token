@@ -1415,7 +1415,7 @@ name|PAGE_SIZE
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|,
 literal|0x500
 argument_list|,
