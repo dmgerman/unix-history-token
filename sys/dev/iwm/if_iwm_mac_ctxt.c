@@ -635,9 +635,9 @@ name|cmd
 operator|->
 name|node_addr
 argument_list|,
-name|ic
+name|vap
 operator|->
-name|ic_macaddr
+name|iv_myaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX should we error out if in_assoc is 1 and ni == NULL? 	 */
