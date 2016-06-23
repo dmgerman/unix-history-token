@@ -2160,6 +2160,12 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
