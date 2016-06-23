@@ -646,6 +646,22 @@ operator|.
 name|channel_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|relid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * XXX channel0 will not be processed; skip it. 		 */
+name|printf
+argument_list|(
+literal|"VMBUS: got channel0 offer\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hv_vmbus_g_connection
 operator|.
 name|channels
@@ -655,6 +671,7 @@ index|]
 operator|=
 name|new_channel
 expr_stmt|;
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|channel

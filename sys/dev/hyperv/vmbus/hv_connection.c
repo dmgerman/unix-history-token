@@ -956,7 +956,6 @@ name|hv_vmbus_synic_event_flags
 modifier|*
 name|event
 decl_stmt|;
-comment|/* int maxdword = PAGE_SIZE>> 3; */
 name|KASSERT
 argument_list|(
 name|cpu
@@ -1025,12 +1024,18 @@ literal|0
 index|]
 argument_list|)
 condition|)
+block|{
 name|recv_interrupt_page
 operator|=
 name|hv_vmbus_g_connection
 operator|.
 name|recv_interrupt_page
 expr_stmt|;
+block|}
+else|else
+block|{
+return|return;
+block|}
 block|}
 else|else
 block|{
@@ -1047,13 +1052,6 @@ name|flags32
 expr_stmt|;
 block|}
 comment|/* 	 * Check events 	 */
-if|if
-condition|(
-name|recv_interrupt_page
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|dword
@@ -1074,8 +1072,10 @@ name|recv_interrupt_page
 index|[
 name|dword
 index|]
+operator|==
+literal|0
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|bit
@@ -1108,6 +1108,11 @@ index|]
 argument_list|)
 condition|)
 block|{
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|channel
+decl_stmt|;
 name|rel_id
 operator|=
 operator|(
@@ -1118,29 +1123,15 @@ operator|)
 operator|+
 name|bit
 expr_stmt|;
-if|if
-condition|(
-name|rel_id
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 				 * Special case - 				 * vmbus channel protocol msg. 				 */
-continue|continue;
-block|}
-else|else
-block|{
-name|hv_vmbus_channel
-modifier|*
 name|channel
-init|=
+operator|=
 name|hv_vmbus_g_connection
 operator|.
 name|channels
 index|[
 name|rel_id
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/* if channel is closed or closing */
 if|if
 condition|(
@@ -1161,6 +1152,7 @@ name|channel
 operator|->
 name|batched_reading
 condition|)
+block|{
 name|hv_ring_buffer_read_begin
 argument_list|(
 operator|&
@@ -1169,7 +1161,8 @@ operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_fast
+block|}
+name|taskqueue_enqueue
 argument_list|(
 name|channel
 operator|->
@@ -1184,10 +1177,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-block|}
-block|}
-return|return;
 block|}
 end_function
 
