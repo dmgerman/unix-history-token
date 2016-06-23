@@ -6777,6 +6777,12 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 block|}
+name|rule
+operator|->
+name|overload_tbl
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|rule
@@ -8384,6 +8390,12 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 block|}
+name|newrule
+operator|->
+name|overload_tbl
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|newrule
