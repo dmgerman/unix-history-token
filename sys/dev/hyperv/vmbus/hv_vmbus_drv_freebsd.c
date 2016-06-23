@@ -205,13 +205,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|device_t
-name|vmbus_devp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|vmbus_inited
 decl_stmt|;
@@ -264,18 +257,12 @@ name|msg
 decl_stmt|;
 name|msg
 operator|=
-operator|(
-operator|(
-name|hv_vmbus_message
-operator|*
-operator|)
 name|hv_vmbus_g_context
 operator|.
 name|syn_ic_msg_page
 index|[
 name|curcpu
 index|]
-operator|)
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
@@ -430,18 +417,17 @@ init|=
 name|vmbus_get_softc
 argument_list|()
 decl_stmt|;
+name|hv_vmbus_message
+modifier|*
+name|msg
+decl_stmt|,
+modifier|*
+name|msg_base
+decl_stmt|;
 name|int
 name|cpu
 init|=
 name|curcpu
-decl_stmt|;
-name|hv_vmbus_message
-modifier|*
-name|msg
-decl_stmt|;
-name|void
-modifier|*
-name|page_addr
 decl_stmt|;
 comment|/* 	 * The Windows team has advised that we check for events 	 * before checking for messages. This is the way they do it 	 * in Windows when running as a guest in Hyper-V 	 */
 name|sc
@@ -454,7 +440,7 @@ name|cpu
 argument_list|)
 expr_stmt|;
 comment|/* Check if there are actual msgs to be process */
-name|page_addr
+name|msg_base
 operator|=
 name|hv_vmbus_g_context
 operator|.
@@ -465,13 +451,7 @@ index|]
 expr_stmt|;
 name|msg
 operator|=
-operator|(
-operator|(
-name|hv_vmbus_message
-operator|*
-operator|)
-name|page_addr
-operator|)
+name|msg_base
 operator|+
 name|HV_VMBUS_TIMER_SINT
 expr_stmt|;
@@ -530,13 +510,7 @@ block|}
 block|}
 name|msg
 operator|=
-operator|(
-operator|(
-name|hv_vmbus_message
-operator|*
-operator|)
-name|page_addr
-operator|)
+name|msg_base
 operator|+
 name|HV_VMBUS_MESSAGE_SINT
 expr_stmt|;
@@ -1183,7 +1157,8 @@ name|child
 operator|=
 name|device_add_child
 argument_list|(
-name|vmbus_devp
+name|vmbus_get_device
+argument_list|()
 argument_list|,
 name|NULL
 argument_list|,
@@ -1238,7 +1213,8 @@ name|ret
 operator|=
 name|device_delete_child
 argument_list|(
-name|vmbus_devp
+name|vmbus_get_device
+argument_list|()
 argument_list|,
 name|child_dev
 operator|->
@@ -1290,6 +1266,10 @@ name|dev
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
 condition|)
 return|return
 operator|(
@@ -1681,31 +1661,6 @@ operator|=
 name|vmbus_get_softc
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
-name|hv_vmbus_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Error VMBUS: Hypervisor Initialization Failed!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
 comment|/* 	 * Find a free IDT slot for vmbus callback. 	 */
 name|hv_vmbus_g_context
 operator|.
@@ -1732,6 +1687,10 @@ argument_list|(
 literal|"Error VMBUS: Cannot find free IDT slot for "
 literal|"vmbus callback!\n"
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ENXIO
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -2133,12 +2092,16 @@ argument_list|()
 expr_stmt|;
 name|bus_generic_attach
 argument_list|(
-name|vmbus_devp
+name|sc
+operator|->
+name|vmbus_dev
 argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|vmbus_devp
+name|sc
+operator|->
+name|vmbus_dev
 argument_list|,
 literal|"device scan, probe and attach done\n"
 argument_list|)
@@ -2237,9 +2200,6 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
-name|hv_vmbus_cleanup
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -2275,29 +2235,18 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"VMBUS: attach dev: %p\n"
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-name|vmbus_devp
-operator|=
-name|dev
-expr_stmt|;
 name|vmbus_sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|vmbus_sc
+operator|->
+name|vmbus_dev
+operator|=
+name|dev
 expr_stmt|;
 comment|/* 	 * Event processing logic will be configured: 	 * - After the vmbus protocol version negotiation. 	 * - Before we request channel offers. 	 */
 name|vmbus_sc
@@ -2432,9 +2381,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
-name|hv_vmbus_cleanup
-argument_list|()
-expr_stmt|;
 comment|/* remove swi */
 name|CPU_FOREACH
 argument_list|(

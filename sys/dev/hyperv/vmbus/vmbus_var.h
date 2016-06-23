@@ -61,6 +61,9 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
+name|device_t
+name|vmbus_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -90,6 +93,23 @@ name|vmbus_sc
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|device_t
+name|vmbus_get_device
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|vmbus_sc
+operator|->
+name|vmbus_dev
+return|;
+block|}
+end_function
 
 begin_define
 define|#
