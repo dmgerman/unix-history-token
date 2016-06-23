@@ -138,7 +138,8 @@ specifier|static
 name|u_long
 name|bhndb_debug
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2080,11 +2081,22 @@ name|ndevs
 argument_list|)
 operator|)
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"unable to get children\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Find our host bridge device */
 name|hostb
 operator|=

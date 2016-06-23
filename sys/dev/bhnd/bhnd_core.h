@@ -22,12 +22,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BHND_CF
+value|0x0408
+end_define
+
+begin_define
+define|#
+directive|define
 name|BHND_CF_BIST_EN
 value|0x8000
 end_define
 
 begin_comment
-comment|/**< ??? */
+comment|/**< built-in self test */
 end_comment
 
 begin_define
@@ -77,6 +84,13 @@ end_comment
 begin_comment
 comment|/* Common core status flags */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_SF
+value|0x0500
+end_define
 
 begin_define
 define|#
@@ -132,6 +146,31 @@ end_define
 begin_comment
 comment|/**< core-specific status mask */
 end_comment
+
+begin_comment
+comment|/*Reset core control flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_RESET_CF
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_RESET_CF_ENABLE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_RESET_SF
+value|0x0804
+end_define
 
 begin_comment
 comment|/*   * A register that is common to all cores to  * communicate w/PMU regarding clock control.  *   * TODO: Determine when this register first appeared.  */
