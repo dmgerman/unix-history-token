@@ -342,7 +342,9 @@ return|;
 else|else
 return|return
 operator|(
-literal|800
+literal|200
+operator|*
+literal|1024
 operator|*
 literal|1024
 operator|)
