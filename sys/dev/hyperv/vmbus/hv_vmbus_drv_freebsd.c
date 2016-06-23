@@ -281,7 +281,7 @@ argument_list|,
 name|curcpu
 argument_list|)
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 for|for
 control|(
@@ -410,10 +410,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/**  * @brief Interrupt filter routine for VMBUS.  *  * The purpose of this routine is to determine the type of VMBUS protocol  * message to process - an event or a channel message.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -441,17 +437,6 @@ decl_stmt|,
 modifier|*
 name|msg_base
 decl_stmt|;
-comment|/* 	 * The Windows team has advised that we check for events 	 * before checking for messages. This is the way they do it 	 * in Windows when running as a guest in Hyper-V 	 */
-name|sc
-operator|->
-name|vmbus_event_proc
-argument_list|(
-name|sc
-argument_list|,
-name|cpu
-argument_list|)
-expr_stmt|;
-comment|/* Check if there are actual msgs to be process */
 name|msg_base
 operator|=
 name|VMBUS_PCPU_GET
@@ -463,13 +448,13 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check event timer. 	 * 	 * TODO: move this to independent IDT vector. 	 */
 name|msg
 operator|=
 name|msg_base
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
-comment|/* we call eventtimer process the message */
 if|if
 condition|(
 name|msg
@@ -489,8 +474,7 @@ name|message_type
 operator|=
 name|HV_MESSAGE_TYPE_NONE
 expr_stmt|;
-comment|/* call intrrupt handler of event timer */
-name|hv_et_intr
+name|vmbus_et_intr
 argument_list|(
 name|frame
 argument_list|)
@@ -522,14 +506,27 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Check events.  Hot path for network and storage I/O data; high rate. 	 * 	 * NOTE: 	 * As recommended by the Windows guest fellows, we check events before 	 * checking messages. 	 */
+name|sc
+operator|->
+name|vmbus_event_proc
+argument_list|(
+name|sc
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check messages.  Mainly management stuffs; ultra low rate. 	 */
 name|msg
 operator|=
 name|msg_base
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|msg
 operator|->
 name|header
@@ -537,6 +534,7 @@ operator|.
 name|message_type
 operator|!=
 name|HV_MESSAGE_TYPE_NONE
+argument_list|)
 condition|)
 block|{
 name|taskqueue_enqueue
@@ -787,7 +785,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 name|orig
 operator|=
@@ -822,7 +820,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
 name|orig
 operator|=
@@ -920,7 +918,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 name|orig
 operator|=
@@ -943,7 +941,7 @@ name|sint
 operator|=
 name|MSR_HV_SINT0
 operator|+
-name|HV_VMBUS_TIMER_SINT
+name|VMBUS_SINT_TIMER
 expr_stmt|;
 name|orig
 operator|=

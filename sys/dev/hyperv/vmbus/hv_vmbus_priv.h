@@ -480,14 +480,6 @@ block|,
 name|HV_VMBUS_MONITOR_PORT_ID
 init|=
 literal|3
-block|,
-name|HV_VMBUS_MESSAGE_SINT
-init|=
-literal|2
-block|,
-name|HV_VMBUS_TIMER_SINT
-init|=
-literal|4
 block|, }
 enum|;
 end_enum
@@ -1464,30 +1456,6 @@ parameter_list|(
 name|hv_vmbus_channel
 modifier|*
 name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Event Timer interfaces  */
-end_comment
-
-begin_function_decl
-name|void
-name|hv_et_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hv_et_intr
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1125,7 +1125,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 name|vmbus_event_flags_proc
 argument_list|(
@@ -1175,7 +1175,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|+
-name|HV_VMBUS_MESSAGE_SINT
+name|VMBUS_SINT_MESSAGE
 expr_stmt|;
 if|if
 condition|(
