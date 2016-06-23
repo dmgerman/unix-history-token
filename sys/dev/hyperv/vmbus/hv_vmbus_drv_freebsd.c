@@ -174,7 +174,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_vmbus_priv.h"
+file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
 begin_include
@@ -188,6 +194,14 @@ include|#
 directive|include
 file|"acpi_if.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|vmbus_softc
+modifier|*
+name|vmbus_sc
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -441,6 +455,14 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+init|=
+name|vmbus_get_softc
+argument_list|()
+decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
@@ -460,8 +482,12 @@ name|cpuid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The Windows team has advised that we check for events 	 * before checking for messages. This is the way they do it 	 * in Windows when running as a guest in Hyper-V 	 */
-name|hv_vmbus_on_events
+name|sc
+operator|->
+name|vmbus_event_proc
 argument_list|(
+name|sc
+argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
@@ -1646,6 +1672,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -1678,6 +1709,11 @@ return|;
 name|vmbus_inited
 operator|=
 literal|1
+expr_stmt|;
+name|sc
+operator|=
+name|vmbus_get_softc
+argument_list|()
 expr_stmt|;
 name|ret
 operator|=
@@ -2107,6 +2143,29 @@ condition|)
 goto|goto
 name|cleanup1
 goto|;
+if|if
+condition|(
+name|hv_vmbus_protocal_version
+operator|==
+name|HV_VMBUS_VERSION_WS2008
+operator|||
+name|hv_vmbus_protocal_version
+operator|==
+name|HV_VMBUS_VERSION_WIN7
+condition|)
+name|sc
+operator|->
+name|vmbus_event_proc
+operator|=
+name|vmbus_event_proc_compat
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|vmbus_event_proc
+operator|=
+name|vmbus_event_proc
+expr_stmt|;
 name|hv_vmbus_request_channel_offers
 argument_list|()
 expr_stmt|;
@@ -2232,6 +2291,24 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|vmbus_event_proc_dummy
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+name|__unused
+parameter_list|,
+name|int
+name|cpu
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
 name|int
 name|vmbus_attach
 parameter_list|(
@@ -2255,6 +2332,20 @@ expr_stmt|;
 name|vmbus_devp
 operator|=
 name|dev
+expr_stmt|;
+name|vmbus_sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Event processing logic will be configured: 	 * - After the vmbus protocol version negotiation. 	 * - Before we request channel offers. 	 */
+name|vmbus_sc
+operator|->
+name|vmbus_event_proc
+operator|=
+name|vmbus_event_proc_dummy
 expr_stmt|;
 comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible indicated by the global 	 * cold set to zero, we just call the driver 	 * initialization directly. 	 */
 if|if
@@ -2291,6 +2382,11 @@ condition|(
 name|vm_guest
 operator|!=
 name|VM_GUEST_HV
+operator|||
+name|vmbus_get_softc
+argument_list|()
+operator|==
+name|NULL
 condition|)
 return|return;
 comment|/*  	 * If the system has already booted and thread 	 * scheduling is possible, as indicated by the 	 * global cold set to zero, we just call the driver 	 * initialization directly. 	 */
@@ -2641,26 +2737,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|driver_name
-index|[]
-init|=
-literal|"vmbus"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|driver_t
 name|vmbus_driver
 init|=
 block|{
-name|driver_name
+literal|"vmbus"
 block|,
 name|vmbus_methods
 block|,
-literal|0
-block|, }
+expr|sizeof
+operator|(
+expr|struct
+name|vmbus_softc
+operator|)
+block|}
 decl_stmt|;
 end_decl_stmt
 
