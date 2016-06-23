@@ -198,16 +198,6 @@ decl_stmt|;
 name|int
 name|d_destroyed
 decl_stmt|;
-name|struct
-name|mtx
-name|d_mtx
-decl_stmt|;
-name|char
-name|d_mtx_name
-index|[
-literal|24
-index|]
-decl_stmt|;
 name|disk_init_level
 name|d_init_level
 decl_stmt|;
