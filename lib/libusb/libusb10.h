@@ -167,6 +167,9 @@ decl_stmt|;
 name|uint32_t
 name|last_len
 decl_stmt|;
+name|uint32_t
+name|stream_id
+decl_stmt|;
 name|uint8_t
 name|state
 decl_stmt|;

@@ -5877,7 +5877,7 @@ expr_stmt|;
 comment|/* make sure the transfer is opened */
 name|err
 operator|=
-name|libusb20_tr_open
+name|libusb20_tr_open_stream
 argument_list|(
 name|pxfer0
 argument_list|,
@@ -5886,6 +5886,10 @@ argument_list|,
 name|maxframe
 argument_list|,
 name|endpoint
+argument_list|,
+name|sxfer
+operator|->
+name|stream_id
 argument_list|)
 expr_stmt|;
 if|if
