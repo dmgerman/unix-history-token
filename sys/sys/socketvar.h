@@ -295,6 +295,21 @@ comment|/* routing domain for this socket */
 name|uint32_t
 name|so_user_cookie
 decl_stmt|;
+name|void
+modifier|*
+name|so_pspare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* packet pacing / general use */
+name|int
+name|so_ispare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* packet pacing / general use */
 block|}
 struct|;
 end_struct

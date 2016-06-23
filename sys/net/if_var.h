@@ -1002,6 +1002,21 @@ name|if_hw_tsomaxsegsize
 decl_stmt|;
 comment|/* TSO maximum segment size in bytes */
 comment|/* 	 * Spare fields to be added before branching a stable branch, so 	 * that structure can be enhanced without changing the kernel 	 * binary interface. 	 */
+name|void
+modifier|*
+name|if_pspare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* packet pacing / general use */
+name|int
+name|if_ispare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* packet pacing / general use */
 block|}
 struct|;
 end_struct

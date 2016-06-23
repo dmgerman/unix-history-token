@@ -456,7 +456,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-comment|/* (x) route caching / general use */
+comment|/* (x) packet pacing / general use */
 name|uint32_t
 name|inp_flowtype
 decl_stmt|;
@@ -471,7 +471,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* (x) route caching / user cookie / 					 *     general use */
+comment|/* (x) packet pacing / user cookie / 					 *     general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
