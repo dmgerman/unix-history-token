@@ -23468,6 +23468,11 @@ operator|->
 name|sc_ic
 argument_list|)
 expr_stmt|;
+name|iwm_phy_db_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Free descriptor rings */
 name|iwm_free_rx_ring
 argument_list|(
