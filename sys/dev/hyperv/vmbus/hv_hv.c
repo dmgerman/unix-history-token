@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/vmbus/hyperv_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
@@ -111,17 +117,6 @@ directive|define
 name|HV_NANOSECONDS_PER_SEC
 value|1000000000L
 end_define
-
-begin_define
-define|#
-directive|define
-name|HYPERV_INTERFACE
-value|0x31237648
-end_define
-
-begin_comment
-comment|/* HV#1 */
-end_comment
 
 begin_define
 define|#
@@ -192,18 +187,10 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|hypercall_ctx
-name|hypercall_context
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|u_int
-name|hv_get_timecount
+name|hyperv_get_timecount
 parameter_list|(
 name|struct
 name|timecounter
@@ -243,52 +230,79 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|timecounter
-name|hv_timecounter
+name|hyperv_timecounter
 init|=
 block|{
-name|hv_get_timecount
+operator|.
+name|tc_get_timecount
+operator|=
+name|hyperv_get_timecount
 block|,
-literal|0
+operator|.
+name|tc_poll_pps
+operator|=
+name|NULL
 block|,
-operator|~
-literal|0u
+operator|.
+name|tc_counter_mask
+operator|=
+literal|0xffffffff
 block|,
+operator|.
+name|tc_frequency
+operator|=
 name|HV_NANOSECONDS_PER_SEC
 operator|/
 literal|100
 block|,
+operator|.
+name|tc_name
+operator|=
 literal|"Hyper-V"
 block|,
-name|HV_NANOSECONDS_PER_SEC
-operator|/
-literal|100
+operator|.
+name|tc_quality
+operator|=
+literal|2000
+block|,
+operator|.
+name|tc_flags
+operator|=
+literal|0
+block|,
+operator|.
+name|tc_priv
+operator|=
+name|NULL
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|hypercall_ctx
+name|hypercall_context
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
 name|u_int
-name|hv_get_timecount
+name|hyperv_get_timecount
 parameter_list|(
 name|struct
 name|timecounter
 modifier|*
 name|tc
+name|__unused
 parameter_list|)
 block|{
-name|u_int
-name|now
-init|=
+return|return
 name|rdmsr
 argument_list|(
-name|HV_X64_MSR_TIME_REF_COUNT
+name|MSR_HV_TIME_REF_COUNT
 argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|now
-operator|)
 return|;
 block|}
 end_function
@@ -713,11 +727,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|maxLeaf
-decl_stmt|;
-name|unsigned
-name|int
-name|op
+name|maxleaf
 decl_stmt|;
 if|if
 condition|(
@@ -730,18 +740,14 @@ operator|(
 name|false
 operator|)
 return|;
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_HV_VENDOR_AND_MAX_FUNCTION
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_MAXLEAF
 argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
-name|maxLeaf
+name|maxleaf
 operator|=
 name|regs
 index|[
@@ -750,22 +756,18 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|maxLeaf
+name|maxleaf
 operator|<
-name|HV_CPU_ID_FUNCTION_MS_HV_IMPLEMENTATION_LIMITS
+name|CPUID_LEAF_HV_LIMITS
 condition|)
 return|return
 operator|(
 name|false
 operator|)
 return|;
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_HV_INTERFACE
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_INTERFACE
 argument_list|,
 name|regs
 argument_list|)
@@ -777,20 +779,16 @@ index|[
 literal|0
 index|]
 operator|!=
-name|HYPERV_INTERFACE
+name|CPUID_HV_IFACE_HYPERV
 condition|)
 return|return
 operator|(
 name|false
 operator|)
 return|;
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_MS_HV_FEATURES
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_FEATURES
 argument_list|,
 name|regs
 argument_list|)
@@ -803,7 +801,7 @@ index|[
 literal|0
 index|]
 operator|&
-name|HV_FEATURE_MSR_HYPERCALL
+name|CPUID_HV_MSR_HYPERCALL
 operator|)
 operator|==
 literal|0
@@ -837,13 +835,9 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_MS_HV_VERSION
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_IDENTITY
 argument_list|,
 name|regs
 argument_list|)
@@ -885,54 +879,54 @@ name|hyperv_features
 argument_list|,
 literal|"\020"
 literal|"\001VPRUNTIME"
-comment|/* MSR_VP_RUNTIME */
+comment|/* MSR_HV_VP_RUNTIME */
 literal|"\002TMREFCNT"
-comment|/* MSR_TIME_REF_COUNT */
+comment|/* MSR_HV_TIME_REF_COUNT */
 literal|"\003SYNIC"
 comment|/* MSRs for SynIC */
 literal|"\004SYNTM"
 comment|/* MSRs for SynTimer */
 literal|"\005APIC"
-comment|/* MSR_{EOI,ICR,TPR} */
+comment|/* MSR_HV_{EOI,ICR,TPR} */
 literal|"\006HYPERCALL"
-comment|/* MSR_{GUEST_OS_ID,HYPERCALL} */
+comment|/* MSR_HV_{GUEST_OS_ID,HYPERCALL} */
 literal|"\007VPINDEX"
-comment|/* MSR_VP_INDEX */
+comment|/* MSR_HV_VP_INDEX */
 literal|"\010RESET"
-comment|/* MSR_RESET */
+comment|/* MSR_HV_RESET */
 literal|"\011STATS"
-comment|/* MSR_STATS_ */
+comment|/* MSR_HV_STATS_ */
 literal|"\012REFTSC"
-comment|/* MSR_REFERENCE_TSC */
+comment|/* MSR_HV_REFERENCE_TSC */
 literal|"\013IDLE"
-comment|/* MSR_GUEST_IDLE */
+comment|/* MSR_HV_GUEST_IDLE */
 literal|"\014TMFREQ"
-comment|/* MSR_{TSC,APIC}_FREQUENCY */
+comment|/* MSR_HV_{TSC,APIC}_FREQUENCY */
 literal|"\015DEBUG"
 argument_list|)
 expr_stmt|;
-comment|/* MSR_SYNTH_DEBUG_ */
+comment|/* MSR_HV_SYNTH_DEBUG_ */
 name|printf
 argument_list|(
-literal|"  PM Features=max C%u, 0x%b\n"
-argument_list|,
-name|HV_PM_FEATURE_CSTATE
-argument_list|(
-name|hyperv_pm_features
-argument_list|)
+literal|"  PM Features=0x%b [C%u]\n"
 argument_list|,
 operator|(
 name|hyperv_pm_features
 operator|&
 operator|~
-name|HV_PM_FEATURE_CSTATE_MASK
+name|CPUPM_HV_CSTATE_MASK
 operator|)
 argument_list|,
 literal|"\020"
 literal|"\005C3HPET"
+argument_list|,
+comment|/* HPET is required for C3 state */
+name|CPUPM_HV_CSTATE
+argument_list|(
+name|hyperv_pm_features
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* HPET is required for C3 state */
 name|printf
 argument_list|(
 literal|"  Features3=0x%b\n"
@@ -970,13 +964,9 @@ literal|"\016HVDIS"
 argument_list|)
 expr_stmt|;
 comment|/* disabling hypervisor */
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_MS_HV_ENLIGHTENMENT_INFORMATION
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_RECOMMENDS
 argument_list|,
 name|regs
 argument_list|)
@@ -1007,13 +997,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_MS_HV_IMPLEMENTATION_LIMITS
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_LIMITS
 argument_list|,
 name|regs
 argument_list|)
@@ -1046,18 +1032,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|maxLeaf
+name|maxleaf
 operator|>=
-name|HV_CPU_ID_FUNCTION_MS_HV_HARDWARE_FEATURE
+name|CPUID_LEAF_HV_HWFEATURES
 condition|)
 block|{
-name|op
-operator|=
-name|HV_CPU_ID_FUNCTION_MS_HV_HARDWARE_FEATURE
-expr_stmt|;
 name|do_cpuid
 argument_list|(
-name|op
+name|CPUID_LEAF_HV_HWFEATURES
 argument_list|,
 name|regs
 argument_list|)
@@ -1069,7 +1051,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  HW Features: %08x AMD: %08x\n"
+literal|"  HW Features: %08x, AMD: %08x\n"
 argument_list|,
 name|regs
 index|[
@@ -1135,14 +1117,14 @@ if|if
 condition|(
 name|hyperv_features
 operator|&
-name|HV_FEATURE_MSR_TIME_REFCNT
+name|CPUID_HV_MSR_TIME_REFCNT
 condition|)
 block|{
-comment|/* Register virtual timecount */
+comment|/* Register Hyper-V timecounter */
 name|tc_init
 argument_list|(
 operator|&
-name|hv_timecounter
+name|hyperv_timecounter
 argument_list|)
 expr_stmt|;
 block|}
