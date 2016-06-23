@@ -138,8 +138,7 @@ specifier|static
 name|u_long
 name|bhndb_debug
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
