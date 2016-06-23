@@ -1718,14 +1718,6 @@ name|inp
 operator|!=
 name|NULL
 operator|)
-operator|&&
-operator|(
-name|inp
-operator|->
-name|sctp_socket
-operator|!=
-name|NULL
-operator|)
 condition|)
 block|{
 comment|/* Check the verification tag */
