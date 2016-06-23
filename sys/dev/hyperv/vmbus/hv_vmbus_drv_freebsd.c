@@ -1600,60 +1600,15 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
-comment|/* 	 * Find a free IDT vector for vmbus messages/events. 	 */
-name|sc
-operator|->
-name|vmbus_idtvec
-operator|=
-name|vmbus_vector_alloc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vmbus_idtvec
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
-argument_list|,
-literal|"cannot find free IDT vector\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENXIO
-return|;
-block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
-argument_list|,
-literal|"vmbus IDT vector %d\n"
-argument_list|,
-name|sc
-operator|->
-name|vmbus_idtvec
-argument_list|)
-expr_stmt|;
-block|}
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
 argument_list|)
 block|{
+name|struct
+name|task
+name|cpuset_task
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1662,6 +1617,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|cpuset_t
+name|cpu_mask
+decl_stmt|;
+comment|/* Allocate an interrupt counter for Hyper-V interrupt */
 name|snprintf
 argument_list|(
 name|buf
@@ -1690,21 +1649,7 @@ name|cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Per cpu setup. 	 */
-name|CPU_FOREACH
-argument_list|(
-argument|cpu
-argument_list|)
-block|{
-name|struct
-name|task
-name|cpuset_task
-decl_stmt|;
-name|cpuset_t
-name|cpu_mask
-decl_stmt|;
-comment|/* 		 * Setup taskqueue to handle events 		 */
+comment|/* 		 * Setup taskqueue to handle events.  Task will be per- 		 * channel. 		 */
 name|hv_vmbus_g_context
 operator|.
 name|hv_event_queue
@@ -1795,7 +1740,7 @@ operator|&
 name|cpuset_task
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Setup per-cpu tasks and taskqueues to handle msg. 		 */
+comment|/* 		 * Setup tasks and taskqueues to handle messages. 		 */
 name|hv_vmbus_g_context
 operator|.
 name|hv_msg_tq
@@ -1904,6 +1849,55 @@ name|cpuset_task
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * All Hyper-V ISR required resources are setup, now let's find a 	 * free IDT vector for Hyper-V ISR and set it up. 	 */
+name|sc
+operator|->
+name|vmbus_idtvec
+operator|=
+name|vmbus_vector_alloc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|vmbus_idtvec
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"cannot find free IDT vector\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"vmbus IDT vector %d\n"
+argument_list|,
+name|sc
+operator|->
+name|vmbus_idtvec
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -1924,7 +1918,13 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
-comment|/* 	 * remove swi and vmbus callback vector; 	 */
+name|vmbus_vector_free
+argument_list|(
+name|sc
+operator|->
+name|vmbus_idtvec
+argument_list|)
+expr_stmt|;
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -2013,13 +2013,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|vmbus_vector_free
-argument_list|(
-name|sc
-operator|->
-name|vmbus_idtvec
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2744,10 +2737,10 @@ operator|=
 name|vmbus_get_softc
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Setup interrupt. 	 */
+comment|/* 	 * Allocate DMA stuffs. 	 */
 name|ret
 operator|=
-name|vmbus_intr_setup
+name|vmbus_dma_alloc
 argument_list|(
 name|sc
 argument_list|)
@@ -2761,10 +2754,10 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/* 	 * Allocate DMA stuffs. 	 */
+comment|/* 	 * Setup interrupt. 	 */
 name|ret
 operator|=
-name|vmbus_dma_alloc
+name|vmbus_intr_setup
 argument_list|(
 name|sc
 argument_list|)
@@ -2867,12 +2860,12 @@ operator|)
 return|;
 name|cleanup
 label|:
-name|vmbus_dma_free
+name|vmbus_intr_teardown
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|vmbus_intr_teardown
+name|vmbus_dma_free
 argument_list|(
 name|sc
 argument_list|)
@@ -3025,12 +3018,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|vmbus_dma_free
+name|vmbus_intr_teardown
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|vmbus_intr_teardown
+name|vmbus_dma_free
 argument_list|(
 name|sc
 argument_list|)
