@@ -18563,8 +18563,8 @@ expr_stmt|;
 comment|/* Don't send out individual delete messages. */
 name|s
 operator|->
-name|sync_state
-operator|=
+name|state_flags
+operator||=
 name|PFSTATE_NOSYNC
 expr_stmt|;
 name|pf_unlink_state
