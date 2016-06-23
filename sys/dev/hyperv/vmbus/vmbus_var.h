@@ -69,6 +69,23 @@ name|hyperv_dma
 name|event_flag_dma
 decl_stmt|;
 comment|/* busdma glue */
+name|struct
+name|taskqueue
+modifier|*
+name|event_tq
+decl_stmt|;
+comment|/* event taskq */
+name|struct
+name|taskqueue
+modifier|*
+name|message_tq
+decl_stmt|;
+comment|/* message taskq */
+name|struct
+name|task
+name|message_task
+decl_stmt|;
+comment|/* message task */
 block|}
 name|__aligned
 argument_list|(
@@ -101,6 +118,7 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
+comment|/* Rarely used fields */
 name|device_t
 name|vmbus_dev
 decl_stmt|;
