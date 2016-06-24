@@ -718,7 +718,7 @@ struct_decl|struct
 name|libusb_device_handle
 struct_decl|;
 struct_decl|struct
-name|libusb_hotplug_callback_handle
+name|libusb_hotplug_callback_handle_struct
 struct_decl|;
 struct|struct
 name|libusb_pollfd
@@ -817,7 +817,7 @@ parameter_list|)
 function_decl|;
 typedef|typedef
 name|struct
-name|libusb_hotplug_callback_handle
+name|libusb_hotplug_callback_handle_struct
 modifier|*
 name|libusb_hotplug_callback_handle
 typedef|;

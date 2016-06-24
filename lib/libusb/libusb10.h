@@ -187,11 +187,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|libusb_hotplug_callback_handle
+name|libusb_hotplug_callback_handle_struct
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|libusb_hotplug_callback_handle
+argument|libusb_hotplug_callback_handle_struct
 argument_list|)
 name|entry
 expr_stmt|;
@@ -276,7 +276,7 @@ expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|libusb_hotplug_callback_handle
+argument|libusb_hotplug_callback_handle_struct
 argument_list|)
 name|hotplug_cbh
 expr_stmt|;
