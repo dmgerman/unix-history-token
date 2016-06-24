@@ -75,13 +75,13 @@ name|vcpuid
 decl_stmt|;
 comment|/* virtual cpuid */
 name|int
-name|event_flag_cnt
+name|event_flags_cnt
 decl_stmt|;
 comment|/* # of event flags */
-name|union
-name|vmbus_event_flags
+name|struct
+name|vmbus_evtflags
 modifier|*
-name|event_flag
+name|event_flags
 decl_stmt|;
 comment|/* shared event flags */
 comment|/* Rarely used fields */
@@ -92,7 +92,7 @@ decl_stmt|;
 comment|/* busdma glue */
 name|struct
 name|hyperv_dma
-name|event_flag_dma
+name|event_flags_dma
 decl_stmt|;
 comment|/* busdma glue */
 name|struct
