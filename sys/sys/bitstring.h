@@ -70,6 +70,45 @@ name|_BITSTR_BITS
 value|(sizeof(bitstr_t) * 8)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|roundup2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_bit_roundup2
+value|roundup2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_bit_roundup2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)+((y)-1))&(~((y)-1)))
+end_define
+
+begin_comment
+comment|/* if y is powers of two */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* bitstr_t in bit string containing the bit. */
 end_comment
@@ -193,7 +232,7 @@ comment|/*----------------------------- Public Interface -----------------------
 end_comment
 
 begin_comment
-comment|/* Number of bytes consumed by a bit string of nbits bits */
+comment|/* Number of bytes allocated for a bit string of nbits bits */
 end_comment
 
 begin_define
@@ -203,8 +242,7 @@ name|bitstr_size
 parameter_list|(
 name|_nbits
 parameter_list|)
-define|\
-value|(((_nbits) + _BITSTR_BITS - 1) / 8)
+value|(_bit_roundup2(_nbits, _BITSTR_BITS) / 8)
 end_define
 
 begin_comment
@@ -302,7 +340,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Allocate a bit string on the stack with no bits set. */
+comment|/* Allocate a bit string on the stack */
 end_comment
 
 begin_define
