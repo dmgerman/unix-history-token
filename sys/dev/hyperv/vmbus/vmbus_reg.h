@@ -96,6 +96,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_MSGTYPE_CHANNEL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_MSGTYPE_TIMER_EXPIRED
 value|0x80000010
 end_define
@@ -160,6 +167,13 @@ define|#
 directive|define
 name|VMBUS_EVTFLAG_LEN
 value|(1<< VMBUS_EVTFLAG_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_EVTFLAG_MASK
+value|(VMBUS_EVTFLAG_LEN - 1)
 end_define
 
 begin_define
