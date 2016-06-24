@@ -240,7 +240,7 @@ argument_list|)
 decl_stmt|,
 name|IDTVEC
 argument_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -412,9 +412,9 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
-name|hv_vmbus_isr
+name|vmbus_handle_intr1
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -569,7 +569,7 @@ end_function
 
 begin_function
 name|void
-name|hv_vector_handler
+name|vmbus_handle_intr
 parameter_list|(
 name|struct
 name|trapframe
@@ -608,7 +608,7 @@ argument_list|)
 operator|)
 operator|++
 expr_stmt|;
-name|hv_vmbus_isr
+name|vmbus_handle_intr1
 argument_list|(
 name|sc
 argument_list|,
@@ -1334,7 +1334,7 @@ name|vector
 argument_list|,
 name|IDTVEC
 argument_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
@@ -1357,7 +1357,7 @@ name|vector
 argument_list|,
 name|IDTVEC
 argument_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 argument_list|)
 argument_list|,
 name|SDT_SYSIGT
