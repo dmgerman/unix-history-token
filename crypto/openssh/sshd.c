@@ -542,23 +542,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_BLACKLIST
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"blacklist_client.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|LIBWRAP
 end_ifdef
 
@@ -1524,16 +1507,6 @@ name|SIGTERM
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_notify
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Log error and exit. */
 name|sigdie
 argument_list|(
@@ -2704,14 +2677,6 @@ comment|/* Demote the private keys to public keys. */
 name|demote_sensitive_data
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Demote the child */
 if|if
 condition|(
@@ -5773,14 +5738,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Stay listening for connections until the system crashes or 	 * the daemon is killed with a signal. 	 */
 for|for
 control|(

@@ -180,23 +180,6 @@ directive|include
 file|"buffer.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"blacklist_client.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* import */
 end_comment
@@ -1360,16 +1343,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_notify
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|"Access denied for user %s by PAM account "
@@ -1645,16 +1618,6 @@ operator|=
 name|fakepw
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_notify
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Configuration may have changed as a result of Match */
 if|if

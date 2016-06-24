@@ -292,23 +292,6 @@ directive|include
 file|"compat.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"blacklist_client.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* import */
 end_comment
@@ -1376,24 +1359,6 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-if|if
-condition|(
-operator|!
-name|authctxt
-operator|->
-name|postponed
-condition|)
-name|blacklist_notify
-argument_list|(
-operator|!
-name|authenticated
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|authctxt
@@ -2966,16 +2931,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_notify
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|logit
 argument_list|(
 literal|"Invalid user %.100s from %.100s"
