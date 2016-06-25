@@ -1681,11 +1681,14 @@ name|family
 operator|=
 name|AF_INET6
 expr_stmt|;
+comment|/* 			 * Currently there is no way to distinguish between 			 * IPv6 only sockets or dual family sockets. 			 * So mark it as dual socket. 			 */
 name|sock
 operator|->
 name|vflag
 operator|=
 name|INP_IPV6
+operator||
+name|INP_IPV4
 expr_stmt|;
 block|}
 else|else
@@ -2159,6 +2162,14 @@ condition|(
 name|opt_l
 operator|&&
 operator|(
+name|sock
+operator|->
+name|vflag
+operator|&
+name|vflag
+operator|)
+operator|&&
+operator|(
 operator|!
 name|opt_L
 operator|||
@@ -2315,11 +2326,14 @@ name|family
 operator|=
 name|AF_INET6
 expr_stmt|;
+comment|/* 				 * Currently there is no way to distinguish 				 * between IPv6 only sockets or dual family 				 *  sockets. So mark it as dual socket. 				 */
 name|sock
 operator|->
 name|vflag
 operator|=
 name|INP_IPV6
+operator||
+name|INP_IPV4
 expr_stmt|;
 block|}
 else|else
@@ -2841,6 +2855,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|sock
+operator|->
+name|vflag
+operator|&
+name|vflag
+operator|)
+operator|&&
+operator|(
 operator|!
 name|opt_L
 operator|||
@@ -2849,6 +2872,7 @@ operator|(
 name|local_all_loopback
 operator|||
 name|foreign_all_loopback
+operator|)
 operator|)
 condition|)
 block|{
@@ -5504,7 +5528,7 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"4 "
+literal|"4"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5519,7 +5543,26 @@ name|pos
 operator|+=
 name|xprintf
 argument_list|(
-literal|"6 "
+literal|"6"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|vflag
+operator|&
+operator|(
+name|INP_IPV4
+operator||
+name|INP_IPV6
+operator|)
+condition|)
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 name|laddr
