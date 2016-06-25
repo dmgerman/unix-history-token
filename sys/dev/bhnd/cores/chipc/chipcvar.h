@@ -112,6 +112,42 @@ name|chipc_flash
 typedef|;
 end_typedef
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|chipc_flash_name
+parameter_list|(
+name|chipc_flash
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|chipc_flash_bus_name
+parameter_list|(
+name|chipc_flash
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|chipc_sflash_device_name
+parameter_list|(
+name|chipc_flash
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * ChipCommon capability flags;  */
 end_comment
@@ -143,7 +179,11 @@ comment|/**< ExtBus type (CHIPC_CAP_EXTBUS_*) */
 name|chipc_flash
 name|flash_type
 decl_stmt|;
-comment|/**< Flash type */
+comment|/**< flash type */
+name|uint8_t
+name|cfi_width
+decl_stmt|;
+comment|/**< CFI bus width, 0 if unknown or CFI 					     not present */
 name|bhnd_nvram_src
 name|nvram_src
 decl_stmt|;
@@ -156,10 +196,6 @@ name|uint8_t
 name|otp_size
 decl_stmt|;
 comment|/**< OTP (row?) size, 0 if not present */
-name|uint8_t
-name|cfi_width
-decl_stmt|;
-comment|/**< CFI bus width, 0 if unknown or CFI 					     not present */
 name|uint8_t
 name|pll_type
 decl_stmt|;
@@ -383,11 +419,6 @@ modifier|*
 name|core_region
 decl_stmt|;
 comment|/**< region containing core registers */
-name|struct
-name|bhnd_chipid
-name|ccid
-decl_stmt|;
-comment|/**< chip identification */
 name|uint32_t
 name|quirks
 decl_stmt|;

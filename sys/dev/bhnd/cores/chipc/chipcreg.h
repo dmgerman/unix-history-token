@@ -920,15 +920,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIPC_UART0_BASE
-value|CHIPC_UART_BASE
+name|CHIPC_UART_MAX
+value|3
 end_define
+
+begin_comment
+comment|/**< max UART blocks */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CHIPC_UART1_BASE
-value|(CHIPC_UART_BASE + CHIPC_UART_SIZE)
+name|CHIPC_UART
+parameter_list|(
+name|_n
+parameter_list|)
+value|(CHIPC_UART_BASE + (CHIPC_UART_SIZE*_n))
 end_define
 
 begin_comment

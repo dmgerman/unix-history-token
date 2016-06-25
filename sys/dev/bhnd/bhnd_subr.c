@@ -4435,57 +4435,5 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|/**  * Helper function for implementing BHND_BUS_GET_ATTACH_TYPE().  *  * This implementation of BHND_BUS_GET_ATTACH_TYPE() simply calls the  * BHND_BUS_GET_ATTACH_TYPE() method of the parent of @p dev.  */
-end_comment
-
-begin_function
-name|bhnd_attach_type
-name|bhnd_bus_generic_get_attach_type
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-block|{
-comment|/* iterate from cores via bhnd to bridge or SoC */
-if|if
-condition|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|BHND_BUS_GET_ATTACH_TYPE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|child
-argument_list|)
-operator|)
-return|;
-name|panic
-argument_list|(
-literal|"bhnd_bus_get_attach_type unimplemented"
-argument_list|)
-expr_stmt|;
-comment|/* Unreachable */
-return|return
-operator|(
-name|BHND_ATTACH_ADAPTER
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 

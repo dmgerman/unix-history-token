@@ -21,6 +21,12 @@ directive|include
 file|<sys/slicer.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"chipcvar.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -41,6 +47,16 @@ directive|define
 name|NVRAM_MAGIC
 value|0x48534C46
 end_define
+
+begin_function_decl
+name|void
+name|chipc_register_slicer
+parameter_list|(
+name|chipc_flash
+name|flash_type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

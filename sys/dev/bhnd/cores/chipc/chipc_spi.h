@@ -117,19 +117,25 @@ struct|struct
 name|chipc_spi_softc
 block|{
 name|device_t
-name|dev
+name|sc_dev
 decl_stmt|;
-comment|/* SPI registers */
-name|struct
-name|resource
-modifier|*
-name|sc_mem_res
-decl_stmt|;
-comment|/* MMIO flash */
 name|struct
 name|resource
 modifier|*
 name|sc_res
+decl_stmt|;
+comment|/**< SPI registers */
+name|int
+name|sc_rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_flash_res
+decl_stmt|;
+comment|/**< flash shadow */
+name|int
+name|sc_flash_rid
 decl_stmt|;
 block|}
 struct|;
@@ -146,7 +152,7 @@ name|SPI_BARRIER_WRITE
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 				    BUS_SPACE_BARRIER_WRITE)
+value|bus_barrier((sc)->sc_res, 0, 0, 	\ 				    BUS_SPACE_BARRIER_WRITE)
 end_define
 
 begin_define
@@ -156,7 +162,7 @@ name|SPI_BARRIER_READ
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 				    BUS_SPACE_BARRIER_READ)
+value|bus_barrier((sc)->sc_res, 0, 0, 	\ 				    BUS_SPACE_BARRIER_READ)
 end_define
 
 begin_define
@@ -166,7 +172,7 @@ name|SPI_BARRIER_RW
 parameter_list|(
 name|sc
 parameter_list|)
-value|bus_barrier((sc)->sc_mem_res, 0, 0, 	\ 			            BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
+value|bus_barrier((sc)->sc_res, 0, 0, 	\ 			            BUS_SPACE_BARRIER_READ |		\ 			            BUS_SPACE_BARRIER_WRITE)
 end_define
 
 begin_define
@@ -180,7 +186,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 		bus_write_4(sc->sc_mem_res, (reg), (val));		\ 	} while (0)
+value|bus_write_4(sc->sc_res, (reg), (val));
 end_define
 
 begin_define
@@ -192,7 +198,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_read_4(sc->sc_mem_res, (reg))
+value|bus_read_4(sc->sc_res, (reg))
 end_define
 
 begin_define
