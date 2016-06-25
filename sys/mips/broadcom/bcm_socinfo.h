@@ -40,6 +40,9 @@ name|uint32_t
 name|uartrate
 decl_stmt|;
 comment|/* in Hz */
+name|int
+name|double_count
+decl_stmt|;
 block|}
 struct|;
 end_struct

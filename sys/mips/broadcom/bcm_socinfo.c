@@ -46,6 +46,8 @@ block|,
 literal|600
 block|,
 literal|25000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM4706 to check */
@@ -55,6 +57,8 @@ block|,
 literal|300
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM4716B0 ASUS RT-N12  */
@@ -64,6 +68,8 @@ block|,
 literal|354
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM4717A1 to check  */
@@ -73,6 +79,8 @@ block|,
 literal|480
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM4718A1 ASUS RT-N16 */
@@ -82,6 +90,8 @@ block|,
 literal|300
 block|,
 literal|25000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5356A1 (RT-N10, WNR1000v3) */
@@ -91,6 +101,8 @@ block|,
 literal|500
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5358UB0 ASUS RT-N53A1 */
@@ -100,6 +112,8 @@ block|,
 literal|300
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5357B0 to check */
@@ -109,6 +123,8 @@ block|,
 literal|500
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5358 */
@@ -118,6 +134,8 @@ block|,
 literal|500
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM47186B0 Tenda N60  */
@@ -127,6 +145,8 @@ block|,
 literal|300
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5356C0 */
@@ -136,9 +156,22 @@ block|,
 literal|300
 block|,
 literal|20000000
+block|,
+literal|1
 block|}
 block|,
 comment|/* BCM5357C0 */
+block|{
+literal|0x00015365
+block|,
+literal|200
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+comment|/* BCM5365 */
 block|{
 literal|0
 block|,
@@ -165,6 +198,8 @@ block|,
 literal|300
 block|,
 literal|20000000
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

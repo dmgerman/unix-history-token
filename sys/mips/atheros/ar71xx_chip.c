@@ -149,12 +149,6 @@ directive|include
 file|<mips/atheros/ar71xx_cpudef.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
 begin_comment
 comment|/* XXX these should replace the current definitions in ar71xxreg.h */
 end_comment

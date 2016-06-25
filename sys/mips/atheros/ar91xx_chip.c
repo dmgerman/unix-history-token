@@ -161,12 +161,6 @@ directive|include
 file|<mips/atheros/ar91xx_chip.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
 begin_function
 specifier|static
 name|void

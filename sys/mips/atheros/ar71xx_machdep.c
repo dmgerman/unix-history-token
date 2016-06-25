@@ -161,12 +161,6 @@ directive|include
 file|<mips/atheros/ar71xx_macaddr.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|char

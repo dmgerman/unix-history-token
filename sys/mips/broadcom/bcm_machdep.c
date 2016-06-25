@@ -248,12 +248,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bcm_socinfo.h"
 end_include
 
@@ -283,8 +277,29 @@ end_if
 begin_define
 define|#
 directive|define
-name|BROADCOM_TRACE
-value|0
+name|BCM_TRACE
+parameter_list|(
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|printf(_fmt, ##__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BCM_TRACE
+parameter_list|(
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 end_define
 
 begin_endif
@@ -395,18 +410,13 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BROADCOM_TRACE
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|"There is no phys memory for: %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|phys_avail
 index|[
 name|i
@@ -430,18 +440,13 @@ operator|!=
 name|CFE_MI_AVAILABLE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BROADCOM_TRACE
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|"phys memory is not available: %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 name|phys_avail
@@ -474,32 +479,27 @@ name|kernel_kseg0_end
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|BROADCOM_TRACE
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|"phys memory is available for: %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|" => addr =  %jx\n"
 argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|" => len =  %jd\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|phys_avail
 index|[
 name|i
@@ -516,18 +516,13 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|BROADCOM_TRACE
-name|printf
+name|BCM_TRACE
 argument_list|(
 literal|"Total phys memory is : %ld\n"
 argument_list|,
 name|physmem
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|realmem
 operator|=
 name|btoc
@@ -608,13 +603,6 @@ directive|endif
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|BCM_REG_CHIPC
-value|0x18000000
-end_define
-
 begin_function
 name|void
 name|platform_reset
@@ -630,6 +618,22 @@ expr_stmt|;
 name|intr_disable
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CFE
+argument_list|)
+name|cfe_exit
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* PMU watchdog reset */
 name|BCM_WRITE_REG32
 argument_list|(
 name|BCM_REG_CHIPC_PMUWD_OFFS
@@ -638,6 +642,15 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* PMU watchdog */
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* Non-PMU reset  	 * XXX: Need chipc capability flags */
+block|*((volatile uint8_t *)MIPS_PHYS_TO_KSEG1(SENTRY5_EXTIFADR)) = 0x80;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -709,6 +722,36 @@ comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Probe the Broadcom on-chip PLL clock registers 	 * and discover the CPU pipeline clock and bus clock 	 * multipliers from this. 	 * XXX: Wrong place. You have to ask the ChipCommon 	 * or External Interface cores on the SiBa. 	 */
+block|uint32_t busmult, cpumult, refclock, clkcfg1;
+define|#
+directive|define
+name|S5_CLKCFG1_REFCLOCK_MASK
+value|0x0000001F
+define|#
+directive|define
+name|S5_CLKCFG1_BUSMULT_MASK
+value|0x000003E0
+define|#
+directive|define
+name|S5_CLKCFG1_BUSMULT_SHIFT
+value|5
+define|#
+directive|define
+name|S5_CLKCFG1_CPUMULT_MASK
+value|0xFFFFFC00
+define|#
+directive|define
+name|S5_CLKCFG1_CPUMULT_SHIFT
+value|10
+block|counter_freq = 100000000;
+comment|/* XXX */
+block|clkcfg1 = s5_rd_clkcfg1(); 	printf("clkcfg1 = 0x%08x\n", clkcfg1);  	refclock = clkcfg1& 0x1F; 	busmult = ((clkcfg1& 0x000003E0)>> 5) + 1; 	cpumult = ((clkcfg1& 0xFFFFFC00)>> 10) + 1;  	printf("refclock = %u\n", refclock); 	printf("busmult = %u\n", busmult); 	printf("cpumult = %u\n", cpumult);  	counter_freq = cpumult * refclock;
+endif|#
+directive|endif
 name|socinfo
 operator|=
 name|bcm_get_socinfo
@@ -755,12 +798,13 @@ expr_stmt|;
 name|mips_init
 argument_list|()
 expr_stmt|;
-comment|/* BCM471x timer is 1/2 of Clk */
 name|mips_timer_init_params
 argument_list|(
 name|platform_counter_freq
 argument_list|,
-literal|1
+name|socinfo
+operator|->
+name|double_count
 argument_list|)
 expr_stmt|;
 block|}
