@@ -568,7 +568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Allocate and initialize new device info structure, assuming ownership  * of the provided core configuration.  *   * @param bus The requesting bus device.  * @param corecfg Device core configuration.  */
+comment|/**  * Allocate and return a new empty device info structure.  *   * @param bus The requesting bus device.  *   * @retval NULL if allocation failed.  */
 end_comment
 
 begin_function
@@ -579,11 +579,6 @@ name|bcma_alloc_dinfo
 parameter_list|(
 name|device_t
 name|bus
-parameter_list|,
-name|struct
-name|bcma_corecfg
-modifier|*
-name|corecfg
 parameter_list|)
 block|{
 name|struct
@@ -604,6 +599,8 @@ argument_list|,
 name|M_BHND
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,13 +610,15 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|dinfo
 operator|->
 name|corecfg
 operator|=
-name|corecfg
+name|NULL
 expr_stmt|;
 name|dinfo
 operator|->
@@ -641,6 +640,56 @@ name|dinfo
 operator|->
 name|resources
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|dinfo
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Initialize a device info structure previously allocated via  * bcma_alloc_dinfo, assuming ownership of the provided core  * configuration.  *   * @param bus The requesting bus device.  * @param dinfo The device info instance.  * @param corecfg Device core configuration; ownership of this value  * will be assumed by @p dinfo.  *   * @retval 0 success  * @retval non-zero initialization failed.  */
+end_comment
+
+begin_function
+name|int
+name|bcma_init_dinfo
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|struct
+name|bcma_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|struct
+name|bcma_corecfg
+modifier|*
+name|corecfg
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|dinfo
+operator|->
+name|corecfg
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"dinfo previously initialized"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Save core configuration value */
+name|dinfo
+operator|->
+name|corecfg
+operator|=
+name|corecfg
 expr_stmt|;
 comment|/* The device ports must always be initialized first to ensure that 	 * rid 0 maps to the first device port */
 name|bcma_dinfo_init_resource_info
@@ -680,7 +729,9 @@ name|wrapper_ports
 argument_list|)
 expr_stmt|;
 return|return
-name|dinfo
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -702,19 +753,27 @@ modifier|*
 name|dinfo
 parameter_list|)
 block|{
-name|bcma_free_corecfg
-argument_list|(
-name|dinfo
-operator|->
-name|corecfg
-argument_list|)
-expr_stmt|;
 name|resource_list_free
 argument_list|(
 operator|&
 name|dinfo
 operator|->
 name|resources
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|corecfg
+operator|!=
+name|NULL
+condition|)
+name|bcma_free_corecfg
+argument_list|(
+name|dinfo
+operator|->
+name|corecfg
 argument_list|)
 expr_stmt|;
 comment|/* Release agent resource, if any */

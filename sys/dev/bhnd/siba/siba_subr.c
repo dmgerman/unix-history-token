@@ -263,7 +263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Allocate and initialize new device info structure, copying the  * provided core id.  *   * @param dev The requesting bus device.  * @param core Device core info.  */
+comment|/**  * Allocate and return a new empty device info structure.  *   * @param bus The requesting bus device.  *   * @retval NULL if allocation failed.  */
 end_comment
 
 begin_function
@@ -274,12 +274,6 @@ name|siba_alloc_dinfo
 parameter_list|(
 name|device_t
 name|bus
-parameter_list|,
-specifier|const
-name|struct
-name|siba_core_id
-modifier|*
-name|core_id
 parameter_list|)
 block|{
 name|struct
@@ -300,6 +294,8 @@ argument_list|,
 name|M_BHND
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -311,13 +307,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|dinfo
-operator|->
-name|core_id
-operator|=
-operator|*
-name|core_id
-expr_stmt|;
 for|for
 control|(
 name|u_int
@@ -368,6 +357,44 @@ argument_list|)
 expr_stmt|;
 return|return
 name|dinfo
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Initialize a device info structure previously allocated via  * siba_alloc_dinfo, copying the provided core id.  *   * @param dev The requesting bus device.  * @param dinfo The device info instance.  * @param core Device core info.  *   * @retval 0 success  * @retval non-zero initialization failed.  */
+end_comment
+
+begin_function
+name|int
+name|siba_init_dinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+specifier|const
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
+parameter_list|)
+block|{
+name|dinfo
+operator|->
+name|core_id
+operator|=
+operator|*
+name|core_id
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function

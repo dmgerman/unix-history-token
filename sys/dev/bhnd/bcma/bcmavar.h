@@ -202,6 +202,21 @@ name|bcma_alloc_dinfo
 parameter_list|(
 name|device_t
 name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bcma_init_dinfo
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|struct
+name|bcma_devinfo
+modifier|*
+name|dinfo
 parameter_list|,
 name|struct
 name|bcma_corecfg
@@ -467,6 +482,11 @@ begin_struct
 struct|struct
 name|bcma_devinfo
 block|{
+name|struct
+name|bhnd_devinfo
+name|bhnd_dinfo
+decl_stmt|;
+comment|/**< superclass device info. */
 name|struct
 name|resource_list
 name|resources

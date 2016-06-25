@@ -177,6 +177,21 @@ name|siba_alloc_dinfo
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|siba_init_dinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
 parameter_list|,
 specifier|const
 name|struct
@@ -489,6 +504,11 @@ begin_struct
 struct|struct
 name|siba_devinfo
 block|{
+name|struct
+name|bhnd_devinfo
+name|bhnd_dinfo
+decl_stmt|;
+comment|/**< superclass device info. */
 name|struct
 name|resource_list
 name|resources

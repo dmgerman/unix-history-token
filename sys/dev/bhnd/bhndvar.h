@@ -60,6 +60,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/**  * bhnd per-device info.  Must be first member of all subclass  * devinfo structures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_devinfo
+block|{ }
+struct|;
+end_struct
+
+begin_comment
 comment|/**  * bhnd driver instance state. Must be first member of all subclass  * softc structures.  */
 end_comment
 
@@ -149,6 +160,40 @@ end_function_decl
 begin_function_decl
 name|void
 name|bhnd_generic_probe_nomatch
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|device_t
+name|bhnd_generic_add_child
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|order
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhnd_generic_child_deleted
 parameter_list|(
 name|device_t
 name|dev
