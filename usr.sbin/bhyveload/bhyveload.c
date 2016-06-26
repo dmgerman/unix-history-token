@@ -2580,7 +2580,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-S][-c<console-device>] [-d<disk-path>] [-e<name=value>]\n"
-literal|"       %*s [-h<host-path>] [-m mem-size]<vmname>\n"
+literal|"       %*s [-h<host-path>] [-m memsize[K|k|M|m|G|g|T|t]]<vmname>\n"
 argument_list|,
 name|progname
 argument_list|,
