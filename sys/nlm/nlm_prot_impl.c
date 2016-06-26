@@ -5443,6 +5443,8 @@ name|handle
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|stops_deferred
 decl_stmt|;
 comment|/* 	 * If the granted message arrived before we got here, 	 * nw->nw_waiting will be FALSE - in that case, don't sleep. 	 */
 name|mtx_lock
@@ -5461,6 +5463,14 @@ name|nw
 operator|->
 name|nw_waiting
 condition|)
+block|{
+name|stops_deferred
+operator|=
+name|sigdeferstop
+argument_list|(
+name|SIGDEFERSTOP_ERESTART
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|msleep
@@ -5477,6 +5487,12 @@ argument_list|,
 name|timo
 argument_list|)
 expr_stmt|;
+name|sigallowstop
+argument_list|(
+name|stops_deferred
+argument_list|)
+expr_stmt|;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
