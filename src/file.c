@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.170 2016/03/31 17:51:12 christos Exp $"
+literal|"@(#)$File: file.c,v 1.171 2016/05/17 15:52:45 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1471,13 +1471,17 @@ name|magic
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+name|e
+operator|=
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 default|default:
 if|if
 condition|(
@@ -1621,6 +1625,8 @@ name|wid
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 if|if
 condition|(
 name|magic

@@ -28,7 +28,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: der.c,v 1.6 2016/04/21 14:26:03 christos Exp $"
+literal|"@(#)$File: der.c,v 1.7 2016/06/01 22:01:15 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1057,13 +1057,13 @@ name|ms
 operator|->
 name|search
 operator|.
-name|rm_len
+name|s_len
 condition|?
 name|ms
 operator|->
 name|search
 operator|.
-name|rm_len
+name|s_len
 else|:
 name|nbytes
 decl_stmt|;
