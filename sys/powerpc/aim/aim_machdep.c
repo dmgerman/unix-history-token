@@ -710,20 +710,6 @@ name|cacheline_warn
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-comment|/* 	 * Switch to 64-bit mode, if the bootloader didn't, before we start  	 * using memory beyond what the bootloader might have set up. 	 * Guaranteed not to cause an implicit branch since we either (a) 	 * started with a 32-bit bootloader below 4 GB or (b) were already in 	 * 64-bit mode, making this a no-op. 	 */
-name|mtmsrd
-argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_SF
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Various very early CPU fix ups */
 switch|switch
 condition|(
