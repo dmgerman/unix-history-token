@@ -508,7 +508,13 @@ name|td
 operator|->
 name|td_flags
 operator|&
+operator|(
 name|TDF_SBDRY
+operator||
+name|TDF_SEINTR
+operator||
+name|TDF_SERESTART
+operator|)
 operator|)
 operator|==
 literal|0

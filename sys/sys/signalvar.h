@@ -1216,6 +1216,65 @@ name|SIGPROCMASK_PS_LOCKED
 value|0x0004
 end_define
 
+begin_comment
+comment|/*  * Modes for sigdeferstop().  Manages behaviour of  * thread_suspend_check() in the region delimited by  * sigdeferstop()/sigallowstop().  Must be restored to  * SIGDEFERSTOP_OFF before returning to userspace.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGDEFERSTOP_NOP
+value|0
+end_define
+
+begin_comment
+comment|/* continue doing whatever is done now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGDEFERSTOP_OFF
+value|1
+end_define
+
+begin_comment
+comment|/* stop ignoring STOPs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGDEFERSTOP_SILENT
+value|2
+end_define
+
+begin_comment
+comment|/* silently ignore STOPs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGDEFERSTOP_EINTR
+value|3
+end_define
+
+begin_comment
+comment|/* ignore STOPs, return EINTR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGDEFERSTOP_ERESTART
+value|4
+end_define
+
+begin_comment
+comment|/* ignore STOPs, return ERESTART */
+end_comment
+
 begin_function_decl
 name|int
 name|cursig
@@ -1232,16 +1291,18 @@ begin_function_decl
 name|int
 name|sigdeferstop
 parameter_list|(
-name|void
+name|int
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sigallowstop
 parameter_list|(
-name|void
+name|int
+name|prev
 parameter_list|)
 function_decl|;
 end_function_decl

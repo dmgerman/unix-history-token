@@ -1450,12 +1450,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED19
+name|TDF_SERESTART
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* ERESTART on stop attempts. */
 end_comment
 
 begin_define
@@ -1472,12 +1472,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED21
+name|TDF_SEINTR
 value|0x00200000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* EINTR on stop attempts. */
 end_comment
 
 begin_define

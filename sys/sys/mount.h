@@ -3054,7 +3054,7 @@ name|VFS_PROLOGUE
 parameter_list|(
 name|MP
 parameter_list|)
-value|do {					\ 	struct mount *mp__;						\ 	int _enable_stops;						\ 									\ 	mp__ = (MP);							\ 	_enable_stops = (mp__ != NULL&&				\ 	    (mp__->mnt_vfc->vfc_flags& VFCF_SBDRY)&& sigdeferstop())
+value|do {					\ 	struct mount *mp__;						\ 	int _prev_stops;						\ 									\ 	mp__ = (MP);							\ 	_prev_stops = sigdeferstop((mp__ != NULL&&			\ 	    (mp__->mnt_vfc->vfc_flags& VFCF_SBDRY) != 0) ?		\ 	    SIGDEFERSTOP_SILENT : SIGDEFERSTOP_NOP);
 end_define
 
 begin_define
@@ -3065,7 +3065,7 @@ parameter_list|(
 name|MP
 parameter_list|)
 define|\
-value|if (_enable_stops)						\ 		sigallowstop();						\ } while (0)
+value|sigallowstop(_prev_stops);					\ } while (0)
 end_define
 
 begin_define
