@@ -67050,6 +67050,14 @@ operator|&
 name|SCTP_STATE_ABOUT_TO_BE_FREED
 condition|)
 block|{
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out_unlocked
 goto|;
