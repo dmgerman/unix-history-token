@@ -2828,6 +2828,7 @@ decl_stmt|;
 comment|/* (c + e) Pointer to process group. */
 name|struct
 name|knlist
+modifier|*
 name|p_klist
 decl_stmt|;
 comment|/* (c) Knotes attached to this proc. */

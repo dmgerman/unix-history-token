@@ -3154,7 +3154,6 @@ expr_stmt|;
 comment|/* 	 * Tell any interested parties about the new process. 	 */
 name|knote_fork
 argument_list|(
-operator|&
 name|p1
 operator|->
 name|p_klist
@@ -4033,13 +4032,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|knlist_init_mtx
-argument_list|(
-operator|&
 name|newproc
 operator|->
 name|p_klist
-argument_list|,
+operator|=
+name|knlist_alloc
+argument_list|(
 operator|&
 name|newproc
 operator|->

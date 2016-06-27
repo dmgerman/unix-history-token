@@ -2014,13 +2014,12 @@ name|p_state
 operator|=
 name|PRS_NORMAL
 expr_stmt|;
-name|knlist_init_mtx
-argument_list|(
-operator|&
 name|p
 operator|->
 name|p_klist
-argument_list|,
+operator|=
+name|knlist_alloc
+argument_list|(
 operator|&
 name|p
 operator|->

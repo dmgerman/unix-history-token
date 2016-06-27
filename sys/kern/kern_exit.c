@@ -1825,7 +1825,6 @@ directive|endif
 comment|/* 	 * Notify interested parties of our demise. 	 */
 name|KNOTE_LOCKED
 argument_list|(
-operator|&
 name|p
 operator|->
 name|p_klist
@@ -1875,17 +1874,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Just delete all entries in the p_klist. At this point we won't 	 * report any more events, and there are nasty race conditions that 	 * can beat us if we don't. 	 */
-name|knlist_clear
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_klist
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If this is a process with a descriptor, we may not need to deliver 	 * a signal to the parent.  proctree_lock is held over 	 * procdesc_exit() to serialize concurrent calls to close() and 	 * exit(). 	 */
 if|if
 condition|(
@@ -2139,15 +2127,6 @@ argument_list|(
 name|p
 operator|->
 name|p_pptr
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Hopefully no one will try to deliver a signal to the process this 	 * late in the game. 	 */
-name|knlist_destroy
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_klist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Save our children's rusage information in our exit rusage. 	 */
@@ -3327,6 +3306,29 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|proctree_lock
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|knlist_detach
+argument_list|(
+name|p
+operator|->
+name|p_klist
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_klist
+operator|=
+name|NULL
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Removal from allproc list and process group list paired with 	 * PROC_LOCK which was executed during that time should guarantee 	 * nothing can reach this process anymore. As such further locking 	 * is unnecessary. 	 */

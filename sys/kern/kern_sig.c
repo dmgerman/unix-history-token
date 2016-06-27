@@ -10836,7 +10836,6 @@ name|p_sigacts
 expr_stmt|;
 name|KNOTE_LOCKED
 argument_list|(
-operator|&
 name|p
 operator|->
 name|p_klist
@@ -17031,7 +17030,6 @@ expr_stmt|;
 comment|/* automatically set */
 name|knlist_add
 argument_list|(
-operator|&
 name|p
 operator|->
 name|p_klist
@@ -17073,7 +17071,6 @@ name|p_proc
 decl_stmt|;
 name|knlist_remove
 argument_list|(
-operator|&
 name|p
 operator|->
 name|p_klist
