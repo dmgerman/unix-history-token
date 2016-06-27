@@ -1882,12 +1882,12 @@ directive|endif
 name|struct
 name|vnode
 modifier|*
-name|textvp
+name|oldtextvp
 init|=
 name|NULL
 decl_stmt|,
 modifier|*
-name|binvp
+name|newtextvp
 decl_stmt|;
 name|cap_rights_t
 name|rights
@@ -2121,7 +2121,7 @@ condition|)
 goto|goto
 name|exec_fail
 goto|;
-name|binvp
+name|newtextvp
 operator|=
 name|nd
 operator|.
@@ -2131,7 +2131,7 @@ name|imgp
 operator|->
 name|vp
 operator|=
-name|binvp
+name|newtextvp
 expr_stmt|;
 block|}
 else|else
@@ -2163,7 +2163,7 @@ name|CAP_FEXECVE
 argument_list|)
 argument_list|,
 operator|&
-name|binvp
+name|newtextvp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2175,7 +2175,7 @@ name|exec_fail
 goto|;
 name|vn_lock
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|,
 name|LK_EXCLUSIVE
 operator||
@@ -2184,14 +2184,14 @@ argument_list|)
 expr_stmt|;
 name|AUDIT_ARG_VNODE1
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|)
 expr_stmt|;
 name|imgp
 operator|->
 name|vp
 operator|=
-name|binvp
+name|newtextvp
 expr_stmt|;
 block|}
 comment|/* 	 * Check file permissions (also 'opens' file) 	 */
@@ -2440,7 +2440,7 @@ directive|ifdef
 name|MAC
 name|mac_execve_interpreter_enter
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|,
 operator|&
 name|interpvplabel
@@ -2457,7 +2457,7 @@ condition|)
 block|{
 name|VOP_CLOSE
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|,
 name|FREAD
 argument_list|,
@@ -2477,7 +2477,7 @@ expr_stmt|;
 block|}
 name|vput
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
@@ -2922,7 +2922,7 @@ if|if
 condition|(
 name|vn_commname
 argument_list|(
-name|binvp
+name|newtextvp
 argument_list|,
 name|p
 operator|->
@@ -3453,7 +3453,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Store the vp for use in procfs.  This vnode was referenced by namei 	 * or fgetvp_exec. 	 */
-name|textvp
+name|oldtextvp
 operator|=
 name|p
 operator|->
@@ -3463,7 +3463,7 @@ name|p
 operator|->
 name|p_textvp
 operator|=
-name|binvp
+name|newtextvp
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3716,13 +3716,13 @@ expr_stmt|;
 comment|/* 	 * Handle deferred decrement of ref counts. 	 */
 if|if
 condition|(
-name|textvp
+name|oldtextvp
 operator|!=
 name|NULL
 condition|)
 name|vrele
 argument_list|(
-name|textvp
+name|oldtextvp
 argument_list|)
 expr_stmt|;
 ifdef|#
