@@ -2053,9 +2053,7 @@ name|ap_mask
 operator|.
 name|am_failure
 expr_stmt|;
-name|td
-operator|->
-name|td_proc
+name|tp
 operator|->
 name|p_ucred
 operator|=
