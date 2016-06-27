@@ -321,7 +321,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|SDT_PROBE1(LINUX_DTRACE, a, b, \     c, 0)
+value|SDT_PROBE0(LINUX_DTRACE, a, b, \     c)
 end_define
 
 begin_define

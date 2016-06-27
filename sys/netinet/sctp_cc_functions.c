@@ -426,7 +426,7 @@ name|assoc
 operator|->
 name|peers_rwnd
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -925,7 +925,7 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -1267,7 +1267,7 @@ operator||
 literal|1
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -1483,7 +1483,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -1619,7 +1619,7 @@ operator||
 literal|0
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -1721,7 +1721,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -1930,7 +1930,7 @@ operator|.
 name|ret_from_eq
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2307,7 +2307,7 @@ operator||
 literal|1
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2408,7 +2408,7 @@ operator||
 literal|0
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2511,7 +2511,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2667,7 +2667,7 @@ operator||
 literal|0
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2769,7 +2769,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -2906,7 +2906,7 @@ operator||
 literal|0
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -3008,7 +3008,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -3231,7 +3231,7 @@ operator|<<
 literal|32
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -3333,7 +3333,7 @@ name|rtcc
 operator|.
 name|last_step_state
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -3779,7 +3779,7 @@ name|inst_ind
 operator|)
 expr_stmt|;
 block|}
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -4565,7 +4565,7 @@ operator|->
 name|rport
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -5109,7 +5109,7 @@ name|SCTP_CWND_LOG_FROM_SS
 argument_list|)
 expr_stmt|;
 block|}
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -5413,7 +5413,7 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -5574,7 +5574,7 @@ name|net
 operator|->
 name|mtu
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -6002,7 +6002,7 @@ name|partial_bytes_acked
 operator|=
 literal|0
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -6346,7 +6346,7 @@ name|net
 operator|->
 name|ssthresh
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -6830,7 +6830,7 @@ literal|0
 condition|)
 block|{
 comment|/* log only changes */
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -6982,7 +6982,7 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -7387,7 +7387,7 @@ operator||
 literal|0
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,
@@ -7789,7 +7789,7 @@ operator|->
 name|rport
 operator|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE5
 argument_list|(
 name|sctp
 argument_list|,

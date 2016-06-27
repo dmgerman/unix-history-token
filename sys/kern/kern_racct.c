@@ -426,9 +426,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add
@@ -446,9 +444,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__failure
@@ -466,9 +462,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__cred
@@ -486,9 +480,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__force
@@ -506,9 +498,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -526,9 +516,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set__failure
@@ -546,9 +534,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub
@@ -566,9 +552,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub__cred
@@ -586,9 +570,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|create
@@ -602,9 +584,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|destroy
@@ -618,9 +598,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|join
@@ -636,9 +614,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|join__failure
@@ -654,9 +630,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE2
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|leave
@@ -2390,9 +2364,7 @@ return|return;
 name|SDT_PROBE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|create
@@ -2453,9 +2425,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|racct
 argument_list|,
 name|destroy
@@ -2781,9 +2751,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add
@@ -2830,9 +2798,7 @@ block|{
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__failure
@@ -2974,9 +2940,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__cred
@@ -3127,9 +3091,7 @@ return|return;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|add__force
@@ -3227,9 +3189,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -3355,9 +3315,7 @@ block|{
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set__failure
@@ -3530,9 +3488,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|set
@@ -3869,9 +3825,7 @@ return|return;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub
@@ -4018,9 +3972,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|racct
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|rusage
 argument_list|,
 name|sub__cred

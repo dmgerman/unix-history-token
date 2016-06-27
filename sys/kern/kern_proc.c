@@ -351,9 +351,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE4
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|ctor
 argument_list|,
 name|entry
@@ -374,7 +372,6 @@ name|SDT_PROBE_DEFINE4
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|ctor
 argument_list|,
@@ -398,9 +395,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE4
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|dtor
 argument_list|,
 name|entry
@@ -421,7 +416,6 @@ name|SDT_PROBE_DEFINE3
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|dtor
 argument_list|,
@@ -443,9 +437,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|init
 argument_list|,
 name|entry
@@ -464,7 +456,6 @@ name|SDT_PROBE_DEFINE3
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|init
 argument_list|,
@@ -1201,9 +1192,7 @@ expr_stmt|;
 name|SDT_PROBE4
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|ctor
 argument_list|,
 name|entry
@@ -1228,7 +1217,6 @@ name|SDT_PROBE4
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|ctor
 argument_list|,
@@ -1302,9 +1290,7 @@ expr_stmt|;
 name|SDT_PROBE4
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|dtor
 argument_list|,
 name|entry
@@ -1401,7 +1387,6 @@ name|SDT_PROBE3
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|dtor
 argument_list|,
@@ -1454,9 +1439,7 @@ expr_stmt|;
 name|SDT_PROBE3
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|,
+argument_list|, ,
 name|init
 argument_list|,
 name|entry
@@ -1582,7 +1565,6 @@ name|SDT_PROBE3
 argument_list|(
 argument|proc
 argument_list|,
-argument|kernel
 argument_list|,
 argument|init
 argument_list|,

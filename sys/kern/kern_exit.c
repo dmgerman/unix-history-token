@@ -343,9 +343,7 @@ begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exit
 argument_list|,
 literal|"int"
@@ -2025,9 +2023,7 @@ expr_stmt|;
 name|SDT_PROBE1
 argument_list|(
 name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
+argument_list|, , ,
 name|exit
 argument_list|,
 name|reason
