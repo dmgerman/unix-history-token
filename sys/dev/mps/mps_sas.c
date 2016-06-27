@@ -1663,6 +1663,11 @@ modifier|*
 name|tm
 parameter_list|)
 block|{
+name|int
+name|target_id
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
 if|if
 condition|(
 name|tm
@@ -1689,6 +1694,14 @@ operator|&=
 operator|~
 name|MPSSAS_TARGET_INRESET
 expr_stmt|;
+name|target_id
+operator|=
+name|tm
+operator|->
+name|cm_targ
+operator|->
+name|tid
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1705,11 +1718,7 @@ name|MPS_INFO
 argument_list|,
 literal|"Unfreezing devq for target ID %d\n"
 argument_list|,
-name|tm
-operator|->
-name|cm_targ
-operator|->
-name|tid
+name|target_id
 argument_list|)
 expr_stmt|;
 name|xpt_release_devq
@@ -2307,9 +2316,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -2318,25 +2334,20 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting device 0x%x\n"
 argument_list|,
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
 argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mpssas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mps_dprint
 argument_list|(
@@ -2385,9 +2396,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
+name|le16toh
+argument_list|(
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3081,14 +3099,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mpssas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -3104,7 +3114,7 @@ name|sc
 argument_list|,
 name|MPS_FAULT
 argument_list|,
-literal|"%s NULL reply reseting device 0x%04x\n"
+literal|"%s NULL reply resetting device 0x%04x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3122,12 +3132,16 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -3136,7 +3150,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting device 0x%x\n"
 argument_list|,
@@ -3150,14 +3164,6 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|mpssas_free_tm
-argument_list|(
-name|sc
-argument_list|,
-name|tm
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 name|mps_dprint
 argument_list|(
@@ -3498,12 +3504,16 @@ expr_stmt|;
 comment|/* 	 * Don't clear target if remove fails because things will get confusing. 	 * Leave the devname and sasaddr intact so that we know to avoid reusing 	 * this target id if possible, and so we can assign the same target id 	 * to this device if it comes back in the future. 	 */
 if|if
 condition|(
+operator|(
 name|le16toh
 argument_list|(
 name|reply
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
 operator|==
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
@@ -4500,12 +4510,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|sassc
-operator|->
-name|flags
-operator||=
-name|MPSSAS_SHUTDOWN
-expr_stmt|;
 name|mps_unlock
 argument_list|(
 name|sc
