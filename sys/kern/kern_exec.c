@@ -2797,12 +2797,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-comment|/* Get a reference to the vnode prior to locking the proc */
-name|VREF
-argument_list|(
-name|binvp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * For security and other reasons, signal handlers cannot 	 * be shared after an exec. The new process gets a copy of the old 	 * handlers. In execsigs(), the new process will have its signals 	 * reset. 	 */
 if|if
 condition|(
@@ -3458,7 +3452,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Store the vp for use in procfs.  This vnode was referenced prior 	 * to locking the proc lock. 	 */
+comment|/* 	 * Store the vp for use in procfs.  This vnode was referenced by namei 	 * or fgetvp_exec. 	 */
 name|textvp
 operator|=
 name|p
@@ -3731,17 +3725,6 @@ argument_list|(
 name|textvp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|vrele
-argument_list|(
-name|binvp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -3861,11 +3844,27 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 name|vput
 argument_list|(
 name|imgp
 operator|->
 name|vp
+argument_list|)
+expr_stmt|;
+else|else
+name|VOP_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
