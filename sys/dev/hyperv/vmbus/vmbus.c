@@ -1447,7 +1447,7 @@ name|gate_descriptor
 modifier|*
 name|ip
 decl_stmt|;
-comment|/* 	 * Search backwards form the highest IDT vector available for use 	 * as vmbus channel callback vector. We install 'hv_vmbus_callback' 	 * handler at that vector and use it to interrupt vcpus. 	 */
+comment|/* 	 * Search backwards form the highest IDT vector available for use 	 * as vmbus channel callback vector. We install 'vmbus_isr' 	 * handler at that vector and use it to interrupt vcpus. 	 */
 name|vector
 operator|=
 name|APIC_SPURIOUS_INT
@@ -1638,7 +1638,7 @@ operator|)
 operator|&
 name|IDTVEC
 argument_list|(
-name|hv_vmbus_callback
+name|vmbus_isr
 argument_list|)
 argument_list|,
 operator|(
