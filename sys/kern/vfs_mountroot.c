@@ -174,7 +174,7 @@ file|<geom/geom.h>
 end_include
 
 begin_comment
-comment|/*  * The root filesystem is detailed in the kernel environment variable  * vfs.root.mountfrom, which is expected to be in the general format  *  *<vfsname>:[<path>][<vfsname>:[<path>] ...]  * vfsname   := the name of a VFS known to the kernel and capable  *              of being mounted as root  * path      := disk device name or other data used by the filesystem  *              to locate its physical store  *  * If the environment variable vfs.root.mountfrom is a space separated list,  * each list element is tried in turn and the root filesystem will be mounted  * from the first one that suceeds.  *  * The environment variable vfs.root.mountfrom.options is a comma delimited  * set of string mount options.  These mount options must be parseable  * by nmount() in the kernel.  */
+comment|/*  * The root filesystem is detailed in the kernel environment variable  * vfs.root.mountfrom, which is expected to be in the general format  *  *<vfsname>:[<path>][<vfsname>:[<path>] ...]  * vfsname   := the name of a VFS known to the kernel and capable  *              of being mounted as root  * path      := disk device name or other data used by the filesystem  *              to locate its physical store  *  * If the environment variable vfs.root.mountfrom is a space separated list,  * each list element is tried in turn and the root filesystem will be mounted  * from the first one that succeeds.  *  * The environment variable vfs.root.mountfrom.options is a comma delimited  * set of string mount options.  These mount options must be parseable  * by nmount() in the kernel.  */
 end_comment
 
 begin_function_decl

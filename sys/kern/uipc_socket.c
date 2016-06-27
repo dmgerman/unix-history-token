@@ -480,7 +480,7 @@ value|VNET_ASSERT(curvnet != NULL,					\ 	    ("%s:%d curvnet is NULL, so=%p", _
 end_define
 
 begin_comment
-comment|/*  * Limit on the number of connections in the listen queue waiting  * for accept(2).  * NB: The orginal sysctl somaxconn is still available but hidden  * to prevent confusion about the actual purpose of this number.  */
+comment|/*  * Limit on the number of connections in the listen queue waiting  * for accept(2).  * NB: The original sysctl somaxconn is still available but hidden  * to prevent confusion about the actual purpose of this number.  */
 end_comment
 
 begin_decl_stmt
@@ -4745,7 +4745,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously done could be out 	 * of date.  We could have recieved a reset packet in an interrupt or 	 * maybe we slept while doing page faults in uiomove() etc.  We could 	 * probably recheck again inside the locking protection here, but 	 * there are probably other places that this also happens.  We must 	 * rethink this. 	 */
+comment|/* 	 * XXX all the SBS_CANTSENDMORE checks previously done could be out 	 * of date.  We could have received a reset packet in an interrupt or 	 * maybe we slept while doing page faults in uiomove() etc.  We could 	 * probably recheck again inside the locking protection here, but 	 * there are probably other places that this also happens.  We must 	 * rethink this. 	 */
 name|VNET_SO_ASSERT
 argument_list|(
 name|so
@@ -5548,7 +5548,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * XXX all the SBS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have recieved 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc.  We 			 * could probably recheck again inside the locking 			 * protection here, but there are probably other 			 * places that this also happens.  We must rethink 			 * this. 			 */
+comment|/* 			 * XXX all the SBS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have received 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc.  We 			 * could probably recheck again inside the locking 			 * protection here, but there are probably other 			 * places that this also happens.  We must rethink 			 * this. 			 */
 name|VNET_SO_ASSERT
 argument_list|(
 name|so

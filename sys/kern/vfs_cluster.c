@@ -2531,7 +2531,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Must propogate errors to all the components. 	 */
+comment|/* 	 * Must propagate errors to all the components. 	 */
 if|if
 condition|(
 name|bp

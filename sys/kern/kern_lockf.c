@@ -1718,7 +1718,7 @@ name|lf_outedges
 argument_list|)
 argument_list|,
 operator|(
-literal|"freeing lock with dependancies"
+literal|"freeing lock with dependencies"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3615,7 +3615,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We can just free all the active locks since they 		 * will have no dependancies (we removed them all 		 * above). We don't need to bother locking since we 		 * are the last thread using this state structure. 		 */
+comment|/* 		 * We can just free all the active locks since they 		 * will have no dependencies (we removed them all 		 * above). We don't need to bother locking since we 		 * are the last thread using this state structure. 		 */
 name|KASSERT
 argument_list|(
 name|LIST_EMPTY
@@ -4577,7 +4577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wake up a sleeping lock and remove it from the pending list now  * that all its dependancies have been resolved. The caller should  * arrange for the lock to be added to the active list, adjusting any  * existing locks for the same owner as needed.  */
+comment|/*  * Wake up a sleeping lock and remove it from the pending list now  * that all its dependencies have been resolved. The caller should  * arrange for the lock to be added to the active list, adjusting any  * existing locks for the same owner as needed.  */
 end_comment
 
 begin_function
@@ -4652,7 +4652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-check all dependant locks and remove edges to locks that we no  * longer block. If 'all' is non-zero, the lock has been removed and  * we must remove all the dependancies, otherwise it has simply been  * reduced but remains active. Any pending locks which have been been  * unblocked are added to 'granted'  */
+comment|/*  * Re-check all dependent locks and remove edges to locks that we no  * longer block. If 'all' is non-zero, the lock has been removed and  * we must remove all the dependencies, otherwise it has simply been  * reduced but remains active. Any pending locks which have been been  * unblocked are added to 'granted'  */
 end_comment
 
 begin_function
@@ -4773,7 +4773,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the start of an existing active lock, updating dependancies and  * adding any newly woken locks to 'granted'.  */
+comment|/*  * Set the start of an existing active lock, updating dependencies and  * adding any newly woken locks to 'granted'.  */
 end_comment
 
 begin_function
@@ -4848,7 +4848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the end of an existing active lock, updating dependancies and  * adding any newly woken locks to 'granted'.  */
+comment|/*  * Set the end of an existing active lock, updating dependencies and  * adding any newly woken locks to 'granted'.  */
 end_comment
 
 begin_function
@@ -4909,7 +4909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a lock to the active list, updating or removing any current  * locks owned by the same owner and processing any pending locks that  * become unblocked as a result. This code is also used for unlock  * since the logic for updating existing locks is identical.  *  * As a result of processing the new lock, we may unblock existing  * pending locks as a result of downgrading/unlocking. We simply  * activate the newly granted locks by looping.  *  * Since the new lock already has its dependancies set up, we always  * add it to the list (unless its an unlock request). This may  * fragment the lock list in some pathological cases but its probably  * not a real problem.  */
+comment|/*  * Add a lock to the active list, updating or removing any current  * locks owned by the same owner and processing any pending locks that  * become unblocked as a result. This code is also used for unlock  * since the logic for updating existing locks is identical.  *  * As a result of processing the new lock, we may unblock existing  * pending locks as a result of downgrading/unlocking. We simply  * activate the newly granted locks by looping.  *  * Since the new lock already has its dependencies set up, we always  * add it to the list (unless its an unlock request). This may  * fragment the lock list in some pathological cases but its probably  * not a real problem.  */
 end_comment
 
 begin_function
@@ -5289,7 +5289,7 @@ name|struct
 name|lockf_entry_list
 name|granted
 decl_stmt|;
-comment|/* 	 * Note it is theoretically possible that cancelling this lock 	 * may allow some other pending lock to become 	 * active. Consider this case: 	 * 	 * Owner	Action		Result		Dependancies 	 *  	 * A:		lock [0..0]	succeeds	 	 * B:		lock [2..2]	succeeds	 	 * C:		lock [1..2]	blocked		C->B 	 * D:		lock [0..1]	blocked		C->B,D->A,D->C 	 * A:		unlock [0..0]			C->B,D->C 	 * C:		cancel [1..2]	 	 */
+comment|/* 	 * Note it is theoretically possible that cancelling this lock 	 * may allow some other pending lock to become 	 * active. Consider this case: 	 * 	 * Owner	Action		Result		Dependencies 	 *  	 * A:		lock [0..0]	succeeds	 	 * B:		lock [2..2]	succeeds	 	 * C:		lock [1..2]	blocked		C->B 	 * D:		lock [0..1]	blocked		C->B,D->A,D->C 	 * A:		unlock [0..0]			C->B,D->C 	 * C:		cancel [1..2]	 	 */
 name|LIST_REMOVE
 argument_list|(
 name|lock
@@ -6916,7 +6916,7 @@ operator|->
 name|lf_vnode
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This cannot cause a deadlock since any edges we would add 	 * to splitlock already exist in lock1. We must be sure to add 	 * necessary dependancies to splitlock before we reduce lock1 	 * otherwise we may accidentally grant a pending lock that 	 * was blocked by the tail end of lock1. 	 */
+comment|/* 	 * This cannot cause a deadlock since any edges we would add 	 * to splitlock already exist in lock1. We must be sure to add 	 * necessary dependencies to splitlock before we reduce lock1 	 * otherwise we may accidentally grant a pending lock that 	 * was blocked by the tail end of lock1. 	 */
 name|splitlock
 operator|->
 name|lf_start

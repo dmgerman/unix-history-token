@@ -2160,7 +2160,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-comment|/* round size up to page boundry */
+comment|/* round size up to page boundary */
 name|size
 operator|=
 operator|(

@@ -1365,7 +1365,7 @@ operator|&
 name|rctl_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return slightly less than actual value of the available 	 * %cpu resource.  This makes %cpu throttling more agressive 	 * and lets us act sooner than the limits are already exceeded. 	 */
+comment|/* 	 * Return slightly less than actual value of the available 	 * %cpu resource.  This makes %cpu throttling more aggressive 	 * and lets us act sooner than the limits are already exceeded. 	 */
 if|if
 condition|(
 name|limit

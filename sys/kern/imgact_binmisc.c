@@ -2946,7 +2946,7 @@ break|break;
 case|case
 literal|' '
 case|:
-comment|/* Replace space with NUL to seperate arguments. */
+comment|/* Replace space with NUL to separate arguments. */
 operator|*
 name|d
 operator|++
