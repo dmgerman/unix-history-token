@@ -8154,15 +8154,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hints
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|bad
-goto|;
 name|error
 operator|=
 name|vn_rdwr
