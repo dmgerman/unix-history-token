@@ -12864,11 +12864,12 @@ name|cr_prison
 operator|=
 name|pr
 expr_stmt|;
+name|proc_set_cred
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|=
+argument_list|,
 name|newcred
+argument_list|)
 expr_stmt|;
 name|setsugid
 argument_list|(

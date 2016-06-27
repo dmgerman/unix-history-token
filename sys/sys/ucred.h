@@ -442,6 +442,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|ucred
+modifier|*
+name|proc_set_cred
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|crfree
 parameter_list|(

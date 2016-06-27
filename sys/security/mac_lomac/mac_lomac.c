@@ -9697,11 +9697,12 @@ name|cr_label
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|proc_set_cred
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|=
+argument_list|,
 name|newcred
+argument_list|)
 expr_stmt|;
 name|crfree
 argument_list|(

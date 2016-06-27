@@ -3632,11 +3632,12 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
+name|proc_set_cred
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|pargs_drop
 argument_list|(
