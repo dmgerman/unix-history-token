@@ -1162,6 +1162,11 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|printf
+argument_list|(
+literal|"WARNING: Filemon is still experimental for FreeBSD 9.\n"
+argument_list|)
+expr_stmt|;
 name|filemon_load
 argument_list|(
 name|data
