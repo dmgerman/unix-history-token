@@ -10594,7 +10594,7 @@ name|knl
 operator|->
 name|kl_autodestroy
 operator|=
-name|false
+literal|0
 expr_stmt|;
 name|SLIST_INIT
 argument_list|(
@@ -10796,7 +10796,7 @@ name|knl
 operator|->
 name|kl_autodestroy
 operator|=
-name|true
+literal|1
 expr_stmt|;
 if|if
 condition|(

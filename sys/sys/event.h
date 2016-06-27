@@ -839,7 +839,7 @@ modifier|*
 name|kl_lockarg
 decl_stmt|;
 comment|/* argument passed to lock functions */
-name|bool
+name|int
 name|kl_autodestroy
 decl_stmt|;
 block|}
