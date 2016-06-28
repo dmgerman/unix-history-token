@@ -39640,6 +39640,15 @@ name|scope
 operator||
 name|res_type
 expr_stmt|;
+name|scsi_ulto2b
+argument_list|(
+name|dxfer_len
+argument_list|,
+name|scsi_cmd
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
 name|cam_fill_csio
 argument_list|(
 name|csio
