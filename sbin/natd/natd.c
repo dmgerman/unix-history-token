@@ -2686,6 +2686,10 @@ condition|(
 name|errno
 operator|==
 name|EMSGSIZE
+operator|&&
+name|mip
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
