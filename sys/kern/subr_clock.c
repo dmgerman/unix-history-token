@@ -148,6 +148,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 operator|&
 name|adjkerntz

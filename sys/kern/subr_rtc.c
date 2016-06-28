@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -115,6 +127,29 @@ name|timespec
 name|clock_adj
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|resettodr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|resettodr_init
+argument_list|,
+operator|&
+name|resettodr_lock
+argument_list|,
+literal|"tod2rl"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* XXX: should be kern. now, it's no longer machdep.  */
@@ -463,6 +498,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|resettodr_lock
+argument_list|)
+expr_stmt|;
 name|getnanotime
 argument_list|(
 operator|&
@@ -486,9 +527,6 @@ name|utc_offset
 argument_list|()
 expr_stmt|;
 comment|/* XXX: We should really set all registered RTCs */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|CLOCK_SETTIME
@@ -498,7 +536,16 @@ argument_list|,
 operator|&
 name|ts
 argument_list|)
-operator|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|resettodr_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
