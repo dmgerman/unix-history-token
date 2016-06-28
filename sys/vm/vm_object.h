@@ -278,17 +278,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OBJ_ACTIVE
-value|0x0004
-end_define
-
-begin_comment
-comment|/* active objects */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|OBJ_DEAD
 value|0x0008
 end_define
