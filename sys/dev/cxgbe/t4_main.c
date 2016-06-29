@@ -51274,7 +51274,7 @@ condition|)
 block|{
 name|rc
 operator|=
-name|cxgbe_init_synchronized
+name|vi_full_init
 argument_list|(
 name|vi
 argument_list|)
@@ -51308,7 +51308,7 @@ condition|)
 block|{
 name|rc
 operator|=
-name|cxgbe_init_synchronized
+name|vi_full_init
 argument_list|(
 operator|&
 name|pi

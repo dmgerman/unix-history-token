@@ -3088,7 +3088,7 @@ literal|0
 block|ADAPTER_LOCK(sc); 	if (IS_BUSY(sc)) { 		log(LOG_ERR, "%s: listen request ignored, %s is busy", 		    __func__, device_get_nameunit(sc->dev)); 		goto done; 	}  	KASSERT(uld_active(sc, ULD_TOM), 	    ("%s: TOM not initialized", __func__));
 endif|#
 directive|endif
-comment|/* 	 * Find a running VI with IFCAP_TOE (4 or 6).  We'll use the first 	 * such VI's queues to send the passive open and receive the reply to 	 * it. 	 * 	 * XXX: need a way to mark a port in use by offload.  if_cxgbe should 	 * then reject any attempt to bring down such a port (and maybe reject 	 * attempts to disable IFCAP_TOE on that port too?). 	 */
+comment|/* 	 * Find an initialized VI with IFCAP_TOE (4 or 6).  We'll use the first 	 * such VI's queues to send the passive open and receive the reply to 	 * it. 	 * 	 * XXX: need a way to mark a port in use by offload.  if_cxgbe should 	 * then reject any attempt to bring down such a port (and maybe reject 	 * attempts to disable IFCAP_TOE on that port too?). 	 */
 name|for_each_port
 argument_list|(
 argument|sc
@@ -3118,11 +3118,9 @@ if|if
 condition|(
 name|vi
 operator|->
-name|ifp
-operator|->
-name|if_drv_flags
+name|flags
 operator|&
-name|IFF_DRV_RUNNING
+name|VI_INIT_DONE
 operator|&&
 name|vi
 operator|->
