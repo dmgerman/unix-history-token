@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|XHCI_MAX_SCRATCHPADS
-value|32
+value|1024
 end_define
 
 begin_define
@@ -2137,6 +2137,10 @@ decl_stmt|;
 name|uint16_t
 name|sc_imod_default
 decl_stmt|;
+comment|/* number of scratch pages */
+name|uint16_t
+name|sc_noscratch
+decl_stmt|;
 name|uint8_t
 name|sc_event_ccs
 decl_stmt|;
@@ -2150,10 +2154,6 @@ decl_stmt|;
 comment|/* number of ports on root HUB */
 name|uint8_t
 name|sc_noport
-decl_stmt|;
-comment|/* number of scratch pages */
-name|uint8_t
-name|sc_noscratch
 decl_stmt|;
 comment|/* root HUB device configuration */
 name|uint8_t
