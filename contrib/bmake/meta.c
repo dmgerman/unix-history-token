@@ -6885,6 +6885,14 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 name|fclose
 argument_list|(
