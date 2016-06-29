@@ -1007,6 +1007,10 @@ comment|/* claimed interface */
 name|uint8_t
 name|claimed_interface
 decl_stmt|;
+comment|/* auto detach kernel driver */
+name|uint8_t
+name|auto_detach
+decl_stmt|;
 comment|/* device file handle */
 name|int
 name|file
