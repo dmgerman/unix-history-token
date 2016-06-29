@@ -15058,6 +15058,39 @@ argument_list|,
 name|dev_addr
 argument_list|)
 expr_stmt|;
+comment|/* check if we should generate a random MAC address */
+if|if
+condition|(
+name|MLX5_CAP_GEN
+argument_list|(
+name|priv
+operator|->
+name|mdev
+argument_list|,
+name|vport_group_manager
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|is_zero_ether_addr
+argument_list|(
+name|dev_addr
+argument_list|)
+condition|)
+block|{
+name|random_ether_addr
+argument_list|(
+name|dev_addr
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"Assigned random MAC address\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* set default MTU */
 name|mlx5e_set_dev_port_mtu
 argument_list|(

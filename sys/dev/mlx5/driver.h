@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/semaphore.h>
 end_include
 
