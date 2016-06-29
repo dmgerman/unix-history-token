@@ -4663,6 +4663,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|mtmsr
+argument_list|(
+name|mfmsr
+argument_list|()
+operator||
+name|PSL_DR
+operator||
+name|PSL_IR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pmap_bootstrapped
 operator|++
 expr_stmt|;

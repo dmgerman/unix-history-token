@@ -770,6 +770,15 @@ comment|/* Check for ePAPR loader, which puts a magic value into r6 */
 argument|if (mdp == (void *)
 literal|0x65504150
 argument|) 		mdp = NULL;
+if|#
+directive|if
+name|AIM
+comment|/* 	 * If running from an FDT, make sure we are in real mode to avoid 	 * tromping on firmware page tables. Everything in the kernel assumes 	 * 1:1 mappings out of firmware, so this won't break anything not 	 * already broken. This doesn't work if there is live OF, since OF 	 * may internally use non-1:1 mappings. 	 */
+argument|if (ofentry ==
+literal|0
+argument|) 		mtmsr(mfmsr()& ~(PSL_IR | PSL_DR));
+endif|#
+directive|endif
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
