@@ -770,8 +770,8 @@ comment|/* Check for ePAPR loader, which puts a magic value into r6 */
 argument|if (mdp == (void *)
 literal|0x65504150
 argument|) 		mdp = NULL;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AIM
 comment|/* 	 * If running from an FDT, make sure we are in real mode to avoid 	 * tromping on firmware page tables. Everything in the kernel assumes 	 * 1:1 mappings out of firmware, so this won't break anything not 	 * already broken. This doesn't work if there is live OF, since OF 	 * may internally use non-1:1 mappings. 	 */
 argument|if (ofentry ==
