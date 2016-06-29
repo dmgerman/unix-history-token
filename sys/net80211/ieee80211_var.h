@@ -485,6 +485,10 @@ name|ieee80211_tx_lock_t
 name|ic_txlock
 decl_stmt|;
 comment|/* ic/vap TX lock */
+name|ieee80211_ff_lock_t
+name|ic_fflock
+decl_stmt|;
+comment|/* stageq/ni_tx_superg lock */
 name|LIST_ENTRY
 argument_list|(
 argument|ieee80211com

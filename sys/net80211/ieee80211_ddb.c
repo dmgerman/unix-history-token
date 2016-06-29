@@ -3306,6 +3306,26 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|" txlock %p"
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_txlock
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" fflock %p"
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_fflock
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;

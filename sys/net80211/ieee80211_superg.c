@@ -423,6 +423,15 @@ name|ieee80211_superg
 modifier|*
 name|sg
 decl_stmt|;
+name|IEEE80211_FF_LOCK_INIT
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_name
+argument_list|)
+expr_stmt|;
 name|sg
 operator|=
 operator|(
@@ -488,6 +497,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|IEEE80211_FF_LOCK_DESTROY
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ic
@@ -2641,14 +2655,9 @@ name|ni
 operator|->
 name|ni_ic
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|IEEE80211_TX_LOCK_ASSERT
 argument_list|(
-name|vap
-operator|->
-name|iv_ic
+name|ic
 argument_list|)
 expr_stmt|;
 comment|/* encap and xmit */
@@ -2669,18 +2678,9 @@ name|m
 operator|!=
 name|NULL
 condition|)
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|vap
-operator|->
-name|iv_ifp
-decl_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
@@ -2688,21 +2688,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-name|if_inc_counter
-argument_list|(
-name|ifp
-argument_list|,
-name|IFCOUNTER_OPACKETS
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|ieee80211_free_node
 argument_list|(
@@ -2833,7 +2818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Age frames on the staging queue.  *  * This is called without the comlock held, but it does all its work  * behind the comlock.  Because of this, it's possible that the  * staging queue will be serviced between the function which called  * it and now; thus simply checking that the queue has work in it  * may fail.  *  * See PR kern/174283 for more details.  */
+comment|/*  * Age frames on the staging queue.  */
 end_comment
 
 begin_function
@@ -2867,15 +2852,39 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|KASSERT(sq->head != NULL, ("stageq empty"));
-endif|#
-directive|endif
-name|IEEE80211_LOCK
+name|IEEE80211_FF_LOCK
 argument_list|(
 name|ic
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sq
+operator|->
+name|depth
+operator|==
+literal|0
+condition|)
+block|{
+name|IEEE80211_FF_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+return|return;
+comment|/* nothing to do */
+block|}
+name|KASSERT
+argument_list|(
+name|sq
+operator|->
+name|head
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"stageq empty"
+operator|)
 argument_list|)
 expr_stmt|;
 name|head
@@ -2988,7 +2997,7 @@ argument_list|,
 name|quanta
 argument_list|)
 expr_stmt|;
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3039,7 +3048,7 @@ name|age
 init|=
 name|ieee80211_ffagemax
 decl_stmt|;
-name|IEEE80211_LOCK_ASSERT
+name|IEEE80211_FF_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -3147,7 +3156,7 @@ decl_stmt|,
 modifier|*
 name|mprev
 decl_stmt|;
-name|IEEE80211_LOCK_ASSERT
+name|IEEE80211_FF_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
@@ -3472,8 +3481,36 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if the supplied frame can be aggregated. 	 * 	 * NB: we allow EAPOL frames to be aggregated with other ucast traffic. 	 *     Do 802.1x EAPOL frames proceed in the clear? Then they couldn't 	 *     be aggregated with other types of frames when encryption is on? 	 */
 name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|limit
+operator|=
+name|IEEE80211_TXOP_TO_US
+argument_list|(
+name|ic
+operator|->
+name|ic_wme
+operator|.
+name|wme_chanParams
+operator|.
+name|cap_wmeParams
+index|[
+name|pri
+index|]
+operator|.
+name|wmep_txopLimit
+argument_list|)
+expr_stmt|;
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check if the supplied frame can be aggregated. 	 * 	 * NB: we allow EAPOL frames to be aggregated with other ucast traffic. 	 *     Do 802.1x EAPOL frames proceed in the clear? Then they couldn't 	 *     be aggregated with other types of frames when encryption is on? 	 */
+name|IEEE80211_FF_LOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3535,7 +3572,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* XXX flush staged frame? */
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3559,7 +3596,7 @@ operator|<
 name|ieee80211_ffppsmin
 condition|)
 block|{
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3579,24 +3616,6 @@ name|pri
 index|]
 expr_stmt|;
 comment|/* 	 * Check the txop limit to insure the aggregate fits. 	 */
-name|limit
-operator|=
-name|IEEE80211_TXOP_TO_US
-argument_list|(
-name|ic
-operator|->
-name|ic_wme
-operator|.
-name|wme_chanParams
-operator|.
-name|cap_wmeParams
-index|[
-name|pri
-index|]
-operator|.
-name|wmep_txopLimit
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|limit
@@ -3662,7 +3681,7 @@ argument_list|,
 name|mstaged
 argument_list|)
 expr_stmt|;
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3740,7 +3759,7 @@ argument_list|,
 name|mstaged
 argument_list|)
 expr_stmt|;
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -3863,7 +3882,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -4045,7 +4064,7 @@ decl_stmt|;
 name|int
 name|tid
 decl_stmt|;
-name|IEEE80211_LOCK
+name|IEEE80211_FF_LOCK
 argument_list|(
 name|ic
 argument_list|)
@@ -4140,7 +4159,7 @@ name|m
 expr_stmt|;
 block|}
 block|}
-name|IEEE80211_UNLOCK
+name|IEEE80211_FF_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
