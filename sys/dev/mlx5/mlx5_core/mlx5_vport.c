@@ -275,7 +275,7 @@ name|out
 index|[
 name|MLX5_ST_SZ_DW
 argument_list|(
-name|alloc_q_counter_in
+name|alloc_q_counter_out
 argument_list|)
 index|]
 decl_stmt|;
