@@ -1120,7 +1120,7 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|i
 decl_stmt|;
 name|cb
@@ -1185,7 +1185,9 @@ literal|0
 init|;
 name|i
 operator|!=
-name|XHCI_MAX_SCRATCHPADS
+name|sc
+operator|->
+name|sc_noscratch
 condition|;
 name|i
 operator|++
