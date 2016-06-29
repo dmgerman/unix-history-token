@@ -12,7 +12,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPILED_FROM_DSP
+name|WIN32
 end_ifdef
 
 begin_include
@@ -94,7 +94,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ndef COMPILED_FROM_DSP */
+comment|/* ndef WIN32 */
 end_comment
 
 begin_include
@@ -181,7 +181,7 @@ parameter_list|,
 name|lo
 parameter_list|)
 define|\
-value|(namingBitmap[(pages[hi]<< 3) + ((lo)>> 5)]& (1<< ((lo)& 0x1F)))
+value|(namingBitmap[(pages[hi]<< 3) + ((lo)>> 5)]& (1u<< ((lo)& 0x1F)))
 end_define
 
 begin_comment
@@ -198,7 +198,7 @@ parameter_list|,
 name|byte
 parameter_list|)
 define|\
-value|(namingBitmap[((pages)[(((byte)[0])>> 2)& 7]<< 3) \                       + ((((byte)[0])& 3)<< 1) \                       + ((((byte)[1])>> 5)& 1)] \& (1<< (((byte)[1])& 0x1F)))
+value|(namingBitmap[((pages)[(((byte)[0])>> 2)& 7]<< 3) \                       + ((((byte)[0])& 3)<< 1) \                       + ((((byte)[1])>> 5)& 1)] \& (1u<< (((byte)[1])& 0x1F)))
 end_define
 
 begin_comment
@@ -215,7 +215,7 @@ parameter_list|,
 name|byte
 parameter_list|)
 define|\
-value|(namingBitmap[((pages)[((((byte)[0])& 0xF)<< 4) \                              + ((((byte)[1])>> 2)& 0xF)] \<< 3) \                       + ((((byte)[1])& 3)<< 1) \                       + ((((byte)[2])>> 5)& 1)] \& (1<< (((byte)[2])& 0x1F)))
+value|(namingBitmap[((pages)[((((byte)[0])& 0xF)<< 4) \                              + ((((byte)[1])>> 2)& 0xF)] \<< 3) \                       + ((((byte)[1])& 3)<< 1) \                       + ((((byte)[2])>> 5)& 1)] \& (1u<< (((byte)[2])& 0x1F)))
 end_define
 
 begin_define
@@ -279,12 +279,18 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|p
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -302,7 +308,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -336,7 +345,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -377,7 +389,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -411,7 +426,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -452,7 +470,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -484,7 +505,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -516,7 +540,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -848,6 +875,31 @@ name|E
 parameter_list|)
 define|\
 value|E ## isName2, \  E ## isName3, \  E ## isName4, \  E ## isNmstrt2, \  E ## isNmstrt3, \  E ## isNmstrt4, \  E ## isInvalid2, \  E ## isInvalid3, \  E ## isInvalid4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NULL_VTABLE
+define|\
+comment|/* isName2 */
+value|NULL, \
+comment|/* isName3 */
+value|NULL, \
+comment|/* isName4 */
+value|NULL, \
+comment|/* isNmstrt2 */
+value|NULL, \
+comment|/* isNmstrt3 */
+value|NULL, \
+comment|/* isNmstrt4 */
+value|NULL, \
+comment|/* isInvalid2 */
+value|NULL, \
+comment|/* isInvalid3 */
+value|NULL, \
+comment|/* isInvalid4 */
+value|NULL
 end_define
 
 begin_function_decl
@@ -1380,15 +1432,214 @@ enum|;
 end_enum
 
 begin_function
-specifier|static
 name|void
+name|align_limit_to_full_utf8_characters
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|from
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|fromLimRef
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|fromLim
+init|=
+operator|*
+name|fromLimRef
+decl_stmt|;
+name|size_t
+name|walked
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+init|;
+name|fromLim
+operator|>
+name|from
+condition|;
+name|fromLim
+operator|--
+operator|,
+name|walked
+operator|++
+control|)
+block|{
+specifier|const
+name|unsigned
+name|char
+name|prev
+init|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|fromLim
+index|[
+operator|-
+literal|1
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|prev
+operator|&
+literal|0xf8u
+operator|)
+operator|==
+literal|0xf0u
+condition|)
+block|{
+comment|/* 4-byte character, lead by 0b11110xxx byte */
+if|if
+condition|(
+name|walked
+operator|+
+literal|1
+operator|>=
+literal|4
+condition|)
+block|{
+name|fromLim
+operator|+=
+literal|4
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|walked
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|prev
+operator|&
+literal|0xf0u
+operator|)
+operator|==
+literal|0xe0u
+condition|)
+block|{
+comment|/* 3-byte character, lead by 0b1110xxxx byte */
+if|if
+condition|(
+name|walked
+operator|+
+literal|1
+operator|>=
+literal|3
+condition|)
+block|{
+name|fromLim
+operator|+=
+literal|3
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|walked
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|prev
+operator|&
+literal|0xe0u
+operator|)
+operator|==
+literal|0xc0u
+condition|)
+block|{
+comment|/* 2-byte character, lead by 0b110xxxxx byte */
+if|if
+condition|(
+name|walked
+operator|+
+literal|1
+operator|>=
+literal|2
+condition|)
+block|{
+name|fromLim
+operator|+=
+literal|2
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|walked
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|prev
+operator|&
+literal|0x80u
+operator|)
+operator|==
+literal|0x00u
+condition|)
+block|{
+comment|/* 1-byte character, matching 0b0xxxxxxx */
+break|break;
+block|}
+block|}
+operator|*
+name|fromLimRef
+operator|=
+name|fromLim
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|utf8_toUtf8
 parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -1412,6 +1663,12 @@ modifier|*
 name|toLim
 parameter_list|)
 block|{
+name|enum
+name|XML_Convert_Result
+name|res
+init|=
+name|XML_CONVERT_COMPLETED
+decl_stmt|;
 name|char
 modifier|*
 name|to
@@ -1435,8 +1692,10 @@ name|toP
 condition|)
 block|{
 comment|/* Avoid copying partial characters. */
-for|for
-control|(
+name|res
+operator|=
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+expr_stmt|;
 name|fromLim
 operator|=
 operator|*
@@ -1448,34 +1707,16 @@ operator|-
 operator|*
 name|toP
 operator|)
-init|;
-name|fromLim
-operator|>
+expr_stmt|;
+name|align_limit_to_full_utf8_characters
+argument_list|(
 operator|*
 name|fromP
-condition|;
-name|fromLim
-operator|--
-control|)
-if|if
-condition|(
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|fromLim
-index|[
-operator|-
-literal|1
-index|]
+argument_list|,
 operator|&
-literal|0xc0
-operator|)
-operator|!=
-literal|0x80
-condition|)
-break|break;
+name|fromLim
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -1489,9 +1730,17 @@ operator|=
 operator|*
 name|fromP
 init|;
+operator|(
 name|from
-operator|!=
+operator|<
 name|fromLim
+operator|)
+operator|&&
+operator|(
+name|to
+operator|<
+name|toLim
+operator|)
 condition|;
 name|from
 operator|++
@@ -1515,12 +1764,34 @@ name|toP
 operator|=
 name|to
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|to
+operator|==
+name|toLim
+operator|)
+operator|&&
+operator|(
+name|from
+operator|<
+name|fromLim
+operator|)
+condition|)
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
+else|else
+return|return
+name|res
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|utf8_toUtf16
 parameter_list|(
@@ -1553,6 +1824,12 @@ modifier|*
 name|toLim
 parameter_list|)
 block|{
+name|enum
+name|XML_Convert_Result
+name|res
+init|=
+name|XML_CONVERT_COMPLETED
+decl_stmt|;
 name|unsigned
 name|short
 modifier|*
@@ -1572,11 +1849,11 @@ decl_stmt|;
 while|while
 condition|(
 name|from
-operator|!=
+operator|<
 name|fromLim
 operator|&&
 name|to
-operator|!=
+operator|<
 name|toLim
 condition|)
 block|{
@@ -1605,6 +1882,21 @@ block|{
 case|case
 name|BT_LEAD2
 case|:
+if|if
+condition|(
+name|fromLim
+operator|-
+name|from
+operator|<
+literal|2
+condition|)
+block|{
+name|res
+operator|=
+name|XML_CONVERT_INPUT_INCOMPLETE
+expr_stmt|;
+break|break;
+block|}
 operator|*
 name|to
 operator|++
@@ -1645,6 +1937,21 @@ break|break;
 case|case
 name|BT_LEAD3
 case|:
+if|if
+condition|(
+name|fromLim
+operator|-
+name|from
+operator|<
+literal|3
+condition|)
+block|{
+name|res
+operator|=
+name|XML_CONVERT_INPUT_INCOMPLETE
+expr_stmt|;
+break|break;
+block|}
 operator|*
 name|to
 operator|++
@@ -1705,15 +2012,38 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-name|to
-operator|+
-literal|1
-operator|==
 name|toLim
+operator|-
+name|to
+operator|<
+literal|2
 condition|)
+block|{
+name|res
+operator|=
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+expr_stmt|;
 goto|goto
 name|after
 goto|;
+block|}
+if|if
+condition|(
+name|fromLim
+operator|-
+name|from
+operator|<
+literal|4
+condition|)
+block|{
+name|res
+operator|=
+name|XML_CONVERT_INPUT_INCOMPLETE
+expr_stmt|;
+goto|goto
+name|after
+goto|;
+block|}
 name|n
 operator|=
 operator|(
@@ -1840,6 +2170,9 @@ name|toP
 operator|=
 name|to
 expr_stmt|;
+return|return
+name|res
+return|;
 block|}
 end_function
 
@@ -2053,14 +2386,18 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|latin1_toUtf8
 parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -2101,7 +2438,9 @@ name|fromP
 operator|==
 name|fromLim
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_COMPLETED
+return|;
 name|c
 operator|=
 operator|(
@@ -2128,7 +2467,9 @@ name|toP
 operator|<
 literal|2
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
 operator|*
 operator|(
 operator|*
@@ -2185,7 +2526,9 @@ name|toP
 operator|==
 name|toLim
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
 operator|*
 operator|(
 operator|*
@@ -2207,14 +2550,18 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|latin1_toUtf16
 parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -2244,12 +2591,12 @@ while|while
 condition|(
 operator|*
 name|fromP
-operator|!=
+operator|<
 name|fromLim
 operator|&&
 operator|*
 name|toP
-operator|!=
+operator|<
 name|toLim
 condition|)
 operator|*
@@ -2270,6 +2617,29 @@ name|fromP
 operator|)
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|toP
+operator|==
+name|toLim
+operator|)
+operator|&&
+operator|(
+operator|*
+name|fromP
+operator|<
+name|fromLim
+operator|)
+condition|)
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
+else|else
+return|return
+name|XML_CONVERT_COMPLETED
+return|;
 block|}
 end_function
 
@@ -2314,6 +2684,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|sb_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2365,20 +2736,25 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|sb_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|ascii_toUtf8
 parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -2406,12 +2782,12 @@ while|while
 condition|(
 operator|*
 name|fromP
-operator|!=
+operator|<
 name|fromLim
 operator|&&
 operator|*
 name|toP
-operator|!=
+operator|<
 name|toLim
 condition|)
 operator|*
@@ -2428,6 +2804,29 @@ name|fromP
 operator|)
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|toP
+operator|==
+name|toLim
+operator|)
+operator|&&
+operator|(
+operator|*
+name|fromP
+operator|<
+name|fromLim
+operator|)
+condition|)
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
+else|else
+return|return
+name|XML_CONVERT_COMPLETED
+return|;
 block|}
 end_function
 
@@ -2470,6 +2869,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|sb_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2519,6 +2919,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|sb_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2613,11 +3014,13 @@ parameter_list|(
 name|E
 parameter_list|)
 define|\
-value|static void  PTRCALL \ E ## toUtf8(const ENCODING *enc, \             const char **fromP, const char *fromLim, \             char **toP, const char *toLim) \ { \   const char *from; \   for (from = *fromP; from != fromLim; from += 2) { \     int plane; \     unsigned char lo2; \     unsigned char lo = GET_LO(from); \     unsigned char hi = GET_HI(from); \     switch (hi) { \     case 0: \       if (lo< 0x80) { \         if (*toP == toLim) { \           *fromP = from; \           return; \         } \         *(*toP)++ = lo; \         break; \       } \
+value|static enum XML_Convert_Result  PTRCALL \ E ## toUtf8(const ENCODING *UNUSED_P(enc), \             const char **fromP, const char *fromLim, \             char **toP, const char *toLim) \ { \   const char *from = *fromP; \   fromLim = from + (((fromLim - from)>> 1)<< 1);
+comment|/* shrink to even */
+value|\   for (; from< fromLim; from += 2) { \     int plane; \     unsigned char lo2; \     unsigned char lo = GET_LO(from); \     unsigned char hi = GET_HI(from); \     switch (hi) { \     case 0: \       if (lo< 0x80) { \         if (*toP == toLim) { \           *fromP = from; \           return XML_CONVERT_OUTPUT_EXHAUSTED; \         } \         *(*toP)++ = lo; \         break; \       } \
 comment|/* fall through */
-value|\     case 0x1: case 0x2: case 0x3: \     case 0x4: case 0x5: case 0x6: case 0x7: \       if (toLim -  *toP< 2) { \         *fromP = from; \         return; \       } \       *(*toP)++ = ((lo>> 6) | (hi<< 2) |  UTF8_cval2); \       *(*toP)++ = ((lo& 0x3f) | 0x80); \       break; \     default: \       if (toLim -  *toP< 3)  { \         *fromP = from; \         return; \       } \
+value|\     case 0x1: case 0x2: case 0x3: \     case 0x4: case 0x5: case 0x6: case 0x7: \       if (toLim -  *toP< 2) { \         *fromP = from; \         return XML_CONVERT_OUTPUT_EXHAUSTED; \       } \       *(*toP)++ = ((lo>> 6) | (hi<< 2) |  UTF8_cval2); \       *(*toP)++ = ((lo& 0x3f) | 0x80); \       break; \     default: \       if (toLim -  *toP< 3)  { \         *fromP = from; \         return XML_CONVERT_OUTPUT_EXHAUSTED; \       } \
 comment|/* 16 bits divided 4, 6, 6 amongst 3 bytes */
-value|\       *(*toP)++ = ((hi>> 4) | UTF8_cval3); \       *(*toP)++ = (((hi& 0xf)<< 2) | (lo>> 6) | 0x80); \       *(*toP)++ = ((lo& 0x3f) | 0x80); \       break; \     case 0xD8: case 0xD9: case 0xDA: case 0xDB: \       if (toLim -  *toP< 4) { \         *fromP = from; \         return; \       } \       plane = (((hi& 0x3)<< 2) | ((lo>> 6)& 0x3)) + 1; \       *(*toP)++ = ((plane>> 2) | UTF8_cval4); \       *(*toP)++ = (((lo>> 2)& 0xF) | ((plane& 0x3)<< 4) | 0x80); \       from += 2; \       lo2 = GET_LO(from); \       *(*toP)++ = (((lo& 0x3)<< 4) \                    | ((GET_HI(from)& 0x3)<< 2) \                    | (lo2>> 6) \                    | 0x80); \       *(*toP)++ = ((lo2& 0x3f) | 0x80); \       break; \     } \   } \   *fromP = from; \ }
+value|\       *(*toP)++ = ((hi>> 4) | UTF8_cval3); \       *(*toP)++ = (((hi& 0xf)<< 2) | (lo>> 6) | 0x80); \       *(*toP)++ = ((lo& 0x3f) | 0x80); \       break; \     case 0xD8: case 0xD9: case 0xDA: case 0xDB: \       if (toLim -  *toP< 4) { \         *fromP = from; \         return XML_CONVERT_OUTPUT_EXHAUSTED; \       } \       if (fromLim - from< 4) { \         *fromP = from; \         return XML_CONVERT_INPUT_INCOMPLETE; \       } \       plane = (((hi& 0x3)<< 2) | ((lo>> 6)& 0x3)) + 1; \       *(*toP)++ = ((plane>> 2) | UTF8_cval4); \       *(*toP)++ = (((lo>> 2)& 0xF) | ((plane& 0x3)<< 4) | 0x80); \       from += 2; \       lo2 = GET_LO(from); \       *(*toP)++ = (((lo& 0x3)<< 4) \                    | ((GET_HI(from)& 0x3)<< 2) \                    | (lo2>> 6) \                    | 0x80); \       *(*toP)++ = ((lo2& 0x3f) | 0x80); \       break; \     } \   } \   *fromP = from; \   if (from< fromLim) \     return XML_CONVERT_INPUT_INCOMPLETE; \   else \     return XML_CONVERT_COMPLETED; \ }
 end_define
 
 begin_define
@@ -2628,9 +3031,11 @@ parameter_list|(
 name|E
 parameter_list|)
 define|\
-value|static void  PTRCALL \ E ## toUtf16(const ENCODING *enc, \              const char **fromP, const char *fromLim, \              unsigned short **toP, const unsigned short *toLim) \ { \
+value|static enum XML_Convert_Result  PTRCALL \ E ## toUtf16(const ENCODING *UNUSED_P(enc), \              const char **fromP, const char *fromLim, \              unsigned short **toP, const unsigned short *toLim) \ { \   enum XML_Convert_Result res = XML_CONVERT_COMPLETED; \   fromLim = *fromP + (((fromLim - *fromP)>> 1)<< 1);
+comment|/* shrink to even */
+value|\
 comment|/* Avoid copying first half only of surrogate */
-value|\   if (fromLim - *fromP> ((toLim - *toP)<< 1) \&& (GET_HI(fromLim - 2)& 0xF8) == 0xD8) \     fromLim -= 2; \   for (; *fromP != fromLim&& *toP != toLim; *fromP += 2) \     *(*toP)++ = (GET_HI(*fromP)<< 8) | GET_LO(*fromP); \ }
+value|\   if (fromLim - *fromP> ((toLim - *toP)<< 1) \&& (GET_HI(fromLim - 2)& 0xF8) == 0xD8) { \     fromLim -= 2; \     res = XML_CONVERT_INPUT_INCOMPLETE; \   } \   for (; *fromP< fromLim&& *toP< toLim; *fromP += 2) \     *(*toP)++ = (GET_HI(*fromP)<< 8) | GET_LO(*fromP); \   if ((*toP == toLim)&& (*fromP< fromLim)) \     return XML_CONVERT_OUTPUT_EXHAUSTED; \   else \     return res; \ }
 end_define
 
 begin_define
@@ -3249,6 +3654,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|little2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3306,6 +3712,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|little2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3355,6 +3762,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|little2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3402,6 +3810,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|little2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3897,6 +4306,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|big2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3954,6 +4364,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|big2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4003,6 +4414,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|big2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4050,6 +4462,7 @@ name|STANDARD_VTABLE
 argument_list|(
 argument|big2_
 argument_list|)
+name|NULL_VTABLE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4165,7 +4578,10 @@ parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|enc
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -6147,7 +6563,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|unknown_toUtf8
 parameter_list|(
@@ -6216,7 +6633,9 @@ name|fromP
 operator|==
 name|fromLim
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_COMPLETED
+return|;
 name|utf8
 operator|=
 name|uenc
@@ -6278,7 +6697,9 @@ operator|-
 operator|*
 name|toP
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
 name|utf8
 operator|=
 name|buf
@@ -6322,7 +6743,9 @@ operator|-
 operator|*
 name|toP
 condition|)
-break|break;
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
 operator|(
 operator|*
 name|fromP
@@ -6358,7 +6781,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|enum
+name|XML_Convert_Result
 name|PTRCALL
 name|unknown_toUtf16
 parameter_list|(
@@ -6406,12 +6830,12 @@ while|while
 condition|(
 operator|*
 name|fromP
-operator|!=
+operator|<
 name|fromLim
 operator|&&
 operator|*
 name|toP
-operator|!=
+operator|<
 name|toLim
 condition|)
 block|{
@@ -6502,6 +6926,29 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+operator|*
+name|toP
+operator|==
+name|toLim
+operator|)
+operator|&&
+operator|(
+operator|*
+name|fromP
+operator|<
+name|fromLim
+operator|)
+condition|)
+return|return
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+return|;
+else|else
+return|return
+name|XML_CONVERT_COMPLETED
+return|;
 block|}
 end_function
 
@@ -7536,7 +7983,7 @@ decl_stmt|;
 if|if
 condition|(
 name|ptr
-operator|==
+operator|>=
 name|end
 condition|)
 return|return

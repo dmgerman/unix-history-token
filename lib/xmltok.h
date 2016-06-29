@@ -390,6 +390,23 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+enum|enum
+name|XML_Convert_Result
+block|{
+name|XML_CONVERT_COMPLETED
+init|=
+literal|0
+block|,
+name|XML_CONVERT_INPUT_INCOMPLETE
+init|=
+literal|1
+block|,
+name|XML_CONVERT_OUTPUT_EXHAUSTED
+init|=
+literal|2
+comment|/* and therefore potentially input remaining as well */
+block|}
+enum|;
 struct|struct
 name|encoding
 block|{
@@ -600,7 +617,8 @@ modifier|*
 name|badPtr
 parameter_list|)
 function_decl|;
-name|void
+name|enum
+name|XML_Convert_Result
 function_decl|(
 name|PTRCALL
 modifier|*
@@ -634,7 +652,8 @@ modifier|*
 name|toLim
 parameter_list|)
 function_decl|;
-name|void
+name|enum
+name|XML_Convert_Result
 function_decl|(
 name|PTRCALL
 modifier|*
