@@ -150,13 +150,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_endif
