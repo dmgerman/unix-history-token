@@ -84,6 +84,9 @@ name|void
 modifier|*
 name|pvt
 decl_stmt|;
+name|int
+name|max_blen
+decl_stmt|;
 block|}
 struct|;
 end_struct
