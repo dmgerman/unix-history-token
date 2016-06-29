@@ -104,6 +104,13 @@ directive|include
 file|"libusb10.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|LIBUSB_NUM_SW_ENDPOINTS
+value|(16 * 4)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
@@ -1896,10 +1903,7 @@ name|libusb20_dev_open
 argument_list|(
 name|pdev
 argument_list|,
-literal|16
-operator|*
-literal|4
-comment|/* number of endpoints */
+name|LIBUSB_NUM_SW_ENDPOINTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -6214,7 +6218,59 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-comment|/* TODO */
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+init|=
+name|dev
+operator|->
+name|os_priv
+decl_stmt|;
+name|unsigned
+name|x
+decl_stmt|;
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|!=
+name|LIBUSB_NUM_SW_ENDPOINTS
+condition|;
+name|x
+operator|++
+control|)
+block|{
+name|struct
+name|libusb20_transfer
+modifier|*
+name|xfer
+decl_stmt|;
+name|xfer
+operator|=
+name|libusb20_tr_get_pointer
+argument_list|(
+name|pdev
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|libusb20_tr_close
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
