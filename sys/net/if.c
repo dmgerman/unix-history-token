@@ -2348,6 +2348,17 @@ name|if_alloctype
 operator|=
 name|type
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|ifp
+operator|->
+name|if_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|if_com_alloc
