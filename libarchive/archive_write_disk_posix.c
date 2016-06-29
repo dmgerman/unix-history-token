@@ -15547,6 +15547,14 @@ name|int
 name|dffd
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ACL_H
+return|return
+literal|0
+return|;
+else|#
+directive|else
 name|acl_t
 name|acl
 decl_stmt|,
@@ -15676,6 +15684,8 @@ operator|(
 name|ret
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

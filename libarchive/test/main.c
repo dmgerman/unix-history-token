@@ -7373,6 +7373,21 @@ name|st
 operator|.
 name|st_birthtime
 expr_stmt|;
+comment|/* FreeBSD filesystems that don't support birthtime 		 * (e.g., UFS1) always return -1 here. */
+if|if
+condition|(
+name|filet
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|filet_nsec
 operator|=
 name|st
