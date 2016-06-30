@@ -466,12 +466,23 @@ begin_comment
 comment|/* Skeleton rule for reference by entities 				   this proxy creates. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|rpcbcnt
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rpcbcnt
+value|VNET(rpcbcnt)
+end_define
 
 begin_comment
 comment|/* Upper bound of allocated RPCB sessions. */
@@ -541,7 +552,7 @@ name|void
 name|ipf_p_rpcb_main_load
 parameter_list|()
 block|{
-name|rpcbcnt
+name|V_rpcbcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -2646,7 +2657,7 @@ return|;
 block|}
 if|if
 condition|(
-name|rpcbcnt
+name|V_rpcbcnt
 operator|==
 name|RPCB_MAXREQS
 condition|)
@@ -2746,7 +2757,7 @@ operator|=
 literal|1
 expr_stmt|;
 operator|++
-name|rpcbcnt
+name|V_rpcbcnt
 expr_stmt|;
 return|return
 operator|(
@@ -3930,7 +3941,7 @@ argument|static void ipf_p_rpcb_deref(rs, rx) 	rpcb_session_t *rs; 	rpcb_xact_t 
 comment|/* LINT */
 argument|if (rx == NULL) 		return;  	if (--rx->rx_ref !=
 literal|0
-argument|) 		return;  	if (rx->rx_next != NULL) 		rx->rx_next->rx_pnext = rx->rx_pnext;  	*rx->rx_pnext = rx->rx_next;  	KFREE(rx);  	--rpcbcnt; }
+argument|) 		return;  	if (rx->rx_next != NULL) 		rx->rx_next->rx_pnext = rx->rx_pnext;  	*rx->rx_pnext = rx->rx_next;  	KFREE(rx);  	--V_rpcbcnt; }
 comment|/* --------------------------------------------------------------------	*/
 comment|/* Function:	ipf_p_rpcb_getproto					*/
 comment|/* Returns:	int - -1 == illegal protocol/netid,			*/
