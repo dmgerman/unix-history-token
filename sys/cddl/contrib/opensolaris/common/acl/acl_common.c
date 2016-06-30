@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -7046,14 +7046,12 @@ name|execute_mask
 init|=
 name|ACE_EXECUTE
 decl_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|isdir
-condition|)
-name|write_mask
-operator||=
-name|ACE_DELETE_CHILD
 expr_stmt|;
+comment|/* will need this later */
 name|masks
 operator|->
 name|deny1
@@ -7855,32 +7853,15 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 		 * Delete permission is never set by default 		 */
+comment|/* 		 * Delete permissions are never set by default 		 */
 if|if
 condition|(
 name|mask
 operator|&
+operator|(
 name|ACE_DELETE
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* 		 * Child delete permission should be accompanied by write 		 */
-if|if
-condition|(
-operator|(
-name|mask
-operator|&
+operator||
 name|ACE_DELETE_CHILD
-operator|)
-operator|&&
-operator|!
-operator|(
-name|mask
-operator|&
-name|ACE_WRITE_DATA
 operator|)
 condition|)
 return|return
