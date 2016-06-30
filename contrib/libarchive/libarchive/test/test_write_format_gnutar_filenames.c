@@ -65,6 +65,9 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|buff
 operator|=
 name|malloc
@@ -147,9 +150,8 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|0
 init|;
 name|i
@@ -452,6 +454,9 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|buff
 operator|=
 name|malloc
@@ -534,9 +539,8 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|0
 init|;
 name|i

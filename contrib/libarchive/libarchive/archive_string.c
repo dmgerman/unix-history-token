@@ -2981,10 +2981,11 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+break|break;
 block|}
 do|while
 condition|(
-literal|0
+literal|1
 condition|)
 do|;
 block|}
@@ -17237,19 +17238,22 @@ operator|&
 name|defchar
 argument_list|)
 expr_stmt|;
+comment|/* Exit loop if we succeeded */
 if|if
 condition|(
 name|ll
-operator|==
+operator|!=
 literal|0
-operator|&&
+operator|||
 name|GetLastError
 argument_list|()
-operator|==
+operator|!=
 name|ERROR_INSUFFICIENT_BUFFER
 condition|)
 block|{
-comment|/* Need more buffer for MBS. */
+break|break;
+block|}
+comment|/* Else expand buffer and loop to try again. */
 name|ll
 operator|=
 name|WideCharToMultiByte
@@ -17320,12 +17324,10 @@ name|length
 operator|-
 literal|1
 expr_stmt|;
-continue|continue;
-block|}
 block|}
 do|while
 condition|(
-literal|0
+literal|1
 condition|)
 do|;
 name|archive_string_free
@@ -17708,19 +17710,22 @@ operator|>>
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Exit loop if we succeeded */
 if|if
 condition|(
 name|count
-operator|==
+operator|!=
 literal|0
-operator|&&
+operator|||
 name|GetLastError
 argument_list|()
-operator|==
+operator|!=
 name|ERROR_INSUFFICIENT_BUFFER
 condition|)
 block|{
-comment|/* Need more buffer for UTF-16 string */
+break|break;
+block|}
+comment|/* Expand buffer and try again */
 name|count
 operator|=
 name|MultiByteToWideChar
@@ -17784,12 +17789,10 @@ name|buffer_length
 operator|-
 literal|2
 expr_stmt|;
-continue|continue;
-block|}
 block|}
 do|while
 condition|(
-literal|0
+literal|1
 condition|)
 do|;
 name|as16
