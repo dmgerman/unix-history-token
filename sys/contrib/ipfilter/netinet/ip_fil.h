@@ -7736,33 +7736,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern	int	(*ipf_checkp
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|ip_t
-operator|*
-operator|,
-name|int
-operator|,
-name|void
-operator|*
-operator|,
-name|int
-operator|,
-name|mb_t
-operator|*
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
 name|struct
