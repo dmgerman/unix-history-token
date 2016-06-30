@@ -11332,12 +11332,6 @@ expr_stmt|;
 name|ipfw_init_sopt_handler
 argument_list|()
 expr_stmt|;
-name|ipfw_log_bpf
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* init */
 name|ipfw_iface_init
 argument_list|()
 expr_stmt|;
@@ -11364,12 +11358,6 @@ block|{
 name|ipfw_iface_destroy
 argument_list|()
 expr_stmt|;
-name|ipfw_log_bpf
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* uninit */
 name|ipfw_destroy_sopt_handler
 argument_list|()
 expr_stmt|;
@@ -11691,6 +11679,12 @@ name|V_ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl3
 expr_stmt|;
+name|ipfw_log_bpf
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* init */
 name|error
 operator|=
 name|ipfw_attach_hooks
@@ -11758,6 +11752,12 @@ name|V_ip_fw_ctl_ptr
 operator|=
 name|NULL
 expr_stmt|;
+name|ipfw_log_bpf
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* uninit */
 name|last
 operator|=
 name|IS_DEFAULT_VNET

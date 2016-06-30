@@ -444,18 +444,29 @@ begin_comment
 comment|/* !WITHOUT_BPF */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ifnet
-modifier|*
+operator|*
+argument_list|,
 name|log_if
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* hook to attach to bpf */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_log_if
+value|VNET(log_if)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -900,11 +911,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|log_if
+name|V_log_if
 operator|==
 name|NULL
 condition|)
-name|log_if
+name|V_log_if
 operator|=
 name|ifp
 expr_stmt|;
@@ -991,15 +1002,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|log_if
+name|V_log_if
 operator|!=
 name|NULL
 operator|&&
 name|ifp
 operator|==
-name|log_if
+name|V_log_if
 condition|)
-name|log_if
+name|V_log_if
 operator|=
 name|NULL
 expr_stmt|;
@@ -1053,14 +1064,25 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|if_clone
-modifier|*
+operator|*
+argument_list|,
 name|ipfw_log_cloner
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipfw_log_cloner
+value|VNET(ipfw_log_cloner)
+end_define
 
 begin_function
 name|void
@@ -1075,10 +1097,17 @@ condition|(
 name|onoff
 condition|)
 block|{
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|LOGIF_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|ipfw_log_cloner
+name|V_ipfw_log_cloner
 operator|=
 name|if_clone_advanced
 argument_list|(
@@ -1098,9 +1127,16 @@ else|else
 block|{
 name|if_clone_detach
 argument_list|(
-name|ipfw_log_cloner
+name|V_ipfw_log_cloner
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
 name|LOGIF_LOCK_DESTROY
 argument_list|()
 expr_stmt|;
@@ -1217,11 +1253,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|log_if
+name|V_log_if
 operator|==
 name|NULL
 operator|||
-name|log_if
+name|V_log_if
 operator|->
 name|if_bpf
 operator|==
@@ -1242,7 +1278,7 @@ condition|)
 comment|/* layer2, use orig hdr */
 name|BPF_MTAP2
 argument_list|(
-name|log_if
+name|V_log_if
 argument_list|,
 name|args
 operator|->
@@ -1266,7 +1302,7 @@ literal|4
 condition|)
 name|BPF_MTAP2
 argument_list|(
-name|log_if
+name|V_log_if
 argument_list|,
 literal|"DDDDDDSSSSSS\x08\x00"
 argument_list|,
@@ -1286,7 +1322,7 @@ literal|6
 condition|)
 name|BPF_MTAP2
 argument_list|(
-name|log_if
+name|V_log_if
 argument_list|,
 literal|"DDDDDDSSSSSS\x86\xdd"
 argument_list|,
@@ -1299,7 +1335,7 @@ else|else
 comment|/* Obviously bogus EtherType. */
 name|BPF_MTAP2
 argument_list|(
-name|log_if
+name|V_log_if
 argument_list|,
 literal|"DDDDDDSSSSSS\xff\xff"
 argument_list|,
