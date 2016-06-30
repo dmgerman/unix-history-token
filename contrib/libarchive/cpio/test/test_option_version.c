@@ -198,18 +198,18 @@ name|assertEqualMem
 argument_list|(
 name|q
 argument_list|,
-literal|"-- "
+literal|"- "
 argument_list|,
-literal|3
+literal|2
 argument_list|)
 expr_stmt|;
 name|q
 operator|+=
-literal|3
+literal|2
 expr_stmt|;
 name|s
 operator|-=
-literal|3
+literal|2
 expr_stmt|;
 comment|/* libarchive name and version number */
 name|assert

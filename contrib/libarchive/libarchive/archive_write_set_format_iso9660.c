@@ -31339,7 +31339,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|int
+name|size_t
 name|ffmax
 decl_stmt|,
 name|parent_len
@@ -31410,6 +31410,9 @@ name|children
 operator|.
 name|cnt
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ffmax
 argument_list|,
 literal|6
@@ -31499,10 +31502,7 @@ name|lt
 decl_stmt|;
 if|if
 condition|(
-call|(
-name|int
-call|)
-argument_list|(
+operator|(
 name|l
 operator|=
 name|np
@@ -31512,7 +31512,7 @@ operator|->
 name|basename_utf16
 operator|.
 name|length
-argument_list|)
+operator|)
 operator|>
 name|ffmax
 condition|)
@@ -31722,9 +31722,6 @@ expr_stmt|;
 comment|/* 		 * Get a length of MBS of a full-pathname. 		 */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|np
 operator|->
 name|file
@@ -31843,6 +31840,16 @@ comment|/* If a length of full-pathname is longer than 240 bytes, 		 * it violat
 if|if
 condition|(
 name|parent_len
+operator|>
+literal|240
+operator|||
+name|np
+operator|->
+name|mb_len
+operator|>
+literal|240
+operator|||
+name|parent_len
 operator|+
 name|np
 operator|->
@@ -31895,9 +31902,6 @@ block|}
 comment|/* Make an offset of the number which is used to be set 		 * hexadecimal number to avoid duplicate identifier. */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|l
 operator|==
 name|ffmax
@@ -31911,9 +31915,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|l
 operator|==
 name|ffmax
@@ -31929,9 +31930,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|l
 operator|==
 name|ffmax

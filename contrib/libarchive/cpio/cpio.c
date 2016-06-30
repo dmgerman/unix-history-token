@@ -2321,7 +2321,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"bsdcpio %s -- %s\n"
+literal|"bsdcpio %s - %s\n"
 argument_list|,
 name|BSDCPIO_VERSION_STRING
 argument_list|,
