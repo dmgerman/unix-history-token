@@ -371,6 +371,17 @@ name|if_vnet
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|V_ipfw_vnet_ready
+operator|==
+literal|0
+operator|||
+name|V_ipfw_nat_ready
+operator|==
+literal|0
+condition|)
+return|return;
 name|chain
 operator|=
 operator|&
@@ -5477,6 +5488,10 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+name|V_ipfw_nat_ready
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ptr
@@ -5509,10 +5524,6 @@ operator|-
 literal|1
 comment|/* flush all */
 argument_list|)
-expr_stmt|;
-name|V_ipfw_nat_ready
-operator|=
-literal|0
 expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
