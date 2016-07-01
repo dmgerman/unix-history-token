@@ -53,6 +53,22 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|int
+name|command_fdt_internal
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -73,6 +89,10 @@ name|OF_getproplen
 argument_list|(
 name|node
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|prop
 argument_list|)
 operator|>
@@ -108,7 +128,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-literal|2048
+literal|255
 index|]
 decl_stmt|,
 modifier|*
@@ -121,7 +141,7 @@ name|void
 modifier|*
 name|propbuf
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|proplen
 decl_stmt|;
 name|lastprop
@@ -151,6 +171,27 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Detect and correct for errors and strangeness */
+if|if
+condition|(
+name|proplen
+operator|<
+literal|0
+condition|)
+name|proplen
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|proplen
+operator|>
+literal|1024
+condition|)
+name|proplen
+operator|=
+literal|1024
+expr_stmt|;
 name|propbuf
 operator|=
 name|malloc
@@ -158,6 +199,22 @@ argument_list|(
 name|proplen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|propbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Cannot allocate memory for prop %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|OF_getprop
 argument_list|(
 name|node
@@ -551,7 +608,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Remove /memory/available properties, which reflect long-gone OF 		 * state. Note that this doesn't work if we need RTAS still, since 		 * that's part of the firmware. 		 */
+comment|/* 		 * Remove /memory/available properties, which reflect long-gone 		 * OF state. Note that this doesn't work if we need RTAS still, 		 * since that's part of the firmware. 		 */
 name|offset
 operator|=
 name|fdt_path_offset
@@ -577,7 +634,7 @@ literal|"available"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	/* 	 * Convert stored ihandles under /chosen to xref phandles 	 */
+comment|/* 	 * Convert stored ihandles under /chosen to xref phandles 	 */
 name|offset
 operator|=
 name|fdt_path_offset

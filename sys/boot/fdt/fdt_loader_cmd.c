@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|FDT_MAX_DEPTH
-value|6
+value|12
 end_define
 
 begin_define
@@ -4840,8 +4840,6 @@ decl_stmt|,
 name|o
 decl_stmt|,
 name|depth
-decl_stmt|,
-name|len
 decl_stmt|;
 name|path
 operator|=
@@ -4938,8 +4936,7 @@ name|fdtp
 argument_list|,
 name|o
 argument_list|,
-operator|&
-name|len
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
