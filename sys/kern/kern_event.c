@@ -2207,6 +2207,18 @@ name|kn_ptr
 operator|.
 name|p_proc
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+comment|/* already activated, from attach filter */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Mask off extra data. */
 name|event
 operator|=
