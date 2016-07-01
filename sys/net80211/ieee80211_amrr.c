@@ -1078,6 +1078,8 @@ name|amn_ticks
 operator|=
 name|ticks
 expr_stmt|;
+comment|/* XXX TODO: we really need a rate-to-string method */
+comment|/* XXX TODO: non-11n rate should be divided by two.. */
 name|IEEE80211_NOTE
 argument_list|(
 name|ni
@@ -1088,13 +1090,24 @@ name|IEEE80211_MSG_RATECTL
 argument_list|,
 name|ni
 argument_list|,
-literal|"AMRR: nrates=%d, initial rate %d"
+literal|"AMRR: nrates=%d, initial rate %s%d"
 argument_list|,
 name|rs
 operator|->
 name|rs_nrates
 argument_list|,
+name|amrr_node_is_11n
+argument_list|(
+name|ni
+argument_list|)
+condition|?
+literal|"MCS "
+else|:
+literal|""
+argument_list|,
 name|rate
+operator|&
+name|IEEE80211_RATE_VAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1208,6 +1221,8 @@ operator|->
 name|ni_rates
 expr_stmt|;
 block|}
+comment|/* XXX TODO: we really need a rate-to-string method */
+comment|/* XXX TODO: non-11n rate should be divided by two.. */
 name|IEEE80211_NOTE
 argument_list|(
 name|ni
@@ -1286,6 +1301,8 @@ expr_stmt|;
 name|rix
 operator|++
 expr_stmt|;
+comment|/* XXX TODO: we really need a rate-to-string method */
+comment|/* XXX TODO: non-11n rate should be divided by two.. */
 name|IEEE80211_NOTE
 argument_list|(
 name|ni
@@ -1395,6 +1412,8 @@ block|}
 name|rix
 operator|--
 expr_stmt|;
+comment|/* XXX TODO: we really need a rate-to-string method */
+comment|/* XXX TODO: non-11n rate should be divided by two.. */
 name|IEEE80211_NOTE
 argument_list|(
 name|ni
