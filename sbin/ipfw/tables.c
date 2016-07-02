@@ -4776,12 +4776,16 @@ name|tablename
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|quiet
+operator|==
+literal|0
+condition|)
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"DEPRECATED: inserting data into "
-literal|"non-existent table %s. (auto-created)\n"
+literal|"non-existent table %s. (auto-created)"
 argument_list|,
 name|xi
 operator|.
@@ -4878,10 +4882,6 @@ name|count
 argument_list|,
 name|atomic
 argument_list|)
-expr_stmt|;
-name|quiet
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Compatibility stuff: do not yell on duplicate keys or 	 * failed deletions. 	 */
 if|if
