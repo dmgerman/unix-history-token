@@ -1523,9 +1523,10 @@ name|state
 operator|)
 operator|||
 operator|(
+operator|*
 name|sptr
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 operator|*
