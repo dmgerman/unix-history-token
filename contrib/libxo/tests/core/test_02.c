@@ -349,10 +349,19 @@ argument_list|(
 literal|" {:lines/%7ju} {:words/%7ju} "
 literal|"{:characters/%7ju} {d:filename/%s}\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 literal|20
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 literal|30
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 literal|40
 argument_list|,
 literal|"file"
