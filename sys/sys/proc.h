@@ -2392,6 +2392,28 @@ parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
 
+begin_define
+define|#
+directive|define
+name|TD_SBDRY_INTR
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|(((td)->td_flags& (TDF_SEINTR | TDF_SERESTART)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SBDRY_ERRNO
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|(((td)->td_flags& TDF_SEINTR) != 0 ? EINTR : ERESTART)
+end_define
+
 begin_comment
 comment|/*  * Process structure.  */
 end_comment
