@@ -862,6 +862,8 @@ decl_stmt|,
 name|result
 decl_stmt|;
 name|boolean_t
+name|dead
+decl_stmt|,
 name|growstack
 decl_stmt|,
 name|is_first_object_locked
@@ -895,8 +897,6 @@ decl_stmt|,
 name|behind
 decl_stmt|,
 name|cluster_offset
-decl_stmt|,
-name|dead
 decl_stmt|,
 name|error
 decl_stmt|,
