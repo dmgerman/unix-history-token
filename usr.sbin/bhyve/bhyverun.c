@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"atkbdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"inout.h"
 end_include
 
@@ -509,7 +515,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-abehuwxACHPSWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
-literal|"       %*s [-m memsize[K|k|M|m|G|g|T|t]] [-p vcpu:hostcpu] [-s<pci>] [-U uuid]<vm>\n"
+literal|"       %*s [-m mem] [-p vcpu:hostcpu] [-s<pci>] [-U uuid]<vm>\n"
 literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create ACPI tables\n"
 literal|"       -c: # cpus (default 1)\n"
@@ -519,7 +525,7 @@ literal|"       -g: gdb port\n"
 literal|"       -h: help\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -l: LPC device configuration\n"
-literal|"       -m: memory size\n"
+literal|"       -m: memory size in MB\n"
 literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
 literal|"       -P: vmexit from the guest on pause\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
@@ -3960,6 +3966,11 @@ argument_list|()
 expr_stmt|;
 name|init_inout
 argument_list|()
+expr_stmt|;
+name|atkbdc_init
+argument_list|(
+name|ctx
+argument_list|)
 expr_stmt|;
 name|pci_irq_init
 argument_list|(
