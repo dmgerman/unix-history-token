@@ -269,14 +269,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DWC_OTG_MSK_GINT_ENABLED
-define|\
-value|(GINTMSK_ENUMDONEMSK |		\    GINTMSK_USBRSTMSK |			\    GINTMSK_USBSUSPMSK |			\    GINTMSK_IEPINTMSK |			\    GINTMSK_SESSREQINTMSK |		\    GINTMSK_RXFLVLMSK |			\    GINTMSK_HCHINTMSK |			\    GINTMSK_OTGINTMSK |			\    GINTMSK_PRTINTMSK)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DWC_OTG_MSK_GINT_THREAD_IRQ
 define|\
 value|(GINTSTS_USBRST | GINTSTS_ENUMDONE | GINTSTS_PRTINT |	\    GINTSTS_WKUPINT | GINTSTS_USBSUSP | GINTMSK_OTGINTMSK |	\    GINTSTS_SESSREQINT)
@@ -1442,6 +1434,31 @@ operator|-
 literal|1U
 argument_list|)
 expr_stmt|;
+comment|/* enable proper host channel interrupts */
+name|sc
+operator|->
+name|sc_irq_mask
+operator||=
+name|GINTMSK_HCHINTMSK
+expr_stmt|;
+name|sc
+operator|->
+name|sc_irq_mask
+operator|&=
+operator|~
+name|GINTMSK_IEPINTMSK
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_GINTMSK
+argument_list|,
+name|sc
+operator|->
+name|sc_irq_mask
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1751,6 +1768,31 @@ name|max_out_frame_size
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* enable proper device channel interrupts */
+name|sc
+operator|->
+name|sc_irq_mask
+operator|&=
+operator|~
+name|GINTMSK_HCHINTMSK
+expr_stmt|;
+name|sc
+operator|->
+name|sc_irq_mask
+operator||=
+name|GINTMSK_IEPINTMSK
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DOTG_GINTMSK
+argument_list|,
+name|sc
+operator|->
+name|sc_irq_mask
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* reset RX FIFO */
 name|dwc_otg_tx_fifo_reset
@@ -11981,13 +12023,13 @@ name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 			 * NOTE: Need to clear all interrupt bits, 			 * because some appears to be unmaskable and 			 * can cause an interrupt loop: 			 */
 if|if
 condition|(
 name|temp
-operator|&
-name|DIEPMSK_XFERCOMPLMSK
+operator|!=
+literal|0
 condition|)
-block|{
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
@@ -11997,10 +12039,9 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|,
-name|DIEPMSK_XFERCOMPLMSK
+name|temp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* poll FIFOs, if any */
@@ -16474,8 +16515,8 @@ comment|/* enable interrupts */
 name|sc
 operator|->
 name|sc_irq_mask
-operator|=
-name|DWC_OTG_MSK_GINT_ENABLED
+operator||=
+name|DWC_OTG_MSK_GINT_THREAD_IRQ
 expr_stmt|;
 name|DWC_OTG_WRITE_4
 argument_list|(
