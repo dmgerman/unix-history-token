@@ -2549,10 +2549,6 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
-name|NULL
-expr_stmt|;
 name|options
 operator||=
 name|F_SRCADDR
@@ -3104,9 +3100,12 @@ name|ai_canonname
 condition|)
 name|hostname
 operator|=
+name|strdup
+argument_list|(
 name|res
 operator|->
 name|ai_canonname
+argument_list|)
 expr_stmt|;
 else|else
 name|hostname
@@ -3172,6 +3171,11 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"socket"
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 comment|/* set the source address if specified. */
@@ -6435,17 +6439,6 @@ argument_list|)
 expr_stmt|;
 name|summary
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|res
-operator|!=
-name|NULL
-condition|)
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
