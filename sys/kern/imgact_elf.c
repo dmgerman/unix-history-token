@@ -634,7 +634,7 @@ name|elf_legacy_coredump
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"include all and only RW pages in core dumps"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
