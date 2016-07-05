@@ -1598,6 +1598,11 @@ decl_stmt|;
 name|boolean_t
 name|resetting
 decl_stmt|;
+comment|/* submit_lock */
+name|boolean_t
+name|resetting_cleanup
+decl_stmt|;
+comment|/* cleanup_lock */
 name|uint32_t
 name|head
 decl_stmt|;
