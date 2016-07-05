@@ -1563,7 +1563,11 @@ name|comp_update_bus_addr
 decl_stmt|;
 name|struct
 name|callout
-name|timer
+name|poll_timer
+decl_stmt|;
+name|struct
+name|callout
+name|shrink_timer
 decl_stmt|;
 name|struct
 name|task
@@ -1581,6 +1585,7 @@ decl_stmt|;
 name|boolean_t
 name|is_completion_pending
 decl_stmt|;
+comment|/* submit_lock */
 name|boolean_t
 name|is_reset_pending
 decl_stmt|;
