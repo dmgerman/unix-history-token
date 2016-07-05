@@ -1595,6 +1595,9 @@ decl_stmt|;
 name|boolean_t
 name|intrdelay_supported
 decl_stmt|;
+name|boolean_t
+name|resetting
+decl_stmt|;
 name|uint32_t
 name|head
 decl_stmt|;
