@@ -994,21 +994,10 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_macro
+begin_empty_stmt
 unit|)
-name|__alloc_align
-argument_list|(
-literal|2
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__alloc_size
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* (ADV) */
