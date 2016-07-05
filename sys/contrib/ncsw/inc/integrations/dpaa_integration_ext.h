@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**   @File          dpaa_integration_ext.h   @Description   P2041 FM external definitions and structures. */
+comment|/**   @File          dpaa_integration_ext.h   @Description   P5020 FM external definitions and structures. */
 end_comment
 
 begin_comment
@@ -283,7 +283,12 @@ comment|/**< Dedicated channel serviced by Direct Connect Portal 2:             
 name|e_QM_FQ_CHANNEL_PME
 init|=
 literal|0xA0
+block|,
 comment|/**< Dedicated channel serviced by Direct Connect Portal 3:                                                      connected to PME */
+name|e_QM_FQ_CHANNEL_RAID
+init|=
+literal|0xC0
+comment|/**< Dedicated channel serviced by Direct Connect Portal 4:                                                      connected to RAID */
 block|}
 name|e_QmFQChannel
 typedef|;
@@ -303,24 +308,6 @@ end_define
 begin_comment
 comment|/**< Number of buffers pools */
 end_comment
-
-begin_comment
-comment|/*****************************************************************************  SEC INTEGRATION-SPECIFIC DEFINITIONS ******************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEC_NUM_OF_DECOS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEC_ALL_DECOS_MASK
-value|0x00000003
-end_define
 
 begin_comment
 comment|/*****************************************************************************  FM INTEGRATION-SPECIFIC DEFINITIONS ******************************************************************************/
@@ -622,10 +609,6 @@ value|16
 end_define
 
 begin_comment
-comment|/**< Port weight in BMI arbitration register */
-end_comment
-
-begin_comment
 comment|/**************************************************************************/
 end_comment
 
@@ -816,7 +799,7 @@ value|TRUE
 end_define
 
 begin_comment
-comment|/* P2041 unique features */
+comment|/* P5020 unique features */
 end_comment
 
 begin_define
@@ -892,7 +875,218 @@ name|FM_NO_OP_OBSERVED_CGS
 end_define
 
 begin_comment
-comment|/* FM erratas */
+comment|/* FM erratas (P5020, P3041) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_TX_ECC_FRMS_ERRATA_10GMAC_A004
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_TX_SHORT_FRAME_BAD_TS_ERRATA_10GMAC_A006
+end_define
+
+begin_comment
+comment|/* No implementation, Out of LLD scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_TX_FIFO_CORRUPTION_ERRATA_10GMAC_A007
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_ECC_HALT_NO_SYNC_ERRATA_10GMAC_A008
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_NO_RX_PREAM_ERRATA_DTSECx1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_GRS_ERRATA_DTSEC_A002
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_BAD_TX_TS_IN_B_2_B_ERRATA_DTSEC_A003
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_GTS_ERRATA_DTSEC_A004
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_PAUSE_BLOCK_ERRATA_DTSEC_A006
+end_define
+
+begin_comment
+comment|/* do nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_RESERVED_ACCESS_TO_DISABLED_DEV_ERRATA_DTSEC_A0011
+end_define
+
+begin_comment
+comment|/* do nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_GTS_AFTER_MAC_ABORTED_FRAME_ERRATA_DTSEC_A0012
+value|FM_GTS_ERRATA_DTSEC_A004
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_10_100_SGMII_NO_TS_ERRATA_DTSEC3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_TX_LOCKUP_ERRATA_DTSEC6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_IM_TX_SYNC_SKIP_TNUM_ERRATA_FMAN_A001
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_HC_DEF_FQID_ONLY_ERRATA_FMAN_A003
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_IM_TX_SHARED_TNUM_ERRATA_FMAN4
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_IM_GS_DEADLOCK_ERRATA_FMAN5
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_IM_DEQ_PIPELINE_DEPTH_ERRATA_FMAN10
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_CC_GEN6_MISSMATCH_ERRATA_FMAN12
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_CC_CHANGE_SHARED_TNUM_ERRATA_FMAN13
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_IM_LARGE_MRBLR_ERRATA_FMAN15
+end_define
+
+begin_comment
+comment|/* Implemented by ucode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_BMI_TO_RISC_ENQ_ERRATA_FMANc
+end_define
+
+begin_comment
+comment|/* No implementation, Out of LLD scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_INVALID_SWPRS_DATA_ERRATA_FMANd
+end_define
+
+begin_comment
+comment|//#define FM_PRS_MPLS_SSA_ERRATA_FMANj                            /* No implementation, No patch yet */
+end_comment
+
+begin_comment
+comment|//#define FM_PRS_INITIAL_PLANID_ERRATA_FMANk                      /* No implementation, No patch yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_NO_COPY_CTXA_CTXB_ERRATA_FMAN_SW001
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_10G_REM_N_LCL_FLT_EX_ERRATA_10GMAC001
+end_define
+
+begin_comment
+comment|/* P2041 */
 end_comment
 
 begin_define
@@ -901,10 +1095,21 @@ directive|define
 name|FM_BAD_VLAN_DETECT_ERRATA_10GMAC_A010
 end_define
 
+begin_comment
+comment|/* Common to all */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FM_RX_PREAM_4_ERRATA_DTSEC_A001
+value|FM_NO_RX_PREAM_ERRATA_DTSECx1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_UCODE_NOT_RESET_ERRATA_BUGZILLA6173
 end_define
 
 begin_define
@@ -920,19 +1125,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FM_UCODE_NOT_RESET_ERRATA_BUGZILLA6173
+name|FM_PRS_MEM_ERRATA_FMAN_SW003
 end_define
 
 begin_define
 define|#
 directive|define
 name|FM_LEN_CHECK_ERRATA_FMAN_SW002
-end_define
-
-begin_define
-define|#
-directive|define
-name|FM_PRS_MEM_ERRATA_FMAN_SW003
 end_define
 
 begin_endif

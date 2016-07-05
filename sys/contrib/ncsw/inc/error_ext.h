@@ -787,6 +787,16 @@ name|PRINT_FMT_PARAMS
 value|CORE_GetId(), __FILE__, __LINE__, __FUNCTION__
 end_define
 
+begin_define
+define|#
+directive|define
+name|ERR_STRING
+parameter_list|(
+name|err
+parameter_list|)
+value|#err
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1023,7 +1033,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (REPORT_LEVEL_##_level<= DEBUG_DYNAMIC_LEVEL) { \             XX_Print("> %s (%s) " PRINT_FORMAT ": ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      moduleStrings[__ERR_MODULE__>> 16], \                      PRINT_FMT_PARAMS); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
+value|do { \         if (REPORT_LEVEL_##_level<= DEBUG_DYNAMIC_LEVEL) { \             XX_Print("> %s (%s) " PRINT_FORMAT ": ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
 end_define
 
 begin_endif
@@ -1047,7 +1057,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (REPORT_LEVEL_##_level<= ERROR_DYNAMIC_LEVEL) { \             XX_Print("! %s %s Error " PRINT_FORMAT ": %s; ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      moduleStrings[__ERR_MODULE__>> 16], \                      PRINT_FMT_PARAMS, \                      errTypeStrings[(GET_ERROR_TYPE(_err) - E_OK - 1)]); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
+value|do { \         if (REPORT_LEVEL_##_level<= ERROR_DYNAMIC_LEVEL) { \             XX_Print("! %s %s Error " PRINT_FORMAT ": %s; ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      errTypeStrings[(GET_ERROR_TYPE(_err) - E_OK - 1)]); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
 end_define
 
 begin_define
@@ -1089,7 +1099,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (_ev##_LEVEL<= EVENT_DYNAMIC_LEVEL) { \             XX_Print("~ %s %s Event " PRINT_FORMAT ": %s (flags: 0x%04x); ", \                      dbgLevelStrings[_ev##_LEVEL - 1], \                      moduleStrings[__ERR_MODULE__>> 16], \                      PRINT_FMT_PARAMS, \                      eventStrings[((_ev) - EV_NO_EVENT - 1)], \                      (uint16_t)(_flg)); \             XX_Print _vmsg; \             XX_Print("\r\n"); \             XX_EventById((uint32_t)(_ev), (t_Handle)(_appId), (uint16_t)(_flg), NO_MSG); \         } \     } while (0)
+value|do { \         if (_ev##_LEVEL<= EVENT_DYNAMIC_LEVEL) { \             XX_Print("~ %s %s Event " PRINT_FORMAT ": %s (flags: 0x%04x); ", \                      dbgLevelStrings[_ev##_LEVEL - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      eventStrings[((_ev) - EV_NO_EVENT - 1)], \                      (uint16_t)(_flg)); \             XX_Print _vmsg; \             XX_Print("\r\n"); \             XX_EventById((uint32_t)(_ev), (t_Handle)(_appId), (uint16_t)(_flg), NO_MSG); \         } \     } while (0)
 end_define
 
 begin_else

@@ -26,7 +26,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"P3041/fman_ctrl_code/p3041_r1.0.h"
+file|"fman_ctrl_code/p3041_r1.0.h"
 end_include
 
 begin_comment
