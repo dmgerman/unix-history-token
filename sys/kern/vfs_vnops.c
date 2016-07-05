@@ -2133,6 +2133,11 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_VNODE1
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6600,6 +6605,11 @@ decl_stmt|;
 name|u_short
 name|mode
 decl_stmt|;
+name|AUDIT_ARG_VNODE1
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -7202,6 +7212,11 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|AUDIT_ARG_VNODE1
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
