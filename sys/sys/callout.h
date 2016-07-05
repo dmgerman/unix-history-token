@@ -218,12 +218,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CS_MIGRBLOCK
+name|CS_EXECUTING
 value|0x0002
 end_define
 
 begin_comment
-comment|/* Block migration, return value 					  indicates that the callout was 				          executing */
+comment|/* Positive return value indicates that 					  the callout was executing */
 end_comment
 
 begin_ifdef
