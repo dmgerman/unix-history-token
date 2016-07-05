@@ -287,7 +287,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|INVARIANTS
+name|INVARIANT_SUPPORT
 argument_list|)
 end_if
 
