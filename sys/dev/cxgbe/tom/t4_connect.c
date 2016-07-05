@@ -1267,16 +1267,11 @@ begin_function
 name|void
 name|t4_init_connect_cpl_handlers
 parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_ACT_ESTABLISH
 argument_list|,
 name|do_act_establish
@@ -1284,8 +1279,6 @@ argument_list|)
 expr_stmt|;
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_ACT_OPEN_RPL
 argument_list|,
 name|do_act_open_rpl

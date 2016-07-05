@@ -8644,16 +8644,11 @@ begin_function
 name|void
 name|t4_init_listen_cpl_handlers
 parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_PASS_OPEN_RPL
 argument_list|,
 name|do_pass_open_rpl
@@ -8661,8 +8656,6 @@ argument_list|)
 expr_stmt|;
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_CLOSE_LISTSRV_RPL
 argument_list|,
 name|do_close_server_rpl
@@ -8670,8 +8663,6 @@ argument_list|)
 expr_stmt|;
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_PASS_ACCEPT_REQ
 argument_list|,
 name|do_pass_accept_req
@@ -8679,8 +8670,6 @@ argument_list|)
 expr_stmt|;
 name|t4_register_cpl_handler
 argument_list|(
-name|sc
-argument_list|,
 name|CPL_PASS_ESTABLISH
 argument_list|,
 name|do_pass_establish
