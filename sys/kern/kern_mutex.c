@@ -3015,7 +3015,13 @@ condition|(
 name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
+block|{
+comment|/* 		 * Ensure that spinlock sections are balanced even when the 		 * scheduler is stopped, since we may otherwise inadvertently 		 * re-enable interrupts while dumping core. 		 */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
