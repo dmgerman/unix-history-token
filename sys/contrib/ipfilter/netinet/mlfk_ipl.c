@@ -1917,13 +1917,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|ipf_destroy_all
-argument_list|(
-operator|&
-name|V_ipfmain
-argument_list|)
-expr_stmt|;
-block|}
 name|V_ipfmain
 operator|.
 name|ipf_running
@@ -1931,6 +1924,13 @@ operator|=
 operator|-
 literal|2
 expr_stmt|;
+name|ipf_destroy_all
+argument_list|(
+operator|&
+name|V_ipfmain
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
