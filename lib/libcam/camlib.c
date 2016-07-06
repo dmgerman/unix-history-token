@@ -2550,24 +2550,12 @@ name|serial_num_len
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Zero the payload, the kernel does look at the flags. 	 */
-name|bzero
+name|CCB_CLEAR_ALL_EXCEPT_HDR
 argument_list|(
-operator|&
-operator|(
 operator|&
 name|ccb
 operator|.
-name|ccb_h
-operator|)
-index|[
-literal|1
-index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ccb_trans_settings
-argument_list|)
+name|cts
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get transfer settings for this device. 	 */
