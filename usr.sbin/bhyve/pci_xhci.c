@@ -737,7 +737,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|((a)& ~((m)<< (s)) | \ 					((b)& (m))<< (s))
+value|(((a)& ~((m)<< (s))) | \ 					(((b)& (m))<< (s)))
 end_define
 
 begin_define
@@ -753,7 +753,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|((a)& ~((m)<< (s)) | \ 					((b)& ((m)<< (s))))
+value|(((a)& ~((m)<< (s))) | \ 					(((b)& ((m)<< (s)))))
 end_define
 
 begin_struct
@@ -8036,10 +8036,6 @@ name|xfer_block
 decl_stmt|;
 name|uint64_t
 name|val
-decl_stmt|,
-name|setup_addr
-decl_stmt|,
-name|status_addr
 decl_stmt|;
 name|uint32_t
 name|trbflags
@@ -8106,14 +8102,6 @@ expr_stmt|;
 name|setup_trb
 operator|=
 name|NULL
-expr_stmt|;
-name|setup_addr
-operator|=
-literal|0
-expr_stmt|;
-name|status_addr
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -8262,10 +8250,6 @@ block|}
 name|setup_trb
 operator|=
 name|trb
-expr_stmt|;
-name|setup_addr
-operator|=
-name|addr
 expr_stmt|;
 name|val
 operator|=
@@ -8417,10 +8401,6 @@ break|break;
 case|case
 name|XHCI_TRB_TYPE_STATUS_STAGE
 case|:
-name|status_addr
-operator|=
-name|addr
-expr_stmt|;
 name|xfer_block
 operator|=
 name|usb_data_xfer_append
@@ -8677,10 +8657,6 @@ name|dev_sc
 argument_list|,
 name|xfer
 argument_list|)
-expr_stmt|;
-name|status_addr
-operator|=
-literal|0
 expr_stmt|;
 name|setup_trb
 operator|=
