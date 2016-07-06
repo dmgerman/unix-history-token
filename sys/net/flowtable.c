@@ -3558,6 +3558,9 @@ modifier|*
 name|ft
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|ft
 operator|->
 name|ft_table
