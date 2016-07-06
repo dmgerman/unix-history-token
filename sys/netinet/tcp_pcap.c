@@ -87,6 +87,14 @@ value|((m)->m_data - M_START(m))
 end_define
 
 begin_decl_stmt
+name|int
+name|tcp_pcap_aggressive_free
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|tcp_pcap_clusters_referenced_cur
@@ -103,6 +111,27 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tcp_pcap_aggressive_free
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_pcap_aggressive_free
+argument_list|,
+literal|0
+argument_list|,
+literal|"Free saved packets when the memory system comes under pressure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
