@@ -1276,14 +1276,6 @@ name|umouse_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|char
-modifier|*
-name|mopt
-decl_stmt|;
-name|mopt
-operator|=
-name|opt
-expr_stmt|;
 name|sc
 operator|=
 name|calloc
