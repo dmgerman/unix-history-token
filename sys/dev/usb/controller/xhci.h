@@ -41,8 +41,12 @@ begin_define
 define|#
 directive|define
 name|XHCI_MAX_SCRATCHPADS
-value|1024
+value|256
 end_define
+
+begin_comment
+comment|/* theoretical max is 1023 */
+end_comment
 
 begin_define
 define|#
