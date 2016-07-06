@@ -6973,7 +6973,11 @@ if|if
 condition|(
 name|cmd
 operator|&
+operator|(
 name|IOC_IN
+operator||
+name|IOC_VOID
+operator|)
 condition|)
 name|memcpy
 argument_list|(
