@@ -1654,8 +1654,6 @@ name|uint32_t
 name|vector_control
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|index
 decl_stmt|;
 name|pi
@@ -1953,8 +1951,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|vm_setup_pptdev_msix
 argument_list|(
 name|ctx
