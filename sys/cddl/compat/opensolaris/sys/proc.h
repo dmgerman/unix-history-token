@@ -104,14 +104,14 @@ begin_define
 define|#
 directive|define
 name|max_ncpus
-value|mp_ncpus
+value|(mp_maxid + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|boot_max_ncpus
-value|mp_ncpus
+value|(mp_maxid + 1)
 end_define
 
 begin_define

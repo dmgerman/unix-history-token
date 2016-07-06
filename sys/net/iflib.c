@@ -19854,6 +19854,8 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
+name|cpu
+decl_stmt|,
 name|err
 decl_stmt|,
 name|txconf
@@ -20116,6 +20118,11 @@ operator|=
 name|i
 operator|=
 literal|0
+operator|,
+name|cpu
+operator|=
+name|CPU_FIRST
+argument_list|()
 init|;
 name|i
 operator|<
@@ -20129,6 +20136,13 @@ operator|++
 operator|,
 name|txq
 operator|++
+operator|,
+name|cpu
+operator|=
+name|CPU_NEXT
+argument_list|(
+name|cpu
+argument_list|)
 control|)
 block|{
 comment|/* Set up some basics */
@@ -20264,9 +20278,7 @@ name|ift_timer
 operator|.
 name|c_cpu
 operator|=
-name|i
-operator|%
-name|mp_ncpus
+name|cpu
 expr_stmt|;
 name|txq
 operator|->
@@ -20274,9 +20286,7 @@ name|ift_db_check
 operator|.
 name|c_cpu
 operator|=
-name|i
-operator|%
-name|mp_ncpus
+name|cpu
 expr_stmt|;
 name|txq
 operator|->

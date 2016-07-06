@@ -371,6 +371,10 @@ name|mp_ncpus
 operator|=
 literal|0
 expr_stmt|;
+name|mp_maxid
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|platform_smp_first_cpu
@@ -387,6 +391,17 @@ condition|)
 block|{
 name|mp_ncpus
 operator|++
+expr_stmt|;
+name|mp_maxid
+operator|=
+name|max
+argument_list|(
+name|cpuref
+operator|.
+name|cr_cpuid
+argument_list|,
+name|mp_maxid
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -406,18 +421,6 @@ literal|0
 condition|)
 name|mp_ncpus
 operator|=
-literal|1
-expr_stmt|;
-comment|/* 	 * Set the largest cpuid we're going to use. This is necessary 	 * for VM initialization. 	 */
-name|mp_maxid
-operator|=
-name|min
-argument_list|(
-name|mp_ncpus
-argument_list|,
-name|MAXCPU
-argument_list|)
-operator|-
 literal|1
 expr_stmt|;
 block|}

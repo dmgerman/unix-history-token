@@ -504,8 +504,8 @@ operator|>=
 literal|0
 operator|&&
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 operator|&&
 name|cpu_enabled
 argument_list|(
@@ -586,8 +586,8 @@ operator|>=
 literal|0
 operator|&&
 name|oldcpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 operator|&&
 name|cpu_enabled
 argument_list|(
@@ -673,8 +673,8 @@ decl_stmt|;
 if|if
 condition|(
 name|cpu
-operator|>=
-name|mp_ncpus
+operator|>
+name|mp_maxid
 operator|||
 operator|!
 name|cpu_enabled
@@ -926,8 +926,8 @@ operator|>=
 literal|0
 operator|&&
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 argument_list|,
 operator|(
 literal|"[cpuctl,%d]: bad cpu number %d"
@@ -1162,8 +1162,8 @@ operator|>=
 literal|0
 operator|&&
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 argument_list|,
 operator|(
 literal|"[cpuctl,%d]: bad cpu number %d"
@@ -1450,8 +1450,8 @@ operator|>=
 literal|0
 operator|&&
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 argument_list|,
 operator|(
 literal|"[cpuctl,%d]: bad cpu number %d"
@@ -2519,8 +2519,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu
-operator|>=
-name|mp_ncpus
+operator|>
+name|mp_maxid
 operator|||
 operator|!
 name|cpu_enabled
@@ -2617,7 +2617,11 @@ operator|*
 name|cpuctl_devs
 argument_list|)
 operator|*
-name|mp_ncpus
+operator|(
+name|mp_maxid
+operator|+
+literal|1
+operator|)
 argument_list|,
 name|M_CPUCTL
 argument_list|,
@@ -2626,19 +2630,10 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|cpu
-operator|=
-literal|0
-init|;
-name|cpu
-operator|<
-name|mp_ncpus
-condition|;
-name|cpu
-operator|++
-control|)
+name|CPU_FOREACH
+argument_list|(
+argument|cpu
+argument_list|)
 if|if
 condition|(
 name|cpu_enabled
@@ -2673,19 +2668,10 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-for|for
-control|(
-name|cpu
-operator|=
-literal|0
-init|;
-name|cpu
-operator|<
-name|mp_ncpus
-condition|;
-name|cpu
-operator|++
-control|)
+name|CPU_FOREACH
+argument_list|(
+argument|cpu
+argument_list|)
 block|{
 if|if
 condition|(

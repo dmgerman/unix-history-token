@@ -550,7 +550,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* 					 * Allocates mp_ncpus slabs sized to 					 * sizeof(struct pcpu). 					 */
+comment|/* 					 * Allocates mp_maxid + 1 slabs sized to 					 * sizeof(struct pcpu). 					 */
 end_comment
 
 begin_comment
