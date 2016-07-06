@@ -2799,7 +2799,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* (b) Process name. */
+comment|/* (x) Process name. */
 name|struct
 name|sysentvec
 modifier|*
