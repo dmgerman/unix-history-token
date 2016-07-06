@@ -610,7 +610,7 @@ name|sense_len
 argument_list|,
 literal|9
 argument_list|,
-name|sati_get_ata_lba_high
+name|sati_get_ata_lba_low
 argument_list|(
 name|register_fis
 argument_list|)
@@ -638,7 +638,7 @@ name|sense_len
 argument_list|,
 literal|11
 argument_list|,
-name|sati_get_ata_lba_low
+name|sati_get_ata_lba_high
 argument_list|(
 name|register_fis
 argument_list|)
