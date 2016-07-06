@@ -705,6 +705,15 @@ operator||
 name|XPT_FC_USER_CCB
 block|,
 comment|/* Acknowledgement of event */
+name|XPT_REPROBE_LUN
+init|=
+literal|0x38
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+block|,
+comment|/* Query device capacity and notify GEOM */
 comment|/* Vendor Unique codes: 0x80->0x8F */
 name|XPT_VUNIQUE
 init|=
