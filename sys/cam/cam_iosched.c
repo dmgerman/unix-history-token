@@ -127,7 +127,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Default I/O scheduler for FreeBSD. This implementation is just a thin-vineer  * over the bioq_* interface, with notions of separate calls for normal I/O and  * for trims.  */
+comment|/*  * Default I/O scheduler for FreeBSD. This implementation is just a thin-vineer  * over the bioq_* interface, with notions of separate calls for normal I/O and  * for trims.  *  * When CAM_IOSCHED_DYNAMIC is defined, the scheduler is enhanced to dynamically  * steer the rate of one type of traffic to help other types of traffic (eg  * limit writes when read latency deteriorates on SSDs).  */
 end_comment
 
 begin_ifdef
@@ -139,7 +139,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|do_netflix_iosched
+name|do_dynamic_iosched
 init|=
 literal|1
 decl_stmt|;
@@ -148,10 +148,10 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"kern.cam.do_netflix_iosched"
+literal|"kern.cam.do_dynamic_iosched"
 argument_list|,
 operator|&
-name|do_netflix_iosched
+name|do_dynamic_iosched
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -163,16 +163,16 @@ name|_kern_cam
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|do_netflix_iosched
+name|do_dynamic_iosched
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|do_netflix_iosched
+name|do_dynamic_iosched
 argument_list|,
 literal|1
 argument_list|,
-literal|"Enable Netflix I/O scheduler optimizations."
+literal|"Enable Dynamic I/O scheduler optimizations."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2296,7 +2296,7 @@ directive|ifdef
 name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 block|{
 name|struct
@@ -4020,7 +4020,7 @@ directive|ifdef
 name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 block|{
 name|bioq_init
@@ -4402,7 +4402,7 @@ name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 operator|!
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 return|return;
 name|isc
@@ -4611,7 +4611,7 @@ directive|ifdef
 name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 name|bioq_flush
 argument_list|(
@@ -5065,7 +5065,7 @@ name|CAM_IOSCHED_DYNAMIC
 comment|/* 	 * See if we have any pending writes, and room in the queue for them, 	 * and if so, those are next. 	 */
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 block|{
 if|if
@@ -5113,7 +5113,7 @@ name|CAM_IOSCHED_DYNAMIC
 comment|/* 	 * For the netflix scheduler, bio_queue is only for reads, so enforce 	 * the limits here. Enforce only for reads. 	 */
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 block|{
 if|if
@@ -5157,7 +5157,7 @@ directive|ifdef
 name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 block|{
 if|if
@@ -5292,7 +5292,7 @@ name|CAM_IOSCHED_DYNAMIC
 elseif|else
 if|if
 condition|(
-name|do_netflix_iosched
+name|do_dynamic_iosched
 operator|&&
 operator|(
 name|bp
@@ -5581,7 +5581,7 @@ name|CAM_IOSCHED_DYNAMIC
 if|if
 condition|(
 operator|!
-name|do_netflix_iosched
+name|do_dynamic_iosched
 condition|)
 return|return
 name|retval
