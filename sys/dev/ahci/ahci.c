@@ -1032,13 +1032,13 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|,
-name|u
-decl_stmt|,
 name|speed
 decl_stmt|,
 name|unit
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
+name|u
+decl_stmt|,
 name|version
 decl_stmt|;
 name|device_t

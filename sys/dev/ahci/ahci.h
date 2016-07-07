@@ -2607,7 +2607,7 @@ decl_stmt|;
 name|int
 name|channels
 decl_stmt|;
-name|int
+name|uint32_t
 name|ichannels
 decl_stmt|;
 block|}
@@ -2738,7 +2738,7 @@ decl_stmt|;
 name|int
 name|channels
 decl_stmt|;
-name|int
+name|uint32_t
 name|ichannels
 decl_stmt|;
 name|int
