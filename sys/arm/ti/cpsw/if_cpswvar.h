@@ -214,6 +214,9 @@ name|rx
 decl_stmt|,
 name|tx
 decl_stmt|;
+name|uint32_t
+name|last_hdp
+decl_stmt|;
 comment|/* We expect 1 memory resource and 4 interrupts from the device tree. */
 name|int
 name|mem_rid
