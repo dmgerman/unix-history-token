@@ -36,7 +36,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPILED_FROM_DSP
+name|WIN32
 end_ifdef
 
 begin_include
@@ -111,7 +111,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ndef COMPILED_FROM_DSP */
+comment|/* ndef WIN32 */
 end_comment
 
 begin_include
@@ -119,6 +119,16 @@ include|#
 directive|include
 file|"expat.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"internal.h"
+end_include
+
+begin_comment
+comment|/* for UNUSED_P only */
+end_comment
 
 begin_include
 include|#
@@ -804,7 +814,10 @@ parameter_list|,
 specifier|const
 name|XML_Char
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|publicId
+parameter_list|)
 parameter_list|)
 block|{
 name|int
@@ -1160,7 +1173,10 @@ parameter_list|,
 specifier|const
 name|XML_Char
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|publicId
+parameter_list|)
 parameter_list|)
 block|{
 name|XML_Char

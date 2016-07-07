@@ -60,6 +60,25 @@ name|__func__
 value|__FUNCTION__
 endif|#
 directive|endif
+comment|/* ISO C90 does not support '__func__' predefined identifier */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+operator|(
+name|__STDC_VERSION__
+operator|<
+literal|199901
+operator|)
+define|#
+directive|define
+name|__func__
+value|"(unknown)"
+endif|#
+directive|endif
 define|#
 directive|define
 name|START_TEST
@@ -141,6 +160,7 @@ struct|;
 struct|struct
 name|Suite
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -154,6 +174,7 @@ struct|;
 struct|struct
 name|TCase
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -213,6 +234,7 @@ parameter_list|,
 name|int
 name|line
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -222,6 +244,7 @@ name|Suite
 modifier|*
 name|suite_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -231,6 +254,7 @@ name|TCase
 modifier|*
 name|tcase_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

@@ -771,7 +771,7 @@ argument_list|,
 argument|XML_EntityDeclHandler handler
 argument_list|)
 empty_stmt|;
-comment|/* OBSOLETE -- OBSOLETE -- OBSOLETE    This handler has been superceded by the EntityDeclHandler above.    It is provided here for backward compatibility.     This is called for a declaration of an unparsed (NDATA) entity.    The base argument is whatever was set by XML_SetBase. The    entityName, systemId and notationName arguments will never be    NULL. The other arguments may be. */
+comment|/* OBSOLETE -- OBSOLETE -- OBSOLETE    This handler has been superseded by the EntityDeclHandler above.    It is provided here for backward compatibility.     This is called for a declaration of an unparsed (NDATA) entity.    The base argument is whatever was set by XML_SetBase. The    entityName, systemId and notationName arguments will never be    NULL. The other arguments may be. */
 typedef|typedef
 name|void
 function_decl|(
@@ -1695,16 +1695,27 @@ name|XMLPARSEAPI
 argument_list|(
 argument|void *
 argument_list|)
+name|XML_ATTR_MALLOC
+name|XML_ATTR_ALLOC_SIZE
+argument_list|(
+literal|2
+argument_list|)
 name|XML_MemMalloc
 argument_list|(
-argument|XML_Parser parser
+name|XML_Parser
+name|parser
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|)
-empty_stmt|;
+decl_stmt|;
 name|XMLPARSEAPI
 argument_list|(
 argument|void *
+argument_list|)
+name|XML_ATTR_ALLOC_SIZE
+argument_list|(
+literal|3
 argument_list|)
 name|XML_MemRealloc
 argument_list|(
@@ -1839,7 +1850,7 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
-comment|/* Expat follows the GNU/Linux convention of odd number minor version for    beta/development releases and even number minor version for stable    releases. Micro is bumped with each release, and set to 0 with each    change to major or minor version. */
+comment|/* Expat follows the semantic versioning convention.    See http://semver.org. */
 define|#
 directive|define
 name|XML_MAJOR_VERSION
@@ -1847,7 +1858,7 @@ value|2
 define|#
 directive|define
 name|XML_MINOR_VERSION
-value|1
+value|2
 define|#
 directive|define
 name|XML_MICRO_VERSION

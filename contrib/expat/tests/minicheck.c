@@ -30,6 +30,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"internal.h"
+end_include
+
+begin_comment
+comment|/* for UNUSED_P only */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"minicheck.h"
 end_include
 
@@ -38,6 +48,7 @@ name|Suite
 modifier|*
 name|suite_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -86,6 +97,7 @@ name|TCase
 modifier|*
 name|tcase_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -732,16 +744,26 @@ name|void
 name|_fail_unless
 parameter_list|(
 name|int
+name|UNUSED_P
+parameter_list|(
 name|condition
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|file
+parameter_list|)
 parameter_list|,
 name|int
+name|UNUSED_P
+parameter_list|(
 name|line
+parameter_list|)
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg

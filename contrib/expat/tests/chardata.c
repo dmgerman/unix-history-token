@@ -20,33 +20,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CHECK_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<check.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|"minicheck.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -236,6 +214,9 @@ name|storage
 operator|->
 name|count
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|storage
@@ -381,6 +362,9 @@ name|storage
 operator|->
 name|count
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|storage

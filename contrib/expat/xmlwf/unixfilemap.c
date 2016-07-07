@@ -256,7 +256,8 @@ operator|)
 name|mmap
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -319,7 +320,8 @@ expr_stmt|;
 name|munmap
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|p
 argument_list|,
