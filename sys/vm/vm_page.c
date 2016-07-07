@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1625,6 +1631,9 @@ decl_stmt|;
 name|int
 name|biggestone
 decl_stmt|;
+name|int
+name|pages_per_zone
+decl_stmt|;
 name|biggestsize
 operator|=
 literal|0
@@ -1916,6 +1925,47 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Almost all of the pages needed for boot strapping UMA are used 	 * for zone structures, so if the number of CPUs results in those 	 * structures taking more than one page each, we set aside more pages 	 * in proportion to the zone structure size. 	 */
+name|pages_per_zone
+operator|=
+name|howmany
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uma_zone
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uma_cache
+argument_list|)
+operator|*
+operator|(
+name|mp_maxid
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|UMA_SLAB_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pages_per_zone
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* Reserve more pages so that we don't run out. */
+name|boot_pages
+operator|=
+name|UMA_BOOT_PAGES_ZONES
+operator|*
+name|pages_per_zone
+expr_stmt|;
+block|}
 comment|/* 	 * Allocate memory for use when boot strapping the kernel memory 	 * allocator. 	 * 	 * CTFLAG_RDTUN doesn't work during the early boot process, so we must 	 * manually fetch the value. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(

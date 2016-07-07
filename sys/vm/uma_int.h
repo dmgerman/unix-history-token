@@ -77,6 +77,21 @@ begin_comment
 comment|/* Pages allocated for startup */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_BOOT_PAGES_ZONES
+value|32
+end_define
+
+begin_comment
+comment|/* Multiplier for pages to reserve */
+end_comment
+
+begin_comment
+comment|/* if uma_zone> PAGE_SIZE */
+end_comment
+
 begin_comment
 comment|/* Max waste percentage before going to off page slab management */
 end_comment
