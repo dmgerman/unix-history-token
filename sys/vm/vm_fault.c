@@ -2145,9 +2145,7 @@ name|nera
 expr_stmt|;
 if|if
 condition|(
-name|fs
-operator|.
-name|pindex
+name|vaddr
 operator|==
 name|fs
 operator|.
@@ -2169,9 +2167,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|fs
-operator|.
-name|pindex
+name|vaddr
 operator|==
 name|fs
 operator|.
@@ -3474,7 +3470,7 @@ name|retry_prot
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the page was filled by a pager, update the map entry's 	 * last read offset. 	 * 	 * XXX The following assignment modifies the map 	 * without holding a write lock on it. 	 */
+comment|/* 	 * If the page was filled by a pager, save the virtual address that 	 * should be faulted on next under a sequential access pattern to the 	 * map entry.  A read lock on the map suffices to update this address 	 * safely. 	 */
 if|if
 condition|(
 name|hardfault
@@ -3485,13 +3481,14 @@ name|entry
 operator|->
 name|next_read
 operator|=
-name|fs
-operator|.
-name|pindex
+name|vaddr
 operator|+
+name|ptoa
+argument_list|(
 name|ahead
+argument_list|)
 operator|+
-literal|1
+name|PAGE_SIZE
 expr_stmt|;
 name|vm_fault_dirty
 argument_list|(

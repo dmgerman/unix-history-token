@@ -5300,10 +5300,7 @@ name|new_entry
 operator|->
 name|next_read
 operator|=
-name|OFF_TO_IDX
-argument_list|(
-name|offset
-argument_list|)
+name|start
 expr_stmt|;
 name|KASSERT
 argument_list|(

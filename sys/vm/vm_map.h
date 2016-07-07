@@ -123,6 +123,10 @@ name|vm_offset_t
 name|avail_ssize
 decl_stmt|;
 comment|/* amt can grow if this is a stack */
+name|vm_offset_t
+name|next_read
+decl_stmt|;
+comment|/* vaddr of the next sequential read */
 name|vm_size_t
 name|adj_free
 decl_stmt|;
@@ -164,10 +168,6 @@ name|int
 name|wired_count
 decl_stmt|;
 comment|/* can be paged if = 0 */
-name|vm_pindex_t
-name|next_read
-decl_stmt|;
-comment|/* index of the next sequential read */
 name|struct
 name|ucred
 modifier|*
