@@ -733,6 +733,8 @@ name|unmount
 argument_list|(
 name|fsid_str
 argument_list|,
+name|MNT_NONBUSY
+operator||
 name|MNT_BYFSID
 argument_list|)
 expr_stmt|;

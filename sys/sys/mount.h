@@ -1265,7 +1265,7 @@ value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| 
 end_define
 
 begin_comment
-comment|/*  * External filesystem command modifier flags.  * Unmount can use the MNT_FORCE flag.  * XXX: These are not STATES and really should be somewhere else.  * XXX: MNT_BYFSID collides with MNT_ACLS, but because MNT_ACLS is only used for  *      mount(2) and MNT_BYFSID is only used for unmount(2) it's harmless.  */
+comment|/*  * External filesystem command modifier flags.  * Unmount can use the MNT_FORCE flag.  * XXX: These are not STATES and really should be somewhere else.  * XXX: MNT_BYFSID and MNT_NONBUSY collide with MNT_ACLS and MNT_MULTILABEL,  *      but because MNT_ACLS and MNT_MULTILABEL are only used for mount(2),  *      and MNT_BYFSID and MNT_NONBUSY are only used for unmount(2),  *      it's harmless.  */
 end_comment
 
 begin_define
@@ -1326,6 +1326,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_NONBUSY
+value|0x0000000004000000ULL
+end_define
+
+begin_comment
+comment|/* check vnode use counts. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_BYFSID
 value|0x0000000008000000ULL
 end_define
@@ -1338,7 +1349,7 @@ begin_define
 define|#
 directive|define
 name|MNT_CMDFLAGS
-value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT	| MNT_BYFSID)
+value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT	| MNT_NONBUSY	| \ 			MNT_BYFSID)
 end_define
 
 begin_comment

@@ -442,7 +442,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaF:fh:t:v"
+literal|"AaF:fh:nt:v"
 argument_list|)
 operator|)
 operator|!=
@@ -483,7 +483,7 @@ case|case
 literal|'f'
 case|:
 name|fflag
-operator|=
+operator||=
 name|MNT_FORCE
 expr_stmt|;
 break|break;
@@ -498,6 +498,14 @@ expr_stmt|;
 name|nfshost
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|fflag
+operator||=
+name|MNT_NONBUSY
 expr_stmt|;
 break|break;
 case|case
@@ -546,13 +554,42 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* Start disks transferring immediately. */
 if|if
 condition|(
 operator|(
 name|fflag
 operator|&
 name|MNT_FORCE
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|fflag
+operator|&
+name|MNT_NONBUSY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"-f and -n are mutually exclusive"
+argument_list|)
+expr_stmt|;
+comment|/* Start disks transferring immediately. */
+if|if
+condition|(
+operator|(
+name|fflag
+operator|&
+operator|(
+name|MNT_FORCE
+operator||
+name|MNT_NONBUSY
+operator|)
 operator|)
 operator|==
 literal|0
@@ -3101,9 +3138,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: umount [-fv] special ... | node ... | fsid ..."
+literal|"usage: umount [-fnv] special ... | node ... | fsid ..."
 argument_list|,
-literal|"       umount -a | -A [-F fstab] [-fv] [-h host] [-t type]"
+literal|"       umount -a | -A [-F fstab] [-fnv] [-h host] [-t type]"
 argument_list|)
 expr_stmt|;
 name|exit
