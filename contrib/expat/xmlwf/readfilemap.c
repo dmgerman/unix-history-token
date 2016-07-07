@@ -33,6 +33,10 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_comment
+comment|/* Functions close(2) and read(2) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -67,22 +71,43 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__BEOS__
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

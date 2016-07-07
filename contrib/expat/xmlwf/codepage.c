@@ -9,6 +9,16 @@ directive|include
 file|"codepage.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"internal.h"
+end_include
+
+begin_comment
+comment|/* for UNUSED_P only */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -340,11 +350,17 @@ name|int
 name|codepageMap
 parameter_list|(
 name|int
+name|UNUSED_P
+parameter_list|(
 name|cp
+parameter_list|)
 parameter_list|,
 name|int
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|map
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -358,12 +374,18 @@ name|int
 name|codepageConvert
 parameter_list|(
 name|int
+name|UNUSED_P
+parameter_list|(
 name|cp
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|UNUSED_P
+parameter_list|(
 name|p
+parameter_list|)
 parameter_list|)
 block|{
 return|return
