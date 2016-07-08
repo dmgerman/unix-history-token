@@ -546,7 +546,7 @@ decl_stmt|;
 if|if
 condition|(
 name|rtype
-operator|>
+operator|>=
 name|RPCBVERS_STAT
 condition|)
 return|return;
