@@ -662,6 +662,11 @@ init|=
 literal|248
 block|,
 comment|/* Supports HAL_RX_FILTER_MYBEACON */
+name|HAL_CAP_TOA_LOCATIONING
+init|=
+literal|249
+block|,
+comment|/* time of flight / arrival locationing */
 name|HAL_CAP_TXTSTAMP_PREC
 init|=
 literal|250
