@@ -475,6 +475,9 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_REQUIRE_EQ
 argument_list|(
 name|strcmp
@@ -487,6 +490,28 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ATF_REQUIRE_EQ_MSG
+argument_list|(
+name|strcmp
+argument_list|(
+name|result
+argument_list|,
+name|goodResult
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s != %s"
+argument_list|,
+name|result
+argument_list|,
+name|goodResult
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
