@@ -208,6 +208,12 @@ name|CLOCK_CCU
 block|}
 block|,
 block|{
+literal|"allwinner,sun5i-a13"
+block|,
+name|CLOCK_CCU
+block|}
+block|,
+block|{
 literal|"allwinner,sun7i-a20"
 block|,
 name|CLOCK_CCU

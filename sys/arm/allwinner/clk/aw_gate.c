@@ -152,6 +152,33 @@ literal|"Allwinner APB1 Clock Gates"
 block|}
 block|,
 block|{
+literal|"allwinner,sun5i-a13-ahb-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner AHB Clock Gates"
+block|}
+block|,
+block|{
+literal|"allwinner,sun5i-a13-apb0-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner APB0 Clock Gates"
+block|}
+block|,
+block|{
+literal|"allwinner,sun5i-a13-apb1-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner APB1 Clock Gates"
+block|}
+block|,
+block|{
 literal|"allwinner,sun7i-a20-ahb-gates-clk"
 block|,
 operator|(

@@ -3338,6 +3338,35 @@ begin_comment
 comment|/*  * Device interface  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"allwinner,sun4i-a10-codec"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"allwinner,sun7i-a20-codec"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -3362,13 +3391,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"allwinner,sun7i-a20-codec"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

@@ -385,6 +385,16 @@ name|a10_ehci_conf
 block|}
 block|,
 block|{
+literal|"allwinner,sun5i-a13-ehci"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|a10_ehci_conf
+block|}
+block|,
+block|{
 literal|"allwinner,sun6i-a31-ehci"
 block|,
 operator|(
