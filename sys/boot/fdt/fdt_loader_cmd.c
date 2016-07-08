@@ -1956,7 +1956,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Using DTB from memory address 0x%p.\n"
+literal|"Using DTB from memory address %p.\n"
 argument_list|,
 name|fdt_to_load
 argument_list|)

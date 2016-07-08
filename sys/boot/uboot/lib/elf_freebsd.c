@@ -308,7 +308,7 @@ name|e_entry
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kernel entry at 0x%p...\n"
+literal|"Kernel entry at %p...\n"
 argument_list|,
 name|entry
 argument_list|)
