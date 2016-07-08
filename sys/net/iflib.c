@@ -2812,7 +2812,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * device-specific sysctl variables:  *  * ixl_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ixl_rx_miss, ixl_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
+comment|/*  * device-specific sysctl variables:  *  * iflib_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * iflib_rx_miss, iflib_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
 end_comment
 
 begin_expr_stmt
@@ -2892,7 +2892,7 @@ name|_dev_netmap
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ixl_rx_miss_bufs
+name|iflib_rx_miss_bufs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
