@@ -5541,12 +5541,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_has_long_rxdesc_tsf
+name|ath_hal_get_rx_tsf_prec
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_pr
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, \ 	0, NULL) == HAL_OK)
+value|(ath_hal_getcapability((_ah), HAL_CAP_RXTSTAMP_PREC, 0, (_pr)) \ 	    == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_get_tx_tsf_prec
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_pr
+parameter_list|)
+define|\
+value|(ath_hal_getcapability((_ah), HAL_CAP_TXTSTAMP_PREC, 0, (_pr)) \ 	    == HAL_OK)
 end_define
 
 begin_define
