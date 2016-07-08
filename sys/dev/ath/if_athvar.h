@@ -1022,8 +1022,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_BUF_TOA_PROBE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* ToD/ToA exchange probe */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATH_BUF_FLAGS_CLONE
-value|(ATH_BUF_MGMT)
+value|(ATH_BUF_MGMT | ATH_BUF_TOA_PROBE)
 end_define
 
 begin_comment
