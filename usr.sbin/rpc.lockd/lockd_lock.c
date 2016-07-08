@@ -5984,6 +5984,7 @@ name|retval
 operator|=
 name|PFL_NFSRESERR
 expr_stmt|;
+break|break;
 default|default:
 name|debuglog
 argument_list|(
