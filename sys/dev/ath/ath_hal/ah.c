@@ -3445,7 +3445,7 @@ name|result
 operator|=
 name|pCap
 operator|->
-name|halTstampPrecision
+name|halRxTstampPrecision
 expr_stmt|;
 return|return
 name|HAL_OK
@@ -3575,19 +3575,6 @@ else|:
 name|HAL_ENOTSUPP
 return|;
 case|case
-name|HAL_CAP_LONG_RXDESC_TSF
-case|:
-comment|/* 32 bit TSF in RX descriptor? */
-return|return
-name|pCap
-operator|->
-name|halHasLongRxDescTsf
-condition|?
-name|HAL_OK
-else|:
-name|HAL_ENOTSUPP
-return|;
-case|case
 name|HAL_CAP_BB_READ_WAR
 case|:
 comment|/* Baseband read WAR */
@@ -3652,6 +3639,20 @@ condition|?
 name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
+return|;
+case|case
+name|HAL_CAP_TXTSTAMP_PREC
+case|:
+comment|/* tx desc tstamp precision (bits) */
+operator|*
+name|result
+operator|=
+name|pCap
+operator|->
+name|halTxTstampPrecision
+expr_stmt|;
+return|return
+name|HAL_OK
 return|;
 default|default:
 return|return

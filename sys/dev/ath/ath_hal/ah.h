@@ -637,11 +637,6 @@ init|=
 literal|242
 block|,
 comment|/* support a self-linked tail RX descriptor */
-name|HAL_CAP_LONG_RXDESC_TSF
-init|=
-literal|243
-block|,
-comment|/* hardware supports 32bit TSF in RX descriptor */
 name|HAL_CAP_BB_READ_WAR
 init|=
 literal|244
@@ -667,6 +662,11 @@ init|=
 literal|248
 block|,
 comment|/* Supports HAL_RX_FILTER_MYBEACON */
+name|HAL_CAP_TXTSTAMP_PREC
+init|=
+literal|250
+block|,
+comment|/* tx desc tstamp precision (bits) */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

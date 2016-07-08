@@ -5287,7 +5287,13 @@ name|AH_TRUE
 expr_stmt|;
 name|pCap
 operator|->
-name|halTstampPrecision
+name|halTxTstampPrecision
+operator|=
+literal|32
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxTstampPrecision
 operator|=
 literal|32
 expr_stmt|;
@@ -5511,13 +5517,6 @@ operator|->
 name|halEnhancedDfsSupport
 operator|=
 name|AH_FALSE
-expr_stmt|;
-comment|/* Hardware supports 32 bit TSF values in the RX descriptor */
-name|pCap
-operator|->
-name|halHasLongRxDescTsf
-operator|=
-name|AH_TRUE
 expr_stmt|;
 comment|/* 	 * BB Read WAR: this is only for AR5008/AR9001 NICs 	 * It is also set individually in the AR91xx attach functions. 	 */
 if|if

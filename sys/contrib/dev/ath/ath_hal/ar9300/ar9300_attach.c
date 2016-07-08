@@ -12172,11 +12172,16 @@ endif|#
 directive|endif
 name|p_cap
 operator|->
-name|halHasLongRxDescTsf
+name|halTxTstampPrecision
 operator|=
-name|AH_TRUE
+literal|32
 expr_stmt|;
-comment|//    p_cap->hal_rx_desc_timestamp_bits = 32;
+name|p_cap
+operator|->
+name|halRxTstampPrecision
+operator|=
+literal|32
+expr_stmt|;
 name|p_cap
 operator|->
 name|halRxTxAbortSupport

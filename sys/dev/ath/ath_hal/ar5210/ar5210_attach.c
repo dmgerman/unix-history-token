@@ -1727,7 +1727,13 @@ expr_stmt|;
 block|}
 name|pCap
 operator|->
-name|halTstampPrecision
+name|halTxTstampPrecision
+operator|=
+literal|16
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxTstampPrecision
 operator|=
 literal|15
 expr_stmt|;

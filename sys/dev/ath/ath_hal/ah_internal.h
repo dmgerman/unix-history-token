@@ -967,10 +967,6 @@ name|halSupportsFastClock5GHz
 range|:
 literal|1
 decl_stmt|,
-name|halHasLongRxDescTsf
-range|:
-literal|1
-decl_stmt|,
 name|halHasBBReadWar
 range|:
 literal|1
@@ -1084,7 +1080,10 @@ decl_stmt|,
 name|halHigh2GhzChan
 decl_stmt|;
 name|int
-name|halTstampPrecision
+name|halTxTstampPrecision
+decl_stmt|;
+name|int
+name|halRxTstampPrecision
 decl_stmt|;
 name|int
 name|halRtsAggrLimit
