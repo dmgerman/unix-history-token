@@ -26705,6 +26705,27 @@ argument_list|,
 literal|"index of first tx queue"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rss_size"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|vi
+operator|->
+name|rss_size
+argument_list|,
+literal|"size of RSS indirection table"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IS_MAIN_VI
