@@ -1512,6 +1512,22 @@ operator|->
 name|status6
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ads
+operator|->
+name|status8
+operator|&
+name|AR_tx_fast_ts
+condition|)
+block|{
+name|ts
+operator|->
+name|ts_flags
+operator||=
+name|HAL_TX_FAST_TS
+expr_stmt|;
+block|}
 comment|/*      * Extract the transmit rate.      */
 name|ts
 operator|->
@@ -2473,6 +2489,28 @@ operator|=
 name|AR_not_sounding
 expr_stmt|;
 comment|/* set not sounding for normal frame */
+comment|/* ToA/ToD positioning */
+if|if
+condition|(
+name|flags
+operator|&
+name|HAL_TXDESC_POS
+condition|)
+block|{
+name|ads
+operator|->
+name|ds_ctl12
+operator||=
+name|AR_loc_mode
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl19
+operator|&=
+operator|~
+name|AR_not_sounding
+expr_stmt|;
+block|}
 comment|/*      * Clear Ness1/2/3 (Number of Extension Spatial Streams) fields.      * Ness0 is cleared in ctl19.  See EV66059 (BB panic).      */
 name|ads
 operator|->
