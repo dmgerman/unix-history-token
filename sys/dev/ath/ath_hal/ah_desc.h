@@ -60,6 +60,12 @@ name|ts_seqnum
 decl_stmt|;
 comment|/* h/w assigned sequence number */
 name|uint16_t
+name|ts_pad1
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uint32_t
 name|ts_tstamp
 decl_stmt|;
 comment|/* h/w assigned timestamp */
@@ -279,6 +285,17 @@ begin_comment
 comment|/* Tx delimiter underrun */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_TX_FAST_TS
+value|0x80
+end_define
+
+begin_comment
+comment|/* Tx locationing timestamp */
+end_comment
+
 begin_comment
 comment|/*  * Receive descriptor status.  This structure is filled  * in only after the rx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * If rx_status is zero, then the frame was received ok;  * otherwise the error information is indicated and rs_phyerr  * contains a phy error code if HAL_RXERR_PHY is set.  In general  * the frame contents is undefined when an error occurred thought  * for some errors (e.g. a decryption error), it may be meaningful.  *  * Note that the receive timestamp is expanded using the TSF to  * at least 15 bits (regardless of what the h/w provides directly).  * Newer hardware supports a full 32-bits; use HAL_CAP_32TSTAMP to  * find out if the hardware is capable.  *  * rx_rssi is in units of dbm above the noise floor.  This value  * is measured during the preamble and PLCP; i.e. with the initial  * 4us of detection.  The noise floor is typically a consistent  * -96dBm absolute power in a 20MHz channel.  */
 end_comment
@@ -361,6 +378,17 @@ name|uint8_t
 name|rs_spare0
 decl_stmt|;
 comment|/* padding */
+name|uint8_t
+name|rs_ness
+decl_stmt|;
+comment|/* number of extension spatial streams */
+name|uint8_t
+name|rs_hw_upload_data_type
+decl_stmt|;
+comment|/* hw upload format */
+name|uint16_t
+name|rs_spare1
+decl_stmt|;
 name|uint32_t
 name|rs_evm0
 decl_stmt|;
@@ -579,6 +607,50 @@ end_define
 
 begin_comment
 comment|/* Is an STBC frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LOC_INFO
+value|0x0400
+end_define
+
+begin_comment
+comment|/* RX locationing information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_HW_UPLOAD_DATA
+value|0x1000
+end_define
+
+begin_comment
+comment|/* This is a hardware data frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_HW_SOUNDING
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Rx sounding frame (TxBF, positioning) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_UPLOAD_VALID
+value|0x4000
+end_define
+
+begin_comment
+comment|/* This hardware data frame is valid */
 end_comment
 
 begin_comment
@@ -1133,6 +1205,17 @@ end_define
 
 begin_comment
 comment|/* Request Azimuth Timestamp in TX payload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_POS
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Request ToD/ToA locationing */
 end_comment
 
 begin_comment
