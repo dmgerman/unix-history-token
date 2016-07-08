@@ -1064,7 +1064,7 @@ name|ned
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -1092,7 +1092,7 @@ init|;
 operator|*
 name|cp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|cp
 operator|++
