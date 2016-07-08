@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_CC_VER
-value|1100000
+value|1200000
 end_define
 
 begin_comment
