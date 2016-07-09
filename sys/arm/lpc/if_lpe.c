@@ -883,7 +883,7 @@ define|#
 directive|define
 name|lpe_lock_assert
 parameter_list|(
-name|sc
+name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->lpe_mtx, MA_OWNED)
 end_define
