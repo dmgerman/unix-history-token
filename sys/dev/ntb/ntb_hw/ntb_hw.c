@@ -2245,7 +2245,7 @@ specifier|static
 name|int
 name|g_ntb_msix_idx
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -7123,6 +7123,51 @@ name|features
 operator||=
 name|NTB_SPLIT_BAR
 expr_stmt|;
+if|if
+condition|(
+name|HAS_FEATURE
+argument_list|(
+name|ntb
+argument_list|,
+name|NTB_SB01BASE_LOCKUP
+argument_list|)
+operator|&&
+operator|!
+name|HAS_FEATURE
+argument_list|(
+name|ntb
+argument_list|,
+name|NTB_SPLIT_BAR
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|ntb
+operator|->
+name|device
+argument_list|,
+literal|"Can not apply SB01BASE_LOCKUP workaround "
+literal|"with split BARs disabled!\n"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|ntb
+operator|->
+name|device
+argument_list|,
+literal|"Expect system hangs under heavy NTB traffic!\n"
+argument_list|)
+expr_stmt|;
+name|ntb
+operator|->
+name|features
+operator|&=
+operator|~
+name|NTB_SB01BASE_LOCKUP
+expr_stmt|;
+block|}
 comment|/* 	 * SDOORBELL errata workaround gets in the way of SB01BASE_LOCKUP 	 * errata workaround; only do one at a time. 	 */
 if|if
 condition|(
