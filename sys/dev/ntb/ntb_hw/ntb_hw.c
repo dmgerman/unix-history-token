@@ -8041,12 +8041,25 @@ name|idx
 operator|==
 name|regbar
 condition|)
+block|{
+if|if
+condition|(
+name|ntb
+operator|->
+name|b2b_off
+condition|)
 name|bar_addr
 operator|+=
 name|ntb
 operator|->
 name|b2b_off
 expr_stmt|;
+else|else
+name|bar_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Set limit registers first to avoid an errata where setting the base 	 * registers locks the limit registers. 	 */
 if|if
 condition|(
