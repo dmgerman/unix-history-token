@@ -7244,9 +7244,6 @@ name|struct
 name|tegra_pcib_softc
 modifier|*
 name|sc
-parameter_list|,
-name|uint32_t
-name|port
 parameter_list|)
 block|{
 name|int
@@ -8003,9 +8000,6 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
-name|uint32_t
-name|unit
-decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
@@ -8040,13 +8034,6 @@ operator|->
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|unit
-operator|=
-name|fdt_get_unit
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -8580,8 +8567,6 @@ operator|=
 name|tegra_pcib_enable
 argument_list|(
 name|sc
-argument_list|,
-name|unit
 argument_list|)
 expr_stmt|;
 if|if
