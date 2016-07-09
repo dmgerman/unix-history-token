@@ -870,7 +870,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* NOTREACHED */
+comment|/* This shouldn't happen. */
 name|rtn
 operator|&=
 operator|~
