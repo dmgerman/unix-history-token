@@ -224,6 +224,10 @@ modifier|*
 name|epoll
 decl_stmt|;
 comment|/* epoll data */
+name|uint32_t
+name|persona
+decl_stmt|;
+comment|/* process execution domain */
 block|}
 struct|;
 end_struct
