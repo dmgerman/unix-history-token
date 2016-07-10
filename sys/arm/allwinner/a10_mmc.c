@@ -1532,7 +1532,7 @@ operator|->
 name|a10_dev
 argument_list|)
 argument_list|,
-literal|1
+name|A10_MMC_DMA_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -1662,7 +1662,7 @@ operator|->
 name|a10_dev
 argument_list|)
 argument_list|,
-literal|1
+name|A10_MMC_DMA_ALIGN
 argument_list|,
 literal|0
 argument_list|,
