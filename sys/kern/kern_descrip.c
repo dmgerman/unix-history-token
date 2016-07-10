@@ -3901,6 +3901,12 @@ operator|<
 name|FDDUP_LASTMODE
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_FD
+argument_list|(
+name|old
+argument_list|)
+expr_stmt|;
+comment|/* XXXRW: if (flags& FDDUP_FIXED) AUDIT_ARG_FD2(new); */
 comment|/* 	 * Verify we have a valid descriptor to dup from and possibly to 	 * dup to. Unlike dup() and dup2(), fcntl()'s F_DUPFD should 	 * return EINVAL when the new descriptor is out of bounds. 	 */
 if|if
 condition|(

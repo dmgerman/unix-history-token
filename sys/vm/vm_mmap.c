@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -670,6 +676,13 @@ expr_stmt|;
 name|fp
 operator|=
 name|NULL
+expr_stmt|;
+name|AUDIT_ARG_FD
+argument_list|(
+name|uap
+operator|->
+name|fd
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Ignore old flags that used to be defined but did not do anything. 	 */
 name|flags

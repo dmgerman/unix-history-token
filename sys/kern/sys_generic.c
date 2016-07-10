@@ -1701,6 +1701,11 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+name|AUDIT_ARG_FD
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 comment|/* Finish zero length reads right here */
 if|if
 condition|(
@@ -2783,6 +2788,11 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+name|AUDIT_ARG_FD
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|auio
 operator|->
 name|uio_rw
