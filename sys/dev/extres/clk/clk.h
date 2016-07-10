@@ -859,6 +859,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|clk_get_by_ofw_node_index
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|clk_t
+modifier|*
+name|clk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|clk_parse_ofw_out_names
 parameter_list|(
 name|device_t
