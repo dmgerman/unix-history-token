@@ -5167,6 +5167,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|AUDIT_ARG_VNODE1
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|foff
 operator|=
 operator|*
