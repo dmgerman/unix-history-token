@@ -4531,6 +4531,13 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|AUDIT_ARG_FD
+argument_list|(
+name|uap
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kern_openat
@@ -4644,7 +4651,6 @@ argument_list|(
 name|mode
 argument_list|)
 expr_stmt|;
-comment|/* XXX: audit dirfd */
 name|cap_rights_init
 argument_list|(
 operator|&
