@@ -2166,6 +2166,8 @@ name|regulator_get_by_ofw_property
 argument_list|(
 name|parent_dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"vdd-cpu-supply"
 argument_list|,
 operator|&
@@ -2201,6 +2203,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|parent_dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"cpu_g"
 argument_list|,
@@ -2240,6 +2244,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|parent_dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"cpu_lp"
 argument_list|,
 operator|&
@@ -2275,6 +2281,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|parent_dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"pll_x"
 argument_list|,
@@ -2312,6 +2320,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|parent_dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"pll_p"
 argument_list|,
 operator|&
@@ -2345,6 +2355,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|parent_dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"dfll"
 argument_list|,

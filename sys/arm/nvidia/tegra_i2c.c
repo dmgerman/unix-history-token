@@ -3468,6 +3468,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"div-clk"
 argument_list|,
 operator|&
@@ -3503,6 +3505,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"i2c"
 argument_list|,

@@ -219,6 +219,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"allwinner_gmac_tx"
 argument_list|,
 operator|&
@@ -335,6 +337,8 @@ condition|(
 name|regulator_get_by_ofw_property
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"phy-supply"
 argument_list|,

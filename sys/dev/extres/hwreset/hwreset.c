@@ -360,6 +360,9 @@ parameter_list|(
 name|device_t
 name|consumer_dev
 parameter_list|,
+name|phandle_t
+name|cnode
+parameter_list|,
 name|int
 name|idx
 parameter_list|,
@@ -369,8 +372,6 @@ name|rst
 parameter_list|)
 block|{
 name|phandle_t
-name|cnode
-decl_stmt|,
 name|xnode
 decl_stmt|;
 name|pcell_t
@@ -388,6 +389,12 @@ decl_stmt|;
 name|intptr_t
 name|id
 decl_stmt|;
+if|if
+condition|(
+name|cnode
+operator|<=
+literal|0
+condition|)
 name|cnode
 operator|=
 name|ofw_bus_get_node
@@ -533,6 +540,9 @@ parameter_list|(
 name|device_t
 name|consumer_dev
 parameter_list|,
+name|phandle_t
+name|cnode
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -547,9 +557,12 @@ name|rv
 decl_stmt|,
 name|idx
 decl_stmt|;
-name|phandle_t
+if|if
+condition|(
 name|cnode
-decl_stmt|;
+operator|<=
+literal|0
+condition|)
 name|cnode
 operator|=
 name|ofw_bus_get_node
@@ -609,6 +622,8 @@ operator|(
 name|hwreset_get_by_ofw_idx
 argument_list|(
 name|consumer_dev
+argument_list|,
+name|cnode
 argument_list|,
 name|idx
 argument_list|,

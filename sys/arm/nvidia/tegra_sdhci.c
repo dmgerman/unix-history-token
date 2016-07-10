@@ -1287,6 +1287,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"sdhci"
 argument_list|,
 operator|&
@@ -1398,6 +1400,8 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -1427,6 +1431,8 @@ operator|=
 name|clk_get_by_ofw_index
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

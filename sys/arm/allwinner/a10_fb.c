@@ -1123,6 +1123,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"de_be"
 argument_list|,
 operator|&
@@ -1188,6 +1190,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"ahb_de_be"
 argument_list|,
@@ -1255,6 +1259,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"dram_de_be"
 argument_list|,
 operator|&
@@ -1320,6 +1326,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"de_be"
 argument_list|,
@@ -1676,6 +1684,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"lcd_ch1_sclk1"
 argument_list|,
 operator|&
@@ -1711,6 +1721,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"lcd_ch1_sclk2"
 argument_list|,
@@ -1989,6 +2001,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"lcd"
 argument_list|,
 operator|&
@@ -2054,6 +2068,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"ahb_lcd"
 argument_list|,

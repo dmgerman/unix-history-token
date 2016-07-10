@@ -1156,6 +1156,8 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|clk_pll
 argument_list|)
@@ -1183,6 +1185,8 @@ operator|=
 name|clk_get_by_ofw_index
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|1
 argument_list|,

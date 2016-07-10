@@ -193,6 +193,9 @@ parameter_list|(
 name|device_t
 name|consumer_dev
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -210,6 +213,9 @@ name|hwreset_get_by_ofw_idx
 parameter_list|(
 name|device_t
 name|consumer_dev
+parameter_list|,
+name|phandle_t
+name|node
 parameter_list|,
 name|int
 name|idx

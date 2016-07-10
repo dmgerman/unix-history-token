@@ -3920,6 +3920,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"usb"
 argument_list|,
 operator|&
@@ -3956,6 +3958,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"utmi-pads"
 argument_list|,
 operator|&
@@ -3991,6 +3995,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"reg"
 argument_list|,
@@ -4030,6 +4036,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"pll_u"
 argument_list|,
 operator|&
@@ -4067,6 +4075,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"utmi-pads"
 argument_list|,
@@ -4302,6 +4312,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"vbus-supply"
 argument_list|,

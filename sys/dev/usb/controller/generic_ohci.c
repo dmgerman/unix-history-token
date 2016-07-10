@@ -684,6 +684,8 @@ name|clk_get_by_ofw_index
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 name|off
 argument_list|,
 operator|&
@@ -771,6 +773,8 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -816,6 +820,8 @@ condition|(
 name|phy_get_by_ofw_name
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"usb"
 argument_list|,

@@ -122,12 +122,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_function_decl
 name|int
 name|phy_get_by_ofw_name
 parameter_list|(
 name|device_t
 name|consumer
+parameter_list|,
+name|phandle_t
+name|node
 parameter_list|,
 name|char
 modifier|*
@@ -147,6 +156,9 @@ parameter_list|(
 name|device_t
 name|consumer
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|int
 name|idx
 parameter_list|,
@@ -164,6 +176,9 @@ parameter_list|(
 name|device_t
 name|consumer
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -174,6 +189,11 @@ name|phy
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

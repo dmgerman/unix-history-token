@@ -975,6 +975,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"hvdd-supply"
 argument_list|,
 operator|&
@@ -1012,6 +1014,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"vddio-supply"
 argument_list|,
@@ -1051,6 +1055,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"avdd-supply"
 argument_list|,
 operator|&
@@ -1088,6 +1094,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"target-5v-supply"
 argument_list|,
@@ -1127,6 +1135,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"target-12v-supply"
 argument_list|,
 operator|&
@@ -1164,6 +1174,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"sata"
 argument_list|,
@@ -1203,6 +1215,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"sata-oob"
 argument_list|,
 operator|&
@@ -1240,6 +1254,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"sata-cold"
 argument_list|,
@@ -1279,6 +1295,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"sata-phy"
 argument_list|,
 operator|&
@@ -1316,6 +1334,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"sata"
 argument_list|,
@@ -1355,6 +1375,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"sata-oob"
 argument_list|,
 operator|&
@@ -1393,6 +1415,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"cml1"
 argument_list|,
 operator|&
@@ -1430,6 +1454,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"pll_e"
 argument_list|,
