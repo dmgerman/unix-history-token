@@ -1228,7 +1228,7 @@ literal|0
 condition|)
 name|bus_width
 operator|=
-literal|1
+literal|4
 expr_stmt|;
 name|sc
 operator|->
