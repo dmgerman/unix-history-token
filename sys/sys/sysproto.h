@@ -35961,14 +35961,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_read
-value|AUE_NULL
+value|AUE_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_write
-value|AUE_NULL
+value|AUE_WRITE
 end_define
 
 begin_define

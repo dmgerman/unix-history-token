@@ -332,7 +332,7 @@ operator|*
 operator|)
 name|sys_read
 block|,
-name|AUE_NULL
+name|AUE_READ
 block|,
 name|NULL
 block|,
@@ -358,7 +358,7 @@ operator|*
 operator|)
 name|sys_write
 block|,
-name|AUE_NULL
+name|AUE_WRITE
 block|,
 name|NULL
 block|,
