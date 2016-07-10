@@ -1849,7 +1849,14 @@ name|res_offset
 argument_list|,
 name|p
 argument_list|,
+operator|(
 name|nbytes
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 operator|*
