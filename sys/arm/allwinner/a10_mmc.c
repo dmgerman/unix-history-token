@@ -1807,6 +1807,11 @@ name|a10_dma_map_err
 operator|=
 name|err
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return;
 name|dma_desc
 operator|=
 name|sc
