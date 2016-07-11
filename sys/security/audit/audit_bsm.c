@@ -7111,6 +7111,9 @@ break|break;
 case|case
 name|AUE_WAIT4
 case|:
+case|case
+name|AUE_WAIT6
+case|:
 name|PROCESS_PID_TOKENS
 argument_list|(
 literal|1
