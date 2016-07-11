@@ -1358,7 +1358,7 @@ name|nullfd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -1372,7 +1372,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 break|break;
