@@ -2370,6 +2370,25 @@ argument_list|(
 name|curthread
 argument_list|)
 return|;
+default|default:
+name|KASSERT
+argument_list|(
+name|false
+argument_list|,
+operator|(
+literal|"%s: unhandled capability: %0x"
+operator|,
+name|__func__
+operator|,
+name|cap
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 block|}
 end_function
