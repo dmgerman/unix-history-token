@@ -2011,6 +2011,10 @@ name|void
 modifier|*
 name|hv_chan_priv3
 decl_stmt|;
+name|struct
+name|task
+name|ch_detach_task
+decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
