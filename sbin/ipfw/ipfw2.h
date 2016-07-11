@@ -1472,6 +1472,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* ipfw2.c */
+end_comment
+
+begin_function_decl
+name|void
+name|bp_flush
+parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* tables.c */
 end_comment
 
