@@ -287,22 +287,6 @@ name|a10_ehci_detach
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|bs_r_1_proto
-argument_list|(
-name|reversed
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|bs_w_1_proto
-argument_list|(
-name|reversed
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|aw_ehci_softc
