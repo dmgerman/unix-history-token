@@ -574,7 +574,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|intptr_t
 name|phy
 parameter_list|,
 name|bool
@@ -714,7 +714,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't %s regulator for phy %d\n"
+literal|"couldn't %s regulator for phy %jd\n"
 argument_list|,
 name|enable
 condition|?
@@ -722,6 +722,9 @@ literal|"enable"
 else|:
 literal|"disable"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|phy
 argument_list|)
 expr_stmt|;
