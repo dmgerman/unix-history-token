@@ -3391,6 +3391,12 @@ operator|.
 name|buf
 argument_list|)
 expr_stmt|;
+name|bp_flush
+argument_list|(
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|DN_LINK
