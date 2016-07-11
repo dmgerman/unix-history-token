@@ -619,17 +619,11 @@ argument_list|,
 name|__no_mem_str
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xprt
-condition|)
-block|{
 name|svc_xprt_free
 argument_list|(
 name|xprt
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
