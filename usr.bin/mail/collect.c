@@ -67,7 +67,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Read a message from standard output and return a read file to it  * or NULL on error.  */
+comment|/*  * Read a message from standard input and return a read file to it  * or NULL on error.  */
 end_comment
 
 begin_comment
