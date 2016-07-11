@@ -964,16 +964,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hv_vmbus_channel
-modifier|*
-name|hv_vmbus_allocate_channel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|hv_vmbus_free_vmbus_channel
 parameter_list|(

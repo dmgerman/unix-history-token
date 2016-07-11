@@ -704,8 +704,9 @@ name|vmbus_softc
 modifier|*
 name|sc
 init|=
-name|vmbus_get_softc
-argument_list|()
+name|channel
+operator|->
+name|vmbus_sc
 decl_stmt|;
 name|int
 name|ret
@@ -796,8 +797,9 @@ name|flag_cnt_ptr
 operator|=
 name|VMBUS_PCPU_PTR
 argument_list|(
-name|vmbus_get_softc
-argument_list|()
+name|chan
+operator|->
+name|vmbus_sc
 argument_list|,
 name|event_flags_cnt
 argument_list|,
