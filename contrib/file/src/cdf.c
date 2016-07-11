@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: cdf.c,v 1.80 2016/05/06 15:17:10 christos Exp $"
+literal|"@(#)$File: cdf.c,v 1.82 2016/06/01 22:25:25 christos Exp $"
 argument_list|)
 end_macro
 
@@ -3302,7 +3302,10 @@ name|ssat
 argument_list|,
 name|sid
 argument_list|,
-name|ss
+name|CDF_SEC_SIZE
+argument_list|(
+name|h
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|scn
@@ -3319,12 +3322,6 @@ name|ss
 expr_stmt|;
 if|if
 condition|(
-name|sst
-operator|->
-name|sst_tab
-operator|==
-name|NULL
-operator|||
 name|scn
 operator|->
 name|sst_len
@@ -4009,10 +4006,7 @@ name|sat
 argument_list|,
 name|sid
 argument_list|,
-name|CDF_SEC_SIZE
-argument_list|(
-name|h
-argument_list|)
+name|ss
 argument_list|)
 expr_stmt|;
 if|if
@@ -6598,6 +6592,16 @@ name|eb
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|nr
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|nr
 operator|--
 expr_stmt|;

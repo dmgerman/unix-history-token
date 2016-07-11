@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: apprentice.c,v 1.248 2016/03/31 17:51:12 christos Exp $"
+literal|"@(#)$File: apprentice.c,v 1.249 2016/05/17 21:43:07 christos Exp $"
 argument_list|)
 end_macro
 
@@ -15166,6 +15166,11 @@ literal|0
 expr_stmt|;
 name|out
 label|:
+name|apprentice_unmap
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|dbname

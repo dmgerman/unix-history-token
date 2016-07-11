@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.231 2016/04/21 15:23:31 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.234 2016/06/13 12:02:06 christos Exp $"
 argument_list|)
 end_macro
 
@@ -4386,6 +4386,11 @@ name|nbytes
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|op
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5763,6 +5768,16 @@ case|:
 case|case
 name|FILE_SEARCH
 case|:
+if|if
+condition|(
+name|offset
+operator|>
+name|nbytes
+condition|)
+name|offset
+operator|=
+name|nbytes
+expr_stmt|;
 name|ms
 operator|->
 name|search
@@ -9942,6 +9957,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|file_regfree
+argument_list|(
+operator|&
+name|rx
+argument_list|)
+expr_stmt|;
 name|file_error
 argument_list|(
 name|ms
