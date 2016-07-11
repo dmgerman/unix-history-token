@@ -5094,19 +5094,6 @@ name|pc
 decl_stmt|;
 endif|#
 directive|endif
-name|KASSERT
-argument_list|(
-name|curcpu
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: not on CPU 0"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|NETISR_LOCK_INIT
 argument_list|()
 expr_stmt|;

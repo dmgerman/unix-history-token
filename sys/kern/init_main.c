@@ -2109,7 +2109,7 @@ name|td
 operator|->
 name|td_oncpu
 operator|=
-literal|0
+name|curcpu
 expr_stmt|;
 name|td
 operator|->
