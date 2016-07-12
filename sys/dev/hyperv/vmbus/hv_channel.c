@@ -4019,17 +4019,6 @@ decl_stmt|;
 name|boolean_t
 name|is_batched_reading
 decl_stmt|;
-comment|/** 	 * Find the channel based on this relid and invokes 	 * the channel callback to process the event 	 */
-if|if
-condition|(
-name|channel
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
-comment|/** 	 * To deal with the race condition where we might 	 * receive a packet while the relevant driver is 	 * being unloaded, dispatch the callback while 	 * holding the channel lock. The unloading driver 	 * will acquire the same channel lock to set the 	 * callback to NULL. This closes the window. 	 */
 if|if
 condition|(
 name|channel
