@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"21.00.00.00-fbsd"
+value|"21.01.00.00-fbsd"
 end_define
 
 begin_define
@@ -55,6 +55,13 @@ define|#
 directive|define
 name|MPS_CHAIN_FRAMES
 value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_MAXIO_PAGES
+value|(-1)
 end_define
 
 begin_define
@@ -916,6 +923,9 @@ name|chain_free
 decl_stmt|;
 name|int
 name|max_chains
+decl_stmt|;
+name|int
+name|max_io_pages
 decl_stmt|;
 name|int
 name|chain_free_lowwater
