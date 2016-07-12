@@ -9790,6 +9790,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
 case|case
 name|E82545_BAR_REGISTER
 case|:
@@ -10011,6 +10012,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
 case|case
 name|E82545_BAR_REGISTER
 case|:
