@@ -343,6 +343,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * log2 fraction of the zio arena to keep free.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|arc_zio_arena_free_shift
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * These tunables are for performance analysis.  */
 end_comment
 
@@ -12167,6 +12179,9 @@ argument_list|)
 comment|/* 	 * If we're on an i386 platform, it's possible that we'll exhaust the 	 * kernel heap space before we ever run out of available physical 	 * memory.  Most checks of the size of the heap_area compare against 	 * tune.t_minarmem, which is the minimum available real memory that we 	 * can have in the system.  However, this is generally fixed at 25 pages 	 * which is so low that it's useless.  In this comparison, we seek to 	 * calculate the total heap-size, and reclaim if more than 3/4ths of the 	 * heap is allocated.  (Or, in the calculation, if less than 1/4th is 	 * free) 	 */
 name|n
 operator|=
+operator|(
+name|int64_t
+operator|)
 name|vmem_size
 argument_list|(
 name|heap_arena
@@ -12205,7 +12220,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this arena remains 	 * above about 1/16th free. 	 * 	 * Note: The 1/16th arena free requirement was put in place 	 * to aggressively evict memory from the arc in order to avoid 	 * memory fragmentation issues. 	 */
+comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this arena remains 	 * above about 1/4th (1/(2^arc_zio_arena_free_shift)) free. 	 * 	 * Note that reducing the arc_zio_arena_free_shift keeps more virtual 	 * memory (in the zio_arena) free, which can avoid memory 	 * fragmentation issues. 	 */
 if|if
 condition|(
 name|zio_arena
@@ -12215,6 +12230,9 @@ condition|)
 block|{
 name|n
 operator|=
+operator|(
+name|int64_t
+operator|)
 name|vmem_size
 argument_list|(
 name|zio_arena
@@ -12230,7 +12248,7 @@ argument_list|,
 name|VMEM_ALLOC
 argument_list|)
 operator|>>
-literal|4
+name|arc_zio_arena_free_shift
 operator|)
 expr_stmt|;
 if|if
