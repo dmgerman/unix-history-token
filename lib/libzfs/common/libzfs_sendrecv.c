@@ -14656,7 +14656,7 @@ name|drr
 operator|->
 name|drr_u
 operator|.
-name|drr_write
+name|drr_spill
 operator|.
 name|drr_length
 operator|=
