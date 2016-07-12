@@ -202,6 +202,9 @@ comment|/* see VMBUS_FLAG_ */
 name|uint32_t
 name|vmbus_version
 decl_stmt|;
+name|uint32_t
+name|vmbus_gpadl
+decl_stmt|;
 comment|/* Shared memory for vmbus_{rx,tx}_evtflags */
 name|void
 modifier|*
@@ -564,6 +567,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|vmbus_scan_newchan
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|vmbus_gpadl_alloc
 parameter_list|(
 name|struct
 name|vmbus_softc

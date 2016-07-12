@@ -242,9 +242,6 @@ block|{
 name|hv_vmbus_connect_state
 name|connect_state
 decl_stmt|;
-name|uint32_t
-name|next_gpadl_handle
-decl_stmt|;
 comment|/** 	 * List of primary channels. Sub channels will be linked 	 * under their primary channel. 	 */
 name|TAILQ_HEAD
 argument_list|(

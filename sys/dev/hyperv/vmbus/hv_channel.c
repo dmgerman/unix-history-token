@@ -1523,14 +1523,9 @@ block|}
 comment|/* 	 * Allocate GPADL id. 	 */
 name|gpadl
 operator|=
-name|atomic_fetchadd_int
+name|vmbus_gpadl_alloc
 argument_list|(
-operator|&
-name|hv_vmbus_g_connection
-operator|.
-name|next_gpadl_handle
-argument_list|,
-literal|1
+name|sc
 argument_list|)
 expr_stmt|;
 operator|*

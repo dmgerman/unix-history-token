@@ -219,6 +219,13 @@ directive|include
 file|"vmbus_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|VMBUS_GPADL_START
+value|0xe1e10
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_msghc
@@ -1672,6 +1679,30 @@ operator|->
 name|mhc_active
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|vmbus_gpadl_alloc
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+name|atomic_fetchadd_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|vmbus_gpadl
+argument_list|,
+literal|1
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -4784,6 +4815,12 @@ name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|vmbus_gpadl
+operator|=
+name|VMBUS_GPADL_START
 expr_stmt|;
 comment|/* 	 * Create context for "post message" Hypercalls 	 */
 name|sc

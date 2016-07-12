@@ -106,12 +106,7 @@ operator|.
 name|connect_state
 operator|=
 name|HV_DISCONNECTED
-block|,
-operator|.
-name|next_gpadl_handle
-operator|=
-literal|0xE1E10
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
