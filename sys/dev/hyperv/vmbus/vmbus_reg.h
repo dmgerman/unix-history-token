@@ -278,6 +278,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANMSG_TYPE_CHCLOSE
+value|7
+end_define
+
+begin_comment
+comment|/* REQ */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHANMSG_TYPE_GPADL_CONN
 value|8
 end_define
@@ -645,6 +656,26 @@ name|chm_gpadl
 decl_stmt|;
 name|uint32_t
 name|chm_status
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VMBUS_CHANMSG_TYPE_CHCLOSE */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_chanmsg_chclose
+block|{
+name|struct
+name|vmbus_chanmsg_hdr
+name|chm_hdr
+decl_stmt|;
+name|uint32_t
+name|chm_chanid
 decl_stmt|;
 block|}
 name|__packed
