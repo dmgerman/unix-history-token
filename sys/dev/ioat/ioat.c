@@ -3636,6 +3636,37 @@ operator|==
 name|status
 condition|)
 break|break;
+name|KASSERT
+argument_list|(
+name|ioat_get_active
+argument_list|(
+name|ioat
+argument_list|)
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"overrunning ring t:%u "
+literal|"h:%u st:0x%016lx last_seen:%016lx completed:%u\n"
+operator|,
+name|ioat
+operator|->
+name|tail
+operator|,
+name|ioat
+operator|->
+name|head
+operator|,
+name|comp_update
+operator|,
+name|ioat
+operator|->
+name|last_seen
+operator|,
+name|completed
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|ioat
 operator|->
