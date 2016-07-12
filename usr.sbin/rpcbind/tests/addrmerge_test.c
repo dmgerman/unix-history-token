@@ -318,6 +318,7 @@ name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|in
 argument_list|)
 expr_stmt|;
@@ -350,6 +351,7 @@ name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|mask_in
 argument_list|)
 expr_stmt|;
@@ -382,6 +384,7 @@ name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
+operator|*
 name|bcast_in
 argument_list|)
 expr_stmt|;
