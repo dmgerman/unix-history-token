@@ -421,9 +421,14 @@ expr_stmt|;
 block|}
 name|ctx
 operator|=
-name|device_get_sysctl_ctx
+operator|&
+name|channel
+operator|->
+name|ch_sysctl_ctx
+expr_stmt|;
+name|sysctl_ctx_init
 argument_list|(
-name|dev
+name|ctx
 argument_list|)
 expr_stmt|;
 comment|/* This creates dev.DEVNAME.DEVUNIT.channel tree */
@@ -2153,6 +2158,14 @@ operator|->
 name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
+expr_stmt|;
+name|sysctl_ctx_free
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|ch_sysctl_ctx
+argument_list|)
 expr_stmt|;
 comment|/* 	 * set rxq to NULL to avoid more requests be scheduled 	 */
 name|channel

@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1630,6 +1636,10 @@ argument|hv_vmbus_channel
 argument_list|)
 name|ch_link
 expr_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|ch_sysctl_ctx
+decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
