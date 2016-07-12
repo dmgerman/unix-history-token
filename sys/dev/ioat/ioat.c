@@ -8837,6 +8837,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|CTR0
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 name|IOAT_REFLK
