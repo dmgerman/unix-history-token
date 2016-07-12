@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_include
@@ -727,6 +727,7 @@ return|;
 block|}
 do|while
 condition|(
+operator|(
 name|perm_name
 operator|=
 name|nvlist_next_nvpair
@@ -735,11 +736,15 @@ name|perms
 argument_list|,
 name|perm_name
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 block|}
 do|while
 condition|(
+operator|(
 name|who
 operator|=
 name|nvlist_next_nvpair
@@ -748,6 +753,9 @@ name|nvp
 argument_list|,
 name|who
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 return|return
