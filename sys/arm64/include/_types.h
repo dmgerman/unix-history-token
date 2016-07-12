@@ -414,11 +414,11 @@ begin_define
 define|#
 directive|define
 name|__WCHAR_MAX
-value|__UINT_MAX
+value|__INT_MAX
 end_define
 
 begin_comment
-comment|/* max value for a wchar_t */
+comment|/* max for a wchar_t<= WINT_MAX */
 end_comment
 
 begin_comment
