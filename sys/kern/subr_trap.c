@@ -1095,11 +1095,26 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|sig
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"sig %d"
+operator|,
+name|sig
+operator|)
+argument_list|)
+expr_stmt|;
 name|postsig
 argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
