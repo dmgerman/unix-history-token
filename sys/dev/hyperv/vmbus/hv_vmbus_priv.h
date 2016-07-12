@@ -248,12 +248,6 @@ block|{
 name|hv_vmbus_connect_state
 name|connect_state
 decl_stmt|;
-comment|/** 	 * channel table for fast lookup through id. 	*/
-name|hv_vmbus_channel
-modifier|*
-modifier|*
-name|channels
-decl_stmt|;
 block|}
 name|hv_vmbus_connection
 typedef|;
