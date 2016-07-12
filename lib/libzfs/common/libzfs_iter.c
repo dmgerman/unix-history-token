@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -512,6 +512,9 @@ name|zfs_handle_t
 modifier|*
 name|zhp
 parameter_list|,
+name|boolean_t
+name|simple
+parameter_list|,
 name|zfs_iter_f
 name|func
 parameter_list|,
@@ -553,6 +556,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|zc
+operator|.
+name|zc_simple
+operator|=
+name|simple
+expr_stmt|;
 if|if
 condition|(
 name|zcmd_alloc_dst_nvlist
@@ -596,7 +605,19 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+name|simple
+condition|)
+name|nzhp
+operator|=
+name|make_dataset_simple_handle_zc
+argument_list|(
+name|zhp
+argument_list|,
+operator|&
+name|zc
+argument_list|)
+expr_stmt|;
+else|else
 name|nzhp
 operator|=
 name|make_dataset_handle_zc
@@ -608,13 +629,14 @@ argument_list|,
 operator|&
 name|zc
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|nzhp
 operator|==
 name|NULL
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 operator|(
@@ -1207,6 +1229,8 @@ operator|=
 name|zfs_iter_snapshots
 argument_list|(
 name|zhp
+argument_list|,
+name|B_FALSE
 argument_list|,
 name|zfs_sort_snaps
 argument_list|,
@@ -1873,6 +1897,8 @@ name|zfs_iter_snapshots
 argument_list|(
 name|zhp
 argument_list|,
+name|B_FALSE
+argument_list|,
 name|func
 argument_list|,
 name|data
@@ -2150,17 +2176,21 @@ name|err
 operator|==
 literal|0
 condition|)
+block|{
 name|err
 operator|=
 name|zfs_iter_snapshots
 argument_list|(
 name|zhp
 argument_list|,
+name|B_FALSE
+argument_list|,
 name|iter_dependents_cb
 argument_list|,
 name|ida
 argument_list|)
 expr_stmt|;
+block|}
 name|ida
 operator|->
 name|stack

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
 end_comment
 
 begin_include
@@ -13848,6 +13848,48 @@ condition|(
 name|pl
 operator|->
 name|pl_prop
+operator|==
+name|ZFS_PROP_NAME
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|property
+argument_list|,
+name|zfs_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|property
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|propstr
+operator|=
+name|property
+expr_stmt|;
+name|right_justify
+operator|=
+name|zfs_prop_align_right
+argument_list|(
+name|pl
+operator|->
+name|pl_prop
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pl
+operator|->
+name|pl_prop
 operator|!=
 name|ZPROP_INVAL
 condition|)
@@ -14610,6 +14652,27 @@ condition|)
 name|fields
 operator|=
 name|default_fields
+expr_stmt|;
+comment|/* 	 * If we are only going to list snapshot names and sort by name, 	 * then we can use faster version. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fields
+argument_list|,
+literal|"name"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|zfs_sort_only_by_name
+argument_list|(
+name|sortcol
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|ZFS_ITER_SIMPLE
 expr_stmt|;
 comment|/* 	 * If "-o space" and no types were specified, don't display snapshots. 	 */
 if|if
@@ -15952,6 +16015,8 @@ operator|=
 name|zfs_iter_snapshots
 argument_list|(
 name|zhp
+argument_list|,
+name|B_FALSE
 argument_list|,
 name|rollback_check
 argument_list|,
