@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1646,6 +1646,10 @@ decl_stmt|;
 name|arc_done_func_t
 modifier|*
 name|awcb_ready
+decl_stmt|;
+name|arc_done_func_t
+modifier|*
+name|awcb_children_ready
 decl_stmt|;
 name|arc_done_func_t
 modifier|*
@@ -18068,6 +18072,48 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|arc_write_children_ready
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|)
+block|{
+name|arc_write_callback_t
+modifier|*
+name|callback
+init|=
+name|zio
+operator|->
+name|io_private
+decl_stmt|;
+name|arc_buf_t
+modifier|*
+name|buf
+init|=
+name|callback
+operator|->
+name|awcb_buf
+decl_stmt|;
+name|callback
+operator|->
+name|awcb_children_ready
+argument_list|(
+name|zio
+argument_list|,
+name|buf
+argument_list|,
+name|callback
+operator|->
+name|awcb_private
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The SPA calls this callback for each physical write that happens on behalf  * of a logical write.  See the comment in dbuf_write_physdone() for details.  */
 end_comment
@@ -18602,6 +18648,10 @@ name|ready
 parameter_list|,
 name|arc_done_func_t
 modifier|*
+name|children_ready
+parameter_list|,
+name|arc_done_func_t
+modifier|*
 name|physdone
 parameter_list|,
 name|arc_done_func_t
@@ -18734,6 +18784,12 @@ name|ready
 expr_stmt|;
 name|callback
 operator|->
+name|awcb_children_ready
+operator|=
+name|children_ready
+expr_stmt|;
+name|callback
+operator|->
 name|awcb_physdone
 operator|=
 name|physdone
@@ -18779,6 +18835,16 @@ argument_list|,
 name|zp
 argument_list|,
 name|arc_write_ready
+argument_list|,
+operator|(
+name|children_ready
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|arc_write_children_ready
+else|:
+name|NULL
 argument_list|,
 name|arc_write_physdone
 argument_list|,
