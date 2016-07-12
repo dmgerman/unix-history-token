@@ -311,8 +311,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANMSG_TYPE_GPADP_CONNRESP
+name|VMBUS_CHANMSG_TYPE_GPADL_CONNRESP
 value|10
+end_define
+
+begin_comment
+comment|/* RESP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_GPADL_DISCONN
+value|11
+end_define
+
+begin_comment
+comment|/* REQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_GPADL_DISCONNRESP
+value|12
 end_define
 
 begin_comment
@@ -676,6 +698,29 @@ name|chm_hdr
 decl_stmt|;
 name|uint32_t
 name|chm_chanid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VMBUS_CHANMSG_TYPE_GPADL_DISCONN */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_chanmsg_gpadl_disconn
+block|{
+name|struct
+name|vmbus_chanmsg_hdr
+name|chm_hdr
+decl_stmt|;
+name|uint32_t
+name|chm_chanid
+decl_stmt|;
+name|uint32_t
+name|chm_gpadl
 decl_stmt|;
 block|}
 name|__packed
