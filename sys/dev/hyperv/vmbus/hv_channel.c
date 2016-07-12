@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/vmbus/hyperv_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/vmbus_reg.h>
 end_include
 
@@ -240,9 +246,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|hv_vmbus_set_event
+name|hypercall_signal_event
 argument_list|(
 name|channel
+operator|->
+name|ch_sigevt_dma
+operator|.
+name|hv_paddr
 argument_list|)
 expr_stmt|;
 block|}

@@ -528,30 +528,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/**  * Send an event notification to the parent  */
-end_comment
-
-begin_function
-name|int
-name|hv_vmbus_set_event
-parameter_list|(
-name|hv_vmbus_channel
-modifier|*
-name|channel
-parameter_list|)
-block|{
-return|return
-name|hv_vmbus_signal_event
-argument_list|(
-name|channel
-operator|->
-name|signal_event_param
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_function
 name|void
 name|vmbus_on_channel_open

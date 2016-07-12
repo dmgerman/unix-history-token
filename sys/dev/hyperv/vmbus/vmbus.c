@@ -213,24 +213,6 @@ directive|include
 file|"acpi_if.h"
 end_include
 
-begin_comment
-comment|/*  * NOTE: DO NOT CHANGE THESE  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CONNID_MESSAGE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CONNID_EVENT
-value|2
-end_define
-
 begin_struct
 struct|struct
 name|vmbus_msghc

@@ -402,6 +402,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|uint64_t
+name|hypercall_signal_event
+parameter_list|(
+name|bus_addr_t
+name|sigevt_paddr
+parameter_list|)
+block|{
+return|return
+name|hypercall_md
+argument_list|(
+name|hypercall_context
+operator|.
+name|hc_addr
+argument_list|,
+name|HYPERCALL_SIGNAL_EVENT
+argument_list|,
+name|sigevt_paddr
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * @brief Signal an event on the specified connection using the hypervisor  * event IPC. (This involves a hypercall.)  */
 end_comment

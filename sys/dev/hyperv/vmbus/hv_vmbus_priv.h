@@ -960,17 +960,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|hv_vmbus_set_event
-parameter_list|(
-name|hv_vmbus_channel
-modifier|*
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

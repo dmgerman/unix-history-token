@@ -61,6 +61,24 @@ name|VMBUS_SINT_TIMER
 value|4
 end_define
 
+begin_comment
+comment|/*  * NOTE: DO NOT CHANGE THESE  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CONNID_MESSAGE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CONNID_EVENT
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_pcpu_data
