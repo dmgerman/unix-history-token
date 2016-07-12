@@ -1181,10 +1181,7 @@ literal|0
 init|;
 name|cnt
 operator|<=
-operator|(
-name|wint_t
-operator|)
-name|WCHAR_MAX
+name|WINT_MAX
 condition|;
 name|cnt
 operator|++
