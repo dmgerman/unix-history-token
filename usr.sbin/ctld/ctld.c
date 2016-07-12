@@ -1940,11 +1940,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|log_errx
+name|log_warnx
 argument_list|(
-literal|1
-argument_list|,
-literal|"Incorrect initiator portal '%s'"
+literal|"incorrect initiator portal \"%s\""
 argument_list|,
 name|portal
 argument_list|)
