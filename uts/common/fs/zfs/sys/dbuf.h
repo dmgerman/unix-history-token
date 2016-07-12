@@ -194,6 +194,10 @@ name|unsigned
 name|int
 name|dr_accounted
 decl_stmt|;
+comment|/* A copy of the bp that points to us */
+name|blkptr_t
+name|dr_bp_copy
+decl_stmt|;
 union|union
 name|dirty_types
 block|{
