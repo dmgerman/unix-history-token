@@ -7458,6 +7458,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|sepp
+operator|=
+name|NULL
+expr_stmt|;
+name|idx
+operator|=
+literal|0
+expr_stmt|;
 comment|/* step through components of name */
 for|for
 control|(
@@ -10790,6 +10798,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|nvlist_size
@@ -10801,6 +10810,7 @@ name|alloc_size
 argument_list|,
 name|encoding
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
