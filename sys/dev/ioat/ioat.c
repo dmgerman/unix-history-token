@@ -8493,7 +8493,7 @@ argument_list|(
 operator|&
 name|ioat
 operator|->
-name|poll_timer
+name|shrink_timer
 argument_list|,
 name|IOAT_SHRINK_PERIOD
 argument_list|,
