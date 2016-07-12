@@ -6655,7 +6655,7 @@ decl_stmt|;
 name|char
 name|source
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zprop_get_cbdata_t
@@ -8833,7 +8833,7 @@ decl_stmt|;
 name|char
 name|cb_lastfs
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 block|}
@@ -10962,7 +10962,7 @@ comment|/* SMB */
 name|char
 name|sid
 index|[
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
 operator|+
 literal|32
 index|]
@@ -11669,7 +11669,7 @@ decl_stmt|;
 name|char
 name|valstr
 index|[
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
 index|]
 decl_stmt|;
 name|boolean_t
@@ -15727,7 +15727,7 @@ decl_stmt|;
 name|char
 name|parentname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -17617,7 +17617,7 @@ block|{
 name|char
 name|frombuf
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|enum
@@ -17902,7 +17902,7 @@ block|{
 name|char
 name|origin
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zprop_source_t
@@ -18539,7 +18539,7 @@ block|}
 name|char
 name|namebuf
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -22831,7 +22831,7 @@ decl_stmt|;
 name|char
 name|who_buf
 index|[
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
 operator|+
 literal|32
 index|]
@@ -24686,7 +24686,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
 operator|+
 literal|32
 index|]
@@ -24757,9 +24757,10 @@ name|snprintf
 argument_list|(
 name|buf
 argument_list|,
-name|ZFS_MAXNAMELEN
-operator|+
-literal|32
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|gettext
 argument_list|(
@@ -25674,7 +25675,7 @@ decl_stmt|;
 name|char
 name|parent
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 specifier|const
@@ -26311,11 +26312,9 @@ decl_stmt|;
 name|size_t
 name|znamelen
 init|=
-name|strnlen
+name|strlen
 argument_list|(
 name|zname
-argument_list|,
-name|ZFS_MAXNAMELEN
 argument_list|)
 decl_stmt|;
 if|if
@@ -26436,11 +26435,9 @@ decl_stmt|;
 name|size_t
 name|taglen
 init|=
-name|strnlen
+name|strlen
 argument_list|(
 name|tag
-argument_list|,
-name|MAXNAMELEN
 argument_list|)
 decl_stmt|;
 if|if
@@ -32129,7 +32126,7 @@ block|{
 name|char
 name|snapname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zfs_handle_t

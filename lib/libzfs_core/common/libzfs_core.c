@@ -747,7 +747,7 @@ decl_stmt|;
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|*
@@ -896,7 +896,7 @@ decl_stmt|;
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* determine the pool name */
@@ -1034,7 +1034,7 @@ decl_stmt|;
 name|char
 name|fs
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -1223,7 +1223,7 @@ block|{
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|nvlist_t
@@ -1365,7 +1365,7 @@ block|{
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|nvpair_t
@@ -2450,7 +2450,7 @@ decl_stmt|;
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* determine the pool name */
@@ -2593,7 +2593,7 @@ decl_stmt|;
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* determine the pool name */

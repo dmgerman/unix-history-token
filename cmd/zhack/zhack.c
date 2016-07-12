@@ -122,12 +122,6 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|ZFS_MAXNAMELEN
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|verify
 end_undef
 

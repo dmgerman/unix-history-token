@@ -1788,7 +1788,7 @@ block|{
 name|char
 name|bootfs
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 return|return
@@ -17955,7 +17955,7 @@ decl_stmt|;
 name|char
 name|dsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 if|if
@@ -19179,7 +19179,7 @@ decl_stmt|;
 name|char
 name|poolname
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -19319,7 +19319,7 @@ name|p
 operator|-
 name|volname
 operator|>=
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 name|zfs_error_aux
