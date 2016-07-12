@@ -6862,7 +6862,7 @@ operator|<
 literal|1
 operator|||
 name|num_descs
-operator|>
+operator|>=
 operator|(
 literal|1
 operator|<<
@@ -6878,6 +6878,12 @@ goto|goto
 name|out
 goto|;
 block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|ioat
@@ -6893,12 +6899,6 @@ goto|goto
 name|out
 goto|;
 block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 if|if
 condition|(
 name|ioat_get_ring_space
@@ -7184,6 +7184,22 @@ operator|->
 name|submit_lock
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|ioat
+operator|->
+name|quiescing
+operator|||
+name|error
+operator|==
+name|ENXIO
+argument_list|,
+operator|(
+literal|"reserved during quiesce"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
