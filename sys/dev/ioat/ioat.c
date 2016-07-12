@@ -3589,15 +3589,23 @@ name|desc
 operator|->
 name|bus_dmadesc
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_IOAT
 argument_list|,
-literal|"completing desc %d"
+literal|"completing desc %u ok  cb %p(%p)"
 argument_list|,
 name|ioat
 operator|->
 name|tail
+argument_list|,
+name|dmadesc
+operator|->
+name|callback_fn
+argument_list|,
+name|dmadesc
+operator|->
+name|callback_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -3953,15 +3961,23 @@ name|desc
 operator|->
 name|bus_dmadesc
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_IOAT
 argument_list|,
-literal|"completing err desc %d"
+literal|"completing desc %u err cb %p(%p)"
 argument_list|,
 name|ioat
 operator|->
 name|tail
+argument_list|,
+name|dmadesc
+operator|->
+name|callback_fn
+argument_list|,
+name|dmadesc
+operator|->
+name|callback_arg
 argument_list|)
 expr_stmt|;
 if|if
