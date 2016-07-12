@@ -245,7 +245,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANMSG_TYPE_CHANNEL_REQ
+name|VMBUS_CHANMSG_TYPE_CHREQUEST
 value|3
 end_define
 
@@ -344,7 +344,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANMSG_TYPE_INIT_CONTACT
+name|VMBUS_CHANMSG_TYPE_CONNECT
 value|14
 end_define
 
@@ -355,7 +355,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANMSG_TYPE_VERSION_RESP
+name|VMBUS_CHANMSG_TYPE_CONNECT_RESP
 value|15
 end_define
 
@@ -366,7 +366,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANMSG_TYPE_UNLOAD
+name|VMBUS_CHANMSG_TYPE_DISCONNECT
 value|16
 end_define
 
@@ -391,12 +391,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VMBUS_CHANMSG_TYPE_INIT_CONTACT */
+comment|/* VMBUS_CHANMSG_TYPE_CONNECT */
 end_comment
 
 begin_struct
 struct|struct
-name|vmbus_chanmsg_init_contact
+name|vmbus_chanmsg_connect
 block|{
 name|struct
 name|vmbus_chanmsg_hdr
@@ -423,19 +423,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VMBUS_CHANMSG_TYPE_VERSION_RESP */
+comment|/* VMBUS_CHANMSG_TYPE_CONNECT_RESP */
 end_comment
 
 begin_struct
 struct|struct
-name|vmbus_chanmsg_version_resp
+name|vmbus_chanmsg_connect_resp
 block|{
 name|struct
 name|vmbus_chanmsg_hdr
 name|chm_hdr
 decl_stmt|;
 name|uint8_t
-name|chm_supp
+name|chm_done
 decl_stmt|;
 block|}
 name|__packed
@@ -443,12 +443,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VMBUS_CHANMSG_TYPE_CHANNEL_REQ */
+comment|/* VMBUS_CHANMSG_TYPE_CHREQUEST */
 end_comment
 
 begin_struct
 struct|struct
-name|vmbus_chanmsg_channel_req
+name|vmbus_chanmsg_chrequest
 block|{
 name|struct
 name|vmbus_chanmsg_hdr
@@ -460,12 +460,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VMBUS_CHANMSG_TYPE_UNLOAD */
+comment|/* VMBUS_CHANMSG_TYPE_DISCONNECT */
 end_comment
 
 begin_struct
 struct|struct
-name|vmbus_chanmsg_unload
+name|vmbus_chanmsg_disconnect
 block|{
 name|struct
 name|vmbus_chanmsg_hdr

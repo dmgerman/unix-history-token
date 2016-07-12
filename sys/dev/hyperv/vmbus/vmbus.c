@@ -294,7 +294,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|vmbus_init_contact
+name|vmbus_connect
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -321,7 +321,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vmbus_uninit
+name|vmbus_disconnect
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -1672,7 +1672,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|vmbus_init_contact
+name|vmbus_connect
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -1684,15 +1684,9 @@ name|version
 parameter_list|)
 block|{
 name|struct
-name|vmbus_chanmsg_init_contact
+name|vmbus_chanmsg_connect
 modifier|*
 name|req
-decl_stmt|;
-specifier|const
-name|struct
-name|vmbus_chanmsg_version_resp
-modifier|*
-name|resp
 decl_stmt|;
 specifier|const
 name|struct
@@ -1708,7 +1702,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|supp
+name|done
 init|=
 literal|0
 decl_stmt|;
@@ -1747,7 +1741,7 @@ name|chm_hdr
 operator|.
 name|chm_type
 operator|=
-name|VMBUS_CHANMSG_TYPE_INIT_CONTACT
+name|VMBUS_CHANMSG_TYPE_CONNECT
 expr_stmt|;
 name|req
 operator|->
@@ -1819,23 +1813,21 @@ argument_list|,
 name|mh
 argument_list|)
 expr_stmt|;
-name|resp
+name|done
 operator|=
+operator|(
 operator|(
 specifier|const
 expr|struct
-name|vmbus_chanmsg_version_resp
+name|vmbus_chanmsg_connect_resp
 operator|*
 operator|)
 name|msg
 operator|->
 name|msg_data
-expr_stmt|;
-name|supp
-operator|=
-name|resp
+operator|)
 operator|->
-name|chm_supp
+name|chm_done
 expr_stmt|;
 name|vmbus_msghc_put
 argument_list|(
@@ -1846,7 +1838,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|supp
+name|done
 condition|?
 literal|0
 else|:
@@ -1892,7 +1884,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|vmbus_init_contact
+name|vmbus_connect
 argument_list|(
 name|sc
 argument_list|,
@@ -1950,7 +1942,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vmbus_uninit
+name|vmbus_disconnect
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -1959,7 +1951,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|vmbus_chanmsg_unload
+name|vmbus_chanmsg_disconnect
 modifier|*
 name|req
 decl_stmt|;
@@ -1997,7 +1989,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"can not get msg hypercall for unload\n"
+literal|"can not get msg hypercall for disconnect\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2015,7 +2007,7 @@ name|chm_hdr
 operator|.
 name|chm_type
 operator|=
-name|VMBUS_CHANMSG_TYPE_UNLOAD
+name|VMBUS_CHANMSG_TYPE_DISCONNECT
 expr_stmt|;
 name|error
 operator|=
@@ -2042,7 +2034,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"unload msg hypercall failed\n"
+literal|"disconnect msg hypercall failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2061,7 +2053,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|vmbus_chanmsg_channel_req
+name|vmbus_chanmsg_chrequest
 modifier|*
 name|req
 decl_stmt|;
@@ -2108,7 +2100,7 @@ name|chm_hdr
 operator|.
 name|chm_type
 operator|=
-name|VMBUS_CHANMSG_TYPE_CHANNEL_REQ
+name|VMBUS_CHANMSG_TYPE_CHREQUEST
 expr_stmt|;
 name|error
 operator|=
@@ -5164,7 +5156,7 @@ decl_stmt|;
 name|hv_vmbus_release_unattached_channels
 argument_list|()
 expr_stmt|;
-name|vmbus_uninit
+name|vmbus_disconnect
 argument_list|(
 name|sc
 argument_list|)
