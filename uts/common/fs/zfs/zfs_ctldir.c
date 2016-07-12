@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -5817,6 +5817,14 @@ operator|->
 name|sd_lock
 argument_list|)
 expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -5826,6 +5834,19 @@ operator|>
 literal|1
 condition|)
 block|{
+name|vp
+operator|->
+name|v_count
+operator|--
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
@@ -5834,8 +5855,21 @@ operator|->
 name|sd_lock
 argument_list|)
 expr_stmt|;
+name|VN_RELE
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|mutex_exit
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
 name|ASSERT
 argument_list|(
 operator|!
