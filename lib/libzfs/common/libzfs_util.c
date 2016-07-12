@@ -4482,6 +4482,8 @@ specifier|const
 name|char
 modifier|*
 name|str
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
