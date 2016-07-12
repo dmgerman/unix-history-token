@@ -9613,6 +9613,10 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 return|return
