@@ -1493,12 +1493,6 @@ typedef|typedef
 struct|struct
 name|hv_vmbus_channel
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|hv_vmbus_channel
-argument_list|)
-name|list_entry
-expr_stmt|;
 name|struct
 name|hv_device
 modifier|*
@@ -1630,6 +1624,12 @@ name|struct
 name|task
 name|ch_detach_task
 decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|hv_vmbus_channel
+argument_list|)
+name|ch_link
+expr_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;

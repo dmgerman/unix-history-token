@@ -4822,6 +4822,28 @@ name|vmbus_gpadl
 operator|=
 name|VMBUS_GPADL_START
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|vmbus_chlist_lock
+argument_list|,
+literal|"vmbus chlist"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|vmbus_chlist
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create context for "post message" Hypercalls 	 */
 name|sc
 operator|->
@@ -5248,7 +5270,9 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|hv_vmbus_release_unattached_channels
-argument_list|()
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|vmbus_disconnect
 argument_list|(

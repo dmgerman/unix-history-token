@@ -241,6 +241,17 @@ value|0x80000000
 name|uint32_t
 name|vmbus_scan_devcnt
 decl_stmt|;
+name|struct
+name|mtx
+name|vmbus_chlist_lock
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|hv_vmbus_channel
+argument_list|)
+name|vmbus_chlist
+expr_stmt|;
 block|}
 struct|;
 end_struct

@@ -45,6 +45,12 @@ directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|vmbus_softc
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -241,18 +247,6 @@ struct|struct
 block|{
 name|hv_vmbus_connect_state
 name|connect_state
-decl_stmt|;
-comment|/** 	 * List of primary channels. Sub channels will be linked 	 * under their primary channel. 	 */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|hv_vmbus_channel
-argument_list|)
-name|channel_anchor
-expr_stmt|;
-name|struct
-name|mtx
-name|channel_lock
 decl_stmt|;
 comment|/** 	 * channel table for fast lookup through id. 	*/
 name|hv_vmbus_channel
@@ -609,7 +603,9 @@ begin_function_decl
 name|void
 name|hv_vmbus_release_unattached_channels
 parameter_list|(
-name|void
+name|struct
+name|vmbus_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -632,12 +628,6 @@ name|channel
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|vmbus_softc
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|void
