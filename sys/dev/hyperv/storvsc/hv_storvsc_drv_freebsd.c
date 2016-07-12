@@ -1317,6 +1317,11 @@ name|props
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vmbus_channel_cpu_rr
+argument_list|(
+name|new_channel
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|hv_vmbus_channel_open
@@ -2385,6 +2390,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Open the channel 	 */
+name|vmbus_channel_cpu_rr
+argument_list|(
+name|dev
+operator|->
+name|channel
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|hv_vmbus_channel_open
