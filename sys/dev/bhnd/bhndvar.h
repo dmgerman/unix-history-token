@@ -77,7 +77,28 @@ end_comment
 begin_struct
 struct|struct
 name|bhnd_softc
-block|{}
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/**< bus device */
+name|bool
+name|attach_done
+decl_stmt|;
+comment|/**< true if initialization of all 					  *  platform devices has been 					  *  completed */
+name|device_t
+name|chipc_dev
+decl_stmt|;
+comment|/**< bhnd_chipc device */
+name|device_t
+name|nvram_dev
+decl_stmt|;
+comment|/**< bhnd_nvram device, if any */
+name|device_t
+name|pmu_dev
+decl_stmt|;
+comment|/**< bhnd_pmu device, if any */
+block|}
 struct|;
 end_struct
 
@@ -226,6 +247,32 @@ name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_generic_get_nvram_var
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

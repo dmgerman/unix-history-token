@@ -101,17 +101,6 @@ directive|include
 file|"bhndvar.h"
 end_include
 
-begin_function_decl
-specifier|static
-name|device_t
-name|find_nvram_child
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* BHND core device description table. */
 end_comment
@@ -1156,6 +1145,67 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * Return the name of an NVRAM source.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|bhnd_nvram_src_name
+parameter_list|(
+name|bhnd_nvram_src
+name|nvram_src
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|nvram_src
+condition|)
+block|{
+case|case
+name|BHND_NVRAM_SRC_FLASH
+case|:
+return|return
+operator|(
+literal|"flash"
+operator|)
+return|;
+case|case
+name|BHND_NVRAM_SRC_OTP
+case|:
+return|return
+operator|(
+literal|"OTP"
+operator|)
+return|;
+case|case
+name|BHND_NVRAM_SRC_SPROM
+case|:
+return|return
+operator|(
+literal|"SPROM"
+operator|)
+return|;
+case|case
+name|BHND_NVRAM_SRC_UNKNOWN
+case|:
+return|return
+operator|(
+literal|"none"
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|"unknown"
+operator|)
+return|;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 specifier|const
@@ -1459,7 +1509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Find a @p class child device with @p unit on @p dev.  *   * @param parent The bhnd-compatible bus to be searched.  * @param class The device class to match on.  * @param unit The device unit number; specify -1 to return the first match  * regardless of unit number.  *   * @retval device_t if a matching child device is found.  * @retval NULL if no matching child device is found.  */
+comment|/**  * Find a @p class child device with @p unit on @p dev.  *   * @param parent The bhnd-compatible bus to be searched.  * @param class The device class to match on.  * @param unit The core unit number; specify -1 to return the first match  * regardless of unit number.  *   * @retval device_t if a matching child device is found.  * @retval NULL if no matching child device is found.  */
 end_comment
 
 begin_function
@@ -3818,115 +3868,7 @@ name|BHND_GV_OPT
 end_undef
 
 begin_comment
-comment|/**  * Find an NVRAM child device on @p dev, if any.  *   * @retval device_t An NVRAM device.  * @retval NULL If no NVRAM device is found.  */
-end_comment
-
-begin_function
-specifier|static
-name|device_t
-name|find_nvram_child
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|device_t
-name|chipc
-decl_stmt|,
-name|nvram
-decl_stmt|;
-comment|/* Look for a directly-attached NVRAM child */
-name|nvram
-operator|=
-name|device_find_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"bhnd_nvram"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nvram
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|nvram
-operator|)
-return|;
-comment|/* Remaining checks are only applicable when searching a bhnd(4) 	 * bus. */
-if|if
-condition|(
-name|device_get_devclass
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|bhnd_devclass
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-comment|/* Look for a ChipCommon-attached NVRAM device */
-if|if
-condition|(
-operator|(
-name|chipc
-operator|=
-name|bhnd_find_child
-argument_list|(
-name|dev
-argument_list|,
-name|BHND_DEVCLASS_CC
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|nvram
-operator|=
-name|device_find_child
-argument_list|(
-name|chipc
-argument_list|,
-literal|"bhnd_nvram"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nvram
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|nvram
-operator|)
-return|;
-block|}
-comment|/* Not found */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * Helper function for implementing BHND_BUS_GET_NVRAM_VAR().  *   * This implementation searches @p dev for a usable NVRAM child device:  * - The first child device implementing the bhnd_nvram devclass is  *   returned, otherwise  * - If @p dev is a bhnd(4) bus, a ChipCommon core that advertises an  *   attached NVRAM source.  *   * If no usable child device is found on @p dev, the request is delegated to  * the BHND_BUS_GET_NVRAM_VAR() method on the parent of @p dev.  */
+comment|/**  * Helper function for implementing BHND_BUS_GET_NVRAM_VAR().  *   * This implementation searches @p dev for a usable NVRAM child device.  *   * If no usable child device is found on @p dev, the request is delegated to  * the BHND_BUS_GET_NVRAM_VAR() method on the parent of @p dev.  */
 end_comment
 
 begin_function
@@ -3959,15 +3901,23 @@ decl_stmt|;
 name|device_t
 name|parent
 decl_stmt|;
-comment|/* Try to find an NVRAM device applicable to @p child */
+comment|/* Make sure we're holding Giant for newbus */
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* Look for a directly-attached NVRAM child */
 if|if
 condition|(
 operator|(
 name|nvram
 operator|=
-name|find_nvram_child
+name|device_find_child
 argument_list|(
 name|dev
+argument_list|,
+literal|"bhnd_nvram"
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|!=
