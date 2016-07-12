@@ -151,6 +151,123 @@ name|IOAT_VER_3_3
 value|0x33
 end_define
 
+begin_comment
+comment|/*  * Hardware capabilities.  Different hardware revisions support different  * features.  It is often useful to detect specific features than try to infer  * them from hardware version.  *  * Different channels may support different features too; for example, 'PQ' may  * only be supported on the first two channels of some hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PB
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_CRC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_MARKER_SKIP
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_OLD_XOR
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DCA
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_MOVECRC
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_BFILL
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_EXT_APIC
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_XOR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PQ
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMA_DIF
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DWBES
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_RAID16SS
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMAMC
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_CTOS
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_STR
+define|\
+value|"\20\24Completion_Timeout_Support\23DMA_with_Multicasting_Support" \     "\22RAID_Super_descriptors\16Descriptor_Write_Back_Error_Support" \     "\13DMA_with_DIF\12PQ\11XOR\10Extended_APIC_ID\07Block_Fill\06Move_CRC" \     "\05DCA\04Old_XOR\03Marker_Skipping\02CRC\01Page_Break"
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -240,6 +357,16 @@ end_function_decl
 begin_function_decl
 name|size_t
 name|ioat_get_max_io_size
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|ioat_get_capabilities
 parameter_list|(
 name|bus_dmaengine_t
 name|dmaengine
