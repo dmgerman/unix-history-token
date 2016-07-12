@@ -115,12 +115,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|uint32_t
-name|hv_vmbus_protocal_version
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/**  * Send a connect request on the partition service connection  */
 end_comment

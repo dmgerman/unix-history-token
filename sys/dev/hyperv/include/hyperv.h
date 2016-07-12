@@ -169,29 +169,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WS2008
+name|VMBUS_VERSION_WS2008
 value|((0<< 16) | (13))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN7
+name|VMBUS_VERSION_WIN7
 value|((1<< 16) | (1))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN8
+name|VMBUS_VERSION_WIN8
 value|((2<< 16) | (4))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN8_1
+name|VMBUS_VERSION_WIN8_1
 value|((3<< 16) | (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))& 0xffff)
 end_define
 
 begin_comment
@@ -2003,13 +2023,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|hv_vmbus_protocal_version
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

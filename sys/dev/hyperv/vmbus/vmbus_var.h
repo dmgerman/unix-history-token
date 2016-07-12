@@ -188,7 +188,7 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-comment|/* Rarely used fields */
+comment|/* 	 * Rarely used fields 	 */
 name|device_t
 name|vmbus_dev
 decl_stmt|;
@@ -199,6 +199,9 @@ name|uint32_t
 name|vmbus_flags
 decl_stmt|;
 comment|/* see VMBUS_FLAG_ */
+name|uint32_t
+name|vmbus_version
+decl_stmt|;
 comment|/* Shared memory for vmbus_{rx,tx}_evtflags */
 name|void
 modifier|*
