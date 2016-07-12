@@ -1012,7 +1012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* buf must be long enough (MAXNAMELEN + strlen(MOS_DIR_NAME) + 1 should do) */
+comment|/* buf must be at least ZFS_MAX_DATASET_NAME_LEN bytes */
 end_comment
 
 begin_function
@@ -1044,14 +1044,20 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
+name|VERIFY3U
+argument_list|(
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
 literal|"/"
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
+argument_list|)
+argument_list|,
+operator|<
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1086,16 +1092,22 @@ operator|->
 name|dd_lock
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
+name|VERIFY3U
+argument_list|(
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
 name|dd
 operator|->
 name|dd_myname
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
+argument_list|)
+argument_list|,
+operator|<
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -1109,16 +1121,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|strcat
+name|VERIFY3U
+argument_list|(
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
 name|dd
 operator|->
 name|dd_myname
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
+argument_list|)
+argument_list|,
+operator|<
+argument_list|,
+name|ZFS_MAX_DATASET_NAME_LEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1371,7 +1389,7 @@ argument_list|(
 name|path
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(
@@ -1413,7 +1431,7 @@ name|p
 operator|-
 name|path
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(
@@ -1485,7 +1503,7 @@ name|p
 operator|-
 name|path
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(
@@ -1582,7 +1600,7 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 specifier|const
@@ -4090,7 +4108,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|VERIFY0
@@ -7598,7 +7616,7 @@ decl_stmt|;
 name|char
 name|namebuf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_name
@@ -7618,7 +7636,7 @@ operator|+
 operator|*
 name|deltap
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(

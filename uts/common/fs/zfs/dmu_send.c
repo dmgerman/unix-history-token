@@ -6630,7 +6630,7 @@ comment|/* target fs does not exist; must be a full backup or clone */
 name|char
 name|buf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* 		 * If it's a non-clone incremental, we are missing the 		 * target fs, so fail the recv. 		 */
@@ -6695,7 +6695,10 @@ argument_list|)
 argument_list|,
 operator|<
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7767,10 +7770,13 @@ name|ENOTSUP
 argument_list|)
 operator|)
 return|;
+comment|/* 6 extra bytes for /%recv */
 name|char
 name|recvname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
+operator|+
+literal|6
 index|]
 decl_stmt|;
 operator|(
@@ -8125,10 +8131,13 @@ decl_stmt|;
 name|uint64_t
 name|dsobj
 decl_stmt|;
+comment|/* 6 extra bytes for /%recv */
 name|char
 name|recvname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
+operator|+
+literal|6
 index|]
 decl_stmt|;
 operator|(
@@ -11697,7 +11706,7 @@ block|{
 name|char
 name|name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_name
@@ -15931,16 +15940,16 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|char
-name|name
-index|[
-name|MAXNAMELEN
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
 comment|/* 	 * We will be destroying the ds; make sure its origin is unmounted if 	 * necessary. 	 */
+name|char
+name|name
+index|[
+name|ZFS_MAX_DATASET_NAME_LEN
+index|]
+decl_stmt|;
 name|dsl_dataset_name
 argument_list|(
 name|drc

@@ -2258,7 +2258,7 @@ decl_stmt|;
 name|char
 name|setpoint
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* 			 * Unprivileged users are allowed to modify the 			 * limit on things *under* (ie. contained by) 			 * the thing they own. 			 */
@@ -3308,7 +3308,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -3584,7 +3584,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_t
@@ -4356,7 +4356,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -5065,7 +5065,7 @@ block|{
 name|char
 name|fsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|error
@@ -5179,7 +5179,7 @@ block|{
 name|char
 name|fsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|error
@@ -9735,7 +9735,7 @@ name|zc_name
 argument_list|)
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 name|dmu_objset_rele
@@ -13218,7 +13218,7 @@ decl_stmt|;
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -14827,7 +14827,7 @@ block|{
 name|char
 name|originname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_name
@@ -15601,7 +15601,7 @@ decl_stmt|;
 name|char
 name|fullname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -17860,7 +17860,7 @@ decl_stmt|;
 name|char
 name|tofs
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|boolean_t

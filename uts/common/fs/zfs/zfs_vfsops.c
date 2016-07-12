@@ -2288,7 +2288,7 @@ block|{
 name|char
 name|osname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dmu_objset_name
@@ -7831,7 +7831,9 @@ name|statp
 operator|->
 name|f_namemax
 operator|=
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * We have all of 32 characters to stuff a string here. 	 * Is there anything useful we could/should provide? 	 */
 name|bzero

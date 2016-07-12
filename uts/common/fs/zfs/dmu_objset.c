@@ -2746,7 +2746,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|ds
@@ -3709,6 +3709,25 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|doca
+operator|->
+name|doca_name
+argument_list|)
+operator|>=
+name|ZFS_MAX_DATASET_NAME_LEN
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+operator|)
+return|;
 name|error
 operator|=
 name|dsl_dir_hold
@@ -4187,6 +4206,25 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|doca
+operator|->
+name|doca_clone
+argument_list|)
+operator|>=
+name|ZFS_MAX_DATASET_NAME_LEN
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+operator|)
+return|;
 name|error
 operator|=
 name|dsl_dir_hold
@@ -4405,7 +4443,7 @@ decl_stmt|;
 name|char
 name|namebuf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|VERIFY0
@@ -9322,7 +9360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine name of filesystem, given name of snapshot.  * buf must be at least MAXNAMELEN bytes  */
+comment|/*  * Determine name of filesystem, given name of snapshot.  * buf must be at least ZFS_MAX_DATASET_NAME_LEN bytes  */
 end_comment
 
 begin_function
@@ -9370,7 +9408,7 @@ name|atp
 operator|-
 name|snapname
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(

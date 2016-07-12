@@ -224,7 +224,7 @@ comment|/* protected by dd_lock; keep at end of struct for better locality */
 name|char
 name|dd_myname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 block|}
@@ -746,7 +746,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { \ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { \ 	char *__ds_name = kmem_alloc(MAXNAMELEN + strlen(MOS_DIR_NAME) + 1, \ 	    KM_SLEEP); \ 	dsl_dir_name(dd, __ds_name); \ 	dprintf("dd=%s " fmt, __ds_name, __VA_ARGS__); \ 	kmem_free(__ds_name, MAXNAMELEN + strlen(MOS_DIR_NAME) + 1); \ 	} \ _NOTE(CONSTCOND) } while (0)
+value|do { \ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { \ 	char *__ds_name = kmem_alloc(ZFS_MAX_DATASET_NAME_LEN, KM_SLEEP); \ 	dsl_dir_name(dd, __ds_name); \ 	dprintf("dd=%s " fmt, __ds_name, __VA_ARGS__); \ 	kmem_free(__ds_name, ZFS_MAX_DATASET_NAME_LEN); \ 	} \ _NOTE(CONSTCOND) } while (0)
 else|#
 directive|else
 define|#
