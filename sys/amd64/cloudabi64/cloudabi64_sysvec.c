@@ -328,6 +328,16 @@ operator|->
 name|code
 index|]
 expr_stmt|;
+name|sa
+operator|->
+name|narg
+operator|=
+name|sa
+operator|->
+name|callp
+operator|->
+name|sy_narg
+expr_stmt|;
 comment|/* Fetch system call arguments. */
 name|sa
 operator|->
