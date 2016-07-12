@@ -2710,14 +2710,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t(Total: %dK Active: %dK)\n"
+literal|"Virtual Memory:\t\t(Total: %jdK Active: %jdK)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_vm
 operator|*
 name|pageKilo
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_avm
@@ -2727,14 +2733,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t(Total: %dK Active: %dK)\n"
+literal|"Real Memory:\t\t(Total: %jdK Active: %jdK)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_rm
 operator|*
 name|pageKilo
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_arm
@@ -2744,14 +2756,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Virtual Memory:\t(Total: %dK Active: %dK)\n"
+literal|"Shared Virtual Memory:\t(Total: %jdK Active: %jdK)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_vmshr
 operator|*
 name|pageKilo
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_avmshr
@@ -2761,14 +2779,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Real Memory:\t(Total: %dK Active: %dK)\n"
+literal|"Shared Real Memory:\t(Total: %jdK Active: %jdK)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_rmshr
 operator|*
 name|pageKilo
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_armshr
@@ -2778,8 +2802,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory:\t%dK"
+literal|"Free Memory:\t%jdK"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|v
 operator|->
 name|t_free
