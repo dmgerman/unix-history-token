@@ -4965,23 +4965,7 @@ name|vmbus_flags
 operator||=
 name|VMBUS_FLAG_SYNIC
 expr_stmt|;
-comment|/* 	 * Connect to VMBus in the root partition 	 */
-name|ret
-operator|=
-name|hv_vmbus_connect
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|cleanup
-goto|;
+comment|/* 	 * Initialize vmbus, e.g. connect to Hypervisor. 	 */
 name|ret
 operator|=
 name|vmbus_init
@@ -5309,9 +5293,6 @@ name|vmbus_disconnect
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|hv_vmbus_disconnect
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
