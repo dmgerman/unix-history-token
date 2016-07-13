@@ -1180,7 +1180,7 @@ operator|=
 literal|0
 init|;
 name|cnt
-operator|<=
+operator|<
 name|WINT_MAX
 condition|;
 name|cnt
