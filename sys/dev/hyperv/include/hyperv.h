@@ -1295,7 +1295,7 @@ index|[
 literal|4084
 index|]
 decl_stmt|;
-comment|/* 	 * WARNING: Ring data starts here + ring_data_start_offset 	 *  !!! DO NOT place any fields below this !!! 	 */
+comment|/* 	 * WARNING: Ring data starts here 	 *  !!! DO NOT place any fields below this !!! 	 */
 name|uint8_t
 name|buffer
 index|[
@@ -1358,10 +1358,6 @@ name|hv_vmbus_ring_buffer
 modifier|*
 name|ring_buffer
 decl_stmt|;
-name|uint32_t
-name|ring_size
-decl_stmt|;
-comment|/* Include the shared header */
 name|struct
 name|mtx
 name|ring_lock
@@ -1370,9 +1366,6 @@ name|uint32_t
 name|ring_data_size
 decl_stmt|;
 comment|/* ring_size */
-name|uint32_t
-name|ring_data_start_offset
-decl_stmt|;
 block|}
 name|hv_vmbus_ring_buffer_info
 typedef|;

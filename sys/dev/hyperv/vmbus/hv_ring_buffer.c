@@ -814,12 +814,6 @@ literal|0
 expr_stmt|;
 name|ring_info
 operator|->
-name|ring_size
-operator|=
-name|buffer_len
-expr_stmt|;
-name|ring_info
-operator|->
 name|ring_data_size
 operator|=
 name|buffer_len
