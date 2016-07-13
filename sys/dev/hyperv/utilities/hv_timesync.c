@@ -482,8 +482,6 @@ name|softc
 operator|->
 name|util_sc
 operator|.
-name|hv_dev
-operator|->
 name|channel
 expr_stmt|;
 name|time_buf

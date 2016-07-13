@@ -36,9 +36,9 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|struct
-name|hv_device
+name|hv_vmbus_channel
 modifier|*
-name|hv_dev
+name|channel
 decl_stmt|;
 name|uint8_t
 modifier|*

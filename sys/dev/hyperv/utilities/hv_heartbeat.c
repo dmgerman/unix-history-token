@@ -177,8 +177,6 @@ name|channel
 operator|=
 name|softc
 operator|->
-name|hv_dev
-operator|->
 name|channel
 expr_stmt|;
 name|ret
