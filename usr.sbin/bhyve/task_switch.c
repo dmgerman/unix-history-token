@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdbool.h>
 end_include
 
@@ -81,18 +93,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -234,7 +234,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|CTASSERT
+name|static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -243,6 +243,8 @@ name|tss32
 argument_list|)
 operator|==
 literal|104
+argument_list|,
+literal|"compile-time assertion failed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

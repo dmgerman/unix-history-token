@@ -528,6 +528,22 @@ name|__packed
 struct|;
 end_struct
 
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msicap
+argument_list|)
+operator|==
+literal|14
+argument_list|,
+literal|"compile-time assertion failed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|msixcap
@@ -553,6 +569,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msixcap
+argument_list|)
+operator|==
+literal|12
+argument_list|,
+literal|"compile-time assertion failed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -641,6 +673,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pciecap
+argument_list|)
+operator|==
+literal|60
+argument_list|,
+literal|"compile-time assertion failed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef

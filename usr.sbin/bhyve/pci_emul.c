@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -3590,17 +3590,6 @@ block|{
 name|int
 name|mmc
 decl_stmt|;
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|msicap
-argument_list|)
-operator|==
-literal|14
-argument_list|)
-expr_stmt|;
 comment|/* Number of msi messages must be a power of 2 between 1 and 32 */
 name|assert
 argument_list|(
@@ -3742,17 +3731,6 @@ name|uint32_t
 name|msix_tab_size
 parameter_list|)
 block|{
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|msixcap
-argument_list|)
-operator|==
-literal|12
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|msix_tab_size
@@ -4459,17 +4437,6 @@ name|struct
 name|pciecap
 name|pciecap
 decl_stmt|;
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pciecap
-argument_list|)
-operator|==
-literal|60
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|type
