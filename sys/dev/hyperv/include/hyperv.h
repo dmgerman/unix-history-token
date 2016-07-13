@@ -1067,7 +1067,9 @@ block|,
 name|HV_VMBUS_IVAR_NODE
 block|,
 name|HV_VMBUS_IVAR_DEVCTX
-block|}
+block|,
+name|HV_VMBUS_IVAR_CHAN
+block|, }
 enum|;
 end_enum
 
@@ -1085,6 +1087,12 @@ parameter_list|)
 define|\
 value|__BUS_ACCESSOR(vmbus, var, HV_VMBUS, ivar, type)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|hv_vmbus_channel
+struct_decl|;
+end_struct_decl
 
 begin_macro
 name|HV_VMBUS_ACCESSOR
@@ -1105,6 +1113,17 @@ argument_list|,
 argument|DEVCTX
 argument_list|,
 argument|struct hv_device *
+argument_list|)
+end_macro
+
+begin_macro
+name|HV_VMBUS_ACCESSOR
+argument_list|(
+argument|channel
+argument_list|,
+argument|CHAN
+argument_list|,
+argument|struct hv_vmbus_channel *
 argument_list|)
 end_macro
 
