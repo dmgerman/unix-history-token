@@ -957,7 +957,7 @@ name|hv_vmbus_channel
 modifier|*
 name|new_channel
 decl_stmt|;
-comment|/* Allocate the channel object and save this offer */
+comment|/* 	 * Allocate the channel object and save this offer 	 */
 name|new_channel
 operator|=
 name|hv_vmbus_allocate_channel
@@ -983,18 +983,6 @@ name|offer
 operator|.
 name|sub_channel_index
 expr_stmt|;
-if|if
-condition|(
-name|offer
-operator|->
-name|monitor_allocated
-condition|)
-name|new_channel
-operator|->
-name|ch_flags
-operator||=
-name|VMBUS_CHAN_FLAG_HASMNF
-expr_stmt|;
 name|new_channel
 operator|->
 name|ch_guid_type
@@ -1015,12 +1003,24 @@ name|offer
 operator|.
 name|interface_instance
 expr_stmt|;
-comment|/* 	 * By default we setup state to enable batched 	 * reading. A specific service can choose to 	 * disable this prior to opening the channel. 	 */
+comment|/* Batch reading is on by default */
 name|new_channel
 operator|->
-name|batched_reading
-operator|=
-name|TRUE
+name|ch_flags
+operator||=
+name|VMBUS_CHAN_FLAG_BATCHREAD
+expr_stmt|;
+if|if
+condition|(
+name|offer
+operator|->
+name|monitor_allocated
+condition|)
+name|new_channel
+operator|->
+name|ch_flags
+operator||=
+name|VMBUS_CHAN_FLAG_HASMNF
 expr_stmt|;
 name|new_channel
 operator|->

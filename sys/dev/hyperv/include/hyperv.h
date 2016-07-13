@@ -1506,10 +1506,6 @@ name|void
 modifier|*
 name|channel_callback_context
 decl_stmt|;
-comment|/* 	 * If batched_reading is set to "true", mask the interrupt 	 * and read until the channel is empty. 	 * If batched_reading is set to "false", the channel is not 	 * going to perform batched reading. 	 * 	 * Batched reading is enabled by default; specific 	 * drivers that don't want this behavior can turn it off. 	 */
-name|boolean_t
-name|batched_reading
-decl_stmt|;
 name|struct
 name|hypercall_sigevt_in
 modifier|*
@@ -1616,6 +1612,17 @@ name|VMBUS_CHAN_FLAG_HASMNF
 value|0x0001
 end_define
 
+begin_comment
+comment|/*  * If this flag is set, this channel's interrupt will be masked in ISR,  * and the RX bufring will be drained before this channel's interrupt is  * unmasked.  *  * This flag is turned on by default.  Drivers can turn it off according  * to their own requirement.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_FLAG_BATCHREAD
+value|0x0002
+end_define
+
 begin_function
 specifier|static
 specifier|inline
@@ -1627,14 +1634,27 @@ modifier|*
 name|channel
 parameter_list|,
 name|boolean_t
-name|state
+name|on
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|on
+condition|)
 name|channel
 operator|->
-name|batched_reading
-operator|=
-name|state
+name|ch_flags
+operator|&=
+operator|~
+name|VMBUS_CHAN_FLAG_BATCHREAD
+expr_stmt|;
+else|else
+name|channel
+operator|->
+name|ch_flags
+operator||=
+name|VMBUS_CHAN_FLAG_BATCHREAD
 expr_stmt|;
 block|}
 end_function
