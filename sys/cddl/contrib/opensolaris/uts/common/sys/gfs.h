@@ -742,10 +742,10 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|gfs_vop_inactive
+name|gfs_vop_reclaim
 parameter_list|(
 name|struct
-name|vop_inactive_args
+name|vop_reclaim_args
 modifier|*
 parameter_list|)
 function_decl|;
