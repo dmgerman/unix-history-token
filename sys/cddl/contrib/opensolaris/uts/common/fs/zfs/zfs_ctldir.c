@@ -717,7 +717,7 @@ decl_stmt|;
 name|ASSERT
 argument_list|(
 name|index
-operator|<=
+operator|<
 literal|2
 argument_list|)
 expr_stmt|;
