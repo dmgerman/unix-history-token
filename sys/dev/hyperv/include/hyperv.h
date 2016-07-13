@@ -1461,12 +1461,14 @@ name|ch_id
 decl_stmt|;
 comment|/* channel id */
 comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
-name|uint8_t
-name|monitor_group
+name|int
+name|ch_montrig_idx
 decl_stmt|;
-name|uint8_t
-name|monitor_bit
+comment|/* MNF trig index */
+name|uint32_t
+name|ch_montrig_mask
 decl_stmt|;
+comment|/* MNF trig mask */
 name|uint32_t
 name|ring_buffer_gpadl_handle
 decl_stmt|;

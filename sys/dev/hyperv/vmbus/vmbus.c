@@ -3430,7 +3430,11 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|PAGE_SIZE
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmbus_mnf
+argument_list|)
 argument_list|,
 operator|&
 name|sc
