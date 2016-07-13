@@ -707,6 +707,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* This should not be here, but I'll rather leave it in than engage in 	   a LC_COLLATE flamewar about a shell I don't use... */
 if|if
 condition|(
@@ -743,6 +746,8 @@ operator|-
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 name|s1
 index|[
@@ -770,6 +775,19 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+name|wcscmp
+argument_list|(
+name|s1
+argument_list|,
+name|s2
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|wcscoll
 argument_list|(
@@ -778,6 +796,8 @@ argument_list|,
 name|s2
 argument_list|)
 return|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* not WIDE_STRINGS */
