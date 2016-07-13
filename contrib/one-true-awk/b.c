@@ -1773,6 +1773,27 @@ index|]
 operator|=
 name|b
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+operator|(
+name|strcmp
+argument_list|(
+name|s
+index|[
+literal|0
+index|]
+argument_list|,
+name|s
+index|[
+literal|1
+index|]
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|strcoll
@@ -1789,6 +1810,8 @@ index|]
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
