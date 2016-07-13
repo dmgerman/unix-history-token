@@ -1523,6 +1523,9 @@ name|hv_device
 modifier|*
 name|device
 decl_stmt|;
+name|device_t
+name|ch_dev
+decl_stmt|;
 name|struct
 name|vmbus_softc
 modifier|*
