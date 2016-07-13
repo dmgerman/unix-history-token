@@ -826,6 +826,8 @@ literal|"hv"
 block|,
 literal|"vmware"
 block|,
+literal|"kvm"
+block|,
 name|NULL
 block|}
 decl_stmt|;

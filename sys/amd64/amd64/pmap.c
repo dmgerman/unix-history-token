@@ -5167,8 +5167,8 @@ comment|/* 	 * If the kernel is running on a virtual machine, then it must assum
 if|if
 condition|(
 name|vm_guest
-operator|==
-name|VM_GUEST_VM
+operator|!=
+name|VM_GUEST_NO
 operator|&&
 operator|(
 name|cpu_feature
