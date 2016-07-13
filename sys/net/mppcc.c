@@ -1320,13 +1320,18 @@ block|}
 else|else
 block|{
 comment|/* NOTREACHED */
+name|__unreachable
+argument_list|()
+expr_stmt|;
 name|rtn
 operator|&=
 operator|~
 name|MPPC_OK
 expr_stmt|;
 return|return
+operator|(
 name|rtn
+operator|)
 return|;
 block|}
 comment|/* Encode length of match. */
