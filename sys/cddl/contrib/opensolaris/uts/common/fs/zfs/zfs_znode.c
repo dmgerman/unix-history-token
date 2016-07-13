@@ -2489,7 +2489,7 @@ name|B_TRUE
 else|:
 name|B_FALSE
 expr_stmt|;
-comment|/* 	 * Slap on VROOT if we are the root znode 	 */
+comment|/* 	 * Slap on VROOT if we are the root znode unless we are the root 	 * node of a snapshot mounted under .zfs. 	 */
 if|if
 condition|(
 name|zp
@@ -2499,6 +2499,12 @@ operator|==
 name|zfsvfs
 operator|->
 name|z_root
+operator|&&
+name|zfsvfs
+operator|->
+name|z_parent
+operator|==
+name|zfsvfs
 condition|)
 name|ZTOV
 argument_list|(
