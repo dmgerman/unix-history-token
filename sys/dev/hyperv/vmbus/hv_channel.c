@@ -423,11 +423,7 @@ name|sub_ch_id
 operator|=
 name|channel
 operator|->
-name|offer_msg
-operator|.
-name|offer
-operator|.
-name|sub_channel_index
+name|ch_subidx
 expr_stmt|;
 block|}
 name|ctx

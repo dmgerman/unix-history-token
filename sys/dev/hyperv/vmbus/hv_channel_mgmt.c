@@ -576,11 +576,7 @@ name|ch_id
 argument_list|,
 name|new_channel
 operator|->
-name|offer_msg
-operator|.
-name|offer
-operator|.
-name|sub_channel_index
+name|ch_subidx
 argument_list|,
 name|logstr
 argument_list|)
@@ -598,11 +594,7 @@ if|if
 condition|(
 name|new_channel
 operator|->
-name|offer_msg
-operator|.
-name|offer
-operator|.
-name|sub_channel_index
+name|ch_subidx
 operator|!=
 literal|0
 condition|)
@@ -1028,6 +1020,16 @@ operator|=
 name|offer
 operator|->
 name|child_rel_id
+expr_stmt|;
+name|new_channel
+operator|->
+name|ch_subidx
+operator|=
+name|offer
+operator|->
+name|offer
+operator|.
+name|sub_channel_index
 expr_stmt|;
 comment|/* 	 * By default we setup state to enable batched 	 * reading. A specific service can choose to 	 * disable this prior to opening the channel. 	 */
 name|new_channel

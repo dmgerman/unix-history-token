@@ -1640,6 +1640,10 @@ argument|hv_vmbus_channel
 argument_list|)
 name|ch_link
 expr_stmt|;
+name|uint32_t
+name|ch_subidx
+decl_stmt|;
+comment|/* subchan index */
 name|struct
 name|sysctl_ctx_list
 name|ch_sysctl_ctx
