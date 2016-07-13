@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/power.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -223,6 +229,18 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+name|power_pm_get_type
+argument_list|()
+operator|==
+name|POWER_PM_TYPE_ACPI
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|microtime
 argument_list|(
 operator|&
@@ -279,6 +297,18 @@ name|resume_time
 decl_stmt|,
 name|tmp_time
 decl_stmt|;
+if|if
+condition|(
+name|power_pm_get_type
+argument_list|()
+operator|==
+name|POWER_PM_TYPE_ACPI
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* modified for adjkerntz */
 name|timer_restore
 argument_list|()

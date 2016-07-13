@@ -1900,62 +1900,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
-begin_comment
-comment|/* Reset system clock while resuming.  XXX Remove once tested. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|acpi_reset_clock
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.reset_clock"
-argument_list|,
-operator|&
-name|acpi_reset_clock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_acpi
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|reset_clock
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|acpi_reset_clock
-argument_list|,
-literal|1
-argument_list|,
-literal|"Reset system clock while resuming."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Allow users to override quirks. */
 end_comment
@@ -13388,15 +13332,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__amd64__
-if|if
-condition|(
-operator|!
-name|acpi_reset_clock
-condition|)
-return|return;
 comment|/*      * Warm up timecounter again and reset system clock.      */
 operator|(
 name|void
@@ -13427,8 +13362,6 @@ operator|->
 name|acpi_sleep_delay
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
