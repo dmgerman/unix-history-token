@@ -10718,6 +10718,16 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+name|ifp
+operator|->
+name|if_afdata
+index|[
+name|AF_INET6
+index|]
+operator|==
+name|NULL
+operator|||
+operator|(
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -10726,6 +10736,9 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_IFDISABLED
+operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 return|return
