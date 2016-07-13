@@ -1035,7 +1035,7 @@ operator|->
 name|vmbus_dev
 argument_list|)
 argument_list|,
-name|HYPERCALL_SIGEVTIN_ALIGN
+name|HYPERCALL_PARAM_ALIGN
 argument_list|,
 literal|0
 argument_list|,

@@ -543,7 +543,7 @@ name|hyperv_dmamem_alloc
 argument_list|(
 name|parent_dtag
 argument_list|,
-name|HYPERCALL_POSTMSGIN_ALIGN
+name|HYPERCALL_PARAM_ALIGN
 argument_list|,
 literal|0
 argument_list|,

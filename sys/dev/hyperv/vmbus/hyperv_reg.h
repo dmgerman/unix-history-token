@@ -644,6 +644,35 @@ begin_comment
 comment|/*  * Hypercall input parameters  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HYPERCALL_PARAM_ALIGN
+value|8
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * XXX  *<<Hypervisor Top Level Functional Specification 4.0b>> requires  * input parameters size to be multiple of 8, however, many post  * message input parameters do _not_ meet this requirement.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYPERCALL_PARAM_SIZE_ALIGN
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * HYPERCALL_POST_MESSAGE  */
 end_comment
@@ -660,13 +689,6 @@ define|#
 directive|define
 name|HYPERCALL_POSTMSGIN_SIZE
 value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|HYPERCALL_POSTMSGIN_ALIGN
-value|8
 end_define
 
 begin_struct
@@ -714,13 +736,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * HYPERCALL_SIGNAL_EVENT  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|HYPERCALL_SIGEVTIN_ALIGN
-value|8
-end_define
 
 begin_struct
 struct|struct
