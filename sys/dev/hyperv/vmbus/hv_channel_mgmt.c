@@ -141,7 +141,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vmbus_channel_on_offer_rescind
+name|vmbus_channel_on_offers_delivered
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -158,7 +158,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vmbus_channel_on_offers_delivered
+name|vmbus_chan_msgproc_chrescind
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -196,7 +196,7 @@ index|[
 name|HV_CHANNEL_MESSAGE_RESCIND_CHANNEL_OFFER
 index|]
 operator|=
-name|vmbus_channel_on_offer_rescind
+name|vmbus_chan_msgproc_chrescind
 block|,
 index|[
 name|HV_CHANNEL_MESSAGE_ALL_OFFERS_DELIVERED
@@ -1183,13 +1183,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Rescind offer handler.  *  * We queue a work item to process this offer  * synchronously.  *  * XXX pretty broken; need rework.  */
+comment|/*  * XXX pretty broken; need rework.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|vmbus_channel_on_offer_rescind
+name|vmbus_chan_msgproc_chrescind
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -1204,25 +1204,52 @@ name|msg
 parameter_list|)
 block|{
 specifier|const
-name|hv_vmbus_channel_rescind_offer
+name|struct
+name|vmbus_chanmsg_chrescind
 modifier|*
-name|rescind
+name|note
 decl_stmt|;
+name|struct
 name|hv_vmbus_channel
 modifier|*
-name|channel
+name|chan
 decl_stmt|;
-name|rescind
+name|note
 operator|=
 operator|(
 specifier|const
-name|hv_vmbus_channel_rescind_offer
+expr|struct
+name|vmbus_chanmsg_chrescind
 operator|*
 operator|)
 name|msg
 operator|->
 name|msg_data
 expr_stmt|;
+if|if
+condition|(
+name|note
+operator|->
+name|chm_chanid
+operator|>
+name|VMBUS_CHAN_MAX
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"invalid rescinded chan%u\n"
+argument_list|,
+name|note
+operator|->
+name|chm_chanid
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|bootverbose
@@ -1234,28 +1261,28 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"chan%u rescind\n"
+literal|"chan%u rescinded\n"
 argument_list|,
-name|rescind
+name|note
 operator|->
-name|child_rel_id
+name|chm_chanid
 argument_list|)
 expr_stmt|;
 block|}
-name|channel
+name|chan
 operator|=
 name|sc
 operator|->
 name|vmbus_chmap
 index|[
-name|rescind
+name|note
 operator|->
-name|child_rel_id
+name|chm_chanid
 index|]
 expr_stmt|;
 if|if
 condition|(
-name|channel
+name|chan
 operator|==
 name|NULL
 condition|)
@@ -1264,9 +1291,9 @@ name|sc
 operator|->
 name|vmbus_chmap
 index|[
-name|rescind
+name|note
 operator|->
-name|child_rel_id
+name|chm_chanid
 index|]
 operator|=
 name|NULL
@@ -1276,7 +1303,7 @@ argument_list|(
 name|taskqueue_thread
 argument_list|,
 operator|&
-name|channel
+name|chan
 operator|->
 name|ch_detach_task
 argument_list|)

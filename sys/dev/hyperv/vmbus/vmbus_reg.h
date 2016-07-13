@@ -345,7 +345,18 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Channel messages  * - Embedded in vmbus_message.msg_data, e.g. response.  * - Embedded in hypercall_postmsg_in.hc_data, e.g. request.  */
+comment|/*  * Channel messages  * - Embedded in vmbus_message.msg_data, e.g. response and notification.  * - Embedded in hypercall_postmsg_in.hc_data, e.g. request.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_CHRESCIND
+value|2
+end_define
+
+begin_comment
+comment|/* NOTE */
 end_comment
 
 begin_define
@@ -851,6 +862,26 @@ end_comment
 begin_struct
 struct|struct
 name|vmbus_chanmsg_chfree
+block|{
+name|struct
+name|vmbus_chanmsg_hdr
+name|chm_hdr
+decl_stmt|;
+name|uint32_t
+name|chm_chanid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VMBUS_CHANMSG_TYPE_CHRESCIND */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_chanmsg_chrescind
 block|{
 name|struct
 name|vmbus_chanmsg_hdr
