@@ -1326,7 +1326,9 @@ operator|~
 name|MPPC_OK
 expr_stmt|;
 return|return
+operator|(
 name|rtn
+operator|)
 return|;
 block|}
 comment|/* Encode length of match. */
