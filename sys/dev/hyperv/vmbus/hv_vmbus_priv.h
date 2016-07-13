@@ -567,12 +567,7 @@ name|hv_device
 modifier|*
 name|hv_vmbus_child_device_create
 parameter_list|(
-name|hv_guid
-name|device_type
-parameter_list|,
-name|hv_guid
-name|device_instance
-parameter_list|,
+name|struct
 name|hv_vmbus_channel
 modifier|*
 name|channel

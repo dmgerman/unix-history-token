@@ -1649,6 +1649,14 @@ name|ch_subidx
 decl_stmt|;
 comment|/* subchan index */
 name|struct
+name|hv_guid
+name|ch_guid_type
+decl_stmt|;
+name|struct
+name|hv_guid
+name|ch_guid_inst
+decl_stmt|;
+name|struct
 name|sysctl_ctx_list
 name|ch_sysctl_ctx
 decl_stmt|;
