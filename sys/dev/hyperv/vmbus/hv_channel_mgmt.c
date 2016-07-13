@@ -1024,7 +1024,7 @@ name|VMBUS_CHAN_FLAG_HASMNF
 expr_stmt|;
 name|new_channel
 operator|->
-name|ch_sigevt
+name|ch_monprm
 operator|=
 name|hyperv_dmamem_alloc
 argument_list|(
@@ -1042,13 +1042,13 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hypercall_sigevt_in
+name|hyperv_mon_param
 argument_list|)
 argument_list|,
 operator|&
 name|new_channel
 operator|->
-name|ch_sigevt_dma
+name|ch_monprm_dma
 argument_list|,
 name|BUS_DMA_WAITOK
 operator||
@@ -1059,7 +1059,7 @@ if|if
 condition|(
 name|new_channel
 operator|->
-name|ch_sigevt
+name|ch_monprm
 operator|==
 name|NULL
 condition|)
@@ -1070,7 +1070,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"sigevt alloc failed\n"
+literal|"monprm alloc failed\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -1093,9 +1093,9 @@ return|return;
 block|}
 name|new_channel
 operator|->
-name|ch_sigevt
+name|ch_monprm
 operator|->
-name|hc_connid
+name|mp_connid
 operator|=
 name|VMBUS_CONNID_EVENT
 expr_stmt|;
@@ -1109,9 +1109,9 @@ name|VMBUS_VERSION_WS2008
 condition|)
 name|new_channel
 operator|->
-name|ch_sigevt
+name|ch_monprm
 operator|->
-name|hc_connid
+name|mp_connid
 operator|=
 name|offer
 operator|->

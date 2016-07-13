@@ -334,7 +334,7 @@ name|uint64_t
 name|hypercall_signal_event
 parameter_list|(
 name|bus_addr_t
-name|sigevt_paddr
+name|monprm_paddr
 parameter_list|)
 block|{
 return|return
@@ -346,7 +346,7 @@ name|hc_addr
 argument_list|,
 name|HYPERCALL_SIGNAL_EVENT
 argument_list|,
-name|sigevt_paddr
+name|monprm_paddr
 argument_list|,
 literal|0
 argument_list|)

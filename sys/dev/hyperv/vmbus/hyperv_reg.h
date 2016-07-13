@@ -587,6 +587,28 @@ value|0x40000006
 end_define
 
 begin_comment
+comment|/*  * Hyper-V Monitor Notification Facility  */
+end_comment
+
+begin_struct
+struct|struct
+name|hyperv_mon_param
+block|{
+name|uint32_t
+name|mp_connid
+decl_stmt|;
+name|uint16_t
+name|mp_evtflag_ofs
+decl_stmt|;
+name|uint16_t
+name|mp_rsvd
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Hyper-V message types  */
 end_comment
 
@@ -734,26 +756,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * HYPERCALL_SIGNAL_EVENT  */
+comment|/*  * HYPERCALL_SIGNAL_EVENT  *  * struct hyperv_mon_param.  */
 end_comment
-
-begin_struct
-struct|struct
-name|hypercall_sigevt_in
-block|{
-name|uint32_t
-name|hc_connid
-decl_stmt|;
-name|uint16_t
-name|hc_evtflag_ofs
-decl_stmt|;
-name|uint16_t
-name|hc_rsvd
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
 
 begin_endif
 endif|#

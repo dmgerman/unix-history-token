@@ -1507,13 +1507,13 @@ modifier|*
 name|channel_callback_context
 decl_stmt|;
 name|struct
-name|hypercall_sigevt_in
+name|hyperv_mon_param
 modifier|*
-name|ch_sigevt
+name|ch_monprm
 decl_stmt|;
 name|struct
 name|hyperv_dma
-name|ch_sigevt_dma
+name|ch_monprm_dma
 decl_stmt|;
 comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interrupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
 name|uint32_t

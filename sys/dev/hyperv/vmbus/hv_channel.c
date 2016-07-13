@@ -276,7 +276,7 @@ name|hypercall_signal_event
 argument_list|(
 name|channel
 operator|->
-name|ch_sigevt_dma
+name|ch_monprm_dma
 operator|.
 name|hv_paddr
 argument_list|)
