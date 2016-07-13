@@ -1378,14 +1378,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-else|#
-directive|else
-name|fidp
-operator|->
-name|fid_len
-operator|=
-name|SHORT_FID_LEN
-expr_stmt|;
 endif|#
 directive|endif
 name|zfid
