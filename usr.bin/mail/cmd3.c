@@ -263,10 +263,6 @@ operator|-
 literal|1
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -370,6 +366,9 @@ if|if
 condition|(
 name|n
 operator|<
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|lastbang

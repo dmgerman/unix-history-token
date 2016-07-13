@@ -275,7 +275,7 @@ name|char
 modifier|*
 name|getname
 parameter_list|(
-name|int
+name|uid_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -811,8 +811,9 @@ begin_function_decl
 name|int
 name|copycmd
 parameter_list|(
-name|char
-index|[]
+name|void
+modifier|*
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1215,7 +1216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|uid_t
 name|getuserid
 parameter_list|(
 name|char
@@ -1981,14 +1982,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1997,8 +1991,9 @@ begin_function_decl
 name|int
 name|save
 parameter_list|(
-name|char
-index|[]
+name|void
+modifier|*
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2273,14 +2268,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

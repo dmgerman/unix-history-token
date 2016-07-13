@@ -808,8 +808,6 @@ argument_list|,
 name|tempname
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 operator|<
 literal|0

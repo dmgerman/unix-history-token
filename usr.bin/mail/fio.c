@@ -1101,7 +1101,7 @@ name|f
 argument_list|)
 argument_list|,
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 operator|&

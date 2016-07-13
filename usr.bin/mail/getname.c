@@ -75,7 +75,7 @@ name|char
 modifier|*
 name|getname
 parameter_list|(
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 block|{
@@ -117,7 +117,7 @@ comment|/*  * Convert the passed name to a user id and return it.  Return -1  * 
 end_comment
 
 begin_function
-name|int
+name|uid_t
 name|getuserid
 parameter_list|(
 name|char
