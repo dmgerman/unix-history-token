@@ -172,6 +172,12 @@ name|hv_vmbus_channel
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|hn_softc
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|hv_rf_on_receive
@@ -179,11 +185,6 @@ parameter_list|(
 name|netvsc_dev
 modifier|*
 name|net_dev
-parameter_list|,
-name|struct
-name|hv_device
-modifier|*
-name|device
 parameter_list|,
 name|struct
 name|hv_vmbus_channel
@@ -225,9 +226,9 @@ name|int
 name|hv_rf_on_device_add
 parameter_list|(
 name|struct
-name|hv_device
+name|hn_softc
 modifier|*
-name|device
+name|sc
 parameter_list|,
 name|void
 modifier|*
@@ -244,9 +245,9 @@ name|int
 name|hv_rf_on_device_remove
 parameter_list|(
 name|struct
-name|hv_device
+name|hn_softc
 modifier|*
-name|device
+name|sc
 parameter_list|,
 name|boolean_t
 name|destroy_channel
@@ -259,9 +260,9 @@ name|int
 name|hv_rf_on_open
 parameter_list|(
 name|struct
-name|hv_device
+name|hn_softc
 modifier|*
-name|device
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,9 +272,9 @@ name|int
 name|hv_rf_on_close
 parameter_list|(
 name|struct
-name|hv_device
+name|hn_softc
 modifier|*
-name|device
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
