@@ -246,6 +246,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TX_NEXT_FRAME
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TX_MD
 value|(1<< 1)
 end_define
