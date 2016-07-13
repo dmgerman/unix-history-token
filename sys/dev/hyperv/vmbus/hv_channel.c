@@ -218,9 +218,9 @@ if|if
 condition|(
 name|channel
 operator|->
-name|offer_msg
-operator|.
-name|monitor_allocated
+name|ch_flags
+operator|&
+name|VMBUS_CHAN_FLAG_HASMNF
 condition|)
 block|{
 name|hv_vmbus_monitor_page
@@ -298,9 +298,9 @@ if|if
 condition|(
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|monitor_allocated
+name|ch_flags
+operator|&
+name|VMBUS_CHAN_FLAG_HASMNF
 condition|)
 name|alloc
 operator|=

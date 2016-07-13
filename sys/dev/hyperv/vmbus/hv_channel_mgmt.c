@@ -1031,6 +1031,18 @@ name|offer
 operator|.
 name|sub_channel_index
 expr_stmt|;
+if|if
+condition|(
+name|offer
+operator|->
+name|monitor_allocated
+condition|)
+name|new_channel
+operator|->
+name|ch_flags
+operator||=
+name|VMBUS_CHAN_FLAG_HASMNF
+expr_stmt|;
 comment|/* 	 * By default we setup state to enable batched 	 * reading. A specific service can choose to 	 * disable this prior to opening the channel. 	 */
 name|new_channel
 operator|->

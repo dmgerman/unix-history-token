@@ -1516,6 +1516,10 @@ name|hv_vmbus_channel_offer_channel
 name|offer_msg
 decl_stmt|;
 name|uint32_t
+name|ch_flags
+decl_stmt|;
+comment|/* VMBUS_CHAN_FLAG_ */
+name|uint32_t
 name|ch_id
 decl_stmt|;
 comment|/* channel id */
@@ -1661,6 +1665,13 @@ parameter_list|(
 name|chan
 parameter_list|)
 value|((chan)->primary_channel == NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_FLAG_HASMNF
+value|0x0001
 end_define
 
 begin_function
