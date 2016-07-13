@@ -1424,16 +1424,6 @@ name|vpp
 operator|=
 name|pvp
 expr_stmt|;
-name|vn_lock
-argument_list|(
-operator|*
-name|vpp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
