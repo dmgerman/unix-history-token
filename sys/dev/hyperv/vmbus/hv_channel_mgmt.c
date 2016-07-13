@@ -592,14 +592,6 @@ name|channel
 expr_stmt|;
 name|new_channel
 operator|->
-name|device
-operator|=
-name|channel
-operator|->
-name|device
-expr_stmt|;
-name|new_channel
-operator|->
 name|ch_dev
 operator|=
 name|channel
@@ -719,16 +711,6 @@ operator|->
 name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
-expr_stmt|;
-comment|/* 	 * Start the process of binding this offer to the driver 	 * (We need to set the device field before calling 	 * hv_vmbus_child_device_add()) 	 */
-name|new_channel
-operator|->
-name|device
-operator|=
-name|hv_vmbus_child_device_create
-argument_list|(
-name|new_channel
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Add the new device to the bus. This will kick off device-driver 	 * binding which eventually invokes the device driver's AddDevice() 	 * method. 	 * 	 * NOTE: 	 * Error is ignored here; don't have much to do if error really 	 * happens. 	 */
 name|hv_vmbus_child_device_register

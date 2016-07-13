@@ -562,20 +562,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|hv_device
-modifier|*
-name|hv_vmbus_child_device_create
-parameter_list|(
-name|struct
-name|hv_vmbus_channel
-modifier|*
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|hv_vmbus_child_device_register
 parameter_list|(
