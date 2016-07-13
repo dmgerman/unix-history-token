@@ -385,9 +385,7 @@ name|relid
 operator|=
 name|new_channel
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 expr_stmt|;
 comment|/* 	 * Make sure this is a new offer 	 */
 name|mtx_lock
@@ -560,9 +558,7 @@ literal|", primary chan%u"
 argument_list|,
 name|channel
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -576,9 +572,7 @@ literal|"chan%u subchanid%u offer%s\n"
 argument_list|,
 name|new_channel
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|,
 name|new_channel
 operator|->
@@ -726,9 +720,7 @@ literal|"VMBUS: duplicated primary channel%u\n"
 argument_list|,
 name|new_channel
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 name|hv_vmbus_free_vmbus_channel
@@ -872,9 +864,7 @@ literal|"vmbus_chan%u: assigned to cpu%u [vcpu%u]\n"
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|,
 name|chan
 operator|->
@@ -1030,6 +1020,14 @@ name|hv_vmbus_allocate_channel
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|new_channel
+operator|->
+name|ch_id
+operator|=
+name|offer
+operator|->
+name|child_rel_id
 expr_stmt|;
 comment|/* 	 * By default we setup state to enable batched 	 * reading. A specific service can choose to 	 * disable this prior to opening the channel. 	 */
 name|new_channel
@@ -1406,9 +1404,7 @@ literal|"can not get msg hypercall for chfree(chan%u)\n"
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1436,9 +1432,7 @@ name|chm_chanid
 operator|=
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 expr_stmt|;
 name|error
 operator|=
@@ -1469,9 +1463,7 @@ literal|"chfree(chan%u) failed: %d"
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|,
 name|error
 argument_list|)
@@ -1495,9 +1487,7 @@ literal|"chan%u freed\n"
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 block|}

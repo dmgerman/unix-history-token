@@ -13952,9 +13952,7 @@ name|idx
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -14034,9 +14032,7 @@ name|idx
 argument_list|,
 name|chan
 operator|->
-name|offer_msg
-operator|.
-name|child_rel_id
+name|ch_id
 argument_list|)
 expr_stmt|;
 block|}

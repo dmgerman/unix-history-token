@@ -1515,6 +1515,10 @@ decl_stmt|;
 name|hv_vmbus_channel_offer_channel
 name|offer_msg
 decl_stmt|;
+name|uint32_t
+name|ch_id
+decl_stmt|;
+comment|/* channel id */
 comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
 name|uint8_t
 name|monitor_group
