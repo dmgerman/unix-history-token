@@ -219,6 +219,12 @@ directive|include
 file|"hv_kvp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vmbus_if.h"
+end_include
+
 begin_comment
 comment|/* hv_kvp defines */
 end_comment
@@ -286,6 +292,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|hv_guid
 name|service_guid
 init|=
@@ -3858,16 +3865,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|p
-init|=
-name|vmbus_get_type
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|resource_disabled
@@ -3882,19 +3879,20 @@ name|ENXIO
 return|;
 if|if
 condition|(
-operator|!
-name|memcmp
+name|VMBUS_PROBE_GUID
 argument_list|(
-name|p
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
 argument_list|,
 operator|&
 name|service_guid
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hv_guid
 argument_list|)
-argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|device_set_desc
