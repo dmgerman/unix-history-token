@@ -1512,9 +1512,6 @@ decl_stmt|;
 name|hv_vmbus_channel_state
 name|state
 decl_stmt|;
-name|hv_vmbus_channel_offer_channel
-name|offer_msg
-decl_stmt|;
 name|uint32_t
 name|ch_flags
 decl_stmt|;
