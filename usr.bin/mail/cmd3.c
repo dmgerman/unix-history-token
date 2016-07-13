@@ -2395,6 +2395,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|gh
 operator|=
 name|calloc
@@ -2406,6 +2409,16 @@ argument_list|(
 operator|*
 name|gh
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|gh
@@ -2458,6 +2471,9 @@ name|ap
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
 name|gp
 operator|=
 name|calloc
@@ -2469,6 +2485,16 @@ argument_list|(
 operator|*
 name|gp
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|gp
@@ -3388,6 +3414,9 @@ argument_list|(
 name|altnames
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|altnames
 operator|=
 name|calloc
@@ -3402,6 +3431,16 @@ argument_list|(
 name|char
 operator|*
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 for|for
