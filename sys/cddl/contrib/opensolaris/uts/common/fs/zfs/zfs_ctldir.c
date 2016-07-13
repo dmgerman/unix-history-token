@@ -4665,20 +4665,6 @@ goto|goto
 name|domount
 goto|;
 block|}
-else|else
-block|{
-comment|/* 			 * VROOT was set during the traverse call.  We need 			 * to clear it since we're pretending to be part 			 * of our parent's vfs. 			 */
-operator|(
-operator|*
-name|vpp
-operator|)
-operator|->
-name|v_flag
-operator|&=
-operator|~
-name|VROOT
-expr_stmt|;
-block|}
 name|mutex_exit
 argument_list|(
 operator|&
