@@ -1517,9 +1517,6 @@ comment|/* 	 * If batched_reading is set to "true", mask the interrupt 	 * and r
 name|boolean_t
 name|batched_reading
 decl_stmt|;
-name|boolean_t
-name|is_dedicated_interrupt
-decl_stmt|;
 name|struct
 name|hypercall_sigevt_in
 modifier|*

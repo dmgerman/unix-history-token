@@ -1107,19 +1107,6 @@ name|vmbus_version
 operator|!=
 name|VMBUS_VERSION_WS2008
 condition|)
-block|{
-name|new_channel
-operator|->
-name|is_dedicated_interrupt
-operator|=
-operator|(
-name|offer
-operator|->
-name|is_dedicated_interrupt
-operator|!=
-literal|0
-operator|)
-expr_stmt|;
 name|new_channel
 operator|->
 name|ch_sigevt
@@ -1130,7 +1117,6 @@ name|offer
 operator|->
 name|connection_id
 expr_stmt|;
-block|}
 name|new_channel
 operator|->
 name|monitor_group
