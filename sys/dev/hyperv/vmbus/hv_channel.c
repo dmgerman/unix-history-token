@@ -3557,22 +3557,13 @@ name|is_batched_reading
 operator|=
 name|true
 expr_stmt|;
-if|if
-condition|(
-name|channel
-operator|->
-name|on_channel_callback
-operator|!=
-name|NULL
-condition|)
-block|{
 name|arg
 operator|=
 name|channel
 operator|->
 name|channel_callback_context
 expr_stmt|;
-comment|/* 		 * Optimize host to guest signaling by ensuring: 		 * 1. While reading the channel, we disable interrupts from 		 *    host. 		 * 2. Ensure that we process all posted messages from the host 		 *    before returning from this callback. 		 * 3. Once we return, enable signaling from the host. Once this 		 *    state is set we check to see if additional packets are 		 *    available to read. In this case we repeat the process. 		 */
+comment|/* 	 * Optimize host to guest signaling by ensuring: 	 * 1. While reading the channel, we disable interrupts from 	 *    host. 	 * 2. Ensure that we process all posted messages from the host 	 *    before returning from this callback. 	 * 3. Once we return, enable signaling from the host. Once this 	 *    state is set we check to see if additional packets are 	 *    available to read. In this case we repeat the process. 	 */
 do|do
 block|{
 if|if
@@ -3625,7 +3616,6 @@ literal|0
 operator|)
 condition|)
 do|;
-block|}
 block|}
 end_function
 
