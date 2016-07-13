@@ -603,6 +603,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|passwd_val
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|dflt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 specifier|const
 modifier|*
