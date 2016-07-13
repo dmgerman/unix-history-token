@@ -978,6 +978,83 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|zfsctl_common_print
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|vnode_t
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|gfs_file_t
+modifier|*
+name|fp
+init|=
+name|vp
+operator|->
+name|v_data
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"    parent = %p\n"
+argument_list|,
+name|fp
+operator|->
+name|gfs_parent
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    type = %d\n"
+argument_list|,
+name|fp
+operator|->
+name|gfs_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    index = %d\n"
+argument_list|,
+name|fp
+operator|->
+name|gfs_index
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    ino = %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fp
+operator|->
+name|gfs_ino
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Common open routine.  Disallow any write access.  */
 end_comment
@@ -1951,6 +2028,38 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|zfsctl_root_print
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|printf
+argument_list|(
+literal|"    .zfs node\n"
+argument_list|)
+expr_stmt|;
+name|zfsctl_common_print
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2506,6 +2615,11 @@ operator|.
 name|vop_fid
 operator|=
 name|zfsctl_common_fid
+block|,
+operator|.
+name|vop_print
+operator|=
+name|zfsctl_root_print
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6289,6 +6403,99 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|zfsctl_shares_print
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|printf
+argument_list|(
+literal|"    .zfs/shares node\n"
+argument_list|)
+expr_stmt|;
+name|zfsctl_common_print
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|zfsctl_snapdir_print
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|vnode_t
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|zfsctl_snapdir_t
+modifier|*
+name|sdp
+init|=
+name|vp
+operator|->
+name|v_data
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"    .zfs/snapshot node\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    number of children = %lu\n"
+argument_list|,
+name|avl_numnodes
+argument_list|(
+operator|&
+name|sdp
+operator|->
+name|sd_snaps
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zfsctl_common_print
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6654,6 +6861,11 @@ operator|.
 name|vop_fid
 operator|=
 name|zfsctl_common_fid
+block|,
+operator|.
+name|vop_print
+operator|=
+name|zfsctl_snapdir_print
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6720,6 +6932,11 @@ operator|.
 name|vop_fid
 operator|=
 name|zfsctl_shares_fid
+block|,
+operator|.
+name|vop_print
+operator|=
+name|zfsctl_shares_print
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7755,6 +7972,66 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|zfsctl_snaphot_print
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|vnode_t
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|zfsctl_node_t
+modifier|*
+name|zcp
+init|=
+name|vp
+operator|->
+name|v_data
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"    .zfs/snapshot/<snap> node\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    id = %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|zcp
+operator|->
+name|zc_id
+argument_list|)
+expr_stmt|;
+name|zfsctl_common_print
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * These VP's should never see the light of day.  They should always  * be covered.  */
 end_comment
@@ -7801,6 +8078,11 @@ operator|.
 name|vop_vptocnp
 operator|=
 name|zfsctl_snapshot_vptocnp
+block|,
+operator|.
+name|vop_print
+operator|=
+name|zfsctl_snaphot_print
 block|, }
 decl_stmt|;
 end_decl_stmt
