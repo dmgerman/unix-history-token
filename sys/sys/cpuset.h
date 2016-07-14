@@ -27,12 +27,6 @@ directive|include
 file|<sys/bitset.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -462,6 +456,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_expr_stmt
 name|LIST_HEAD
