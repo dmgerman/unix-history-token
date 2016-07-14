@@ -19131,14 +19131,16 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
 name|db_printf
 argument_list|(
 literal|"(%p, 0x%lx, 0x%lx)"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|m
 operator|->
 name|object
@@ -19157,6 +19159,12 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|db_printf
+argument_list|(
+literal|"( ??? )"
 argument_list|)
 expr_stmt|;
 if|if
