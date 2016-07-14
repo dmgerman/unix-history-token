@@ -82,9 +82,9 @@ name|int
 name|pirq_alloc_pin
 parameter_list|(
 name|struct
-name|vmctx
+name|pci_devinst
 modifier|*
-name|ctx
+name|pi
 parameter_list|)
 function_decl|;
 end_function_decl
