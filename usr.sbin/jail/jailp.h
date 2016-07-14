@@ -316,6 +316,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|JF_FROM_RUNQ
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Has already been on the run queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JF_OP_MASK
 value|(JF_START | JF_SET | JF_STOP)
 end_define
@@ -1174,6 +1185,24 @@ begin_function_decl
 specifier|extern
 name|void
 name|requeue
+parameter_list|(
+name|struct
+name|cfjail
+modifier|*
+name|j
+parameter_list|,
+name|struct
+name|cfjails
+modifier|*
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|requeue_head
 parameter_list|(
 name|struct
 name|cfjail
