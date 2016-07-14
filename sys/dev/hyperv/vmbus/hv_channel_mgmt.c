@@ -101,9 +101,9 @@ name|vmbus_softc
 modifier|*
 parameter_list|,
 specifier|const
-name|hv_vmbus_channel_offer_channel
+name|struct
+name|vmbus_chanmsg_choffer
 modifier|*
-name|offer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -907,33 +907,25 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-specifier|const
-name|hv_vmbus_channel_offer_channel
-modifier|*
-name|offer
-decl_stmt|;
 comment|/* New channel is offered by vmbus */
 name|vmbus_scan_newchan
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|offer
-operator|=
+name|vmbus_channel_on_offer_internal
+argument_list|(
+name|sc
+argument_list|,
 operator|(
 specifier|const
-name|hv_vmbus_channel_offer_channel
+expr|struct
+name|vmbus_chanmsg_choffer
 operator|*
 operator|)
 name|msg
 operator|->
 name|msg_data
-expr_stmt|;
-name|vmbus_channel_on_offer_internal
-argument_list|(
-name|sc
-argument_list|,
-name|offer
 argument_list|)
 expr_stmt|;
 block|}
@@ -950,7 +942,8 @@ modifier|*
 name|sc
 parameter_list|,
 specifier|const
-name|hv_vmbus_channel_offer_channel
+name|struct
+name|vmbus_chanmsg_choffer
 modifier|*
 name|offer
 parameter_list|)
@@ -973,7 +966,7 @@ name|ch_id
 operator|=
 name|offer
 operator|->
-name|child_rel_id
+name|chm_chanid
 expr_stmt|;
 name|new_channel
 operator|->
@@ -981,9 +974,7 @@ name|ch_subidx
 operator|=
 name|offer
 operator|->
-name|offer
-operator|.
-name|sub_channel_index
+name|chm_subidx
 expr_stmt|;
 name|new_channel
 operator|->
@@ -991,9 +982,7 @@ name|ch_guid_type
 operator|=
 name|offer
 operator|->
-name|offer
-operator|.
-name|interface_type
+name|chm_chtype
 expr_stmt|;
 name|new_channel
 operator|->
@@ -1001,9 +990,7 @@ name|ch_guid_inst
 operator|=
 name|offer
 operator|->
-name|offer
-operator|.
-name|interface_instance
+name|chm_chinst
 expr_stmt|;
 comment|/* Batch reading is on by default */
 name|new_channel
@@ -1016,7 +1003,9 @@ if|if
 condition|(
 name|offer
 operator|->
-name|monitor_allocated
+name|chm_flags1
+operator|&
+name|VMBUS_CHOFFER_FLAG1_HASMNF
 condition|)
 name|new_channel
 operator|->
@@ -1117,7 +1106,7 @@ name|mp_connid
 operator|=
 name|offer
 operator|->
-name|connection_id
+name|chm_connid
 expr_stmt|;
 if|if
 condition|(
@@ -1134,7 +1123,7 @@ name|ch_montrig_idx
 operator|=
 name|offer
 operator|->
-name|monitor_id
+name|chm_montrig
 operator|/
 name|VMBUS_MONTRIG_LEN
 expr_stmt|;
@@ -1148,11 +1137,11 @@ name|VMBUS_MONTRIGS_MAX
 condition|)
 name|panic
 argument_list|(
-literal|"invalid monitor id %u"
+literal|"invalid monitor trigger %u"
 argument_list|,
 name|offer
 operator|->
-name|monitor_id
+name|chm_montrig
 argument_list|)
 expr_stmt|;
 name|new_channel
@@ -1164,7 +1153,7 @@ operator|<<
 operator|(
 name|offer
 operator|->
-name|monitor_id
+name|chm_montrig
 operator|%
 name|VMBUS_MONTRIG_LEN
 operator|)
