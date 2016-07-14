@@ -4864,6 +4864,8 @@ literal|0
 decl_stmt|;
 name|uint32_t
 name|first_serial
+init|=
+literal|0
 decl_stmt|;
 name|rrtype
 operator|=
