@@ -1972,12 +1972,13 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|g_net_vsc_device_type
 init|=
 block|{
 operator|.
-name|data
+name|hv_guid
 operator|=
 block|{
 literal|0x63

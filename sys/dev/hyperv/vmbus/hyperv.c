@@ -360,7 +360,7 @@ name|hyperv_guid2str
 parameter_list|(
 specifier|const
 name|struct
-name|hv_guid
+name|hyperv_guid
 modifier|*
 name|guid
 parameter_list|,
@@ -379,7 +379,7 @@ name|d
 init|=
 name|guid
 operator|->
-name|data
+name|hv_guid
 decl_stmt|;
 return|return
 name|snprintf

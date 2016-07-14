@@ -323,22 +323,20 @@ define|\
 value|((HV_ALIGN_UP(addr+len, PAGE_SIZE) -			\ 		    HV_ALIGN_DOWN(addr, PAGE_SIZE))>> PAGE_SHIFT )
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|hv_guid
+name|hyperv_guid
 block|{
 name|uint8_t
-name|data
+name|hv_guid
 index|[
 literal|16
 index|]
 decl_stmt|;
 block|}
 name|__packed
-name|hv_guid
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -353,7 +351,7 @@ name|hyperv_guid2str
 parameter_list|(
 specifier|const
 name|struct
-name|hv_guid
+name|hyperv_guid
 modifier|*
 parameter_list|,
 name|char
@@ -364,30 +362,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|HV_NIC_GUID
-define|\
-value|.data = {0x63, 0x51, 0x61, 0xF8, 0x3E, 0xDF, 0xc5, 0x46,	\ 		0x91, 0x3F, 0xF2, 0xD2, 0xF9, 0x65, 0xED, 0x0E}
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_IDE_GUID
-define|\
-value|.data = {0x32, 0x26, 0x41, 0x32, 0xcb, 0x86, 0xa2, 0x44,	\ 		 0x9b, 0x5c, 0x50, 0xd1, 0x41, 0x73, 0x54, 0xf5}
-end_define
-
-begin_define
-define|#
-directive|define
-name|HV_SCSI_GUID
-define|\
-value|.data = {0xd9, 0x63, 0x61, 0xba, 0xa1, 0x04, 0x29, 0x4d,	\ 		 0xb6, 0x05, 0x72, 0xe2, 0xff, 0xb1, 0xdc, 0x7f}
-end_define
-
 begin_comment
 comment|/*  * At the center of the Channel Management library is  * the Channel Offer. This struct contains the  * fundamental information about an offer.  */
 end_comment
@@ -397,10 +371,12 @@ typedef|typedef
 struct|struct
 name|hv_vmbus_channel_offer
 block|{
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|interface_type
 decl_stmt|;
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|interface_instance
 decl_stmt|;
 name|uint64_t
@@ -1258,11 +1234,11 @@ name|ch_subidx
 decl_stmt|;
 comment|/* subchan index */
 name|struct
-name|hv_guid
+name|hyperv_guid
 name|ch_guid_type
 decl_stmt|;
 name|struct
-name|hv_guid
+name|hyperv_guid
 name|ch_guid_inst
 decl_stmt|;
 name|struct

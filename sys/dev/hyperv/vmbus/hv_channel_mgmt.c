@@ -447,7 +447,8 @@ name|ch_guid_type
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hv_guid
+expr|struct
+name|hyperv_guid
 argument_list|)
 argument_list|)
 operator|==
@@ -467,7 +468,8 @@ name|ch_guid_inst
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hv_guid
+expr|struct
+name|hyperv_guid
 argument_list|)
 argument_list|)
 operator|==

@@ -101,10 +101,12 @@ decl_stmt|;
 name|hv_vmbus_channel_state
 name|state
 decl_stmt|;
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|interface_type
 decl_stmt|;
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|interface_instance
 decl_stmt|;
 name|uint32_t
