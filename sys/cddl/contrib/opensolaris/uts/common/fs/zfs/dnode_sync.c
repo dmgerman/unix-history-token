@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -226,44 +226,6 @@ operator|->
 name|dn_nlevels
 argument_list|)
 expr_stmt|;
-comment|/* check for existing blkptrs in the dnode */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nblkptr
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|!
-name|BP_IS_HOLE
-argument_list|(
-operator|&
-name|dn
-operator|->
-name|dn_phys
-operator|->
-name|dn_blkptr
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-break|break;
-if|if
-condition|(
-name|i
-operator|!=
-name|nblkptr
-condition|)
-block|{
 comment|/* transfer dnode's block pointers to new indirect block */
 operator|(
 name|void
@@ -345,7 +307,6 @@ operator|->
 name|db_buf
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* set dbuf's parent pointers to new indirect buf */
 for|for
 control|(
