@@ -10,13 +10,6 @@ name|PFLAGS_FULL
 value|0x01
 end_define
 
-begin_define
-define|#
-directive|define
-name|PFLAGS_RESUME
-value|0x02
-end_define
-
 begin_struct
 struct|struct
 name|dumpers

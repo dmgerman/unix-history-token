@@ -265,7 +265,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:fs"
+literal|"c:f"
 argument_list|)
 operator|)
 operator|!=
@@ -292,14 +292,6 @@ case|:
 name|pflags
 operator||=
 name|PFLAGS_FULL
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-name|pflags
-operator||=
-name|PFLAGS_RESUME
 expr_stmt|;
 break|break;
 default|default:
