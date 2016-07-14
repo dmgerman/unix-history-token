@@ -2371,17 +2371,13 @@ name|curthread
 argument_list|)
 return|;
 default|default:
-name|KASSERT
+name|panic
 argument_list|(
-name|false
-argument_list|,
-operator|(
 literal|"%s: unhandled capability: %0x"
-operator|,
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|cap
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
