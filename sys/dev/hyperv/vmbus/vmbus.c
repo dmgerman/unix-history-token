@@ -4692,9 +4692,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|,
-literal|"vmbus chlist"
+literal|"vmbus prichan"
 argument_list|,
 name|NULL
 argument_list|,
@@ -4706,7 +4706,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist
+name|vmbus_prichans
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5000,7 +5000,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -5250,7 +5250,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 return|return

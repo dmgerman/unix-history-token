@@ -538,16 +538,16 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|prichan
 argument_list|,
-argument|&sc->vmbus_chlist
+argument|&sc->vmbus_prichans
 argument_list|,
-argument|ch_link
+argument|ch_prilink
 argument_list|)
 block|{
 if|if
@@ -617,11 +617,11 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist
+name|vmbus_prichans
 argument_list|,
 name|newchan
 argument_list|,
-name|ch_link
+name|ch_prilink
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -629,7 +629,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -643,7 +643,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -680,7 +680,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -708,7 +708,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This is a sub-channel; link it with the primary channel. 	 */
@@ -1649,7 +1649,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -1662,7 +1662,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist
+name|vmbus_prichans
 argument_list|)
 operator|)
 operator|!=
@@ -1686,11 +1686,11 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist
+name|vmbus_prichans
 argument_list|,
 name|chan
 argument_list|,
-name|ch_link
+name|ch_prilink
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1698,7 +1698,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 name|hv_vmbus_child_device_unregister
@@ -1716,7 +1716,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1741,7 +1741,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 block|}
