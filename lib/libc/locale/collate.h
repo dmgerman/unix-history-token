@@ -382,10 +382,6 @@ begin_function_decl
 name|int
 name|__collate_range_cmp
 parameter_list|(
-name|struct
-name|xlocale_collate
-modifier|*
-parameter_list|,
 name|char
 parameter_list|,
 name|char
@@ -397,10 +393,6 @@ begin_function_decl
 name|int
 name|__wcollate_range_cmp
 parameter_list|(
-name|struct
-name|xlocale_collate
-modifier|*
-parameter_list|,
 name|wchar_t
 parameter_list|,
 name|wchar_t

@@ -1358,8 +1358,6 @@ name|c2
 else|:
 name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|c
 argument_list|,
 name|test
@@ -1369,8 +1367,6 @@ literal|0
 operator|&&
 name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|test
 argument_list|,
 name|c2
