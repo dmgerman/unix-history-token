@@ -724,7 +724,7 @@ argument|double
 argument_list|,
 argument|double
 argument_list|,
-literal|"0x%llf"
+literal|"0x%f"
 argument_list|)
 end_macro
 
