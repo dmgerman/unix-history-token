@@ -413,15 +413,6 @@ name|hv_vmbus_channel
 modifier|*
 name|channel
 decl_stmt|;
-name|uint32_t
-name|relid
-decl_stmt|;
-name|relid
-operator|=
-name|new_channel
-operator|->
-name|ch_id
-expr_stmt|;
 comment|/* 	 * Make sure this is a new offer 	 */
 name|mtx_lock
 argument_list|(
@@ -433,7 +424,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|relid
+name|new_channel
+operator|->
+name|ch_id
 operator|==
 literal|0
 condition|)
@@ -451,7 +444,9 @@ name|sc
 operator|->
 name|vmbus_chmap
 index|[
-name|relid
+name|new_channel
+operator|->
+name|ch_id
 index|]
 operator|=
 name|new_channel
