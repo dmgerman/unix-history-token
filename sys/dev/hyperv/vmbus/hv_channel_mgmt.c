@@ -1165,7 +1165,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 argument_list|(
 name|chan
 argument_list|)
@@ -1333,7 +1333,7 @@ name|xchan
 decl_stmt|;
 if|if
 condition|(
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 argument_list|(
 name|chan
 argument_list|)
@@ -1685,7 +1685,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 argument_list|(
 name|channel
 argument_list|)

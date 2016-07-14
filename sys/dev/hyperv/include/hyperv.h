@@ -957,11 +957,11 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 parameter_list|(
 name|chan
 parameter_list|)
-value|((chan)->primary_channel == NULL)
+value|((chan)->ch_subidx == 0)
 end_define
 
 begin_define

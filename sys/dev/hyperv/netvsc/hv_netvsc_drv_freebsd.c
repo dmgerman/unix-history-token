@@ -13926,7 +13926,7 @@ block|{
 name|KASSERT
 argument_list|(
 operator|!
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 argument_list|(
 name|chan
 argument_list|)
