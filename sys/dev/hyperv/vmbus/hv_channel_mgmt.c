@@ -343,9 +343,9 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
-literal|"vmbus multi channel"
+literal|"vmbus subchan"
 argument_list|,
 name|NULL
 argument_list|,
@@ -357,7 +357,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -411,7 +411,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -550,6 +550,7 @@ argument_list|,
 argument|ch_prilink
 argument_list|)
 block|{
+comment|/* 		 * Sub-channel will have the same type GUID and instance 		 * GUID as its primary channel. 		 */
 if|if
 condition|(
 name|memcmp
@@ -738,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|newchan
 operator|->
-name|primary_channel
+name|ch_prichan
 operator|=
 name|prichan
 expr_stmt|;
@@ -755,7 +756,7 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -763,17 +764,17 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|,
 name|newchan
 argument_list|,
-name|sc_list_entry
+name|ch_sublink
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Bump up sub-channel count and notify anyone that is 	 * interested in this sub-channel, after this sub-channel 	 * is setup. 	 */
 name|prichan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|++
 expr_stmt|;
 name|mtx_unlock
@@ -781,7 +782,7 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1395,7 +1396,7 @@ name|pri_chan
 init|=
 name|chan
 operator|->
-name|primary_channel
+name|ch_prichan
 decl_stmt|;
 name|struct
 name|vmbus_chanmsg_chfree
@@ -1535,7 +1536,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1543,18 +1544,18 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|,
 name|chan
 argument_list|,
-name|sc_list_entry
+name|ch_sublink
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|>
 literal|0
 argument_list|,
@@ -1563,13 +1564,13 @@ literal|"invalid subchan_cnt %d"
 operator|,
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|)
 argument_list|)
 expr_stmt|;
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|--
 expr_stmt|;
 name|mtx_unlock
@@ -1577,7 +1578,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1805,7 +1806,7 @@ argument_list|(
 operator|&
 name|primary
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|)
 condition|)
 block|{
@@ -1837,13 +1838,14 @@ argument_list|,
 name|smp_pro_id
 argument_list|)
 expr_stmt|;
+comment|/* XXX need lock */
 name|TAILQ_FOREACH
 argument_list|(
 argument|new_channel
 argument_list|,
-argument|&primary->sc_list_anchor
+argument|&primary->ch_subchans
 argument_list|,
-argument|sc_list_entry
+argument|ch_sublink
 argument_list|)
 block|{
 if|if
@@ -2003,14 +2005,14 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|<
 name|subchan_cnt
 condition|)
@@ -2021,7 +2023,7 @@ argument_list|,
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -2038,9 +2040,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|chan
 argument_list|,
-argument|&pri_chan->sc_list_anchor
+argument|&pri_chan->ch_subchans
 argument_list|,
-argument|sc_list_entry
+argument|ch_sublink
 argument_list|)
 block|{
 comment|/* TODO: refcnt chan */
@@ -2073,7 +2075,7 @@ literal|"invalid subchan count %d, should be %d"
 operator|,
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|,
 name|subchan_cnt
 operator|)
@@ -2084,7 +2086,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2133,14 +2135,14 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|>
 literal|0
 condition|)
@@ -2151,7 +2153,7 @@ argument_list|,
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -2165,7 +2167,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 block|}

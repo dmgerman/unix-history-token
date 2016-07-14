@@ -876,34 +876,35 @@ comment|/* The corresponding CPUID in the guest */
 name|uint32_t
 name|target_cpu
 decl_stmt|;
-comment|/* 	 * Support for multi-channels. 	 * The initial offer is considered the primary channel and this 	 * offer message will indicate if the host supports multi-channels. 	 * The guest is free to ask for multi-channels to be offerred and can 	 * open these multi-channels as a normal "primary" channel. However, 	 * all multi-channels will have the same type and instance guids as the 	 * primary channel. Requests sent on a given channel will result in a 	 * response on the same channel. 	 */
+comment|/* 	 * If this is a primary channel, ch_subchan* fields 	 * contain sub-channels belonging to this primary 	 * channel. 	 */
 name|struct
 name|mtx
-name|sc_lock
+name|ch_subchan_lock
 decl_stmt|;
-comment|/* 	 * Link list of all the multi-channels if this is a primary channel 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|hv_vmbus_channel
 argument_list|)
-name|sc_list_anchor
+name|ch_subchans
 expr_stmt|;
+name|int
+name|ch_subchan_cnt
+decl_stmt|;
+comment|/* If this is a sub-channel */
 name|TAILQ_ENTRY
 argument_list|(
 argument|hv_vmbus_channel
 argument_list|)
-name|sc_list_entry
+name|ch_sublink
 expr_stmt|;
-name|int
-name|subchan_cnt
-decl_stmt|;
-comment|/* 	 * The primary channel this sub-channle belongs to. 	 * This will be NULL for the primary channel. 	 */
+comment|/* sub-channel link */
 name|struct
 name|hv_vmbus_channel
 modifier|*
-name|primary_channel
+name|ch_prichan
 decl_stmt|;
+comment|/* owner primary chan */
 comment|/* 	 * Driver private data 	 */
 name|void
 modifier|*
