@@ -585,9 +585,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uint64_t
-name|msr
-decl_stmt|;
 comment|/* 	 * CPUID with %eax = 1, %ebx returns 	 * Bits 15-8: CLFLUSH line size 	 * 	(Value * 8 = cache line size in bytes) 	 */
 if|if
 condition|(
