@@ -30,28 +30,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|gic_v3_irqsrc
-block|{
-name|struct
-name|intr_irqsrc
-name|gi_isrc
-decl_stmt|;
-name|uint32_t
-name|gi_irq
-decl_stmt|;
-name|enum
-name|intr_polarity
-name|gi_pol
-decl_stmt|;
-name|enum
-name|intr_trigger
-name|gi_trig
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -385,32 +368,6 @@ name|val
 parameter_list|)
 define|\
 value|({						\ 	u_int cpu = PCPU_GET(cpuid);		\ 						\ 	bus_write_##len(			\ 	    sc->gic_redists.pcpu[cpu],		\ 	    reg, val);				\ })
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVID_GENERIC
-parameter_list|(
-name|pci_dev
-parameter_list|)
-define|\
-value|({								\ 	((pci_get_domain(pci_dev)<< PCI_RID_DOMAIN_SHIFT) |	\ 	(pci_get_bus(pci_dev)<< PCI_RID_BUS_SHIFT) |		\ 	(pci_get_slot(pci_dev)<< PCI_RID_SLOT_SHIFT) |		\ 	(pci_get_function(pci_dev)<< PCI_RID_FUNC_SHIFT));	\ })
-end_define
-
-begin_comment
-comment|/*  * Request number of maximum MSI-X vectors for this device.  * Device can ask for less vectors than maximum supported but not more.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_MSIX_NUM
-parameter_list|(
-name|pci_dev
-parameter_list|)
-define|\
-value|({						\ 	struct pci_devinfo *dinfo;		\ 	pcicfgregs *cfg;			\ 						\ 	dinfo = device_get_ivars(pci_dev);	\ 	cfg =&dinfo->cfg;			\ 						\ 	cfg->msix.msix_msgnum;			\ })
 end_define
 
 begin_endif
