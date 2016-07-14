@@ -108,6 +108,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|vp
 operator|=
 name|calloc
@@ -119,6 +122,16 @@ argument_list|(
 operator|*
 name|vp
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|vp
