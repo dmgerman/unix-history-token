@@ -4294,7 +4294,7 @@ condition|)
 continue|continue;
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"Disk %s (device %s) marked as clean."
 argument_list|,
@@ -4403,7 +4403,7 @@ condition|)
 continue|continue;
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"Disk %s (device %s) marked as dirty."
 argument_list|,
@@ -9722,7 +9722,7 @@ condition|)
 block|{
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"Disk %s (device %s) marked as dirty."
 argument_list|,
@@ -9763,7 +9763,7 @@ condition|)
 block|{
 name|G_MIRROR_DEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"Disk %s (device %s) marked as clean."
 argument_list|,
