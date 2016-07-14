@@ -740,12 +740,6 @@ operator|->
 name|vmbus_chlist_lock
 argument_list|)
 expr_stmt|;
-name|new_channel
-operator|->
-name|state
-operator|=
-name|HV_CHANNEL_OPEN_STATE
-expr_stmt|;
 comment|/* 			 * Bump up sub-channel count and notify anyone that is 			 * interested in this sub-channel, after this sub-channel 			 * is setup. 			 */
 name|mtx_lock
 argument_list|(
@@ -794,12 +788,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|new_channel
-operator|->
-name|state
-operator|=
-name|HV_CHANNEL_OPEN_STATE
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1873,11 +1861,15 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|new_channel
 operator|->
-name|state
-operator|!=
-name|HV_CHANNEL_OPENED_STATE
+name|ch_stflags
+operator|&
+name|VMBUS_CHAN_ST_OPENED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 continue|continue;

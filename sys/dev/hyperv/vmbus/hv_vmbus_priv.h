@@ -98,9 +98,6 @@ block|{
 name|uint32_t
 name|rel_id
 decl_stmt|;
-name|hv_vmbus_channel_state
-name|state
-decl_stmt|;
 name|struct
 name|hyperv_guid
 name|interface_type
