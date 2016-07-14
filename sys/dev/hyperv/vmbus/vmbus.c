@@ -5157,7 +5157,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|hv_vmbus_release_unattached_channels
+name|vmbus_chan_destroy_all
 argument_list|(
 name|sc
 argument_list|)

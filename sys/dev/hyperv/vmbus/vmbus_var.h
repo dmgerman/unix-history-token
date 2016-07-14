@@ -445,6 +445,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vmbus_chan_destroy_all
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|vmbus_msghc
 modifier|*

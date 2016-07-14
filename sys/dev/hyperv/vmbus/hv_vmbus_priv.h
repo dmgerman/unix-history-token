@@ -401,17 +401,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|hv_vmbus_release_unattached_channels
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|hv_vmbus_child_device_register
 parameter_list|(
