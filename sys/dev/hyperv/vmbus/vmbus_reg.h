@@ -394,6 +394,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANMSG_TYPE_CHOFFER_DONE
+value|4
+end_define
+
+begin_comment
+comment|/* NOTE */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHANMSG_TYPE_CHOPEN
 value|5
 end_define
@@ -522,6 +533,13 @@ end_define
 begin_comment
 comment|/* REQ */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_MAX
+value|22
+end_define
 
 begin_struct
 struct|struct
