@@ -950,7 +950,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vmbus_channel_select_defcpu
+name|vmbus_chan_cpu_default
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -992,9 +992,10 @@ name|vmbus_chanmsg_choffer
 modifier|*
 name|offer
 decl_stmt|;
+name|struct
 name|hv_vmbus_channel
 modifier|*
-name|new_channel
+name|chan
 decl_stmt|;
 name|int
 name|error
@@ -1011,8 +1012,7 @@ name|msg
 operator|->
 name|msg_data
 expr_stmt|;
-comment|/* 	 * Allocate the channel object and save this offer 	 */
-name|new_channel
+name|chan
 operator|=
 name|vmbus_chan_alloc
 argument_list|(
@@ -1021,7 +1021,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|new_channel
+name|chan
 operator|==
 name|NULL
 condition|)
@@ -1041,7 +1041,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|new_channel
+name|chan
 operator|->
 name|ch_id
 operator|=
@@ -1049,7 +1049,7 @@ name|offer
 operator|->
 name|chm_chanid
 expr_stmt|;
-name|new_channel
+name|chan
 operator|->
 name|ch_subidx
 operator|=
@@ -1057,7 +1057,7 @@ name|offer
 operator|->
 name|chm_subidx
 expr_stmt|;
-name|new_channel
+name|chan
 operator|->
 name|ch_guid_type
 operator|=
@@ -1065,7 +1065,7 @@ name|offer
 operator|->
 name|chm_chtype
 expr_stmt|;
-name|new_channel
+name|chan
 operator|->
 name|ch_guid_inst
 operator|=
@@ -1074,27 +1074,13 @@ operator|->
 name|chm_chinst
 expr_stmt|;
 comment|/* Batch reading is on by default */
-name|new_channel
+name|chan
 operator|->
 name|ch_flags
 operator||=
 name|VMBUS_CHAN_FLAG_BATCHREAD
 expr_stmt|;
-if|if
-condition|(
-name|offer
-operator|->
-name|chm_flags1
-operator|&
-name|VMBUS_CHOFFER_FLAG1_HASMNF
-condition|)
-name|new_channel
-operator|->
-name|ch_flags
-operator||=
-name|VMBUS_CHAN_FLAG_HASMNF
-expr_stmt|;
-name|new_channel
+name|chan
 operator|->
 name|ch_monprm
 operator|->
@@ -1110,7 +1096,7 @@ name|vmbus_version
 operator|!=
 name|VMBUS_VERSION_WS2008
 condition|)
-name|new_channel
+name|chan
 operator|->
 name|ch_monprm
 operator|->
@@ -1122,14 +1108,21 @@ name|chm_connid
 expr_stmt|;
 if|if
 condition|(
-name|new_channel
+name|offer
 operator|->
-name|ch_flags
+name|chm_flags1
 operator|&
-name|VMBUS_CHAN_FLAG_HASMNF
+name|VMBUS_CHOFFER_FLAG1_HASMNF
 condition|)
 block|{
-name|new_channel
+comment|/* 		 * Setup MNF stuffs. 		 */
+name|chan
+operator|->
+name|ch_flags
+operator||=
+name|VMBUS_CHAN_FLAG_HASMNF
+expr_stmt|;
+name|chan
 operator|->
 name|ch_montrig_idx
 operator|=
@@ -1141,7 +1134,7 @@ name|VMBUS_MONTRIG_LEN
 expr_stmt|;
 if|if
 condition|(
-name|new_channel
+name|chan
 operator|->
 name|ch_montrig_idx
 operator|>=
@@ -1156,7 +1149,7 @@ operator|->
 name|chm_montrig
 argument_list|)
 expr_stmt|;
-name|new_channel
+name|chan
 operator|->
 name|ch_montrig_mask
 operator|=
@@ -1172,16 +1165,16 @@ operator|)
 expr_stmt|;
 block|}
 comment|/* Select default cpu for this channel. */
-name|vmbus_channel_select_defcpu
+name|vmbus_chan_cpu_default
 argument_list|(
-name|new_channel
+name|chan
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|vmbus_chan_add
 argument_list|(
-name|new_channel
+name|chan
 argument_list|)
 expr_stmt|;
 if|if
@@ -1197,7 +1190,7 @@ name|vmbus_dev
 argument_list|,
 literal|"add chan%u failed: %d\n"
 argument_list|,
-name|new_channel
+name|chan
 operator|->
 name|ch_id
 argument_list|,
@@ -1206,7 +1199,7 @@ argument_list|)
 expr_stmt|;
 name|vmbus_chan_free
 argument_list|(
-name|new_channel
+name|chan
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1215,14 +1208,14 @@ if|if
 condition|(
 name|HV_VMBUS_CHAN_ISPRIMARY
 argument_list|(
-name|new_channel
+name|chan
 argument_list|)
 condition|)
 block|{
 comment|/* 		 * Add device for this primary channel. 		 * 		 * NOTE: 		 * Error is ignored here; don't have much to do if error 		 * really happens. 		 */
 name|hv_vmbus_child_device_register
 argument_list|(
-name|new_channel
+name|chan
 argument_list|)
 expr_stmt|;
 block|}
