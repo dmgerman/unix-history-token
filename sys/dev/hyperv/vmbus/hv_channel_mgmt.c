@@ -447,8 +447,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|vmbus_channel_process_offer
+name|int
+name|vmbus_chan_add
 parameter_list|(
 name|hv_vmbus_channel
 modifier|*
@@ -486,12 +486,27 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX channel0 will not be processed; skip it. 		 */
-name|printf
+comment|/* 		 * XXX 		 * Chan0 will neither be processed nor should be offered; 		 * skip it. 		 */
+name|mtx_unlock
 argument_list|(
-literal|"VMBUS: got channel0 offer\n"
+operator|&
+name|sc
+operator|->
+name|vmbus_chlist_lock
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"got chan0 offer\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
 block|}
 else|else
 block|{
@@ -775,23 +790,26 @@ argument_list|(
 name|channel
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"VMBUS: duplicated primary channel%u\n"
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"duplicated primary chan%u\n"
 argument_list|,
 name|new_channel
 operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-name|vmbus_chan_free
-argument_list|(
-name|new_channel
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+name|EINVAL
+return|;
 block|}
 name|new_channel
 operator|->
@@ -799,12 +817,9 @@ name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
 expr_stmt|;
-comment|/* 	 * Add the new device to the bus. This will kick off device-driver 	 * binding which eventually invokes the device driver's AddDevice() 	 * method. 	 * 	 * NOTE: 	 * Error is ignored here; don't have much to do if error really 	 * happens. 	 */
-name|hv_vmbus_child_device_register
-argument_list|(
-name|new_channel
-argument_list|)
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1037,6 +1052,9 @@ name|hv_vmbus_channel
 modifier|*
 name|new_channel
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Allocate the channel object and save this offer 	 */
 name|new_channel
 operator|=
@@ -1203,11 +1221,55 @@ argument_list|(
 name|new_channel
 argument_list|)
 expr_stmt|;
-name|vmbus_channel_process_offer
+name|error
+operator|=
+name|vmbus_chan_add
 argument_list|(
 name|new_channel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"add chan%u failed: %d\n"
+argument_list|,
+name|new_channel
+operator|->
+name|ch_id
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|vmbus_chan_free
+argument_list|(
+name|new_channel
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|HV_VMBUS_CHAN_ISPRIMARY
+argument_list|(
+name|new_channel
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Add device for this primary channel. 		 * 		 * NOTE: 		 * Error is ignored here; don't have much to do if error 		 * really happens. 		 */
+name|hv_vmbus_child_device_register
+argument_list|(
+name|new_channel
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
