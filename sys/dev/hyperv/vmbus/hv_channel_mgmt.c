@@ -2220,7 +2220,7 @@ if|if
 condition|(
 name|msg_type
 operator|>=
-name|HV_CHANNEL_MESSAGE_COUNT
+name|VMBUS_CHANMSG_TYPE_MAX
 condition|)
 block|{
 name|device_printf
