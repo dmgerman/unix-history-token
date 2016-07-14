@@ -3236,13 +3236,31 @@ if|if
 condition|(
 name|pincount
 operator|>=
-literal|24
+literal|32
 condition|)
 name|allowed_irqs
 operator|=
-literal|0x00f00000
+literal|0xff000000
 expr_stmt|;
-comment|/* irqs 20, 21, 22 and 23 */
+comment|/* irqs 24-31 */
+elseif|else
+if|if
+condition|(
+name|pincount
+operator|>=
+literal|20
+condition|)
+name|allowed_irqs
+operator|=
+literal|0xf
+operator|<<
+operator|(
+name|pincount
+operator|-
+literal|4
+operator|)
+expr_stmt|;
+comment|/* 4 upper irqs */
 else|else
 name|allowed_irqs
 operator|=
