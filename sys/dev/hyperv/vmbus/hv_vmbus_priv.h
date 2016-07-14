@@ -405,17 +405,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|hv_vmbus_free_vmbus_channel
-parameter_list|(
-name|hv_vmbus_channel
-modifier|*
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|hv_vmbus_release_unattached_channels
 parameter_list|(
 name|struct
