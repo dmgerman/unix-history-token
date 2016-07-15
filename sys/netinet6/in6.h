@@ -2784,8 +2784,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|IPV6CTL_INTRQMAXLEN
 value|51
+end_define
+
+begin_comment
+comment|/* max length of IPv6 netisr queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_INTRDQMAXLEN
+value|52
+end_define
+
+begin_comment
+comment|/* max length of direct IPv6 netisr 					 * queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|53
 end_define
 
 begin_endif
