@@ -1523,10 +1523,9 @@ name|state
 operator|)
 operator|||
 operator|(
-operator|*
 name|sptr
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|)
 operator|*
@@ -2079,6 +2078,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|state
+operator|=
+name|NULL
+expr_stmt|;
 name|pri
 operator|=
 name|COLLATE_MAX_PRIORITY
@@ -2162,6 +2165,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|state
+operator|=
+name|NULL
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -2663,6 +2670,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|state
+operator|=
+name|NULL
+expr_stmt|;
 name|pri
 operator|=
 name|COLLATE_MAX_PRIORITY
@@ -2778,6 +2789,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|state
+operator|=
+name|NULL
+expr_stmt|;
 continue|continue;
 block|}
 name|b
