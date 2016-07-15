@@ -355,6 +355,30 @@ name|VMBUS_CHANPKT_SIZE_ALIGN
 value|(1<< VMBUS_CHANPKT_SIZE_SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_SETLEN
+parameter_list|(
+name|pktlen
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|do {							\ 	(pktlen) = (len)>> VMBUS_CHANPKT_SIZE_SHIFT;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_TOTLEN
+parameter_list|(
+name|tlen
+parameter_list|)
+define|\
+value|roundup2((tlen), VMBUS_CHANPKT_SIZE_ALIGN)
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_chanpkt_hdr
