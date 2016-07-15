@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/racct.h>
 end_include
 
@@ -1177,9 +1183,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag2
+name|p_ptevents
 operator|&
-name|P2_LWP_EVENTS
+name|PTRACE_LWP
 condition|)
 name|newtd
 operator|->
@@ -1513,15 +1519,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_ptevents
 operator|&
-name|P_TRACED
-operator|&&
-name|p
-operator|->
-name|p_flag2
-operator|&
-name|P2_LWP_EVENTS
+name|PTRACE_LWP
 condition|)
 name|ptracestop
 argument_list|(
