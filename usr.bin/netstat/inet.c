@@ -2151,7 +2151,7 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-18.18s}"
+literal|"{T:/%-5.5s} {T:/%-32.32s} {T:/%-18.18s}"
 else|:
 operator|(
 operator|(
@@ -2163,9 +2163,9 @@ operator|==
 name|AF_INET
 operator|)
 condition|?
-literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-22.22s}"
+literal|"{T:/%-5.5s} {T:/%-32.32s} {T:/%-22.22s}"
 else|:
-literal|"{T:/%-5.5s} {T:/%-14.14s} {T:/%-45.45s}"
+literal|"{T:/%-5.5s} {T:/%-32.32s} {T:/%-45.45s}"
 operator|)
 argument_list|,
 literal|"Proto"
