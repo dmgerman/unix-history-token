@@ -31,7 +31,7 @@ name|name
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -56,7 +56,7 @@ modifier|*
 name|extract
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -91,7 +91,7 @@ modifier|*
 name|nalloc
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -317,7 +317,7 @@ modifier|*
 name|ishfield
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -381,7 +381,7 @@ name|char
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -475,7 +475,7 @@ modifier|*
 name|snarf
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -526,7 +526,7 @@ name|char
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -540,7 +540,7 @@ name|char
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -559,7 +559,7 @@ begin_function_decl
 name|int
 name|More
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -589,7 +589,7 @@ begin_function_decl
 name|int
 name|Type
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -600,7 +600,7 @@ name|int
 name|doRespond
 parameter_list|(
 name|int
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -840,10 +840,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|delete
+name|deletecmd
 parameter_list|(
-name|int
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -853,7 +853,7 @@ name|int
 name|delm
 parameter_list|(
 name|int
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -862,8 +862,8 @@ begin_function_decl
 name|int
 name|deltype
 parameter_list|(
-name|int
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -976,7 +976,7 @@ name|int
 name|execute
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -988,7 +988,7 @@ name|int
 name|exwrite
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|FILE
 modifier|*
@@ -1031,7 +1031,7 @@ modifier|*
 name|findgroup
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1111,7 +1111,7 @@ name|int
 name|forward
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|FILE
 modifier|*
@@ -1137,7 +1137,7 @@ begin_function_decl
 name|int
 name|from
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1173,7 +1173,7 @@ name|FILE
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -1204,7 +1204,7 @@ name|int
 name|getrawlist
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -1220,7 +1220,7 @@ name|uid_t
 name|getuserid
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1242,8 +1242,7 @@ begin_function_decl
 name|int
 name|group
 parameter_list|(
-name|char
-modifier|*
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1282,7 +1281,7 @@ begin_function_decl
 name|int
 name|headers
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1336,9 +1335,8 @@ begin_function_decl
 name|int
 name|igfield
 parameter_list|(
-name|char
+name|void
 modifier|*
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1349,7 +1347,7 @@ name|ignore1
 parameter_list|(
 name|char
 modifier|*
-index|[]
+modifier|*
 parameter_list|,
 name|struct
 name|ignoretab
@@ -1410,7 +1408,7 @@ name|int
 name|isdate
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1420,7 +1418,7 @@ name|int
 name|isdir
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1440,7 +1438,7 @@ name|int
 name|ishead
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1499,7 +1497,7 @@ modifier|*
 name|lex
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1595,7 +1593,7 @@ name|int
 name|markall
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -1630,8 +1628,8 @@ begin_function_decl
 name|int
 name|mboxit
 parameter_list|(
-name|int
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1670,7 +1668,7 @@ name|FILE
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1679,7 +1677,7 @@ begin_function_decl
 name|int
 name|messize
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1700,7 +1698,7 @@ begin_function_decl
 name|int
 name|more
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1719,7 +1717,7 @@ begin_function_decl
 name|int
 name|next
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1739,14 +1737,14 @@ name|void
 name|parse
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|struct
 name|headline
 modifier|*
 parameter_list|,
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1787,7 +1785,7 @@ begin_function_decl
 name|int
 name|preserve
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1809,7 +1807,7 @@ name|void
 name|printgroup
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1932,7 +1930,7 @@ begin_function_decl
 name|int
 name|respond
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1942,9 +1940,8 @@ begin_function_decl
 name|int
 name|retfield
 parameter_list|(
-name|char
+name|void
 modifier|*
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1953,7 +1950,8 @@ begin_function_decl
 name|int
 name|rexit
 parameter_list|(
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2003,7 +2001,7 @@ name|int
 name|save1
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -2032,9 +2030,8 @@ begin_function_decl
 name|int
 name|saveigfield
 parameter_list|(
-name|char
+name|void
 modifier|*
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2044,7 +2041,7 @@ name|int
 name|savemail
 parameter_list|(
 name|char
-index|[]
+modifier|*
 parameter_list|,
 name|FILE
 modifier|*
@@ -2056,9 +2053,8 @@ begin_function_decl
 name|int
 name|saveretfield
 parameter_list|(
-name|char
+name|void
 modifier|*
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2087,8 +2083,7 @@ begin_function_decl
 name|int
 name|schdir
 parameter_list|(
-name|char
-modifier|*
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2107,8 +2102,8 @@ begin_function_decl
 name|int
 name|scroll
 parameter_list|(
-name|char
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2148,8 +2143,7 @@ begin_function_decl
 name|int
 name|set
 parameter_list|(
-name|char
-modifier|*
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2303,8 +2297,8 @@ begin_function_decl
 name|int
 name|stouch
 parameter_list|(
-name|int
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2313,8 +2307,8 @@ begin_function_decl
 name|int
 name|swrite
 parameter_list|(
-name|char
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2332,7 +2326,7 @@ begin_function_decl
 name|int
 name|top
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2371,7 +2365,7 @@ begin_function_decl
 name|int
 name|type
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2393,9 +2387,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|undelete_messages
+name|undeletecmd
 parameter_list|(
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2427,8 +2421,8 @@ begin_function_decl
 name|int
 name|unread
 parameter_list|(
-name|int
-index|[]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2447,8 +2441,7 @@ begin_function_decl
 name|int
 name|unset
 parameter_list|(
-name|char
-modifier|*
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

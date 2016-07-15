@@ -209,8 +209,8 @@ modifier|*
 name|extract
 parameter_list|(
 name|char
+modifier|*
 name|line
-index|[]
 parameter_list|,
 name|int
 name|ntype
@@ -625,8 +625,8 @@ modifier|*
 name|ap
 parameter_list|,
 name|char
+modifier|*
 name|wbuf
-index|[]
 parameter_list|)
 block|{
 name|char
@@ -822,8 +822,8 @@ modifier|*
 name|ap
 parameter_list|,
 name|char
+modifier|*
 name|wbuf
-index|[]
 parameter_list|)
 block|{
 name|char

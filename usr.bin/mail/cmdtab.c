@@ -202,7 +202,7 @@ block|,
 block|{
 literal|"delete"
 block|,
-name|delete
+name|deletecmd
 block|,
 name|W
 operator||
@@ -246,7 +246,7 @@ block|,
 block|{
 literal|"undelete"
 block|,
-name|undelete_messages
+name|undeletecmd
 block|,
 name|P
 operator||
