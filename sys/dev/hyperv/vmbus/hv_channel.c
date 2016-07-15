@@ -2744,7 +2744,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_data_ofs
+name|cph_hlen
 operator|=
 name|hlen
 operator|>>
@@ -2754,7 +2754,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_len
+name|cph_tlen
 operator|=
 name|pad_pktlen
 operator|>>
@@ -2978,7 +2978,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_data_ofs
+name|cph_hlen
 operator|=
 name|hlen
 operator|>>
@@ -2988,7 +2988,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_len
+name|cph_tlen
 operator|=
 name|pad_pktlen
 operator|>>
@@ -3256,7 +3256,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_data_ofs
+name|cph_hlen
 operator|=
 name|hlen
 operator|>>
@@ -3266,7 +3266,7 @@ name|pkt
 operator|.
 name|cp_hdr
 operator|.
-name|cph_len
+name|cph_tlen
 operator|=
 name|pad_pktlen
 operator|>>

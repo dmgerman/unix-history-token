@@ -363,13 +363,13 @@ name|uint16_t
 name|cph_type
 decl_stmt|;
 name|uint16_t
-name|cph_data_ofs
+name|cph_hlen
 decl_stmt|;
-comment|/* in 8 bytes */
+comment|/* header len, in 8 bytes */
 name|uint16_t
-name|cph_len
+name|cph_tlen
 decl_stmt|;
-comment|/* in 8 bytes */
+comment|/* total len, in 8 bytes */
 name|uint16_t
 name|cph_flags
 decl_stmt|;
