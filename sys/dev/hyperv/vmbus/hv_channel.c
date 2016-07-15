@@ -2986,7 +2986,7 @@ name|cp_hdr
 operator|.
 name|cph_flags
 operator|=
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 expr_stmt|;
 name|pkt
 operator|.
@@ -3264,7 +3264,7 @@ name|cp_hdr
 operator|.
 name|cph_flags
 operator|=
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 expr_stmt|;
 name|pkt
 operator|.

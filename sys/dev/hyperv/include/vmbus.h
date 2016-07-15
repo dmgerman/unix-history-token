@@ -71,6 +71,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANPKT_FLAG_RC
+value|0x0001
+end_define
+
+begin_comment
+comment|/* report completion */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHAN_SGLIST_MAX
 value|32
 end_define

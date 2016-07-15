@@ -675,7 +675,7 @@ name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1025,7 +1025,7 @@ name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1699,7 +1699,7 @@ name|init_pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -2209,7 +2209,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* 	 * TODO:  BUGBUG - We have to wait for the above msg since the netvsp 	 * uses KMCL which acknowledges packet (completion packet)  	 * since our Vmbus always set the 	 * HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED flag 	 */
+comment|/* 	 * TODO:  BUGBUG - We have to wait for the above msg since the netvsp 	 * uses KMCL which acknowledges packet (completion packet)  	 * since our Vmbus always set the VMBUS_CHANPKT_FLAG_RC flag 	 */
 comment|/* sema_wait(&NetVscChannel->channel_init_sema); */
 comment|/* Post the big receive buffer to NetVSP */
 if|if
@@ -3036,7 +3036,7 @@ name|pkt
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 block|}

@@ -1433,7 +1433,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 comment|/* wait for 5 seconds */
@@ -1689,7 +1689,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1835,7 +1835,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1990,7 +1990,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -2148,7 +2148,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -2461,7 +2461,7 @@ name|hs_reset_req
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -2700,7 +2700,7 @@ name|request
 argument_list|,
 name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
 argument_list|,
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 block|}

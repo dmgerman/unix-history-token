@@ -398,13 +398,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HW_MACADDR_LEN
 value|6
 end_define
