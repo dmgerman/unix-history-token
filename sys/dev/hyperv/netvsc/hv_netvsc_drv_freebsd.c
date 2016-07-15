@@ -449,7 +449,7 @@ define|#
 directive|define
 name|HN_TX_DATA_SEGCNT_MAX
 define|\
-value|(NETVSC_PACKET_MAXPAGE - HV_RF_NUM_TX_RESERVED_PAGE_BUFS)
+value|(VMBUS_CHAN_SGLIST_MAX - HV_RF_NUM_TX_RESERVED_PAGE_BUFS)
 end_define
 
 begin_define
@@ -4753,7 +4753,7 @@ name|tot_data_buf_len
 expr_stmt|;
 name|packet
 operator|->
-name|page_buf_count
+name|gpa_cnt
 operator|=
 literal|0
 expr_stmt|;
@@ -4852,7 +4852,7 @@ name|m_head
 expr_stmt|;
 name|packet
 operator|->
-name|page_buf_count
+name|gpa_cnt
 operator|=
 name|nsegs
 operator|+
@@ -4861,12 +4861,12 @@ expr_stmt|;
 comment|/* send packet with page buffer */
 name|packet
 operator|->
-name|page_buffers
+name|gpa
 index|[
 literal|0
 index|]
 operator|.
-name|pfn
+name|gpa_page
 operator|=
 name|atop
 argument_list|(
@@ -4877,12 +4877,12 @@ argument_list|)
 expr_stmt|;
 name|packet
 operator|->
-name|page_buffers
+name|gpa
 index|[
 literal|0
 index|]
 operator|.
-name|offset
+name|gpa_ofs
 operator|=
 name|txd
 operator|->
@@ -4892,12 +4892,12 @@ name|PAGE_MASK
 expr_stmt|;
 name|packet
 operator|->
-name|page_buffers
+name|gpa
 index|[
 literal|0
 index|]
 operator|.
-name|length
+name|gpa_len
 operator|=
 name|rndis_msg_size
 expr_stmt|;
@@ -4916,23 +4916,24 @@ operator|++
 name|i
 control|)
 block|{
-name|hv_vmbus_page_buffer
+name|struct
+name|vmbus_gpa
 modifier|*
-name|pb
+name|gpa
 init|=
 operator|&
 name|packet
 operator|->
-name|page_buffers
+name|gpa
 index|[
 name|i
 operator|+
 name|HV_RF_NUM_TX_RESERVED_PAGE_BUFS
 index|]
 decl_stmt|;
-name|pb
+name|gpa
 operator|->
-name|pfn
+name|gpa_page
 operator|=
 name|atop
 argument_list|(
@@ -4944,9 +4945,9 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
-name|pb
+name|gpa
 operator|->
-name|offset
+name|gpa_ofs
 operator|=
 name|segs
 index|[
@@ -4957,9 +4958,9 @@ name|ds_addr
 operator|&
 name|PAGE_MASK
 expr_stmt|;
-name|pb
+name|gpa
 operator|->
-name|length
+name|gpa_len
 operator|=
 name|segs
 index|[

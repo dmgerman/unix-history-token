@@ -24,18 +24,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/hyperv_reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
 begin_comment
 comment|/* XXX for hyperv_guid */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/hyperv_reg.h>
+end_include
 
 begin_comment
 comment|/*  * Hyper-V SynIC message format.  */
@@ -405,6 +411,30 @@ block|{
 name|struct
 name|vmbus_chanpkt_hdr
 name|cp_hdr
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vmbus_chanpkt_sglist
+block|{
+name|struct
+name|vmbus_chanpkt_hdr
+name|cp_hdr
+decl_stmt|;
+name|uint32_t
+name|cp_rsvd
+decl_stmt|;
+name|uint32_t
+name|cp_gpa_cnt
+decl_stmt|;
+name|struct
+name|vmbus_gpa
+name|cp_gpa
+index|[]
 decl_stmt|;
 block|}
 name|__packed

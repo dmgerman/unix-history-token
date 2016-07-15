@@ -109,6 +109,12 @@ directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2149,13 +2155,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NETVSC_PACKET_MAXPAGE
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|NETVSC_VLAN_PRIO_MASK
 value|0xe000
 end_define
@@ -2338,12 +2337,13 @@ modifier|*
 name|data
 decl_stmt|;
 name|uint32_t
-name|page_buf_count
+name|gpa_cnt
 decl_stmt|;
-name|hv_vmbus_page_buffer
-name|page_buffers
+name|struct
+name|vmbus_gpa
+name|gpa
 index|[
-name|NETVSC_PACKET_MAXPAGE
+name|VMBUS_CHAN_SGLIST_MAX
 index|]
 decl_stmt|;
 block|}
