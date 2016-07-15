@@ -22,6 +22,31 @@ file|<sys/param.h>
 end_include
 
 begin_comment
+comment|/*  * GPA stuffs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_gpa_range
+block|{
+name|uint32_t
+name|gpa_len
+decl_stmt|;
+name|uint32_t
+name|gpa_ofs
+decl_stmt|;
+name|uint64_t
+name|gpa_page
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/* This is actually vmbus_gpa_range.gpa_page[1] */
 end_comment
 
@@ -50,6 +75,13 @@ name|VMBUS_CHAN_SGLIST_MAX
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_PRPLIST_MAX
+value|32
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|hv_vmbus_channel
@@ -72,6 +104,36 @@ index|[]
 parameter_list|,
 name|int
 name|sglen
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|dlen
+parameter_list|,
+name|uint64_t
+name|xactid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vmbus_chan_send_prplist
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|struct
+name|vmbus_gpa_range
+modifier|*
+name|prp
+parameter_list|,
+name|int
+name|prp_cnt
 parameter_list|,
 name|void
 modifier|*

@@ -338,29 +338,6 @@ value|(VMBUS_EVTFLAG_LEN * VMBUS_EVTFLAGS_MAX)
 end_define
 
 begin_comment
-comment|/*  * GPA range.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vmbus_gpa_range
-block|{
-name|uint32_t
-name|gpa_len
-decl_stmt|;
-name|uint32_t
-name|gpa_ofs
-decl_stmt|;
-name|uint64_t
-name|gpa_page
-index|[]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Channel packets  */
 end_comment
 
@@ -434,6 +411,30 @@ decl_stmt|;
 name|struct
 name|vmbus_gpa
 name|cp_gpa
+index|[]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vmbus_chanpkt_prplist
+block|{
+name|struct
+name|vmbus_chanpkt_hdr
+name|cp_hdr
+decl_stmt|;
+name|uint32_t
+name|cp_rsvd
+decl_stmt|;
+name|uint32_t
+name|cp_range_cnt
+decl_stmt|;
+name|struct
+name|vmbus_gpa_range
+name|cp_range
 index|[]
 decl_stmt|;
 block|}
