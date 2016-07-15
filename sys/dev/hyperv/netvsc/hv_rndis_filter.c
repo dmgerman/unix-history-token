@@ -4980,7 +4980,7 @@ name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)

@@ -2670,10 +2670,10 @@ parameter_list|,
 name|uint64_t
 name|request_id
 parameter_list|,
-name|hv_vmbus_packet_type
+name|uint16_t
 name|type
 parameter_list|,
-name|uint32_t
+name|uint16_t
 name|flags
 parameter_list|)
 block|{
@@ -2978,7 +2978,7 @@ name|cp_hdr
 operator|.
 name|cph_type
 operator|=
-name|HV_VMBUS_PACKET_TYPE_DATA_USING_GPA_DIRECT
+name|VMBUS_CHANPKT_TYPE_GPA
 expr_stmt|;
 name|pkt
 operator|.
@@ -3256,7 +3256,7 @@ name|cp_hdr
 operator|.
 name|cph_type
 operator|=
-name|HV_VMBUS_PACKET_TYPE_DATA_USING_GPA_DIRECT
+name|VMBUS_CHANPKT_TYPE_GPA
 expr_stmt|;
 name|pkt
 operator|.

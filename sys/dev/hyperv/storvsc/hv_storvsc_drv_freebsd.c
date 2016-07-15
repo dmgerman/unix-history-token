@@ -1431,7 +1431,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1687,7 +1687,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1833,7 +1833,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1988,7 +1988,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -2146,7 +2146,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -2459,7 +2459,7 @@ name|sc
 operator|->
 name|hs_reset_req
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -2698,7 +2698,7 @@ name|uintptr_t
 operator|)
 name|request
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)

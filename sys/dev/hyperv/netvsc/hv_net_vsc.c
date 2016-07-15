@@ -673,7 +673,7 @@ name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1023,7 +1023,7 @@ name|uint64_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1248,7 +1248,7 @@ name|uintptr_t
 operator|)
 name|revoke_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
@@ -1473,7 +1473,7 @@ name|uintptr_t
 operator|)
 name|revoke_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
@@ -1697,7 +1697,7 @@ name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -1878,7 +1878,7 @@ name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
@@ -2193,7 +2193,7 @@ name|uintptr_t
 operator|)
 name|init_pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
@@ -3034,7 +3034,7 @@ name|uintptr_t
 operator|)
 name|pkt
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
@@ -3123,7 +3123,7 @@ name|pkt
 operator|->
 name|type
 operator|!=
-name|HV_VMBUS_PACKET_TYPE_DATA_USING_TRANSFER_PAGES
+name|VMBUS_CHANPKT_TYPE_RXBUF
 condition|)
 block|{
 name|device_printf
@@ -3398,7 +3398,7 @@ argument_list|)
 argument_list|,
 name|tid
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_COMPLETION
+name|VMBUS_CHANPKT_TYPE_COMP
 argument_list|,
 literal|0
 argument_list|)
@@ -3763,7 +3763,7 @@ name|type
 condition|)
 block|{
 case|case
-name|HV_VMBUS_PACKET_TYPE_COMPLETION
+name|VMBUS_CHANPKT_TYPE_COMP
 case|:
 name|hv_nv_on_send_completion
 argument_list|(
@@ -3776,7 +3776,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|HV_VMBUS_PACKET_TYPE_DATA_USING_TRANSFER_PAGES
+name|VMBUS_CHANPKT_TYPE_RXBUF
 case|:
 name|hv_nv_on_receive
 argument_list|(
@@ -3791,7 +3791,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 case|:
 name|hv_nv_send_table
 argument_list|(
