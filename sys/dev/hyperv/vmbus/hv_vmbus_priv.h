@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_iovec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
@@ -50,22 +56,6 @@ struct_decl|struct
 name|vmbus_softc
 struct_decl|;
 end_struct_decl
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|data
-decl_stmt|;
-name|uint32_t
-name|length
-decl_stmt|;
-block|}
-name|hv_vmbus_sg_buffer_list
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * The format must be the same as hv_vm_data_gpa_direct  */
@@ -228,12 +218,14 @@ name|hv_vmbus_ring_buffer_info
 modifier|*
 name|ring_info
 parameter_list|,
-name|hv_vmbus_sg_buffer_list
-name|sg_buffers
+specifier|const
+name|struct
+name|iovec
+name|iov
 index|[]
 parameter_list|,
 name|uint32_t
-name|sg_buff_count
+name|iovlen
 parameter_list|,
 name|boolean_t
 modifier|*
