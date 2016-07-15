@@ -26024,7 +26024,7 @@ name|pred
 operator|->
 name|dtp_difo
 decl_stmt|;
-name|int
+name|uint64_t
 name|rval
 decl_stmt|;
 name|rval
