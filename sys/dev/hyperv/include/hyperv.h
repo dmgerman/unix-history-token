@@ -853,13 +853,13 @@ name|struct
 name|hyperv_dma
 name|ch_monprm_dma
 decl_stmt|;
-comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interrupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
-name|uint32_t
-name|target_vcpu
+name|int
+name|ch_cpuid
 decl_stmt|;
-comment|/* The corresponding CPUID in the guest */
+comment|/* owner cpu */
+comment|/* 	 * Virtual cpuid for ch_cpuid; it is used to communicate cpuid 	 * related information w/ Hyper-V.  If MSR_HV_VP_INDEX does not 	 * exist, ch_vcpuid will always be 0 for compatibility. 	 */
 name|uint32_t
-name|target_cpu
+name|ch_vcpuid
 decl_stmt|;
 comment|/* 	 * If this is a primary channel, ch_subchan* fields 	 * contain sub-channels belonging to this primary 	 * channel. 	 */
 name|struct

@@ -710,7 +710,7 @@ argument_list|,
 operator|&
 name|channel
 operator|->
-name|target_cpu
+name|ch_cpuid
 argument_list|,
 literal|0
 argument_list|,
@@ -1022,7 +1022,7 @@ name|event_tq
 argument_list|,
 name|new_channel
 operator|->
-name|target_cpu
+name|ch_cpuid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1294,7 +1294,7 @@ name|chm_vcpuid
 operator|=
 name|new_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 expr_stmt|;
 name|req
 operator|->
@@ -4214,7 +4214,7 @@ name|event_flags_cnt
 argument_list|,
 name|chan
 operator|->
-name|target_cpu
+name|ch_cpuid
 argument_list|)
 expr_stmt|;
 for|for
@@ -4269,7 +4269,7 @@ name|ch_id
 argument_list|,
 name|chan
 operator|->
-name|target_cpu
+name|ch_cpuid
 argument_list|,
 name|flag_cnt
 argument_list|)
@@ -4899,13 +4899,13 @@ expr_stmt|;
 block|}
 name|chan
 operator|->
-name|target_cpu
+name|ch_cpuid
 operator|=
 name|cpu
 expr_stmt|;
 name|chan
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|=
 name|VMBUS_PCPU_GET
 argument_list|(
@@ -4933,11 +4933,11 @@ name|ch_id
 argument_list|,
 name|chan
 operator|->
-name|target_cpu
+name|ch_cpuid
 argument_list|,
 name|chan
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 argument_list|)
 expr_stmt|;
 block|}
@@ -5882,7 +5882,7 @@ if|if
 condition|(
 name|new_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|==
 name|cur_vcpu
 condition|)
@@ -5897,7 +5897,7 @@ operator|(
 operator|(
 name|outgoing_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|>
 name|cur_vcpu
 operator|)
@@ -5905,7 +5905,7 @@ condition|?
 operator|(
 name|outgoing_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|-
 name|cur_vcpu
 operator|)
@@ -5915,7 +5915,7 @@ name|cur_vcpu
 operator|-
 name|outgoing_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|)
 operator|)
 expr_stmt|;
@@ -5925,7 +5925,7 @@ operator|(
 operator|(
 name|new_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|>
 name|cur_vcpu
 operator|)
@@ -5933,7 +5933,7 @@ condition|?
 operator|(
 name|new_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|-
 name|cur_vcpu
 operator|)
@@ -5943,7 +5943,7 @@ name|cur_vcpu
 operator|-
 name|new_channel
 operator|->
-name|target_vcpu
+name|ch_vcpuid
 operator|)
 operator|)
 expr_stmt|;
