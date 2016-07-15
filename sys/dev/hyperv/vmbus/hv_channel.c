@@ -2238,11 +2238,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hv_vmbus_channel_close_internal
+name|vmbus_chan_close_internal
 parameter_list|(
+name|struct
 name|hv_vmbus_channel
 modifier|*
-name|channel
+name|chan
 parameter_list|)
 block|{
 name|struct
@@ -2250,7 +2251,7 @@ name|vmbus_softc
 modifier|*
 name|sc
 init|=
-name|channel
+name|chan
 operator|->
 name|vmbus_sc
 decl_stmt|;
@@ -2269,7 +2270,7 @@ name|taskqueue
 modifier|*
 name|tq
 init|=
-name|channel
+name|chan
 operator|->
 name|ch_tq
 decl_stmt|;
@@ -2280,23 +2281,24 @@ comment|/* TODO: stringent check */
 name|atomic_clear_int
 argument_list|(
 operator|&
-name|channel
+name|chan
 operator|->
 name|ch_stflags
 argument_list|,
 name|VMBUS_CHAN_ST_OPENED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Free this channel's sysctl tree attached to its device's 	 * sysctl tree. 	 */
 name|sysctl_ctx_free
 argument_list|(
 operator|&
-name|channel
+name|chan
 operator|->
 name|ch_sysctl_ctx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set ch_tq to NULL to avoid more requests be scheduled 	 */
-name|channel
+comment|/* 	 * Set ch_tq to NULL to avoid more requests be scheduled. 	 * XXX pretty broken; need rework. 	 */
+name|chan
 operator|->
 name|ch_tq
 operator|=
@@ -2307,18 +2309,18 @@ argument_list|(
 name|tq
 argument_list|,
 operator|&
-name|channel
+name|chan
 operator|->
 name|ch_task
 argument_list|)
 expr_stmt|;
-name|channel
+name|chan
 operator|->
 name|ch_cb
 operator|=
 name|NULL
 expr_stmt|;
-comment|/** 	 * Send a closing message 	 */
+comment|/* 	 * Close this channel. 	 */
 name|mh
 operator|=
 name|vmbus_msghc_get
@@ -2347,7 +2349,7 @@ name|vmbus_dev
 argument_list|,
 literal|"can not get msg hypercall for chclose(chan%u)\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|)
@@ -2373,7 +2375,7 @@ name|req
 operator|->
 name|chm_chanid
 operator|=
-name|channel
+name|chan
 operator|->
 name|ch_id
 expr_stmt|;
@@ -2404,7 +2406,7 @@ name|vmbus_dev
 argument_list|,
 literal|"chclose(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|,
@@ -2427,42 +2429,41 @@ name|vmbus_dev
 argument_list|,
 literal|"close chan%u\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Tear down the gpadl for the channel's ring buffer */
+comment|/* 	 * Disconnect the TX+RX bufrings from this channel. 	 */
 if|if
 condition|(
-name|channel
+name|chan
 operator|->
 name|ch_bufring_gpadl
 condition|)
 block|{
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
-name|channel
+name|chan
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_bufring_gpadl
 argument_list|)
 expr_stmt|;
-name|channel
+name|chan
 operator|->
 name|ch_bufring_gpadl
 operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* TODO: Send a msg to release the childRelId */
-comment|/* cleanup the ring buffers for this channel */
+comment|/* 	 * Destroy the TX+RX bufrings. 	 */
 name|hv_ring_buffer_cleanup
 argument_list|(
 operator|&
-name|channel
+name|chan
 operator|->
 name|outbound
 argument_list|)
@@ -2470,14 +2471,14 @@ expr_stmt|;
 name|hv_ring_buffer_cleanup
 argument_list|(
 operator|&
-name|channel
+name|chan
 operator|->
 name|inbound
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|channel
+name|chan
 operator|->
 name|ch_bufring
 operator|!=
@@ -2487,16 +2488,16 @@ block|{
 name|hyperv_dmamem_free
 argument_list|(
 operator|&
-name|channel
+name|chan
 operator|->
 name|ch_bufring_dma
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_bufring
 argument_list|)
 expr_stmt|;
-name|channel
+name|chan
 operator|->
 name|ch_bufring
 operator|=
@@ -2580,7 +2581,7 @@ condition|;
 operator|++
 name|i
 control|)
-name|hv_vmbus_channel_close_internal
+name|vmbus_chan_close_internal
 argument_list|(
 name|subchan
 index|[
@@ -2597,7 +2598,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Then close the primary channel. */
-name|hv_vmbus_channel_close_internal
+name|vmbus_chan_close_internal
 argument_list|(
 name|chan
 argument_list|)
