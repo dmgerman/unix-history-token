@@ -355,6 +355,63 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Channel packets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_SIZE_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_SIZE_ALIGN
+value|(1<< VMBUS_CHANPKT_SIZE_SHIFT)
+end_define
+
+begin_struct
+struct|struct
+name|vmbus_chanpkt_hdr
+block|{
+name|uint16_t
+name|cph_type
+decl_stmt|;
+name|uint16_t
+name|cph_data_ofs
+decl_stmt|;
+comment|/* in 8 bytes */
+name|uint16_t
+name|cph_len
+decl_stmt|;
+comment|/* in 8 bytes */
+name|uint16_t
+name|cph_flags
+decl_stmt|;
+name|uint64_t
+name|cph_xactid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vmbus_chanpkt
+block|{
+name|struct
+name|vmbus_chanpkt_hdr
+name|cp_hdr
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Channel messages  * - Embedded in vmbus_message.msg_data, e.g. response and notification.  * - Embedded in hypercall_postmsg_in.hc_data, e.g. request.  */
 end_comment
 
