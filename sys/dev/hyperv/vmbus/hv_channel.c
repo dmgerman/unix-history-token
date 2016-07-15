@@ -1451,7 +1451,7 @@ operator|->
 name|ch_bufring_gpadl
 condition|)
 block|{
-name|hv_vmbus_channel_teardown_gpdal
+name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|new_channel
 argument_list|,
@@ -2075,7 +2075,7 @@ end_comment
 
 begin_function
 name|int
-name|hv_vmbus_channel_teardown_gpdal
+name|vmbus_chan_gpadl_disconnect
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -2441,7 +2441,7 @@ operator|->
 name|ch_bufring_gpadl
 condition|)
 block|{
-name|hv_vmbus_channel_teardown_gpdal
+name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|channel
 argument_list|,
@@ -2560,7 +2560,7 @@ name|i
 decl_stmt|;
 name|subchan
 operator|=
-name|vmbus_get_subchan
+name|vmbus_subchan_get
 argument_list|(
 name|chan
 argument_list|,
@@ -2588,7 +2588,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|vmbus_rel_subchan
+name|vmbus_subchan_rel
 argument_list|(
 name|subchan
 argument_list|,
@@ -4706,7 +4706,7 @@ end_function
 
 begin_function
 name|void
-name|vmbus_channel_cpu_set
+name|vmbus_chan_cpu_set
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -4808,7 +4808,7 @@ end_function
 
 begin_function
 name|void
-name|vmbus_channel_cpu_rr
+name|vmbus_chan_cpu_rr
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -4835,7 +4835,7 @@ argument_list|)
 operator|%
 name|mp_ncpus
 expr_stmt|;
-name|vmbus_channel_cpu_set
+name|vmbus_chan_cpu_set
 argument_list|(
 name|chan
 argument_list|,
@@ -4856,8 +4856,8 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
-comment|/* 	 * By default, pin the channel to cpu0.  Devices having 	 * special channel-cpu mapping requirement should call 	 * vmbus_channel_cpu_{set,rr}(). 	 */
-name|vmbus_channel_cpu_set
+comment|/* 	 * By default, pin the channel to cpu0.  Devices having 	 * special channel-cpu mapping requirement should call 	 * vmbus_chan_cpu_{set,rr}(). 	 */
+name|vmbus_chan_cpu_set
 argument_list|(
 name|chan
 argument_list|,
@@ -5836,7 +5836,7 @@ name|struct
 name|hv_vmbus_channel
 modifier|*
 modifier|*
-name|vmbus_get_subchan
+name|vmbus_subchan_get
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -5974,7 +5974,7 @@ end_function
 
 begin_function
 name|void
-name|vmbus_rel_subchan
+name|vmbus_subchan_rel
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -5999,7 +5999,7 @@ end_function
 
 begin_function
 name|void
-name|vmbus_drain_subchan
+name|vmbus_subchan_drain
 parameter_list|(
 name|struct
 name|hv_vmbus_channel

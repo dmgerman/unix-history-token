@@ -1251,7 +1251,7 @@ name|hv_chan_priv1
 operator|=
 name|sc
 expr_stmt|;
-name|vmbus_channel_cpu_rr
+name|vmbus_chan_cpu_rr
 argument_list|(
 name|new_channel
 argument_list|)
@@ -1501,7 +1501,7 @@ block|}
 comment|/* Wait for sub-channels setup to complete. */
 name|subchan
 operator|=
-name|vmbus_get_subchan
+name|vmbus_subchan_get
 argument_list|(
 name|sc
 operator|->
@@ -1535,7 +1535,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Release the sub-channels. */
-name|vmbus_rel_subchan
+name|vmbus_subchan_rel
 argument_list|(
 name|subchan
 argument_list|,
@@ -2287,7 +2287,7 @@ literal|"invalid chan priv1"
 operator|)
 argument_list|)
 expr_stmt|;
-name|vmbus_channel_cpu_rr
+name|vmbus_chan_cpu_rr
 argument_list|(
 name|sc
 operator|->
