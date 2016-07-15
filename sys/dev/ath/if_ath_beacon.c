@@ -1449,6 +1449,8 @@ argument_list|,
 name|rix
 argument_list|,
 literal|0
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 name|ath_hal_set11nratescenario

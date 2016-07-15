@@ -6631,6 +6631,9 @@ name|isht40
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|,
+name|HAL_BOOL
+name|includeSifs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6690,6 +6693,9 @@ name|rateix
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|,
+name|HAL_BOOL
+name|includeSifs
 parameter_list|)
 function_decl|;
 end_function_decl

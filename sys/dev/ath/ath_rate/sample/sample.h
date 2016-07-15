@@ -744,7 +744,7 @@ index|]
 operator|.
 name|spAckDuration
 expr_stmt|;
-comment|/* XXX assumes short preamble */
+comment|/* XXX assumes short preamble, include SIFS */
 name|ctsduration
 operator|+=
 name|ath_hal_pkt_txtime
@@ -762,6 +762,8 @@ argument_list|,
 name|is_ht40
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -795,7 +797,7 @@ name|tt
 operator|+=
 name|t_difs
 expr_stmt|;
-comment|/* XXX assumes short preamble */
+comment|/* XXX assumes short preamble, include SIFS */
 name|tt
 operator|+=
 operator|(
@@ -819,6 +821,8 @@ argument_list|,
 name|is_ht40
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|tt

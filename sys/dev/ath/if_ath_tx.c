@@ -3974,6 +3974,8 @@ argument_list|,
 name|rix
 argument_list|,
 name|shortPreamble
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4208,6 +4210,8 @@ argument_list|,
 name|rix
 argument_list|,
 name|AH_TRUE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4266,6 +4270,8 @@ argument_list|,
 name|rix
 argument_list|,
 name|AH_FALSE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 if|if

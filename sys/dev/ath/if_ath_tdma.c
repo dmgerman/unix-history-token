@@ -1082,6 +1082,8 @@ argument_list|,
 name|rix
 argument_list|,
 name|AH_TRUE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1615,6 +1617,8 @@ name|rix
 index|]
 operator|.
 name|shortPreamble
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 comment|/* NB:<< 9 is to cvt to TU and /2 */

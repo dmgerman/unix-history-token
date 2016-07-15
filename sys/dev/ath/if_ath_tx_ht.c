@@ -1455,7 +1455,7 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
-comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 * 			 * XXX TODO: .. and the rate is an 11n rate? 			 */
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
 if|if
 condition|(
 name|ic
@@ -2646,6 +2646,7 @@ index|]
 operator|.
 name|shortPreamble
 expr_stmt|;
+comment|/* XXX TODO: don't include SIFS */
 name|series
 index|[
 name|i
@@ -2669,6 +2670,8 @@ operator|.
 name|rix
 argument_list|,
 name|shortPreamble
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}

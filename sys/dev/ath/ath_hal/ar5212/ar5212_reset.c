@@ -12514,6 +12514,8 @@ operator|.
 name|controlRate
 argument_list|,
 name|AH_FALSE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12605,6 +12607,8 @@ operator|.
 name|controlRate
 argument_list|,
 name|AH_FALSE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12656,6 +12660,8 @@ name|i
 index|]
 operator|.
 name|controlRate
+argument_list|,
+name|AH_TRUE
 argument_list|,
 name|AH_TRUE
 argument_list|)

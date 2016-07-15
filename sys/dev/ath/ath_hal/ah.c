@@ -1093,6 +1093,9 @@ name|isht40
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|,
+name|HAL_BOOL
+name|includeSifs
 parameter_list|)
 block|{
 name|uint8_t
@@ -1133,6 +1136,8 @@ argument_list|,
 name|rateix
 argument_list|,
 name|shortPreamble
+argument_list|,
+name|includeSifs
 argument_list|)
 return|;
 comment|/* 11n frame - extract out the number of spatial streams */
@@ -1160,6 +1165,7 @@ name|rateix
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: Add SIFS */
 return|return
 name|ath_computedur_ht
 argument_list|(
@@ -1511,6 +1517,9 @@ name|rateix
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|,
+name|HAL_BOOL
+name|includeSifs
 parameter_list|)
 block|{
 name|uint32_t
@@ -1629,8 +1638,6 @@ literal|3
 expr_stmt|;
 name|txTime
 operator|=
-name|CCK_SIFS_TIME
-operator|+
 name|phyTime
 operator|+
 operator|(
@@ -1642,6 +1649,14 @@ operator|)
 operator|/
 name|kbps
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|includeSifs
+condition|)
+name|txTime
+operator|+=
+name|CCK_SIFS_TIME
 expr_stmt|;
 break|break;
 case|case
@@ -1685,8 +1700,6 @@ argument_list|)
 expr_stmt|;
 name|txTime
 operator|=
-name|OFDM_SIFS_TIME
-operator|+
 name|OFDM_PREAMBLE_TIME
 operator|+
 operator|(
@@ -1694,6 +1707,14 @@ name|numSymbols
 operator|*
 name|OFDM_SYMBOL_TIME
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|includeSifs
+condition|)
+name|txTime
+operator|+=
+name|OFDM_SIFS_TIME
 expr_stmt|;
 break|break;
 case|case
@@ -1737,8 +1758,6 @@ argument_list|)
 expr_stmt|;
 name|txTime
 operator|=
-name|OFDM_HALF_SIFS_TIME
-operator|+
 name|OFDM_HALF_PREAMBLE_TIME
 operator|+
 operator|(
@@ -1746,6 +1765,14 @@ name|numSymbols
 operator|*
 name|OFDM_HALF_SYMBOL_TIME
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|includeSifs
+condition|)
+name|txTime
+operator|+=
+name|OFDM_HALF_SIFS_TIME
 expr_stmt|;
 break|break;
 case|case
@@ -1789,8 +1816,6 @@ argument_list|)
 expr_stmt|;
 name|txTime
 operator|=
-name|OFDM_QUARTER_SIFS_TIME
-operator|+
 name|OFDM_QUARTER_PREAMBLE_TIME
 operator|+
 operator|(
@@ -1798,6 +1823,14 @@ name|numSymbols
 operator|*
 name|OFDM_QUARTER_SYMBOL_TIME
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|includeSifs
+condition|)
+name|txTime
+operator|+=
+name|OFDM_QUARTER_SIFS_TIME
 expr_stmt|;
 break|break;
 case|case
@@ -1841,8 +1874,6 @@ argument_list|)
 expr_stmt|;
 name|txTime
 operator|=
-name|TURBO_SIFS_TIME
-operator|+
 name|TURBO_PREAMBLE_TIME
 operator|+
 operator|(
@@ -1850,6 +1881,14 @@ name|numSymbols
 operator|*
 name|TURBO_SYMBOL_TIME
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|includeSifs
+condition|)
+name|txTime
+operator|+=
+name|TURBO_SIFS_TIME
 expr_stmt|;
 break|break;
 default|default:
@@ -2642,6 +2681,8 @@ argument_list|,
 name|cix
 argument_list|,
 name|AH_FALSE
+argument_list|,
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 name|rt
@@ -2662,6 +2703,8 @@ argument_list|,
 name|WLAN_CTRL_FRAME_SIZE
 argument_list|,
 name|cix
+argument_list|,
+name|AH_TRUE
 argument_list|,
 name|AH_TRUE
 argument_list|)
