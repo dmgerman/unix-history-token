@@ -1455,6 +1455,44 @@ name|size
 parameter_list|,
 name|uint32_t
 modifier|*
+name|gpadl
+parameter_list|)
+block|{
+return|return
+name|vmbus_chan_gpadl_connect
+argument_list|(
+name|channel
+argument_list|,
+name|hv_get_phys_addr
+argument_list|(
+name|contig_buffer
+argument_list|)
+argument_list|,
+name|size
+argument_list|,
+name|gpadl
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|vmbus_chan_gpadl_connect
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|bus_addr_t
+name|paddr
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|uint32_t
+modifier|*
 name|gpadl0
 parameter_list|)
 block|{
@@ -1463,7 +1501,7 @@ name|vmbus_softc
 modifier|*
 name|sc
 init|=
-name|channel
+name|chan
 operator|->
 name|vmbus_sc
 decl_stmt|;
@@ -1504,8 +1542,6 @@ name|error
 decl_stmt|;
 name|uint64_t
 name|page_id
-decl_stmt|,
-name|paddr
 decl_stmt|;
 comment|/* 	 * Preliminary checks. 	 */
 name|KASSERT
@@ -1519,7 +1555,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"invalid GPA size %u, not multiple page size"
+literal|"invalid GPA size %d, not multiple page size"
 operator|,
 name|size
 operator|)
@@ -1530,13 +1566,6 @@ operator|=
 name|size
 operator|>>
 name|PAGE_SHIFT
-expr_stmt|;
-name|paddr
-operator|=
-name|hv_get_phys_addr
-argument_list|(
-name|contig_buffer
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -1672,7 +1701,7 @@ name|vmbus_dev
 argument_list|,
 literal|"can not get msg hypercall for gpadl->chan%u\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|)
@@ -1700,7 +1729,7 @@ name|req
 operator|->
 name|chm_chanid
 operator|=
-name|channel
+name|chan
 operator|->
 name|ch_id
 expr_stmt|;
@@ -1785,7 +1814,7 @@ name|vmbus_dev
 argument_list|,
 literal|"gpadl->chan%u msg hypercall exec failed: %d\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|,
@@ -1965,7 +1994,7 @@ argument_list|,
 literal|"gpadl->chan%u failed: "
 literal|"status %u\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|,
@@ -1992,7 +2021,7 @@ argument_list|,
 literal|"gpadl->chan%u "
 literal|"succeeded\n"
 argument_list|,
-name|channel
+name|chan
 operator|->
 name|ch_id
 argument_list|)
