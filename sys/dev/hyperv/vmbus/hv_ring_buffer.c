@@ -734,29 +734,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * @brief Get the interrupt mask for the specified ring buffer.  */
-end_comment
-
-begin_function
-name|uint32_t
-name|hv_vmbus_get_ring_buffer_interrupt_mask
-parameter_list|(
-name|hv_vmbus_ring_buffer_info
-modifier|*
-name|rbi
-parameter_list|)
-block|{
-return|return
-name|rbi
-operator|->
-name|ring_buffer
-operator|->
-name|interrupt_mask
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * @brief Initialize the ring buffer.  */
 end_comment
 
