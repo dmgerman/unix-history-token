@@ -2208,10 +2208,19 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|!
+name|aflag
+operator|&&
+name|is_listening
+operator|)
+operator|||
+operator|(
 name|Lflag
 operator|&&
 operator|!
 name|is_listening
+operator|)
 condition|)
 block|{
 name|sctp_skip_xinpcb_ifneed
@@ -2487,15 +2496,23 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|Lflag
+condition|)
+block|{
 name|xo_emit
 argument_list|(
-literal|"{:protocol/%-6.6s/%s} {:type/%-5.5s/%s} "
+literal|"{:protocol/%-6.6s/%s} "
+literal|"{:type/%-5.5s/%s} "
 argument_list|,
 name|pname
 argument_list|,
 name|tname
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
