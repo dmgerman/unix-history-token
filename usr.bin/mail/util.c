@@ -845,8 +845,8 @@ modifier|*
 name|ishfield
 parameter_list|(
 name|char
+modifier|*
 name|linebuf
-index|[]
 parameter_list|,
 name|char
 modifier|*
