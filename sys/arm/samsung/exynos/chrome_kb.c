@@ -1122,7 +1122,9 @@ name|keymap
 operator|!=
 name|NULL
 argument_list|,
+operator|(
 literal|"keymap_read: no keymap"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1199,7 +1201,9 @@ name|keymap
 operator|!=
 name|NULL
 argument_list|,
+operator|(
 literal|"keymap_write: no keymap"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
