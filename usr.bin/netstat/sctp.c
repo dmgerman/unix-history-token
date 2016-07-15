@@ -2573,7 +2573,7 @@ block|{
 name|xo_emit
 argument_list|(
 literal|"{P:/%-45.45s} "
-literal|"{:state:LISTEN}"
+literal|"{:state/LISTEN}"
 argument_list|,
 literal|" "
 argument_list|)
