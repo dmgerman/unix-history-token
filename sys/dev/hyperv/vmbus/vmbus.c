@@ -4401,7 +4401,7 @@ end_function
 
 begin_function
 name|int
-name|hv_vmbus_child_device_register
+name|vmbus_add_child
 parameter_list|(
 name|struct
 name|hv_vmbus_channel
@@ -4503,7 +4503,7 @@ end_function
 
 begin_function
 name|int
-name|hv_vmbus_child_device_unregister
+name|vmbus_delete_child
 parameter_list|(
 name|struct
 name|hv_vmbus_channel

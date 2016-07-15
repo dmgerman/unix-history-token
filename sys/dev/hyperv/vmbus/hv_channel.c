@@ -5118,7 +5118,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Add device for this primary channel. 		 * 		 * NOTE: 		 * Error is ignored here; don't have much to do if error 		 * really happens. 		 */
-name|hv_vmbus_child_device_register
+name|vmbus_add_child
 argument_list|(
 name|chan
 argument_list|)
@@ -5286,7 +5286,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Only primary channel owns the device */
-name|hv_vmbus_child_device_unregister
+name|vmbus_delete_child
 argument_list|(
 name|chan
 argument_list|)
@@ -5586,7 +5586,7 @@ operator|->
 name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
-name|hv_vmbus_child_device_unregister
+name|vmbus_delete_child
 argument_list|(
 name|chan
 argument_list|)
