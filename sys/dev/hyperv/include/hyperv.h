@@ -820,21 +820,6 @@ name|uint32_t
 name|ch_montrig_mask
 decl_stmt|;
 comment|/* MNF trig mask */
-name|uint32_t
-name|ring_buffer_gpadl_handle
-decl_stmt|;
-comment|/* 	 * Allocated memory for ring buffer 	 */
-name|void
-modifier|*
-name|ring_buffer_pages
-decl_stmt|;
-name|unsigned
-name|long
-name|ring_buffer_size
-decl_stmt|;
-name|uint32_t
-name|ring_buffer_page_count
-decl_stmt|;
 comment|/* 	 * send to parent 	 */
 name|hv_vmbus_ring_buffer_info
 name|outbound
@@ -917,6 +902,18 @@ decl_stmt|;
 name|void
 modifier|*
 name|hv_chan_priv3
+decl_stmt|;
+name|void
+modifier|*
+name|ch_bufring
+decl_stmt|;
+comment|/* TX+RX bufrings */
+name|struct
+name|hyperv_dma
+name|ch_bufring_dma
+decl_stmt|;
+name|uint32_t
+name|ch_bufring_gpadl
 decl_stmt|;
 name|struct
 name|task
