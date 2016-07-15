@@ -1352,7 +1352,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|vmbus_chan_gpadl_disconnect
+name|hv_vmbus_channel_teardown_gpdal
 argument_list|(
 name|net_dev
 operator|->
@@ -1576,7 +1576,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|vmbus_chan_gpadl_disconnect
+name|hv_vmbus_channel_teardown_gpdal
 argument_list|(
 name|net_dev
 operator|->
