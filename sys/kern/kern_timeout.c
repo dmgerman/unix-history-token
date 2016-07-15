@@ -6066,7 +6066,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cancelled
+literal|0
 operator|)
 return|;
 block|}
