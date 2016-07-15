@@ -499,15 +499,17 @@ name|util_sc
 operator|.
 name|receive_buffer
 expr_stmt|;
+name|recvlen
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_recv_packet
+name|vmbus_chan_recv
 argument_list|(
 name|channel
 argument_list|,
 name|time_buf
-argument_list|,
-name|PAGE_SIZE
 argument_list|,
 operator|&
 name|recvlen
@@ -516,6 +518,18 @@ operator|&
 name|requestId
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ret
+operator|!=
+name|ENOBUFS
+argument_list|,
+operator|(
+literal|"hvtimesync recvbuf is not large enough"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX check recvlen to make sure that it contains enough data */
 if|if
 condition|(
 operator|(

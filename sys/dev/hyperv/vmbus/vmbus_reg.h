@@ -371,6 +371,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANPKT_GETLEN
+parameter_list|(
+name|pktlen
+parameter_list|)
+define|\
+value|(((int)(pktlen))<< VMBUS_CHANPKT_SIZE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHANPKT_TOTLEN
 parameter_list|(
 name|tlen
