@@ -1512,11 +1512,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|vmspace_free
-argument_list|(
-name|vm
-argument_list|)
-expr_stmt|;
 name|pve
 operator|->
 name|pve_fsid
@@ -1770,6 +1765,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vmspace_free
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
