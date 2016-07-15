@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/hyperv_busdma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/vmbus.h>
 end_include
 
@@ -2109,6 +2115,14 @@ name|nvsp_version
 decl_stmt|;
 name|uint32_t
 name|num_channel
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|rxbuf_dma
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|txbuf_dma
 decl_stmt|;
 name|uint32_t
 name|vrss_send_table
