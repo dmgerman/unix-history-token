@@ -5970,6 +5970,12 @@ name|oflags
 operator|=
 name|VPO_UNMANAGED
 expr_stmt|;
+name|m
+operator|->
+name|busy_lock
+operator|=
+name|VPB_UNBUSIED
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -6855,6 +6861,12 @@ operator||=
 name|VPO_UNMANAGED
 expr_stmt|;
 block|}
+name|m
+operator|->
+name|busy_lock
+operator|=
+name|VPB_UNBUSIED
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
