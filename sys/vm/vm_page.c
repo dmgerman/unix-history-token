@@ -3483,12 +3483,6 @@ name|vm_page_t
 name|mpred
 parameter_list|)
 block|{
-name|vm_pindex_t
-name|sidx
-decl_stmt|;
-name|vm_object_t
-name|sobj
-decl_stmt|;
 name|vm_page_t
 name|msucc
 decl_stmt|;
@@ -3584,18 +3578,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Record the object/offset pair in this page 	 */
-name|sobj
-operator|=
-name|m
-operator|->
-name|object
-expr_stmt|;
-name|sidx
-operator|=
-name|m
-operator|->
-name|pindex
-expr_stmt|;
 name|m
 operator|->
 name|object
@@ -3626,13 +3608,13 @@ name|m
 operator|->
 name|object
 operator|=
-name|sobj
+name|NULL
 expr_stmt|;
 name|m
 operator|->
 name|pindex
 operator|=
-name|sidx
+literal|0
 expr_stmt|;
 return|return
 operator|(
