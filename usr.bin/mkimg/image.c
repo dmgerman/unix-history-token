@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1627,6 +1633,24 @@ name|unit
 operator|-
 literal|1
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|madvise
+argument_list|(
+name|buffer
+argument_list|,
+name|sz
+argument_list|,
+name|MADV_DONTNEED
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"madvise"
+argument_list|)
 expr_stmt|;
 name|munmap
 argument_list|(
