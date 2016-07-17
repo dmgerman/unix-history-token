@@ -425,6 +425,23 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|j
+operator|->
+name|flags
+operator|&
+name|JF_FROM_RUNQ
+condition|)
+name|requeue_head
+argument_list|(
+name|j
+argument_list|,
+operator|&
+name|runnable
+argument_list|)
+expr_stmt|;
+else|else
 name|requeue
 argument_list|(
 name|j
@@ -437,6 +454,13 @@ return|return
 literal|1
 return|;
 block|}
+name|j
+operator|->
+name|flags
+operator|&=
+operator|~
+name|JF_FROM_RUNQ
+expr_stmt|;
 name|create_failed
 operator|=
 operator|(
@@ -808,6 +832,11 @@ modifier|*
 name|j
 parameter_list|)
 block|{
+name|struct
+name|cfjail
+modifier|*
+name|rj
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -871,18 +900,30 @@ operator|&
 name|runnable
 argument_list|)
 condition|)
-name|requeue
-argument_list|(
+block|{
+name|rj
+operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|runnable
 argument_list|)
+expr_stmt|;
+name|rj
+operator|->
+name|flags
+operator||=
+name|JF_FROM_RUNQ
+expr_stmt|;
+name|requeue
+argument_list|(
+name|rj
 argument_list|,
 operator|&
 name|ready
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 literal|0
@@ -1353,7 +1394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Run a single command for a jail, possible inside the jail.  */
+comment|/*  * Run a single command for a jail, possibly inside the jail.  */
 end_comment
 
 begin_function
