@@ -891,12 +891,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_PR_SCTP_BUF
+name|SCTP_PR_SCTP_PRIO
 value|0x0002
 end_define
 
 begin_comment
 comment|/* Buffer based PR-SCTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PR_SCTP_BUF
+value|SCTP_PR_SCTP_PRIO
+end_define
+
+begin_comment
+comment|/* For backwards compatibility */
 end_comment
 
 begin_define
