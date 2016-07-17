@@ -97,6 +97,9 @@ decl_stmt|;
 name|int
 name|sc_quirks
 decl_stmt|;
+name|int
+name|sc_have_pmem
+decl_stmt|;
 name|struct
 name|ofw_pci_range
 modifier|*
@@ -104,6 +107,9 @@ name|sc_range
 decl_stmt|;
 name|int
 name|sc_nrange
+decl_stmt|;
+name|uint64_t
+name|sc_range_mask
 decl_stmt|;
 name|struct
 name|ofw_pci_cell_info
@@ -117,6 +123,10 @@ decl_stmt|;
 name|struct
 name|rman
 name|sc_mem_rman
+decl_stmt|;
+name|struct
+name|rman
+name|sc_pmem_rman
 decl_stmt|;
 name|bus_space_tag_t
 name|sc_memt
