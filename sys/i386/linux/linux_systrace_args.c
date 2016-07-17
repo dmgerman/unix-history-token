@@ -4620,7 +4620,7 @@ name|p
 operator|->
 name|per
 expr_stmt|;
-comment|/* l_ulong */
+comment|/* l_uint */
 operator|*
 name|n_args
 operator|=
@@ -15258,7 +15258,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong"
+literal|"l_uint"
 expr_stmt|;
 break|break;
 default|default:
