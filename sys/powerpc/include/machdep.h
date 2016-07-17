@@ -44,15 +44,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|booke_enable_l3_cache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|booke_enable_bpred
 parameter_list|(
 name|void

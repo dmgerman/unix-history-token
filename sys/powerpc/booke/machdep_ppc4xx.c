@@ -450,15 +450,6 @@ end_function
 
 begin_function
 name|void
-name|booke_enable_l3_cache
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|booke_disable_l2_cache
 parameter_list|(
 name|void
