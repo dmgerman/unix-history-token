@@ -2810,6 +2810,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|ctlr
+operator|->
+name|channels
+operator|>
+name|ctlr
+operator|->
+name|numirqs
+operator|&&
 name|i
 operator|==
 name|ctlr
