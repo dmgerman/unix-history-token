@@ -1202,7 +1202,7 @@ name|uint16_t
 name|stream
 decl_stmt|;
 name|uint16_t
-name|reserved
+name|flags
 decl_stmt|;
 name|uint32_t
 name|msg_id

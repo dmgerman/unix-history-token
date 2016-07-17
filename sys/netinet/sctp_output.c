@@ -51524,6 +51524,7 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|at
 operator|->
 name|rec
@@ -51533,6 +51534,9 @@ operator|.
 name|rcv_flags
 operator|&
 name|SCTP_DATA_UNORDERED
+operator|)
+operator|&&
+name|old
 condition|)
 block|{
 comment|/* We don't report these */
@@ -52070,6 +52074,9 @@ condition|)
 break|break;
 if|if
 condition|(
+name|old
+operator|&&
+operator|(
 name|at
 operator|->
 name|rec
@@ -52079,6 +52086,7 @@ operator|.
 name|rcv_flags
 operator|&
 name|SCTP_DATA_UNORDERED
+operator|)
 condition|)
 block|{
 comment|/* We don't report these */
@@ -52173,15 +52181,6 @@ argument_list|)
 expr_stmt|;
 name|strseq_m
 operator|->
-name|reserved
-operator|=
-name|ntohs
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|strseq_m
-operator|->
 name|msg_id
 operator|=
 name|ntohl
@@ -52194,6 +52193,34 @@ name|data
 operator|.
 name|stream_seq
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|at
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|rcv_flags
+operator|&
+name|SCTP_DATA_UNORDERED
+condition|)
+name|strseq_m
+operator|->
+name|flags
+operator|=
+name|ntohs
+argument_list|(
+name|PR_SCTP_UNORDERED_FLAG
+argument_list|)
+expr_stmt|;
+else|else
+name|strseq_m
+operator|->
+name|flags
+operator|=
+literal|0
 expr_stmt|;
 name|strseq_m
 operator|++
