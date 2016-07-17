@@ -3992,6 +3992,11 @@ name|on_strm_q
 operator|=
 literal|0
 expr_stmt|;
+name|SCTP_STAT_INCR_COUNTER64
+argument_list|(
+name|sctps_reasmusrmsgs
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4893,6 +4898,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|SCTP_STAT_INCR_COUNTER64
+argument_list|(
+name|sctps_reasmusrmsgs
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5146,6 +5156,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|SCTP_STAT_INCR_COUNTER64
+argument_list|(
+name|sctps_reasmusrmsgs
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5358,6 +5373,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|SCTP_STAT_INCR_COUNTER64
+argument_list|(
+name|sctps_reasmusrmsgs
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
