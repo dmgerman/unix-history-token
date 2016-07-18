@@ -5107,6 +5107,16 @@ name|z_parent
 operator|=
 name|zfsvfs
 expr_stmt|;
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_flag
+operator|&=
+operator|~
+name|VROOT
+expr_stmt|;
 block|}
 name|ZFS_EXIT
 argument_list|(
