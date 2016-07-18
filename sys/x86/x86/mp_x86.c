@@ -2743,11 +2743,7 @@ name|TOPO_TYPE_PKG
 case|:
 name|printf
 argument_list|(
-literal|"Package HW ID = %u (%#x)\n"
-argument_list|,
-name|node
-operator|->
-name|hwid
+literal|"Package HW ID = %u\n"
 argument_list|,
 name|node
 operator|->
@@ -2760,11 +2756,7 @@ name|TOPO_TYPE_CORE
 case|:
 name|printf
 argument_list|(
-literal|"\tCore HW ID = %u (%#x)\n"
-argument_list|,
-name|node
-operator|->
-name|hwid
+literal|"\tCore HW ID = %u\n"
 argument_list|,
 name|node
 operator|->
@@ -2805,14 +2797,10 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tCPU (AP%s): APIC ID: %u (%#x)"
+literal|"\t\tCPU (AP%s): APIC ID: %u"
 literal|"(disabled)\n"
 argument_list|,
 name|hyperthread
-argument_list|,
-name|node
-operator|->
-name|hwid
 argument_list|,
 name|node
 operator|->
@@ -2830,11 +2818,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tCPU0 (BSP): APIC ID: %u (%#x)\n"
-argument_list|,
-name|node
-operator|->
-name|hwid
+literal|"\t\tCPU0 (BSP): APIC ID: %u\n"
 argument_list|,
 name|node
 operator|->
@@ -2844,17 +2828,13 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\t\tCPU%u (AP%s): APIC ID: %u (%#x)\n"
+literal|"\t\tCPU%u (AP%s): APIC ID: %u\n"
 argument_list|,
 name|node
 operator|->
 name|id
 argument_list|,
 name|hyperthread
-argument_list|,
-name|node
-operator|->
-name|hwid
 argument_list|,
 name|node
 operator|->
