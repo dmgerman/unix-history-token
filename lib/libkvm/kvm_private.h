@@ -246,55 +246,66 @@ name|kvaddr_t
 name|dpcpu_curoff
 decl_stmt|;
 comment|/* dpcpu base of current CPU */
+comment|/* Page table lookup structures. */
+name|uint64_t
+modifier|*
+name|pt_map
+decl_stmt|;
+name|size_t
+name|pt_map_size
+decl_stmt|;
+name|off_t
+name|pt_sparse_off
+decl_stmt|;
+name|uint64_t
+name|pt_sparse_size
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|pt_popcounts
+decl_stmt|;
+name|unsigned
+name|int
+name|pt_page_size
+decl_stmt|;
+name|unsigned
+name|int
+name|pt_word_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Page table hash used by minidump backends to map physical addresses  * to file offsets.  */
+comment|/* Page table lookup constants. */
 end_comment
-
-begin_struct
-struct|struct
-name|hpte
-block|{
-name|struct
-name|hpte
-modifier|*
-name|next
-decl_stmt|;
-name|uint64_t
-name|pa
-decl_stmt|;
-name|off_t
-name|off
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
 directive|define
-name|HPT_SIZE
+name|POPCOUNT_BITS
 value|1024
 end_define
 
-begin_struct
-struct|struct
-name|hpt
-block|{
-name|struct
-name|hpte
-modifier|*
-name|hpt_head
-index|[
-name|HPT_SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|BITS_IN
+parameter_list|(
+name|v
+parameter_list|)
+value|(sizeof(v) * NBBY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POPCOUNTS_IN
+parameter_list|(
+name|v
+parameter_list|)
+value|(POPCOUNT_BITS / BITS_IN(v))
+end_define
 
 begin_comment
 comment|/*  * Functions used internally by kvm, but across kvm modules.  */
@@ -618,23 +629,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|_kvm_hpt_init
+name|int
+name|_kvm_pt_init
 parameter_list|(
 name|kvm_t
-modifier|*
-parameter_list|,
-name|struct
-name|hpt
-modifier|*
-parameter_list|,
-name|void
 modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
 name|off_t
 parameter_list|,
+name|off_t
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -644,24 +650,12 @@ end_function_decl
 
 begin_function_decl
 name|off_t
-name|_kvm_hpt_find
+name|_kvm_pt_find
 parameter_list|(
-name|struct
-name|hpt
+name|kvm_t
 modifier|*
 parameter_list|,
 name|uint64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_kvm_hpt_free
-parameter_list|(
-name|struct
-name|hpt
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
