@@ -1252,12 +1252,16 @@ operator|.
 name|it_value
 argument_list|)
 operator|&&
-name|callout_stop
+name|_callout_stop_safe
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_itcallout
+argument_list|,
+name|CS_EXECUTING
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
