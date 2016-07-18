@@ -307,7 +307,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* 	 * Check that we called signotify() enough.  For 	 * multi-threaded processes, where signal distribution might 	 * change due to other threads changing sigmask, the check is 	 * racy and cannot be performed reliably. 	 */
+comment|/* 	 * Check that we called signotify() enough.  For 	 * multi-threaded processes, where signal distribution might 	 * change due to other threads changing sigmask, the check is 	 * racy and cannot be performed reliably. 	 * If current process is vfork child, indicated by P_PPWAIT, then 	 * issignal() ignores stops, so we block the check to avoid 	 * classifying pending signals. 	 */
 if|if
 condition|(
 name|p
@@ -327,6 +327,19 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_PPWAIT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|KASSERT
 argument_list|(
 operator|!
@@ -354,7 +367,8 @@ name|TDF_ASTPENDING
 operator|)
 argument_list|,
 operator|(
-literal|"failed to set signal flags for ast p %p td %p fl %x"
+literal|"failed to set signal flags for ast p %p "
+literal|"td %p fl %x"
 operator|,
 name|p
 operator|,
@@ -366,6 +380,7 @@ name|td_flags
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|thread_unlock
 argument_list|(
 name|td
@@ -1138,7 +1153,20 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that TDF_NEEDSIGCHK should be re-read from 		 * td_flags, since signal might have been delivered 		 * after we cleared td_flags above.  This is one of 		 * the reason for looping check for AST condition. 		 */
+comment|/* 		 * Note that TDF_NEEDSIGCHK should be re-read from 		 * td_flags, since signal might have been delivered 		 * after we cleared td_flags above.  This is one of 		 * the reason for looping check for AST condition. 		 * See comment in userret() about P_PPWAIT. 		 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_PPWAIT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|KASSERT
 argument_list|(
 operator|!
@@ -1166,7 +1194,8 @@ name|TDF_ASTPENDING
 operator|)
 argument_list|,
 operator|(
-literal|"failed2 to set signal flags for ast p %p td %p fl %x %x"
+literal|"failed2 to set signal flags for ast p %p td %p "
+literal|"fl %x %x"
 operator|,
 name|p
 operator|,
@@ -1180,6 +1209,7 @@ name|td_flags
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|thread_unlock
 argument_list|(
 name|td

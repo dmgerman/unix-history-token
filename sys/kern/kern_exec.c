@@ -3416,6 +3416,12 @@ operator|->
 name|p_pwait
 argument_list|)
 expr_stmt|;
+comment|/* STOPs are no longer ignored, arrange for AST */
+name|signotify
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Implement image setuid/setgid installation. 	 */
 if|if
