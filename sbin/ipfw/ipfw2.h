@@ -463,6 +463,17 @@ block|,
 name|TOK_VLIST
 block|,
 name|TOK_OLIST
+block|,
+name|TOK_STATS
+block|,
+comment|/* NPTv6 tokens */
+name|TOK_NPTV6
+block|,
+name|TOK_INTPREFIX
+block|,
+name|TOK_EXTPREFIX
+block|,
+name|TOK_PREFIXLEN
 block|, }
 enum|;
 end_enum
@@ -1135,6 +1146,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|ipfw_internal_handler
+parameter_list|(
+name|int
+name|ac
+parameter_list|,
+name|char
+modifier|*
+name|av
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_nptv6_handler
 parameter_list|(
 name|int
 name|ac
