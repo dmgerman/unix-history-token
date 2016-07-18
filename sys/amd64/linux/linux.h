@@ -552,45 +552,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* mmap options */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_MAP_SHARED
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_MAP_PRIVATE
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_MAP_FIXED
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_MAP_ANON
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_MAP_GROWSDOWN
-value|0x0100
-end_define
-
-begin_comment
 comment|/*  * stat family of syscalls  */
 end_comment
 
