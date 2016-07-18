@@ -1704,6 +1704,17 @@ begin_comment
 comment|/* Exiting LWP indicator for ptrace() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_VFORK
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* vfork indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
