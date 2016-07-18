@@ -6313,14 +6313,11 @@ argument_list|,
 name|FTAG
 argument_list|)
 expr_stmt|;
-name|VERIFY
-argument_list|(
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,
 name|FTAG
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7867,11 +7864,6 @@ operator|.
 name|dr_data
 argument_list|,
 name|DBUF_IS_L2CACHEABLE
-argument_list|(
-name|db
-argument_list|)
-argument_list|,
-name|DBUF_IS_L2COMPRESSIBLE
 argument_list|(
 name|db
 argument_list|)
@@ -9445,9 +9437,6 @@ expr_stmt|;
 name|dnode_init
 argument_list|()
 expr_stmt|;
-name|dbuf_init
-argument_list|()
-expr_stmt|;
 name|zfetch_init
 argument_list|()
 expr_stmt|;
@@ -9455,6 +9444,9 @@ name|l2arc_init
 argument_list|()
 expr_stmt|;
 name|arc_init
+argument_list|()
+expr_stmt|;
+name|dbuf_init
 argument_list|()
 expr_stmt|;
 block|}
