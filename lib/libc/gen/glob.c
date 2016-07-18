@@ -3397,6 +3397,10 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
+operator|+
+name|MB_LEN_MAX
+operator|-
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -4604,6 +4608,10 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
+operator|+
+name|MB_LEN_MAX
+operator|-
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -4703,6 +4711,10 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
+operator|+
+name|MB_LEN_MAX
+operator|-
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -4790,6 +4802,10 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
+operator|+
+name|MB_LEN_MAX
+operator|-
+literal|1
 index|]
 decl_stmt|;
 if|if
