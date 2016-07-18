@@ -209,6 +209,10 @@ begin_struct
 struct|struct
 name|am335x_pwmss_softc
 block|{
+name|struct
+name|simplebus_softc
+name|sc_simplebus
+decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
