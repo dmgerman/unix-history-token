@@ -971,9 +971,6 @@ name|disk
 modifier|*
 name|dp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|dp
 operator|=
 name|arg
