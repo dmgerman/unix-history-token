@@ -2541,6 +2541,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|nvme_ns_dump
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|,
+name|void
+modifier|*
+name|virt
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Registration functions */
 end_comment
