@@ -4047,6 +4047,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|nc
+operator|->
+name|first_frag_seen
+operator|)
+operator|&&
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
@@ -4055,12 +4061,6 @@ name|nc
 operator|->
 name|reasm
 argument_list|)
-operator|&&
-operator|(
-name|nc
-operator|->
-name|first_frag_seen
-operator|)
 condition|)
 block|{
 comment|/* 					 * Switch to the new guy and 					 * continue 					 */
