@@ -1266,7 +1266,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|new_channel
 argument_list|,
@@ -2304,7 +2304,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|sc
 operator|->
@@ -4421,7 +4421,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* 	 * Since we have already drained, we don't need to busy wait. 	 * The call to close the channel will reset the callback 	 * under the protection of the incoming channel lock. 	 */
-name|hv_vmbus_channel_close
+name|vmbus_chan_close
 argument_list|(
 name|sc
 operator|->
