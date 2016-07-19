@@ -1789,10 +1789,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
-literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-R roundup-size]\n"
-literal|"\t[-s image-size] [-b free-blocks] [-f free-files] [-F mtree-specfile]\n"
-literal|"\t[-xZ] [-N userdb-dir] [-T<timestamp/file>]\n"
+literal|"usage: %s [-xZ] [-B endian] [-b free-blocks] [-d debug-mask]\n"
+literal|"\t[-F mtree-specfile] [-f free-files] [-M minimum-size] [-m maximum-size]\n"
+literal|"\t[-N userdb-dir] [-o fs-options] [-R roundup-size] [-S sector-size]\n"
+literal|"\t[-s image-size] [-T<timestamp/file>] [-t fs-type]\n"
 literal|"\timage-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog
