@@ -190,6 +190,7 @@ comment|/*  * Rune initialization function prototypes.  */
 end_comment
 
 begin_function_decl
+name|__hidden
 name|int
 name|_none_init
 parameter_list|(
@@ -204,6 +205,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
+name|int
+name|_ascii_init
+parameter_list|(
+name|struct
+name|xlocale_ctype
+modifier|*
+parameter_list|,
+name|_RuneLocale
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__hidden
 name|int
 name|_UTF8_init
 parameter_list|(
@@ -218,6 +235,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_EUC_CN_init
 parameter_list|(
@@ -232,6 +250,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_EUC_JP_init
 parameter_list|(
@@ -246,6 +265,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_EUC_KR_init
 parameter_list|(
@@ -260,6 +280,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_EUC_TW_init
 parameter_list|(
@@ -274,6 +295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_GB18030_init
 parameter_list|(
@@ -288,6 +310,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_GB2312_init
 parameter_list|(
@@ -302,6 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_GBK_init
 parameter_list|(
@@ -316,6 +340,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_BIG5_init
 parameter_list|(
@@ -330,22 +355,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__hidden
 name|int
 name|_MSKanji_init
-parameter_list|(
-name|struct
-name|xlocale_ctype
-modifier|*
-parameter_list|,
-name|_RuneLocale
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_ascii_init
 parameter_list|(
 name|struct
 name|xlocale_ctype
