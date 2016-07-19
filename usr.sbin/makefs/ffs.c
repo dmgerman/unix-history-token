@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ffs.c,v 1.44 2009/04/28 22:49:26 joerg Exp $	*/
+comment|/*	$NetBSD: ffs.c,v 1.45 2011/10/09 22:49:26 christos Exp $	*/
 end_comment
 
 begin_comment

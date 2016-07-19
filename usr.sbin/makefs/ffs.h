@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ffs.h,v 1.1 2004/12/20 20:51:42 jmc Exp $	*/
+comment|/*	$NetBSD: ffs.h,v 1.2 2004/12/20 20:51:42 jmc Exp $	*/
 end_comment
 
 begin_comment
