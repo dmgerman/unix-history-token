@@ -1216,6 +1216,19 @@ name|do_ldpc
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * The 11n duration calculation doesn't know about LDPC, 	 * so don't enable it for positioning. 	 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_flags
+operator|&
+name|ATH_BUF_TOA_PROBE
+condition|)
+name|do_ldpc
+operator|=
+literal|0
+expr_stmt|;
 name|do_stbc
 operator|=
 literal|0
@@ -1385,6 +1398,7 @@ name|flags
 operator||=
 name|ATH_RC_CW40_FLAG
 expr_stmt|;
+comment|/* 			 * NOTE: Don't do short-gi for positioning frames. 			 * 			 * For now, the ath_hal and net80211 HT duration 			 * calculation rounds up the 11n data txtime 			 * to the nearest multiple of 3.6 microseconds 			 * and doesn't return the fractional part, so 			 * we are always "out" by some amount. 			 */
 if|if
 condition|(
 name|ni
@@ -1410,7 +1424,18 @@ operator|->
 name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_SHORTGI40
+operator|&&
+operator|(
+name|bf
+operator|->
+name|bf_flags
+operator|&
+name|ATH_BUF_TOA_PROBE
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
 name|rc
 index|[
 name|i
@@ -1420,6 +1445,7 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ni
@@ -1445,7 +1471,18 @@ operator|->
 name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_SHORTGI20
+operator|&&
+operator|(
+name|bf
+operator|->
+name|bf_flags
+operator|&
+name|ATH_BUF_TOA_PROBE
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
 name|rc
 index|[
 name|i
@@ -1455,7 +1492,8 @@ name|flags
 operator||=
 name|ATH_RC_SGI_FLAG
 expr_stmt|;
-comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * enable STBC. 			 */
+block|}
+comment|/* 			 * If we have STBC TX enabled and the receiver 			 * can receive (at least) 1 stream STBC, AND it's 			 * MCS 0-7, AND we have at least two chains enabled, 			 * and we're not doing positioning, enable STBC. 			 */
 if|if
 condition|(
 name|ic
@@ -1486,12 +1524,24 @@ operator|>
 literal|1
 operator|)
 operator|&&
+operator|(
 name|HT_RC_2_STREAMS
 argument_list|(
 name|rate
 argument_list|)
 operator|==
 literal|1
+operator|)
+operator|&&
+operator|(
+name|bf
+operator|->
+name|bf_flags
+operator|&
+name|ATH_BUF_TOA_PROBE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|rc
