@@ -226,6 +226,8 @@ name|RANDOM_PURE_RNDTEST
 block|,
 name|RANDOM_PURE_VIRTIO
 block|,
+name|RANDOM_PURE_BROADCOM
+block|,
 name|ENTROPYSOURCE
 block|}
 enum|;
