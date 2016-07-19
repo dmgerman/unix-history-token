@@ -629,6 +629,9 @@ name|struct
 name|tcphdr
 modifier|*
 name|tcp
+parameter_list|,
+name|uint16_t
+name|kidx
 parameter_list|)
 function_decl|;
 end_function_decl
