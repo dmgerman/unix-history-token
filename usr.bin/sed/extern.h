@@ -103,6 +103,7 @@ name|struct
 name|s_command
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|s_command
 modifier|*
@@ -139,15 +140,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|cu_fgets
 parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
 name|int
 modifier|*
 parameter_list|)
@@ -201,6 +198,7 @@ name|strregerror
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|regex_t
 modifier|*
 parameter_list|)

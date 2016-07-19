@@ -48,6 +48,7 @@ name|u_long
 name|l
 decl_stmt|;
 comment|/* Line number */
+specifier|const
 name|regex_t
 modifier|*
 name|r
@@ -89,6 +90,7 @@ name|int
 name|wfd
 decl_stmt|;
 comment|/* Cached file descriptor */
+specifier|const
 name|regex_t
 modifier|*
 name|re
@@ -191,6 +193,9 @@ modifier|*
 name|t
 decl_stmt|;
 comment|/* Text for : a c i r w */
+name|size_t
+name|tlen
+decl_stmt|;
 union|union
 block|{
 name|struct
