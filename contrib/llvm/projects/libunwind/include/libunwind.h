@@ -650,11 +650,11 @@ name|UNW_X86_EBX
 init|=
 literal|3
 block|,
-name|UNW_X86_EBP
+name|UNW_X86_ESP
 init|=
 literal|4
 block|,
-name|UNW_X86_ESP
+name|UNW_X86_EBP
 init|=
 literal|5
 block|,
