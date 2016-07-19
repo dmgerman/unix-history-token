@@ -2255,7 +2255,7 @@ name|vd_height
 operator|=
 name|MIN
 argument_list|(
-name|VT_FB_DEFAULT_HEIGHT
+name|VT_FB_MAX_HEIGHT
 argument_list|,
 name|info
 operator|->
@@ -2292,7 +2292,7 @@ name|vd_width
 operator|=
 name|MIN
 argument_list|(
-name|VT_FB_DEFAULT_WIDTH
+name|VT_FB_MAX_WIDTH
 argument_list|,
 name|info
 operator|->
