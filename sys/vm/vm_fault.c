@@ -1214,6 +1214,7 @@ literal|"!wired&& VM_FAULT_WIRE"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Try to avoid lock contention on the top-level object through 	 * special-case handling of some types of page faults, specifically, 	 * those that are both (1) mapping an existing page from the top- 	 * level object and (2) not having to mark that object as containing 	 * dirty pages.  Under these conditions, a read lock on the top-level 	 * object suffices, allowing multiple page faults of a similar type to 	 * run in parallel on the same top-level object. 	 */
 if|if
 condition|(
 name|fs
