@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2100,13 +2106,13 @@ decl_stmt|;
 name|nvsp_msg
 name|revoke_packet
 decl_stmt|;
-comment|/*uint8_t				hw_mac_addr[HW_MACADDR_LEN];*/
+comment|/*uint8_t				hw_mac_addr[ETHER_ADDR_LEN];*/
 comment|/* Holds rndis device info */
 name|void
 modifier|*
 name|extension
 decl_stmt|;
-name|hv_bool_uint8_t
+name|uint8_t
 name|destroy
 decl_stmt|;
 comment|/* Negotiated NVSP version */
@@ -2285,7 +2291,7 @@ typedef|typedef
 struct|struct
 name|netvsc_packet_
 block|{
-name|hv_bool_uint8_t
+name|uint8_t
 name|is_data_pkt
 decl_stmt|;
 comment|/* One byte */
@@ -2376,7 +2382,7 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* Assumption unsigned long */
-name|hv_bool_uint8_t
+name|uint8_t
 name|link_state
 decl_stmt|;
 block|}

@@ -3086,7 +3086,7 @@ block|{
 name|uint32_t
 name|size
 init|=
-name|HW_MACADDR_LEN
+name|ETHER_ADDR_LEN
 decl_stmt|;
 return|return
 operator|(
@@ -4755,7 +4755,7 @@ name|rndis_dev
 operator|->
 name|hw_mac_addr
 argument_list|,
-name|HW_MACADDR_LEN
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|hv_rf_query_device_link_status

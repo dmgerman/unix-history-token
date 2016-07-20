@@ -133,13 +133,6 @@ directive|include
 file|<dev/hyperv/include/hyperv_busdma.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|hv_bool_uint8_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -258,13 +251,6 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|HW_MACADDR_LEN
-value|6
-end_define
 
 begin_comment
 comment|/*  * Common defines for Hyper-V ICs  */

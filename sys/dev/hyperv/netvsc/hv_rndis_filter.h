@@ -15,6 +15,18 @@ directive|define
 name|__HV_RNDIS_FILTER_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
 begin_comment
 comment|/*  * Defines  */
 end_comment
@@ -151,7 +163,7 @@ expr_stmt|;
 name|uint8_t
 name|hw_mac_addr
 index|[
-name|HW_MACADDR_LEN
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 block|}
