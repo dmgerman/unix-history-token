@@ -187,6 +187,12 @@ name|hn_softc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|hn_rx_ring
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|hv_rf_on_receive
@@ -196,9 +202,9 @@ modifier|*
 name|net_dev
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|hn_rx_ring
 modifier|*
-name|chan
+name|rxr
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -223,9 +229,14 @@ name|void
 name|hv_rf_channel_rollup
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|hn_rx_ring
 modifier|*
-name|chan
+name|rxr
+parameter_list|,
+name|struct
+name|hn_tx_ring
+modifier|*
+name|txr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -245,6 +256,11 @@ name|additl_info
 parameter_list|,
 name|int
 name|nchan
+parameter_list|,
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -409,19 +409,6 @@ modifier|*
 name|ch_prichan
 decl_stmt|;
 comment|/* owner primary chan */
-comment|/* 	 * Driver private data 	 */
-name|void
-modifier|*
-name|ch_dev_priv1
-decl_stmt|;
-name|void
-modifier|*
-name|ch_dev_priv2
-decl_stmt|;
-name|void
-modifier|*
-name|ch_dev_priv3
-decl_stmt|;
 name|void
 modifier|*
 name|ch_bufring

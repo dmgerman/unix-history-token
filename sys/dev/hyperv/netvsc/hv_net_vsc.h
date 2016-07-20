@@ -2428,6 +2428,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|hn_tx_ring
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|hn_rx_ring
@@ -2436,6 +2442,15 @@ name|struct
 name|ifnet
 modifier|*
 name|hn_ifp
+decl_stmt|;
+name|struct
+name|hn_tx_ring
+modifier|*
+name|hn_txr
+decl_stmt|;
+name|void
+modifier|*
+name|hn_rdbuf
 decl_stmt|;
 name|int
 name|hn_rx_idx
@@ -2808,6 +2823,11 @@ parameter_list|,
 name|void
 modifier|*
 name|additional_info
+parameter_list|,
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2862,6 +2882,11 @@ name|struct
 name|hv_vmbus_channel
 modifier|*
 name|chan
+parameter_list|,
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
 parameter_list|)
 function_decl|;
 end_function_decl
