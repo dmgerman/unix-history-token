@@ -5110,6 +5110,26 @@ parameter_list|)
 value|((entry) * 8 + 2 + (i))
 end_define
 
+begin_define
+define|#
+directive|define
+name|R92C_CAM_CTL6
+parameter_list|(
+name|entry
+parameter_list|)
+value|((entry) * 8 + 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_CAM_CTL7
+parameter_list|(
+name|entry
+parameter_list|)
+value|((entry) * 8 + 7)
+end_define
+
 begin_comment
 comment|/* Bits for R92C_CAM_CTL0(i). */
 end_comment
