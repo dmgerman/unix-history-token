@@ -5296,6 +5296,17 @@ name|ETHER_HDR_LEN
 operator|+
 name|ETHER_CRC_LEN
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|if_getdrvflags
+argument_list|(
+name|ifp
+argument_list|)
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
 name|lem_init_locked
 argument_list|(
 name|adapter

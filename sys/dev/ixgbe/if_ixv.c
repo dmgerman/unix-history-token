@@ -2551,6 +2551,14 @@ name|if_mtu
 operator|+
 name|IXGBE_MTU_HDR
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
 name|ixv_init_locked
 argument_list|(
 name|adapter
