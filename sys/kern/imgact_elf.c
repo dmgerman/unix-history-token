@@ -8684,6 +8684,9 @@ argument_list|,
 operator|(
 literal|"e_shoff: %zu, hdrsize - shdr: %zu"
 operator|,
+operator|(
+name|size_t
+operator|)
 name|ehdr
 operator|->
 name|e_shoff
