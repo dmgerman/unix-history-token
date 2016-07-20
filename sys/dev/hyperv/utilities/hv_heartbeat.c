@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/utilities/hv_utilreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
