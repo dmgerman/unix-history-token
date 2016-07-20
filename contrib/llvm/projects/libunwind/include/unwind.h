@@ -521,6 +521,12 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__aligned__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
