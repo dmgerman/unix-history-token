@@ -1380,10 +1380,10 @@ argument_list|)
 expr_stmt|;
 name|hyperv_guid2str
 argument_list|(
-operator|&
+name|vmbus_chan_guid_inst
+argument_list|(
 name|chan
-operator|->
-name|ch_guid_inst
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -2809,6 +2809,7 @@ name|uint8_t
 modifier|*
 name|kvp_buf
 decl_stmt|;
+name|struct
 name|hv_vmbus_channel
 modifier|*
 name|channel

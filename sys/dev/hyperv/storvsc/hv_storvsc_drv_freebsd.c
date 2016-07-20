@@ -3517,14 +3517,15 @@ literal|"cpu%d -> chan%u\n"
 argument_list|,
 name|cpu
 argument_list|,
+name|vmbus_chan_id
+argument_list|(
 name|sc
 operator|->
 name|hs_cpu2chan
 index|[
 name|cpu
 index|]
-operator|->
-name|ch_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
