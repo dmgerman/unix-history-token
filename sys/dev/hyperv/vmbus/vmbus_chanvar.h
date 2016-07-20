@@ -152,10 +152,12 @@ name|ch_id
 decl_stmt|;
 comment|/* channel id */
 comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
-name|int
-name|ch_montrig_idx
+specifier|volatile
+name|uint32_t
+modifier|*
+name|ch_montrig
 decl_stmt|;
-comment|/* MNF trig index */
+comment|/* MNF trigger */
 name|uint32_t
 name|ch_montrig_mask
 decl_stmt|;
