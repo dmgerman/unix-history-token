@@ -971,6 +971,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ktritimerval
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|ktrstruct("itimerval", (s), sizeof(struct itimerval))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ktrsockaddr
 parameter_list|(
 name|s
