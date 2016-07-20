@@ -4416,7 +4416,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|device_t
 name|parent
@@ -4541,7 +4541,7 @@ name|device_delete_child
 argument_list|(
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 operator|->
 name|vmbus_dev
 argument_list|,

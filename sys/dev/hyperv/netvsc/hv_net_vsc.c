@@ -92,8 +92,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|hv_chan_rdbuf
-value|hv_chan_priv3
+name|ch_dev_rdbuf
+value|ch_dev_priv3
 end_define
 
 begin_expr_stmt
@@ -2380,7 +2380,7 @@ parameter_list|)
 block|{
 name|chan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 operator|=
 name|malloc
 argument_list|(
@@ -2479,7 +2479,7 @@ argument_list|)
 expr_stmt|;
 name|chan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 operator|=
 name|malloc
 argument_list|(
@@ -2521,7 +2521,7 @@ name|free
 argument_list|(
 name|chan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 argument_list|,
 name|M_NETVSC
 argument_list|)
@@ -2559,7 +2559,7 @@ name|free
 argument_list|(
 name|chan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 argument_list|,
 name|M_NETVSC
 argument_list|)
@@ -2641,7 +2641,7 @@ name|sc
 operator|->
 name|hn_prichan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 argument_list|,
 name|M_NETVSC
 argument_list|)
@@ -3716,7 +3716,7 @@ name|buffer
 operator|=
 name|chan
 operator|->
-name|hv_chan_rdbuf
+name|ch_dev_rdbuf
 expr_stmt|;
 do|do
 block|{

@@ -336,15 +336,15 @@ end_include
 begin_define
 define|#
 directive|define
-name|hv_chan_rxr
-value|hv_chan_priv1
+name|ch_dev_rxr
+value|ch_dev_priv1
 end_define
 
 begin_define
 define|#
 directive|define
-name|hv_chan_txr
-value|hv_chan_priv2
+name|ch_dev_txr
+value|ch_dev_priv2
 end_define
 
 begin_comment
@@ -3863,7 +3863,7 @@ name|txr
 init|=
 name|chan
 operator|->
-name|hv_chan_txr
+name|ch_dev_txr
 decl_stmt|;
 if|#
 directive|if
@@ -3883,7 +3883,7 @@ name|rxr
 init|=
 name|chan
 operator|->
-name|hv_chan_rxr
+name|ch_dev_rxr
 decl_stmt|;
 name|tcp_lro_flush_all
 argument_list|(
@@ -5902,7 +5902,7 @@ name|rxr
 init|=
 name|chan
 operator|->
-name|hv_chan_rxr
+name|ch_dev_rxr
 decl_stmt|;
 name|struct
 name|ifnet
@@ -13783,7 +13783,7 @@ name|HN_RX_FLAG_ATTACHED
 expr_stmt|;
 name|chan
 operator|->
-name|hv_chan_rxr
+name|ch_dev_rxr
 operator|=
 name|rxr
 expr_stmt|;
@@ -13857,7 +13857,7 @@ name|HN_TX_FLAG_ATTACHED
 expr_stmt|;
 name|chan
 operator|->
-name|hv_chan_txr
+name|ch_dev_txr
 operator|=
 name|txr
 expr_stmt|;

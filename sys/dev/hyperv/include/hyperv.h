@@ -310,7 +310,7 @@ decl_stmt|;
 name|struct
 name|vmbus_softc
 modifier|*
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|uint32_t
 name|ch_flags
@@ -329,13 +329,13 @@ name|uint32_t
 name|ch_montrig_mask
 decl_stmt|;
 comment|/* MNF trig mask */
-comment|/* 	 * send to parent 	 */
+comment|/* 	 * TX bufring; at the beginning of ch_bufring. 	 */
 name|hv_vmbus_ring_buffer_info
-name|outbound
+name|ch_txbr
 decl_stmt|;
-comment|/* 	 * receive from parent 	 */
+comment|/* 	 * RX bufring; immediately following ch_txbr. 	 */
 name|hv_vmbus_ring_buffer_info
-name|inbound
+name|ch_rxbr
 decl_stmt|;
 name|struct
 name|taskqueue
@@ -402,15 +402,15 @@ comment|/* owner primary chan */
 comment|/* 	 * Driver private data 	 */
 name|void
 modifier|*
-name|hv_chan_priv1
+name|ch_dev_priv1
 decl_stmt|;
 name|void
 modifier|*
-name|hv_chan_priv2
+name|ch_dev_priv2
 decl_stmt|;
 name|void
 modifier|*
-name|hv_chan_priv3
+name|ch_dev_priv3
 decl_stmt|;
 name|void
 modifier|*

@@ -296,7 +296,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|uint32_t
 name|chanid
@@ -788,7 +788,7 @@ argument_list|,
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 literal|"inbound ring buffer stats"
 argument_list|)
@@ -838,7 +838,7 @@ argument_list|,
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|,
 literal|"outbound ring buffer stats"
 argument_list|)
@@ -885,7 +885,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 specifier|const
 name|struct
@@ -1023,7 +1023,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 argument_list|,
 name|event_tq
 argument_list|,
@@ -1135,7 +1135,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|,
 name|br
 argument_list|,
@@ -1148,7 +1148,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 name|br
 operator|+
@@ -1539,7 +1539,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|struct
 name|vmbus_msghc
@@ -2094,7 +2094,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|struct
 name|vmbus_msghc
@@ -2254,7 +2254,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|struct
 name|vmbus_msghc
@@ -2466,7 +2466,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|)
 expr_stmt|;
 name|hv_ring_buffer_cleanup
@@ -2474,7 +2474,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2792,7 +2792,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|,
 name|iov
 argument_list|,
@@ -3065,7 +3065,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|,
 name|iov
 argument_list|,
@@ -3346,7 +3346,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|outbound
+name|ch_txbr
 argument_list|,
 name|iov
 argument_list|,
@@ -3414,7 +3414,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 operator|&
 name|pkt
@@ -3490,7 +3490,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 name|data
 argument_list|,
@@ -3550,7 +3550,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 operator|&
 name|pkt
@@ -3608,7 +3608,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|,
 name|pkt0
 argument_list|,
@@ -3691,7 +3691,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3709,7 +3709,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|)
 expr_stmt|;
 block|}
@@ -3894,7 +3894,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|inbound
+name|ch_rxbr
 argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
@@ -4244,7 +4244,7 @@ return|;
 block|}
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 operator|=
 name|sc
 expr_stmt|;
@@ -4352,7 +4352,7 @@ name|sc
 init|=
 name|newchan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|struct
 name|hv_vmbus_channel
@@ -4740,7 +4740,7 @@ if|if
 condition|(
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 operator|->
 name|vmbus_version
 operator|==
@@ -4748,7 +4748,7 @@ name|VMBUS_VERSION_WS2008
 operator|||
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 operator|->
 name|vmbus_version
 operator|==
@@ -4775,7 +4775,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 argument_list|,
 name|vcpuid
 argument_list|,
@@ -5297,7 +5297,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|struct
 name|hv_vmbus_channel
@@ -5695,7 +5695,7 @@ name|VMBUS_PCPU_GET
 argument_list|(
 name|prichan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 argument_list|,
 name|vcpuid
 argument_list|,

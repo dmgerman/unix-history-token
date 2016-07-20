@@ -1255,7 +1255,7 @@ argument_list|)
 expr_stmt|;
 name|new_channel
 operator|->
-name|hv_chan_priv1
+name|ch_dev_priv1
 operator|=
 name|sc
 expr_stmt|;
@@ -2286,7 +2286,7 @@ name|sc
 operator|->
 name|hs_chan
 operator|->
-name|hv_chan_priv1
+name|ch_dev_priv1
 operator|==
 name|sc
 argument_list|,
@@ -3091,7 +3091,7 @@ name|sc
 init|=
 name|channel
 operator|->
-name|hv_chan_priv1
+name|ch_dev_priv1
 decl_stmt|;
 name|uint32_t
 name|bytes_recvd
@@ -3640,7 +3640,7 @@ name|sc
 operator|->
 name|hs_chan
 operator|->
-name|hv_chan_priv1
+name|ch_dev_priv1
 operator|=
 name|sc
 expr_stmt|;
