@@ -2099,7 +2099,7 @@ if|if
 condition|(
 name|n
 operator|>
-literal|1
+literal|0
 condition|)
 return|return
 operator|(
