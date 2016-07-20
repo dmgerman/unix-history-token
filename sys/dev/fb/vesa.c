@@ -599,6 +599,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|vesa_late_load
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|video_switch_t
@@ -5685,7 +5696,7 @@ condition|)
 block|{
 name|vga_sub_configure
 operator|=
-name|vesa_configure
+name|vesa_late_load
 expr_stmt|;
 return|return
 operator|(
@@ -9948,6 +9959,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return
+operator|(
+name|vesa_late_load
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * To be called from the vga_sub_configure hook in case the VGA adapter is  * not found when VESA is loaded.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vesa_late_load
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+block|{
 name|int
 name|error
 decl_stmt|;
@@ -9981,7 +10016,7 @@ name|error
 operator|=
 name|vesa_configure
 argument_list|(
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
