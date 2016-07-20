@@ -260,7 +260,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt
@@ -414,9 +414,6 @@ name|vm_cnt
 operator|.
 name|v_cache_count
 operator|<
-operator|(
-name|u_int
-operator|)
 name|vm_pageout_wakeup_thresh
 operator|)
 return|;
