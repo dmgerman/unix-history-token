@@ -92,6 +92,18 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<sys/cred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cddl/dev/dtrace/dtrace_cddl.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|u_int
@@ -241,9 +253,6 @@ name|mode
 init|=
 name|SIZE32
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
 name|mode
 operator|=
 operator|(
@@ -256,8 +265,6 @@ name|SIZE64
 else|:
 name|SIZE32
 expr_stmt|;
-endif|#
-directive|endif
 name|x
 operator|.
 name|d86_data
