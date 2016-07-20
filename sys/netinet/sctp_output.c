@@ -60274,17 +60274,6 @@ argument_list|,
 name|SCTP_MIN_OVERHEAD
 argument_list|)
 expr_stmt|;
-name|sctp_add_stream_reset_result
-argument_list|(
-name|chk
-argument_list|,
-name|ent
-operator|->
-name|seq
-argument_list|,
-name|response
-argument_list|)
-expr_stmt|;
 comment|/* setup chunk parameters */
 name|chk
 operator|->
@@ -60389,6 +60378,17 @@ operator|=
 name|chk
 operator|->
 name|send_size
+expr_stmt|;
+name|sctp_add_stream_reset_result
+argument_list|(
+name|chk
+argument_list|,
+name|ent
+operator|->
+name|seq
+argument_list|,
+name|response
+argument_list|)
 expr_stmt|;
 comment|/* insert the chunk for sending */
 name|TAILQ_INSERT_TAIL
