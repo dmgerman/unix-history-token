@@ -28,6 +28,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|aw_sid_get_rootkey
+parameter_list|(
+name|u_char
+modifier|*
+name|out
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
