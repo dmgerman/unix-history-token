@@ -142,6 +142,11 @@ specifier|static
 name|void
 name|hv_shutdown_cb
 parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|channel
+parameter_list|,
 name|void
 modifier|*
 name|context
@@ -150,10 +155,6 @@ block|{
 name|uint8_t
 modifier|*
 name|buf
-decl_stmt|;
-name|hv_vmbus_channel
-modifier|*
-name|channel
 decl_stmt|;
 name|uint8_t
 name|execute_shutdown
@@ -194,12 +195,6 @@ operator|=
 name|softc
 operator|->
 name|receive_buffer
-expr_stmt|;
-name|channel
-operator|=
-name|softc
-operator|->
-name|channel
 expr_stmt|;
 name|recv_len
 operator|=

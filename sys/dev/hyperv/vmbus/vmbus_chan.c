@@ -3681,6 +3681,8 @@ name|left
 decl_stmt|;
 name|cb
 argument_list|(
+name|chan
+argument_list|,
 name|cbarg
 argument_list|)
 expr_stmt|;
@@ -3741,6 +3743,8 @@ name|chan
 operator|->
 name|ch_cb
 argument_list|(
+name|chan
+argument_list|,
 name|chan
 operator|->
 name|ch_cbarg

@@ -136,6 +136,11 @@ specifier|static
 name|void
 name|hv_heartbeat_cb
 parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|channel
+parameter_list|,
 name|void
 modifier|*
 name|context
@@ -144,10 +149,6 @@ block|{
 name|uint8_t
 modifier|*
 name|buf
-decl_stmt|;
-name|hv_vmbus_channel
-modifier|*
-name|channel
 decl_stmt|;
 name|int
 name|recvlen
@@ -185,12 +186,6 @@ operator|=
 name|softc
 operator|->
 name|receive_buffer
-expr_stmt|;
-name|channel
-operator|=
-name|softc
-operator|->
-name|channel
 expr_stmt|;
 name|recvlen
 operator|=
