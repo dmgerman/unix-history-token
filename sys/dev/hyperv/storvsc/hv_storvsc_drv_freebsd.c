@@ -471,7 +471,7 @@ struct|struct
 name|storvsc_softc
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hs_chan
 decl_stmt|;
@@ -532,7 +532,7 @@ name|device_t
 name|hs_dev
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hs_cpu2chan
 index|[
@@ -1003,7 +1003,7 @@ name|void
 name|hv_storvsc_on_channel_callback
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -1231,7 +1231,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|new_channel
 parameter_list|)
@@ -1321,7 +1321,7 @@ name|max_chans
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|subchan
@@ -2548,7 +2548,7 @@ operator|->
 name|vstor_packet
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|outgoing_channel
 init|=
@@ -3051,7 +3051,7 @@ name|void
 name|hv_storvsc_on_channel_callback
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|channel
 parameter_list|,

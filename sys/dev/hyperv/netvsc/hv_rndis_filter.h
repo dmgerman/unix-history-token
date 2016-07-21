@@ -177,12 +177,6 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|hn_softc
 struct_decl|;
 end_struct_decl

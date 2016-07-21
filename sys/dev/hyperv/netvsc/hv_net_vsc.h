@@ -2143,7 +2143,7 @@ end_typedef
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 struct_decl|;
 end_struct_decl
 
@@ -2156,7 +2156,7 @@ name|pfn_on_send_rx_completion
 function_decl|)
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 name|void
@@ -2617,7 +2617,7 @@ modifier|*
 name|hn_sc
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hn_chan
 decl_stmt|;
@@ -2732,7 +2732,7 @@ modifier|*
 name|net_dev
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hn_prichan
 decl_stmt|;
@@ -2852,7 +2852,7 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2879,7 +2879,7 @@ name|void
 name|hv_nv_subchan_attach
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,

@@ -1644,7 +1644,7 @@ name|hn_softc
 modifier|*
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1660,7 +1660,7 @@ name|hn_softc
 modifier|*
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3720,7 +3720,7 @@ name|void
 name|hn_tx_done
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -13725,7 +13725,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -13931,7 +13931,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -13971,7 +13971,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|subchans
@@ -14018,7 +14018,7 @@ name|i
 control|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|subchan
 init|=

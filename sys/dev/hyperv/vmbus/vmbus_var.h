@@ -234,7 +234,7 @@ name|vmbus_rx_evtflags
 decl_stmt|;
 comment|/* compat evtflgs from host */
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|vmbus_chmap
@@ -312,7 +312,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|hv_vmbus_channel
+argument|vmbus_channel
 argument_list|)
 name|vmbus_prichans
 expr_stmt|;
@@ -415,7 +415,7 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 struct_decl|;
 end_struct_decl
 
@@ -453,7 +453,7 @@ name|int
 name|vmbus_add_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -464,7 +464,7 @@ name|int
 name|vmbus_delete_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;

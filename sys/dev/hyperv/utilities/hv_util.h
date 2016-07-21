@@ -32,7 +32,7 @@ name|callback
 function_decl|)
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 name|void

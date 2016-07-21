@@ -136,7 +136,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -273,7 +273,7 @@ name|vmbus_chan_signal_tx
 parameter_list|(
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -330,7 +330,7 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -375,7 +375,7 @@ name|void
 name|vmbus_chan_sysctl_create
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -801,7 +801,7 @@ name|int
 name|vmbus_chan_open
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -1466,7 +1466,7 @@ name|int
 name|vmbus_chan_gpadl_connect
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2028,7 +2028,7 @@ name|int
 name|vmbus_chan_gpadl_disconnect
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2191,7 +2191,7 @@ name|void
 name|vmbus_chan_close_internal
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -2466,7 +2466,7 @@ name|void
 name|vmbus_chan_close
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -2501,7 +2501,7 @@ literal|0
 condition|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|subchan
@@ -2561,7 +2561,7 @@ name|int
 name|vmbus_chan_send
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2774,7 +2774,7 @@ name|int
 name|vmbus_chan_send_sglist
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3047,7 +3047,7 @@ name|int
 name|vmbus_chan_send_prplist
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3328,7 +3328,7 @@ name|int
 name|vmbus_chan_recv
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3469,7 +3469,7 @@ name|int
 name|vmbus_chan_recv_pkt
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3597,7 +3597,7 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -3682,7 +3682,7 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -3792,7 +3792,7 @@ literal|0
 condition|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -3996,7 +3996,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4101,7 +4101,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|vmbus_chan_alloc
 parameter_list|(
@@ -4112,7 +4112,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -4249,7 +4249,7 @@ name|void
 name|vmbus_chan_free
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4293,7 +4293,7 @@ name|int
 name|vmbus_chan_add
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|newchan
 parameter_list|)
@@ -4308,7 +4308,7 @@ operator|->
 name|ch_vmbus
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|prichan
 decl_stmt|;
@@ -4664,7 +4664,7 @@ name|void
 name|vmbus_chan_cpu_set
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -4766,7 +4766,7 @@ name|void
 name|vmbus_chan_cpu_rr
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4806,7 +4806,7 @@ name|void
 name|vmbus_chan_cpu_default
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4846,7 +4846,7 @@ modifier|*
 name|offer
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -5149,7 +5149,7 @@ modifier|*
 name|note
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -5265,7 +5265,7 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -5299,7 +5299,7 @@ operator|->
 name|ch_vmbus
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|pri_chan
 init|=
@@ -5519,7 +5519,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -5608,7 +5608,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 operator|*
 argument_list|)
 operator|*
@@ -5632,12 +5632,12 @@ end_comment
 
 begin_function
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|vmbus_chan_cpu2chan
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|prichan
 parameter_list|,
@@ -5646,7 +5646,7 @@ name|cpu
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|sel
 decl_stmt|,
@@ -5826,13 +5826,13 @@ end_function
 
 begin_function
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|vmbus_subchan_get
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|pri_chan
 parameter_list|,
@@ -5841,7 +5841,7 @@ name|subchan_cnt
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|ret
@@ -5861,7 +5861,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 operator|*
 argument_list|)
 argument_list|,
@@ -5970,7 +5970,7 @@ name|void
 name|vmbus_subchan_rel
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|subchan
@@ -5995,7 +5995,7 @@ name|void
 name|vmbus_subchan_drain
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|pri_chan
 parameter_list|)
@@ -6122,7 +6122,7 @@ name|void
 name|vmbus_chan_set_readbatch
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6158,7 +6158,7 @@ name|vmbus_chan_id
 parameter_list|(
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -6177,7 +6177,7 @@ name|vmbus_chan_subidx
 parameter_list|(
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -6196,7 +6196,7 @@ name|vmbus_chan_is_primary
 parameter_list|(
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -6227,7 +6227,7 @@ name|vmbus_chan_guid_inst
 parameter_list|(
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)

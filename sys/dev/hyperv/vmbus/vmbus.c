@@ -4294,7 +4294,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -4404,7 +4404,7 @@ name|int
 name|vmbus_add_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4506,7 +4506,7 @@ name|int
 name|vmbus_delete_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4677,7 +4677,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -4888,7 +4888,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 operator|*
 argument_list|)
 operator|*

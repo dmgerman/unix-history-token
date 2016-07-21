@@ -130,10 +130,9 @@ name|hv_vmbus_ring_buffer_info
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 block|{
 comment|/* 	 * NOTE: 	 * Fields before ch_txbr are only accessed on this channel's 	 * target CPU. 	 */
 name|uint32_t
@@ -232,7 +231,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|hv_vmbus_channel
+argument|vmbus_channel
 argument_list|)
 name|ch_subchans
 expr_stmt|;
@@ -242,13 +241,13 @@ decl_stmt|;
 comment|/* If this is a sub-channel */
 name|TAILQ_ENTRY
 argument_list|(
-argument|hv_vmbus_channel
+argument|vmbus_channel
 argument_list|)
 name|ch_sublink
 expr_stmt|;
 comment|/* sub-channel link */
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|ch_prichan
 decl_stmt|;
@@ -271,7 +270,7 @@ name|ch_detach_task
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|hv_vmbus_channel
+argument|vmbus_channel
 argument_list|)
 name|ch_prilink
 expr_stmt|;
@@ -299,12 +298,12 @@ name|sysctl_ctx_list
 name|ch_sysctl_ctx
 decl_stmt|;
 block|}
-name|hv_vmbus_channel
 name|__aligned
-typedef|(
+argument_list|(
 name|CACHE_LINE_SIZE
-typedef|);
-end_typedef
+argument_list|)
+struct|;
+end_struct
 
 begin_define
 define|#

@@ -1360,7 +1360,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -2810,7 +2810,7 @@ modifier|*
 name|kvp_buf
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|channel
 decl_stmt|;
@@ -3178,7 +3178,7 @@ name|void
 name|hv_kvp_callback
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 name|__unused

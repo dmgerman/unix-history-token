@@ -268,7 +268,7 @@ modifier|*
 name|softc
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;

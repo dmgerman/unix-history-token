@@ -107,7 +107,7 @@ name|void
 name|hv_nv_on_channel_callback
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -190,7 +190,7 @@ modifier|*
 name|net_dev
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 specifier|const
@@ -208,7 +208,7 @@ name|void
 name|hv_nv_on_receive_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -236,7 +236,7 @@ modifier|*
 name|rxr
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2367,7 +2367,7 @@ name|void
 name|hv_nv_subchan_attach
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2452,7 +2452,7 @@ name|rxr
 parameter_list|)
 block|{
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -2697,7 +2697,7 @@ modifier|*
 name|net_dev
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2950,7 +2950,7 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3134,7 +3134,7 @@ modifier|*
 name|rxr
 parameter_list|,
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3365,7 +3365,7 @@ name|void
 name|hv_nv_on_receive_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3661,7 +3661,7 @@ name|void
 name|hv_nv_on_channel_callback
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,

@@ -385,7 +385,7 @@ name|void
 name|hv_rf_on_send_request_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 name|void
@@ -401,7 +401,7 @@ name|void
 name|hv_rf_on_send_request_halt_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 name|void
@@ -5255,7 +5255,7 @@ name|void
 name|hv_rf_on_send_request_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 name|__unused
@@ -5278,7 +5278,7 @@ name|void
 name|hv_rf_on_send_request_halt_completion
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 name|__unused

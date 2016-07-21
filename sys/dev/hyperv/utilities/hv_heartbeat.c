@@ -137,7 +137,7 @@ name|void
 name|hv_heartbeat_cb
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|channel
 parameter_list|,
