@@ -135,48 +135,11 @@ typedef|typedef
 struct|struct
 name|hv_vmbus_channel
 block|{
-name|device_t
-name|ch_dev
-decl_stmt|;
-name|struct
-name|vmbus_softc
-modifier|*
-name|ch_vmbus
-decl_stmt|;
+comment|/* 	 * NOTE: 	 * Fields before ch_txbr are only accessed on this channel's 	 * target CPU. 	 */
 name|uint32_t
 name|ch_flags
 decl_stmt|;
 comment|/* VMBUS_CHAN_FLAG_ */
-name|uint32_t
-name|ch_id
-decl_stmt|;
-comment|/* channel id */
-comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_montrig. 	 * Save it here for easy access. 	 */
-specifier|volatile
-name|uint32_t
-modifier|*
-name|ch_montrig
-decl_stmt|;
-comment|/* MNF trigger loc. */
-name|uint32_t
-name|ch_montrig_mask
-decl_stmt|;
-comment|/* MNF trig mask */
-comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_chanid. 	 * Save it here for easy access. 	 */
-specifier|volatile
-name|u_long
-modifier|*
-name|ch_evtflag
-decl_stmt|;
-comment|/* event flag loc. */
-name|u_long
-name|ch_evtflag_mask
-decl_stmt|;
-comment|/* event flag */
-comment|/* 	 * TX bufring; at the beginning of ch_bufring. 	 */
-name|hv_vmbus_ring_buffer_info
-name|ch_txbr
-decl_stmt|;
 comment|/* 	 * RX bufring; immediately following ch_txbr. 	 */
 name|hv_vmbus_ring_buffer_info
 name|ch_rxbr
@@ -197,6 +160,41 @@ name|void
 modifier|*
 name|ch_cbarg
 decl_stmt|;
+comment|/* 	 * TX bufring; at the beginning of ch_bufring. 	 * 	 * NOTE: 	 * Put TX bufring and the following MNF/evtflag to a new 	 * cacheline, since they will be accessed on all CPUs by 	 * locking ch_txbr first. 	 * 	 * XXX 	 * TX bufring and following MNF/evtflags do _not_ fit in 	 * one 64B cacheline. 	 */
+name|hv_vmbus_ring_buffer_info
+name|ch_txbr
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|ch_txflags
+decl_stmt|;
+comment|/* VMBUS_CHAN_TXF_ */
+comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_montrig. 	 * Save it here for easy access. 	 */
+name|uint32_t
+name|ch_montrig_mask
+decl_stmt|;
+comment|/* MNF trig mask */
+specifier|volatile
+name|uint32_t
+modifier|*
+name|ch_montrig
+decl_stmt|;
+comment|/* MNF trigger loc. */
+comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_chanid. 	 * Save it here for easy access. 	 */
+name|u_long
+name|ch_evtflag_mask
+decl_stmt|;
+comment|/* event flag */
+specifier|volatile
+name|u_long
+modifier|*
+name|ch_evtflag
+decl_stmt|;
+comment|/* event flag loc. */
+comment|/* 	 * Rarely used fields. 	 */
 name|struct
 name|hyperv_mon_param
 modifier|*
@@ -205,6 +203,18 @@ decl_stmt|;
 name|struct
 name|hyperv_dma
 name|ch_monprm_dma
+decl_stmt|;
+name|uint32_t
+name|ch_id
+decl_stmt|;
+comment|/* channel id */
+name|device_t
+name|ch_dev
+decl_stmt|;
+name|struct
+name|vmbus_softc
+modifier|*
+name|ch_vmbus
 decl_stmt|;
 name|int
 name|ch_cpuid
@@ -290,7 +300,10 @@ name|ch_sysctl_ctx
 decl_stmt|;
 block|}
 name|hv_vmbus_channel
-typedef|;
+name|__aligned
+typedef|(
+name|CACHE_LINE_SIZE
+typedef|);
 end_typedef
 
 begin_define
@@ -303,13 +316,6 @@ parameter_list|)
 value|((chan)->ch_subidx == 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VMBUS_CHAN_FLAG_HASMNF
-value|0x0001
-end_define
-
 begin_comment
 comment|/*  * If this flag is set, this channel's interrupt will be masked in ISR,  * and the RX bufring will be drained before this channel's interrupt is  * unmasked.  *  * This flag is turned on by default.  Drivers can turn it off according  * to their own requirement.  */
 end_comment
@@ -319,6 +325,13 @@ define|#
 directive|define
 name|VMBUS_CHAN_FLAG_BATCHREAD
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_TXF_HASMNF
+value|0x0001
 end_define
 
 begin_define

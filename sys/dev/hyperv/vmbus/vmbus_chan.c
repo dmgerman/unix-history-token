@@ -293,9 +293,9 @@ if|if
 condition|(
 name|chan
 operator|->
-name|ch_flags
+name|ch_txflags
 operator|&
-name|VMBUS_CHAN_FLAG_HASMNF
+name|VMBUS_CHAN_TXF_HASMNF
 condition|)
 name|atomic_set_int
 argument_list|(
@@ -345,9 +345,9 @@ if|if
 condition|(
 name|chan
 operator|->
-name|ch_flags
+name|ch_txflags
 operator|&
-name|VMBUS_CHAN_FLAG_HASMNF
+name|VMBUS_CHAN_TXF_HASMNF
 condition|)
 name|mnf
 operator|=
@@ -4974,9 +4974,9 @@ decl_stmt|;
 comment|/* 		 * Setup MNF stuffs. 		 */
 name|chan
 operator|->
-name|ch_flags
+name|ch_txflags
 operator||=
-name|VMBUS_CHAN_FLAG_HASMNF
+name|VMBUS_CHAN_TXF_HASMNF
 expr_stmt|;
 name|trig_idx
 operator|=
