@@ -788,6 +788,23 @@ literal|128
 block|,
 name|FL_ERASE_4K
 block|}
+block|,
+comment|/* GigaDevice */
+block|{
+literal|"gd25q64"
+block|,
+literal|0xc8
+block|,
+literal|0x4017
+block|,
+literal|64
+operator|*
+literal|1024
+block|,
+literal|128
+block|,
+name|FL_ERASE_4K
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
