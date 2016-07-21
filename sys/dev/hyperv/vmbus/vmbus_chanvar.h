@@ -151,17 +151,28 @@ name|uint32_t
 name|ch_id
 decl_stmt|;
 comment|/* channel id */
-comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
+comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_montrig. 	 * Save it here for easy access. 	 */
 specifier|volatile
 name|uint32_t
 modifier|*
 name|ch_montrig
 decl_stmt|;
-comment|/* MNF trigger */
+comment|/* MNF trigger loc. */
 name|uint32_t
 name|ch_montrig_mask
 decl_stmt|;
 comment|/* MNF trig mask */
+comment|/* 	 * These are based on the vmbus_chanmsg_choffer.chm_chanid. 	 * Save it here for easy access. 	 */
+specifier|volatile
+name|u_long
+modifier|*
+name|ch_evtflag
+decl_stmt|;
+comment|/* event flag loc. */
+name|u_long
+name|ch_evtflag_mask
+decl_stmt|;
+comment|/* event flag */
 comment|/* 	 * TX bufring; at the beginning of ch_bufring. 	 */
 name|hv_vmbus_ring_buffer_info
 name|ch_txbr
