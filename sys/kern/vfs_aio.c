@@ -210,6 +210,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -473,6 +479,37 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Permit asynchronous IO on all file types, not just known-safe types"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|unsafe_warningcnt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs_aio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unsafe_warningcnt
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|unsafe_warningcnt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Warnings that will be triggered upon failed IO requests on unsafe files"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8279,11 +8316,21 @@ operator|||
 name|enable_aio_unsafe
 operator|)
 condition|)
+block|{
+name|counted_warning
+argument_list|(
+operator|&
+name|unsafe_warningcnt
+argument_list|,
+literal|"is attempting to use unsafe AIO requests"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|opcode
