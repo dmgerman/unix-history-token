@@ -421,7 +421,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|each_writable_segment
+name|each_dumpable_segment
 parameter_list|(
 name|vm_map_entry_t
 parameter_list|,
@@ -1167,7 +1167,7 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-name|each_writable_segment
+name|each_dumpable_segment
 argument_list|(
 name|map
 argument_list|,
@@ -1601,7 +1601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A callback for each_writable_segment() to write out the segment's  * program header entry.  */
+comment|/*  * A callback for each_dumpable_segment() to write out the segment's  * program header entry.  */
 end_comment
 
 begin_function
@@ -1763,7 +1763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A callback for each_writable_segment() to gather information about  * the number of segments and their total size.  */
+comment|/*  * A callback for each_dumpable_segment() to gather information about  * the number of segments and their total size.  */
 end_comment
 
 begin_function
@@ -1818,7 +1818,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|each_writable_segment
+name|each_dumpable_segment
 parameter_list|(
 name|vm_map_entry_t
 name|map
@@ -2837,7 +2837,7 @@ name|offset
 operator|=
 name|segoff
 expr_stmt|;
-name|each_writable_segment
+name|each_dumpable_segment
 argument_list|(
 name|map
 argument_list|,
