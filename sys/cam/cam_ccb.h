@@ -897,6 +897,16 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|XPORT_IS_NVME
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == XPORT_NVME)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XPORT_IS_ATA
 parameter_list|(
 name|t
@@ -911,7 +921,7 @@ name|XPORT_IS_SCSI
 parameter_list|(
 name|t
 parameter_list|)
-value|((t) != XPORT_UNKNOWN&& \ 				 (t) != XPORT_UNSPECIFIED&& \ 				 !XPORT_IS_ATA(t))
+value|((t) != XPORT_UNKNOWN&& \ 				 (t) != XPORT_UNSPECIFIED&& \ 				 !XPORT_IS_ATA(t)&& !XPORT_IS_NVME(t))
 end_define
 
 begin_define
