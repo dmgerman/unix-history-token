@@ -6059,6 +6059,23 @@ operator|->
 name|c_arg
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For not scheduled and not executing callout return 		 * negative value. 		 */
+if|if
+condition|(
+name|cc_exec_curr
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|!=
+name|c
+condition|)
+name|cancelled
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
