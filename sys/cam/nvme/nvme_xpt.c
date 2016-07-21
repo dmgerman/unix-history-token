@@ -646,13 +646,7 @@ specifier|static
 name|void
 name|nvme_probe_periph_init
 parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"nvme cam probe device init\n"
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_function
@@ -1250,21 +1244,13 @@ name|start_ccb
 argument_list|)
 expr_stmt|;
 block|}
-comment|// XXX not sure I need this
-comment|// XXX unlike other XPTs, we never freeze the queue since we have a super-simple
-comment|// XXX state machine
-comment|/* Drop freeze taken due to CAM_DEV_QFREEZE flag set. -- did we really do this? */
-comment|//	cam_release_devq(path, 0, 0, 0, FALSE);
 name|cam_periph_invalidate
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|cam_periph_release_locked
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
+comment|/* Can't release periph since we hit a (possibly bogus) assertion */
+comment|//	cam_periph_release_locked(periph);
 block|}
 end_function
 
