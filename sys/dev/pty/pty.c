@@ -90,7 +90,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|int
 name|pty_warningcnt
 init|=
 literal|1
@@ -239,40 +238,14 @@ operator|)
 return|;
 block|}
 comment|/* Raise a warning when a legacy PTY has been allocated. */
-if|if
-condition|(
-name|pty_warningcnt
-operator|>
-literal|0
-condition|)
-block|{
-name|pty_warningcnt
-operator|--
-expr_stmt|;
-name|log
+name|counted_warning
 argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"pid %d (%s) is using legacy pty devices%s\n"
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|,
+operator|&
 name|pty_warningcnt
-condition|?
-literal|""
-else|:
-literal|" - not logging anymore"
+argument_list|,
+literal|"is using legacy pty devices"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
