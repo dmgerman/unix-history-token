@@ -22,6 +22,58 @@ file|<sys/param.h>
 end_include
 
 begin_comment
+comment|/*  * VMBUS version is 32 bit, upper 16 bit for major_number and lower  * 16 bit for minor_number.  *  * 0.13  --  Windows Server 2008  * 1.1   --  Windows 7  * 2.4   --  Windows 8  * 3.0   --  Windows 8.1  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WS2008
+value|((0<< 16) | (13))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN7
+value|((1<< 16) | (1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN8
+value|((2<< 16) | (4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN8_1
+value|((3<< 16) | (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))& 0xffff)
+end_define
+
+begin_comment
 comment|/*  * GPA stuffs.  */
 end_comment
 
@@ -249,6 +301,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|hv_vmbus_channel
+operator|*
+name|vmbus_get_channel
+argument_list|(
+argument|device_t dev
+argument_list|)
+block|{
+return|return
+name|device_get_ivars
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function_decl
 name|int
