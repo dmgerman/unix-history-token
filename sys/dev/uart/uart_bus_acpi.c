@@ -95,6 +95,12 @@ directive|include
 file|<dev/uart/uart_cpu_acpi.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__aarch64__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -112,6 +118,11 @@ include|#
 directive|include
 file|<dev/acpica/acpivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
