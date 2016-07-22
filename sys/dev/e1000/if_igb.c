@@ -5510,13 +5510,11 @@ name|ETHER_CRC_LEN
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ifp
 operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
-operator|)
 condition|)
 name|igb_init_locked
 argument_list|(
