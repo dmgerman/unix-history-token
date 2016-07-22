@@ -1298,7 +1298,7 @@ literal|"gpio_out"
 block|,
 literal|"nand0"
 block|,
-literal|"mmc2"
+name|NULL
 block|,
 name|NULL
 block|,
