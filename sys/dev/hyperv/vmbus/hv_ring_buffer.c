@@ -48,8 +48,54 @@ name|w
 parameter_list|,
 name|z
 parameter_list|)
-value|((w)>= (r))? \ 				((z) - ((w) - (r))):((r) - (w))
+define|\
+value|((w)>= (r)) ? ((z) - ((w) - (r))) : ((r) - (w))
 end_define
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|copy_to_ring_buffer
+parameter_list|(
+name|hv_vmbus_ring_buffer_info
+modifier|*
+name|ring_info
+parameter_list|,
+name|uint32_t
+name|start_write_offset
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|src
+parameter_list|,
+name|uint32_t
+name|src_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|copy_from_ring_buffer
+parameter_list|(
+name|hv_vmbus_ring_buffer_info
+modifier|*
+name|ring_info
+parameter_list|,
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|uint32_t
+name|dest_len
+parameter_list|,
+name|uint32_t
+name|start_read_offset
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -147,11 +193,7 @@ argument_list|(
 name|rbi_stats
 argument_list|)
 argument_list|,
-literal|"r_idx:%d "
-literal|"w_idx:%d "
-literal|"int_mask:%d "
-literal|"r_avail:%d "
-literal|"w_avail:%d"
+literal|"r_idx:%d w_idx:%d int_mask:%d r_avail:%d w_avail:%d"
 argument_list|,
 name|read_index
 argument_list|,
@@ -165,7 +207,6 @@ name|write_avail
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|sysctl_handle_string
 argument_list|(
 name|oidp
@@ -179,7 +220,6 @@ argument_list|)
 argument_list|,
 name|req
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -244,7 +284,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|get_ring_buffer_avail_bytes
 parameter_list|(
@@ -316,7 +356,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint32_t
 name|get_next_write_location
 parameter_list|(
@@ -325,19 +365,12 @@ modifier|*
 name|ring_info
 parameter_list|)
 block|{
-name|uint32_t
-name|next
-init|=
+return|return
 name|ring_info
 operator|->
 name|ring_buffer
 operator|->
 name|write_index
-decl_stmt|;
-return|return
-operator|(
-name|next
-operator|)
 return|;
 block|}
 end_function
@@ -348,7 +381,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|set_next_write_location
 parameter_list|(
@@ -377,7 +410,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint32_t
 name|get_next_read_location
 parameter_list|(
@@ -386,19 +419,12 @@ modifier|*
 name|ring_info
 parameter_list|)
 block|{
-name|uint32_t
-name|next
-init|=
+return|return
 name|ring_info
 operator|->
 name|ring_buffer
 operator|->
 name|read_index
-decl_stmt|;
-return|return
-operator|(
-name|next
-operator|)
 return|;
 block|}
 end_function
@@ -409,7 +435,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint32_t
 name|get_next_read_location_with_offset
 parameter_list|(
@@ -454,7 +480,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|set_next_read_location
 parameter_list|(
@@ -483,7 +509,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 modifier|*
 name|get_ring_buffer
@@ -494,10 +520,6 @@ name|ring_info
 parameter_list|)
 block|{
 return|return
-operator|(
-name|void
-operator|*
-operator|)
 name|ring_info
 operator|->
 name|ring_buffer
@@ -513,7 +535,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint32_t
 name|get_ring_buffer_size
 parameter_list|(
@@ -536,7 +558,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint64_t
 name|get_ring_buffer_indices
 parameter_list|(
@@ -547,6 +569,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|uint64_t
 operator|)
 name|ring_info
@@ -554,6 +577,7 @@ operator|->
 name|ring_buffer
 operator|->
 name|write_index
+operator|)
 operator|<<
 literal|32
 return|;
@@ -689,51 +713,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|uint32_t
-name|copy_to_ring_buffer
-parameter_list|(
-name|hv_vmbus_ring_buffer_info
-modifier|*
-name|ring_info
-parameter_list|,
-name|uint32_t
-name|start_write_offset
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|src
-parameter_list|,
-name|uint32_t
-name|src_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|uint32_t
-name|copy_from_ring_buffer
-parameter_list|(
-name|hv_vmbus_ring_buffer_info
-modifier|*
-name|ring_info
-parameter_list|,
-name|char
-modifier|*
-name|dest
-parameter_list|,
-name|uint32_t
-name|dest_len
-parameter_list|,
-name|uint32_t
-name|start_read_offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/**  * @brief Initialize the ring buffer.  */
 end_comment
@@ -770,10 +749,6 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|=
-operator|(
-name|hv_vmbus_ring_buffer
-operator|*
-operator|)
 name|buffer
 expr_stmt|;
 name|ring_info
@@ -782,6 +757,8 @@ name|ring_buffer
 operator|->
 name|read_index
 operator|=
+literal|0
+expr_stmt|;
 name|ring_info
 operator|->
 name|ring_buffer
@@ -914,7 +891,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|total_bytes_to_write
 operator|+=
 name|iov
@@ -924,7 +900,6 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
-block|}
 name|total_bytes_to_write
 operator|+=
 sizeof|sizeof
@@ -1490,6 +1465,7 @@ comment|/**  * @brief Helper routine to copy to source from ring buffer.  *  * A
 end_comment
 
 begin_function
+specifier|static
 name|uint32_t
 name|copy_from_ring_buffer
 parameter_list|(
@@ -1537,7 +1513,7 @@ operator|-
 name|start_read_offset
 condition|)
 block|{
-comment|/*  wrap-around detected at the src */
+comment|/* wrap-around detected at the src */
 name|fragLen
 operator|=
 name|ring_buffer_size
