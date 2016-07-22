@@ -4086,10 +4086,8 @@ literal|1
 index|]
 argument_list|)
 else|:
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|CHAR
 argument_list|(
 name|c
@@ -4103,10 +4101,8 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|CHAR
 argument_list|(
 name|k

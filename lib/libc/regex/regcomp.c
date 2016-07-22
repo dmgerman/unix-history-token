@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<runetype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<wchar.h>
 end_include
 
@@ -4295,6 +4289,10 @@ condition|(
 name|table
 operator|->
 name|__collate_load_error
+operator|||
+name|MB_CUR_MAX
+operator|>
+literal|1
 condition|)
 block|{
 operator|(
@@ -4302,14 +4300,8 @@ name|void
 operator|)
 name|REQUIRE
 argument_list|(
-operator|(
-name|uch
-operator|)
 name|start
 operator|<=
-operator|(
-name|uch
-operator|)
 name|finish
 argument_list|,
 name|REG_ERANGE
@@ -4334,10 +4326,8 @@ name|void
 operator|)
 name|REQUIRE
 argument_list|(
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|start
 argument_list|,
 name|finish
@@ -4364,10 +4354,8 @@ control|)
 block|{
 if|if
 condition|(
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|start
 argument_list|,
 name|i
@@ -4375,10 +4363,8 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collate_range_cmp
+name|__wcollate_range_cmp
 argument_list|(
-name|table
-argument_list|,
 name|i
 argument_list|,
 name|finish
