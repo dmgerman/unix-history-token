@@ -19,6 +19,23 @@ directive|define
 name|_IF_IGB_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALTQ
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IGB_LEGACY_TX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
