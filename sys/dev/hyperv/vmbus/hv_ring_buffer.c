@@ -33,6 +33,12 @@ directive|include
 file|"hv_vmbus_priv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_reg.h>
+end_include
+
 begin_comment
 comment|/* Amount of space to write to */
 end_comment
@@ -135,7 +141,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 expr_stmt|;
 name|windex
 operator|=
@@ -143,7 +149,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 expr_stmt|;
 name|intr_mask
 operator|=
@@ -151,7 +157,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|interrupt_mask
+name|br_imask
 expr_stmt|;
 name|wavail
 operator|=
@@ -275,7 +281,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 expr_stmt|;
 name|windex
 operator|=
@@ -283,7 +289,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 expr_stmt|;
 name|wavail
 operator|=
@@ -321,7 +327,7 @@ name|br
 operator|->
 name|ring_buffer
 operator|->
-name|interrupt_mask
+name|br_imask
 expr_stmt|;
 name|state
 index|[
@@ -551,7 +557,7 @@ name|rbi
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 expr_stmt|;
 name|write_loc
 operator|=
@@ -559,7 +565,7 @@ name|rbi
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 expr_stmt|;
 operator|*
 name|write
@@ -608,7 +614,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 return|;
 block|}
 end_function
@@ -635,7 +641,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 operator|=
 name|next_write_location
 expr_stmt|;
@@ -662,7 +668,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 return|;
 block|}
 end_function
@@ -692,7 +698,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 decl_stmt|;
 name|next
 operator|+=
@@ -734,7 +740,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 operator|=
 name|next_read_location
 expr_stmt|;
@@ -762,7 +768,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|buffer
+name|br_data
 return|;
 block|}
 end_function
@@ -814,7 +820,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 operator|)
 operator|<<
 literal|32
@@ -835,7 +841,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|interrupt_mask
+name|br_imask
 operator|=
 literal|1
 expr_stmt|;
@@ -863,7 +869,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|interrupt_mask
+name|br_imask
 operator|=
 literal|0
 expr_stmt|;
@@ -916,7 +922,7 @@ name|rbi
 operator|->
 name|ring_buffer
 operator|->
-name|interrupt_mask
+name|br_imask
 condition|)
 return|return
 operator|(
@@ -936,7 +942,7 @@ name|rbi
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 condition|)
 return|return
 operator|(
@@ -993,7 +999,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|read_index
+name|br_rindex
 operator|=
 literal|0
 expr_stmt|;
@@ -1001,7 +1007,7 @@ name|ring_info
 operator|->
 name|ring_buffer
 operator|->
-name|write_index
+name|br_windex
 operator|=
 literal|0
 expr_stmt|;
@@ -1013,7 +1019,8 @@ name|buffer_len
 operator|-
 sizeof|sizeof
 argument_list|(
-name|hv_vmbus_ring_buffer
+expr|struct
+name|vmbus_bufring
 argument_list|)
 expr_stmt|;
 name|mtx_init

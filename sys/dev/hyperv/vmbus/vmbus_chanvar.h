@@ -73,47 +73,8 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-comment|/* 	 * offset in bytes from the start of ring data below 	 */
-specifier|volatile
-name|uint32_t
-name|write_index
-decl_stmt|;
-comment|/* 	 * offset in bytes from the start of ring data below 	 */
-specifier|volatile
-name|uint32_t
-name|read_index
-decl_stmt|;
-comment|/* 	 * NOTE: The interrupt_mask field is used only for channels, but 	 * vmbus connection also uses this data structure 	 */
-specifier|volatile
-name|uint32_t
-name|interrupt_mask
-decl_stmt|;
-comment|/* pad it to PAGE_SIZE so that data starts on a page */
-name|uint8_t
-name|reserved
-index|[
-literal|4084
-index|]
-decl_stmt|;
-comment|/* 	 * WARNING: Ring data starts here 	 *  !!! DO NOT place any fields below this !!! 	 */
-name|uint8_t
-name|buffer
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* doubles as interrupt mask */
-block|}
-name|__packed
-name|hv_vmbus_ring_buffer
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|hv_vmbus_ring_buffer
+name|struct
+name|vmbus_bufring
 modifier|*
 name|ring_buffer
 decl_stmt|;

@@ -320,6 +320,57 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Buffer ring  */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_bufring
+block|{
+comment|/* 	 * If br_windex == br_rindex, this bufring is empty; this 	 * means we can _not_ write data to the bufring, if the 	 * write is going to make br_windex same as br_rindex. 	 */
+specifier|volatile
+name|uint32_t
+name|br_windex
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|br_rindex
+decl_stmt|;
+comment|/* 	 * Interrupt mask {0,1} 	 * 	 * For TX bufring, host set this to 1, when it is processing 	 * the TX bufring, so that we can safely skip the TX event 	 * notification to host. 	 * 	 * For RX bufring, once this is set to 1 by us, host will not 	 * further dispatch interrupts to us, even if there are data 	 * pending on the RX bufring.  This effectively disables the 	 * interrupt of the channel to which this RX bufring is attached. 	 */
+specifier|volatile
+name|uint32_t
+name|br_imask
+decl_stmt|;
+name|uint8_t
+name|br_rsvd
+index|[
+literal|4084
+index|]
+decl_stmt|;
+name|uint8_t
+name|br_data
+index|[]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmbus_bufring
+argument_list|)
+operator|==
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Channel  */
 end_comment
 
