@@ -340,23 +340,15 @@ begin_define
 define|#
 directive|define
 name|_LIBUNWIND_CONTEXT_SIZE
-value|128
+value|64
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|_LIBUNWIND_CURSOR_SIZE
-value|140
+value|76
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_define
 define|#
