@@ -1237,6 +1237,7 @@ operator|&
 name|s2
 argument_list|)
 condition|)
+block|{
 name|cmap_add
 argument_list|(
 name|map
@@ -1261,6 +1262,7 @@ operator|.
 name|lastch
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|cmap_add
