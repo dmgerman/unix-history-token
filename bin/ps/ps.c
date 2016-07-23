@@ -2974,6 +2974,9 @@ block|{
 name|printheader
 argument_list|()
 expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
