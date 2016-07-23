@@ -553,11 +553,27 @@ argument_list|)
 operator|:
 name|Val
 argument_list|(
-argument|Elts.size() ==
+argument|Elts.empty()                 ? PtrUnion()                 : Elts.size() ==
 literal|1
 argument|? PtrUnion(Elts[
 literal|0
-argument|])                              : PtrUnion(new VecTy(Elts.begin(), Elts.end()))
+argument|])                       : PtrUnion(new VecTy(Elts.begin(), Elts.end()))
+argument_list|)
+block|{}
+name|TinyPtrVector
+argument_list|(
+argument|size_t Count
+argument_list|,
+argument|EltTy Value
+argument_list|)
+operator|:
+name|Val
+argument_list|(
+argument|Count ==
+literal|0
+argument|? PtrUnion()                        : Count ==
+literal|1
+argument|? PtrUnion(Value)                                     : PtrUnion(new VecTy(Count, Value))
 argument_list|)
 block|{}
 comment|// implicit conversion operator to ArrayRef.
@@ -684,13 +700,70 @@ operator|)
 return|;
 end_return
 
-begin_macro
-unit|}    bool
-name|empty
-argument_list|()
-end_macro
+begin_comment
+unit|}
+comment|// Implicit conversion to ArrayRef<U> if EltTy* implicitly converts to U*.
+end_comment
 
 begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|U
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_convertible
+operator|<
+name|ArrayRef
+operator|<
+name|EltTy
+operator|>
+operator|,
+name|ArrayRef
+operator|<
+name|U
+operator|>>
+operator|::
+name|value
+operator|,
+name|bool
+operator|>
+operator|::
+name|type
+operator|=
+name|false
+operator|>
+name|operator
+name|ArrayRef
+operator|<
+name|U
+operator|>
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|operator
+name|ArrayRef
+operator|<
+name|EltTy
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
 specifier|const
 block|{
 comment|// This vector can be empty if it contains no element, or if it
@@ -796,19 +869,43 @@ end_return
 
 begin_decl_stmt
 unit|}    typedef
-specifier|const
 name|EltTy
 modifier|*
-name|const_iterator
+name|iterator
 decl_stmt|;
 end_decl_stmt
 
 begin_typedef
 typedef|typedef
+specifier|const
 name|EltTy
 modifier|*
-name|iterator
+name|const_iterator
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|iterator
+operator|>
+name|reverse_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|const_iterator
+operator|>
+name|const_reverse_iterator
+expr_stmt|;
 end_typedef
 
 begin_function
@@ -948,6 +1045,68 @@ operator|)
 operator|->
 name|end
 argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|reverse_iterator
+name|rbegin
+parameter_list|()
+block|{
+return|return
+name|reverse_iterator
+argument_list|(
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|reverse_iterator
+name|rend
+parameter_list|()
+block|{
+return|return
+name|reverse_iterator
+argument_list|(
+name|begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_reverse_iterator
+argument_list|(
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_reverse_iterator
+argument_list|(
+name|begin
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt

@@ -418,7 +418,7 @@ end_function
 
 begin_function
 name|int
-name|disassemble
+name|llvm_disassemble
 parameter_list|(
 name|void
 parameter_list|)
@@ -432,7 +432,7 @@ expr_stmt|;
 name|LLVMInitializeAllDisassemblers
 argument_list|()
 expr_stmt|;
-name|tokenize_stdin
+name|llvm_tokenize_stdin
 argument_list|(
 name|handle_line
 argument_list|)

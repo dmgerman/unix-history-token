@@ -233,9 +233,7 @@ name|ValueToValueMapTy
 operator|&
 name|VMap
 argument_list|,
-name|std
-operator|::
-name|function
+name|function_ref
 operator|<
 name|bool
 argument_list|(
@@ -351,23 +349,22 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// CloneFunction - Return a copy of the specified function, but without
-comment|/// embedding the function into another module.  Also, any references specified
-comment|/// in the VMap are changed to refer to their mapped value instead of the
-comment|/// original one.  If any of the arguments to the function are in the VMap,
-comment|/// the arguments are deleted from the resultant function.  The VMap is
-comment|/// updated to include mappings from all of the instructions and basicblocks in
-comment|/// the function from their old to new values.  The final argument captures
-comment|/// information about the cloned code if non-null.
+comment|/// CloneFunction - Return a copy of the specified function and add it to that
+comment|/// function's module.  Also, any references specified in the VMap are changed
+comment|/// to refer to their mapped value instead of the original one.  If any of the
+comment|/// arguments to the function are in the VMap, the arguments are deleted from
+comment|/// the resultant function.  The VMap is updated to include mappings from all of
+comment|/// the instructions and basicblocks in the function from their old to new
+comment|/// values.  The final argument captures information about the cloned code if
+comment|/// non-null.
 comment|///
-comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
-comment|/// mappings, and debug info metadata will not be cloned.
+comment|/// VMap contains no non-identity GlobalValue mappings and debug info metadata
+comment|/// will not be cloned.
 comment|///
 name|Function
 modifier|*
 name|CloneFunction
 parameter_list|(
-specifier|const
 name|Function
 modifier|*
 name|F
@@ -375,9 +372,6 @@ parameter_list|,
 name|ValueToValueMapTy
 modifier|&
 name|VMap
-parameter_list|,
-name|bool
-name|ModuleLevelChanges
 parameter_list|,
 name|ClonedCodeInfo
 modifier|*
@@ -716,6 +710,7 @@ comment|/// Blocks.
 comment|///
 comment|/// Updates LoopInfo and DominatorTree assuming the loop is dominated by block
 comment|/// \p LoopDomBB.  Insert the new blocks before block specified in \p Before.
+comment|/// Note: Only innermost loops are supported.
 name|Loop
 modifier|*
 name|cloneLoopWithPreheader

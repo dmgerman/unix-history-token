@@ -56,6 +56,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymDumper
 block|{
@@ -388,6 +391,7 @@ name|RequireImpl
 decl_stmt|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_decl_stmt
 

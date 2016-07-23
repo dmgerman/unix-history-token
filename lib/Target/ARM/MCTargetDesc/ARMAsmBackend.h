@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/ARMMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCAsmBackend.h"
 end_include
 
@@ -61,18 +67,15 @@ directive|include
 file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/TargetRegistry.h"
+end_include
+
 begin_decl_stmt
-name|using
 name|namespace
 name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|namespace
-end_macro
-
-begin_block
 block|{
 name|class
 name|ARMAsmBackend
@@ -285,6 +288,8 @@ name|relaxInstruction
 argument_list|(
 argument|const MCInst&Inst
 argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|MCInst&Res
 argument_list|)
 specifier|const
@@ -346,10 +351,10 @@ return|;
 block|}
 expr|}
 block|; }
-end_block
+end_decl_stmt
 
 begin_comment
-comment|// end anonymous namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

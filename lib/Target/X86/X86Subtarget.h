@@ -142,18 +142,15 @@ name|Style
 block|{
 name|StubPIC
 block|,
-comment|// Used on i386-darwin in -fPIC mode.
-name|StubDynamicNoPIC
-block|,
-comment|// Used on i386-darwin in -mdynamic-no-pic mode.
+comment|// Used on i386-darwin in pic mode.
 name|GOT
 block|,
-comment|// Used on many 32-bit unices in -fPIC mode.
+comment|// Used on 32 bit elf on when in pic mode.
 name|RIPRel
 block|,
-comment|// Used on X86-64 when not in -static mode.
+comment|// Used on X86-64 when in pic mode.
 name|None
-comment|// Set when in -static mode (not PIC or DynamicNoPIC mode).
+comment|// Set when not in pic mode.
 block|}
 enum|;
 block|}
@@ -220,6 +217,11 @@ operator|::
 name|Style
 name|PICStyle
 block|;
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+block|;
 comment|/// SSE1, SSE2, SSE3, SSSE3, SSE41, SSE42, or none supported.
 name|X86SSEEnum
 name|X86SSELevel
@@ -227,6 +229,10 @@ block|;
 comment|/// MMX, 3DNow, 3DNow Athlon, or none supported.
 name|X863DNowEnum
 name|X863DNowLevel
+block|;
+comment|/// True if the processor supports X87 instructions.
+name|bool
+name|HasX87
 block|;
 comment|/// True if this processor has conditional move instructions
 comment|/// (generally pentium pro+).
@@ -317,6 +323,14 @@ comment|/// Processor has BMI2 instructions.
 name|bool
 name|HasBMI2
 block|;
+comment|/// Processor has VBMI instructions.
+name|bool
+name|HasVBMI
+block|;
+comment|/// Processor has Integer Fused Multiply Add
+name|bool
+name|HasIFMA
+block|;
 comment|/// Processor has RTM instructions.
 name|bool
 name|HasRTM
@@ -344,6 +358,14 @@ block|;
 comment|/// Processor has LAHF/SAHF instructions.
 name|bool
 name|HasLAHFSAHF
+block|;
+comment|/// Processor has MONITORX/MWAITX instructions.
+name|bool
+name|HasMWAITX
+block|;
+comment|/// Processor has Prefetch with intent to Write instruction
+name|bool
+name|HasPFPREFETCHWT1
 block|;
 comment|/// True if BT (bit test) of memory instructions are slow.
 name|bool
@@ -375,6 +397,11 @@ comment|/// True if the LEA instruction should be used for adjusting
 comment|/// the stack pointer. This is an optimization for Intel Atom processors.
 name|bool
 name|UseLeaForSP
+block|;
+comment|/// True if there is no performance penalty to writing only the lower parts
+comment|/// of a YMM register without clearing the upper part.
+name|bool
+name|HasFastPartialYMMWrite
 block|;
 comment|/// True if 8-bit divisions are significantly faster than
 comment|/// 32-bit divisions and should be used when possible.
@@ -437,9 +464,37 @@ comment|/// Processor has PKU extenstions
 name|bool
 name|HasPKU
 block|;
-comment|/// Processot supports MPX - Memory Protection Extensions
+comment|/// Processor supports MPX - Memory Protection Extensions
 name|bool
 name|HasMPX
+block|;
+comment|/// Processor supports Invalidate Process-Context Identifier
+name|bool
+name|HasInvPCId
+block|;
+comment|/// Processor has VM Functions
+name|bool
+name|HasVMFUNC
+block|;
+comment|/// Processor has Supervisor Mode Access Protection
+name|bool
+name|HasSMAP
+block|;
+comment|/// Processor has Software Guard Extensions
+name|bool
+name|HasSGX
+block|;
+comment|/// Processor supports Flush Cache Line instruction
+name|bool
+name|HasCLFLUSHOPT
+block|;
+comment|/// Processor has Persistent Commit feature
+name|bool
+name|HasPCOMMIT
+block|;
+comment|/// Processor supports Cache Line Write Back instruction
+name|bool
+name|HasCLWB
 block|;
 comment|/// Use software floating point for code generation.
 name|bool
@@ -504,9 +559,9 @@ name|X86Subtarget
 argument_list|(
 argument|const Triple&TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
 argument_list|,
 argument|const X86TargetMachine&TM
 argument_list|,
@@ -744,6 +799,15 @@ name|PICStyle
 operator|=
 name|Style
 block|; }
+name|bool
+name|hasX87
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasX87
+return|;
+block|}
 name|bool
 name|hasCMov
 argument_list|()
@@ -1107,6 +1171,24 @@ name|HasBMI2
 return|;
 block|}
 name|bool
+name|hasVBMI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVBMI
+return|;
+block|}
+name|bool
+name|hasIFMA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasIFMA
+return|;
+block|}
+name|bool
 name|hasRTM
 argument_list|()
 specifier|const
@@ -1170,6 +1252,15 @@ name|HasLAHFSAHF
 return|;
 block|}
 name|bool
+name|hasMWAITX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMWAITX
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
@@ -1230,6 +1321,15 @@ specifier|const
 block|{
 return|return
 name|UseLeaForSP
+return|;
+block|}
+name|bool
+name|hasFastPartialYMMWrite
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastPartialYMMWrite
 return|;
 block|}
 name|bool
@@ -1398,6 +1498,22 @@ return|return
 name|UseSoftFloat
 return|;
 block|}
+comment|/// Use mfence if we have SSE2 or we're on x86-64 (even if we asked for
+comment|/// no-sse2). There isn't any reason to disable it if the target processor
+comment|/// supports it.
+name|bool
+name|hasMFence
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasSSE2
+argument_list|()
+operator|||
+name|is64Bit
+argument_list|()
+return|;
+block|}
 specifier|const
 name|Triple
 operator|&
@@ -1514,6 +1630,30 @@ return|return
 name|TargetTriple
 operator|.
 name|isOSLinux
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetKFreeBSD
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSKFreeBSD
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetGlibc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSGlibc
 argument_list|()
 return|;
 block|}
@@ -1709,19 +1849,6 @@ operator|)
 return|;
 block|}
 name|bool
-name|isPICStyleSet
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PICStyle
-operator|!=
-name|PICStyles
-operator|::
-name|None
-return|;
-block|}
-name|bool
 name|isPICStyleGOT
 argument_list|()
 specifier|const
@@ -1761,35 +1888,15 @@ name|StubPIC
 return|;
 block|}
 name|bool
-name|isPICStyleStubNoDynamic
+name|isPositionIndependent
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PICStyle
-operator|==
-name|PICStyles
-operator|::
-name|StubDynamicNoPIC
-return|;
-block|}
-name|bool
-name|isPICStyleStubAny
+name|TM
+operator|.
+name|isPositionIndependent
 argument_list|()
-specifier|const
-block|{
-return|return
-name|PICStyle
-operator|==
-name|PICStyles
-operator|::
-name|StubDynamicNoPIC
-operator|||
-name|PICStyle
-operator|==
-name|PICStyles
-operator|::
-name|StubPIC
 return|;
 block|}
 name|bool
@@ -1869,16 +1976,50 @@ name|false
 return|;
 block|}
 block|}
-comment|/// ClassifyGlobalReference - Classify a global variable reference for the
-comment|/// current subtarget according to how we should reference it in a non-pcrel
-comment|/// context.
+comment|/// Classify a global variable reference for the current subtarget according
+comment|/// to how we should reference it in a non-pcrel context.
 name|unsigned
 name|char
-name|ClassifyGlobalReference
+name|classifyLocalReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|char
+name|classifyGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|const TargetMachine&TM
+argument|const Module&M
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|char
+name|classifyGlobalReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+block|;
+comment|/// Classify a global function reference for the current subtarget.
+name|unsigned
+name|char
+name|classifyGlobalFunctionReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|const Module&M
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|char
+name|classifyGlobalFunctionReference
+argument_list|(
+argument|const GlobalValue *GV
 argument_list|)
 specifier|const
 block|;
@@ -1886,16 +2027,14 @@ comment|/// Classify a blockaddress reference for the current subtarget accordin
 comment|/// how we should reference it in a non-pcrel context.
 name|unsigned
 name|char
-name|ClassifyBlockAddressReference
+name|classifyBlockAddressReference
 argument_list|()
 specifier|const
 block|;
 comment|/// Return true if the subtarget allows calls to immediate address.
 name|bool
-name|IsLegalToCallImmediateAddr
-argument_list|(
-argument|const TargetMachine&TM
-argument_list|)
+name|isLegalToCallImmediateAddr
+argument_list|()
 specifier|const
 block|;
 comment|/// This function returns the name of a function which has an interface

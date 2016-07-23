@@ -390,6 +390,14 @@ name|Vector
 parameter_list|)
 function_decl|;
 name|unsigned
+name|getCacheLineSize
+parameter_list|()
+function_decl|;
+name|unsigned
+name|getPrefetchDistance
+parameter_list|()
+function_decl|;
+name|unsigned
 name|getMaxInterleaveFactor
 parameter_list|(
 name|unsigned

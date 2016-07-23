@@ -149,12 +149,6 @@ directive|include
 file|<cmath>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<iterator>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -343,7 +337,7 @@ argument|bool isUse
 argument_list|,
 argument|const MachineBlockFrequencyInfo *MBFI
 argument_list|,
-argument|const MachineInstr *Instr
+argument|const MachineInstr&Instr
 argument_list|)
 block|;
 name|LiveInterval
@@ -519,7 +513,7 @@ name|addSegmentToEndOfBlock
 argument_list|(
 argument|unsigned reg
 argument_list|,
-argument|MachineInstr* startInst
+argument|MachineInstr&startInst
 argument_list|)
 block|;
 comment|/// After removing some uses of a register, shrink its live range to just
@@ -624,7 +618,7 @@ comment|/// removed or was never entered in the map.
 name|bool
 name|isNotInMIMap
 argument_list|(
-argument|const MachineInstr* Instr
+argument|const MachineInstr&Instr
 argument_list|)
 specifier|const
 block|{
@@ -642,7 +636,7 @@ comment|/// Returns the base index of the given instruction.
 name|SlotIndex
 name|getInstructionIndex
 argument_list|(
-argument|const MachineInstr *instr
+argument|const MachineInstr&Instr
 argument_list|)
 specifier|const
 block|{
@@ -651,7 +645,7 @@ name|Indexes
 operator|->
 name|getInstructionIndex
 argument_list|(
-name|instr
+name|Instr
 argument_list|)
 return|;
 block|}
@@ -820,7 +814,7 @@ block|;     }
 name|SlotIndex
 name|InsertMachineInstrInMaps
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 block|{
 return|return
@@ -860,6 +854,7 @@ name|Indexes
 operator|->
 name|insertMachineInstrInMaps
 argument_list|(
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -867,7 +862,7 @@ block|}
 name|void
 name|RemoveMachineInstrFromMaps
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 block|{
 name|Indexes
@@ -880,9 +875,9 @@ block|;     }
 name|void
 name|ReplaceMachineInstrInMaps
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
-argument|MachineInstr *NewMI
+argument|MachineInstr&NewMI
 argument_list|)
 block|{
 name|Indexes
@@ -978,7 +973,7 @@ comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs
 name|void
 name|handleMove
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|,
 argument|bool UpdateFlags = false
 argument_list|)
@@ -994,9 +989,9 @@ comment|/// instruction in the Bundle.
 name|void
 name|handleMoveIntoBundle
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|,
-argument|MachineInstr* BundleStart
+argument|MachineInstr&BundleStart
 argument_list|,
 argument|bool UpdateFlags = false
 argument_list|)
@@ -1301,6 +1296,17 @@ operator|*
 operator|>
 operator|&
 name|SplitLIs
+argument_list|)
+block|;
+comment|/// For live interval \p LI with correct SubRanges construct matching
+comment|/// information for the main live range. Expects the main live range to not
+comment|/// have any segments or value numbers.
+name|void
+name|constructMainRangeFromSubranges
+argument_list|(
+name|LiveInterval
+operator|&
+name|LI
 argument_list|)
 block|;
 name|private

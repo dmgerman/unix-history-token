@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineOperand.h"
 end_include
 
@@ -184,9 +178,9 @@ name|MachineBasicBlock
 operator|*
 name|BB2
 argument_list|,
-name|MCSymbolRefExpr
+name|MipsMCExpr
 operator|::
-name|VariantKind
+name|MipsExprKind
 name|Kind
 argument_list|)
 decl|const
@@ -220,9 +214,9 @@ argument_list|,
 name|int
 name|Opcode
 argument_list|,
-name|MCSymbolRefExpr
+name|MipsMCExpr
 operator|::
-name|VariantKind
+name|MipsExprKind
 name|Kind
 argument_list|)
 decl|const

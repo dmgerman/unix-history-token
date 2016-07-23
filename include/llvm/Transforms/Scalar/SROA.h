@@ -105,6 +105,7 @@ comment|/// A private "module" namespace for types and utilities used by SROA. T
 comment|/// are implementation details and should not be used by clients.
 name|namespace
 name|sroa
+name|LLVM_LIBRARY_VISIBILITY
 block|{
 name|class
 name|AllocaSliceRewriter
@@ -139,19 +140,25 @@ comment|///    this form. By doing so, it will enable promotion of vector aggreg
 comment|///    SSA vector values.
 name|class
 name|SROA
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|SROA
+operator|>
 block|{
 name|LLVMContext
-modifier|*
+operator|*
 name|C
-decl_stmt|;
+block|;
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-decl_stmt|;
+block|;
 name|AssumptionCache
-modifier|*
+operator|*
 name|AC
-decl_stmt|;
+block|;
 comment|/// \brief Worklist of alloca instructions to simplify.
 comment|///
 comment|/// Each alloca in the function is added to this. Each new alloca formed gets
@@ -163,16 +170,16 @@ name|SetVector
 operator|<
 name|AllocaInst
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|AllocaInst
 operator|*
-operator|,
+block|,
 literal|16
 operator|>>
 name|Worklist
-expr_stmt|;
+block|;
 comment|/// \brief A collection of instructions to delete.
 comment|/// We try to batch deletions to simplify code and make things a bit more
 comment|/// efficient.
@@ -180,16 +187,16 @@ name|SetVector
 operator|<
 name|Instruction
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|Instruction
 operator|*
-operator|,
+block|,
 literal|8
 operator|>>
 name|DeadInsts
-expr_stmt|;
+block|;
 comment|/// \brief Post-promotion worklist.
 comment|///
 comment|/// Sometimes we discover an alloca which has a high probability of becoming
@@ -202,16 +209,16 @@ name|SetVector
 operator|<
 name|AllocaInst
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|AllocaInst
 operator|*
-operator|,
+block|,
 literal|16
 operator|>>
 name|PostPromotionWorklist
-expr_stmt|;
+block|;
 comment|/// \brief A collection of alloca instructions we can directly promote.
 name|std
 operator|::
@@ -221,7 +228,7 @@ name|AllocaInst
 operator|*
 operator|>
 name|PromotableAllocas
-expr_stmt|;
+block|;
 comment|/// \brief A worklist of PHIs to speculate prior to promoting allocas.
 comment|///
 comment|/// All of these PHIs have been checked for the safety of speculation and by
@@ -231,16 +238,16 @@ name|SetVector
 operator|<
 name|PHINode
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|PHINode
 operator|*
-operator|,
+block|,
 literal|2
 operator|>>
 name|SpeculatablePHIs
-expr_stmt|;
+block|;
 comment|/// \brief A worklist of select instructions to speculate prior to promoting
 comment|/// allocas.
 comment|///
@@ -251,18 +258,18 @@ name|SetVector
 operator|<
 name|SelectInst
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|SelectInst
 operator|*
-operator|,
+block|,
 literal|2
 operator|>>
 name|SpeculatableSelects
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|SROA
 argument_list|()
 operator|:
@@ -270,26 +277,17 @@ name|C
 argument_list|(
 name|nullptr
 argument_list|)
-operator|,
+block|,
 name|DT
 argument_list|(
 name|nullptr
 argument_list|)
-operator|,
+block|,
 name|AC
 argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-specifier|static
-name|StringRef
-name|name
-argument_list|()
-block|{
-return|return
-literal|"SROA"
-return|;
-block|}
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -302,41 +300,41 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
-decl_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|friend
 name|class
 name|sroa
 operator|::
 name|AllocaSliceRewriter
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|sroa
 operator|::
 name|SROALegacyPass
-expr_stmt|;
+block|;
 comment|/// Helper used by both the public run method and by the legacy pass.
 name|PreservedAnalyses
 name|runImpl
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|,
+argument_list|,
 name|DominatorTree
-modifier|&
+operator|&
 name|RunDT
-parameter_list|,
+argument_list|,
 name|AssumptionCache
-modifier|&
+operator|&
 name|RunAC
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|presplitLoadsAndStores
 argument_list|(
@@ -350,9 +348,9 @@ name|AllocaSlices
 operator|&
 name|AS
 argument_list|)
-decl_stmt|;
+block|;
 name|AllocaInst
-modifier|*
+operator|*
 name|rewritePartition
 argument_list|(
 name|AllocaInst
@@ -371,7 +369,7 @@ name|Partition
 operator|&
 name|P
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|splitAlloca
 argument_list|(
@@ -385,23 +383,23 @@ name|AllocaSlices
 operator|&
 name|AS
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|runOnAlloca
-parameter_list|(
+argument_list|(
 name|AllocaInst
-modifier|&
+operator|&
 name|AI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|clobberUse
-parameter_list|(
+argument_list|(
 name|Use
-modifier|&
+operator|&
 name|U
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|deleteDeadInstructions
 argument_list|(
@@ -413,17 +411,16 @@ operator|>
 operator|&
 name|DeletedAllocas
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|promoteAllocas
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

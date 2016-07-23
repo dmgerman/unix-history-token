@@ -68,6 +68,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 comment|/// PDBSymbolCustom represents symbols that are compiler-specific and do not
 comment|/// fit anywhere else in the lexical hierarchy.
 comment|/// https://msdn.microsoft.com/en-us/library/d88sf09h.aspx
@@ -121,19 +124,12 @@ operator|>
 operator|&
 name|bytes
 argument_list|)
-block|;
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
-argument|getSymIndexId
-argument_list|)
-block|}
+block|; }
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

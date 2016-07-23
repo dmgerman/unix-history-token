@@ -226,7 +226,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createScalarReplAggregatesPass function. */
+comment|/** See llvm::createSROAPass function. */
 name|void
 name|LLVMAddScalarReplAggregatesPass
 parameter_list|(
@@ -234,7 +234,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createScalarReplAggregatesPass function. */
+comment|/** See llvm::createSROAPass function. */
 name|void
 name|LLVMAddScalarReplAggregatesPassSSA
 parameter_list|(
@@ -242,7 +242,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createScalarReplAggregatesPass function. */
+comment|/** See llvm::createSROAPass function. */
 name|void
 name|LLVMAddScalarReplAggregatesPassWithThreshold
 parameter_list|(

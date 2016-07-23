@@ -181,6 +181,9 @@ block|;
 name|bool
 name|HasVector
 block|;
+name|bool
+name|HasLoadStoreOnCond2
+block|;
 name|private
 operator|:
 name|Triple
@@ -292,7 +295,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()
@@ -342,6 +345,16 @@ specifier|const
 block|{
 return|return
 name|HasLoadStoreOnCond
+return|;
+block|}
+comment|// Return true if the target has the load/store-on-condition facility 2.
+name|bool
+name|hasLoadStoreOnCond2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLoadStoreOnCond2
 return|;
 block|}
 comment|// Return true if the target has the high-word facility.
@@ -440,8 +453,6 @@ name|bool
 name|isPC32DBLSymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|)

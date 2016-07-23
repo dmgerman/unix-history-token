@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -103,6 +97,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineConstantPool
+decl_stmt|;
 comment|/// \brief This is a fast-path instruction selection class that generates poor
 comment|/// code and doesn't support illegal types or non-trivial lowering, but runs
 comment|/// quickly.
@@ -162,6 +159,16 @@ name|IsReturned
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|IsSwiftSelf
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSwiftError
+range|:
+literal|1
+decl_stmt|;
 name|uint16_t
 name|Alignment
 decl_stmt|;
@@ -214,6 +221,16 @@ name|false
 argument_list|)
 operator|,
 name|IsReturned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftSelf
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftError
 argument_list|(
 name|false
 argument_list|)
@@ -1840,7 +1857,9 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|)
 function_decl|;

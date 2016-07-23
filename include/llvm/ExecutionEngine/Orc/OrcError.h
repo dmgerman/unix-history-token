@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
 end_include
 
@@ -92,16 +98,17 @@ block|,
 name|RemoteIndirectStubsOwnerIdAlreadyInUse
 block|,
 name|UnexpectedRPCCall
-block|}
+block|,
+name|UnexpectedRPCResponse
+block|, }
 decl_stmt|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|orcError
-argument_list|(
-argument|OrcErrorCode ErrCode
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|OrcErrorCode
+name|ErrCode
+parameter_list|)
+function_decl|;
 block|}
 comment|// End namespace orc.
 block|}

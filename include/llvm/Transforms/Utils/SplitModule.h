@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<functional>
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -113,9 +113,7 @@ argument_list|,
 name|unsigned
 name|N
 argument_list|,
-name|std
-operator|::
-name|function
+name|function_ref
 operator|<
 name|void
 argument_list|(
@@ -129,6 +127,11 @@ name|MPart
 argument_list|)
 operator|>
 name|ModuleCallback
+argument_list|,
+name|bool
+name|PreserveLocals
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 block|}

@@ -74,10 +74,6 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|rdf
 block|{
@@ -109,6 +105,11 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|CopyPropagation
+argument_list|()
+block|{}
 name|bool
 name|run
 argument_list|()
@@ -134,6 +135,31 @@ return|return
 name|Trace
 return|;
 block|}
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|RegisterRef
+operator|,
+name|RegisterRef
+operator|>
+name|EqualityMap
+expr_stmt|;
+name|virtual
+name|bool
+name|interpretAsCopy
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|EqualityMap
+modifier|&
+name|EM
+parameter_list|)
+function_decl|;
 name|private
 label|:
 specifier|const
@@ -170,6 +196,17 @@ name|NodeId
 operator|>>
 name|RDefMap
 expr_stmt|;
+comment|// map: statement -> (map: dst reg -> src reg)
+name|std
+operator|::
+name|map
+operator|<
+name|NodeId
+operator|,
+name|EqualityMap
+operator|>
+name|CopyMap
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -188,9 +225,9 @@ operator|*
 operator|>
 name|SA
 argument_list|,
-name|MachineInstr
-operator|*
-name|MI
+name|EqualityMap
+operator|&
+name|EM
 argument_list|)
 decl_stmt|;
 name|void
@@ -215,7 +252,13 @@ function_decl|;
 block|}
 struct|;
 block|}
+comment|// namespace rdf
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

@@ -83,6 +83,9 @@ comment|///< objc_retain
 name|RetainRV
 operator|,
 comment|///< objc_retainAutoreleasedReturnValue
+name|ClaimRV
+operator|,
+comment|///< objc_unsafeClaimAutoreleasedReturnValue
 name|RetainBlock
 operator|,
 comment|///< objc_retainBlock

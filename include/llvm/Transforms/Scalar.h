@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<functional>
 end_include
 
@@ -183,6 +177,17 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// GuardWidening - An optimization over the @llvm.experimental.guard intrinsic
+comment|// that (optimistically) combines multiple guards into one to have fewer checks
+comment|// at runtime.
+comment|//
+name|FunctionPass
+modifier|*
+name|createGuardWideningPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// BitTrackingDCE - This pass uses a bit-tracking DCE algorithm in order to
 comment|// remove computations of dead bits.
 comment|//
@@ -199,45 +204,6 @@ name|FunctionPass
 modifier|*
 name|createSROAPass
 parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// ScalarReplAggregates - Break up alloca's of aggregates into multiple allocas
-comment|// if possible.
-comment|//
-name|FunctionPass
-modifier|*
-name|createScalarReplAggregatesPass
-parameter_list|(
-name|signed
-name|Threshold
-init|=
-operator|-
-literal|1
-parameter_list|,
-name|bool
-name|UseDomTree
-init|=
-name|true
-parameter_list|,
-name|signed
-name|StructMemberThreshold
-init|=
-operator|-
-literal|1
-parameter_list|,
-name|signed
-name|ArrayElementThreshold
-init|=
-operator|-
-literal|1
-parameter_list|,
-name|signed
-name|ScalarLoadThreshold
-init|=
-operator|-
-literal|1
-parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -274,7 +240,12 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createInstructionCombiningPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|ExpensiveCombines
+init|=
+name|true
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -304,35 +275,6 @@ name|Pass
 modifier|*
 name|createLoopStrengthReducePass
 parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// GlobalMerge - This pass merges internal (by default) globals into structs
-comment|// to enable reuse of a base pointer by indexed addressing modes.
-comment|// It can also be configured to focus on size optimizations only.
-comment|//
-name|Pass
-modifier|*
-name|createGlobalMergePass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|,
-name|unsigned
-name|MaximalOffset
-parameter_list|,
-name|bool
-name|OnlyOptimizeForSize
-init|=
-name|false
-parameter_list|,
-name|bool
-name|MergeExternalByDefault
-init|=
-name|false
-parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -427,6 +369,15 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopIdiomPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopVersioningLICM - This pass is a loop versioning pass for LICM.
+comment|//
+name|Pass
+modifier|*
+name|createLoopVersioningLICMPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -536,10 +487,18 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// CFG Structurization - Remove irreducible control flow
 comment|//
+comment|///
+comment|/// When \p SkipUniformRegions is true the structizer will not structurize
+comment|/// regions that only contain uniform branches.
 name|Pass
 modifier|*
 name|createStructurizeCFGPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|SkipUniformRegions
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -647,6 +606,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// GVNHoist - This pass performs a simple and fast GVN pass over the dominator
+comment|// tree to hoist common expressions from sibling branches.
+comment|//
+name|FunctionPass
+modifier|*
+name|createGVNHoistPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// MergedLoadStoreMotion - This pass merges loads and stores in diamonds. Loads
 comment|// are hoisted into the header, while stores sink into the footer.
 comment|//
@@ -654,21 +623,6 @@ name|FunctionPass
 modifier|*
 name|createMergedLoadStoreMotionPass
 parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// GVN - This pass performs global value numbering and redundant load
-comment|// elimination cotemporaneously.
-comment|//
-name|FunctionPass
-modifier|*
-name|createGVNPass
-parameter_list|(
-name|bool
-name|NoLoads
-init|=
-name|false
-parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -729,6 +683,15 @@ comment|//
 name|Pass
 modifier|*
 name|createLowerAtomicPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LowerGuardIntrinsic - Lower guard intrinsics to normal control flow.
+comment|//
+name|Pass
+modifier|*
+name|createLowerGuardIntrinsicPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -821,6 +784,13 @@ modifier|*
 name|createSpeculativeExecutionPass
 parameter_list|()
 function_decl|;
+comment|// Same as createSpeculativeExecutionPass, but does nothing unless
+comment|// TargetTransformInfo::hasBranchDivergence() is true.
+name|FunctionPass
+modifier|*
+name|createSpeculativeExecutionIfHasBranchDivergencePass
+parameter_list|()
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// LoadCombine - Combine loads into bigger loads.
@@ -885,10 +855,16 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// LoopDistribute - Distribute loops.
 comment|//
+comment|// ProcessAllLoopsByDefault instructs the pass to look for distribution
+comment|// opportunities in all loops unless -enable-loop-distribute or the
+comment|// llvm.loop.distribute.enable metadata data override this default.
 name|FunctionPass
 modifier|*
 name|createLoopDistributePass
-parameter_list|()
+parameter_list|(
+name|bool
+name|ProcessAllLoopsByDefault
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -897,6 +873,40 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createLoopLoadEliminationPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopSimplifyCFG - This pass performs basic CFG simplification on loops,
+comment|// primarily to help other loop passes.
+comment|//
+name|Pass
+modifier|*
+name|createLoopSimplifyCFGPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopVersioning - Perform loop multi-versioning.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLoopVersioningPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopDataPrefetch - Perform data prefetching in loops.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLoopDataPrefetchPass
+parameter_list|()
+function_decl|;
+comment|///===---------------------------------------------------------------------===//
+name|ModulePass
+modifier|*
+name|createNameAnonFunctionPass
 parameter_list|()
 function_decl|;
 block|}

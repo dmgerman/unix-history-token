@@ -69,8 +69,15 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
+name|namespace
+name|codeview
+block|{
 name|class
-name|StreamWriter
+name|MemoryTypeTableBuilder
+decl_stmt|;
+block|}
+name|class
+name|ScopedPrinter
 decl_stmt|;
 name|class
 name|ObjDumper
@@ -79,7 +86,7 @@ name|public
 label|:
 name|ObjDumper
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|Writer
 argument_list|)
@@ -172,6 +179,16 @@ name|void
 name|printVersionInfo
 parameter_list|()
 block|{}
+name|virtual
+name|void
+name|printGroupSections
+parameter_list|()
+block|{}
+name|virtual
+name|void
+name|printHashHistogram
+parameter_list|()
+block|{}
 comment|// Only implemented for ARM ELF at this time.
 name|virtual
 name|void
@@ -192,6 +209,11 @@ block|{ }
 name|virtual
 name|void
 name|printMipsReginfo
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMipsOptions
 parameter_list|()
 block|{ }
 comment|// Only implemented for PE/COFF.
@@ -217,9 +239,27 @@ parameter_list|()
 block|{ }
 name|virtual
 name|void
+name|printCOFFDebugDirectory
+parameter_list|()
+block|{ }
+name|virtual
+name|void
 name|printCodeViewDebugInfo
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|mergeCodeViewTypes
+argument_list|(
+name|llvm
+operator|::
+name|codeview
+operator|::
+name|MemoryTypeTableBuilder
+operator|&
+name|CVTypes
+argument_list|)
+block|{}
 comment|// Only implemented for MachO.
 name|virtual
 name|void
@@ -261,7 +301,7 @@ literal|0
 expr_stmt|;
 name|protected
 label|:
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|W
 decl_stmt|;
@@ -279,7 +319,7 @@ name|ObjectFile
 operator|*
 name|Obj
 argument_list|,
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|Writer
 argument_list|,
@@ -305,7 +345,7 @@ name|ObjectFile
 operator|*
 name|Obj
 argument_list|,
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|Writer
 argument_list|,
@@ -331,7 +371,7 @@ name|ObjectFile
 operator|*
 name|Obj
 argument_list|,
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|Writer
 argument_list|,
@@ -354,6 +394,22 @@ operator|::
 name|COFFImportFile
 operator|*
 name|File
+argument_list|)
+decl_stmt|;
+name|void
+name|dumpCodeViewMergedTypes
+argument_list|(
+name|ScopedPrinter
+operator|&
+name|Writer
+argument_list|,
+name|llvm
+operator|::
+name|codeview
+operator|::
+name|MemoryTypeTableBuilder
+operator|&
+name|CVTypes
 argument_list|)
 decl_stmt|;
 block|}

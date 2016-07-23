@@ -279,6 +279,47 @@ name|X86_INTR
 init|=
 literal|83
 block|,
+comment|/// Used for AVR interrupt routines.
+name|AVR_INTR
+init|=
+literal|84
+block|,
+comment|/// Calling convention used for AVR signal routines.
+name|AVR_SIGNAL
+init|=
+literal|85
+block|,
+comment|/// Calling convention used for special AVR rtlib functions
+comment|/// which have an "optimized" convention to preserve registers.
+name|AVR_BUILTIN
+init|=
+literal|86
+block|,
+comment|/// Calling convention used for Mesa vertex shaders.
+name|AMDGPU_VS
+init|=
+literal|87
+block|,
+comment|/// Calling convention used for Mesa geometry shaders.
+name|AMDGPU_GS
+init|=
+literal|88
+block|,
+comment|/// Calling convention used for Mesa pixel shaders.
+name|AMDGPU_PS
+init|=
+literal|89
+block|,
+comment|/// Calling convention used for Mesa compute shaders.
+name|AMDGPU_CS
+init|=
+literal|90
+block|,
+comment|/// Calling convention for AMDGPU code object kernels.
+name|AMDGPU_KERNEL
+init|=
+literal|91
+block|,
 comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
 name|MaxID
 init|=

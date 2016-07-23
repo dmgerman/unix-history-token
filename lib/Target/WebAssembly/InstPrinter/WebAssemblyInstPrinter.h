@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCInstPrinter.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineValueType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInstPrinter.h"
 end_include
 
 begin_decl_stmt
@@ -153,6 +159,16 @@ block|;
 comment|// Used by tblegen code.
 name|void
 name|printOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printWebAssemblyP2AlignOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

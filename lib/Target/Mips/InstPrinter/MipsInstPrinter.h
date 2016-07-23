@@ -294,18 +294,18 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|unsigned
+name|Bits
+block|,
+name|unsigned
+name|Offset
+operator|=
+literal|0
+operator|>
 name|void
-name|printUnsignedImm
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|int opNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printUnsignedImm8
+name|printUImm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

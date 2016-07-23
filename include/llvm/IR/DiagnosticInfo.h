@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/DiagnosticInfo.h - Diagnostic Declaration ---*- C++ -*-===//
+comment|//===- llvm/IR/DiagnosticInfo.h - Diagnostic Declaration --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -78,19 +90,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Module.h"
+file|"llvm/Support/CBindingWrapping.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -108,16 +126,10 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
-name|LLVMContextImpl
+name|LLVMContext
 decl_stmt|;
 name|class
-name|Twine
-decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
-name|class
-name|DebugLoc
+name|Module
 decl_stmt|;
 name|class
 name|SMDiagnostic
@@ -125,6 +137,8 @@ decl_stmt|;
 comment|/// \brief Defines the different supported severity of a diagnostic.
 enum|enum
 name|DiagnosticSeverity
+enum|:
+name|char
 block|{
 name|DS_Error
 block|,
@@ -146,11 +160,15 @@ name|DK_Bitcode
 block|,
 name|DK_InlineAsm
 block|,
+name|DK_ResourceLimit
+block|,
 name|DK_StackSize
 block|,
 name|DK_Linker
 block|,
 name|DK_DebugMetadataVersion
+block|,
+name|DK_DebugMetadataInvalid
 block|,
 name|DK_SampleProfile
 block|,
@@ -166,9 +184,19 @@ name|DK_OptimizationRemarkAnalysisAliasing
 block|,
 name|DK_OptimizationFailure
 block|,
+name|DK_FirstRemark
+init|=
+name|DK_OptimizationRemark
+block|,
+name|DK_LastRemark
+init|=
+name|DK_OptimizationFailure
+block|,
 name|DK_MIRParser
 block|,
 name|DK_PGOProfile
+block|,
+name|DK_Unsupported
 block|,
 name|DK_FirstPluginKind
 block|}
@@ -267,12 +295,6 @@ argument_list|)
 decl|const
 init|=
 literal|0
-decl_stmt|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AlwaysPrint
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -457,42 +479,59 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Diagnostic information for stack size reporting.
+comment|/// Diagnostic information for stack size etc. reporting.
 comment|/// This is basically a function and a size.
 name|class
-name|DiagnosticInfoStackSize
+name|DiagnosticInfoResourceLimit
 operator|:
 name|public
 name|DiagnosticInfo
 block|{
 name|private
 operator|:
-comment|/// The function that is concerned by this stack size diagnostic.
+comment|/// The function that is concerned by this resource limit diagnostic.
 specifier|const
 name|Function
 operator|&
 name|Fn
 block|;
-comment|/// The computed stack size.
-name|unsigned
-name|StackSize
+comment|/// Description of the resource type (e.g. stack size)
+specifier|const
+name|char
+operator|*
+name|ResourceName
+block|;
+comment|/// The computed size usage
+name|uint64_t
+name|ResourceSize
+block|;
+comment|// Threshould passed
+name|uint64_t
+name|ResourceLimit
 block|;
 name|public
 operator|:
 comment|/// \p The function that is concerned by this stack size diagnostic.
 comment|/// \p The computed stack size.
-name|DiagnosticInfoStackSize
+name|DiagnosticInfoResourceLimit
 argument_list|(
 argument|const Function&Fn
 argument_list|,
-argument|unsigned StackSize
+argument|const char *ResourceName
+argument_list|,
+argument|uint64_t ResourceSize
 argument_list|,
 argument|DiagnosticSeverity Severity = DS_Warning
+argument_list|,
+argument|DiagnosticKind Kind = DK_ResourceLimit
+argument_list|,
+argument|uint64_t ResourceLimit =
+literal|0
 argument_list|)
 operator|:
 name|DiagnosticInfo
 argument_list|(
-name|DK_StackSize
+name|Kind
 argument_list|,
 name|Severity
 argument_list|)
@@ -502,9 +541,19 @@ argument_list|(
 name|Fn
 argument_list|)
 block|,
-name|StackSize
+name|ResourceName
 argument_list|(
-argument|StackSize
+name|ResourceName
+argument_list|)
+block|,
+name|ResourceSize
+argument_list|(
+name|ResourceSize
+argument_list|)
+block|,
+name|ResourceLimit
+argument_list|(
+argument|ResourceLimit
 argument_list|)
 block|{}
 specifier|const
@@ -518,13 +567,33 @@ return|return
 name|Fn
 return|;
 block|}
-name|unsigned
-name|getStackSize
+specifier|const
+name|char
+operator|*
+name|getResourceName
 argument_list|()
 specifier|const
 block|{
 return|return
-name|StackSize
+name|ResourceName
+return|;
+block|}
+name|uint64_t
+name|getResourceSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResourceSize
+return|;
+block|}
+name|uint64_t
+name|getResourceLimit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResourceLimit
 return|;
 block|}
 comment|/// \see DiagnosticInfo::print.
@@ -536,6 +605,86 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_ResourceLimit
+operator|||
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_StackSize
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|DiagnosticInfoStackSize
+operator|:
+name|public
+name|DiagnosticInfoResourceLimit
+block|{
+name|public
+operator|:
+name|DiagnosticInfoStackSize
+argument_list|(
+argument|const Function&Fn
+argument_list|,
+argument|uint64_t StackSize
+argument_list|,
+argument|DiagnosticSeverity Severity = DS_Warning
+argument_list|,
+argument|uint64_t StackLimit =
+literal|0
+argument_list|)
+operator|:
+name|DiagnosticInfoResourceLimit
+argument_list|(
+argument|Fn
+argument_list|,
+literal|"stack size"
+argument_list|,
+argument|StackSize
+argument_list|,
+argument|Severity
+argument_list|,
+argument|DK_StackSize
+argument_list|,
+argument|StackLimit
+argument_list|)
+block|{}
+name|uint64_t
+name|getStackSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getResourceSize
+argument_list|()
+return|;
+block|}
+name|uint64_t
+name|getStackLimit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getResourceLimit
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -647,6 +796,81 @@ name|getKind
 argument_list|()
 operator|==
 name|DK_DebugMetadataVersion
+return|;
+block|}
+expr|}
+block|;
+comment|/// Diagnostic information for stripping invalid debug metadata.
+name|class
+name|DiagnosticInfoIgnoringInvalidDebugMetadata
+operator|:
+name|public
+name|DiagnosticInfo
+block|{
+name|private
+operator|:
+comment|/// The module that is concerned by this debug metadata version diagnostic.
+specifier|const
+name|Module
+operator|&
+name|M
+block|;
+name|public
+operator|:
+comment|/// \p The module that is concerned by this debug metadata version diagnostic.
+name|DiagnosticInfoIgnoringInvalidDebugMetadata
+argument_list|(
+argument|const Module&M
+argument_list|,
+argument|DiagnosticSeverity Severity = DS_Warning
+argument_list|)
+operator|:
+name|DiagnosticInfo
+argument_list|(
+name|DK_DebugMetadataVersion
+argument_list|,
+name|Severity
+argument_list|)
+block|,
+name|M
+argument_list|(
+argument|M
+argument_list|)
+block|{}
+specifier|const
+name|Module
+operator|&
+name|getModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|M
+return|;
+block|}
+comment|/// \see DiagnosticInfo::print.
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_DebugMetadataInvalid
 return|;
 block|}
 expr|}
@@ -917,35 +1141,26 @@ operator|&
 name|Msg
 block|; }
 block|;
-comment|/// Common features for diagnostics dealing with optimization remarks.
+comment|/// Common features for diagnostics with an associated DebugLoc
 name|class
-name|DiagnosticInfoOptimizationBase
+name|DiagnosticInfoWithDebugLocBase
 operator|:
 name|public
 name|DiagnosticInfo
 block|{
 name|public
 operator|:
-comment|/// \p PassName is the name of the pass emitting this diagnostic.
 comment|/// \p Fn is the function where the diagnostic is being emitted. \p DLoc is
-comment|/// the location information to use in the diagnostic. If line table
-comment|/// information is available, the diagnostic will include the source code
-comment|/// location. \p Msg is the message to show. Note that this class does not
-comment|/// copy this message, so this reference must be valid for the whole life time
-comment|/// of the diagnostic.
-name|DiagnosticInfoOptimizationBase
+comment|/// the location information to use in the diagnostic.
+name|DiagnosticInfoWithDebugLocBase
 argument_list|(
 argument|enum DiagnosticKind Kind
 argument_list|,
 argument|enum DiagnosticSeverity Severity
 argument_list|,
-argument|const char *PassName
-argument_list|,
 argument|const Function&Fn
 argument_list|,
 argument|const DebugLoc&DLoc
-argument_list|,
-argument|const Twine&Msg
 argument_list|)
 operator|:
 name|DiagnosticInfo
@@ -955,11 +1170,6 @@ argument_list|,
 name|Severity
 argument_list|)
 block|,
-name|PassName
-argument_list|(
-name|PassName
-argument_list|)
-block|,
 name|Fn
 argument_list|(
 name|Fn
@@ -967,36 +1177,9 @@ argument_list|)
 block|,
 name|DLoc
 argument_list|(
-name|DLoc
-argument_list|)
-block|,
-name|Msg
-argument_list|(
-argument|Msg
+argument|DLoc
 argument_list|)
 block|{}
-comment|/// \see DiagnosticInfo::print.
-name|void
-name|print
-argument_list|(
-argument|DiagnosticPrinter&DP
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// Return true if this optimization remark is enabled by one of
-comment|/// of the LLVM command line flags (-pass-remarks, -pass-remarks-missed,
-comment|/// or -pass-remarks-analysis). Note that this only handles the LLVM
-comment|/// flags. We cannot access Clang flags from here (they are handled
-comment|/// in BackendConsumer::OptimizationRemarkHandler).
-name|virtual
-name|bool
-name|isEnabled
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// Return true if location information is available for this diagnostic.
 name|bool
 name|isLocationAvailable
@@ -1028,17 +1211,6 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|char
-operator|*
-name|getPassName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PassName
-return|;
-block|}
-specifier|const
 name|Function
 operator|&
 name|getFunction
@@ -1060,6 +1232,111 @@ return|return
 name|DLoc
 return|;
 block|}
+name|private
+operator|:
+comment|/// Function where this diagnostic is triggered.
+specifier|const
+name|Function
+operator|&
+name|Fn
+block|;
+comment|/// Debug location where this diagnostic is triggered.
+name|DebugLoc
+name|DLoc
+block|; }
+block|;
+comment|/// Common features for diagnostics dealing with optimization remarks.
+name|class
+name|DiagnosticInfoOptimizationBase
+operator|:
+name|public
+name|DiagnosticInfoWithDebugLocBase
+block|{
+name|public
+operator|:
+comment|/// \p PassName is the name of the pass emitting this diagnostic.
+comment|/// \p Fn is the function where the diagnostic is being emitted. \p DLoc is
+comment|/// the location information to use in the diagnostic. If line table
+comment|/// information is available, the diagnostic will include the source code
+comment|/// location. \p Msg is the message to show. Note that this class does not
+comment|/// copy this message, so this reference must be valid for the whole life time
+comment|/// of the diagnostic.
+name|DiagnosticInfoOptimizationBase
+argument_list|(
+argument|enum DiagnosticKind Kind
+argument_list|,
+argument|enum DiagnosticSeverity Severity
+argument_list|,
+argument|const char *PassName
+argument_list|,
+argument|const Function&Fn
+argument_list|,
+argument|const DebugLoc&DLoc
+argument_list|,
+argument|const Twine&Msg
+argument_list|,
+argument|Optional<uint64_t> Hotness = None
+argument_list|)
+operator|:
+name|DiagnosticInfoWithDebugLocBase
+argument_list|(
+name|Kind
+argument_list|,
+name|Severity
+argument_list|,
+name|Fn
+argument_list|,
+name|DLoc
+argument_list|)
+block|,
+name|PassName
+argument_list|(
+name|PassName
+argument_list|)
+block|,
+name|Msg
+argument_list|(
+name|Msg
+argument_list|)
+block|,
+name|Hotness
+argument_list|(
+argument|Hotness
+argument_list|)
+block|{}
+comment|/// \see DiagnosticInfo::print.
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if this optimization remark is enabled by one of
+comment|/// of the LLVM command line flags (-pass-remarks, -pass-remarks-missed,
+comment|/// or -pass-remarks-analysis). Note that this only handles the LLVM
+comment|/// flags. We cannot access Clang flags from here (they are handled
+comment|/// in BackendConsumer::OptimizationRemarkHandler).
+name|virtual
+name|bool
+name|isEnabled
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+specifier|const
+name|char
+operator|*
+name|getPassName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PassName
+return|;
+block|}
 specifier|const
 name|Twine
 operator|&
@@ -1069,6 +1346,29 @@ specifier|const
 block|{
 return|return
 name|Msg
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|>=
+name|DK_FirstRemark
+operator|&&
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|DK_LastRemark
 return|;
 block|}
 name|private
@@ -1081,21 +1381,19 @@ name|char
 operator|*
 name|PassName
 block|;
-comment|/// Function where this diagnostic is triggered.
-specifier|const
-name|Function
-operator|&
-name|Fn
-block|;
-comment|/// Debug location where this diagnostic is triggered.
-name|DebugLoc
-name|DLoc
-block|;
 comment|/// Message to report.
 specifier|const
 name|Twine
 operator|&
 name|Msg
+block|;
+comment|/// If profile information is available, this is the number of times the
+comment|/// corresponding code was executed in a profile instrumentation run.
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
 block|; }
 block|;
 comment|/// Diagnostic information for applied optimization remarks.
@@ -1215,6 +1513,14 @@ specifier|const
 name|Twine
 operator|&
 name|Msg
+argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Hotness
+operator|=
+name|None
 argument_list|)
 operator|:
 name|DiagnosticInfoOptimizationBase
@@ -1230,6 +1536,8 @@ argument_list|,
 argument|DLoc
 argument_list|,
 argument|Msg
+argument_list|,
+argument|Hotness
 argument_list|)
 block|{}
 specifier|static
@@ -1334,6 +1642,24 @@ argument_list|()
 specifier|const
 name|override
 block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|AlwaysPrint
+block|;
+name|bool
+name|shouldAlwaysPrint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPassName
+argument_list|()
+operator|==
+name|AlwaysPrint
+return|;
+block|}
 name|protected
 operator|:
 name|DiagnosticInfoOptimizationRemarkAnalysis
@@ -1364,7 +1690,7 @@ argument_list|,
 argument|Msg
 argument_list|)
 block|{}
-block|}
+expr|}
 block|;
 comment|/// Diagnostic information for optimization analysis remarks related to
 comment|/// floating-point non-commutativity.
@@ -1832,6 +2158,89 @@ specifier|const
 name|override
 block|; }
 block|;
+comment|/// Diagnostic information for unsupported feature in backend.
+name|class
+name|DiagnosticInfoUnsupported
+operator|:
+name|public
+name|DiagnosticInfoWithDebugLocBase
+block|{
+name|private
+operator|:
+name|Twine
+name|Msg
+block|;
+name|public
+operator|:
+comment|/// \p Fn is the function where the diagnostic is being emitted. \p DLoc is
+comment|/// the location information to use in the diagnostic. If line table
+comment|/// information is available, the diagnostic will include the source code
+comment|/// location. \p Msg is the message to show. Note that this class does not
+comment|/// copy this message, so this reference must be valid for the whole life time
+comment|/// of the diagnostic.
+name|DiagnosticInfoUnsupported
+argument_list|(
+argument|const Function&Fn
+argument_list|,
+argument|const Twine&Msg
+argument_list|,
+argument|DebugLoc DLoc = DebugLoc()
+argument_list|,
+argument|DiagnosticSeverity Severity = DS_Error
+argument_list|)
+operator|:
+name|DiagnosticInfoWithDebugLocBase
+argument_list|(
+name|DK_Unsupported
+argument_list|,
+name|Severity
+argument_list|,
+name|Fn
+argument_list|,
+name|DLoc
+argument_list|)
+block|,
+name|Msg
+argument_list|(
+argument|Msg
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_Unsupported
+return|;
+block|}
+specifier|const
+name|Twine
+operator|&
+name|getMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Msg
+return|;
+block|}
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
 comment|/// Emit a warning when loop vectorization is specified but fails. \p Fn is the
 comment|/// function triggering the warning, \p DLoc is the debug location where the
 comment|/// diagnostic is generated. \p Msg is the message string to use.
@@ -1887,13 +2296,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DIAGNOSTICINFO_H
+end_comment
 
 end_unit
 

@@ -457,7 +457,7 @@ comment|///
 name|void
 name|Observe
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Count
 argument_list|,
@@ -493,7 +493,7 @@ name|bool
 name|IsImplicitDefUse
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineOperand
@@ -507,7 +507,7 @@ name|void
 name|GetPassthruRegs
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|std
@@ -553,7 +553,7 @@ name|void
 name|PrescanInstruction
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -573,7 +573,7 @@ name|void
 name|ScanInstruction
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned

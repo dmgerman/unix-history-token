@@ -67,24 +67,15 @@ directive|define
 name|LLVM_IR_COMDAT_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -184,13 +175,6 @@ decl_stmt|;
 name|Comdat
 argument_list|()
 expr_stmt|;
-name|Comdat
-argument_list|(
-argument|SelectionKind SK
-argument_list|,
-argument|StringMapEntry<Comdat> *Name
-argument_list|)
-empty_stmt|;
 name|Comdat
 argument_list|(
 specifier|const

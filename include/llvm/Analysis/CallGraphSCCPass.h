@@ -99,6 +99,12 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/PassSupport.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -241,12 +247,29 @@ argument|AnalysisUsage&Info
 argument_list|)
 specifier|const
 name|override
+block|;
+name|protected
+operator|:
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when optimization bisect is over the limit.
+name|bool
+name|skipSCC
+argument_list|(
+argument|CallGraphSCC&SCC
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 comment|/// CallGraphSCC - This is a single SCC that a CallGraphSCCPass is run on.
 name|class
 name|CallGraphSCC
 block|{
+specifier|const
+name|CallGraph
+modifier|&
+name|CG
+decl_stmt|;
+comment|// The call graph for this SCC.
 name|void
 modifier|*
 name|Context
@@ -265,11 +288,20 @@ name|public
 label|:
 name|CallGraphSCC
 argument_list|(
+name|CallGraph
+operator|&
+name|cg
+argument_list|,
 name|void
 operator|*
 name|context
 argument_list|)
 operator|:
+name|CG
+argument_list|(
+name|cg
+argument_list|)
+operator|,
 name|Context
 argument_list|(
 argument|context
@@ -368,9 +400,89 @@ name|end
 argument_list|()
 return|;
 block|}
+specifier|const
+name|CallGraph
+modifier|&
+name|getCallGraph
+parameter_list|()
+block|{
+return|return
+name|CG
+return|;
+block|}
 block|}
 empty_stmt|;
+name|void
+name|initializeDummyCGSCCPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+comment|/// This pass is required by interprocedural register allocation. It forces
+comment|/// codegen to follow bottom up order on call graph.
+name|class
+name|DummyCGSCCPass
+range|:
+name|public
+name|CallGraphSCCPass
+block|{
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+name|DummyCGSCCPass
+argument_list|()
+operator|:
+name|CallGraphSCCPass
+argument_list|(
+argument|ID
+argument_list|)
+block|{
+name|PassRegistry
+operator|&
+name|Registry
+operator|=
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+block|;
+name|initializeDummyCGSCCPassPass
+argument_list|(
+name|Registry
+argument_list|)
+block|;   }
+block|;
+name|bool
+name|runOnSCC
+argument_list|(
+argument|CallGraphSCC&SCC
+argument_list|)
+name|override
+block|{
+return|return
+name|false
+return|;
 block|}
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|{
+name|AU
+operator|.
+name|setPreservesAll
+argument_list|()
+block|;   }
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -286,6 +286,11 @@ specifier|const
 name|MCAsmInfo
 operator|*
 name|MAI
+argument_list|,
+name|bool
+name|InParens
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -563,6 +568,8 @@ name|VK_GOT
 block|,
 name|VK_GOTOFF
 block|,
+name|VK_GOTREL
+block|,
 name|VK_GOTPCREL
 block|,
 name|VK_GOTTPOFF
@@ -585,6 +592,12 @@ name|VK_TPOFF
 block|,
 name|VK_DTPOFF
 block|,
+name|VK_TLSCALL
+block|,
+comment|// symbol(tlscall)
+name|VK_TLSDESC
+block|,
+comment|// symbol(tlsdesc)
 name|VK_TLVP
 block|,
 comment|// Mach-O thread local variable relocations
@@ -624,12 +637,6 @@ comment|// symbol(sbrel)
 name|VK_ARM_TLSLDO
 block|,
 comment|// symbol(tlsldo)
-name|VK_ARM_TLSCALL
-block|,
-comment|// symbol(tlscall)
-name|VK_ARM_TLSDESC
-block|,
-comment|// symbol(tlsdesc)
 name|VK_ARM_TLSDESCSEQ
 block|,
 name|VK_PPC_LO
@@ -680,9 +687,6 @@ comment|// symbol@toc@ha
 name|VK_PPC_DTPMOD
 block|,
 comment|// symbol@dtpmod
-name|VK_PPC_TPREL
-block|,
-comment|// symbol@tprel
 name|VK_PPC_TPREL_LO
 block|,
 comment|// symbol@tprel@l
@@ -704,9 +708,6 @@ comment|// symbol@tprel@highest
 name|VK_PPC_TPREL_HIGHESTA
 block|,
 comment|// symbol@tprel@highesta
-name|VK_PPC_DTPREL
-block|,
-comment|// symbol@dtprel
 name|VK_PPC_DTPREL_LO
 block|,
 comment|// symbol@dtprel@l
@@ -788,58 +789,6 @@ comment|// symbol@tlsld
 name|VK_PPC_LOCAL
 block|,
 comment|// symbol@local
-name|VK_Mips_GPREL
-block|,
-name|VK_Mips_GOT_CALL
-block|,
-name|VK_Mips_GOT16
-block|,
-name|VK_Mips_GOT
-block|,
-name|VK_Mips_ABS_HI
-block|,
-name|VK_Mips_ABS_LO
-block|,
-name|VK_Mips_TLSGD
-block|,
-name|VK_Mips_TLSLDM
-block|,
-name|VK_Mips_DTPREL_HI
-block|,
-name|VK_Mips_DTPREL_LO
-block|,
-name|VK_Mips_GOTTPREL
-block|,
-name|VK_Mips_TPREL_HI
-block|,
-name|VK_Mips_TPREL_LO
-block|,
-name|VK_Mips_GPOFF_HI
-block|,
-name|VK_Mips_GPOFF_LO
-block|,
-name|VK_Mips_GOT_DISP
-block|,
-name|VK_Mips_GOT_PAGE
-block|,
-name|VK_Mips_GOT_OFST
-block|,
-name|VK_Mips_HIGHER
-block|,
-name|VK_Mips_HIGHEST
-block|,
-name|VK_Mips_GOT_HI16
-block|,
-name|VK_Mips_GOT_LO16
-block|,
-name|VK_Mips_CALL_HI16
-block|,
-name|VK_Mips_CALL_LO16
-block|,
-name|VK_Mips_PCREL_HI16
-block|,
-name|VK_Mips_PCREL_LO16
-block|,
 name|VK_COFF_IMGREL32
 block|,
 comment|// symbol@imgrel (image-relative)

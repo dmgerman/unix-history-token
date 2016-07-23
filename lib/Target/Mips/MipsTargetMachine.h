@@ -170,7 +170,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -283,7 +283,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// MipsebTargetMachine - Mips32/64 big endian target machine.
+comment|/// Mips32/64 big endian target machine.
 end_comment
 
 begin_comment
@@ -316,7 +316,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -327,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// MipselTargetMachine - Mips32/64 little endian target machine.
+comment|/// Mips32/64 little endian target machine.
 end_comment
 
 begin_comment
@@ -360,7 +360,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

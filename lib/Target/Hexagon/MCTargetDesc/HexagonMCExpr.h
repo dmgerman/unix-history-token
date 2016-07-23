@@ -57,7 +57,7 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|HexagonNoExtendOperand
+name|HexagonMCExpr
 range|:
 name|public
 name|MCTargetExpr
@@ -65,9 +65,9 @@ block|{
 name|public
 operator|:
 specifier|static
-name|HexagonNoExtendOperand
+name|HexagonMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 name|MCExpr
 specifier|const
@@ -141,9 +141,53 @@ name|getExpr
 argument_list|()
 specifier|const
 block|;
+name|void
+name|setMustExtend
+argument_list|(
+argument|bool Val = true
+argument_list|)
+block|;
+name|bool
+name|mustExtend
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setMustNotExtend
+argument_list|(
+argument|bool Val = true
+argument_list|)
+block|;
+name|bool
+name|mustNotExtend
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setS23_2_reloc
+argument_list|(
+argument|bool Val = true
+argument_list|)
+block|;
+name|bool
+name|s23_2_reloc
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setSignMismatch
+argument_list|(
+argument|bool Val = true
+argument_list|)
+block|;
+name|bool
+name|signMismatch
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
-name|HexagonNoExtendOperand
+name|HexagonMCExpr
 argument_list|(
 name|MCExpr
 specifier|const
@@ -155,6 +199,18 @@ name|MCExpr
 specifier|const
 operator|*
 name|Expr
+block|;
+name|bool
+name|MustNotExtend
+block|;
+name|bool
+name|MustExtend
+block|;
+name|bool
+name|S23_2_reloc
+block|;
+name|bool
+name|SignMismatch
 block|; }
 decl_stmt|;
 block|}

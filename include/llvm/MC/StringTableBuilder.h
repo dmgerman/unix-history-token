@@ -93,7 +93,10 @@ name|StringTable
 expr_stmt|;
 name|DenseMap
 operator|<
+name|CachedHash
+operator|<
 name|StringRef
+operator|>
 operator|,
 name|size_t
 operator|>
@@ -107,11 +110,24 @@ decl_stmt|;
 name|Kind
 name|K
 decl_stmt|;
+name|unsigned
+name|Alignment
+decl_stmt|;
+name|void
+name|finalizeStringTable
+parameter_list|(
+name|bool
+name|Optimize
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|StringTableBuilder
 argument_list|(
 argument|Kind K
+argument_list|,
+argument|unsigned Alignment =
+literal|1
 argument_list|)
 empty_stmt|;
 comment|/// \brief Add a string to the builder. Returns the position of S in the
@@ -128,6 +144,12 @@ comment|/// \brief Analyze the strings and build the final table. No more string
 comment|/// be added after this point.
 name|void
 name|finalize
+parameter_list|()
+function_decl|;
+comment|/// Finalize the string table without reording it. In this mode, offsets
+comment|/// returned by add will still be valid.
+name|void
+name|finalizeInOrder
 parameter_list|()
 function_decl|;
 comment|/// \brief Retrieve the string table data. Can only be used after the table
@@ -160,7 +182,10 @@ decl_stmt|;
 specifier|const
 name|DenseMap
 operator|<
+name|CachedHash
+operator|<
 name|StringRef
+operator|>
 operator|,
 name|size_t
 operator|>

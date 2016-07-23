@@ -211,6 +211,11 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|LLVM_USE_INTEL_JITEVENTS
+argument_list|)
+operator|&&
 name|LLVM_USE_INTEL_JITEVENTS
 comment|// Construct an IntelJITEventListener
 specifier|static
@@ -261,6 +266,11 @@ directive|endif
 comment|// USE_INTEL_JITEVENTS
 if|#
 directive|if
+name|defined
+argument_list|(
+name|LLVM_USE_OPROFILE
+argument_list|)
+operator|&&
 name|LLVM_USE_OPROFILE
 comment|// Construct an OProfileJITEventListener
 specifier|static

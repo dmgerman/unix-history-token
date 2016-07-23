@@ -49,25 +49,6 @@ comment|/* This option has been deprecated and                                  
 block|}
 name|LLVMLinkerMode
 typedef|;
-comment|/* Links the source module into the destination module. The source module is  * damaged. The only thing that can be done is destroy it. Optionally returns a  * human-readable description of any errors that occurred in linking. OutMessage  * must be disposed with LLVMDisposeMessage. The return value is true if an  * error occurred, false otherwise.  *  * Note that the linker mode parameter \p Unused is no longer used, and has  * no effect.  *  * This function is deprecated. Use LLVMLinkModules2 instead.  */
-name|LLVMBool
-name|LLVMLinkModules
-parameter_list|(
-name|LLVMModuleRef
-name|Dest
-parameter_list|,
-name|LLVMModuleRef
-name|Src
-parameter_list|,
-name|LLVMLinkerMode
-name|Unused
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|OutMessage
-parameter_list|)
-function_decl|;
 comment|/* Links the source module into the destination module. The source module is  * destroyed.  * The return value is true if an error occurred, false otherwise.  * Use the diagnostic handler to get any diagnostic message. */
 name|LLVMBool
 name|LLVMLinkModules2

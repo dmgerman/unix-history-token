@@ -88,30 +88,26 @@ name|namespace
 name|llvm
 block|{
 comment|/// Pass to remove unused function declarations.
-name|class
+name|struct
 name|StripDeadPrototypesPass
+range|:
+name|PassInfoMixin
+operator|<
+name|StripDeadPrototypesPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"StripDeadPrototypesPass"
-return|;
-block|}
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

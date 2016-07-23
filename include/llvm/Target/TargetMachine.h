@@ -124,10 +124,10 @@ name|class
 name|MachineFunctionInitializer
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|MCCodeGenInfo
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MCContext
@@ -146,9 +146,6 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|Target
-decl_stmt|;
-name|class
-name|DataLayout
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -170,9 +167,6 @@ name|TargetPassConfig
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|TargetSelectionDAGInfo
 decl_stmt|;
 name|class
 name|TargetSubtargetInfo
@@ -283,12 +277,33 @@ operator|::
 name|string
 name|TargetFS
 expr_stmt|;
-comment|/// Low level target information such as relocation model. Non-const to
-comment|/// allow resetting optimization level per-function.
-name|MCCodeGenInfo
-modifier|*
-name|CodeGenInfo
-decl_stmt|;
+name|Reloc
+operator|::
+name|Model
+name|RM
+operator|=
+name|Reloc
+operator|::
+name|Static
+expr_stmt|;
+name|CodeModel
+operator|::
+name|Model
+name|CMModel
+operator|=
+name|CodeModel
+operator|::
+name|Default
+expr_stmt|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+operator|=
+name|CodeGenOpt
+operator|::
+name|Default
+expr_stmt|;
 comment|/// Contains target specific asm information.
 specifier|const
 name|MCAsmInfo
@@ -320,23 +335,6 @@ name|O0WantsFastISel
 range|:
 literal|1
 decl_stmt|;
-comment|/// This API is here to support the C API, deprecated in 3.7 release.
-comment|/// This should never be used outside of legacy existing client.
-specifier|const
-name|DataLayout
-operator|&
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DL
-return|;
-block|}
-name|friend
-struct_decl|struct
-name|C_API_PRIVATE_ACCESS
-struct_decl|;
 name|public
 label|:
 name|mutable
@@ -607,6 +605,26 @@ name|getCodeModel
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isPositionIndependent
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|shouldAssumeDSOLocal
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|,
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns the TLS model which should be used for the given global variable.
 name|TLSModel
 operator|::
@@ -634,7 +652,6 @@ operator|::
 name|Level
 name|Level
 argument_list|)
-decl|const
 decl_stmt|;
 name|void
 name|setFastISel
@@ -743,6 +760,17 @@ name|TargetIRAnalysis
 name|getTargetIRAnalysis
 parameter_list|()
 function_decl|;
+comment|/// Add target-specific function passes that should be run as early as
+comment|/// possible in the optimization pipeline.  Most TargetMachines have no such
+comment|/// passes.
+name|virtual
+name|void
+name|addEarlyAsPossiblePasses
+parameter_list|(
+name|PassManagerBase
+modifier|&
+parameter_list|)
+block|{}
 comment|/// These enums are meant to be passed into addPassesToEmitFile to indicate
 comment|/// what type of file to emit, and returned by it to indicate what type of
 comment|/// file could actually be made.
@@ -890,6 +918,20 @@ name|Mang
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// True if the target uses physical regs at Prolog/Epilog insertion
+comment|/// time. If true (most machines), all vregs must be allocated before
+comment|/// PEI. If false (virtual-register machines), then callee-save register
+comment|/// spilling and scavenging are not needed or used.
+name|virtual
+name|bool
+name|usesPhysRegsForPEI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// This class describes a target machine that is implemented with the LLVM
@@ -991,6 +1033,25 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 name|override
+block|;
+comment|/// Add MachineModuleInfo pass to pass manager.
+name|MachineModuleInfo
+operator|&
+name|addMachineModuleInfo
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+specifier|const
+block|;
+comment|/// Add MachineFunctionAnalysis pass to pass manager.
+name|void
+name|addMachineFunctionAnalysis
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|MachineFunctionInitializer *MFInitializer
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

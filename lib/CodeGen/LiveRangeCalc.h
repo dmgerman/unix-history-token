@@ -492,6 +492,17 @@ name|bool
 name|TrackSubRegs
 parameter_list|)
 function_decl|;
+comment|/// For live interval \p LI with correct SubRanges construct matching
+comment|/// information for the main live range. Expects the main live range to not
+comment|/// have any segments or value numbers.
+name|void
+name|constructMainRangeFromSubranges
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Low-level interface.
 comment|//===--------------------------------------------------------------------===//

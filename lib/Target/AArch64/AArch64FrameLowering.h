@@ -101,12 +101,12 @@ argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
-argument_list|,
-argument|unsigned FramePtr
 argument_list|)
 specifier|const
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF
@@ -250,8 +250,27 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;  }
+name|bool
+name|enableStackSlotScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|bool
+name|shouldCombineCSRLocalStackBump
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|unsigned StackBumpBytes
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

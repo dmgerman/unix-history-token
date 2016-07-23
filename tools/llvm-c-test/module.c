@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -84,9 +78,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|LLVMModuleRef
-name|load_module
+name|llvm_load_module
 parameter_list|(
 name|bool
 name|Lazy
@@ -260,7 +253,7 @@ end_function
 
 begin_function
 name|int
-name|module_dump
+name|llvm_module_dump
 parameter_list|(
 name|bool
 name|Lazy
@@ -272,7 +265,7 @@ block|{
 name|LLVMModuleRef
 name|M
 init|=
-name|load_module
+name|llvm_load_module
 argument_list|(
 name|Lazy
 argument_list|,
@@ -311,7 +304,7 @@ end_function
 
 begin_function
 name|int
-name|module_list_functions
+name|llvm_module_list_functions
 parameter_list|(
 name|void
 parameter_list|)
@@ -319,7 +312,7 @@ block|{
 name|LLVMModuleRef
 name|M
 init|=
-name|load_module
+name|llvm_load_module
 argument_list|(
 name|false
 argument_list|,
@@ -509,7 +502,7 @@ end_function
 
 begin_function
 name|int
-name|module_list_globals
+name|llvm_module_list_globals
 parameter_list|(
 name|void
 parameter_list|)
@@ -517,7 +510,7 @@ block|{
 name|LLVMModuleRef
 name|M
 init|=
-name|load_module
+name|llvm_load_module
 argument_list|(
 name|false
 argument_list|,

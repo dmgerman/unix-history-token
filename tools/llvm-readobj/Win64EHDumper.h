@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"StreamWriter.h"
+file|"llvm/Support/ScopedPrinter.h"
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ block|{
 name|class
 name|Dumper
 block|{
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|SW
 decl_stmt|;
@@ -250,7 +250,7 @@ name|public
 label|:
 name|Dumper
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|SW
 argument_list|)

@@ -87,68 +87,6 @@ directive|include
 file|"HexagonGenRegisterInfo.inc"
 end_include
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//  We try not to hard code the reserved registers in our code,
-end_comment
-
-begin_comment
-comment|//  so the following two macros were defined. However, there
-end_comment
-
-begin_comment
-comment|//  are still a few places that R11 and R10 are hard wired.
-end_comment
-
-begin_comment
-comment|//  See below. If, in the future, we decided to change the reserved
-end_comment
-
-begin_comment
-comment|//  register. Don't forget changing the following places.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//  1. the "Defs" set of STriw_pred in HexagonInstrInfo.td
-end_comment
-
-begin_comment
-comment|//  2. the "Defs" set of LDri_pred in HexagonInstrInfo.td
-end_comment
-
-begin_comment
-comment|//  3. the definition of "IntRegs" in HexagonRegisterInfo.td
-end_comment
-
-begin_comment
-comment|//  4. the definition of "DoubleRegs" in HexagonRegisterInfo.td
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HEXAGON_RESERVED_REG_1
-value|Hexagon::R10
-end_define
-
-begin_define
-define|#
-directive|define
-name|HEXAGON_RESERVED_REG_2
-value|Hexagon::R11
-end_define
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -276,6 +214,8 @@ operator|*
 name|getCallerSavedRegs
 argument_list|(
 argument|const MachineFunction *MF
+argument_list|,
+argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;

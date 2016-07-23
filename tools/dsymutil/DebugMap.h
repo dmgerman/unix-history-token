@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- tools/dsymutil/DebugMap.h - Generic debug map representation -------===//
+comment|//=== tools/dsymutil/DebugMap.h - Generic debug map representation -*- C++ -*-//
 end_comment
 
 begin_comment
@@ -409,9 +409,12 @@ label|:
 struct|struct
 name|SymbolMapping
 block|{
+name|Optional
+operator|<
 name|yaml
 operator|::
 name|Hex64
+operator|>
 name|ObjectAddress
 expr_stmt|;
 name|yaml
@@ -426,18 +429,13 @@ name|Size
 expr_stmt|;
 name|SymbolMapping
 argument_list|(
-argument|uint64_t ObjectAddress
+argument|Optional<uint64_t> ObjectAddr
 argument_list|,
 argument|uint64_t BinaryAddress
 argument_list|,
 argument|uint32_t Size
 argument_list|)
 block|:
-name|ObjectAddress
-argument_list|(
-name|ObjectAddress
-argument_list|)
-operator|,
 name|BinaryAddress
 argument_list|(
 name|BinaryAddress
@@ -447,7 +445,17 @@ name|Size
 argument_list|(
 argument|Size
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|ObjectAddr
+condition|)
+name|ObjectAddress
+operator|=
+operator|*
+name|ObjectAddr
+expr_stmt|;
+block|}
 comment|/// For YAML IO support
 name|SymbolMapping
 argument_list|()
@@ -474,7 +482,10 @@ operator|::
 name|StringRef
 name|SymName
 argument_list|,
+name|Optional
+operator|<
 name|uint64_t
+operator|>
 name|ObjectAddress
 argument_list|,
 name|uint64_t

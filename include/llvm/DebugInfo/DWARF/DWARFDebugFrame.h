@@ -74,16 +74,22 @@ block|{
 name|class
 name|FrameEntry
 decl_stmt|;
-comment|/// \brief A parsed .debug_frame section
+comment|/// \brief A parsed .debug_frame or .eh_frame section
 comment|///
 name|class
 name|DWARFDebugFrame
 block|{
+comment|// True if this is parsing an eh_frame section.
+name|bool
+name|IsEH
+decl_stmt|;
 name|public
 label|:
 name|DWARFDebugFrame
-argument_list|()
-expr_stmt|;
+argument_list|(
+argument|bool IsEH
+argument_list|)
+empty_stmt|;
 operator|~
 name|DWARFDebugFrame
 argument_list|()

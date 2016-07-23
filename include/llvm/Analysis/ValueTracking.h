@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -91,6 +97,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|APInt
 decl_stmt|;
@@ -105,6 +119,9 @@ name|DataLayout
 decl_stmt|;
 name|class
 name|DominatorTree
+decl_stmt|;
+name|class
+name|GEPOperator
 decl_stmt|;
 name|class
 name|Instruction
@@ -127,6 +144,15 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|namespace
+name|Intrinsic
+block|{
+enum_decl|enum
+name|ID
+enum_decl|:
+name|unsigned
+enum_decl|;
+block|}
 comment|/// Determine which bits of V are known to be either zero or one and return
 comment|/// them in the KnownZero/KnownOne bit sets.
 comment|///
@@ -239,8 +265,8 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// ComputeSignBit - Determine whether the sign bit is known to be zero or
-comment|/// one.  Convenience wrapper around computeKnownBits.
+comment|/// Determine whether the sign bit is known to be zero or one. Convenience
+comment|/// wrapper around computeKnownBits.
 name|void
 name|ComputeSignBit
 parameter_list|(
@@ -287,11 +313,11 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isKnownToBeAPowerOfTwo - Return true if the given value is known to have
-comment|/// exactly one bit set when defined. For vectors return true if every
-comment|/// element is known to be a power of two when defined.  Supports values with
-comment|/// integer or pointer type and vectors of integers.  If 'OrZero' is set then
-comment|/// return true if the given value is either a power of two or zero.
+comment|/// Return true if the given value is known to have exactly one bit set when
+comment|/// defined. For vectors return true if every element is known to be a power
+comment|/// of two when defined. Supports values with integer or pointer type and
+comment|/// vectors of integers. If 'OrZero' is set, then return true if the given
+comment|/// value is either a power of two or zero.
 name|bool
 name|isKnownToBeAPowerOfTwo
 parameter_list|(
@@ -335,10 +361,10 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isKnownNonZero - Return true if the given value is known to be non-zero
-comment|/// when defined.  For vectors return true if every element is known to be
-comment|/// non-zero when defined.  Supports values with integer or pointer type and
-comment|/// vectors of integers.
+comment|/// Return true if the given value is known to be non-zero when defined. For
+comment|/// vectors, return true if every element is known to be non-zero when
+comment|/// defined. Supports values with integer or pointer type and vectors of
+comment|/// integers.
 name|bool
 name|isKnownNonZero
 parameter_list|(
@@ -416,8 +442,88 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isKnownNonEqual - Return true if the given values are known to be
-comment|/// non-equal when defined. Supports scalar integer types only.
+comment|/// Returns true if the given value is known be positive (i.e. non-negative
+comment|/// and non-zero).
+name|bool
+name|isKnownPositive
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the given value is known be negative (i.e. non-positive
+comment|/// and non-zero).
+name|bool
+name|isKnownNegative
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Return true if the given values are known to be non-equal when defined.
+comment|/// Supports scalar integer types only.
 name|bool
 name|isKnownNonEqual
 parameter_list|(
@@ -455,9 +561,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// MaskedValueIsZero - Return true if 'V& Mask' is known to be zero.  We use
-comment|/// this predicate to simplify operations downstream.  Mask is known to be
-comment|/// zero for bits that V cannot have.
+comment|/// Return true if 'V& Mask' is known to be zero. We use this predicate to
+comment|/// simplify operations downstream. Mask is known to be zero for bits that V
+comment|/// cannot have.
 comment|///
 comment|/// This function is defined on values with integer type, values with pointer
 comment|/// type, and vectors of integers.  In the case
@@ -507,14 +613,13 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// ComputeNumSignBits - Return the number of times the sign bit of the
-comment|/// register is replicated into the other bits.  We know that at least 1 bit
-comment|/// is always equal to the sign bit (itself), but other cases can give us
-comment|/// information.  For example, immediately after an "ashr X, 2", we know that
-comment|/// the top 3 bits are all equal to each other, so we return 3.
-comment|///
-comment|/// 'Op' must have a scalar integer type.
-comment|///
+comment|/// Return the number of times the sign bit of the register is replicated into
+comment|/// the other bits. We know that at least 1 bit is always equal to the sign
+comment|/// bit (itself), but other cases can give us information. For example,
+comment|/// immediately after an "ashr X, 2", we know that the top 3 bits are all
+comment|/// equal to each other, so we return 3. For vectors, return the number of
+comment|/// sign bits for the vector element with the mininum number of known sign
+comment|/// bits.
 name|unsigned
 name|ComputeNumSignBits
 parameter_list|(
@@ -553,11 +658,11 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// ComputeMultiple - This function computes the integer multiple of Base that
-comment|/// equals V.  If successful, it returns true and returns the multiple in
-comment|/// Multiple.  If unsuccessful, it returns false.  Also, if V can be
-comment|/// simplified to an integer, then the simplified V is returned in Val.  Look
-comment|/// through sext only if LookThroughSExt=true.
+comment|/// This function computes the integer multiple of Base that equals V. If
+comment|/// successful, it returns true and returns the multiple in Multiple. If
+comment|/// unsuccessful, it returns false. Also, if V can be simplified to an
+comment|/// integer, then the simplified V is returned in Val. Look through sext only
+comment|/// if LookThroughSExt=true.
 name|bool
 name|ComputeMultiple
 parameter_list|(
@@ -584,9 +689,20 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CannotBeNegativeZero - Return true if we can prove that the specified FP
-comment|/// value is never equal to -0.0.
-comment|///
+comment|/// Map a call instruction to an intrinsic ID.  Libcalls which have equivalent
+comment|/// intrinsics are treated as-if they were intrinsics.
+name|Intrinsic
+operator|::
+name|ID
+name|getIntrinsicForCallSite
+argument_list|(
+argument|ImmutableCallSite ICS
+argument_list|,
+argument|const TargetLibraryInfo *TLI
+argument_list|)
+expr_stmt|;
+comment|/// Return true if we can prove that the specified FP value is never equal to
+comment|/// -0.0.
 name|bool
 name|CannotBeNegativeZero
 parameter_list|(
@@ -595,15 +711,19 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CannotBeOrderedLessThanZero - Return true if we can prove that the
-comment|/// specified FP value is either a NaN or never less than 0.0.
-comment|///
+comment|/// Return true if we can prove that the specified FP value is either a NaN or
+comment|/// never less than 0.0.
 name|bool
 name|CannotBeOrderedLessThanZero
 parameter_list|(
@@ -612,17 +732,22 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// isBytewiseValue - If the specified value can be set by repeating the same
-comment|/// byte in memory, return the i8 value that it is represented with.  This is
-comment|/// true for all i8 values obviously, but is also true for i32 0, i32 -1,
-comment|/// i16 0xF0F0, double 0.0 etc.  If the value can't be handled with a repeated
-comment|/// byte store (e.g. i16 0x1234), return null.
+comment|/// If the specified value can be set by repeating the same byte in memory,
+comment|/// return the i8 value that it is represented with. This is true for all i8
+comment|/// values obviously, but is also true for i32 0, i32 -1, i16 0xF0F0, double
+comment|/// 0.0 etc. If the value can't be handled with a repeated byte store (e.g.
+comment|/// i16 0x1234), return null.
 name|Value
 modifier|*
 name|isBytewiseValue
@@ -632,9 +757,9 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// FindInsertedValue - Given an aggregrate and an sequence of indices, see if
-comment|/// the scalar value indexed is already around as a register, for example if
-comment|/// it were inserted directly into the aggregrate.
+comment|/// Given an aggregrate and an sequence of indices, see if the scalar value
+comment|/// indexed is already around as a register, for example if it were inserted
+comment|/// directly into the aggregrate.
 comment|///
 comment|/// If InsertBefore is not null, this function will duplicate (modified)
 comment|/// insertvalues when a part of a nested struct is extracted.
@@ -659,9 +784,8 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// GetPointerBaseWithConstantOffset - Analyze the specified pointer to see if
-comment|/// it can be expressed as a base pointer plus a constant offset.  Return the
-comment|/// base and offset to the caller.
+comment|/// Analyze the specified pointer to see if it can be expressed as a base
+comment|/// pointer plus a constant offset. Return the base and offset to the caller.
 name|Value
 modifier|*
 name|GetPointerBaseWithConstantOffset
@@ -720,12 +844,23 @@ name|DL
 argument_list|)
 return|;
 block|}
-comment|/// getConstantStringInfo - This function computes the length of a
-comment|/// null-terminated C string pointed to by V.  If successful, it returns true
-comment|/// and returns the string in Str.  If unsuccessful, it returns false.  This
-comment|/// does not include the trailing nul character by default.  If TrimAtNul is
-comment|/// set to false, then this returns any trailing nul characters as well as any
-comment|/// other characters that come after it.
+comment|/// Returns true if the GEP is based on a pointer to a string (array of i8),
+comment|/// and is indexing into this string.
+name|bool
+name|isGEPBasedOnPointerToString
+parameter_list|(
+specifier|const
+name|GEPOperator
+modifier|*
+name|GEP
+parameter_list|)
+function_decl|;
+comment|/// This function computes the length of a null-terminated C string pointed to
+comment|/// by V. If successful, it returns true and returns the string in Str. If
+comment|/// unsuccessful, it returns false. This does not include the trailing null
+comment|/// character by default. If TrimAtNul is set to false, then this returns any
+comment|/// trailing null characters as well as any other characters that come after
+comment|/// it.
 name|bool
 name|getConstantStringInfo
 parameter_list|(
@@ -749,8 +884,8 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-comment|/// GetStringLength - If we can compute the length of the string pointed to by
-comment|/// the specified pointer, return 'len+1'.  If we can't, return 0.
+comment|/// If we can compute the length of the string pointed to by the specified
+comment|/// pointer, return 'len+1'.  If we can't, return 0.
 name|uint64_t
 name|GetStringLength
 parameter_list|(
@@ -759,11 +894,11 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// GetUnderlyingObject - This method strips off any GEP address adjustments
-comment|/// and pointer casts from the specified value, returning the original object
-comment|/// being addressed.  Note that the returned value has pointer type if the
-comment|/// specified value does.  If the MaxLookup value is non-zero, it limits the
-comment|/// number of instructions to be stripped off.
+comment|/// This method strips off any GEP address adjustments and pointer casts from
+comment|/// the specified value, returning the original object being addressed. Note
+comment|/// that the returned value has pointer type if the specified value does. If
+comment|/// the MaxLookup value is non-zero, it limits the number of instructions to
+comment|/// be stripped off.
 name|Value
 modifier|*
 name|GetUnderlyingObject
@@ -884,8 +1019,7 @@ operator|=
 literal|6
 argument_list|)
 decl_stmt|;
-comment|/// onlyUsedByLifetimeMarkers - Return true if the only users of this pointer
-comment|/// are lifetime markers.
+comment|/// Return true if the only users of this pointer are lifetime markers.
 name|bool
 name|onlyUsedByLifetimeMarkers
 parameter_list|(
@@ -895,90 +1029,8 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// isDereferenceablePointer - Return true if this is always a dereferenceable
-comment|/// pointer. If the context instruction is specified perform context-sensitive
-comment|/// analysis and return true if the pointer is dereferenceable at the
-comment|/// specified instruction.
-name|bool
-name|isDereferenceablePointer
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CtxI
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|DominatorTree
-modifier|*
-name|DT
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
-comment|/// Returns true if V is always a dereferenceable pointer with alignment
-comment|/// greater or equal than requested. If the context instruction is specified
-comment|/// performs context-sensitive analysis and returns true if the pointer is
-comment|/// dereferenceable at the specified instruction.
-name|bool
-name|isDereferenceableAndAlignedPointer
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-name|unsigned
-name|Align
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CtxI
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|DominatorTree
-modifier|*
-name|DT
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
-comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
-comment|/// have any effects besides calculating the result and does not have
-comment|/// undefined behavior.
+comment|/// Return true if the instruction does not have any effects besides
+comment|/// calculating the result and does not have undefined behavior.
 comment|///
 comment|/// This method never returns true for an instruction that returns true for
 comment|/// mayHaveSideEffects; however, this method also does some other checks in
@@ -1021,13 +1073,6 @@ modifier|*
 name|DT
 init|=
 name|nullptr
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Returns true if the result or effects of the given instructions \p I
@@ -1047,9 +1092,9 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
-comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
-comment|/// its definition.  This returns true for allocas, non-extern-weak globals
-comment|/// and byval arguments.
+comment|/// Return true if this pointer couldn't possibly be null by its definition.
+comment|/// This returns true for allocas, non-extern-weak globals, and byval
+comment|/// arguments.
 name|bool
 name|isKnownNonNull
 parameter_list|(
@@ -1057,18 +1102,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isKnownNonNullAt - Return true if this pointer couldn't possibly be null.
-comment|/// If the context instruction is specified perform context-sensitive analysis
-comment|/// and return true if the pointer couldn't possibly be null at the specified
+comment|/// Return true if this pointer couldn't possibly be null. If the context
+comment|/// instruction is specified, perform context-sensitive analysis and return
+comment|/// true if the pointer couldn't possibly be null at the specified
 comment|/// instruction.
 name|bool
 name|isKnownNonNullAt
@@ -1089,13 +1127,6 @@ specifier|const
 name|DominatorTree
 modifier|*
 name|DT
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
 init|=
 name|nullptr
 parameter_list|)
@@ -1266,6 +1297,21 @@ modifier|*
 name|DT
 init|=
 name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the arithmetic part of the \p II 's result is
+comment|/// used only along the paths control dependent on the computation
+comment|/// not overflowing, \p II being an<op>.with.overflow intrinsic.
+name|bool
+name|isOverflowIntrinsicNoWrap
+parameter_list|(
+name|IntrinsicInst
+modifier|*
+name|II
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DT
 parameter_list|)
 function_decl|;
 comment|/// Return true if this function can prove that the instruction I will
@@ -1507,56 +1553,40 @@ modifier|&
 name|RangeMD
 parameter_list|)
 function_decl|;
-comment|/// Return true if RHS is known to be implied by LHS.  A& B must be i1
-comment|/// (boolean) values or a vector of such values. Note that the truth table for
-comment|/// implication is the same as<=u on i1 values (but not<=s!).  The truth
-comment|/// table for both is:
+comment|/// Return true if RHS is known to be implied true by LHS.  Return false if
+comment|/// RHS is known to be implied false by LHS.  Otherwise, return None if no
+comment|/// implication can be made.
+comment|/// A& B must be i1 (boolean) values or a vector of such values. Note that
+comment|/// the truth table for implication is the same as<=u on i1 values (but not
+comment|///<=s!).  The truth table for both is:
 comment|///    | T | F (B)
 comment|///  T | T | F
 comment|///  F | T | T
 comment|/// (A)
+name|Optional
+operator|<
 name|bool
+operator|>
 name|isImpliedCondition
-parameter_list|(
-name|Value
-modifier|*
-name|LHS
-parameter_list|,
-name|Value
-modifier|*
-name|RHS
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-name|unsigned
-name|Depth
-init|=
+argument_list|(
+argument|Value *LHS
+argument_list|,
+argument|Value *RHS
+argument_list|,
+argument|const DataLayout&DL
+argument_list|,
+argument|bool InvertAPred = false
+argument_list|,
+argument|unsigned Depth =
 literal|0
-parameter_list|,
-name|AssumptionCache
-modifier|*
-name|AC
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CxtI
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|DominatorTree
-modifier|*
-name|DT
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|,
+argument|AssumptionCache *AC = nullptr
+argument_list|,
+argument|const Instruction *CxtI = nullptr
+argument_list|,
+argument|const DominatorTree *DT = nullptr
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

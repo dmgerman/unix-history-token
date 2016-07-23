@@ -68,6 +68,8 @@ name|NeverSeen
 block|,
 name|Global
 block|,
+name|GlobalWeak
+block|,
 name|Defined
 block|,
 name|DefinedGlobal
@@ -95,10 +97,9 @@ block|;
 name|void
 name|markGlobal
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|Symbol
+argument|const MCSymbol&Symbol
+argument_list|,
+argument|MCSymbolAttr Attribute
 argument_list|)
 block|;
 name|void

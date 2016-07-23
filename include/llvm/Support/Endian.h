@@ -974,6 +974,22 @@ operator|>
 expr|struct
 name|packed_endian_specific_integral
 block|{
+name|packed_endian_specific_integral
+argument_list|()
+operator|=
+expr|default
+block|;
+name|explicit
+name|packed_endian_specific_integral
+argument_list|(
+argument|value_type val
+argument_list|)
+block|{
+operator|*
+name|this
+operator|=
+name|val
+block|; }
 name|operator
 name|value_type
 argument_list|()

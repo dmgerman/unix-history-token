@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines the XCore subclass for TargetSelectionDAGInfo.
+comment|// This file defines the XCore subclass for SelectionDAGTargetInfo.
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -76,7 +76,7 @@ name|class
 name|XCoreSelectionDAGInfo
 range|:
 name|public
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 block|{
 name|public
 operator|:
@@ -85,7 +85,7 @@ name|EmitTargetCodeForMemcpy
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SDValue Chain
 argument_list|,

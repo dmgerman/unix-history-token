@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -111,18 +105,6 @@ begin_include
 include|#
 directive|include
 file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utility>
 end_include
 
 begin_decl_stmt
@@ -157,11 +139,6 @@ literal|0
 argument_list|)
 block|,
 name|GlobalBaseReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Mips16SPAliasReg
 argument_list|(
 literal|0
 argument_list|)
@@ -222,15 +199,6 @@ specifier|const
 block|;
 name|unsigned
 name|getGlobalBaseReg
-argument_list|()
-block|;
-name|bool
-name|mips16SPAliasRegSet
-argument_list|()
-specifier|const
-block|;
-name|unsigned
-name|getMips16SPAliasReg
 argument_list|()
 block|;
 name|int
@@ -460,12 +428,6 @@ comment|/// use as the global base register. This is used for PIC in some PIC
 comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
-block|;
-comment|/// Mips16SPAliasReg - keeps track of the virtual register initialized for
-comment|/// use as an alias for SP for use in load/store of halfword/byte from/to
-comment|/// the stack
-name|unsigned
-name|Mips16SPAliasReg
 block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int

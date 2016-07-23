@@ -32,7 +32,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Define the interface between the Fuzzer and the library being tested.
+comment|// Define the interface between libFuzzer and the library being tested.
 end_comment
 
 begin_comment
@@ -40,15 +40,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// WARNING: keep the interface free of STL or any other header-based C++ lib,
+comment|// NOTE: the libFuzzer interface is thin and in the majority of cases
 end_comment
 
 begin_comment
-comment|// to avoid bad interactions between the code used in the fuzzer and
+comment|// you should not include this file into your target. In 95% of cases
 end_comment
 
 begin_comment
-comment|// the code used in the target function.
+comment|// all you need is to define the following function in your file:
+end_comment
+
+begin_comment
+comment|// extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
+end_comment
+
+begin_comment
+comment|// WARNING: keep the interface in C.
 end_comment
 
 begin_ifndef
@@ -66,53 +74,34 @@ end_define
 begin_include
 include|#
 directive|include
-file|<limits>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cstdint>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_decl_stmt
-name|namespace
-name|fuzzer
+begin_extern
+extern|extern
+literal|"C"
 block|{
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|uint8_t
-operator|>
-name|Unit
-expr_stmt|;
-comment|/// Returns an int 0. Values other than zero are reserved for future.
-typedef|typedef
+endif|#
+directive|endif
+comment|// __cplusplus
+comment|// Mandatory user-provided target function.
+comment|// Executes the code under test with [Data, Data+Size) as the input.
+comment|// libFuzzer will invoke this function *many* times with different inputs.
+comment|// Must return 0.
 name|int
-function_decl|(
-modifier|*
-name|UserCallback
-function_decl|)
+name|LLVMFuzzerTestOneInput
 parameter_list|(
 specifier|const
 name|uint8_t
@@ -123,304 +112,52 @@ name|size_t
 name|Size
 parameter_list|)
 function_decl|;
-comment|/** Simple C-like interface with a single user-supplied callback.  Usage:  #\code #include "FuzzerInterface.h"  int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {   DoStuffWithData(Data, Size);   return 0; }  // Implement your own main() or use the one from FuzzerMain.cpp. int main(int argc, char **argv) {   InitializeMeIfNeeded();   return fuzzer::FuzzerDriver(argc, argv, LLVMFuzzerTestOneInput); } #\endcode */
+comment|// Optional user-provided initialization function.
+comment|// If provided, this function will be called by libFuzzer once at startup.
+comment|// It may read and modify argc/argv.
+comment|// Must return 0.
 name|int
-name|FuzzerDriver
+name|LLVMFuzzerInitialize
 parameter_list|(
 name|int
+modifier|*
 name|argc
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+modifier|*
 name|argv
-parameter_list|,
-name|UserCallback
-name|Callback
 parameter_list|)
 function_decl|;
-name|class
-name|FuzzerRandomBase
-block|{
-name|public
-label|:
-name|FuzzerRandomBase
-argument_list|()
-block|{}
-name|virtual
-operator|~
-name|FuzzerRandomBase
-argument_list|()
-block|{}
-expr_stmt|;
-name|virtual
-name|void
-name|ResetSeed
+comment|// Optional user-provided custom mutator.
+comment|// Mutates raw data in [Data, Data+Size) inplace.
+comment|// Returns the new size, which is not greater than MaxSize.
+comment|// Given the same Seed produces the same mutation.
+name|size_t
+name|LLVMFuzzerCustomMutator
 parameter_list|(
+name|uint8_t
+modifier|*
+name|Data
+parameter_list|,
+name|size_t
+name|Size
+parameter_list|,
+name|size_t
+name|MaxSize
+parameter_list|,
 name|unsigned
 name|int
-name|seed
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|// Return a random number.
-name|virtual
-name|size_t
-name|Rand
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-comment|// Return a random number in range [0,n).
-name|size_t
-name|operator
-argument_list|()
-operator|(
-name|size_t
-name|n
-operator|)
-block|{
-return|return
-name|n
-operator|?
-name|Rand
-argument_list|()
-operator|%
-name|n
-operator|:
-literal|0
-return|;
-block|}
-name|bool
-name|RandBool
-parameter_list|()
-block|{
-return|return
-name|Rand
-argument_list|()
-operator|%
-literal|2
-return|;
-block|}
-block|}
-empty_stmt|;
-name|class
-name|FuzzerRandomLibc
-range|:
-name|public
-name|FuzzerRandomBase
-block|{
-name|public
-operator|:
-name|FuzzerRandomLibc
-argument_list|(
-argument|unsigned int seed
-argument_list|)
-block|{
-name|ResetSeed
-argument_list|(
-name|seed
-argument_list|)
-block|; }
-name|void
-name|ResetSeed
-argument_list|(
-argument|unsigned int seed
-argument_list|)
-name|override
-block|;
-operator|~
-name|FuzzerRandomLibc
-argument_list|()
-name|override
-block|{}
-name|size_t
-name|Rand
-argument_list|()
-name|override
-block|; }
-decl_stmt|;
-name|class
-name|MutationDispatcher
-block|{
-name|public
-label|:
-name|MutationDispatcher
-argument_list|(
-name|FuzzerRandomBase
-operator|&
-name|Rand
-argument_list|)
-expr_stmt|;
-operator|~
-name|MutationDispatcher
-argument_list|()
-expr_stmt|;
-comment|/// Indicate that we are about to start a new sequence of mutations.
-name|void
-name|StartMutationSequence
-parameter_list|()
-function_decl|;
-comment|/// Print the current sequence of mutations.
-name|void
-name|PrintMutationSequence
-parameter_list|()
-function_decl|;
-comment|/// Mutates data by shuffling bytes.
-name|size_t
-name|Mutate_ShuffleBytes
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
+name|Seed
 parameter_list|)
 function_decl|;
-comment|/// Mutates data by erasing a byte.
+comment|// Optional user-provided custom cross-over function.
+comment|// Combines pieces of Data1& Data2 together into Out.
+comment|// Returns the new size, which is not greater than MaxOutSize.
+comment|// Should produce the same mutation given the same Seed.
 name|size_t
-name|Mutate_EraseByte
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Mutates data by inserting a byte.
-name|size_t
-name|Mutate_InsertByte
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Mutates data by chanding one byte.
-name|size_t
-name|Mutate_ChangeByte
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Mutates data by chanding one bit.
-name|size_t
-name|Mutate_ChangeBit
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Mutates data by adding a word from the manual dictionary.
-name|size_t
-name|Mutate_AddWordFromManualDictionary
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Mutates data by adding a word from the automatic dictionary.
-name|size_t
-name|Mutate_AddWordFromAutoDictionary
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Tries to find an ASCII integer in Data, changes it to another ASCII int.
-name|size_t
-name|Mutate_ChangeASCIIInteger
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// CrossOver Data with some other element of the corpus.
-name|size_t
-name|Mutate_CrossOver
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Applies one of the above mutations.
-comment|/// Returns the new size of data which could be up to MaxSize.
-name|size_t
-name|Mutate
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
-comment|/// Creates a cross-over of two pieces of Data, returns its size.
-name|size_t
-name|CrossOver
+name|LLVMFuzzerCustomCrossOver
 parameter_list|(
 specifier|const
 name|uint8_t
@@ -444,181 +181,18 @@ name|Out
 parameter_list|,
 name|size_t
 name|MaxOutSize
-parameter_list|)
-function_decl|;
-name|void
-name|AddWordToManualDictionary
-parameter_list|(
-specifier|const
-name|Unit
-modifier|&
-name|Word
-parameter_list|)
-function_decl|;
-name|void
-name|AddWordToAutoDictionary
-parameter_list|(
-specifier|const
-name|Unit
-modifier|&
-name|Word
 parameter_list|,
-name|size_t
-name|PositionHint
-parameter_list|)
-function_decl|;
-name|void
-name|ClearAutoDictionary
-parameter_list|()
-function_decl|;
-name|void
-name|SetCorpus
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Unit
-operator|>
-operator|*
-name|Corpus
-argument_list|)
-decl_stmt|;
-name|private
-label|:
-name|FuzzerRandomBase
-modifier|&
-name|Rand
-decl_stmt|;
-struct_decl|struct
-name|Impl
-struct_decl|;
-name|Impl
-modifier|*
-name|MDImpl
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|// For backward compatibility only, deprecated.
-specifier|static
-specifier|inline
-name|size_t
-name|Mutate
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|,
-name|FuzzerRandomBase
-modifier|&
-name|Rand
-parameter_list|)
-block|{
-name|MutationDispatcher
-name|MD
-argument_list|(
-name|Rand
-argument_list|)
-decl_stmt|;
-return|return
-name|MD
-operator|.
-name|Mutate
-argument_list|(
-name|Data
-argument_list|,
-name|Size
-argument_list|,
-name|MaxSize
-argument_list|)
-return|;
-block|}
-comment|/** An abstract class that allows to use user-supplied mutators with libFuzzer.  Usage:  #\code #include "FuzzerInterface.h" class MyFuzzer : public fuzzer::UserSuppliedFuzzer {  public:   MyFuzzer(fuzzer::FuzzerRandomBase *Rand);   // Must define the target function.   int TargetFunction(...) { ...; return 0; }   // Optionally define the mutator.   size_t Mutate(...) { ... }   // Optionally define the CrossOver method.   size_t CrossOver(...) { ... } };  int main(int argc, char **argv) {   MyFuzzer F;   fuzzer::FuzzerDriver(argc, argv, F); } #\endcode */
-name|class
-name|UserSuppliedFuzzer
-block|{
-name|public
-label|:
-name|UserSuppliedFuzzer
-argument_list|(
-name|FuzzerRandomBase
-operator|*
-name|Rand
-argument_list|)
-expr_stmt|;
-comment|/// Executes the target function on 'Size' bytes of 'Data'.
-name|virtual
+name|unsigned
 name|int
-name|TargetFunction
-parameter_list|(
-specifier|const
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
+name|Seed
 parameter_list|)
-init|=
-literal|0
 function_decl|;
-name|virtual
-name|void
-name|StartMutationSequence
-parameter_list|()
-block|{
-name|MD
-operator|.
-name|StartMutationSequence
-argument_list|()
-expr_stmt|;
-block|}
-name|virtual
-name|void
-name|PrintMutationSequence
-parameter_list|()
-block|{
-name|MD
-operator|.
-name|PrintMutationSequence
-argument_list|()
-expr_stmt|;
-block|}
-name|virtual
-name|void
-name|SetCorpus
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Unit
-operator|>
-operator|*
-name|Corpus
-argument_list|)
-block|{
-name|MD
-operator|.
-name|SetCorpus
-argument_list|(
-name|Corpus
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Mutates 'Size' bytes of data in 'Data' inplace into up to 'MaxSize' bytes,
-comment|/// returns the new size of the data, which should be positive.
-name|virtual
+comment|// Experimental, may go away in future.
+comment|// libFuzzer-provided function to be used inside LLVMFuzzerTestOneInput.
+comment|// Mutates raw data in [Data, Data+Size) inplace.
+comment|// Returns the new size, which is not greater than MaxSize.
 name|size_t
-name|Mutate
+name|LLVMFuzzerMutate
 parameter_list|(
 name|uint8_t
 modifier|*
@@ -630,171 +204,24 @@ parameter_list|,
 name|size_t
 name|MaxSize
 parameter_list|)
-block|{
-return|return
-name|MD
-operator|.
-name|Mutate
-argument_list|(
-name|Data
-argument_list|,
-name|Size
-argument_list|,
-name|MaxSize
-argument_list|)
-return|;
-block|}
-comment|/// Crosses 'Data1' and 'Data2', writes up to 'MaxOutSize' bytes into Out,
-comment|/// returns the number of bytes written, which should be positive.
-name|virtual
-name|size_t
-name|CrossOver
-parameter_list|(
-specifier|const
-name|uint8_t
-modifier|*
-name|Data1
-parameter_list|,
-name|size_t
-name|Size1
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|Data2
-parameter_list|,
-name|size_t
-name|Size2
-parameter_list|,
-name|uint8_t
-modifier|*
-name|Out
-parameter_list|,
-name|size_t
-name|MaxOutSize
-parameter_list|)
-block|{
-return|return
-name|MD
-operator|.
-name|CrossOver
-argument_list|(
-name|Data1
-argument_list|,
-name|Size1
-argument_list|,
-name|Data2
-argument_list|,
-name|Size2
-argument_list|,
-name|Out
-argument_list|,
-name|MaxOutSize
-argument_list|)
-return|;
-block|}
-name|virtual
-operator|~
-name|UserSuppliedFuzzer
-argument_list|()
-expr_stmt|;
-name|FuzzerRandomBase
-modifier|&
-name|GetRand
-parameter_list|()
-block|{
-return|return
-operator|*
-name|Rand
-return|;
-block|}
-name|MutationDispatcher
-modifier|&
-name|GetMD
-parameter_list|()
-block|{
-return|return
-name|MD
-return|;
-block|}
-name|private
-label|:
-name|bool
-name|OwnRand
-init|=
-name|false
-decl_stmt|;
-name|FuzzerRandomBase
-modifier|*
-name|Rand
-decl_stmt|;
-name|MutationDispatcher
-name|MD
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|/// Runs the fuzzing with the UserSuppliedFuzzer.
-name|int
-name|FuzzerDriver
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|UserSuppliedFuzzer
-modifier|&
-name|USF
-parameter_list|)
 function_decl|;
-comment|/// More C++-ish interface.
-name|int
-name|FuzzerDriver
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
-argument_list|,
-name|UserSuppliedFuzzer
-operator|&
-name|USF
-argument_list|)
-decl_stmt|;
-name|int
-name|FuzzerDriver
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
-argument_list|,
-name|UserCallback
-name|Callback
-argument_list|)
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
 block|}
-end_decl_stmt
+end_extern
 
 begin_comment
-comment|// namespace fuzzer
+comment|// extern "C"
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __cplusplus
 end_comment
 
 begin_endif

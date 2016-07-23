@@ -85,20 +85,14 @@ name|llvm
 block|{
 comment|/// A pass which infers function attributes from the names and signatures of
 comment|/// function declarations in a module.
-name|class
+name|struct
 name|InferFunctionAttrsPass
+range|:
+name|PassInfoMixin
+operator|<
+name|InferFunctionAttrsPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"InferFunctionAttrsPass"
-return|;
-block|}
 name|PreservedAnalyses
 name|run
 argument_list|(
@@ -110,12 +104,11 @@ name|AnalysisManager
 operator|<
 name|Module
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// Create a legacy pass manager instance of a pass to infer function
 comment|/// attributes.
 name|Pass

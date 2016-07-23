@@ -343,7 +343,7 @@ name|SPVersion
 parameter_list|()
 block|{
 return|return
-literal|102
+literal|103
 return|;
 block|}
 comment|/// Represents the relative location of an instruction.
@@ -439,70 +439,6 @@ name|OS
 operator|,
 specifier|const
 name|LineLocation
-operator|&
-name|Loc
-operator|)
-expr_stmt|;
-comment|/// Represents the relative location of a callsite.
-comment|///
-comment|/// Callsite locations are specified by the line offset from the
-comment|/// beginning of the function (marked by the line where the function
-comment|/// head is), the discriminator value within that line, and the callee
-comment|/// function name.
-name|struct
-name|CallsiteLocation
-range|:
-name|public
-name|LineLocation
-block|{
-name|CallsiteLocation
-argument_list|(
-argument|uint32_t L
-argument_list|,
-argument|uint32_t D
-argument_list|,
-argument|StringRef N
-argument_list|)
-operator|:
-name|LineLocation
-argument_list|(
-name|L
-argument_list|,
-name|D
-argument_list|)
-block|,
-name|CalleeName
-argument_list|(
-argument|N
-argument_list|)
-block|{}
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|;
-name|StringRef
-name|CalleeName
-block|; }
-decl_stmt|;
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|CallsiteLocation
 operator|&
 name|Loc
 operator|)
@@ -803,7 +739,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|CallsiteLocation
+name|LineLocation
 operator|,
 name|FunctionSamples
 operator|>
@@ -822,6 +758,9 @@ label|:
 name|FunctionSamples
 argument_list|()
 operator|:
+name|Name
+argument_list|()
+operator|,
 name|TotalSamples
 argument_list|(
 literal|0
@@ -975,9 +914,11 @@ argument_list|,
 name|uint32_t
 name|Discriminator
 argument_list|,
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|FName
 argument_list|,
 name|uint64_t
@@ -1073,7 +1014,7 @@ modifier|&
 name|functionSamplesAt
 parameter_list|(
 specifier|const
-name|CallsiteLocation
+name|LineLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1092,7 +1033,7 @@ modifier|*
 name|findFunctionSamplesAt
 argument_list|(
 specifier|const
-name|CallsiteLocation
+name|LineLocation
 operator|&
 name|Loc
 argument_list|)
@@ -1211,6 +1152,13 @@ name|sampleprof_error
 operator|::
 name|success
 decl_stmt|;
+name|Name
+operator|=
+name|Other
+operator|.
+name|getName
+argument_list|()
+expr_stmt|;
 name|MergeResult
 argument_list|(
 name|Result
@@ -1304,7 +1252,7 @@ argument_list|()
 control|)
 block|{
 specifier|const
-name|CallsiteLocation
+name|LineLocation
 modifier|&
 name|Loc
 init|=
@@ -1343,8 +1291,37 @@ return|return
 name|Result
 return|;
 block|}
+comment|/// Set the name of the function.
+name|void
+name|setName
+parameter_list|(
+name|StringRef
+name|FunctionName
+parameter_list|)
+block|{
+name|Name
+operator|=
+name|FunctionName
+expr_stmt|;
+block|}
+comment|/// Return the function name.
+specifier|const
+name|StringRef
+operator|&
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
 name|private
 label|:
+comment|/// Mangled name of the function.
+name|StringRef
+name|Name
+decl_stmt|;
 comment|/// Total number of samples collected inside this function.
 comment|///
 comment|/// Samples are cumulative, they include all the samples collected

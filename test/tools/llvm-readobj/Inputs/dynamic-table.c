@@ -15,6 +15,14 @@ begin_comment
 comment|//       -o dynamic-table-exe.mips
 end_comment
 
+begin_comment
+comment|// clang -target aarch64-linux-gnu -fPIC -shared dynamic-table.c \
+end_comment
+
+begin_comment
+comment|//       -o dynamic-table-so.aarch64
+end_comment
+
 begin_function_decl
 name|int
 name|puts
@@ -25,6 +33,13 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|__thread
+name|int
+name|foo
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -37,6 +52,10 @@ name|puts
 argument_list|(
 literal|"Hello, World"
 argument_list|)
+expr_stmt|;
+name|foo
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

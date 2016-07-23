@@ -71,6 +71,12 @@ directive|include
 file|<utility>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -240,11 +246,12 @@ name|value
 block|; }
 expr_stmt|;
 comment|/// \brief Metafunction that determines whether the given type is either an
-comment|/// integral type or an enumeration type.
+comment|/// integral type or an enumeration type, including enum classes.
 comment|///
 comment|/// Note that this accepts potentially more integral types than is_integral
-comment|/// because it is based on merely being convertible implicitly to an integral
-comment|/// type.
+comment|/// because it is based on being implicitly convertible to an integral type.
+comment|/// Also note that enum classes aren't implicitly convertible to integral types,
+comment|/// the value may therefore need to be explicitly converted before being used.
 name|template
 operator|<
 name|typename
@@ -303,6 +310,16 @@ operator|>
 operator|::
 name|value
 operator|&&
+operator|(
+name|std
+operator|::
+name|is_enum
+operator|<
+name|UnderlyingT
+operator|>
+operator|::
+name|value
+operator|||
 name|std
 operator|::
 name|is_convertible
@@ -315,6 +332,7 @@ name|long
 operator|>
 operator|::
 name|value
+operator|)
 expr_stmt|;
 block|}
 end_decl_stmt

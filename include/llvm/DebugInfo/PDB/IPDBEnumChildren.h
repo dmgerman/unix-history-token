@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|template
 operator|<
 name|typename
@@ -133,11 +136,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
+block|}
+end_decl_stmt
 
 begin_endif
 unit|}

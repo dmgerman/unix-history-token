@@ -325,7 +325,9 @@ parameter_list|,
 name|MVT
 name|VT
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|)
 function_decl|;

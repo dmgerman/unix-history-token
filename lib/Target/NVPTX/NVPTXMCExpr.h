@@ -59,6 +59,12 @@ directive|include
 file|"llvm/MC/MCExpr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -108,7 +114,7 @@ argument_list|)
 block|,
 name|Flt
 argument_list|(
-argument|Flt
+argument|std::move(Flt)
 argument_list|)
 block|{}
 name|public
@@ -123,7 +129,7 @@ name|create
 argument_list|(
 argument|VariantKind Kind
 argument_list|,
-argument|APFloat Flt
+argument|const APFloat&Flt
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
@@ -134,7 +140,7 @@ name|NVPTXFloatMCExpr
 operator|*
 name|createConstantFPSingle
 argument_list|(
-argument|APFloat Flt
+argument|const APFloat&Flt
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
@@ -156,7 +162,7 @@ name|NVPTXFloatMCExpr
 operator|*
 name|createConstantFPDouble
 argument_list|(
-argument|APFloat Flt
+argument|const APFloat&Flt
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)

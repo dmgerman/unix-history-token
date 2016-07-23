@@ -53,9 +53,16 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|LinePrinter
 decl_stmt|;
+typedef|typedef
+name|int
+name|CompilandDumpFlags
+typedef|;
 name|class
 name|CompilandDumper
 range|:
@@ -64,6 +71,26 @@ name|PDBSymDumper
 block|{
 name|public
 operator|:
+expr|enum
+name|Flags
+block|{
+name|None
+operator|=
+literal|0x0
+block|,
+name|Children
+operator|=
+literal|0x1
+block|,
+name|Symbols
+operator|=
+literal|0x2
+block|,
+name|Lines
+operator|=
+literal|0x4
+block|}
+block|;
 name|CompilandDumper
 argument_list|(
 name|LinePrinter
@@ -76,7 +103,7 @@ name|start
 argument_list|(
 argument|const PDBSymbolCompiland&Symbol
 argument_list|,
-argument|bool Children
+argument|CompilandDumpFlags flags
 argument_list|)
 block|;
 name|void
@@ -142,6 +169,7 @@ operator|&
 name|Printer
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCELFStreamer.h"
 end_include
 
@@ -103,12 +109,24 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|setPic
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{}
+name|virtual
+name|void
 name|emitDirectiveSetMicroMips
 argument_list|()
 block|;
 name|virtual
 name|void
 name|emitDirectiveSetNoMicroMips
+argument_list|()
+block|;
+name|virtual
+name|void
+name|setUsesMicroMips
 argument_list|()
 block|;
 name|virtual
@@ -370,15 +388,16 @@ argument|unsigned RegNo
 argument_list|)
 block|;
 name|virtual
-name|void
+name|bool
 name|emitDirectiveCpRestore
 argument_list|(
-argument|SmallVector<MCInst
-argument_list|,
-literal|3
-argument|>&StoreInsts
-argument_list|,
 argument|int Offset
+argument_list|,
+argument|function_ref<unsigned()> GetATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
 argument_list|)
 block|;
 name|virtual
@@ -440,6 +459,261 @@ name|virtual
 name|void
 name|emitDirectiveSetNoOddSPReg
 argument_list|()
+block|;
+name|void
+name|emitR
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitII
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|int16_t Imm1
+argument_list|,
+argument|int16_t Imm2
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRX
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|MCOperand Op1
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRI
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|int32_t Imm
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRR
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRRX
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|MCOperand Op2
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRRR
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|unsigned Reg2
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRRI
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|int16_t Imm
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitAddu
+argument_list|(
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned TrgReg
+argument_list|,
+argument|bool Is64Bit
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitDSLL
+argument_list|(
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|int16_t ShiftAmount
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitEmptyDelaySlot
+argument_list|(
+argument|bool hasShortDelaySlot
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitNop
+argument_list|(
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+comment|/// Emit a store instruction with an offset. If the offset is out of range
+comment|/// then it will be synthesized using the assembler temporary.
+comment|///
+comment|/// GetATReg() is a callback that can be used to obtain the current assembler
+comment|/// temporary and is only called when the assembler temporary is required. It
+comment|/// must handle the case where no assembler temporary is available (typically
+comment|/// by reporting an error).
+name|void
+name|emitStoreWithImmOffset
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|function_ref<unsigned()> GetATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitStoreWithSymOffset
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|MCOperand&HiOperand
+argument_list|,
+argument|MCOperand&LoOperand
+argument_list|,
+argument|unsigned ATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitLoadWithImmOffset
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|unsigned TmpReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitLoadWithSymOffset
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|MCOperand&HiOperand
+argument_list|,
+argument|MCOperand&LoOperand
+argument_list|,
+argument|unsigned ATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitGPRestore
+argument_list|(
+argument|int Offset
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
 block|;
 name|void
 name|forbidModuleDirective
@@ -861,15 +1135,23 @@ argument|unsigned RegNo
 argument_list|)
 name|override
 block|;
-name|void
+comment|/// Emit a .cprestore directive.  If the offset is out of range then it will
+comment|/// be synthesized using the assembler temporary.
+comment|///
+comment|/// GetATReg() is a callback that can be used to obtain the current assembler
+comment|/// temporary and is only called when the assembler temporary is required. It
+comment|/// must handle the case where no assembler temporary is available (typically
+comment|/// by reporting an error).
+name|bool
 name|emitDirectiveCpRestore
 argument_list|(
-argument|SmallVector<MCInst
-argument_list|,
-literal|3
-argument|>&StoreInsts
-argument_list|,
 argument|int Offset
+argument_list|,
+argument|function_ref<unsigned()> GetATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
 argument_list|)
 name|override
 block|;
@@ -981,6 +1263,17 @@ name|STI
 argument_list|)
 block|;
 name|void
+name|setPic
+argument_list|(
+argument|bool Value
+argument_list|)
+name|override
+block|{
+name|Pic
+operator|=
+name|Value
+block|; }
+name|void
 name|emitLabel
 argument_list|(
 argument|MCSymbol *Symbol
@@ -1008,6 +1301,11 @@ name|override
 block|;
 name|void
 name|emitDirectiveSetNoMicroMips
+argument_list|()
+name|override
+block|;
+name|void
+name|setUsesMicroMips
 argument_list|()
 name|override
 block|;
@@ -1102,15 +1400,16 @@ argument|unsigned RegNo
 argument_list|)
 name|override
 block|;
-name|void
+name|bool
 name|emitDirectiveCpRestore
 argument_list|(
-argument|SmallVector<MCInst
-argument_list|,
-literal|3
-argument|>&StoreInsts
-argument_list|,
 argument|int Offset
+argument_list|,
+argument|function_ref<unsigned()> GetATReg
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
 argument_list|)
 name|override
 block|;

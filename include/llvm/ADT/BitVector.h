@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -98,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
 end_include
 
 begin_decl_stmt
@@ -301,10 +301,8 @@ operator|<<
 name|BitPos
 operator|)
 operator|)
-operator|?
-name|true
-operator|:
-name|false
+operator|!=
+literal|0
 return|;
 block|}
 block|}
@@ -496,6 +494,16 @@ operator|.
 name|Bits
 operator|=
 name|nullptr
+block|;
+name|RHS
+operator|.
+name|Size
+operator|=
+name|RHS
+operator|.
+name|Capacity
+operator|=
+literal|0
 block|;   }
 operator|~
 name|BitVector
@@ -1289,7 +1297,7 @@ name|PrefixMask
 expr_stmt|;
 name|I
 operator|=
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|I
 argument_list|,
@@ -1539,7 +1547,7 @@ name|PrefixMask
 expr_stmt|;
 name|I
 operator|=
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|I
 argument_list|,
@@ -2765,6 +2773,19 @@ name|nullptr
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RHS
+operator|.
+name|Size
+operator|=
+name|RHS
+operator|.
+name|Capacity
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|*
@@ -3533,7 +3554,7 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -3572,10 +3593,18 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|// end namespace std
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_BITVECTOR_H
+end_comment
 
 end_unit
 

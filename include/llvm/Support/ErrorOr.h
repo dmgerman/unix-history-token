@@ -101,104 +101,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|V
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|is_constructible
-operator|<
-name|T
-operator|,
-name|V
-operator|>
-operator|::
-name|value
-operator|,
-name|typename
-name|std
-operator|::
-name|remove_reference
-operator|<
-name|V
-operator|>
-operator|::
-name|type
-operator|>
-operator|::
-name|type
-operator|&&
-name|moveIfMoveConstructible
-argument_list|(
-argument|V&Val
-argument_list|)
-block|{
-return|return
-name|std
-operator|::
-name|move
-argument_list|(
-name|Val
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|V
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-operator|!
-name|std
-operator|::
-name|is_constructible
-operator|<
-name|T
-operator|,
-name|V
-operator|>
-operator|::
-name|value
-operator|,
-name|typename
-name|std
-operator|::
-name|remove_reference
-operator|<
-name|V
-operator|>
-operator|::
-name|type
-operator|>
-operator|::
-name|type
-operator|&
-name|moveIfMoveConstructible
-argument_list|(
-argument|V&Val
-argument_list|)
-block|{
-return|return
-name|Val
-return|;
-block|}
 comment|/// \brief Stores a reference that can be changed.
 name|template
 operator|<
@@ -274,7 +176,7 @@ comment|/// Implicit conversion to bool returns true if there is a usable value.
 comment|/// unary * and -> operators provide pointer like access to the value. Accessing
 comment|/// the value when there is an error has undefined behavior.
 comment|///
-comment|/// When T is a reference type the behaivor is slightly different. The reference
+comment|/// When T is a reference type the behavior is slightly different. The reference
 comment|/// is held in a std::reference_wrapper<std::remove_reference<T>::type>, and
 comment|/// there is special handling to make operator -> work as if T was not a
 comment|/// reference.
@@ -413,8 +315,7 @@ argument|E ErrorCode
 argument_list|,
 argument|typename std::enable_if<std::is_error_code_enum<E>::value ||                                       std::is_error_condition_enum<E>::value
 argument_list|,
-argument|void *>::type =
-literal|0
+argument|void *>::type = nullptr
 argument_list|)
 operator|:
 name|HasError
@@ -457,9 +358,18 @@ argument_list|(
 name|EC
 argument_list|)
 block|;   }
+name|template
+operator|<
+name|class
+name|OtherT
+operator|>
 name|ErrorOr
 argument_list|(
-argument|T Val
+argument|OtherT&&Val
+argument_list|,
+argument|typename std::enable_if<std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type               * = nullptr
 argument_list|)
 operator|:
 name|HasError
@@ -473,9 +383,11 @@ argument|getStorage()
 argument_list|)
 name|storage_type
 argument_list|(
-name|moveIfMoveConstructible
+name|std
+operator|::
+name|forward
 operator|<
-name|storage_type
+name|OtherT
 operator|>
 operator|(
 name|Val
@@ -1373,6 +1285,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_ERROROR_H
+end_comment
 
 end_unit
 

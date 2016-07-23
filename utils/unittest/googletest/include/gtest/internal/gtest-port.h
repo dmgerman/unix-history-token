@@ -368,6 +368,10 @@ comment|//   GTEST_OS_MAC      - Mac OS X
 end_comment
 
 begin_comment
+comment|//   GTEST_OS_MINIX    - Minix
+end_comment
+
+begin_comment
 comment|//   GTEST_OS_NACL     - Google Native Client (NaCl)
 end_comment
 
@@ -1172,6 +1176,22 @@ name|GTEST_OS_HAIKU
 value|1
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MINIX
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_MINIX
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1714,7 +1734,7 @@ define|#
 directive|define
 name|GTEST_HAS_STD_WSTRING
 define|\
-value|(!(GTEST_OS_LINUX_ANDROID || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || GTEST_OS_HAIKU || defined(_MINIX)))
+value|(!(GTEST_OS_LINUX_ANDROID || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || GTEST_OS_HAIKU || GTEST_OS_MINIX))
 end_define
 
 begin_endif

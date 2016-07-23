@@ -92,7 +92,15 @@ comment|/// virtual stack trace.  This gets dumped out if the program crashes.
 name|class
 name|PrettyStackTraceEntry
 block|{
-specifier|const
+name|friend
+name|PrettyStackTraceEntry
+modifier|*
+name|ReverseStackTrace
+parameter_list|(
+name|PrettyStackTraceEntry
+modifier|*
+parameter_list|)
+function_decl|;
 name|PrettyStackTraceEntry
 modifier|*
 name|NextEntry

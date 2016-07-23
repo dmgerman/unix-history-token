@@ -93,30 +93,26 @@ comment|/// This pass eliminates dead code by optimistically assuming that all
 comment|/// instructions are dead until proven otherwise. This allows it to eliminate
 comment|/// dead computations that other DCE passes do not catch, particularly involving
 comment|/// loop computations.
-name|class
+name|struct
 name|ADCEPass
+range|:
+name|PassInfoMixin
+operator|<
+name|ADCEPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"ADCEPass"
-return|;
-block|}
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

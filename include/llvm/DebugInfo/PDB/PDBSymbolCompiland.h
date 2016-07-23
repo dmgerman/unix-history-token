@@ -68,6 +68,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolCompiland
 range|:
@@ -120,16 +123,15 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getName
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
-argument|getSourceFileName
-argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
-argument|getSymIndexId
-argument_list|)
-block|}
+name|std
+operator|::
+name|string
+name|getSourceFileName
+argument_list|()
+specifier|const
+block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

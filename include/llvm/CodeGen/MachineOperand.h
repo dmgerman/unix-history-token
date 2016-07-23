@@ -1925,6 +1925,34 @@ operator|=
 name|MBB
 expr_stmt|;
 block|}
+comment|/// Sets value of register mask operand referencing Mask.  The
+comment|/// operand does not take ownership of the memory referenced by Mask, it must
+comment|/// remain valid for the lifetime of the operand. See CreateRegMask().
+comment|/// Any physreg with a 0 bit in the mask is clobbered by the instruction.
+name|void
+name|setRegMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMaskPtr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isRegMask
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand mutator"
+argument_list|)
+expr_stmt|;
+name|Contents
+operator|.
+name|RegMask
+operator|=
+name|RegMaskPtr
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Other methods.
 comment|//===--------------------------------------------------------------------===//

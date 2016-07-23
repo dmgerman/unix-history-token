@@ -126,11 +126,11 @@ comment|/// getBundleStart - Returns the first instruction in the bundle contain
 comment|///
 specifier|inline
 name|MachineInstr
-modifier|*
+modifier|&
 name|getBundleStart
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -153,7 +153,6 @@ operator|--
 name|I
 expr_stmt|;
 return|return
-operator|&
 operator|*
 name|I
 return|;
@@ -161,12 +160,12 @@ block|}
 specifier|inline
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|getBundleStart
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -189,7 +188,6 @@ operator|--
 name|I
 expr_stmt|;
 return|return
-operator|&
 operator|*
 name|I
 return|;
@@ -201,7 +199,7 @@ operator|::
 name|instr_iterator
 name|getBundleEnd
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 block|{
 name|MachineBasicBlock
@@ -240,7 +238,7 @@ operator|::
 name|const_instr_iterator
 name|getBundleEnd
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 block|{
 name|MachineBasicBlock
@@ -408,7 +406,7 @@ name|explicit
 name|MachineOperandIteratorBase
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|bool
@@ -426,14 +424,14 @@ name|getBundleStart
 argument_list|(
 name|MI
 argument_list|)
-operator|->
+operator|.
 name|getIterator
 argument_list|()
 expr_stmt|;
 name|InstrE
 operator|=
 name|MI
-operator|->
+operator|.
 name|getParent
 argument_list|()
 operator|->
@@ -448,7 +446,7 @@ operator|=
 name|InstrE
 operator|=
 name|MI
-operator|->
+operator|.
 name|getIterator
 argument_list|()
 expr_stmt|;
@@ -592,10 +590,17 @@ comment|/// Reg or a super-register is read. The full register is read.
 name|bool
 name|FullyRead
 decl_stmt|;
-comment|/// Reg is FullyDefined and all defs of reg or an overlapping register are
-comment|/// dead.
+comment|/// Either:
+comment|/// - Reg is FullyDefined and all defs of reg or an overlapping
+comment|///   register are dead, or
+comment|/// - Reg is completely dead because "defined" by a clobber.
 name|bool
 name|DeadDef
+decl_stmt|;
+comment|/// Reg is Defined and all defs of reg or an overlapping register are
+comment|/// dead.
+name|bool
+name|PartialDeadDef
 decl_stmt|;
 comment|/// There is a use operand of reg or a super-register with kill flag set.
 name|bool
@@ -680,7 +685,7 @@ operator|:
 name|MIOperands
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 operator|:
@@ -746,13 +751,13 @@ name|ConstMIOperands
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 operator|:
 name|MachineOperandIteratorBase
 argument_list|(
-argument|const_cast<MachineInstr*>(MI)
+argument|const_cast<MachineInstr&>(MI)
 argument_list|,
 argument|false
 argument_list|)
@@ -817,7 +822,7 @@ operator|:
 name|MIBundleOperands
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 operator|:
@@ -887,13 +892,13 @@ name|ConstMIBundleOperands
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 operator|:
 name|MachineOperandIteratorBase
 argument_list|(
-argument|const_cast<MachineInstr*>(MI)
+argument|const_cast<MachineInstr&>(MI)
 argument_list|,
 argument|true
 argument_list|)

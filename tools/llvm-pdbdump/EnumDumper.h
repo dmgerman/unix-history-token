@@ -53,6 +53,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|LinePrinter
 decl_stmt|;
@@ -87,6 +90,7 @@ operator|&
 name|Printer
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

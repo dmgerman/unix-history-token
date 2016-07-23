@@ -56,6 +56,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolUnknown
 range|:
@@ -119,11 +122,9 @@ return|;
 block|}
 expr|}
 block|;  }
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

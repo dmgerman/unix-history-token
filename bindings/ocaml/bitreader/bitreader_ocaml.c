@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm-c/Core.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"caml/alloc.h"
 end_include
 
@@ -86,7 +92,10 @@ argument_list|(
 literal|"Llvm_bitreader.Error"
 argument_list|)
 argument_list|,
+name|LLVMCreateMessage
+argument_list|(
 literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -134,7 +143,10 @@ argument_list|(
 literal|"Llvm_bitreader.Error"
 argument_list|)
 argument_list|,
+name|LLVMCreateMessage
+argument_list|(
 literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

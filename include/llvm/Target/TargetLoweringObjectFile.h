@@ -260,6 +260,8 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
+argument_list|,
+argument|unsigned&Align
 argument_list|)
 specifier|const
 block|;
@@ -519,9 +521,11 @@ name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getExecutableRelativeSymbol
+name|lowerRelativeReference
 argument_list|(
-argument|const ConstantExpr *CE
+argument|const GlobalValue *LHS
+argument_list|,
+argument|const GlobalValue *RHS
 argument_list|,
 argument|Mangler&Mang
 argument_list|,

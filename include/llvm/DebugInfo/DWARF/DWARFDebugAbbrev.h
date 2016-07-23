@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<list>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 

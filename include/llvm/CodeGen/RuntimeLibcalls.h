@@ -454,6 +454,10 @@ block|,
 name|FMAX_PPCF128
 block|,
 comment|// CONVERSION
+name|FPEXT_F32_PPCF128
+block|,
+name|FPEXT_F64_PPCF128
+block|,
 name|FPEXT_F64_F128
 block|,
 name|FPEXT_F32_F128
@@ -613,11 +617,15 @@ name|OEQ_F64
 block|,
 name|OEQ_F128
 block|,
+name|OEQ_PPCF128
+block|,
 name|UNE_F32
 block|,
 name|UNE_F64
 block|,
 name|UNE_F128
+block|,
+name|UNE_PPCF128
 block|,
 name|OGE_F32
 block|,
@@ -625,11 +633,15 @@ name|OGE_F64
 block|,
 name|OGE_F128
 block|,
+name|OGE_PPCF128
+block|,
 name|OLT_F32
 block|,
 name|OLT_F64
 block|,
 name|OLT_F128
+block|,
+name|OLT_PPCF128
 block|,
 name|OLE_F32
 block|,
@@ -637,11 +649,15 @@ name|OLE_F64
 block|,
 name|OLE_F128
 block|,
+name|OLE_PPCF128
+block|,
 name|OGT_F32
 block|,
 name|OGT_F64
 block|,
 name|OGT_F128
+block|,
+name|OGT_PPCF128
 block|,
 name|UO_F32
 block|,
@@ -649,11 +665,15 @@ name|UO_F64
 block|,
 name|UO_F128
 block|,
+name|UO_PPCF128
+block|,
 name|O_F32
 block|,
 name|O_F64
 block|,
 name|O_F128
+block|,
+name|O_PPCF128
 block|,
 comment|// MEMORY
 name|MEMCPY
@@ -665,7 +685,10 @@ block|,
 comment|// EXCEPTION HANDLING
 name|UNWIND_RESUME
 block|,
-comment|// Family ATOMICs
+comment|// Note: there's two sets of atomics libcalls; see
+comment|//<http://llvm.org/docs/Atomics.html> for more info on the
+comment|// difference between them.
+comment|// Atomic '__sync_*' libcalls.
 name|SYNC_VAL_COMPARE_AND_SWAP_1
 block|,
 name|SYNC_VAL_COMPARE_AND_SWAP_2
@@ -786,8 +809,120 @@ name|SYNC_FETCH_AND_UMIN_8
 block|,
 name|SYNC_FETCH_AND_UMIN_16
 block|,
+comment|// Atomic '__atomic_*' libcalls.
+name|ATOMIC_LOAD
+block|,
+name|ATOMIC_LOAD_1
+block|,
+name|ATOMIC_LOAD_2
+block|,
+name|ATOMIC_LOAD_4
+block|,
+name|ATOMIC_LOAD_8
+block|,
+name|ATOMIC_LOAD_16
+block|,
+name|ATOMIC_STORE
+block|,
+name|ATOMIC_STORE_1
+block|,
+name|ATOMIC_STORE_2
+block|,
+name|ATOMIC_STORE_4
+block|,
+name|ATOMIC_STORE_8
+block|,
+name|ATOMIC_STORE_16
+block|,
+name|ATOMIC_EXCHANGE
+block|,
+name|ATOMIC_EXCHANGE_1
+block|,
+name|ATOMIC_EXCHANGE_2
+block|,
+name|ATOMIC_EXCHANGE_4
+block|,
+name|ATOMIC_EXCHANGE_8
+block|,
+name|ATOMIC_EXCHANGE_16
+block|,
+name|ATOMIC_COMPARE_EXCHANGE
+block|,
+name|ATOMIC_COMPARE_EXCHANGE_1
+block|,
+name|ATOMIC_COMPARE_EXCHANGE_2
+block|,
+name|ATOMIC_COMPARE_EXCHANGE_4
+block|,
+name|ATOMIC_COMPARE_EXCHANGE_8
+block|,
+name|ATOMIC_COMPARE_EXCHANGE_16
+block|,
+name|ATOMIC_FETCH_ADD_1
+block|,
+name|ATOMIC_FETCH_ADD_2
+block|,
+name|ATOMIC_FETCH_ADD_4
+block|,
+name|ATOMIC_FETCH_ADD_8
+block|,
+name|ATOMIC_FETCH_ADD_16
+block|,
+name|ATOMIC_FETCH_SUB_1
+block|,
+name|ATOMIC_FETCH_SUB_2
+block|,
+name|ATOMIC_FETCH_SUB_4
+block|,
+name|ATOMIC_FETCH_SUB_8
+block|,
+name|ATOMIC_FETCH_SUB_16
+block|,
+name|ATOMIC_FETCH_AND_1
+block|,
+name|ATOMIC_FETCH_AND_2
+block|,
+name|ATOMIC_FETCH_AND_4
+block|,
+name|ATOMIC_FETCH_AND_8
+block|,
+name|ATOMIC_FETCH_AND_16
+block|,
+name|ATOMIC_FETCH_OR_1
+block|,
+name|ATOMIC_FETCH_OR_2
+block|,
+name|ATOMIC_FETCH_OR_4
+block|,
+name|ATOMIC_FETCH_OR_8
+block|,
+name|ATOMIC_FETCH_OR_16
+block|,
+name|ATOMIC_FETCH_XOR_1
+block|,
+name|ATOMIC_FETCH_XOR_2
+block|,
+name|ATOMIC_FETCH_XOR_4
+block|,
+name|ATOMIC_FETCH_XOR_8
+block|,
+name|ATOMIC_FETCH_XOR_16
+block|,
+name|ATOMIC_FETCH_NAND_1
+block|,
+name|ATOMIC_FETCH_NAND_2
+block|,
+name|ATOMIC_FETCH_NAND_4
+block|,
+name|ATOMIC_FETCH_NAND_8
+block|,
+name|ATOMIC_FETCH_NAND_16
+block|,
 comment|// Stack Protector Fail.
 name|STACKPROTECTOR_CHECK_FAIL
+block|,
+comment|// Deoptimization.
+name|DEOPTIMIZE
 block|,
 name|UNKNOWN_LIBCALL
 block|}
@@ -867,7 +1002,7 @@ function_decl|;
 comment|/// Return the SYNC_FETCH_AND_* value for the given opcode and type, or
 comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
-name|getATOMIC
+name|getSYNC
 parameter_list|(
 name|unsigned
 name|Opc

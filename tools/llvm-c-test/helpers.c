@@ -37,7 +37,7 @@ end_define
 
 begin_function
 name|void
-name|tokenize_stdin
+name|llvm_tokenize_stdin
 parameter_list|(
 name|void
 function_decl|(

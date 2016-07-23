@@ -106,12 +106,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -149,6 +143,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -209,6 +211,12 @@ comment|/// @brief Prevent core file generation.
 specifier|static
 name|void
 name|PreventCoreFiles
+parameter_list|()
+function_decl|;
+comment|/// \brief true if PreventCoreFiles has been called, false otherwise.
+specifier|static
+name|bool
+name|AreCoreFilesPrevented
 parameter_list|()
 function_decl|;
 comment|// This function returns the environment variable \arg name's value as a UTF-8

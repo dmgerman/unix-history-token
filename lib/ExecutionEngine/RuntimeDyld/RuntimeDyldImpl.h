@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -146,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -187,37 +175,17 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Helper for extensive error checking in debug builds.
-specifier|inline
-name|std
-operator|::
-name|error_code
-name|Check
-argument_list|(
-argument|std::error_code Err
-argument_list|)
-block|{
-if|if
-condition|(
-name|Err
-condition|)
-block|{
-name|report_fatal_error
-argument_list|(
-name|Err
-operator|.
-name|message
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|Err
-return|;
-block|}
 name|class
 name|Twine
 decl_stmt|;
+define|#
+directive|define
+name|UNIMPLEMENTED_RELOC
+parameter_list|(
+name|RelType
+parameter_list|)
+define|\
+value|case RelType: \     return make_error<RuntimeDyldError>("Unimplemented relocation: " #RelType)
 comment|/// SectionEntry - represents a section emitted into memory by the dynamic
 comment|/// linker.
 name|class
@@ -1176,31 +1144,6 @@ operator|::
 name|string
 name|ErrorStr
 expr_stmt|;
-comment|// Set the error state and record an error string.
-name|bool
-name|Error
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-block|{
-name|ErrorStr
-operator|=
-name|Msg
-operator|.
-name|str
-argument_list|()
-expr_stmt|;
-name|HasError
-operator|=
-name|true
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
@@ -1545,7 +1488,7 @@ decl_stmt|;
 comment|/// \brief Given the common symbols discovered in the object file, emit a
 comment|/// new section for them and update the symbol mappings in the object and
 comment|/// symbol table.
-name|void
+name|Error
 name|emitCommonSymbols
 parameter_list|(
 specifier|const
@@ -1562,49 +1505,39 @@ comment|/// \brief Emits section data from the object file to the MemoryManager.
 comment|/// \param IsCode if it's true then allocateCodeSection() will be
 comment|///        used for emits, else allocateDataSection() will be used.
 comment|/// \return SectionID.
+name|Expected
+operator|<
 name|unsigned
+operator|>
 name|emitSection
-parameter_list|(
-specifier|const
-name|ObjectFile
-modifier|&
-name|Obj
-parameter_list|,
-specifier|const
-name|SectionRef
-modifier|&
-name|Section
-parameter_list|,
-name|bool
-name|IsCode
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const ObjectFile&Obj
+argument_list|,
+argument|const SectionRef&Section
+argument_list|,
+argument|bool IsCode
+argument_list|)
+expr_stmt|;
 comment|/// \brief Find Section in LocalSections. If the secton is not found - emit
 comment|///        it and store in LocalSections.
 comment|/// \param IsCode if it's true then allocateCodeSection() will be
 comment|///        used for emmits, else allocateDataSection() will be used.
 comment|/// \return SectionID.
+name|Expected
+operator|<
 name|unsigned
+operator|>
 name|findOrEmitSection
-parameter_list|(
-specifier|const
-name|ObjectFile
-modifier|&
-name|Obj
-parameter_list|,
-specifier|const
-name|SectionRef
-modifier|&
-name|Section
-parameter_list|,
-name|bool
-name|IsCode
-parameter_list|,
-name|ObjSectionToIDMap
-modifier|&
-name|LocalSections
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const ObjectFile&Obj
+argument_list|,
+argument|const SectionRef&Section
+argument_list|,
+argument|bool IsCode
+argument_list|,
+argument|ObjSectionToIDMap&LocalSections
+argument_list|)
+expr_stmt|;
 comment|// \brief Add a relocation entry that uses the given section.
 name|void
 name|addRelocationForSection
@@ -1684,31 +1617,25 @@ comment|///        relocation pairs) and stores it to Relocations or SymbolReloc
 comment|///        (this depends on the object file type).
 comment|/// \return Iterator to the next relocation that needs to be parsed.
 name|virtual
+name|Expected
+operator|<
 name|relocation_iterator
+operator|>
 name|processRelocationRef
-parameter_list|(
-name|unsigned
-name|SectionID
-parameter_list|,
-name|relocation_iterator
-name|RelI
-parameter_list|,
-specifier|const
-name|ObjectFile
-modifier|&
-name|Obj
-parameter_list|,
-name|ObjSectionToIDMap
-modifier|&
-name|ObjSectionToID
-parameter_list|,
-name|StubMap
-modifier|&
-name|Stubs
-parameter_list|)
-init|=
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|relocation_iterator RelI
+argument_list|,
+argument|const ObjectFile&Obj
+argument_list|,
+argument|ObjSectionToIDMap&ObjSectionToID
+argument_list|,
+argument|StubMap&Stubs
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 comment|/// \brief Resolve relocations to external symbols.
 name|void
 name|resolveExternalSymbols
@@ -1716,7 +1643,7 @@ parameter_list|()
 function_decl|;
 comment|// \brief Compute an upper bound of the memory that is required to load all
 comment|// sections
-name|void
+name|Error
 name|computeTotalAllocSize
 parameter_list|(
 specifier|const
@@ -1765,7 +1692,10 @@ name|Section
 parameter_list|)
 function_decl|;
 comment|// \brief Implementation of the generic part of the loadObject algorithm.
+name|Expected
+operator|<
 name|ObjSectionToIDMap
+operator|>
 name|loadObjectImpl
 argument_list|(
 specifier|const
@@ -1775,7 +1705,7 @@ name|ObjectFile
 operator|&
 name|Obj
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|// \brief Return true if the relocation R may require allocating a stub.
 name|virtual
 name|bool
@@ -2171,7 +2101,7 @@ end_function_decl
 
 begin_function
 name|virtual
-name|void
+name|Error
 name|finalizeLoad
 parameter_list|(
 specifier|const
@@ -2183,7 +2113,14 @@ name|ObjSectionToIDMap
 modifier|&
 name|SectionMap
 parameter_list|)
-block|{}
+block|{
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
+block|}
 end_function
 
 begin_comment

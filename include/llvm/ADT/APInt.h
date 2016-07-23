@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -132,6 +126,14 @@ name|T
 operator|>
 name|class
 name|SmallVectorImpl
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
 expr_stmt|;
 comment|// An unsigned host type used as a single part of a multi-part
 comment|// bignum.
@@ -484,6 +486,7 @@ name|divide
 parameter_list|(
 specifier|const
 name|APInt
+modifier|&
 name|LHS
 parameter_list|,
 name|unsigned
@@ -510,9 +513,6 @@ comment|/// out-of-line slow case for inline constructor
 name|void
 name|initSlowCase
 parameter_list|(
-name|unsigned
-name|numBits
-parameter_list|,
 name|uint64_t
 name|val
 parameter_list|,
@@ -684,8 +684,6 @@ expr_stmt|;
 else|else
 name|initSlowCase
 argument_list|(
-name|numBits
-argument_list|,
 name|val
 argument_list|,
 name|isSigned
@@ -2413,18 +2411,23 @@ operator|(
 operator|)
 specifier|const
 block|{
-return|return
 name|APInt
+name|Result
 argument_list|(
-name|BitWidth
-argument_list|,
-literal|0
-argument_list|)
-operator|-
-operator|(
 operator|*
 name|this
-operator|)
+argument_list|)
+block|;
+name|Result
+operator|.
+name|flipAllBits
+argument_list|()
+block|;
+operator|++
+name|Result
+block|;
+return|return
+name|Result
 return|;
 block|}
 end_expr_stmt
@@ -3456,21 +3459,7 @@ name|uint64_t
 name|RHS
 operator|)
 specifier|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|+
-name|APInt
-argument_list|(
-name|BitWidth
-argument_list|,
-name|RHS
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -3508,21 +3497,7 @@ name|uint64_t
 name|RHS
 operator|)
 specifier|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|-
-name|APInt
-argument_list|(
-name|BitWidth
-argument_list|,
-name|RHS
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -6729,6 +6704,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \returns the value with the bit representation reversed of this APInt
+end_comment
+
+begin_comment
+comment|/// Value.
+end_comment
+
+begin_expr_stmt
+name|APInt
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|reverseBits
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Converts this APInt to a double value.
 end_comment
 
@@ -8239,7 +8231,9 @@ name|APIntOps
 block|{
 comment|/// \brief Determine the smaller of two APInts considered to be signed.
 specifier|inline
+specifier|const
 name|APInt
+modifier|&
 name|smin
 parameter_list|(
 specifier|const
@@ -8268,7 +8262,9 @@ return|;
 block|}
 comment|/// \brief Determine the larger of two APInts considered to be signed.
 specifier|inline
+specifier|const
 name|APInt
+modifier|&
 name|smax
 parameter_list|(
 specifier|const
@@ -8297,7 +8293,9 @@ return|;
 block|}
 comment|/// \brief Determine the smaller of two APInts considered to be signed.
 specifier|inline
+specifier|const
 name|APInt
+modifier|&
 name|umin
 parameter_list|(
 specifier|const
@@ -8326,7 +8324,9 @@ return|;
 block|}
 comment|/// \brief Determine the larger of two APInts considered to be unsigned.
 specifier|inline
+specifier|const
 name|APInt
+modifier|&
 name|umax
 parameter_list|(
 specifier|const
@@ -8435,6 +8435,39 @@ argument_list|()
 argument_list|,
 name|numBits
 argument_list|)
+return|;
+block|}
+comment|/// \returns true if the argument is a non-empty sequence of ones starting at
+comment|/// the least significant bit with the remainder zero (32 bit version).
+comment|/// Ex. isMask(0x0000FFFFU) == true.
+specifier|inline
+name|bool
+name|isMask
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|Value
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Value
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|Value
+operator|+
+literal|1
+operator|)
+operator|&
+name|Value
+operator|)
+operator|==
+literal|0
 return|;
 block|}
 comment|/// \brief Return true if the argument APInt value contains a sequence of ones

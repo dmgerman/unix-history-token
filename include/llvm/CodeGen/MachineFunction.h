@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineMemOperand.h"
 end_include
 
 begin_include
@@ -109,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ArrayRecycler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -193,6 +211,11 @@ name|Sentinel
 block|;
 name|public
 operator|:
+comment|// FIXME: This downcast is UB. See llvm.org/PR26753.
+name|LLVM_NO_SANITIZE
+argument_list|(
+literal|"object-size"
+argument_list|)
 name|MachineBasicBlock
 operator|*
 name|createSentinel
@@ -330,6 +353,227 @@ return|;
 block|}
 block|}
 struct|;
+comment|/// Properties which a MachineFunction may have at a given point in time.
+comment|/// Each of these has checking code in the MachineVerifier, and passes can
+comment|/// require that a property be set.
+name|class
+name|MachineFunctionProperties
+block|{
+comment|// TODO: Add MachineVerifier checks for AllVRegsAllocated
+comment|// TODO: Add a way to print the properties and make more useful error messages
+comment|// Possible TODO: Allow targets to extend this (perhaps by allowing the
+comment|// constructor to specify the size of the bit vector)
+comment|// Possible TODO: Allow requiring the negative (e.g. VRegsAllocated could be
+comment|// stated as the negative of "has vregs"
+name|public
+label|:
+comment|// The properties are stated in "positive" form; i.e. a pass could require
+comment|// that the property hold, but not that it does not hold.
+comment|// Property descriptions:
+comment|// IsSSA: True when the machine function is in SSA form and virtual registers
+comment|//  have a single def.
+comment|// TracksLiveness: True when tracking register liveness accurately.
+comment|//  While this property is set, register liveness information in basic block
+comment|//  live-in lists and machine instruction operands (e.g. kill flags, implicit
+comment|//  defs) is accurate. This means it can be used to change the code in ways
+comment|//  that affect the values in registers, for example by the register
+comment|//  scavenger.
+comment|//  When this property is clear, liveness is no longer reliable.
+comment|// AllVRegsAllocated: All virtual registers have been allocated; i.e. all
+comment|//  register operands are physical registers.
+name|enum
+name|class
+name|Property
+range|:
+name|unsigned
+block|{
+name|IsSSA
+block|,
+name|TracksLiveness
+block|,
+name|AllVRegsAllocated
+block|,
+name|LastProperty
+block|,   }
+decl_stmt|;
+name|bool
+name|hasProperty
+argument_list|(
+name|Property
+name|P
+argument_list|)
+decl|const
+block|{
+return|return
+name|Properties
+index|[
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|P
+operator|)
+index|]
+return|;
+block|}
+name|MachineFunctionProperties
+modifier|&
+name|set
+parameter_list|(
+name|Property
+name|P
+parameter_list|)
+block|{
+name|Properties
+operator|.
+name|set
+argument_list|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|P
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|MachineFunctionProperties
+modifier|&
+name|clear
+parameter_list|(
+name|Property
+name|P
+parameter_list|)
+block|{
+name|Properties
+operator|.
+name|reset
+argument_list|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|P
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|MachineFunctionProperties
+modifier|&
+name|set
+parameter_list|(
+specifier|const
+name|MachineFunctionProperties
+modifier|&
+name|MFP
+parameter_list|)
+block|{
+name|Properties
+operator||=
+name|MFP
+operator|.
+name|Properties
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|MachineFunctionProperties
+modifier|&
+name|clear
+parameter_list|(
+specifier|const
+name|MachineFunctionProperties
+modifier|&
+name|MFP
+parameter_list|)
+block|{
+name|Properties
+operator|.
+name|reset
+argument_list|(
+name|MFP
+operator|.
+name|Properties
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// Returns true if all properties set in V (i.e. required by a pass) are set
+comment|// in this.
+name|bool
+name|verifyRequiredProperties
+argument_list|(
+specifier|const
+name|MachineFunctionProperties
+operator|&
+name|V
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|V
+operator|.
+name|Properties
+operator|.
+name|test
+argument_list|(
+name|Properties
+argument_list|)
+return|;
+block|}
+comment|// Print the MachineFunctionProperties in human-readable form. If OnlySet is
+comment|// true, only print the properties that are set.
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|ROS
+argument_list|,
+name|bool
+name|OnlySet
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|private
+label|:
+name|BitVector
+name|Properties
+init|=
+name|BitVector
+argument_list|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|Property
+operator|::
+name|LastProperty
+operator|)
+argument_list|)
+decl_stmt|;
+block|}
+empty_stmt|;
 name|class
 name|MachineFunction
 block|{
@@ -455,10 +699,19 @@ comment|/// This is used to limit optimizations which cannot reason
 comment|/// about the control flow of such functions.
 name|bool
 name|ExposesReturnsTwice
+init|=
+name|false
 decl_stmt|;
 comment|/// True if the function includes any inline assembly.
 name|bool
 name|HasInlineAsm
+init|=
+name|false
+decl_stmt|;
+comment|/// Current high-level properties of the IR of the function (e.g. is in SSA
+comment|/// form or whether registers have been allocated)
+name|MachineFunctionProperties
+name|Properties
 decl_stmt|;
 comment|// Allocation management for pseudo source values.
 name|std
@@ -866,6 +1119,27 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// Get the function properties
+specifier|const
+name|MachineFunctionProperties
+operator|&
+name|getProperties
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Properties
+return|;
+block|}
+name|MachineFunctionProperties
+modifier|&
+name|getProperties
+parameter_list|()
+block|{
+return|return
+name|Properties
+return|;
+block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for
 comment|/// backends that would like to do so.
 comment|///
@@ -1032,6 +1306,7 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
+specifier|const
 name|SlotIndexes
 operator|*
 operator|=
@@ -1067,9 +1342,10 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// verify - Run the current MachineFunction through the machine code
-comment|/// verifier, useful for debugger use.
-name|void
+comment|/// Run the current MachineFunction through the machine code verifier, useful
+comment|/// for debugger use.
+comment|/// \returns true if no problems were found.
+name|bool
 name|verify
 argument_list|(
 name|Pass
@@ -1084,6 +1360,11 @@ operator|*
 name|Banner
 operator|=
 name|nullptr
+argument_list|,
+name|bool
+name|AbortOnError
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1602,7 +1883,9 @@ name|MCInstrDesc
 modifier|&
 name|MCID
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|,
 name|bool
@@ -1668,35 +1951,37 @@ comment|/// explicitly deallocated.
 name|MachineMemOperand
 modifier|*
 name|getMachineMemOperand
-parameter_list|(
+argument_list|(
 name|MachinePointerInfo
 name|PtrInfo
-parameter_list|,
-name|unsigned
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
 name|f
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|s
-parameter_list|,
+argument_list|,
 name|unsigned
 name|base_alignment
-parameter_list|,
+argument_list|,
 specifier|const
 name|AAMDNodes
-modifier|&
+operator|&
 name|AAInfo
-init|=
+operator|=
 name|AAMDNodes
 argument_list|()
-parameter_list|,
+argument_list|,
 specifier|const
 name|MDNode
-modifier|*
+operator|*
 name|Ranges
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// getMachineMemOperand - Allocate a new MachineMemOperand by copying
 comment|/// an existing one, adjusting by an offset and using the given size.
 comment|/// MachineMemOperands are owned by the MachineFunction and need not be

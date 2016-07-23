@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
 end_include
 
 begin_include
@@ -140,7 +140,7 @@ block|;
 name|BPFTargetLowering
 name|TLInfo
 block|;
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 name|TSInfo
 block|;
 name|public
@@ -224,7 +224,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

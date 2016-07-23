@@ -74,12 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -87,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -144,18 +132,22 @@ decl_stmt|;
 name|class
 name|DbgValueInst
 decl_stmt|;
-comment|/// \brief Maps from type identifier to the actual MDNode.
-typedef|typedef
-name|DenseMap
+name|template
 operator|<
-specifier|const
-name|MDString
-operator|*
+name|typename
+name|K
 operator|,
-name|DIType
-operator|*
+name|typename
+name|V
+operator|,
+name|typename
+name|KeyInfoT
+operator|,
+name|typename
+name|BucketT
 operator|>
-name|DITypeIdentifierMap
+name|class
+name|DenseMap
 expr_stmt|;
 comment|/// \brief Find subprogram that is enclosing this scope.
 name|DISubprogram
@@ -166,29 +158,6 @@ specifier|const
 name|MDNode
 modifier|*
 name|Scope
-parameter_list|)
-function_decl|;
-comment|/// \brief Find debug info for a given function.
-comment|///
-comment|/// \returns a valid subprogram, if found. Otherwise, return \c nullptr.
-name|DISubprogram
-modifier|*
-name|getDISubprogram
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|)
-function_decl|;
-comment|/// \brief Generate map by visiting all retained types.
-name|DITypeIdentifierMap
-name|generateDITypeIdentifierMap
-parameter_list|(
-specifier|const
-name|NamedMDNode
-modifier|*
-name|CU_Nodes
 parameter_list|)
 function_decl|;
 comment|/// \brief Strip debug info in the module if it exists.
@@ -235,24 +204,16 @@ name|DebugInfoFinder
 block|{
 name|public
 label|:
-name|DebugInfoFinder
-argument_list|()
-operator|:
-name|TypeMapInitialized
-argument_list|(
-argument|false
-argument_list|)
-block|{}
 comment|/// \brief Process entire module and collect debug info anchors.
 name|void
 name|processModule
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Process DbgDeclareInst.
 name|void
 name|processDeclare
@@ -658,17 +619,10 @@ specifier|const
 name|MDNode
 operator|*
 operator|,
-literal|64
+literal|32
 operator|>
 name|NodesSeen
 expr_stmt|;
-name|DITypeIdentifierMap
-name|TypeIdentifierMap
-decl_stmt|;
-comment|/// \brief Specify if TypeIdentifierMap is initialized.
-name|bool
-name|TypeMapInitialized
-decl_stmt|;
 block|}
 empty_stmt|;
 block|}

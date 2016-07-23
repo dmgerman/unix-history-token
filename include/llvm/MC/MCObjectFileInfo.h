@@ -301,6 +301,10 @@ name|MCSection
 modifier|*
 name|COFFDebugSymbolsSection
 decl_stmt|;
+name|MCSection
+modifier|*
+name|COFFDebugTypesSection
+decl_stmt|;
 comment|/// Extra TLS Variable Data section.
 comment|///
 comment|/// If the target needs to put additional information for a TLS variable,
@@ -356,6 +360,10 @@ decl_stmt|;
 name|MCSection
 modifier|*
 name|MergeableConst16Section
+decl_stmt|;
+name|MCSection
+modifier|*
+name|MergeableConst32Section
 decl_stmt|;
 comment|// MachO specific sections.
 comment|/// Section for thread local structure information.
@@ -426,6 +434,10 @@ name|MCSection
 modifier|*
 name|NonLazySymbolPointerSection
 decl_stmt|;
+name|MCSection
+modifier|*
+name|ThreadLocalPointerSection
+decl_stmt|;
 comment|/// COFF specific sections.
 name|MCSection
 modifier|*
@@ -453,10 +465,8 @@ name|Triple
 operator|&
 name|TT
 argument_list|,
-name|Reloc
-operator|::
-name|Model
-name|RM
+name|bool
+name|PIC
 argument_list|,
 name|CodeModel
 operator|::
@@ -468,13 +478,6 @@ operator|&
 name|ctx
 argument_list|)
 decl_stmt|;
-name|LLVM_ATTRIBUTE_DEPRECATED
-argument_list|(
-argument|void InitMCObjectFileInfo(StringRef TT, Reloc::Model RM,                                 CodeModel::Model CM, MCContext&ctx)
-argument_list|,
-literal|"StringRef GNU Triple argument replaced by a llvm::Triple object"
-argument_list|)
-empty_stmt|;
 name|bool
 name|getSupportsWeakOmittedEHFrame
 argument_list|()
@@ -919,6 +922,16 @@ return|;
 block|}
 name|MCSection
 operator|*
+name|getCOFFDebugTypesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|COFFDebugTypesSection
+return|;
+block|}
+name|MCSection
+operator|*
 name|getTLSExtraDataSection
 argument_list|()
 specifier|const
@@ -1010,6 +1023,17 @@ specifier|const
 block|{
 return|return
 name|MergeableConst16Section
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getMergeableConst32Section
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MergeableConst32Section
 return|;
 block|}
 comment|// MachO specific sections.
@@ -1174,6 +1198,16 @@ return|return
 name|NonLazySymbolPointerSection
 return|;
 block|}
+name|MCSection
+operator|*
+name|getThreadLocalPointerSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ThreadLocalPointerSection
+return|;
+block|}
 comment|// COFF specific sections.
 name|MCSection
 operator|*
@@ -1243,15 +1277,13 @@ return|return
 name|Env
 return|;
 block|}
-name|Reloc
-operator|::
-name|Model
-name|getRelocM
+name|bool
+name|isPositionIndependent
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RelocM
+name|PositionIndependent
 return|;
 block|}
 name|private
@@ -1259,11 +1291,9 @@ label|:
 name|Environment
 name|Env
 decl_stmt|;
-name|Reloc
-operator|::
-name|Model
-name|RelocM
-expr_stmt|;
+name|bool
+name|PositionIndependent
+decl_stmt|;
 name|CodeModel
 operator|::
 name|Model
@@ -1279,21 +1309,27 @@ decl_stmt|;
 name|void
 name|initMachOMCObjectFileInfo
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|T
 parameter_list|)
 function_decl|;
 name|void
 name|initELFMCObjectFileInfo
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|T
 parameter_list|)
 function_decl|;
 name|void
 name|initCOFFMCObjectFileInfo
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|T
 parameter_list|)
 function_decl|;

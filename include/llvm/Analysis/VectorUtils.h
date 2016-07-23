@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -77,25 +71,21 @@ directive|include
 file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/IR/IntrinsicInst.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Intrinsics.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-struct_decl|struct
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
+name|class
 name|DemandedBits
-struct_decl|;
+decl_stmt|;
 name|class
 name|GetElementPtrInst
 decl_stmt|;
@@ -114,6 +104,15 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|namespace
+name|Intrinsic
+block|{
+enum_decl|enum
+name|ID
+enum_decl|:
+name|unsigned
+enum_decl|;
+block|}
 comment|/// \brief Identify if the intrinsic is trivially vectorizable.
 comment|/// This method returns true if the intrinsic's argument types are all
 comment|/// scalars for the scalar form of the intrinsic and all vectors for
@@ -141,44 +140,15 @@ name|unsigned
 name|ScalarOpdIdx
 argument_list|)
 decl_stmt|;
-comment|/// \brief Identify if call has a unary float signature
-comment|/// It returns input intrinsic ID if call has a single argument,
-comment|/// argument type and call instruction type should be floating
-comment|/// point type and call should only reads memory.
-comment|/// else return not_intrinsic.
-name|Intrinsic
-operator|::
-name|ID
-name|checkUnaryFloatSignature
-argument_list|(
-argument|const CallInst&I
-argument_list|,
-argument|Intrinsic::ID ValidIntrinsicID
-argument_list|)
-expr_stmt|;
-comment|/// \brief Identify if call has a binary float signature
-comment|/// It returns input intrinsic ID if call has two arguments,
-comment|/// arguments type and call instruction type should be floating
-comment|/// point type and call should only reads memory.
-comment|/// else return not_intrinsic.
-name|Intrinsic
-operator|::
-name|ID
-name|checkBinaryFloatSignature
-argument_list|(
-argument|const CallInst&I
-argument_list|,
-argument|Intrinsic::ID ValidIntrinsicID
-argument_list|)
-expr_stmt|;
 comment|/// \brief Returns intrinsic ID for call.
 comment|/// For the input call instruction it finds mapping intrinsic and returns
 comment|/// its intrinsic ID, in case it does not found it return not_intrinsic.
 name|Intrinsic
 operator|::
 name|ID
-name|getIntrinsicIDForCall
+name|getVectorIntrinsicIDForCall
 argument_list|(
+specifier|const
 name|CallInst
 operator|*
 name|CI
@@ -349,6 +319,29 @@ operator|=
 name|nullptr
 argument_list|)
 expr_stmt|;
+comment|/// Specifically, let Kinds = [MD_tbaa, MD_alias_scope, MD_noalias, MD_fpmath,
+comment|/// MD_nontemporal].  For K in Kinds, we get the MDNode for K from each of the
+comment|/// elements of VL, compute their "intersection" (i.e., the most generic
+comment|/// metadata value that covers all of the individual values), and set I's
+comment|/// metadata for M equal to the intersection value.
+comment|///
+comment|/// This function always sets a (possibly null) value for each K in Kinds.
+name|Instruction
+modifier|*
+name|propagateMetadata
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|VL
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

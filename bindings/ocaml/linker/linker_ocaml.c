@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm-c/Core.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/Linker.h"
 end_include
 
@@ -80,7 +86,10 @@ argument_list|(
 literal|"Llvm_linker.Error"
 argument_list|)
 argument_list|,
+name|LLVMCreateMessage
+argument_list|(
 literal|"Linking failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

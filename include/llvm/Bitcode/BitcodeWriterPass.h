@@ -69,6 +69,12 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -82,9 +88,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-name|class
-name|PreservedAnalyses
-decl_stmt|;
 comment|/// \brief Create and return a pass that writes the module to the specified
 comment|/// ostream. Note that this pass is designed for use with the legacy pass
 comment|/// manager.
@@ -92,8 +95,11 @@ comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
 comment|/// reproduced when deserialized.
 comment|///
-comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
-comment|/// for use in ThinLTO optimization).
+comment|/// If \c EmitSummaryIndex, emit the summary index (currently for use in ThinLTO
+comment|/// optimization).
+comment|///
+comment|/// If \c EmitModuleHash, compute and emit the module hash in the bitcode
+comment|/// (currently for use in ThinLTO incremental build).
 name|ModulePass
 modifier|*
 name|createBitcodeWriterPass
@@ -108,7 +114,12 @@ init|=
 name|false
 parameter_list|,
 name|bool
-name|EmitFunctionSummary
+name|EmitSummaryIndex
+init|=
+name|false
+parameter_list|,
+name|bool
+name|EmitModuleHash
 init|=
 name|false
 parameter_list|)
@@ -128,7 +139,10 @@ name|bool
 name|ShouldPreserveUseListOrder
 decl_stmt|;
 name|bool
-name|EmitFunctionSummary
+name|EmitSummaryIndex
+decl_stmt|;
+name|bool
+name|EmitModuleHash
 decl_stmt|;
 name|public
 label|:
@@ -137,7 +151,7 @@ comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
 comment|/// reproduced when deserialized.
 comment|///
-comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
+comment|/// If \c EmitSummaryIndex, emit the summary index (currently
 comment|/// for use in ThinLTO optimization).
 name|explicit
 name|BitcodeWriterPass
@@ -146,7 +160,9 @@ argument|raw_ostream&OS
 argument_list|,
 argument|bool ShouldPreserveUseListOrder = false
 argument_list|,
-argument|bool EmitFunctionSummary = false
+argument|bool EmitSummaryIndex = false
+argument_list|,
+argument|bool EmitModuleHash = false
 argument_list|)
 block|:
 name|OS
@@ -159,9 +175,14 @@ argument_list|(
 name|ShouldPreserveUseListOrder
 argument_list|)
 operator|,
-name|EmitFunctionSummary
+name|EmitSummaryIndex
 argument_list|(
-argument|EmitFunctionSummary
+name|EmitSummaryIndex
+argument_list|)
+operator|,
+name|EmitModuleHash
+argument_list|(
+argument|EmitModuleHash
 argument_list|)
 block|{}
 comment|/// \brief Run the bitcode writer pass, and output the module to the selected
@@ -172,6 +193,9 @@ argument_list|(
 name|Module
 operator|&
 name|M
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
 argument_list|)
 expr_stmt|;
 specifier|static

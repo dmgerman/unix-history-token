@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/TargetSchedule.h"
 end_include
 
@@ -838,7 +844,7 @@ name|getInstrCycles
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -850,6 +856,7 @@ name|Cycles
 operator|.
 name|lookup
 argument_list|(
+operator|&
 name|MI
 argument_list|)
 return|;
@@ -862,7 +869,7 @@ name|getInstrSlack
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -874,7 +881,7 @@ name|getPHIDepth
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|PHI
 argument_list|)
 decl|const
@@ -887,12 +894,12 @@ name|isDepInTrace
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|DefMI
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|UseMI
 argument_list|)
 decl|const

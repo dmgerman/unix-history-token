@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|DIASession
 decl_stmt|;
@@ -325,7 +328,9 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|PDB_RegisterId
+name|codeview
+operator|::
+name|RegisterId
 name|getLocalBasePointerRegisterId
 argument_list|()
 specifier|const
@@ -419,7 +424,9 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|PDB_RegisterId
+name|codeview
+operator|::
+name|RegisterId
 name|getRegisterId
 argument_list|()
 specifier|const
@@ -641,7 +648,9 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|PDB_ThunkOrdinal
+name|codeview
+operator|::
+name|ThunkOrdinal
 name|getThunkOrdinal
 argument_list|()
 specifier|const
@@ -1179,6 +1188,7 @@ operator|>
 name|Symbol
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

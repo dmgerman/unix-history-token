@@ -128,7 +128,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -183,11 +183,11 @@ return|;
 block|}
 name|private
 operator|:
-name|bool
-name|isLittle
+name|AArch64Subtarget
+name|Subtarget
 block|; }
 decl_stmt|;
-comment|// AArch64leTargetMachine - AArch64 little endian target machine.
+comment|// AArch64 little endian target machine.
 comment|//
 name|class
 name|AArch64leTargetMachine
@@ -214,7 +214,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -222,7 +222,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
-comment|// AArch64beTargetMachine - AArch64 big endian target machine.
+comment|// AArch64 big endian target machine.
 comment|//
 name|class
 name|AArch64beTargetMachine
@@ -249,7 +249,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

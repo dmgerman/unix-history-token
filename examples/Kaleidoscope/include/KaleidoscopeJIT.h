@@ -62,7 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbolFlags.h"
 end_include
 
 begin_include
@@ -74,7 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/SectionMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
 end_include
 
 begin_include
@@ -98,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Mangler.h"
 end_include
 
@@ -105,6 +147,42 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DynamicLibrary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -229,20 +307,10 @@ name|Name
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
 name|Sym
 operator|.
-name|getAddress
+name|toRuntimeDyldSymbol
 argument_list|()
-argument_list|,
-name|Sym
-operator|.
-name|getFlags
-argument_list|()
-argument_list|)
 return|;
 return|return
 name|RuntimeDyld
@@ -561,12 +629,12 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

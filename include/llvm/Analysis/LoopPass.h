@@ -268,10 +268,11 @@ argument_list|)
 block|{}
 name|protected
 operator|:
-comment|/// skipOptnoneFunction - Containing function has Attribute::OptimizeNone
-comment|/// and most transformation passes should skip it.
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when Attribute::OptimizeNone is set or when
+comment|/// optimization bisect is over the limit.
 name|bool
-name|skipOptnoneFunction
+name|skipLoop
 argument_list|(
 argument|const Loop *L
 argument_list|)

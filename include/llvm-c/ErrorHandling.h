@@ -15,12 +15,6 @@ directive|define
 name|LLVM_C_ERROR_HANDLING_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm-c/Types.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

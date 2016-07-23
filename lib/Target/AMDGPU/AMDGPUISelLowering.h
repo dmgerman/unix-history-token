@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUISELLOWERING_H
 end_define
 
 begin_include
@@ -99,8 +99,6 @@ name|AMDGPUSubtarget
 operator|*
 name|Subtarget
 block|;
-name|private
-operator|:
 name|SDValue
 name|LowerConstantInitializer
 argument_list|(
@@ -111,15 +109,6 @@ argument_list|,
 argument|const SDValue&InitPtr
 argument_list|,
 argument|SDValue Chain
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerFrameIndex
-argument_list|(
-argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -333,6 +322,24 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|protected
+operator|:
+name|bool
+name|shouldCombineMemoryType
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performLoadCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|performStoreCombine
 argument_list|(
@@ -343,7 +350,34 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performAndCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|performShlCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performSraCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performSrlCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -363,7 +397,7 @@ block|;
 name|SDValue
 name|performCtlzCombine
 argument_list|(
-argument|SDLoc SL
+argument|const SDLoc&SL
 argument_list|,
 argument|SDValue Cond
 argument_list|,
@@ -384,8 +418,6 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
-name|protected
-operator|:
 specifier|static
 name|EVT
 name|getEquivalentMemType
@@ -397,7 +429,7 @@ argument_list|)
 block|;
 specifier|static
 name|EVT
-name|getEquivalentLoadRegType
+name|getEquivalentBitType
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
@@ -416,9 +448,34 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Split a vector load into a scalar load of each component.
+comment|/// Return 64-bit value Op as two 32-bit integers.
+name|std
+operator|::
+name|pair
+operator|<
 name|SDValue
-name|ScalarizeVectorLoad
+block|,
+name|SDValue
+operator|>
+name|split64BitValue
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getLoHalf64
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getHiHalf64
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -436,28 +493,9 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Split a vector store into a scalar store of each component.
-name|SDValue
-name|ScalarizeVectorStore
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
 comment|/// \brief Split a vector store into 2 stores of half the vector.
 name|SDValue
 name|SplitVectorStore
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerLOAD
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -514,20 +552,6 @@ argument|SmallVectorImpl<SDValue>&Results
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|isHWTrueValue
-argument_list|(
-argument|SDValue Op
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isHWFalseValue
-argument_list|(
-argument|SDValue Op
-argument_list|)
-specifier|const
-block|;
 comment|/// The SelectionDAGBuilder will automatically promote function arguments
 comment|/// with illegal types.  However, this does not work for the AMDGPU targets
 comment|/// since the function arguments are stored in memory as these illegal types.
@@ -569,6 +593,7 @@ name|public
 operator|:
 name|AMDGPUTargetLowering
 argument_list|(
+specifier|const
 name|TargetMachine
 operator|&
 name|TM
@@ -709,7 +734,7 @@ argument_list|,
 argument|EVT
 argument_list|)
 specifier|const
-name|override
+name|final
 block|;
 name|bool
 name|storeOfVectorConstantIsCheap
@@ -756,7 +781,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -815,27 +840,9 @@ specifier|const
 name|override
 block|;
 name|SDValue
-name|LowerIntrinsicIABS
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerIntrinsicLRP
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|CombineFMinMaxLegacy
 argument_list|(
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT VT
 argument_list|,
@@ -899,11 +906,9 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-block|{
-return|return
-name|N
-return|;
-block|}
+operator|=
+literal|0
+block|;
 comment|/// \brief Determine which of the bits specified in \p Mask are known to be
 comment|/// either zero or one and return them in the \p KnownZero and \p KnownOne
 comment|/// bitsets.
@@ -957,10 +962,14 @@ specifier|const
 block|;    enum
 name|ImplicitParameter
 block|{
+name|FIRST_IMPLICIT
+block|,
 name|GRID_DIM
+operator|=
+name|FIRST_IMPLICIT
 block|,
 name|GRID_OFFSET
-block|}
+block|,   }
 block|;
 comment|/// \brief Helper function that returns the byte offset of the given
 comment|/// type of implicit parameter.
@@ -995,11 +1004,13 @@ comment|// Function call based on a single integer
 name|UMUL
 block|,
 comment|// 32bit unsigned multiplication
-name|RET_FLAG
-block|,
 name|BRANCH_COND
 block|,
 comment|// End AMDIL ISD Opcodes
+name|ENDPGM
+block|,
+name|RETURN
+block|,
 name|DWORDADDR
 block|,
 name|FRACT
@@ -1028,6 +1039,12 @@ name|SMIN3
 block|,
 name|UMIN3
 block|,
+name|FMED3
+block|,
+name|SMED3
+block|,
+name|UMED3
+block|,
 name|URECIP
 block|,
 name|DIV_SCALE
@@ -1047,7 +1064,7 @@ name|RSQ
 block|,
 name|RSQ_LEGACY
 block|,
-name|RSQ_CLAMPED
+name|RSQ_CLAMP
 block|,
 name|LDEXP
 block|,
@@ -1132,6 +1149,8 @@ name|INTERP_P1
 block|,
 name|INTERP_P2
 block|,
+name|PC_ADD_REL_OFFSET
+block|,
 name|FIRST_MEM_OPCODE_NUMBER
 init|=
 name|ISD
@@ -1143,6 +1162,12 @@ block|,
 name|LOAD_CONSTANT
 block|,
 name|TBUFFER_STORE_FORMAT
+block|,
+name|ATOMIC_CMP_SWAP
+block|,
+name|ATOMIC_INC
+block|,
+name|ATOMIC_DEC
 block|,
 name|LAST_AMDGPU_ISD_NUMBER
 block|}

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -114,7 +120,7 @@ name|class
 name|MCValue
 decl_stmt|;
 name|class
-name|raw_ostream
+name|raw_pwrite_stream
 decl_stmt|;
 comment|/// Generic interface to target specific assembler backends.
 name|class
@@ -146,11 +152,6 @@ comment|// Can only create subclasses.
 name|MCAsmBackend
 argument_list|()
 expr_stmt|;
-name|unsigned
-name|HasDataInCodeSupport
-range|:
-literal|1
-decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -179,32 +180,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// Create a new ELFObjectTargetWriter to enable non-standard
-comment|/// ELFObjectWriters.
-name|virtual
-name|MCELFObjectTargetWriter
-operator|*
-name|createELFObjectTargetWriter
-argument_list|()
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"createELFObjectTargetWriter is not supported by asm "
-literal|"backend"
-argument_list|)
-block|;   }
-comment|/// Check whether this target implements data-in-code markers. If not, data
-comment|/// region directives will be ignored.
-name|bool
-name|hasDataInCodeSupport
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasDataInCodeSupport
-return|;
-block|}
 comment|/// \name Target Fixup Interfaces
 comment|/// @{
 comment|/// Get the number of target specific fixup kinds.
@@ -217,21 +192,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/// Map a relocation name used in .reloc to a fixup kind.
-comment|/// Returns true and sets MappedKind if Name is successfully mapped.
-comment|/// Otherwise returns false and leaves MappedKind unchanged.
 name|virtual
-name|bool
+name|Optional
+operator|<
+name|MCFixupKind
+operator|>
 name|getFixupKind
 argument_list|(
-name|StringRef
-name|Name
-argument_list|,
-name|MCFixupKind
-operator|&
-name|MappedKind
+argument|StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// Get information on a fixup kind.
 name|virtual
 specifier|const
@@ -393,6 +364,7 @@ comment|/// Relax the instruction in the given fragment to the next wider instru
 comment|///
 comment|/// \param Inst The instruction to relax, which may be the same as the
 comment|/// output.
+comment|/// \param STI the subtarget information for the associated instruction.
 comment|/// \param [out] Res On return, the relaxed instruction.
 name|virtual
 name|void
@@ -402,6 +374,11 @@ specifier|const
 name|MCInst
 operator|&
 name|Inst
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|,
 name|MCInst
 operator|&
@@ -445,6 +422,22 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Give backend an opportunity to finish layout after relaxation
+name|virtual
+name|void
+name|finishLayout
+argument_list|(
+name|MCAssembler
+specifier|const
+operator|&
+name|Asm
+argument_list|,
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|)
+decl|const
+block|{}
 comment|/// Handle any target-specific assembler flags. By default, do nothing.
 name|virtual
 name|void

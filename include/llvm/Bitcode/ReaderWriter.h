@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/FunctionInfo.h"
+file|"llvm/IR/ModuleSummaryIndex.h"
 end_include
 
 begin_include
@@ -123,6 +123,61 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+comment|/// Offsets of the 32-bit fields of bitcode wrapper header.
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_MagicField
+init|=
+literal|0
+operator|*
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_VersionField
+init|=
+literal|1
+operator|*
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_OffsetField
+init|=
+literal|2
+operator|*
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_SizeField
+init|=
+literal|3
+operator|*
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_CPUTypeField
+init|=
+literal|4
+operator|*
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|BWH_HeaderSize
+init|=
+literal|5
+operator|*
+literal|4
+decl_stmt|;
 comment|/// Read the header of the specified bitcode buffer and prepare for lazy
 comment|/// deserialization of function bodies. If ShouldLazyLoadMetadata is true,
 comment|/// lazily load metadata as well. If successful, this moves Buffer. On
@@ -176,6 +231,19 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 expr_stmt|;
+comment|/// Return true if \p Buffer contains a bitcode file with ObjC code (category
+comment|/// or class) in it.
+name|bool
+name|isBitcodeContainingObjCCategory
+parameter_list|(
+name|MemoryBufferRef
+name|Buffer
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
 comment|/// Read the header of the specified bitcode buffer and extract just the
 comment|/// producer string information. If successful, this returns a string. On
 comment|/// error, this returns "".
@@ -205,57 +273,33 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 expr_stmt|;
-comment|/// Check if the given bitcode buffer contains a function summary block.
+comment|/// Check if the given bitcode buffer contains a summary block.
 name|bool
-name|hasFunctionSummary
+name|hasGlobalValueSummary
 parameter_list|(
 name|MemoryBufferRef
 name|Buffer
 parameter_list|,
+specifier|const
 name|DiagnosticHandlerFunction
+modifier|&
 name|DiagnosticHandler
 parameter_list|)
 function_decl|;
-comment|/// Parse the specified bitcode buffer, returning the function info index.
-comment|/// If IsLazy is true, parse the entire function summary into
-comment|/// the index. Otherwise skip the function summary section, and only create
-comment|/// an index object with a map from function name to function summary offset.
-comment|/// The index is used to perform lazy function summary reading later.
+comment|/// Parse the specified bitcode buffer, returning the module summary index.
 name|ErrorOr
 operator|<
 name|std
 operator|::
 name|unique_ptr
 operator|<
-name|FunctionInfoIndex
+name|ModuleSummaryIndex
 operator|>>
-name|getFunctionInfoIndex
+name|getModuleSummaryIndex
 argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler
-argument_list|,
-argument|bool IsLazy = false
-argument_list|)
-expr_stmt|;
-comment|/// This method supports lazy reading of function summary data from the
-comment|/// combined index during function importing. When reading the combined index
-comment|/// file, getFunctionInfoIndex is first invoked with IsLazy=true.
-comment|/// Then this method is called for each function considered for importing,
-comment|/// to parse the summary information for the given function name into
-comment|/// the index.
-name|std
-operator|::
-name|error_code
-name|readFunctionSummary
-argument_list|(
-argument|MemoryBufferRef Buffer
-argument_list|,
-argument|DiagnosticHandlerFunction DiagnosticHandler
-argument_list|,
-argument|StringRef FunctionName
-argument_list|,
-argument|std::unique_ptr<FunctionInfoIndex> Index
+argument|const DiagnosticHandlerFunction&DiagnosticHandler
 argument_list|)
 expr_stmt|;
 comment|/// \brief Write the specified module to the specified raw output stream.
@@ -267,7 +311,7 @@ comment|/// If \c ShouldPreserveUseListOrder, encode the use-list order for each
 comment|/// Value in \c M.  These will be reconstructed exactly when \a M is
 comment|/// deserialized.
 comment|///
-comment|/// If \c EmitFunctionSummary, emit the function summary index (currently
+comment|/// If \c EmitSummaryIndex, emit the module's summary index (currently
 comment|/// for use in ThinLTO optimization).
 name|void
 name|WriteBitcodeToFile
@@ -286,28 +330,52 @@ name|ShouldPreserveUseListOrder
 init|=
 name|false
 parameter_list|,
+specifier|const
+name|ModuleSummaryIndex
+modifier|*
+name|Index
+init|=
+name|nullptr
+parameter_list|,
 name|bool
-name|EmitFunctionSummary
+name|GenerateHash
 init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// Write the specified function summary index to the given raw output stream,
+comment|/// Write the specified module summary index to the given raw output stream,
 comment|/// where it will be written in a new bitcode block. This is used when
-comment|/// writing the combined index file for ThinLTO.
+comment|/// writing the combined index file for ThinLTO. When writing a subset of the
+comment|/// index for a distributed backend, provide the \p ModuleToSummariesForIndex
+comment|/// map.
 name|void
-name|WriteFunctionSummaryToFile
-parameter_list|(
+name|WriteIndexToFile
+argument_list|(
 specifier|const
-name|FunctionInfoIndex
-modifier|&
+name|ModuleSummaryIndex
+operator|&
 name|Index
-parameter_list|,
+argument_list|,
 name|raw_ostream
-modifier|&
+operator|&
 name|Out
-parameter_list|)
-function_decl|;
+argument_list|,
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|GVSummaryMapTy
+operator|>
+operator|*
+name|ModuleToSummariesForIndex
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes
 comment|/// for an LLVM IR bitcode wrapper.
 comment|///
@@ -494,38 +562,19 @@ name|bool
 name|VerifyBufferSize
 parameter_list|)
 block|{
-enum|enum
-block|{
-name|KnownHeaderSize
-init|=
-literal|4
-operator|*
-literal|4
-block|,
-comment|// Size of header we read.
-name|OffsetField
-init|=
-literal|2
-operator|*
-literal|4
-block|,
-comment|// Offset in bytes to Offset field.
-name|SizeField
-init|=
-literal|3
-operator|*
-literal|4
-comment|// Offset in bytes to Size field.
-block|}
-enum|;
-comment|// Must contain the header!
+comment|// Must contain the offset and size field!
 if|if
 condition|(
+name|unsigned
+argument_list|(
 name|BufEnd
 operator|-
 name|BufPtr
+argument_list|)
 operator|<
-name|KnownHeaderSize
+name|BWH_SizeField
+operator|+
+literal|4
 condition|)
 return|return
 name|true
@@ -542,7 +591,7 @@ argument_list|(
 operator|&
 name|BufPtr
 index|[
-name|OffsetField
+name|BWH_OffsetField
 index|]
 argument_list|)
 decl_stmt|;
@@ -558,20 +607,31 @@ argument_list|(
 operator|&
 name|BufPtr
 index|[
-name|SizeField
+name|BWH_SizeField
 index|]
 argument_list|)
+decl_stmt|;
+name|uint64_t
+name|BitcodeOffsetEnd
+init|=
+operator|(
+name|uint64_t
+operator|)
+name|Offset
+operator|+
+operator|(
+name|uint64_t
+operator|)
+name|Size
 decl_stmt|;
 comment|// Verify that Offset+Size fits in the file.
 if|if
 condition|(
 name|VerifyBufferSize
 operator|&&
-name|Offset
-operator|+
-name|Size
+name|BitcodeOffsetEnd
 operator|>
-name|unsigned
+name|uint64_t
 argument_list|(
 name|BufEnd
 operator|-

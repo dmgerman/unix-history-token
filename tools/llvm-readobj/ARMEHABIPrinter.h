@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"StreamWriter.h"
+file|"llvm-readobj.h"
 end_include
 
 begin_include
@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ScopedPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -116,7 +122,7 @@ block|{
 name|class
 name|OpcodeDecoder
 block|{
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|SW
 decl_stmt|;
@@ -466,7 +472,7 @@ name|public
 label|:
 name|OpcodeDecoder
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|SW
 argument_list|)
@@ -2628,7 +2634,7 @@ expr_stmt|;
 end_typedef
 
 begin_decl_stmt
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|SW
 decl_stmt|;
@@ -2808,7 +2814,7 @@ end_label
 begin_expr_stmt
 name|PrinterContext
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|SW
 argument_list|,
@@ -2958,23 +2964,54 @@ name|ELF
 operator|::
 name|STT_FUNC
 condition|)
-return|return
+block|{
+name|auto
+name|NameOrErr
+init|=
 name|Sym
 operator|.
 name|getName
 argument_list|(
 name|StrTable
 argument_list|)
-return|;
-end_expr_stmt
-
-begin_return
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|NameOrErr
+condition|)
+block|{
+comment|// TODO: Actually report errors helpfully.
+name|consumeError
+argument_list|(
+name|NameOrErr
+operator|.
+name|takeError
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|readobj_error
 operator|::
 name|unknown_symbol
 return|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|NameOrErr
+return|;
 end_return
+
+begin_expr_stmt
+unit|}   return
+name|readobj_error
+operator|::
+name|unknown_symbol
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 unit|}  template

@@ -242,6 +242,10 @@ name|DIV_use
 init|=
 literal|44
 block|,
+name|DSP_extension
+init|=
+literal|46
+block|,
 name|also_compatible_with
 init|=
 literal|65
@@ -404,11 +408,21 @@ init|=
 literal|13
 block|,
 comment|// v7_M with DSP extensions
-name|v8
+name|v8_A
 init|=
 literal|14
 block|,
-comment|// v8,v8.1a AArch32
+comment|// v8_A AArch32
+name|v8_M_Base
+init|=
+literal|16
+block|,
+comment|// v8_M_Base AArch32
+name|v8_M_Main
+init|=
+literal|17
+block|,
+comment|// v8_M_Main AArch32
 block|}
 enum|;
 enum|enum
@@ -467,6 +481,11 @@ init|=
 literal|2
 block|,
 comment|// 32-bit Thumb (implies 16-bit instructions)
+name|AllowThumbDerived
+init|=
+literal|3
+block|,
+comment|// Thumb allowed, derived from arch/profile
 comment|// Tag_FP_arch (=10), uleb128 (formerly Tag_VFP_arch = 10)
 name|AllowFPv2
 init|=

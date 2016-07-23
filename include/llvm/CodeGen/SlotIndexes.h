@@ -413,7 +413,7 @@ comment|/// def slot of PHI-defs.
 name|Slot_Block
 block|,
 comment|/// Early-clobber register use/def slot.  A live range defined at
-comment|/// Slot_EarlyCLobber interferes with normal live ranges killed at
+comment|/// Slot_EarlyClobber interferes with normal live ranges killed at
 comment|/// Slot_Register.  Also used as the kill slot for live ranges tied to an
 comment|/// early-clobber def.
 name|Slot_EarlyClobber
@@ -795,6 +795,27 @@ argument_list|()
 operator|->
 name|getIndex
 argument_list|()
+return|;
+block|}
+comment|/// Return true if A refers to the same instruction as B or an earlier one.
+comment|/// This is equivalent to !isEarlierInstr(B, A).
+specifier|static
+name|bool
+name|isEarlierEqualInstr
+argument_list|(
+argument|SlotIndex A
+argument_list|,
+argument|SlotIndex B
+argument_list|)
+block|{
+return|return
+operator|!
+name|isEarlierInstr
+argument_list|(
+name|B
+argument_list|,
+name|A
+argument_list|)
 return|;
 block|}
 comment|/// Return the distance from this index to the given one.
@@ -1418,6 +1439,7 @@ block|;     }
 operator|~
 name|SlotIndexes
 argument_list|()
+name|override
 block|{
 comment|// The indexList's nodes are all allocated in the BumpPtrAllocator.
 name|indexList
@@ -1523,7 +1545,7 @@ comment|/// otherwise returns false.
 name|bool
 name|hasIndex
 argument_list|(
-argument|const MachineInstr *instr
+argument|const MachineInstr&instr
 argument_list|)
 specifier|const
 block|{
@@ -1532,6 +1554,7 @@ name|mi2iMap
 operator|.
 name|count
 argument_list|(
+operator|&
 name|instr
 argument_list|)
 return|;
@@ -1540,7 +1563,7 @@ comment|/// Returns the base index for the given instruction.
 name|SlotIndex
 name|getInstructionIndex
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -1554,6 +1577,7 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
+operator|&
 name|getBundleStart
 argument_list|(
 name|MI
@@ -1677,7 +1701,7 @@ name|getIndexBefore
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -1688,7 +1712,7 @@ modifier|*
 name|MBB
 init|=
 name|MI
-operator|->
+operator|.
 name|getParent
 argument_list|()
 decl_stmt|;
@@ -1743,6 +1767,8 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -1770,7 +1796,7 @@ name|getIndexAfter
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -1781,7 +1807,7 @@ modifier|*
 name|MBB
 init|=
 name|MI
-operator|->
+operator|.
 name|getParent
 argument_list|()
 decl_stmt|;
@@ -1836,6 +1862,8 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
+operator|&
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -2278,8 +2306,8 @@ name|SlotIndex
 name|insertMachineInstrInMaps
 parameter_list|(
 name|MachineInstr
-modifier|*
-name|mi
+modifier|&
+name|MI
 parameter_list|,
 name|bool
 name|Late
@@ -2290,8 +2318,8 @@ block|{
 name|assert
 argument_list|(
 operator|!
-name|mi
-operator|->
+name|MI
+operator|.
 name|isInsideBundle
 argument_list|()
 operator|&&
@@ -2304,7 +2332,8 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
-name|mi
+operator|&
+name|MI
 argument_list|)
 operator|==
 name|mi2iMap
@@ -2320,8 +2349,8 @@ comment|// affected by debug information.
 name|assert
 argument_list|(
 operator|!
-name|mi
-operator|->
+name|MI
+operator|.
 name|isDebugValue
 argument_list|()
 operator|&&
@@ -2330,8 +2359,8 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|mi
-operator|->
+name|MI
+operator|.
 name|getParent
 argument_list|()
 operator|!=
@@ -2340,7 +2369,7 @@ operator|&&
 literal|"Instr must be added to function."
 argument_list|)
 expr_stmt|;
-comment|// Get the entries where mi should be inserted.
+comment|// Get the entries where MI should be inserted.
 name|IndexList
 operator|::
 name|iterator
@@ -2353,12 +2382,12 @@ condition|(
 name|Late
 condition|)
 block|{
-comment|// Insert mi's index immediately before the following instruction.
+comment|// Insert MI's index immediately before the following instruction.
 name|nextItr
 operator|=
 name|getIndexAfter
 argument_list|(
-name|mi
+name|MI
 argument_list|)
 operator|.
 name|listEntry
@@ -2379,12 +2408,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|// Insert mi's index immediately after the preceding instruction.
+comment|// Insert MI's index immediately after the preceding instruction.
 name|prevItr
 operator|=
 name|getIndexBefore
 argument_list|(
-name|mi
+name|MI
 argument_list|)
 operator|.
 name|listEntry
@@ -2437,7 +2466,7 @@ argument_list|()
 operator|+
 name|dist
 decl_stmt|;
-comment|// Insert a new list entry for mi.
+comment|// Insert a new list entry for MI.
 name|IndexList
 operator|::
 name|iterator
@@ -2451,7 +2480,8 @@ name|nextItr
 argument_list|,
 name|createEntry
 argument_list|(
-name|mi
+operator|&
+name|MI
 argument_list|,
 name|newNumber
 argument_list|)
@@ -2489,7 +2519,8 @@ name|std
 operator|::
 name|make_pair
 argument_list|(
-name|mi
+operator|&
+name|MI
 argument_list|,
 name|newIndex
 argument_list|)
@@ -2504,8 +2535,8 @@ name|void
 name|removeMachineInstrFromMaps
 parameter_list|(
 name|MachineInstr
-modifier|*
-name|mi
+modifier|&
+name|MI
 parameter_list|)
 block|{
 comment|// remove index -> MachineInstr and
@@ -2519,7 +2550,8 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
-name|mi
+operator|&
+name|MI
 argument_list|)
 expr_stmt|;
 if|if
@@ -2551,7 +2583,8 @@ operator|->
 name|getInstr
 argument_list|()
 operator|==
-name|mi
+operator|&
+name|MI
 operator|&&
 literal|"Instruction indexes broken."
 argument_list|)
@@ -2579,12 +2612,12 @@ name|void
 name|replaceMachineInstrInMaps
 parameter_list|(
 name|MachineInstr
-modifier|*
-name|mi
+modifier|&
+name|MI
 parameter_list|,
 name|MachineInstr
-modifier|*
-name|newMI
+modifier|&
+name|NewMI
 parameter_list|)
 block|{
 name|Mi2IndexMap
@@ -2596,7 +2629,8 @@ name|mi2iMap
 operator|.
 name|find
 argument_list|(
-name|mi
+operator|&
+name|MI
 argument_list|)
 expr_stmt|;
 if|if
@@ -2633,7 +2667,8 @@ operator|->
 name|getInstr
 argument_list|()
 operator|==
-name|mi
+operator|&
+name|MI
 operator|&&
 literal|"Mismatched instruction in index tables."
 argument_list|)
@@ -2642,7 +2677,8 @@ name|miEntry
 operator|->
 name|setInstr
 argument_list|(
-name|newMI
+operator|&
+name|NewMI
 argument_list|)
 expr_stmt|;
 name|mi2iMap
@@ -2660,7 +2696,8 @@ name|std
 operator|::
 name|make_pair
 argument_list|(
-name|newMI
+operator|&
+name|NewMI
 argument_list|,
 name|replaceBaseIndex
 argument_list|)
@@ -3013,8 +3050,12 @@ block|{   }
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

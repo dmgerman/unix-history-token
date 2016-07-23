@@ -91,7 +91,7 @@ decl_stmt|;
 name|class
 name|MVT
 decl_stmt|;
-comment|/// \brief Decode a PSHUFB mask from an IR-level vector constant.
+comment|/// Decode a PSHUFB mask from an IR-level vector constant.
 name|void
 name|DecodePSHUFBMask
 argument_list|(
@@ -108,7 +108,7 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a VPERMILP variable mask from an IR-level vector constant.
+comment|/// Decode a VPERMILP variable mask from an IR-level vector constant.
 name|void
 name|DecodeVPERMILPMask
 argument_list|(
@@ -128,7 +128,47 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a VPERM W/D/Q/PS/PD mask from an IR-level vector constant.
+comment|/// Decode a VPERMILP2 variable mask from an IR-level vector constant.
+name|void
+name|DecodeVPERMIL2PMask
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|unsigned
+name|MatchImm
+argument_list|,
+name|unsigned
+name|ElSize
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// Decode a VPPERM variable mask from an IR-level vector constant.
+name|void
+name|DecodeVPPERMMask
+argument_list|(
+specifier|const
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// Decode a VPERM W/D/Q/PS/PD mask from an IR-level vector constant.
 name|void
 name|DecodeVPERMVMask
 argument_list|(
@@ -148,7 +188,7 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// \brief Decode a VPERMT2 W/D/Q/PS/PD mask from an IR-level vector constant.
+comment|/// Decode a VPERMT2 W/D/Q/PS/PD mask from an IR-level vector constant.
 name|void
 name|DecodeVPERMV3Mask
 argument_list|(

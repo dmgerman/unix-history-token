@@ -218,12 +218,6 @@ directive|include
 file|<string>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_comment
 comment|/// Determines if the program is running on Windows 8 or newer. This
 end_comment
@@ -379,7 +373,7 @@ decl_stmt|;
 name|DWORD
 name|R
 init|=
-name|FormatMessage
+name|FormatMessageA
 argument_list|(
 name|FORMAT_MESSAGE_ALLOCATE_BUFFER
 operator||
@@ -771,6 +765,52 @@ return|;
 block|}
 expr|}
 block|;  struct
+name|RegTraits
+operator|:
+name|CommonHandleTraits
+block|{
+typedef|typedef
+name|HKEY
+name|handle_type
+typedef|;
+specifier|static
+name|handle_type
+name|GetInvalid
+argument_list|()
+block|{
+return|return
+name|NULL
+return|;
+block|}
+specifier|static
+name|void
+name|Close
+argument_list|(
+argument|handle_type h
+argument_list|)
+block|{
+operator|::
+name|RegCloseKey
+argument_list|(
+name|h
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|IsValid
+argument_list|(
+argument|handle_type h
+argument_list|)
+block|{
+return|return
+name|h
+operator|!=
+name|GetInvalid
+argument_list|()
+return|;
+block|}
+expr|}
+block|;  struct
 name|FindHandleTraits
 operator|:
 name|CommonHandleTraits
@@ -821,6 +861,16 @@ operator|<
 name|CryptContextTraits
 operator|>
 name|ScopedCryptContext
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ScopedHandle
+operator|<
+name|RegTraits
+operator|>
+name|ScopedRegHandle
 expr_stmt|;
 end_typedef
 

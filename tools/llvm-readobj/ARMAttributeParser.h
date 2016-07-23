@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"StreamWriter.h"
+file|"llvm/Support/ARMBuildAttributes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ARMBuildAttributes.h"
+file|"llvm/Support/ScopedPrinter.h"
 end_include
 
 begin_decl_stmt
@@ -65,7 +65,7 @@ decl_stmt|;
 name|class
 name|ARMAttributeParser
 block|{
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|SW
 decl_stmt|;
@@ -757,6 +757,24 @@ name|Offset
 argument_list|)
 decl_stmt|;
 name|void
+name|DSP_extension
+argument_list|(
+name|ARMBuildAttrs
+operator|::
+name|AttrType
+name|Tag
+argument_list|,
+specifier|const
+name|uint8_t
+operator|*
+name|Data
+argument_list|,
+name|uint32_t
+operator|&
+name|Offset
+argument_list|)
+decl_stmt|;
+name|void
 name|T2EE_use
 argument_list|(
 name|ARMBuildAttrs
@@ -862,7 +880,7 @@ name|public
 label|:
 name|ARMAttributeParser
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|SW
 argument_list|)

@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm-c/Object.h"
 end_include
 
@@ -35,7 +29,7 @@ end_include
 
 begin_function
 name|int
-name|object_list_sections
+name|llvm_object_list_sections
 parameter_list|(
 name|void
 parameter_list|)
@@ -174,7 +168,7 @@ end_function
 
 begin_function
 name|int
-name|object_list_symbols
+name|llvm_object_list_symbols
 parameter_list|(
 name|void
 parameter_list|)

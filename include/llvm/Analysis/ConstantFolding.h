@@ -88,25 +88,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
-decl_stmt|;
-name|class
-name|ConstantExpr
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|TargetLibraryInfo
-decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|Type
+name|APInt
 decl_stmt|;
 name|template
 operator|<
@@ -116,6 +98,54 @@ operator|>
 name|class
 name|ArrayRef
 expr_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|ConstantExpr
+decl_stmt|;
+name|class
+name|DataLayout
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|GlobalValue
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+comment|/// If this constant is a constant offset from a global, return the global and
+comment|/// the constant. Because of constantexprs, this function is recursive.
+name|bool
+name|IsConstantOffsetFromGlobal
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+name|GlobalValue
+modifier|*
+modifier|&
+name|GV
+parameter_list|,
+name|APInt
+modifier|&
+name|Offset
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
 comment|/// ConstantFoldInstruction - Try to constant fold the specified instruction.
 comment|/// If successful, the constant result is returned, if not, null is returned.
 comment|/// Note that this fails if not all of the operands are constant.  Otherwise,
@@ -177,6 +207,42 @@ name|Constant
 modifier|*
 name|ConstantFoldInstOperands
 argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|ArrayRef
+operator|<
+name|Constant
+operator|*
+operator|>
+name|Ops
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// ConstantFoldInstOperands - Attempt to constant fold an instruction with the
+comment|/// specified operands.  If successful, the constant result is returned, if not,
+comment|/// null is returned.  Note that this function can fail when attempting to
+comment|/// fold instructions like loads and stores, which have no constant expression
+comment|/// form.
+comment|///
+comment|/// This function doesn't work for compares (use ConstantFoldCompareInstOperands
+comment|/// for this) and GEPs.
+name|Constant
+modifier|*
+name|ConstantFoldInstOperands
+argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
@@ -234,6 +300,53 @@ modifier|*
 name|TLI
 init|=
 name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// \brief Attempt to constant fold a binary operation with the specified
+comment|/// operands.  If it fails, it returns a constant expression of the specified
+comment|/// operands.
+name|Constant
+modifier|*
+name|ConstantFoldBinaryOpOperands
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|Constant
+modifier|*
+name|LHS
+parameter_list|,
+name|Constant
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
+comment|/// \brief Attempt to constant fold a cast with the specified operand.  If it
+comment|/// fails, it returns a constant expression of the specified operand.
+name|Constant
+modifier|*
+name|ConstantFoldCastOperand
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+name|Type
+modifier|*
+name|DestTy
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldInsertValueInstruction - Attempt to constant fold an insertvalue
@@ -302,6 +415,10 @@ parameter_list|(
 name|Constant
 modifier|*
 name|C
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
 parameter_list|,
 specifier|const
 name|DataLayout

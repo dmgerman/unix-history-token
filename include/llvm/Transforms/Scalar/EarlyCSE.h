@@ -82,20 +82,14 @@ comment|/// eliminating trivially redundant instructions and using instsimplify 
 comment|/// canonicalize things as it goes. It is intended to be fast and catch obvious
 comment|/// cases so that instcombine and other passes are more effective. It is
 comment|/// expected that a later pass of GVN will catch the interesting/hard cases.
-name|class
+name|struct
 name|EarlyCSEPass
+range|:
+name|PassInfoMixin
+operator|<
+name|EarlyCSEPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"EarlyCSEPass"
-return|;
-block|}
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -108,12 +102,11 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

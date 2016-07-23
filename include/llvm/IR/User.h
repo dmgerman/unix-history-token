@@ -82,12 +82,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
@@ -119,6 +113,22 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|MutableArrayRef
+expr_stmt|;
 comment|/// \brief Compile-time customization of User operands.
 comment|///
 comment|/// Customizes operand-related allocators and accessors.

@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -358,6 +352,18 @@ name|RHS
 operator|)
 return|;
 block|}
+comment|/// @brief Difference in bytes between this and RHS.
+name|ptrdiff_t
+name|operator
+operator|-
+operator|(
+specifier|const
+name|reverse_iterator
+operator|&
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// @brief Get begin iterator over \a path.
@@ -450,6 +456,40 @@ specifier|const
 name|Twine
 operator|&
 name|extension
+argument_list|)
+decl_stmt|;
+comment|/// @brief Replace matching path prefix with another path.
+comment|///
+comment|/// @code
+comment|///   /foo, /old, /new => /foo
+comment|///   /old/foo, /old, /new => /new/foo
+comment|///   /foo,<empty>, /new => /new/foo
+comment|///   /old/foo, /old,<empty> => /foo
+comment|/// @endcode
+comment|///
+comment|/// @param Path If \a Path starts with \a OldPrefix modify to instead
+comment|///        start with \a NewPrefix.
+comment|/// @param OldPrefix The path prefix to strip from \a Path.
+comment|/// @param NewPrefix The path prefix to replace \a NewPrefix with.
+name|void
+name|replace_path_prefix
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Path
+argument_list|,
+specifier|const
+name|StringRef
+operator|&
+name|OldPrefix
+argument_list|,
+specifier|const
+name|StringRef
+operator|&
+name|NewPrefix
 argument_list|)
 decl_stmt|;
 comment|/// @brief Append to path.

@@ -473,6 +473,11 @@ define|\
 value|ENTRY(CR0)          \   ENTRY(CR1)          \   ENTRY(CR2)          \   ENTRY(CR3)          \   ENTRY(CR4)          \   ENTRY(CR5)          \   ENTRY(CR6)          \   ENTRY(CR7)          \   ENTRY(CR8)          \   ENTRY(CR9)          \   ENTRY(CR10)         \   ENTRY(CR11)         \   ENTRY(CR12)         \   ENTRY(CR13)         \   ENTRY(CR14)         \   ENTRY(CR15)
 define|#
 directive|define
+name|REGS_BOUND
+define|\
+value|ENTRY(BND0)         \   ENTRY(BND1)         \   ENTRY(BND2)         \   ENTRY(BND3)
+define|#
+directive|define
 name|ALL_EA_BASES
 define|\
 value|EA_BASES_16BIT      \   EA_BASES_32BIT      \   EA_BASES_64BIT
@@ -485,7 +490,7 @@ define|#
 directive|define
 name|ALL_REGS
 define|\
-value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_ZMM            \   REGS_MASKS          \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
+value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_ZMM            \   REGS_MASKS          \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   REGS_BOUND          \   ENTRY(RIP)
 comment|/// \brief All possible values of the base field for effective-address
 comment|/// computations, a.k.a. the Mod and R/M fields of the ModR/M byte.
 comment|/// We distinguish between bases (EA_BASE_*) and registers that just happen

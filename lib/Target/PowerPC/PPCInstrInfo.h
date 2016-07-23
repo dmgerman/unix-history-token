@@ -242,7 +242,7 @@ name|LoadRegFromStackSlot
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -250,7 +250,7 @@ argument|int FrameIdx
 argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument|SmallVectorImpl<MachineInstr *>&NewMIs
 argument_list|,
 argument|bool&NonRI
 argument_list|,
@@ -279,7 +279,7 @@ name|MachineInstr
 operator|*
 name|commuteInstructionImpl
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|bool NewMI
 argument_list|,
@@ -342,7 +342,7 @@ name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned *PredCost = nullptr
 argument_list|)
@@ -354,11 +354,11 @@ name|getOperandLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|,
-argument|const MachineInstr *UseMI
+argument|const MachineInstr&UseMI
 argument_list|,
 argument|unsigned UseIdx
 argument_list|)
@@ -403,7 +403,7 @@ name|hasLowDefLatency
 argument_list|(
 argument|const TargetSchedModel&SchedModel
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|)
@@ -465,7 +465,7 @@ block|;
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -475,7 +475,7 @@ block|;
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -485,7 +485,7 @@ block|;
 name|bool
 name|findCommutedOpIndices
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcOpIdx1
 argument_list|,
@@ -506,7 +506,7 @@ name|override
 block|;
 comment|// Branch analysis.
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -540,7 +540,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -573,7 +573,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
@@ -593,7 +593,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -653,9 +653,9 @@ block|;
 name|bool
 name|FoldImmediate
 argument_list|(
-argument|MachineInstr *UseMI
+argument|MachineInstr&UseMI
 argument_list|,
-argument|MachineInstr *DefMI
+argument|MachineInstr&DefMI
 argument_list|,
 argument|unsigned Reg
 argument_list|,
@@ -739,7 +739,7 @@ comment|// Predication support.
 name|bool
 name|isPredicated
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -747,7 +747,7 @@ block|;
 name|bool
 name|isUnpredicatedTerminator
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -755,7 +755,7 @@ block|;
 name|bool
 name|PredicateInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<MachineOperand> Pred
 argument_list|)
@@ -775,7 +775,7 @@ block|;
 name|bool
 name|DefinesPredicate
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
@@ -785,7 +785,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -794,7 +794,7 @@ comment|// Comparison optimization.
 name|bool
 name|analyzeCompare
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
@@ -810,7 +810,7 @@ block|;
 name|bool
 name|optimizeCompareInstr
 argument_list|(
-argument|MachineInstr *CmpInstr
+argument|MachineInstr&CmpInstr
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
@@ -831,7 +831,7 @@ comment|///
 name|unsigned
 name|GetInstSizeInBytes
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -889,6 +889,15 @@ operator|*
 operator|>>
 name|getSerializableBitmaskMachineOperandTargetFlags
 argument_list|()
+specifier|const
+name|override
+block|;
+comment|// Lower pseudo instructions after register allocation.
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
 specifier|const
 name|override
 block|; }

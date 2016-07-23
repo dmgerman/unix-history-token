@@ -8,7 +8,7 @@ comment|// RUN: %host_cc -O0 -g %s -o %t 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: %t 2>&1 | llvm-symbolizer -print-source-context-lines=5 -obj=%t | FileCheck %s --check-prefix=CHECK
+comment|// RUN: %t 2>&1 | llvm-symbolizer -print-source-context-lines=5 -obj=%t | FileCheck %s
 end_comment
 
 begin_include

@@ -53,6 +53,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|IPDBLineNumber
 block|{
@@ -161,6 +164,7 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_decl_stmt
 

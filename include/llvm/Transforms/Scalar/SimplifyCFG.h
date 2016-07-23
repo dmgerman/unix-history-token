@@ -86,31 +86,28 @@ comment|/// unnecessary control flows and bringing it into the canonical form ex
 comment|/// by the rest of the mid-level optimizer.
 name|class
 name|SimplifyCFGPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|SimplifyCFGPass
+operator|>
 block|{
 name|int
 name|BonusInstThreshold
-decl_stmt|;
+block|;
 name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"SimplifyCFGPass"
-return|;
-block|}
+operator|:
 comment|/// \brief Construct a pass with the default thresholds.
 name|SimplifyCFGPass
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// \brief Construct a pass with a specific bonus threshold.
 name|SimplifyCFGPass
 argument_list|(
 argument|int BonusInstThreshold
 argument_list|)
-empty_stmt|;
+block|;
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -123,12 +120,11 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 

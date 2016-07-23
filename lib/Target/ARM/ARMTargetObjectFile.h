@@ -84,7 +84,13 @@ name|AttributesSection
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{}
+block|{
+name|PLTRelativeVariantKind
+operator|=
+name|MCSymbolRefExpr
+operator|::
+name|VK_ARM_PREL31
+block|;   }
 name|void
 name|Initialize
 argument_list|(

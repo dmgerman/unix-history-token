@@ -80,6 +80,9 @@ name|class
 name|ImmutablePass
 decl_stmt|;
 name|class
+name|PassRegistry
+decl_stmt|;
+name|class
 name|X86TargetMachine
 decl_stmt|;
 comment|/// This pass converts a legalized DAG into a X86-specific DAG, ready for
@@ -149,6 +152,18 @@ modifier|*
 name|createX86OptimizeLEAs
 parameter_list|()
 function_decl|;
+comment|/// Return a pass that transforms setcc + movzx pairs into xor + setcc.
+name|FunctionPass
+modifier|*
+name|createX86FixupSetCC
+parameter_list|()
+function_decl|;
+comment|/// Return a pass that expands WinAlloca pseudo-instructions.
+name|FunctionPass
+modifier|*
+name|createX86WinAllocaExpander
+parameter_list|()
+function_decl|;
 comment|/// Return a pass that optimizes the code-size of x86 call sequences. This is
 comment|/// done by replacing esp-relative movs with pushes.
 name|FunctionPass
@@ -172,6 +187,22 @@ name|FunctionPass
 modifier|*
 name|createX86ExpandPseudoPass
 parameter_list|()
+function_decl|;
+comment|/// Return a Machine IR pass that selectively replaces
+comment|/// certain byte and word instructions by equivalent 32 bit instructions,
+comment|/// in order to eliminate partial register usage, false dependences on
+comment|/// the upper portions of registers, and to save code size.
+name|FunctionPass
+modifier|*
+name|createX86FixupBWInsts
+parameter_list|()
+function_decl|;
+name|void
+name|initializeFixupBWInstPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

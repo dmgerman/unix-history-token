@@ -250,6 +250,8 @@ name|fixup_Hexagon_TPREL_16_X
 block|,
 name|fixup_Hexagon_TPREL_11_X
 block|,
+name|fixup_Hexagon_23_REG
+block|,
 name|LastTargetFixupKind
 block|,
 name|NumTargetFixupKinds

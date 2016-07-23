@@ -178,6 +178,11 @@ name|MachOUniversalBinary
 operator|>
 name|CurrentFatBinary
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|CurrentFatBinaryName
+expr_stmt|;
 name|bool
 name|Verbose
 decl_stmt|;
@@ -513,18 +518,6 @@ name|ErrOrObj
 operator|)
 return|;
 block|}
-specifier|static
-name|Triple
-name|getTriple
-argument_list|(
-specifier|const
-name|object
-operator|::
-name|MachOObjectFile
-operator|&
-name|Obj
-argument_list|)
-decl_stmt|;
 block|}
 end_decl_stmt
 

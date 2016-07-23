@@ -5226,10 +5226,6 @@ name|Shift
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return;
-end_return
-
 begin_expr_stmt
 unit|}  template
 operator|<
@@ -5360,10 +5356,6 @@ name|Shift
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return;
-end_return
-
 begin_expr_stmt
 unit|}  template
 operator|<
@@ -5408,6 +5400,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_SCALEDNUMBER_H
+end_comment
 
 end_unit
 

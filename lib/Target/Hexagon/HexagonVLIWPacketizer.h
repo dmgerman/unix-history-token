@@ -145,7 +145,7 @@ comment|// ignorePseudoInstruction - Ignore bundling of pseudo instructions.
 name|bool
 name|ignorePseudoInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineBasicBlock *MBB
 argument_list|)
@@ -156,7 +156,7 @@ comment|// with any other instruction, which means that MI itself is a packet.
 name|bool
 name|isSoloInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 name|override
 block|;
@@ -187,7 +187,7 @@ operator|::
 name|iterator
 name|addToPacket
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 name|override
 block|;
@@ -196,14 +196,14 @@ name|endPacket
 argument_list|(
 argument|MachineBasicBlock *MBB
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineBasicBlock::iterator MI
 argument_list|)
 name|override
 block|;
 name|bool
 name|shouldAddToPacket
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 name|override
 block|;
@@ -317,11 +317,11 @@ name|bool
 name|arePredicatesComplements
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI1
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI2
 argument_list|)
 block|;

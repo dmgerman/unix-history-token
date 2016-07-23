@@ -172,12 +172,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 
@@ -197,6 +191,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|Loop
 decl_stmt|;
@@ -708,7 +710,7 @@ name|NextSuccessor
 decl_stmt|;
 name|friend
 name|class
-name|DependenceAnalysis
+name|DependenceInfo
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -919,39 +921,55 @@ name|DV
 block|;
 name|friend
 name|class
-name|DependenceAnalysis
+name|DependenceInfo
 block|;   }
 decl_stmt|;
-comment|/// DependenceAnalysis - This class is the main dependence-analysis driver.
+comment|/// DependenceInfo - This class is the main dependence-analysis driver.
 comment|///
 name|class
-name|DependenceAnalysis
-range|:
-name|public
-name|FunctionPass
+name|DependenceInfo
 block|{
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|DependenceAnalysis
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|DependenceAnalysis
-argument_list|(
-specifier|const
-name|DependenceAnalysis
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
+label|:
+name|DependenceInfo
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|,
+name|ScalarEvolution
+operator|*
+name|SE
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+argument_list|)
 operator|:
+name|AA
+argument_list|(
+name|AA
+argument_list|)
+operator|,
+name|SE
+argument_list|(
+name|SE
+argument_list|)
+operator|,
+name|LI
+argument_list|(
+name|LI
+argument_list|)
+operator|,
+name|F
+argument_list|(
+argument|F
+argument_list|)
+block|{}
 comment|/// depends - Tests for a dependence between the Src and Dst instructions.
 comment|/// Returns NULL if no dependence; otherwise, returns a Dependence (or a
 comment|/// FullDependence) with as much information as can be gleaned.
@@ -972,7 +990,7 @@ argument|Instruction *Dst
 argument_list|,
 argument|bool PossiblyLoopIndependent
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// getSplitIteration - Give a dependence that's splittable at some
 comment|/// particular level, return the iteration that should be used to split
 comment|/// the loop.
@@ -1015,48 +1033,63 @@ comment|/// breaks the dependence and allows us to vectorize/parallelize
 comment|/// both loops.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|getSplitIteration
-argument_list|(
-argument|const Dependence&Dep
-argument_list|,
-argument|unsigned Level
-argument_list|)
-block|;
-name|private
-operator|:
-name|AliasAnalysis
-operator|*
-name|AA
-block|;
-name|ScalarEvolution
-operator|*
-name|SE
-block|;
-name|LoopInfo
-operator|*
-name|LI
-block|;
+parameter_list|(
+specifier|const
+name|Dependence
+modifier|&
+name|Dep
+parameter_list|,
+name|unsigned
+name|Level
+parameter_list|)
+function_decl|;
 name|Function
 operator|*
+name|getFunction
+argument_list|()
+specifier|const
+block|{
+return|return
 name|F
-block|;
+return|;
+block|}
+name|private
+label|:
+name|AliasAnalysis
+modifier|*
+name|AA
+decl_stmt|;
+name|ScalarEvolution
+modifier|*
+name|SE
+decl_stmt|;
+name|LoopInfo
+modifier|*
+name|LI
+decl_stmt|;
+name|Function
+modifier|*
+name|F
+decl_stmt|;
 comment|/// Subscript - This private struct represents a pair of subscripts from
 comment|/// a pair of potentially multi-dimensional array references. We use a
 comment|/// vector of them to guide subscript partitioning.
-block|struct
+struct|struct
 name|Subscript
 block|{
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Src
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Dst
-block|;       enum
+decl_stmt|;
+enum|enum
 name|ClassificationKind
 block|{
 name|ZIV
@@ -1070,72 +1103,77 @@ block|,
 name|NonLinear
 block|}
 name|Classification
-block|;
+enum|;
 name|SmallBitVector
 name|Loops
-block|;
+decl_stmt|;
 name|SmallBitVector
 name|GroupLoops
-block|;
+decl_stmt|;
 name|SmallBitVector
 name|Group
-block|;     }
-block|;      struct
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|CoefficientInfo
 block|{
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Coeff
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|PosPart
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|NegPart
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Iterations
-block|;     }
-block|;      struct
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|BoundInfo
 block|{
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Iterations
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Upper
 index|[
 literal|8
 index|]
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Lower
 index|[
 literal|8
 index|]
-block|;
+decl_stmt|;
 name|unsigned
 name|char
 name|Direction
-block|;
+decl_stmt|;
 name|unsigned
 name|char
 name|DirSet
-block|;     }
-block|;
+decl_stmt|;
+block|}
+struct|;
 comment|/// Constraint - This private class represents a constraint, as defined
 comment|/// in the paper
 comment|///
@@ -1155,8 +1193,8 @@ name|class
 name|Constraint
 block|{
 name|private
-operator|:
-expr|enum
+label|:
+enum|enum
 name|ConstraintKind
 block|{
 name|Empty
@@ -1170,33 +1208,33 @@ block|,
 name|Any
 block|}
 name|Kind
-block|;
+enum|;
 name|ScalarEvolution
-operator|*
+modifier|*
 name|SE
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|A
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|B
-block|;
+decl_stmt|;
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|C
-block|;
+decl_stmt|;
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|AssociatedLoop
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 comment|/// isEmpty - Return true if the constraint is of kind Empty.
 name|bool
 name|isEmpty
@@ -1271,7 +1309,7 @@ operator|*
 name|getX
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getY - If constraint is a point<X, Y>, returns Y.
 comment|/// Otherwise assert.
 specifier|const
@@ -1280,7 +1318,7 @@ operator|*
 name|getY
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getA - If constraint is a line AX + BY = C, returns A.
 comment|/// Otherwise assert.
 specifier|const
@@ -1289,7 +1327,7 @@ operator|*
 name|getA
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getB - If constraint is a line AX + BY = C, returns B.
 comment|/// Otherwise assert.
 specifier|const
@@ -1298,7 +1336,7 @@ operator|*
 name|getB
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getC - If constraint is a line AX + BY = C, returns C.
 comment|/// Otherwise assert.
 specifier|const
@@ -1307,7 +1345,7 @@ operator|*
 name|getC
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getD - If constraint is a distance, returns D.
 comment|/// Otherwise assert.
 specifier|const
@@ -1316,7 +1354,7 @@ operator|*
 name|getD
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getAssociatedLoop - Returns the loop associated with this constraint.
 specifier|const
 name|Loop
@@ -1324,91 +1362,94 @@ operator|*
 name|getAssociatedLoop
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// setPoint - Change a constraint to Point.
 name|void
 name|setPoint
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|X
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Y
-argument_list|,
+parameter_list|,
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|CurrentLoop
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setLine - Change a constraint to Line.
 name|void
 name|setLine
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|A
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|B
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|C
-argument_list|,
+parameter_list|,
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|CurrentLoop
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setDistance - Change a constraint to Distance.
 name|void
 name|setDistance
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|D
-argument_list|,
+parameter_list|,
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|CurrentLoop
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setEmpty - Change a constraint to Empty.
 name|void
 name|setEmpty
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// setAny - Change a constraint to Any.
 name|void
 name|setAny
-argument_list|(
+parameter_list|(
 name|ScalarEvolution
-operator|*
+modifier|*
 name|SE
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// dump - For debugging purposes. Dumps the constraint
 comment|/// out to OS.
 name|void
 name|dump
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-block|;     }
-block|;
+decl|const
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// establishNestingLevels - Examines the loop nesting of the Src and Dst
 comment|/// instructions and establishes their shared loops. Sets the variables
 comment|/// CommonLevels, SrcLevels, and MaxLevels.
@@ -1461,54 +1502,66 @@ comment|///     f - 6
 comment|///     g - 7 = MaxLevels
 name|void
 name|establishNestingLevels
-argument_list|(
+parameter_list|(
 specifier|const
 name|Instruction
-operator|*
+modifier|*
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|Instruction
-operator|*
+modifier|*
 name|Dst
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|unsigned
 name|CommonLevels
-block|,
+decl_stmt|,
 name|SrcLevels
-block|,
+decl_stmt|,
 name|MaxLevels
-block|;
+decl_stmt|;
 comment|/// mapSrcLoop - Given one of the loops containing the source, return
 comment|/// its level index in our numbering scheme.
 name|unsigned
 name|mapSrcLoop
 argument_list|(
-argument|const Loop *SrcLoop
-argument_list|)
 specifier|const
-block|;
+name|Loop
+operator|*
+name|SrcLoop
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// mapDstLoop - Given one of the loops containing the destination,
 comment|/// return its level index in our numbering scheme.
 name|unsigned
 name|mapDstLoop
 argument_list|(
-argument|const Loop *DstLoop
-argument_list|)
 specifier|const
-block|;
+name|Loop
+operator|*
+name|DstLoop
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isLoopInvariant - Returns true if Expression is loop invariant
 comment|/// in LoopNest.
 name|bool
 name|isLoopInvariant
 argument_list|(
-argument|const SCEV *Expression
-argument_list|,
-argument|const Loop *LoopNest
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Expression
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|LoopNest
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Makes sure all subscript pairs share the same integer type by
 comment|/// sign-extending as necessary.
 comment|/// Sign-extending a subscript is safe because getelementptr assumes the
@@ -1523,72 +1576,80 @@ operator|*
 operator|>
 name|Pairs
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// removeMatchingExtensions - Examines a subscript pair.
 comment|/// If the source and destination are identically sign (or zero)
 comment|/// extended, it strips off the extension in an effort to
 comment|/// simplify the actual analysis.
 name|void
 name|removeMatchingExtensions
-argument_list|(
+parameter_list|(
 name|Subscript
-operator|*
+modifier|*
 name|Pair
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// collectCommonLoops - Finds the set of loops from the LoopNest that
 comment|/// have a level<= CommonLevels and are referred to by the SCEV Expression.
 name|void
 name|collectCommonLoops
 argument_list|(
-argument|const SCEV *Expression
-argument_list|,
-argument|const Loop *LoopNest
-argument_list|,
-argument|SmallBitVector&Loops
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Expression
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|LoopNest
+argument_list|,
+name|SmallBitVector
+operator|&
+name|Loops
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// checkSrcSubscript - Examines the SCEV Src, returning true iff it's
 comment|/// linear. Collect the set of loops mentioned by Src.
 name|bool
 name|checkSrcSubscript
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|LoopNest
-argument_list|,
+parameter_list|,
 name|SmallBitVector
-operator|&
+modifier|&
 name|Loops
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// checkDstSubscript - Examines the SCEV Dst, returning true iff it's
 comment|/// linear. Collect the set of loops mentioned by Dst.
 name|bool
 name|checkDstSubscript
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|Dst
-argument_list|,
+parameter_list|,
 specifier|const
 name|Loop
-operator|*
+modifier|*
 name|LoopNest
-argument_list|,
+parameter_list|,
 name|SmallBitVector
-operator|&
+modifier|&
 name|Loops
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// isKnownPredicate - Compare X and Y using the predicate Pred.
 comment|/// Basically a wrapper for SCEV::isKnownPredicate,
 comment|/// but tries harder, especially in the presence of sign and zero
@@ -1596,14 +1657,23 @@ comment|/// extensions and symbolics.
 name|bool
 name|isKnownPredicate
 argument_list|(
-argument|ICmpInst::Predicate Pred
+name|ICmpInst
+operator|::
+name|Predicate
+name|Pred
 argument_list|,
-argument|const SCEV *X
-argument_list|,
-argument|const SCEV *Y
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|X
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Y
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// collectUpperBound - All subscripts are the same type (on my machine,
 comment|/// an i64). The loop bound may be a smaller type. collectUpperBound
 comment|/// find the bound, if available, and zero extends it to the Type T.
@@ -1611,29 +1681,39 @@ comment|/// (I zero extend since the bound should always be>= 0.)
 comment|/// If no upper bound is available, return NULL.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|collectUpperBound
 argument_list|(
-argument|const Loop *l
-argument_list|,
-argument|Type *T
-argument_list|)
 specifier|const
-block|;
+name|Loop
+operator|*
+name|l
+argument_list|,
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// collectConstantUpperBound - Calls collectUpperBound(), then
 comment|/// attempts to cast it to SCEVConstant. If the cast fails,
 comment|/// returns NULL.
 specifier|const
 name|SCEVConstant
-operator|*
+modifier|*
 name|collectConstantUpperBound
 argument_list|(
-argument|const Loop *l
-argument_list|,
-argument|Type *T
-argument_list|)
 specifier|const
-block|;
+name|Loop
+operator|*
+name|l
+argument_list|,
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// classifyPair - Examines the subscript pair (the Src and Dst SCEVs)
 comment|/// and classifies it as either ZIV, SIV, RDIV, MIV, or Nonlinear.
 comment|/// Collects the associated loops in a set.
@@ -1666,7 +1746,7 @@ name|SmallBitVector
 operator|&
 name|Loops
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// testZIV - Tests the ZIV subscript pair (Src and Dst) for dependence.
 comment|/// Returns true if any possible dependence is disproved.
 comment|/// If there might be a dependence, returns false.
@@ -1675,14 +1755,22 @@ comment|/// marks the Result as inconsistent.
 name|bool
 name|testZIV
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// testSIV - Tests the SIV subscript pair (Src and Dst) for dependence.
 comment|/// Things of the form [c1 + a1*i] and [c2 + a2*j], where
 comment|/// i and j are induction variables, c1 and c2 are loop invariant,
@@ -1696,20 +1784,36 @@ comment|/// marks the Result as inconsistent.
 name|bool
 name|testSIV
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|unsigned&Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|,
-argument|const SCEV *&SplitIter
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+name|unsigned
+operator|&
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|SplitIter
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// testRDIV - Tests the RDIV subscript pair (Src and Dst) for dependence.
 comment|/// Things of the form [c1 + a1*i] and [c2 + a2*j]
 comment|/// where i and j are induction variables, c1 and c2 are loop invariant,
@@ -1722,30 +1826,49 @@ comment|/// Marks the Result as inconsistent.
 name|bool
 name|testRDIV
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// testMIV - Tests the MIV subscript pair (Src and Dst) for dependence.
 comment|/// Returns true if dependence disproved.
 comment|/// Can sometimes refine direction vectors.
 name|bool
 name|testMIV
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|const SmallBitVector&Loops
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+specifier|const
+name|SmallBitVector
+operator|&
+name|Loops
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// strongSIVtest - Tests the strong SIV subscript pair (Src and Dst)
 comment|/// for dependence.
 comment|/// Things of the form [c1 + a*i] and [c2 + a*i],
@@ -1757,22 +1880,39 @@ comment|/// Sets appropriate direction and distance.
 name|bool
 name|strongSIVtest
 argument_list|(
-argument|const SCEV *Coeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *CurrentLoop
-argument_list|,
-argument|unsigned Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Coeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|CurrentLoop
+argument_list|,
+name|unsigned
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// weakCrossingSIVtest - Tests the weak-crossing SIV subscript pair
 comment|/// (Src and Dst) for dependence.
 comment|/// Things of the form [c1 + a*i] and [c2 - a*i],
@@ -1786,24 +1926,45 @@ comment|/// Marks the dependence as splitable.
 name|bool
 name|weakCrossingSIVtest
 argument_list|(
-argument|const SCEV *SrcCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *CurrentLoop
-argument_list|,
-argument|unsigned Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|,
-argument|const SCEV *&SplitIter
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|SrcCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|CurrentLoop
+argument_list|,
+name|unsigned
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|SplitIter
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// ExactSIVtest - Tests the SIV subscript pair
 comment|/// (Src and Dst) for dependence.
 comment|/// Things of the form [c1 + a1*i] and [c2 + a2*i],
@@ -1816,24 +1977,44 @@ comment|/// Set consistent to false.
 name|bool
 name|exactSIVtest
 argument_list|(
-argument|const SCEV *SrcCoeff
-argument_list|,
-argument|const SCEV *DstCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *CurrentLoop
-argument_list|,
-argument|unsigned Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|SrcCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|CurrentLoop
+argument_list|,
+name|unsigned
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// weakZeroSrcSIVtest - Tests the weak-zero SIV subscript pair
 comment|/// (Src and Dst) for dependence.
 comment|/// Things of the form [c1] and [c2 + a*i],
@@ -1847,22 +2028,39 @@ comment|/// If loop peeling will break the dependence, mark appropriately.
 name|bool
 name|weakZeroSrcSIVtest
 argument_list|(
-argument|const SCEV *DstCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *CurrentLoop
-argument_list|,
-argument|unsigned Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|DstCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|CurrentLoop
+argument_list|,
+name|unsigned
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// weakZeroDstSIVtest - Tests the weak-zero SIV subscript pair
 comment|/// (Src and Dst) for dependence.
 comment|/// Things of the form [c1 + a*i] and [c2],
@@ -1876,22 +2074,39 @@ comment|/// If loop peeling will break the dependence, mark appropriately.
 name|bool
 name|weakZeroDstSIVtest
 argument_list|(
-argument|const SCEV *SrcCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *CurrentLoop
-argument_list|,
-argument|unsigned Level
-argument_list|,
-argument|FullDependence&Result
-argument_list|,
-argument|Constraint&NewConstraint
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|SrcCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|CurrentLoop
+argument_list|,
+name|unsigned
+name|Level
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|,
+name|Constraint
+operator|&
+name|NewConstraint
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// exactRDIVtest - Tests the RDIV subscript pair for dependence.
 comment|/// Things of the form [c1 + a*i] and [c2 + b*j],
 comment|/// where i and j are induction variable, c1 and c2 are loop invariant,
@@ -1903,22 +2118,42 @@ comment|/// and vice versa.
 name|bool
 name|exactRDIVtest
 argument_list|(
-argument|const SCEV *SrcCoeff
-argument_list|,
-argument|const SCEV *DstCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *SrcLoop
-argument_list|,
-argument|const Loop *DstLoop
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|SrcCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|SrcLoop
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|DstLoop
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// symbolicRDIVtest - Tests the RDIV subscript pair for dependence.
 comment|/// Things of the form [c1 + a*i] and [c2 + b*j],
 comment|/// where i and j are induction variable, c1 and c2 are loop invariant,
@@ -1931,20 +2166,38 @@ comment|/// ordinary SIV tests.
 name|bool
 name|symbolicRDIVtest
 argument_list|(
-argument|const SCEV *SrcCoeff
-argument_list|,
-argument|const SCEV *DstCoeff
-argument_list|,
-argument|const SCEV *SrcConst
-argument_list|,
-argument|const SCEV *DstConst
-argument_list|,
-argument|const Loop *SrcLoop
-argument_list|,
-argument|const Loop *DstLoop
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|SrcCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstCoeff
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|SrcConst
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|DstConst
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|SrcLoop
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|DstLoop
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// gcdMIVtest - Tests an MIV subscript pair for dependence.
 comment|/// Returns true if any possible dependence is disproved.
 comment|/// Marks the result as inconsistent.
@@ -1954,14 +2207,22 @@ comment|/// so we use it as a backup for everything.
 name|bool
 name|gcdMIVtest
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// banerjeeMIVtest - Tests an MIV subscript pair for dependence.
 comment|/// Returns true if any possible dependence is disproved.
 comment|/// Marks the result as inconsistent.
@@ -1969,77 +2230,106 @@ comment|/// Computes directions.
 name|bool
 name|banerjeeMIVtest
 argument_list|(
-argument|const SCEV *Src
-argument_list|,
-argument|const SCEV *Dst
-argument_list|,
-argument|const SmallBitVector&Loops
-argument_list|,
-argument|FullDependence&Result
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Src
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Dst
+argument_list|,
+specifier|const
+name|SmallBitVector
+operator|&
+name|Loops
+argument_list|,
+name|FullDependence
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// collectCoefficientInfo - Walks through the subscript,
 comment|/// collecting each coefficient, the associated loop bounds,
 comment|/// and recording its positive and negative parts for later use.
 name|CoefficientInfo
-operator|*
+modifier|*
 name|collectCoeffInfo
 argument_list|(
-argument|const SCEV *Subscript
-argument_list|,
-argument|bool SrcFlag
-argument_list|,
-argument|const SCEV *&Constant
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Subscript
+argument_list|,
+name|bool
+name|SrcFlag
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|Constant
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getPositivePart - X^+ = max(X, 0).
 comment|///
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|getPositivePart
 argument_list|(
-argument|const SCEV *X
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|X
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getNegativePart - X^- = min(X, 0).
 comment|///
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|getNegativePart
 argument_list|(
-argument|const SCEV *X
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|X
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getLowerBound - Looks through all the bounds info and
 comment|/// computes the lower bound given the current direction settings
 comment|/// at each level.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|getLowerBound
 argument_list|(
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// getUpperBound - Looks through all the bounds info and
 comment|/// computes the upper bound given the current direction settings
 comment|/// at each level.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|getUpperBound
 argument_list|(
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// exploreDirections - Hierarchically expands the direction vector
 comment|/// search space, combining the directions of discovered dependences
 comment|/// in the DirSet field of Bound. Returns the number of distinct
@@ -2048,111 +2338,162 @@ comment|/// it will return 0.
 name|unsigned
 name|exploreDirections
 argument_list|(
-argument|unsigned Level
+name|unsigned
+name|Level
 argument_list|,
-argument|CoefficientInfo *A
+name|CoefficientInfo
+operator|*
+name|A
 argument_list|,
-argument|CoefficientInfo *B
+name|CoefficientInfo
+operator|*
+name|B
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|const SmallBitVector&Loops
-argument_list|,
-argument|unsigned&DepthExpanded
-argument_list|,
-argument|const SCEV *Delta
-argument_list|)
 specifier|const
-block|;
+name|SmallBitVector
+operator|&
+name|Loops
+argument_list|,
+name|unsigned
+operator|&
+name|DepthExpanded
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Delta
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// testBounds - Returns true iff the current bounds are plausible.
 name|bool
 name|testBounds
 argument_list|(
-argument|unsigned char DirKind
+name|unsigned
+name|char
+name|DirKind
 argument_list|,
-argument|unsigned Level
+name|unsigned
+name|Level
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|const SCEV *Delta
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Delta
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// findBoundsALL - Computes the upper and lower bounds for level K
 comment|/// using the * direction. Records them in Bound.
 name|void
 name|findBoundsALL
 argument_list|(
-argument|CoefficientInfo *A
+name|CoefficientInfo
+operator|*
+name|A
 argument_list|,
-argument|CoefficientInfo *B
+name|CoefficientInfo
+operator|*
+name|B
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|unsigned K
+name|unsigned
+name|K
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// findBoundsLT - Computes the upper and lower bounds for level K
 comment|/// using the< direction. Records them in Bound.
 name|void
 name|findBoundsLT
 argument_list|(
-argument|CoefficientInfo *A
+name|CoefficientInfo
+operator|*
+name|A
 argument_list|,
-argument|CoefficientInfo *B
+name|CoefficientInfo
+operator|*
+name|B
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|unsigned K
+name|unsigned
+name|K
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// findBoundsGT - Computes the upper and lower bounds for level K
 comment|/// using the> direction. Records them in Bound.
 name|void
 name|findBoundsGT
 argument_list|(
-argument|CoefficientInfo *A
+name|CoefficientInfo
+operator|*
+name|A
 argument_list|,
-argument|CoefficientInfo *B
+name|CoefficientInfo
+operator|*
+name|B
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|unsigned K
+name|unsigned
+name|K
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// findBoundsEQ - Computes the upper and lower bounds for level K
 comment|/// using the = direction. Records them in Bound.
 name|void
 name|findBoundsEQ
 argument_list|(
-argument|CoefficientInfo *A
+name|CoefficientInfo
+operator|*
+name|A
 argument_list|,
-argument|CoefficientInfo *B
+name|CoefficientInfo
+operator|*
+name|B
 argument_list|,
-argument|BoundInfo *Bound
+name|BoundInfo
+operator|*
+name|Bound
 argument_list|,
-argument|unsigned K
+name|unsigned
+name|K
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// intersectConstraints - Updates X with the intersection
 comment|/// of the Constraints X and Y. Returns true if X has changed.
 name|bool
 name|intersectConstraints
-argument_list|(
+parameter_list|(
 name|Constraint
-operator|*
+modifier|*
 name|X
-argument_list|,
+parameter_list|,
 specifier|const
 name|Constraint
-operator|*
+modifier|*
 name|Y
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// propagate - Review the constraints, looking for opportunities
 comment|/// to simplify a subscript pair (Src and Dst).
 comment|/// Return true if some simplification occurs.
@@ -2188,7 +2529,7 @@ name|bool
 operator|&
 name|Consistent
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// propagateDistance - Attempt to propagate a distance
 comment|/// constraint into a subscript pair (Src and Dst).
 comment|/// Return true if some simplification occurs.
@@ -2196,51 +2537,51 @@ comment|/// If the simplification isn't exact (that is, if it is conservative
 comment|/// in terms of dependence), set consistent to false.
 name|bool
 name|propagateDistance
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Dst
-argument_list|,
+parameter_list|,
 name|Constraint
-operator|&
+modifier|&
 name|CurConstraint
-argument_list|,
+parameter_list|,
 name|bool
-operator|&
+modifier|&
 name|Consistent
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// propagatePoint - Attempt to propagate a point
 comment|/// constraint into a subscript pair (Src and Dst).
 comment|/// Return true if some simplification occurs.
 name|bool
 name|propagatePoint
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Dst
-argument_list|,
+parameter_list|,
 name|Constraint
-operator|&
+modifier|&
 name|CurConstraint
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// propagateLine - Attempt to propagate a line
 comment|/// constraint into a subscript pair (Src and Dst).
 comment|/// Return true if some simplification occurs.
@@ -2248,28 +2589,28 @@ comment|/// If the simplification isn't exact (that is, if it is conservative
 comment|/// in terms of dependence), set consistent to false.
 name|bool
 name|propagateLine
-argument_list|(
+parameter_list|(
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Src
-argument_list|,
+parameter_list|,
 specifier|const
 name|SCEV
-operator|*
-operator|&
+modifier|*
+modifier|&
 name|Dst
-argument_list|,
+parameter_list|,
 name|Constraint
-operator|&
+modifier|&
 name|CurConstraint
-argument_list|,
+parameter_list|,
 name|bool
-operator|&
+modifier|&
 name|Consistent
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// findCoefficient - Given a linear SCEV,
 comment|/// return the coefficient corresponding to specified loop.
 comment|/// If there isn't one, return the SCEV constant 0.
@@ -2277,15 +2618,21 @@ comment|/// For example, given a*i + b*j + c*k, returning the coefficient
 comment|/// corresponding to the j loop would yield b.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|findCoefficient
 argument_list|(
-argument|const SCEV *Expr
-argument_list|,
-argument|const Loop *TargetLoop
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|TargetLoop
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// zeroCoefficient - Given a linear SCEV,
 comment|/// return the SCEV given by zeroing out the coefficient
 comment|/// corresponding to the specified loop.
@@ -2293,15 +2640,21 @@ comment|/// For example, given a*i + b*j + c*k, zeroing the coefficient
 comment|/// corresponding to the j loop would yield a*i + c*k.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|zeroCoefficient
 argument_list|(
-argument|const SCEV *Expr
-argument_list|,
-argument|const Loop *TargetLoop
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|TargetLoop
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// addToCoefficient - Given a linear SCEV Expr,
 comment|/// return the SCEV given by adding some Value to the
 comment|/// coefficient corresponding to the specified TargetLoop.
@@ -2309,28 +2662,44 @@ comment|/// For example, given a*i + b*j + c*k, adding 1 to the coefficient
 comment|/// corresponding to the j loop would yield a*i + (b+1)*j + c*k.
 specifier|const
 name|SCEV
-operator|*
+modifier|*
 name|addToCoefficient
 argument_list|(
-argument|const SCEV *Expr
-argument_list|,
-argument|const Loop *TargetLoop
-argument_list|,
-argument|const SCEV *Value
-argument_list|)
 specifier|const
-block|;
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|TargetLoop
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Value
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// updateDirection - Update direction vector entry
 comment|/// based on the current constraint.
 name|void
 name|updateDirection
 argument_list|(
-argument|Dependence::DVEntry&Level
+name|Dependence
+operator|::
+name|DVEntry
+operator|&
+name|Level
 argument_list|,
-argument|const Constraint&CurConstraint
-argument_list|)
 specifier|const
-block|;
+name|Constraint
+operator|&
+name|CurConstraint
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|tryDelinearize
 argument_list|(
@@ -2349,7 +2718,73 @@ operator|>
 operator|&
 name|Pair
 argument_list|)
-block|;
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|// class DependenceInfo
+comment|/// \brief AnalysisPass to compute dependence information in a function
+name|class
+name|DependenceAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|DependenceAnalysis
+operator|>
+block|{
+name|public
+operator|:
+typedef|typedef
+name|DependenceInfo
+name|Result
+typedef|;
+name|Result
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+name|FAM
+argument_list|)
+decl_stmt|;
+name|private
+label|:
+specifier|static
+name|char
+name|PassID
+decl_stmt|;
+name|friend
+block|struct
+name|AnalysisInfoMixin
+operator|<
+name|DependenceAnalysis
+operator|>
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// class DependenceAnalysis
+end_comment
+
+begin_comment
+comment|/// \brief Legacy pass manager pass to access dependence information
+end_comment
+
+begin_decl_stmt
+name|class
+name|DependenceAnalysisWrapperPass
+range|:
+name|public
+name|FunctionPass
+block|{
 name|public
 operator|:
 specifier|static
@@ -2357,7 +2792,7 @@ name|char
 name|ID
 block|;
 comment|// Class identification, replacement for typeinfo
-name|DependenceAnalysis
+name|DependenceAnalysisWrapperPass
 argument_list|()
 operator|:
 name|FunctionPass
@@ -2365,7 +2800,7 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{
-name|initializeDependenceAnalysisPass
+name|initializeDependenceAnalysisWrapperPassPass
 argument_list|(
 operator|*
 name|PassRegistry
@@ -2403,20 +2838,48 @@ argument|const Module * = nullptr
 argument_list|)
 specifier|const
 name|override
+block|;
+name|DependenceInfo
+operator|&
+name|getDI
+argument_list|()
+specifier|const
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DependenceInfo
+operator|>
+name|info
 block|;   }
 decl_stmt|;
-comment|// class DependenceAnalysis
-comment|/// createDependenceAnalysisPass - This creates an instance of the
-comment|/// DependenceAnalysis pass.
-name|FunctionPass
-modifier|*
-name|createDependenceAnalysisPass
-parameter_list|()
-function_decl|;
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// class DependenceAnalysisWrapperPass
+end_comment
+
+begin_comment
+comment|/// createDependenceAnalysisPass - This creates an instance of the
+end_comment
+
+begin_comment
+comment|/// DependenceAnalysis wrapper pass.
+end_comment
+
+begin_function_decl
+name|FunctionPass
+modifier|*
+name|createDependenceAnalysisWrapperPass
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|}
 comment|// namespace llvm
 end_comment
 

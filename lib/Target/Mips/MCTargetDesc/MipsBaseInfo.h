@@ -111,10 +111,8 @@ comment|//===------------------------------------------------------------------=
 comment|// Mips Specific MachineOperand flags.
 name|MO_NO_FLAG
 block|,
-comment|/// MO_GOT16 - Represents the offset into the global offset table at which
+comment|/// MO_GOT - Represents the offset into the global offset table at which
 comment|/// the address the relocation entry symbol resides during execution.
-name|MO_GOT16
-block|,
 name|MO_GOT
 block|,
 comment|/// MO_GOT_CALL - Represents the offset into the global offset table at
@@ -230,6 +228,20 @@ block|,
 name|FormMask
 init|=
 literal|15
+block|,
+comment|/// IsCTI - Instruction is a Control Transfer Instruction.
+name|IsCTI
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/// HasForbiddenSlot - Instruction has a forbidden slot.
+name|HasForbiddenSlot
+init|=
+literal|1
+operator|<<
+literal|5
 block|}
 enum|;
 block|}

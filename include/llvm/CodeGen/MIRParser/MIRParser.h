@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunctionInitializer.h"
 end_include
 
@@ -109,6 +103,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|MIRParserImpl
 decl_stmt|;

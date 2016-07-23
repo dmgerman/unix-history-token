@@ -251,6 +251,18 @@ comment|/// ScannedRemattable - true when remattable values have been identified
 name|bool
 name|ScannedRemattable
 block|;
+comment|/// DeadRemats - The saved instructions which have already been dead after
+comment|/// rematerialization but not deleted yet -- to be done in postOptimization.
+name|SmallPtrSet
+operator|<
+name|MachineInstr
+operator|*
+block|,
+literal|32
+operator|>
+operator|*
+name|DeadRemats
+block|;
 comment|/// Remattable - Values defined by remattable instructions as identified by
 comment|/// tii.isTriviallyReMaterializable().
 name|SmallPtrSet
@@ -350,6 +362,10 @@ argument_list|,
 name|ToShrinkSet
 operator|&
 name|ToShrink
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
 argument_list|)
 block|;
 comment|/// MachineRegisterInfo callback to notify when new virtual
@@ -383,6 +399,8 @@ comment|/// @param lis The collection of all live intervals in this function.
 comment|/// @param vrm Map of virtual registers to physical registers for this
 comment|///            function.  If NULL, no virtual register map updates will
 comment|///            be done.  This could be the case if called before Regalloc.
+comment|/// @param deadRemats The collection of all the instructions defining an
+comment|///                   original reg and are dead after remat.
 name|LiveRangeEdit
 argument_list|(
 name|LiveInterval
@@ -411,6 +429,18 @@ argument_list|,
 name|Delegate
 operator|*
 name|delegate
+operator|=
+name|nullptr
+argument_list|,
+name|SmallPtrSet
+operator|<
+name|MachineInstr
+operator|*
+argument_list|,
+literal|32
+operator|>
+operator|*
+name|deadRemats
 operator|=
 name|nullptr
 argument_list|)
@@ -470,7 +500,12 @@ argument_list|)
 block|,
 name|ScannedRemattable
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|DeadRemats
+argument_list|(
+argument|deadRemats
 argument_list|)
 block|{
 name|MRI
@@ -600,6 +635,23 @@ name|FirstNew
 index|]
 return|;
 block|}
+comment|/// pop_back - It allows LiveRangeEdit users to drop new registers.
+comment|/// The context is when an original def instruction of a register is
+comment|/// dead after rematerialization, we still want to keep it for following
+comment|/// rematerializations. We save the def instruction in DeadRemats,
+comment|/// and replace the original dst register with a new dummy register so
+comment|/// the live range of original dst register can be shrinked normally.
+comment|/// We don't want to allocate phys register for the dummy register, so
+comment|/// we want to drop it from the NewRegs set.
+name|void
+name|pop_back
+argument_list|()
+block|{
+name|NewRegs
+operator|.
+name|pop_back
+argument_list|()
+block|; }
 name|ArrayRef
 operator|<
 name|unsigned
@@ -622,12 +674,13 @@ return|;
 block|}
 comment|/// createEmptyIntervalFrom - Create a new empty interval based on OldReg.
 name|LiveInterval
-operator|&
+modifier|&
 name|createEmptyIntervalFrom
-argument_list|(
-argument|unsigned OldReg
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|unsigned
+name|OldReg
+parameter_list|)
+function_decl|;
 comment|/// createFrom - Create a new virtual register based on OldReg.
 name|unsigned
 name|createFrom
@@ -704,7 +757,8 @@ name|MachineInstr
 modifier|*
 name|OrigMI
 decl_stmt|;
-comment|// Instruction defining ParentVNI.
+comment|// Instruction defining OrigVNI. It contains the
+comment|// real expr for remat.
 name|explicit
 name|Remat
 argument_list|(
@@ -734,6 +788,10 @@ parameter_list|(
 name|Remat
 modifier|&
 name|RM
+parameter_list|,
+name|VNInfo
+modifier|*
+name|OrigVNI
 parameter_list|,
 name|SlotIndex
 name|UseIdx
@@ -815,6 +873,27 @@ name|ParentVNI
 argument_list|)
 return|;
 block|}
+name|void
+name|markDeadRemat
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|inst
+parameter_list|)
+block|{
+comment|// DeadRemats is an optional field.
+if|if
+condition|(
+name|DeadRemats
+condition|)
+name|DeadRemats
+operator|->
+name|insert
+argument_list|(
+name|inst
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// eraseVirtReg - Notify the delegate that Reg is no longer in use, and try
 comment|/// to erase it from LIS.
 name|void
@@ -848,6 +927,12 @@ operator|>
 name|RegsBeingSpilled
 operator|=
 name|None
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// calculateRegClassAndHint - Recompute register class and hint for each new

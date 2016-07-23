@@ -83,11 +83,13 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
+comment|// LLVM IR passes.
 name|FunctionPass
 modifier|*
 name|createWebAssemblyOptimizeReturned
 parameter_list|()
 function_decl|;
+comment|// ISel and immediate followup passes.
 name|FunctionPass
 modifier|*
 name|createWebAssemblyISelDag
@@ -109,6 +111,27 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createWebAssemblySetP2AlignOperands
+parameter_list|()
+function_decl|;
+comment|// Late passes.
+name|FunctionPass
+modifier|*
+name|createWebAssemblyReplacePhysRegs
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createWebAssemblyPrepareForLiveIntervals
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createWebAssemblyOptimizeLiveIntervals
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createWebAssemblyStoreResults
 parameter_list|()
 function_decl|;
@@ -124,7 +147,7 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createWebAssemblyPEI
+name|createWebAssemblyFixIrreducibleControlFlow
 parameter_list|()
 function_decl|;
 name|FunctionPass
@@ -145,11 +168,6 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createWebAssemblyPeephole
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createWebAssemblyRelooper
 parameter_list|()
 function_decl|;
 block|}

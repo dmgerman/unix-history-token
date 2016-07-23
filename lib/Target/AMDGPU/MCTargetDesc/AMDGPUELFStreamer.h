@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-------- AMDGPUELFStreamer.h - ELF Object Output ---------------------===//
+comment|//===-------- AMDGPUELFStreamer.h - ELF Object Output -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -123,14 +123,7 @@ argument_list|,
 argument|Emitter
 argument_list|)
 block|{ }
-name|virtual
-name|void
-name|InitSections
-argument_list|(
-argument|bool NoExecStac
-argument_list|)
-name|override
-block|; }
+block|}
 decl_stmt|;
 name|MCELFStreamer
 modifier|*

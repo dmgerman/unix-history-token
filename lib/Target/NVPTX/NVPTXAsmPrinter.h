@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringExtras.h"
 end_include
 
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineLoopInfo.h"
 end_include
 
 begin_include
@@ -120,13 +120,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/MC/MCStreamer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
@@ -1619,9 +1619,11 @@ name|LineReader
 modifier|*
 name|getReader
 argument_list|(
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 argument_list|)
 decl_stmt|;
 comment|// Used to control the need to emit .generic() in the initializer of

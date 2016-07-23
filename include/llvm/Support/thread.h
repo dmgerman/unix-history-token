@@ -245,6 +245,16 @@ name|void
 name|join
 parameter_list|()
 block|{}
+specifier|static
+name|unsigned
+name|hardware_concurrency
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+empty_stmt|;
 block|}
 struct|;
 block|}

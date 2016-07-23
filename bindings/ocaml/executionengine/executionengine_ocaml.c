@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm-c/Core.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/ExecutionEngine.h"
 end_include
 

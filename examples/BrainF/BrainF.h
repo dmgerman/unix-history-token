@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- BrainF.h - BrainF compiler class ----------------------*- C++ -*-===//
+comment|//===-- BrainF.h - BrainF compiler class ------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_ifndef
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<istream>
 end_include
 
 begin_decl_stmt
@@ -300,6 +306,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// BRAINF_H
+end_comment
 
 end_unit
 

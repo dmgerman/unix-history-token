@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugLoc.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -215,7 +215,12 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|dl
+argument_list|)
 argument_list|)
 operator|,
 name|Order
@@ -281,7 +286,12 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|dl
+argument_list|)
 argument_list|)
 operator|,
 name|Order
@@ -337,7 +347,12 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|dl
+argument_list|)
 argument_list|)
 operator|,
 name|Order

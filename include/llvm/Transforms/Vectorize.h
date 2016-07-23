@@ -263,6 +263,16 @@ name|VectorizeConfig
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoadStoreVectorizer - Create vector loads and stores, but leave scalar
+comment|// operations.
+comment|//
+name|Pass
+modifier|*
+name|createLoadStoreVectorizerPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

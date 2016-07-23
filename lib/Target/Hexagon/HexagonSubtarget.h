@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -179,6 +173,22 @@ comment|/// True if the target should use Back-Skip-Back scheduling. This is the
 comment|/// default for V60.
 name|bool
 name|UseBSBScheduling
+block|;
+name|class
+name|HexagonDAGMutation
+operator|:
+name|public
+name|ScheduleDAGMutation
+block|{
+name|public
+operator|:
+name|void
+name|apply
+argument_list|(
+argument|ScheduleDAGInstrs *DAG
+argument_list|)
+name|override
+block|;   }
 block|;
 name|private
 operator|:
@@ -471,6 +481,32 @@ return|return
 name|false
 return|;
 block|}
+name|AntiDepBreakMode
+name|getAntiDepBreakMode
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|ANTIDEP_ALL
+return|;
+block|}
+name|bool
+name|enablePostRAScheduler
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|enableSubRegLiveness
+argument_list|()
+specifier|const
+name|override
+block|;
 specifier|const
 name|std
 operator|::
@@ -505,8 +541,82 @@ return|return
 name|HexagonArchVersion
 return|;
 block|}
-expr|}
-block|;  }
+name|void
+name|getPostRAMutations
+argument_list|(
+argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// \brief Perform target specific adjustments to the latency of a schedule
+comment|/// dependency.
+name|void
+name|adjustSchedDependency
+argument_list|(
+argument|SUnit *def
+argument_list|,
+argument|SUnit *use
+argument_list|,
+argument|SDep& dep
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+comment|// Helper function responsible for increasing the latency only.
+name|void
+name|updateLatency
+argument_list|(
+argument|MachineInstr *SrcInst
+argument_list|,
+argument|MachineInstr *DstInst
+argument_list|,
+argument|SDep&Dep
+argument_list|)
+specifier|const
+block|;
+name|void
+name|changeLatency
+argument_list|(
+argument|SUnit *Src
+argument_list|,
+argument|SmallVector<SDep
+argument_list|,
+literal|4
+argument|>&Deps
+argument_list|,
+argument|SUnit *Dst
+argument_list|,
+argument|unsigned Lat
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isBestZeroLatency
+argument_list|(
+argument|SUnit *Src
+argument_list|,
+argument|SUnit *Dst
+argument_list|,
+argument|const HexagonInstrInfo *TII
+argument_list|)
+specifier|const
+block|;
+name|void
+name|changePhiLatency
+argument_list|(
+argument|MachineInstr *SrcInst
+argument_list|,
+argument|SUnit *Dst
+argument_list|,
+argument|SDep&Dep
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

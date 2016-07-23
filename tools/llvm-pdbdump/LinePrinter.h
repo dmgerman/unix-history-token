@@ -77,6 +77,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|LinePrinter
 block|{
@@ -355,6 +358,7 @@ name|OS
 decl_stmt|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_decl_stmt
 

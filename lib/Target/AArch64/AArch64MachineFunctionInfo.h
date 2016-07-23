@@ -122,6 +122,10 @@ comment|/// \brief Amount of stack frame size, not including callee-saved regist
 name|unsigned
 name|LocalStackSize
 block|;
+comment|/// \brief Amount of stack frame size used for saving callee-saved registers.
+name|unsigned
+name|CalleeSavedStackSize
+block|;
 comment|/// \brief Number of TLS accesses using the special (combinable)
 comment|/// _TLS_MODULE_BASE_ symbol.
 name|unsigned
@@ -156,6 +160,16 @@ comment|/// True if this function has a subset of CSRs that is handled explicitl
 comment|/// copies.
 name|bool
 name|IsSplitCSR
+block|;
+comment|/// True when the stack gets realigned dynamically because the size of stack
+comment|/// frame is unknown at compile time. e.g., in case of VLAs.
+name|bool
+name|StackRealigned
+block|;
+comment|/// True when the callee-save stack area has unused gaps that may be used for
+comment|/// other stack allocations.
+name|bool
+name|CalleeSaveStackHasFreeSpace
 block|;
 name|public
 operator|:
@@ -208,6 +222,16 @@ literal|0
 argument_list|)
 block|,
 name|IsSplitCSR
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|StackRealigned
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|CalleeSaveStackHasFreeSpace
 argument_list|(
 argument|false
 argument_list|)
@@ -266,6 +290,16 @@ literal|0
 argument_list|)
 block|,
 name|IsSplitCSR
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|StackRealigned
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|CalleeSaveStackHasFreeSpace
 argument_list|(
 argument|false
 argument_list|)
@@ -333,6 +367,44 @@ operator|=
 name|s
 block|; }
 name|bool
+name|isStackRealigned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackRealigned
+return|;
+block|}
+name|void
+name|setStackRealigned
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|StackRealigned
+operator|=
+name|s
+block|; }
+name|bool
+name|hasCalleeSaveStackFreeSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeSaveStackHasFreeSpace
+return|;
+block|}
+name|void
+name|setCalleeSaveStackHasFreeSpace
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|CalleeSaveStackHasFreeSpace
+operator|=
+name|s
+block|;   }
+name|bool
 name|isSplitCSR
 argument_list|()
 specifier|const
@@ -368,6 +440,25 @@ specifier|const
 block|{
 return|return
 name|LocalStackSize
+return|;
+block|}
+name|void
+name|setCalleeSavedStackSize
+argument_list|(
+argument|unsigned Size
+argument_list|)
+block|{
+name|CalleeSavedStackSize
+operator|=
+name|Size
+block|; }
+name|unsigned
+name|getCalleeSavedStackSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeSavedStackSize
 return|;
 block|}
 name|void
@@ -524,7 +615,7 @@ block|;
 name|public
 operator|:
 typedef|typedef
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 specifier|const
 name|MachineInstr
@@ -536,7 +627,7 @@ name|MILOHDirective
 argument_list|(
 argument|MCLOHType Kind
 argument_list|,
-argument|const LOHArgs&Args
+argument|LOHArgs Args
 argument_list|)
 operator|:
 name|Kind
@@ -570,9 +661,7 @@ return|return
 name|Kind
 return|;
 block|}
-specifier|const
 name|LOHArgs
-operator|&
 name|getArgs
 argument_list|()
 specifier|const
@@ -634,9 +723,7 @@ parameter_list|(
 name|MCLOHType
 name|Kind
 parameter_list|,
-specifier|const
 name|MILOHArgs
-modifier|&
 name|Args
 parameter_list|)
 block|{

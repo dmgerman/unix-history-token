@@ -422,7 +422,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -433,7 +433,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitShiftInstr
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -460,7 +460,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -479,7 +479,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -500,7 +500,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -519,7 +519,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -551,7 +551,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

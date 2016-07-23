@@ -84,7 +84,11 @@ name|GNU_Ada
 operator|,
 name|GNU_C
 operator|,
+name|GNU_C_SjLj
+operator|,
 name|GNU_CXX
+operator|,
+name|GNU_CXX_SjLj
 operator|,
 name|GNU_ObjC
 operator|,
@@ -95,6 +99,8 @@ operator|,
 name|MSVC_CXX
 operator|,
 name|CoreCLR
+operator|,
+name|Rust
 block|}
 empty_stmt|;
 comment|/// \brief See if the given exception handling personality function is one

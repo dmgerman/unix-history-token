@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
@@ -96,6 +102,8 @@ block|{
 name|uintptr_t
 name|Value
 block|;
+comment|// Note: This '<' is correct; using '<=' would result in some shifts
+comment|// overflowing their storage types.
 name|static_assert
 argument_list|(
 name|Bits
@@ -140,6 +148,15 @@ operator|)
 operator|<<
 name|Bits
 block|}
+block|;    struct
+name|RawValueTag
+block|{
+name|explicit
+name|RawValueTag
+argument_list|()
+operator|=
+expr|default
+block|;   }
 block|;
 name|friend
 name|class
@@ -152,6 +169,8 @@ name|explicit
 name|PointerEmbeddedInt
 argument_list|(
 argument|uintptr_t Value
+argument_list|,
+argument|RawValueTag
 argument_list|)
 operator|:
 name|Value
@@ -173,24 +192,11 @@ name|PointerEmbeddedInt
 argument_list|(
 argument|IntT I
 argument_list|)
-operator|:
-name|Value
-argument_list|(
-argument|static_cast<uintptr_t>(I)<< Shift
-argument_list|)
 block|{
-name|assert
-argument_list|(
-operator|(
+operator|*
+name|this
+operator|=
 name|I
-operator|&
-name|Mask
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"Integer has bits outside those preserved!"
-argument_list|)
 block|;   }
 name|PointerEmbeddedInt
 operator|&
@@ -204,12 +210,35 @@ block|{
 name|assert
 argument_list|(
 operator|(
+name|std
+operator|::
+name|is_signed
+operator|<
+name|IntT
+operator|>
+operator|::
+name|value
+operator|?
+name|llvm
+operator|::
+name|isInt
+operator|<
+name|Bits
+operator|>
+operator|(
 name|I
-operator|&
-name|Mask
 operator|)
-operator|==
-literal|0
+operator|:
+name|llvm
+operator|::
+name|isUInt
+operator|<
+name|Bits
+operator|>
+operator|(
+name|I
+operator|)
+operator|)
 operator|&&
 literal|"Integer has bits outside those preserved!"
 argument_list|)
@@ -225,14 +254,47 @@ name|I
 operator|)
 operator|<<
 name|Shift
-block|;   }
-comment|// Note that this imilict conversion additionally allows all of the basic
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// Note that this implicit conversion additionally allows all of the basic
 comment|// comparison operators to work transparently, etc.
 name|operator
 name|IntT
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|std
+operator|::
+name|is_signed
+operator|<
+name|IntT
+operator|>
+operator|::
+name|value
+condition|)
+return|return
+name|static_cast
+operator|<
+name|IntT
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|Value
+operator|)
+operator|>>
+name|Shift
+operator|)
+return|;
 return|return
 name|static_cast
 operator|<
@@ -245,15 +307,27 @@ name|Shift
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Provide pointer like traits to support use with pointer unions and sum
+end_comment
+
+begin_comment
 comment|// types.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|IntT
-block|,
+operator|,
 name|int
 name|Bits
 operator|>
@@ -263,7 +337,7 @@ operator|<
 name|PointerEmbeddedInt
 operator|<
 name|IntT
-block|,
+operator|,
 name|Bits
 operator|>>
 block|{
@@ -311,13 +385,9 @@ block|{
 return|return
 name|T
 argument_list|(
-name|reinterpret_cast
-operator|<
-name|uintptr_t
-operator|>
-operator|(
-name|P
-operator|)
+argument|reinterpret_cast<uintptr_t>(P)
+argument_list|,
+argument|typename T::RawValueTag()
 argument_list|)
 return|;
 block|}
@@ -332,17 +402,13 @@ block|{
 return|return
 name|T
 argument_list|(
-name|reinterpret_cast
-operator|<
-name|uintptr_t
-operator|>
-operator|(
-name|P
-operator|)
+argument|reinterpret_cast<uintptr_t>(P)
+argument_list|,
+argument|typename T::RawValueTag()
 argument_list|)
 return|;
 block|}
-expr|enum
+block|enum
 block|{
 name|NumLowBitsAvailable
 operator|=
@@ -350,10 +416,19 @@ name|T
 operator|::
 name|Shift
 block|}
-block|; }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|// Teach DenseMap how to use PointerEmbeddedInt objects as keys if the Int type
+end_comment
+
+begin_comment
 comment|// itself can be a key.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -381,6 +456,9 @@ name|Bits
 operator|>
 name|T
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|DenseMapInfo
 operator|<
@@ -388,6 +466,9 @@ name|IntT
 operator|>
 name|IntInfo
 expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 specifier|inline
 name|T
@@ -401,6 +482,9 @@ name|getEmptyKey
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|T
@@ -414,6 +498,9 @@ name|getTombstoneKey
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|getHashValue
@@ -433,6 +520,9 @@ name|Arg
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isEqual
@@ -454,15 +544,10 @@ operator|==
 name|RHS
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_endif
-unit|}
+unit|}; }
 endif|#
 directive|endif
 end_endif

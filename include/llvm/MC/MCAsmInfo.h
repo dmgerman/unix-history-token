@@ -180,6 +180,20 @@ name|Log2Alignment
 block|}
 enum|;
 block|}
+name|enum
+name|class
+name|DebugCompressionType
+block|{
+name|DCT_None
+operator|,
+comment|// no compression
+name|DCT_Zlib
+operator|,
+comment|// zlib style complession
+name|DCT_ZlibGnu
+comment|// zlib-gnu style compression
+block|}
+empty_stmt|;
 comment|/// This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|class
@@ -508,6 +522,11 @@ comment|/// to false.
 name|bool
 name|HasNoDeadStrip
 decl_stmt|;
+comment|/// True if this target supports the MachO .alt_entry directive.  Defaults to
+comment|/// false.
+name|bool
+name|HasAltEntry
+decl_stmt|;
 comment|/// Used to declare a global as being a weak symbol. Defaults to ".weak".
 specifier|const
 name|char
@@ -605,14 +624,25 @@ comment|/// construction (see LLVMTargetMachine::initAsmInfo()).
 name|bool
 name|UseIntegratedAssembler
 decl_stmt|;
-comment|/// Compress DWARF debug sections. Defaults to false.
+comment|/// Preserve Comments in assembly
 name|bool
+name|PreserveAsmComments
+decl_stmt|;
+comment|/// Compress DWARF debug sections. Defaults to no compression.
+name|DebugCompressionType
 name|CompressDebugSections
 decl_stmt|;
 comment|/// True if the integrated assembler should interpret 'a>> b' constant
 comment|/// expressions as logical rather than arithmetic.
 name|bool
 name|UseLogicalShr
+decl_stmt|;
+comment|// If true, emit GOTPCRELX/REX_GOTPCRELX instead of GOTPCREL, on
+comment|// X86_64 ELF.
+name|bool
+name|RelaxELFRelocations
+init|=
+name|true
 decl_stmt|;
 name|public
 label|:
@@ -1196,7 +1226,7 @@ name|GlobalDirective
 return|;
 block|}
 name|bool
-name|doesSetDirectiveSuppressesReloc
+name|doesSetDirectiveSuppressReloc
 argument_list|()
 specifier|const
 block|{
@@ -1276,6 +1306,15 @@ specifier|const
 block|{
 return|return
 name|HasNoDeadStrip
+return|;
+block|}
+name|bool
+name|hasAltEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAltEntry
 return|;
 block|}
 specifier|const
@@ -1395,6 +1434,18 @@ block|{
 return|return
 name|WinEHEncodingType
 return|;
+block|}
+name|void
+name|setExceptionsType
+parameter_list|(
+name|ExceptionHandling
+name|EH
+parameter_list|)
+block|{
+name|ExceptionsType
+operator|=
+name|EH
+expr_stmt|;
 block|}
 comment|/// Returns true if the exception handling method for the platform uses call
 comment|/// frame information to unwind.
@@ -1546,7 +1597,31 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/// Return true if assembly (inline or otherwise) should be parsed.
 name|bool
+name|preserveAsmComments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreserveAsmComments
+return|;
+block|}
+comment|/// Set whether assembly (inline or otherwise) should be parsed.
+name|virtual
+name|void
+name|setPreserveAsmComments
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|PreserveAsmComments
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|DebugCompressionType
 name|compressDebugSections
 argument_list|()
 specifier|const
@@ -1558,7 +1633,7 @@ block|}
 name|void
 name|setCompressDebugSections
 parameter_list|(
-name|bool
+name|DebugCompressionType
 name|CompressDebugSections
 parameter_list|)
 block|{
@@ -1577,6 +1652,27 @@ block|{
 return|return
 name|UseLogicalShr
 return|;
+block|}
+name|bool
+name|canRelaxRelocations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelaxELFRelocations
+return|;
+block|}
+name|void
+name|setRelaxELFRelocations
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+block|{
+name|RelaxELFRelocations
+operator|=
+name|V
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

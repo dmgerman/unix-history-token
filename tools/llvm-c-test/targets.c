@@ -17,7 +17,7 @@ end_include
 
 begin_function
 name|int
-name|targets_list
+name|llvm_targets_list
 parameter_list|(
 name|void
 parameter_list|)

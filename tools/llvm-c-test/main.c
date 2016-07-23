@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -72,7 +66,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Read bytecode from stdin - print disassembly\n\n"
+literal|"    Read bitcode from stdin - print disassembly\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -86,7 +80,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Lazily read bytecode from stdin - print disassembly\n\n"
+literal|"    Lazily read bitcode from stdin - print disassembly\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -100,7 +94,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Read bytecode from stdin - print disassembly\n\n"
+literal|"    Read bitcode from stdin - print disassembly\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -114,7 +108,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Lazily read bytecode from stdin - print disassembly\n\n"
+literal|"    Lazily read bitcode from stdin - print disassembly\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -128,7 +122,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Read bytecode from stdin - list summary of functions\n\n"
+literal|"    Read bitcode from stdin - list summary of functions\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -142,7 +136,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    Read bytecode from stdin - list summary of globals\n\n"
+literal|"    Read bitcode from stdin - list summary of globals\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -216,6 +210,34 @@ argument_list|,
 literal|"    Read lines of name, rpn from stdin - print generated module\n\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  * --echo\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    Read bitcode file form stdin - print it back out\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  * --test-diagnostic-handler\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    Read bitcode file form stdin with a diagnostic handler set\n\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -262,7 +284,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_dump
+name|llvm_module_dump
 argument_list|(
 name|true
 argument_list|,
@@ -290,7 +312,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_dump
+name|llvm_module_dump
 argument_list|(
 name|false
 argument_list|,
@@ -318,7 +340,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_dump
+name|llvm_module_dump
 argument_list|(
 name|true
 argument_list|,
@@ -346,7 +368,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_dump
+name|llvm_module_dump
 argument_list|(
 name|false
 argument_list|,
@@ -374,7 +396,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_list_functions
+name|llvm_module_list_functions
 argument_list|()
 return|;
 block|}
@@ -398,7 +420,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|module_list_globals
+name|llvm_module_list_globals
 argument_list|()
 return|;
 block|}
@@ -422,7 +444,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|targets_list
+name|llvm_targets_list
 argument_list|()
 return|;
 block|}
@@ -446,7 +468,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|object_list_sections
+name|llvm_object_list_sections
 argument_list|()
 return|;
 block|}
@@ -470,7 +492,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|object_list_symbols
+name|llvm_object_list_symbols
 argument_list|()
 return|;
 block|}
@@ -494,7 +516,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|disassemble
+name|llvm_disassemble
 argument_list|()
 return|;
 block|}
@@ -518,7 +540,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|calc
+name|llvm_calc
 argument_list|()
 return|;
 block|}
@@ -542,7 +564,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|add_named_metadata_operand
+name|llvm_add_named_metadata_operand
 argument_list|()
 return|;
 block|}
@@ -566,7 +588,55 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|set_metadata
+name|llvm_set_metadata
+argument_list|()
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--echo"
+argument_list|)
+condition|)
+block|{
+return|return
+name|llvm_echo
+argument_list|()
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--test-diagnostic-handler"
+argument_list|)
+condition|)
+block|{
+return|return
+name|llvm_test_diagnostic_handler
 argument_list|()
 return|;
 block|}

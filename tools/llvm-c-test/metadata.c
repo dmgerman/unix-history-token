@@ -9,15 +9,9 @@ directive|include
 file|"llvm-c-test.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm-c/Core.h"
-end_include
-
 begin_function
 name|int
-name|add_named_metadata_operand
+name|llvm_add_named_metadata_operand
 parameter_list|(
 name|void
 parameter_list|)
@@ -73,7 +67,7 @@ end_function
 
 begin_function
 name|int
-name|set_metadata
+name|llvm_set_metadata
 parameter_list|(
 name|void
 parameter_list|)

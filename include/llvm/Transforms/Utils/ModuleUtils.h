@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -85,6 +79,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|Module
 decl_stmt|;
@@ -109,14 +111,6 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|PtrType
-operator|>
-name|class
-name|SmallPtrSetImpl
-expr_stmt|;
 comment|/// Append F to the list of global ctors of module M with the given Priority.
 comment|/// This wraps the function in the appropriate structure and stores it along
 comment|/// side other global constructors. For details see
@@ -134,6 +128,12 @@ name|F
 parameter_list|,
 name|int
 name|Priority
+parameter_list|,
+name|Constant
+modifier|*
+name|Data
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Same as appendToGlobalCtors(), but for global dtors.
@@ -150,30 +150,14 @@ name|F
 parameter_list|,
 name|int
 name|Priority
+parameter_list|,
+name|Constant
+modifier|*
+name|Data
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Given "llvm.used" or "llvm.compiler.used" as a global name, collect
-comment|/// the initializer elements of that global in Set and return the global itself.
-name|GlobalVariable
-modifier|*
-name|collectUsedGlobalVariables
-argument_list|(
-name|Module
-operator|&
-name|M
-argument_list|,
-name|SmallPtrSetImpl
-operator|<
-name|GlobalValue
-operator|*
-operator|>
-operator|&
-name|Set
-argument_list|,
-name|bool
-name|CompilerUsed
-argument_list|)
-decl_stmt|;
 comment|// Validate the result of Module::getOrInsertFunction called for an interface
 comment|// function of given sanitizer. If the instrumented module defines a function
 comment|// with the same name, their prototypes must match, otherwise
@@ -216,6 +200,16 @@ argument_list|,
 argument|StringRef VersionCheckName = StringRef()
 argument_list|)
 expr_stmt|;
+comment|/// Rename all the anon functions in the module using a hash computed from
+comment|/// the list of public globals in the module.
+name|bool
+name|nameUnamedFunctions
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

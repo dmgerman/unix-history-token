@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -626,12 +620,12 @@ end_function
 
 begin_function
 name|int
-name|calc
+name|llvm_calc
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tokenize_stdin
+name|llvm_tokenize_stdin
 argument_list|(
 name|handle_line
 argument_list|)

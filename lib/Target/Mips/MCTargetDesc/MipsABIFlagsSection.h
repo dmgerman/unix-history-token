@@ -118,9 +118,11 @@ name|AFL_REG
 name|CPR2Size
 expr_stmt|;
 comment|// Processor-specific extension.
-name|uint32_t
-name|ISAExtensionSet
-decl_stmt|;
+name|Mips
+operator|::
+name|AFL_EXT
+name|ISAExtension
+expr_stmt|;
 comment|// Mask of ASEs used.
 name|uint32_t
 name|ASESet
@@ -178,9 +180,11 @@ operator|::
 name|AFL_REG_NONE
 argument_list|)
 operator|,
-name|ISAExtensionSet
+name|ISAExtension
 argument_list|(
-literal|0
+name|Mips
+operator|::
+name|AFL_EXT_NONE
 argument_list|)
 operator|,
 name|ASESet
@@ -267,14 +271,14 @@ name|getFpABIValue
 parameter_list|()
 function_decl|;
 name|uint32_t
-name|getISAExtensionSetValue
+name|getISAExtensionValue
 parameter_list|()
 block|{
 return|return
 operator|(
 name|uint32_t
 operator|)
-name|ISAExtensionSet
+name|ISAExtension
 return|;
 block|}
 name|uint32_t
@@ -658,6 +662,38 @@ name|class
 name|PredicateLibrary
 operator|>
 name|void
+name|setISAExtensionFromPredicates
+argument_list|(
+argument|const PredicateLibrary&P
+argument_list|)
+block|{
+if|if
+condition|(
+name|P
+operator|.
+name|hasCnMips
+argument_list|()
+condition|)
+name|ISAExtension
+operator|=
+name|Mips
+operator|::
+name|AFL_EXT_OCTEON
+expr_stmt|;
+else|else
+name|ISAExtension
+operator|=
+name|Mips
+operator|::
+name|AFL_EXT_NONE
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|class
+name|PredicateLibrary
+operator|>
+name|void
 name|setASESetFromPredicates
 argument_list|(
 argument|const PredicateLibrary&P
@@ -862,6 +898,11 @@ name|P
 argument_list|)
 expr_stmt|;
 name|setCPR1SizeFromPredicates
+argument_list|(
+name|P
+argument_list|)
+expr_stmt|;
+name|setISAExtensionFromPredicates
 argument_list|(
 name|P
 argument_list|)

@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/Analysis/CGSCCPassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/CGSCCPassManager.h"
+file|"llvm/Analysis/LoopPassManager.h"
 end_include
 
 begin_include
@@ -89,6 +89,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|AAManager
+decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
@@ -107,6 +113,94 @@ name|TM
 decl_stmt|;
 name|public
 label|:
+comment|/// \brief LLVM-provided high-level optimization levels.
+comment|///
+comment|/// This enumerates the LLVM-provided high-level optimization levels. Each
+comment|/// level has a specific goal and rationale.
+enum|enum
+name|OptimizationLevel
+block|{
+comment|/// Disable as many optimizations as possible. This doesn't completely
+comment|/// disable the optimizer in all cases, for example always_inline functions
+comment|/// can be required to be inlined for correctness.
+name|O0
+block|,
+comment|/// Optimize quickly without destroying debuggability.
+comment|///
+comment|/// FIXME: The current and historical behavior of this level does *not*
+comment|/// agree with this goal, but we would like to move toward this goal in the
+comment|/// future.
+comment|///
+comment|/// This level is tuned to produce a result from the optimizer as quickly
+comment|/// as possible and to avoid destroying debuggability. This tends to result
+comment|/// in a very good development mode where the compiled code will be
+comment|/// immediately executed as part of testing. As a consequence, where
+comment|/// possible, we would like to produce efficient-to-execute code, but not
+comment|/// if it significantly slows down compilation or would prevent even basic
+comment|/// debugging of the resulting binary.
+comment|///
+comment|/// As an example, complex loop transformations such as versioning,
+comment|/// vectorization, or fusion might not make sense here due to the degree to
+comment|/// which the executed code would differ from the source code, and the
+comment|/// potential compile time cost.
+name|O1
+block|,
+comment|/// Optimize for fast execution as much as possible without triggering
+comment|/// significant incremental compile time or code size growth.
+comment|///
+comment|/// The key idea is that optimizations at this level should "pay for
+comment|/// themselves". So if an optimization increases compile time by 5% or
+comment|/// increases code size by 5% for a particular benchmark, that benchmark
+comment|/// should also be one which sees a 5% runtime improvement. If the compile
+comment|/// time or code size penalties happen on average across a diverse range of
+comment|/// LLVM users' benchmarks, then the improvements should as well.
+comment|///
+comment|/// And no matter what, the compile time needs to not grow superlinearly
+comment|/// with the size of input to LLVM so that users can control the runtime of
+comment|/// the optimizer in this mode.
+comment|///
+comment|/// This is expected to be a good default optimization level for the vast
+comment|/// majority of users.
+name|O2
+block|,
+comment|/// Optimize for fast execution as much as possible.
+comment|///
+comment|/// This mode is significantly more aggressive in trading off compile time
+comment|/// and code size to get execution time improvements. The core idea is that
+comment|/// this mode should include any optimization that helps execution time on
+comment|/// balance across a diverse collection of benchmarks, even if it increases
+comment|/// code size or compile time for some benchmarks without corresponding
+comment|/// improvements to execution time.
+comment|///
+comment|/// Despite being willing to trade more compile time off to get improved
+comment|/// execution time, this mode still tries to avoid superlinear growth in
+comment|/// order to make even significantly slower compile times at least scale
+comment|/// reasonably. This does not preclude very substantial constant factor
+comment|/// costs though.
+name|O3
+block|,
+comment|/// Similar to \c O2 but tries to optimize for small code size instead of
+comment|/// fast execution without triggering significant incremental execution
+comment|/// time slowdowns.
+comment|///
+comment|/// The logic here is exactly the same as \c O2, but with code size and
+comment|/// execution time metrics swapped.
+comment|///
+comment|/// A consequence of the different core goal is that this should in general
+comment|/// produce substantially smaller executables that still run in
+comment|/// a reasonable amount of time.
+name|Os
+block|,
+comment|/// A very specialized mode that will optimize for code size at any and all
+comment|/// costs.
+comment|///
+comment|/// This is useful primarily when there are absolute size limitations and
+comment|/// any effort taken to reduce the size is worth it regardless of the
+comment|/// execution time impact. You should expect this level to produce rather
+comment|/// slow, but very small, code.
+name|Oz
+block|}
+enum|;
 name|explicit
 name|PassBuilder
 argument_list|(
@@ -122,24 +216,50 @@ argument_list|(
 argument|TM
 argument_list|)
 block|{}
-comment|/// \brief Registers all available module analysis passes.
+comment|/// \brief Cross register the analysis managers through their proxies.
 comment|///
-comment|/// This is an interface that can be used to populate a \c
-comment|/// ModuleAnalysisManager with all registered module analyses. Callers can
-comment|/// still manually register any additional analyses.
+comment|/// This is an interface that can be used to cross register each
+comment|// AnalysisManager with all the others analysis managers.
 name|void
-name|registerModuleAnalyses
+name|crossRegisterProxies
 argument_list|(
+name|LoopAnalysisManager
+operator|&
+name|LAM
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+name|FAM
+argument_list|,
+name|CGSCCAnalysisManager
+operator|&
+name|CGAM
+argument_list|,
 name|ModuleAnalysisManager
 operator|&
 name|MAM
 argument_list|)
 expr_stmt|;
+comment|/// \brief Registers all available module analysis passes.
+comment|///
+comment|/// This is an interface that can be used to populate a \c
+comment|/// ModuleAnalysisManager with all registered module analyses. Callers can
+comment|/// still manually register any additional analyses. Callers can also
+comment|/// pre-register analyses and this will not override those.
+name|void
+name|registerModuleAnalyses
+parameter_list|(
+name|ModuleAnalysisManager
+modifier|&
+name|MAM
+parameter_list|)
+function_decl|;
 comment|/// \brief Registers all available CGSCC analysis passes.
 comment|///
 comment|/// This is an interface that can be used to populate a \c CGSCCAnalysisManager
 comment|/// with all registered CGSCC analyses. Callers can still manually register any
-comment|/// additional analyses.
+comment|/// additional analyses. Callers can also pre-register analyses and this will
+comment|/// not override those.
 name|void
 name|registerCGSCCAnalyses
 parameter_list|(
@@ -152,13 +272,94 @@ comment|/// \brief Registers all available function analysis passes.
 comment|///
 comment|/// This is an interface that can be used to populate a \c
 comment|/// FunctionAnalysisManager with all registered function analyses. Callers can
-comment|/// still manually register any additional analyses.
+comment|/// still manually register any additional analyses. Callers can also
+comment|/// pre-register analyses and this will not override those.
 name|void
 name|registerFunctionAnalyses
 parameter_list|(
 name|FunctionAnalysisManager
 modifier|&
 name|FAM
+parameter_list|)
+function_decl|;
+comment|/// \brief Registers all available loop analysis passes.
+comment|///
+comment|/// This is an interface that can be used to populate a \c LoopAnalysisManager
+comment|/// with all registered loop analyses. Callers can still manually register any
+comment|/// additional analyses.
+name|void
+name|registerLoopAnalyses
+parameter_list|(
+name|LoopAnalysisManager
+modifier|&
+name|LAM
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a per-module default optimization pipeline to a pass manager.
+comment|///
+comment|/// This provides a good default optimization pipeline for per-module
+comment|/// optimization and code generation without any link-time optimization. It
+comment|/// typically correspond to frontend "-O[123]" options for optimization
+comment|/// levels \c O1, \c O2 and \c O3 resp.
+name|void
+name|addPerModuleDefaultPipeline
+parameter_list|(
+name|ModulePassManager
+modifier|&
+name|MPM
+parameter_list|,
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a pre-link, LTO-targeting default optimization pipeline to
+comment|/// a pass manager.
+comment|///
+comment|/// This adds the pre-link optimizations tuned to work well with a later LTO
+comment|/// run. It works to minimize the IR which needs to be analyzed without
+comment|/// making irreversible decisions which could be made better during the LTO
+comment|/// run.
+name|void
+name|addLTOPreLinkDefaultPipeline
+parameter_list|(
+name|ModulePassManager
+modifier|&
+name|MPM
+parameter_list|,
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Add an LTO default optimization pipeline to a pass manager.
+comment|///
+comment|/// This provides a good default optimization pipeline for link-time
+comment|/// optimization and code generation. It is particularly tuned to fit well
+comment|/// when IR coming into the LTO phase was first run through \c
+comment|/// addPreLinkLTODefaultPipeline, and the two coordinate closely.
+name|void
+name|addLTODefaultPipeline
+parameter_list|(
+name|ModulePassManager
+modifier|&
+name|MPM
+parameter_list|,
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Parse a textual pass pipeline description into a \c ModulePassManager.
@@ -210,6 +411,32 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Parse a textual alias analysis pipeline into the provided AA manager.
+comment|///
+comment|/// The format of the textual AA pipeline is a comma separated list of AA
+comment|/// pass names:
+comment|///
+comment|///   basic-aa,globals-aa,...
+comment|///
+comment|/// The AA manager is set up such that the provided alias analyses are tried
+comment|/// in the order specified. See the \c AAManaager documentation for details
+comment|/// about the logic used. This routine just provides the textual mapping
+comment|/// between AA names and the analyses to register with the manager.
+comment|///
+comment|/// Returns false if the text cannot be parsed cleanly. The specific state of
+comment|/// the \p AA manager is unspecified if such an error is encountered and this
+comment|/// returns false.
+name|bool
+name|parseAAPipeline
+parameter_list|(
+name|AAManager
+modifier|&
+name|AA
+parameter_list|,
+name|StringRef
+name|PipelineText
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|bool
@@ -221,6 +448,9 @@ name|MPM
 parameter_list|,
 name|StringRef
 name|Name
+parameter_list|,
+name|bool
+name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool
@@ -243,6 +473,46 @@ name|FPM
 parameter_list|,
 name|StringRef
 name|Name
+parameter_list|)
+function_decl|;
+name|bool
+name|parseLoopPassName
+parameter_list|(
+name|LoopPassManager
+modifier|&
+name|LPM
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+name|bool
+name|parseAAPassName
+parameter_list|(
+name|AAManager
+modifier|&
+name|AA
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+name|bool
+name|parseLoopPassPipeline
+parameter_list|(
+name|LoopPassManager
+modifier|&
+name|LPM
+parameter_list|,
+name|StringRef
+modifier|&
+name|PipelineText
+parameter_list|,
+name|bool
+name|VerifyEachPass
+parameter_list|,
+name|bool
+name|DebugLogging
 parameter_list|)
 function_decl|;
 name|bool

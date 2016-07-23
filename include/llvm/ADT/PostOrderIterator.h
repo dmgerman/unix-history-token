@@ -105,7 +105,7 @@ comment|// The po_iterator_storage template provides access to the set of alread
 comment|// visited nodes during the po_iterator's depth-first traversal.
 comment|//
 comment|// The default implementation simply contains a set of visited nodes, while
-comment|// the Extended=true version uses a reference to an external set.
+comment|// the External=true version uses a reference to an external set.
 comment|//
 comment|// It is possible to prune the depth-first traversal in several ways:
 comment|//

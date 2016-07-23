@@ -99,6 +99,12 @@ directive|include
 file|"llvm/IR/Operator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -117,6 +123,9 @@ name|BranchInst
 decl_stmt|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|CallInst
 decl_stmt|;
 name|class
 name|DbgDeclareInst
@@ -171,10 +180,10 @@ expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Local constant propagation.
 comment|//
-comment|/// ConstantFoldTerminator - If a terminator instruction is predicated on a
-comment|/// constant value, convert it into an unconditional branch to the constant
-comment|/// destination.  This is a nontrivial operation because the successors of this
-comment|/// basic block must have their PHI nodes updated.
+comment|/// If a terminator instruction is predicated on a constant value, convert it
+comment|/// into an unconditional branch to the constant destination.
+comment|/// This is a nontrivial operation because the successors of this basic block
+comment|/// must have their PHI nodes updated.
 comment|/// Also calls RecursivelyDeleteTriviallyDeadInstructions() on any branch/switch
 comment|/// conditions and indirectbr addresses this might make dead if
 comment|/// DeleteDeadConditions is true.
@@ -201,9 +210,8 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Local dead code elimination.
 comment|//
-comment|/// isInstructionTriviallyDead - Return true if the result produced by the
-comment|/// instruction is not used, and the instruction has no side effects.
-comment|///
+comment|/// Return true if the result produced by the instruction is not used, and the
+comment|/// instruction has no side effects.
 name|bool
 name|isInstructionTriviallyDead
 parameter_list|(
@@ -219,10 +227,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// RecursivelyDeleteTriviallyDeadInstructions - If the specified value is a
-comment|/// trivially dead instruction, delete it.  If that makes any of its operands
-comment|/// trivially dead, delete them too, recursively.  Return true if any
-comment|/// instructions were deleted.
+comment|/// If the specified value is a trivially dead instruction, delete it.
+comment|/// If that makes any of its operands trivially dead, delete them too,
+comment|/// recursively. Return true if any instructions were deleted.
 name|bool
 name|RecursivelyDeleteTriviallyDeadInstructions
 parameter_list|(
@@ -238,11 +245,11 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectively
-comment|/// dead PHI node, due to being a def-use chain of single-use nodes that
-comment|/// either forms a cycle or is terminated by a trivially dead instruction,
-comment|/// delete it.  If that makes any of its operands trivially dead, delete them
-comment|/// too, recursively.  Return true if a change was made.
+comment|/// If the specified value is an effectively dead PHI node, due to being a
+comment|/// def-use chain of single-use nodes that either forms a cycle or is terminated
+comment|/// by a trivially dead instruction, delete it. If that makes any of its
+comment|/// operands trivially dead, delete them too, recursively. Return true if a
+comment|/// change was made.
 name|bool
 name|RecursivelyDeleteDeadPHINode
 parameter_list|(
@@ -258,8 +265,8 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyInstructionsInBlock - Scan the specified basic block and try to
-comment|/// simplify any instructions in it and recursively delete dead instructions.
+comment|/// Scan the specified basic block and try to simplify any instructions in it
+comment|/// and recursively delete dead instructions.
 comment|///
 comment|/// This returns true if it changed the code, note that it can delete
 comment|/// instructions in other blocks as well in this block.
@@ -281,9 +288,9 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Control Flow Graph Restructuring.
 comment|//
-comment|/// RemovePredecessorAndSimplify - Like BasicBlock::removePredecessor, this
-comment|/// method is called when we're about to delete Pred as a predecessor of BB.  If
-comment|/// BB contains any PHI nodes, this drops the entries in the PHI nodes for Pred.
+comment|/// Like BasicBlock::removePredecessor, this method is called when we're about
+comment|/// to delete Pred as a predecessor of BB. If BB contains any PHI nodes, this
+comment|/// drops the entries in the PHI nodes for Pred.
 comment|///
 comment|/// Unlike the removePredecessor method, this attempts to simplify uses of PHI
 comment|/// nodes that collapse into identity values.  For example, if we have:
@@ -304,11 +311,9 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
-comment|/// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
-comment|/// predecessor is known to have one successor (BB!).  Eliminate the edge
-comment|/// between them, moving the instructions in the predecessor into BB.  This
-comment|/// deletes the predecessor block.
-comment|///
+comment|/// BB is a block with one predecessor and its predecessor is known to have one
+comment|/// successor (BB!). Eliminate the edge between them, moving the instructions in
+comment|/// the predecessor into BB. This deletes the predecessor block.
 name|void
 name|MergeBasicBlockIntoOnlyPred
 parameter_list|(
@@ -323,11 +328,10 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// TryToSimplifyUncondBranchFromEmptyBlock - BB is known to contain an
-comment|/// unconditional branch, and contains no instructions other than PHI nodes,
-comment|/// potential debug intrinsics and the branch.  If possible, eliminate BB by
-comment|/// rewriting all the predecessors to branch to the successor block and return
-comment|/// true.  If we can't transform, return false.
+comment|/// BB is known to contain an unconditional branch, and contains no instructions
+comment|/// other than PHI nodes, potential debug intrinsics and the branch. If
+comment|/// possible, eliminate BB by rewriting all the predecessors to branch to the
+comment|/// successor block and return true. If we can't transform, return false.
 name|bool
 name|TryToSimplifyUncondBranchFromEmptyBlock
 parameter_list|(
@@ -336,11 +340,9 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// EliminateDuplicatePHINodes - Check for and eliminate duplicate PHI
-comment|/// nodes in this block. This doesn't try to be clever about PHI nodes
-comment|/// which differ only in the order of the incoming values, but instcombine
-comment|/// orders them so it usually won't matter.
-comment|///
+comment|/// Check for and eliminate duplicate PHI nodes in this block. This doesn't try
+comment|/// to be clever about PHI nodes which differ only in the order of the incoming
+comment|/// values, but instcombine orders them so it usually won't matter.
 name|bool
 name|EliminateDuplicatePHINodes
 parameter_list|(
@@ -349,38 +351,48 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// SimplifyCFG - This function is used to do simplification of a CFG.  For
+comment|/// This function is used to do simplification of a CFG.  For
 comment|/// example, it adjusts branches to branches to eliminate the extra hop, it
 comment|/// eliminates unreachable basic blocks, and does other "peephole" optimization
 comment|/// of the CFG.  It returns true if a modification was made, possibly deleting
-comment|/// the basic block that was pointed to.
-comment|///
+comment|/// the basic block that was pointed to. LoopHeaders is an optional input
+comment|/// parameter, providing the set of loop header that SimplifyCFG should not
+comment|/// eliminate.
 name|bool
 name|SimplifyCFG
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|BB
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetTransformInfo
-modifier|&
+operator|&
 name|TTI
-parameter_list|,
+argument_list|,
 name|unsigned
 name|BonusInstThreshold
-parameter_list|,
+argument_list|,
 name|AssumptionCache
-modifier|*
+operator|*
 name|AC
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
-comment|/// FlatternCFG - This function is used to flatten a CFG.  For
-comment|/// example, it uses parallel-and and parallel-or mode to collapse
-comment|//  if-conditions and merge if-regions with identical statements.
-comment|///
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|*
+name|LoopHeaders
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// This function is used to flatten a CFG. For example, it uses parallel-and
+comment|/// and parallel-or mode to collapse if-conditions and merge if-regions with
+comment|/// identical statements.
 name|bool
 name|FlattenCFG
 parameter_list|(
@@ -395,10 +407,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
-comment|/// and if a predecessor branches to us and one of our successors, fold the
-comment|/// setcc into the predecessor and use logical operations to pick the right
-comment|/// destination.
+comment|/// If this basic block is ONLY a setcc and a branch, and if a predecessor
+comment|/// branches to us and one of our successors, fold the setcc into the
+comment|/// predecessor and use logical operations to pick the right destination.
 name|bool
 name|FoldBranchToCommonDest
 parameter_list|(
@@ -412,12 +423,11 @@ init|=
 literal|1
 parameter_list|)
 function_decl|;
-comment|/// DemoteRegToStack - This function takes a virtual register computed by an
-comment|/// Instruction and replaces it with a slot in the stack frame, allocated via
-comment|/// alloca.  This allows the CFG to be changed around without fear of
-comment|/// invalidating the SSA information for the value.  It returns the pointer to
-comment|/// the alloca inserted to create a stack slot for X.
-comment|///
+comment|/// This function takes a virtual register computed by an Instruction and
+comment|/// replaces it with a slot in the stack frame, allocated via alloca.
+comment|/// This allows the CFG to be changed around without fear of invalidating the
+comment|/// SSA information for the value. It returns the pointer to the alloca inserted
+comment|/// to create a stack slot for X.
 name|AllocaInst
 modifier|*
 name|DemoteRegToStack
@@ -438,9 +448,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// DemotePHIToStack - This function takes a virtual register computed by a phi
-comment|/// node and replaces it with a slot in the stack frame, allocated via alloca.
-comment|/// The phi node is deleted and it returns the pointer to the alloca inserted.
+comment|/// This function takes a virtual register computed by a phi node and replaces
+comment|/// it with a slot in the stack frame, allocated via alloca. The phi node is
+comment|/// deleted and it returns the pointer to the alloca inserted.
 name|AllocaInst
 modifier|*
 name|DemotePHIToStack
@@ -456,10 +466,10 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// getOrEnforceKnownAlignment - If the specified pointer has an alignment that
-comment|/// we can determine, return it, otherwise return 0.  If PrefAlign is specified,
-comment|/// and it is more than the alignment of the ultimate object, see if we can
-comment|/// increase the alignment of the ultimate object, making this check succeed.
+comment|/// If the specified pointer has an alignment that we can determine, return it,
+comment|/// otherwise return 0. If PrefAlign is specified, and it is more than the
+comment|/// alignment of the ultimate object, see if we can increase the alignment of
+comment|/// the ultimate object, making this check succeed.
 name|unsigned
 name|getOrEnforceKnownAlignment
 parameter_list|(
@@ -496,7 +506,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// getKnownAlignment - Try to infer an alignment for the specified pointer.
+comment|/// Try to infer an alignment for the specified pointer.
 specifier|static
 specifier|inline
 name|unsigned
@@ -549,9 +559,9 @@ name|DT
 argument_list|)
 return|;
 block|}
-comment|/// EmitGEPOffset - Given a getelementptr instruction/constantexpr, emit the
-comment|/// code necessary to compute the offset from the base pointer (without adding
-comment|/// in the base pointer).  Return the result as a signed integer of intptr size.
+comment|/// Given a getelementptr instruction/constantexpr, emit the code necessary to
+comment|/// compute the offset from the base pointer (without adding in the base
+comment|/// pointer). Return the result as a signed integer of intptr size.
 comment|/// When NoAssumptions is true, no assumptions about index computation not
 comment|/// overflowing is made.
 name|template
@@ -1018,8 +1028,8 @@ modifier|&
 name|Builder
 parameter_list|)
 function_decl|;
-comment|/// LowerDbgDeclare - Lowers llvm.dbg.declare intrinsics into appropriate set
-comment|/// of llvm.dbg.value intrinsics.
+comment|/// Lowers llvm.dbg.declare intrinsics into appropriate set of
+comment|/// llvm.dbg.value intrinsics.
 name|bool
 name|LowerDbgDeclare
 parameter_list|(
@@ -1028,8 +1038,7 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
-comment|/// FindAllocaDbgDeclare - Finds the llvm.dbg.declare intrinsic corresponding to
-comment|/// an alloca, if any.
+comment|/// Finds the llvm.dbg.declare intrinsic corresponding to an alloca, if any.
 name|DbgDeclareInst
 modifier|*
 name|FindAllocaDbgDeclare
@@ -1039,7 +1048,7 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// \brief Replaces llvm.dbg.declare instruction when the address it describes
+comment|/// Replaces llvm.dbg.declare instruction when the address it describes
 comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
 comment|/// prepended to the expression. If Offset is non-zero, a constant displacement
 comment|/// is added to the expression (after the optional Deref). Offset can be
@@ -1070,7 +1079,7 @@ name|int
 name|Offset
 parameter_list|)
 function_decl|;
-comment|/// \brief Replaces llvm.dbg.declare instruction when the alloca it describes
+comment|/// Replaces llvm.dbg.declare instruction when the alloca it describes
 comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
 comment|/// prepended to the expression. If Offset is non-zero, a constant displacement
 comment|/// is added to the expression (after the optional Deref). Offset can be
@@ -1099,9 +1108,45 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// \brief Insert an unreachable instruction before the specified
-comment|/// instruction, making it and the rest of the code in the block dead.
+comment|/// Replaces multiple llvm.dbg.value instructions when the alloca it describes
+comment|/// is replaced with a new value. If Offset is non-zero, a constant displacement
+comment|/// is added to the expression (after the mandatory Deref). Offset can be
+comment|/// negative. New llvm.dbg.value instructions are inserted at the locations of
+comment|/// the instructions they replace.
 name|void
+name|replaceDbgValueForAlloca
+parameter_list|(
+name|AllocaInst
+modifier|*
+name|AI
+parameter_list|,
+name|Value
+modifier|*
+name|NewAllocaAddress
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|,
+name|int
+name|Offset
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Remove all instructions from a basic block other than it's terminator
+comment|/// and any present EH pad instructions.
+name|unsigned
+name|removeAllNonTerminatorAndEHPadInstructions
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+comment|/// Insert an unreachable instruction before the specified
+comment|/// instruction, making it and the rest of the code in the block dead.
+name|unsigned
 name|changeToUnreachable
 parameter_list|(
 name|Instruction
@@ -1113,7 +1158,7 @@ name|UseLLVMTrap
 parameter_list|)
 function_decl|;
 comment|/// Replace 'BB's terminator with one that does not have an unwind successor
-comment|/// block.  Rewrites `invoke` to `call`, etc.  Updates any PHIs in unwind
+comment|/// block. Rewrites `invoke` to `call`, etc. Updates any PHIs in unwind
 comment|/// successor.
 comment|///
 comment|/// \param BB  Block whose terminator will be replaced.  Its terminator must
@@ -1126,7 +1171,7 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// \brief Remove all blocks that can not be reached from the function's entry.
+comment|/// Remove all blocks that can not be reached from the function's entry.
 comment|///
 comment|/// Returns true if any basic block was removed.
 name|bool
@@ -1143,7 +1188,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Combine the metadata of two instructions so that K can replace J
+comment|/// Combine the metadata of two instructions so that K can replace J
 comment|///
 comment|/// Metadata not listed as known via KnownIDs is removed
 name|void
@@ -1165,7 +1210,7 @@ operator|>
 name|KnownIDs
 argument_list|)
 decl_stmt|;
-comment|/// \brief Replace each use of 'From' with 'To' if that use is dominated by
+comment|/// Replace each use of 'From' with 'To' if that use is dominated by
 comment|/// the given edge.  Returns the number of replacements made.
 name|unsigned
 name|replaceDominatedUsesWith
@@ -1188,8 +1233,8 @@ modifier|&
 name|Edge
 parameter_list|)
 function_decl|;
-comment|/// \brief Replace each use of 'From' with 'To' if that use is dominated by
-comment|/// the given BasicBlock. Returns the number of replacements made.
+comment|/// Replace each use of 'From' with 'To' if that use is dominated by
+comment|/// the end of the given BasicBlock. Returns the number of replacements made.
 name|unsigned
 name|replaceDominatedUsesWith
 parameter_list|(
@@ -1211,7 +1256,7 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-comment|/// \brief Return true if the CallSite CS calls a gc leaf function.
+comment|/// Return true if the CallSite CS calls a gc leaf function.
 comment|///
 comment|/// A leaf function is a function that does not safepoint the thread during its
 comment|/// execution.  During a call or invoke to such a function, the callers stack
@@ -1229,7 +1274,7 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Intrinsic pattern matching
 comment|//
-comment|/// Try and match a bitreverse or bswap idiom.
+comment|/// Try and match a bswap or bitreverse idiom.
 comment|///
 comment|/// If an idiom is matched, an intrinsic call is inserted before \c I. Any added
 comment|/// instructions are returned in \c InsertedInsts. They will all have been added
@@ -1241,7 +1286,7 @@ comment|/// to BW / 4 nodes to be searched, so is significantly faster.
 comment|///
 comment|/// This function returns true on a successful match or false otherwise.
 name|bool
-name|recognizeBitReverseOrBSwapIdiom
+name|recognizeBSwapOrBitReverseIdiom
 argument_list|(
 name|Instruction
 operator|*
@@ -1262,6 +1307,26 @@ operator|&
 name|InsertedInsts
 argument_list|)
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|//  Sanitizer utilities
+comment|//
+comment|/// Given a CallInst, check if it calls a string function known to CodeGen,
+comment|/// and mark it with NoBuiltin if so.  To be used by sanitizers that intend
+comment|/// to intercept string functions and want to avoid converting them to target
+comment|/// specific instructions.
+name|void
+name|maybeMarkSanitizerLibraryCallNoBuiltin
+parameter_list|(
+name|CallInst
+modifier|*
+name|CI
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

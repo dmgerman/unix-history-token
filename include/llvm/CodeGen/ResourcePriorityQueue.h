@@ -274,7 +274,7 @@ comment|/// Heuristics for estimating register pressure.
 name|unsigned
 name|ParallelLiveRanges
 block|;
-name|signed
+name|int
 name|HorizontalVerticalBalance
 block|;
 name|public
@@ -397,7 +397,7 @@ return|;
 block|}
 comment|/// Single cost function reflecting benefit of scheduling SU
 comment|/// in the current cycle.
-name|signed
+name|int
 name|SUSchedulingCost
 argument_list|(
 name|SUnit
@@ -423,7 +423,7 @@ operator|*
 name|SU
 argument_list|)
 block|;
-name|signed
+name|int
 name|regPressureDelta
 argument_list|(
 argument|SUnit *SU
@@ -431,7 +431,7 @@ argument_list|,
 argument|bool RawPressure = false
 argument_list|)
 block|;
-name|signed
+name|int
 name|rawRegPressureDelta
 argument_list|(
 argument|SUnit *SU

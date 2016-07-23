@@ -139,8 +139,6 @@ name|void
 name|expandLoadStackGuard
 argument_list|(
 argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|Reloc::Model RM
 argument_list|)
 specifier|const
 name|override
