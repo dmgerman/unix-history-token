@@ -33,6 +33,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|signed
 name|char
 name|v4i8
 name|__attribute__

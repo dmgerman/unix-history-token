@@ -341,6 +341,19 @@ decl_stmt|;
 block|}
 name|type128
 typedef|;
+typedef|typedef
+struct|struct
+name|type256
+block|{
+name|uint64_t
+name|x
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|type256
+typedef|;
 block|}
 end_decl_stmt
 

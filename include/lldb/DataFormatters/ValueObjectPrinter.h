@@ -389,6 +389,16 @@ name|bool
 name|print_dotdotdot
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GenerateChild
+argument_list|(
+argument|ValueObject* synth_valobj
+argument_list|,
+argument|size_t idx
+argument_list|)
+expr_stmt|;
 name|void
 name|PrintChild
 argument_list|(

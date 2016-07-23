@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ThreadSafeSTLVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ValueObject.h"
 end_include
 
@@ -400,6 +406,18 @@ name|LanguageType
 argument_list|)
 block|;
 name|bool
+name|IsSyntheticChildrenGenerated
+argument_list|()
+name|override
+block|;
+name|void
+name|SetSyntheticChildrenGenerated
+argument_list|(
+argument|bool b
+argument_list|)
+name|override
+block|;
+name|bool
 name|GetDeclaration
 argument_list|(
 argument|Declaration&decl
@@ -480,6 +498,15 @@ operator|>
 name|NameToIndexMap
 expr_stmt|;
 typedef|typedef
+name|ThreadSafeSTLVector
+operator|<
+name|lldb
+operator|::
+name|ValueObjectSP
+operator|>
+name|SyntheticChildrenCache
+expr_stmt|;
+typedef|typedef
 name|ByIndexMap
 operator|::
 name|iterator
@@ -501,6 +528,9 @@ name|uint32_t
 name|m_synthetic_children_count
 decl_stmt|;
 comment|// FIXME use the ValueObject's ChildrenManager instead of a special purpose solution
+name|SyntheticChildrenCache
+name|m_synthetic_children_cache
+decl_stmt|;
 name|ConstString
 name|m_parent_type_name
 decl_stmt|;

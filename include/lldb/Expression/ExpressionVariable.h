@@ -67,6 +67,12 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -1081,19 +1087,72 @@ name|ConstString
 operator|&
 name|name
 argument_list|)
-operator|=
-literal|0
+block|;
+name|void
+name|RegisterExecutionUnit
+argument_list|(
+name|lldb
+operator|::
+name|IRExecutionUnitSP
+operator|&
+name|execution_unit_sp
+argument_list|)
 block|;
 name|private
 operator|:
 name|LLVMCastKind
 name|m_kind
-block|; }
+block|;
+typedef|typedef
+name|std
+operator|::
+name|set
+operator|<
+name|lldb
+operator|::
+name|IRExecutionUnitSP
+operator|>
+name|ExecutionUnitSet
+expr_stmt|;
+name|ExecutionUnitSet
+name|m_execution_units
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|}
+comment|///< The execution units that contain valuable symbols.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|>
+name|SymbolMap
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|SymbolMap
+name|m_symbol_map
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|///< The addresses of the symbols in m_execution_units.
+end_comment
+
+begin_comment
+unit|};      }
 comment|// namespace lldb_private
 end_comment
 

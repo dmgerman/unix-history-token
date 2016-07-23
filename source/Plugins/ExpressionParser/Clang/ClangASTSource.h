@@ -1132,6 +1132,16 @@ name|function
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|local_vars_nsp
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|type
+range|:
+literal|1
+decl_stmt|;
 block|}
 name|m_found
 struct|;

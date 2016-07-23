@@ -36,10 +36,19 @@ parameter_list|(
 function_decl|(noinline
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|))
-empty_stmt|;
-end_empty_stmt
+name|__attribute__
+argument_list|(
+operator|(
+name|regparm
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -82,10 +91,19 @@ parameter_list|(
 function_decl|(noinline
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|))
-empty_stmt|;
-end_empty_stmt
+name|__attribute__
+argument_list|(
+operator|(
+name|regparm
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -112,6 +130,31 @@ name|c
 argument_list|)
 expr_stmt|;
 comment|// set breakpoint here
+block|}
+end_function
+
+begin_function_decl
+name|float
+name|f3
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noinline
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|float
+name|f3
+parameter_list|()
+block|{
+return|return
+literal|3.14f
+return|;
 block|}
 end_function
 
@@ -144,6 +187,20 @@ operator|&
 name|myBar
 argument_list|)
 expr_stmt|;
+name|float
+name|f
+init|=
+name|f3
+argument_list|()
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%f\n"
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+comment|// set breakpoint here
 return|return
 literal|0
 return|;

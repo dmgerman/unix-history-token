@@ -312,6 +312,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBMemoryRegionInfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBModule
 decl_stmt|;
 end_decl_stmt

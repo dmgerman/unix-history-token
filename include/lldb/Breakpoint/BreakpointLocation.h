@@ -57,6 +57,12 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -789,10 +789,13 @@ name|UserExpressionSP
 name|m_user_expression_sp
 expr_stmt|;
 comment|///< The compiled expression to use in testing our condition.
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_condition_mutex
-decl_stmt|;
-comment|///< Guards parsing and evaluation of the condition, which could be evaluated by multiple processes.
+expr_stmt|;
+comment|///< Guards parsing and evaluation of the condition, which could be evaluated by
+comment|/// multiple processes.
 name|size_t
 name|m_condition_hash
 decl_stmt|;

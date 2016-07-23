@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UniqueCStringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -221,10 +221,12 @@ name|symbol
 argument_list|)
 decl|const
 decl_stmt|;
-name|Mutex
-modifier|&
+name|std
+operator|::
+name|recursive_mutex
+operator|&
 name|GetMutex
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_mutex
@@ -643,20 +645,12 @@ argument_list|)
 decl_stmt|;
 name|Symbol
 modifier|*
-name|FindSymbolContainingFileAddress
+name|FindSymbolAtFileAddress
 argument_list|(
 name|lldb
 operator|::
 name|addr_t
 name|file_addr
-argument_list|,
-specifier|const
-name|uint32_t
-operator|*
-name|indexes
-argument_list|,
-name|uint32_t
-name|num_indexes
 argument_list|)
 decl_stmt|;
 name|Symbol
@@ -889,9 +883,11 @@ operator|>
 name|m_selector_to_index
 expr_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 comment|// Provide thread safety for this symbol table
 name|bool
 name|m_file_addr_to_index_computed

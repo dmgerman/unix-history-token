@@ -104,15 +104,6 @@ name|idx
 argument_list|)
 decl|const
 decl_stmt|;
-name|bool
-name|Insert
-parameter_list|(
-specifier|const
-name|DWARFDIE
-modifier|&
-name|die
-parameter_list|)
-function_decl|;
 name|size_t
 name|Size
 argument_list|()

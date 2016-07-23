@@ -261,6 +261,20 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|bool
+name|IsArmHardFloat
+argument_list|(
+name|lldb_private
+operator|::
+name|Thread
+operator|&
+name|thread
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|//------------------------------------------------------------------
 end_comment

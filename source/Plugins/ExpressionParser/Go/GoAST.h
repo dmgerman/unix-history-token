@@ -9609,6 +9609,10 @@ operator|&&
 literal|"Invalid kind"
 argument_list|)
 expr_stmt|;
+return|return
+name|R
+argument_list|()
+return|;
 block|}
 block|}
 name|template

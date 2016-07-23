@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ArchSpec.h"
 end_include
 
@@ -70,7 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/DiagnosticManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Expression/ExpressionParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -144,8 +150,8 @@ comment|//------------------------------------------------------------------
 comment|/// Parse a single expression and convert it to IR using Clang.  Don't
 comment|/// wrap the expression in anything at all.
 comment|///
-comment|/// @param[in] stream
-comment|///     The stream to print errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @return
 comment|///     The number of errors encountered during parsing.  0 means
@@ -154,7 +160,14 @@ comment|//------------------------------------------------------------------
 name|unsigned
 name|Parse
 argument_list|(
-argument|Stream&stream
+argument|DiagnosticManager&diagnostic_manager
+argument_list|)
+name|override
+block|;
+name|bool
+name|RewriteExpression
+argument_list|(
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 name|override
 block|;
@@ -211,6 +224,52 @@ argument_list|,
 argument|lldb_private::ExecutionPolicy execution_policy
 argument_list|)
 name|override
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Run all static initializers for an execution unit.
+comment|///
+comment|/// @param[in] execution_unit_sp
+comment|///     The execution unit.
+comment|///
+comment|/// @param[in] exe_ctx
+comment|///     The execution context to use when running them.  Thread can't be null.
+comment|///
+comment|/// @return
+comment|///     The error code indicating the
+comment|//------------------------------------------------------------------
+name|Error
+name|RunStaticInitializers
+argument_list|(
+name|lldb
+operator|::
+name|IRExecutionUnitSP
+operator|&
+name|execution_unit_sp
+argument_list|,
+name|ExecutionContext
+operator|&
+name|exe_ctx
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Returns a string representing current ABI.
+comment|///
+comment|/// @param[in] target_arch
+comment|///     The target architecture.
+comment|///
+comment|/// @return
+comment|///     A string representing target ABI for the current architecture.
+comment|//-------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetClangTargetABI
+argument_list|(
+specifier|const
+name|ArchSpec
+operator|&
+name|target_arch
+argument_list|)
 block|;
 name|private
 operator|:

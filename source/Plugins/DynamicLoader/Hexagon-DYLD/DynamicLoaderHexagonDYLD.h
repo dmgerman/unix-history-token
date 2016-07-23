@@ -177,6 +177,8 @@ argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|,
 argument|const lldb::ThreadSP thread
+argument_list|,
+argument|lldb::addr_t tls_file_addr
 argument_list|)
 name|override
 block|;
@@ -296,23 +298,6 @@ name|void
 name|UnloadSections
 argument_list|(
 argument|const lldb::ModuleSP module
-argument_list|)
-name|override
-block|;
-comment|/// Locates or creates a module given by @p file and updates/loads the
-comment|/// resulting module at the virtual base address @p base_addr.
-name|lldb
-operator|::
-name|ModuleSP
-name|LoadModuleAtAddress
-argument_list|(
-argument|const lldb_private::FileSpec&file
-argument_list|,
-argument|lldb::addr_t link_map_addr
-argument_list|,
-argument|lldb::addr_t base_addr
-argument_list|,
-argument|bool base_addr_is_offset
 argument_list|)
 name|override
 block|;

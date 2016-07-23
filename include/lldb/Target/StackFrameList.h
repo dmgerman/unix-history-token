@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -70,12 +76,6 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
 
 begin_include
 include|#
@@ -372,9 +372,11 @@ name|StackFrameListSP
 name|m_prev_frames_sp
 expr_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|collection
 name|m_frames
 decl_stmt|;

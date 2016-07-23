@@ -153,7 +153,28 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((FPR_linux_mips*)NULL)->reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, fpr_##reg##_mips }, NULL, NULL }
+value|{ #reg, alt, sizeof(((FPR_linux_mips*)NULL)->reg), FPR_OFFSET(reg), eEncodingIEEE754,   \       eFormatFloat, { kind1, kind2, kind3, kind4, fpr_##reg##_mips }, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFINE_FPR_INFO
+parameter_list|(
+name|reg
+parameter_list|,
+name|alt
+parameter_list|,
+name|kind1
+parameter_list|,
+name|kind2
+parameter_list|,
+name|kind3
+parameter_list|,
+name|kind4
+parameter_list|)
+define|\
+value|{ #reg, alt, sizeof(((FPR_linux_mips*)NULL)->reg), FPR_OFFSET(reg), eEncodingUint,   \      eFormatHex, { kind1, kind2, kind3, kind4, fpr_##reg##_mips }, NULL, NULL }
 end_define
 
 begin_define
@@ -1274,7 +1295,7 @@ argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|fcsr
 argument_list|,
@@ -1289,7 +1310,7 @@ argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|fir
 argument_list|,
@@ -1304,7 +1325,7 @@ argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|config5
 argument_list|,
@@ -1930,6 +1951,12 @@ begin_undef
 undef|#
 directive|undef
 name|DEFINE_FPR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DEFINE_FPR_INFO
 end_undef
 
 begin_undef

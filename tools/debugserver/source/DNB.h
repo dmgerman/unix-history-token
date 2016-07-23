@@ -1430,6 +1430,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|JSONGenerator
+operator|::
+name|ObjectSP
+name|DNBGetAllLoadedLibrariesInfos
+argument_list|(
+argument|nub_process_t pid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|JSONGenerator
+operator|::
+name|ObjectSP
+name|DNBGetLibrariesInfoForAddresses
+argument_list|(
+argument|nub_process_t pid
+argument_list|,
+argument|std::vector<uint64_t>&macho_addresses
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|JSONGenerator
+operator|::
+name|ObjectSP
+name|DNBGetSharedCacheInfo
+argument_list|(
+argument|nub_process_t pid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|//
 end_comment

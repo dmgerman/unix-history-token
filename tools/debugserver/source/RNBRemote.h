@@ -372,6 +372,9 @@ comment|// 'jGetLoadedDynamicLibrariesInfos'
 name|json_query_threads_info
 block|,
 comment|// 'jThreadsInfo'
+name|json_query_get_shared_cache_info
+block|,
+comment|// 'jGetSharedCacheInfo'
 name|pass_signals_to_inferior
 block|,
 comment|// 'QPassSignals'
@@ -817,6 +820,18 @@ end_function_decl
 begin_function_decl
 name|rnb_err_t
 name|HandlePacket_jThreadsInfo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rnb_err_t
+name|HandlePacket_jGetSharedCacheInfo
 parameter_list|(
 specifier|const
 name|char

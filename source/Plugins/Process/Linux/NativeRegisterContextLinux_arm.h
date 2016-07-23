@@ -214,6 +214,15 @@ block|;
 name|lldb
 operator|::
 name|addr_t
+name|GetWatchpointHitAddress
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+name|override
+block|;
+name|lldb
+operator|::
+name|addr_t
 name|GetWatchpointAddress
 argument_list|(
 argument|uint32_t wp_index
@@ -433,6 +442,18 @@ name|addr_t
 name|address
 block|;
 comment|// Breakpoint/watchpoint address value.
+name|lldb
+operator|::
+name|addr_t
+name|hit_addr
+block|;
+comment|// Address at which last watchpoint trigger exception occurred.
+name|lldb
+operator|::
+name|addr_t
+name|real_addr
+block|;
+comment|// Address value that should cause target to stop.
 name|uint32_t
 name|control
 block|;

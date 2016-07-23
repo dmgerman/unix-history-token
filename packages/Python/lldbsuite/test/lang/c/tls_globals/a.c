@@ -47,6 +47,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
+name|touch_shared
+parameter_list|()
+block|{
+return|return
+name|var_shared
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|shared_check
 parameter_list|()

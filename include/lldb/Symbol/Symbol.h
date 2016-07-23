@@ -761,6 +761,13 @@ argument_list|,
 argument|Stream&strm
 argument_list|)
 block|;
+name|bool
+name|ContainsFileAddress
+argument_list|(
+argument|lldb::addr_t file_addr
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 comment|// This is the internal guts of ResolveReExportedSymbol, it assumes reexport_name is not null, and that module_spec

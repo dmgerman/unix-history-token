@@ -89,6 +89,13 @@ argument|lldb::PathType path_type
 argument_list|)
 expr_stmt|;
 specifier|static
+name|lldb
+operator|::
+name|SBFileSpec
+name|GetUserHomeDirectory
+argument_list|()
+expr_stmt|;
+specifier|static
 name|void
 name|ThreadCreated
 parameter_list|(

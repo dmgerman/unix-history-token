@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|<memory>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<mutex>
 end_include
 
 begin_decl_stmt
@@ -101,9 +101,11 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr

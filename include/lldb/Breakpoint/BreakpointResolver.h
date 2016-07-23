@@ -155,6 +155,9 @@ argument_list|(
 argument|Breakpoint *bkpt
 argument_list|,
 argument|unsigned char resolverType
+argument_list|,
+argument|lldb::addr_t offset =
+literal|0
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -180,6 +183,37 @@ operator|*
 name|bkpt
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|/// This updates the offset for this breakpoint.  All the locations currently
+comment|/// set for this breakpoint will have their offset adjusted when this is called.
+comment|///
+comment|/// @param[in] offset
+comment|///   The offset to add to all locations.
+comment|//------------------------------------------------------------------
+name|void
+name|SetOffset
+argument_list|(
+argument|lldb::addr_t offset
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// This updates the offset for this breakpoint.  All the locations currently
+comment|/// set for this breakpoint will have their offset adjusted when this is called.
+comment|///
+comment|/// @param[in] offset
+comment|///   The offset to add to all locations.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|addr_t
+name|GetOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_offset
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// In response to this method the resolver scans all the modules in the breakpoint's
 comment|/// target, and adds any new locations it finds.
@@ -315,11 +349,27 @@ argument_list|,
 argument|const char *log_ident
 argument_list|)
 block|;
+name|lldb
+operator|::
+name|BreakpointLocationSP
+name|AddLocation
+argument_list|(
+argument|Address loc_addr
+argument_list|,
+argument|bool *new_location = NULL
+argument_list|)
+block|;
 name|Breakpoint
 operator|*
 name|m_breakpoint
 block|;
 comment|// This is the breakpoint we add locations to.
+name|lldb
+operator|::
+name|addr_t
+name|m_offset
+block|;
+comment|// A random offset the user asked us to add to any breakpoints we set.
 name|private
 operator|:
 comment|// Subclass identifier (for llvm isa/dyn_cast)

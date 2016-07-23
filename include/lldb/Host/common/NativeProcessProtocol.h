@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -804,7 +804,9 @@ name|tid_t
 name|m_current_thread_id
 block|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_threads_mutex
 block|;
 name|lldb
@@ -813,7 +815,9 @@ name|StateType
 name|m_state
 block|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_state_mutex
 block|;
 name|lldb_private
@@ -829,7 +833,9 @@ operator|::
 name|string
 name|m_exit_description
 block|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_delegates_mutex
 block|;
 name|std

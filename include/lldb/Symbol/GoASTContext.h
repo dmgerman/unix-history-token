@@ -253,31 +253,6 @@ name|ConstString
 argument_list|()
 return|;
 block|}
-name|lldb
-operator|::
-name|VariableSP
-name|DeclGetVariable
-argument_list|(
-argument|void *opaque_decl
-argument_list|)
-name|override
-block|{
-return|return
-name|lldb
-operator|::
-name|VariableSP
-argument_list|()
-return|;
-block|}
-name|void
-name|DeclLinkToObject
-argument_list|(
-argument|void *opaque_decl
-argument_list|,
-argument|std::shared_ptr<void> object
-argument_list|)
-name|override
-block|{     }
 comment|//----------------------------------------------------------------------
 comment|// CompilerDeclContext functions
 comment|//----------------------------------------------------------------------
@@ -547,6 +522,15 @@ name|bool
 name|IsFunctionPointerType
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
+argument_list|)
+name|override
+block|;
+name|bool
+name|IsBlockPointerType
+argument_list|(
+argument|lldb::opaque_compiler_type_t type
+argument_list|,
+argument|CompilerType *function_pointer_type_ptr
 argument_list|)
 name|override
 block|;

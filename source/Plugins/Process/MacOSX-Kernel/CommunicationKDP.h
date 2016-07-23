@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/StreamBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -353,13 +353,16 @@ begin_decl_stmt
 name|bool
 name|GetSequenceMutex
 argument_list|(
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|unique_lock
+operator|<
+name|std
 operator|::
-name|Locker
+name|recursive_mutex
+operator|>
 operator|&
-name|locker
+name|lock
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1092,9 +1095,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 name|m_sequence_mutex
 expr_stmt|;
 end_expr_stmt

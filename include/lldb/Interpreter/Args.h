@@ -284,20 +284,34 @@ name|Args
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Dump all arguments to the stream \a s.
+comment|/// Dump all entries to the stream \a s using label \a label_name.
+comment|///
+comment|/// If label_name is nullptr, the dump operation is skipped.
 comment|///
 comment|/// @param[in] s
 comment|///     The stream to which to dump all arguments in the argument
 comment|///     vector.
+comment|/// @param[in] label_name
+comment|///     The label_name to use as the label printed for each
+comment|///     entry of the args like so:
+comment|///       {label_name}[{index}]={value}
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|&
 name|s
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|label_name
+operator|=
+literal|"argv"
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Sets the command string contained by this object.
 comment|///
@@ -1033,6 +1047,11 @@ modifier|*
 name|GetShellSafeArgument
 argument_list|(
 specifier|const
+name|FileSpec
+operator|&
+name|shell
+argument_list|,
+specifier|const
 name|char
 operator|*
 name|unsafe_arg
@@ -1110,6 +1129,30 @@ name|string
 operator|&
 name|common_prefix
 argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return whether a given environment variable exists.
+comment|///
+comment|/// This command treats Args like a list of environment variables,
+comment|/// as used in ProcessLaunchInfo.  It treats each argument as
+comment|/// an {env_var_name}={value} or an {env_var_name} entry.
+comment|///
+comment|/// @param[in] env_var_name
+comment|///     Specifies the name of the environment variable to check.
+comment|///
+comment|/// @return
+comment|///     true if the specified env var name exists in the list in
+comment|///     either of the above-mentioned formats; otherwise, false.
+comment|//------------------------------------------------------------------
+name|bool
+name|ContainsEnvironmentVariable
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|env_var_name
+argument_list|)
+decl|const
 decl_stmt|;
 name|protected
 label|:

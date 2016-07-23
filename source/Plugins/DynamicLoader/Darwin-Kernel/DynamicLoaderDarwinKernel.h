@@ -54,13 +54,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -178,6 +178,19 @@ operator|::
 name|Debugger
 operator|&
 name|debugger
+argument_list|)
+block|;
+specifier|static
+name|lldb
+operator|::
+name|addr_t
+name|SearchForDarwinKernel
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -919,22 +932,6 @@ specifier|static
 name|lldb
 operator|::
 name|addr_t
-name|SearchForDarwinKernel
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|addr_t
 name|SearchForKernelAtSameLoadAddr
 argument_list|(
 name|lldb_private
@@ -1058,9 +1055,9 @@ end_expr_stmt
 
 begin_expr_stmt
 name|mutable
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 name|m_mutex
 expr_stmt|;
 end_expr_stmt

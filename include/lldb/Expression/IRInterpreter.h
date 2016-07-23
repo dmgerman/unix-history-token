@@ -196,9 +196,9 @@ name|args
 argument_list|,
 name|lldb_private
 operator|::
-name|IRMemoryMap
+name|IRExecutionUnit
 operator|&
-name|memory_map
+name|execution_unit
 argument_list|,
 name|lldb_private
 operator|::

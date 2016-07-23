@@ -270,6 +270,15 @@ argument|const char *basename
 argument_list|)
 name|override
 block|;
+name|lldb_private
+operator|::
+name|Error
+name|LaunchProcess
+argument_list|(
+argument|lldb_private::ProcessLaunchInfo&launch_info
+argument_list|)
+name|override
+block|;
 name|protected
 operator|:
 name|void

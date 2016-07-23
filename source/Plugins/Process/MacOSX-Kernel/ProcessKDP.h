@@ -161,7 +161,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
@@ -208,7 +208,7 @@ name|ProcessKDP
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener
 argument_list|)
 block|;
 name|virtual

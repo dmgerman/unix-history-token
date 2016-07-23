@@ -145,19 +145,45 @@ directive|include
 file|<sys/prctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_comment
+comment|// Android API<= 16 does not have these defined.
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PR_SET_PTRACER
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PR_SET_PTRACER
+value|0x59616d61
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PR_SET_PTRACER_ANY
-argument_list|)
-end_if
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PR_SET_PTRACER_ANY
+value|((unsigned long)-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// For now we execute on best effort basis.  If this fails for some reason, so be it.
@@ -171,11 +197,6 @@ parameter_list|()
 define|\
 value|do                                                                                \     {                                                                                 \         const int prctl_result = prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0);  \         (void)prctl_result;                                                           \     } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -197,6 +218,115 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|LLDB_USING_LIBSTDCPP
+argument_list|)
+end_if
+
+begin_comment
+comment|// on Darwin, libstdc++ is missing<atomic>, so this would cause any test to fail building
+end_comment
+
+begin_comment
+comment|// since this header file is being included in every C-family test case, we need to not include it
+end_comment
+
+begin_comment
+comment|// on Darwin, most tests use libc++ by default, so this will only affect tests that explicitly require libstdc++
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<atomic>
+end_include
+
+begin_comment
+comment|// Note that although hogging the CPU while waiting for a variable to change
+end_comment
+
+begin_comment
+comment|// would be terrible in production code, it's great for testing since it
+end_comment
+
+begin_comment
+comment|// avoids a lot of messy context switching to get multiple threads synchronized.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|atomic
+operator|<
+name|int
+operator|>
+name|pseudo_barrier_t
+expr_stmt|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|pseudo_barrier_wait
+parameter_list|(
+name|barrier
+parameter_list|)
+define|\
+value|do                                      \     {                                       \         --(barrier);                        \         while ((barrier).load()> 0)        \             ;                               \     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pseudo_barrier_init
+parameter_list|(
+name|barrier
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|do                                      \     {                                       \         (barrier) = (count);                \     } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __cplusplus
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// defined(__APPLE__)&& defined(LLDB_USING_LIBSTDCPP)
+end_comment
 
 end_unit
 

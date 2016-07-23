@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Expression/Expression.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -192,6 +192,8 @@ name|eKindSwift
 block|,
 name|eKindGo
 block|,
+name|eKindJava
+block|,
 name|kNumKinds
 block|}
 block|;
@@ -239,6 +241,13 @@ argument_list|,
 argument|Target *target
 argument_list|)
 block|;
+comment|// Free up any resources associated with this TypeSystem.  Done before removing
+comment|// all the TypeSystems from the TypeSystemMap.
+name|virtual
+name|void
+name|Finalize
+argument_list|()
+block|{}
 name|virtual
 name|DWARFASTParser
 operator|*
@@ -296,38 +305,6 @@ name|opaque_decl
 argument_list|)
 block|;
 name|virtual
-name|lldb
-operator|::
-name|VariableSP
-name|DeclGetVariable
-argument_list|(
-name|void
-operator|*
-name|opaque_decl
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|DeclLinkToObject
-argument_list|(
-name|void
-operator|*
-name|opaque_decl
-argument_list|,
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|void
-operator|>
-name|object
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
 name|CompilerDeclContext
 name|DeclGetDeclContext
 argument_list|(
@@ -378,6 +355,8 @@ argument_list|(
 argument|void *opaque_decl_ctx
 argument_list|,
 argument|ConstString name
+argument_list|,
+argument|const bool ignore_imported_decls
 argument_list|)
 block|;
 name|virtual
@@ -554,6 +533,17 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|IsBlockPointerType
+argument_list|(
+argument|lldb::opaque_compiler_type_t type
+argument_list|,
+argument|CompilerType *function_pointer_type_ptr
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|IsIntegerType
 argument_list|(
 argument|lldb::opaque_compiler_type_t type
@@ -563,6 +553,23 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|virtual
+name|bool
+name|IsEnumerationType
+argument_list|(
+argument|lldb::opaque_compiler_type_t type
+argument_list|,
+argument|bool&is_signed
+argument_list|)
+block|{
+name|is_signed
+operator|=
+name|false
+block|;
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|bool
 name|IsPossibleDynamicType
@@ -1504,6 +1511,8 @@ operator|~
 name|TypeSystemMap
 argument_list|()
 expr_stmt|;
+comment|// Clear calls Finalize on all the TypeSystems managed by this map, and then
+comment|// empties the map.
 name|void
 name|Clear
 parameter_list|()
@@ -1564,6 +1573,24 @@ argument_list|)
 decl_stmt|;
 name|protected
 label|:
+comment|// This function does not take the map mutex, and should only be called from
+comment|// functions that do take the mutex.
+name|void
+name|AddToMap
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
+name|lldb
+operator|::
+name|TypeSystemSP
+specifier|const
+operator|&
+name|type_system_sp
+argument_list|)
+decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -1580,12 +1607,17 @@ operator|>
 name|collection
 expr_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< A mutex to keep this object happy in multi-threaded environments.
 name|collection
 name|m_map
+decl_stmt|;
+name|bool
+name|m_clear_in_progress
 decl_stmt|;
 block|}
 empty_stmt|;

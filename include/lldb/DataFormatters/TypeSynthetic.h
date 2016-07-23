@@ -268,6 +268,18 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|// if this function returns a non-empty ConstString, then clients are expected to use the return
+comment|// as the name of the type of this ValueObject for display purposes
+name|virtual
+name|ConstString
+name|GetSyntheticTypeName
+parameter_list|()
+block|{
+return|return
+name|ConstString
+argument_list|()
+return|;
+block|}
 typedef|typedef
 name|std
 operator|::
@@ -1767,6 +1779,11 @@ name|lldb
 operator|::
 name|ValueObjectSP
 name|GetSyntheticValue
+argument_list|()
+name|override
+block|;
+name|ConstString
+name|GetSyntheticTypeName
 argument_list|()
 name|override
 block|;

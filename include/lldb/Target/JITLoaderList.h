@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -53,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -145,9 +145,9 @@ name|JITLoaderSP
 operator|>
 name|m_jit_loaders_vec
 expr_stmt|;
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 name|m_jit_loaders_mutex
 expr_stmt|;
 block|}

@@ -212,6 +212,9 @@ block|;
 name|uint32_t
 name|ptr_depth
 block|;
+name|uint32_t
+name|elem_count
+block|;
 name|lldb
 operator|::
 name|DynamicValueType

@@ -128,6 +128,11 @@ name|FileSpec
 name|GetProgramFileSpec
 argument_list|()
 block|;
+specifier|static
+name|uint32_t
+name|GetMaxThreadNameLength
+argument_list|()
+block|;
 name|protected
 operator|:
 specifier|static

@@ -182,7 +182,7 @@ literal|6
 operator|)
 block|,
 comment|// Can create file only if it doesn't already exist
-name|eOpenoptionDontFollowSymlinks
+name|eOpenOptionDontFollowSymlinks
 operator|=
 operator|(
 literal|1u
@@ -291,14 +291,6 @@ argument_list|(
 argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
-name|File
-argument_list|(
-specifier|const
-name|File
-operator|&
-name|rhs
-argument_list|)
-block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor with path.
 comment|///
@@ -406,17 +398,6 @@ operator|~
 name|File
 argument_list|()
 name|override
-block|;
-name|File
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|File
-operator|&
-name|rhs
-operator|)
 block|;
 name|bool
 name|IsValid
@@ -537,14 +518,9 @@ name|Close
 argument_list|()
 name|override
 block|;
-name|Error
-name|Duplicate
-argument_list|(
-specifier|const
-name|File
-operator|&
-name|rhs
-argument_list|)
+name|void
+name|Clear
+argument_list|()
 block|;
 name|int
 name|GetDescriptor
@@ -1023,6 +999,13 @@ name|m_is_real_terminal
 block|;
 name|LazyBool
 name|m_supports_colors
+block|;
+name|private
+operator|:
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|File
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

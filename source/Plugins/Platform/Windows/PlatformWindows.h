@@ -185,15 +185,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|size_t
-name|GetSoftwareBreakpointTrapOpcode
-argument_list|(
-argument|lldb_private::Target&target
-argument_list|,
-argument|lldb_private::BreakpointSite *bp_site
-argument_list|)
-name|override
-block|;
 name|bool
 name|GetRemoteOSVersion
 argument_list|()

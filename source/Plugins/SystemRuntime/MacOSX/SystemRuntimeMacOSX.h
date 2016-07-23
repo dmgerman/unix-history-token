@@ -54,13 +54,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -105,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -393,9 +393,9 @@ name|user_id_t
 name|m_break_id
 block|;
 name|mutable
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 name|m_mutex
 block|;
 name|private

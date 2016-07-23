@@ -981,11 +981,6 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-modifier|*
-name|GetBytes
-parameter_list|()
-function_decl|;
 specifier|const
 name|void
 operator|*

@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unordered_map>
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Communication.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -135,13 +135,6 @@ comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|GDBRemoteCommunicationServerLLGS
 argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|PlatformSP
-operator|&
-name|platform_sp
-argument_list|,
 name|MainLoop
 operator|&
 name|mainloop
@@ -277,11 +270,6 @@ argument_list|)
 decl_stmt|;
 name|protected
 label|:
-name|lldb
-operator|::
-name|PlatformSP
-name|m_platform_sp
-expr_stmt|;
 name|MainLoop
 modifier|&
 name|m_mainloop
@@ -301,9 +289,11 @@ operator|::
 name|tid_t
 name|m_continue_tid
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_debugged_process_mutex
-decl_stmt|;
+expr_stmt|;
 name|NativeProcessProtocolSP
 name|m_debugged_process_sp
 decl_stmt|;
@@ -325,9 +315,11 @@ operator|::
 name|DataBufferSP
 name|m_active_auxv_buffer_sp
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_saved_registers_mutex
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|unordered_map

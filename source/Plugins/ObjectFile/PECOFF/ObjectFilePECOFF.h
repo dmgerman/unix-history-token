@@ -533,13 +533,16 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|//    virtual lldb_private::Address
-end_comment
-
-begin_comment
-comment|//    GetEntryPointAddress ();
-end_comment
+begin_expr_stmt
+name|virtual
+name|lldb_private
+operator|::
+name|Address
+name|GetEntryPointAddress
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|ObjectFile
@@ -1228,6 +1231,14 @@ name|lldb
 operator|::
 name|addr_t
 name|m_image_base
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|Address
+name|m_entry_point_address
 expr_stmt|;
 end_expr_stmt
 

@@ -75,6 +75,20 @@ name|BITWIDTH_INT128
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|NUM_OF_WORDS_INT256
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITWIDTH_INT256
+value|256
+end_define
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -118,6 +132,10 @@ block|,
 name|e_uint128
 block|,
 name|e_sint128
+block|,
+name|e_uint256
+block|,
+name|e_sint256
 block|}
 enum|;
 comment|//------------------------------------------------------------------
@@ -584,6 +602,28 @@ operator|=
 name|e_uint128
 expr_stmt|;
 break|break;
+case|case
+literal|256
+case|:
+if|if
+condition|(
+name|m_integer
+operator|.
+name|isSignedIntN
+argument_list|(
+name|BITWIDTH_INT256
+argument_list|)
+condition|)
+name|m_type
+operator|=
+name|e_sint256
+expr_stmt|;
+else|else
+name|m_type
+operator|=
+name|e_uint256
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|Scalar
@@ -631,6 +671,7 @@ name|uint32_t
 name|bit
 parameter_list|)
 function_decl|;
+specifier|const
 name|void
 operator|*
 name|GetBytes
@@ -754,6 +795,10 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|MakeSigned
+parameter_list|()
+function_decl|;
+name|bool
+name|MakeUnsigned
 parameter_list|()
 function_decl|;
 specifier|static
@@ -1016,14 +1061,6 @@ return|return
 name|m_type
 return|;
 block|}
-name|void
-name|SetType
-parameter_list|(
-specifier|const
-name|RegisterInfo
-modifier|*
-parameter_list|)
-function_decl|;
 comment|//----------------------------------------------------------------------
 comment|// Returns a casted value of the current contained data without
 comment|// modifying the current value. FAIL_VALUE will be returned if the type
@@ -1039,28 +1076,6 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Return the raw unsigned integer without any casting or conversion
-name|unsigned
-name|int
-name|RawUInt
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Return the raw unsigned long without any casting or conversion
-name|unsigned
-name|long
-name|RawULong
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Return the raw unsigned long long without any casting or conversion
-name|unsigned
-name|long
-name|long
-name|RawULongLong
-argument_list|()
-specifier|const
-expr_stmt|;
 name|unsigned
 name|char
 name|UChar
@@ -1073,6 +1088,7 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+name|signed
 name|char
 name|SChar
 argument_list|(
@@ -1183,6 +1199,24 @@ argument|const llvm::APInt& fail_value
 argument_list|)
 specifier|const
 expr_stmt|;
+name|llvm
+operator|::
+name|APInt
+name|SInt256
+argument_list|(
+argument|llvm::APInt& fail_value
+argument_list|)
+specifier|const
+expr_stmt|;
+name|llvm
+operator|::
+name|APInt
+name|UInt256
+argument_list|(
+argument|const llvm::APInt& fail_value
+argument_list|)
+specifier|const
+expr_stmt|;
 name|float
 name|Float
 argument_list|(
@@ -1212,14 +1246,6 @@ name|double
 name|fail_value
 operator|=
 literal|0.0
-argument_list|)
-decl|const
-decl_stmt|;
-name|uint64_t
-name|GetRawBits64
-argument_list|(
-name|uint64_t
-name|fail_value
 argument_list|)
 decl|const
 decl_stmt|;

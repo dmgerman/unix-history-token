@@ -37,6 +37,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_comment
 comment|// This simple program is to test the lldb Python API SBValue.GetChildAtIndex().
 end_comment
@@ -152,6 +158,16 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|uint32_t
+name|uinthex
+init|=
+literal|0xE0A35F10
+decl_stmt|;
+name|int32_t
+name|sinthex
+init|=
+literal|0xE0A35F10
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;

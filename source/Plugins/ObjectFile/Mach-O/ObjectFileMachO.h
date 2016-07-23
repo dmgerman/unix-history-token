@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/ObjectFile.h"
 end_include
 
@@ -485,6 +479,11 @@ operator|&
 name|header
 argument_list|)
 block|;
+name|bool
+name|AllowAssemblyEmulationUnwindPlans
+argument_list|()
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
@@ -745,6 +744,12 @@ name|FileSpecList
 name|m_reexported_dylibs
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|m_allow_assembly_emulation_unwind_plans
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 unit|};

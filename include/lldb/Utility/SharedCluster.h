@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/SharingPtr.h"
+file|"lldb/Utility/LLDBAssert.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|"lldb/Utility/SharingPtr.h"
 end_include
 
 begin_include
@@ -161,9 +161,7 @@ literal|0
 argument_list|)
 block|,
 name|m_mutex
-argument_list|(
-argument|Mutex::eMutexTypeNormal
-argument_list|)
+argument_list|()
 block|{}
 operator|~
 name|ClusterManager
@@ -221,7 +219,7 @@ comment|// and it should have locked the mutex, now we will unlock it before
 comment|// we destroy it...
 name|m_mutex
 operator|.
-name|Unlock
+name|unlock
 argument_list|()
 expr_stmt|;
 block|}
@@ -231,10 +229,15 @@ argument_list|(
 argument|T *new_object
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -259,10 +262,15 @@ argument|T *desired_object
 argument_list|)
 block|{
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -270,16 +278,31 @@ block|;
 name|m_external_ref
 operator|++
 block|;
-name|assert
-argument_list|(
+if|if
+condition|(
+literal|0
+operator|==
 name|m_objects
 operator|.
 name|count
 argument_list|(
 name|desired_object
 argument_list|)
+condition|)
+block|{
+name|lldbassert
+argument_list|(
+name|false
+operator|&&
+literal|"object not found in shared cluster when expected"
 argument_list|)
-block|;         }
+expr_stmt|;
+name|desired_object
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+block|}
 return|return
 name|typename
 name|lldb_private
@@ -312,7 +335,7 @@ argument_list|()
 block|{
 name|m_mutex
 operator|.
-name|Lock
+name|lock
 argument_list|()
 block|;
 name|m_external_ref
@@ -330,7 +353,7 @@ decl_stmt|;
 else|else
 name|m_mutex
 operator|.
-name|Unlock
+name|unlock
 argument_list|()
 expr_stmt|;
 block|}
@@ -357,7 +380,9 @@ block|;
 name|int
 name|m_external_ref
 block|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
 block|; }
 expr_stmt|;

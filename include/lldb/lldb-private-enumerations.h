@@ -349,6 +349,9 @@ block|,
 name|eExecutionPolicyNever
 block|,
 name|eExecutionPolicyAlways
+block|,
+name|eExecutionPolicyTopLevel
+comment|// used for top-level code
 block|}
 name|ExecutionPolicy
 typedef|;

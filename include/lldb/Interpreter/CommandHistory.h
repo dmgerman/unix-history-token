@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -220,9 +220,11 @@ operator|>
 name|History
 expr_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|History
 name|m_history
 decl_stmt|;

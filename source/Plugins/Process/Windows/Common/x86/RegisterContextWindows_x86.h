@@ -124,7 +124,22 @@ argument_list|,
 argument|RegisterValue&reg_value
 argument_list|)
 name|override
-block|;  }
+block|;
+name|private
+operator|:
+name|bool
+name|ReadRegisterHelper
+argument_list|(
+argument|DWORD flags_required
+argument_list|,
+argument|const char *reg_name
+argument_list|,
+argument|DWORD value
+argument_list|,
+argument|RegisterValue&reg_value
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

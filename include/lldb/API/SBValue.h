@@ -327,6 +327,16 @@ name|bool
 name|IsSynthetic
 parameter_list|()
 function_decl|;
+name|bool
+name|IsSyntheticChildrenGenerated
+parameter_list|()
+function_decl|;
+name|void
+name|SetSyntheticChildrenGenerated
+parameter_list|(
+name|bool
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*

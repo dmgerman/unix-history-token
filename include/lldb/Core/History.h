@@ -60,6 +60,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stack>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -112,15 +112,11 @@ name|HistorySource
 argument_list|()
 operator|:
 name|m_mutex
-argument_list|(
-name|Mutex
-operator|::
-name|eMutexTypeRecursive
-argument_list|)
+argument_list|()
 operator|,
 name|m_events
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|HistorySource
@@ -222,9 +218,11 @@ name|HistoryEvent
 operator|>
 name|collection
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|collection
 name|m_events
 decl_stmt|;

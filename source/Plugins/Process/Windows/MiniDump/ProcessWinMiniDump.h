@@ -104,7 +104,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
@@ -137,7 +137,7 @@ name|ProcessWinMiniDump
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec&core_file
 argument_list|)
@@ -266,95 +266,17 @@ name|override
 block|;
 name|private
 operator|:
-comment|// Describes a range of memory captured in the mini dump.
-expr|struct
-name|Range
-block|{
-name|lldb
-operator|::
-name|addr_t
-name|start
-block|;
-comment|// virtual address of the beginning of the range
-name|size_t
-name|size
-block|;
-comment|// size of the range in bytes
-specifier|const
-name|uint8_t
-operator|*
-name|ptr
-block|;
-comment|// absolute pointer to the first byte of the range
-block|}
-block|;
-comment|// If the mini dump has a memory range that contains the desired address, it
-comment|// returns true with the details of the range in *range_out.  Otherwise, it
-comment|// returns false.
-name|bool
-name|FindMemoryRange
-argument_list|(
-argument|lldb::addr_t addr
-argument_list|,
-argument|Range *range_out
-argument_list|)
-specifier|const
-block|;
-name|lldb_private
-operator|::
-name|Error
-name|MapMiniDumpIntoMemory
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|file
-argument_list|)
-block|;
-name|lldb_private
-operator|::
-name|ArchSpec
-name|DetermineArchitecture
-argument_list|()
-block|;
-name|void
-name|ReadExceptionRecord
-argument_list|()
-block|;
-name|void
-name|ReadMiscInfo
-argument_list|()
-block|;
-name|void
-name|ReadModuleList
-argument_list|()
-block|;
-comment|// A thin wrapper around WinAPI's MiniDumpReadDumpStream to avoid redundant
-comment|// checks.  If there's a failure (e.g., if the requested stream doesn't exist),
-comment|// the function returns nullptr and sets *size_out to 0.
-name|void
-operator|*
-name|FindDumpStream
-argument_list|(
-argument|unsigned stream_number
-argument_list|,
-argument|size_t *size_out
-argument_list|)
-specifier|const
-block|;
-comment|// Isolate the data to keep Windows-specific types out of this header.  Can't
-comment|// use the typical pimpl idiom because the implementation of this class also
-comment|// needs access to public and protected members of the base class.
+comment|// Keep Windows-specific types out of this header.
 name|class
-name|Data
+name|Impl
 block|;
 name|std
 operator|::
 name|unique_ptr
 operator|<
-name|Data
+name|Impl
 operator|>
-name|m_data_up
+name|m_impl_up
 block|; }
 decl_stmt|;
 end_decl_stmt

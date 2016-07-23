@@ -63,6 +63,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -83,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/HostThread.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -749,9 +749,9 @@ name|Operation
 modifier|*
 name|m_operation
 decl_stmt|;
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|mutex
 name|m_operation_mutex
 expr_stmt|;
 comment|// semaphores notified when Operation is ready to be processed and when
@@ -1031,9 +1031,9 @@ specifier|static
 name|bool
 name|MonitorCallback
 argument_list|(
-name|void
+name|ProcessMonitor
 operator|*
-name|callback_baton
+name|monitor
 argument_list|,
 name|lldb
 operator|::

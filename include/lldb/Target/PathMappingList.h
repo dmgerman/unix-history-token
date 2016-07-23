@@ -363,6 +363,20 @@ name|new_path
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|ReverseRemapPath
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|path
+argument_list|,
+name|ConstString
+operator|&
+name|new_path
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Finds a source file given a file spec using the path remappings.
 comment|///

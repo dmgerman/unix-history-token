@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/StreamString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -132,9 +132,11 @@ decl_stmt|;
 name|collection
 name|m_accumulated_data
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_collection_mutex
-decl_stmt|;
+expr_stmt|;
 name|StreamString
 modifier|&
 name|FindStreamForThread

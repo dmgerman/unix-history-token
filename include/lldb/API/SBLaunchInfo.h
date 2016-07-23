@@ -299,7 +299,7 @@ name|void
 name|SetShellExpandArguments
 parameter_list|(
 name|bool
-name|glob
+name|expand
 parameter_list|)
 function_decl|;
 name|uint32_t

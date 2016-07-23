@@ -110,6 +110,24 @@ name|options
 parameter_list|)
 function_decl|;
 comment|// libcstdc++ c++11 std::wstring
+name|bool
+name|LibStdcppSmartPointerSummaryProvider
+parameter_list|(
+name|ValueObject
+modifier|&
+name|valobj
+parameter_list|,
+name|Stream
+modifier|&
+name|stream
+parameter_list|,
+specifier|const
+name|TypeSummaryOptions
+modifier|&
+name|options
+parameter_list|)
+function_decl|;
+comment|// libstdc++ std::shared_ptr<> and std::weak_ptr<>
 name|SyntheticChildrenFrontEnd
 modifier|*
 name|LibstdcppMapIteratorSyntheticFrontEndCreator
@@ -125,6 +143,18 @@ decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
 name|LibStdcppVectorIteratorSyntheticFrontEndCreator
+argument_list|(
+name|CXXSyntheticChildren
+operator|*
+argument_list|,
+name|lldb
+operator|::
+name|ValueObjectSP
+argument_list|)
+decl_stmt|;
+name|SyntheticChildrenFrontEnd
+modifier|*
+name|LibStdcppSharedPtrSyntheticFrontEndCreator
 argument_list|(
 name|CXXSyntheticChildren
 operator|*

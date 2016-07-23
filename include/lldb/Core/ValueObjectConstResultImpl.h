@@ -127,6 +127,8 @@ argument_list|,
 argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
+argument_list|,
+argument|ConstString name_const_str = ConstString()
 argument_list|)
 expr_stmt|;
 name|lldb

@@ -171,9 +171,6 @@ name|LanguageType
 name|wrapping_language
 argument_list|,
 name|bool
-name|const_object
-argument_list|,
-name|bool
 name|static_method
 argument_list|,
 name|ExecutionContext
@@ -181,6 +178,31 @@ operator|&
 name|exe_ctx
 argument_list|)
 decl|const
+decl_stmt|;
+comment|// Given a string returned by GetText, find the beginning and end of the body passed to CreateWrapped.
+comment|// Return true if the bounds could be found.  This will also work on text with FixItHints applied.
+specifier|static
+name|bool
+name|GetOriginalBodyBounds
+argument_list|(
+name|std
+operator|::
+name|string
+name|transformed_text
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|wrapping_language
+argument_list|,
+name|size_t
+operator|&
+name|start_loc
+argument_list|,
+name|size_t
+operator|&
+name|end_loc
+argument_list|)
 decl_stmt|;
 name|private
 label|:

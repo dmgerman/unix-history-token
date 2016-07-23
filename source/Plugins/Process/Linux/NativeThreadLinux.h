@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -158,13 +164,21 @@ operator|:
 comment|// ---------------------------------------------------------------------
 comment|// Interface for friend classes
 comment|// ---------------------------------------------------------------------
-name|void
-name|SetRunning
-argument_list|()
+comment|/// Resumes the thread.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+name|Error
+name|Resume
+argument_list|(
+argument|uint32_t signo
+argument_list|)
 block|;
-name|void
-name|SetStepping
-argument_list|()
+comment|/// Single steps the thread.  If @p signo is anything but
+comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
+name|Error
+name|SingleStep
+argument_list|(
+argument|uint32_t signo
+argument_list|)
 block|;
 name|void
 name|SetStoppedBySignal
@@ -232,6 +246,25 @@ argument_list|(
 argument|lldb::StateType new_state
 argument_list|)
 block|;
+name|NativeProcessLinux
+operator|&
+name|GetProcess
+argument_list|()
+block|;
+name|void
+name|SetStopped
+argument_list|()
+block|;
+specifier|inline
+name|void
+name|MaybePrepareSingleStepWorkaround
+argument_list|()
+block|;
+specifier|inline
+name|void
+name|MaybeCleanupSingleStepWorkaround
+argument_list|()
+block|;
 comment|// ---------------------------------------------------------------------
 comment|// Member Variables
 comment|// ---------------------------------------------------------------------
@@ -267,7 +300,12 @@ operator|>
 block|;
 name|WatchpointIndexMap
 name|m_watchpoint_index_map
-block|;     }
+block|;
+name|cpu_set_t
+name|m_original_cpu_set
+block|;
+comment|// For single-step workaround.
+block|}
 decl_stmt|;
 typedef|typedef
 name|std

@@ -227,15 +227,6 @@ argument|ArchSpec&arch
 argument_list|)
 name|override
 block|;
-name|size_t
-name|GetSoftwareBreakpointTrapOpcode
-argument_list|(
-argument|Target&target
-argument_list|,
-argument|BreakpointSite *bp_site
-argument_list|)
-name|override
-block|;
 name|int32_t
 name|GetResumeCountForLaunchInfo
 argument_list|(

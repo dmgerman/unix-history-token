@@ -157,7 +157,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec *
 argument_list|)
@@ -193,7 +193,7 @@ name|ProcessWindowsLive
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|)
 empty_stmt|;
 operator|~

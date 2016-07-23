@@ -117,6 +117,23 @@ argument|StringList&matches
 argument_list|)
 name|override
 block|;
+specifier|static
+name|void
+name|GenerateAdditionalHelpAvenuesMessage
+argument_list|(
+argument|Stream *s
+argument_list|,
+argument|const char* command
+argument_list|,
+argument|const char* prefix = nullptr
+argument_list|,
+argument|const char* subcommand = nullptr
+argument_list|,
+argument|bool include_apropos = true
+argument_list|,
+argument|bool include_type_lookup = true
+argument_list|)
+block|;
 name|class
 name|CommandOptions
 operator|:

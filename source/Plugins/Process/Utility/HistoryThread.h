@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -314,7 +314,9 @@ name|GetStackFrameList
 argument_list|()
 block|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_framelist_mutex
 block|;
 name|lldb

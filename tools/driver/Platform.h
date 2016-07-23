@@ -52,16 +52,6 @@ name|_WIN32
 argument_list|)
 end_if
 
-begin_comment
-comment|// this will stop signal.h being included
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_INC_SIGNAL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -87,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<eh.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_endif
@@ -161,56 +157,6 @@ define|#
 directive|define
 name|TIOCGWINSZ
 value|0x5413
-end_define
-
-begin_comment
-comment|// signal handler function pointer type
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|sighandler_t
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|// signal.h
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGINT
-value|2
-end_define
-
-begin_comment
-comment|// default handler
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|( (sighandler_t) -1 )
-end_define
-
-begin_comment
-comment|// ignored
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|( (sighandler_t) -2 )
 end_define
 
 begin_comment
@@ -339,19 +285,6 @@ directive|define
 name|snprintf
 value|_snprintf
 end_define
-
-begin_function_decl
-specifier|extern
-name|sighandler_t
-name|signal
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|sighandler_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#

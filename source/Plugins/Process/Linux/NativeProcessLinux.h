@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/MemoryRegionInfo.h"
 end_include
 
@@ -117,9 +111,6 @@ name|lldb_private
 block|{
 name|class
 name|Error
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 name|class
 name|Scalar
@@ -366,6 +357,11 @@ argument_list|,
 argument|long *result = nullptr
 argument_list|)
 block|;
+name|bool
+name|SupportHardwareSingleStepping
+argument_list|()
+specifier|const
+block|;
 name|protected
 operator|:
 comment|// ---------------------------------------------------------------------
@@ -403,9 +399,6 @@ name|MemoryRegionInfo
 operator|>
 name|m_mem_region_cache
 block|;
-name|Mutex
-name|m_mem_region_cache_mutex
-block|;
 name|lldb
 operator|::
 name|tid_t
@@ -427,213 +420,36 @@ name|addr_t
 operator|>
 name|m_threads_stepping_with_breakpoint
 block|;
-comment|/// @class LauchArgs
-comment|///
-comment|/// @brief Simple structure to pass data to the thread responsible for
-comment|/// launching a child process.
-block|struct
-name|LaunchArgs
-block|{
-name|LaunchArgs
-argument_list|(
-name|Module
-operator|*
-name|module
-argument_list|,
-name|char
-specifier|const
-operator|*
-operator|*
-name|argv
-argument_list|,
-name|char
-specifier|const
-operator|*
-operator|*
-name|envp
-argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|stdin_file_spec
-argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|stdout_file_spec
-argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|stderr_file_spec
-argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|working_dir
-argument_list|,
-specifier|const
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
-argument_list|)
-block|;
-operator|~
-name|LaunchArgs
-argument_list|()
-block|;
-name|Module
-operator|*
-name|m_module
-block|;
-comment|// The executable image to launch.
-name|char
-specifier|const
-operator|*
-operator|*
-name|m_argv
-block|;
-comment|// Process arguments.
-name|char
-specifier|const
-operator|*
-operator|*
-name|m_envp
-block|;
-comment|// Process environment.
-specifier|const
-name|FileSpec
-name|m_stdin_file_spec
-block|;
-comment|// Redirect stdin if not empty.
-specifier|const
-name|FileSpec
-name|m_stdout_file_spec
-block|;
-comment|// Redirect stdout if not empty.
-specifier|const
-name|FileSpec
-name|m_stderr_file_spec
-block|;
-comment|// Redirect stderr if not empty.
-specifier|const
-name|FileSpec
-name|m_working_dir
-block|;
-comment|// Working directory or empty.
-specifier|const
-name|ProcessLaunchInfo
-operator|&
-name|m_launch_info
-block|;         }
-block|;
-typedef|typedef
-name|std
-operator|::
-name|function
-operator|<
-operator|::
-name|pid_t
-argument_list|(
-name|Error
-operator|&
-argument_list|)
-operator|>
-name|InitialOperation
-expr_stmt|;
 comment|// ---------------------------------------------------------------------
 comment|// Private Instance Methods
 comment|// ---------------------------------------------------------------------
 name|NativeProcessLinux
 argument_list|()
-decl_stmt|;
-comment|/// Launches an inferior process ready for debugging.  Forms the
-comment|/// implementation of Process::DoLaunch.
-name|void
-name|LaunchInferior
-parameter_list|(
-name|MainLoop
-modifier|&
-name|mainloop
-parameter_list|,
-name|Module
-modifier|*
-name|module
-parameter_list|,
-name|char
-specifier|const
-modifier|*
-name|argv
-index|[]
-parameter_list|,
-name|char
-specifier|const
-modifier|*
-name|envp
-index|[]
-parameter_list|,
-specifier|const
-name|FileSpec
-modifier|&
-name|stdin_file_spec
-parameter_list|,
-specifier|const
-name|FileSpec
-modifier|&
-name|stdout_file_spec
-parameter_list|,
-specifier|const
-name|FileSpec
-modifier|&
-name|stderr_file_spec
-parameter_list|,
-specifier|const
-name|FileSpec
-modifier|&
-name|working_dir
-parameter_list|,
-specifier|const
-name|ProcessLaunchInfo
-modifier|&
-name|launch_info
-parameter_list|,
+block|;
 name|Error
-modifier|&
-name|error
-parameter_list|)
-function_decl|;
+name|LaunchInferior
+argument_list|(
+name|MainLoop
+operator|&
+name|mainloop
+argument_list|,
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|)
+block|;
 comment|/// Attaches to an existing process.  Forms the
 comment|/// implementation of Process::DoAttach
 name|void
 name|AttachToInferior
 argument_list|(
-name|MainLoop
-operator|&
-name|mainloop
+argument|MainLoop&mainloop
 argument_list|,
-name|lldb
-operator|::
-name|pid_t
-name|pid
+argument|lldb::pid_t pid
 argument_list|,
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
-decl_stmt|;
-operator|::
-name|pid_t
-name|Launch
-argument_list|(
-name|LaunchArgs
-operator|*
-name|args
-argument_list|,
-name|Error
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
+block|;
 operator|::
 name|pid_t
 name|Attach
@@ -642,7 +458,15 @@ argument|lldb::pid_t pid
 argument_list|,
 argument|Error&error
 argument_list|)
-expr_stmt|;
+block|;
+specifier|static
+name|void
+name|ChildFunc
+argument_list|(
+argument|const ProcessLaunchInfo&launch_info
+argument_list|)
+name|LLVM_ATTRIBUTE_NORETURN
+block|;
 specifier|static
 name|Error
 name|SetDefaultPtraceOpts
@@ -652,128 +476,101 @@ name|lldb
 operator|::
 name|pid_t
 argument_list|)
-decl_stmt|;
+block|;
 specifier|static
 name|bool
 name|DupDescriptor
-parameter_list|(
-specifier|const
-name|FileSpec
-modifier|&
-name|file_spec
-parameter_list|,
-name|int
-name|fd
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const FileSpec&file_spec
+argument_list|,
+argument|int fd
+argument_list|,
+argument|int flags
+argument_list|)
+block|;
 specifier|static
 name|void
-modifier|*
+operator|*
 name|MonitorThread
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|baton
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|MonitorCallback
 argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
+argument|lldb::pid_t pid
 argument_list|,
-name|bool
-name|exited
+argument|bool exited
 argument_list|,
-name|int
-name|signal
+argument|int signal
 argument_list|,
-name|int
-name|status
+argument|int status
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|WaitForNewThread
 argument_list|(
-operator|::
-name|pid_t
-name|tid
+argument|::pid_t tid
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|MonitorSIGTRAP
-parameter_list|(
+argument_list|(
 specifier|const
 name|siginfo_t
-modifier|&
+operator|&
 name|info
-parameter_list|,
+argument_list|,
 name|NativeThreadLinux
-modifier|&
+operator|&
 name|thread
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|MonitorTrace
-parameter_list|(
+argument_list|(
 name|NativeThreadLinux
-modifier|&
+operator|&
 name|thread
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|MonitorBreakpoint
-parameter_list|(
+argument_list|(
 name|NativeThreadLinux
-modifier|&
+operator|&
 name|thread
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|MonitorWatchpoint
-parameter_list|(
-name|NativeThreadLinux
-modifier|&
-name|thread
-parameter_list|,
-name|uint32_t
-name|wp_index
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|NativeThreadLinux&thread
+argument_list|,
+argument|uint32_t wp_index
+argument_list|)
+block|;
 name|void
 name|MonitorSignal
-parameter_list|(
-specifier|const
-name|siginfo_t
-modifier|&
-name|info
-parameter_list|,
-name|NativeThreadLinux
-modifier|&
-name|thread
-parameter_list|,
-name|bool
-name|exited
-parameter_list|)
-function_decl|;
-name|bool
-name|SupportHardwareSingleStepping
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+argument|const siginfo_t&info
+argument_list|,
+argument|NativeThreadLinux&thread
+argument_list|,
+argument|bool exited
+argument_list|)
+block|;
 name|Error
 name|SetupSoftwareSingleStepping
-parameter_list|(
+argument_list|(
 name|NativeThreadLinux
-modifier|&
+operator|&
 name|thread
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 if|#
 directive|if
 literal|0
@@ -783,182 +580,115 @@ directive|endif
 name|bool
 name|HasThreadNoLock
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|thread_id
+argument|lldb::tid_t thread_id
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|StopTrackingThread
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|thread_id
+argument|lldb::tid_t thread_id
 argument_list|)
-decl_stmt|;
+block|;
 name|NativeThreadLinuxSP
 name|AddThread
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|thread_id
+argument|lldb::tid_t thread_id
 argument_list|)
-decl_stmt|;
+block|;
 name|Error
 name|GetSoftwareBreakpointPCOffset
-parameter_list|(
+argument_list|(
 name|uint32_t
-modifier|&
+operator|&
 name|actual_opcode_size
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|Error
 name|FixupBreakpointPCAsNeeded
-parameter_list|(
+argument_list|(
 name|NativeThreadLinux
-modifier|&
+operator|&
 name|thread
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Writes a siginfo_t structure corresponding to the given thread ID to the
 comment|/// memory region pointed to by @p siginfo.
 name|Error
 name|GetSignalInfo
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|,
-name|void
-operator|*
-name|siginfo
+argument|void *siginfo
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
 comment|/// corresponding to the given thread ID to the memory pointed to by @p
 comment|/// message.
 name|Error
 name|GetEventMessage
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|,
-name|unsigned
-name|long
-operator|*
-name|message
+argument|unsigned long *message
 argument_list|)
-decl_stmt|;
-comment|/// Resumes the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
-name|Error
-name|Resume
-argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
-argument_list|,
-name|uint32_t
-name|signo
-argument_list|)
-decl_stmt|;
-comment|/// Single steps the given thread.  If @p signo is anything but
-comment|/// LLDB_INVALID_SIGNAL_NUMBER, deliver that signal to the thread.
-name|Error
-name|SingleStep
-argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
-argument_list|,
-name|uint32_t
-name|signo
-argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|NotifyThreadDeath
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|)
-decl_stmt|;
+block|;
 name|Error
 name|Detach
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|tid
+argument|lldb::tid_t tid
 argument_list|)
-decl_stmt|;
+block|;
 comment|// This method is requests a stop on all threads which are still running. It sets up a
 comment|// deferred delegate notification, which will fire once threads report as stopped. The
 comment|// triggerring_tid will be set as the current thread (main stop reason).
 name|void
 name|StopRunningThreads
 argument_list|(
-name|lldb
-operator|::
-name|tid_t
-name|triggering_tid
+argument|lldb::tid_t triggering_tid
 argument_list|)
-decl_stmt|;
+block|;
 comment|// Notify the delegate if all threads have stopped.
 name|void
 name|SignalIfAllThreadsStopped
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// Resume the given thread, optionally passing it the given signal. The type of resume
 comment|// operation (continue, single-step) depends on the state parameter.
 name|Error
 name|ResumeThread
 argument_list|(
+argument|NativeThreadLinux&thread
+argument_list|,
+argument|lldb::StateType state
+argument_list|,
+argument|int signo
+argument_list|)
+block|;
+name|void
+name|ThreadWasCreated
+argument_list|(
 name|NativeThreadLinux
 operator|&
 name|thread
-argument_list|,
-name|lldb
-operator|::
-name|StateType
-name|state
-argument_list|,
-name|int
-name|signo
 argument_list|)
-decl_stmt|;
-name|void
-name|ThreadWasCreated
-parameter_list|(
-name|NativeThreadLinux
-modifier|&
-name|thread
-parameter_list|)
-function_decl|;
+block|;
 name|void
 name|SigchldHandler
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;     }
+decl_stmt|;
 block|}
-empty_stmt|;
+comment|// namespace process_linux
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace process_linux
-end_comment
-
-begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

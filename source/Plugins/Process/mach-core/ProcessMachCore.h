@@ -113,7 +113,7 @@ name|ProcessMachCore
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener
 argument_list|,
 argument|const lldb_private::FileSpec&core_file
 argument_list|)
@@ -131,7 +131,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener
 argument_list|,
 argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
@@ -263,6 +263,17 @@ argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
+name|lldb_private
+operator|::
+name|Error
+name|GetMemoryRegionInfo
+argument_list|(
+argument|lldb::addr_t load_addr
+argument_list|,
+argument|lldb_private::MemoryRegionInfo&region_info
+argument_list|)
+name|override
+block|;
 name|lldb
 operator|::
 name|addr_t
@@ -320,7 +331,7 @@ comment|/// which style wins.
 comment|///
 comment|/// If a core file contains both a kernel binary and a user-process
 comment|/// dynamic loader, lldb needs to pick one over the other.  This could
-comment|/// be a kernel corefile that happens to have a coyp of dyld in its
+comment|/// be a kernel corefile that happens to have a copy of dyld in its
 comment|/// memory.  Or it could be a user process coredump of lldb while doing
 comment|/// kernel debugging - so a copy of the kernel is in its heap.  This
 comment|/// should become a setting so it can be over-ridden when necessary.
@@ -359,8 +370,28 @@ name|FileRange
 operator|>
 name|VMRangeToFileOffset
 expr_stmt|;
+typedef|typedef
+name|lldb_private
+operator|::
+name|RangeDataVector
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|uint32_t
+operator|>
+name|VMRangeToPermissions
+expr_stmt|;
 name|VMRangeToFileOffset
 name|m_core_aranges
+block|;
+name|VMRangeToPermissions
+name|m_core_range_infos
 block|;
 name|lldb
 decl|::

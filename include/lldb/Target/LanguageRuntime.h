@@ -107,6 +107,18 @@ directive|include
 file|"lldb/Target/ExecutionContextScope.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Expression/LLVMUserExpression.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TargetOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -389,6 +401,33 @@ argument_list|(
 argument|const ModuleList&module_list
 argument_list|)
 block|{     }
+comment|// Called by the Clang expression evaluation engine to allow runtimes to alter the set of target options provided to
+comment|// the compiler.
+comment|// If the options prototype is modified, runtimes must return true, false otherwise.
+name|virtual
+name|bool
+name|GetOverrideExprOptions
+argument_list|(
+argument|clang::TargetOptions&prototype
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Called by ClangExpressionParser::PrepareForExecution to query for any custom LLVM IR passes
+comment|// that need to be run before an expression is assembled and run.
+name|virtual
+name|bool
+name|GetIRPasses
+argument_list|(
+argument|LLVMUserExpression::IRPasses&custom_passes
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"Plugins/Platform/Linux/PlatformLinux.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AdbClient.h"
 end_include
 
 begin_decl_stmt
@@ -244,6 +256,27 @@ name|override
 block|;
 name|private
 operator|:
+name|AdbClient
+operator|::
+name|SyncService
+operator|*
+name|GetSyncService
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|AdbClient
+operator|::
+name|SyncService
+operator|>
+name|m_adb_sync_svc
+block|;
 name|std
 operator|::
 name|string

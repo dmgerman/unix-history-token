@@ -725,7 +725,12 @@ comment|// A collection of stack frame register values
 name|eValueTypeConstResult
 init|=
 literal|7
+block|,
 comment|// constant result variables
+name|eValueTypeVariableThreadLocal
+init|=
+literal|8
+comment|// thread local storage variable
 block|}
 enum|;
 comment|//----------------------------------------------------------------------
@@ -1103,7 +1108,7 @@ comment|/// Programming language type.
 comment|///
 comment|/// These enumerations use the same language enumerations as the DWARF
 comment|/// specification for ease of use and consistency.
-comment|/// The enum -> string code is in LanguageRuntime.cpp, don't change this
+comment|/// The enum -> string code is in Language.cpp, don't change this
 comment|/// table without updating that code as well.
 comment|//----------------------------------------------------------------------
 enum|enum
@@ -1316,6 +1321,10 @@ name|eInstrumentationRuntimeTypeAddressSanitizer
 init|=
 literal|0x0000
 block|,
+name|eInstrumentationRuntimeTypeThreadSanitizer
+init|=
+literal|0x0001
+block|,
 name|eNumInstrumentationRuntimeTypes
 block|}
 enum|;
@@ -1520,6 +1529,8 @@ name|eArgTypeWatchpointIDRange
 block|,
 name|eArgTypeWatchType
 block|,
+name|eArgRawInput
+block|,
 name|eArgTypeLastArg
 comment|// Always keep this entry as the last entry in this enumeration!!
 block|}
@@ -1694,6 +1705,9 @@ block|,
 comment|// compact unwind section in Mach-O, __TEXT,__unwind_info
 name|eSectionTypeGoSymtab
 block|,
+name|eSectionTypeAbsoluteAddress
+block|,
+comment|// Dummy section for symbols with absolute address
 name|eSectionTypeOther
 block|}
 enum|;

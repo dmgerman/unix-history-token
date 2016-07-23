@@ -208,9 +208,33 @@ name|eLoadScriptFromSymFileWarn
 block|}
 name|LoadScriptFromSymFile
 typedef|;
+typedef|typedef
+enum|enum
+name|LoadCWDlldbinitFile
+block|{
+name|eLoadCWDlldbinitTrue
+block|,
+name|eLoadCWDlldbinitFalse
+block|,
+name|eLoadCWDlldbinitWarn
+block|}
+name|LoadCWDlldbinitFile
+typedef|;
 comment|//----------------------------------------------------------------------
 comment|// TargetProperties
 comment|//----------------------------------------------------------------------
+name|class
+name|TargetExperimentalProperties
+range|:
+name|public
+name|Properties
+block|{
+name|public
+operator|:
+name|TargetExperimentalProperties
+argument_list|()
+block|; }
+decl_stmt|;
 name|class
 name|TargetProperties
 range|:
@@ -390,6 +414,16 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|GetEnableAutoApplyFixIts
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|GetEnableNotifyAboutFixIts
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|GetEnableSyntheticValue
 argument_list|()
 specifier|const
@@ -488,6 +522,11 @@ name|GetLoadScriptFromSymbolFile
 argument_list|()
 specifier|const
 block|;
+name|LoadCWDlldbinitFile
+name|GetLoadCWDlldbinitFile
+argument_list|()
+specifier|const
+block|;
 name|Disassembler
 operator|::
 name|HexImmediateStyle
@@ -551,6 +590,21 @@ specifier|const
 name|ProcessLaunchInfo
 operator|&
 name|launch_info
+argument_list|)
+block|;
+name|bool
+name|GetInjectLocalVariables
+argument_list|(
+argument|ExecutionContext *exe_ctx
+argument_list|)
+specifier|const
+block|;
+name|void
+name|SetInjectLocalVariables
+argument_list|(
+argument|ExecutionContext *exe_ctx
+argument_list|,
+argument|bool b
 argument_list|)
 block|;
 name|private
@@ -683,6 +737,14 @@ comment|// Member variables.
 comment|//------------------------------------------------------------------
 name|ProcessLaunchInfo
 name|m_launch_info
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TargetExperimentalProperties
+operator|>
+name|m_experimental_properties_up
 block|; }
 decl_stmt|;
 name|class
@@ -697,12 +759,19 @@ name|default_timeout
 init|=
 literal|500000
 decl_stmt|;
+specifier|static
+specifier|const
+name|ExecutionPolicy
+name|default_execution_policy
+init|=
+name|eExecutionPolicyOnlyWhenNeeded
+decl_stmt|;
 name|EvaluateExpressionOptions
 argument_list|()
 operator|:
 name|m_execution_policy
 argument_list|(
-name|eExecutionPolicyOnlyWhenNeeded
+name|default_execution_policy
 argument_list|)
 operator|,
 name|m_language
@@ -764,6 +833,11 @@ operator|,
 name|m_result_is_internal
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|m_auto_apply_fixits
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|m_use_dynamic
@@ -1370,6 +1444,27 @@ return|return
 name|m_result_is_internal
 return|;
 block|}
+name|void
+name|SetAutoApplyFixIts
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_auto_apply_fixits
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|GetAutoApplyFixIts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_auto_apply_fixits
+return|;
+block|}
 name|private
 label|:
 name|ExecutionPolicy
@@ -1420,6 +1515,9 @@ name|m_ansi_color_errors
 decl_stmt|;
 name|bool
 name|m_result_is_internal
+decl_stmt|;
+name|bool
+name|m_auto_apply_fixits
 decl_stmt|;
 name|lldb
 operator|::
@@ -1774,10 +1872,12 @@ operator|&
 name|GetGlobalProperties
 argument_list|()
 expr_stmt|;
-name|Mutex
-modifier|&
+name|std
+operator|::
+name|recursive_mutex
+operator|&
 name|GetAPIMutex
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_mutex
@@ -1823,19 +1923,11 @@ name|ProcessSP
 operator|&
 name|CreateProcess
 argument_list|(
-name|Listener
-operator|&
-name|listener
+argument|lldb::ListenerSP listener
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|plugin_name
+argument|const char *plugin_name
 argument_list|,
-specifier|const
-name|FileSpec
-operator|*
-name|crash_file
+argument|const FileSpec *crash_file
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1940,6 +2032,8 @@ argument|const FileSpec&file
 argument_list|,
 argument|uint32_t line_no
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|LazyBool check_inlines
 argument_list|,
 argument|LazyBool skip_prologue
@@ -1952,6 +2046,7 @@ argument|LazyBool move_to_nearest_code
 argument_list|)
 expr_stmt|;
 comment|// Use this to create breakpoint that matches regex against the source lines in files given in source_file_list:
+comment|// If function_names is non-empty, also filter by function after the matches are made.
 name|lldb
 operator|::
 name|BreakpointSP
@@ -1960,6 +2055,8 @@ argument_list|(
 argument|const FileSpecList *containingModules
 argument_list|,
 argument|const FileSpecList *source_file_list
+argument_list|,
+argument|const std::unordered_set<std::string>&function_names
 argument_list|,
 argument|RegularExpression&source_regex
 argument_list|,
@@ -2053,6 +2150,8 @@ argument|uint32_t func_name_type_mask
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
 argument|bool internal
@@ -2099,6 +2198,8 @@ argument|uint32_t func_name_type_mask
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
 argument|bool internal
@@ -2120,6 +2221,8 @@ argument_list|,
 argument|uint32_t func_name_type_mask
 argument_list|,
 argument|lldb::LanguageType language
+argument_list|,
+argument|lldb::addr_t m_offset
 argument_list|,
 argument|LazyBool skip_prologue
 argument_list|,
@@ -3225,6 +3328,14 @@ name|options
 operator|=
 name|EvaluateExpressionOptions
 argument_list|()
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|fixed_expression
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -3771,9 +3882,11 @@ name|PlatformSP
 name|m_platform_sp
 expr_stmt|;
 comment|///< The platform for this target.
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< An API mutex that is used by the lldb::SB* classes make the SB interface thread safe
 name|ArchSpec
 name|m_arch

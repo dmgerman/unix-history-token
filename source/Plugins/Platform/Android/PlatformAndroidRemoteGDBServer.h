@@ -143,15 +143,6 @@ argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
-name|size_t
-name|ConnectToWaitingProcesses
-argument_list|(
-argument|lldb_private::Debugger& debugger
-argument_list|,
-argument|lldb_private::Error& error
-argument_list|)
-name|override
-block|;
 name|protected
 operator|:
 name|std

@@ -743,6 +743,24 @@ operator|=
 name|b
 expr_stmt|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the permissions as OR'ed bits from lldb::Permissions
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetPermissions
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Set the permissions using bits OR'ed from lldb::Permissions
+comment|//------------------------------------------------------------------
+name|void
+name|SetPermissions
+parameter_list|(
+name|uint32_t
+name|permissions
+parameter_list|)
+function_decl|;
 name|ObjectFile
 modifier|*
 name|GetObjectFile
@@ -922,8 +940,23 @@ comment|// Set to true if the contents are encrypted
 name|m_thread_specific
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|// This section is thread specific
+name|m_readable
+range|:
+literal|1
+decl_stmt|,
+comment|// If this section has read permissions
+name|m_writable
+range|:
+literal|1
+decl_stmt|,
+comment|// If this section has write permissions
+name|m_executable
+range|:
+literal|1
+decl_stmt|;
+comment|// If this section has executable permissions
 name|uint32_t
 name|m_target_byte_size
 decl_stmt|;

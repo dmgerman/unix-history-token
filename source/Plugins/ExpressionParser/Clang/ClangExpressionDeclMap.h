@@ -453,34 +453,6 @@ name|ptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// [Used by IRForTarget] Get the address of a function given nothing
-comment|/// but its name.  Some functions are needed but didn't get Decls made
-comment|/// during parsing -- specifically, sel_registerName is never called
-comment|/// in the generated IR but we need to call it nonetheless.
-comment|///
-comment|/// @param[in] name
-comment|///     The name of the function.
-comment|///
-comment|/// @param[out] ptr
-comment|///     The absolute address of the function in the target.
-comment|///
-comment|/// @return
-comment|///     True if the address could be retrieved; false otherwise.
-comment|//------------------------------------------------------------------
-name|bool
-name|GetFunctionAddress
-argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|name
-argument_list|,
-name|uint64_t
-operator|&
-name|ptr
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// [Used by IRForTarget] Get the address of a symbol given nothing
 comment|/// but its name.
 comment|///
@@ -1240,6 +1212,11 @@ argument|TypeFromUser&type
 argument_list|,
 argument|unsigned int current_id
 argument_list|)
+block|;
+name|ClangASTContext
+operator|*
+name|GetClangASTContext
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

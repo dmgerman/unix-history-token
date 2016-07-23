@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -96,10 +96,8 @@ name|thread
 argument_list|)
 operator|,
 name|m_unwind_mutex
-argument_list|(
-argument|Mutex::eMutexTypeRecursive
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 name|public
 operator|:
 name|virtual
@@ -111,25 +109,35 @@ name|void
 name|Clear
 argument_list|()
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_unwind_mutex
 argument_list|)
 block|;
 name|DoClear
 argument_list|()
-block|;          }
+block|;     }
 name|uint32_t
 name|GetFrameCount
 argument_list|()
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_unwind_mutex
 argument_list|)
@@ -212,10 +220,15 @@ operator|&
 name|pc
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_unwind_mutex
 argument_list|)
@@ -239,10 +252,15 @@ argument_list|(
 argument|StackFrame *frame
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_unwind_mutex
 argument_list|)
@@ -321,9 +339,11 @@ name|Thread
 modifier|&
 name|m_thread
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_unwind_mutex
-decl_stmt|;
+expr_stmt|;
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

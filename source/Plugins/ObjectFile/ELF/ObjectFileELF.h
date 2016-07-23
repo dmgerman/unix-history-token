@@ -60,6 +60,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -188,7 +194,7 @@ literal|12
 operator|+
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|n_namesz
 argument_list|,
@@ -197,7 +203,7 @@ argument_list|)
 operator|+
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|n_descsz
 argument_list|,
@@ -409,18 +415,6 @@ name|Symtab
 operator|*
 name|GetSymtab
 argument_list|()
-name|override
-block|;
-name|lldb_private
-operator|::
-name|Symbol
-operator|*
-name|ResolveSymbolForAddress
-argument_list|(
-argument|const lldb_private::Address& so_addr
-argument_list|,
-argument|bool verify_unique
-argument_list|)
 name|override
 block|;
 name|bool
@@ -691,6 +685,34 @@ name|FileAddressToAddressClassMap
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|lldb
+operator|::
+name|offset_t
+argument_list|(
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+argument_list|)
+operator|>
+name|SetDataFunction
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/// Version of this reader common to all plugins based on this class.
 end_comment
@@ -887,11 +909,10 @@ name|ProgramHeaderColl
 operator|&
 name|program_headers
 argument_list|,
-name|lldb_private
-operator|::
-name|DataExtractor
+specifier|const
+name|SetDataFunction
 operator|&
-name|data
+name|set_data
 argument_list|,
 specifier|const
 name|elf
@@ -964,6 +985,29 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|void
+name|ParseARMAttributes
+argument_list|(
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|,
+name|uint64_t
+name|length
+argument_list|,
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch_spec
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// Parses the elf section headers and returns the uuid, debug link name, crc, archspec.
 end_comment
@@ -977,11 +1021,10 @@ name|SectionHeaderColl
 operator|&
 name|section_headers
 argument_list|,
-name|lldb_private
-operator|::
-name|DataExtractor
+specifier|const
+name|SetDataFunction
 operator|&
-name|data
+name|set_data
 argument_list|,
 specifier|const
 name|elf
@@ -1171,6 +1214,25 @@ name|lldb
 operator|::
 name|user_id_t
 name|section_id
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ParseUnwindSymbols
+argument_list|(
+name|lldb_private
+operator|::
+name|Symtab
+operator|*
+name|symbol_table
+argument_list|,
+name|lldb_private
+operator|::
+name|DWARFCallFrameInfo
+operator|*
+name|eh_frame
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1638,6 +1700,39 @@ operator|::
 name|UUID
 operator|&
 name|uuid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|lldb
+operator|::
+name|offset_t
+name|SetData
+argument_list|(
+argument|const lldb_private::DataExtractor&src
+argument_list|,
+argument|lldb_private::DataExtractor&dst
+argument_list|,
+argument|lldb::offset_t offset
+argument_list|,
+argument|lldb::offset_t length
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|offset_t
+name|SetDataWithReadMemoryFallback
+argument_list|(
+argument|lldb_private::DataExtractor&dst
+argument_list|,
+argument|lldb::offset_t offset
+argument_list|,
+argument|lldb::offset_t length
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -57,6 +57,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|// On some OS's (darwin) you must actually access a thread local variable
+end_comment
+
+begin_comment
+comment|// before you can read it
+end_comment
+
+begin_function_decl
+name|int
+name|touch_shared
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Create some TLS storage within the static executable.
 end_comment
 
@@ -135,17 +150,23 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|touch_shared
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
+name|var_static
 condition|;
 control|)
+block|{
 name|usleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 comment|// main breakpoint
+block|}
 return|return
 literal|0
 return|;

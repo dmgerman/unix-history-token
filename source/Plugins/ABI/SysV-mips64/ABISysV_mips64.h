@@ -165,6 +165,13 @@ argument|const lldb_private::RegisterInfo *reg_info
 argument_list|)
 name|override
 block|;
+name|bool
+name|IsSoftFloat
+argument_list|(
+argument|uint32_t fp_flag
+argument_list|)
+specifier|const
+block|;
 comment|// The SysV mips ABI requires that stack frames be 16 byte aligned.
 comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
 comment|// code, we've seen that the stack pointer is often not aligned properly

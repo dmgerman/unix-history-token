@@ -116,16 +116,14 @@ name|IsRunning
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|HostThread
 name|StartMonitoring
 argument_list|(
-argument|HostProcess::MonitorCallback callback
-argument_list|,
-argument|void *callback_baton
+argument|const Host::MonitorChildProcessCallback&callback
 argument_list|,
 argument|bool monitor_signals
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

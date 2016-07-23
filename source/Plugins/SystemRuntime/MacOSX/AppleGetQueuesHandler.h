@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -320,17 +320,21 @@ name|UtilityFunction
 operator|>
 name|m_get_queues_impl_code_up
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_get_queues_function_mutex
-decl_stmt|;
+expr_stmt|;
 name|lldb
 operator|::
 name|addr_t
 name|m_get_queues_return_buffer_addr
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_get_queues_retbuffer_mutex
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
