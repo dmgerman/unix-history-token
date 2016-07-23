@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -113,9 +119,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|runOnFile
 argument_list|(
 argument|SimpleFile&file
@@ -136,9 +142,9 @@ name|_passes
 control|)
 if|if
 condition|(
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|EC
 operator|=
 name|pass
@@ -152,9 +158,9 @@ return|return
 name|EC
 return|;
 return|return
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 argument_list|()
 return|;
 block|}

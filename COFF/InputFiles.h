@@ -58,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/LTO/LTOModule.h"
+file|"llvm/IR/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/LTO/legacy/LTOModule.h"
 end_include
 
 begin_include
@@ -430,7 +436,7 @@ name|override
 block|{
 name|llvm_unreachable
 argument_list|(
-literal|"internal error"
+literal|"internal fatal"
 argument_list|)
 block|;   }
 name|private
@@ -625,15 +631,6 @@ operator|*
 name|createUndefined
 argument_list|(
 argument|COFFSymbolRef Sym
-argument_list|)
-block|;
-name|Undefined
-operator|*
-name|createWeakExternal
-argument_list|(
-argument|COFFSymbolRef Sym
-argument_list|,
-argument|const void *Aux
 argument_list|)
 block|;
 name|std
@@ -892,6 +889,12 @@ name|M
 argument_list|)
 return|;
 block|}
+specifier|static
+name|llvm
+operator|::
+name|LLVMContext
+name|Context
+block|;
 name|private
 operator|:
 name|void

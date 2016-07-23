@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lld/Core/range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -269,144 +263,7 @@ argument_list|)
 block|;   }
 block|}
 empty_stmt|;
-comment|/// \brief An implementation of future. std::future and std::promise in
-comment|/// old libstdc++ have a threading bug; there is a small chance that a
-comment|/// call of future::get throws an exception in the normal use case.
-comment|/// We want to use our own future implementation until we drop support
-comment|/// of old versions of libstdc++.
-comment|/// https://gcc.gnu.org/ml/gcc-patches/2014-05/msg01389.html
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|Future
-block|{
-name|public
-operator|:
-name|Future
-argument_list|()
-operator|:
-name|_hasValue
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|void
-name|set
-argument_list|(
-argument|T&&val
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|_hasValue
-argument_list|)
-block|;
-block|{
-name|std
-operator|::
-name|unique_lock
-operator|<
-name|std
-operator|::
-name|mutex
-operator|>
-name|lock
-argument_list|(
-name|_mutex
-argument_list|)
-block|;
-name|_val
-operator|=
-name|val
-block|;
-name|_hasValue
-operator|=
-name|true
-block|;     }
-name|_cond
-operator|.
-name|notify_all
-argument_list|()
-block|;   }
-name|T
-operator|&
-name|get
-argument_list|()
-block|{
-name|std
-operator|::
-name|unique_lock
-operator|<
-name|std
-operator|::
-name|mutex
-operator|>
-name|lock
-argument_list|(
-name|_mutex
-argument_list|)
-block|;
-if|if
-condition|(
-name|_hasValue
-condition|)
-return|return
-name|_val
-return|;
-name|_cond
-operator|.
-name|wait
-argument_list|(
-name|lock
-argument_list|,
-index|[
-operator|&
-index|]
-block|{
-return|return
-name|_hasValue
-return|;
-block|}
-argument_list|)
-block|;
-return|return
-name|_val
-return|;
-block|}
-name|private
-label|:
-name|T
-name|_val
-decl_stmt|;
-name|bool
-name|_hasValue
-decl_stmt|;
-name|std
-operator|::
-name|mutex
-name|_mutex
-expr_stmt|;
-name|std
-operator|::
-name|condition_variable
-name|_cond
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// Classes in this namespace are implementation details of this header.
-end_comment
-
-begin_decl_stmt
 name|namespace
 name|internal
 block|{
@@ -894,21 +751,9 @@ block|}
 endif|#
 directive|endif
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace internal
-end_comment
-
-begin_comment
 comment|/// \brief Allows launching a number of tasks and waiting for them to finish
-end_comment
-
-begin_comment
 comment|///   either explicitly via sync() or implicitly on destruction.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TaskGroup
 block|{
@@ -970,13 +815,7 @@ name|sync
 argument_list|()
 block|; }
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -988,9 +827,6 @@ operator|||
 name|LLVM_ENABLE_THREADS
 operator|==
 literal|0
-end_if
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1191,7 +1027,7 @@ name|template
 operator|<
 name|class
 name|RandomAccessIterator
-operator|,
+block|,
 name|class
 name|Comp
 operator|>
@@ -1246,7 +1082,7 @@ block|}
 comment|// Partition.
 name|auto
 name|pivot
-operator|=
+init|=
 name|medianOf3
 argument_list|(
 name|start
@@ -1255,14 +1091,8 @@ name|end
 argument_list|,
 name|comp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|// Move pivot to end.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|swap
@@ -1277,10 +1107,7 @@ argument_list|,
 operator|*
 name|pivot
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|pivot
 operator|=
 name|std
@@ -1321,18 +1148,9 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|)
+block|;
 comment|// Move pivot to middle of partition.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|swap
@@ -1347,14 +1165,8 @@ operator|-
 literal|1
 operator|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Recurse.
-end_comment
-
-begin_expr_stmt
 name|tg
 operator|.
 name|spawn
@@ -1385,10 +1197,7 @@ literal|1
 argument_list|)
 block|;   }
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|parallel_quick_sort
 argument_list|(
 name|pivot
@@ -1405,11 +1214,11 @@ name|depth
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+block|; }
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|} }
 name|template
 operator|<
 name|class

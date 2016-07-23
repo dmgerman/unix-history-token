@@ -116,16 +116,10 @@ name|namespace
 name|lld
 block|{
 name|class
-name|ELFLinkingContext
-decl_stmt|;
-name|class
 name|File
 decl_stmt|;
 name|class
 name|LinkingContext
-decl_stmt|;
-name|class
-name|PECOFFLinkingContext
 decl_stmt|;
 name|class
 name|MachOLinkingContext
@@ -133,8 +127,7 @@ decl_stmt|;
 comment|/// \brief An abstract class for reading object files, library files, and
 comment|/// executable files.
 comment|///
-comment|/// Each file format (e.g. ELF, mach-o, PECOFF, etc) have a concrete
-comment|/// subclass of Reader.
+comment|/// Each file format (e.g. mach-o, etc) has a concrete subclass of Reader.
 name|class
 name|Reader
 block|{
@@ -357,37 +350,9 @@ name|addSupportYamlFiles
 parameter_list|()
 function_decl|;
 name|void
-name|addSupportCOFFObjects
-parameter_list|(
-name|PECOFFLinkingContext
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
-name|addSupportCOFFImportLibraries
-parameter_list|(
-name|PECOFFLinkingContext
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
 name|addSupportMachOObjects
 parameter_list|(
 name|MachOLinkingContext
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
-name|addSupportELFObjects
-parameter_list|(
-name|ELFLinkingContext
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
-name|addSupportELFDynamicSharedObjects
-parameter_list|(
-name|ELFLinkingContext
 modifier|&
 parameter_list|)
 function_decl|;

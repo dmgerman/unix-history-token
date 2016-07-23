@@ -155,6 +155,18 @@ begin_comment
 comment|///
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLD_READER_WRITER_MACHO_NORMALIZE_FILE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLD_READER_WRITER_MACHO_NORMALIZE_FILE_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -214,18 +226,6 @@ include|#
 directive|include
 file|"llvm/Support/YAMLTraits.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LLD_READER_WRITER_MACHO_NORMALIZE_FILE_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LLD_READER_WRITER_MACHO_NORMALIZE_FILE_H
-end_define
 
 begin_expr_stmt
 name|using
@@ -501,6 +501,13 @@ argument|uint32_t
 argument_list|,
 argument|SectionAttr
 argument_list|)
+comment|/// A typedef so that YAML I/O can encode/decode section alignment.
+name|LLVM_YAML_STRONG_TYPEDEF
+argument_list|(
+argument|uint16_t
+argument_list|,
+argument|SectionAlignment
+argument_list|)
 comment|/// Mach-O has a 32-bit and 64-bit section record.  This normalized form
 comment|/// can support either kind.
 struct|struct
@@ -545,7 +552,7 @@ decl_stmt|;
 name|SectionAttr
 name|attributes
 decl_stmt|;
-name|uint16_t
+name|SectionAlignment
 name|alignment
 decl_stmt|;
 name|Hex64
@@ -736,7 +743,10 @@ name|Hex64
 name|size
 decl_stmt|;
 name|VMProtect
-name|access
+name|init_access
+decl_stmt|;
+name|VMProtect
+name|max_access
 decl_stmt|;
 block|}
 struct|;
@@ -953,6 +963,16 @@ name|hasUUID
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|hasMinVersionLoadCommand
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|generateDataInCodeLoadCommand
+init|=
+name|false
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -995,6 +1015,14 @@ decl_stmt|;
 name|PackedVersion
 name|sdkVersion
 init|=
+literal|0
+decl_stmt|;
+name|LoadCommandType
+name|minOSVersionKind
+init|=
+operator|(
+name|LoadCommandType
+operator|)
 literal|0
 decl_stmt|;
 comment|// Maps to load commands with LINKEDIT content (final linked images only).
@@ -1042,6 +1070,14 @@ operator|<
 name|Export
 operator|>
 name|exportInfo
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint8_t
+operator|>
+name|functionStarts
 expr_stmt|;
 name|std
 operator|::
@@ -1099,7 +1135,9 @@ name|size
 argument_list|)
 decl_stmt|;
 comment|/// Reads a mach-o file and produces an in-memory normalized view.
-name|ErrorOr
+name|llvm
+operator|::
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1115,9 +1153,9 @@ argument|const MachOLinkingContext::Arch arch
 argument_list|)
 expr_stmt|;
 comment|/// Takes in-memory normalized view and writes a mach-o object file.
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|writeBinary
 argument_list|(
 argument|const NormalizedFile&file
@@ -1135,7 +1173,9 @@ name|file
 parameter_list|)
 function_decl|;
 comment|/// Parses a yaml encoded mach-o file to produce an in-memory normalized view.
-name|ErrorOr
+name|llvm
+operator|::
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1171,9 +1211,9 @@ operator|&
 name|out
 argument_list|)
 expr_stmt|;
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|normalizedObjectToAtoms
 argument_list|(
 argument|MachOFile *file
@@ -1183,9 +1223,9 @@ argument_list|,
 argument|bool copyRefs
 argument_list|)
 expr_stmt|;
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|normalizedDylibToAtoms
 argument_list|(
 argument|MachODylibFile *file
@@ -1196,7 +1236,9 @@ argument|bool copyRefs
 argument_list|)
 expr_stmt|;
 comment|/// Takes in-memory normalized dylib or object and parses it into lld::File
-name|ErrorOr
+name|llvm
+operator|::
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1216,7 +1258,9 @@ argument|bool copyRefs
 argument_list|)
 expr_stmt|;
 comment|/// Takes atoms and generates a normalized macho-o view.
-name|ErrorOr
+name|llvm
+operator|::
+name|Expected
 operator|<
 name|std
 operator|::

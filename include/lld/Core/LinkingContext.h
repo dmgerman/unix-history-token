@@ -64,19 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lld/Core/Parallel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lld/Core/Reference.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/range.h"
 end_include
 
 begin_include
@@ -132,28 +120,12 @@ comment|/// \brief The LinkingContext class encapsulates "what and how" to link.
 comment|///
 comment|/// The base class LinkingContext contains the options needed by core linking.
 comment|/// Subclasses of LinkingContext have additional options needed by specific
-comment|/// Writers. For example, ELFLinkingContext has methods that supplies
-comment|/// options to the ELF Writer and ELF Passes.
+comment|/// Writers.
 name|class
 name|LinkingContext
 block|{
 name|public
 label|:
-comment|/// \brief The types of output file that the linker creates.
-name|enum
-name|class
-name|OutputFileType
-range|:
-name|uint8_t
-block|{
-name|Default
-block|,
-comment|// The default output type for this target
-name|YAML
-block|,
-comment|// The output type is set to YAML
-block|}
-decl_stmt|;
 name|virtual
 operator|~
 name|LinkingContext
@@ -246,38 +218,6 @@ name|symbolName
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Archive files (aka static libraries) are normally lazily loaded.  That is,
-comment|/// object files within an archive are only loaded and linked in, if the
-comment|/// object file contains a DefinedAtom which will replace an existing
-comment|/// UndefinedAtom.  If this method returns true, core linking will also look
-comment|/// for archive members to replace existing tentative definitions in addition
-comment|/// to replacing undefines. Note: a "tentative definition" (also called a
-comment|/// "common" symbols) is a C (but not C++) concept. They are modeled in lld
-comment|/// as a DefinedAtom with merge() of mergeAsTentative.
-name|bool
-name|searchArchivesToOverrideTentativeDefinitions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_searchArchivesToOverrideTentativeDefinitions
-return|;
-block|}
-comment|/// Normally core linking will turn a tentative definition into a real
-comment|/// definition if not replaced by a real DefinedAtom from some object file.
-comment|/// If this method returns true, core linking will search all supplied
-comment|/// dynamic shared libraries for symbol names that match remaining tentative
-comment|/// definitions.  If any are found, the corresponding tentative definition
-comment|/// atom is replaced with SharedLibraryAtom.
-name|bool
-name|searchSharedLibrariesToOverrideTentativeDefinitions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_searchSharedLibrariesToOverrideTentativeDefinitions
-return|;
-block|}
 comment|/// Normally, every UndefinedAtom must be replaced by a DefinedAtom or a
 comment|/// SharedLibraryAtom for the link to be successful.  This method controls
 comment|/// whether core linking prints out a list of remaining UndefinedAtoms.
@@ -304,45 +244,6 @@ specifier|const
 block|{
 return|return
 name|_allowRemainingUndefines
-return|;
-block|}
-comment|/// In the lld model, a SharedLibraryAtom is a proxy atom for something
-comment|/// that will be found in a dynamic shared library when the program runs.
-comment|/// A SharedLibraryAtom optionally contains the name of the shared library
-comment|/// in which to find the symbol name at runtime.  Core linking may merge
-comment|/// two SharedLibraryAtom with the same name.  If this method returns true,
-comment|/// when merging core linking will also verify that they both have the same
-comment|/// loadName() and if not print a warning.
-comment|///
-comment|/// \todo This should be a method core linking calls so that drivers can
-comment|/// format the warning as needed.
-name|bool
-name|warnIfCoalesableAtomsHaveDifferentLoadName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_warnIfCoalesableAtomsHaveDifferentLoadName
-return|;
-block|}
-comment|/// In C/C++ you can mark a function's prototype with
-comment|/// __attribute__((weak_import)) or __attribute__((weak)) to say the function
-comment|/// may not be available at runtime and/or build time and in which case its
-comment|/// address will evaluate to NULL. In lld this is modeled using the
-comment|/// UndefinedAtom::canBeNull() method.  During core linking, UndefinedAtom
-comment|/// with the same name are automatically merged.  If this method returns
-comment|/// true, core link also verfies that the canBeNull() value for merged
-comment|/// UndefinedAtoms are the same and warns if not.
-comment|///
-comment|/// \todo This should be a method core linking calls so that drivers can
-comment|/// format the warning as needed.
-name|bool
-name|warnIfCoalesableAtomsHaveDifferentCanBeNull
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_warnIfCoalesableAtomsHaveDifferentCanBeNull
 return|;
 block|}
 comment|/// Normally, every UndefinedAtom must be replaced by a DefinedAtom or a
@@ -438,18 +339,6 @@ name|enable
 expr_stmt|;
 block|}
 name|void
-name|setAllowDuplicates
-parameter_list|(
-name|bool
-name|enable
-parameter_list|)
-block|{
-name|_allowDuplicates
-operator|=
-name|enable
-expr_stmt|;
-block|}
-name|void
 name|setGlobalsAreDeadStripRoots
 parameter_list|(
 name|bool
@@ -459,54 +348,6 @@ block|{
 name|_globalsAreDeadStripRoots
 operator|=
 name|v
-expr_stmt|;
-block|}
-name|void
-name|setSearchArchivesToOverrideTentativeDefinitions
-parameter_list|(
-name|bool
-name|search
-parameter_list|)
-block|{
-name|_searchArchivesToOverrideTentativeDefinitions
-operator|=
-name|search
-expr_stmt|;
-block|}
-name|void
-name|setSearchSharedLibrariesToOverrideTentativeDefinitions
-parameter_list|(
-name|bool
-name|search
-parameter_list|)
-block|{
-name|_searchSharedLibrariesToOverrideTentativeDefinitions
-operator|=
-name|search
-expr_stmt|;
-block|}
-name|void
-name|setWarnIfCoalesableAtomsHaveDifferentCanBeNull
-parameter_list|(
-name|bool
-name|warn
-parameter_list|)
-block|{
-name|_warnIfCoalesableAtomsHaveDifferentCanBeNull
-operator|=
-name|warn
-expr_stmt|;
-block|}
-name|void
-name|setWarnIfCoalesableAtomsHaveDifferentLoadName
-parameter_list|(
-name|bool
-name|warn
-parameter_list|)
-block|{
-name|_warnIfCoalesableAtomsHaveDifferentLoadName
-operator|=
-name|warn
 expr_stmt|;
 block|}
 name|void
@@ -557,17 +398,6 @@ operator|=
 name|log
 expr_stmt|;
 block|}
-comment|// Returns true if multiple definitions should not be treated as a
-comment|// fatal error.
-name|bool
-name|getAllowDuplicates
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_allowDuplicates
-return|;
-block|}
 name|void
 name|appendLLVMOption
 parameter_list|(
@@ -585,46 +415,6 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|addAlias
-parameter_list|(
-name|StringRef
-name|from
-parameter_list|,
-name|StringRef
-name|to
-parameter_list|)
-block|{
-name|_aliasSymbols
-index|[
-name|from
-index|]
-operator|=
-name|to
-expr_stmt|;
-block|}
-specifier|const
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|getAliases
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_aliasSymbols
-return|;
-block|}
 name|std
 operator|::
 name|vector
@@ -663,29 +453,6 @@ return|return
 name|_nodes
 return|;
 block|}
-comment|/// Notify the LinkingContext when the symbol table found a name collision.
-comment|/// The useNew parameter specifies which the symbol table plans to keep,
-comment|/// but that can be changed by the LinkingContext.  This is also an
-comment|/// opportunity for flavor specific processing.
-name|virtual
-name|void
-name|notifySymbolTableCoalesce
-parameter_list|(
-specifier|const
-name|Atom
-modifier|*
-name|existingAtom
-parameter_list|,
-specifier|const
-name|Atom
-modifier|*
-name|newAtom
-parameter_list|,
-name|bool
-modifier|&
-name|useNew
-parameter_list|)
-block|{}
 comment|/// This method adds undefined symbols specified by the -u option to the to
 comment|/// the list of undefined symbols known to the linker. This option essentially
 comment|/// forces an undefined symbol to be created. You may also need to call
@@ -753,11 +520,9 @@ decl|const
 decl_stmt|;
 comment|/// Return the list of undefined symbols that are specified in the
 comment|/// linker command line, using the -u option.
-name|range
+name|ArrayRef
 operator|<
-specifier|const
 name|StringRef
-operator|*
 operator|>
 name|initialUndefinedSymbols
 argument_list|()
@@ -791,11 +556,9 @@ argument_list|(
 argument|StringRef symbolName
 argument_list|)
 specifier|const
-block|{
-return|return
-name|symbolName
-return|;
-block|}
+operator|=
+literal|0
+expr_stmt|;
 comment|/// @}
 comment|/// \name Methods used by Driver::link()
 comment|/// @{
@@ -810,49 +573,6 @@ specifier|const
 block|{
 return|return
 name|_outputPath
-return|;
-block|}
-comment|/// Set the various output file types that the linker would
-comment|/// create
-name|bool
-name|setOutputFileType
-parameter_list|(
-name|StringRef
-name|outputFileType
-parameter_list|)
-block|{
-if|if
-condition|(
-name|outputFileType
-operator|.
-name|equals_lower
-argument_list|(
-literal|"yaml"
-argument_list|)
-condition|)
-block|{
-name|_outputFileType
-operator|=
-name|OutputFileType
-operator|::
-name|YAML
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-comment|/// Returns the output file type that that the linker needs to create.
-name|OutputFileType
-name|outputFileType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_outputFileType
 return|;
 block|}
 comment|/// Accessor for Register object embedded in LinkingContext.
@@ -895,6 +615,8 @@ name|File
 operator|>>
 operator|&
 argument_list|)
+init|=
+literal|0
 decl_stmt|;
 comment|/// This method is called by core linking to build the list of Passes to be
 comment|/// run on the merged/linked graph of all input files.
@@ -906,14 +628,16 @@ name|PassManager
 modifier|&
 name|pm
 parameter_list|)
+init|=
+literal|0
 function_decl|;
 comment|/// Calls through to the writeFile() method on the specified Writer.
 comment|///
 comment|/// \param linkedFile This is the merged/linked graph of all input file Atoms.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|writeFile
 argument_list|(
 argument|const File&linkedFile
@@ -938,16 +662,27 @@ name|virtual
 name|void
 name|finalizeInputFiles
 parameter_list|()
-block|{}
-name|TaskGroup
-modifier|&
-name|getTaskGroup
-parameter_list|()
-block|{
-return|return
-name|_taskGroup
-return|;
-block|}
+init|=
+literal|0
+function_decl|;
+comment|/// Callback invoked for each file the Resolver decides we are going to load.
+comment|/// This can be used to update context state based on the file, and emit
+comment|/// errors for any differences between the context state and a loaded file.
+comment|/// For example, we can error if we try to load a file which is a different
+comment|/// arch from that being linked.
+name|virtual
+name|llvm
+operator|::
+name|Error
+name|handleLoadedFile
+argument_list|(
+name|File
+operator|&
+name|file
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|/// @}
 name|protected
 label|:
@@ -1013,17 +748,6 @@ argument|StringRef filename
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// Method to create an internal file for alias symbols
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|File
-operator|>
-name|createAliasSymbolFile
-argument_list|()
-specifier|const
-expr_stmt|;
 name|StringRef
 name|_outputPath
 decl_stmt|;
@@ -1032,39 +756,33 @@ name|_entrySymbolName
 decl_stmt|;
 name|bool
 name|_deadStrip
-decl_stmt|;
-name|bool
-name|_allowDuplicates
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|_globalsAreDeadStripRoots
-decl_stmt|;
-name|bool
-name|_searchArchivesToOverrideTentativeDefinitions
-decl_stmt|;
-name|bool
-name|_searchSharedLibrariesToOverrideTentativeDefinitions
-decl_stmt|;
-name|bool
-name|_warnIfCoalesableAtomsHaveDifferentCanBeNull
-decl_stmt|;
-name|bool
-name|_warnIfCoalesableAtomsHaveDifferentLoadName
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|_printRemainingUndefines
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|_allowRemainingUndefines
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|_logInputFiles
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|_allowShlibUndefines
-decl_stmt|;
-name|OutputFileType
-name|_outputFileType
+init|=
+name|false
 decl_stmt|;
 name|std
 operator|::
@@ -1073,20 +791,6 @@ operator|<
 name|StringRef
 operator|>
 name|_deadStripRoots
-expr_stmt|;
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|std
-operator|::
-name|string
-operator|>
-name|_aliasSymbols
 expr_stmt|;
 name|std
 operator|::
@@ -1122,6 +826,8 @@ expr_stmt|;
 name|mutable
 name|uint64_t
 name|_nextOrdinal
+init|=
+literal|0
 decl_stmt|;
 name|Registry
 name|_registry
@@ -1140,9 +846,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|TaskGroup
-name|_taskGroup
-decl_stmt|;
 block|}
 empty_stmt|;
 block|}

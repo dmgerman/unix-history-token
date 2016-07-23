@@ -95,6 +95,9 @@ name|llvm
 block|{
 comment|// ADT's.
 name|class
+name|Error
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -157,6 +160,14 @@ operator|>
 name|class
 name|ErrorOr
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Expected
+expr_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -195,6 +206,11 @@ operator|::
 name|cast_or_null
 expr_stmt|;
 comment|// ADT's.
+name|using
+name|llvm
+operator|::
+name|Error
+expr_stmt|;
 name|using
 name|llvm
 operator|::
@@ -244,6 +260,11 @@ name|using
 name|llvm
 operator|::
 name|ErrorOr
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|Expected
 expr_stmt|;
 name|using
 name|llvm

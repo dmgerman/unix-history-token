@@ -152,21 +152,6 @@ expr_stmt|;
 name|class
 name|InputFile
 decl_stmt|;
-comment|// Entry point of the COFF linker.
-name|void
-name|link
-argument_list|(
-name|llvm
-operator|::
-name|ArrayRef
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-name|Args
-argument_list|)
-decl_stmt|;
 comment|// Implemented in MarkLive.cpp.
 name|void
 name|markLive
@@ -591,6 +576,12 @@ parameter_list|(
 name|StringRef
 parameter_list|)
 function_decl|;
+name|void
+name|parseSection
+parameter_list|(
+name|StringRef
+parameter_list|)
+function_decl|;
 comment|// Parses a string in the form of "EMBED[,=<integer>]|NO".
 name|void
 name|parseManifest
@@ -669,13 +660,6 @@ operator|&
 name|MBs
 argument_list|)
 expr_stmt|;
-name|void
-name|touchFile
-parameter_list|(
-name|StringRef
-name|Path
-parameter_list|)
-function_decl|;
 name|void
 name|createPDB
 parameter_list|(

@@ -131,24 +131,6 @@ return|return
 name|true
 return|;
 block|}
-comment|/// Returns an undefined atom if this undefined symbol has a synonym.  This is
-comment|/// mainly used in COFF. In COFF, an unresolved external symbol can have up to
-comment|/// one optional name (sym2) in addition to its regular name (sym1). If a
-comment|/// definition of sym1 exists, sym1 is resolved normally. Otherwise, all
-comment|/// references to sym1 refer to sym2 instead. In that case sym2 must be
-comment|/// resolved, or link will fail.
-name|virtual
-specifier|const
-name|UndefinedAtom
-operator|*
-name|fallback
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
 name|protected
 operator|:
 name|UndefinedAtom
@@ -159,8 +141,15 @@ argument_list|(
 argument|definitionUndefined
 argument_list|)
 block|{}
-expr|}
-block|;  }
+operator|~
+name|UndefinedAtom
+argument_list|()
+name|override
+operator|=
+expr|default
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

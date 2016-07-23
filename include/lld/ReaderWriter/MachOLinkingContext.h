@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -202,6 +208,29 @@ name|suppress
 block|,
 name|dynamicLookup
 block|}
+block|;    enum
+name|ObjCConstraint
+block|{
+name|objc_unknown
+operator|=
+literal|0
+block|,
+name|objc_supports_gc
+operator|=
+literal|2
+block|,
+name|objc_gc_only
+operator|=
+literal|4
+block|,
+comment|// Image optimized by dyld = 8
+comment|// GC compaction = 16
+name|objc_retainReleaseForSimulator
+operator|=
+literal|32
+block|,
+name|objc_retainRelease
+block|}
 block|;
 comment|/// Initializes the context to sane default values given the specified output
 comment|/// file type, arch, os, and minimum os version.  This should be called before
@@ -216,6 +245,8 @@ argument_list|,
 argument|OS os
 argument_list|,
 argument|uint32_t minOSVersion
+argument_list|,
+argument|bool exportDynamicSymbols
 argument_list|)
 block|;
 name|void
@@ -249,6 +280,118 @@ argument|std::vector<std::unique_ptr<File>>&
 argument_list|)
 name|override
 block|;
+comment|/// Creates a new file which is owned by the context.  Returns a pointer to
+comment|/// the new file.
+name|template
+operator|<
+name|class
+name|T
+block|,
+name|class
+operator|...
+name|Args
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+operator|!
+name|std
+operator|::
+name|is_array
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+block|,
+name|T
+operator|*
+operator|>
+operator|::
+name|type
+name|make_file
+argument_list|(
+argument|Args&&... args
+argument_list|)
+specifier|const
+block|{
+name|auto
+name|file
+operator|=
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|T
+operator|>
+operator|(
+name|new
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|Args
+operator|>
+operator|(
+name|args
+operator|)
+operator|...
+argument_list|)
+operator|)
+block|;
+name|auto
+operator|*
+name|filePtr
+operator|=
+name|file
+operator|.
+name|get
+argument_list|()
+block|;
+name|auto
+operator|*
+name|ctx
+operator|=
+name|const_cast
+operator|<
+name|MachOLinkingContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+block|;
+name|ctx
+operator|->
+name|getNodes
+argument_list|()
+operator|.
+name|push_back
+argument_list|(
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|FileNode
+operator|>
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|file
+argument_list|)
+operator|)
+argument_list|)
+block|;
+return|return
+name|filePtr
+return|;
+block|}
 name|uint32_t
 name|getCPUType
 argument_list|()
@@ -456,6 +599,25 @@ name|_demangle
 operator|=
 name|d
 block|; }
+name|bool
+name|mergeObjCCategories
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_mergeObjCCategories
+return|;
+block|}
+name|void
+name|setMergeObjCCategories
+argument_list|(
+argument|bool v
+argument_list|)
+block|{
+name|_mergeObjCCategories
+operator|=
+name|v
+block|; }
 comment|/// Create file at specified path which will contain a binary encoding
 comment|/// of all input and output file paths.
 name|std
@@ -594,6 +756,63 @@ name|_pie
 operator|=
 name|pie
 block|; }
+name|bool
+name|generateVersionLoadCommand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_generateVersionLoadCommand
+return|;
+block|}
+name|void
+name|setGenerateVersionLoadCommand
+argument_list|(
+argument|bool v
+argument_list|)
+block|{
+name|_generateVersionLoadCommand
+operator|=
+name|v
+block|;   }
+name|bool
+name|generateFunctionStartsLoadCommand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_generateFunctionStartsLoadCommand
+return|;
+block|}
+name|void
+name|setGenerateFunctionStartsLoadCommand
+argument_list|(
+argument|bool v
+argument_list|)
+block|{
+name|_generateFunctionStartsLoadCommand
+operator|=
+name|v
+block|;   }
+name|bool
+name|generateDataInCodeLoadCommand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_generateDataInCodeLoadCommand
+return|;
+block|}
+name|void
+name|setGenerateDataInCodeLoadCommand
+argument_list|(
+argument|bool v
+argument_list|)
+block|{
+name|_generateDataInCodeLoadCommand
+operator|=
+name|v
+block|;   }
 name|uint64_t
 name|stackSize
 argument_list|()
@@ -632,6 +851,71 @@ name|_baseAddress
 operator|=
 name|baseAddress
 block|; }
+name|ObjCConstraint
+name|objcConstraint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_objcConstraint
+return|;
+block|}
+name|uint32_t
+name|osMinVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_osMinVersion
+return|;
+block|}
+name|uint32_t
+name|sdkVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_sdkVersion
+return|;
+block|}
+name|void
+name|setSdkVersion
+argument_list|(
+argument|uint64_t v
+argument_list|)
+block|{
+name|_sdkVersion
+operator|=
+name|v
+block|; }
+name|uint64_t
+name|sourceVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_sourceVersion
+return|;
+block|}
+name|void
+name|setSourceVersion
+argument_list|(
+argument|uint64_t v
+argument_list|)
+block|{
+name|_sourceVersion
+operator|=
+name|v
+block|; }
+name|uint32_t
+name|swiftVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_swiftVersion
+return|;
+block|}
 comment|/// \brief Checks whether a given path on the filesystem exists.
 comment|///
 comment|/// When running in -test_file_usage mode, this method consults an
@@ -672,7 +956,9 @@ comment|///
 comment|/// The -lFoo option is documented to search for libFoo.dylib and libFoo.a in
 comment|/// that order, unless Foo ends in ".o", in which case only the exact file
 comment|/// matches (e.g. -lfoo.o would only find foo.o).
-name|ErrorOr
+name|llvm
+operator|::
+name|Optional
 operator|<
 name|StringRef
 operator|>
@@ -686,7 +972,9 @@ specifier|const
 block|;
 comment|/// \brief Iterates through all search path entries looking for libName (as
 comment|/// specified by -lFoo).
-name|ErrorOr
+name|llvm
+operator|::
+name|Optional
 operator|<
 name|StringRef
 operator|>
@@ -708,7 +996,9 @@ argument_list|)
 block|;
 comment|/// \brief Iterates through all framework directories looking for
 comment|/// Foo.framework/Foo (when fwName = "Foo").
-name|ErrorOr
+name|llvm
+operator|::
+name|Optional
 operator|<
 name|StringRef
 operator|>
@@ -1022,6 +1312,12 @@ name|needsShimPass
 argument_list|()
 specifier|const
 block|;
+comment|/// Pass to add objc image info and optimized objc data.
+name|bool
+name|needsObjCPass
+argument_list|()
+specifier|const
+block|;
 comment|/// Magic symbol name stubs will need to help lazy bind.
 name|StringRef
 name|binderSymbolName
@@ -1193,9 +1489,29 @@ argument_list|,
 argument|uint32_t&result
 argument_list|)
 block|;
+comment|/// Construct 64-bit value from string "A.B.C.D.E" where
+comment|/// bits are aaaa.bb.cc.dd.ee.  Largest number is 16777215.1023.1023.1023.1023
+specifier|static
+name|bool
+name|parsePackedVersion
+argument_list|(
+argument|StringRef str
+argument_list|,
+argument|uint64_t&result
+argument_list|)
+block|;
 name|void
 name|finalizeInputFiles
 argument_list|()
+name|override
+block|;
+name|llvm
+operator|::
+name|Error
+name|handleLoadedFile
+argument_list|(
+argument|File&file
+argument_list|)
 name|override
 block|;
 name|bool
@@ -1344,45 +1660,96 @@ name|_frameworkDirs
 block|;
 name|HeaderFileType
 name|_outputMachOType
+operator|=
+name|llvm
+operator|::
+name|MachO
+operator|::
+name|MH_EXECUTE
 block|;
-comment|// e.g MH_EXECUTE
 name|bool
 name|_outputMachOTypeStatic
+operator|=
+name|false
 block|;
 comment|// Disambiguate static vs dynamic prog
 name|bool
 name|_doNothing
+operator|=
+name|false
 block|;
 comment|// for -help and -v which just print info
 name|bool
 name|_pie
+operator|=
+name|false
 block|;
 name|Arch
 name|_arch
+operator|=
+name|arch_unknown
 block|;
 name|OS
 name|_os
+operator|=
+name|OS
+operator|::
+name|macOSX
 block|;
 name|uint32_t
 name|_osMinVersion
+operator|=
+literal|0
+block|;
+name|uint32_t
+name|_sdkVersion
+operator|=
+literal|0
+block|;
+name|uint64_t
+name|_sourceVersion
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|_pageZeroSize
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|_pageSize
+operator|=
+literal|4096
 block|;
 name|uint64_t
 name|_baseAddress
+operator|=
+literal|0
 block|;
 name|uint64_t
 name|_stackSize
+operator|=
+literal|0
 block|;
 name|uint32_t
 name|_compatibilityVersion
+operator|=
+literal|0
 block|;
 name|uint32_t
 name|_currentVersion
+operator|=
+literal|0
+block|;
+name|ObjCConstraint
+name|_objcConstraint
+operator|=
+name|objc_unknown
+block|;
+name|uint32_t
+name|_swiftVersion
+operator|=
+literal|0
 block|;
 name|StringRef
 name|_installName
@@ -1392,24 +1759,60 @@ name|_rpaths
 block|;
 name|bool
 name|_flatNamespace
+operator|=
+name|false
 block|;
 name|UndefinedMode
 name|_undefinedMode
+operator|=
+name|UndefinedMode
+operator|::
+name|error
 block|;
 name|bool
 name|_deadStrippableDylib
+operator|=
+name|false
 block|;
 name|bool
 name|_printAtoms
+operator|=
+name|false
 block|;
 name|bool
 name|_testingFileUsage
+operator|=
+name|false
 block|;
 name|bool
 name|_keepPrivateExterns
+operator|=
+name|false
 block|;
 name|bool
 name|_demangle
+operator|=
+name|false
+block|;
+name|bool
+name|_mergeObjCCategories
+operator|=
+name|true
+block|;
+name|bool
+name|_generateVersionLoadCommand
+operator|=
+name|false
+block|;
+name|bool
+name|_generateFunctionStartsLoadCommand
+operator|=
+name|false
+block|;
+name|bool
+name|_generateDataInCodeLoadCommand
+operator|=
+name|false
 block|;
 name|StringRef
 name|_bundleLoader
@@ -1499,6 +1902,10 @@ name|_dylibsMutex
 block|;
 name|ExportMode
 name|_exportMode
+operator|=
+name|ExportMode
+operator|::
+name|globals
 block|;
 name|llvm
 operator|::
@@ -1509,6 +1916,10 @@ name|_exportedSymbols
 block|;
 name|DebugInfoMode
 name|_debugInfoMode
+operator|=
+name|DebugInfoMode
+operator|::
+name|addDebugMap
 block|;
 name|std
 operator|::
@@ -1534,10 +1945,14 @@ name|_orderFiles
 block|;
 name|unsigned
 name|_orderFileEntries
+operator|=
+literal|0
 block|;
 name|File
 operator|*
 name|_flatNamespaceFile
+operator|=
+name|nullptr
 block|;
 name|mach_o
 operator|::

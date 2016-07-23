@@ -77,9 +77,7 @@ name|Data
 block|,   }
 block|;
 comment|/// Returns shared library name used to load it at runtime.
-comment|/// On linux that is the DT_NEEDED name.
 comment|/// On Darwin it is the LC_DYLIB_LOAD dylib name.
-comment|/// On Windows it is the DLL name that to be referred from .idata section.
 name|virtual
 name|StringRef
 name|loadName
@@ -152,8 +150,15 @@ argument_list|(
 argument|definitionSharedLibrary
 argument_list|)
 block|{}
-expr|}
-block|;  }
+operator|~
+name|SharedLibraryAtom
+argument_list|()
+name|override
+operator|=
+expr|default
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

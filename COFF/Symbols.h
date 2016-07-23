@@ -416,12 +416,6 @@ name|uint64_t
 name|getRVA
 argument_list|()
 block|;
-comment|// Returns the file offset of this symbol in the final executable.
-comment|// The writer uses this information to apply relocations.
-name|uint64_t
-name|getFileOff
-argument_list|()
-block|;
 comment|// Returns the RVA relative to the beginning of the output section.
 comment|// Used to implement SECREL relocation type.
 name|uint64_t

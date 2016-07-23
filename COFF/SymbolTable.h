@@ -471,10 +471,8 @@ name|std
 operator|::
 name|vector
 operator|<
-name|SmallVector
+name|SmallString
 operator|<
-name|char
-operator|,
 literal|0
 operator|>>
 name|Objs

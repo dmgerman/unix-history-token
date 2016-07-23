@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -539,6 +545,14 @@ operator|->
 name|SizeOfRawData
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|getContents
+argument_list|()
+specifier|const
+block|;
 name|void
 name|writeTo
 argument_list|(
@@ -758,14 +772,6 @@ literal|0
 block|;
 name|private
 operator|:
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|getContents
-argument_list|()
-specifier|const
-block|;
 comment|// A file this chunk was created from.
 name|ObjectFile
 operator|*
@@ -1237,7 +1243,7 @@ argument_list|)
 operator|:
 name|Syms
 argument_list|(
-argument|S
+argument|std::move(S)
 argument_list|)
 block|{}
 name|size_t
@@ -1372,30 +1378,9 @@ block|;
 name|uint8_t
 name|Type
 block|; }
-block|;
-specifier|inline
-name|uint64_t
-name|align
-argument_list|(
-argument|uint64_t Value
-argument_list|,
-argument|uint64_t Align
-argument_list|)
-block|{
-return|return
-name|llvm
-operator|::
-name|RoundUpToAlignment
-argument_list|(
-name|Value
-argument_list|,
-name|Align
-argument_list|)
-return|;
-block|}
-expr|}
+block|;  }
 comment|// namespace coff
-expr|}
+block|}
 end_decl_stmt
 
 begin_comment

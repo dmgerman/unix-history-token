@@ -49,6 +49,12 @@ directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lld
@@ -58,7 +64,7 @@ name|coff
 block|{
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|error
+name|fatal
 parameter_list|(
 specifier|const
 name|Twine
@@ -66,8 +72,9 @@ modifier|&
 name|Msg
 parameter_list|)
 function_decl|;
+name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|error
+name|fatal
 argument_list|(
 name|std
 operator|::
@@ -80,35 +87,113 @@ operator|&
 name|Prefix
 argument_list|)
 decl_stmt|;
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|fatal
+argument_list|(
+name|llvm
+operator|::
+name|Error
+operator|&
+name|Err
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Prefix
+argument_list|)
+decl_stmt|;
 name|template
 operator|<
-name|typename
+name|class
 name|T
 operator|>
-name|void
-name|error
+name|T
+name|check
 argument_list|(
-argument|const ErrorOr<T>&V
+argument|ErrorOr<T>&&V
 argument_list|,
 argument|const Twine&Prefix
 argument_list|)
 block|{
-name|error
-argument_list|(
+if|if
+condition|(
+name|auto
+name|EC
+init|=
 name|V
 operator|.
 name|getError
 argument_list|()
+condition|)
+name|fatal
+argument_list|(
+name|EC
 argument_list|,
 name|Prefix
 argument_list|)
-block|; }
+expr_stmt|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+operator|*
+name|V
+argument_list|)
+return|;
 block|}
-comment|// namespace coff
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|T
+name|check
+argument_list|(
+argument|Expected<T> E
+argument_list|,
+argument|const Twine&Prefix
+argument_list|)
+block|{
+if|if
+condition|(
+name|llvm
+operator|::
+name|Error
+name|Err
+operator|=
+name|E
+operator|.
+name|takeError
+argument_list|()
+condition|)
+name|fatal
+argument_list|(
+name|Err
+argument_list|,
+name|Prefix
+argument_list|)
+expr_stmt|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+operator|*
+name|E
+argument_list|)
+return|;
 block|}
 end_decl_stmt
 
 begin_comment
+unit|}
+comment|// namespace coff
+end_comment
+
+begin_comment
+unit|}
 comment|// namespace lld
 end_comment
 

@@ -114,13 +114,6 @@ name|SymbolTable
 block|{
 name|public
 label|:
-name|explicit
-name|SymbolTable
-parameter_list|(
-name|LinkingContext
-modifier|&
-parameter_list|)
-function_decl|;
 comment|/// @brief add atom to symbol table
 name|bool
 name|add
@@ -231,27 +224,6 @@ parameter_list|(
 specifier|const
 name|Atom
 modifier|*
-parameter_list|)
-function_decl|;
-comment|/// @brief Find a group atom.
-specifier|const
-name|Atom
-modifier|*
-name|findGroup
-parameter_list|(
-name|StringRef
-name|name
-parameter_list|)
-function_decl|;
-comment|/// @brief Add a group atom and returns true/false depending on whether the
-comment|/// previously existed.
-name|bool
-name|addGroup
-parameter_list|(
-specifier|const
-name|DefinedAtom
-modifier|&
-name|da
 parameter_list|)
 function_decl|;
 name|private
@@ -446,18 +418,11 @@ name|DefinedAtom
 modifier|&
 parameter_list|)
 function_decl|;
-name|LinkingContext
-modifier|&
-name|_ctx
-decl_stmt|;
 name|AtomToAtom
 name|_replacedAtoms
 decl_stmt|;
 name|NameToAtom
 name|_nameTable
-decl_stmt|;
-name|NameToAtom
-name|_groupTable
 decl_stmt|;
 name|AtomContentSet
 name|_contentTable

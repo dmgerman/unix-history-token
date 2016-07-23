@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lld/Core/range.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -102,9 +102,9 @@ argument_list|()
 block|{ }
 comment|/// Do the actual work of the Pass.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|perform
 argument_list|(
 name|SimpleFile

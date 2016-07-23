@@ -87,22 +87,18 @@ argument_list|(
 literal|"flat namespace"
 argument_list|)
 block|{ }
-specifier|const
+name|OwningAtomPtr
+operator|<
 name|SharedLibraryAtom
-operator|*
+operator|>
 name|exports
 argument_list|(
 argument|StringRef name
-argument_list|,
-argument|bool dataSymbolOnly
 argument_list|)
 specifier|const
 name|override
 block|{
-name|_sharedLibraryAtoms
-operator|.
-name|push_back
-argument_list|(
+return|return
 name|new
 argument_list|(
 argument|allocator()
@@ -119,13 +115,6 @@ argument_list|()
 argument_list|,
 name|false
 argument_list|)
-argument_list|)
-block|;
-return|return
-name|_sharedLibraryAtoms
-operator|.
-name|back
-argument_list|()
 return|;
 block|}
 name|StringRef
@@ -139,11 +128,10 @@ literal|"flat-namespace"
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|DefinedAtom
 operator|>
-operator|&
 name|defined
 argument_list|()
 specifier|const
@@ -154,11 +142,10 @@ name|_noDefinedAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|UndefinedAtom
 operator|>
-operator|&
 name|undefined
 argument_list|()
 specifier|const
@@ -169,26 +156,24 @@ name|_noUndefinedAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|SharedLibraryAtom
 operator|>
-operator|&
 name|sharedLibrary
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-name|_sharedLibraryAtoms
+name|_noSharedLibraryAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|AbsoluteAtom
 operator|>
-operator|&
 name|absolute
 argument_list|()
 specifier|const
@@ -198,17 +183,33 @@ return|return
 name|_noAbsoluteAtoms
 return|;
 block|}
-name|private
-operator|:
-name|mutable
-name|AtomVector
-operator|<
-name|SharedLibraryAtom
-operator|>
-name|_sharedLibraryAtoms
-block|; }
-decl_stmt|;
-block|}
+name|void
+name|clearAtoms
+argument_list|()
+name|override
+block|{
+name|_noDefinedAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_noUndefinedAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_noSharedLibraryAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_noAbsoluteAtoms
+operator|.
+name|clear
+argument_list|()
+block|;   }
+expr|}
+block|;  }
 comment|// namespace mach_o
 block|}
 end_decl_stmt

@@ -52,7 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lld/Core/Reference.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_decl_stmt
@@ -61,9 +73,6 @@ name|lld
 block|{
 name|class
 name|File
-decl_stmt|;
-name|class
-name|Reference
 decl_stmt|;
 comment|/// \brief The fundamental unit of linking.
 comment|///
@@ -184,6 +193,9 @@ block|{
 name|typeUnknown
 block|,
 comment|// for use with definitionUndefined
+name|typeMachHeader
+block|,
+comment|// atom representing mach_header [Darwin]
 name|typeCode
 block|,
 comment|// executable code
@@ -250,6 +262,9 @@ comment|// pointer through which a stub jumps
 name|typeLazyDylibPointer
 block|,
 comment|// pointer through which a stub jumps [Darwin]
+name|typeNonLazyPointer
+block|,
+comment|// pointer to external symbol
 name|typeCFString
 block|,
 comment|// NS/CFString object [Darwin]
@@ -271,6 +286,12 @@ comment|// pointer to ObjC class [Darwin]
 name|typeObjC2CategoryList
 block|,
 comment|// pointers to ObjC category [Darwin]
+name|typeObjCImageInfo
+block|,
+comment|// pointer to ObjC class [Darwin]
+name|typeObjCMethodList
+block|,
+comment|// pointer to ObjC method list [Darwin]
 name|typeDTraceDOF
 block|,
 comment|// runtime data for Dtrace [Darwin]
@@ -298,30 +319,9 @@ comment|// TLV initial zero fill data [Darwin]
 name|typeTLVInitializerPtr
 block|,
 comment|// pointer to thread local initializer [Darwin]
-name|typeMachHeader
+name|typeDSOHandle
 block|,
-comment|// atom representing mach_header [Darwin]
-name|typeThreadZeroFill
-block|,
-comment|// Uninitialized thread local data(TBSS) [ELF]
-name|typeThreadData
-block|,
-comment|// Initialized thread local data(TDATA) [ELF]
-name|typeRONote
-block|,
-comment|// Identifies readonly note sections [ELF]
-name|typeRWNote
-block|,
-comment|// Identifies readwrite note sections [ELF]
-name|typeNoAlloc
-block|,
-comment|// Identifies non allocatable sections [ELF]
-name|typeGroupComdat
-block|,
-comment|// Identifies a section group [ELF, COFF]
-name|typeGnuLinkOnce
-block|,
-comment|// Identifies a gnu.linkonce section [ELF]
+comment|// atom representing DSO handle [Darwin]
 name|typeSectCreate
 block|,
 comment|// Created via the -sectcreate option [Darwin]
@@ -512,11 +512,6 @@ comment|/// \brief returns a value for the order of this Atom within its file.
 comment|///
 comment|/// This is used by the linker to order the layout of Atoms so that the
 comment|/// resulting image is stable and reproducible.
-comment|///
-comment|/// Note that this should not be confused with ordinals of exported symbols in
-comment|/// Windows DLLs. In Windows terminology, ordinals are symbols' export table
-comment|/// indices (small integers) which can be used instead of symbol names to
-comment|/// refer items in a DLL.
 name|virtual
 name|uint64_t
 name|ordinal
@@ -749,7 +744,7 @@ return|;
 block|}
 name|bool
 name|operator
-operator|!=
+operator|==
 operator|(
 specifier|const
 name|reference_iterator
@@ -760,10 +755,31 @@ specifier|const
 block|{
 return|return
 name|_it
-operator|!=
+operator|==
 name|other
 operator|.
 name|_it
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|reference_iterator
+operator|&
+name|other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|other
+operator|)
 return|;
 block|}
 name|reference_iterator
@@ -816,6 +832,29 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// Adds a reference to this atom.
+name|virtual
+name|void
+name|addReference
+argument_list|(
+argument|Reference::KindNamespace ns
+argument_list|,
+argument|Reference::KindArch arch
+argument_list|,
+argument|Reference::KindValue kindValue
+argument_list|,
+argument|uint64_t off
+argument_list|,
+argument|const Atom *target
+argument_list|,
+argument|Reference::Addend a
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Subclass does not permit adding references"
+argument_list|)
+block|;   }
 specifier|static
 name|bool
 name|classof
@@ -872,19 +911,14 @@ operator|==
 name|DefinedAtom
 operator|::
 name|typeTLVInitialZeroFill
-operator|||
-name|atomContentType
-operator|==
-name|DefinedAtom
-operator|::
-name|typeThreadZeroFill
 operator|)
 return|;
 block|}
-comment|/// Utility function to check if the atom belongs to a group section
-comment|/// that represents section groups or .gnu.linkonce sections.
+comment|/// Utility function to check if relocations in this atom to other defined
+comment|/// atoms can be implicitly generated, and so we don't need to explicitly
+comment|/// emit those relocations.
 name|bool
-name|isGroupParent
+name|relocsToDefinedCanBeImplicit
 argument_list|()
 specifier|const
 block|{
@@ -895,19 +929,9 @@ name|contentType
 argument_list|()
 block|;
 return|return
-operator|(
 name|atomContentType
 operator|==
-name|DefinedAtom
-operator|::
-name|typeGroupComdat
-operator|||
-name|atomContentType
-operator|==
-name|DefinedAtom
-operator|::
-name|typeGnuLinkOnce
-operator|)
+name|typeCFI
 return|;
 block|}
 comment|// Returns true if lhs should be placed before rhs in the final output.
@@ -938,6 +962,13 @@ argument_list|(
 argument|definitionRegular
 argument_list|)
 block|{ }
+operator|~
+name|DefinedAtom
+argument_list|()
+name|override
+operator|=
+expr|default
+block|;
 comment|/// \brief Returns a pointer to the Reference object that the abstract
 comment|/// iterator "points" to.
 name|virtual

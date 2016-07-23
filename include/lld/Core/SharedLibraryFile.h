@@ -85,21 +85,19 @@ comment|/// Check if the shared library exports a symbol with the specified name
 comment|/// If so, return a SharedLibraryAtom which represents that exported
 comment|/// symbol.  Otherwise return nullptr.
 name|virtual
-specifier|const
+name|OwningAtomPtr
+operator|<
 name|SharedLibraryAtom
-operator|*
+operator|>
 name|exports
 argument_list|(
 argument|StringRef name
-argument_list|,
-argument|bool dataSymbolOnly
 argument_list|)
 specifier|const
 operator|=
 literal|0
 block|;
-comment|// Returns DSO name. It's the soname (ELF), the install name (MachO) or
-comment|// the import name (Windows).
+comment|// Returns the install name.
 name|virtual
 name|StringRef
 name|getDSOName
@@ -109,11 +107,10 @@ operator|=
 literal|0
 block|;
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|DefinedAtom
 operator|>
-operator|&
 name|defined
 argument_list|()
 specifier|const
@@ -124,11 +121,10 @@ name|_definedAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|UndefinedAtom
 operator|>
-operator|&
 name|undefined
 argument_list|()
 specifier|const
@@ -139,11 +135,10 @@ name|_undefinedAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|SharedLibraryAtom
 operator|>
-operator|&
 name|sharedLibrary
 argument_list|()
 specifier|const
@@ -154,11 +149,10 @@ name|_sharedLibraryAtoms
 return|;
 block|}
 specifier|const
-name|AtomVector
+name|AtomRange
 operator|<
 name|AbsoluteAtom
 operator|>
-operator|&
 name|absolute
 argument_list|()
 specifier|const
@@ -168,6 +162,31 @@ return|return
 name|_absoluteAtoms
 return|;
 block|}
+name|void
+name|clearAtoms
+argument_list|()
+name|override
+block|{
+name|_definedAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_undefinedAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_sharedLibraryAtoms
+operator|.
+name|clear
+argument_list|()
+block|;
+name|_absoluteAtoms
+operator|.
+name|clear
+argument_list|()
+block|;   }
 name|protected
 operator|:
 comment|/// only subclasses of SharedLibraryFile can be instantiated

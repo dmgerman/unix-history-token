@@ -31,6 +31,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLD_READER_WRITER_MACHO_ARCH_HANDLER_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLD_READER_WRITER_MACHO_ARCH_HANDLER_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -58,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lld/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/Reference.h"
 end_include
 
@@ -78,18 +96,6 @@ include|#
 directive|include
 file|"llvm/ADT/Triple.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LLD_READER_WRITER_MACHO_ARCH_HANDLER_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LLD_READER_WRITER_MACHO_ARCH_HANDLER_H
-end_define
 
 begin_decl_stmt
 name|namespace
@@ -270,6 +276,18 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|/// Reference from an __eh_frame CIE atom to its personality function it's
+comment|/// describing. Usually pointer-sized and PC-relative, but differs in whether
+comment|/// it needs to be in relocatable objects.
+name|virtual
+name|Reference
+operator|::
+name|KindValue
+name|unwindRefToPersonalityFunctionKind
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Reference from an __eh_frame FDE to the CIE it's based on.
 name|virtual
 name|Reference
@@ -301,6 +319,17 @@ name|Reference
 operator|::
 name|KindValue
 name|unwindRefToEhFrameKind
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Returns a pointer sized reference kind.  On 64-bit targets this will
+comment|/// likely be something like pointer64, and pointer32 on 32-bit targets.
+name|virtual
+name|Reference
+operator|::
+name|KindValue
+name|pointerKind
 argument_list|()
 operator|=
 literal|0
@@ -362,9 +391,9 @@ name|std
 operator|::
 name|function
 operator|<
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 argument_list|(
 argument|uint32_t sectionIndex
 argument_list|,
@@ -384,9 +413,9 @@ name|std
 operator|::
 name|function
 operator|<
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 argument_list|(
 argument|uint32_t symbolIndex
 argument_list|,
@@ -400,9 +429,9 @@ comment|/// (kind, target, addend) needed to instantiate a Reference.
 comment|/// Two helper functions are passed as parameters to find the target atom
 comment|/// given a symbol index or address.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|getReferenceInfo
 argument_list|(
 argument|const normalized::Relocation&reloc
@@ -433,9 +462,9 @@ comment|/// (kind, target, addend) needed to instantiate a Reference.
 comment|/// Two helper functions are passed as parameters to find the target atom
 comment|/// given a symbol index or address.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|getPairReferenceInfo
 argument_list|(
 argument|const normalized::Relocation&reloc1
@@ -535,31 +564,35 @@ comment|/// Copy raw content then apply all fixup References on an Atom.
 name|virtual
 name|void
 name|generateAtomContent
-parameter_list|(
+argument_list|(
 specifier|const
 name|DefinedAtom
-modifier|&
+operator|&
 name|atom
-parameter_list|,
+argument_list|,
 name|bool
 name|relocatable
-parameter_list|,
+argument_list|,
 name|FindAddressForAtom
 name|findAddress
-parameter_list|,
+argument_list|,
 name|FindAddressForAtom
 name|findSectionAddress
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|imageBaseAddress
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
 name|uint8_t
-modifier|*
+operator|>
 name|atomContentBuffer
-parameter_list|)
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|/// Used in -r mode to convert a Reference to a mach-o relocation.
 name|virtual
 name|void
@@ -808,8 +841,16 @@ decl_stmt|;
 name|ReferenceInfo
 name|stubHelperReferenceToHelperCommon
 decl_stmt|;
+name|DefinedAtom
+operator|::
+name|ContentType
+name|stubHelperImageCacheContentType
+expr_stmt|;
 name|uint32_t
 name|stubHelperCommonSize
+decl_stmt|;
+name|uint8_t
+name|stubHelperCommonAlignment
 decl_stmt|;
 name|uint8_t
 name|stubHelperCommonBytes

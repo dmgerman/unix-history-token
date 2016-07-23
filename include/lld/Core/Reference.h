@@ -71,15 +71,13 @@ comment|/// For example if a function contains a call site to "malloc" 40 bytes 
 comment|/// the Atom, then the function Atom will have a Reference of: offsetInAtom=40,
 comment|/// kind=callsite, target=malloc, addend=0.
 comment|///
-comment|/// Besides supporting traditional "relocations", References are also used
-comment|/// grouping atoms (group comdat), forcing layout (one atom must follow
-comment|/// another), marking data-in-code (jump tables or ARM constants), etc.
+comment|/// Besides supporting traditional "relocations", references are also used
+comment|/// forcing layout (one atom must follow another), marking data-in-code
+comment|/// (jump tables or ARM constants), etc.
 comment|///
 comment|/// The "kind" of a reference is a tuple of<namespace, arch, value>.  This
 comment|/// enable us to re-use existing relocation types definded for various
-comment|/// file formats and architectures.  For instance, in ELF the relocation type 10
-comment|/// means R_X86_64_32 for x86_64, and R_386_GOTPC for i386. For PE/COFF
-comment|/// relocation 10 means IMAGE_REL_AMD64_SECTION.
+comment|/// file formats and architectures.
 comment|///
 comment|/// References and atoms form a directed graph. The dead-stripping pass
 comment|/// traverses them starting from dead-strip root atoms to garbage collect
@@ -105,17 +103,9 @@ name|testing
 operator|=
 literal|1
 operator|,
-name|ELF
-operator|=
-literal|2
-operator|,
-name|COFF
-operator|=
-literal|3
-operator|,
 name|mach_o
 operator|=
-literal|4
+literal|2
 operator|,
 block|}
 empty_stmt|;
@@ -155,13 +145,7 @@ name|all
 operator|,
 name|AArch64
 operator|,
-name|AMDGPU
-operator|,
 name|ARM
-operator|,
-name|Hexagon
-operator|,
-name|Mips
 operator|,
 name|x86
 operator|,
@@ -230,9 +214,6 @@ comment|// pass.
 name|kindLayoutAfter
 init|=
 literal|1
-block|,
-comment|// kindGroupChild is treated as a bidirected edge too.
-name|kindGroupChild
 block|,
 name|kindAssociate
 block|,   }

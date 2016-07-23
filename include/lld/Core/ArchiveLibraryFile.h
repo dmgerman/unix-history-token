@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lld/Core/Parallel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<set>
 end_include
 
@@ -106,8 +100,6 @@ operator|*
 name|find
 argument_list|(
 argument|StringRef name
-argument_list|,
-argument|bool dataSymbolOnly
 argument_list|)
 operator|=
 literal|0
@@ -134,42 +126,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|// Parses a member file containing a given symbol, so that when you
-comment|// need the file find() can return that immediately. Calling this function
-comment|// has no side effect other than pre-instantiating a file. Calling this
-comment|// function doesn't affect correctness.
-name|virtual
-name|void
-name|preload
-argument_list|(
-argument|TaskGroup&group
-argument_list|,
-argument|StringRef symbolName
-argument_list|)
-block|{}
-comment|/// Returns a set of all defined symbols in the archive, i.e. all
-comment|/// resolvable symbol using this file.
-name|virtual
-name|std
-operator|::
-name|set
-operator|<
-name|StringRef
-operator|>
-name|getDefinedSymbols
-argument_list|()
-block|{
-return|return
-name|std
-operator|::
-name|set
-operator|<
-name|StringRef
-operator|>
-operator|(
-operator|)
-return|;
-block|}
 name|protected
 operator|:
 comment|/// only subclasses of ArchiveLibraryFile can be instantiated
@@ -185,8 +141,9 @@ argument_list|,
 argument|kindArchiveLibrary
 argument_list|)
 block|{}
-expr|}
-block|;  }
+block|}
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

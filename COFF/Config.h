@@ -463,6 +463,17 @@ name|StringRef
 operator|>
 name|Merge
 expr_stmt|;
+comment|// Used for /section=.name,{DEKPRSW} to set section attributes.
+name|std
+operator|::
+name|map
+operator|<
+name|StringRef
+operator|,
+name|uint32_t
+operator|>
+name|Section
+expr_stmt|;
 comment|// Options for manifest files.
 name|ManifestKind
 name|Manifest
@@ -482,6 +493,16 @@ name|ManifestUAC
 init|=
 name|true
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ManifestInput
+expr_stmt|;
 name|StringRef
 name|ManifestLevel
 init|=

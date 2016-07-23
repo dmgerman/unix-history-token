@@ -238,17 +238,7 @@ argument_list|)
 block|,
 name|_file
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|f
-argument_list|)
-argument_list|)
-block|,
-name|_asNeeded
-argument_list|(
-argument|false
+argument|std::move(f)
 argument_list|)
 block|{}
 specifier|static
@@ -283,25 +273,6 @@ name|get
 argument_list|()
 return|;
 block|}
-name|void
-name|setAsNeeded
-argument_list|(
-argument|bool val
-argument_list|)
-block|{
-name|_asNeeded
-operator|=
-name|val
-block|; }
-name|bool
-name|asNeeded
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_asNeeded
-return|;
-block|}
 name|protected
 operator|:
 name|std
@@ -311,9 +282,6 @@ operator|<
 name|File
 operator|>
 name|_file
-block|;
-name|bool
-name|_asNeeded
 block|; }
 decl_stmt|;
 block|}

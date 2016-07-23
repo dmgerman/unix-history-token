@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -66,9 +72,6 @@ name|namespace
 name|lld
 block|{
 name|class
-name|ELFLinkingContext
-decl_stmt|;
-name|class
 name|File
 decl_stmt|;
 name|class
@@ -77,12 +80,9 @@ decl_stmt|;
 name|class
 name|MachOLinkingContext
 decl_stmt|;
-name|class
-name|PECOFFLinkingContext
-decl_stmt|;
 comment|/// \brief The Writer is an abstract class for writing object files, shared
-comment|/// library files, and executable files.  Each file format (e.g. ELF, mach-o,
-comment|/// PECOFF, etc) have a concrete subclass of Writer.
+comment|/// library files, and executable files.  Each file format (e.g. mach-o, etc)
+comment|/// has a concrete subclass of Writer.
 name|class
 name|Writer
 block|{
@@ -95,9 +95,9 @@ argument_list|()
 expr_stmt|;
 comment|/// \brief Write a file from the supplied File object
 name|virtual
-name|std
+name|llvm
 operator|::
-name|error_code
+name|Error
 name|writeFile
 argument_list|(
 argument|const File&linkedFile
@@ -141,36 +141,10 @@ name|unique_ptr
 operator|<
 name|Writer
 operator|>
-name|createWriterELF
-argument_list|(
-specifier|const
-name|ELFLinkingContext
-operator|&
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Writer
-operator|>
 name|createWriterMachO
 argument_list|(
 specifier|const
 name|MachOLinkingContext
-operator|&
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Writer
-operator|>
-name|createWriterPECOFF
-argument_list|(
-specifier|const
-name|PECOFFLinkingContext
 operator|&
 argument_list|)
 expr_stmt|;
