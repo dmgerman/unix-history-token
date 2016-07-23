@@ -118,6 +118,16 @@ argument_list|,
 name|O_DIRECTORY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dirfd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return;
+block|}
 name|d
 operator|=
 name|fdopendir
