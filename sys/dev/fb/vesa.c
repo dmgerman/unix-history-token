@@ -247,6 +247,21 @@ name|vesa_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|vesa_lock
+argument_list|,
+operator|&
+name|vesa_lock
+argument_list|,
+literal|"VESA lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -595,17 +610,6 @@ name|vesa_bios_info
 parameter_list|(
 name|int
 name|level
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|vesa_late_load
-parameter_list|(
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5696,7 +5700,7 @@ condition|)
 block|{
 name|vga_sub_configure
 operator|=
-name|vesa_late_load
+name|vesa_configure
 expr_stmt|;
 return|return
 operator|(
@@ -9959,30 +9963,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
-name|vesa_late_load
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * To be called from the vga_sub_configure hook in case the VGA adapter is  * not found when VESA is loaded.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|vesa_late_load
-parameter_list|(
-name|int
-name|flags
-parameter_list|)
-block|{
 name|int
 name|error
 decl_stmt|;
@@ -9995,18 +9975,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mtx_init
-argument_list|(
-operator|&
-name|vesa_lock
-argument_list|,
-literal|"VESA lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* locate a VGA adapter */
 name|vesa_adp
 operator|=
@@ -10016,7 +9984,7 @@ name|error
 operator|=
 name|vesa_configure
 argument_list|(
-name|flags
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10166,12 +10134,6 @@ block|}
 block|}
 name|vesa_bios_uninit
 argument_list|()
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|vesa_lock
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
