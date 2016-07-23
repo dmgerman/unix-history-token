@@ -59,12 +59,6 @@ directive|define
 name|PLATFORM_SUPPORT_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<__config>
-end_include
-
 begin_comment
 comment|// locale names
 end_comment
@@ -293,7 +287,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
+name|_WIN32
 argument_list|)
 operator|||
 name|defined
@@ -309,7 +303,7 @@ file|<io.h>
 end_include
 
 begin_comment
-comment|// _mktemp
+comment|// _mktemp_s
 end_comment
 
 begin_else
@@ -372,7 +366,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+name|__CloudABI__
 end_ifndef
 
 begin_expr_stmt
@@ -385,11 +379,6 @@ argument_list|()
 block|{
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_LIBCPP_MSVCRT
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__MINGW32__
@@ -456,6 +445,50 @@ end_do
 begin_return
 return|return
 name|FN
+return|;
+end_return
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_decl_stmt
+name|char
+name|Name
+index|[]
+init|=
+literal|"libcxx.XXXXXX"
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|_mktemp_s
+argument_list|(
+name|Name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_return
+return|return
+name|Name
 return|;
 end_return
 
@@ -557,7 +590,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+comment|// __CloudABI__
 end_comment
 
 begin_endif

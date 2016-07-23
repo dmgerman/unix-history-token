@@ -51,6 +51,15 @@ begin_comment
 comment|// Disable the missing braces warning for this reason.
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -59,6 +68,11 @@ name|diagnostic
 name|ignored
 literal|"-Wmissing-braces"
 end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -46,14 +46,17 @@ end_define
 begin_include
 include|#
 directive|include
-file|<__config>
+file|"test_macros.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_ASAN
-end_ifndef
+begin_if
+if|#
+directive|if
+name|TEST_HAS_FEATURE
+argument_list|(
+name|address_sanitizer
+argument_list|)
+end_if
 
 begin_extern
 extern|extern
@@ -180,7 +183,7 @@ name|is_contiguous_container_asan_correct
 argument_list|(
 argument|const std::vector<T
 argument_list|,
-argument|Alloc>&c
+argument|Alloc>&
 argument_list|)
 block|{
 return|return

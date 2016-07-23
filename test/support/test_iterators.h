@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -2339,7 +2345,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|//	Constructors
+comment|//  Constructors
 end_comment
 
 begin_expr_stmt
@@ -2473,6 +2479,9 @@ name|index_
 operator|==
 literal|0
 condition|)
+ifndef|#
+directive|ifndef
+name|TEST_HAS_NO_EXCEPTIONS
 name|throw
 name|std
 operator|::
@@ -2481,6 +2490,15 @@ argument_list|(
 literal|"throw from iterator assignment"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assert
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|--
 name|index_
@@ -2539,7 +2557,7 @@ end_return
 
 begin_comment
 unit|}
-comment|//	iterator operations
+comment|//  iterator operations
 end_comment
 
 begin_macro
@@ -2566,6 +2584,9 @@ name|index_
 operator|==
 literal|0
 condition|)
+ifndef|#
+directive|ifndef
+name|TEST_HAS_NO_EXCEPTIONS
 name|throw
 name|std
 operator|::
@@ -2574,6 +2595,15 @@ argument_list|(
 literal|"throw from iterator dereference"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assert
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|--
 name|index_
@@ -2589,7 +2619,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  	ThrowingIterator
+unit|}      ThrowingIterator
 operator|&
 name|operator
 operator|++
@@ -2609,6 +2639,9 @@ name|index_
 operator|==
 literal|0
 condition|)
+ifndef|#
+directive|ifndef
+name|TEST_HAS_NO_EXCEPTIONS
 name|throw
 name|std
 operator|::
@@ -2617,6 +2650,15 @@ argument_list|(
 literal|"throw from iterator increment"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assert
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|--
 name|index_
@@ -2635,7 +2677,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|} 	 	ThrowingIterator
+unit|}      ThrowingIterator
 name|operator
 operator|++
 operator|(
@@ -2681,6 +2723,9 @@ name|index_
 operator|==
 literal|0
 condition|)
+ifndef|#
+directive|ifndef
+name|TEST_HAS_NO_EXCEPTIONS
 name|throw
 name|std
 operator|::
@@ -2689,6 +2734,15 @@ argument_list|(
 literal|"throw from iterator decrement"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assert
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|--
 name|index_
@@ -2707,7 +2761,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}  	ThrowingIterator
+unit|}      ThrowingIterator
 name|operator
 operator|--
 operator|(
@@ -2757,6 +2811,9 @@ name|index_
 operator|==
 literal|0
 condition|)
+ifndef|#
+directive|ifndef
+name|TEST_HAS_NO_EXCEPTIONS
 name|throw
 name|std
 operator|::
@@ -2765,6 +2822,15 @@ argument_list|(
 literal|"throw from iterator comparison"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assert
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 operator|--
 name|index_
@@ -3002,7 +3068,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//	Constructors
+comment|//  Constructors
 end_comment
 
 begin_expr_stmt
@@ -3117,7 +3183,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//	iterator operations
+comment|//  iterator operations
 end_comment
 
 begin_expr_stmt

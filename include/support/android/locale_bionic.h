@@ -85,14 +85,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|// Share implementation with Newlib
-end_comment
+begin_include
+include|#
+directive|include
+file|<support/xlocale/__posix_l_fallback.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<support/xlocale/xlocale.h>
+file|<support/xlocale/__strtonum_fallback.h>
 end_include
 
 begin_endif

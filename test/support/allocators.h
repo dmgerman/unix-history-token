@@ -755,7 +755,6 @@ argument_list|(
 name|std
 operator|::
 name|size_t
-name|n
 argument_list|,
 specifier|const
 name|void

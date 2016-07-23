@@ -43,6 +43,12 @@ directive|define
 name|MOVEONLY_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
