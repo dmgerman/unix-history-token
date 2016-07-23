@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.26 2016/01/08 02:53:13 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.27 2016/07/09 15:24:19 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<getopt.h>
 end_include
 
 begin_include
